@@ -25,7 +25,7 @@ import java.time.LocalDate
 import java.util.Locale
 import kotlin.math.abs
 
-enum class GameTab { EMPIRE, MANAGERS, UPGRADES }
+enum class GameTab { EMPIRE, MANAGERS, UPGRADES, GOALS }
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) { super.onCreate(savedInstanceState); setContent { ZeroToEmpireApp() } }
@@ -34,6 +34,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun ZeroToEmpireApp(vm: GameViewModel = viewModel()) {
     val state by vm.state.collectAsStateWithLifecycle()
+    val meta by vm.meta.collectAsStateWithLifecycle()
     val offlineReward by vm.offlineReward.collectAsStateWithLifecycle()
     var tab by remember { mutableStateOf(GameTab.EMPIRE) }
 
@@ -61,36 +62,32 @@ fun ZeroToEmpireApp(vm: GameViewModel = viewModel()) {
                         items(Upgrades.catalog) { u -> UpgradeCard(u, state) { vm.buyUpgrade(u.id) } }
                         item { BoostCard(state, vm::activateProfitBoost) }
                     }
+                    GameTab.GOALS -> {
+                        item { Section("COMMAND CENTER", "Daily momentum and permanent achievements") }
+                        item { DailyRewardCard(meta, vm.canClaimDaily(), vm::claimDaily) }
+                        item { Section("MISSIONS", "Complete objectives to earn gems") }
+                        items(vm.missions()) { mission -> MissionCard(mission) { vm.claimMission(mission.id) } }
+                        item { Section("ACHIEVEMENTS", "Permanent milestones across your empire") }
+                        items(vm.achievements()) { achievement -> AchievementCard(achievement) { vm.claimAchievement(achievement.id) } }
+                    }
                 }
             }
         }
     }
 }
 
+@Composable private fun DailyRewardCard(meta:PlayerMeta, claimable:Boolean, claim:()->RewardDay?) { val next=LoginCalendar.rewardFor(meta.streakDays+1); Surface(color=EmpireColors.Gold.copy(alpha=.13f),shape=RoundedCornerShape(20.dp),modifier=Modifier.fillMaxWidth()){Column(Modifier.padding(18.dp)){Text("DAILY CAPITAL DROP",color=EmpireColors.Gold,fontWeight=FontWeight.Black,fontSize=18.sp);Text("STREAK ${meta.streakDays} DAYS",color=EmpireColors.TextSecondary,fontSize=11.sp);Spacer(Modifier.height(8.dp));Text("Next reward: ◆ ${next.gems}${if(next.multiplierMinutes>0) " + ×2 for ${next.multiplierMinutes}m" else ""}",color=EmpireColors.TextPrimary,fontWeight=FontWeight.Bold);Spacer(Modifier.height(10.dp));Button(onClick={claim()},enabled=claimable,modifier=Modifier.fillMaxWidth()){Text(if(claimable)"CLAIM DAILY REWARD" else "CLAIMED TODAY",fontWeight=FontWeight.Black)}}} }
+@Composable private fun MissionCard(m:Mission,claim:()->Unit){Surface(color=EmpireColors.Surface,shape=RoundedCornerShape(16.dp),modifier=Modifier.fillMaxWidth()){Column(Modifier.padding(14.dp)){Row(verticalAlignment=Alignment.CenterVertically){Column(Modifier.weight(1f)){Text(m.title,color=EmpireColors.TextPrimary,fontWeight=FontWeight.Bold);Text("◆ ${m.rewardGems} reward",color=EmpireColors.Violet,fontSize=11.sp)};Button(onClick=claim,enabled=m.completed&&!m.claimed){Text(if(m.claimed)"DONE" else if(m.completed)"CLAIM" else "${(m.fraction*100).toInt()}%",fontSize=10.sp)}};Spacer(Modifier.height(7.dp));LinearProgressIndicator(progress={m.fraction},modifier=Modifier.fillMaxWidth().height(4.dp),color=EmpireColors.Cyan,trackColor=EmpireColors.SurfaceHigh)}}}
+@Composable private fun AchievementCard(a:Achievement,claim:()->Unit){Surface(color=EmpireColors.Surface,shape=RoundedCornerShape(16.dp),modifier=Modifier.fillMaxWidth()){Row(Modifier.padding(14.dp),verticalAlignment=Alignment.CenterVertically){Text(if(a.unlocked)"★" else "☆",color=if(a.unlocked)EmpireColors.Gold else EmpireColors.TextSecondary,fontSize=28.sp);Spacer(Modifier.width(10.dp));Column(Modifier.weight(1f)){Text(a.title,color=EmpireColors.TextPrimary,fontWeight=FontWeight.Black);Text(a.description,color=EmpireColors.TextSecondary,fontSize=11.sp)};Button(onClick=claim,enabled=a.unlocked&&!a.claimed){Text(if(a.claimed)"DONE" else "◆ ${a.rewardGems}",fontSize=10.sp)}}}}
+
 @Composable
 private fun OfflineRewardDialog(reward: OfflineReward, dismiss: () -> Unit) {
-    val hours = reward.paidSeconds / 3600
-    val minutes = (reward.paidSeconds % 3600) / 60
-    AlertDialog(
-        onDismissRequest = dismiss,
-        containerColor = EmpireColors.SurfaceHigh,
-        title = { Text("EMPIRE NEVER SLEEPS", color = EmpireColors.Gold, fontWeight = FontWeight.Black) },
-        text = {
-            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
-                Text("Your managers kept the machine running while you were away.", color = EmpireColors.TextSecondary, textAlign = TextAlign.Center)
-                Spacer(Modifier.height(18.dp))
-                Text("+${money(reward.cash)}", color = EmpireColors.Success, fontSize = 34.sp, fontWeight = FontWeight.Black)
-                Text("$hours h ${minutes} min of offline production", color = EmpireColors.TextSecondary, fontSize = 12.sp)
-                Spacer(Modifier.height(10.dp))
-                Text("75% OFFLINE EFFICIENCY", color = EmpireColors.Cyan, fontSize = 10.sp, fontWeight = FontWeight.Bold)
-            }
-        },
-        confirmButton = { Button(onClick = dismiss, modifier = Modifier.fillMaxWidth()) { Text("COLLECT", fontWeight = FontWeight.Black) } }
-    )
+    val hours = reward.paidSeconds / 3600; val minutes = (reward.paidSeconds % 3600) / 60
+    AlertDialog(onDismissRequest = dismiss, containerColor = EmpireColors.SurfaceHigh, title = { Text("EMPIRE NEVER SLEEPS", color = EmpireColors.Gold, fontWeight = FontWeight.Black) }, text = { Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) { Text("Your managers kept the machine running while you were away.", color = EmpireColors.TextSecondary, textAlign = TextAlign.Center); Spacer(Modifier.height(18.dp)); Text("+${money(reward.cash)}", color = EmpireColors.Success, fontSize = 34.sp, fontWeight = FontWeight.Black); Text("$hours h ${minutes} min of offline production", color = EmpireColors.TextSecondary, fontSize = 12.sp); Spacer(Modifier.height(10.dp)); Text("75% OFFLINE EFFICIENCY", color = EmpireColors.Cyan, fontSize = 10.sp, fontWeight = FontWeight.Bold) } }, confirmButton = { Button(onClick = dismiss, modifier = Modifier.fillMaxWidth()) { Text("COLLECT", fontWeight = FontWeight.Black) } })
 }
 
-@Composable private fun GameNav(selected: GameTab, onSelect: (GameTab) -> Unit) { NavigationBar(containerColor = EmpireColors.Surface) { GameTab.entries.forEach { tab -> NavigationBarItem(selected = tab == selected, onClick = { onSelect(tab) }, icon = { Text(when(tab){ GameTab.EMPIRE -> "◈"; GameTab.MANAGERS -> "♟"; GameTab.UPGRADES -> "◆" }) }, label = { Text(tab.name) }) } } }
-@Composable private fun Header(s: GameState) { Row(Modifier.fillMaxWidth().padding(top=16.dp), verticalAlignment=Alignment.CenterVertically) { Column(Modifier.weight(1f)) { Text("ZERO → EMPIRE", color=EmpireColors.Gold, fontWeight=FontWeight.Black, fontSize=23.sp); Text("FROM NOTHING. BEYOND EVERYTHING.", color=EmpireColors.TextSecondary, fontSize=9.sp) }; Text("◆ ${s.prestigePoints}", color=EmpireColors.Violet, fontWeight=FontWeight.Bold) } }
+@Composable private fun GameNav(selected: GameTab, onSelect: (GameTab) -> Unit) { NavigationBar(containerColor = EmpireColors.Surface) { GameTab.entries.forEach { tab -> NavigationBarItem(selected = tab == selected, onClick = { onSelect(tab) }, icon = { Text(when(tab){ GameTab.EMPIRE -> "◈"; GameTab.MANAGERS -> "♟"; GameTab.UPGRADES -> "◆"; GameTab.GOALS -> "★" }) }, label = { Text(tab.name) }) } } }
+@Composable private fun Header(s: GameState) { Row(Modifier.fillMaxWidth().padding(top=16.dp), verticalAlignment=Alignment.CenterVertically) { Column(Modifier.weight(1f)) { Text("ZERO → EMPIRE", color=EmpireColors.Gold, fontWeight=FontWeight.Black, fontSize=23.sp); Text("FROM NOTHING. BEYOND EVERYTHING.", color=EmpireColors.TextSecondary, fontSize=9.sp) }; Text("◆ ${s.gems}   ◇ ${s.prestigePoints}", color=EmpireColors.Violet, fontWeight=FontWeight.Bold) } }
 @Composable private fun EventBanner(e: LiveEvent) { Surface(color=EmpireColors.Violet.copy(alpha=.16f), shape=RoundedCornerShape(15.dp), modifier=Modifier.fillMaxWidth()) { Row(Modifier.padding(13.dp), verticalAlignment=Alignment.CenterVertically) { Text(e.icon, fontSize=25.sp); Spacer(Modifier.width(10.dp)); Column { Text(e.name.uppercase(), color=EmpireColors.Violet, fontWeight=FontWeight.Black); Text("${e.description}  ×${e.incomeMultiplier}", color=EmpireColors.TextSecondary, fontSize=11.sp) } } } }
 @Composable private fun WealthHero(s: GameState) { Surface(shape=RoundedCornerShape(24.dp), color=EmpireColors.SurfaceHigh, modifier=Modifier.fillMaxWidth()) { Column(Modifier.padding(20.dp)) { Text("NET WORTH", color=EmpireColors.TextSecondary, fontSize=10.sp); Text(money(s.cash), color=EmpireColors.TextPrimary, fontSize=39.sp, fontWeight=FontWeight.Black); Text("▲ ${money(s.incomePerSecond)} / SEC   ×${String.format(Locale.US,"%.1f",s.prestigeMultiplier)} LEGACY", color=EmpireColors.Success, fontWeight=FontWeight.Bold, fontSize=12.sp) } } }
 @Composable private fun PowerTap(s: GameState, tap:()->Unit) { Box(Modifier.fillMaxWidth().padding(8.dp), contentAlignment=Alignment.Center) { Surface(Modifier.size(180.dp).clickable(onClick=tap), shape=CircleShape, color=EmpireColors.Gold, shadowElevation=18.dp) { Box(Modifier.background(Brush.radialGradient(listOf(EmpireColors.GoldBright,EmpireColors.Gold))), contentAlignment=Alignment.Center) { Column(horizontalAlignment=Alignment.CenterHorizontally) { Text("$", color=EmpireColors.Void, fontSize=52.sp, fontWeight=FontWeight.Black); Text("POWER TAP", color=EmpireColors.Void, fontWeight=FontWeight.Black); Text("+${money(s.tapValue)}", color=EmpireColors.Void.copy(alpha=.7f), fontWeight=FontWeight.Bold) } } } } }
