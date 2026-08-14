@@ -47,7 +47,7 @@ fun ZeroToEmpireApp(vm: GameViewModel = viewModel()) {
     var tab by remember { mutableStateOf(GameTab.EMPIRE) }
 
     MaterialTheme(colorScheme = EmpireColorScheme) {
-        offlineReward?.let { OfflineRewardDialog(it, vm::dismissOfflineReward) }
+        offlineReward?.let { OfflineRewardDialog(it, vm::dismissOfflineReward, vm::requestDoubleOfflineAd) }
         Scaffold(containerColor = EmpireColors.Void, bottomBar = { GameNav(tab) { tab = it } }) { inset ->
             LazyColumn(
                 Modifier.padding(inset).fillMaxSize()
@@ -189,7 +189,40 @@ private fun JuicyBusinessCard(b: Business, s: GameState, buy: () -> Unit) {
 @Composable private fun MissionCard(m: Mission, claim:()->Unit){val h=LocalHapticFeedback.current;Surface(color=EmpireColors.Surface,shape=RoundedCornerShape(16.dp),modifier=Modifier.fillMaxWidth()){Column(Modifier.padding(14.dp)){Row(verticalAlignment=Alignment.CenterVertically){Column(Modifier.weight(1f)){Text(m.title,color=EmpireColors.TextPrimary,fontWeight=FontWeight.Bold);Text("◆ ${m.rewardGems} reward",color=EmpireColors.Violet,fontSize=11.sp)};Button(onClick={claim();h.performHapticFeedback(HapticFeedbackType.LongPress)},enabled=m.completed&&!m.claimed){Text(if(m.claimed)"DONE" else if(m.completed)"CLAIM" else "${(m.fraction*100).toInt()}%",fontSize=10.sp)}};Spacer(Modifier.height(7.dp));LinearProgressIndicator(progress={m.fraction},modifier=Modifier.fillMaxWidth().height(4.dp),color=EmpireColors.Cyan,trackColor=EmpireColors.SurfaceHigh)}}}
 @Composable private fun AchievementCard(a: Achievement, claim:()->Unit){val h=LocalHapticFeedback.current;Surface(color=EmpireColors.Surface,shape=RoundedCornerShape(16.dp),modifier=Modifier.fillMaxWidth()){Row(Modifier.padding(14.dp),verticalAlignment=Alignment.CenterVertically){Text(if(a.unlocked)"★" else "☆",color=if(a.unlocked)EmpireColors.Gold else EmpireColors.TextSecondary,fontSize=28.sp);Spacer(Modifier.width(10.dp));Column(Modifier.weight(1f)){Text(a.title,color=EmpireColors.TextPrimary,fontWeight=FontWeight.Black);Text(a.description,color=EmpireColors.TextSecondary,fontSize=11.sp)};Button(onClick={claim();h.performHapticFeedback(HapticFeedbackType.LongPress)},enabled=a.unlocked&&!a.claimed){Text(if(a.claimed)"DONE" else "◆ ${a.rewardGems}",fontSize=10.sp)}}}}
 
-@Composable private fun OfflineRewardDialog(reward: OfflineReward, dismiss: () -> Unit) { val h=LocalHapticFeedback.current; val hours=reward.paidSeconds/3600; val minutes=(reward.paidSeconds%3600)/60; AlertDialog(onDismissRequest=dismiss,containerColor=EmpireColors.SurfaceHigh,title={Text("EMPIRE NEVER SLEEPS",color=EmpireColors.Gold,fontWeight=FontWeight.Black)},text={Column(horizontalAlignment=Alignment.CenterHorizontally,modifier=Modifier.fillMaxWidth()){Text("Your managers kept the machine running while you were away.",color=EmpireColors.TextSecondary,textAlign=TextAlign.Center);Spacer(Modifier.height(18.dp));Text("+${money(reward.cash)}",color=EmpireColors.Success,fontSize=34.sp,fontWeight=FontWeight.Black);Text("$hours h ${minutes} min of offline production",color=EmpireColors.TextSecondary,fontSize=12.sp);Spacer(Modifier.height(10.dp));Text("75% OFFLINE EFFICIENCY",color=EmpireColors.Cyan,fontSize=10.sp,fontWeight=FontWeight.Bold)}},confirmButton={Button(onClick={dismiss();h.performHapticFeedback(HapticFeedbackType.LongPress)},modifier=Modifier.fillMaxWidth()){Text("COLLECT",fontWeight=FontWeight.Black)}}) }
+@Composable
+private fun OfflineRewardDialog(reward: OfflineReward, dismiss: () -> Unit, doubleReward: () -> Unit) {
+    val h = LocalHapticFeedback.current
+    val hours = reward.paidSeconds / 3600
+    val minutes = (reward.paidSeconds % 3600) / 60
+    AlertDialog(
+        onDismissRequest = dismiss,
+        containerColor = EmpireColors.SurfaceHigh,
+        title = { Text("EMPIRE NEVER SLEEPS", color = EmpireColors.Gold, fontWeight = FontWeight.Black) },
+        text = {
+            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
+                Text("Your managers kept the machine running while you were away.", color = EmpireColors.TextSecondary, textAlign = TextAlign.Center)
+                Spacer(Modifier.height(18.dp))
+                Text("+${money(reward.cash)}", color = EmpireColors.Success, fontSize = 34.sp, fontWeight = FontWeight.Black)
+                Text("$hours h ${minutes} min of offline production", color = EmpireColors.TextSecondary, fontSize = 12.sp)
+                Spacer(Modifier.height(10.dp))
+                Text("75% OFFLINE EFFICIENCY", color = EmpireColors.Cyan, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+            }
+        },
+        confirmButton = {
+            Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Button(
+                    onClick = { doubleReward(); h.performHapticFeedback(HapticFeedbackType.LongPress) },
+                    modifier = Modifier.fillMaxWidth()
+                ) { Text("▶ WATCH AD • DOUBLE TO ${money(reward.cash * 2)}", fontWeight = FontWeight.Black, fontSize = 11.sp) }
+                TextButton(
+                    onClick = { dismiss(); h.performHapticFeedback(HapticFeedbackType.LongPress) },
+                    modifier = Modifier.fillMaxWidth()
+                ) { Text("COLLECT ${money(reward.cash)}") }
+            }
+        }
+    )
+}
+
 @Composable private fun GameNav(selected: GameTab,onSelect:(GameTab)->Unit){NavigationBar(containerColor=EmpireColors.Surface){GameTab.entries.forEach{tab->NavigationBarItem(selected=tab==selected,onClick={onSelect(tab)},icon={Text(when(tab){GameTab.EMPIRE->"◈";GameTab.MANAGERS->"♟";GameTab.UPGRADES->"◆";GameTab.GOALS->"★"})},label={Text(tab.name)})}}}
 @Composable private fun Header(s:GameState){Row(Modifier.fillMaxWidth().padding(top=16.dp),verticalAlignment=Alignment.CenterVertically){Column(Modifier.weight(1f)){Text("ZERO → EMPIRE",color=EmpireColors.Gold,fontWeight=FontWeight.Black,fontSize=23.sp);Text("FROM NOTHING. BEYOND EVERYTHING.",color=EmpireColors.TextSecondary,fontSize=9.sp)};Text("◆ ${s.gems}   ◇ ${s.prestigePoints}",color=EmpireColors.Violet,fontWeight=FontWeight.Bold)}}
 @Composable private fun EventBanner(e:LiveEvent){Surface(color=EmpireColors.Violet.copy(alpha=.16f),shape=RoundedCornerShape(15.dp),modifier=Modifier.fillMaxWidth()){Row(Modifier.padding(13.dp),verticalAlignment=Alignment.CenterVertically){Text(e.icon,fontSize=25.sp);Spacer(Modifier.width(10.dp));Column{Text(e.name.uppercase(),color=EmpireColors.Violet,fontWeight=FontWeight.Black);Text("${e.description}  ×${e.incomeMultiplier}",color=EmpireColors.TextSecondary,fontSize=11.sp)}}}}
