@@ -21,7 +21,9 @@ data class Achievement(
     val id: String,
     val title: String,
     val description: String,
-    val unlocked: Boolean = false
+    val unlocked: Boolean = false,
+    val claimed: Boolean = false,
+    val rewardGems: Int = 10
 )
 
 data class PlayerMeta(
@@ -31,7 +33,9 @@ data class PlayerMeta(
     val prestigeCount: Int = 0,
     val streakDays: Int = 0,
     val lastDailyClaimEpochDay: Long = -1L,
-    val boostEndsAtMillis: Long = 0L
+    val boostEndsAtMillis: Long = 0L,
+    val claimedMissionIds: Set<String> = emptySet(),
+    val claimedAchievementIds: Set<String> = emptySet()
 )
 
 object Progression {
@@ -40,16 +44,17 @@ object Progression {
 
     fun dailyReward(day: Int): Int = listOf(5, 7, 10, 15, 20, 30, 50)[day.coerceIn(0, 6)]
 
-    fun initialMissions() = listOf(
-        Mission("tap_50", "Tap 50 times", 50.0, 5),
-        Mission("buy_25", "Buy 25 businesses", 25.0, 8),
-        Mission("earn_100k", "Earn 100K", 100_000.0, 12)
+    fun missions(state: GameState, meta: PlayerMeta) = listOf(
+        Mission("tap_50", "Tap 50 times", 50.0, 5, meta.totalTaps.toDouble(), "tap_50" in meta.claimedMissionIds),
+        Mission("buy_25", "Buy 25 business levels", 25.0, 8, meta.totalPurchases.toDouble(), "buy_25" in meta.claimedMissionIds),
+        Mission("earn_100k", "Earn 100K lifetime", 100_000.0, 12, state.lifetimeCash, "earn_100k" in meta.claimedMissionIds),
+        Mission("prestige_1", "Ascend once", 1.0, 20, meta.prestigeCount.toDouble(), "prestige_1" in meta.claimedMissionIds)
     )
 
     fun achievements(state: GameState, meta: PlayerMeta) = listOf(
-        Achievement("first", "First Step", "Own your first business", state.businesses.any { it.level > 0 }),
-        Achievement("million", "Millionaire", "Earn 1M lifetime cash", state.lifetimeCash >= 1_000_000.0),
-        Achievement("century", "Industrial Machine", "Own 100 total business levels", state.businesses.sumOf { it.level } >= 100),
-        Achievement("reborn", "Reborn", "Prestige for the first time", meta.prestigeCount > 0)
+        Achievement("first", "First Step", "Own your first business", state.businesses.any { it.level > 0 }, "first" in meta.claimedAchievementIds, 5),
+        Achievement("million", "Millionaire", "Earn 1M lifetime cash", state.lifetimeCash >= 1_000_000.0, "million" in meta.claimedAchievementIds, 10),
+        Achievement("century", "Industrial Machine", "Own 100 total business levels", state.businesses.sumOf { it.level } >= 100, "century" in meta.claimedAchievementIds, 15),
+        Achievement("reborn", "Reborn", "Prestige for the first time", meta.prestigeCount > 0, "reborn" in meta.claimedAchievementIds, 20)
     )
 }
