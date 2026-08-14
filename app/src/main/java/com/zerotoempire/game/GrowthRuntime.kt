@@ -3,10 +3,15 @@ package com.zerotoempire.game
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 
@@ -38,7 +43,18 @@ fun GrowthRuntimeRoot(vm: GameViewModel = viewModel()) {
     }
 
     SfxRuntime(vm)
-    CommerceRoot(vm)
+
+    Box {
+        CommerceRoot(vm)
+        if (meta.onboardingCompleted) {
+            BulkQuoteDock(
+                vm = vm,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(start = 10.dp, end = 10.dp, bottom = 148.dp)
+            )
+        }
+    }
 
     if (activity != null) {
         InterstitialController(
