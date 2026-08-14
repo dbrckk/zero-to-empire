@@ -65,34 +65,26 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun completeOnboarding() {
-        if (_meta.value.onboardingCompleted) return
-        _meta.value = _meta.value.copy(onboardingCompleted = true)
-        scheduleSave()
-    }
-
+    fun completeOnboarding() { if (!_meta.value.onboardingCompleted) { _meta.value = _meta.value.copy(onboardingCompleted = true); scheduleSave() } }
     fun dismissCelebration() { _celebration.value = null }
     fun dismissOfflineReward() { _offlineReward.value = null }
-
     fun canClaimDaily(): Boolean = _meta.value.lastDailyClaimEpochDay != LocalDate.now().toEpochDay()
 
     fun claimDaily(): RewardDay? {
-        val today = LocalDate.now().toEpochDay()
-        val meta = _meta.value
+        val today = LocalDate.now().toEpochDay(); val meta = _meta.value
         if (meta.lastDailyClaimEpochDay == today) return null
         val nextStreak = if (meta.lastDailyClaimEpochDay == today - 1) meta.streakDays + 1 else 1
-        val reward = LoginCalendar.rewardFor(nextStreak)
-        val s = _state.value
+        val reward = LoginCalendar.rewardFor(nextStreak); val s = _state.value
         val boostBase = maxOf(System.currentTimeMillis(), s.boostEndsAtMillis)
         val boostEnd = if (reward.multiplierMinutes > 0) boostBase + reward.multiplierMinutes * 60_000L else s.boostEndsAtMillis
         _state.value = s.copy(gems = s.gems + reward.gems, boostEndsAtMillis = boostEnd)
         _meta.value = meta.copy(gems = _state.value.gems, streakDays = nextStreak, lastDailyClaimEpochDay = today, boostEndsAtMillis = boostEnd)
-        scheduleSave()
-        return reward
+        scheduleSave(); return reward
     }
 
     fun missions(): List<Mission> = Progression.missions(_state.value, _meta.value)
     fun achievements(): List<Achievement> = Progression.achievements(_state.value, _meta.value)
+    fun challenges(): List<TimedChallenge> = ChallengeRotation.current(_state.value, _meta.value)
 
     fun claimMission(id: String): Boolean {
         val mission = missions().firstOrNull { it.id == id } ?: return false
@@ -110,20 +102,25 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         scheduleSave(); return true
     }
 
+    fun claimChallenge(id: String): Boolean {
+        val challenge = challenges().firstOrNull { it.id == id } ?: return false
+        if (!challenge.completed || challenge.claimed) return false
+        _state.value = _state.value.copy(gems = _state.value.gems + challenge.rewardGems)
+        _meta.value = _meta.value.copy(gems = _state.value.gems, claimedChallengeIds = _meta.value.claimedChallengeIds + id)
+        _celebration.value = MajorCelebration("CHALLENGE COMPLETE", "+${challenge.rewardGems} gems earned", "★", "WEEKLY")
+        scheduleSave(); return true
+    }
+
     fun tap() {
-        val s = _state.value
-        val updated = s.copy(cash = s.cash + s.tapValue, lifetimeCash = s.lifetimeCash + s.tapValue)
-        _state.value = updated
-        _meta.value = _meta.value.copy(totalTaps = _meta.value.totalTaps + 1)
+        val s = _state.value; val updated = s.copy(cash = s.cash + s.tapValue, lifetimeCash = s.lifetimeCash + s.tapValue)
+        _state.value = updated; _meta.value = _meta.value.copy(totalTaps = _meta.value.totalTaps + 1)
         checkEraUnlock(updated); scheduleSave()
     }
 
     fun buy(id: Int) {
-        val s = _state.value
-        val b = s.businesses.firstOrNull { it.id == id } ?: return
+        val s = _state.value; val b = s.businesses.firstOrNull { it.id == id } ?: return
         if (s.cash < b.nextCost) return
-        val newLevel = b.level + 1
-        val updatedBusiness = b.copy(level = newLevel)
+        val newLevel = b.level + 1; val updatedBusiness = b.copy(level = newLevel)
         _state.value = s.copy(cash = s.cash - b.nextCost, businesses = s.businesses.map { if (it.id == id) updatedBusiness else it })
         _meta.value = _meta.value.copy(totalPurchases = _meta.value.totalPurchases + 1)
         if (newLevel in setOf(10, 25, 50, 100, 250, 500, 1000)) _celebration.value = Celebrations.milestone(updatedBusiness)
@@ -131,57 +128,40 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun hireManager(businessId: Int): Boolean {
-        val s = _state.value
-        val manager = Managers.catalog.firstOrNull { it.businessId == businessId } ?: return false
+        val s = _state.value; val manager = Managers.catalog.firstOrNull { it.businessId == businessId } ?: return false
         if (businessId in s.hiredManagerIds || s.cash < manager.cost) return false
-        _state.value = s.copy(cash = s.cash - manager.cost, hiredManagerIds = s.hiredManagerIds + businessId)
-        scheduleSave(); return true
+        _state.value = s.copy(cash = s.cash - manager.cost, hiredManagerIds = s.hiredManagerIds + businessId); scheduleSave(); return true
     }
 
     fun buyUpgrade(id: String): Boolean {
-        val s = _state.value
-        val u = Upgrades.catalog.firstOrNull { it.id == id } ?: return false
-        val rank = s.upgradeRanks[id] ?: 0
+        val s = _state.value; val u = Upgrades.catalog.firstOrNull { it.id == id } ?: return false; val rank = s.upgradeRanks[id] ?: 0
         if (rank >= u.maxRank || s.gems < u.gemCost) return false
-        _state.value = s.copy(gems = s.gems - u.gemCost, upgradeRanks = s.upgradeRanks + (id to rank + 1))
-        syncMetaCurrency(); scheduleSave(); return true
+        _state.value = s.copy(gems = s.gems - u.gemCost, upgradeRanks = s.upgradeRanks + (id to rank + 1)); syncMetaCurrency(); scheduleSave(); return true
     }
 
     fun grantGems(amount: Int) { if (amount > 0) { _state.value = _state.value.copy(gems = _state.value.gems + amount); syncMetaCurrency(); scheduleSave() } }
 
     fun activateProfitBoost(minutes: Int = 10) {
-        val s = _state.value
-        val base = maxOf(System.currentTimeMillis(), s.boostEndsAtMillis)
-        _state.value = s.copy(boostEndsAtMillis = base + minutes * 60_000L)
-        _meta.value = _meta.value.copy(boostEndsAtMillis = _state.value.boostEndsAtMillis)
-        scheduleSave()
+        val s = _state.value; val base = maxOf(System.currentTimeMillis(), s.boostEndsAtMillis)
+        _state.value = s.copy(boostEndsAtMillis = base + minutes * 60_000L); _meta.value = _meta.value.copy(boostEndsAtMillis = _state.value.boostEndsAtMillis); scheduleSave()
     }
 
     fun prestige() {
-        val s = _state.value
-        val totalReward = Progression.prestigeReward(s.lifetimeCash)
+        val s = _state.value; val totalReward = Progression.prestigeReward(s.lifetimeCash)
         if (totalReward - s.prestigePoints <= 0) return
         _state.value = GameState(prestigePoints = totalReward, gems = s.gems, upgradeRanks = s.upgradeRanks)
         _meta.value = _meta.value.copy(prestigeCount = _meta.value.prestigeCount + 1)
-        _celebration.value = MajorCelebration("ASCENSION COMPLETE", "Legacy power permanently increased.", "◇", "PRESTIGE")
-        scheduleSave()
+        _celebration.value = MajorCelebration("ASCENSION COMPLETE", "Legacy power permanently increased.", "◇", "PRESTIGE"); scheduleSave()
     }
 
     private fun checkEraUnlock(s: GameState) {
         val era = EmpireEras.current(s.lifetimeCash)
-        if (era.index > _meta.value.highestEraSeen) {
-            _meta.value = _meta.value.copy(highestEraSeen = era.index)
-            _celebration.value = Celebrations.era(era)
-            scheduleSave()
-        }
+        if (era.index > _meta.value.highestEraSeen) { _meta.value = _meta.value.copy(highestEraSeen = era.index); _celebration.value = Celebrations.era(era); scheduleSave() }
     }
 
     private fun syncMetaCurrency() { _meta.value = _meta.value.copy(gems = _state.value.gems) }
     private fun scheduleSave() { if (loaded) { saveJob?.cancel(); saveJob = viewModelScope.launch { delay(350L); persistNow() } } }
     private suspend fun persistNow() { if (loaded) repository.save(_state.value, _meta.value) }
 
-    override fun onCleared() {
-        if (loaded) { val s = _state.value; val m = _meta.value; viewModelScope.launch { repository.save(s, m) } }
-        super.onCleared()
-    }
+    override fun onCleared() { if (loaded) { val s = _state.value; val m = _meta.value; viewModelScope.launch { repository.save(s, m) } }; super.onCleared() }
 }
