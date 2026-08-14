@@ -5,8 +5,11 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -26,6 +29,9 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     private val _celebration = MutableStateFlow<MajorCelebration?>(null)
     val celebration: StateFlow<MajorCelebration?> = _celebration.asStateFlow()
 
+    private val _rewardedRequests = MutableSharedFlow<RewardPlacement>(extraBufferCapacity = 1)
+    val rewardedRequests: SharedFlow<RewardPlacement> = _rewardedRequests.asSharedFlow()
+
     private var loaded = false
     private var saveJob: Job? = null
 
@@ -40,7 +46,11 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
             }
             _state.value = restored
             val eraIndex = EmpireEras.current(restored.lifetimeCash).index
-            _meta.value = save.meta.copy(gems = restored.gems, boostEndsAtMillis = restored.boostEndsAtMillis, highestEraSeen = maxOf(save.meta.highestEraSeen, eraIndex))
+            _meta.value = save.meta.copy(
+                gems = restored.gems,
+                boostEndsAtMillis = restored.boostEndsAtMillis,
+                highestEraSeen = maxOf(save.meta.highestEraSeen, eraIndex)
+            )
             loaded = true
 
             launch {
@@ -60,9 +70,26 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun completeOnboarding() { if (!_meta.value.onboardingCompleted) { _meta.value = _meta.value.copy(onboardingCompleted = true); scheduleSave() } }
+    fun completeOnboarding() {
+        if (!_meta.value.onboardingCompleted) {
+            _meta.value = _meta.value.copy(onboardingCompleted = true)
+            scheduleSave()
+        }
+    }
+
     fun dismissCelebration() { _celebration.value = null }
     fun dismissOfflineReward() { _offlineReward.value = null }
+
+    fun requestDoubleOfflineAd() {
+        if (_offlineReward.value?.eligible == true) {
+            _rewardedRequests.tryEmit(RewardPlacement.DOUBLE_OFFLINE_EARNINGS)
+        }
+    }
+
+    fun requestProfitBoostAd() {
+        _rewardedRequests.tryEmit(RewardPlacement.PROFIT_BOOST)
+    }
+
     fun canClaimDaily(): Boolean = _meta.value.lastDailyClaimEpochDay != LocalDate.now().toEpochDay()
 
     fun claimDaily(): RewardDay? {
@@ -99,6 +126,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
                 if (!_meta.value.starterPackOwned) {
                     _state.value = _state.value.copy(gems = _state.value.gems + 250)
                     _meta.value = _meta.value.copy(gems = _state.value.gems, starterPackOwned = true)
+                    activateProfitBoost(30)
                 }
             }
             StoreProduct.GEM_PACK_SMALL -> grantGems(120)
@@ -111,23 +139,26 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     fun rewardDoubleOffline() {
         val reward = _offlineReward.value ?: return
         if (!reward.eligible) return
-        _state.value = _state.value.copy(cash = _state.value.cash + reward.cash, lifetimeCash = _state.value.lifetimeCash + reward.cash)
+        _state.value = _state.value.copy(
+            cash = _state.value.cash + reward.cash,
+            lifetimeCash = _state.value.lifetimeCash + reward.cash
+        )
         _offlineReward.value = null
         _celebration.value = MajorCelebration("OFFLINE PROFITS ×2", "+${reward.cash.toLong()} bonus cash", "⚡", "REWARDED")
         scheduleSave()
     }
 
-    fun rewardProfitBoost() { activateProfitBoost(10); _celebration.value = MajorCelebration("OVERDRIVE ACTIVE", "All profits doubled for 10 minutes.", "⚡", "REWARDED") }
+    fun rewardProfitBoost() {
+        activateProfitBoost(10)
+        _celebration.value = MajorCelebration("OVERDRIVE ACTIVE", "All profits doubled for 10 minutes.", "⚡", "REWARDED")
+    }
 
     fun tap() { val s=_state.value; val u=s.copy(cash=s.cash+s.tapValue,lifetimeCash=s.lifetimeCash+s.tapValue); _state.value=u; _meta.value=_meta.value.copy(totalTaps=_meta.value.totalTaps+1); checkEraUnlock(u); scheduleSave() }
-
     fun buy(id: Int) { val s=_state.value; val b=s.businesses.firstOrNull{it.id==id}?:return; if(s.cash<b.nextCost)return; val l=b.level+1; val ub=b.copy(level=l); _state.value=s.copy(cash=s.cash-b.nextCost,businesses=s.businesses.map{if(it.id==id)ub else it}); _meta.value=_meta.value.copy(totalPurchases=_meta.value.totalPurchases+1); if(l in setOf(10,25,50,100,250,500,1000))_celebration.value=Celebrations.milestone(ub); scheduleSave() }
-
     fun hireManager(businessId:Int):Boolean{val s=_state.value;val m=Managers.catalog.firstOrNull{it.businessId==businessId}?:return false;if(businessId in s.hiredManagerIds||s.cash<m.cost)return false;_state.value=s.copy(cash=s.cash-m.cost,hiredManagerIds=s.hiredManagerIds+businessId);scheduleSave();return true}
     fun buyUpgrade(id:String):Boolean{val s=_state.value;val u=Upgrades.catalog.firstOrNull{it.id==id}?:return false;val r=s.upgradeRanks[id]?:0;if(r>=u.maxRank||s.gems<u.gemCost)return false;_state.value=s.copy(gems=s.gems-u.gemCost,upgradeRanks=s.upgradeRanks+(id to r+1));syncMetaCurrency();scheduleSave();return true}
     fun grantGems(amount:Int){if(amount>0){_state.value=_state.value.copy(gems=_state.value.gems+amount);syncMetaCurrency();scheduleSave()}}
     fun activateProfitBoost(minutes:Int=10){val s=_state.value;val base=maxOf(System.currentTimeMillis(),s.boostEndsAtMillis);_state.value=s.copy(boostEndsAtMillis=base+minutes*60_000L);_meta.value=_meta.value.copy(boostEndsAtMillis=_state.value.boostEndsAtMillis);scheduleSave()}
-
     fun prestige(){val s=_state.value;val total=Progression.prestigeReward(s.lifetimeCash);if(total-s.prestigePoints<=0)return;_state.value=GameState(prestigePoints=total,gems=s.gems,upgradeRanks=s.upgradeRanks);_meta.value=_meta.value.copy(prestigeCount=_meta.value.prestigeCount+1);_celebration.value=MajorCelebration("ASCENSION COMPLETE","Legacy power permanently increased.","◇","PRESTIGE");scheduleSave()}
 
     private fun checkEraUnlock(s:GameState){val era=EmpireEras.current(s.lifetimeCash);if(era.index>_meta.value.highestEraSeen){_meta.value=_meta.value.copy(highestEraSeen=era.index);_celebration.value=Celebrations.era(era);scheduleSave()}}
