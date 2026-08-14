@@ -29,6 +29,9 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     private val _celebration = MutableStateFlow<MajorCelebration?>(null)
     val celebration: StateFlow<MajorCelebration?> = _celebration.asStateFlow()
 
+    private val _buyMode = MutableStateFlow(BuyMode.X1)
+    val buyMode: StateFlow<BuyMode> = _buyMode.asStateFlow()
+
     private val _rewardedRequests = MutableSharedFlow<RewardPlacement>(extraBufferCapacity = 1)
     val rewardedRequests: SharedFlow<RewardPlacement> = _rewardedRequests.asSharedFlow()
 
@@ -69,6 +72,8 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
             launch { while (true) { delay(5_000L); persistNow() } }
         }
     }
+
+    fun setBuyMode(mode: BuyMode) { _buyMode.value = mode }
 
     fun completeOnboarding() {
         if (!_meta.value.onboardingCompleted) {
@@ -153,9 +158,9 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         scheduleSave()
     }
 
-    fun buy(id: Int) { buyBulk(id, BuyMode.X1) }
+    fun buy(id: Int) { buyBulk(id, _buyMode.value) }
 
-    fun bulkQuote(id: Int, mode: BuyMode): BulkQuote {
+    fun bulkQuote(id: Int, mode: BuyMode = _buyMode.value): BulkQuote {
         val s = _state.value
         val b = s.businesses.firstOrNull { it.id == id } ?: return BulkQuote(0, 0.0)
         return BulkPurchase.quote(b, s.cash, mode)
@@ -178,6 +183,8 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         val crossed = BulkPurchase.crossedMilestones(b.level, newLevel)
         if (crossed.isNotEmpty()) {
             _celebration.value = Celebrations.milestone(updatedBusiness.copy(level = crossed.last()))
+        } else if (quote.count >= 10) {
+            _celebration.value = MajorCelebration("MASS EXPANSION", "+${quote.count} ${b.name} levels", "▲", "EXPANSION")
         }
         scheduleSave()
         return quote
