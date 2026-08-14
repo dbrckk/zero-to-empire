@@ -38,7 +38,9 @@ data class PlayerMeta(
     val claimedAchievementIds: Set<String> = emptySet(),
     val claimedChallengeIds: Set<String> = emptySet(),
     val onboardingCompleted: Boolean = false,
-    val highestEraSeen: Int = 0
+    val highestEraSeen: Int = 0,
+    val adsRemoved: Boolean = false,
+    val starterPackOwned: Boolean = false
 )
 
 object Progression {
