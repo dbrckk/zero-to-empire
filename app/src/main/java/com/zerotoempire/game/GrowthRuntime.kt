@@ -37,6 +37,7 @@ fun GrowthRuntimeRoot(vm: GameViewModel = viewModel()) {
         if (celebration?.accent == "REWARDED") telemetry.track(GrowthEvent.FirstRewardedCompleted)
     }
 
+    SfxRuntime(vm)
     CommerceRoot(vm)
 
     if (activity != null) {
