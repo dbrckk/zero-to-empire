@@ -25,9 +25,9 @@ fun InterstitialController(
 
     LaunchedEffect(celebration, adsAllowed, meta.adsRemoved, meta.onboardingCompleted) {
         if (!adsAllowed || celebration == null || meta.adsRemoved) return@LaunchedEffect
-        val breakPoint = when (celebration.source) {
+        val breakPoint = when (celebration.accent) {
             "PRESTIGE" -> NaturalBreakPoint.PRESTIGE
-            "ERA" -> NaturalBreakPoint.ERA_UNLOCK
+            "NEW ERA", "ERA" -> NaturalBreakPoint.ERA_UNLOCK
             else -> return@LaunchedEffect
         }
         val now = System.currentTimeMillis()
