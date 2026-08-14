@@ -215,28 +215,49 @@ private fun EraHud(state: GameState) {
         val span = (next.requiredLifetimeCash - current.requiredLifetimeCash).coerceAtLeast(1.0)
         ((state.lifetimeCash - current.requiredLifetimeCash) / span).toFloat().coerceIn(0f, 1f)
     }
-    Column(Modifier.fillMaxWidth().padding(top = 6.dp, start = 72.dp, end = 72.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-        Surface(shape = RoundedCornerShape(50), color = EmpireColors.Void.copy(alpha = .88f)) {
-            Row(Modifier.padding(horizontal = 12.dp, vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {
-                Text(current.icon, color = EmpireColors.Gold, fontSize = 12.sp); Spacer(Modifier.width(6.dp)); Text(current.name, color = EmpireColors.TextPrimary, fontSize = 9.sp, fontWeight = FontWeight.Black)
+    Surface(
+        modifier = Modifier.fillMaxWidth().padding(top = 6.dp, start = 62.dp, end = 62.dp).height(74.dp),
+        shape = RoundedCornerShape(18.dp),
+        color = EmpireColors.Void.copy(alpha = .90f),
+        shadowElevation = 10.dp
+    ) {
+        Box(Modifier.fillMaxSize()) {
+            EraVista(current.index, Modifier.fillMaxSize())
+            Column(
+                Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(EmpireColors.Void.copy(alpha = .18f), EmpireColors.Void.copy(alpha = .78f)))).padding(horizontal = 12.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.Bottom
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(current.icon, color = EmpireColors.Gold, fontSize = 13.sp)
+                    Spacer(Modifier.width(6.dp))
+                    Text(current.name, color = EmpireColors.TextPrimary, fontSize = 10.sp, fontWeight = FontWeight.Black)
+                    Spacer(Modifier.weight(1f))
+                    next?.let { Text("NEXT: ${it.name}", color = EmpireColors.TextSecondary, fontSize = 8.sp, fontWeight = FontWeight.Bold) }
+                }
+                Spacer(Modifier.height(5.dp))
+                LinearProgressIndicator(progress = { fraction }, modifier = Modifier.fillMaxWidth().height(3.dp), color = EmpireColors.Gold, trackColor = EmpireColors.SurfaceHigh.copy(alpha = .75f))
             }
         }
-        Spacer(Modifier.height(3.dp))
-        LinearProgressIndicator(progress = { fraction }, modifier = Modifier.fillMaxWidth().height(2.dp), color = EmpireColors.Gold, trackColor = EmpireColors.SurfaceHigh.copy(alpha = .6f))
     }
 }
 
 @Composable
 private fun CelebrationOverlay(item: MajorCelebration, onShown: () -> Unit, onDismiss: () -> Unit) {
     var visible by remember(item) { mutableStateOf(false) }
-    LaunchedEffect(item) { visible = true; onShown(); delay(1800); visible = false; delay(260); onDismiss() }
+    LaunchedEffect(item) { visible = true; onShown(); delay(2100); visible = false; delay(280); onDismiss() }
     AnimatedVisibility(visible = visible, enter = fadeIn() + scaleIn(initialScale = .82f), exit = fadeOut() + scaleOut(targetScale = 1.08f), modifier = Modifier.fillMaxSize()) {
-        Box(Modifier.fillMaxSize().background(EmpireColors.Void.copy(alpha = .88f)), contentAlignment = Alignment.Center) {
+        Box(Modifier.fillMaxSize().background(EmpireColors.Void.copy(alpha = .92f)), contentAlignment = Alignment.Center) {
+            CelebrationVfx(item.accent, Modifier.fillMaxSize())
             Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(32.dp)) {
-                Text(item.accent, color = EmpireColors.Cyan, fontWeight = FontWeight.Black, fontSize = 12.sp, letterSpacing = 2.sp)
-                Spacer(Modifier.height(16.dp)); Text(item.icon, fontSize = 72.sp); Spacer(Modifier.height(18.dp))
+                Surface(shape = RoundedCornerShape(50), color = EmpireColors.SurfaceHigh.copy(alpha = .86f)) {
+                    Text(item.accent, modifier = Modifier.padding(horizontal = 14.dp, vertical = 7.dp), color = EmpireColors.Cyan, fontWeight = FontWeight.Black, fontSize = 11.sp, letterSpacing = 2.sp)
+                }
+                Spacer(Modifier.height(18.dp))
+                Text(item.icon, fontSize = 72.sp)
+                Spacer(Modifier.height(18.dp))
                 Text(item.title, color = EmpireColors.GoldBright, fontWeight = FontWeight.Black, fontSize = 30.sp, textAlign = TextAlign.Center)
-                Spacer(Modifier.height(8.dp)); Text(item.subtitle, color = EmpireColors.TextSecondary, fontSize = 15.sp, textAlign = TextAlign.Center)
+                Spacer(Modifier.height(8.dp))
+                Text(item.subtitle, color = EmpireColors.TextSecondary, fontSize = 15.sp, textAlign = TextAlign.Center)
             }
         }
     }
