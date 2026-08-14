@@ -14,9 +14,26 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "0.1.0"
+
+        // Google's documented sample AdMob app id. Replace in Play release configuration.
+        manifestPlaceholders["ADMOB_APP_ID"] = "ca-app-pub-3940256099942544~3347511713"
     }
 
-    buildFeatures { compose = true }
+    buildFeatures {
+        compose = true
+        buildConfig = true
+    }
+
+    buildTypes {
+        debug {
+            buildConfigField("String", "REWARDED_AD_UNIT_ID", "\"ca-app-pub-3940256099942544/5224354917\"")
+        }
+        release {
+            isMinifyEnabled = false
+            // Production ad unit id is intentionally not hardcoded into source control.
+            buildConfigField("String", "REWARDED_AD_UNIT_ID", "\"\"")
+        }
+    }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -35,6 +52,9 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.datastore:datastore-preferences:1.1.7")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
+
+    implementation("com.android.billingclient:billing:9.1.0")
+    implementation("com.google.android.gms:play-services-ads:25.4.0")
 
     testImplementation("junit:junit:4.13.2")
     debugImplementation("androidx.compose.ui:ui-tooling")
