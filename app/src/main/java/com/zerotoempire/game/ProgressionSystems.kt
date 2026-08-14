@@ -35,7 +35,9 @@ data class PlayerMeta(
     val lastDailyClaimEpochDay: Long = -1L,
     val boostEndsAtMillis: Long = 0L,
     val claimedMissionIds: Set<String> = emptySet(),
-    val claimedAchievementIds: Set<String> = emptySet()
+    val claimedAchievementIds: Set<String> = emptySet(),
+    val onboardingCompleted: Boolean = false,
+    val highestEraSeen: Int = 0
 )
 
 object Progression {
