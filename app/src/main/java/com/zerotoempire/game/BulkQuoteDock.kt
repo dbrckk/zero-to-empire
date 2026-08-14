@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -25,7 +24,7 @@ import java.util.Locale
 import kotlin.math.abs
 
 @Composable
-fun BulkQuoteDock(vm: GameViewModel) {
+fun BulkQuoteDock(vm: GameViewModel, modifier: Modifier = Modifier) {
     val state by vm.state.collectAsStateWithLifecycle()
     val mode by vm.buyMode.collectAsStateWithLifecycle()
     val candidates = state.businesses.mapNotNull { business ->
@@ -38,7 +37,7 @@ fun BulkQuoteDock(vm: GameViewModel) {
         color = EmpireColors.Void.copy(alpha = .93f),
         shape = RoundedCornerShape(18.dp),
         shadowElevation = 12.dp,
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp)
+        modifier = modifier.fillMaxWidth()
     ) {
         Column(Modifier.padding(10.dp)) {
             val label = when (mode) {
