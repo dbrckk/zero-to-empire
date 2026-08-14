@@ -27,11 +27,13 @@ android {
     buildTypes {
         debug {
             buildConfigField("String", "REWARDED_AD_UNIT_ID", "\"ca-app-pub-3940256099942544/5224354917\"")
+            buildConfigField("String", "INTERSTITIAL_AD_UNIT_ID", "\"ca-app-pub-3940256099942544/1033173712\"")
         }
         release {
             isMinifyEnabled = false
-            // Production ad unit id is intentionally not hardcoded into source control.
+            // Production ad unit ids are intentionally not hardcoded into source control.
             buildConfigField("String", "REWARDED_AD_UNIT_ID", "\"\"")
+            buildConfigField("String", "INTERSTITIAL_AD_UNIT_ID", "\"\"")
         }
     }
 
