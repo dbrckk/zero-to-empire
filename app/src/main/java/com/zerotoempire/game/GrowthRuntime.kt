@@ -33,8 +33,8 @@ fun GrowthRuntimeRoot(vm: GameViewModel = viewModel()) {
     LaunchedEffect(meta.prestigeCount) {
         if (meta.prestigeCount > 0) telemetry.track(GrowthEvent.FirstPrestige)
     }
-    LaunchedEffect(celebration?.source) {
-        if (celebration?.source == "REWARDED") telemetry.track(GrowthEvent.FirstRewardedCompleted)
+    LaunchedEffect(celebration?.accent) {
+        if (celebration?.accent == "REWARDED") telemetry.track(GrowthEvent.FirstRewardedCompleted)
     }
 
     CommerceRoot(vm)
