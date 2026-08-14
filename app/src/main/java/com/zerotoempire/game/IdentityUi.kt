@@ -42,7 +42,14 @@ fun EmpireRoot(vm: GameViewModel = viewModel()) {
                 }
             )
         } else {
-            EraHud(state)
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                EraHud(state)
+                Spacer(Modifier.height(5.dp))
+                ViralShareChip(state)
+            }
         }
 
         celebration?.let { item ->
