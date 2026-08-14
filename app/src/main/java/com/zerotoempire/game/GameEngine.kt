@@ -1,5 +1,6 @@
 package com.zerotoempire.game
 
+import java.time.LocalDate
 import kotlin.math.pow
 
 data class Business(
@@ -11,18 +12,35 @@ data class Business(
     val level: Int = 0
 ) {
     val nextCost: Double get() = baseCost * 1.15.pow(level)
-    val incomePerSecond: Double get() = baseIncome * level * GameEconomy.milestoneMultiplier(level)
-    val nextMilestone: Int? get() = listOf(25, 50, 100, 250, 500, 1000).firstOrNull { it > level }
+    val rawIncomePerSecond: Double get() = baseIncome * level * GameEconomy.milestoneMultiplier(level)
+    val nextMilestone: Int? get() = listOf(10, 25, 50, 100, 250, 500, 1000).firstOrNull { it > level }
 }
 
 data class GameState(
     val cash: Double = 10.0,
     val lifetimeCash: Double = 10.0,
     val prestigePoints: Int = 0,
-    val businesses: List<Business> = defaultBusinesses()
+    val businesses: List<Business> = defaultBusinesses(),
+    val hiredManagerIds: Set<Int> = emptySet(),
+    val upgradeRanks: Map<String, Int> = emptyMap(),
+    val gems: Int = 0,
+    val boostEndsAtMillis: Long = 0L
 ) {
-    val prestigeMultiplier: Double get() = 1.0 + prestigePoints * 0.12
-    val incomePerSecond: Double get() = businesses.sumOf { it.incomePerSecond } * prestigeMultiplier
+    val prestigeUpgradeRank: Int get() = upgradeRanks["prestige"] ?: 0
+    val incomeUpgradeRank: Int get() = upgradeRanks["income"] ?: 0
+    val tapUpgradeRank: Int get() = upgradeRanks["tap"] ?: 0
+    val prestigeMultiplier: Double get() = 1.0 + prestigePoints * (0.12 * (1.0 + prestigeUpgradeRank * .08))
+    val globalUpgradeMultiplier: Double get() = 1.0 + incomeUpgradeRank * .10
+    val boostMultiplier: Double get() = if (System.currentTimeMillis() < boostEndsAtMillis) 2.0 else 1.0
+    val eventMultiplier: Double get() = LiveOps.currentEvent(LocalDate.now())?.incomeMultiplier ?: 1.0
+
+    fun businessIncome(b: Business): Double {
+        val manager = Managers.catalog.firstOrNull { it.businessId == b.id && it.businessId in hiredManagerIds }
+        return b.rawIncomePerSecond * (manager?.incomeMultiplier ?: 1.0)
+    }
+
+    val incomePerSecond: Double get() = businesses.sumOf(::businessIncome) * prestigeMultiplier * globalUpgradeMultiplier * boostMultiplier * eventMultiplier
+    val tapValue: Double get() = (1.0 + incomePerSecond * .05) * prestigeMultiplier * (1.0 + tapUpgradeRank * .25)
     val empireLevel: Int get() = when {
         lifetimeCash >= 1e18 -> 7
         lifetimeCash >= 1e15 -> 6
