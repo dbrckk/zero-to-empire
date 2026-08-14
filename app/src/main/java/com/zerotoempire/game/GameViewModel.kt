@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 class GameViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = GameRepository(application.applicationContext)
@@ -31,10 +32,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
             var restored = save.state
             val reward = OfflineProgress.calculate(restored, save.lastSeenMillis)
             if (reward.eligible) {
-                restored = restored.copy(
-                    cash = restored.cash + reward.cash,
-                    lifetimeCash = restored.lifetimeCash + reward.cash
-                )
+                restored = restored.copy(cash = restored.cash + reward.cash, lifetimeCash = restored.lifetimeCash + reward.cash)
                 _offlineReward.value = reward
             }
             _state.value = restored
@@ -46,9 +44,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
                     delay(100L)
                     val s = _state.value
                     val gain = s.incomePerSecond / 10.0
-                    if (gain > 0) {
-                        _state.value = s.copy(cash = s.cash + gain, lifetimeCash = s.lifetimeCash + gain)
-                    }
+                    if (gain > 0) _state.value = s.copy(cash = s.cash + gain, lifetimeCash = s.lifetimeCash + gain)
                 }
             }
 
@@ -63,6 +59,44 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
 
     fun dismissOfflineReward() { _offlineReward.value = null }
 
+    fun canClaimDaily(): Boolean = _meta.value.lastDailyClaimEpochDay != LocalDate.now().toEpochDay()
+
+    fun claimDaily(): RewardDay? {
+        val today = LocalDate.now().toEpochDay()
+        val meta = _meta.value
+        if (meta.lastDailyClaimEpochDay == today) return null
+        val nextStreak = if (meta.lastDailyClaimEpochDay == today - 1) meta.streakDays + 1 else 1
+        val reward = LoginCalendar.rewardFor(nextStreak)
+        val s = _state.value
+        val boostBase = maxOf(System.currentTimeMillis(), s.boostEndsAtMillis)
+        val boostEnd = if (reward.multiplierMinutes > 0) boostBase + reward.multiplierMinutes * 60_000L else s.boostEndsAtMillis
+        _state.value = s.copy(gems = s.gems + reward.gems, boostEndsAtMillis = boostEnd)
+        _meta.value = meta.copy(gems = _state.value.gems, streakDays = nextStreak, lastDailyClaimEpochDay = today, boostEndsAtMillis = boostEnd)
+        scheduleSave()
+        return reward
+    }
+
+    fun missions(): List<Mission> = Progression.missions(_state.value, _meta.value)
+    fun achievements(): List<Achievement> = Progression.achievements(_state.value, _meta.value)
+
+    fun claimMission(id: String): Boolean {
+        val mission = missions().firstOrNull { it.id == id } ?: return false
+        if (!mission.completed || mission.claimed) return false
+        _state.value = _state.value.copy(gems = _state.value.gems + mission.rewardGems)
+        _meta.value = _meta.value.copy(gems = _state.value.gems, claimedMissionIds = _meta.value.claimedMissionIds + id)
+        scheduleSave()
+        return true
+    }
+
+    fun claimAchievement(id: String): Boolean {
+        val achievement = achievements().firstOrNull { it.id == id } ?: return false
+        if (!achievement.unlocked || achievement.claimed) return false
+        _state.value = _state.value.copy(gems = _state.value.gems + achievement.rewardGems)
+        _meta.value = _meta.value.copy(gems = _state.value.gems, claimedAchievementIds = _meta.value.claimedAchievementIds + id)
+        scheduleSave()
+        return true
+    }
+
     fun tap() {
         val s = _state.value
         _state.value = s.copy(cash = s.cash + s.tapValue, lifetimeCash = s.lifetimeCash + s.tapValue)
@@ -74,10 +108,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         val s = _state.value
         val b = s.businesses.firstOrNull { it.id == id } ?: return
         if (s.cash < b.nextCost) return
-        _state.value = s.copy(
-            cash = s.cash - b.nextCost,
-            businesses = s.businesses.map { if (it.id == id) it.copy(level = it.level + 1) else it }
-        )
+        _state.value = s.copy(cash = s.cash - b.nextCost, businesses = s.businesses.map { if (it.id == id) it.copy(level = it.level + 1) else it })
         _meta.value = _meta.value.copy(totalPurchases = _meta.value.totalPurchases + 1)
         scheduleSave()
     }
@@ -97,18 +128,10 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         val rank = s.upgradeRanks[id] ?: 0
         if (rank >= u.maxRank || s.gems < u.gemCost) return false
         _state.value = s.copy(gems = s.gems - u.gemCost, upgradeRanks = s.upgradeRanks + (id to rank + 1))
-        syncMetaCurrency()
-        scheduleSave()
-        return true
+        syncMetaCurrency(); scheduleSave(); return true
     }
 
-    fun grantGems(amount: Int) {
-        if (amount <= 0) return
-        val s = _state.value
-        _state.value = s.copy(gems = s.gems + amount)
-        syncMetaCurrency()
-        scheduleSave()
-    }
+    fun grantGems(amount: Int) { if (amount > 0) { _state.value = _state.value.copy(gems = _state.value.gems + amount); syncMetaCurrency(); scheduleSave() } }
 
     fun activateProfitBoost(minutes: Int = 10) {
         val s = _state.value
@@ -121,41 +144,18 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     fun prestige() {
         val s = _state.value
         val totalReward = Progression.prestigeReward(s.lifetimeCash)
-        val earned = totalReward - s.prestigePoints
-        if (earned <= 0) return
-        _state.value = GameState(
-            prestigePoints = totalReward,
-            gems = s.gems,
-            upgradeRanks = s.upgradeRanks
-        )
+        if (totalReward - s.prestigePoints <= 0) return
+        _state.value = GameState(prestigePoints = totalReward, gems = s.gems, upgradeRanks = s.upgradeRanks)
         _meta.value = _meta.value.copy(prestigeCount = _meta.value.prestigeCount + 1)
         scheduleSave()
     }
 
-    private fun syncMetaCurrency() {
-        _meta.value = _meta.value.copy(gems = _state.value.gems)
-    }
-
-    private fun scheduleSave() {
-        if (!loaded) return
-        saveJob?.cancel()
-        saveJob = viewModelScope.launch {
-            delay(350L)
-            persistNow()
-        }
-    }
-
-    private suspend fun persistNow() {
-        if (loaded) repository.save(_state.value, _meta.value)
-    }
+    private fun syncMetaCurrency() { _meta.value = _meta.value.copy(gems = _state.value.gems) }
+    private fun scheduleSave() { if (loaded) { saveJob?.cancel(); saveJob = viewModelScope.launch { delay(350L); persistNow() } } }
+    private suspend fun persistNow() { if (loaded) repository.save(_state.value, _meta.value) }
 
     override fun onCleared() {
-        if (loaded) {
-            val s = _state.value
-            val m = _meta.value
-            // Android may destroy the ViewModel after the UI disappears; use a best-effort final write.
-            viewModelScope.launch { repository.save(s, m) }
-        }
+        if (loaded) { val s = _state.value; val m = _meta.value; viewModelScope.launch { repository.save(s, m) } }
         super.onCleared()
     }
 }
