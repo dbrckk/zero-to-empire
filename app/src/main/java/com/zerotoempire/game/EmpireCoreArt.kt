@@ -9,17 +9,27 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlin.math.cos
 import kotlin.math.sin
 
 @Composable
 fun EmpireCoreGlyph(modifier: Modifier = Modifier) {
+    val vm: GameViewModel = viewModel()
+    val state by vm.state.collectAsStateWithLifecycle()
     val infinite = rememberInfiniteTransition(label = "empireCore")
     val rotation by infinite.animateFloat(
         initialValue = 0f,
         targetValue = 360f,
         animationSpec = infiniteRepeatable(tween(12_000, easing = LinearEasing)),
         label = "coreRotation"
+    )
+    val fastRotation by infinite.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(tween(4_800, easing = LinearEasing)),
+        label = "trailRotation"
     )
     val pulse by infinite.animateFloat(
         initialValue = .82f,
@@ -28,9 +38,35 @@ fun EmpireCoreGlyph(modifier: Modifier = Modifier) {
         label = "corePulse"
     )
 
+    val intensity = (1 + state.empireLevel).coerceIn(1, 8)
+
     Canvas(modifier) {
         val s = size.minDimension
         val center = Offset(size.width / 2f, size.height / 2f)
+
+        // Long orbital trails: intensity grows with the player's empire tier.
+        repeat(intensity + 3) { i ->
+            val angle = Math.toRadians((fastRotation + i * (360f / (intensity + 3))).toDouble())
+            val radius = s * (.34f + (i % 3) * .045f)
+            val head = Offset(
+                center.x + cos(angle).toFloat() * radius,
+                center.y + sin(angle).toFloat() * radius
+            )
+            repeat(5) { trail ->
+                val backAngle = angle - trail * .075
+                val alpha = (.34f - trail * .055f).coerceAtLeast(.05f)
+                drawCircle(
+                    color = if (i % 2 == 0) EmpireArtPalette.Cyan.copy(alpha = alpha) else EmpireArtPalette.Violet.copy(alpha = alpha),
+                    radius = s * (.014f - trail * .0015f).coerceAtLeast(.006f),
+                    center = Offset(
+                        center.x + cos(backAngle).toFloat() * radius,
+                        center.y + sin(backAngle).toFloat() * radius
+                    )
+                )
+            }
+            drawCircle(EmpireArtPalette.White.copy(alpha = .88f), s * .012f, head)
+        }
+
         drawCircle(
             brush = Brush.radialGradient(
                 listOf(EmpireArtPalette.White, EmpireArtPalette.GoldHot, EmpireArtPalette.Gold, Color.Transparent),
@@ -42,6 +78,7 @@ fun EmpireCoreGlyph(modifier: Modifier = Modifier) {
         )
         drawCircle(EmpireArtPalette.Ink, radius = s * .17f, center = center)
         drawCircle(EmpireArtPalette.GoldHot, radius = s * .12f, center = center, style = Stroke(s * .025f))
+
         repeat(3) { ring ->
             val radius = s * (.23f + ring * .07f)
             drawCircle(
@@ -62,6 +99,19 @@ fun EmpireCoreGlyph(modifier: Modifier = Modifier) {
                 )
             }
         }
+
+        if (state.empireLevel >= 4) {
+            repeat(6) { i ->
+                val a = Math.toRadians((rotation * -1.4f + i * 60f).toDouble())
+                drawLine(
+                    color = EmpireArtPalette.GoldHot.copy(alpha = .28f),
+                    start = Offset(center.x + cos(a).toFloat() * s * .18f, center.y + sin(a).toFloat() * s * .18f),
+                    end = Offset(center.x + cos(a).toFloat() * s * .48f, center.y + sin(a).toFloat() * s * .48f),
+                    strokeWidth = s * .008f
+                )
+            }
+        }
+
         drawLine(EmpireArtPalette.GoldHot, Offset(center.x, center.y - s*.085f), Offset(center.x, center.y + s*.085f), s*.024f)
         drawLine(EmpireArtPalette.GoldHot, Offset(center.x - s*.055f, center.y - s*.055f), Offset(center.x + s*.055f, center.y - s*.055f), s*.024f)
     }
