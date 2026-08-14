@@ -33,6 +33,9 @@ fun EmpireRoot(vm: GameViewModel = viewModel()) {
     val audio = remember { GameAudioEngine() }
     val rewarded = remember { AdMobRewardedGateway(context.applicationContext) }
     val billing = remember { PlayBillingGateway(context.applicationContext) }
+    val eraIndex = EmpireEras.current(state.lifetimeCash).index
+    var previousEra by remember { mutableIntStateOf(eraIndex) }
+    var eraTransitionVisible by remember { mutableStateOf(false) }
 
     DisposableEffect(Unit) {
         billing.connect()
@@ -45,6 +48,16 @@ fun EmpireRoot(vm: GameViewModel = viewModel()) {
     LaunchedEffect(Unit) {
         delay(900)
         billing.restore(vm::applyEntitlements)
+    }
+
+    LaunchedEffect(eraIndex) {
+        if (eraIndex > previousEra && meta.onboardingCompleted) {
+            eraTransitionVisible = true
+            audio.prestige()
+            delay(1550)
+            eraTransitionVisible = false
+        }
+        previousEra = eraIndex
     }
 
     Box(Modifier.fillMaxSize()) {
@@ -83,6 +96,12 @@ fun EmpireRoot(vm: GameViewModel = viewModel()) {
                 onDismiss = vm::dismissCelebration
             )
         }
+
+        EraTransitionOverlay(
+            eraIndex = eraIndex,
+            visible = eraTransitionVisible,
+            modifier = Modifier.fillMaxSize()
+        )
     }
 }
 
