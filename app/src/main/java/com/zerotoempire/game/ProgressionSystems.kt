@@ -36,6 +36,7 @@ data class PlayerMeta(
     val boostEndsAtMillis: Long = 0L,
     val claimedMissionIds: Set<String> = emptySet(),
     val claimedAchievementIds: Set<String> = emptySet(),
+    val claimedChallengeIds: Set<String> = emptySet(),
     val onboardingCompleted: Boolean = false,
     val highestEraSeen: Int = 0
 )
