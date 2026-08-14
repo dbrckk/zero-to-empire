@@ -28,6 +28,7 @@ fun EmpireRoot(vm: GameViewModel = viewModel()) {
     val state by vm.state.collectAsStateWithLifecycle()
     val meta by vm.meta.collectAsStateWithLifecycle()
     val celebration by vm.celebration.collectAsStateWithLifecycle()
+    val buyMode by vm.buyMode.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val activity = context as? Activity
     val audio = remember { GameAudioEngine() }
@@ -76,6 +77,8 @@ fun EmpireRoot(vm: GameViewModel = viewModel()) {
                 EraHud(state)
                 Spacer(Modifier.height(5.dp))
                 ViralShareChip(state)
+                Spacer(Modifier.height(5.dp))
+                BulkBuySelector(selected = buyMode, onSelect = vm::setBuyMode)
             }
             if (activity != null) {
                 MonetizationDock(
@@ -102,6 +105,41 @@ fun EmpireRoot(vm: GameViewModel = viewModel()) {
             visible = eraTransitionVisible,
             modifier = Modifier.fillMaxSize()
         )
+    }
+}
+
+@Composable
+private fun BulkBuySelector(selected: BuyMode, onSelect: (BuyMode) -> Unit) {
+    val modes = listOf(BuyMode.X1 to "×1", BuyMode.X10 to "×10", BuyMode.X25 to "×25", BuyMode.MAX to "MAX")
+    Surface(
+        color = EmpireColors.Void.copy(alpha = .91f),
+        shape = RoundedCornerShape(18.dp),
+        shadowElevation = 8.dp
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 7.dp, vertical = 6.dp),
+            horizontalArrangement = Arrangement.spacedBy(5.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("BUY", color = EmpireColors.TextSecondary, fontSize = 9.sp, fontWeight = FontWeight.Black)
+            modes.forEach { (mode, label) ->
+                if (mode == selected) {
+                    Button(
+                        onClick = { onSelect(mode) },
+                        contentPadding = PaddingValues(horizontal = 11.dp, vertical = 2.dp),
+                        modifier = Modifier.height(30.dp),
+                        shape = RoundedCornerShape(10.dp)
+                    ) { Text(label, fontSize = 10.sp, fontWeight = FontWeight.Black) }
+                } else {
+                    TextButton(
+                        onClick = { onSelect(mode) },
+                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 2.dp),
+                        modifier = Modifier.height(30.dp),
+                        shape = RoundedCornerShape(10.dp)
+                    ) { Text(label, fontSize = 10.sp, fontWeight = FontWeight.Bold, color = EmpireColors.TextSecondary) }
+                }
+            }
+        }
     }
 }
 
