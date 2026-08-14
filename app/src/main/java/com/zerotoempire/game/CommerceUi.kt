@@ -13,24 +13,66 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun CommerceRoot(vm: GameViewModel = viewModel()) {
     val context = LocalContext.current
     val activity = remember(context) { context.findActivity() }
+    val meta by vm.meta.collectAsStateWithLifecycle()
     val billing = remember(context) { PlayBillingGateway(context.applicationContext) }
     val rewarded = remember(context) { AdMobRewardedGateway(context.applicationContext) }
+    val consent = remember(activity) { activity?.let(::PrivacyConsentManager) }
 
     var showStore by remember { mutableStateOf(false) }
     var owned by remember { mutableStateOf<Set<StoreProduct>>(emptySet()) }
     var status by remember { mutableStateOf<String?>(null) }
+    var adsAllowed by remember { mutableStateOf(false) }
+    var privacyOptionsRequired by remember { mutableStateOf(false) }
 
-    DisposableEffect(billing) {
+    DisposableEffect(billing, activity) {
         billing.connect()
-        rewarded.preload()
-        billing.restore { restored -> owned = restored }
+        if (activity != null && consent != null) {
+            consent.gather { canRequestAds, error ->
+                adsAllowed = canRequestAds
+                privacyOptionsRequired = consent.isPrivacyOptionsRequired()
+                if (canRequestAds) rewarded.preload()
+                if (error != null && !canRequestAds) status = "Privacy setup is incomplete: $error"
+            }
+        }
+        billing.restore { restored ->
+            owned = restored
+            vm.applyEntitlements(restored)
+        }
         onDispose { billing.disconnect() }
+    }
+
+    LaunchedEffect(activity, adsAllowed) {
+        if (activity == null) return@LaunchedEffect
+        vm.rewardedRequests.collect { placement ->
+            if (!adsAllowed) {
+                status = "Ads are unavailable until privacy choices are resolved."
+                return@collect
+            }
+            if (!rewarded.isReady()) {
+                rewarded.preload()
+                status = "Reward video is loading. Try again shortly."
+                return@collect
+            }
+            rewarded.show(
+                activity = activity,
+                placement = placement,
+                onReward = {
+                    when (placement) {
+                        RewardPlacement.DOUBLE_OFFLINE_EARNINGS -> vm.rewardDoubleOffline()
+                        RewardPlacement.PROFIT_BOOST -> vm.rewardProfitBoost()
+                        RewardPlacement.DAILY_BONUS -> vm.grantGems(10)
+                        RewardPlacement.EVENT_BONUS -> vm.activateProfitBoost(5)
+                    }
+                }
+            )
+        }
     }
 
     Box(Modifier.fillMaxSize()) {
@@ -50,25 +92,27 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
                 Spacer(Modifier.height(8.dp))
 
                 FilledTonalButton(
-                    onClick = {
-                        if (!rewarded.isReady()) {
-                            rewarded.preload()
-                            status = "Reward video is loading. Try again shortly."
-                        } else {
-                            rewarded.show(
-                                activity = activity,
-                                placement = RewardPlacement.PROFIT_BOOST,
-                                onReward = {
-                                    vm.activateProfitBoost(10)
-                                    status = "Profit Overdrive activated for 10 minutes."
-                                }
-                            )
-                        }
-                    },
+                    onClick = vm::requestProfitBoostAd,
+                    enabled = adsAllowed,
                     shape = RoundedCornerShape(50),
                     contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
                 ) {
                     Text("▶ ×2 BOOST", fontSize = 10.sp, fontWeight = FontWeight.Black)
+                }
+
+                if (privacyOptionsRequired && consent != null) {
+                    Spacer(Modifier.height(6.dp))
+                    TextButton(
+                        onClick = {
+                            consent.showPrivacyOptions { error ->
+                                adsAllowed = consent.canRequestAds()
+                                privacyOptionsRequired = consent.isPrivacyOptionsRequired()
+                                if (adsAllowed) rewarded.preload()
+                                if (error != null) status = error
+                            }
+                        },
+                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
+                    ) { Text("PRIVACY", fontSize = 9.sp) }
                 }
             }
         }
@@ -84,11 +128,15 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
 
     if (showStore && activity != null) {
         StoreDialog(
-            owned = owned,
+            owned = owned + buildSet {
+                if (meta.adsRemoved) add(StoreProduct.REMOVE_ADS)
+                if (meta.starterPackOwned) add(StoreProduct.STARTER_PACK)
+            },
             onDismiss = { showStore = false },
             onRestore = {
                 billing.restore {
                     owned = it
+                    vm.applyEntitlements(it)
                     status = if (it.isEmpty()) "No permanent purchases found." else "Purchases restored."
                 }
             },
@@ -96,16 +144,8 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
                 billing.purchase(activity, product) { result ->
                     when (result) {
                         is PurchaseResult.Success -> {
-                            when (result.product) {
-                                StoreProduct.REMOVE_ADS -> owned = owned + StoreProduct.REMOVE_ADS
-                                StoreProduct.STARTER_PACK -> {
-                                    owned = owned + StoreProduct.STARTER_PACK
-                                    vm.grantGems(150)
-                                    vm.activateProfitBoost(30)
-                                }
-                                StoreProduct.GEM_PACK_SMALL -> vm.grantGems(100)
-                                StoreProduct.GEM_PACK_MEDIUM -> vm.grantGems(600)
-                            }
+                            if (!result.product.consumable) owned = owned + result.product
+                            vm.applyPurchase(result.product)
                             status = "Purchase completed."
                         }
                         PurchaseResult.Cancelled -> Unit
@@ -132,24 +172,24 @@ private fun StoreDialog(
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text(
-                    "Purchases are handled by Google Play. Prices are shown by the Play purchase sheet.",
+                    "Purchases are handled by Google Play. Prices and final confirmation are shown by Google Play.",
                     color = EmpireColors.TextSecondary,
                     fontSize = 11.sp
                 )
                 StoreRow(
                     "REMOVE ADS",
-                    "Lifetime removal of non-rewarded advertising.",
+                    "Lifetime removal of non-rewarded advertising. Reward videos remain optional.",
                     StoreProduct.REMOVE_ADS in owned,
                     { onPurchase(StoreProduct.REMOVE_ADS) }
                 )
                 StoreRow(
                     "STARTER PACK",
-                    "150 gems + 30 min ×2 income. One-time purchase.",
+                    "250 gems + 30 min ×2 income. One-time purchase.",
                     StoreProduct.STARTER_PACK in owned,
                     { onPurchase(StoreProduct.STARTER_PACK) }
                 )
-                StoreRow("100 GEMS", "Consumable gem pack.", false) { onPurchase(StoreProduct.GEM_PACK_SMALL) }
-                StoreRow("600 GEMS", "Consumable gem pack.", false) { onPurchase(StoreProduct.GEM_PACK_MEDIUM) }
+                StoreRow("120 GEMS", "Consumable gem pack.", false) { onPurchase(StoreProduct.GEM_PACK_SMALL) }
+                StoreRow("650 GEMS", "Consumable gem pack.", false) { onPurchase(StoreProduct.GEM_PACK_MEDIUM) }
                 OutlinedButton(onClick = onRestore, modifier = Modifier.fillMaxWidth()) {
                     Text("RESTORE PURCHASES")
                 }
