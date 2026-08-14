@@ -75,8 +75,8 @@ fun ManagerPortrait(businessId: Int, size: Dp = 58.dp) {
 
             val torso = Path().apply {
                 moveTo(s * .24f, s * .82f)
-                quadraticBezierTo(s * .28f, s * .58f, s * .5f, s * .57f)
-                quadraticBezierTo(s * .72f, s * .58f, s * .76f, s * .82f)
+                quadraticTo(s * .28f, s * .58f, s * .5f, s * .57f)
+                quadraticTo(s * .72f, s * .58f, s * .76f, s * .82f)
                 close()
             }
             drawPath(torso, EmpireArtPalette.Steel)
