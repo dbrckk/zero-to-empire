@@ -4,11 +4,13 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.matchParentSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
@@ -39,18 +41,19 @@ object EmpireArtPalette {
 }
 
 @Composable
-fun BusinessArtIcon(id: Int, size: Dp = 54.dp, modifier: Modifier = Modifier) {
+fun BusinessArtIcon(id: Int, iconSize: Dp = 54.dp, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
-            .size(size)
+            .size(iconSize)
             .background(
                 Brush.radialGradient(
                     listOf(EmpireColors.SurfaceHigh, EmpireColors.Surface, EmpireColors.Void)
                 ),
-                RoundedCornerShape(size * .28f)
+                RoundedCornerShape(iconSize * .28f)
             )
     ) {
         Canvas(Modifier.matchParentSize()) {
+            val s = this.size.minDimension
             val glow = when (id) {
                 0, 1 -> EmpireArtPalette.Gold
                 2, 3 -> EmpireArtPalette.Cyan
@@ -58,11 +61,11 @@ fun BusinessArtIcon(id: Int, size: Dp = 54.dp, modifier: Modifier = Modifier) {
                 6, 7 -> EmpireArtPalette.Red
                 else -> EmpireArtPalette.Magenta
             }
-            drawCircle(glow.copy(alpha = .16f), radius = size.minDimension * .46f)
+            drawCircle(glow.copy(alpha = .16f), radius = s * .46f)
             drawCircle(
                 color = glow.copy(alpha = .42f),
-                radius = size.minDimension * .38f,
-                style = Stroke(width = size.minDimension * .025f)
+                radius = s * .38f,
+                style = Stroke(width = s * .025f)
             )
             when (id) {
                 0 -> drawStreetStand(glow)
@@ -199,7 +202,7 @@ private fun DrawScope.drawDyson(c: Color) {
 
 private fun DrawScope.drawGalaxy(c: Color) {
     val s=size.minDimension
-    drawCircle(EmpireArtPalette.White,s*.045f,Offset(s*.5f,s*.5f));
+    drawCircle(EmpireArtPalette.White,s*.045f,Offset(s*.5f,s*.5f))
     repeat(3){ring->drawArc(c.copy(alpha=.9f-ring*.2f),25f+ring*42f,205f,false,Rect(s*(.18f+ring*.06f),s*(.27f+ring*.06f),s*(.82f-ring*.06f),s*(.73f-ring*.06f)),style=Stroke(s*(.045f-ring*.008f)))}
     repeat(8){i->val a=i*.83f;drawCircle(if(i%2==0)EmpireArtPalette.Cyan else EmpireArtPalette.Magenta,s*.018f,Offset(s*.5f+cos(a)*s*(.23f+i*.012f),s*.5f+sin(a)*s*(.16f+i*.009f)))}
 }
