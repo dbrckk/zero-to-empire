@@ -1,8 +1,5 @@
 package com.zerotoempire.game
 
-import android.media.AudioManager
-import android.media.ToneGenerator
-
 data class EmpireEra(
     val index: Int,
     val name: String,
@@ -60,14 +57,12 @@ object Celebrations {
     )
 }
 
-/** Lightweight fallback audio retained for compatibility. */
+/** Compatibility facade backed exclusively by the premium SoundPool engine. */
 class GameAudioEngine {
-    private val tone = ToneGenerator(AudioManager.STREAM_MUSIC, 36)
-
-    fun tap() = tone.startTone(ToneGenerator.TONE_PROP_BEEP, 28)
-    fun purchase() = tone.startTone(ToneGenerator.TONE_PROP_ACK, 45)
-    fun reward() = tone.startTone(ToneGenerator.TONE_PROP_PROMPT, 90)
-    fun milestone() = tone.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 170)
-    fun prestige() = tone.startTone(ToneGenerator.TONE_CDMA_ABBR_ALERT, 260)
-    fun release() = tone.release()
+    fun tap() = GameSfxBus.play(PremiumSfxCue.TAP)
+    fun purchase() = GameSfxBus.play(PremiumSfxCue.PURCHASE)
+    fun reward() = GameSfxBus.play(PremiumSfxCue.REWARD)
+    fun milestone() = GameSfxBus.play(PremiumSfxCue.MILESTONE)
+    fun prestige() = GameSfxBus.play(PremiumSfxCue.PRESTIGE)
+    fun release() = Unit
 }
