@@ -44,6 +44,7 @@ fun BulkQuoteDock(vm: GameViewModel, modifier: Modifier = Modifier) {
                 BuyMode.X1 -> "×1"
                 BuyMode.X10 -> "×10"
                 BuyMode.X25 -> "×25"
+                BuyMode.MILESTONE -> "MILESTONE"
                 BuyMode.MAX -> "MAX"
             }
             Text("BULK PURCHASE • $label", color = EmpireColors.Gold, fontWeight = FontWeight.Black, fontSize = 10.sp)
