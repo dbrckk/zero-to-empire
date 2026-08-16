@@ -47,6 +47,12 @@ fun GrowthRuntimeRoot(vm: GameViewModel = viewModel()) {
     Box {
         CommerceRoot(vm)
         if (meta.onboardingCompleted) {
+            AscensionAdvisor(
+                state = state,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(start = 10.dp, end = 10.dp, bottom = 232.dp)
+            )
             BulkQuoteDock(
                 vm = vm,
                 modifier = Modifier
