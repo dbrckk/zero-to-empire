@@ -30,6 +30,8 @@ data class GameState(
     val incomeUpgradeRank: Int get() = upgradeRanks["income"] ?: 0
     val tapUpgradeRank: Int get() = upgradeRanks["tap"] ?: 0
     val prestigeMultiplier: Double get() = 1.0 + prestigePoints * (0.12 * (1.0 + prestigeUpgradeRank * .08))
+    val legacyMasteryMultiplier: Double get() = LateGame.legacyMasteryMultiplier(prestigePoints)
+    val portfolioDepthMultiplier: Double get() = LateGame.portfolioDepthMultiplier(businesses)
     val globalUpgradeMultiplier: Double get() = 1.0 + incomeUpgradeRank * .10
     val boostMultiplier: Double get() = if (System.currentTimeMillis() < boostEndsAtMillis) 2.0 else 1.0
     val eventMultiplier: Double get() = LiveOps.currentEvent(LocalDate.now())?.incomeMultiplier ?: 1.0
@@ -39,8 +41,8 @@ data class GameState(
         return b.rawIncomePerSecond * (manager?.incomeMultiplier ?: 1.0)
     }
 
-    val incomePerSecond: Double get() = businesses.sumOf(::businessIncome) * prestigeMultiplier * globalUpgradeMultiplier * boostMultiplier * eventMultiplier
-    val tapValue: Double get() = (1.0 + incomePerSecond * .05) * prestigeMultiplier * (1.0 + tapUpgradeRank * .25)
+    val incomePerSecond: Double get() = businesses.sumOf(::businessIncome) * prestigeMultiplier * legacyMasteryMultiplier * portfolioDepthMultiplier * globalUpgradeMultiplier * boostMultiplier * eventMultiplier
+    val tapValue: Double get() = (1.0 + incomePerSecond * .05) * prestigeMultiplier * legacyMasteryMultiplier * (1.0 + tapUpgradeRank * .25)
     val empireLevel: Int get() = when {
         lifetimeCash >= 1e18 -> 7
         lifetimeCash >= 1e15 -> 6
