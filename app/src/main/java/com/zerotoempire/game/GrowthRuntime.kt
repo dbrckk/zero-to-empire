@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.matchParentSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,6 +25,7 @@ fun GrowthRuntimeRoot(vm: GameViewModel = viewModel()) {
     val meta = vm.meta.collectAsStateWithLifecycle().value
     val celebration = vm.celebration.collectAsStateWithLifecycle().value
     val adsAllowed = PrivacyConsentManager.adsAllowed.collectAsStateWithLifecycle().value
+    val eraIndex = EmpireEras.current(state.lifetimeCash).index
 
     LaunchedEffect(Unit) { telemetry.track(GrowthEvent.SessionStarted) }
     LaunchedEffect(meta.onboardingCompleted) {
@@ -46,12 +48,13 @@ fun GrowthRuntimeRoot(vm: GameViewModel = viewModel()) {
 
     Box {
         CommerceRoot(vm)
+        EndgameAtmosphere(eraIndex = eraIndex, modifier = Modifier.matchParentSize())
         if (meta.onboardingCompleted) {
-            AscensionAdvisor(
+            AscensionAdvisorCard(
                 state = state,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(start = 10.dp, end = 10.dp, bottom = 232.dp)
+                    .padding(start = 10.dp, end = 10.dp, bottom = 220.dp)
             )
             BulkQuoteDock(
                 vm = vm,
