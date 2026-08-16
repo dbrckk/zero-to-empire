@@ -19,11 +19,22 @@ object EmpireEras {
         EmpireEra(3, "MEGACITY", "Your economy shapes entire cities.", "▦", 1_000_000_000.0),
         EmpireEra(4, "PLANETARY", "Earth is no longer the limit.", "◉", 1_000_000_000_000.0),
         EmpireEra(5, "STELLAR", "Harness stars as infrastructure.", "✦", 1_000_000_000_000_000.0),
-        EmpireEra(6, "GALACTIC", "Markets now span the galaxy.", "✧", 1_000_000_000_000_000_000.0)
+        EmpireEra(6, "GALACTIC", "Markets now span the galaxy.", "✧", 1_000_000_000_000_000_000.0),
+        EmpireEra(7, "INTERGALACTIC", "Trade routes bridge entire galaxy clusters.", "◇", 1e21),
+        EmpireEra(8, "COSMIC", "Civilizations become nodes in your economy.", "◎", 1e24),
+        EmpireEra(9, "REALITY ENGINE", "Matter, energy and information become one market.", "⬡", 1e27),
+        EmpireEra(10, "TRANSCENDENT", "Your empire operates beyond conventional scale.", "✺", 1e30)
     )
 
-    fun current(lifetimeCash: Double): EmpireEra = catalog.last { lifetimeCash >= it.requiredLifetimeCash }
-    fun next(lifetimeCash: Double): EmpireEra? = catalog.firstOrNull { lifetimeCash < it.requiredLifetimeCash }
+    fun current(lifetimeCash: Double): EmpireEra {
+        val safe = if (lifetimeCash.isFinite()) lifetimeCash.coerceAtLeast(0.0) else Double.MAX_VALUE
+        return catalog.last { safe >= it.requiredLifetimeCash }
+    }
+
+    fun next(lifetimeCash: Double): EmpireEra? {
+        val safe = if (lifetimeCash.isFinite()) lifetimeCash.coerceAtLeast(0.0) else Double.MAX_VALUE
+        return catalog.firstOrNull { safe < it.requiredLifetimeCash }
+    }
 }
 
 data class MajorCelebration(
@@ -49,7 +60,7 @@ object Celebrations {
     )
 }
 
-/** Lightweight procedural audio; no copyrighted assets and no bundled audio files required. */
+/** Lightweight fallback audio retained for compatibility. */
 class GameAudioEngine {
     private val tone = ToneGenerator(AudioManager.STREAM_MUSIC, 36)
 
