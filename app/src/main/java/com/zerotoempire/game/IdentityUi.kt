@@ -110,7 +110,13 @@ fun EmpireRoot(vm: GameViewModel = viewModel()) {
 
 @Composable
 private fun BulkBuySelector(selected: BuyMode, onSelect: (BuyMode) -> Unit) {
-    val modes = listOf(BuyMode.X1 to "×1", BuyMode.X10 to "×10", BuyMode.X25 to "×25", BuyMode.MAX to "MAX")
+    val modes = listOf(
+        BuyMode.X1 to "×1",
+        BuyMode.X10 to "×10",
+        BuyMode.X25 to "×25",
+        BuyMode.MILESTONE to "NEXT",
+        BuyMode.MAX to "MAX"
+    )
     Surface(
         color = EmpireColors.Void.copy(alpha = .91f),
         shape = RoundedCornerShape(18.dp),
@@ -126,17 +132,17 @@ private fun BulkBuySelector(selected: BuyMode, onSelect: (BuyMode) -> Unit) {
                 if (mode == selected) {
                     Button(
                         onClick = { onSelect(mode) },
-                        contentPadding = PaddingValues(horizontal = 11.dp, vertical = 2.dp),
-                        modifier = Modifier.height(30.dp),
-                        shape = RoundedCornerShape(10.dp)
-                    ) { Text(label, fontSize = 10.sp, fontWeight = FontWeight.Black) }
-                } else {
-                    TextButton(
-                        onClick = { onSelect(mode) },
                         contentPadding = PaddingValues(horizontal = 10.dp, vertical = 2.dp),
                         modifier = Modifier.height(30.dp),
                         shape = RoundedCornerShape(10.dp)
-                    ) { Text(label, fontSize = 10.sp, fontWeight = FontWeight.Bold, color = EmpireColors.TextSecondary) }
+                    ) { Text(label, fontSize = 9.sp, fontWeight = FontWeight.Black) }
+                } else {
+                    TextButton(
+                        onClick = { onSelect(mode) },
+                        contentPadding = PaddingValues(horizontal = 9.dp, vertical = 2.dp),
+                        modifier = Modifier.height(30.dp),
+                        shape = RoundedCornerShape(10.dp)
+                    ) { Text(label, fontSize = 9.sp, fontWeight = FontWeight.Bold, color = EmpireColors.TextSecondary) }
                 }
             }
         }
