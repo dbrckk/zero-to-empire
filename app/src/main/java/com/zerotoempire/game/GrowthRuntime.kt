@@ -28,6 +28,7 @@ fun GrowthRuntimeRoot(vm: GameViewModel = viewModel()) {
     val eraIndex = EmpireEras.current(state.lifetimeCash).index
 
     LaunchedEffect(Unit) { telemetry.track(GrowthEvent.SessionStarted) }
+    LaunchedEffect(eraIndex) { GameMusicBus.setEmpireLevel(eraIndex) }
     LaunchedEffect(meta.onboardingCompleted) {
         if (meta.onboardingCompleted) telemetry.track(GrowthEvent.OnboardingCompleted)
     }
