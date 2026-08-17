@@ -71,8 +71,11 @@ fun BusinessArtIcon(id: Int, iconSize: Dp, modifier: Modifier = Modifier) {
                 }
             }
 
-            if (id >= 10) EndgameBusinessSprite(id = id, level = level, iconSize = iconSize)
-            else PremiumBusinessSprite(id = id, level = level, iconSize = iconSize)
+            when {
+                id in 0..3 -> BusinessGroup01Sprite(id = id, level = level, iconSize = iconSize)
+                id >= 10 -> EndgameBusinessSprite(id = id, level = level, iconSize = iconSize)
+                else -> PremiumBusinessSprite(id = id, level = level, iconSize = iconSize)
+            }
 
             if (buyMode != BuyMode.X1) {
                 Text(
