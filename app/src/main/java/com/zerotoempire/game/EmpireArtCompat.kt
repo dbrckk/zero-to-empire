@@ -38,21 +38,79 @@ fun BusinessArtIcon(id: Int, iconSize: Dp, modifier: Modifier = Modifier) {
     val affordable = quote.valid && quote.totalCost <= state.cash
     val burst = remember(id) { Animatable(0f) }
     val previousLevel = remember(id) { intArrayOf(level) }
-    LaunchedEffect(level) { val delta=level-previousLevel[0]; previousLevel[0]=level; if(delta>0){burst.snapTo(min(1f,.28f+delta/25f));burst.animateTo(0f,tween(650))} }
-    Column(modifier=modifier,horizontalAlignment=Alignment.CenterHorizontally){
-        Box(contentAlignment=Alignment.Center){
-            if(burst.value>0f) Canvas(Modifier.size(iconSize+26.dp)){val center=Offset(size.width/2f,size.height/2f);val rays=8+(burst.value*16).toInt();val radius=size.minDimension*(.32f+.18f*(1f-burst.value));repeat(rays){i->val a=2.0*PI*i/rays;val start=Offset(center.x+cos(a).toFloat()*radius*.48f,center.y+sin(a).toFloat()*radius*.48f);val end=Offset(center.x+cos(a).toFloat()*radius,center.y+sin(a).toFloat()*radius);drawLine(if(i%2==0)EmpireColors.GoldBright else EmpireColors.Cyan,start,end,1.5f+burst.value*3f,alpha=burst.value)}}
-            when {
-                id in 0..3 -> { BusinessGroup01Sprite(id,level,iconSize); BusinessGroup01Evolution(id,level,iconSize) }
-                id in 4..7 -> { BusinessGroup02Sprite(id,level,iconSize); BusinessGroup02Evolution(id,level,iconSize) }
-                id in 8..11 -> BusinessGroup03Sprite(id,level,iconSize)
-                id in 12..13 -> BusinessGroup04Sprite(id,level,iconSize)
-                else -> PremiumBusinessSprite(id,level,iconSize)
-            }
-            if(buyMode!=BuyMode.X1) Text(if(quote.count>0)"×${quote.count}" else "—",if(affordable)EmpireColors.GoldBright else EmpireColors.TextSecondary, fontSize=8.sp,fontWeight=FontWeight.Black,modifier=Modifier.align(Alignment.TopEnd).offset(x=8.dp,y=(-4).dp))
+
+    LaunchedEffect(level) {
+        val delta = level - previousLevel[0]
+        previousLevel[0] = level
+        if (delta > 0) {
+            burst.snapTo(min(1f, .28f + delta / 25f))
+            burst.animateTo(0f, tween(650))
         }
-        if(buyMode!=BuyMode.X1) Text(if(quote.count>0)compactMoney(quote.totalCost) else "LOCKED",if(affordable)EmpireColors.Success else EmpireColors.TextSecondary,fontSize=7.sp,fontWeight=FontWeight.Bold,maxLines=1)
+    }
+
+    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+        Box(contentAlignment = Alignment.Center) {
+            if (burst.value > 0f) {
+                Canvas(Modifier.size(iconSize + 26.dp)) {
+                    val center = Offset(size.width / 2f, size.height / 2f)
+                    val rays = 8 + (burst.value * 16).toInt()
+                    val radius = size.minDimension * (.32f + .18f * (1f - burst.value))
+                    repeat(rays) { i ->
+                        val a = 2.0 * PI * i / rays
+                        val start = Offset(center.x + cos(a).toFloat() * radius * .48f, center.y + sin(a).toFloat() * radius * .48f)
+                        val end = Offset(center.x + cos(a).toFloat() * radius, center.y + sin(a).toFloat() * radius)
+                        drawLine(
+                            color = if (i % 2 == 0) EmpireColors.GoldBright else EmpireColors.Cyan,
+                            start = start,
+                            end = end,
+                            strokeWidth = 1.5f + burst.value * 3f,
+                            alpha = burst.value
+                        )
+                    }
+                }
+            }
+
+            when {
+                id in 0..3 -> {
+                    BusinessGroup01Sprite(id, level, iconSize)
+                    BusinessGroup01Evolution(id, level, iconSize)
+                }
+                id in 4..7 -> {
+                    BusinessGroup02Sprite(id, level, iconSize)
+                    BusinessGroup02Evolution(id, level, iconSize)
+                }
+                id in 8..11 -> BusinessGroup03Sprite(id, level, iconSize)
+                id in 12..13 -> BusinessGroup04Sprite(id, level, iconSize)
+                else -> PremiumBusinessSprite(id, level, iconSize)
+            }
+
+            if (buyMode != BuyMode.X1) {
+                Text(
+                    text = if (quote.count > 0) "×${quote.count}" else "—",
+                    color = if (affordable) EmpireColors.GoldBright else EmpireColors.TextSecondary,
+                    fontSize = 8.sp,
+                    fontWeight = FontWeight.Black,
+                    modifier = Modifier.align(Alignment.TopEnd).offset(x = 8.dp, y = (-4).dp)
+                )
+            }
+        }
+
+        if (buyMode != BuyMode.X1) {
+            Text(
+                text = if (quote.count > 0) compactMoney(quote.totalCost) else "LOCKED",
+                color = if (affordable) EmpireColors.Success else EmpireColors.TextSecondary,
+                fontSize = 7.sp,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1
+            )
+        }
     }
 }
 
-private fun compactMoney(value:Double):String{if(!value.isFinite())return "∞";val units=listOf(1e30 to "No",1e27 to "Oc",1e24 to "Sp",1e21 to "Sx",1e18 to "Qi",1e15 to "Q",1e12 to "T",1e9 to "B",1e6 to "M",1e3 to "K");val unit=units.firstOrNull{value>=it.first};return if(unit==null)"$${String.format(Locale.US,"%.0f",value)}" else "$${String.format(Locale.US,"%.1f",value/unit.first)}${unit.second}"}
+private fun compactMoney(value: Double): String {
+    if (!value.isFinite()) return "∞"
+    val units = listOf(1e30 to "No", 1e27 to "Oc", 1e24 to "Sp", 1e21 to "Sx", 1e18 to "Qi", 1e15 to "Q", 1e12 to "T", 1e9 to "B", 1e6 to "M", 1e3 to "K")
+    val unit = units.firstOrNull { value >= it.first }
+    return if (unit == null) "$${String.format(Locale.US, "%.0f", value)}"
+    else "$${String.format(Locale.US, "%.1f", value / unit.first)}${unit.second}"
+}
