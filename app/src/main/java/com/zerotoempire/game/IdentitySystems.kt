@@ -38,7 +38,8 @@ data class MajorCelebration(
     val title: String,
     val subtitle: String,
     val icon: String,
-    val accent: String
+    val accent: String,
+    val businessId: Int? = null
 )
 
 object Celebrations {
@@ -46,7 +47,8 @@ object Celebrations {
         title = "POWER SPIKE ×${GameEconomy.milestoneMultiplier(business.level).toInt()}",
         subtitle = "${business.name} reached level ${business.level}",
         icon = business.emoji,
-        accent = "MILESTONE"
+        accent = "MILESTONE",
+        businessId = business.id
     )
 
     fun era(era: EmpireEra): MajorCelebration = MajorCelebration(
