@@ -58,14 +58,8 @@ fun BusinessArtIcon(id: Int, iconSize: Dp, modifier: Modifier = Modifier) {
                     val radius = size.minDimension * (.32f + .18f * (1f - burst.value))
                     repeat(rays) { i ->
                         val a = 2.0 * PI * i / rays
-                        val start = Offset(
-                            center.x + cos(a).toFloat() * radius * .48f,
-                            center.y + sin(a).toFloat() * radius * .48f
-                        )
-                        val end = Offset(
-                            center.x + cos(a).toFloat() * radius,
-                            center.y + sin(a).toFloat() * radius
-                        )
+                        val start = Offset(center.x + cos(a).toFloat() * radius * .48f, center.y + sin(a).toFloat() * radius * .48f)
+                        val end = Offset(center.x + cos(a).toFloat() * radius, center.y + sin(a).toFloat() * radius)
                         drawLine(
                             color = if (i % 2 == 0) EmpireColors.GoldBright else EmpireColors.Cyan,
                             start = start,
@@ -77,7 +71,8 @@ fun BusinessArtIcon(id: Int, iconSize: Dp, modifier: Modifier = Modifier) {
                 }
             }
 
-            PremiumBusinessSprite(id = id, level = level, iconSize = iconSize)
+            if (id >= 10) EndgameBusinessSprite(id = id, level = level, iconSize = iconSize)
+            else PremiumBusinessSprite(id = id, level = level, iconSize = iconSize)
 
             if (buyMode != BuyMode.X1) {
                 Text(
@@ -104,7 +99,7 @@ fun BusinessArtIcon(id: Int, iconSize: Dp, modifier: Modifier = Modifier) {
 
 private fun compactMoney(value: Double): String {
     if (!value.isFinite()) return "∞"
-    val units = listOf(1e18 to "Qi", 1e15 to "Q", 1e12 to "T", 1e9 to "B", 1e6 to "M", 1e3 to "K")
+    val units = listOf(1e30 to "No", 1e27 to "Oc", 1e24 to "Sp", 1e21 to "Sx", 1e18 to "Qi", 1e15 to "Q", 1e12 to "T", 1e9 to "B", 1e6 to "M", 1e3 to "K")
     val unit = units.firstOrNull { value >= it.first }
     return if (unit == null) "$${String.format(Locale.US, "%.0f", value)}"
     else "$${String.format(Locale.US, "%.1f", value / unit.first)}${unit.second}"
