@@ -57,5 +57,9 @@ fun defaultBusinesses() = listOf(
     Business(6, "Moon Colony", "🌕", 800_000_000.0, 18_000_000.0),
     Business(7, "Mars Empire", "🔴", 75_000_000_000.0, 1_200_000_000.0),
     Business(8, "Dyson Network", "☀️", 12_000_000_000_000.0, 160_000_000_000.0),
-    Business(9, "Galactic Exchange", "🌌", 4_000_000_000_000_000.0, 35_000_000_000_000.0)
+    Business(9, "Galactic Exchange", "🌌", 4.0e15, 3.5e13),
+    Business(10, "Intergalactic Gateway", "◎", 2.0e18, 1.8e16),
+    Business(11, "Cosmic Foundry", "◇", 8.0e21, 8.5e19),
+    Business(12, "Reality Engine", "✦", 3.0e25, 4.2e23),
+    Business(13, "Transcendent Nexus", "✧", 1.2e29, 2.4e27)
 )
