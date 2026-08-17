@@ -35,7 +35,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.Locale
-import kotlin.math.abs
 
 enum class GameTab { EMPIRE, MANAGERS, UPGRADES, GOALS }
 
@@ -46,6 +45,8 @@ fun ZeroToEmpireApp(vm: GameViewModel = viewModel()) {
     val offlineReward by vm.offlineReward.collectAsStateWithLifecycle()
     var tab by remember { mutableStateOf(GameTab.EMPIRE) }
     val eraIndex = EmpireEras.current(state.lifetimeCash).index
+    val visibleBusinesses = remember(state.businesses, state.lifetimeCash) { ContentUnlocks.visibleBusinesses(state) }
+    val visibleManagers = remember(state.hiredManagerIds, state.lifetimeCash) { ContentUnlocks.visibleManagers(state) }
 
     MaterialTheme(colorScheme = EmpireColorScheme) {
         offlineReward?.let { OfflineRewardDialog(it, vm::dismissOfflineReward, vm::requestDoubleOfflineAd) }
@@ -65,12 +66,14 @@ fun ZeroToEmpireApp(vm: GameViewModel = viewModel()) {
                             item { EraVistaCard(state) }
                             item { JuicyPowerTap(state, vm::tap) }
                             item { Section("YOUR EMPIRE", "${state.businesses.sumOf { it.level }} total assets") }
-                            items(state.businesses, key = { it.id }) { b -> JuicyBusinessCard(b, state) { vm.buy(b.id) } }
+                            items(visibleBusinesses, key = { it.id }) { b -> JuicyBusinessCard(b, state) { vm.buy(b.id) } }
+                            ContentUnlocks.nextHiddenBusiness(state)?.let { next -> item { NextAssetUnlockCard(state, next) } }
                             item { PrestigeCard(state, vm::prestige) }
                         }
                         GameTab.MANAGERS -> {
-                            item { Section("MANAGERS", "Automate and multiply every asset") }
-                            items(Managers.catalog) { m -> ManagerCard(m, state) { vm.hireManager(m.businessId) } }
+                            item { Section("MANAGERS", "Automate and multiply every revealed asset") }
+                            items(visibleManagers, key = { it.businessId }) { m -> ManagerCard(m, state) { vm.hireManager(m.businessId) } }
+                            ContentUnlocks.nextHiddenBusiness(state)?.let { next -> item { NextManagerUnlockCard(state, next) } }
                         }
                         GameTab.UPGRADES -> {
                             item { Section("PERMANENT LAB", "Spend gems on permanent power") }
@@ -198,6 +201,43 @@ private fun JuicyBusinessCard(b: Business, s: GameState, buy: () -> Unit) {
     }
 }
 
+@Composable
+private fun NextAssetUnlockCard(state: GameState, next: Business) {
+    val threshold = ContentUnlocks.thresholdForBusiness(next.id)
+    val progress = ContentUnlocks.progressToNextUnlock(state)
+    Surface(color = EmpireColors.Surface.copy(alpha = .72f), shape = RoundedCornerShape(18.dp), modifier = Modifier.fillMaxWidth()) {
+        Column(Modifier.padding(14.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Surface(shape = RoundedCornerShape(14.dp), color = EmpireColors.Void, modifier = Modifier.size(50.dp)) {
+                    Box(contentAlignment = Alignment.Center) { Text("?", color = EmpireColors.Violet, fontSize = 25.sp, fontWeight = FontWeight.Black) }
+                }
+                Spacer(Modifier.width(11.dp))
+                Column(Modifier.weight(1f)) {
+                    Text("CLASSIFIED ASSET", color = EmpireColors.TextPrimary, fontWeight = FontWeight.Black)
+                    Text("Next economic class reveals at ${money(threshold)} lifetime capital", color = EmpireColors.TextSecondary, fontSize = 10.sp)
+                }
+            }
+            Spacer(Modifier.height(9.dp))
+            LinearProgressIndicator(progress = { progress }, modifier = Modifier.fillMaxWidth().height(4.dp), color = EmpireColors.Violet, trackColor = EmpireColors.SurfaceHigh)
+        }
+    }
+}
+
+@Composable
+private fun NextManagerUnlockCard(state: GameState, next: Business) {
+    val threshold = ContentUnlocks.thresholdForBusiness(next.id)
+    Surface(color = EmpireColors.Violet.copy(alpha = .08f), shape = RoundedCornerShape(16.dp), modifier = Modifier.fillMaxWidth()) {
+        Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
+            Text("◇", color = EmpireColors.Violet, fontSize = 26.sp)
+            Spacer(Modifier.width(10.dp))
+            Column {
+                Text("NEXT EXECUTIVE CLASSIFIED", color = EmpireColors.TextPrimary, fontWeight = FontWeight.Black, fontSize = 12.sp)
+                Text("Reveals with the next asset at ${money(threshold)} lifetime capital", color = EmpireColors.TextSecondary, fontSize = 10.sp)
+            }
+        }
+    }
+}
+
 @Composable private fun DailyRewardCard(meta: PlayerMeta, claimable: Boolean, claim: () -> RewardDay?) { val h=LocalHapticFeedback.current; val next=LoginCalendar.rewardFor(meta.streakDays+1); Surface(color=EmpireColors.Gold.copy(alpha=.13f),shape=RoundedCornerShape(20.dp),modifier=Modifier.fillMaxWidth()){Column(Modifier.padding(18.dp)){Text("DAILY CAPITAL DROP",color=EmpireColors.Gold,fontWeight=FontWeight.Black,fontSize=18.sp);Text("STREAK ${meta.streakDays} DAYS",color=EmpireColors.TextSecondary,fontSize=11.sp);Spacer(Modifier.height(8.dp));Text("Next reward: ◆ ${next.gems}${if(next.multiplierMinutes>0) " + ×2 for ${next.multiplierMinutes}m" else ""}",color=EmpireColors.TextPrimary,fontWeight=FontWeight.Bold);Spacer(Modifier.height(10.dp));Button(onClick={if(claim()!=null)h.performHapticFeedback(HapticFeedbackType.LongPress)},enabled=claimable,modifier=Modifier.fillMaxWidth()){Text(if(claimable)"CLAIM DAILY REWARD" else "CLAIMED TODAY",fontWeight=FontWeight.Black)}}} }
 @Composable private fun MissionCard(m: Mission, claim:()->Unit){val h=LocalHapticFeedback.current;Surface(color=EmpireColors.Surface,shape=RoundedCornerShape(16.dp),modifier=Modifier.fillMaxWidth()){Column(Modifier.padding(14.dp)){Row(verticalAlignment=Alignment.CenterVertically){Column(Modifier.weight(1f)){Text(m.title,color=EmpireColors.TextPrimary,fontWeight=FontWeight.Bold);Text("◆ ${m.rewardGems} reward",color=EmpireColors.Violet,fontSize=11.sp)};Button(onClick={claim();h.performHapticFeedback(HapticFeedbackType.LongPress)},enabled=m.completed&&!m.claimed){Text(if(m.claimed)"DONE" else if(m.completed)"CLAIM" else "${(m.fraction*100).toInt()}%",fontSize=10.sp)}};Spacer(Modifier.height(7.dp));LinearProgressIndicator(progress={m.fraction},modifier=Modifier.fillMaxWidth().height(4.dp),color=EmpireColors.Cyan,trackColor=EmpireColors.SurfaceHigh)}}}
 @Composable private fun AchievementCard(a: Achievement, claim:()->Unit){val h=LocalHapticFeedback.current;Surface(color=EmpireColors.Surface,shape=RoundedCornerShape(16.dp),modifier=Modifier.fillMaxWidth()){Row(Modifier.padding(14.dp),verticalAlignment=Alignment.CenterVertically){Text(if(a.unlocked)"★" else "☆",color=if(a.unlocked)EmpireColors.Gold else EmpireColors.TextSecondary,fontSize=28.sp);Spacer(Modifier.width(10.dp));Column(Modifier.weight(1f)){Text(a.title,color=EmpireColors.TextPrimary,fontWeight=FontWeight.Black);Text(a.description,color=EmpireColors.TextSecondary,fontSize=11.sp)};Button(onClick={claim();h.performHapticFeedback(HapticFeedbackType.LongPress)},enabled=a.unlocked&&!a.claimed){Text(if(a.claimed)"DONE" else "◆ ${a.rewardGems}",fontSize=10.sp)}}}}
@@ -246,4 +286,4 @@ private fun OfflineRewardDialog(reward: OfflineReward, dismiss: () -> Unit, doub
 @Composable private fun UpgradeCard(u:Upgrade,s:GameState,buy:()->Unit){val h=LocalHapticFeedback.current;val rank=s.upgradeRanks[u.id]?:0;val maxed=rank>=u.maxRank;Surface(color=EmpireColors.Surface,shape=RoundedCornerShape(18.dp),modifier=Modifier.fillMaxWidth()){Row(Modifier.padding(15.dp),verticalAlignment=Alignment.CenterVertically){Column(Modifier.weight(1f)){Text(u.name,color=EmpireColors.TextPrimary,fontWeight=FontWeight.Black);Text(u.description,color=EmpireColors.TextSecondary,fontSize=11.sp);Text("RANK $rank / ${u.maxRank}",color=EmpireColors.Cyan,fontSize=10.sp)};Button(onClick={buy();h.performHapticFeedback(HapticFeedbackType.LongPress)},enabled=!maxed&&s.gems>=u.gemCost){Text(if(maxed)"MAX" else "◆ ${u.gemCost}")}}}}
 @Composable private fun BoostCard(s:GameState,boost:()->Unit){val h=LocalHapticFeedback.current;val active=System.currentTimeMillis()<s.boostEndsAtMillis;Surface(color=EmpireColors.Gold.copy(alpha=.12f),shape=RoundedCornerShape(18.dp),modifier=Modifier.fillMaxWidth()){Column(Modifier.padding(16.dp)){Text("PROFIT OVERDRIVE",color=EmpireColors.Gold,fontWeight=FontWeight.Black);Text("Double all income for 10 minutes.",color=EmpireColors.TextSecondary,fontSize=11.sp);Spacer(Modifier.height(8.dp));Button(onClick={boost();h.performHapticFeedback(HapticFeedbackType.LongPress)},enabled=!active){Text(if(active)"BOOST ACTIVE ×2" else "ACTIVATE ×2 BOOST")}}}}
 @Composable private fun PrestigeCard(s:GameState,prestige:()->Unit){val h=LocalHapticFeedback.current;val reward=(Progression.prestigeReward(s.lifetimeCash)-s.prestigePoints).coerceAtLeast(0);Surface(color=EmpireColors.SurfaceHigh,shape=RoundedCornerShape(22.dp),modifier=Modifier.fillMaxWidth()){Column(Modifier.padding(19.dp),horizontalAlignment=Alignment.CenterHorizontally){Text("ASCENSION",color=EmpireColors.Violet,fontWeight=FontWeight.Black,fontSize=20.sp);Text("Reset this empire for permanent legacy power.",color=EmpireColors.TextSecondary,textAlign=TextAlign.Center,fontSize=11.sp);Text("+$reward LEGACY",color=EmpireColors.Gold,fontWeight=FontWeight.Black,fontSize=17.sp);Button(onClick={prestige();h.performHapticFeedback(HapticFeedbackType.LongPress)},enabled=reward>0,modifier=Modifier.fillMaxWidth()){Text("TRANSCEND")}}}}
-private fun money(value:Double):String{val v=abs(value);val units=listOf(1e18 to "Qi",1e15 to "Q",1e12 to "T",1e9 to "B",1e6 to "M",1e3 to "K");val u=units.firstOrNull{v>=it.first};return if(u!=null)"$${String.format(Locale.US,"%.2f",value/u.first)}${u.second}" else "$${String.format(Locale.US,"%.0f",value)}" }
+private fun money(value:Double):String = EmpireNumberFormat.money(value)
