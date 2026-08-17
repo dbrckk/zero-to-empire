@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 fun ManagerPortrait(businessId: Int, size: Dp = 58.dp) {
     when {
         businessId in 0..3 -> ManagerGroup01Portrait(businessId = businessId, portraitSize = size)
+        businessId in 4..7 -> ManagerGroup02Portrait(businessId = businessId, portraitSize = size)
         businessId >= 10 -> EndgameManagerPortrait(businessId = businessId, portraitSize = size)
         else -> LegacyManagerPortrait(businessId = businessId, portraitSize = size)
     }
@@ -26,8 +27,8 @@ fun ManagerPortrait(businessId: Int, size: Dp = 58.dp) {
 
 @Composable
 private fun LegacyManagerPortrait(businessId: Int, portraitSize: Dp) {
-    // Temporary compatibility path for groups 2–3 until their dedicated AAA passes land.
-    ManagerGroup01Portrait(businessId = businessId.coerceIn(0,3), portraitSize = portraitSize)
+    // Compatibility path only for ids 8–9 until the megastructure portrait pass lands.
+    ManagerGroup02Portrait(businessId = if (businessId == 8) 6 else 7, portraitSize = portraitSize)
 }
 
 @Composable
