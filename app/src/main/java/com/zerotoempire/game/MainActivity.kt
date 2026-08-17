@@ -8,10 +8,12 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         GameSfxBus.attach(PremiumSfxEngine(applicationContext))
+        GameMusicBus.attach(AdaptiveMusicEngine(applicationContext))
         setContent { GrowthRuntimeRoot() }
     }
 
     override fun onDestroy() {
+        GameMusicBus.detach()
         GameSfxBus.detach()
         super.onDestroy()
     }
