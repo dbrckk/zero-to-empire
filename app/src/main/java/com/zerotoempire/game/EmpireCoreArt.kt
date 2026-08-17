@@ -9,6 +9,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlin.math.cos
@@ -18,61 +19,67 @@ import kotlin.math.sin
 fun EmpireCoreGlyph(modifier: Modifier = Modifier) {
     val vm: GameViewModel = viewModel()
     val state by vm.state.collectAsStateWithLifecycle()
-    val infinite = rememberInfiniteTransition(label = "empireCore")
-    val rotation by infinite.animateFloat(
-        initialValue = 0f,
-        targetValue = 360f,
-        animationSpec = infiniteRepeatable(tween(12_000, easing = LinearEasing)),
-        label = "coreRotation"
-    )
-    val fastRotation by infinite.animateFloat(
-        initialValue = 0f,
-        targetValue = 360f,
-        animationSpec = infiniteRepeatable(tween(4_800, easing = LinearEasing)),
-        label = "trailRotation"
-    )
-    val pulse by infinite.animateFloat(
-        initialValue = .82f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(tween(1_400, easing = FastOutSlowInEasing), RepeatMode.Reverse),
-        label = "corePulse"
-    )
+    val context = LocalContext.current
+    val reducedMotion = MotionQuality.reducedMotion(context)
+    val lowPower = MotionQuality.lowPowerMode(context)
 
-    val intensity = (1 + state.empireLevel).coerceIn(1, 8)
+    val rotation: Float
+    val fastRotation: Float
+    val pulse: Float
+    if (reducedMotion) {
+        rotation = 0f
+        fastRotation = 0f
+        pulse = .94f
+    } else {
+        val infinite = rememberInfiniteTransition(label = "empireCore")
+        val r by infinite.animateFloat(
+            initialValue = 0f,
+            targetValue = 360f,
+            animationSpec = infiniteRepeatable(tween(if (lowPower) 18_000 else 12_000, easing = LinearEasing)),
+            label = "coreRotation"
+        )
+        val fr by infinite.animateFloat(
+            initialValue = 0f,
+            targetValue = 360f,
+            animationSpec = infiniteRepeatable(tween(if (lowPower) 8_000 else 4_800, easing = LinearEasing)),
+            label = "trailRotation"
+        )
+        val p by infinite.animateFloat(
+            initialValue = .82f,
+            targetValue = 1f,
+            animationSpec = infiniteRepeatable(tween(if (lowPower) 2_100 else 1_400, easing = FastOutSlowInEasing), RepeatMode.Reverse),
+            label = "corePulse"
+        )
+        rotation = r
+        fastRotation = fr
+        pulse = p
+    }
+
+    val intensity = (1 + state.empireLevel).coerceIn(1, if (lowPower) 5 else 8)
+    val trailPoints = if (lowPower) 3 else 5
 
     Canvas(modifier) {
         val s = size.minDimension
         val center = Offset(size.width / 2f, size.height / 2f)
 
-        // Long orbital trails: intensity grows with the player's empire tier.
         repeat(intensity + 3) { i ->
             val angle = Math.toRadians((fastRotation + i * (360f / (intensity + 3))).toDouble())
             val radius = s * (.34f + (i % 3) * .045f)
-            val head = Offset(
-                center.x + cos(angle).toFloat() * radius,
-                center.y + sin(angle).toFloat() * radius
-            )
-            repeat(5) { trail ->
+            val head = Offset(center.x + cos(angle).toFloat() * radius, center.y + sin(angle).toFloat() * radius)
+            repeat(trailPoints) { trail ->
                 val backAngle = angle - trail * .075
                 val alpha = (.34f - trail * .055f).coerceAtLeast(.05f)
                 drawCircle(
                     color = if (i % 2 == 0) EmpireArtPalette.Cyan.copy(alpha = alpha) else EmpireArtPalette.Violet.copy(alpha = alpha),
                     radius = s * (.014f - trail * .0015f).coerceAtLeast(.006f),
-                    center = Offset(
-                        center.x + cos(backAngle).toFloat() * radius,
-                        center.y + sin(backAngle).toFloat() * radius
-                    )
+                    center = Offset(center.x + cos(backAngle).toFloat() * radius, center.y + sin(backAngle).toFloat() * radius)
                 )
             }
             drawCircle(EmpireArtPalette.White.copy(alpha = .88f), s * .012f, head)
         }
 
         drawCircle(
-            brush = Brush.radialGradient(
-                listOf(EmpireArtPalette.White, EmpireArtPalette.GoldHot, EmpireArtPalette.Gold, Color.Transparent),
-                center = center,
-                radius = s * .39f
-            ),
+            brush = Brush.radialGradient(listOf(EmpireArtPalette.White, EmpireArtPalette.GoldHot, EmpireArtPalette.Gold, Color.Transparent), center, s * .39f),
             radius = s * .39f * pulse,
             center = center
         )
@@ -87,20 +94,18 @@ fun EmpireCoreGlyph(modifier: Modifier = Modifier) {
                 center = center,
                 style = Stroke(s * .012f)
             )
-            repeat(4 + ring * 2) { i ->
-                val angle = Math.toRadians((rotation * (if (ring % 2 == 0) 1 else -1) + i * (360f / (4 + ring * 2))).toDouble())
+            val nodes = if (lowPower) 3 + ring else 4 + ring * 2
+            repeat(nodes) { i ->
+                val angle = Math.toRadians((rotation * (if (ring % 2 == 0) 1 else -1) + i * (360f / nodes)).toDouble())
                 drawCircle(
                     color = if (ring % 2 == 0) EmpireArtPalette.White else EmpireArtPalette.GoldHot,
                     radius = s * .018f,
-                    center = Offset(
-                        center.x + cos(angle).toFloat() * radius,
-                        center.y + sin(angle).toFloat() * radius
-                    )
+                    center = Offset(center.x + cos(angle).toFloat() * radius, center.y + sin(angle).toFloat() * radius)
                 )
             }
         }
 
-        if (state.empireLevel >= 4) {
+        if (state.empireLevel >= 4 && !lowPower) {
             repeat(6) { i ->
                 val a = Math.toRadians((rotation * -1.4f + i * 60f).toDouble())
                 drawLine(
