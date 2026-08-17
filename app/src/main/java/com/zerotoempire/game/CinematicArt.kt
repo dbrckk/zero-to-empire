@@ -20,15 +20,9 @@ fun ManagerPortrait(businessId: Int, size: Dp = 58.dp) {
     when {
         businessId in 0..3 -> ManagerGroup01Portrait(businessId = businessId, portraitSize = size)
         businessId in 4..7 -> ManagerGroup02Portrait(businessId = businessId, portraitSize = size)
-        businessId >= 10 -> EndgameManagerPortrait(businessId = businessId, portraitSize = size)
-        else -> LegacyManagerPortrait(businessId = businessId, portraitSize = size)
+        businessId in 8..9 -> ManagerGroup03Portrait(businessId = businessId, portraitSize = size)
+        else -> EndgameManagerPortrait(businessId = businessId, portraitSize = size)
     }
-}
-
-@Composable
-private fun LegacyManagerPortrait(businessId: Int, portraitSize: Dp) {
-    // Compatibility path only for ids 8–9 until the megastructure portrait pass lands.
-    ManagerGroup02Portrait(businessId = if (businessId == 8) 6 else 7, portraitSize = portraitSize)
 }
 
 @Composable
