@@ -1,0 +1,37 @@
+package com.zerotoempire.game
+
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
+import org.junit.Test
+
+class ContentUnlocksTest {
+    @Test fun firstBusinessIsAlwaysVisible() {
+        assertTrue(ContentUnlocks.isBusinessVisible(0, 0.0))
+        assertFalse(ContentUnlocks.isBusinessVisible(1, 0.0))
+    }
+
+    @Test fun revealThresholdsAreStrictlyIncreasing() {
+        val thresholds = defaultBusinesses().map { ContentUnlocks.thresholdForBusiness(it.id) }
+        thresholds.zipWithNext().forEach { (a, b) -> assertTrue(b > a) }
+    }
+
+    @Test fun endgameContentStaysHiddenUntilEarned() {
+        assertFalse(ContentUnlocks.isBusinessVisible(10, 1e15))
+        assertTrue(ContentUnlocks.isBusinessVisible(10, 5e17))
+        assertFalse(ContentUnlocks.isBusinessVisible(13, 1e27))
+        assertTrue(ContentUnlocks.isBusinessVisible(13, 3e28))
+    }
+
+    @Test fun managersFollowTheirBusinessReveal() {
+        val early = GameState(lifetimeCash = 10.0)
+        assertEquals(listOf(0), ContentUnlocks.visibleManagers(early).map { it.businessId })
+    }
+
+    @Test fun fullyProgressedEmpireHasNoHiddenBusiness() {
+        val state = GameState(lifetimeCash = 1e31)
+        assertNull(ContentUnlocks.nextHiddenBusiness(state))
+        assertEquals(1f, ContentUnlocks.progressToNextUnlock(state))
+    }
+}
