@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.matchParentSize
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -46,11 +46,11 @@ fun GrowthRuntimeRoot(vm: GameViewModel = viewModel()) {
 
     SfxRuntime(vm)
 
-    Box {
+    Box(Modifier.fillMaxSize()) {
         CommerceRoot(vm)
-        EndgameAtmosphere(eraIndex = eraIndex, modifier = Modifier.matchParentSize())
+        EndgameAtmosphere(eraIndex = eraIndex, modifier = Modifier.fillMaxSize())
         if (meta.onboardingCompleted) {
-            AscensionAdvisorCard(
+            AscensionAdvisor(
                 state = state,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
