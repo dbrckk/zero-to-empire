@@ -20,7 +20,11 @@ object Managers {
         Manager(6, "Luna", "Lunar Governor", 300_000_000_000.0, 1.65),
         Manager(7, "Ares", "Martian Chancellor", 25_000_000_000_000.0, 1.80),
         Manager(8, "Sol", "Stellar Engineer", 3.0e15, 2.0),
-        Manager(9, "Orion", "Galactic Broker", 4.0e17, 2.25)
+        Manager(9, "Orion", "Galactic Broker", 4.0e17, 2.25),
+        Manager(10, "Vega", "Intergalactic Navigator", 1.2e20, 2.55),
+        Manager(11, "Lyra", "Cosmic Fabricator", 5.0e23, 2.90),
+        Manager(12, "Axiom", "Reality Systems Architect", 2.0e27, 3.35),
+        Manager(13, "Zenith", "Transcendence Director", 8.0e30, 4.00)
     )
 }
 
