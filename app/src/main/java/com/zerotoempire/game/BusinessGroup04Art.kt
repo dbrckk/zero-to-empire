@@ -63,14 +63,14 @@ private fun DrawScope.drawRealityEngineFinal(stage:Int,phase:Float,pulse:Float,l
     drawCircle(Brush.radialGradient(listOf(Color.White,pink.copy(alpha=.82f),Color.Transparent),c,s*.105f),s*.105f,c)
     val nodes=if(lowPower)5 else 10;repeat(nodes){i->val a=-phase*2f*PI.toFloat()+i*2f*PI.toFloat()/nodes;drawCircle(if(i%2==0)cyan else pink,s*.010f,Offset(c.x+cos(a)*s*.31f,c.y+sin(a)*s*.19f))}
     if(stage>=2){val diamond=Path().apply{moveTo(c.x,s*.13f);lineTo(s*.79f,c.y);lineTo(c.x,s*.87f);lineTo(s*.21f,c.y);close()};drawPath(diamond,pink.copy(alpha=.30f),style=Stroke(s*.009f))}
-    if(stage>=4) repeat(4){i->val a=i*PI.toFloat()/2f+phase;drawLine(c,Offset(c.x+cos(a)*s*.37f,c.y+sin(a)*s*.37f),s*.006f,pink.copy(alpha=.40f))}
+    if(stage>=4) repeat(4){i->val a=i*PI.toFloat()/2f+phase;drawLine(color=pink.copy(alpha=.40f),start=c,end=Offset(c.x+cos(a)*s*.37f,c.y+sin(a)*s*.37f),strokeWidth=s*.006f)}
 }
 
 private fun DrawScope.drawTranscendentNexusFinal(stage:Int,phase:Float,pulse:Float,lowPower:Boolean){
     val s=size.minDimension;val c=Offset(s*.5f,s*.51f);val gold=Color(0xFFFFE36E);val violet=Color(0xFFC68BFF)
     drawCircle(Brush.radialGradient(listOf(Color.White,gold.copy(alpha=.86f),violet.copy(alpha=.34f),Color.Transparent),c,s*.18f),s*.18f,c)
     repeat(3){r->drawCircle(if(r%2==0)gold.copy(alpha=.72f-r*.15f) else violet.copy(alpha=.58f),s*(.22f+r*.065f),c,style=Stroke(s*(.020f-r*.004f)))}
-    val rays=if(lowPower)6 else 12;repeat(rays){i->val a=phase*2f*PI.toFloat()+i*2f*PI.toFloat()/rays;val inner=s*.20f;val outer=s*(.32f+(i%3)*.045f);drawLine(Offset(c.x+cos(a)*inner,c.y+sin(a)*inner),Offset(c.x+cos(a)*outer,c.y+sin(a)*outer),s*.012f,if(i%2==0)gold else violet)}
+    val rays=if(lowPower)6 else 12;repeat(rays){i->val a=phase*2f*PI.toFloat()+i*2f*PI.toFloat()/rays;val inner=s*.20f;val outer=s*(.32f+(i%3)*.045f);drawLine(color=if(i%2==0)gold else violet,start=Offset(c.x+cos(a)*inner,c.y+sin(a)*inner),end=Offset(c.x+cos(a)*outer,c.y+sin(a)*outer),strokeWidth=s*.012f)}
     if(stage>=2) repeat(6){i->val a=-phase*PI.toFloat()+i*PI.toFloat()/3f;drawCircle(Color.White.copy(alpha=.88f),s*.009f,Offset(c.x+cos(a)*s*.37f,c.y+sin(a)*s*.23f))}
     if(stage>=3) drawCircle(gold.copy(alpha=.12f*pulse),s*.39f,c)
     if(stage>=4) drawArc(violet.copy(alpha=.55f),-30f+phase*40f,300f,false,Offset(s*.09f,s*.09f),Size(s*.82f,s*.82f),style=Stroke(s*.011f))
