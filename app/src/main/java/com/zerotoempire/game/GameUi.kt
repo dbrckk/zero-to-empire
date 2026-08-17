@@ -8,42 +8,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.matchParentSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -79,7 +50,7 @@ fun ZeroToEmpireApp(vm: GameViewModel = viewModel()) {
         offlineReward?.let { OfflineRewardDialog(it, vm::dismissOfflineReward, vm::requestDoubleOfflineAd) }
         Scaffold(containerColor = EmpireColors.Void, bottomBar = { GameNav(tab) { tab = it } }) { inset ->
             Box(Modifier.padding(inset).fillMaxSize()) {
-                EmpireAmbientBackdrop(eraIndex, Modifier.matchParentSize())
+                EmpireAmbientBackdrop(eraIndex, Modifier.fillMaxSize())
                 LazyColumn(
                     modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -104,7 +75,13 @@ fun ZeroToEmpireApp(vm: GameViewModel = viewModel()) {
                         }
                         GameTab.UPGRADES -> {
                             item { Section("PERMANENT LAB", "Spend gems on permanent power") }
-                            item { Text("◆ ${state.gems} GEMS", color = EmpireColors.Violet, fontSize = 24.sp, fontWeight = FontWeight.Black) }
+                            item {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    MetaSprite(MetaSpriteKind.GEM, 38.dp)
+                                    Spacer(Modifier.width(8.dp))
+                                    Text("${state.gems} GEMS", color = EmpireColors.Violet, fontSize = 24.sp, fontWeight = FontWeight.Black)
+                                }
+                            }
                             items(Upgrades.catalog) { upgrade -> UpgradeCard(upgrade, state) { vm.buyUpgrade(upgrade.id) } }
                             item { BoostCard(state, vm::activateProfitBoost) }
                         }
@@ -152,10 +129,7 @@ private fun JuicyPowerTap(state: GameState, tap: () -> Unit) {
             color = EmpireColors.SurfaceHigh,
             shadowElevation = 24.dp
         ) {
-            Box(
-                Modifier.background(Brush.radialGradient(listOf(EmpireColors.Gold.copy(alpha = .35f), EmpireColors.SurfaceHigh, EmpireColors.Void))),
-                contentAlignment = Alignment.Center
-            ) {
+            Box(Modifier.background(Brush.radialGradient(listOf(EmpireColors.Gold.copy(alpha = .35f), EmpireColors.SurfaceHigh, EmpireColors.Void))), contentAlignment = Alignment.Center) {
                 EmpireCoreGlyph(Modifier.size(142.dp))
                 Column(Modifier.align(Alignment.BottomCenter).padding(bottom = 18.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text("POWER CORE", color = EmpireColors.GoldBright, fontWeight = FontWeight.Black, fontSize = 11.sp)
@@ -215,7 +189,7 @@ private fun NextAssetUnlockCard(state: GameState, next: Business) {
     Surface(color = EmpireColors.Surface.copy(alpha = .72f), shape = RoundedCornerShape(18.dp), modifier = Modifier.fillMaxWidth()) {
         Column(Modifier.padding(14.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Surface(shape = RoundedCornerShape(14.dp), color = EmpireColors.Void, modifier = Modifier.size(50.dp)) { Box(contentAlignment = Alignment.Center) { Text("?", color = EmpireColors.Violet, fontSize = 25.sp, fontWeight = FontWeight.Black) } }
+                MetaSprite(MetaSpriteKind.LOCK, 50.dp, active = false)
                 Spacer(Modifier.width(11.dp))
                 Column(Modifier.weight(1f)) {
                     Text("CLASSIFIED ASSET", color = EmpireColors.TextPrimary, fontWeight = FontWeight.Black)
@@ -233,7 +207,7 @@ private fun NextManagerUnlockCard(state: GameState, next: Business) {
     val threshold = ContentUnlocks.thresholdForBusiness(next.id)
     Surface(color = EmpireColors.Violet.copy(alpha = .08f), shape = RoundedCornerShape(16.dp), modifier = Modifier.fillMaxWidth()) {
         Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
-            Text("◇", color = EmpireColors.Violet, fontSize = 26.sp)
+            MetaSprite(MetaSpriteKind.LOCK, 42.dp, active = false)
             Spacer(Modifier.width(10.dp))
             Column {
                 Text("NEXT EXECUTIVE CLASSIFIED", color = EmpireColors.TextPrimary, fontWeight = FontWeight.Black, fontSize = 12.sp)
@@ -262,11 +236,9 @@ private fun ManagerCard(manager: Manager, gameState: GameState, hire: () -> Unit
     val visualState = managerVisualState(manager, gameState)
     var previousState by remember(manager.businessId) { mutableStateOf(visualState) }
     var celebration by remember(manager.businessId) { mutableStateOf<ManagerVisualState?>(null) }
-    val pulseTarget = if (celebration != null) 1.035f else 1f
-    val pulse by animateFloatAsState(pulseTarget, spring(dampingRatio = .58f), label = "managerPulse")
+    val pulse by animateFloatAsState(if (celebration != null) 1.035f else 1f, spring(dampingRatio = .58f), label = "managerPulse")
     val lockAlpha by animateFloatAsState(if (visualState == ManagerVisualState.LOCKED) .70f else 0f, label = "managerLock")
     val masteryScale by animateFloatAsState(if (visualState == ManagerVisualState.MASTERED) 1f else .2f, spring(dampingRatio = .45f), label = "managerMastery")
-
     LaunchedEffect(visualState) {
         if (visualState != previousState) {
             if (visualState == ManagerVisualState.HIRED || visualState == ManagerVisualState.MASTERED) {
@@ -278,21 +250,18 @@ private fun ManagerCard(manager: Manager, gameState: GameState, hire: () -> Unit
             previousState = visualState
         }
     }
-
     val accent = when (visualState) {
         ManagerVisualState.LOCKED -> EmpireColors.TextSecondary
         ManagerVisualState.RECRUIT -> EmpireColors.Gold
         ManagerVisualState.HIRED -> EmpireColors.Cyan
         ManagerVisualState.MASTERED -> EmpireColors.GoldBright
     }
-    val badge = visualState.name
     val detail = when (visualState) {
         ManagerVisualState.LOCKED -> "Need ${money((manager.cost - gameState.cash).coerceAtLeast(0.0))} more capital"
         ManagerVisualState.RECRUIT -> "Executive ready • ${money(manager.cost)}"
         ManagerVisualState.HIRED -> "Automation online"
         ManagerVisualState.MASTERED -> "Elite automation • asset LV 100+"
     }
-
     Surface(
         color = if (visualState == ManagerVisualState.MASTERED) EmpireColors.Gold.copy(alpha = .11f) else EmpireColors.Surface.copy(alpha = .95f),
         shape = RoundedCornerShape(18.dp),
@@ -302,15 +271,15 @@ private fun ManagerCard(manager: Manager, gameState: GameState, hire: () -> Unit
             Row(Modifier.padding(15.dp), verticalAlignment = Alignment.CenterVertically) {
                 Box(contentAlignment = Alignment.Center) {
                     ManagerPortrait(manager.businessId, 56.dp)
-                    if (lockAlpha > .01f) Box(Modifier.size(56.dp).alpha(lockAlpha).background(EmpireColors.Void, RoundedCornerShape(18.dp)), contentAlignment = Alignment.Center) { Text("⌾", color = EmpireColors.TextSecondary, fontSize = 23.sp, fontWeight = FontWeight.Black) }
-                    if (masteryScale > .21f) Text("★", color = EmpireColors.GoldBright, fontSize = 17.sp, modifier = Modifier.align(Alignment.TopEnd).scale(masteryScale))
+                    if (lockAlpha > .01f) Box(Modifier.size(56.dp).alpha(lockAlpha).background(EmpireColors.Void, RoundedCornerShape(18.dp)), contentAlignment = Alignment.Center) { MetaSprite(MetaSpriteKind.LOCK, 36.dp, active = false) }
+                    if (masteryScale > .21f) Box(Modifier.align(Alignment.TopEnd).scale(masteryScale)) { MetaSprite(MetaSpriteKind.ACHIEVEMENT, 22.dp) }
                 }
                 Spacer(Modifier.width(12.dp))
                 Column(Modifier.weight(1f)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(manager.name, color = if (visualState == ManagerVisualState.LOCKED) EmpireColors.TextSecondary else EmpireColors.TextPrimary, fontWeight = FontWeight.Black)
                         Spacer(Modifier.width(7.dp))
-                        Surface(color = accent.copy(alpha = .14f), shape = RoundedCornerShape(50)) { Text(badge, color = accent, fontSize = 8.sp, fontWeight = FontWeight.Black, modifier = Modifier.padding(horizontal = 7.dp, vertical = 3.dp)) }
+                        Surface(color = accent.copy(alpha = .14f), shape = RoundedCornerShape(50)) { Text(visualState.name, color = accent, fontSize = 8.sp, fontWeight = FontWeight.Black, modifier = Modifier.padding(horizontal = 7.dp, vertical = 3.dp)) }
                     }
                     Text(manager.title, color = EmpireColors.TextSecondary, fontSize = 11.sp)
                     Text("×${manager.incomeMultiplier} production", color = if (visualState == ManagerVisualState.LOCKED) EmpireColors.TextSecondary else EmpireColors.Success, fontSize = 11.sp, fontWeight = FontWeight.Bold)
@@ -322,7 +291,11 @@ private fun ManagerCard(manager: Manager, gameState: GameState, hire: () -> Unit
             }
             celebration?.let { state ->
                 Surface(color = accent.copy(alpha = .18f), shape = RoundedCornerShape(50), modifier = Modifier.align(Alignment.TopCenter).padding(top = 4.dp)) {
-                    Text(if (state == ManagerVisualState.MASTERED) "★ MASTERY ACHIEVED ★" else "◆ EXECUTIVE RECRUITED ◆", color = accent, fontSize = 9.sp, fontWeight = FontWeight.Black, modifier = Modifier.padding(horizontal = 12.dp, vertical = 5.dp))
+                    Row(Modifier.padding(horizontal = 10.dp, vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
+                        MetaSprite(if (state == ManagerVisualState.MASTERED) MetaSpriteKind.ACHIEVEMENT else MetaSpriteKind.MISSION, 20.dp)
+                        Spacer(Modifier.width(5.dp))
+                        Text(if (state == ManagerVisualState.MASTERED) "MASTERY ACHIEVED" else "EXECUTIVE RECRUITED", color = accent, fontSize = 9.sp, fontWeight = FontWeight.Black)
+                    }
                 }
             }
         }
@@ -335,10 +308,17 @@ private fun DailyRewardCard(meta: PlayerMeta, claimable: Boolean, claim: () -> R
     val next = LoginCalendar.rewardFor(meta.streakDays + 1)
     Surface(color = EmpireColors.Gold.copy(alpha = .13f), shape = RoundedCornerShape(20.dp), modifier = Modifier.fillMaxWidth()) {
         Column(Modifier.padding(18.dp)) {
-            Text("DAILY CAPITAL DROP", color = EmpireColors.Gold, fontWeight = FontWeight.Black, fontSize = 18.sp)
-            Text("STREAK ${meta.streakDays} DAYS", color = EmpireColors.TextSecondary, fontSize = 11.sp)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                MetaSprite(MetaSpriteKind.DAILY, 46.dp, active = claimable)
+                Spacer(Modifier.width(10.dp))
+                Column { Text("DAILY CAPITAL DROP", color = EmpireColors.Gold, fontWeight = FontWeight.Black, fontSize = 18.sp); Text("STREAK ${meta.streakDays} DAYS", color = EmpireColors.TextSecondary, fontSize = 11.sp) }
+            }
             Spacer(Modifier.height(8.dp))
-            Text("Next reward: ◆ ${next.gems}${if (next.multiplierMinutes > 0) " + ×2 for ${next.multiplierMinutes}m" else ""}", color = EmpireColors.TextPrimary, fontWeight = FontWeight.Bold)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                MetaSprite(MetaSpriteKind.GEM, 26.dp)
+                Spacer(Modifier.width(6.dp))
+                Text("Next reward: ${next.gems}${if (next.multiplierMinutes > 0) " + ×2 for ${next.multiplierMinutes}m" else ""}", color = EmpireColors.TextPrimary, fontWeight = FontWeight.Bold)
+            }
             Spacer(Modifier.height(10.dp))
             Button(onClick = { if (claim() != null) h.performHapticFeedback(HapticFeedbackType.LongPress) }, enabled = claimable, modifier = Modifier.fillMaxWidth()) { Text(if (claimable) "CLAIM DAILY REWARD" else "CLAIMED TODAY", fontWeight = FontWeight.Black) }
         }
@@ -351,7 +331,12 @@ private fun MissionCard(mission: Mission, claim: () -> Unit) {
     Surface(color = EmpireColors.Surface, shape = RoundedCornerShape(16.dp), modifier = Modifier.fillMaxWidth()) {
         Column(Modifier.padding(14.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Column(Modifier.weight(1f)) { Text(mission.title, color = EmpireColors.TextPrimary, fontWeight = FontWeight.Bold); Text("◆ ${mission.rewardGems} reward", color = EmpireColors.Violet, fontSize = 11.sp) }
+                MetaSprite(MetaSpriteKind.MISSION, 40.dp, active = !mission.claimed, progress = mission.fraction)
+                Spacer(Modifier.width(10.dp))
+                Column(Modifier.weight(1f)) {
+                    Text(mission.title, color = EmpireColors.TextPrimary, fontWeight = FontWeight.Bold)
+                    Row(verticalAlignment = Alignment.CenterVertically) { MetaSprite(MetaSpriteKind.GEM, 20.dp); Spacer(Modifier.width(4.dp)); Text("${mission.rewardGems} reward", color = EmpireColors.Violet, fontSize = 11.sp) }
+                }
                 Button(onClick = { claim(); h.performHapticFeedback(HapticFeedbackType.LongPress) }, enabled = mission.completed && !mission.claimed) { Text(if (mission.claimed) "DONE" else if (mission.completed) "CLAIM" else "${(mission.fraction * 100).toInt()}%", fontSize = 10.sp) }
             }
             Spacer(Modifier.height(7.dp))
@@ -365,10 +350,12 @@ private fun AchievementCard(achievement: Achievement, claim: () -> Unit) {
     val h = LocalHapticFeedback.current
     Surface(color = EmpireColors.Surface, shape = RoundedCornerShape(16.dp), modifier = Modifier.fillMaxWidth()) {
         Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
-            Text(if (achievement.unlocked) "★" else "☆", color = if (achievement.unlocked) EmpireColors.Gold else EmpireColors.TextSecondary, fontSize = 28.sp)
+            MetaSprite(MetaSpriteKind.ACHIEVEMENT, 46.dp, active = achievement.unlocked)
             Spacer(Modifier.width(10.dp))
             Column(Modifier.weight(1f)) { Text(achievement.title, color = EmpireColors.TextPrimary, fontWeight = FontWeight.Black); Text(achievement.description, color = EmpireColors.TextSecondary, fontSize = 11.sp) }
-            Button(onClick = { claim(); h.performHapticFeedback(HapticFeedbackType.LongPress) }, enabled = achievement.unlocked && !achievement.claimed) { Text(if (achievement.claimed) "DONE" else "◆ ${achievement.rewardGems}", fontSize = 10.sp) }
+            Button(onClick = { claim(); h.performHapticFeedback(HapticFeedbackType.LongPress) }, enabled = achievement.unlocked && !achievement.claimed) {
+                Row(verticalAlignment = Alignment.CenterVertically) { if (!achievement.claimed) MetaSprite(MetaSpriteKind.GEM, 20.dp); Text(if (achievement.claimed) "DONE" else " ${achievement.rewardGems}", fontSize = 10.sp) }
+            }
         }
     }
 }
@@ -381,25 +368,131 @@ private fun OfflineRewardDialog(reward: OfflineReward, dismiss: () -> Unit, doub
     AlertDialog(
         onDismissRequest = dismiss,
         containerColor = EmpireColors.SurfaceHigh,
-        title = { Text("EMPIRE NEVER SLEEPS", color = EmpireColors.Gold, fontWeight = FontWeight.Black) },
-        text = { Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) { Text("Your managers kept the machine running while you were away.", color = EmpireColors.TextSecondary, textAlign = TextAlign.Center); Spacer(Modifier.height(18.dp)); Text("+${money(reward.cash)}", color = EmpireColors.Success, fontSize = 34.sp, fontWeight = FontWeight.Black); Text("$hours h ${minutes} min of offline production", color = EmpireColors.TextSecondary, fontSize = 12.sp); Spacer(Modifier.height(10.dp)); Text("75% OFFLINE EFFICIENCY", color = EmpireColors.Cyan, fontSize = 10.sp, fontWeight = FontWeight.Bold) } },
-        confirmButton = { Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) { Button(onClick = { doubleReward(); h.performHapticFeedback(HapticFeedbackType.LongPress) }, modifier = Modifier.fillMaxWidth()) { Text("▶ WATCH AD • DOUBLE TO ${money(reward.cash * 2)}", fontWeight = FontWeight.Black, fontSize = 11.sp) }; TextButton(onClick = { dismiss(); h.performHapticFeedback(HapticFeedbackType.LongPress) }, modifier = Modifier.fillMaxWidth()) { Text("COLLECT ${money(reward.cash)}") } } }
+        title = { Row(verticalAlignment = Alignment.CenterVertically) { MetaSprite(MetaSpriteKind.CASH, 40.dp); Spacer(Modifier.width(8.dp)); Text("EMPIRE NEVER SLEEPS", color = EmpireColors.Gold, fontWeight = FontWeight.Black) } },
+        text = {
+            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
+                Text("Your managers kept the machine running while you were away.", color = EmpireColors.TextSecondary, textAlign = TextAlign.Center)
+                Spacer(Modifier.height(14.dp))
+                MetaSprite(MetaSpriteKind.CASH, 64.dp)
+                Text("+${money(reward.cash)}", color = EmpireColors.Success, fontSize = 34.sp, fontWeight = FontWeight.Black)
+                Text("$hours h ${minutes} min of offline production", color = EmpireColors.TextSecondary, fontSize = 12.sp)
+                Spacer(Modifier.height(10.dp))
+                Text("75% OFFLINE EFFICIENCY", color = EmpireColors.Cyan, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+            }
+        },
+        confirmButton = {
+            Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Button(onClick = { doubleReward(); h.performHapticFeedback(HapticFeedbackType.LongPress) }, modifier = Modifier.fillMaxWidth()) {
+                    MetaSprite(MetaSpriteKind.BOOST, 24.dp); Spacer(Modifier.width(6.dp)); Text("DOUBLE TO ${money(reward.cash * 2)}", fontWeight = FontWeight.Black, fontSize = 11.sp)
+                }
+                TextButton(onClick = { dismiss(); h.performHapticFeedback(HapticFeedbackType.LongPress) }, modifier = Modifier.fillMaxWidth()) { Text("COLLECT ${money(reward.cash)}") }
+            }
+        }
     )
 }
 
 @Composable
 private fun GameNav(selected: GameTab, onSelect: (GameTab) -> Unit) {
     NavigationBar(containerColor = EmpireColors.Surface) {
-        GameTab.entries.forEach { tab -> NavigationBarItem(selected = tab == selected, onClick = { onSelect(tab) }, icon = { Text(when (tab) { GameTab.EMPIRE -> "◈"; GameTab.MANAGERS -> "♟"; GameTab.UPGRADES -> "◆"; GameTab.GOALS -> "★" }) }, label = { Text(tab.name) }) }
+        GameTab.entries.forEach { tab ->
+            NavigationBarItem(selected = tab == selected, onClick = { onSelect(tab) }, icon = { NavSprite(tab, selected = tab == selected, size = 28.dp) }, label = { Text(tab.name) })
+        }
     }
 }
 
-@Composable private fun Header(state: GameState) { Row(Modifier.fillMaxWidth().padding(top = 16.dp), verticalAlignment = Alignment.CenterVertically) { Column(Modifier.weight(1f)) { Text("ZERO → EMPIRE", color = EmpireColors.Gold, fontWeight = FontWeight.Black, fontSize = 23.sp); Text("FROM NOTHING. BEYOND EVERYTHING.", color = EmpireColors.TextSecondary, fontSize = 9.sp) }; Text("◆ ${state.gems}   ◇ ${state.prestigePoints}", color = EmpireColors.Violet, fontWeight = FontWeight.Bold) } }
-@Composable private fun EventBanner(event: LiveEvent) { Surface(color = EmpireColors.Violet.copy(alpha = .16f), shape = RoundedCornerShape(15.dp), modifier = Modifier.fillMaxWidth()) { Row(Modifier.padding(13.dp), verticalAlignment = Alignment.CenterVertically) { Text(event.icon, fontSize = 25.sp); Spacer(Modifier.width(10.dp)); Column { Text(event.name.uppercase(), color = EmpireColors.Violet, fontWeight = FontWeight.Black); Text("${event.description}  ×${event.incomeMultiplier}", color = EmpireColors.TextSecondary, fontSize = 11.sp) } } } }
-@Composable private fun WealthHero(state: GameState) { Surface(shape = RoundedCornerShape(24.dp), color = EmpireColors.SurfaceHigh.copy(alpha = .92f), modifier = Modifier.fillMaxWidth()) { Column(Modifier.padding(20.dp)) { Text("NET WORTH", color = EmpireColors.TextSecondary, fontSize = 10.sp); Text(money(state.cash), color = EmpireColors.TextPrimary, fontSize = 39.sp, fontWeight = FontWeight.Black); Text("▲ ${money(state.incomePerSecond)} / SEC   ×${String.format(Locale.US, "%.1f", state.prestigeMultiplier)} LEGACY", color = EmpireColors.Success, fontWeight = FontWeight.Bold, fontSize = 12.sp) } } }
-@Composable private fun EraVistaCard(state: GameState) { val era = EmpireEras.current(state.lifetimeCash); Surface(shape = RoundedCornerShape(20.dp), color = EmpireColors.Surface.copy(alpha = .88f), modifier = Modifier.fillMaxWidth().height(132.dp)) { Box(Modifier.fillMaxSize()) { EraVista(era.index, Modifier.fillMaxSize()); Column(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(EmpireColors.Void.copy(alpha = .06f), EmpireColors.Void.copy(alpha = .86f)))).padding(15.dp), verticalArrangement = Arrangement.Bottom) { Text("ERA ${era.index + 1}", color = EmpireColors.Cyan, fontSize = 9.sp, fontWeight = FontWeight.Black, letterSpacing = 1.5.sp); Text(era.name, color = EmpireColors.TextPrimary, fontSize = 19.sp, fontWeight = FontWeight.Black); Text(era.subtitle, color = EmpireColors.TextSecondary, fontSize = 11.sp) } } } }
+@Composable
+private fun Header(state: GameState) {
+    Row(Modifier.fillMaxWidth().padding(top = 16.dp), verticalAlignment = Alignment.CenterVertically) {
+        Column(Modifier.weight(1f)) { Text("ZERO → EMPIRE", color = EmpireColors.Gold, fontWeight = FontWeight.Black, fontSize = 23.sp); Text("FROM NOTHING. BEYOND EVERYTHING.", color = EmpireColors.TextSecondary, fontSize = 9.sp) }
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            MetaSprite(MetaSpriteKind.GEM, 25.dp); Text("${state.gems}", color = EmpireColors.Violet, fontWeight = FontWeight.Bold)
+            Spacer(Modifier.width(6.dp))
+            MetaSprite(MetaSpriteKind.LEGACY, 25.dp); Text("${state.prestigePoints}", color = EmpireColors.Gold, fontWeight = FontWeight.Bold)
+        }
+    }
+}
+
+@Composable
+private fun EventBanner(event: LiveEvent) {
+    Surface(color = EmpireColors.Violet.copy(alpha = .16f), shape = RoundedCornerShape(15.dp), modifier = Modifier.fillMaxWidth()) {
+        Row(Modifier.padding(13.dp), verticalAlignment = Alignment.CenterVertically) {
+            MetaSprite(MetaSpriteKind.EVENT, 42.dp)
+            Spacer(Modifier.width(10.dp))
+            Column { Text(event.name.uppercase(), color = EmpireColors.Violet, fontWeight = FontWeight.Black); Text("${event.description}  ×${event.incomeMultiplier}", color = EmpireColors.TextSecondary, fontSize = 11.sp) }
+        }
+    }
+}
+
+@Composable
+private fun WealthHero(state: GameState) {
+    Surface(shape = RoundedCornerShape(24.dp), color = EmpireColors.SurfaceHigh.copy(alpha = .92f), modifier = Modifier.fillMaxWidth()) {
+        Row(Modifier.padding(20.dp), verticalAlignment = Alignment.CenterVertically) {
+            MetaSprite(MetaSpriteKind.CASH, 52.dp)
+            Spacer(Modifier.width(12.dp))
+            Column { Text("NET WORTH", color = EmpireColors.TextSecondary, fontSize = 10.sp); Text(money(state.cash), color = EmpireColors.TextPrimary, fontSize = 36.sp, fontWeight = FontWeight.Black); Text("${money(state.incomePerSecond)} / SEC   ×${String.format(Locale.US, "%.1f", state.prestigeMultiplier)} LEGACY", color = EmpireColors.Success, fontWeight = FontWeight.Bold, fontSize = 12.sp) }
+        }
+    }
+}
+
+@Composable
+private fun EraVistaCard(state: GameState) {
+    val era = EmpireEras.current(state.lifetimeCash)
+    Surface(shape = RoundedCornerShape(20.dp), color = EmpireColors.Surface.copy(alpha = .88f), modifier = Modifier.fillMaxWidth().height(132.dp)) {
+        Box(Modifier.fillMaxSize()) {
+            EraVista(era.index, Modifier.fillMaxSize())
+            Column(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(EmpireColors.Void.copy(alpha = .06f), EmpireColors.Void.copy(alpha = .86f)))).padding(15.dp), verticalArrangement = Arrangement.Bottom) {
+                Text("ERA ${era.index + 1}", color = EmpireColors.Cyan, fontSize = 9.sp, fontWeight = FontWeight.Black, letterSpacing = 1.5.sp)
+                Text(era.name, color = EmpireColors.TextPrimary, fontSize = 19.sp, fontWeight = FontWeight.Black)
+                Text(era.subtitle, color = EmpireColors.TextSecondary, fontSize = 11.sp)
+            }
+        }
+    }
+}
+
 @Composable private fun Section(title: String, subtitle: String) { Column(Modifier.padding(top = 8.dp)) { Text(title, color = EmpireColors.TextPrimary, fontWeight = FontWeight.Black, fontSize = 19.sp); Text(subtitle, color = EmpireColors.TextSecondary, fontSize = 11.sp) } }
-@Composable private fun UpgradeCard(upgrade: Upgrade, state: GameState, buy: () -> Unit) { val h = LocalHapticFeedback.current; val rank = state.upgradeRanks[upgrade.id] ?: 0; val maxed = rank >= upgrade.maxRank; Surface(color = EmpireColors.Surface, shape = RoundedCornerShape(18.dp), modifier = Modifier.fillMaxWidth()) { Row(Modifier.padding(15.dp), verticalAlignment = Alignment.CenterVertically) { Column(Modifier.weight(1f)) { Text(upgrade.name, color = EmpireColors.TextPrimary, fontWeight = FontWeight.Black); Text(upgrade.description, color = EmpireColors.TextSecondary, fontSize = 11.sp); Text("RANK $rank / ${upgrade.maxRank}", color = EmpireColors.Cyan, fontSize = 10.sp) }; Button(onClick = { buy(); h.performHapticFeedback(HapticFeedbackType.LongPress) }, enabled = !maxed && state.gems >= upgrade.gemCost) { Text(if (maxed) "MAX" else "◆ ${upgrade.gemCost}") } } } }
-@Composable private fun BoostCard(state: GameState, boost: () -> Unit) { val h = LocalHapticFeedback.current; val active = System.currentTimeMillis() < state.boostEndsAtMillis; Surface(color = EmpireColors.Gold.copy(alpha = .12f), shape = RoundedCornerShape(18.dp), modifier = Modifier.fillMaxWidth()) { Column(Modifier.padding(16.dp)) { Text("PROFIT OVERDRIVE", color = EmpireColors.Gold, fontWeight = FontWeight.Black); Text("Double all income for 10 minutes.", color = EmpireColors.TextSecondary, fontSize = 11.sp); Spacer(Modifier.height(8.dp)); Button(onClick = { boost(); h.performHapticFeedback(HapticFeedbackType.LongPress) }, enabled = !active) { Text(if (active) "BOOST ACTIVE ×2" else "ACTIVATE ×2 BOOST") } } } }
-@Composable private fun PrestigeCard(state: GameState, prestige: () -> Unit) { val h = LocalHapticFeedback.current; val reward = (Progression.prestigeReward(state.lifetimeCash) - state.prestigePoints).coerceAtLeast(0); Surface(color = EmpireColors.SurfaceHigh, shape = RoundedCornerShape(22.dp), modifier = Modifier.fillMaxWidth()) { Column(Modifier.padding(19.dp), horizontalAlignment = Alignment.CenterHorizontally) { Text("ASCENSION", color = EmpireColors.Violet, fontWeight = FontWeight.Black, fontSize = 20.sp); Text("Reset this empire for permanent legacy power.", color = EmpireColors.TextSecondary, textAlign = TextAlign.Center, fontSize = 11.sp); Text("+$reward LEGACY", color = EmpireColors.Gold, fontWeight = FontWeight.Black, fontSize = 17.sp); Button(onClick = { prestige(); h.performHapticFeedback(HapticFeedbackType.LongPress) }, enabled = reward > 0, modifier = Modifier.fillMaxWidth()) { Text("TRANSCEND") } } } }
+
+@Composable
+private fun UpgradeCard(upgrade: Upgrade, state: GameState, buy: () -> Unit) {
+    val h = LocalHapticFeedback.current
+    val rank = state.upgradeRanks[upgrade.id] ?: 0
+    val maxed = rank >= upgrade.maxRank
+    Surface(color = EmpireColors.Surface, shape = RoundedCornerShape(18.dp), modifier = Modifier.fillMaxWidth()) {
+        Row(Modifier.padding(15.dp), verticalAlignment = Alignment.CenterVertically) {
+            MetaSprite(MetaSpriteKind.GEM, 38.dp, active = !maxed)
+            Spacer(Modifier.width(10.dp))
+            Column(Modifier.weight(1f)) { Text(upgrade.name, color = EmpireColors.TextPrimary, fontWeight = FontWeight.Black); Text(upgrade.description, color = EmpireColors.TextSecondary, fontSize = 11.sp); Text("RANK $rank / ${upgrade.maxRank}", color = EmpireColors.Cyan, fontSize = 10.sp) }
+            Button(onClick = { buy(); h.performHapticFeedback(HapticFeedbackType.LongPress) }, enabled = !maxed && state.gems >= upgrade.gemCost) { Text(if (maxed) "MAX" else "${upgrade.gemCost}") }
+        }
+    }
+}
+
+@Composable
+private fun BoostCard(state: GameState, boost: () -> Unit) {
+    val h = LocalHapticFeedback.current
+    val active = System.currentTimeMillis() < state.boostEndsAtMillis
+    Surface(color = EmpireColors.Gold.copy(alpha = .12f), shape = RoundedCornerShape(18.dp), modifier = Modifier.fillMaxWidth()) {
+        Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+            MetaSprite(MetaSpriteKind.BOOST, 48.dp, active = !active)
+            Spacer(Modifier.width(10.dp))
+            Column(Modifier.weight(1f)) { Text("PROFIT OVERDRIVE", color = EmpireColors.Gold, fontWeight = FontWeight.Black); Text("Double all income for 10 minutes.", color = EmpireColors.TextSecondary, fontSize = 11.sp) }
+            Button(onClick = { boost(); h.performHapticFeedback(HapticFeedbackType.LongPress) }, enabled = !active) { Text(if (active) "ACTIVE" else "ACTIVATE") }
+        }
+    }
+}
+
+@Composable
+private fun PrestigeCard(state: GameState, prestige: () -> Unit) {
+    val h = LocalHapticFeedback.current
+    val reward = (Progression.prestigeReward(state.lifetimeCash) - state.prestigePoints).coerceAtLeast(0)
+    Surface(color = EmpireColors.SurfaceHigh, shape = RoundedCornerShape(22.dp), modifier = Modifier.fillMaxWidth()) {
+        Column(Modifier.padding(19.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            MetaSprite(MetaSpriteKind.LEGACY, 68.dp, active = reward > 0)
+            Text("ASCENSION", color = EmpireColors.Violet, fontWeight = FontWeight.Black, fontSize = 20.sp)
+            Text("Reset this empire for permanent legacy power.", color = EmpireColors.TextSecondary, textAlign = TextAlign.Center, fontSize = 11.sp)
+            Text("+$reward LEGACY", color = EmpireColors.Gold, fontWeight = FontWeight.Black, fontSize = 17.sp)
+            Button(onClick = { prestige(); h.performHapticFeedback(HapticFeedbackType.LongPress) }, enabled = reward > 0, modifier = Modifier.fillMaxWidth()) { Text("TRANSCEND") }
+        }
+    }
+}
+
 private fun money(value: Double): String = EmpireNumberFormat.money(value)
