@@ -1,11 +1,6 @@
 package com.zerotoempire.game
 
 import android.app.Activity
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -40,17 +35,9 @@ fun EmpireRoot(vm: GameViewModel = viewModel()) {
 
     DisposableEffect(Unit) {
         billing.connect()
-        onDispose {
-            audio.release()
-            billing.disconnect()
-        }
+        onDispose { audio.release(); billing.disconnect() }
     }
-
-    LaunchedEffect(Unit) {
-        delay(900)
-        billing.restore(vm::applyEntitlements)
-    }
-
+    LaunchedEffect(Unit) { delay(900); billing.restore(vm::applyEntitlements) }
     LaunchedEffect(eraIndex) {
         if (eraIndex > previousEra && meta.onboardingCompleted) {
             eraTransitionVisible = true
@@ -63,15 +50,8 @@ fun EmpireRoot(vm: GameViewModel = viewModel()) {
 
     Box(Modifier.fillMaxSize()) {
         ZeroToEmpireApp(vm)
-
         if (!meta.onboardingCompleted) {
-            OnboardingOverlay(
-                onTapSound = audio::tap,
-                onComplete = {
-                    audio.reward()
-                    vm.completeOnboarding()
-                }
-            )
+            OnboardingOverlay(onTapSound = audio::tap, onComplete = { audio.reward(); vm.completeOnboarding() })
         } else {
             Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                 EraHud(state)
@@ -91,7 +71,6 @@ fun EmpireRoot(vm: GameViewModel = viewModel()) {
                 )
             }
         }
-
         celebration?.let { item ->
             CelebrationOverlay(
                 item = item,
@@ -99,50 +78,21 @@ fun EmpireRoot(vm: GameViewModel = viewModel()) {
                 onDismiss = vm::dismissCelebration
             )
         }
-
-        EraTransitionOverlay(
-            eraIndex = eraIndex,
-            visible = eraTransitionVisible,
-            modifier = Modifier.fillMaxSize()
-        )
+        EraTransitionOverlay(eraIndex = eraIndex, visible = eraTransitionVisible, modifier = Modifier.fillMaxSize())
     }
 }
 
 @Composable
 private fun BulkBuySelector(selected: BuyMode, onSelect: (BuyMode) -> Unit) {
-    val modes = listOf(
-        BuyMode.X1 to "×1",
-        BuyMode.X10 to "×10",
-        BuyMode.X25 to "×25",
-        BuyMode.MILESTONE to "NEXT",
-        BuyMode.MAX to "MAX"
-    )
-    Surface(
-        color = EmpireColors.Void.copy(alpha = .91f),
-        shape = RoundedCornerShape(18.dp),
-        shadowElevation = 8.dp
-    ) {
-        Row(
-            modifier = Modifier.padding(horizontal = 7.dp, vertical = 6.dp),
-            horizontalArrangement = Arrangement.spacedBy(5.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text("BUY", color = EmpireColors.TextSecondary, fontSize = 9.sp, fontWeight = FontWeight.Black)
+    val modes = listOf(BuyMode.X1 to "×1", BuyMode.X10 to "×10", BuyMode.X25 to "×25", BuyMode.MILESTONE to "NEXT", BuyMode.MAX to "MAX")
+    Surface(color = EmpireColors.Void.copy(alpha = .91f), shape = RoundedCornerShape(18.dp), shadowElevation = 8.dp) {
+        Row(modifier = Modifier.padding(horizontal = 7.dp, vertical = 6.dp), horizontalArrangement = Arrangement.spacedBy(5.dp), verticalAlignment = Alignment.CenterVertically) {
+            MetaSprite(MetaSpriteKind.CASH, 24.dp)
             modes.forEach { (mode, label) ->
                 if (mode == selected) {
-                    Button(
-                        onClick = { onSelect(mode) },
-                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 2.dp),
-                        modifier = Modifier.height(30.dp),
-                        shape = RoundedCornerShape(10.dp)
-                    ) { Text(label, fontSize = 9.sp, fontWeight = FontWeight.Black) }
+                    Button(onClick = { onSelect(mode) }, contentPadding = PaddingValues(horizontal = 10.dp, vertical = 2.dp), modifier = Modifier.height(30.dp), shape = RoundedCornerShape(10.dp)) { Text(label, fontSize = 9.sp, fontWeight = FontWeight.Black) }
                 } else {
-                    TextButton(
-                        onClick = { onSelect(mode) },
-                        contentPadding = PaddingValues(horizontal = 9.dp, vertical = 2.dp),
-                        modifier = Modifier.height(30.dp),
-                        shape = RoundedCornerShape(10.dp)
-                    ) { Text(label, fontSize = 9.sp, fontWeight = FontWeight.Bold, color = EmpireColors.TextSecondary) }
+                    TextButton(onClick = { onSelect(mode) }, contentPadding = PaddingValues(horizontal = 9.dp, vertical = 2.dp), modifier = Modifier.height(30.dp), shape = RoundedCornerShape(10.dp)) { Text(label, fontSize = 9.sp, fontWeight = FontWeight.Bold, color = EmpireColors.TextSecondary) }
                 }
             }
         }
@@ -150,29 +100,18 @@ private fun BulkBuySelector(selected: BuyMode, onSelect: (BuyMode) -> Unit) {
 }
 
 @Composable
-private fun MonetizationDock(
-    modifier: Modifier,
-    activity: Activity,
-    meta: PlayerMeta,
-    rewarded: RewardedAdGateway,
-    billing: PurchaseGateway,
-    vm: GameViewModel
-) {
+private fun MonetizationDock(modifier: Modifier, activity: Activity, meta: PlayerMeta, rewarded: RewardedAdGateway, billing: PurchaseGateway, vm: GameViewModel) {
     var storeOpen by remember { mutableStateOf(false) }
     var status by remember { mutableStateOf<String?>(null) }
-
     Column(modifier, horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.spacedBy(8.dp)) {
         FilledTonalButton(
-            onClick = {
-                rewarded.show(activity, RewardPlacement.PROFIT_BOOST, onReward = vm::rewardProfitBoost) {
-                    if (!rewarded.isReady()) rewarded.preload()
-                }
-            },
+            onClick = { rewarded.show(activity, RewardPlacement.PROFIT_BOOST, onReward = vm::rewardProfitBoost) { if (!rewarded.isReady()) rewarded.preload() } },
             shape = RoundedCornerShape(50)
-        ) { Text("▶ ×2 BOOST", fontWeight = FontWeight.Black, fontSize = 11.sp) }
-
+        ) { MetaSprite(MetaSpriteKind.BOOST, 22.dp); Spacer(Modifier.width(5.dp)); Text("×2 BOOST", fontWeight = FontWeight.Black, fontSize = 11.sp) }
         Button(onClick = { storeOpen = true }, shape = RoundedCornerShape(50)) {
-            Text(if (meta.adsRemoved) "◆ STORE" else "◆ STORE + NO ADS", fontWeight = FontWeight.Black, fontSize = 11.sp)
+            MetaSprite(MetaSpriteKind.STORE, 22.dp)
+            Spacer(Modifier.width(5.dp))
+            Text(if (meta.adsRemoved) "STORE" else "STORE + NO ADS", fontWeight = FontWeight.Black, fontSize = 11.sp)
         }
     }
 
@@ -180,31 +119,15 @@ private fun MonetizationDock(
         AlertDialog(
             onDismissRequest = { storeOpen = false },
             containerColor = EmpireColors.SurfaceHigh,
-            title = { Text("EMPIRE STORE", color = EmpireColors.Gold, fontWeight = FontWeight.Black) },
+            title = { Row(verticalAlignment = Alignment.CenterVertically) { MetaSprite(MetaSpriteKind.STORE, 34.dp); Spacer(Modifier.width(8.dp)); Text("EMPIRE STORE", color = EmpireColors.Gold, fontWeight = FontWeight.Black) } },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(9.dp)) {
                     Text("Permanent upgrades and optional currency. Core progression remains playable without purchases.", color = EmpireColors.TextSecondary, fontSize = 12.sp)
-                    StoreButton(
-                        title = if (meta.adsRemoved) "ADS REMOVED ✓" else "REMOVE ADS — LIFETIME",
-                        enabled = !meta.adsRemoved,
-                        onClick = { buy(activity, billing, StoreProduct.REMOVE_ADS, vm, { status = it }) }
-                    )
-                    StoreButton(
-                        title = if (meta.starterPackOwned) "STARTER PACK OWNED ✓" else "STARTER PACK — 250 GEMS",
-                        enabled = !meta.starterPackOwned,
-                        onClick = { buy(activity, billing, StoreProduct.STARTER_PACK, vm, { status = it }) }
-                    )
-                    StoreButton("120 GEMS", true) { buy(activity, billing, StoreProduct.GEM_PACK_SMALL, vm, { status = it }) }
-                    StoreButton("650 GEMS", true) { buy(activity, billing, StoreProduct.GEM_PACK_MEDIUM, vm, { status = it }) }
-                    OutlinedButton(
-                        onClick = {
-                            billing.restore {
-                                vm.applyEntitlements(it)
-                                status = "Purchases restored"
-                            }
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    ) { Text("RESTORE PURCHASES") }
+                    IdentityStoreButton(if (meta.adsRemoved) "ADS REMOVED" else "REMOVE ADS — LIFETIME", !meta.adsRemoved, MetaSpriteKind.LEGACY) { buy(activity, billing, StoreProduct.REMOVE_ADS, vm) { status = it } }
+                    IdentityStoreButton(if (meta.starterPackOwned) "STARTER PACK OWNED" else "STARTER PACK — 250 GEMS", !meta.starterPackOwned, MetaSpriteKind.BOOST) { buy(activity, billing, StoreProduct.STARTER_PACK, vm) { status = it } }
+                    IdentityStoreButton("120 GEMS", true, MetaSpriteKind.GEM) { buy(activity, billing, StoreProduct.GEM_PACK_SMALL, vm) { status = it } }
+                    IdentityStoreButton("650 GEMS", true, MetaSpriteKind.GEM) { buy(activity, billing, StoreProduct.GEM_PACK_MEDIUM, vm) { status = it } }
+                    OutlinedButton(onClick = { billing.restore { vm.applyEntitlements(it); status = "Purchases restored" } }, modifier = Modifier.fillMaxWidth()) { Text("RESTORE PURCHASES") }
                     status?.let { Text(it, color = EmpireColors.Cyan, fontSize = 11.sp) }
                 }
             },
@@ -213,13 +136,7 @@ private fun MonetizationDock(
     }
 }
 
-private fun buy(
-    activity: Activity,
-    billing: PurchaseGateway,
-    product: StoreProduct,
-    vm: GameViewModel,
-    status: (String) -> Unit
-) {
+private fun buy(activity: Activity, billing: PurchaseGateway, product: StoreProduct, vm: GameViewModel, status: (String) -> Unit) {
     billing.purchase(activity, product) { result ->
         when (result) {
             is PurchaseResult.Success -> { vm.applyPurchase(result.product); status("Purchase complete") }
@@ -231,8 +148,10 @@ private fun buy(
 }
 
 @Composable
-private fun StoreButton(title: String, enabled: Boolean, onClick: () -> Unit) {
+private fun IdentityStoreButton(title: String, enabled: Boolean, kind: MetaSpriteKind, onClick: () -> Unit) {
     Button(onClick = onClick, enabled = enabled, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(14.dp)) {
+        MetaSprite(kind, 28.dp, active = enabled)
+        Spacer(Modifier.width(8.dp))
         Text(title, fontWeight = FontWeight.Bold, fontSize = 11.sp)
     }
 }
@@ -248,24 +167,21 @@ private fun OnboardingOverlay(onTapSound: () -> Unit, onComplete: () -> Unit) {
         Triple("ASCEND", "When growth slows, reset the run for permanent Legacy power.", "RESET → RETURN STRONGER")
     )
     val current = steps[step]
-
     Box(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(EmpireColors.Void, EmpireColors.DeepSpace))), contentAlignment = Alignment.Center) {
         Column(Modifier.fillMaxWidth().padding(28.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-            Text("ZERO → EMPIRE", color = EmpireColors.Gold, fontSize = 30.sp, fontWeight = FontWeight.Black)
-            Spacer(Modifier.height(48.dp))
-            Text(current.first, color = EmpireColors.TextPrimary, fontSize = 42.sp, fontWeight = FontWeight.Black)
+            Text("ZERO → EMPIRE", color = EmpireColors.Gold, fontSize = 28.sp, fontWeight = FontWeight.Black)
+            Spacer(Modifier.height(12.dp))
+            OnboardingStepArt(step)
+            Spacer(Modifier.height(8.dp))
+            Text(current.first, color = EmpireColors.TextPrimary, fontSize = 36.sp, fontWeight = FontWeight.Black)
+            Spacer(Modifier.height(10.dp))
+            Text(current.second, color = EmpireColors.TextSecondary, fontSize = 16.sp, textAlign = TextAlign.Center, lineHeight = 23.sp)
             Spacer(Modifier.height(14.dp))
-            Text(current.second, color = EmpireColors.TextSecondary, fontSize = 17.sp, textAlign = TextAlign.Center, lineHeight = 25.sp)
-            Spacer(Modifier.height(20.dp))
-            Surface(shape = RoundedCornerShape(50), color = EmpireColors.SurfaceHigh) {
-                Text(current.third, modifier = Modifier.padding(horizontal = 18.dp, vertical = 9.dp), color = EmpireColors.Cyan, fontWeight = FontWeight.Bold, fontSize = 12.sp)
-            }
-            Spacer(Modifier.height(50.dp))
+            Surface(shape = RoundedCornerShape(50), color = EmpireColors.SurfaceHigh) { Text(current.third, modifier = Modifier.padding(horizontal = 18.dp, vertical = 9.dp), color = EmpireColors.Cyan, fontWeight = FontWeight.Bold, fontSize = 12.sp) }
+            Spacer(Modifier.height(22.dp))
             LinearProgressIndicator(progress = { (step + 1) / steps.size.toFloat() }, modifier = Modifier.fillMaxWidth().height(5.dp), color = EmpireColors.Gold, trackColor = EmpireColors.SurfaceHigh)
-            Spacer(Modifier.height(18.dp))
-            Button(onClick = { onTapSound(); if (step == steps.lastIndex) onComplete() else step++ }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(16.dp)) {
-                Text(if (step == steps.lastIndex) "BUILD MY EMPIRE" else "CONTINUE", fontWeight = FontWeight.Black)
-            }
+            Spacer(Modifier.height(16.dp))
+            Button(onClick = { onTapSound(); if (step == steps.lastIndex) onComplete() else step++ }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(16.dp)) { Text(if (step == steps.lastIndex) "BUILD MY EMPIRE" else "CONTINUE", fontWeight = FontWeight.Black) }
         }
     }
 }
@@ -278,20 +194,12 @@ private fun EraHud(state: GameState) {
         val span = (next.requiredLifetimeCash - current.requiredLifetimeCash).coerceAtLeast(1.0)
         ((state.lifetimeCash - current.requiredLifetimeCash) / span).toFloat().coerceIn(0f, 1f)
     }
-    Surface(
-        modifier = Modifier.fillMaxWidth().padding(top = 6.dp, start = 62.dp, end = 62.dp).height(74.dp),
-        shape = RoundedCornerShape(18.dp),
-        color = EmpireColors.Void.copy(alpha = .90f),
-        shadowElevation = 10.dp
-    ) {
+    Surface(modifier = Modifier.fillMaxWidth().padding(top = 6.dp, start = 62.dp, end = 62.dp).height(74.dp), shape = RoundedCornerShape(18.dp), color = EmpireColors.Void.copy(alpha = .90f), shadowElevation = 10.dp) {
         Box(Modifier.fillMaxSize()) {
             EraVista(current.index, Modifier.fillMaxSize())
-            Column(
-                Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(EmpireColors.Void.copy(alpha = .18f), EmpireColors.Void.copy(alpha = .78f)))).padding(horizontal = 12.dp, vertical = 8.dp),
-                verticalArrangement = Arrangement.Bottom
-            ) {
+            Column(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(EmpireColors.Void.copy(alpha = .18f), EmpireColors.Void.copy(alpha = .78f)))).padding(horizontal = 12.dp, vertical = 8.dp), verticalArrangement = Arrangement.Bottom) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(current.icon, color = EmpireColors.Gold, fontSize = 13.sp)
+                    MetaSprite(MetaSpriteKind.LEGACY, 22.dp)
                     Spacer(Modifier.width(6.dp))
                     Text(current.name, color = EmpireColors.TextPrimary, fontSize = 10.sp, fontWeight = FontWeight.Black)
                     Spacer(Modifier.weight(1f))
@@ -306,31 +214,25 @@ private fun EraHud(state: GameState) {
 
 @Composable
 private fun CelebrationOverlay(item: MajorCelebration, onShown: () -> Unit, onDismiss: () -> Unit) {
-    var visible by remember(item) { mutableStateOf(false) }
-    LaunchedEffect(item) { visible = true; onShown(); delay(2100); visible = false; delay(280); onDismiss() }
-    AnimatedVisibility(visible = visible, enter = fadeIn() + scaleIn(initialScale = .82f), exit = fadeOut() + scaleOut(targetScale = 1.08f), modifier = Modifier.fillMaxSize()) {
-        Box(Modifier.fillMaxSize().background(EmpireColors.Void.copy(alpha = .92f)), contentAlignment = Alignment.Center) {
-            CelebrationVfx(item.accent, Modifier.fillMaxSize())
-            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(32.dp)) {
-                Surface(shape = RoundedCornerShape(50), color = EmpireColors.SurfaceHigh.copy(alpha = .86f)) {
-                    Text(item.accent, modifier = Modifier.padding(horizontal = 14.dp, vertical = 7.dp), color = EmpireColors.Cyan, fontWeight = FontWeight.Black, fontSize = 11.sp, letterSpacing = 2.sp)
-                }
-                Spacer(Modifier.height(18.dp))
-                val businessId = item.businessId
-                if (businessId != null) {
-                    if (businessId >= 10) {
-                        EndgameBusinessSprite(businessId, item.businessLevel ?: 0, 116.dp)
-                    } else {
-                        PremiumBusinessSprite(businessId, item.businessLevel ?: 0, 116.dp)
-                    }
-                } else {
-                    Text(item.icon, fontSize = 72.sp)
-                }
-                Spacer(Modifier.height(18.dp))
-                Text(item.title, color = EmpireColors.GoldBright, fontWeight = FontWeight.Black, fontSize = 30.sp, textAlign = TextAlign.Center)
-                Spacer(Modifier.height(8.dp))
-                Text(item.subtitle, color = EmpireColors.TextSecondary, fontSize = 15.sp, textAlign = TextAlign.Center)
+    var visible by remember(item) { mutableStateOf(true) }
+    LaunchedEffect(item) { onShown(); delay(2100); visible = false; delay(280); onDismiss() }
+    if (!visible) return
+    Box(Modifier.fillMaxSize().background(EmpireColors.Void.copy(alpha = .92f)), contentAlignment = Alignment.Center) {
+        CelebrationVfx(item.accent, Modifier.fillMaxSize())
+        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(32.dp)) {
+            Surface(shape = RoundedCornerShape(50), color = EmpireColors.SurfaceHigh.copy(alpha = .86f)) { Text(item.accent, modifier = Modifier.padding(horizontal = 14.dp, vertical = 7.dp), color = EmpireColors.Cyan, fontWeight = FontWeight.Black, fontSize = 11.sp, letterSpacing = 2.sp) }
+            Spacer(Modifier.height(18.dp))
+            val businessId = item.businessId
+            if (businessId != null) {
+                Box(Modifier.size(124.dp), contentAlignment = Alignment.Center) { CelebrationBusinessSprite(businessId, item.businessLevel ?: 0, 116.dp) }
+            } else {
+                val kind = if (item.accent == "PRESTIGE") MetaSpriteKind.LEGACY else MetaSpriteKind.ACHIEVEMENT
+                MetaSprite(kind, 96.dp)
             }
+            Spacer(Modifier.height(18.dp))
+            Text(item.title, color = EmpireColors.GoldBright, fontWeight = FontWeight.Black, fontSize = 30.sp, textAlign = TextAlign.Center)
+            Spacer(Modifier.height(8.dp))
+            Text(item.subtitle, color = EmpireColors.TextSecondary, fontSize = 15.sp, textAlign = TextAlign.Center)
         }
     }
 }
