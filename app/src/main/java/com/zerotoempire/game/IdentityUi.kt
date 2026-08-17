@@ -316,7 +316,16 @@ private fun CelebrationOverlay(item: MajorCelebration, onShown: () -> Unit, onDi
                     Text(item.accent, modifier = Modifier.padding(horizontal = 14.dp, vertical = 7.dp), color = EmpireColors.Cyan, fontWeight = FontWeight.Black, fontSize = 11.sp, letterSpacing = 2.sp)
                 }
                 Spacer(Modifier.height(18.dp))
-                Text(item.icon, fontSize = 72.sp)
+                val businessId = item.businessId
+                if (businessId != null) {
+                    if (businessId >= 10) {
+                        EndgameBusinessSprite(businessId, item.businessLevel ?: 0, 116.dp)
+                    } else {
+                        PremiumBusinessSprite(businessId, item.businessLevel ?: 0, 116.dp)
+                    }
+                } else {
+                    Text(item.icon, fontSize = 72.sp)
+                }
                 Spacer(Modifier.height(18.dp))
                 Text(item.title, color = EmpireColors.GoldBright, fontWeight = FontWeight.Black, fontSize = 30.sp, textAlign = TextAlign.Center)
                 Spacer(Modifier.height(8.dp))
