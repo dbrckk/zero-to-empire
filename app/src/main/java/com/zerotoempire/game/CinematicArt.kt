@@ -28,6 +28,10 @@ import kotlin.math.sin
 
 @Composable
 fun ManagerPortrait(businessId: Int, size: Dp = 58.dp) {
+    if (businessId >= 10) {
+        EndgameManagerPortrait(businessId = businessId, portraitSize = size)
+        return
+    }
     val accent = when (businessId) {
         0, 1 -> EmpireArtPalette.Gold
         2, 3 -> EmpireArtPalette.Cyan
