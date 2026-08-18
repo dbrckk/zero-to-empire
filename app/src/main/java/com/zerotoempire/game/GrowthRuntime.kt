@@ -50,7 +50,14 @@ fun GrowthRuntimeRoot(vm: GameViewModel = viewModel()) {
     Box(Modifier.fillMaxSize()) {
         CommerceRoot(vm)
         EndgameAtmosphere(eraIndex = eraIndex, modifier = Modifier.fillMaxSize())
+
         if (meta.onboardingCompleted) {
+            ChallengeDock(
+                vm = vm,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(start = 10.dp, end = 10.dp, bottom = 286.dp)
+            )
             AscensionAdvisor(
                 state = state,
                 modifier = Modifier
