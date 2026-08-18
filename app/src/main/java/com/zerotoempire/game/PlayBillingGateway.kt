@@ -16,7 +16,7 @@ import com.android.billingclient.api.Purchase
 
 class PlayBillingGateway(private val context: Context) : PurchaseGateway {
     private var pendingResult: ((PurchaseResult) -> Unit)? = null
-    private val pendingRestoreCallbacks = mutableListOf<(Set<StoreProduct>) -> Unit>()
+    private var pendingRestoreCallback: ((Set<StoreProduct>) -> Unit)? = null
     private var connecting = false
 
     private val billingClient = BillingClient.newBuilder(context)
@@ -45,14 +45,12 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
         billingClient.startConnection(object : BillingClientStateListener {
             override fun onBillingSetupFinished(result: BillingResult) {
                 connecting = false
+                val callback = pendingRestoreCallback
+                pendingRestoreCallback = null
                 if (result.responseCode == BillingClient.BillingResponseCode.OK) {
-                    val callbacks = pendingRestoreCallbacks.toList()
-                    pendingRestoreCallbacks.clear()
-                    callbacks.forEach { callback -> restore(callback) }
+                    callback?.let(::restore)
                 } else {
-                    val callbacks = pendingRestoreCallbacks.toList()
-                    pendingRestoreCallbacks.clear()
-                    callbacks.forEach { it(emptySet()) }
+                    callback?.invoke(emptySet())
                 }
             }
             override fun onBillingServiceDisconnected() { connecting = false }
@@ -60,12 +58,16 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
     }
 
     override fun disconnect() {
-        pendingRestoreCallbacks.clear()
+        pendingRestoreCallback = null
         connecting = false
         if (billingClient.isReady) billingClient.endConnection()
     }
 
     override fun purchase(activity: Activity, product: StoreProduct, onResult: (PurchaseResult) -> Unit) {
+        if (pendingResult != null) {
+            onResult(PurchaseResult.Failed("Another Google Play purchase is still being processed"))
+            return
+        }
         if (!billingClient.isReady) {
             onResult(PurchaseResult.Failed("Google Play Billing is not ready"))
             connect()
@@ -114,7 +116,9 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
 
     override fun restore(onResult: (Set<StoreProduct>) -> Unit) {
         if (!billingClient.isReady) {
-            pendingRestoreCallbacks += onResult
+            // Keep a single latest restore waiter. This prevents two simultaneous restore queries
+            // from consuming and crediting the same stale consumable twice after reconnect.
+            pendingRestoreCallback = onResult
             connect()
             return
         }
@@ -170,8 +174,9 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
 
         when (purchase.purchaseState) {
             Purchase.PurchaseState.PENDING -> {
+                // Notify the UI but keep the callback. Google Play can confirm this purchase later
+                // in the same process; clearing it here would acknowledge/consume without granting.
                 pendingResult?.invoke(PurchaseResult.Pending)
-                pendingResult = null
             }
             Purchase.PurchaseState.PURCHASED -> {
                 if (product.consumable) consume(purchase, product) else {
