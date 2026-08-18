@@ -21,21 +21,51 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import java.util.Locale
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin
 
+private data class BusinessArtUiState(
+    val level: Int,
+    val quoteCount: Int,
+    val quoteCost: Double,
+    val affordable: Boolean
+)
+
 @Composable
 fun BusinessArtIcon(id: Int, iconSize: Dp, modifier: Modifier = Modifier) {
     val vm: GameViewModel = viewModel()
-    val state by vm.state.collectAsStateWithLifecycle()
     val buyMode by vm.buyMode.collectAsStateWithLifecycle()
-    val business = state.businesses.firstOrNull { it.id == id }
-    val level = business?.level ?: 0
-    val quote = if (business != null) BulkPurchase.quote(business, state.cash, buyMode) else BulkQuote(0, 0.0)
-    val affordable = quote.valid && quote.totalCost <= state.cash
+
+    // Cash changes several times per second. In X1 mode none of that cash data is rendered
+    // inside the sprite, so emit only when this business level changes. In bulk modes the
+    // quote is part of the visible icon and therefore remains live.
+    val uiFlow = remember(vm, id, buyMode) {
+        vm.state.map { state ->
+            val business = state.businesses.firstOrNull { it.id == id }
+            val level = business?.level ?: 0
+            if (business == null || buyMode == BuyMode.X1) {
+                BusinessArtUiState(level, 0, 0.0, false)
+            } else {
+                val quote = BulkPurchase.quote(business, state.cash, buyMode)
+                BusinessArtUiState(
+                    level = level,
+                    quoteCount = quote.count,
+                    quoteCost = quote.totalCost,
+                    affordable = quote.valid && quote.totalCost <= state.cash
+                )
+            }
+        }.distinctUntilChanged()
+    }
+    val ui by uiFlow.collectAsStateWithLifecycle(
+        initialValue = BusinessArtUiState(level = 0, quoteCount = 0, quoteCost = 0.0, affordable = false)
+    )
+
+    val level = ui.level
     val burst = remember(id) { Animatable(0f) }
     val previousLevel = remember(id) { intArrayOf(level) }
 
@@ -86,8 +116,8 @@ fun BusinessArtIcon(id: Int, iconSize: Dp, modifier: Modifier = Modifier) {
 
             if (buyMode != BuyMode.X1) {
                 Text(
-                    text = if (quote.count > 0) "×${quote.count}" else "—",
-                    color = if (affordable) EmpireColors.GoldBright else EmpireColors.TextSecondary,
+                    text = if (ui.quoteCount > 0) "×${ui.quoteCount}" else "—",
+                    color = if (ui.affordable) EmpireColors.GoldBright else EmpireColors.TextSecondary,
                     fontSize = 8.sp,
                     fontWeight = FontWeight.Black,
                     modifier = Modifier.align(Alignment.TopEnd).offset(x = 8.dp, y = (-4).dp)
@@ -97,8 +127,8 @@ fun BusinessArtIcon(id: Int, iconSize: Dp, modifier: Modifier = Modifier) {
 
         if (buyMode != BuyMode.X1) {
             Text(
-                text = if (quote.count > 0) compactMoney(quote.totalCost) else "LOCKED",
-                color = if (affordable) EmpireColors.Success else EmpireColors.TextSecondary,
+                text = if (ui.quoteCount > 0) compactMoney(ui.quoteCost) else "LOCKED",
+                color = if (ui.affordable) EmpireColors.Success else EmpireColors.TextSecondary,
                 fontSize = 7.sp,
                 fontWeight = FontWeight.Bold,
                 maxLines = 1
