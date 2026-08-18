@@ -31,9 +31,18 @@ fun MetaSprite(kind: MetaSpriteKind, size: Dp = 42.dp, active: Boolean = true, p
     val context = LocalContext.current
     val reduced = MotionQuality.reducedMotion(context)
     val lowPower = MotionQuality.lowPowerMode(context)
-    val t = rememberInfiniteTransition(label = "meta-$kind")
-    val phaseAnim by t.animateFloat(0f, 1f, infiniteRepeatable(tween(if (lowPower) 12000 else 7000, easing = LinearEasing)), label = "phase")
-    val phase = if (reduced) .18f else phaseAnim
+    val shouldAnimate = !reduced && active && kind !in setOf(MetaSpriteKind.LOCK, MetaSpriteKind.CASH)
+    val phase = if (shouldAnimate) {
+        val t = rememberInfiniteTransition(label = "meta-$kind")
+        val phaseAnim by t.animateFloat(
+            0f,
+            1f,
+            infiniteRepeatable(tween(if (lowPower) 12000 else 7000, easing = LinearEasing)),
+            label = "phase"
+        )
+        phaseAnim
+    } else .18f
+
     val accent = when (kind) {
         MetaSpriteKind.CASH -> Color(0xFF6EEB8B)
         MetaSpriteKind.GEM -> Color(0xFFC68BFF)
@@ -55,7 +64,7 @@ fun MetaSprite(kind: MetaSpriteKind, size: Dp = 42.dp, active: Boolean = true, p
         drawCircle(EmpireColors.SurfaceHigh.copy(alpha = .96f), s * .39f, c)
         drawCircle(accent.copy(alpha = .80f * alpha), s * .39f, c, style = Stroke(s * .035f))
         drawMetaGlyph(kind, c, s, accent.copy(alpha = alpha), progress.coerceIn(0f, 1f))
-        if (active && kind !in setOf(MetaSpriteKind.LOCK, MetaSpriteKind.CASH)) {
+        if (shouldAnimate) {
             val count = if (lowPower) 2 else 4
             repeat(count) { i ->
                 val a = phase * 2f * PI.toFloat() + i * 2f * PI.toFloat() / count
@@ -83,7 +92,7 @@ private fun DrawScope.drawMetaGlyph(kind: MetaSpriteKind, c: Offset, s: Float, a
         MetaSpriteKind.LEGACY -> {
             drawCircle(accent.copy(alpha=.22f),s*.22f,c)
             drawCircle(accent,s*.20f,c,style=Stroke(s*.032f))
-            repeat(6){i->val a=i*PI.toFloat()/3f;drawLine(Offset(c.x+cos(a)*s*.11f,c.y+sin(a)*s*.11f),Offset(c.x+cos(a)*s*.27f,c.y+sin(a)*s*.27f),s*.026f,accent)}
+            repeat(6){i->val a=i*PI.toFloat()/3f;drawLine(color=accent,start=Offset(c.x+cos(a)*s*.11f,c.y+sin(a)*s*.11f),end=Offset(c.x+cos(a)*s*.27f,c.y+sin(a)*s*.27f),strokeWidth=s*.026f)}
             drawCircle(Color.White,s*.055f,c)
         }
         MetaSpriteKind.DAILY -> {
@@ -108,7 +117,7 @@ private fun DrawScope.drawMetaGlyph(kind: MetaSpriteKind, c: Offset, s: Float, a
         }
         MetaSpriteKind.EVENT -> {
             drawCircle(accent.copy(alpha=.18f),s*.23f,c)
-            repeat(8){i->val a=i*PI.toFloat()/4f;drawLine(Offset(c.x+cos(a)*s*.14f,c.y+sin(a)*s*.14f),Offset(c.x+cos(a)*s*.29f,c.y+sin(a)*s*.29f),s*.018f,accent)}
+            repeat(8){i->val a=i*PI.toFloat()/4f;drawLine(color=accent,start=Offset(c.x+cos(a)*s*.14f,c.y+sin(a)*s*.14f),end=Offset(c.x+cos(a)*s*.29f,c.y+sin(a)*s*.29f),strokeWidth=s*.018f)}
             drawCircle(Color.White,s*.055f,c)
         }
         MetaSpriteKind.LOCK -> {
