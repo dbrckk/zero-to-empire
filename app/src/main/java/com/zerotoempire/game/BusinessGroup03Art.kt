@@ -35,19 +35,23 @@ fun BusinessGroup03Sprite(id: Int, level: Int, iconSize: Dp, modifier: Modifier 
     val context = LocalContext.current
     val reduced = MotionQuality.reducedMotion(context)
     val lowPower = MotionQuality.lowPowerMode(context)
-    val transition = rememberInfiniteTransition(label = "group03-$id")
-    val phaseAnim by transition.animateFloat(
-        0f, 1f,
-        infiniteRepeatable(tween(if (lowPower) 12_000 else 7_400 + id * 220, easing = LinearEasing)),
-        label = "phase"
-    )
-    val pulseAnim by transition.animateFloat(
-        .82f, 1f,
-        infiniteRepeatable(tween(if (lowPower) 3_400 else 2_100 + id * 90), RepeatMode.Reverse),
-        label = "pulse"
-    )
-    val phase = if (reduced) .24f else phaseAnim
-    val pulse = if (reduced) .90f else pulseAnim
+    val motion = if (reduced) null else rememberInfiniteTransition(label = "group03-$id")
+    val phase = if (motion == null) .24f else {
+        val phaseAnim by motion.animateFloat(
+            0f, 1f,
+            infiniteRepeatable(tween(if (lowPower) 12_000 else 7_400 + id * 220, easing = LinearEasing)),
+            label = "phase"
+        )
+        phaseAnim
+    }
+    val pulse = if (motion == null) .90f else {
+        val pulseAnim by motion.animateFloat(
+            .82f, 1f,
+            infiniteRepeatable(tween(if (lowPower) 3_400 else 2_100 + id * 90), RepeatMode.Reverse),
+            label = "pulse"
+        )
+        pulseAnim
+    }
     val stage = group03Stage(level)
     val accent = group03Accent(id)
 
@@ -68,8 +72,9 @@ fun BusinessGroup03Sprite(id: Int, level: Int, iconSize: Dp, modifier: Modifier 
             val c = Offset(s * .5f, s * .52f)
             drawCircle(Brush.radialGradient(listOf(accent.copy(alpha=.18f*pulse), Color.Transparent), c, s*.46f), s*.46f, c)
             drawCircle(accent.copy(alpha=.32f), s*.41f, c, style=Stroke(s*.011f))
-            repeat(if (lowPower) 10 else 20) { i ->
-                val a = i * 2f * PI.toFloat() / (if (lowPower) 10 else 20)
+            val starCount = if (lowPower) 10 else 20
+            repeat(starCount) { i ->
+                val a = i * 2f * PI.toFloat() / starCount
                 val r = s * (.34f + (i % 3) * .045f)
                 drawCircle(Color.White.copy(alpha=.18f + (i%4)*.06f), if(i%5==0)s*.009f else s*.005f, Offset(c.x+cos(a)*r,c.y+sin(a)*r))
             }
@@ -111,7 +116,8 @@ private fun DrawScope.drawGalacticExchangeAAA(stage:Int, phase:Float, pulse:Floa
     repeat(3){r->drawOval(if(r%2==0)cyan.copy(alpha=.55f) else violet.copy(alpha=.45f),Offset(s*(.22f+r*.04f),s*(.36f+r*.055f)),Size(s*(.56f-r*.08f),s*(.27f-r*.05f)),style=Stroke(s*.015f))}
     drawRoundRect(Color(0xFF26334D),Offset(s*.38f,s*.33f),Size(s*.24f,s*.32f),CornerRadius(s*.035f))
     drawRoundRect(cyan.copy(alpha=.55f),Offset(s*.42f,s*.38f),Size(s*.16f,s*.19f),CornerRadius(s*.020f))
-    repeat(if(lowPower)4 else 9){i->val a=phase*2*PI+i*2*PI/(if(lowPower)4 else 9);val x=c.x+cos(a).toFloat()*s*.34f;val y=c.y+sin(a).toFloat()*s*.13f;drawCircle(if(i%2==0)cyan else Color(0xFFFFD36A),s*.009f,Offset(x,y))}
+    val traderCount = if(lowPower)4 else 9
+    repeat(traderCount){i->val a=phase*2*PI+i*2*PI/traderCount;val x=c.x+cos(a).toFloat()*s*.34f;val y=c.y+sin(a).toFloat()*s*.13f;drawCircle(if(i%2==0)cyan else Color(0xFFFFD36A),s*.009f,Offset(x,y))}
     if(stage>=1) drawArc(cyan.copy(alpha=.55f),180f+phase*35f,170f,false,Offset(s*.13f,s*.17f),Size(s*.74f,s*.64f),style=Stroke(s*.010f))
     if(stage>=2) repeat(4){i->drawLine(violet.copy(alpha=.45f),Offset(s*(.29f+i*.14f),s*.68f),Offset(s*(.34f+i*.10f),s*.42f),s*.006f)}
     if(stage>=3) drawCircle(cyan.copy(alpha=.11f*pulse),s*.34f,c)
