@@ -30,13 +30,27 @@ import kotlin.math.sin
 
 @Composable
 fun PowerCoreTrailField(modifier: Modifier = Modifier) {
-    val transition = rememberInfiniteTransition(label = "coreTrails")
-    val phase by transition.animateFloat(0f, 1f, infiniteRepeatable(tween(2600, easing = LinearEasing)), label = "trailPhase")
+    val context = LocalContext.current
+    val reduced = MotionQuality.reducedMotion(context)
+    val lowPower = MotionQuality.lowPowerMode(context)
+    val phase = if (reduced) {
+        .18f
+    } else {
+        val transition = rememberInfiniteTransition(label = "coreTrails")
+        val animated by transition.animateFloat(
+            0f,
+            1f,
+            infiniteRepeatable(tween(if (lowPower) 4200 else 2600, easing = LinearEasing)),
+            label = "trailPhase"
+        )
+        animated
+    }
     Canvas(modifier) {
         val c = Offset(size.width / 2f, size.height / 2f)
         val r = size.minDimension * .34f
-        repeat(18) { i ->
-            val p = (phase + i / 18f) % 1f
+        val trailCount = if (lowPower) 9 else 18
+        repeat(trailCount) { i ->
+            val p = (phase + i / trailCount.toFloat()) % 1f
             val a = p * (Math.PI * 2.0).toFloat() + i * .31f
             val rr = r * (.55f + .45f * p)
             val pos = Offset(c.x + cos(a) * rr, c.y + sin(a) * rr)
@@ -64,9 +78,18 @@ fun CelebrationVfx(accentName: String, modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val reduced = MotionQuality.reducedMotion(context)
     val lowPower = MotionQuality.lowPowerMode(context)
-    val transition = rememberInfiniteTransition(label = "celebration-$accentName")
-    val animated by transition.animateFloat(0f, 1f, infiniteRepeatable(tween(if (lowPower) 5200 else 3200, easing = LinearEasing)), label = "celebrationPhase")
-    val phase = if (reduced) .22f else animated
+    val phase = if (reduced) {
+        .22f
+    } else {
+        val transition = rememberInfiniteTransition(label = "celebration-$accentName")
+        val animated by transition.animateFloat(
+            0f,
+            1f,
+            infiniteRepeatable(tween(if (lowPower) 5200 else 3200, easing = LinearEasing)),
+            label = "celebrationPhase"
+        )
+        animated
+    }
     val accent = when (accentName.uppercase()) {
         "PRESTIGE", "ASCENSION" -> EmpireArtPalette.Violet
         "REWARDED", "REWARD" -> EmpireArtPalette.Cyan
@@ -111,8 +134,15 @@ fun CelebrationVfx(accentName: String, modifier: Modifier = Modifier) {
 @Composable
 fun EraTransitionOverlay(eraIndex: Int, visible: Boolean, modifier: Modifier = Modifier) {
     AnimatedVisibility(visible = visible, enter = fadeIn(tween(180)), exit = fadeOut(tween(520)), modifier = modifier) {
-        val transition = rememberInfiniteTransition(label = "eraTransition")
-        val phase by transition.animateFloat(0f, 1f, infiniteRepeatable(tween(1200, easing = LinearEasing)), label = "eraPhase")
+        val context = LocalContext.current
+        val reduced = MotionQuality.reducedMotion(context)
+        val phase = if (reduced) {
+            .52f
+        } else {
+            val transition = rememberInfiniteTransition(label = "eraTransition")
+            val animated by transition.animateFloat(0f, 1f, infiniteRepeatable(tween(1200, easing = LinearEasing)), label = "eraPhase")
+            animated
+        }
         val accent = when (eraIndex) {
             0 -> EmpireArtPalette.Gold
             1, 2 -> EmpireArtPalette.Cyan
