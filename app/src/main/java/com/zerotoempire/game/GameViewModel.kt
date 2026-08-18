@@ -119,20 +119,27 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     fun claimChallenge(id: String): Boolean { val c=challenges().firstOrNull{it.id==id}?:return false; if(!c.completed||c.claimed)return false; _state.value=_state.value.copy(gems=_state.value.gems+c.rewardGems); _meta.value=_meta.value.copy(gems=_state.value.gems,claimedChallengeIds=_meta.value.claimedChallengeIds+id); _celebration.value=MajorCelebration("CHALLENGE COMPLETE","+${c.rewardGems} gems earned","★","WEEKLY"); scheduleSave(); return true }
 
     fun applyEntitlements(products: Set<StoreProduct>) {
+        val hadStarter = _meta.value.starterPackOwned
+        val restoredStarter = StoreProduct.STARTER_PACK in products && !hadStarter
         val hasRemoveAds = StoreProduct.REMOVE_ADS in products || _meta.value.adsRemoved
-        val hasStarter = StoreProduct.STARTER_PACK in products || _meta.value.starterPackOwned
-        val recoveredGems = (if (StoreProduct.GEM_PACK_SMALL in products) 120 else 0) +
+        val hasStarter = StoreProduct.STARTER_PACK in products || hadStarter
+        val recoveredConsumableGems = (if (StoreProduct.GEM_PACK_SMALL in products) 120 else 0) +
             (if (StoreProduct.GEM_PACK_MEDIUM in products) 650 else 0)
-        if (recoveredGems > 0) {
-            _state.value = _state.value.copy(gems = _state.value.gems + recoveredGems)
+        val restoredStarterGems = if (restoredStarter) 250 else 0
+        val totalRecoveredGems = recoveredConsumableGems + restoredStarterGems
+
+        if (totalRecoveredGems > 0) {
+            _state.value = _state.value.copy(gems = _state.value.gems + totalRecoveredGems)
         }
         _meta.value = _meta.value.copy(
             gems = _state.value.gems,
             adsRemoved = hasRemoveAds,
             starterPackOwned = hasStarter
         )
-        if (recoveredGems > 0) {
-            _celebration.value = MajorCelebration("PURCHASE RECOVERED", "+$recoveredGems gems restored.", "◆", "STORE")
+        if (restoredStarter) activateProfitBoost(30)
+        if (totalRecoveredGems > 0) {
+            val detail = if (restoredStarter) "Starter Pack and purchase rewards restored." else "+$totalRecoveredGems gems restored."
+            _celebration.value = MajorCelebration("PURCHASE RECOVERED", detail, "◆", "STORE")
         }
         scheduleSave()
     }
