@@ -2,7 +2,6 @@ package com.zerotoempire.game
 
 import java.time.LocalDate
 import java.time.temporal.WeekFields
-import java.util.Locale
 import kotlin.math.min
 
 enum class ChallengeMetric { TAPS, PURCHASES, LIFETIME_CASH, PRESTIGES }
@@ -30,11 +29,14 @@ object ChallengeRotation {
     fun current(state: GameState, meta: PlayerMeta, date: LocalDate = LocalDate.now()): List<TimedChallenge> {
         val key = weeklyKey(date)
         fun claimed(suffix: String) = "$key:$suffix" in meta.claimedChallengeIds
+        val weeklyTaps = (meta.totalTaps - meta.challengeWeekTapBase).coerceAtLeast(0L).toDouble()
+        val weeklyPurchases = (meta.totalPurchases - meta.challengeWeekPurchaseBase).coerceAtLeast(0L).toDouble()
+        val weeklyPrestiges = (meta.prestigeCount - meta.challengeWeekPrestigeBase).coerceAtLeast(0).toDouble()
         return listOf(
-            TimedChallenge("$key:tap", "Tap Storm", "Generate capital manually 500 times this week.", ChallengeMetric.TAPS, 500.0, 20, meta.totalTaps.toDouble(), claimed("tap")),
-            TimedChallenge("$key:scale", "Scale Up", "Purchase 150 business levels this week.", ChallengeMetric.PURCHASES, 150.0, 30, meta.totalPurchases.toDouble(), claimed("scale")),
-            TimedChallenge("$key:wealth", "Capital Surge", "Reach 10M lifetime cash.", ChallengeMetric.LIFETIME_CASH, 10_000_000.0, 40, state.lifetimeCash, claimed("wealth")),
-            TimedChallenge("$key:ascend", "Legacy Run", "Complete 2 ascensions.", ChallengeMetric.PRESTIGES, 2.0, 50, meta.prestigeCount.toDouble(), claimed("ascend"))
+            TimedChallenge("$key:tap", "Tap Storm", "Generate capital manually 500 times this week.", ChallengeMetric.TAPS, 500.0, 20, weeklyTaps, claimed("tap")),
+            TimedChallenge("$key:scale", "Scale Up", "Purchase 150 business levels this week.", ChallengeMetric.PURCHASES, 150.0, 30, weeklyPurchases, claimed("scale")),
+            TimedChallenge("$key:wealth", "Capital Surge", "Reach 10M lifetime cash in the current run.", ChallengeMetric.LIFETIME_CASH, 10_000_000.0, 40, state.lifetimeCash, claimed("wealth")),
+            TimedChallenge("$key:ascend", "Legacy Run", "Complete 2 ascensions this week.", ChallengeMetric.PRESTIGES, 2.0, 50, weeklyPrestiges, claimed("ascend"))
         )
     }
 }
