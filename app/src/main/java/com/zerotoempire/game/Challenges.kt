@@ -28,10 +28,11 @@ object ChallengeRotation {
 
     fun current(state: GameState, meta: PlayerMeta, date: LocalDate = LocalDate.now()): List<TimedChallenge> {
         val key = weeklyKey(date)
+        val baselineReady = meta.challengeWeekKey == key
         fun claimed(suffix: String) = "$key:$suffix" in meta.claimedChallengeIds
-        val weeklyTaps = (meta.totalTaps - meta.challengeWeekTapBase).coerceAtLeast(0L).toDouble()
-        val weeklyPurchases = (meta.totalPurchases - meta.challengeWeekPurchaseBase).coerceAtLeast(0L).toDouble()
-        val weeklyPrestiges = (meta.prestigeCount - meta.challengeWeekPrestigeBase).coerceAtLeast(0).toDouble()
+        val weeklyTaps = if (baselineReady) (meta.totalTaps - meta.challengeWeekTapBase).coerceAtLeast(0L).toDouble() else 0.0
+        val weeklyPurchases = if (baselineReady) (meta.totalPurchases - meta.challengeWeekPurchaseBase).coerceAtLeast(0L).toDouble() else 0.0
+        val weeklyPrestiges = if (baselineReady) (meta.prestigeCount - meta.challengeWeekPrestigeBase).coerceAtLeast(0).toDouble() else 0.0
         return listOf(
             TimedChallenge("$key:tap", "Tap Storm", "Generate capital manually 500 times this week.", ChallengeMetric.TAPS, 500.0, 20, weeklyTaps, claimed("tap")),
             TimedChallenge("$key:scale", "Scale Up", "Purchase 150 business levels this week.", ChallengeMetric.PURCHASES, 150.0, 30, weeklyPurchases, claimed("scale")),
