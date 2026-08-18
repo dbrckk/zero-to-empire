@@ -26,9 +26,17 @@ fun EraVistaAAA(eraIndex: Int, modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val reduced = MotionQuality.reducedMotion(context)
     val lowPower = MotionQuality.lowPowerMode(context)
-    val transition = rememberInfiniteTransition(label = "eraVistaAAA")
-    val driftAnim by transition.animateFloat(0f, 1f, infiniteRepeatable(tween(if (lowPower) 26000 else 16000, easing = LinearEasing)), label = "drift")
-    val drift = if (reduced) .22f else driftAnim
+    val drift = if (!reduced) {
+        val transition = rememberInfiniteTransition(label = "eraVistaAAA")
+        val driftAnim by transition.animateFloat(
+            0f,
+            1f,
+            infiniteRepeatable(tween(if (lowPower) 26000 else 16000, easing = LinearEasing)),
+            label = "drift"
+        )
+        driftAnim
+    } else .22f
+
     Canvas(modifier) {
         val w=size.width; val h=size.height
         drawRect(Brush.verticalGradient(listOf(EmpireColors.DeepSpace,EmpireColors.Void)))
@@ -58,6 +66,6 @@ private fun DrawScope.drawLunarEra(w:Float,h:Float,d:Float){val cyan=Color(0xFFE
 private fun DrawScope.drawMarsEra(w:Float,h:Float,d:Float){val red=EmpireArtPalette.Red;drawCircle(Color(0xFFB34235),h*.24f,Offset(w*.76f,h*.37f));drawCircle(Color(0xFF7A2E28),h*.05f,Offset(w*.68f,h*.32f));val base=h*.83f;repeat(4){i->val x=w*(.10f+i*.19f);drawRoundRect(Color(0xFF3B2929),Offset(x,h*.57f),Size(w*.13f,h*.18f));drawArc(red,180f,180f,false,Offset(x-w*.01f,h*.48f),Size(w*.15f,h*.18f),style=Stroke(3f));drawCircle(red.copy(alpha=.7f),2f,Offset(x+w*.065f,h*.64f))};drawLine(red.copy(alpha=.4f),Offset(0f,base),Offset(w,base),3f)}
 private fun DrawScope.drawDysonEra(w:Float,h:Float,d:Float,low:Boolean){val gold=EmpireArtPalette.GoldHot;val c=Offset(w*.5f,h*.45f);drawCircle(Brush.radialGradient(listOf(Color.White,gold,Color.Transparent),c,h*.22f),h*.22f,c);repeat(if(low)3 else 5){r->drawCircle(gold.copy(alpha=.68f-r*.1f),h*(.24f+r*.035f),c,style=Stroke(2.5f))};repeat(if(low)6 else 12){i->val a=d*2f*PI.toFloat()+i*2f*PI.toFloat()/(if(low)6 else 12);drawCircle(Color.White,2.2f,Offset(c.x+cos(a)*w*.32f,c.y+sin(a)*h*.25f))}}
 private fun DrawScope.drawGalacticEra(w:Float,h:Float,d:Float,low:Boolean){val violet=EmpireArtPalette.Violet;val c=Offset(w*.5f,h*.46f);repeat(if(low)3 else 6){i->drawArc(violet.copy(alpha=.18f+i*.07f),d*360f+i*35f,210f,false,Offset(c.x-w*(.15f+i*.035f),c.y-h*(.10f+i*.025f)),Size(w*(.30f+i*.07f),h*(.20f+i*.05f)),style=Stroke(2f))};drawCircle(Color.White,h*.045f,c);repeat(if(low)4 else 9){i->val a=i*2f*PI.toFloat()/(if(low)4 else 9)-d;drawCircle(if(i%2==0)EmpireArtPalette.Cyan else violet,2.4f,Offset(c.x+cos(a)*w*.37f,c.y+sin(a)*h*.27f))}}
-private fun DrawScope.drawIntergalacticEra(w:Float,h:Float,d:Float,low:Boolean){val cyan=EmpireArtPalette.Cyan;val mag=EmpireArtPalette.Magenta;val c=Offset(w*.5f,h*.45f);drawCircle(cyan.copy(alpha=.10f),h*.27f,c);drawCircle(cyan,h*.20f,c,style=Stroke(3.5f));drawCircle(mag,h*.13f,c,style=Stroke(2.5f));repeat(if(low)4 else 8){i->val a=d*2f*PI.toFloat()+i*PI.toFloat()/4f;drawLine(Offset(c.x+cos(a)*w*.12f,c.y+sin(a)*h*.09f),Offset(c.x+cos(a)*w*.32f,c.y+sin(a)*h*.25f),2f,if(i%2==0)cyan else mag)};drawCircle(Color.White,h*.045f,c)}
+private fun DrawScope.drawIntergalacticEra(w:Float,h:Float,d:Float,low:Boolean){val cyan=EmpireArtPalette.Cyan;val mag=EmpireArtPalette.Magenta;val c=Offset(w*.5f,h*.45f);drawCircle(cyan.copy(alpha=.10f),h*.27f,c);drawCircle(cyan,h*.20f,c,style=Stroke(3.5f));drawCircle(mag,h*.13f,c,style=Stroke(2.5f));repeat(if(low)4 else 8){i->val a=d*2f*PI.toFloat()+i*PI.toFloat()/4f;drawLine(color=if(i%2==0)cyan else mag,start=Offset(c.x+cos(a)*w*.12f,c.y+sin(a)*h*.09f),end=Offset(c.x+cos(a)*w*.32f,c.y+sin(a)*h*.25f),strokeWidth=2f)};drawCircle(Color.White,h*.045f,c)}
 private fun DrawScope.drawRealityEra(w:Float,h:Float,d:Float,low:Boolean){val pink=Color(0xFFFF68D8);val cyan=Color(0xFF6EEBFF);val c=Offset(w*.5f,h*.45f);repeat(4){r->val rx=w*(.12f+r*.06f);val ry=h*(.08f+r*.035f);drawArc(if(r%2==0)pink else cyan,d*360f*(if(r%2==0)1 else -1)+r*45f,255f,false,Offset(c.x-rx,c.y-ry),Size(rx*2,ry*2),style=Stroke(3f-r*.3f))};drawCircle(Color.White,h*.055f,c);val p=Path().apply{moveTo(c.x,h*.12f);lineTo(w*.78f,c.y);lineTo(c.x,h*.78f);lineTo(w*.22f,c.y);close()};drawPath(p,pink.copy(alpha=.24f),style=Stroke(2f))}
-private fun DrawScope.drawTranscendentEra(w:Float,h:Float,d:Float,low:Boolean){val gold=Color(0xFFFFE36E);val violet=Color(0xFFC68BFF);val c=Offset(w*.5f,h*.45f);drawCircle(Brush.radialGradient(listOf(Color.White,gold.copy(alpha=.9f),violet.copy(alpha=.25f),Color.Transparent),c,h*.26f),h*.26f,c);repeat(3){r->drawCircle(if(r%2==0)gold else violet,h*(.15f+r*.07f),c,style=Stroke(3f-r*.45f))};repeat(if(low)6 else 12){i->val a=d*2f*PI.toFloat()+i*2f*PI.toFloat()/(if(low)6 else 12);drawLine(Offset(c.x+cos(a)*w*.11f,c.y+sin(a)*h*.08f),Offset(c.x+cos(a)*w*.34f,c.y+sin(a)*h*.27f),2.4f,if(i%2==0)gold else violet)};drawCircle(Color.White,h*.05f,c)}
+private fun DrawScope.drawTranscendentEra(w:Float,h:Float,d:Float,low:Boolean){val gold=Color(0xFFFFE36E);val violet=Color(0xFFC68BFF);val c=Offset(w*.5f,h*.45f);drawCircle(Brush.radialGradient(listOf(Color.White,gold.copy(alpha=.9f),violet.copy(alpha=.25f),Color.Transparent),c,h*.26f),h*.26f,c);repeat(3){r->drawCircle(if(r%2==0)gold else violet,h*(.15f+r*.07f),c,style=Stroke(3f-r*.45f))};repeat(if(low)6 else 12){i->val a=d*2f*PI.toFloat()+i*2f*PI.toFloat()/(if(low)6 else 12);drawLine(color=if(i%2==0)gold else violet,start=Offset(c.x+cos(a)*w*.11f,c.y+sin(a)*h*.08f),end=Offset(c.x+cos(a)*w*.34f,c.y+sin(a)*h*.27f),strokeWidth=2.4f)};drawCircle(Color.White,h*.05f,c)}
