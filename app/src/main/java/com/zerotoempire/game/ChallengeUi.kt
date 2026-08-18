@@ -11,13 +11,14 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import java.time.LocalDate
 
 /** Compact entry point that makes the rotating challenge system reachable during normal play. */
 @Composable
 fun ChallengeDock(vm: GameViewModel, modifier: Modifier = Modifier) {
-    val state by vm.state.collectAsStateWithLifecycleCompat()
-    val meta by vm.meta.collectAsStateWithLifecycleCompat()
+    val state by vm.state.collectAsStateWithLifecycle()
+    val meta by vm.meta.collectAsStateWithLifecycle()
     val challenges = remember(state, meta) { ChallengeRotation.current(state, meta) }
     val completed = challenges.count { it.completed }
     val unclaimed = challenges.count { it.completed && !it.claimed }
@@ -99,7 +100,9 @@ private fun ChallengeDialog(
                                 Text(progressText, color = EmpireColors.TextSecondary, fontSize = 9.sp, modifier = Modifier.weight(1f))
                                 Button(
                                     onClick = {
-                                        if (onClaim(challenge.id)) haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                                        if (onClaim(challenge.id)) {
+                                            haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                                        }
                                     },
                                     enabled = challenge.completed && !challenge.claimed,
                                     contentPadding = PaddingValues(horizontal = 10.dp, vertical = 2.dp),
@@ -124,8 +127,3 @@ private fun ChallengeDialog(
         confirmButton = { TextButton(onClick = onDismiss) { Text("CLOSE") } }
     )
 }
-
-/** Small local adapter keeps this file independent from lifecycle imports used by the main UI. */
-@Composable
-private fun <T> kotlinx.coroutines.flow.StateFlow<T>.collectAsStateWithLifecycleCompat(): State<T> =
-    androidx.lifecycle.compose.collectAsStateWithLifecycle(this)
