@@ -34,11 +34,18 @@ fun BusinessGroup04Sprite(id: Int, level: Int, iconSize: Dp, modifier: Modifier 
     val context = LocalContext.current
     val reduced = MotionQuality.reducedMotion(context)
     val lowPower = MotionQuality.lowPowerMode(context)
-    val motion = rememberInfiniteTransition(label = "group04-$id")
-    val phaseAnim by motion.animateFloat(0f,1f,infiniteRepeatable(tween(if(lowPower)14000 else 8200,easing=LinearEasing)),label="phase")
-    val pulseAnim by motion.animateFloat(.80f,1f,infiniteRepeatable(tween(if(lowPower)4000 else 2400),RepeatMode.Reverse),label="pulse")
-    val phase=if(reduced).21f else phaseAnim
-    val pulse=if(reduced).90f else pulseAnim
+    val phase: Float
+    val pulse: Float
+    if (reduced) {
+        phase = .21f
+        pulse = .90f
+    } else {
+        val motion = rememberInfiniteTransition(label = "group04-$id")
+        val phaseAnim by motion.animateFloat(0f,1f,infiniteRepeatable(tween(if(lowPower)14000 else 8200,easing=LinearEasing)),label="phase")
+        val pulseAnim by motion.animateFloat(.80f,1f,infiniteRepeatable(tween(if(lowPower)4000 else 2400),RepeatMode.Reverse),label="pulse")
+        phase = phaseAnim
+        pulse = pulseAnim
+    }
     val stage=when{level>=1000->5;level>=500->4;level>=250->3;level>=100->2;level>=25->1;else->0}
     val accent=if(id==12) Color(0xFFFF68D8) else Color(0xFFFFE36E)
 
