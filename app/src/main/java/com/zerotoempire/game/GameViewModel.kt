@@ -1,6 +1,7 @@
 package com.zerotoempire.game
 
 import android.app.Application
+import android.os.SystemClock
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
@@ -57,12 +58,11 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
             loaded = true
 
             launch {
-                var previousTickNanos = System.nanoTime()
+                var previousTickNanos = SystemClock.elapsedRealtimeNanos()
                 while (true) {
                     delay(250L)
-                    val nowNanos = System.nanoTime()
-                    val elapsedSeconds = ((nowNanos - previousTickNanos).coerceAtLeast(0L) / 1_000_000_000.0)
-                        .coerceAtMost(2.0)
+                    val nowNanos = SystemClock.elapsedRealtimeNanos()
+                    val elapsedSeconds = (nowNanos - previousTickNanos).coerceAtLeast(0L) / 1_000_000_000.0
                     previousTickNanos = nowNanos
 
                     val s = _state.value
