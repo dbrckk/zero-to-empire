@@ -33,9 +33,7 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
             }
             purchases.forEach(::processPurchase)
         }
-        .enablePendingPurchases(
-            PendingPurchasesParams.newBuilder().enableOneTimeProducts().build()
-        )
+        .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
         .enableAutoServiceReconnection()
         .build()
 
@@ -47,11 +45,8 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
                 connecting = false
                 val callback = pendingRestoreCallback
                 pendingRestoreCallback = null
-                if (result.responseCode == BillingClient.BillingResponseCode.OK) {
-                    callback?.let(::restore)
-                } else {
-                    callback?.invoke(emptySet())
-                }
+                if (result.responseCode == BillingClient.BillingResponseCode.OK) callback?.let(::restore)
+                else callback?.invoke(emptySet())
             }
             override fun onBillingServiceDisconnected() { connecting = false }
         })
@@ -73,40 +68,23 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
             connect()
             return
         }
-
         val params = QueryProductDetailsParams.newBuilder()
-            .setProductList(
-                listOf(
-                    QueryProductDetailsParams.Product.newBuilder()
-                        .setProductId(product.productId)
-                        .setProductType(BillingClient.ProductType.INAPP)
-                        .build()
-                )
-            )
+            .setProductList(listOf(QueryProductDetailsParams.Product.newBuilder().setProductId(product.productId).setProductType(BillingClient.ProductType.INAPP).build()))
             .build()
-
         billingClient.queryProductDetailsAsync(params) { result, detailsResult ->
             if (result.responseCode != BillingClient.BillingResponseCode.OK) {
-                onResult(PurchaseResult.Failed(result.debugMessage))
-                return@queryProductDetailsAsync
+                onResult(PurchaseResult.Failed(result.debugMessage)); return@queryProductDetailsAsync
             }
             val details = detailsResult.productDetailsList.firstOrNull()
-            if (details == null) {
-                onResult(PurchaseResult.Failed("Product is unavailable in Google Play"))
-                return@queryProductDetailsAsync
-            }
+            if (details == null) { onResult(PurchaseResult.Failed("Product is unavailable in Google Play")); return@queryProductDetailsAsync }
             launch(activity, product, details, onResult)
         }
     }
 
     private fun launch(activity: Activity, product: StoreProduct, details: ProductDetails, onResult: (PurchaseResult) -> Unit) {
         pendingResult = onResult
-        val productParams = BillingFlowParams.ProductDetailsParams.newBuilder()
-            .setProductDetails(details)
-            .build()
-        val flowParams = BillingFlowParams.newBuilder()
-            .setProductDetailsParamsList(listOf(productParams))
-            .build()
+        val productParams = BillingFlowParams.ProductDetailsParams.newBuilder().setProductDetails(details).build()
+        val flowParams = BillingFlowParams.newBuilder().setProductDetailsParamsList(listOf(productParams)).build()
         val result = billingClient.launchBillingFlow(activity, flowParams)
         if (result.responseCode != BillingClient.BillingResponseCode.OK) {
             pendingResult = null
@@ -116,46 +94,24 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
 
     override fun restore(onResult: (Set<StoreProduct>) -> Unit) {
         if (!billingClient.isReady) {
-            // Keep a single latest restore waiter. This prevents two simultaneous restore queries
-            // from consuming and crediting the same stale consumable twice after reconnect.
             pendingRestoreCallback = onResult
             connect()
             return
         }
-        val params = QueryPurchasesParams.newBuilder()
-            .setProductType(BillingClient.ProductType.INAPP)
-            .build()
+        val params = QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.INAPP).build()
         billingClient.queryPurchasesAsync(params) { result, purchases ->
-            if (result.responseCode != BillingClient.BillingResponseCode.OK) {
-                onResult(emptySet())
-                return@queryPurchasesAsync
-            }
-
+            if (result.responseCode != BillingClient.BillingResponseCode.OK) { onResult(emptySet()); return@queryPurchasesAsync }
             val purchased = purchases.filter { it.purchaseState == Purchase.PurchaseState.PURCHASED }
-            val permanentOwned = purchased
-                .flatMap { it.products }
+            val permanentOwned = purchased.flatMap { it.products }
                 .mapNotNull { id -> StoreProduct.entries.firstOrNull { it.productId == id && !it.consumable } }
                 .toMutableSet()
-
-            purchased.filter { purchase ->
-                purchase.products.any { id -> StoreProduct.entries.any { it.productId == id && !it.consumable } }
-            }.forEach(::acknowledge)
-
+            purchased.filter { purchase -> purchase.products.any { id -> StoreProduct.entries.any { it.productId == id && !it.consumable } } }.forEach(::acknowledge)
             val recoverable = purchased.mapNotNull { purchase ->
-                val product = purchase.products
-                    .asSequence()
-                    .mapNotNull { id -> StoreProduct.entries.firstOrNull { it.productId == id && it.consumable } }
-                    .firstOrNull()
+                val product = purchase.products.asSequence().mapNotNull { id -> StoreProduct.entries.firstOrNull { it.productId == id && it.consumable } }.firstOrNull()
                 if (product == null) null else purchase to product
             }
-
-            if (recoverable.isEmpty()) {
-                onResult(permanentOwned)
-                return@queryPurchasesAsync
-            }
-
-            val recovered = mutableSetOf<StoreProduct>()
-            var remaining = recoverable.size
+            if (recoverable.isEmpty()) { onResult(permanentOwned); return@queryPurchasesAsync }
+            val recovered = mutableSetOf<StoreProduct>(); var remaining = recoverable.size
             recoverable.forEach { (purchase, product) ->
                 consumeRecovered(purchase) { success ->
                     if (success) recovered += product
@@ -167,19 +123,15 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
     }
 
     private fun processPurchase(purchase: Purchase) {
-        val product = purchase.products
-            .asSequence()
-            .mapNotNull { id -> StoreProduct.entries.firstOrNull { it.productId == id } }
-            .firstOrNull() ?: return
-
+        val product = purchase.products.asSequence().mapNotNull { id -> StoreProduct.entries.firstOrNull { it.productId == id } }.firstOrNull() ?: return
         when (purchase.purchaseState) {
-            Purchase.PurchaseState.PENDING -> {
-                // Notify the UI but keep the callback. Google Play can confirm this purchase later
-                // in the same process; clearing it here would acknowledge/consume without granting.
-                pendingResult?.invoke(PurchaseResult.Pending)
-            }
+            Purchase.PurchaseState.PENDING -> pendingResult?.invoke(PurchaseResult.Pending)
             Purchase.PurchaseState.PURCHASED -> {
-                if (product.consumable) consume(purchase, product) else {
+                if (product.consumable) {
+                    // If this confirmation arrived after process recreation, no UI callback exists.
+                    // Keep the purchase unconsumed so Restore Purchases / next launch can recover it.
+                    if (pendingResult != null) consume(purchase, product)
+                } else {
                     acknowledge(purchase)
                     pendingResult?.invoke(PurchaseResult.Success(product))
                     pendingResult = null
@@ -191,28 +143,21 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
 
     private fun acknowledge(purchase: Purchase) {
         if (purchase.isAcknowledged) return
-        val params = AcknowledgePurchaseParams.newBuilder()
-            .setPurchaseToken(purchase.purchaseToken)
-            .build()
+        val params = AcknowledgePurchaseParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()
         billingClient.acknowledgePurchase(params) { }
     }
 
     private fun consume(purchase: Purchase, product: StoreProduct) {
         val params = ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()
         billingClient.consumeAsync(params) { result, _ ->
-            if (result.responseCode == BillingClient.BillingResponseCode.OK) {
-                pendingResult?.invoke(PurchaseResult.Success(product))
-            } else {
-                pendingResult?.invoke(PurchaseResult.Failed(result.debugMessage))
-            }
+            if (result.responseCode == BillingClient.BillingResponseCode.OK) pendingResult?.invoke(PurchaseResult.Success(product))
+            else pendingResult?.invoke(PurchaseResult.Failed(result.debugMessage))
             pendingResult = null
         }
     }
 
     private fun consumeRecovered(purchase: Purchase, done: (Boolean) -> Unit) {
         val params = ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()
-        billingClient.consumeAsync(params) { result, _ ->
-            done(result.responseCode == BillingClient.BillingResponseCode.OK)
-        }
+        billingClient.consumeAsync(params) { result, _ -> done(result.responseCode == BillingClient.BillingResponseCode.OK) }
     }
 }
