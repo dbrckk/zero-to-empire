@@ -19,7 +19,11 @@ import java.time.LocalDate
 fun ChallengeDock(vm: GameViewModel, modifier: Modifier = Modifier) {
     val state by vm.state.collectAsStateWithLifecycle()
     val meta by vm.meta.collectAsStateWithLifecycle()
-    val challenges = remember(state, meta) { ChallengeRotation.current(state, meta) }
+    val currentWeek = ChallengeRotation.weeklyKey()
+    LaunchedEffect(currentWeek, meta.challengeWeekKey) {
+        if (meta.challengeWeekKey != currentWeek) vm.ensureChallengeWeek()
+    }
+    val challenges = remember(state, meta, currentWeek) { ChallengeRotation.current(state, meta) }
     val completed = challenges.count { it.completed }
     val unclaimed = challenges.count { it.completed && !it.claimed }
     var open by remember { mutableStateOf(false) }
@@ -61,11 +65,7 @@ private fun ChallengeDialog(
         title = {
             Column {
                 Text("WEEKLY COMMAND", color = EmpireColors.Gold, fontWeight = FontWeight.Black)
-                Text(
-                    ChallengeRotation.weeklyKey(LocalDate.now()),
-                    color = EmpireColors.TextSecondary,
-                    fontSize = 10.sp
-                )
+                Text(ChallengeRotation.weeklyKey(LocalDate.now()), color = EmpireColors.TextSecondary, fontSize = 10.sp)
             }
         },
         text = {
@@ -99,11 +99,7 @@ private fun ChallengeDialog(
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Text(progressText, color = EmpireColors.TextSecondary, fontSize = 9.sp, modifier = Modifier.weight(1f))
                                 Button(
-                                    onClick = {
-                                        if (onClaim(challenge.id)) {
-                                            haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                                        }
-                                    },
+                                    onClick = { if (onClaim(challenge.id)) haptics.performHapticFeedback(HapticFeedbackType.LongPress) },
                                     enabled = challenge.completed && !challenge.claimed,
                                     contentPadding = PaddingValues(horizontal = 10.dp, vertical = 2.dp),
                                     modifier = Modifier.height(30.dp)
