@@ -31,9 +31,16 @@ fun EndgameManagerPortrait(businessId: Int, portraitSize: Dp) {
     val context = LocalContext.current
     val reduced = MotionQuality.reducedMotion(context)
     val lowPower = MotionQuality.lowPowerMode(context)
-    val transition = rememberInfiniteTransition(label = "endgameManager$businessId")
-    val animated by transition.animateFloat(0f, 1f, infiniteRepeatable(tween(if (lowPower) 15000 else 9000, easing = LinearEasing)), label = "phase")
-    val phase = if (reduced) .31f else animated
+    val phase = if (!reduced) {
+        val transition = rememberInfiniteTransition(label = "endgameManager$businessId")
+        val animated by transition.animateFloat(
+            0f,
+            1f,
+            infiniteRepeatable(tween(if (lowPower) 15000 else 9000, easing = LinearEasing)),
+            label = "phase"
+        )
+        animated
+    } else .31f
     val accent = when (businessId) {
         10 -> Color(0xFF67E8FF)
         11 -> Color(0xFFC692FF)
