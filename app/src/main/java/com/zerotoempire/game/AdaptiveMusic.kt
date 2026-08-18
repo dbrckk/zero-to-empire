@@ -12,6 +12,7 @@ import kotlin.math.sin
 /** Resource-free adaptive soundtrack synthesized at runtime. */
 class AdaptiveMusicEngine(context: Context) {
     private val running = AtomicBoolean(false)
+    private val foreground = AtomicBoolean(true)
     @Volatile private var intensity = 0
     @Volatile private var volume = .18f
     private var worker: Thread? = null
@@ -43,14 +44,27 @@ class AdaptiveMusicEngine(context: Context) {
 
     fun start() {
         if (!running.compareAndSet(false, true)) return
+        foreground.set(true)
         track.play()
         worker = thread(name = "EmpireAdaptiveMusic", isDaemon = true) { renderLoop() }
+    }
+
+    fun resumePlayback() {
+        if (!running.get() || foreground.getAndSet(true)) return
+        runCatching { track.play() }
+    }
+
+    fun pausePlayback() {
+        if (!running.get() || !foreground.getAndSet(false)) return
+        runCatching { track.pause() }
+        runCatching { track.flush() }
     }
 
     fun setEmpireLevel(level: Int) { intensity = level.coerceIn(0, 10) }
     fun setVolume(value: Float) { volume = value.coerceIn(0f, .35f) }
 
     fun release() {
+        foreground.set(false)
         running.set(false)
         worker?.join(250)
         worker = null
@@ -64,6 +78,10 @@ class AdaptiveMusicEngine(context: Context) {
         val pcm = ShortArray(frames * 2)
         var sampleCursor = 0L
         while (running.get()) {
+            if (!foreground.get()) {
+                try { Thread.sleep(50) } catch (_: InterruptedException) { Thread.currentThread().interrupt() }
+                continue
+            }
             val tier = intensity
             val root = when (tier) {
                 0, 1 -> 55.0
@@ -90,7 +108,7 @@ class AdaptiveMusicEngine(context: Context) {
                 pcm[frame * 2 + 1] = right
                 sampleCursor++
             }
-            track.write(pcm, 0, pcm.size, AudioTrack.WRITE_BLOCKING)
+            if (foreground.get()) track.write(pcm, 0, pcm.size, AudioTrack.WRITE_BLOCKING)
         }
     }
 }
@@ -98,6 +116,8 @@ class AdaptiveMusicEngine(context: Context) {
 object GameMusicBus {
     @Volatile private var engine: AdaptiveMusicEngine? = null
     fun attach(engine: AdaptiveMusicEngine) { this.engine?.release(); this.engine = engine; engine.start() }
+    fun resume() = engine?.resumePlayback() ?: Unit
+    fun pause() = engine?.pausePlayback() ?: Unit
     fun setEmpireLevel(level: Int) = engine?.setEmpireLevel(level) ?: Unit
     fun setVolume(volume: Float) = engine?.setVolume(volume) ?: Unit
     fun detach() { engine?.release(); engine = null }
