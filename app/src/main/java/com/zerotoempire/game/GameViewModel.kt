@@ -56,6 +56,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
                 highestEraSeen = maxOf(save.meta.highestEraSeen, eraIndex)
             )
             loaded = true
+            persistNow()
 
             launch {
                 var previousTickNanos = SystemClock.elapsedRealtimeNanos()
