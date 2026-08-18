@@ -36,6 +36,21 @@ private data class BusinessArtUiState(
     val affordable: Boolean
 )
 
+private fun businessArtUiState(state: GameState, id: Int, buyMode: BuyMode): BusinessArtUiState {
+    val business = state.businesses.firstOrNull { it.id == id }
+    val level = business?.level ?: 0
+    if (business == null || buyMode == BuyMode.X1) {
+        return BusinessArtUiState(level, 0, 0.0, false)
+    }
+    val quote = BulkPurchase.quote(business, state.cash, buyMode)
+    return BusinessArtUiState(
+        level = level,
+        quoteCount = quote.count,
+        quoteCost = quote.totalCost,
+        affordable = quote.valid && quote.totalCost <= state.cash
+    )
+}
+
 @Composable
 fun BusinessArtIcon(id: Int, iconSize: Dp, modifier: Modifier = Modifier) {
     val vm: GameViewModel = viewModel()
@@ -45,25 +60,10 @@ fun BusinessArtIcon(id: Int, iconSize: Dp, modifier: Modifier = Modifier) {
     // inside the sprite, so emit only when this business level changes. In bulk modes the
     // quote is part of the visible icon and therefore remains live.
     val uiFlow = remember(vm, id, buyMode) {
-        vm.state.map { state ->
-            val business = state.businesses.firstOrNull { it.id == id }
-            val level = business?.level ?: 0
-            if (business == null || buyMode == BuyMode.X1) {
-                BusinessArtUiState(level, 0, 0.0, false)
-            } else {
-                val quote = BulkPurchase.quote(business, state.cash, buyMode)
-                BusinessArtUiState(
-                    level = level,
-                    quoteCount = quote.count,
-                    quoteCost = quote.totalCost,
-                    affordable = quote.valid && quote.totalCost <= state.cash
-                )
-            }
-        }.distinctUntilChanged()
+        vm.state.map { state -> businessArtUiState(state, id, buyMode) }.distinctUntilChanged()
     }
-    val ui by uiFlow.collectAsStateWithLifecycle(
-        initialValue = BusinessArtUiState(level = 0, quoteCount = 0, quoteCost = 0.0, affordable = false)
-    )
+    val initialUi = remember(vm, id, buyMode) { businessArtUiState(vm.state.value, id, buyMode) }
+    val ui by uiFlow.collectAsStateWithLifecycle(initialValue = initialUi)
 
     val level = ui.level
     val burst = remember(id) { Animatable(0f) }
