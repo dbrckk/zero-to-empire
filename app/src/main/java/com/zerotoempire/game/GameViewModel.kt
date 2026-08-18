@@ -75,8 +75,6 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
                 }
             }
 
-            // Structural actions already schedule a debounced save after 350 ms.
-            // Keep only a low-frequency safety snapshot for passive income progression.
             launch { while (true) { delay(30_000L); persistNow() } }
         }
     }
@@ -201,7 +199,8 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     fun hireManager(businessId:Int):Boolean{val s=_state.value;val m=Managers.catalog.firstOrNull{it.businessId==businessId}?:return false;if(businessId in s.hiredManagerIds||s.cash<m.cost)return false;_state.value=s.copy(cash=s.cash-m.cost,hiredManagerIds=s.hiredManagerIds+businessId);scheduleSave();return true}
     fun buyUpgrade(id:String):Boolean{val s=_state.value;val u=Upgrades.catalog.firstOrNull{it.id==id}?:return false;val r=s.upgradeRanks[id]?:0;if(r>=u.maxRank||s.gems<u.gemCost)return false;_state.value=s.copy(gems=s.gems-u.gemCost,upgradeRanks=s.upgradeRanks+(id to r+1));syncMetaCurrency();scheduleSave();return true}
     fun grantGems(amount:Int){if(amount>0){_state.value=_state.value.copy(gems=_state.value.gems+amount);syncMetaCurrency();scheduleSave()}}
-    fun activateProfitBoost(minutes:Int=10){val s=_state.value;val base=maxOf(System.currentTimeMillis(),s.boostEndsAtMillis);_state.value=s.copy(boostEndsAtMillis=base+minutes*60_000L);_meta.value=_meta.value.copy(boostEndsAtMillis=_state.value.boostEndsAtMillis);scheduleSave()}
+    fun activateProfitBoost(){requestProfitBoostAd()}
+    fun activateProfitBoost(minutes:Int){val s=_state.value;val base=maxOf(System.currentTimeMillis(),s.boostEndsAtMillis);_state.value=s.copy(boostEndsAtMillis=base+minutes*60_000L);_meta.value=_meta.value.copy(boostEndsAtMillis=_state.value.boostEndsAtMillis);scheduleSave()}
     fun prestige(){val s=_state.value;val total=Progression.prestigeReward(s.lifetimeCash);if(total-s.prestigePoints<=0)return;_state.value=GameState(prestigePoints=total,gems=s.gems,upgradeRanks=s.upgradeRanks);_meta.value=_meta.value.copy(prestigeCount=_meta.value.prestigeCount+1);_celebration.value=MajorCelebration("ASCENSION COMPLETE","Legacy power permanently increased.","◇","PRESTIGE");scheduleSave()}
 
     private fun checkEraUnlock(s:GameState){val era=EmpireEras.current(s.lifetimeCash);if(era.index>_meta.value.highestEraSeen){_meta.value=_meta.value.copy(highestEraSeen=era.index);_celebration.value=Celebrations.era(era);scheduleSave()}}
