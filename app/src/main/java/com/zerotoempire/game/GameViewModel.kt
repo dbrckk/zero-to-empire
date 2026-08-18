@@ -75,7 +75,9 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
                 }
             }
 
-            launch { while (true) { delay(5_000L); persistNow() } }
+            // Structural actions already schedule a debounced save after 350 ms.
+            // Keep only a low-frequency safety snapshot for passive income progression.
+            launch { while (true) { delay(30_000L); persistNow() } }
         }
     }
 
