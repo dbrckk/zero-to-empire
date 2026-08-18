@@ -26,11 +26,19 @@ fun EndgameAtmosphere(eraIndex: Int, modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val reduced = MotionQuality.reducedMotion(context)
     val lowPower = MotionQuality.lowPowerMode(context)
-    val transition = rememberInfiniteTransition(label = "endgameAtmosphere")
-    val phaseAnimated by transition.animateFloat(0f, 1f, infiniteRepeatable(tween(if (lowPower) 34_000 else 24_000, easing = LinearEasing)), label = "phase")
-    val fastAnimated by transition.animateFloat(0f, 1f, infiniteRepeatable(tween(if (lowPower) 14_000 else 8_500, easing = LinearEasing)), label = "fast")
-    val phase = if (reduced) .38f else phaseAnimated
-    val fast = if (reduced) .22f else fastAnimated
+
+    val phase: Float
+    val fast: Float
+    if (reduced) {
+        phase = .38f
+        fast = .22f
+    } else {
+        val transition = rememberInfiniteTransition(label = "endgameAtmosphere")
+        val phaseAnimated by transition.animateFloat(0f, 1f, infiniteRepeatable(tween(if (lowPower) 34_000 else 24_000, easing = LinearEasing)), label = "phase")
+        val fastAnimated by transition.animateFloat(0f, 1f, infiniteRepeatable(tween(if (lowPower) 14_000 else 8_500, easing = LinearEasing)), label = "fast")
+        phase = phaseAnimated
+        fast = fastAnimated
+    }
 
     Canvas(modifier) {
         val w = size.width
@@ -59,8 +67,9 @@ fun EndgameAtmosphere(eraIndex: Int, modifier: Modifier = Modifier) {
                     val r = size.minDimension * (.13f + ring * .075f)
                     drawCircle(primary.copy(alpha = .08f + ring * .014f), r, center, style = Stroke(1.3f + ring * .25f))
                 }
-                repeat(MotionQuality.particleBudget(context, 18)) { i ->
-                    val count = MotionQuality.particleBudget(context, 18).coerceAtLeast(1)
+                val particleCount = MotionQuality.particleBudget(context, 18)
+                repeat(particleCount) { i ->
+                    val count = particleCount.coerceAtLeast(1)
                     val a = fast * PI.toFloat() * 2f + i * PI.toFloat() * 2f / count
                     val r = size.minDimension * (.18f + (i % 6) * .038f)
                     val p = Offset(center.x + cos(a) * r, center.y + sin(a) * r * .58f)
