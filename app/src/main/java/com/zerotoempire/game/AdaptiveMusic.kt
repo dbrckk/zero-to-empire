@@ -2,7 +2,9 @@ package com.zerotoempire.game
 
 import android.content.Context
 import android.media.AudioAttributes
+import android.media.AudioFocusRequest
 import android.media.AudioFormat
+import android.media.AudioManager
 import android.media.AudioTrack
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.concurrent.thread
@@ -13,9 +15,35 @@ import kotlin.math.sin
 class AdaptiveMusicEngine(context: Context) {
     private val running = AtomicBoolean(false)
     private val foreground = AtomicBoolean(true)
+    private val hasAudioFocus = AtomicBoolean(false)
     @Volatile private var intensity = 0
     @Volatile private var volume = .18f
     private var worker: Thread? = null
+
+    private val audioAttributes = AudioAttributes.Builder()
+        .setUsage(AudioAttributes.USAGE_GAME)
+        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+        .build()
+
+    private val audioManager = context.applicationContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+    private val focusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+        .setAudioAttributes(audioAttributes)
+        .setOnAudioFocusChangeListener { change ->
+            when (change) {
+                AudioManager.AUDIOFOCUS_GAIN -> {
+                    hasAudioFocus.set(true)
+                    if (running.get() && foreground.get()) runCatching { track.play() }
+                }
+                AudioManager.AUDIOFOCUS_LOSS,
+                AudioManager.AUDIOFOCUS_LOSS_TRANSIENT,
+                AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
+                    hasAudioFocus.set(false)
+                    runCatching { track.pause() }
+                    runCatching { track.flush() }
+                }
+            }
+        }
+        .build()
 
     private val sampleRate = 22_050
     private val bufferSize = AudioTrack.getMinBufferSize(
@@ -25,12 +53,7 @@ class AdaptiveMusicEngine(context: Context) {
     ).coerceAtLeast(4096)
 
     private val track = AudioTrack.Builder()
-        .setAudioAttributes(
-            AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_GAME)
-                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                .build()
-        )
+        .setAudioAttributes(audioAttributes)
         .setAudioFormat(
             AudioFormat.Builder()
                 .setSampleRate(sampleRate)
@@ -45,19 +68,23 @@ class AdaptiveMusicEngine(context: Context) {
     fun start() {
         if (!running.compareAndSet(false, true)) return
         foreground.set(true)
-        track.play()
+        requestAudioFocusAndPlay()
         worker = thread(name = "EmpireAdaptiveMusic", isDaemon = true) { renderLoop() }
     }
 
     fun resumePlayback() {
-        if (!running.get() || foreground.getAndSet(true)) return
-        runCatching { track.play() }
+        if (!running.get()) return
+        foreground.set(true)
+        requestAudioFocusAndPlay()
     }
 
     fun pausePlayback() {
-        if (!running.get() || !foreground.getAndSet(false)) return
+        if (!running.get()) return
+        foreground.set(false)
+        hasAudioFocus.set(false)
         runCatching { track.pause() }
         runCatching { track.flush() }
+        runCatching { audioManager.abandonAudioFocusRequest(focusRequest) }
     }
 
     fun setEmpireLevel(level: Int) { intensity = level.coerceIn(0, 10) }
@@ -65,7 +92,9 @@ class AdaptiveMusicEngine(context: Context) {
 
     fun release() {
         foreground.set(false)
+        hasAudioFocus.set(false)
         running.set(false)
+        runCatching { audioManager.abandonAudioFocusRequest(focusRequest) }
         worker?.join(250)
         worker = null
         runCatching { track.pause() }
@@ -73,12 +102,19 @@ class AdaptiveMusicEngine(context: Context) {
         track.release()
     }
 
+    private fun requestAudioFocusAndPlay() {
+        val granted = runCatching { audioManager.requestAudioFocus(focusRequest) }
+            .getOrDefault(AudioManager.AUDIOFOCUS_REQUEST_FAILED) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
+        hasAudioFocus.set(granted)
+        if (granted && foreground.get()) runCatching { track.play() }
+    }
+
     private fun renderLoop() {
         val frames = (bufferSize / 4).coerceAtLeast(512)
         val pcm = ShortArray(frames * 2)
         var sampleCursor = 0L
         while (running.get()) {
-            if (!foreground.get()) {
+            if (!foreground.get() || !hasAudioFocus.get()) {
                 try { Thread.sleep(50) } catch (_: InterruptedException) { Thread.currentThread().interrupt() }
                 continue
             }
@@ -108,7 +144,9 @@ class AdaptiveMusicEngine(context: Context) {
                 pcm[frame * 2 + 1] = right
                 sampleCursor++
             }
-            if (foreground.get()) track.write(pcm, 0, pcm.size, AudioTrack.WRITE_BLOCKING)
+            if (foreground.get() && hasAudioFocus.get()) {
+                track.write(pcm, 0, pcm.size, AudioTrack.WRITE_BLOCKING)
+            }
         }
     }
 }
