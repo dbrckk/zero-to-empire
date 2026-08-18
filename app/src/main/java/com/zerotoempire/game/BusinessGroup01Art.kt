@@ -35,19 +35,23 @@ fun BusinessGroup01Sprite(id: Int, level: Int, iconSize: Dp, modifier: Modifier 
     val context = LocalContext.current
     val reduced = MotionQuality.reducedMotion(context)
     val lowPower = MotionQuality.lowPowerMode(context)
-    val transition = rememberInfiniteTransition(label = "group01-$id")
-    val phaseAnimated by transition.animateFloat(
-        0f, 1f,
-        infiniteRepeatable(tween(if (lowPower) 9000 else 5600 + id * 380, easing = LinearEasing)),
-        label = "phase"
-    )
-    val breatheAnimated by transition.animateFloat(
-        .84f, 1f,
-        infiniteRepeatable(tween(if (lowPower) 2600 else 1600 + id * 120), RepeatMode.Reverse),
-        label = "breathe"
-    )
-    val phase = if (reduced) .18f else phaseAnimated
-    val breathe = if (reduced) .92f else breatheAnimated
+    val transition = if (reduced) null else rememberInfiniteTransition(label = "group01-$id")
+    val phase = if (transition == null) .18f else {
+        val phaseAnimated by transition.animateFloat(
+            0f, 1f,
+            infiniteRepeatable(tween(if (lowPower) 9000 else 5600 + id * 380, easing = LinearEasing)),
+            label = "phase"
+        )
+        phaseAnimated
+    }
+    val breathe = if (transition == null) .92f else {
+        val breatheAnimated by transition.animateFloat(
+            .84f, 1f,
+            infiniteRepeatable(tween(if (lowPower) 2600 else 1600 + id * 120), RepeatMode.Reverse),
+            label = "breathe"
+        )
+        breatheAnimated
+    }
     val stage = group01Stage(level)
     val accent = group01Accent(id)
 
@@ -98,10 +102,10 @@ private fun group01Stage(level: Int) = when {
 }
 
 private fun group01Accent(id: Int): Color = when (id) {
-    0 -> Color(0xFF78F56A) // emerald street economy
-    1 -> Color(0xFF58BFFF) // electric blue retail
-    2 -> Color(0xFFFF9A43) // forge orange
-    else -> Color(0xFFB76CFF) // industrial violet
+    0 -> Color(0xFF78F56A)
+    1 -> Color(0xFF58BFFF)
+    2 -> Color(0xFFFF9A43)
+    else -> Color(0xFFB76CFF)
 }
 
 private fun DrawScope.drawStreetStandAAA(stage: Int, phase: Float, breathe: Float) {
@@ -110,14 +114,10 @@ private fun DrawScope.drawStreetStandAAA(stage: Int, phase: Float, breathe: Floa
     val wood = Color(0xFF7A4B31)
     val cream = Color(0xFFFFE6B0)
     val green = group01Accent(0)
-
-    // cart / base
     drawRoundRect(woodDark, Offset(s*.20f,s*.49f), Size(s*.60f,s*.24f), CornerRadius(s*.04f))
     drawRoundRect(wood, Offset(s*.24f,s*.52f), Size(s*.52f,s*.15f), CornerRadius(s*.025f))
     drawCircle(Color(0xFF1A1412), s*.065f, Offset(s*.29f,s*.73f)); drawCircle(Color(0xFF1A1412),s*.065f,Offset(s*.71f,s*.73f))
     drawCircle(wood, s*.040f, Offset(s*.29f,s*.73f)); drawCircle(wood,s*.040f,Offset(s*.71f,s*.73f))
-
-    // striped canopy
     val canopy = Path().apply { moveTo(s*.15f,s*.42f); lineTo(s*.25f,s*.26f); lineTo(s*.75f,s*.26f); lineTo(s*.85f,s*.42f); close() }
     drawPath(canopy, Color(0xFFE34B3F))
     repeat(5) { i ->
@@ -126,8 +126,6 @@ private fun DrawScope.drawStreetStandAAA(stage: Int, phase: Float, breathe: Floa
         drawPath(strip, cream.copy(alpha=.95f))
     }
     drawLine(green,Offset(s*.17f,s*.43f),Offset(s*.83f,s*.43f),s*.015f)
-
-    // goods + warm lanterns
     repeat(4) { i ->
         val x=s*(.34f+i*.105f)
         drawCircle(Color(0xFFFFB64D),s*.024f,Offset(x,s*.58f))
@@ -151,23 +149,17 @@ private fun DrawScope.drawCornerShopAAA(stage: Int, phase: Float, breathe: Float
     val navy=Color(0xFF18324C)
     val glass=Color(0xFF8FE5FF)
     val warm=Color(0xFFFFB85C)
-
-    // masonry shell
     drawRoundRect(Color(0xFF24394D),Offset(s*.20f,s*.33f),Size(s*.60f,s*.42f),CornerRadius(s*.035f))
     drawRoundRect(Color(0xFF31516E),Offset(s*.23f,s*.36f),Size(s*.54f,s*.35f),CornerRadius(s*.025f))
     drawRoundRect(navy,Offset(s*.27f,s*.49f),Size(s*.46f,s*.20f),CornerRadius(s*.015f))
     drawRect(glass.copy(alpha=.45f),Offset(s*.29f,s*.51f),Size(s*.18f,s*.16f)); drawRect(glass.copy(alpha=.45f),Offset(s*.53f,s*.51f),Size(s*.18f,s*.16f))
     drawLine(warm.copy(alpha=.85f),Offset(s*.50f,s*.51f),Offset(s*.50f,s*.67f),s*.012f)
-
-    // awning
     repeat(6){i->
         val x=.22f+i*.095f
         drawRoundRect(if(i%2==0) blue else Color.White.copy(alpha=.9f),Offset(s*x,s*.40f),Size(s*.09f,s*.08f),CornerRadius(s*.012f))
     }
     drawRoundRect(Color(0xFF0E1C2A),Offset(s*.30f,s*.24f),Size(s*.40f,s*.10f),CornerRadius(s*.022f))
     drawRoundRect(blue.copy(alpha=.75f),Offset(s*.32f,s*.255f),Size(s*.36f,s*.065f),CornerRadius(s*.018f))
-
-    // street lamps / neon breathing
     val neon=.55f+.35f*breathe
     listOf(.17f,.83f).forEach{x->
         drawLine(Color(0xFF6B7D8E),Offset(s*x,s*.43f),Offset(s*x,s*.74f),s*.012f)
@@ -186,21 +178,15 @@ private fun DrawScope.drawWorkshopAAA(stage:Int,phase:Float,breathe:Float){
     val steel=Color(0xFF41474D)
     val dark=Color(0xFF20252A)
     val hot=Color(0xFFFFD073)
-
-    // building silhouette
     val roof=Path().apply{moveTo(s*.18f,s*.48f);lineTo(s*.31f,s*.30f);lineTo(s*.62f,s*.30f);lineTo(s*.75f,s*.43f);lineTo(s*.82f,s*.43f);lineTo(s*.82f,s*.73f);lineTo(s*.18f,s*.73f);close()}
     drawPath(roof,Brush.verticalGradient(listOf(steel,dark)))
     drawPath(roof,orange.copy(alpha=.55f),style=Stroke(s*.014f))
     drawRoundRect(dark,Offset(s*.29f,s*.50f),Size(s*.28f,s*.19f),CornerRadius(s*.015f))
     drawRoundRect(orange.copy(alpha=.42f),Offset(s*.31f,s*.52f),Size(s*.24f,s*.15f),CornerRadius(s*.012f))
-
-    // chimney + furnace glow
     drawRect(steel,Offset(s*.63f,s*.21f),Size(s*.08f,s*.26f))
     drawRect(Color(0xFF1B1B1B),Offset(s*.62f,s*.19f),Size(s*.10f,s*.035f))
     val fire=.55f+.35f*sin(phase*PI.toFloat()*2f)
     drawCircle(orange.copy(alpha=fire),s*.055f,Offset(s*.43f,s*.60f));drawCircle(hot.copy(alpha=.9f),s*.018f,Offset(s*.43f,s*.60f))
-
-    // rotating gear
     val center=Offset(s*.65f,s*.61f)
     drawCircle(steel,s*.09f,center);drawCircle(orange,s*.057f,center,style=Stroke(s*.026f))
     repeat(8){i->val a=phase*PI.toFloat()*2f+i*PI.toFloat()/4f;drawLine(orange,Offset(center.x+cos(a)*s*.066f,center.y+sin(a)*s*.066f),Offset(center.x+cos(a)*s*.105f,center.y+sin(a)*s*.105f),s*.022f)}
@@ -217,14 +203,10 @@ private fun DrawScope.drawFactoryAAA(stage:Int,phase:Float,breathe:Float,lowPowe
     val steel=Color(0xFF333642)
     val steel2=Color(0xFF555B6B)
     val magenta=Color(0xFFFF72D8)
-
-    // stepped industrial body
     drawRoundRect(steel,Offset(s*.16f,s*.46f),Size(s*.68f,s*.30f),CornerRadius(s*.025f))
     drawRoundRect(steel2,Offset(s*.24f,s*.37f),Size(s*.45f,s*.23f),CornerRadius(s*.018f))
     drawRoundRect(Color(0xFF242631),Offset(s*.33f,s*.30f),Size(s*.28f,s*.15f),CornerRadius(s*.015f))
     drawLine(violet,Offset(s*.18f,s*.72f),Offset(s*.82f,s*.72f),s*.015f)
-
-    // smokestacks
     val stacks=if(lowPower) 3 else 4
     repeat(stacks){i->
         val x=.24f+i*.15f
@@ -234,8 +216,6 @@ private fun DrawScope.drawFactoryAAA(stage:Int,phase:Float,breathe:Float,lowPowe
         val smokeOffset=.025f*sin((phase+i*.17f)*PI.toFloat()*2f)
         drawCircle(Color(0xFFC8B8FF).copy(alpha=.10f),s*.045f,Offset(s*(x+.038f+smokeOffset),s*(.36f-h)))
     }
-
-    // power conduits and windows
     repeat(4){i->
         drawRoundRect(violet.copy(alpha=.75f),Offset(s*(.24f+i*.13f),s*.57f),Size(s*.085f,s*.085f),CornerRadius(s*.010f))
         drawCircle(magenta.copy(alpha=.6f*breathe),s*.010f,Offset(s*(.282f+i*.13f),s*.612f))
