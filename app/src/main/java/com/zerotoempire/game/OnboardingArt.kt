@@ -27,9 +27,14 @@ fun OnboardingStepArt(step: Int) {
     val context = LocalContext.current
     val reduced = MotionQuality.reducedMotion(context)
     val lowPower = MotionQuality.lowPowerMode(context)
-    val transition = rememberInfiniteTransition(label = "onboarding-art")
-    val phaseAnim by transition.animateFloat(0f, 1f, infiniteRepeatable(tween(if (lowPower) 12000 else 7000, easing = LinearEasing)), label = "phase")
-    val phase = if (reduced) .2f else phaseAnim
+    val phase: Float
+    if (reduced) {
+        phase = .2f
+    } else {
+        val transition = rememberInfiniteTransition(label = "onboarding-art")
+        val phaseAnim by transition.animateFloat(0f, 1f, infiniteRepeatable(tween(if (lowPower) 12000 else 7000, easing = LinearEasing)), label = "phase")
+        phase = phaseAnim
+    }
     Canvas(Modifier.size(220.dp)) {
         val s = size.minDimension
         val c = Offset(s * .5f, s * .5f)
