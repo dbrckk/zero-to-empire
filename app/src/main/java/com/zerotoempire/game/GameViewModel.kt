@@ -57,11 +57,17 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
             loaded = true
 
             launch {
+                var previousTickNanos = System.nanoTime()
                 while (true) {
-                    delay(100L)
+                    delay(250L)
+                    val nowNanos = System.nanoTime()
+                    val elapsedSeconds = ((nowNanos - previousTickNanos).coerceAtLeast(0L) / 1_000_000_000.0)
+                        .coerceAtMost(2.0)
+                    previousTickNanos = nowNanos
+
                     val s = _state.value
-                    val gain = s.incomePerSecond / 10.0
-                    if (gain > 0) {
+                    val gain = s.incomePerSecond * elapsedSeconds
+                    if (gain > 0.0 && gain.isFinite()) {
                         val updated = s.copy(cash = s.cash + gain, lifetimeCash = s.lifetimeCash + gain)
                         _state.value = updated
                         checkEraUnlock(updated)
