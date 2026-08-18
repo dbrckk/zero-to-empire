@@ -4,6 +4,13 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
+val sampleAdMobAppId = "ca-app-pub-3940256099942544~3347511713"
+val sampleRewardedId = "ca-app-pub-3940256099942544/5224354917"
+val sampleInterstitialId = "ca-app-pub-3940256099942544/1033173712"
+val productionAdMobAppId = providers.gradleProperty("ADMOB_APP_ID").orElse(sampleAdMobAppId)
+val productionRewardedId = providers.gradleProperty("REWARDED_AD_UNIT_ID").orElse("")
+val productionInterstitialId = providers.gradleProperty("INTERSTITIAL_AD_UNIT_ID").orElse("")
+
 android {
     namespace = "com.zerotoempire.game"
     compileSdk = 36
@@ -15,8 +22,9 @@ android {
         versionCode = 1
         versionName = "0.1.0"
 
-        // Google's documented sample AdMob app id. Replace in Play release configuration.
-        manifestPlaceholders["ADMOB_APP_ID"] = "ca-app-pub-3940256099942544~3347511713"
+        // Debug/CI can run safely with Google's sample app id. Production can inject the real id
+        // through ~/.gradle/gradle.properties or CI secrets without committing credentials.
+        manifestPlaceholders["ADMOB_APP_ID"] = productionAdMobAppId.get()
     }
 
     buildFeatures {
@@ -26,8 +34,8 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("String", "REWARDED_AD_UNIT_ID", "\"ca-app-pub-3940256099942544/5224354917\"")
-            buildConfigField("String", "INTERSTITIAL_AD_UNIT_ID", "\"ca-app-pub-3940256099942544/1033173712\"")
+            buildConfigField("String", "REWARDED_AD_UNIT_ID", "\"$sampleRewardedId\"")
+            buildConfigField("String", "INTERSTITIAL_AD_UNIT_ID", "\"$sampleInterstitialId\"")
         }
         release {
             isMinifyEnabled = true
@@ -36,9 +44,8 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            // Production ad unit ids are intentionally not hardcoded into source control.
-            buildConfigField("String", "REWARDED_AD_UNIT_ID", "\"\"")
-            buildConfigField("String", "INTERSTITIAL_AD_UNIT_ID", "\"\"")
+            buildConfigField("String", "REWARDED_AD_UNIT_ID", "\"${productionRewardedId.get()}\"")
+            buildConfigField("String", "INTERSTITIAL_AD_UNIT_ID", "\"${productionInterstitialId.get()}\"")
         }
     }
 
