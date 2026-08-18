@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,23 +18,28 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import java.util.Locale
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin
 
+/**
+ * Stateless business artwork. Game state is collected once by the parent screen and
+ * only the values needed for rendering are passed here. This avoids one ViewModel
+ * subscription pair per visible business card.
+ */
 @Composable
-fun BusinessArtIcon(id: Int, iconSize: Dp, modifier: Modifier = Modifier) {
-    val vm: GameViewModel = viewModel()
-    val state by vm.state.collectAsStateWithLifecycle()
-    val buyMode by vm.buyMode.collectAsStateWithLifecycle()
-    val business = state.businesses.firstOrNull { it.id == id }
-    val level = business?.level ?: 0
-    val quote = if (business != null) BulkPurchase.quote(business, state.cash, buyMode) else BulkQuote(0, 0.0)
-    val affordable = quote.valid && quote.totalCost <= state.cash
+fun BusinessArtIcon(
+    id: Int,
+    level: Int,
+    iconSize: Dp,
+    modifier: Modifier = Modifier,
+    buyMode: BuyMode = BuyMode.X1,
+    quote: BulkQuote? = null,
+    cash: Double = 0.0
+) {
+    val affordable = quote?.let { it.valid && it.totalCost <= cash } ?: false
     val burst = remember(id) { Animatable(0f) }
     val previousLevel = remember(id) { intArrayOf(level) }
 
@@ -84,7 +88,7 @@ fun BusinessArtIcon(id: Int, iconSize: Dp, modifier: Modifier = Modifier) {
                 else -> PremiumBusinessSprite(id, level, iconSize)
             }
 
-            if (buyMode != BuyMode.X1) {
+            if (buyMode != BuyMode.X1 && quote != null) {
                 Text(
                     text = if (quote.count > 0) "×${quote.count}" else "—",
                     color = if (affordable) EmpireColors.GoldBright else EmpireColors.TextSecondary,
@@ -95,7 +99,7 @@ fun BusinessArtIcon(id: Int, iconSize: Dp, modifier: Modifier = Modifier) {
             }
         }
 
-        if (buyMode != BuyMode.X1) {
+        if (buyMode != BuyMode.X1 && quote != null) {
             Text(
                 text = if (quote.count > 0) compactMoney(quote.totalCost) else "LOCKED",
                 color = if (affordable) EmpireColors.Success else EmpireColors.TextSecondary,
