@@ -12,6 +12,16 @@ class MainActivity : ComponentActivity() {
         setContent { GrowthRuntimeRoot() }
     }
 
+    override fun onStart() {
+        super.onStart()
+        GameMusicBus.resume()
+    }
+
+    override fun onStop() {
+        GameMusicBus.pause()
+        super.onStop()
+    }
+
     override fun onDestroy() {
         GameMusicBus.detach()
         GameSfxBus.detach()
