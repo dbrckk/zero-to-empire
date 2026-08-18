@@ -65,7 +65,6 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
                     val nowNanos = SystemClock.elapsedRealtimeNanos()
                     val elapsedSeconds = (nowNanos - previousTickNanos).coerceAtLeast(0L) / 1_000_000_000.0
                     previousTickNanos = nowNanos
-
                     val s = _state.value
                     val gain = s.incomePerSecond * elapsedSeconds
                     if (gain > 0.0 && gain.isFinite()) {
@@ -75,7 +74,6 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
                     }
                 }
             }
-
             launch { while (true) { delay(30_000L); persistNow() } }
         }
     }
@@ -123,7 +121,19 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     fun applyEntitlements(products: Set<StoreProduct>) {
         val hasRemoveAds = StoreProduct.REMOVE_ADS in products || _meta.value.adsRemoved
         val hasStarter = StoreProduct.STARTER_PACK in products || _meta.value.starterPackOwned
-        _meta.value = _meta.value.copy(adsRemoved = hasRemoveAds, starterPackOwned = hasStarter)
+        val recoveredGems = (if (StoreProduct.GEM_PACK_SMALL in products) 120 else 0) +
+            (if (StoreProduct.GEM_PACK_MEDIUM in products) 650 else 0)
+        if (recoveredGems > 0) {
+            _state.value = _state.value.copy(gems = _state.value.gems + recoveredGems)
+        }
+        _meta.value = _meta.value.copy(
+            gems = _state.value.gems,
+            adsRemoved = hasRemoveAds,
+            starterPackOwned = hasStarter
+        )
+        if (recoveredGems > 0) {
+            _celebration.value = MajorCelebration("PURCHASE RECOVERED", "+$recoveredGems gems restored.", "◆", "STORE")
+        }
         scheduleSave()
     }
 
@@ -178,23 +188,14 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         val b = s.businesses.firstOrNull { it.id == id } ?: return BulkQuote(0, 0.0)
         val quote = BulkPurchase.quote(b, s.cash, mode)
         if (!quote.valid || quote.totalCost > s.cash) return BulkQuote(0, 0.0)
-
         val newLevel = b.level + quote.count
         val updatedBusiness = b.copy(level = newLevel)
-        _state.value = s.copy(
-            cash = (s.cash - quote.totalCost).coerceAtLeast(0.0),
-            businesses = s.businesses.map { if (it.id == id) updatedBusiness else it }
-        )
+        _state.value = s.copy(cash = (s.cash - quote.totalCost).coerceAtLeast(0.0), businesses = s.businesses.map { if (it.id == id) updatedBusiness else it })
         _meta.value = _meta.value.copy(totalPurchases = _meta.value.totalPurchases + quote.count)
-
         val crossed = BulkPurchase.crossedMilestones(b.level, newLevel)
-        if (crossed.isNotEmpty()) {
-            _celebration.value = Celebrations.milestone(updatedBusiness.copy(level = crossed.last()))
-        } else if (quote.count >= 10) {
-            _celebration.value = MajorCelebration("MASS EXPANSION", "+${quote.count} ${b.name} levels", "▲", "EXPANSION")
-        }
-        scheduleSave()
-        return quote
+        if (crossed.isNotEmpty()) _celebration.value = Celebrations.milestone(updatedBusiness.copy(level = crossed.last()))
+        else if (quote.count >= 10) _celebration.value = MajorCelebration("MASS EXPANSION", "+${quote.count} ${b.name} levels", "▲", "EXPANSION")
+        scheduleSave(); return quote
     }
 
     fun hireManager(businessId:Int):Boolean{val s=_state.value;val m=Managers.catalog.firstOrNull{it.businessId==businessId}?:return false;if(businessId in s.hiredManagerIds||s.cash<m.cost)return false;_state.value=s.copy(cash=s.cash-m.cost,hiredManagerIds=s.hiredManagerIds+businessId);scheduleSave();return true}
