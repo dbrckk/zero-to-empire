@@ -35,11 +35,15 @@ fun BusinessGroup02Sprite(id: Int, level: Int, iconSize: Dp, modifier: Modifier 
     val context = LocalContext.current
     val reduced = MotionQuality.reducedMotion(context)
     val lowPower = MotionQuality.lowPowerMode(context)
-    val motion = rememberInfiniteTransition(label = "group02-$id")
-    val phaseAnimated by motion.animateFloat(0f, 1f, infiniteRepeatable(tween(if (lowPower) 9800 else 6100 + id * 280, easing = LinearEasing)), label = "phase")
-    val breatheAnimated by motion.animateFloat(.84f, 1f, infiniteRepeatable(tween(if (lowPower) 2900 else 1750 + id * 110), RepeatMode.Reverse), label = "breathe")
-    val phase = if (reduced) .22f else phaseAnimated
-    val breathe = if (reduced) .92f else breatheAnimated
+    val motion = if (reduced) null else rememberInfiniteTransition(label = "group02-$id")
+    val phase = if (motion == null) .22f else {
+        val phaseAnimated by motion.animateFloat(0f, 1f, infiniteRepeatable(tween(if (lowPower) 9800 else 6100 + id * 280, easing = LinearEasing)), label = "phase")
+        phaseAnimated
+    }
+    val breathe = if (motion == null) .92f else {
+        val breatheAnimated by motion.animateFloat(.84f, 1f, infiniteRepeatable(tween(if (lowPower) 2900 else 1750 + id * 110), RepeatMode.Reverse), label = "breathe")
+        breatheAnimated
+    }
     val stage = group02Stage(level)
     val accent = group02Accent(id)
 
@@ -74,7 +78,7 @@ private fun DrawScope.drawTechCompanyAAA(stage:Int,phase:Float,breathe:Float){
     drawRoundRect(Color(0xFF151B28),Offset(s*.24f,s*.35f),Size(s*.52f,s*.36f),CornerRadius(s*.05f))
     repeat(4){i-> val x=.29f+i*.13f; drawRoundRect(if(i%2==0)purple.copy(alpha=.65f) else cyan.copy(alpha=.55f),Offset(s*x,s*.40f),Size(s*.085f,s*.21f),CornerRadius(s*.014f))}
     drawCircle(purple,s*.105f,Offset(s*.5f,s*.48f),style=Stroke(s*.026f)); drawCircle(Color.White,s*.024f,Offset(s*.5f,s*.48f))
-    repeat(if(stage>=3)10 else 6){i->val a=phase*2f*PI.toFloat()/1f+i*2f*PI.toFloat()/(if(stage>=3)10 else 6);drawLine(cyan.copy(alpha=.65f),Offset(s*.5f+cos(a)*s*.13f,s*.48f+sin(a)*s*.13f),Offset(s*.5f+cos(a)*s*.22f,s*.48f+sin(a)*s*.22f),s*.010f)}
+    repeat(if(stage>=3)10 else 6){i->val a=phase*2f*PI.toFloat()+i*2f*PI.toFloat()/(if(stage>=3)10 else 6);drawLine(cyan.copy(alpha=.65f),Offset(s*.5f+cos(a)*s*.13f,s*.48f+sin(a)*s*.13f),Offset(s*.5f+cos(a)*s*.22f,s*.48f+sin(a)*s*.22f),s*.010f)}
     if(stage>=1) drawRoundRect(purple.copy(alpha=.45f*breathe),Offset(s*.31f,s*.22f),Size(s*.38f,s*.06f),CornerRadius(s*.018f))
     if(stage>=2) repeat(3){i->drawCircle(cyan,s*.012f,Offset(s*(.36f+i*.14f),s*.67f))}
     if(stage>=4) drawArc(Color.White.copy(alpha=.45f),200f+phase*15f,140f,false,Offset(s*.16f,s*.15f),Size(s*.68f,s*.68f),style=Stroke(s*.012f))
@@ -87,7 +91,8 @@ private fun DrawScope.drawMegacityAAA(stage:Int,phase:Float,breathe:Float,lowPow
     xs.forEachIndexed{i,x->val h=s*(hs[i]+stage*.012f);val w=s*if(i==3).12f else .095f;drawRoundRect(Brush.verticalGradient(listOf(violet.copy(alpha=.80f),Color(0xFF242838))),Offset(s*x,s*.76f-h),Size(w,h),CornerRadius(s*.016f));repeat(if(lowPower)2 else 4){r->drawCircle(if((i+r)%2==0)cyan else Color(0xFFFFD46A),s*.007f,Offset(s*(x+.03f),s*.71f-h+r*s*.055f))}}
     drawLine(violet.copy(alpha=.70f),Offset(s*.17f,s*.77f),Offset(s*.83f,s*.77f),s*.013f)
     if(stage>=1) drawArc(cyan.copy(alpha=.45f),190f+phase*12f,160f,false,Offset(s*.14f,s*.14f),Size(s*.72f,s*.72f),style=Stroke(s*.010f))
-    if(stage>=2) repeat(if(lowPower)3 else 6){i->val a=phase*2*PI+i*2*PI/(if(lowPower)3 else 6);drawCircle(violet.copy(alpha=.8f),s*.010f,Offset(s*.5f+cos(a).toFloat()*s*.33f,s*.50f+sin(a).toFloat()*s*.10f))}
+    val orbiters = if(lowPower)3 else 6
+    if(stage>=2) repeat(orbiters){i->val a=phase*2*PI+i*2*PI/orbiters;drawCircle(violet.copy(alpha=.8f),s*.010f,Offset(s*.5f+cos(a).toFloat()*s*.33f,s*.50f+sin(a).toFloat()*s*.10f))}
     if(stage>=3) drawRoundRect(Color.White.copy(alpha=.10f*breathe),Offset(s*.28f,s*.18f),Size(s*.44f,s*.055f),CornerRadius(s*.018f))
     if(stage>=4) repeat(3){i->drawLine(cyan.copy(alpha=.50f),Offset(s*(.29f+i*.19f),s*.66f),Offset(s*(.29f+i*.19f),s*.28f),s*.006f)}
     if(stage>=5) drawCircle(violet.copy(alpha=.14f*breathe),s*.36f,Offset(s*.5f,s*.49f))
@@ -113,7 +118,8 @@ private fun DrawScope.drawMarsEmpireAAA(stage:Int,phase:Float,breathe:Float,lowP
     drawPath(palace,Brush.verticalGradient(listOf(red.copy(alpha=.85f),dark)));drawPath(palace,gold.copy(alpha=.60f),style=Stroke(s*.012f))
     drawCircle(gold.copy(alpha=.70f*breathe),s*.055f,Offset(s*.5f,s*.47f));drawCircle(Color.White,s*.014f,Offset(s*.5f,s*.47f))
     repeat(4){i->drawRoundRect(Color(0xFF1F1515),Offset(s*(.28f+i*.13f),s*.56f),Size(s*.07f,s*.11f),CornerRadius(s*.012f))}
-    repeat(if(lowPower)2 else 4){i->val a=phase*2*PI+i*2*PI/(if(lowPower)2 else 4);drawCircle(red.copy(alpha=.75f),s*.010f,Offset(s*.5f+cos(a).toFloat()*s*.30f,s*.50f+sin(a).toFloat()*s*.13f))}
+    val patrolCount = if(lowPower)2 else 4
+    repeat(patrolCount){i->val a=phase*2*PI+i*2*PI/patrolCount;drawCircle(red.copy(alpha=.75f),s*.010f,Offset(s*.5f+cos(a).toFloat()*s*.30f,s*.50f+sin(a).toFloat()*s*.13f))}
     if(stage>=1) drawLine(gold,Offset(s*.24f,s*.73f),Offset(s*.76f,s*.73f),s*.012f)
     if(stage>=2) repeat(3){i->drawCircle(red,s*.012f,Offset(s*(.36f+i*.14f),s*.33f))}
     if(stage>=3) drawArc(red.copy(alpha=.55f),200f+phase*18f,140f,false,Offset(s*.16f,s*.15f),Size(s*.68f,s*.68f),style=Stroke(s*.012f))
