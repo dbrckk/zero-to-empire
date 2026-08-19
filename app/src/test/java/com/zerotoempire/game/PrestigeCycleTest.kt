@@ -1,6 +1,8 @@
 package com.zerotoempire.game
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -18,8 +20,8 @@ class PrestigeCycleTest {
     }
 
     @Test
-    fun resetStateRetainsPermanentPowerButResetsRunEconomy() {
-        val boostEnd = System.currentTimeMillis() + 600_000L
+    fun productionResetRetainsPermanentPowerButResetsRunEconomy() {
+        val boostEnd = 9_999_999_999L
         val before = GameState(
             cash = 1e15,
             lifetimeCash = 1e15,
@@ -27,24 +29,28 @@ class PrestigeCycleTest {
             gems = 90,
             upgradeRanks = mapOf("income" to 5, "prestige" to 4),
             boostEndsAtMillis = boostEnd,
-            businesses = defaultBusinesses().mapIndexed { index, b -> if (index < 4) b.copy(level = 100) else b }
+            businesses = defaultBusinesses().mapIndexed { index, b -> if (index < 4) b.copy(level = 100) else b },
+            hiredManagerIds = setOf(0, 1, 2)
         )
-        val total = Progression.prestigeReward(before.lifetimeCash)
-        val reset = GameState(
-            prestigePoints = total,
-            gems = before.gems,
-            upgradeRanks = before.upgradeRanks,
-            boostEndsAtMillis = before.boostEndsAtMillis
-        )
+        val reset = Progression.prestigeReset(before)
+        assertNotNull(reset)
+        reset!!
 
         assertEquals(10.0, reset.cash, 0.0)
         assertEquals(10.0, reset.lifetimeCash, 0.0)
-        assertEquals(0, reset.businesses.sumOf { it.level })
+        assertEquals(0L, reset.businesses.sumOf { it.level.toLong() })
+        assertTrue(reset.hiredManagerIds.isEmpty())
         assertEquals(before.gems, reset.gems)
         assertEquals(before.upgradeRanks, reset.upgradeRanks)
         assertEquals(boostEnd, reset.boostEndsAtMillis)
         assertTrue(reset.prestigePoints > before.prestigePoints)
-        assertTrue(reset.prestigeMultiplier > before.copy(prestigePoints = before.prestigePoints).prestigeMultiplier)
+    }
+
+    @Test
+    fun sameRunCannotPrestigeTwiceWithoutNewProgress() {
+        val first = Progression.prestigeReset(GameState(lifetimeCash = 1e12))
+        assertNotNull(first)
+        assertNull(Progression.prestigeReset(first!!))
     }
 
     @Test
@@ -58,6 +64,7 @@ class PrestigeCycleTest {
     fun pathologicalPrestigeInputsAreBounded() {
         assertEquals(0, Progression.prestigeReward(Double.NaN))
         assertEquals(Int.MAX_VALUE, Progression.prestigeReward(Double.POSITIVE_INFINITY))
+        assertEquals(Int.MAX_VALUE, Progression.prestigeReward(EconomyMath.MAX_VALUE))
         assertEquals(0, Progression.prestigeReward(-1.0))
     }
 }
