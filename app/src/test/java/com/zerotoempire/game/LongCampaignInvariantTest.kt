@@ -2,17 +2,17 @@ package com.zerotoempire.game
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class LongCampaignInvariantTest {
     @Test
-    fun repeatedPrestigeCyclesRemainFiniteAndProgressive() {
+    fun repeatedPrestigeCyclesRemainFiniteAndProgressiveUntilSaturation() {
         var points = 0
-        var previousPoints = -1
-        val runLifetimeValues = listOf(1e12, 1e18, 1e24, 1e30, 1e60, 1e120)
+        val progressiveRuns = listOf(1e12, 1e15, 1e18, 1e21, 1e24, 1e27, 1e28)
 
-        runLifetimeValues.forEach { lifetime ->
+        progressiveRuns.forEach { lifetime ->
             val state = GameState(
                 lifetimeCash = lifetime,
                 prestigePoints = points,
@@ -23,7 +23,7 @@ class LongCampaignInvariantTest {
             val reset = Progression.prestigeReset(state)
             assertNotNull("run at $lifetime should earn additional legacy", reset)
             reset!!
-            previousPoints = points
+            val previousPoints = points
             points = reset.prestigePoints
 
             assertTrue(points > previousPoints)
@@ -36,6 +36,11 @@ class LongCampaignInvariantTest {
             assertTrue(reset.businesses.all { it.level == 0 })
             assertTrue(reset.hiredManagerIds.isEmpty())
         }
+
+        val saturated = Progression.prestigeReset(GameState(lifetimeCash = 1e30, prestigePoints = points))
+        assertNotNull(saturated)
+        assertEquals(Int.MAX_VALUE, saturated!!.prestigePoints)
+        assertNull(Progression.prestigeReset(GameState(lifetimeCash = EconomyMath.MAX_VALUE, prestigePoints = Int.MAX_VALUE)))
     }
 
     @Test
