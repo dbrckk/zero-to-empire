@@ -76,8 +76,10 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
             launch {
                 while (true) {
                     delay(30_000L)
-                    ensureChallengeWeek()
-                    persistNow()
+                    if (appForeground) {
+                        ensureChallengeWeek()
+                        persistNow()
+                    }
                 }
             }
         }
@@ -219,5 +221,5 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     private fun syncMetaCurrency(){_meta.value=_meta.value.copy(gems=_state.value.gems)}
     private fun scheduleSave(){if(loaded){saveJob?.cancel();saveJob=viewModelScope.launch{delay(350L);persistNow()}}}
     private suspend fun persistNow(){if(loaded)repository.save(_state.value,_meta.value)}
-    override fun onCleared(){if(loaded){val s=_state.value;val m=_meta.value;viewModelScope.launch{repository.save(s,m)}};super.onCleared()}
+    override fun onCleared(){if(loaded&&appForeground){val s=_state.value;val m=_meta.value;viewModelScope.launch{repository.save(s,m)}};super.onCleared()}
 }
