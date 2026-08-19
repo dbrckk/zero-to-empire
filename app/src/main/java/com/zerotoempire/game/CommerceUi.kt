@@ -13,6 +13,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 
@@ -20,6 +23,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 fun CommerceRoot(vm: GameViewModel = viewModel()) {
     val context = LocalContext.current
     val activity = remember(context) { context.findActivity() }
+    val lifecycleOwner = LocalLifecycleOwner.current
     val meta by vm.meta.collectAsStateWithLifecycle()
     val billing = remember(context) { PlayBillingGateway(context.applicationContext) }
     val rewarded = remember(context) { AdMobRewardedGateway(context.applicationContext) }
@@ -45,6 +49,19 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
             vm.applyEntitlements(restored)
         }
         onDispose { billing.disconnect() }
+    }
+
+    DisposableEffect(lifecycleOwner, billing) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                billing.restore { restored ->
+                    owned = restored.filterNot { it.consumable }.toSet()
+                    vm.applyEntitlements(restored)
+                }
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
 
     LaunchedEffect(activity, adsAllowed) {
