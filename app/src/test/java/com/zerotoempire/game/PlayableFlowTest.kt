@@ -1,6 +1,7 @@
 package com.zerotoempire.game
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -58,14 +59,35 @@ class PlayableFlowTest {
 
     @Test
     fun prestigeBecomesAvailableAndCreatesPermanentPower() {
-        val lifetime = 1.0e12
-        val reward = Progression.prestigeReward(lifetime)
-        assertTrue(reward > 0)
-
-        val before = GameState(lifetimeCash = lifetime)
-        val after = GameState(prestigePoints = reward)
-
+        val before = GameState(lifetimeCash = 1.0e12)
+        val after = Progression.prestigeReset(before)
+        assertNotNull(after)
+        assertTrue(after!!.prestigePoints > 0)
         assertTrue(after.prestigeMultiplier > before.prestigeMultiplier)
+        assertEquals(10.0, after.cash, 0.0)
+    }
+
+    @Test
+    fun playerCanCompleteMultiplePrestigeCycles() {
+        val firstRun = GameState(lifetimeCash = 1.0e12, gems = 40, upgradeRanks = mapOf("income" to 2))
+        val firstReset = Progression.prestigeReset(firstRun)
+        assertNotNull(firstReset)
+
+        val secondRun = firstReset!!.copy(
+            cash = 1.0e18,
+            lifetimeCash = 1.0e18,
+            businesses = defaultBusinesses().mapIndexed { index, b -> if (index <= 8) b.copy(level = 100) else b },
+            hiredManagerIds = Managers.catalog.filter { it.businessId <= 8 }.map { it.businessId }.toSet()
+        )
+        val secondReset = Progression.prestigeReset(secondRun)
+        assertNotNull(secondReset)
+        secondReset!!
+
+        assertTrue(secondReset.prestigePoints > firstReset.prestigePoints)
+        assertEquals(firstReset.gems, secondReset.gems)
+        assertEquals(firstReset.upgradeRanks, secondReset.upgradeRanks)
+        assertTrue(secondReset.businesses.all { it.level == 0 })
+        assertTrue(secondReset.hiredManagerIds.isEmpty())
     }
 
     @Test
@@ -81,9 +103,7 @@ class PlayableFlowTest {
 
     @Test
     fun endgameContentRemainsEconomicallyFiniteAtUnlockScale() {
-        val businesses = defaultBusinesses().mapIndexed { index, business ->
-            business.copy(level = if (index <= 13) 25 else 0)
-        }
+        val businesses = defaultBusinesses().map { business -> business.copy(level = 25) }
         val state = GameState(
             cash = 1.0e32,
             lifetimeCash = 1.0e32,
