@@ -1,7 +1,6 @@
 package com.zerotoempire.game
 
 import kotlin.math.floor
-import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
 
@@ -48,8 +47,13 @@ data class PlayerMeta(
 )
 
 object Progression {
-    fun prestigeReward(lifetimeCash: Double): Int =
-        floor((max(0.0, lifetimeCash) / 1_000_000.0).pow(0.42)).toInt()
+    fun prestigeReward(lifetimeCash: Double): Int {
+        if (lifetimeCash.isNaN() || lifetimeCash <= 0.0) return 0
+        if (lifetimeCash == Double.POSITIVE_INFINITY) return Int.MAX_VALUE
+        val reward = floor((lifetimeCash.coerceAtMost(EconomyMath.MAX_VALUE) / 1_000_000.0).pow(0.42))
+        if (!reward.isFinite() || reward >= Int.MAX_VALUE.toDouble()) return Int.MAX_VALUE
+        return reward.toInt().coerceAtLeast(0)
+    }
 
     fun dailyReward(day: Int): Int = listOf(5, 7, 10, 15, 20, 30, 50)[day.coerceIn(0, 6)]
 
