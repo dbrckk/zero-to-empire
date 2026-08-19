@@ -55,6 +55,23 @@ object Progression {
         return reward.toInt().coerceAtLeast(0)
     }
 
+    /**
+     * Produces the next run after an ascension. Run-local cash, lifetime cash,
+     * business levels and managers reset. Premium/permanent currency, upgrades,
+     * accumulated legacy points and an already-earned timed boost survive.
+     * Returns null when the run has not earned any additional legacy point.
+     */
+    fun prestigeReset(state: GameState): GameState? {
+        val totalPoints = prestigeReward(state.lifetimeCash)
+        if (totalPoints <= state.prestigePoints) return null
+        return GameState(
+            prestigePoints = totalPoints,
+            gems = state.gems.coerceAtLeast(0),
+            upgradeRanks = state.upgradeRanks,
+            boostEndsAtMillis = state.boostEndsAtMillis.coerceAtLeast(0L)
+        )
+    }
+
     fun dailyReward(day: Int): Int = listOf(5, 7, 10, 15, 20, 30, 50)[day.coerceIn(0, 6)]
 
     fun missions(state: GameState, meta: PlayerMeta) = listOf(
