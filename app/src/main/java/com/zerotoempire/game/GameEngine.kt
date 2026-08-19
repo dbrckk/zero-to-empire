@@ -42,7 +42,16 @@ data class GameState(
         return b.rawIncomePerSecond * (manager?.incomeMultiplier ?: 1.0)
     }
 
-    val incomePerSecond: Double get() = businesses.sumOf(::businessIncome) * prestigeMultiplier * legacyMasteryMultiplier * portfolioDepthMultiplier * transcendenceMultiplier * globalUpgradeMultiplier * boostMultiplier * eventMultiplier
+    private val globalIncomeMultiplier: Double
+        get() = prestigeMultiplier * legacyMasteryMultiplier * portfolioDepthMultiplier * transcendenceMultiplier * globalUpgradeMultiplier * boostMultiplier * eventMultiplier
+
+    /** All owned businesses generate while the player is active. */
+    val incomePerSecond: Double get() = businesses.sumOf(::businessIncome) * globalIncomeMultiplier
+
+    /** Only manager-operated businesses continue generating while the app is away. */
+    val automatedIncomePerSecond: Double
+        get() = businesses.filter { it.id in hiredManagerIds }.sumOf(::businessIncome) * globalIncomeMultiplier
+
     val tapValue: Double get() = (1.0 + incomePerSecond * .05) * prestigeMultiplier * legacyMasteryMultiplier * transcendenceMultiplier * (1.0 + tapUpgradeRank * .25)
     val empireLevel: Int get() = EmpireEras.current(lifetimeCash).index
 }
