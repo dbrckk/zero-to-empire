@@ -34,9 +34,9 @@ data class OnboardingState(val step: Int = 0, val completed: Boolean = false) {
 object OnboardingCopy {
     val steps = listOf(
         "Tap the core to generate your first capital.",
-        "Buy your first asset. Assets generate income every second.",
+        "Buy your first asset. Assets generate income every second while you play.",
         "Scale assets to reach powerful milestone multipliers.",
-        "Hire managers and automate your empire.",
+        "Hire managers to boost production and keep their assets earning while you're away.",
         "Ascend when growth slows. Every legacy makes the next empire stronger."
     )
 }
