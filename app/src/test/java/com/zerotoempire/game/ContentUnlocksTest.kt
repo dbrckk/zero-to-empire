@@ -17,6 +17,15 @@ class ContentUnlocksTest {
         thresholds.zipWithNext().forEach { (a, b) -> assertTrue(b > a) }
     }
 
+    @Test fun everyAssetRevealsBeforeItsBasePurchaseCost() {
+        defaultBusinesses().forEach { business ->
+            assertTrue(
+                "${business.name} reveals too late",
+                ContentUnlocks.thresholdForBusiness(business.id) <= business.baseCost
+            )
+        }
+    }
+
     @Test fun endgameContentStaysHiddenUntilEarned() {
         assertFalse(ContentUnlocks.isBusinessVisible(10, 1e15))
         assertTrue(ContentUnlocks.isBusinessVisible(10, 5e17))
