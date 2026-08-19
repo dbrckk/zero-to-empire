@@ -239,7 +239,17 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     fun grantGems(amount:Int){if(amount>0){_state.value=_state.value.copy(gems=safeGemAdd(_state.value.gems,amount));syncMetaCurrency();scheduleSave()}}
     fun activateProfitBoost(){requestProfitBoostAd()}
     fun activateProfitBoost(minutes:Int){if(minutes<=0)return;val s=_state.value;val base=maxOf(System.currentTimeMillis(),s.boostEndsAtMillis);val extension=minutes.toLong()*60_000L;val end=if(base>Long.MAX_VALUE-extension)Long.MAX_VALUE else base+extension;_state.value=s.copy(boostEndsAtMillis=end);_meta.value=_meta.value.copy(boostEndsAtMillis=end);scheduleSave()}
-    fun prestige(){ensureChallengeWeek();val s=_state.value;val total=Progression.prestigeReward(s.lifetimeCash);if(total-s.prestigePoints<=0)return;_state.value=GameState(prestigePoints=total,gems=s.gems,upgradeRanks=s.upgradeRanks,boostEndsAtMillis=s.boostEndsAtMillis);_meta.value=_meta.value.copy(prestigeCount=if(_meta.value.prestigeCount==Int.MAX_VALUE)Int.MAX_VALUE else _meta.value.prestigeCount+1,boostEndsAtMillis=s.boostEndsAtMillis);_celebration.value=MajorCelebration("ASCENSION COMPLETE","Legacy power permanently increased.","◇","PRESTIGE");scheduleSave()}
+    fun prestige(){
+        ensureChallengeWeek()
+        val reset = Progression.prestigeReset(_state.value) ?: return
+        _state.value = reset
+        _meta.value = _meta.value.copy(
+            prestigeCount = if (_meta.value.prestigeCount == Int.MAX_VALUE) Int.MAX_VALUE else _meta.value.prestigeCount + 1,
+            boostEndsAtMillis = reset.boostEndsAtMillis
+        )
+        _celebration.value = MajorCelebration("ASCENSION COMPLETE","Legacy power permanently increased.","◇","PRESTIGE")
+        scheduleSave()
+    }
 
     private fun checkEraUnlock(s:GameState){val era=EmpireEras.current(s.lifetimeCash);if(era.index>_meta.value.highestEraSeen){_meta.value=_meta.value.copy(highestEraSeen=era.index);_celebration.value=Celebrations.era(era);scheduleSave()}}
     private fun syncMetaCurrency(){_meta.value=_meta.value.copy(gems=_state.value.gems)}
