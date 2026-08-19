@@ -85,7 +85,7 @@ class GameRepository(private val context: Context) {
             challengeWeekPurchaseBase = if (sameWeek) (p[Keys.challengePurchaseBase] ?: purchases).coerceIn(0L, purchases) else purchases,
             challengeWeekPrestigeBase = if (sameWeek) (p[Keys.challengePrestigeBase] ?: prestigeCount).coerceIn(0, prestigeCount) else prestigeCount,
             onboardingCompleted = p[Keys.onboarding] ?: false,
-            highestEraSeen = (p[Keys.highestEra] ?: 0).coerceIn(0, EmpireEras.all.lastIndex),
+            highestEraSeen = (p[Keys.highestEra] ?: 0).coerceIn(0, EmpireEras.catalog.lastIndex),
             adsRemoved = p[Keys.adsRemoved] ?: false,
             starterPackOwned = p[Keys.starterPack] ?: false
         )
@@ -113,7 +113,7 @@ class GameRepository(private val context: Context) {
             p[Keys.challengePurchaseBase] = m.challengeWeekPurchaseBase.coerceAtLeast(0L)
             p[Keys.challengePrestigeBase] = m.challengeWeekPrestigeBase.coerceAtLeast(0)
             p[Keys.onboarding] = m.onboardingCompleted
-            p[Keys.highestEra] = m.highestEraSeen.coerceIn(0, EmpireEras.all.lastIndex)
+            p[Keys.highestEra] = m.highestEraSeen.coerceIn(0, EmpireEras.catalog.lastIndex)
             p[Keys.adsRemoved] = m.adsRemoved
             p[Keys.starterPack] = m.starterPackOwned
             s.businesses.forEach { p[Keys.level(it.id)] = it.level.coerceAtLeast(0) }
