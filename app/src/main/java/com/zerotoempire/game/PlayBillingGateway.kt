@@ -16,8 +16,9 @@ import com.android.billingclient.api.Purchase
 
 class PlayBillingGateway(private val context: Context) : PurchaseGateway {
     private var pendingResult: ((PurchaseResult) -> Unit)? = null
-    private var pendingRestoreCallback: ((List<StoreProduct>) -> Unit)? = null
+    private val restoreCallbacks = mutableListOf<(List<StoreProduct>) -> Unit>()
     private var connecting = false
+    private var restoreInFlight = false
 
     private val billingClient = BillingClient.newBuilder(context)
         .setListener { result, purchases ->
@@ -43,17 +44,23 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
         billingClient.startConnection(object : BillingClientStateListener {
             override fun onBillingSetupFinished(result: BillingResult) {
                 connecting = false
-                val callback = pendingRestoreCallback
-                pendingRestoreCallback = null
-                if (result.responseCode == BillingClient.BillingResponseCode.OK) callback?.let(::restore)
-                else callback?.invoke(emptyList())
+                if (result.responseCode == BillingClient.BillingResponseCode.OK) {
+                    if (restoreCallbacks.isNotEmpty()) startRestoreQuery()
+                } else {
+                    finishRestore(emptyList())
+                }
             }
-            override fun onBillingServiceDisconnected() { connecting = false }
+
+            override fun onBillingServiceDisconnected() {
+                connecting = false
+                restoreInFlight = false
+            }
         })
     }
 
     override fun disconnect() {
-        pendingRestoreCallback = null
+        restoreCallbacks.clear()
+        restoreInFlight = false
         connecting = false
         if (billingClient.isReady) billingClient.endConnection()
     }
@@ -93,14 +100,28 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
     }
 
     override fun restore(onResult: (List<StoreProduct>) -> Unit) {
+        restoreCallbacks += onResult
+        if (restoreInFlight) return
         if (!billingClient.isReady) {
-            pendingRestoreCallback = onResult
             connect()
             return
         }
+        startRestoreQuery()
+    }
+
+    private fun startRestoreQuery() {
+        if (restoreInFlight || restoreCallbacks.isEmpty()) return
+        if (!billingClient.isReady) {
+            connect()
+            return
+        }
+        restoreInFlight = true
         val params = QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.INAPP).build()
         billingClient.queryPurchasesAsync(params) { result, purchases ->
-            if (result.responseCode != BillingClient.BillingResponseCode.OK) { onResult(emptyList()); return@queryPurchasesAsync }
+            if (result.responseCode != BillingClient.BillingResponseCode.OK) {
+                finishRestore(emptyList())
+                return@queryPurchasesAsync
+            }
             val purchased = purchases.filter { it.purchaseState == Purchase.PurchaseState.PURCHASED }
             val permanentOwned = purchased.flatMap { it.products }
                 .mapNotNull { id -> StoreProduct.entries.firstOrNull { it.productId == id && !it.consumable } }
@@ -110,20 +131,28 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
                 val product = purchase.products.asSequence().mapNotNull { id -> StoreProduct.entries.firstOrNull { it.productId == id && it.consumable } }.firstOrNull()
                 if (product == null) null else purchase to product
             }
-            if (recoverable.isEmpty()) { onResult(permanentOwned); return@queryPurchasesAsync }
+            if (recoverable.isEmpty()) {
+                finishRestore(permanentOwned)
+                return@queryPurchasesAsync
+            }
 
-            // Preserve one entry per successfully consumed purchase token. Using a Set here loses
-            // value when two interrupted purchases contain the same gem pack.
             val recovered = mutableListOf<StoreProduct>()
             var remaining = recoverable.size
             recoverable.forEach { (purchase, product) ->
                 consumeRecovered(purchase) { success ->
                     if (success) recovered += product
                     remaining--
-                    if (remaining == 0) onResult(permanentOwned + recovered)
+                    if (remaining == 0) finishRestore(permanentOwned + recovered)
                 }
             }
         }
+    }
+
+    private fun finishRestore(products: List<StoreProduct>) {
+        val callbacks = restoreCallbacks.toList()
+        restoreCallbacks.clear()
+        restoreInFlight = false
+        callbacks.forEach { it(products) }
     }
 
     private fun processPurchase(purchase: Purchase) {
