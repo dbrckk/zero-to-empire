@@ -30,13 +30,14 @@ object LateGame {
 
     /** A recommended prestige becomes attractive at ~25%+ permanent improvement. */
     fun prestigeReadiness(currentPoints: Int, lifetimeCash: Double): Double {
+        val current = currentPoints.coerceAtLeast(0)
         val total = Progression.prestigeReward(lifetimeCash)
-        val gain = (total - currentPoints).coerceAtLeast(0)
-        if (gain == 0) return 0.0
-        return (gain.toDouble() / max(1, currentPoints).toDouble()).coerceAtMost(4.0)
+        val gain = (total.toLong() - current.toLong()).coerceAtLeast(0L)
+        if (gain == 0L) return 0.0
+        return (gain.toDouble() / max(1, current).toDouble()).coerceAtMost(4.0)
     }
 
     fun recommendedPrestige(currentPoints: Int, lifetimeCash: Double): Boolean =
         prestigeReadiness(currentPoints, lifetimeCash) >= 0.25 ||
-            (currentPoints == 0 && Progression.prestigeReward(lifetimeCash) >= 1)
+            (currentPoints <= 0 && Progression.prestigeReward(lifetimeCash) >= 1)
 }
