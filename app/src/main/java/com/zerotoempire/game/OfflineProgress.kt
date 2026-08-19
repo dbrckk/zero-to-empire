@@ -11,7 +11,7 @@ object OfflineProgress {
         val extraHours=(state.upgradeRanks["offline"]?:0).coerceIn(0,8)
         val capSeconds=(8L+extraHours)*3600L
         val paid=min(elapsed,capSeconds)
-        // Offline runs at 75% to preserve value of active play.
-        return OfflineReward(elapsed,paid,state.incomePerSecond*paid*.75)
+        // Managers define automation. Offline runs at 75% to preserve active-play value.
+        return OfflineReward(elapsed,paid,state.automatedIncomePerSecond*paid*.75)
     }
 }
