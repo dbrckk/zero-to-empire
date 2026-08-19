@@ -40,10 +40,11 @@ object OfflineProgress {
             val seconds = (segmentEnd - cursor) / 1000.0
             val boost = if (cursor < state.boostEndsAtMillis) 2.0 else 1.0
             val event = LiveOps.currentEvent(date)?.incomeMultiplier ?: 1.0
-            cash += state.automatedBaseIncomePerSecond * boost * event * seconds * .75
+            val segmentCash = EconomyMath.finite(state.automatedBaseIncomePerSecond * boost * event * seconds * .75)
+            cash = EconomyMath.safeAdd(cash, segmentCash)
             cursor = segmentEnd
         }
 
-        return OfflineReward(elapsed,paid,cash)
+        return OfflineReward(elapsed,paid,EconomyMath.finite(cash))
     }
 }
