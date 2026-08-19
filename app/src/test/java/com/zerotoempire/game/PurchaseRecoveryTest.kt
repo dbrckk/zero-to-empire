@@ -24,7 +24,6 @@ class PurchaseRecoveryTest {
             StoreProduct.GEM_PACK_SMALL
         )
 
-        // Existing Set-based entitlement path credits the first 120; this covers the other two.
         assertEquals(240, PurchaseRecovery.extraConsumableGems(products))
     }
 
@@ -39,5 +38,26 @@ class PurchaseRecoveryTest {
         )
 
         assertEquals(120 + 650 + 650, PurchaseRecovery.extraConsumableGems(products))
+    }
+
+    @Test
+    fun concurrentRestoreWaitersCannotDoubleCreditConsumables() {
+        val products = listOf(
+            StoreProduct.REMOVE_ADS,
+            StoreProduct.STARTER_PACK,
+            StoreProduct.GEM_PACK_SMALL,
+            StoreProduct.GEM_PACK_SMALL,
+            StoreProduct.GEM_PACK_MEDIUM
+        )
+
+        assertEquals(products, PurchaseRecovery.deliveryForWaiter(products, 0))
+        assertEquals(
+            listOf(StoreProduct.REMOVE_ADS, StoreProduct.STARTER_PACK),
+            PurchaseRecovery.deliveryForWaiter(products, 1)
+        )
+        assertEquals(
+            listOf(StoreProduct.REMOVE_ADS, StoreProduct.STARTER_PACK),
+            PurchaseRecovery.deliveryForWaiter(products, 2)
+        )
     }
 }
