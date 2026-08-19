@@ -16,7 +16,7 @@ import com.android.billingclient.api.Purchase
 
 class PlayBillingGateway(private val context: Context) : PurchaseGateway {
     private var pendingResult: ((PurchaseResult) -> Unit)? = null
-    private var pendingRestoreCallback: ((Set<StoreProduct>) -> Unit)? = null
+    private var pendingRestoreCallback: ((List<StoreProduct>) -> Unit)? = null
     private var connecting = false
 
     private val billingClient = BillingClient.newBuilder(context)
@@ -46,7 +46,7 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
                 val callback = pendingRestoreCallback
                 pendingRestoreCallback = null
                 if (result.responseCode == BillingClient.BillingResponseCode.OK) callback?.let(::restore)
-                else callback?.invoke(emptySet())
+                else callback?.invoke(emptyList())
             }
             override fun onBillingServiceDisconnected() { connecting = false }
         })
@@ -92,7 +92,7 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
         }
     }
 
-    override fun restore(onResult: (Set<StoreProduct>) -> Unit) {
+    override fun restore(onResult: (List<StoreProduct>) -> Unit) {
         if (!billingClient.isReady) {
             pendingRestoreCallback = onResult
             connect()
@@ -100,18 +100,22 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
         }
         val params = QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.INAPP).build()
         billingClient.queryPurchasesAsync(params) { result, purchases ->
-            if (result.responseCode != BillingClient.BillingResponseCode.OK) { onResult(emptySet()); return@queryPurchasesAsync }
+            if (result.responseCode != BillingClient.BillingResponseCode.OK) { onResult(emptyList()); return@queryPurchasesAsync }
             val purchased = purchases.filter { it.purchaseState == Purchase.PurchaseState.PURCHASED }
             val permanentOwned = purchased.flatMap { it.products }
                 .mapNotNull { id -> StoreProduct.entries.firstOrNull { it.productId == id && !it.consumable } }
-                .toMutableSet()
+                .distinct()
             purchased.filter { purchase -> purchase.products.any { id -> StoreProduct.entries.any { it.productId == id && !it.consumable } } }.forEach(::acknowledge)
             val recoverable = purchased.mapNotNull { purchase ->
                 val product = purchase.products.asSequence().mapNotNull { id -> StoreProduct.entries.firstOrNull { it.productId == id && it.consumable } }.firstOrNull()
                 if (product == null) null else purchase to product
             }
             if (recoverable.isEmpty()) { onResult(permanentOwned); return@queryPurchasesAsync }
-            val recovered = mutableSetOf<StoreProduct>(); var remaining = recoverable.size
+
+            // Preserve one entry per successfully consumed purchase token. Using a Set here loses
+            // value when two interrupted purchases contain the same gem pack.
+            val recovered = mutableListOf<StoreProduct>()
+            var remaining = recoverable.size
             recoverable.forEach { (purchase, product) ->
                 consumeRecovered(purchase) { success ->
                     if (success) recovered += product
