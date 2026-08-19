@@ -1,7 +1,6 @@
 package com.zerotoempire.game
 
 import java.time.LocalDate
-import kotlin.math.pow
 
 data class Business(
     val id: Int,
@@ -11,8 +10,8 @@ data class Business(
     val baseIncome: Double,
     val level: Int = 0
 ) {
-    val nextCost: Double get() = baseCost * 1.15.pow(level)
-    val rawIncomePerSecond: Double get() = baseIncome * level * GameEconomy.milestoneMultiplier(level)
+    val nextCost: Double get() = EconomyMath.growthCost(baseCost, level)
+    val rawIncomePerSecond: Double get() = EconomyMath.finite(baseIncome * level.coerceAtLeast(0) * GameEconomy.milestoneMultiplier(level))
     val nextMilestone: Int? get() = listOf(10, 25, 50, 100, 250, 500, 1000).firstOrNull { it > level }
 }
 
@@ -29,37 +28,39 @@ data class GameState(
     val prestigeUpgradeRank: Int get() = upgradeRanks["prestige"] ?: 0
     val incomeUpgradeRank: Int get() = upgradeRanks["income"] ?: 0
     val tapUpgradeRank: Int get() = upgradeRanks["tap"] ?: 0
-    val prestigeMultiplier: Double get() = 1.0 + prestigePoints * (0.12 * (1.0 + prestigeUpgradeRank * .08))
-    val legacyMasteryMultiplier: Double get() = LateGame.legacyMasteryMultiplier(prestigePoints)
-    val portfolioDepthMultiplier: Double get() = LateGame.portfolioDepthMultiplier(businesses)
-    val transcendenceMultiplier: Double get() = EndgameProgression.transcendenceMultiplier(lifetimeCash)
-    val globalUpgradeMultiplier: Double get() = 1.0 + incomeUpgradeRank * .10
+    val prestigeMultiplier: Double get() = EconomyMath.finite(1.0 + prestigePoints.coerceAtLeast(0) * (0.12 * (1.0 + prestigeUpgradeRank * .08)))
+    val legacyMasteryMultiplier: Double get() = EconomyMath.finite(LateGame.legacyMasteryMultiplier(prestigePoints))
+    val portfolioDepthMultiplier: Double get() = EconomyMath.finite(LateGame.portfolioDepthMultiplier(businesses))
+    val transcendenceMultiplier: Double get() = EconomyMath.finite(EndgameProgression.transcendenceMultiplier(lifetimeCash))
+    val globalUpgradeMultiplier: Double get() = EconomyMath.finite(1.0 + incomeUpgradeRank * .10)
     val boostMultiplier: Double get() = if (System.currentTimeMillis() < boostEndsAtMillis) 2.0 else 1.0
     val eventMultiplier: Double get() = LiveOps.currentEvent(LocalDate.now())?.incomeMultiplier ?: 1.0
 
     fun businessIncome(b: Business): Double {
         val manager = Managers.catalog.firstOrNull { it.businessId == b.id && it.businessId in hiredManagerIds }
-        return b.rawIncomePerSecond * (manager?.incomeMultiplier ?: 1.0)
+        return EconomyMath.finite(b.rawIncomePerSecond * (manager?.incomeMultiplier ?: 1.0))
     }
 
     val permanentIncomeMultiplier: Double
-        get() = prestigeMultiplier * legacyMasteryMultiplier * portfolioDepthMultiplier * transcendenceMultiplier * globalUpgradeMultiplier
+        get() = EconomyMath.finite(prestigeMultiplier * legacyMasteryMultiplier * portfolioDepthMultiplier * transcendenceMultiplier * globalUpgradeMultiplier)
 
     private val globalIncomeMultiplier: Double
-        get() = permanentIncomeMultiplier * boostMultiplier * eventMultiplier
+        get() = EconomyMath.finite(permanentIncomeMultiplier * boostMultiplier * eventMultiplier)
 
     /** All owned businesses generate while the player is active. */
-    val incomePerSecond: Double get() = businesses.sumOf(::businessIncome) * globalIncomeMultiplier
+    val incomePerSecond: Double
+        get() = EconomyMath.finite(businesses.sumOf(::businessIncome) * globalIncomeMultiplier)
 
-    /** Stable manager-operated base used by offline integration before time-dependent boost/event multipliers. */
+    /** Base automated income before temporary boost/event multipliers. */
     val automatedBaseIncomePerSecond: Double
-        get() = businesses.filter { it.id in hiredManagerIds }.sumOf(::businessIncome) * permanentIncomeMultiplier
+        get() = EconomyMath.finite(businesses.filter { it.id in hiredManagerIds }.sumOf(::businessIncome) * permanentIncomeMultiplier)
 
-    /** Current instant offline rate, useful for UI/debug; OfflineProgress integrates transient multipliers over time. */
+    /** Only manager-operated businesses continue generating while the app is away. */
     val automatedIncomePerSecond: Double
-        get() = automatedBaseIncomePerSecond * boostMultiplier * eventMultiplier
+        get() = EconomyMath.finite(automatedBaseIncomePerSecond * boostMultiplier * eventMultiplier)
 
-    val tapValue: Double get() = (1.0 + incomePerSecond * .05) * prestigeMultiplier * legacyMasteryMultiplier * transcendenceMultiplier * (1.0 + tapUpgradeRank * .25)
+    val tapValue: Double
+        get() = EconomyMath.finite((1.0 + incomePerSecond * .05) * prestigeMultiplier * legacyMasteryMultiplier * transcendenceMultiplier * (1.0 + tapUpgradeRank * .25))
     val empireLevel: Int get() = EmpireEras.current(lifetimeCash).index
 }
 
