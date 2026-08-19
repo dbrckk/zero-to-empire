@@ -7,12 +7,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 
@@ -20,12 +24,26 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 fun GrowthRuntimeRoot(vm: GameViewModel = viewModel()) {
     val context = LocalContext.current
     val activity = remember(context) { context.findGrowthActivity() }
+    val lifecycleOwner = LocalLifecycleOwner.current
     val telemetry = remember(context) { LocalGrowthTelemetry(context.applicationContext) }
     val state = vm.state.collectAsStateWithLifecycle().value
     val meta = vm.meta.collectAsStateWithLifecycle().value
     val celebration = vm.celebration.collectAsStateWithLifecycle().value
     val adsAllowed = PrivacyConsentManager.adsAllowed.collectAsStateWithLifecycle().value
     val eraIndex = EmpireEras.current(state.lifetimeCash).index
+
+    DisposableEffect(lifecycleOwner, vm) {
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_START -> vm.onAppForegrounded()
+                Lifecycle.Event.ON_STOP -> vm.onAppBackgrounded()
+                else -> Unit
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        if (lifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) vm.onAppForegrounded()
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
 
     LaunchedEffect(Unit) { telemetry.track(GrowthEvent.SessionStarted) }
     LaunchedEffect(eraIndex) { GameMusicBus.setEmpireLevel(eraIndex) }
