@@ -49,8 +49,7 @@ object BulkPurchase {
         if (total <= available * (1.0 + 1e-12)) return BulkQuote(requested, total)
         if (mode == BuyMode.MILESTONE) return BulkQuote(0, total)
 
-        // Fixed modes are at most 25. MAX already uses affordableCount, so this loop stays bounded.
-        var adjusted = requested.coerceAtMost(25)
+        var adjusted = requested
         while (adjusted > 0 && cost(business, adjusted) > available) adjusted--
         return BulkQuote(adjusted, cost(business, adjusted))
     }
