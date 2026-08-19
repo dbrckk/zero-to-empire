@@ -85,6 +85,14 @@ object Progression {
         Achievement("first", "First Step", "Own your first business", state.businesses.any { it.level > 0 }, "first" in meta.claimedAchievementIds, 5),
         Achievement("million", "Millionaire", "Earn 1M lifetime cash", state.lifetimeCash >= 1_000_000.0, "million" in meta.claimedAchievementIds, 10),
         Achievement("century", "Industrial Machine", "Own 100 total business levels", state.businesses.sumOf { it.level.toLong() } >= 100L, "century" in meta.claimedAchievementIds, 15),
-        Achievement("reborn", "Reborn", "Prestige for the first time", meta.prestigeCount > 0, "reborn" in meta.claimedAchievementIds, 20)
+        Achievement("reborn", "Reborn", "Prestige for the first time", meta.prestigeCount > 0, "reborn" in meta.claimedAchievementIds, 20),
+        Achievement(
+            "beyond_everything",
+            "Beyond Everything",
+            "Reach the Transcendent era and the current frontier of Zero → Empire",
+            state.lifetimeCash >= 1e30 || meta.highestEraSeen >= EmpireEras.catalog.lastIndex,
+            "beyond_everything" in meta.claimedAchievementIds,
+            100
+        )
     )
 }
