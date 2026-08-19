@@ -20,7 +20,11 @@ interface PurchaseGateway {
     fun connect()
     fun disconnect()
     fun purchase(activity: Activity, product: StoreProduct, onResult: (PurchaseResult) -> Unit)
-    fun restore(onResult: (Set<StoreProduct>) -> Unit)
+    /**
+     * Returns every recovered transaction. This is intentionally a List rather than a Set:
+     * multiple interrupted purchases of the same consumable must each be credited exactly once.
+     */
+    fun restore(onResult: (List<StoreProduct>) -> Unit)
 }
 
 enum class StoreProduct(val productId: String, val consumable: Boolean) {
