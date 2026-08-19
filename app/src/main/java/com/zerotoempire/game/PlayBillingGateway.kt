@@ -152,7 +152,9 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
         val callbacks = restoreCallbacks.toList()
         restoreCallbacks.clear()
         restoreInFlight = false
-        callbacks.forEach { it(products) }
+        callbacks.forEachIndexed { index, callback ->
+            callback(PurchaseRecovery.deliveryForWaiter(products, index))
+        }
     }
 
     private fun processPurchase(purchase: Purchase) {
