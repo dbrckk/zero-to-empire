@@ -33,6 +33,9 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
 
     private var loaded = false
     private var saveJob: Job? = null
+    @Volatile private var appForeground = true
+    @Volatile private var resetTickClock = true
+    private var backgroundedAtMillis: Long = 0L
 
     init {
         viewModelScope.launch {
@@ -54,6 +57,11 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
                 while (true) {
                     delay(250L)
                     val nowNanos = SystemClock.elapsedRealtimeNanos()
+                    if (!appForeground || resetTickClock) {
+                        previousTickNanos = nowNanos
+                        resetTickClock = false
+                        continue
+                    }
                     val elapsedSeconds = (nowNanos - previousTickNanos).coerceAtLeast(0L) / 1_000_000_000.0
                     previousTickNanos = nowNanos
                     val s = _state.value
@@ -72,6 +80,36 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
                     persistNow()
                 }
             }
+        }
+    }
+
+    fun onAppBackgrounded(nowMillis: Long = System.currentTimeMillis()) {
+        if (!loaded || !appForeground) return
+        appForeground = false
+        resetTickClock = true
+        backgroundedAtMillis = nowMillis
+        viewModelScope.launch { persistNow() }
+    }
+
+    fun onAppForegrounded(nowMillis: Long = System.currentTimeMillis()) {
+        if (!loaded) { appForeground = true; resetTickClock = true; return }
+        if (appForeground) return
+        val startedAt = backgroundedAtMillis
+        backgroundedAtMillis = 0L
+        appForeground = true
+        resetTickClock = true
+        if (startedAt <= 0L || nowMillis <= startedAt) return
+
+        val reward = OfflineProgress.calculate(_state.value, startedAt, nowMillis)
+        if (reward.eligible) {
+            val updated = _state.value.copy(
+                cash = _state.value.cash + reward.cash,
+                lifetimeCash = _state.value.lifetimeCash + reward.cash
+            )
+            _state.value = updated
+            _offlineReward.value = reward
+            checkEraUnlock(updated)
+            scheduleSave()
         }
     }
 
