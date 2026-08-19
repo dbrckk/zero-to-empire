@@ -40,7 +40,10 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
                 if (error != null && !canRequestAds) status = "Privacy setup is incomplete: $error"
             }
         }
-        billing.restore { restored -> owned = restored; vm.applyEntitlements(restored) }
+        billing.restore { restored ->
+            owned = restored.filterNot { it.consumable }.toSet()
+            vm.applyEntitlements(restored)
+        }
         onDispose { billing.disconnect() }
     }
 
@@ -94,7 +97,13 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
         StoreDialog(
             owned = owned + buildSet { if (meta.adsRemoved) add(StoreProduct.REMOVE_ADS); if (meta.starterPackOwned) add(StoreProduct.STARTER_PACK) },
             onDismiss = { showStore = false },
-            onRestore = { billing.restore { owned = it; vm.applyEntitlements(it); status = if (it.isEmpty()) "No permanent purchases found." else "Purchases restored." } },
+            onRestore = {
+                billing.restore { restored ->
+                    owned = restored.filterNot { it.consumable }.toSet()
+                    vm.applyEntitlements(restored)
+                    status = if (restored.isEmpty()) "No purchases found." else "Purchases restored."
+                }
+            },
             onPurchase = { product ->
                 billing.purchase(activity, product) { result ->
                     when (result) {
