@@ -7,6 +7,7 @@ class BulkPurchaseTest {
     @Test fun singlePurchaseKeepsExactNextCost() {
         val business = defaultBusinesses().first()
 
+        assertEquals(business.baseCost, business.nextCost, 0.0)
         assertEquals(business.nextCost, BulkPurchase.cost(business, 1), 0.0)
         assertEquals(1, BulkPurchase.quote(business, business.nextCost, BuyMode.X1).count)
     }
