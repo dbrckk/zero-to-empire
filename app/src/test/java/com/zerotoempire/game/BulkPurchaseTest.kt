@@ -4,6 +4,13 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class BulkPurchaseTest {
+    @Test fun singlePurchaseKeepsExactNextCost() {
+        val business = defaultBusinesses().first()
+
+        assertEquals(business.nextCost, BulkPurchase.cost(business, 1), 0.0)
+        assertEquals(1, BulkPurchase.quote(business, business.nextCost, BuyMode.X1).count)
+    }
+
     @Test fun bulkCostMatchesSequentialPurchases() {
         val b = defaultBusinesses().first().copy(level = 12)
         var sequential = 0.0

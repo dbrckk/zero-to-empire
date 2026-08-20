@@ -34,6 +34,10 @@ object EconomyMath {
         if (count <= 0) return 0.0
         val first = growthCost(baseCost, startLevel)
         if (first >= MAX_VALUE) return MAX_VALUE
+        // Avoid introducing rounding error for the most common purchase. In
+        // particular, a fresh player's exact 10 cash must buy the 10-cost
+        // starter business without producing a tiny negative balance.
+        if (count == 1) return first
         val growthExponent = count.toDouble() * lnGrowth
         if (!growthExponent.isFinite() || growthExponent >= lnMax) return MAX_VALUE
         val factor = exp(growthExponent)
