@@ -18,8 +18,14 @@ class ChallengeRotationTest {
     }
 
     @Test fun completedChallengeCannotLoseCompletion() {
-        val meta = PlayerMeta(totalTaps = 600)
-        val challenge = ChallengeRotation.current(GameState(), meta, LocalDate.of(2026, 8, 14)).first { it.metric == ChallengeMetric.TAPS }
+        val date = LocalDate.of(2026, 8, 14)
+        val key = ChallengeRotation.weeklyKey(date)
+        val meta = PlayerMeta(
+            totalTaps = 600,
+            challengeWeekKey = key,
+            challengeWeekTapBase = 0L
+        )
+        val challenge = ChallengeRotation.current(GameState(), meta, date).first { it.metric == ChallengeMetric.TAPS }
         assertTrue(challenge.completed)
         assertEquals(1f, challenge.fraction)
     }
