@@ -25,7 +25,9 @@ object EconomyMath {
 
     fun growthCost(baseCost: Double, level: Int): Double {
         if (baseCost <= 0.0 || !baseCost.isFinite()) return MAX_VALUE
-        val exponent = ln(baseCost) + level.coerceAtLeast(0) * lnGrowth
+        val safeLevel = level.coerceAtLeast(0)
+        if (safeLevel == 0) return baseCost.coerceAtMost(MAX_VALUE)
+        val exponent = ln(baseCost) + safeLevel * lnGrowth
         if (!exponent.isFinite() || exponent >= lnMax) return MAX_VALUE
         return exp(exponent).coerceAtMost(MAX_VALUE)
     }
@@ -34,6 +36,7 @@ object EconomyMath {
         if (count <= 0) return 0.0
         val first = growthCost(baseCost, startLevel)
         if (first >= MAX_VALUE) return MAX_VALUE
+        if (count == 1) return first
         val growthExponent = count.toDouble() * lnGrowth
         if (!growthExponent.isFinite() || growthExponent >= lnMax) return MAX_VALUE
         val factor = exp(growthExponent)
