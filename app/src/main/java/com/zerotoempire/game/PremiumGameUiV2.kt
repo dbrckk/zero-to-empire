@@ -107,7 +107,9 @@ private fun PremiumEmpireTab(vm: GameViewModel, state: GameState, buyMode: BuyMo
     Box(Modifier.fillMaxSize()) {
         LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(16.dp,14.dp,16.dp,30.dp), verticalArrangement = Arrangement.spacedBy(13.dp)) {
             item { PremiumTopStatus(state) }
+            item { PremiumEmpireSignal(state) }
             item { CinematicEraHero(state) }
+            item { PremiumCampaignPulse(state) }
             item { PremiumPowerCore(state, vm::tap) }
             item { PurchaseModeRail(vm, buyMode) }
             item { PremiumSectionTitle("ASSET NETWORK", "${state.businesses.sumOf { it.level }} levels online") }
@@ -152,6 +154,7 @@ private fun PremiumPowerCore(state: GameState,tap:()->Unit) {
         Column(Modifier.padding(vertical=18.dp),horizontalAlignment=Alignment.CenterHorizontally) {
             Text("POWER CORE",color=EmpireColors.Gold,fontSize=11.sp,fontWeight=FontWeight.Black,letterSpacing=2.sp);Text("Tap to inject capital",color=EmpireColors.TextSecondary,fontSize=10.sp);Spacer(Modifier.height(8.dp))
             Box(Modifier.height(206.dp).fillMaxWidth(),contentAlignment=Alignment.Center) {
+                PremiumCoreAura(eraIndex, Modifier.size(190.dp))
                 Box(Modifier.size(188.dp).scale(scale.value).background(Brush.radialGradient(listOf(EmpireColors.Gold.copy(alpha=.16f),EmpireColors.Cyan.copy(alpha=.06f),Color.Transparent)),CircleShape).pointerInput(state.tapValue) { detectTapGestures(onPress={scale.animateTo(.93f,spring(stiffness=Spring.StiffnessHigh));if(tryAwaitRelease()){lastGain=state.tapValue;tap();combo=(combo+1).coerceAtMost(99);comboToken++;haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove);pop=true;scope.launch{scale.animateTo(1.08f,spring(dampingRatio=.38f,stiffness=Spring.StiffnessMedium));scale.animateTo(1f,spring(dampingRatio=.55f))};scope.launch{delay(430);pop=false};val token=comboToken;scope.launch{delay(900);if(token==comboToken)combo=0}}else scale.snapTo(1f)}) },contentAlignment=Alignment.Center) { EmpireCoreGlyph(Modifier.size(166.dp),eraIndex=eraIndex) }
                 if(pop) Text("+${moneyV2(lastGain)}",color=EmpireColors.GoldBright,fontSize=22.sp,fontWeight=FontWeight.Black,modifier=Modifier.align(Alignment.TopCenter));if(combo>=3) Text("CHAIN ×$combo",color=EmpireColors.Cyan,fontSize=10.sp,fontWeight=FontWeight.Black,letterSpacing=1.2.sp,modifier=Modifier.align(Alignment.BottomCenter))
             }
