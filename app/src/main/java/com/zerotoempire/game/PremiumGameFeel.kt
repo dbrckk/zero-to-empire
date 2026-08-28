@@ -10,9 +10,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,8 +19,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Surface
@@ -37,7 +33,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
@@ -128,7 +123,15 @@ private fun PremiumBurst(seed: Int) {
     val progress: Float
     if (reduced) progress = .72f else {
         val transition = rememberInfiniteTransition(label = "premiumBurst$seed")
-        val p by transition.animateFloat(0f, 1f, infiniteRepeatable(tween(900, easing = FastOutSlowInEasing), RepeatMode.Restart), label = "burst")
+        val p by transition.animateFloat(
+            initialValue = 0f,
+            targetValue = 1f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(durationMillis = 900, easing = FastOutSlowInEasing),
+                repeatMode = RepeatMode.Restart
+            ),
+            label = "burst"
+        )
         progress = p
     }
     Canvas(Modifier.fillMaxSize()) {
@@ -144,25 +147,5 @@ private fun PremiumBurst(seed: Int) {
             val color = if (i % 2 == 0) EmpireColors.GoldBright else EmpireColors.Cyan
             drawLine(color.copy(alpha = a), Offset(center.x + cos(angle).toFloat() * start, center.y + sin(angle).toFloat() * start), Offset(center.x + cos(angle).toFloat() * end, center.y + sin(angle).toFloat() * end), size.minDimension * .006f)
         }
-    }
-}
-
-@Composable
-fun PremiumCoreAura(combo: Int, modifier: Modifier = Modifier) {
-    val context = LocalContext.current
-    val reduced = MotionQuality.reducedMotion(context)
-    val lowPower = MotionQuality.lowPowerMode(context)
-    val phase: Float
-    if (reduced) phase = .5f else {
-        val transition = rememberInfiniteTransition(label = "coreAura")
-        val p by transition.animateFloat(0f, 1f, infiniteRepeatable(tween(if (lowPower) 1900 else 1200), easing = FastOutSlowInEasing, repeatMode = RepeatMode.Reverse), label = "aura")
-        phase = p
-    }
-    Canvas(modifier) {
-        val center = Offset(size.width / 2f, size.height / 2f)
-        val power = (combo.coerceAtMost(20) / 20f)
-        val radius = size.minDimension * (.34f + phase * .07f + power * .05f)
-        drawCircle(Brush.radialGradient(listOf(EmpireColors.Gold.copy(alpha = .10f + power * .14f), EmpireColors.Cyan.copy(alpha = .05f + power * .08f), Color.Transparent), center, radius), radius, center)
-        drawCircle(EmpireColors.GoldBright.copy(alpha = .14f + power * .28f), radius * .72f, center, style = Stroke(size.minDimension * (.006f + power * .004f)))
     }
 }
