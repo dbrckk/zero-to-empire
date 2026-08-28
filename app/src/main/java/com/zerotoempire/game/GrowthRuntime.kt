@@ -17,15 +17,8 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 
-/**
- * Runtime shell for systems that live outside the scrollable game screen.
- *
- * Important UX rule: persistent gameplay controls belong inside GameUi's layout,
- * never as floating overlays. On real phones those overlays covered the purchase
- * deck, business cards and navigation. The game screen already exposes weekly
- * challenges in Goals and bulk purchasing in Empire, so the duplicate floating
- * docks are intentionally removed here.
- */
+/** Runtime shell. Visual atmosphere must stay behind gameplay so it can never
+ * obscure or intercept phone UI. Persistent controls live inside the Scaffold. */
 @Composable
 fun GrowthRuntimeRoot(vm: GameViewModel = viewModel()) {
     val context = LocalContext.current
@@ -72,9 +65,9 @@ fun GrowthRuntimeRoot(vm: GameViewModel = viewModel()) {
     SfxRuntime(vm)
 
     Box(Modifier.fillMaxSize()) {
-        CommerceRoot(vm)
-        // Atmosphere remains non-interactive and may safely sit above the scene.
+        // Draw ambience first. CommerceRoot contains every interactive surface.
         EndgameAtmosphere(eraIndex = eraIndex, modifier = Modifier.fillMaxSize())
+        CommerceRoot(vm)
     }
 
     if (activity != null) {
