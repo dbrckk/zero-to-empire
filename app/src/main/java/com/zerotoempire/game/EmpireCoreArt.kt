@@ -13,20 +13,20 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
+/**
+ * Pure visual power core. The parent already owns game state, so this renderer
+ * deliberately does not create/collect another GameViewModel.
+ */
 @Composable
-fun EmpireCoreGlyph(modifier: Modifier = Modifier) {
-    val vm: GameViewModel = viewModel()
-    val state by vm.state.collectAsStateWithLifecycle()
+fun EmpireCoreGlyph(modifier: Modifier = Modifier, eraIndex: Int = 0) {
     val context = LocalContext.current
     val reducedMotion = MotionQuality.reducedMotion(context)
     val lowPower = MotionQuality.lowPowerMode(context)
-    val era = state.empireLevel.coerceIn(0, 10)
+    val era = eraIndex.coerceIn(0, 10)
 
     val rotation: Float
     val fastRotation: Float
