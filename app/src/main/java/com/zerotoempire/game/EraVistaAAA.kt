@@ -38,21 +38,61 @@ fun EraVistaAAA(eraIndex: Int, modifier: Modifier = Modifier) {
     } else .22f
 
     Canvas(modifier) {
-        val w=size.width; val h=size.height
-        drawRect(Brush.verticalGradient(listOf(EmpireColors.DeepSpace,EmpireColors.Void)))
-        drawStarfield(w,h,if(lowPower)18 else 32,drift)
-        when(eraIndex.coerceIn(0,10)) {
-            0 -> drawStreetEra(w,h,drift)
-            1 -> drawIndustrialEra(w,h,drift)
-            2 -> drawDigitalEra(w,h,drift)
-            3 -> drawMegacityEra(w,h,drift)
-            4 -> drawLunarEra(w,h,drift)
-            5 -> drawMarsEra(w,h,drift)
-            6 -> drawDysonEra(w,h,drift,lowPower)
-            7 -> drawGalacticEra(w,h,drift,lowPower)
-            8 -> drawIntergalacticEra(w,h,drift,lowPower)
-            9 -> drawRealityEra(w,h,drift,lowPower)
-            else -> drawTranscendentEra(w,h,drift,lowPower)
+        val w = size.width
+        val h = size.height
+        val era = eraIndex.coerceIn(0, 10)
+        drawRect(Brush.verticalGradient(listOf(EmpireColors.DeepSpace, EmpireColors.Void)))
+        drawStarfield(w, h, if (lowPower) 18 else 32, drift)
+        when (era) {
+            0 -> drawStreetEra(w, h, drift)
+            1 -> drawIndustrialEra(w, h, drift)
+            2 -> drawDigitalEra(w, h, drift)
+            3 -> drawMegacityEra(w, h, drift)
+            4 -> drawLunarEra(w, h, drift)
+            5 -> drawMarsEra(w, h, drift)
+            6 -> drawDysonEra(w, h, drift, lowPower)
+            7 -> drawGalacticEra(w, h, drift, lowPower)
+            8 -> drawIntergalacticEra(w, h, drift, lowPower)
+            9 -> drawRealityEra(w, h, drift, lowPower)
+            else -> drawTranscendentEra(w, h, drift, lowPower)
+        }
+        if (!reduced) drawAmbientTraffic(w, h, era, drift, lowPower)
+    }
+}
+
+private fun DrawScope.drawAmbientTraffic(w: Float, h: Float, era: Int, drift: Float, lowPower: Boolean) {
+    val count = if (lowPower) 2 else when {
+        era <= 1 -> 3
+        era <= 5 -> 5
+        else -> 7
+    }
+    val accent = when (era) {
+        0 -> EmpireArtPalette.Gold
+        1 -> Color(0xFFFF9B55)
+        2, 4 -> EmpireArtPalette.Cyan
+        3 -> EmpireArtPalette.Violet
+        5 -> EmpireArtPalette.Red
+        6 -> EmpireArtPalette.GoldHot
+        7 -> EmpireArtPalette.Violet
+        8 -> EmpireArtPalette.Cyan
+        9 -> Color(0xFFFF68D8)
+        else -> Color(0xFFFFE36E)
+    }
+    repeat(count) { i ->
+        val lane = .18f + (i % 4) * .115f
+        val speed = .55f + (i % 3) * .22f
+        val phase = (drift * speed + i * .173f) % 1f
+        val reverse = i % 2 == 1
+        val x = if (reverse) w * (1.08f - phase * 1.16f) else w * (-.08f + phase * 1.16f)
+        val y = h * lane + sin((phase + i) * PI.toFloat() * 2f) * h * if (era >= 6) .035f else .012f
+        val trail = w * if (era >= 6) .075f else .04f
+        val alpha = if (lowPower) .26f else .42f
+        val start = Offset(x + if (reverse) trail else -trail, y)
+        val end = Offset(x, y)
+        drawLine(accent.copy(alpha = alpha * .48f), start, end, if (era >= 6) 2.1f else 1.4f)
+        drawCircle(accent.copy(alpha = alpha), if (era >= 6) 2.6f else 1.9f, end)
+        if (!lowPower && era >= 3) {
+            drawCircle(Color.White.copy(alpha = alpha * .7f), 1f, end)
         }
     }
 }
