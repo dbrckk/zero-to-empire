@@ -81,18 +81,52 @@ object Progression {
         Mission("prestige_1", "Ascend once", 1.0, 20, meta.prestigeCount.toDouble(), "prestige_1" in meta.claimedMissionIds)
     )
 
-    fun achievements(state: GameState, meta: PlayerMeta) = listOf(
-        Achievement("first", "First Step", "Own your first business", state.businesses.any { it.level > 0 }, "first" in meta.claimedAchievementIds, 5),
-        Achievement("million", "Millionaire", "Earn 1M lifetime cash", state.lifetimeCash >= 1_000_000.0, "million" in meta.claimedAchievementIds, 10),
-        Achievement("century", "Industrial Machine", "Own 100 total business levels", state.businesses.sumOf { it.level.toLong() } >= 100L, "century" in meta.claimedAchievementIds, 15),
-        Achievement("reborn", "Reborn", "Prestige for the first time", meta.prestigeCount > 0, "reborn" in meta.claimedAchievementIds, 20),
-        Achievement(
-            "beyond_everything",
-            "Beyond Everything",
-            "Reach the Transcendent era and the current frontier of Zero → Empire",
-            state.lifetimeCash >= 1e30 || meta.highestEraSeen >= EmpireEras.catalog.lastIndex,
-            "beyond_everything" in meta.claimedAchievementIds,
-            100
+    fun achievements(state: GameState, meta: PlayerMeta): List<Achievement> {
+        val ids = meta.claimedAchievementIds
+        val totalLevels = state.businesses.sumOf { it.level.toLong() }
+        val dynasty = DynastyProgression.status(state, meta).rank.level
+        fun a(id: String, title: String, description: String, unlocked: Boolean, reward: Int) =
+            Achievement(id, title, description, unlocked, id in ids, reward)
+
+        return listOf(
+            // First-session / early campaign
+            a("first", "First Step", "Own your first asset", state.businesses.any { it.level > 0 }, 5),
+            a("tap_500", "Hands On", "Tap the Power Core 500 times", meta.totalTaps >= 500L, 8),
+            a("buy_100", "Builder", "Purchase 100 asset levels across your career", meta.totalPurchases >= 100L, 10),
+            a("million", "Millionaire", "Earn 1M lifetime cash in a run", state.lifetimeCash >= 1e6, 10),
+            a("century", "Industrial Machine", "Own 100 total asset levels in one run", totalLevels >= 100L, 15),
+            a("manager_1", "Delegation", "Hire your first manager", state.hiredManagerIds.isNotEmpty(), 10),
+            a("reborn", "Reborn", "Ascend for the first time", meta.prestigeCount > 0, 20),
+
+            // Mid campaign
+            a("tap_5000", "Capital Pulse", "Tap the Power Core 5,000 times", meta.totalTaps >= 5_000L, 15),
+            a("buy_1000", "Mass Expansion", "Purchase 1,000 asset levels across your career", meta.totalPurchases >= 1_000L, 20),
+            a("managers_5", "Executive Board", "Hire 5 managers in one run", state.hiredManagerIds.size >= 5, 20),
+            a("levels_1000", "Vertical Integration", "Own 1,000 total asset levels in one run", totalLevels >= 1_000L, 25),
+            a("prestige_10", "Iterative Empire", "Complete 10 ascensions", meta.prestigeCount >= 10, 30),
+            a("streak_14", "Two Week Operator", "Maintain a 14 day login streak", meta.streakDays >= 14, 20),
+            a("era_planetary", "Off-World Balance Sheet", "Reach the Planetary era", meta.highestEraSeen >= 4 || state.empireLevel >= 4, 25),
+
+            // Long campaign
+            a("tap_50000", "Human Metronome", "Tap the Power Core 50,000 times", meta.totalTaps >= 50_000L, 35),
+            a("buy_10000", "Empire Logistics", "Purchase 10,000 asset levels across your career", meta.totalPurchases >= 10_000L, 40),
+            a("prestige_50", "Legacy Engine", "Complete 50 ascensions", meta.prestigeCount >= 50, 50),
+            a("streak_30", "Monthly Discipline", "Maintain a 30 day login streak", meta.streakDays >= 30, 40),
+            a("era_galactic", "Galactic Balance Sheet", "Reach the Galactic era", meta.highestEraSeen >= 6 || state.empireLevel >= 6, 45),
+            a("all_managers", "Board of Fourteen", "Hire every manager in one run", state.hiredManagerIds.size >= Managers.catalog.size, 60),
+
+            // Dynasty ladder: persistent multi-month status targets
+            a("dynasty_5", "Dynasty: Established", "Reach Dynasty Rank 5", dynasty >= 5, 15),
+            a("dynasty_10", "Dynasty: Influential", "Reach Dynasty Rank 10", dynasty >= 10, 25),
+            a("dynasty_20", "Dynasty: Dominant", "Reach Dynasty Rank 20", dynasty >= 20, 50),
+            a("dynasty_30", "Dynasty: Sovereign", "Reach Dynasty Rank 30", dynasty >= 30, 75),
+            a("dynasty_45", "Dynasty: Eternal", "Reach Dynasty Rank 45", dynasty >= 45, 120),
+            a("dynasty_60", "Dynasty: Apex", "Reach the maximum Dynasty Rank 60", dynasty >= 60, 200),
+
+            // Endgame
+            a("prestige_250", "Century of Rebirths", "Complete 250 ascensions", meta.prestigeCount >= 250, 125),
+            a("streak_90", "Quarter-Year Empire", "Maintain a 90 day login streak", meta.streakDays >= 90, 100),
+            a("beyond_everything", "Beyond Everything", "Reach the Transcendent era and the current frontier of Zero → Empire", state.lifetimeCash >= 1e30 || meta.highestEraSeen >= EmpireEras.catalog.lastIndex, 150)
         )
-    )
+    }
 }
