@@ -16,6 +16,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlin.math.cos
@@ -36,13 +37,22 @@ object EmpireArtPalette {
 
 @Composable
 fun BusinessArtIcon(id: Int, level: Int = 0, iconSize: Dp = 54.dp, modifier: Modifier = Modifier) {
-    val transition = rememberInfiniteTransition(label = "businessArt$id")
-    val pulse by transition.animateFloat(
-        initialValue = .82f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(tween(1800 + id * 90), RepeatMode.Reverse),
-        label = "pulse"
-    )
+    val context = LocalContext.current
+    val reducedMotion = MotionQuality.reducedMotion(context)
+    val lowPower = MotionQuality.lowPowerMode(context)
+    val pulse: Float = if (reducedMotion || lowPower) {
+        1f
+    } else {
+        val transition = rememberInfiniteTransition(label = "businessArt$id")
+        val animated by transition.animateFloat(
+            initialValue = .82f,
+            targetValue = 1f,
+            animationSpec = infiniteRepeatable(tween(1800 + id * 90), RepeatMode.Reverse),
+            label = "pulse"
+        )
+        animated
+    }
+
     Box(
         modifier = modifier.size(iconSize).background(
             Brush.radialGradient(listOf(EmpireColors.SurfaceHigh, EmpireColors.Surface, EmpireColors.Void)),
@@ -59,29 +69,67 @@ fun BusinessArtIcon(id: Int, level: Int = 0, iconSize: Dp = 54.dp, modifier: Mod
                 else -> EmpireArtPalette.Magenta
             }
             val tier = when {
-                level >= 500 -> 4
-                level >= 100 -> 3
-                level >= 50 -> 2
+                level >= 1000 -> 7
+                level >= 500 -> 6
+                level >= 250 -> 5
+                level >= 100 -> 4
+                level >= 50 -> 3
+                level >= 25 -> 2
                 level >= 10 -> 1
                 else -> 0
             }
-            drawCircle(glow.copy(alpha = (.12f + tier * .035f) * pulse), radius = s * (.42f + tier * .018f))
-            drawCircle(glow.copy(alpha = .34f + tier * .08f), radius = s * .38f, style = Stroke(s * (.022f + tier * .004f)))
-            if (tier >= 1) drawCircle(EmpireArtPalette.White.copy(alpha = .16f * pulse), s * .46f, style = Stroke(s * .012f))
+            val motionScale = if (lowPower) .72f else 1f
+            drawCircle(
+                glow.copy(alpha = ((.11f + tier * .025f) * pulse * motionScale).coerceAtMost(.34f)),
+                radius = s * (.41f + tier * .010f)
+            )
+            drawCircle(
+                glow.copy(alpha = (.30f + tier * .055f).coerceAtMost(.72f)),
+                radius = s * .38f,
+                style = Stroke(s * (.020f + tier * .0028f))
+            )
+            if (tier >= 1) {
+                drawCircle(EmpireArtPalette.White.copy(alpha = .14f * pulse), s * .445f, style = Stroke(s * .010f))
+            }
             if (tier >= 2) {
-                repeat(4) { i ->
-                    val a = (i * Math.PI / 2.0).toFloat()
-                    drawCircle(glow.copy(alpha = .72f), s * .022f, Offset(s*.5f + cos(a)*s*.44f, s*.5f + sin(a)*s*.44f))
+                repeat(if (lowPower) 2 else 4) { i ->
+                    val count = if (lowPower) 2 else 4
+                    val a = (i * Math.PI * 2.0 / count).toFloat()
+                    drawCircle(glow.copy(alpha = .70f), s * .021f, Offset(s*.5f + cos(a)*s*.43f, s*.5f + sin(a)*s*.43f))
                 }
             }
             if (tier >= 3) {
-                drawArc(EmpireArtPalette.GoldHot.copy(alpha = .55f), -35f, 250f, false, Offset(s*.08f,s*.08f), Size(s*.84f,s*.84f), style = Stroke(s*.015f))
+                drawArc(EmpireArtPalette.GoldHot.copy(alpha = .48f), -35f, 235f, false, Offset(s*.09f,s*.09f), Size(s*.82f,s*.82f), style = Stroke(s*.013f))
             }
             if (tier >= 4) {
-                repeat(8) { i ->
-                    val a = (i * Math.PI / 4.0).toFloat()
-                    drawLine(glow.copy(alpha=.65f), Offset(s*.5f+cos(a)*s*.39f,s*.5f+sin(a)*s*.39f), Offset(s*.5f+cos(a)*s*.49f,s*.5f+sin(a)*s*.49f), s*.012f)
+                val spokes = if (lowPower) 4 else 8
+                repeat(spokes) { i ->
+                    val a = (i * Math.PI * 2.0 / spokes).toFloat()
+                    drawLine(glow.copy(alpha=.58f), Offset(s*.5f+cos(a)*s*.39f,s*.5f+sin(a)*s*.39f), Offset(s*.5f+cos(a)*s*.48f,s*.5f+sin(a)*s*.48f), s*.010f)
                 }
+            }
+            if (tier >= 5) {
+                drawCircle(EmpireColors.Cyan.copy(alpha = .24f * pulse), s * .49f, style = Stroke(s * .009f))
+                drawCircle(EmpireColors.GoldBright.copy(alpha = .18f), s * .455f, style = Stroke(s * .006f))
+            }
+            if (tier >= 6) {
+                drawArc(EmpireColors.Violet.copy(alpha = .52f), 145f, 165f, false, Offset(s*.055f,s*.055f), Size(s*.89f,s*.89f), style = Stroke(s*.012f))
+                drawArc(EmpireColors.GoldBright.copy(alpha = .60f), -32f, 118f, false, Offset(s*.045f,s*.045f), Size(s*.91f,s*.91f), style = Stroke(s*.014f))
+            }
+            if (tier >= 7) {
+                val rays = if (lowPower) 6 else 12
+                repeat(rays) { i ->
+                    val a = (i * Math.PI * 2.0 / rays).toFloat()
+                    val inner = s * .455f
+                    val outer = s * if (i % 2 == 0) .515f else .49f
+                    drawLine(
+                        if (i % 2 == 0) EmpireColors.GoldBright.copy(alpha=.72f) else EmpireColors.Cyan.copy(alpha=.58f),
+                        Offset(s*.5f+cos(a)*inner,s*.5f+sin(a)*inner),
+                        Offset(s*.5f+cos(a)*outer,s*.5f+sin(a)*outer),
+                        s*.008f
+                    )
+                }
+                drawCircle(Color.White.copy(alpha = .10f * pulse), s * .505f)
             }
             when (id) {
                 0 -> drawStreetStand(glow)
@@ -101,8 +149,16 @@ fun BusinessArtIcon(id: Int, level: Int = 0, iconSize: Dp = 54.dp, modifier: Mod
 
 @Composable
 fun EmpireAmbientBackdrop(eraIndex: Int, modifier: Modifier = Modifier) {
-    val transition = rememberInfiniteTransition(label = "empireAmbient")
-    val phase by transition.animateFloat(0f, 1f, infiniteRepeatable(tween(18_000, easing = LinearEasing)), label = "ambientPhase")
+    val context = LocalContext.current
+    val reducedMotion = MotionQuality.reducedMotion(context)
+    val lowPower = MotionQuality.lowPowerMode(context)
+    val phase: Float = if (reducedMotion || lowPower) {
+        .5f
+    } else {
+        val transition = rememberInfiniteTransition(label = "empireAmbient")
+        val animated by transition.animateFloat(0f, 1f, infiniteRepeatable(tween(18_000, easing = LinearEasing)), label = "ambientPhase")
+        animated
+    }
     Canvas(modifier) {
         val accent = when (eraIndex) {
             0 -> EmpireArtPalette.Gold
@@ -113,7 +169,8 @@ fun EmpireAmbientBackdrop(eraIndex: Int, modifier: Modifier = Modifier) {
             else -> EmpireArtPalette.Magenta
         }
         drawRect(Brush.verticalGradient(listOf(EmpireColors.Void, EmpireColors.DeepSpace, EmpireColors.Void)))
-        repeat(34) { i ->
+        val starCount = if (lowPower) 18 else 34
+        repeat(starCount) { i ->
             val x = size.width * (((i * 47) % 101) / 100f)
             val y = size.height * (((i * 73) % 97) / 100f)
             drawCircle(EmpireArtPalette.White.copy(alpha = .28f + .12f * (i % 5)), if (i % 7 == 0) 2.2f else 1.1f, Offset(x, y))
