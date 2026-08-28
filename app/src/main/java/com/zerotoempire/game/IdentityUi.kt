@@ -38,6 +38,9 @@ fun EmpireRoot(vm: GameViewModel = viewModel()) {
 
     Box(Modifier.fillMaxSize()) {
         PremiumZeroToEmpireApp(vm)
+        if (meta.onboardingCompleted) {
+            PremiumMilestoneCelebration(state = state, modifier = Modifier.fillMaxSize())
+        }
         if (!meta.onboardingCompleted) {
             OnboardingOverlay(
                 onTapSound = { GameSfxBus.play(PremiumSfxCue.UI, .85f) },
