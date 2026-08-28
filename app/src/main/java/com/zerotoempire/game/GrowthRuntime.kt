@@ -5,21 +5,27 @@ import android.content.Context
 import android.content.ContextWrapper
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 
+/**
+ * Runtime shell for systems that live outside the scrollable game screen.
+ *
+ * Important UX rule: persistent gameplay controls belong inside GameUi's layout,
+ * never as floating overlays. On real phones those overlays covered the purchase
+ * deck, business cards and navigation. The game screen already exposes weekly
+ * challenges in Goals and bulk purchasing in Empire, so the duplicate floating
+ * docks are intentionally removed here.
+ */
 @Composable
 fun GrowthRuntimeRoot(vm: GameViewModel = viewModel()) {
     val context = LocalContext.current
@@ -67,28 +73,8 @@ fun GrowthRuntimeRoot(vm: GameViewModel = viewModel()) {
 
     Box(Modifier.fillMaxSize()) {
         CommerceRoot(vm)
+        // Atmosphere remains non-interactive and may safely sit above the scene.
         EndgameAtmosphere(eraIndex = eraIndex, modifier = Modifier.fillMaxSize())
-
-        if (meta.onboardingCompleted) {
-            ChallengeDock(
-                vm = vm,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(start = 10.dp, end = 10.dp, bottom = 286.dp)
-            )
-            AscensionAdvisor(
-                state = state,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(start = 10.dp, end = 10.dp, bottom = 220.dp)
-            )
-            BulkQuoteDock(
-                vm = vm,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(start = 10.dp, end = 10.dp, bottom = 148.dp)
-            )
-        }
     }
 
     if (activity != null) {
