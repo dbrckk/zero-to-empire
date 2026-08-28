@@ -1,11 +1,13 @@
 package com.zerotoempire.game
 
 import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -28,12 +30,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.ceil
+import kotlin.math.cos
+import kotlin.math.sin
 
 private val campaignMilestones = listOf(10.0, 120.0, 1_500.0, 25_000.0, 500_000.0, 12_000_000.0, 350_000_000.0, 18_000_000_000.0, 2.5e12, 4e15, 2e18, 8e21, 3e25, 1.2e29, 1e30)
 
@@ -64,31 +71,106 @@ fun PremiumCampaignPulse(state: GameState) {
     }
 }
 
+/**
+ * Lightweight hero VFX for the Power Core. The effect stays Canvas-based so
+ * the composable count is fixed, and automatically scales down in low-power
+ * and reduced-motion modes.
+ */
 @Composable
 fun PremiumCoreAura(eraIndex: Int, modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    val reducedMotion = MotionQuality.reducedMotion(context)
+    val lowPower = MotionQuality.lowPowerMode(context)
     val transition = rememberInfiniteTransition(label = "coreAura")
-    val pulse by transition.animateFloat(
-        initialValue = .82f,
-        targetValue = 1.08f,
-        animationSpec = infiniteRepeatable(tween(1450, easing = FastOutSlowInEasing), RepeatMode.Reverse),
+    val pulseAnimated by transition.animateFloat(
+        initialValue = .94f,
+        targetValue = 1.045f,
+        animationSpec = infiniteRepeatable(tween(1300, easing = FastOutSlowInEasing), RepeatMode.Reverse),
         label = "coreAuraPulse"
     )
-    val alpha by transition.animateFloat(
-        initialValue = .18f,
-        targetValue = .42f,
-        animationSpec = infiniteRepeatable(tween(1450, easing = FastOutSlowInEasing), RepeatMode.Reverse),
+    val alphaAnimated by transition.animateFloat(
+        initialValue = .20f,
+        targetValue = .46f,
+        animationSpec = infiniteRepeatable(tween(1300, easing = FastOutSlowInEasing), RepeatMode.Reverse),
         label = "coreAuraAlpha"
     )
+    val phaseAnimated by transition.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(tween(if (lowPower) 9_000 else 5_400, easing = LinearEasing), RepeatMode.Restart),
+        label = "coreAuraPhase"
+    )
+
+    val pulse = if (reducedMotion) 1f else pulseAnimated
+    val auraAlpha = if (reducedMotion) .26f else alphaAnimated
+    val phase = if (reducedMotion) 32f else phaseAnimated
     val accent = when (eraIndex) {
         in 0..2 -> EmpireColors.Gold
         in 3..5 -> EmpireColors.Cyan
         in 6..8 -> EmpireColors.Violet
         else -> EmpireColors.GoldBright
     }
+
     Box(modifier, contentAlignment = Alignment.Center) {
-        Box(Modifier.fillMaxSize().scale(pulse).alpha(alpha).background(Brush.radialGradient(listOf(accent.copy(alpha = .75f), accent.copy(alpha = .12f), Color.Transparent)), CircleShape))
-        Box(Modifier.fillMaxSize().scale(.88f).border(1.dp, accent.copy(alpha = alpha), CircleShape))
-        Box(Modifier.fillMaxSize().scale(.68f).border(1.dp, Color.White.copy(alpha = alpha * .45f), CircleShape))
+        Box(
+            Modifier.fillMaxSize().scale(pulse).alpha(auraAlpha).background(
+                Brush.radialGradient(
+                    listOf(accent.copy(alpha = .80f), accent.copy(alpha = .14f), Color.Transparent)
+                ),
+                CircleShape
+            )
+        )
+
+        Canvas(Modifier.fillMaxSize()) {
+            val center = Offset(size.width / 2f, size.height / 2f)
+            val min = size.minDimension
+            val orbitCount = if (lowPower) 6 else 12
+            val phaseRad = Math.toRadians(phase.toDouble())
+
+            drawCircle(
+                color = accent.copy(alpha = .48f),
+                radius = min * .43f,
+                center = center,
+                style = Stroke(width = min * .006f)
+            )
+            drawCircle(
+                color = Color.White.copy(alpha = .14f),
+                radius = min * .34f,
+                center = center,
+                style = Stroke(width = min * .004f)
+            )
+
+            repeat(orbitCount) { index ->
+                val angle = phaseRad + index * (Math.PI * 2.0 / orbitCount)
+                val radius = min * if (index % 3 == 0) .46f else .405f
+                val dot = Offset(
+                    x = center.x + cos(angle).toFloat() * radius,
+                    y = center.y + sin(angle).toFloat() * radius
+                )
+                drawCircle(
+                    color = if (index % 2 == 0) accent.copy(alpha = .80f) else Color.White.copy(alpha = .52f),
+                    radius = min * if (index % 3 == 0) .014f else .009f,
+                    center = dot
+                )
+            }
+
+            if (!lowPower) {
+                repeat(4) { index ->
+                    val angle = -phaseRad * .72 + index * (Math.PI / 2.0)
+                    val inner = min * .25f
+                    val outer = min * .38f
+                    drawLine(
+                        color = accent.copy(alpha = .24f),
+                        start = Offset(center.x + cos(angle).toFloat() * inner, center.y + sin(angle).toFloat() * inner),
+                        end = Offset(center.x + cos(angle).toFloat() * outer, center.y + sin(angle).toFloat() * outer),
+                        strokeWidth = min * .005f
+                    )
+                }
+            }
+        }
+
+        Box(Modifier.fillMaxSize().scale(.88f).border(1.dp, accent.copy(alpha = auraAlpha), CircleShape))
+        Box(Modifier.fillMaxSize().scale(.68f).border(1.dp, Color.White.copy(alpha = auraAlpha * .50f), CircleShape))
     }
 }
 
