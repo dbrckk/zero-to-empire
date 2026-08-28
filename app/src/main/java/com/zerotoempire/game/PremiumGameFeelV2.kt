@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LinearProgressIndicator
@@ -34,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlin.math.ceil
 
 private val campaignMilestones = listOf(10.0, 120.0, 1_500.0, 25_000.0, 500_000.0, 12_000_000.0, 350_000_000.0, 18_000_000_000.0, 2.5e12, 4e15, 2e18, 8e21, 3e25, 1.2e29, 1e30)
 
@@ -92,24 +92,47 @@ fun PremiumCoreAura(eraIndex: Int, modifier: Modifier = Modifier) {
     }
 }
 
+/**
+ * Compact phone-safe status deck. It deliberately uses two rows instead of one
+ * crowded rail so values remain readable on narrow devices and never overlap.
+ */
 @Composable
 fun PremiumEmpireSignal(state: GameState) {
     val owned = state.businesses.count { it.level > 0 }
     val automated = state.hiredManagerIds.size
     val era = EmpireEras.current(state.lifetimeCash)
-    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        SignalChip("ERA", "${era.index + 1}", Modifier.weight(1f))
-        SignalChip("ASSETS", "$owned/${state.businesses.size}", Modifier.weight(1f))
-        SignalChip("AUTO", "$automated/${state.businesses.size}", Modifier.weight(1f))
+    val now = System.currentTimeMillis()
+    val boostLeftMs = (state.boostEndsAtMillis - now).coerceAtLeast(0L)
+    val boostLabel = if (boostLeftMs > 0L) {
+        val minutes = ceil(boostLeftMs / 60_000.0).toInt().coerceAtLeast(1)
+        "×2 ${minutes}M"
+    } else "OFF"
+
+    Surface(
+        color = EmpireColors.DeepSpace.copy(alpha = .78f),
+        shape = RoundedCornerShape(20.dp),
+        modifier = Modifier.fillMaxWidth().border(1.dp, Color.White.copy(alpha = .05f), RoundedCornerShape(20.dp))
+    ) {
+        Column(Modifier.padding(7.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                SignalChip("ERA", "${era.index + 1}/11", Modifier.weight(1f), EmpireColors.Cyan)
+                SignalChip("GEMS", state.gems.toString(), Modifier.weight(1f), EmpireColors.Violet)
+                SignalChip("BOOST", boostLabel, Modifier.weight(1f), if (boostLeftMs > 0L) EmpireColors.GoldBright else EmpireColors.TextSecondary)
+            }
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                SignalChip("ASSETS", "$owned/${state.businesses.size}", Modifier.weight(1f), EmpireColors.Gold)
+                SignalChip("AUTO", "$automated/${state.businesses.size}", Modifier.weight(1f), EmpireColors.Success)
+            }
+        }
     }
 }
 
 @Composable
-private fun SignalChip(label: String, value: String, modifier: Modifier = Modifier) {
-    Surface(color = EmpireColors.DeepSpace.copy(alpha = .82f), shape = RoundedCornerShape(15.dp), modifier = modifier) {
-        Column(Modifier.padding(vertical = 9.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(label, color = EmpireColors.TextSecondary, fontSize = 8.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.sp)
-            Text(value, color = EmpireColors.TextPrimary, fontSize = 13.sp, fontWeight = FontWeight.Black)
+private fun SignalChip(label: String, value: String, modifier: Modifier = Modifier, accent: Color = EmpireColors.TextPrimary) {
+    Surface(color = EmpireColors.Surface.copy(alpha = .72f), shape = RoundedCornerShape(13.dp), modifier = modifier) {
+        Column(Modifier.padding(horizontal = 5.dp, vertical = 8.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(label, color = EmpireColors.TextSecondary, fontSize = 7.sp, fontWeight = FontWeight.Bold, letterSpacing = .8.sp, maxLines = 1)
+            Text(value, color = accent, fontSize = 12.sp, fontWeight = FontWeight.Black, maxLines = 1)
         }
     }
 }
