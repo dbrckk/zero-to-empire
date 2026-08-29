@@ -12,6 +12,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -122,7 +124,13 @@ private fun StoreRow(
                 Text(subtitle, color = EmpireColors.TextSecondary, fontSize = 10.sp)
             }
             Spacer(Modifier.width(8.dp))
-            Button(onClick = purchase, enabled = !owned, modifier = Modifier.heightIn(min = 48.dp)) {
+            Button(
+                onClick = purchase,
+                enabled = !owned,
+                modifier = Modifier
+                    .heightIn(min = 48.dp)
+                    .semantics { contentDescription = if (owned) "$title owned" else "Buy $title" }
+            ) {
                 Text(if (owned) "OWNED" else "BUY", fontSize = 10.sp)
             }
         }
