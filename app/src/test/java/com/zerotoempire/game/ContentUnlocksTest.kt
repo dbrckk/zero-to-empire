@@ -38,6 +38,24 @@ class ContentUnlocksTest {
         assertEquals(listOf(0), ContentUnlocks.visibleManagers(early).map { it.businessId })
     }
 
+    @Test fun affordableUnhiredManagersArePrioritizedForPhoneUsability() {
+        val state = GameState(
+            cash = 600_000.0,
+            lifetimeCash = 600_000.0,
+            hiredManagerIds = setOf(0)
+        )
+
+        assertEquals(
+            listOf(1, 2, 3, 4, 0),
+            ContentUnlocks.visibleManagers(state).map { it.businessId }
+        )
+    }
+
+    @Test fun managerPrioritizationNeverRevealsLockedContent() {
+        val state = GameState(cash = Double.MAX_VALUE, lifetimeCash = 10.0)
+        assertEquals(listOf(0), ContentUnlocks.visibleManagers(state).map { it.businessId })
+    }
+
     @Test fun fullyProgressedEmpireHasNoHiddenBusiness() {
         val state = GameState(lifetimeCash = 1e31)
         assertNull(ContentUnlocks.nextHiddenBusiness(state))
