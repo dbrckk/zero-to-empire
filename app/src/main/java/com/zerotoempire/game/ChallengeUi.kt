@@ -2,6 +2,8 @@ package com.zerotoempire.game
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -72,7 +74,7 @@ fun ChallengeDock(vm: GameViewModel, modifier: Modifier = Modifier) {
 
         FilledTonalButton(
             onClick = { open = true },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
             shape = RoundedCornerShape(16.dp),
             contentPadding = PaddingValues(horizontal = 14.dp, vertical = 11.dp)
         ) {
@@ -102,6 +104,16 @@ private fun ChallengeDialog(
     onDismiss: () -> Unit
 ) {
     val haptics = LocalHapticFeedback.current
+    val orderedChallenges = remember(challenges) {
+        challenges.sortedBy { challenge ->
+            when {
+                challenge.completed && !challenge.claimed -> 0
+                !challenge.completed -> 1
+                else -> 2
+            }
+        }
+    }
+
     AlertDialog(
         onDismissRequest = onDismiss,
         containerColor = EmpireColors.SurfaceHigh,
@@ -112,8 +124,11 @@ private fun ChallengeDialog(
             }
         },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(9.dp)) {
-                challenges.forEach { challenge ->
+            LazyColumn(
+                modifier = Modifier.heightIn(max = 440.dp),
+                verticalArrangement = Arrangement.spacedBy(9.dp)
+            ) {
+                items(orderedChallenges, key = { it.id }) { challenge ->
                     Surface(color = EmpireColors.Surface, shape = RoundedCornerShape(14.dp)) {
                         Column(Modifier.fillMaxWidth().padding(12.dp)) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -141,17 +156,18 @@ private fun ChallengeDialog(
                             }
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Text(progressText, color = EmpireColors.TextSecondary, fontSize = 9.sp, modifier = Modifier.weight(1f))
+                                Spacer(Modifier.width(8.dp))
                                 Button(
                                     onClick = { if (onClaim(challenge.id)) haptics.performHapticFeedback(HapticFeedbackType.LongPress) },
                                     enabled = challenge.completed && !challenge.claimed,
-                                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 2.dp),
-                                    modifier = Modifier.height(30.dp)
+                                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
+                                    modifier = Modifier.heightIn(min = 48.dp)
                                 ) {
                                     Text(
                                         when {
-                                            challenge.claimed -> "CLAIMED"
+                                            challenge.claimed -> "DONE"
                                             challenge.completed -> "CLAIM"
-                                            else -> "ACTIVE"
+                                            else -> "IN PROGRESS"
                                         },
                                         fontSize = 9.sp,
                                         fontWeight = FontWeight.Black
@@ -163,6 +179,11 @@ private fun ChallengeDialog(
                 }
             }
         },
-        confirmButton = { TextButton(onClick = onDismiss) { Text("CLOSE") } }
+        confirmButton = {
+            TextButton(
+                onClick = onDismiss,
+                modifier = Modifier.heightIn(min = 48.dp)
+            ) { Text("CLOSE") }
+        }
     )
 }
