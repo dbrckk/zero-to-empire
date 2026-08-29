@@ -74,36 +74,14 @@ fun PremiumCampaignPulse(state: GameState) {
 /**
  * Lightweight hero VFX for the Power Core. The effect stays Canvas-based so
  * the composable count is fixed, and automatically scales down in low-power
- * and reduced-motion modes.
+ * and reduced-motion modes. Reduced-motion is truly static: no infinite
+ * animation clock is created at all.
  */
 @Composable
 fun PremiumCoreAura(eraIndex: Int, modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val reducedMotion = MotionQuality.reducedMotion(context)
     val lowPower = MotionQuality.lowPowerMode(context)
-    val transition = rememberInfiniteTransition(label = "coreAura")
-    val pulseAnimated by transition.animateFloat(
-        initialValue = .94f,
-        targetValue = 1.045f,
-        animationSpec = infiniteRepeatable(tween(1300, easing = FastOutSlowInEasing), RepeatMode.Reverse),
-        label = "coreAuraPulse"
-    )
-    val alphaAnimated by transition.animateFloat(
-        initialValue = .20f,
-        targetValue = .46f,
-        animationSpec = infiniteRepeatable(tween(1300, easing = FastOutSlowInEasing), RepeatMode.Reverse),
-        label = "coreAuraAlpha"
-    )
-    val phaseAnimated by transition.animateFloat(
-        initialValue = 0f,
-        targetValue = 360f,
-        animationSpec = infiniteRepeatable(tween(if (lowPower) 9_000 else 5_400, easing = LinearEasing), RepeatMode.Restart),
-        label = "coreAuraPhase"
-    )
-
-    val pulse = if (reducedMotion) 1f else pulseAnimated
-    val auraAlpha = if (reducedMotion) .26f else alphaAnimated
-    val phase = if (reducedMotion) 32f else phaseAnimated
     val accent = when (eraIndex) {
         in 0..2 -> EmpireColors.Gold
         in 3..5 -> EmpireColors.Cyan
@@ -111,11 +89,52 @@ fun PremiumCoreAura(eraIndex: Int, modifier: Modifier = Modifier) {
         else -> EmpireColors.GoldBright
     }
 
+    var pulse = 1f
+    var auraAlpha = .26f
+    var phase = 32f
+    if (!reducedMotion) {
+        val transition = rememberInfiniteTransition(label = "coreAura")
+        val pulseAnimated by transition.animateFloat(
+            initialValue = if (lowPower) .97f else .94f,
+            targetValue = if (lowPower) 1.025f else 1.045f,
+            animationSpec = infiniteRepeatable(
+                tween(if (lowPower) 1_900 else 1_300, easing = FastOutSlowInEasing),
+                RepeatMode.Reverse
+            ),
+            label = "coreAuraPulse"
+        )
+        val alphaAnimated by transition.animateFloat(
+            initialValue = if (lowPower) .16f else .20f,
+            targetValue = if (lowPower) .30f else .46f,
+            animationSpec = infiniteRepeatable(
+                tween(if (lowPower) 1_900 else 1_300, easing = FastOutSlowInEasing),
+                RepeatMode.Reverse
+            ),
+            label = "coreAuraAlpha"
+        )
+        val phaseAnimated by transition.animateFloat(
+            initialValue = 0f,
+            targetValue = 360f,
+            animationSpec = infiniteRepeatable(
+                tween(if (lowPower) 10_500 else 5_400, easing = LinearEasing),
+                RepeatMode.Restart
+            ),
+            label = "coreAuraPhase"
+        )
+        pulse = pulseAnimated
+        auraAlpha = alphaAnimated
+        phase = phaseAnimated
+    }
+
     Box(modifier, contentAlignment = Alignment.Center) {
         Box(
             Modifier.fillMaxSize().scale(pulse).alpha(auraAlpha).background(
                 Brush.radialGradient(
-                    listOf(accent.copy(alpha = .80f), accent.copy(alpha = .14f), Color.Transparent)
+                    listOf(
+                        accent.copy(alpha = if (lowPower) .62f else .80f),
+                        accent.copy(alpha = if (lowPower) .09f else .14f),
+                        Color.Transparent
+                    )
                 ),
                 CircleShape
             )
@@ -124,21 +143,23 @@ fun PremiumCoreAura(eraIndex: Int, modifier: Modifier = Modifier) {
         Canvas(Modifier.fillMaxSize()) {
             val center = Offset(size.width / 2f, size.height / 2f)
             val min = size.minDimension
-            val orbitCount = if (lowPower) 6 else 12
+            val orbitCount = if (lowPower) 4 else 12
             val phaseRad = Math.toRadians(phase.toDouble())
 
             drawCircle(
-                color = accent.copy(alpha = .48f),
+                color = accent.copy(alpha = if (lowPower) .34f else .48f),
                 radius = min * .43f,
                 center = center,
                 style = Stroke(width = min * .006f)
             )
-            drawCircle(
-                color = Color.White.copy(alpha = .14f),
-                radius = min * .34f,
-                center = center,
-                style = Stroke(width = min * .004f)
-            )
+            if (!lowPower) {
+                drawCircle(
+                    color = Color.White.copy(alpha = .14f),
+                    radius = min * .34f,
+                    center = center,
+                    style = Stroke(width = min * .004f)
+                )
+            }
 
             repeat(orbitCount) { index ->
                 val angle = phaseRad + index * (Math.PI * 2.0 / orbitCount)
@@ -170,7 +191,9 @@ fun PremiumCoreAura(eraIndex: Int, modifier: Modifier = Modifier) {
         }
 
         Box(Modifier.fillMaxSize().scale(.88f).border(1.dp, accent.copy(alpha = auraAlpha), CircleShape))
-        Box(Modifier.fillMaxSize().scale(.68f).border(1.dp, Color.White.copy(alpha = auraAlpha * .50f), CircleShape))
+        if (!lowPower) {
+            Box(Modifier.fillMaxSize().scale(.68f).border(1.dp, Color.White.copy(alpha = auraAlpha * .50f), CircleShape))
+        }
     }
 }
 
