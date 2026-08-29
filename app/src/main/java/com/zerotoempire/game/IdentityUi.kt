@@ -8,6 +8,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -70,7 +75,15 @@ private fun OnboardingOverlay(onTapSound: () -> Unit, onComplete: () -> Unit) {
     )
     val current = steps[step]
     Box(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(EmpireColors.Void, EmpireColors.DeepSpace))), contentAlignment = Alignment.Center) {
-        Column(Modifier.fillMaxWidth().padding(28.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .padding(28.dp)
+                .semantics {
+                    stateDescription = "Onboarding step ${step + 1} of ${steps.size}: ${current.first}"
+                },
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Text("ZERO → EMPIRE", color = EmpireColors.Gold, fontSize = 28.sp, fontWeight = FontWeight.Black)
             Spacer(Modifier.height(12.dp)); OnboardingStepArt(step); Spacer(Modifier.height(8.dp))
             Text(current.first, color = EmpireColors.TextPrimary, fontSize = 36.sp, fontWeight = FontWeight.Black)
@@ -94,7 +107,17 @@ private fun CelebrationOverlay(item: MajorCelebration, onShown: () -> Unit, onDi
     LaunchedEffect(item) { onShown(); delay(2100); visible = false; delay(280); onDismiss() }
     if (!visible) return
     Box(Modifier.fillMaxSize().background(EmpireColors.Void.copy(alpha = .72f)), contentAlignment = Alignment.Center) {
-        Surface(shape = RoundedCornerShape(28.dp), color = EmpireColors.SurfaceHigh, shadowElevation = 28.dp, modifier = Modifier.padding(24.dp)) {
+        Surface(
+            shape = RoundedCornerShape(28.dp),
+            color = EmpireColors.SurfaceHigh,
+            shadowElevation = 28.dp,
+            modifier = Modifier
+                .padding(24.dp)
+                .semantics {
+                    liveRegion = LiveRegionMode.Assertive
+                    contentDescription = "${item.accent}. ${item.title}. ${item.subtitle}"
+                }
+        ) {
             Column(Modifier.padding(28.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                 MetaSprite(MetaSpriteKind.ACHIEVEMENT, 76.dp)
                 Spacer(Modifier.height(14.dp))
