@@ -43,6 +43,7 @@ fun EraVistaAAA(eraIndex: Int, modifier: Modifier = Modifier) {
         val era = eraIndex.coerceIn(0, 10)
         drawRect(Brush.verticalGradient(listOf(EmpireColors.DeepSpace, EmpireColors.Void)))
         drawStarfield(w, h, if (lowPower) 18 else 32, drift)
+        drawAtmosphericDepth(w, h, era, drift, lowPower)
         when (era) {
             0 -> drawStreetEra(w, h, drift)
             1 -> drawIndustrialEra(w, h, drift)
@@ -57,6 +58,71 @@ fun EraVistaAAA(eraIndex: Int, modifier: Modifier = Modifier) {
             else -> drawTranscendentEra(w, h, drift, lowPower)
         }
         if (!reduced) drawAmbientTraffic(w, h, era, drift, lowPower)
+    }
+}
+
+private fun DrawScope.drawAtmosphericDepth(w: Float, h: Float, era: Int, drift: Float, lowPower: Boolean) {
+    val accent = when (era) {
+        0 -> EmpireArtPalette.Gold
+        1 -> Color(0xFFFF9B55)
+        2, 4 -> EmpireArtPalette.Cyan
+        3 -> EmpireArtPalette.Violet
+        5 -> EmpireArtPalette.Red
+        6 -> EmpireArtPalette.GoldHot
+        7 -> EmpireArtPalette.Violet
+        8 -> EmpireArtPalette.Cyan
+        9 -> Color(0xFFFF68D8)
+        else -> Color(0xFFFFE36E)
+    }
+    val secondary = when {
+        era <= 1 -> Color(0xFF6EEBFF)
+        era <= 5 -> EmpireArtPalette.Violet
+        era <= 8 -> EmpireArtPalette.Cyan
+        else -> Color(0xFFC68BFF)
+    }
+    val farX = w * (.18f + drift * .22f)
+    val nearX = w * (.82f - drift * .14f)
+    drawCircle(
+        Brush.radialGradient(
+            listOf(accent.copy(alpha = if (lowPower) .055f else .085f), Color.Transparent),
+            Offset(farX, h * .25f),
+            w * .42f
+        ),
+        w * .42f,
+        Offset(farX, h * .25f)
+    )
+    if (!lowPower) {
+        drawCircle(
+            Brush.radialGradient(
+                listOf(secondary.copy(alpha = .055f), Color.Transparent),
+                Offset(nearX, h * .54f),
+                w * .34f
+            ),
+            w * .34f,
+            Offset(nearX, h * .54f)
+        )
+    }
+    drawRect(
+        Brush.verticalGradient(
+            listOf(Color.Transparent, accent.copy(alpha = if (lowPower) .035f else .055f), Color.Transparent),
+            startY = h * .54f,
+            endY = h * .94f
+        ),
+        topLeft = Offset(0f, h * .50f),
+        size = Size(w, h * .48f)
+    )
+    val horizonY = h * (.78f + sin(drift * 2f * PI.toFloat()) * .008f)
+    drawLine(accent.copy(alpha = if (lowPower) .10f else .16f), Offset(0f, horizonY), Offset(w, horizonY), if (lowPower) 1f else 1.5f)
+    if (era >= 6 && !lowPower) {
+        drawArc(
+            secondary.copy(alpha = .12f),
+            198f,
+            144f,
+            false,
+            Offset(w * .12f, h * .20f),
+            Size(w * .76f, h * .52f),
+            style = Stroke(1.4f)
+        )
     }
 }
 
