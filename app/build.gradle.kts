@@ -11,6 +11,17 @@ val productionAdMobAppId = providers.gradleProperty("ADMOB_APP_ID").orElse(sampl
 val productionRewardedId = providers.gradleProperty("REWARDED_AD_UNIT_ID").orElse("")
 val productionInterstitialId = providers.gradleProperty("INTERSTITIAL_AD_UNIT_ID").orElse("")
 
+val releaseStorePath = providers.environmentVariable("ZERO_EMPIRE_KEYSTORE_PATH").orNull
+val releaseStorePassword = providers.environmentVariable("ZERO_EMPIRE_KEYSTORE_PASSWORD").orNull
+val releaseKeyAlias = providers.environmentVariable("ZERO_EMPIRE_KEY_ALIAS").orNull
+val releaseKeyPassword = providers.environmentVariable("ZERO_EMPIRE_KEY_PASSWORD").orNull
+val hasReleaseSigning = listOf(
+    releaseStorePath,
+    releaseStorePassword,
+    releaseKeyAlias,
+    releaseKeyPassword
+).all { !it.isNullOrBlank() }
+
 android {
     namespace = "com.zerotoempire.game"
     compileSdk = 36
@@ -32,6 +43,17 @@ android {
         buildConfig = true
     }
 
+    signingConfigs {
+        if (hasReleaseSigning) {
+            create("releaseUpload") {
+                storeFile = file(releaseStorePath!!)
+                storePassword = releaseStorePassword
+                keyAlias = releaseKeyAlias
+                keyPassword = releaseKeyPassword
+            }
+        }
+    }
+
     buildTypes {
         debug {
             buildConfigField("String", "REWARDED_AD_UNIT_ID", "\"$sampleRewardedId\"")
@@ -44,6 +66,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            if (hasReleaseSigning) {
+                signingConfig = signingConfigs.getByName("releaseUpload")
+            }
             buildConfigField("String", "REWARDED_AD_UNIT_ID", "\"${productionRewardedId.get()}\"")
             buildConfigField("String", "INTERSTITIAL_AD_UNIT_ID", "\"${productionInterstitialId.get()}\"")
         }
