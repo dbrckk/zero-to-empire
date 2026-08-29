@@ -147,6 +147,7 @@ private fun UpgradeTreeNode(
     val mastered = node.state == UpgradeNodeState.MASTERED
     val locked = node.state == UpgradeNodeState.LOCKED
     val canBuy = !mastered && !locked && gems >= gemCost
+    val shortfall = (gemCost - gems).coerceAtLeast(0)
     val accent = when (node.state) {
         UpgradeNodeState.MASTERED -> EmpireColors.Cyan
         UpgradeNodeState.IN_PROGRESS -> EmpireColors.Violet
@@ -236,7 +237,7 @@ private fun UpgradeTreeNode(
                     when {
                         mastered -> "COMPLETE"
                         locked -> "INVEST IN PREVIOUS TIER"
-                        gems < gemCost -> "NEED ${gemCost - gems} GEMS"
+                        shortfall > 0 -> "NEED $shortfall GEMS"
                         else -> "$gemCost GEMS"
                     },
                     color = if (canBuy) EmpireColors.GoldBright else EmpireColors.TextSecondary,
@@ -248,17 +249,20 @@ private fun UpgradeTreeNode(
             Button(
                 onClick = onUpgrade,
                 enabled = canBuy,
-                modifier = Modifier.fillMaxWidth().height(46.dp),
+                modifier = Modifier.fillMaxWidth().height(48.dp),
                 shape = RoundedCornerShape(14.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = accent,
-                    contentColor = EmpireColors.Void
+                    contentColor = EmpireColors.Void,
+                    disabledContainerColor = accent.copy(alpha = .10f),
+                    disabledContentColor = EmpireColors.TextSecondary
                 )
             ) {
                 Text(
                     when {
                         mastered -> "MASTERED"
                         locked -> "LOCKED"
+                        shortfall > 0 -> "NEED $shortfall GEMS"
                         else -> "INVEST  •  $gemCost GEMS"
                     },
                     fontWeight = FontWeight.Black,
