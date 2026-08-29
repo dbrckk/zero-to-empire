@@ -30,8 +30,24 @@ object ContentUnlocks {
     fun visibleBusinesses(state: GameState): List<Business> =
         state.businesses.filter { isBusinessVisible(it.id, state.lifetimeCash) }
 
+    /**
+     * Keeps the manager screen useful on phones by putting the next actionable hires first.
+     * This is presentation-only: costs, manager effects, unlock thresholds and saved state are untouched.
+     */
     fun visibleManagers(state: GameState): List<Manager> =
-        Managers.catalog.filter { isBusinessVisible(it.businessId, state.lifetimeCash) }
+        Managers.catalog
+            .asSequence()
+            .filter { isBusinessVisible(it.businessId, state.lifetimeCash) }
+            .sortedWith(
+                compareBy<Manager> {
+                    when {
+                        it.businessId in state.hiredManagerIds -> 2
+                        state.cash >= it.cost -> 0
+                        else -> 1
+                    }
+                }.thenBy { it.businessId }
+            )
+            .toList()
 
     fun nextHiddenBusiness(state: GameState): Business? =
         state.businesses.firstOrNull { !isBusinessVisible(it.id, state.lifetimeCash) }
