@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -50,13 +51,23 @@ fun BulkQuoteDock(vm: GameViewModel, modifier: Modifier = Modifier) {
                 BuyMode.MILESTONE -> "MILESTONE"
                 BuyMode.MAX -> "MAX"
             }
-            Text("BULK PURCHASE • $label", color = EmpireColors.Gold, fontWeight = FontWeight.Black, fontSize = 10.sp)
+            Text(
+                "BULK PURCHASE • $label",
+                color = EmpireColors.Gold,
+                fontWeight = FontWeight.Black,
+                fontSize = 10.sp,
+                modifier = Modifier.semantics {
+                    contentDescription = "Bulk purchase"
+                    stateDescription = "$label mode selected"
+                }
+            )
             Spacer(Modifier.height(7.dp))
             Row(
                 Modifier.horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 candidates.forEach { (business, quote, affordable) ->
+                    val affordability = if (affordable) "Available" else "Not enough cash"
                     Button(
                         onClick = { vm.buyBulk(business.id, mode) },
                         enabled = affordable,
@@ -64,6 +75,7 @@ fun BulkQuoteDock(vm: GameViewModel, modifier: Modifier = Modifier) {
                             .heightIn(min = 48.dp)
                             .semantics {
                                 contentDescription = "Buy ${quote.count} levels of ${business.name} for ${compactMoney(quote.totalCost)} using $label mode"
+                                stateDescription = affordability
                             },
                         shape = RoundedCornerShape(14.dp)
                     ) {
