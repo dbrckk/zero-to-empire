@@ -14,6 +14,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.material3.Text
 import androidx.compose.ui.unit.Dp
@@ -55,6 +57,9 @@ private fun businessArtUiState(state: GameState, id: Int, buyMode: BuyMode): Bus
 fun BusinessArtIcon(id: Int, iconSize: Dp, modifier: Modifier = Modifier) {
     val vm: GameViewModel = viewModel()
     val buyMode by vm.buyMode.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val reducedMotion = MotionQuality.reducedMotion(context)
+    val lowPower = MotionQuality.lowPowerMode(context)
 
     // Cash changes several times per second. In X1 mode none of that cash data is rendered
     // inside the sprite, so emit only when this business level changes. In bulk modes the
@@ -69,12 +74,14 @@ fun BusinessArtIcon(id: Int, iconSize: Dp, modifier: Modifier = Modifier) {
     val burst = remember(id) { Animatable(0f) }
     val previousLevel = remember(id) { intArrayOf(level) }
 
-    LaunchedEffect(level) {
+    LaunchedEffect(level, reducedMotion, lowPower) {
         val delta = level - previousLevel[0]
         previousLevel[0] = level
-        if (delta > 0) {
+        if (delta > 0 && !reducedMotion) {
             burst.snapTo(min(1f, .28f + delta / 25f))
-            burst.animateTo(0f, tween(650))
+            burst.animateTo(0f, tween(if (lowPower) 420 else 650))
+        } else if (reducedMotion && burst.value != 0f) {
+            burst.snapTo(0f)
         }
     }
 
@@ -83,18 +90,62 @@ fun BusinessArtIcon(id: Int, iconSize: Dp, modifier: Modifier = Modifier) {
             if (burst.value > 0f) {
                 Canvas(Modifier.size(iconSize + 26.dp)) {
                     val center = Offset(size.width / 2f, size.height / 2f)
-                    val rays = 8 + (burst.value * 16).toInt()
-                    val radius = size.minDimension * (.32f + .18f * (1f - burst.value))
+                    val intensity = burst.value.coerceIn(0f, 1f)
+                    val travel = 1f - intensity
+                    val rays = if (lowPower) 8 else 8 + (intensity * 16).toInt()
+                    val radius = size.minDimension * (.32f + .18f * travel)
+
+                    // Layer 1: a compact energy flash that anchors the purchase at the sprite.
+                    drawCircle(
+                        color = EmpireColors.GoldBright,
+                        radius = size.minDimension * (.16f + .06f * intensity),
+                        center = center,
+                        alpha = .10f * intensity
+                    )
+                    drawCircle(
+                        color = EmpireColors.Cyan,
+                        radius = size.minDimension * (.21f + .25f * travel),
+                        center = center,
+                        alpha = .32f * intensity,
+                        style = Stroke(width = 1.4f + 2.2f * intensity)
+                    )
+                    drawCircle(
+                        color = EmpireColors.GoldBright,
+                        radius = size.minDimension * (.27f + .24f * travel),
+                        center = center,
+                        alpha = .20f * intensity,
+                        style = Stroke(width = .9f + 1.5f * intensity)
+                    )
+
+                    // Layer 2: sharp radial energy rays, preserving the original purchase punch.
                     repeat(rays) { i ->
-                        val a = 2.0 * PI * i / rays
+                        val a = 2.0 * PI * i / rays + id * .17
                         val start = Offset(center.x + cos(a).toFloat() * radius * .48f, center.y + sin(a).toFloat() * radius * .48f)
                         val end = Offset(center.x + cos(a).toFloat() * radius, center.y + sin(a).toFloat() * radius)
                         drawLine(
                             color = if (i % 2 == 0) EmpireColors.GoldBright else EmpireColors.Cyan,
                             start = start,
                             end = end,
-                            strokeWidth = 1.5f + burst.value * 3f,
-                            alpha = burst.value
+                            strokeWidth = 1.5f + intensity * 3f,
+                            alpha = intensity
+                        )
+                    }
+
+                    // Layer 3: small debris sparks with staggered travel for a more physical hit.
+                    val sparkCount = if (lowPower) 6 else 12
+                    repeat(sparkCount) { i ->
+                        val a = 2.0 * PI * i / sparkCount + id * .31
+                        val stagger = .72f + (i % 4) * .08f
+                        val sparkRadius = size.minDimension * (.20f + .34f * travel * stagger)
+                        val p = Offset(
+                            center.x + cos(a).toFloat() * sparkRadius,
+                            center.y + sin(a).toFloat() * sparkRadius
+                        )
+                        drawCircle(
+                            color = if (i % 3 == 0) EmpireColors.GoldBright else EmpireColors.Cyan,
+                            radius = 1.2f + intensity * if (i % 3 == 0) 2.2f else 1.5f,
+                            center = p,
+                            alpha = (.35f + .65f * intensity).coerceAtMost(1f)
                         )
                     }
                 }
