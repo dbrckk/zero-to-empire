@@ -49,6 +49,7 @@ fun EmpireCoreGlyph(modifier: Modifier = Modifier, eraIndex: Int = 0) {
     Canvas(modifier) {
         val s=size.minDimension; val center=Offset(size.width/2f,size.height/2f)
         drawCircle(Brush.radialGradient(listOf(accent.copy(alpha=.20f*pulse),secondary.copy(alpha=.08f),Color.Transparent),center,s*.52f),s*.52f,center)
+        drawCoreDepthField(center,s,rotation,fastRotation,pulse,lowPower,accent,secondary)
 
         repeat(intensity){i->
             val angle=Math.toRadians((fastRotation+i*(360f/intensity)).toDouble())
@@ -83,6 +84,84 @@ private fun coreAccent(era:Int)=when(era){
     0,1->Color(0xFFFFC857);2->Color(0xFF62E8FF);3->Color(0xFF7ED8FF);4->Color(0xFFFF765F);5->Color(0xFFFFD95A);6->Color(0xFF7ADFFF);7->Color(0xFFA685FF);8->Color(0xFFD58CFF);9->Color(0xFFFF66D8);else->Color(0xFFFFE477)}
 private fun coreSecondary(era:Int)=when(era){
     0,1->Color(0xFF6EEBFF);2,3->Color(0xFFA38BFF);4->Color(0xFFFFC068);5->Color(0xFFFFF2B0);6->Color(0xFF766BFF);7,8->Color(0xFF60E9FF);9->Color(0xFF8E7CFF);else->Color(0xFFC68BFF)}
+
+private fun DrawScope.drawCoreDepthField(
+    c: Offset,
+    s: Float,
+    rotation: Float,
+    fast: Float,
+    pulse: Float,
+    lowPower: Boolean,
+    accent: Color,
+    secondary: Color
+) {
+    drawCircle(
+        Brush.radialGradient(
+            listOf(Color.Transparent, accent.copy(alpha = .055f * pulse), secondary.copy(alpha = .035f), Color.Transparent),
+            c,
+            s * .44f
+        ),
+        s * .44f,
+        c
+    )
+
+    val orbitCount = if (lowPower) 2 else 3
+    repeat(orbitCount) { orbit ->
+        val rx = s * (.29f + orbit * .052f)
+        val ry = s * (.12f + orbit * .027f)
+        val direction = if (orbit % 2 == 0) 1f else -1f
+        val phase = rotation * direction + orbit * 61f
+        val orbitColor = if (orbit % 2 == 0) accent else secondary
+        drawArc(
+            orbitColor.copy(alpha = .16f + orbit * .035f),
+            phase,
+            205f,
+            false,
+            Offset(c.x - rx, c.y - ry),
+            Size(rx * 2f, ry * 2f),
+            style = Stroke(s * (.007f + orbit * .0015f))
+        )
+        drawArc(
+            Color.White.copy(alpha = .075f * pulse),
+            phase + 184f,
+            72f,
+            false,
+            Offset(c.x - rx, c.y - ry),
+            Size(rx * 2f, ry * 2f),
+            style = Stroke(s * .0045f)
+        )
+    }
+
+    val sheenRadius = s * .205f
+    val sheenAngle = Math.toRadians((fast * .72f - 36f).toDouble())
+    val sheenCenter = Offset(
+        c.x + cos(sheenAngle).toFloat() * s * .035f,
+        c.y + sin(sheenAngle).toFloat() * s * .025f
+    )
+    drawArc(
+        Color.White.copy(alpha = .17f * pulse),
+        -58f + fast * .16f,
+        82f,
+        false,
+        Offset(sheenCenter.x - sheenRadius, sheenCenter.y - sheenRadius),
+        Size(sheenRadius * 2f, sheenRadius * 2f),
+        style = Stroke(s * .009f)
+    )
+
+    if (!lowPower) {
+        repeat(6) { i ->
+            val angle = Math.toRadians((fast * .55f + i * 60f).toDouble())
+            val rx = s * if (i % 2 == 0) .405f else .365f
+            val ry = s * if (i % 2 == 0) .145f else .19f
+            val p = Offset(c.x + cos(angle).toFloat() * rx, c.y + sin(angle).toFloat() * ry)
+            drawCircle(
+                if (i % 2 == 0) Color.White.copy(alpha = .60f) else secondary.copy(alpha = .62f),
+                s * if (i % 3 == 0) .008f else .0055f,
+                p
+            )
+        }
+    }
+}
 
 private fun DrawScope.drawCoreEraGeometry(era:Int,c:Offset,s:Float,rotation:Float,fast:Float,pulse:Float,lowPower:Boolean,accent:Color,secondary:Color){
     when {
