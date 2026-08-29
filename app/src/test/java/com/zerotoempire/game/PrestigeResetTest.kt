@@ -27,6 +27,7 @@ class PrestigeResetTest {
         assertEquals(10.0, reset.cash, 0.0)
         assertEquals(10.0, reset.lifetimeCash, 0.0)
         assertTrue(reset.prestigePoints > state.prestigePoints)
+        assertEquals(Progression.prestigeReward(state.lifetimeCash), reset.prestigePoints)
         assertTrue(reset.businesses.all { it.level == 0 })
         assertTrue(reset.hiredManagerIds.isEmpty())
         assertEquals(state.upgradeRanks, reset.upgradeRanks)
