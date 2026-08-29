@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -36,6 +37,20 @@ fun PremiumGoalsCenter(
 ) {
     val missions = vm.missions()
     val achievements = vm.achievements()
+    val visibleMissions = missions.sortedBy { mission ->
+        when {
+            mission.completed && !mission.claimed -> 0
+            !mission.claimed -> 1
+            else -> 2
+        }
+    }
+    val visibleAchievements = achievements.sortedBy { achievement ->
+        when {
+            achievement.unlocked && !achievement.claimed -> 0
+            !achievement.claimed -> 1
+            else -> 2
+        }
+    }
     val missionDone = missions.count { it.claimed }
     val missionReady = missions.count { it.completed && !it.claimed }
     val achievementDone = achievements.count { it.claimed }
@@ -98,7 +113,12 @@ fun PremiumGoalsCenter(
                         fontSize = 10.sp
                     )
                     Spacer(Modifier.height(11.dp))
-                    Button(onClick = { vm.claimDaily() }, enabled = claimable, modifier = Modifier.fillMaxWidth().height(46.dp), shape = RoundedCornerShape(14.dp)) {
+                    Button(
+                        onClick = { vm.claimDaily() },
+                        enabled = claimable,
+                        modifier = Modifier.fillMaxWidth().height(48.dp),
+                        shape = RoundedCornerShape(14.dp)
+                    ) {
                         Text(if (claimable) "CLAIM DAILY REWARD" else "CLAIMED TODAY", fontWeight = FontWeight.Black, fontSize = 10.sp)
                     }
                 }
@@ -113,7 +133,7 @@ fun PremiumGoalsCenter(
         item {
             GoalSectionHeader("MISSIONS", if (missionReady > 0) "$missionReady reward${if (missionReady == 1) "" else "s"} ready" else "Short-term progression")
         }
-        items(missions, key = { it.id }) { mission ->
+        items(visibleMissions, key = { it.id }) { mission ->
             PremiumGoalCard(
                 title = mission.title,
                 subtitle = "+${mission.rewardGems} gems",
@@ -135,7 +155,7 @@ fun PremiumGoalsCenter(
                 if (achievementReady > 0) "$achievementReady unlocked reward${if (achievementReady == 1) "" else "s"}" else "Permanent campaign milestones"
             )
         }
-        items(achievements, key = { it.id }) { achievement ->
+        items(visibleAchievements, key = { it.id }) { achievement ->
             PremiumGoalCard(
                 title = achievement.title,
                 subtitle = achievement.description,
@@ -195,7 +215,11 @@ private fun PremiumGoalCard(
                     Text(title, color = EmpireColors.TextPrimary, fontWeight = FontWeight.Black, fontSize = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
                     Text(subtitle, color = EmpireColors.TextSecondary, fontSize = 10.sp, maxLines = 2, overflow = TextOverflow.Ellipsis)
                 }
-                TextButton(onClick = onClick, enabled = enabled) {
+                TextButton(
+                    onClick = onClick,
+                    enabled = enabled,
+                    modifier = Modifier.heightIn(min = 48.dp)
+                ) {
                     Text(stateLabel, color = if (enabled) accent else EmpireColors.TextSecondary, fontWeight = FontWeight.Black, fontSize = 9.sp)
                 }
             }
