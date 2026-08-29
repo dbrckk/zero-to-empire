@@ -104,15 +104,7 @@ private fun ChallengeDialog(
     onDismiss: () -> Unit
 ) {
     val haptics = LocalHapticFeedback.current
-    val orderedChallenges = remember(challenges) {
-        challenges.sortedBy { challenge ->
-            when {
-                challenge.completed && !challenge.claimed -> 0
-                !challenge.completed -> 1
-                else -> 2
-            }
-        }
-    }
+    val orderedChallenges = remember(challenges) { ChallengeOrdering.forCommandCenter(challenges) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
