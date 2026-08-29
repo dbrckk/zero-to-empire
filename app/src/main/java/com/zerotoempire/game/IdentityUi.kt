@@ -81,7 +81,7 @@ private fun OnboardingOverlay(onTapSound: () -> Unit, onComplete: () -> Unit) {
             Spacer(Modifier.height(22.dp))
             LinearProgressIndicator(progress = { (step + 1) / steps.size.toFloat() }, modifier = Modifier.fillMaxWidth().height(5.dp), color = EmpireColors.Gold, trackColor = EmpireColors.SurfaceHigh)
             Spacer(Modifier.height(16.dp))
-            Button(onClick = { onTapSound(); if (step == steps.lastIndex) onComplete() else step++ }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(16.dp)) {
+            Button(onClick = { onTapSound(); if (step == steps.lastIndex) onComplete() else step++ }, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp), shape = RoundedCornerShape(16.dp)) {
                 Text(if (step == steps.lastIndex) "BUILD MY EMPIRE" else "CONTINUE", fontWeight = FontWeight.Black)
             }
         }
