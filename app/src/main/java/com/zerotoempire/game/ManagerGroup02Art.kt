@@ -20,11 +20,11 @@ fun ManagerGroup02Portrait(businessId: Int, portraitSize: Dp) {
     val context = LocalContext.current
     val reduced = MotionQuality.reducedMotion(context)
     val lowPower = MotionQuality.lowPowerMode(context)
-    val phase: Float = if (reduced) {
+    val phase: Float = if (reduced || lowPower) {
         .27f
     } else {
         val t = rememberInfiniteTransition(label="manager-g2-$businessId")
-        val animated by t.animateFloat(0f,1f,infiniteRepeatable(tween(if(lowPower) 15000 else 9000,easing=LinearEasing)),label="phase")
+        val animated by t.animateFloat(0f,1f,infiniteRepeatable(tween(9000,easing=LinearEasing)),label="phase")
         animated
     }
     val id=businessId.coerceIn(4,7)
