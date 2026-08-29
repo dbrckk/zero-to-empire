@@ -29,8 +29,8 @@ jobs:
         with:
           gradle-version: '8.13'
 
-      - name: Unit tests, release lint, debug and optimized release build
-        run: gradle --no-daemon testDebugUnitTest lintRelease assembleDebug assembleRelease
+      - name: Unit tests, release lint, debug, APK and app bundle builds
+        run: gradle --no-daemon testDebugUnitTest lintRelease assembleDebug assembleRelease bundleRelease
 
       - name: Upload release lint report
         if: always()
@@ -49,6 +49,15 @@ jobs:
           path: app/build/outputs/mapping/release/mapping.txt
           if-no-files-found: error
           retention-days: 90
+
+      - name: Upload release app bundle
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ZeroToEmpire-release-aab
+          path: app/build/outputs/bundle/release/app-release.aab
+          if-no-files-found: error
+          retention-days: 30
 
       - name: Upload debug APK
         if: success()
