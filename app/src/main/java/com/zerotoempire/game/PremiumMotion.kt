@@ -10,8 +10,17 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -22,7 +31,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.material3.Text
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.PI
 import kotlin.math.cos
@@ -133,14 +143,26 @@ fun CelebrationVfx(accentName: String, modifier: Modifier = Modifier) {
 
 @Composable
 fun EraTransitionOverlay(eraIndex: Int, visible: Boolean, modifier: Modifier = Modifier) {
-    AnimatedVisibility(visible = visible, enter = fadeIn(tween(180)), exit = fadeOut(tween(520)), modifier = modifier) {
+    AnimatedVisibility(
+        visible = visible,
+        enter = fadeIn(tween(180)),
+        exit = fadeOut(tween(520)),
+        modifier = modifier
+    ) {
         val context = LocalContext.current
         val reduced = MotionQuality.reducedMotion(context)
-        val phase = if (reduced) {
-            .52f
+        val lowPower = MotionQuality.lowPowerMode(context)
+        val era = EmpireEras.catalog.getOrElse(eraIndex.coerceAtLeast(0)) { EmpireEras.catalog.last() }
+        val phase = if (reduced || lowPower) {
+            .48f
         } else {
             val transition = rememberInfiniteTransition(label = "eraTransition")
-            val animated by transition.animateFloat(0f, 1f, infiniteRepeatable(tween(1200, easing = LinearEasing)), label = "eraPhase")
+            val animated by transition.animateFloat(
+                0f,
+                1f,
+                infiniteRepeatable(tween(1250, easing = LinearEasing)),
+                label = "eraPhase"
+            )
             animated
         }
         val accent = when (eraIndex) {
@@ -151,24 +173,100 @@ fun EraTransitionOverlay(eraIndex: Int, visible: Boolean, modifier: Modifier = M
             5 -> EmpireArtPalette.GoldHot
             else -> EmpireArtPalette.Magenta
         }
+
         Box(
-            Modifier.fillMaxSize().background(
-                Brush.radialGradient(listOf(accent.copy(alpha = .55f), EmpireColors.Void.copy(alpha = .94f)), radius = 1400f)
-            ),
+            Modifier.fillMaxSize().background(EmpireColors.Void),
             contentAlignment = Alignment.Center
         ) {
+            EraVistaAAA(era.index, Modifier.fillMaxSize())
+            Box(
+                Modifier.fillMaxSize().background(
+                    Brush.verticalGradient(
+                        listOf(
+                            EmpireColors.Void.copy(alpha = .34f),
+                            EmpireColors.DeepSpace.copy(alpha = .48f),
+                            EmpireColors.Void.copy(alpha = .94f)
+                        )
+                    )
+                )
+            )
             Canvas(Modifier.fillMaxSize()) {
-                val c = Offset(size.width / 2f, size.height / 2f)
-                repeat(4) { i ->
-                    drawCircle(accent.copy(alpha = .45f - i * .08f), size.minDimension * (.12f + phase * .55f + i * .08f), c, style = Stroke(3f + i))
+                val c = Offset(size.width / 2f, size.height * .43f)
+                val min = size.minDimension
+                repeat(if (lowPower) 2 else 4) { i ->
+                    val p = (phase + i * .16f) % 1f
+                    drawCircle(
+                        accent.copy(alpha = (1f - p) * .42f),
+                        min * (.10f + p * .52f),
+                        c,
+                        style = Stroke(2.5f + i)
+                    )
                 }
-                repeat(36) { i ->
-                    val a = i * (Math.PI * 2.0 / 36.0).toFloat()
-                    val d = size.minDimension * (.12f + phase * .62f)
-                    drawCircle(accent.copy(alpha = (1f - phase) * .85f), 2f + (i % 4), Offset(c.x + cos(a) * d, c.y + sin(a) * d))
+                val particleCount = if (lowPower) 14 else 34
+                repeat(particleCount) { i ->
+                    val a = i * (Math.PI * 2.0 / particleCount).toFloat() + phase * .7f
+                    val spread = min * (.18f + ((i * 17) % 100) / 100f * .34f)
+                    drawCircle(
+                        color = if (i % 4 == 0) Color.White.copy(alpha = .78f) else accent.copy(alpha = .64f),
+                        radius = if (i % 6 == 0) 3.2f else 1.8f,
+                        center = Offset(c.x + cos(a) * spread, c.y + sin(a) * spread)
+                    )
                 }
             }
-            Text("ERA ASCENDED", color = Color.White, fontSize = 28.sp, fontWeight = FontWeight.Black)
+
+            Surface(
+                color = EmpireColors.DeepSpace.copy(alpha = .84f),
+                shape = RoundedCornerShape(28.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 26.dp)
+                    .border(1.dp, accent.copy(alpha = .48f), RoundedCornerShape(28.dp))
+            ) {
+                Column(
+                    Modifier.padding(horizontal = 24.dp, vertical = 22.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        "ERA ${era.index + 1} OF ${EmpireEras.catalog.size}",
+                        color = accent,
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Black,
+                        letterSpacing = 2.1.sp
+                    )
+                    Spacer(Modifier.height(5.dp))
+                    Text(
+                        era.icon,
+                        color = Color.White,
+                        fontSize = 38.sp,
+                        fontWeight = FontWeight.Black
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        era.name,
+                        color = Color.White,
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Black,
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(Modifier.height(7.dp))
+                    Text(
+                        era.subtitle,
+                        color = EmpireColors.TextSecondary,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        lineHeight = 18.sp
+                    )
+                    Spacer(Modifier.height(13.dp))
+                    Text(
+                        "NEW ECONOMIC HORIZON UNLOCKED",
+                        color = accent,
+                        fontSize = 9.sp,
+                        fontWeight = FontWeight.Black,
+                        letterSpacing = 1.4.sp
+                    )
+                }
+            }
         }
     }
 }
