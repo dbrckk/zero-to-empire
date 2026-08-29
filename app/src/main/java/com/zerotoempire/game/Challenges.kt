@@ -42,6 +42,17 @@ object ChallengeRotation {
     }
 }
 
+object ChallengeOrdering {
+    fun forCommandCenter(challenges: List<TimedChallenge>): List<TimedChallenge> =
+        challenges.sortedBy { challenge ->
+            when {
+                challenge.completed && !challenge.claimed -> 0
+                !challenge.completed -> 1
+                else -> 2
+            }
+        }
+}
+
 object BalanceGuard {
     fun recommendedPrestigeWindowSeconds(lifetimeCash: Double): Long = when {
         lifetimeCash < 1e6 -> 900L
