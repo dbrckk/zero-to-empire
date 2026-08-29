@@ -109,8 +109,14 @@ fun BusinessArtIcon(id: Int, iconSize: Dp, modifier: Modifier = Modifier) {
                     BusinessGroup02Sprite(id, level, iconSize)
                     BusinessGroup02Evolution(id, level, iconSize)
                 }
-                id in 8..11 -> BusinessGroup03Sprite(id, level, iconSize)
-                id in 12..13 -> BusinessGroup04Sprite(id, level, iconSize)
+                id in 8..11 -> {
+                    BusinessGroup03Sprite(id, level, iconSize)
+                    BusinessGroup03Evolution(id, level, iconSize)
+                }
+                id in 12..13 -> {
+                    BusinessGroup04Sprite(id, level, iconSize)
+                    BusinessGroup04Evolution(id, level, iconSize)
+                }
                 else -> PremiumBusinessSprite(id, level, iconSize)
             }
 
