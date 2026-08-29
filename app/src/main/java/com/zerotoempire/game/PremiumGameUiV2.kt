@@ -83,7 +83,7 @@ fun PremiumZeroToEmpireApp(vm: GameViewModel) {
                 when (tab) {
                     PremiumTab.EMPIRE -> PremiumEmpireTab(vm, state, buyMode)
                     PremiumTab.MANAGERS -> PremiumManagersTab(vm, state)
-                    PremiumTab.UPGRADES -> PremiumUpgradesTab(vm, state)
+                    PremiumTab.UPGRADES -> PremiumUpgradeTreeScreen(vm, state)
                     PremiumTab.GOALS -> PremiumGoalsTab(vm, state, meta)
                 }
             }
