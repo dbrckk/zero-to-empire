@@ -15,12 +15,26 @@ val releaseStorePath = providers.environmentVariable("ZERO_EMPIRE_KEYSTORE_PATH"
 val releaseStorePassword = providers.environmentVariable("ZERO_EMPIRE_KEYSTORE_PASSWORD").orNull
 val releaseKeyAlias = providers.environmentVariable("ZERO_EMPIRE_KEY_ALIAS").orNull
 val releaseKeyPassword = providers.environmentVariable("ZERO_EMPIRE_KEY_PASSWORD").orNull
-val hasReleaseSigning = listOf(
+val releaseSigningValues = listOf(
     releaseStorePath,
     releaseStorePassword,
     releaseKeyAlias,
     releaseKeyPassword
-).all { !it.isNullOrBlank() }
+)
+val hasAnyReleaseSigning = releaseSigningValues.any { !it.isNullOrBlank() }
+val hasReleaseSigning = releaseSigningValues.all { !it.isNullOrBlank() }
+
+if (hasAnyReleaseSigning && !hasReleaseSigning) {
+    throw GradleException(
+        "Incomplete release signing configuration. Set all of " +
+            "ZERO_EMPIRE_KEYSTORE_PATH, ZERO_EMPIRE_KEYSTORE_PASSWORD, " +
+            "ZERO_EMPIRE_KEY_ALIAS and ZERO_EMPIRE_KEY_PASSWORD, or set none of them."
+    )
+}
+
+if (hasReleaseSigning && !file(releaseStorePath!!).isFile) {
+    throw GradleException("Release keystore file does not exist at ZERO_EMPIRE_KEYSTORE_PATH.")
+}
 
 android {
     namespace = "com.zerotoempire.game"
