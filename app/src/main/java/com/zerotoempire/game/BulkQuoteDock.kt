@@ -17,6 +17,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -58,7 +60,11 @@ fun BulkQuoteDock(vm: GameViewModel, modifier: Modifier = Modifier) {
                     Button(
                         onClick = { vm.buyBulk(business.id, mode) },
                         enabled = affordable,
-                        modifier = Modifier.heightIn(min = 48.dp),
+                        modifier = Modifier
+                            .heightIn(min = 48.dp)
+                            .semantics {
+                                contentDescription = "Buy ${quote.count} levels of ${business.name} for ${compactMoney(quote.totalCost)} using $label mode"
+                            },
                         shape = RoundedCornerShape(14.dp)
                     ) {
                         Column {
