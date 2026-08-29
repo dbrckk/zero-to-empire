@@ -32,6 +32,15 @@ jobs:
       - name: Unit tests, release lint, debug and optimized release build
         run: gradle --no-daemon testDebugUnitTest lintRelease assembleDebug assembleRelease
 
+      - name: Upload release lint report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ZeroToEmpire-release-lint
+          path: app/build/reports/lint-results-release.html
+          if-no-files-found: warn
+          retention-days: 14
+
       - name: Upload debug APK
         if: success()
         uses: actions/upload-artifact@v4
