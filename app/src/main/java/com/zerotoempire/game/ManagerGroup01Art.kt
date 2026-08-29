@@ -32,11 +32,11 @@ fun ManagerGroup01Portrait(businessId: Int, portraitSize: Dp) {
     val context = LocalContext.current
     val reduced = MotionQuality.reducedMotion(context)
     val lowPower = MotionQuality.lowPowerMode(context)
-    val phase: Float = if (reduced) {
+    val phase: Float = if (reduced || lowPower) {
         .18f
     } else {
         val transition = rememberInfiniteTransition(label = "manager-g1-$businessId")
-        val animated by transition.animateFloat(0f, 1f, infiniteRepeatable(tween(if (lowPower) 12000 else 7600, easing = LinearEasing)), label = "phase")
+        val animated by transition.animateFloat(0f, 1f, infiniteRepeatable(tween(7600, easing = LinearEasing)), label = "phase")
         animated
     }
     val accent = when (businessId) {
@@ -54,6 +54,10 @@ fun ManagerGroup01Portrait(businessId: Int, portraitSize: Dp) {
             drawCircle(accent.copy(alpha=.13f),s*.47f,c)
             drawCircle(accent.copy(alpha=.62f),s*.425f,c,style=Stroke(s*.017f))
             drawArc(Color.White.copy(alpha=.16f),205f,70f,false,Offset(s*.09f,s*.09f),Size(s*.82f,s*.82f),style=Stroke(s*.008f))
+            drawLine(accent.copy(alpha=.72f),Offset(s*.12f,s*.20f),Offset(s*.12f,s*.32f),s*.010f)
+            drawLine(accent.copy(alpha=.72f),Offset(s*.12f,s*.20f),Offset(s*.24f,s*.20f),s*.010f)
+            drawLine(accent.copy(alpha=.42f),Offset(s*.76f,s*.80f),Offset(s*.88f,s*.80f),s*.008f)
+            drawCircle(accent.copy(alpha=.9f),s*.012f,Offset(s*.84f,s*.24f))
             val orbiters = if (lowPower) 2 else 4
             repeat(orbiters){i->val a=phase*2f*PI.toFloat()+i*2f*PI.toFloat()/orbiters;drawCircle(accent.copy(alpha=.72f),s*.010f,Offset(c.x+cos(a)*s*.39f,c.y+sin(a)*s*.39f))}
             val torso=Path().apply{moveTo(s*.17f,s*.88f);quadraticTo(s*.25f,s*.59f,s*.5f,s*.57f);quadraticTo(s*.75f,s*.59f,s*.83f,s*.88f);close()}
