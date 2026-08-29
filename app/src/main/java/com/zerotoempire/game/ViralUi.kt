@@ -3,6 +3,7 @@ package com.zerotoempire.game
 import android.content.Intent
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,6 +36,7 @@ fun ViralShareChip(state: GameState) {
             }
             context.startActivity(Intent.createChooser(intent, "Share your empire"))
         },
+        modifier = Modifier.heightIn(min = 48.dp),
         shape = RoundedCornerShape(50),
         color = EmpireColors.SurfaceHigh
     ) {
