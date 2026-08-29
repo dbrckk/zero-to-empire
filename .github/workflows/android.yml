@@ -32,6 +32,25 @@ jobs:
       - name: Unit tests, release lint, debug, APK and app bundle builds
         run: gradle --no-daemon testDebugUnitTest lintRelease assembleDebug assembleRelease bundleRelease
 
+      - name: Generate release integrity manifest
+        if: success()
+        run: |
+          mkdir -p app/build/release-integrity
+          sha256sum \
+            app/build/outputs/bundle/release/app-release.aab \
+            app/build/outputs/mapping/release/mapping.txt \
+            > app/build/release-integrity/SHA256SUMS.txt
+          printf 'commit=%s\n' "$GITHUB_SHA" > app/build/release-integrity/RELEASE_INFO.txt
+
+      - name: Upload release integrity manifest
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ZeroToEmpire-release-integrity
+          path: app/build/release-integrity/
+          if-no-files-found: error
+          retention-days: 90
+
       - name: Upload release lint report
         if: always()
         uses: actions/upload-artifact@v4
