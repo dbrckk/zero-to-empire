@@ -1,15 +1,20 @@
 package com.zerotoempire.game
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import kotlin.math.PI
 import kotlin.math.cos
@@ -27,6 +32,23 @@ fun BusinessGroup03Evolution(id: Int, level: Int, iconSize: Dp, modifier: Modifi
         level >= 10 -> 1
         else -> 0
     }
+
+    val context = LocalContext.current
+    val reducedMotion = MotionQuality.reducedMotion(context)
+    val reveal = remember(id) { Animatable(0f) }
+    val previousStage = remember(id) { intArrayOf(stage) }
+
+    LaunchedEffect(stage, reducedMotion) {
+        val prior = previousStage[0]
+        previousStage[0] = stage
+        if (stage > prior && !reducedMotion) {
+            reveal.snapTo(1f)
+            reveal.animateTo(0f, tween(980))
+        } else if (reducedMotion && reveal.value != 0f) {
+            reveal.snapTo(0f)
+        }
+    }
+
     if (stage == 0) return
 
     val accent = when (id) {
@@ -99,6 +121,63 @@ fun BusinessGroup03Evolution(id: Int, level: Int, iconSize: Dp, modifier: Modifi
                 val node = Offset(c.x + cos(angle) * s * .468f, c.y + sin(angle) * s * .468f)
                 drawCircle(Color.Black.copy(alpha = .38f), s * .014f, node)
                 drawCircle(if (i % 2 == 0) Color.White.copy(alpha = .92f) else secondary, s * .0065f, node)
+            }
+        }
+
+        val revealIntensity = reveal.value.coerceIn(0f, 1f)
+        if (revealIntensity > 0f) {
+            val travel = 1f - revealIntensity
+            val gravityRadius = s * (.22f + .25f * travel)
+
+            // Megastructure tiers arrive with a slower, heavier convergence beat: a dense
+            // gravity well, two pressure fronts and massive radial braces instead of sparks.
+            drawCircle(
+                brush = Brush.radialGradient(
+                    colors = listOf(
+                        Color.White.copy(alpha = .14f * revealIntensity),
+                        accent.copy(alpha = .17f * revealIntensity),
+                        secondary.copy(alpha = .07f * revealIntensity),
+                        Color.Transparent
+                    ),
+                    center = c,
+                    radius = s * .50f
+                ),
+                radius = s * (.31f + .12f * travel),
+                center = c
+            )
+            drawCircle(
+                color = accent.copy(alpha = .70f * revealIntensity),
+                radius = gravityRadius,
+                center = c,
+                style = Stroke(width = s * (.010f + .008f * revealIntensity))
+            )
+            drawCircle(
+                color = secondary.copy(alpha = .48f * revealIntensity),
+                radius = gravityRadius + s * .055f,
+                center = c,
+                style = Stroke(width = s * .006f)
+            )
+
+            val braceCount = 8
+            repeat(braceCount) { i ->
+                val angle = i * 2f * PI.toFloat() / braceCount + id * .13f
+                val inner = s * (.17f + .05f * travel)
+                val outer = s * (.34f + .11f * travel)
+                drawLine(
+                    color = if (i % 2 == 0) accent else secondary,
+                    start = Offset(c.x + cos(angle) * inner, c.y + sin(angle) * inner),
+                    end = Offset(c.x + cos(angle) * outer, c.y + sin(angle) * outer),
+                    strokeWidth = s * if (i % 2 == 0) .010f else .006f,
+                    alpha = (.30f + .55f * revealIntensity).coerceAtMost(1f)
+                )
+            }
+
+            repeat(4) { i ->
+                val angle = i * PI.toFloat() / 2f + PI.toFloat() / 4f
+                val nodeRadius = s * (.37f + .08f * travel)
+                val node = Offset(c.x + cos(angle) * nodeRadius, c.y + sin(angle) * nodeRadius)
+                drawCircle(Color.Black.copy(alpha = .34f * revealIntensity), s * .016f, node)
+                drawCircle(secondary.copy(alpha = .82f * revealIntensity), s * .0075f, node)
             }
         }
     }
