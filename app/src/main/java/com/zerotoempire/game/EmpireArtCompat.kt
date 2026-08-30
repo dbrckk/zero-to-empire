@@ -93,47 +93,129 @@ fun BusinessArtIcon(id: Int, iconSize: Dp, modifier: Modifier = Modifier) {
                     val center = Offset(size.width / 2f, size.height / 2f)
                     val intensity = burst.value.coerceIn(0f, 1f)
                     val travel = 1f - intensity
-                    val rays = if (lowPower) 8 else 8 + (intensity * 16).toInt()
+                    val group = when (id) {
+                        in 0..3 -> 0
+                        in 4..7 -> 1
+                        in 8..11 -> 2
+                        else -> 3
+                    }
+                    val primary = when (group) {
+                        0 -> EmpireColors.GoldBright
+                        1 -> EmpireColors.Cyan
+                        2 -> Color(0xFFB48CFF)
+                        else -> Color.White
+                    }
+                    val secondary = when (group) {
+                        0 -> EmpireColors.Cyan
+                        1 -> Color(0xFF9A7CFF)
+                        2 -> Color(0xFFFFD86A)
+                        else -> Color(0xFFFF68D8)
+                    }
+                    val baseRays = when (group) {
+                        0 -> 8
+                        1 -> 10
+                        2 -> 6
+                        else -> 12
+                    }
+                    val extraRays = if (lowPower) 0 else (intensity * when (group) {
+                        0 -> 16
+                        1 -> 10
+                        2 -> 6
+                        else -> 8
+                    }).toInt()
+                    val rays = baseRays + extraRays
                     val radius = size.minDimension * (.32f + .18f * travel)
 
-                    // Layer 1: a compact energy flash that anchors the purchase at the sprite.
+                    // The same purchase event now speaks the visual language of each era:
+                    // energetic early-game sparks, engineered expansion locks, heavy
+                    // megastructure pressure spokes, then a cleaner endgame singularity flash.
                     drawCircle(
-                        color = EmpireColors.GoldBright,
+                        color = primary,
                         radius = size.minDimension * (.16f + .06f * intensity),
                         center = center,
                         alpha = .10f * intensity
                     )
                     drawCircle(
-                        color = EmpireColors.Cyan,
+                        color = secondary,
                         radius = size.minDimension * (.21f + .25f * travel),
                         center = center,
                         alpha = .32f * intensity,
                         style = Stroke(width = 1.4f + 2.2f * intensity)
                     )
                     drawCircle(
-                        color = EmpireColors.GoldBright,
+                        color = primary,
                         radius = size.minDimension * (.27f + .24f * travel),
                         center = center,
                         alpha = .20f * intensity,
                         style = Stroke(width = .9f + 1.5f * intensity)
                     )
 
-                    // Layer 2: sharp radial energy rays, preserving the original purchase punch.
+                    if (group == 1) {
+                        repeat(4) { i ->
+                            val a = i * PI.toFloat() / 2f
+                            val inner = size.minDimension * (.22f + .08f * travel)
+                            val outer = size.minDimension * (.34f + .11f * travel)
+                            val side = size.minDimension * .045f
+                            val joint = Offset(
+                                center.x + cos(a).toFloat() * outer,
+                                center.y + sin(a).toFloat() * outer
+                            )
+                            drawLine(
+                                color = primary,
+                                start = Offset(center.x + cos(a).toFloat() * inner, center.y + sin(a).toFloat() * inner),
+                                end = joint,
+                                strokeWidth = 1.4f + intensity * 2.4f,
+                                alpha = .72f * intensity
+                            )
+                            drawLine(
+                                color = secondary,
+                                start = Offset(joint.x + cos(a + PI.toFloat() / 2f) * side, joint.y + sin(a + PI.toFloat() / 2f) * side),
+                                end = Offset(joint.x - cos(a + PI.toFloat() / 2f) * side, joint.y - sin(a + PI.toFloat() / 2f) * side),
+                                strokeWidth = 1.1f + intensity * 1.7f,
+                                alpha = .60f * intensity
+                            )
+                        }
+                    }
+
                     repeat(rays) { i ->
                         val a = 2.0 * PI * i / rays + id * .17
-                        val start = Offset(center.x + cos(a).toFloat() * radius * .48f, center.y + sin(a).toFloat() * radius * .48f)
+                        val startScale = when (group) {
+                            2 -> .40f
+                            3 -> .58f
+                            else -> .48f
+                        }
+                        val start = Offset(center.x + cos(a).toFloat() * radius * startScale, center.y + sin(a).toFloat() * radius * startScale)
                         val end = Offset(center.x + cos(a).toFloat() * radius, center.y + sin(a).toFloat() * radius)
                         drawLine(
-                            color = if (i % 2 == 0) EmpireColors.GoldBright else EmpireColors.Cyan,
+                            color = when {
+                                group == 3 && i % 3 == 0 -> Color.White
+                                i % 2 == 0 -> primary
+                                else -> secondary
+                            },
                             start = start,
                             end = end,
-                            strokeWidth = 1.5f + intensity * 3f,
+                            strokeWidth = when (group) {
+                                2 -> 2.2f + intensity * if (i % 2 == 0) 4.0f else 2.0f
+                                3 -> 1.1f + intensity * 2.0f
+                                else -> 1.5f + intensity * 3f
+                            },
                             alpha = intensity
                         )
                     }
 
-                    // Layer 3: small debris sparks with staggered travel for a more physical hit.
-                    val sparkCount = if (lowPower) 6 else 12
+                    val sparkCount = if (lowPower) {
+                        when (group) {
+                            2, 3 -> 4
+                            else -> 6
+                        }
+                    } else {
+                        when (group) {
+                            0 -> 12
+                            1 -> 10
+                            2 -> 6
+                            else -> 8
+                        }
+                    }
                     repeat(sparkCount) { i ->
                         val a = 2.0 * PI * i / sparkCount + id * .31
                         val stagger = .72f + (i % 4) * .08f
@@ -143,8 +225,16 @@ fun BusinessArtIcon(id: Int, iconSize: Dp, modifier: Modifier = Modifier) {
                             center.y + sin(a).toFloat() * sparkRadius
                         )
                         drawCircle(
-                            color = if (i % 3 == 0) EmpireColors.GoldBright else EmpireColors.Cyan,
-                            radius = 1.2f + intensity * if (i % 3 == 0) 2.2f else 1.5f,
+                            color = when {
+                                group == 3 && i % 3 == 0 -> Color.White
+                                i % 3 == 0 -> primary
+                                else -> secondary
+                            },
+                            radius = when (group) {
+                                2 -> 1.4f + intensity * if (i % 2 == 0) 2.5f else 1.3f
+                                3 -> 1.0f + intensity * 1.4f
+                                else -> 1.2f + intensity * if (i % 3 == 0) 2.2f else 1.5f
+                            },
                             center = p,
                             alpha = (.35f + .65f * intensity).coerceAtMost(1f)
                         )
