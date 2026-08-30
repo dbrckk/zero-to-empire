@@ -36,6 +36,28 @@ if (hasReleaseSigning && !file(releaseStorePath!!).isFile) {
     throw GradleException("Release keystore file does not exist at ZERO_EMPIRE_KEYSTORE_PATH.")
 }
 
+if (hasReleaseSigning) {
+    val appId = productionAdMobAppId.get().trim()
+    val rewardedId = productionRewardedId.get().trim()
+    val interstitialId = productionInterstitialId.get().trim()
+
+    if (appId.isBlank() || appId == sampleAdMobAppId || appId.startsWith("ca-app-pub-3940256099942544")) {
+        throw GradleException(
+            "Signed release requires a production ADMOB_APP_ID. Google's sample/test App ID is not allowed."
+        )
+    }
+    if (rewardedId.isBlank() || rewardedId == sampleRewardedId || rewardedId.startsWith("ca-app-pub-3940256099942544")) {
+        throw GradleException(
+            "Signed release requires a production REWARDED_AD_UNIT_ID. Google's sample/test ad unit is not allowed."
+        )
+    }
+    if (interstitialId.isBlank() || interstitialId == sampleInterstitialId || interstitialId.startsWith("ca-app-pub-3940256099942544")) {
+        throw GradleException(
+            "Signed release requires a production INTERSTITIAL_AD_UNIT_ID. Google's sample/test ad unit is not allowed."
+        )
+    }
+}
+
 android {
     namespace = "com.zerotoempire.game"
     compileSdk = 36
