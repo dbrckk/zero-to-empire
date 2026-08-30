@@ -7,9 +7,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.Dp
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.sin
 
 /** Extra structural layers that make each progression tier visibly change silhouette. */
 @Composable
@@ -26,8 +30,75 @@ fun BusinessGroup01Evolution(id: Int, level: Int, iconSize: Dp, modifier: Modifi
     }
     if (stage == 0) return
 
+    val accent = when (id) {
+        0 -> Color(0xFF78F56A)
+        1 -> Color(0xFF58BFFF)
+        2 -> Color(0xFFFF9A43)
+        else -> Color(0xFFB76CFF)
+    }
+    val secondary = when (id) {
+        0 -> Color(0xFFFFE87A)
+        1 -> Color(0xFFB8F1FF)
+        2 -> Color(0xFFFFD073)
+        else -> Color(0xFFFF72D8)
+    }
+
     Canvas(modifier.size(iconSize)) {
         val s = size.minDimension
+        val center = Offset(s * .5f, s * .5f)
+
+        if (stage >= 4) {
+            drawCircle(
+                brush = Brush.radialGradient(
+                    colors = listOf(Color.White.copy(alpha = .07f), accent.copy(alpha = .09f), Color.Transparent),
+                    center = Offset(s * .42f, s * .36f),
+                    radius = s * .47f
+                ),
+                radius = s * .455f,
+                center = center
+            )
+            drawArc(
+                secondary.copy(alpha = .24f),
+                214f,
+                50f,
+                false,
+                Offset(s * .10f, s * .10f),
+                Size(s * .80f, s * .80f),
+                style = Stroke(s * .005f)
+            )
+        }
+        if (stage >= 6) {
+            drawArc(
+                accent.copy(alpha = .30f),
+                20f,
+                112f,
+                false,
+                Offset(s * .08f, s * .08f),
+                Size(s * .84f, s * .84f),
+                style = Stroke(s * .006f)
+            )
+            drawArc(
+                Color.White.copy(alpha = .18f),
+                198f,
+                68f,
+                false,
+                Offset(s * .125f, s * .125f),
+                Size(s * .75f, s * .75f),
+                style = Stroke(s * .004f)
+            )
+        }
+        if (stage >= 7) {
+            repeat(8) { i ->
+                val angle = i * 2f * PI.toFloat() / 8f - PI.toFloat() / 2f
+                val node = Offset(
+                    center.x + cos(angle) * s * .445f,
+                    center.y + sin(angle) * s * .445f
+                )
+                drawCircle(Color.Black.copy(alpha = .32f), s * .014f, node)
+                drawCircle(if (i % 2 == 0) secondary else accent, s * .007f, node)
+            }
+        }
+
         when (id) {
             0 -> {
                 val green = Color(0xFF78F56A)
