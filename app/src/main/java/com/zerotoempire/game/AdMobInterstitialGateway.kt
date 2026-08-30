@@ -2,6 +2,7 @@ package com.zerotoempire.game
 
 import android.app.Activity
 import android.content.Context
+import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
@@ -35,16 +36,28 @@ class AdMobInterstitialGateway(private val context: Context) {
 
     fun isReady(): Boolean = ad != null
 
-    fun show(activity: Activity, onClosed: () -> Unit = {}) {
-        val current = ad ?: run { preload(); onClosed(); return }
+    fun show(
+        activity: Activity,
+        onShown: () -> Unit = {},
+        onClosed: () -> Unit = {}
+    ) {
+        val current = ad ?: run {
+            preload()
+            onClosed()
+            return
+        }
         ad = null
         current.fullScreenContentCallback = object : FullScreenContentCallback() {
+            override fun onAdShowedFullScreenContent() {
+                onShown()
+            }
+
             override fun onAdDismissedFullScreenContent() {
                 preload()
                 onClosed()
             }
 
-            override fun onAdFailedToShowFullScreenContent(adError: com.google.android.gms.ads.AdError) {
+            override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                 preload()
                 onClosed()
             }

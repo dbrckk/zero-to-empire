@@ -44,8 +44,12 @@ fun InterstitialController(
             gateway.preload()
             return@LaunchedEffect
         }
-        frequency.recordShow(now)
-        telemetry.track(GrowthEvent.InterstitialShown(breakPoint))
-        gateway.show(activity)
+        gateway.show(
+            activity = activity,
+            onShown = {
+                frequency.recordShow(System.currentTimeMillis())
+                telemetry.track(GrowthEvent.InterstitialShown(breakPoint))
+            }
+        )
     }
 }
