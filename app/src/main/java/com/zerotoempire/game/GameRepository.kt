@@ -1,11 +1,15 @@
 package com.zerotoempire.game
 
 import android.content.Context
+import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.first
 
-private val Context.gameDataStore by preferencesDataStore("zero_empire_save_v2")
+private val Context.gameDataStore by preferencesDataStore(
+    name = "zero_empire_save_v2",
+    corruptionHandler = ReplaceFileCorruptionHandler { emptyPreferences() }
+)
 
 class GameRepository(private val context: Context) {
     private object Keys {
