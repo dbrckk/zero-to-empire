@@ -1,11 +1,8 @@
 package com.zerotoempire.game
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -120,32 +117,64 @@ private fun PremiumBurst(seed: Int) {
     val context = LocalContext.current
     val reduced = MotionQuality.reducedMotion(context)
     val lowPower = MotionQuality.lowPowerMode(context)
-    val progress: Float
-    if (reduced) progress = .72f else {
-        val transition = rememberInfiniteTransition(label = "premiumBurst$seed")
-        val p by transition.animateFloat(
-            initialValue = 0f,
-            targetValue = 1f,
-            animationSpec = infiniteRepeatable(
-                animation = tween(durationMillis = 900, easing = FastOutSlowInEasing),
-                repeatMode = RepeatMode.Restart
-            ),
-            label = "burst"
-        )
-        progress = p
+    val progress = remember(seed) { Animatable(if (reduced) .72f else 0f) }
+
+    LaunchedEffect(seed, reduced) {
+        if (reduced) {
+            progress.snapTo(.72f)
+        } else {
+            progress.snapTo(0f)
+            progress.animateTo(
+                targetValue = 1f,
+                animationSpec = tween(durationMillis = 900, easing = FastOutSlowInEasing)
+            )
+        }
     }
+
+    val p = progress.value
     Canvas(Modifier.fillMaxSize()) {
         val center = Offset(size.width / 2f, size.height / 2f)
         val count = if (lowPower) 10 else 20
-        val radius = size.minDimension * (.16f + .34f * progress)
-        drawCircle(EmpireColors.Gold.copy(alpha = (.18f * (1f - progress)).coerceAtLeast(.03f)), radius * .72f, center, style = Stroke(size.minDimension * .008f))
+        val radius = size.minDimension * (.16f + .34f * p)
+        val fade = (1f - p).coerceIn(0f, 1f)
+
+        drawCircle(
+            EmpireColors.Gold.copy(alpha = (.20f * fade).coerceAtLeast(if (reduced) .04f else 0f)),
+            radius * .72f,
+            center,
+            style = Stroke(size.minDimension * .008f)
+        )
+        drawCircle(
+            Color.White.copy(alpha = (.13f * fade).coerceAtLeast(if (reduced) .025f else 0f)),
+            radius * .52f,
+            center,
+            style = Stroke(size.minDimension * .004f)
+        )
+
         repeat(count) { i ->
             val angle = i * (Math.PI * 2.0 / count) + seed * .17
             val start = radius * .45f
             val end = radius * (if (i % 3 == 0) 1f else .78f)
-            val a = (.62f * (1f - progress)).coerceAtLeast(.06f)
+            val alpha = (.66f * fade).coerceAtLeast(if (reduced) .07f else 0f)
             val color = if (i % 2 == 0) EmpireColors.GoldBright else EmpireColors.Cyan
-            drawLine(color.copy(alpha = a), Offset(center.x + cos(angle).toFloat() * start, center.y + sin(angle).toFloat() * start), Offset(center.x + cos(angle).toFloat() * end, center.y + sin(angle).toFloat() * end), size.minDimension * .006f)
+            drawLine(
+                color.copy(alpha = alpha),
+                Offset(center.x + cos(angle).toFloat() * start, center.y + sin(angle).toFloat() * start),
+                Offset(center.x + cos(angle).toFloat() * end, center.y + sin(angle).toFloat() * end),
+                size.minDimension * .006f
+            )
+
+            if (!reduced && !lowPower && i % 2 == 0) {
+                val sparkRadius = radius * (.68f + (i % 4) * .055f)
+                drawCircle(
+                    color = if (i % 4 == 0) Color.White.copy(alpha = alpha * .92f) else color.copy(alpha = alpha * .78f),
+                    radius = size.minDimension * if (i % 4 == 0) .008f else .005f,
+                    center = Offset(
+                        center.x + cos(angle + .08).toFloat() * sparkRadius,
+                        center.y + sin(angle + .08).toFloat() * sparkRadius
+                    )
+                )
+            }
         }
     }
 }
