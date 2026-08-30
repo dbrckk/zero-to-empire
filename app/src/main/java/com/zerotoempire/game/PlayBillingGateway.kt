@@ -99,27 +99,36 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
             connect()
             return
         }
+        // Reserve the complete query + launch cycle before starting asynchronous product lookup.
+        // Without this guard, two rapid taps can both pass the initial check and open competing
+        // Google Play flows before either query returns.
+        pendingResult = onResult
+        pendingProduct = product
         val params = QueryProductDetailsParams.newBuilder()
             .setProductList(listOf(QueryProductDetailsParams.Product.newBuilder().setProductId(product.productId).setProductType(BillingClient.ProductType.INAPP).build()))
             .build()
         billingClient.queryProductDetailsAsync(params) { result, detailsResult ->
+            // Ignore a stale lookup that completed after disconnect or another terminal result.
+            if (pendingResult !== onResult || pendingProduct != product) return@queryProductDetailsAsync
             if (result.responseCode != BillingClient.BillingResponseCode.OK) {
-                onResult(PurchaseResult.Failed(result.debugMessage)); return@queryProductDetailsAsync
+                completePending(onResult, PurchaseResult.Failed(result.debugMessage.ifBlank { "Google Play product lookup failed" }))
+                return@queryProductDetailsAsync
             }
-            val details = detailsResult.productDetailsList.firstOrNull()
-            if (details == null) { onResult(PurchaseResult.Failed("Product is unavailable in Google Play")); return@queryProductDetailsAsync }
-            launch(activity, product, details, onResult)
+            val details = detailsResult.productDetailsList.firstOrNull { it.productId == product.productId }
+            if (details == null) {
+                completePending(onResult, PurchaseResult.Failed("Product is unavailable in Google Play"))
+                return@queryProductDetailsAsync
+            }
+            launch(activity, details, onResult)
         }
     }
 
-    private fun launch(activity: Activity, product: StoreProduct, details: ProductDetails, onResult: (PurchaseResult) -> Unit) {
-        pendingResult = onResult
-        pendingProduct = product
+    private fun launch(activity: Activity, details: ProductDetails, onResult: (PurchaseResult) -> Unit) {
         val productParams = BillingFlowParams.ProductDetailsParams.newBuilder().setProductDetails(details).build()
         val flowParams = BillingFlowParams.newBuilder().setProductDetailsParamsList(listOf(productParams)).build()
         val result = billingClient.launchBillingFlow(activity, flowParams)
         if (result.responseCode != BillingClient.BillingResponseCode.OK) {
-            finishPending(PurchaseResult.Failed(result.debugMessage.ifBlank { "Google Play could not start the purchase" }))
+            completePending(onResult, PurchaseResult.Failed(result.debugMessage.ifBlank { "Google Play could not start the purchase" }))
         }
     }
 
