@@ -17,6 +17,7 @@ import com.android.billingclient.api.Purchase
 class PlayBillingGateway(private val context: Context) : PurchaseGateway {
     private var pendingResult: ((PurchaseResult) -> Unit)? = null
     private var pendingProduct: StoreProduct? = null
+    private var pendingNotifiedToken: String? = null
     private val restoreCallbacks = mutableListOf<(RestoreResult) -> Unit>()
     private var connecting = false
     private var restoreInFlight = false
@@ -86,6 +87,7 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
         // Never retain an Activity/UI callback beyond the gateway lifecycle.
         pendingResult = null
         pendingProduct = null
+        pendingNotifiedToken = null
         if (billingClient.isReady) billingClient.endConnection()
     }
 
@@ -104,6 +106,7 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
         // Google Play flows before either query returns.
         pendingResult = onResult
         pendingProduct = product
+        pendingNotifiedToken = null
         val params = QueryProductDetailsParams.newBuilder()
             .setProductList(listOf(QueryProductDetailsParams.Product.newBuilder().setProductId(product.productId).setProductType(BillingClient.ProductType.INAPP).build()))
             .build()
@@ -234,9 +237,13 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
 
         when (purchase.purchaseState) {
             Purchase.PurchaseState.PENDING -> {
-                // Pending is informational, not terminal. Keep the callback associated with this
-                // product so a later PURCHASED update can complete the exact same transaction.
-                pendingResult?.invoke(PurchaseResult.Pending)
+                // Pending is informational, not terminal. Google Play may emit the same token more
+                // than once while payment is unresolved, so notify the UI once per transaction while
+                // retaining the callback for the later PURCHASED transition.
+                if (pendingNotifiedToken != purchase.purchaseToken) {
+                    pendingNotifiedToken = purchase.purchaseToken
+                    pendingResult?.invoke(PurchaseResult.Pending)
+                }
             }
             Purchase.PurchaseState.PURCHASED -> {
                 if (product.consumable) {
@@ -274,6 +281,7 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
         val callback = pendingResult ?: return
         pendingResult = null
         pendingProduct = null
+        pendingNotifiedToken = null
         callback(result)
     }
 
@@ -281,6 +289,7 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
         if (pendingResult !== callback) return
         pendingResult = null
         pendingProduct = null
+        pendingNotifiedToken = null
         callback(result)
     }
 
