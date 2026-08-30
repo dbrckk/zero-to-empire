@@ -34,7 +34,6 @@ fun BusinessGroup04Sprite(id: Int, level: Int, iconSize: Dp, modifier: Modifier 
     val reduced = MotionQuality.reducedMotion(context)
     val lowPower = MotionQuality.lowPowerMode(context)
     val phase: Float
-    val pulse = .90f
     if (reduced) {
         phase = .21f
     } else {
@@ -42,6 +41,7 @@ fun BusinessGroup04Sprite(id: Int, level: Int, iconSize: Dp, modifier: Modifier 
         val phaseAnim by motion.animateFloat(0f,1f,infiniteRepeatable(tween(if(lowPower)14000 else 8200,easing=LinearEasing)),label="phase")
         phase = phaseAnim
     }
+    val pulse = if (reduced) .90f else .87f + .08f * ((sin(phase * 2f * PI.toFloat() - PI.toFloat() / 2f) + 1f) * .5f)
     val stage=when{level>=1000->5;level>=500->4;level>=250->3;level>=100->2;level>=25->1;else->0}
     val accent=if(id==12) Color(0xFFFF68D8) else Color(0xFFFFE36E)
 
