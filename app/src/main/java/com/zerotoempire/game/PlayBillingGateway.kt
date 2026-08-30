@@ -29,7 +29,7 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
                 return@setListener
             }
             if (result.responseCode != BillingClient.BillingResponseCode.OK || purchases == null) {
-                finishPending(PurchaseResult.Failed(result.debugMessage.ifBlank { "Google Play purchase failed" }))
+                finishPending(billingFailure(result, "Google Play purchase failed"))
                 return@setListener
             }
             if (purchases.isEmpty()) {
@@ -111,7 +111,7 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
             // Ignore a stale lookup that completed after disconnect or another terminal result.
             if (pendingResult !== onResult || pendingProduct != product) return@queryProductDetailsAsync
             if (result.responseCode != BillingClient.BillingResponseCode.OK) {
-                completePending(onResult, PurchaseResult.Failed(result.debugMessage.ifBlank { "Google Play product lookup failed" }))
+                completePending(onResult, billingFailure(result, "Google Play product lookup failed"))
                 return@queryProductDetailsAsync
             }
             val details = detailsResult.productDetailsList.firstOrNull { it.productId == product.productId }
@@ -128,7 +128,7 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
         val flowParams = BillingFlowParams.newBuilder().setProductDetailsParamsList(listOf(productParams)).build()
         val result = billingClient.launchBillingFlow(activity, flowParams)
         if (result.responseCode != BillingClient.BillingResponseCode.OK) {
-            completePending(onResult, PurchaseResult.Failed(result.debugMessage.ifBlank { "Google Play could not start the purchase" }))
+            completePending(onResult, billingFailure(result, "Google Play could not start the purchase"))
         }
     }
 
@@ -154,6 +154,7 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
         billingClient.queryPurchasesAsync(params) { result, purchases ->
             if (runId != restoreRunId) return@queryPurchasesAsync
             if (result.responseCode != BillingClient.BillingResponseCode.OK) {
+                reconnectIfTransient(result)
                 finishRestore(runId, emptyList())
                 return@queryPurchasesAsync
             }
@@ -237,7 +238,7 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
                             val purchaseResult = if (result.responseCode == BillingClient.BillingResponseCode.OK) {
                                 PurchaseResult.Success(product)
                             } else {
-                                PurchaseResult.Failed("Google Play could not confirm the purchase: ${result.debugMessage}")
+                                billingFailure(result, "Google Play could not confirm the purchase")
                             }
                             completePending(callback, purchaseResult)
                         }
@@ -281,7 +282,7 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
             val purchaseResult = if (result.responseCode == BillingClient.BillingResponseCode.OK) {
                 PurchaseResult.Success(product)
             } else {
-                PurchaseResult.Failed(result.debugMessage.ifBlank { "Google Play could not consume the purchase" })
+                billingFailure(result, "Google Play could not consume the purchase")
             }
             completePending(callback, purchaseResult)
         }
@@ -289,6 +290,26 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
 
     private fun consumeRecovered(purchase: Purchase, done: (Boolean) -> Unit) {
         val params = ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()
-        billingClient.consumeAsync(params) { result, _ -> done(result.responseCode == BillingClient.BillingResponseCode.OK) }
+        billingClient.consumeAsync(params) { result, _ ->
+            reconnectIfTransient(result)
+            done(result.responseCode == BillingClient.BillingResponseCode.OK)
+        }
+    }
+
+    private fun billingFailure(result: BillingResult, fallback: String): PurchaseResult.Failed {
+        val failure = BillingFailurePolicy.resolve(result.failureKind(), result.debugMessage, fallback)
+        if (failure.shouldReconnect) connect()
+        return PurchaseResult.Failed(failure.message)
+    }
+
+    private fun reconnectIfTransient(result: BillingResult) {
+        if (BillingFailurePolicy.resolve(result.failureKind(), result.debugMessage, "").shouldReconnect) connect()
+    }
+
+    private fun BillingResult.failureKind(): BillingFailureKind = when (responseCode) {
+        BillingClient.BillingResponseCode.SERVICE_DISCONNECTED -> BillingFailureKind.SERVICE_DISCONNECTED
+        BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE -> BillingFailureKind.SERVICE_UNAVAILABLE
+        BillingClient.BillingResponseCode.NETWORK_ERROR -> BillingFailureKind.NETWORK_ERROR
+        else -> BillingFailureKind.OTHER
     }
 }
