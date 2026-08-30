@@ -20,7 +20,9 @@ fun InterstitialController(
     val frequency = remember(activity) { InterstitialFrequencyStore(activity.applicationContext) }
 
     LaunchedEffect(adsAllowed, meta.adsRemoved) {
-        if (adsAllowed && !meta.adsRemoved) gateway.preload()
+        val enabled = adsAllowed && !meta.adsRemoved
+        gateway.setEnabled(enabled)
+        if (enabled) gateway.preload()
     }
 
     LaunchedEffect(celebration, adsAllowed, meta.adsRemoved, meta.onboardingCompleted) {
