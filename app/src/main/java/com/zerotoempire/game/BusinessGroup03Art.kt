@@ -43,7 +43,7 @@ fun BusinessGroup03Sprite(id: Int, level: Int, iconSize: Dp, modifier: Modifier 
         )
         phaseAnim
     }
-    val pulse = .90f
+    val pulse = if (reduced) .90f else .86f + .08f * ((sin(phase * 2f * PI.toFloat() - PI.toFloat() / 2f) + 1f) * .5f)
     val stage = group03Stage(level)
     val accent = group03Accent(id)
 
