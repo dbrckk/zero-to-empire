@@ -68,28 +68,46 @@ fun PremiumProgressionStrip(state: GameState) {
 
 @Composable
 fun PremiumMilestoneCelebration(state: GameState, modifier: Modifier = Modifier) {
+    val eraIndex = EmpireEras.current(state.lifetimeCash).index
     var knownLevels by remember { mutableStateOf(state.businesses.associate { it.id to it.level }) }
+    var knownEra by remember { mutableIntStateOf(eraIndex) }
     var serial by remember { mutableIntStateOf(0) }
     var title by remember { mutableStateOf("") }
     var subtitle by remember { mutableStateOf("") }
     var visible by remember { mutableStateOf(false) }
 
-    LaunchedEffect(state.businesses) {
-        val previous = knownLevels
+    LaunchedEffect(state.businesses, eraIndex) {
+        val previousLevels = knownLevels
+        val previousEra = knownEra
         val hit = state.businesses.firstOrNull { business ->
-            val old = previous[business.id] ?: business.level
+            val old = previousLevels[business.id] ?: business.level
             business.level > old && premiumMilestones.any { it in (old + 1)..business.level }
         }
+
         knownLevels = state.businesses.associate { it.id to it.level }
-        if (hit != null) {
-            val old = previous[hit.id] ?: 0
-            val reached = premiumMilestones.lastOrNull { it in (old + 1)..hit.level } ?: hit.level
-            title = "POWER SPIKE  •  LV $reached"
-            subtitle = hit.name.uppercase()
+        knownEra = eraIndex
+
+        val holdMillis = when {
+            eraIndex > previousEra -> {
+                title = "ERA ${eraIndex + 1} UNLOCKED"
+                subtitle = "EMPIRE BREAKTHROUGH"
+                1_650L
+            }
+            hit != null -> {
+                val old = previousLevels[hit.id] ?: 0
+                val reached = premiumMilestones.lastOrNull { it in (old + 1)..hit.level } ?: hit.level
+                title = "POWER SPIKE  •  LV $reached"
+                subtitle = hit.name.uppercase()
+                1_350L
+            }
+            else -> 0L
+        }
+
+        if (holdMillis > 0L) {
             serial++
             val token = serial
             visible = true
-            delay(1350)
+            delay(holdMillis)
             if (token == serial) visible = false
         }
     }
@@ -105,7 +123,7 @@ fun PremiumMilestoneCelebration(state: GameState, modifier: Modifier = Modifier)
                 Column(Modifier.padding(horizontal = 26.dp, vertical = 20.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(title, color = EmpireColors.GoldBright, fontSize = 12.sp, fontWeight = FontWeight.Black, letterSpacing = 1.2.sp)
                     Text(subtitle, color = EmpireColors.TextPrimary, fontSize = 20.sp, fontWeight = FontWeight.Black)
-                    Text("Production evolved", color = EmpireColors.Cyan, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                    Text(if (title.startsWith("ERA")) "New empire systems online" else "Production evolved", color = EmpireColors.Cyan, fontSize = 10.sp, fontWeight = FontWeight.Bold)
                 }
             }
         }
