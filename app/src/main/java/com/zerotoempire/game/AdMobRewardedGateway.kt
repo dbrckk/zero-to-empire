@@ -12,13 +12,30 @@ import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 class AdMobRewardedGateway(private val context: Context) : RewardedAdGateway {
     @Volatile private var rewardedAd: RewardedAd? = null
     @Volatile private var loading = false
+    @Volatile private var mobileAdsReady = false
+    @Volatile private var initializing = false
 
-    init {
-        MobileAds.initialize(context) { preload() }
-    }
-
+    /**
+     * Preload is intentionally the first point that may initialize the ads SDK.
+     * CommerceRoot only calls it after the privacy gate allows ad requests, so
+     * constructing this gateway can never initialize or preload ads early.
+     */
+    @Synchronized
     override fun preload() {
         if (loading || rewardedAd != null || BuildConfig.REWARDED_AD_UNIT_ID.isBlank()) return
+        if (!mobileAdsReady) {
+            if (initializing) return
+            initializing = true
+            MobileAds.initialize(context) {
+                synchronized(this) {
+                    initializing = false
+                    mobileAdsReady = true
+                }
+                preload()
+            }
+            return
+        }
+
         loading = true
         RewardedAd.load(
             context,
