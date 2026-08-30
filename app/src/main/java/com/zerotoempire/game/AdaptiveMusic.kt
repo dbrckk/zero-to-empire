@@ -18,6 +18,7 @@ class AdaptiveMusicEngine(context: Context) {
     private val hasAudioFocus = AtomicBoolean(false)
     @Volatile private var intensity = 0
     @Volatile private var volume = .18f
+    @Volatile private var focusVolumeMultiplier = 1f
     private var worker: Thread? = null
 
     private val audioAttributes = AudioAttributes.Builder()
@@ -31,12 +32,18 @@ class AdaptiveMusicEngine(context: Context) {
         .setOnAudioFocusChangeListener { change ->
             when (change) {
                 AudioManager.AUDIOFOCUS_GAIN -> {
+                    focusVolumeMultiplier = 1f
                     hasAudioFocus.set(true)
                     if (running.get() && foreground.get()) runCatching { track.play() }
                 }
-                AudioManager.AUDIOFOCUS_LOSS,
-                AudioManager.AUDIOFOCUS_LOSS_TRANSIENT,
                 AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
+                    // Keep rendering and playing, but make room for short system/navigation audio.
+                    // This avoids flushing the stream for every notification and resumes seamlessly.
+                    focusVolumeMultiplier = .25f
+                }
+                AudioManager.AUDIOFOCUS_LOSS,
+                AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
+                    focusVolumeMultiplier = 1f
                     hasAudioFocus.set(false)
                     runCatching { track.pause() }
                     runCatching { track.flush() }
@@ -81,6 +88,7 @@ class AdaptiveMusicEngine(context: Context) {
     fun pausePlayback() {
         if (!running.get()) return
         foreground.set(false)
+        focusVolumeMultiplier = 1f
         hasAudioFocus.set(false)
         runCatching { track.pause() }
         runCatching { track.flush() }
@@ -92,6 +100,7 @@ class AdaptiveMusicEngine(context: Context) {
 
     fun release() {
         foreground.set(false)
+        focusVolumeMultiplier = 1f
         hasAudioFocus.set(false)
         running.set(false)
         runCatching { audioManager.abandonAudioFocusRequest(focusRequest) }
@@ -105,6 +114,7 @@ class AdaptiveMusicEngine(context: Context) {
     private fun requestAudioFocusAndPlay() {
         val granted = runCatching { audioManager.requestAudioFocus(focusRequest) }
             .getOrDefault(AudioManager.AUDIOFOCUS_REQUEST_FAILED) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
+        focusVolumeMultiplier = 1f
         hasAudioFocus.set(granted)
         if (granted && foreground.get()) runCatching { track.play() }
     }
@@ -136,9 +146,10 @@ class AdaptiveMusicEngine(context: Context) {
                     sin(2 * PI * root * 2.0 * t) * .10
                 val shimmer = if (tier >= 4) sin(2 * PI * root * 4.0 * t) * .06 else 0.0
                 val drive = if (tier >= 7) sin(2 * PI * root * .5 * t) * pulse * .22 else pulse * .08
-                val amp = volume.toDouble() * (pad + shimmer + drive)
+                val effectiveVolume = volume.toDouble() * focusVolumeMultiplier
+                val amp = effectiveVolume * (pad + shimmer + drive)
                 val left = (amp * 26_000.0).coerceIn(-32767.0, 32767.0).toInt().toShort()
-                val rightPhase = sin(2 * PI * root * 1.0025 * t) * .03 * volume
+                val rightPhase = sin(2 * PI * root * 1.0025 * t) * .03 * effectiveVolume
                 val right = ((amp + rightPhase) * 26_000.0).coerceIn(-32767.0, 32767.0).toInt().toShort()
                 pcm[frame * 2] = left
                 pcm[frame * 2 + 1] = right
