@@ -2,6 +2,7 @@ package com.zerotoempire.game
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -97,5 +98,8 @@ fun ManagerPortrait(businessId: Int, size: Dp = 58.dp) {
 
 @Composable
 fun EraVista(eraIndex: Int, modifier: Modifier = Modifier) {
-    EraVistaAAA(eraIndex = eraIndex, modifier = modifier)
+    Box(modifier = modifier) {
+        EraVistaAAA(eraIndex = eraIndex, modifier = Modifier.fillMaxSize())
+        EraVistaCinematicOverlay(eraIndex = eraIndex, modifier = Modifier.fillMaxSize())
+    }
 }
