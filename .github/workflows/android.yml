@@ -30,7 +30,7 @@ jobs:
           gradle-version: '8.13'
 
       - name: Unit tests, release lint, debug, APK and app bundle builds
-        run: gradle --no-daemon testDebugUnitTest lintRelease assembleDebug assembleRelease bundleRelease
+        run: gradle --no-daemon testDebugUnitTest testReleaseUnitTest lintRelease assembleDebug assembleRelease bundleRelease
 
       - name: Generate release integrity manifest
         if: success()
