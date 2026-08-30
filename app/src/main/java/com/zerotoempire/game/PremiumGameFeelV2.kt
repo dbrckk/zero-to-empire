@@ -94,36 +94,28 @@ fun PremiumCoreAura(eraIndex: Int, modifier: Modifier = Modifier) {
     var phase = 32f
     if (!reducedMotion) {
         val transition = rememberInfiniteTransition(label = "coreAura")
-        val pulseAnimated by transition.animateFloat(
-            initialValue = if (lowPower) .97f else .94f,
-            targetValue = if (lowPower) 1.025f else 1.045f,
-            animationSpec = infiniteRepeatable(
-                tween(if (lowPower) 1_900 else 1_300, easing = FastOutSlowInEasing),
-                RepeatMode.Reverse
-            ),
-            label = "coreAuraPulse"
-        )
-        val alphaAnimated by transition.animateFloat(
-            initialValue = if (lowPower) .16f else .20f,
-            targetValue = if (lowPower) .30f else .46f,
-            animationSpec = infiniteRepeatable(
-                tween(if (lowPower) 1_900 else 1_300, easing = FastOutSlowInEasing),
-                RepeatMode.Reverse
-            ),
-            label = "coreAuraAlpha"
-        )
-        val phaseAnimated by transition.animateFloat(
+        val masterDurationMs = if (lowPower) 399_000 else 70_200
+        val masterAnimated by transition.animateFloat(
             initialValue = 0f,
-            targetValue = 360f,
+            targetValue = masterDurationMs.toFloat(),
             animationSpec = infiniteRepeatable(
-                tween(if (lowPower) 10_500 else 5_400, easing = LinearEasing),
+                tween(masterDurationMs, easing = LinearEasing),
                 RepeatMode.Restart
             ),
-            label = "coreAuraPhase"
+            label = "coreAuraMaster"
         )
-        pulse = pulseAnimated
-        auraAlpha = alphaAnimated
-        phase = phaseAnimated
+        val pulseHalfCycleMs = if (lowPower) 1_900f else 1_300f
+        val pulseCycle = (masterAnimated % (pulseHalfCycleMs * 2f)) / pulseHalfCycleMs
+        val pulseFraction = if (pulseCycle <= 1f) pulseCycle else 2f - pulseCycle
+        val easedPulse = FastOutSlowInEasing.transform(pulseFraction)
+        val pulseMin = if (lowPower) .97f else .94f
+        val pulseMax = if (lowPower) 1.025f else 1.045f
+        val alphaMin = if (lowPower) .16f else .20f
+        val alphaMax = if (lowPower) .30f else .46f
+        val phaseCycleMs = if (lowPower) 10_500f else 5_400f
+        pulse = pulseMin + (pulseMax - pulseMin) * easedPulse
+        auraAlpha = alphaMin + (alphaMax - alphaMin) * easedPulse
+        phase = (masterAnimated % phaseCycleMs) / phaseCycleMs * 360f
     }
 
     Box(modifier, contentAlignment = Alignment.Center) {
