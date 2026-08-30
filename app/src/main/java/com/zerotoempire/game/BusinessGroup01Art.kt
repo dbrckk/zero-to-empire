@@ -1,7 +1,6 @@
 package com.zerotoempire.game
 
 import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
@@ -44,14 +43,7 @@ fun BusinessGroup01Sprite(id: Int, level: Int, iconSize: Dp, modifier: Modifier 
         )
         phaseAnimated
     }
-    val breathe = if (transition == null) .92f else {
-        val breatheAnimated by transition.animateFloat(
-            .84f, 1f,
-            infiniteRepeatable(tween(if (lowPower) 2600 else 1600 + id * 120), RepeatMode.Reverse),
-            label = "breathe"
-        )
-        breatheAnimated
-    }
+    val breathe = .92f
     val stage = group01Stage(level)
     val accent = group01Accent(id)
 

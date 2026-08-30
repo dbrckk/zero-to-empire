@@ -1,7 +1,6 @@
 package com.zerotoempire.game
 
 import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
@@ -35,16 +34,13 @@ fun BusinessGroup04Sprite(id: Int, level: Int, iconSize: Dp, modifier: Modifier 
     val reduced = MotionQuality.reducedMotion(context)
     val lowPower = MotionQuality.lowPowerMode(context)
     val phase: Float
-    val pulse: Float
+    val pulse = .90f
     if (reduced) {
         phase = .21f
-        pulse = .90f
     } else {
         val motion = rememberInfiniteTransition(label = "group04-$id")
         val phaseAnim by motion.animateFloat(0f,1f,infiniteRepeatable(tween(if(lowPower)14000 else 8200,easing=LinearEasing)),label="phase")
-        val pulseAnim by motion.animateFloat(.80f,1f,infiniteRepeatable(tween(if(lowPower)4000 else 2400),RepeatMode.Reverse),label="pulse")
         phase = phaseAnim
-        pulse = pulseAnim
     }
     val stage=when{level>=1000->5;level>=500->4;level>=250->3;level>=100->2;level>=25->1;else->0}
     val accent=if(id==12) Color(0xFFFF68D8) else Color(0xFFFFE36E)
