@@ -5,6 +5,21 @@ import org.junit.Test
 
 class PurchaseRecoveryTest {
     @Test
+    fun duplicatePurchaseTokensAreRecoveredExactlyOnce() {
+        data class Transaction(val token: String, val product: StoreProduct)
+        val transactions = listOf(
+            Transaction("token-a", StoreProduct.GEM_PACK_SMALL),
+            Transaction("token-a", StoreProduct.GEM_PACK_SMALL),
+            Transaction("token-b", StoreProduct.GEM_PACK_SMALL)
+        )
+
+        assertEquals(
+            listOf(transactions[0], transactions[2]),
+            PurchaseRecovery.distinctTransactions(transactions, Transaction::token)
+        )
+    }
+
+    @Test
     fun noDuplicateConsumablesNeedNoExtraCredit() {
         val products = listOf(
             StoreProduct.REMOVE_ADS,

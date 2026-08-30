@@ -2,6 +2,10 @@ package com.zerotoempire.game
 
 /** Pure purchase-recovery rules kept separate so Billing edge cases remain unit-testable. */
 object PurchaseRecovery {
+    /** Google Play transactions are identified by token; duplicate callbacks must be processed once. */
+    fun <T> distinctTransactions(transactions: List<T>, token: (T) -> String): List<T> =
+        transactions.distinctBy(token)
+
     fun extraConsumableGems(products: List<StoreProduct>): Int {
         val extraSmall = (products.count { it == StoreProduct.GEM_PACK_SMALL } - 1).coerceAtLeast(0)
         val extraMedium = (products.count { it == StoreProduct.GEM_PACK_MEDIUM } - 1).coerceAtLeast(0)

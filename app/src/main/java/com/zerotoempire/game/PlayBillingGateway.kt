@@ -20,6 +20,7 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
     private val restoreCallbacks = mutableListOf<(List<StoreProduct>) -> Unit>()
     private var connecting = false
     private var restoreInFlight = false
+    private var restoreRunId = 0L
 
     private val billingClient = BillingClient.newBuilder(context)
         .setListener { result, purchases ->
@@ -66,7 +67,7 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
                 if (result.responseCode == BillingClient.BillingResponseCode.OK) {
                     if (restoreCallbacks.isNotEmpty()) startRestoreQuery()
                 } else {
-                    finishRestore(emptyList())
+                    failAllRestores()
                 }
             }
 
@@ -78,6 +79,7 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
     }
 
     override fun disconnect() {
+        restoreRunId++
         restoreCallbacks.clear()
         restoreInFlight = false
         connecting = false
@@ -138,13 +140,18 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
             return
         }
         restoreInFlight = true
+        val runId = ++restoreRunId
         val params = QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.INAPP).build()
         billingClient.queryPurchasesAsync(params) { result, purchases ->
+            if (runId != restoreRunId) return@queryPurchasesAsync
             if (result.responseCode != BillingClient.BillingResponseCode.OK) {
-                finishRestore(emptyList())
+                finishRestore(runId, emptyList())
                 return@queryPurchasesAsync
             }
-            val purchased = purchases.filter { it.purchaseState == Purchase.PurchaseState.PURCHASED }
+            val purchased = PurchaseRecovery.distinctTransactions(
+                purchases.filter { it.purchaseState == Purchase.PurchaseState.PURCHASED },
+                { it.purchaseToken }
+            )
             val permanentOwned = purchased.flatMap { it.products }
                 .mapNotNull { id -> StoreProduct.entries.firstOrNull { it.productId == id && !it.consumable } }
                 .distinct()
@@ -156,7 +163,7 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
                 if (product == null) null else purchase to product
             }
             if (recoverable.isEmpty()) {
-                finishRestore(permanentOwned)
+                finishRestore(runId, permanentOwned)
                 return@queryPurchasesAsync
             }
 
@@ -164,21 +171,31 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
             var remaining = recoverable.size
             recoverable.forEach { (purchase, product) ->
                 consumeRecovered(purchase) { success ->
+                    if (runId != restoreRunId) return@consumeRecovered
                     if (success) recovered += product
                     remaining--
-                    if (remaining == 0) finishRestore(permanentOwned + recovered)
+                    if (remaining == 0) finishRestore(runId, permanentOwned + recovered)
                 }
             }
         }
     }
 
-    private fun finishRestore(products: List<StoreProduct>) {
+    private fun finishRestore(runId: Long, products: List<StoreProduct>) {
+        if (runId != restoreRunId) return
         val callbacks = restoreCallbacks.toList()
         restoreCallbacks.clear()
         restoreInFlight = false
         callbacks.forEachIndexed { index, callback ->
             callback(PurchaseRecovery.deliveryForWaiter(products, index))
         }
+    }
+
+    private fun failAllRestores() {
+        restoreRunId++
+        val callbacks = restoreCallbacks.toList()
+        restoreCallbacks.clear()
+        restoreInFlight = false
+        callbacks.forEach { it(emptyList()) }
     }
 
     private fun processPurchase(purchase: Purchase) {
