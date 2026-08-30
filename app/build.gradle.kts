@@ -11,6 +11,20 @@ val productionAdMobAppId = providers.gradleProperty("ADMOB_APP_ID").orElse(sampl
 val productionRewardedId = providers.gradleProperty("REWARDED_AD_UNIT_ID").orElse("")
 val productionInterstitialId = providers.gradleProperty("INTERSTITIAL_AD_UNIT_ID").orElse("")
 
+val versionCodeProperty = providers.gradleProperty("VERSION_CODE").orNull?.trim()
+val versionNameProperty = providers.gradleProperty("VERSION_NAME").orNull?.trim()
+val releaseVersionCode = when {
+    versionCodeProperty == null -> 1
+    versionCodeProperty.toIntOrNull() == null || versionCodeProperty.toInt() <= 0 ->
+        throw GradleException("VERSION_CODE must be a positive integer.")
+    else -> versionCodeProperty.toInt()
+}
+val releaseVersionName = when {
+    versionNameProperty == null -> "0.1.0"
+    versionNameProperty.isBlank() -> throw GradleException("VERSION_NAME must not be blank.")
+    else -> versionNameProperty
+}
+
 val releaseStorePath = providers.environmentVariable("ZERO_EMPIRE_KEYSTORE_PATH").orNull
 val releaseStorePassword = providers.environmentVariable("ZERO_EMPIRE_KEYSTORE_PASSWORD").orNull
 val releaseKeyAlias = providers.environmentVariable("ZERO_EMPIRE_KEY_ALIAS").orNull
@@ -37,6 +51,12 @@ if (hasReleaseSigning && !file(releaseStorePath!!).isFile) {
 }
 
 if (hasReleaseSigning) {
+    if (versionCodeProperty == null || versionNameProperty == null) {
+        throw GradleException(
+            "Signed release requires explicit VERSION_CODE and VERSION_NAME Gradle properties."
+        )
+    }
+
     val appId = productionAdMobAppId.get().trim()
     val rewardedId = productionRewardedId.get().trim()
     val interstitialId = productionInterstitialId.get().trim()
@@ -66,8 +86,8 @@ android {
         applicationId = "com.zerotoempire.game"
         minSdk = 26
         targetSdk = 36
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = releaseVersionCode
+        versionName = releaseVersionName
 
         // Debug/CI can run safely with Google's sample app id. Production can inject the real id
         // through ~/.gradle/gradle.properties or CI secrets without committing credentials.
