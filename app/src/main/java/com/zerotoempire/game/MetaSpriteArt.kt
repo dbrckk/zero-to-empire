@@ -31,7 +31,10 @@ fun MetaSprite(kind: MetaSpriteKind, size: Dp = 42.dp, active: Boolean = true, p
     val context = LocalContext.current
     val reduced = MotionQuality.reducedMotion(context)
     val lowPower = MotionQuality.lowPowerMode(context)
-    val shouldAnimate = !reduced && active && kind !in setOf(MetaSpriteKind.LOCK, MetaSpriteKind.CASH)
+    // Orbiting pixels are not legible on compact navigation/action icons. Keeping those sprites
+    // static removes several always-on transitions, while large reward/status badges retain motion.
+    val shouldAnimate = !reduced && !lowPower && active && size >= 32.dp &&
+        kind != MetaSpriteKind.LOCK && kind != MetaSpriteKind.CASH
     val phase = if (shouldAnimate) {
         val t = rememberInfiniteTransition(label = "meta-$kind")
         val phaseAnim by t.animateFloat(
