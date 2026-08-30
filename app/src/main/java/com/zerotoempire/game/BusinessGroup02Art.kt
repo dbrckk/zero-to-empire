@@ -39,7 +39,7 @@ fun BusinessGroup02Sprite(id: Int, level: Int, iconSize: Dp, modifier: Modifier 
         val phaseAnimated by motion.animateFloat(0f, 1f, infiniteRepeatable(tween(if (lowPower) 9800 else 6100 + id * 280, easing = LinearEasing)), label = "phase")
         phaseAnimated
     }
-    val breathe = .92f
+    val breathe = if (reduced) .94f else .92f + .04f * sin(phase * 2f * PI.toFloat())
     val stage = group02Stage(level)
     val accent = group02Accent(id)
 
