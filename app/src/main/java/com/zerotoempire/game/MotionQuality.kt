@@ -8,22 +8,24 @@ import android.os.PowerManager
 object MotionQuality {
     fun animationsEnabled(context: Context): Boolean = ValueAnimator.areAnimatorsEnabled()
 
-    fun reducedMotion(context: Context): Boolean = !animationsEnabled(context)
-
     fun lowPowerMode(context: Context): Boolean {
         val power = context.getSystemService(Context.POWER_SERVICE) as? PowerManager
         return power?.isPowerSaveMode == true
     }
 
+    /**
+     * Decorative motion is disabled when Android animations are disabled or Battery Saver is active.
+     * This keeps low-power mode genuinely static instead of running the same infinite transitions slower.
+     */
+    fun reducedMotion(context: Context): Boolean = !animationsEnabled(context) || lowPowerMode(context)
+
     fun particleBudget(context: Context, requested: Int): Int = when {
         reducedMotion(context) -> 0
-        lowPowerMode(context) -> (requested / 2).coerceAtLeast(1)
         else -> requested
     }
 
     fun animationDuration(context: Context, millis: Int): Int = when {
         reducedMotion(context) -> 1
-        lowPowerMode(context) -> (millis * 1.25f).toInt()
         else -> millis
     }
 }
