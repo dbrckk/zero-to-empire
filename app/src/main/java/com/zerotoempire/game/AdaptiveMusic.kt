@@ -41,8 +41,14 @@ class AdaptiveMusicEngine(context: Context) {
                     // This avoids flushing the stream for every notification and resumes seamlessly.
                     focusVolumeMultiplier = .25f
                 }
-                AudioManager.AUDIOFOCUS_LOSS,
                 AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
+                    // Preserve the short queued buffer so a temporary interruption resumes cleanly.
+                    // The render loop sleeps while focus is absent, so no additional audio is queued.
+                    focusVolumeMultiplier = 1f
+                    hasAudioFocus.set(false)
+                    runCatching { track.pause() }
+                }
+                AudioManager.AUDIOFOCUS_LOSS -> {
                     focusVolumeMultiplier = 1f
                     hasAudioFocus.set(false)
                     runCatching { track.pause() }
