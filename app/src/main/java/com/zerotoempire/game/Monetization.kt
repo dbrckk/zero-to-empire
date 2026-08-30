@@ -34,6 +34,14 @@ enum class StoreProduct(val productId: String, val consumable: Boolean) {
     GEM_PACK_MEDIUM("gems_medium", true)
 }
 
+/** A one-time Google Play transaction is accepted only when it identifies one exact catalog SKU. */
+object StoreProductResolver {
+    fun resolve(productIds: List<String>): StoreProduct? {
+        val productId = productIds.distinct().singleOrNull() ?: return null
+        return StoreProduct.entries.singleOrNull { it.productId == productId }
+    }
+}
+
 sealed interface PurchaseResult {
     data class Success(val product: StoreProduct) : PurchaseResult
     data object Cancelled : PurchaseResult

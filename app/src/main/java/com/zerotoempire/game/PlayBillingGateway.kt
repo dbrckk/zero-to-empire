@@ -48,11 +48,11 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
                     finishPending(PurchaseResult.Failed("Google Play returned an unexpected product"))
                     return@setListener
                 }
-                processPurchase(matchingPurchase)
+                processPurchase(matchingPurchase, target)
             } else {
                 // Purchase updates can also arrive after process/activity recreation. Those have no
                 // live UI callback, but still need acknowledgement/recovery handling.
-                purchases.forEach(::processPurchase)
+                purchases.forEach { processPurchase(it) }
             }
         }
         .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
@@ -167,22 +167,31 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
             )
             val pendingProducts = transactions
                 .filter { it.purchaseState == Purchase.PurchaseState.PENDING }
-                .flatMap { it.products }
-                .mapNotNull { id -> StoreProduct.entries.firstOrNull { it.productId == id } }
+                .mapNotNull { StoreProductResolver.resolve(it.products) }
                 .toSet()
             val purchased = transactions.filter { it.purchaseState == Purchase.PurchaseState.PURCHASED }
-            val permanentOwned = purchased.flatMap { it.products }
-                .mapNotNull { id -> StoreProduct.entries.firstOrNull { it.productId == id && !it.consumable } }
+            val resolvedPurchases = purchased.mapNotNull { purchase ->
+                StoreProductResolver.resolve(purchase.products)?.let { purchase to it }
+            }
+            val ambiguousPurchases = purchased.size - resolvedPurchases.size
+            val permanentOwned = resolvedPurchases.map { it.second }
+                .filterNot { it.consumable }
                 .distinct()
-            purchased.filter { purchase -> purchase.products.any { id -> StoreProduct.entries.any { it.productId == id && !it.consumable } } }.forEach { purchase ->
+            resolvedPurchases.filterNot { it.second.consumable }.forEach { (purchase, _) ->
                 acknowledge(purchase) { }
             }
-            val recoverable = purchased.mapNotNull { purchase ->
-                val product = purchase.products.asSequence().mapNotNull { id -> StoreProduct.entries.firstOrNull { it.productId == id && it.consumable } }.firstOrNull()
-                if (product == null) null else purchase to product
-            }
+            val recoverable = resolvedPurchases.filter { it.second.consumable }
             if (recoverable.isEmpty()) {
-                finishRestore(runId, RestoreResult.Success(permanentOwned, pendingProducts))
+                val restoreResult = if (ambiguousPurchases == 0) {
+                    RestoreResult.Success(permanentOwned, pendingProducts)
+                } else {
+                    RestoreResult.Failed(
+                        "An ambiguous Google Play transaction was not restored. Contact support if it remains unresolved.",
+                        permanentOwned,
+                        pendingProducts
+                    )
+                }
+                finishRestore(runId, restoreResult)
                 return@queryPurchasesAsync
             }
 
@@ -197,11 +206,16 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
                     remaining--
                     if (remaining == 0) {
                         val products = permanentOwned + recovered
-                        val restoreResult = if (failedConsumables == 0) {
+                        val restoreResult = if (failedConsumables == 0 && ambiguousPurchases == 0) {
                             RestoreResult.Success(products, pendingProducts)
                         } else {
+                            val reason = if (ambiguousPurchases > 0) {
+                                "An ambiguous Google Play transaction was not restored. Contact support if it remains unresolved."
+                            } else {
+                                "Some purchases could not be restored. Check your connection and try again."
+                            }
                             RestoreResult.Failed(
-                                "Some purchases could not be restored. Check your connection and try again.",
+                                reason,
                                 products,
                                 pendingProducts
                             )
@@ -235,10 +249,10 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
         callbacks.forEach { it(RestoreResult.Failed(reason)) }
     }
 
-    private fun processPurchase(purchase: Purchase) {
-        val product = purchase.products.asSequence().mapNotNull { id -> StoreProduct.entries.firstOrNull { it.productId == id } }.firstOrNull()
-        if (product == null) {
-            if (pendingResult != null) finishPending(PurchaseResult.Failed("Google Play returned an unknown product"))
+    private fun processPurchase(purchase: Purchase, expectedProduct: StoreProduct? = null) {
+        val product = StoreProductResolver.resolve(purchase.products)
+        if (product == null || expectedProduct != null && product != expectedProduct) {
+            if (pendingResult != null) finishPending(PurchaseResult.Failed("Google Play returned an ambiguous or unexpected product"))
             return
         }
 
