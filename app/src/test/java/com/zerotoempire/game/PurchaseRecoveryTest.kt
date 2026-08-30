@@ -56,6 +56,19 @@ class PurchaseRecoveryTest {
     }
 
     @Test
+    fun pathologicalRecoveryValueSaturatesInsteadOfOverflowing() {
+        assertEquals(
+            Int.MAX_VALUE,
+            PurchaseRecovery.recoveredConsumableGemValue(Int.MAX_VALUE, Int.MAX_VALUE)
+        )
+    }
+
+    @Test
+    fun recoveryValueRejectsNegativeCounts() {
+        assertEquals(0, PurchaseRecovery.recoveredConsumableGemValue(-1, -1))
+    }
+
+    @Test
     fun concurrentRestoreWaitersCannotDoubleCreditConsumables() {
         val products = listOf(
             StoreProduct.REMOVE_ADS,

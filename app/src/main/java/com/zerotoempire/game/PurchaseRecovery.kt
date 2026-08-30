@@ -9,7 +9,13 @@ object PurchaseRecovery {
     fun extraConsumableGems(products: List<StoreProduct>): Int {
         val extraSmall = (products.count { it == StoreProduct.GEM_PACK_SMALL } - 1).coerceAtLeast(0)
         val extraMedium = (products.count { it == StoreProduct.GEM_PACK_MEDIUM } - 1).coerceAtLeast(0)
-        val recovered = extraSmall.toLong() * 120L + extraMedium.toLong() * 650L
+        return recoveredConsumableGemValue(extraSmall, extraMedium)
+    }
+
+    /** Saturating arithmetic keeps restore compensation representable even for pathological histories. */
+    internal fun recoveredConsumableGemValue(extraSmall: Int, extraMedium: Int): Int {
+        val recovered = extraSmall.coerceAtLeast(0).toLong() * 120L +
+            extraMedium.coerceAtLeast(0).toLong() * 650L
         return recovered.coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
     }
 
