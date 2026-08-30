@@ -9,7 +9,8 @@ object PurchaseRecovery {
     fun extraConsumableGems(products: List<StoreProduct>): Int {
         val extraSmall = (products.count { it == StoreProduct.GEM_PACK_SMALL } - 1).coerceAtLeast(0)
         val extraMedium = (products.count { it == StoreProduct.GEM_PACK_MEDIUM } - 1).coerceAtLeast(0)
-        return extraSmall * 120 + extraMedium * 650
+        val recovered = extraSmall.toLong() * 120L + extraMedium.toLong() * 650L
+        return recovered.coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
     }
 
     /** Consumables are transactional: only one restore waiter may receive them after consumption. */
