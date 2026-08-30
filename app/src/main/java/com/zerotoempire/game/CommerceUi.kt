@@ -90,6 +90,7 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
         purchaseInFlight = purchaseInFlight,
         pendingPurchases = pendingPurchases,
         onDismiss = { showStore = false },
+        onDiagnostics = { status = LocalBillingDiagnostics.snapshot().toSupportText() },
         onRestore = { billing.restore { result ->
             val restored = result.products
             owned = restored.filterNot { it.consumable }.toSet()
@@ -142,6 +143,7 @@ private fun StoreDialog(
     purchaseInFlight: StoreProduct?,
     pendingPurchases: Set<StoreProduct>,
     onDismiss: () -> Unit,
+    onDiagnostics: () -> Unit,
     onRestore: () -> Unit,
     onPurchase: (StoreProduct) -> Unit
 ) {
@@ -174,6 +176,7 @@ private fun StoreDialog(
                 StoreRow("120 GEMS", "Consumable gem pack.", false, purchaseInFlight, pendingPurchases, StoreProduct.GEM_PACK_SMALL, MetaSpriteKind.GEM) { onPurchase(StoreProduct.GEM_PACK_SMALL) }
                 StoreRow("650 GEMS", "Consumable gem pack.", false, purchaseInFlight, pendingPurchases, StoreProduct.GEM_PACK_MEDIUM, MetaSpriteKind.GEM) { onPurchase(StoreProduct.GEM_PACK_MEDIUM) }
                 OutlinedButton(onClick = onRestore, enabled = purchaseInFlight == null, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text("RESTORE PURCHASES") }
+                TextButton(onClick = onDiagnostics, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text("BILLING DIAGNOSTICS") }
             }
         },
         confirmButton = {
