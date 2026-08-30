@@ -16,6 +16,7 @@ import com.android.billingclient.api.Purchase
 
 class PlayBillingGateway(private val context: Context) : PurchaseGateway {
     private var pendingResult: ((PurchaseResult) -> Unit)? = null
+    private var pendingProduct: StoreProduct? = null
     private val restoreCallbacks = mutableListOf<(List<StoreProduct>) -> Unit>()
     private var connecting = false
     private var restoreInFlight = false
@@ -23,16 +24,34 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
     private val billingClient = BillingClient.newBuilder(context)
         .setListener { result, purchases ->
             if (result.responseCode == BillingClient.BillingResponseCode.USER_CANCELED) {
-                pendingResult?.invoke(PurchaseResult.Cancelled)
-                pendingResult = null
+                finishPending(PurchaseResult.Cancelled)
                 return@setListener
             }
             if (result.responseCode != BillingClient.BillingResponseCode.OK || purchases == null) {
-                pendingResult?.invoke(PurchaseResult.Failed(result.debugMessage))
-                pendingResult = null
+                finishPending(PurchaseResult.Failed(result.debugMessage.ifBlank { "Google Play purchase failed" }))
                 return@setListener
             }
-            purchases.forEach(::processPurchase)
+            if (purchases.isEmpty()) {
+                finishPending(PurchaseResult.Failed("Google Play returned no purchase to process"))
+                return@setListener
+            }
+
+            // A launch callback must only be completed by the product that was actually launched.
+            // Billing may occasionally include other owned purchases in an update; processing one of
+            // those as the active purchase could grant the wrong entitlement and leave the real flow stuck.
+            val target = pendingProduct
+            if (pendingResult != null && target != null) {
+                val matchingPurchase = purchases.firstOrNull { target.productId in it.products }
+                if (matchingPurchase == null) {
+                    finishPending(PurchaseResult.Failed("Google Play returned an unexpected product"))
+                    return@setListener
+                }
+                processPurchase(matchingPurchase)
+            } else {
+                // Purchase updates can also arrive after process/activity recreation. Those have no
+                // live UI callback, but still need acknowledgement/recovery handling.
+                purchases.forEach(::processPurchase)
+            }
         }
         .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
         .enableAutoServiceReconnection()
@@ -62,6 +81,9 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
         restoreCallbacks.clear()
         restoreInFlight = false
         connecting = false
+        // Never retain an Activity/UI callback beyond the gateway lifecycle.
+        pendingResult = null
+        pendingProduct = null
         if (billingClient.isReady) billingClient.endConnection()
     }
 
@@ -90,12 +112,12 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
 
     private fun launch(activity: Activity, product: StoreProduct, details: ProductDetails, onResult: (PurchaseResult) -> Unit) {
         pendingResult = onResult
+        pendingProduct = product
         val productParams = BillingFlowParams.ProductDetailsParams.newBuilder().setProductDetails(details).build()
         val flowParams = BillingFlowParams.newBuilder().setProductDetailsParamsList(listOf(productParams)).build()
         val result = billingClient.launchBillingFlow(activity, flowParams)
         if (result.responseCode != BillingClient.BillingResponseCode.OK) {
-            pendingResult = null
-            onResult(PurchaseResult.Failed(result.debugMessage))
+            finishPending(PurchaseResult.Failed(result.debugMessage.ifBlank { "Google Play could not start the purchase" }))
         }
     }
 
@@ -160,14 +182,24 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
     }
 
     private fun processPurchase(purchase: Purchase) {
-        val product = purchase.products.asSequence().mapNotNull { id -> StoreProduct.entries.firstOrNull { it.productId == id } }.firstOrNull() ?: return
+        val product = purchase.products.asSequence().mapNotNull { id -> StoreProduct.entries.firstOrNull { it.productId == id } }.firstOrNull()
+        if (product == null) {
+            if (pendingResult != null) finishPending(PurchaseResult.Failed("Google Play returned an unknown product"))
+            return
+        }
+
         when (purchase.purchaseState) {
-            Purchase.PurchaseState.PENDING -> pendingResult?.invoke(PurchaseResult.Pending)
+            Purchase.PurchaseState.PENDING -> {
+                // Pending is informational, not terminal. Keep the callback associated with this
+                // product so a later PURCHASED update can complete the exact same transaction.
+                pendingResult?.invoke(PurchaseResult.Pending)
+            }
             Purchase.PurchaseState.PURCHASED -> {
                 if (product.consumable) {
                     // If this confirmation arrived after process recreation, no UI callback exists.
                     // Keep the purchase unconsumed so Restore Purchases / next launch can recover it.
-                    if (pendingResult != null) consume(purchase, product)
+                    val callback = pendingResult
+                    if (callback != null) consume(purchase, product, callback)
                 } else {
                     val callback = pendingResult
                     if (callback == null) {
@@ -176,18 +208,36 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
                         acknowledge(purchase) { }
                     } else {
                         acknowledge(purchase) { result ->
-                            if (result.responseCode == BillingClient.BillingResponseCode.OK) {
-                                callback(PurchaseResult.Success(product))
+                            val purchaseResult = if (result.responseCode == BillingClient.BillingResponseCode.OK) {
+                                PurchaseResult.Success(product)
                             } else {
-                                callback(PurchaseResult.Failed("Google Play could not confirm the purchase: ${result.debugMessage}"))
+                                PurchaseResult.Failed("Google Play could not confirm the purchase: ${result.debugMessage}")
                             }
-                            if (pendingResult === callback) pendingResult = null
+                            completePending(callback, purchaseResult)
                         }
                     }
                 }
             }
-            else -> Unit
+            else -> {
+                if (pendingResult != null) {
+                    finishPending(PurchaseResult.Failed("Google Play returned an unsupported purchase state: ${purchase.purchaseState}"))
+                }
+            }
         }
+    }
+
+    private fun finishPending(result: PurchaseResult) {
+        val callback = pendingResult ?: return
+        pendingResult = null
+        pendingProduct = null
+        callback(result)
+    }
+
+    private fun completePending(callback: (PurchaseResult) -> Unit, result: PurchaseResult) {
+        if (pendingResult !== callback) return
+        pendingResult = null
+        pendingProduct = null
+        callback(result)
     }
 
     private fun acknowledge(purchase: Purchase, onResult: (BillingResult) -> Unit) {
@@ -199,12 +249,15 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
         billingClient.acknowledgePurchase(params, onResult)
     }
 
-    private fun consume(purchase: Purchase, product: StoreProduct) {
+    private fun consume(purchase: Purchase, product: StoreProduct, callback: (PurchaseResult) -> Unit) {
         val params = ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()
         billingClient.consumeAsync(params) { result, _ ->
-            if (result.responseCode == BillingClient.BillingResponseCode.OK) pendingResult?.invoke(PurchaseResult.Success(product))
-            else pendingResult?.invoke(PurchaseResult.Failed(result.debugMessage))
-            pendingResult = null
+            val purchaseResult = if (result.responseCode == BillingClient.BillingResponseCode.OK) {
+                PurchaseResult.Success(product)
+            } else {
+                PurchaseResult.Failed(result.debugMessage.ifBlank { "Google Play could not consume the purchase" })
+            }
+            completePending(callback, purchaseResult)
         }
     }
 
