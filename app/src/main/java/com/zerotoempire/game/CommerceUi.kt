@@ -34,6 +34,7 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
     val consent = remember(activity) { activity?.let(::PrivacyConsentManager) }
     var showStore by remember { mutableStateOf(false) }
     var owned by remember { mutableStateOf<Set<StoreProduct>>(emptySet()) }
+    var purchaseInFlight by remember { mutableStateOf<StoreProduct?>(null) }
     var status by remember { mutableStateOf<String?>(null) }
     var adsAllowed by remember { mutableStateOf(false) }
     var privacyOptionsRequired by remember { mutableStateOf(false) }
@@ -68,12 +69,38 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
         }
     }
     status?.let { message -> AlertDialog(onDismissRequest = { status = null }, confirmButton = { TextButton(onClick = { status = null }, modifier = Modifier.heightIn(min = 48.dp)) { Text("OK") } }, text = { Text(message) }) }
-    if (showStore && activity != null) StoreDialog(owned = owned + buildSet { if (meta.adsRemoved) add(StoreProduct.REMOVE_ADS); if (meta.starterPackOwned) add(StoreProduct.STARTER_PACK) }, onDismiss = { showStore = false }, onRestore = { billing.restore { restored -> owned = restored.filterNot { it.consumable }.toSet(); vm.applyEntitlements(restored); status = if (restored.isEmpty()) "No purchases found." else "Purchases restored." } }, onPurchase = { product -> billing.purchase(activity, product) { result -> when (result) { is PurchaseResult.Success -> { if (!result.product.consumable) owned = owned + result.product; vm.applyPurchase(result.product); status = "Purchase completed." }; PurchaseResult.Cancelled -> Unit; PurchaseResult.Pending -> status = "Purchase pending. Reward will unlock after Google Play confirms payment."; is PurchaseResult.Failed -> status = result.reason } } })
+    if (showStore && activity != null) StoreDialog(
+        owned = owned + buildSet { if (meta.adsRemoved) add(StoreProduct.REMOVE_ADS); if (meta.starterPackOwned) add(StoreProduct.STARTER_PACK) },
+        purchaseInFlight = purchaseInFlight,
+        onDismiss = { showStore = false },
+        onRestore = { billing.restore { restored -> owned = restored.filterNot { it.consumable }.toSet(); vm.applyEntitlements(restored); status = if (restored.isEmpty()) "No purchases found." else "Purchases restored." } },
+        onPurchase = { product ->
+            if (purchaseInFlight != null) return@StoreDialog
+            purchaseInFlight = product
+            billing.purchase(activity, product) { result ->
+                when (result) {
+                    is PurchaseResult.Success -> {
+                        purchaseInFlight = null
+                        if (!result.product.consumable) owned = owned + result.product
+                        vm.applyPurchase(result.product)
+                        status = "Purchase completed."
+                    }
+                    PurchaseResult.Cancelled -> purchaseInFlight = null
+                    PurchaseResult.Pending -> status = "Purchase pending. Reward will unlock after Google Play confirms payment."
+                    is PurchaseResult.Failed -> {
+                        purchaseInFlight = null
+                        status = result.reason
+                    }
+                }
+            }
+        }
+    )
 }
 
 @Composable
 private fun StoreDialog(
     owned: Set<StoreProduct>,
+    purchaseInFlight: StoreProduct?,
     onDismiss: () -> Unit,
     onRestore: () -> Unit,
     onPurchase: (StoreProduct) -> Unit
@@ -94,11 +121,11 @@ private fun StoreDialog(
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Text("Purchases are handled by Google Play. Prices and final confirmation are shown by Google Play.", color = EmpireColors.TextSecondary, fontSize = 11.sp)
-                StoreRow("REMOVE ADS", "Lifetime removal of non-rewarded advertising. Reward videos remain optional.", StoreProduct.REMOVE_ADS in owned, MetaSpriteKind.LEGACY) { onPurchase(StoreProduct.REMOVE_ADS) }
-                StoreRow("STARTER PACK", "250 gems + 30 min ×2 income. One-time purchase.", StoreProduct.STARTER_PACK in owned, MetaSpriteKind.BOOST) { onPurchase(StoreProduct.STARTER_PACK) }
-                StoreRow("120 GEMS", "Consumable gem pack.", false, MetaSpriteKind.GEM) { onPurchase(StoreProduct.GEM_PACK_SMALL) }
-                StoreRow("650 GEMS", "Consumable gem pack.", false, MetaSpriteKind.GEM) { onPurchase(StoreProduct.GEM_PACK_MEDIUM) }
-                OutlinedButton(onClick = onRestore, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text("RESTORE PURCHASES") }
+                StoreRow("REMOVE ADS", "Lifetime removal of non-rewarded advertising. Reward videos remain optional.", StoreProduct.REMOVE_ADS in owned, purchaseInFlight, StoreProduct.REMOVE_ADS, MetaSpriteKind.LEGACY) { onPurchase(StoreProduct.REMOVE_ADS) }
+                StoreRow("STARTER PACK", "250 gems + 30 min ×2 income. One-time purchase.", StoreProduct.STARTER_PACK in owned, purchaseInFlight, StoreProduct.STARTER_PACK, MetaSpriteKind.BOOST) { onPurchase(StoreProduct.STARTER_PACK) }
+                StoreRow("120 GEMS", "Consumable gem pack.", false, purchaseInFlight, StoreProduct.GEM_PACK_SMALL, MetaSpriteKind.GEM) { onPurchase(StoreProduct.GEM_PACK_SMALL) }
+                StoreRow("650 GEMS", "Consumable gem pack.", false, purchaseInFlight, StoreProduct.GEM_PACK_MEDIUM, MetaSpriteKind.GEM) { onPurchase(StoreProduct.GEM_PACK_MEDIUM) }
+                OutlinedButton(onClick = onRestore, enabled = purchaseInFlight == null, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text("RESTORE PURCHASES") }
             }
         },
         confirmButton = {
@@ -112,9 +139,13 @@ private fun StoreRow(
     title: String,
     subtitle: String,
     owned: Boolean,
+    purchaseInFlight: StoreProduct?,
+    product: StoreProduct,
     kind: MetaSpriteKind,
     purchase: () -> Unit
 ) {
+    val processing = purchaseInFlight == product
+    val enabled = !owned && purchaseInFlight == null
     Surface(color = EmpireColors.Surface, shape = RoundedCornerShape(14.dp)) {
         Row(Modifier.fillMaxWidth().padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
             MetaSprite(kind, 38.dp, active = !owned)
@@ -126,12 +157,12 @@ private fun StoreRow(
             Spacer(Modifier.width(8.dp))
             Button(
                 onClick = purchase,
-                enabled = !owned,
+                enabled = enabled,
                 modifier = Modifier
                     .heightIn(min = 48.dp)
-                    .semantics { contentDescription = if (owned) "$title owned" else "Buy $title" }
+                    .semantics { contentDescription = when { owned -> "$title owned"; processing -> "$title purchase processing"; else -> "Buy $title" } }
             ) {
-                Text(if (owned) "OWNED" else "BUY", fontSize = 10.sp)
+                Text(when { owned -> "OWNED"; processing -> "PROCESSING…"; else -> "BUY" }, fontSize = 10.sp)
             }
         }
     }
