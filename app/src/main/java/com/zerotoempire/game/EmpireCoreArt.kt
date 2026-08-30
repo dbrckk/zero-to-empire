@@ -34,11 +34,23 @@ fun EmpireCoreGlyph(modifier: Modifier = Modifier, eraIndex: Int = 0) {
     if (reducedMotion) {
         rotation = 0f; fastRotation = 0f; pulse = .94f
     } else {
+        val rotationMs = if (lowPower) 18_000f else 12_000f
+        val fastRotationMs = if (lowPower) 8_000f else 4_800f
+        val pulseLegMs = if (lowPower) 2_100f else 1_400f
+        val masterMs = if (lowPower) 504_000f else 168_000f
         val infinite = rememberInfiniteTransition(label = "empireCore")
-        val r by infinite.animateFloat(0f,360f,infiniteRepeatable(tween(if(lowPower)18_000 else 12_000,easing=LinearEasing)),label="coreRotation")
-        val fr by infinite.animateFloat(0f,360f,infiniteRepeatable(tween(if(lowPower)8_000 else 4_800,easing=LinearEasing)),label="trailRotation")
-        val p by infinite.animateFloat(.82f,1f,infiniteRepeatable(tween(if(lowPower)2_100 else 1_400,easing=FastOutSlowInEasing),RepeatMode.Reverse),label="corePulse")
-        rotation=r; fastRotation=fr; pulse=p
+        val clock by infinite.animateFloat(
+            0f,
+            masterMs,
+            infiniteRepeatable(tween(masterMs.toInt(), easing = LinearEasing)),
+            label = "coreClock"
+        )
+        rotation = (clock % rotationMs) / rotationMs * 360f
+        fastRotation = (clock % fastRotationMs) / fastRotationMs * 360f
+        val pulseCycle = pulseLegMs * 2f
+        val pulsePosition = (clock % pulseCycle) / pulseLegMs
+        val pulseTriangle = if (pulsePosition <= 1f) pulsePosition else 2f - pulsePosition
+        pulse = .82f + .18f * FastOutSlowInEasing.transform(pulseTriangle.coerceIn(0f, 1f))
     }
 
     val accent = coreAccent(era)
