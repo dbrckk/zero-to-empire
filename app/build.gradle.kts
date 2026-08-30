@@ -7,6 +7,8 @@ plugins {
 val sampleAdMobAppId = "ca-app-pub-3940256099942544~3347511713"
 val sampleRewardedId = "ca-app-pub-3940256099942544/5224354917"
 val sampleInterstitialId = "ca-app-pub-3940256099942544/1033173712"
+val adMobAppIdPattern = Regex("^ca-app-pub-[0-9]{16}~[0-9]{10}$")
+val adMobAdUnitIdPattern = Regex("^ca-app-pub-[0-9]{16}/[0-9]{10}$")
 val productionAdMobAppId = providers.gradleProperty("ADMOB_APP_ID").orElse(sampleAdMobAppId)
 val productionRewardedId = providers.gradleProperty("REWARDED_AD_UNIT_ID").orElse("")
 val productionInterstitialId = providers.gradleProperty("INTERSTITIAL_AD_UNIT_ID").orElse("")
@@ -66,14 +68,34 @@ if (hasReleaseSigning) {
             "Signed release requires a production ADMOB_APP_ID. Google's sample/test App ID is not allowed."
         )
     }
+    if (!adMobAppIdPattern.matches(appId)) {
+        throw GradleException(
+            "ADMOB_APP_ID must match ca-app-pub-################~########## for a signed release."
+        )
+    }
     if (rewardedId.isBlank() || rewardedId == sampleRewardedId || rewardedId.startsWith("ca-app-pub-3940256099942544")) {
         throw GradleException(
             "Signed release requires a production REWARDED_AD_UNIT_ID. Google's sample/test ad unit is not allowed."
         )
     }
+    if (!adMobAdUnitIdPattern.matches(rewardedId)) {
+        throw GradleException(
+            "REWARDED_AD_UNIT_ID must match ca-app-pub-################/########## for a signed release."
+        )
+    }
     if (interstitialId.isBlank() || interstitialId == sampleInterstitialId || interstitialId.startsWith("ca-app-pub-3940256099942544")) {
         throw GradleException(
             "Signed release requires a production INTERSTITIAL_AD_UNIT_ID. Google's sample/test ad unit is not allowed."
+        )
+    }
+    if (!adMobAdUnitIdPattern.matches(interstitialId)) {
+        throw GradleException(
+            "INTERSTITIAL_AD_UNIT_ID must match ca-app-pub-################/########## for a signed release."
+        )
+    }
+    if (rewardedId == interstitialId) {
+        throw GradleException(
+            "REWARDED_AD_UNIT_ID and INTERSTITIAL_AD_UNIT_ID must be different production ad units."
         )
     }
 }
