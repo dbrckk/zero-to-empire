@@ -46,7 +46,21 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
         onDispose { billing.disconnect() }
     }
     DisposableEffect(lifecycleOwner, billing) {
-        val observer = LifecycleEventObserver { _, event -> if (event == Lifecycle.Event.ON_RESUME) billing.restore { result -> val restored = result.products; owned = restored.filterNot { it.consumable }.toSet(); vm.applyEntitlements(restored) } }
+        var leftForeground = false
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_STOP -> leftForeground = true
+                Lifecycle.Event.ON_RESUME -> if (leftForeground) {
+                    leftForeground = false
+                    billing.restore { result ->
+                        val restored = result.products
+                        owned = restored.filterNot { it.consumable }.toSet()
+                        vm.applyEntitlements(restored)
+                    }
+                }
+                else -> Unit
+            }
+        }
         lifecycleOwner.lifecycle.addObserver(observer); onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
     LaunchedEffect(activity, adsAllowed) {
