@@ -1,10 +1,5 @@
 package com.zerotoempire.game
 
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -12,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -29,18 +23,8 @@ import kotlin.math.sin
 @Composable
 fun EndgameManagerPortrait(businessId: Int, portraitSize: Dp) {
     val context = LocalContext.current
-    val reduced = MotionQuality.reducedMotion(context)
     val lowPower = MotionQuality.lowPowerMode(context)
-    val phase = if (!reduced) {
-        val transition = rememberInfiniteTransition(label = "endgameManager$businessId")
-        val animated by transition.animateFloat(
-            0f,
-            1f,
-            infiniteRepeatable(tween(if (lowPower) 15000 else 9000, easing = LinearEasing)),
-            label = "phase"
-        )
-        animated
-    } else .31f
+    val phase = .31f
     val accent = when (businessId) {
         10 -> Color(0xFF67E8FF)
         11 -> Color(0xFFC692FF)

@@ -1,6 +1,5 @@
 package com.zerotoempire.game
 
-import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -18,15 +17,8 @@ import kotlin.math.*
 @Composable
 fun ManagerGroup02Portrait(businessId: Int, portraitSize: Dp) {
     val context = LocalContext.current
-    val reduced = MotionQuality.reducedMotion(context)
     val lowPower = MotionQuality.lowPowerMode(context)
-    val phase: Float = if (reduced || lowPower) {
-        .27f
-    } else {
-        val t = rememberInfiniteTransition(label="manager-g2-$businessId")
-        val animated by t.animateFloat(0f,1f,infiniteRepeatable(tween(9000,easing=LinearEasing)),label="phase")
-        animated
-    }
+    val phase = .27f
     val id=businessId.coerceIn(4,7)
     val accent=when(id){4->Color(0xFF43E6FF);5->Color(0xFF4FA8FF);6->Color(0xFFEAF6FF);else->Color(0xFFFF654F)}
     val skin=when(id){4->Color(0xFFD49A74);5->Color(0xFF9C664A);6->Color(0xFFF0C7A3);else->Color(0xFFB87854)}
