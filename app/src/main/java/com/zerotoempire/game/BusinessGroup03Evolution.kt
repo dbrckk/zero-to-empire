@@ -7,9 +7,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.Dp
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.sin
 
 @Composable
 fun BusinessGroup03Evolution(id: Int, level: Int, iconSize: Dp, modifier: Modifier = Modifier) {
@@ -57,24 +61,44 @@ fun BusinessGroup03Evolution(id: Int, level: Int, iconSize: Dp, modifier: Modifi
             }
         }
         if (stage >= 4) {
+            drawCircle(
+                brush = Brush.radialGradient(
+                    colors = listOf(Color.White.copy(alpha = .08f), accent.copy(alpha = .12f), Color.Transparent),
+                    center = Offset(s * .42f, s * .37f),
+                    radius = s * .50f
+                ),
+                radius = s * .45f,
+                center = c
+            )
             drawCircle(accent.copy(alpha = .12f), s * .42f, c)
             drawCircle(secondary.copy(alpha = .36f), s * .43f, c, style = Stroke(s * .008f))
+            drawArc(Color.White.copy(alpha = .18f), 208f, 58f, false, Offset(s * .12f, s * .14f), Size(s * .76f, s * .72f), style = Stroke(s * .004f))
         }
         if (stage >= 5) {
             repeat(6) { i ->
                 drawCircle(secondary.copy(alpha = .72f), s * .007f, Offset(s * (.25f + i * .10f), s * .18f))
             }
+            drawArc(secondary.copy(alpha = .24f), 24f, 112f, false, Offset(s * .095f, s * .115f), Size(s * .81f, s * .77f), style = Stroke(s * .005f))
         }
         if (stage >= 6) {
             drawArc(accent.copy(alpha = .68f), -35f, 250f, false, Offset(s * .07f, s * .07f), Size(s * .86f, s * .86f), style = Stroke(s * .012f))
             drawArc(secondary.copy(alpha = .42f), 165f, 170f, false, Offset(s * .11f, s * .11f), Size(s * .78f, s * .78f), style = Stroke(s * .007f))
+            repeat(6) { i ->
+                val angle = i * 2f * PI.toFloat() / 6f - PI.toFloat() / 2f
+                val node = Offset(c.x + cos(angle) * s * .405f, c.y + sin(angle) * s * .405f)
+                drawCircle(Color.Black.copy(alpha = .32f), s * .013f, node)
+                drawCircle(if (i % 2 == 0) secondary else accent, s * .0065f, node)
+            }
         }
         if (stage >= 7) {
-            drawCircle(Color.White.copy(alpha = .12f), s * .48f, c)
-            drawCircle(Color(0xFFFFE79B).copy(alpha = .76f), s * .47f, c, style = Stroke(s * .010f))
-            repeat(8) { i ->
-                val x = s * (.22f + i * .08f)
-                drawCircle(Color.White.copy(alpha = .88f), s * .006f, Offset(x, s * .12f + (i % 2) * s * .035f))
+            drawCircle(Color.White.copy(alpha = .10f), s * .48f, c)
+            drawCircle(accent.copy(alpha = .24f), s * .475f, c, style = Stroke(s * .018f))
+            drawCircle(secondary.copy(alpha = .78f), s * .462f, c, style = Stroke(s * .008f))
+            repeat(10) { i ->
+                val angle = i * 2f * PI.toFloat() / 10f - PI.toFloat() / 2f
+                val node = Offset(c.x + cos(angle) * s * .468f, c.y + sin(angle) * s * .468f)
+                drawCircle(Color.Black.copy(alpha = .38f), s * .014f, node)
+                drawCircle(if (i % 2 == 0) Color.White.copy(alpha = .92f) else secondary, s * .0065f, node)
             }
         }
     }
