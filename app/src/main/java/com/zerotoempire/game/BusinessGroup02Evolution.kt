@@ -1,15 +1,20 @@
 package com.zerotoempire.game
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import kotlin.math.PI
 import kotlin.math.cos
@@ -27,6 +32,24 @@ fun BusinessGroup02Evolution(id: Int, level: Int, iconSize: Dp, modifier: Modifi
         level >= 10 -> 1
         else -> 0
     }
+
+    val context = LocalContext.current
+    val reducedMotion = MotionQuality.reducedMotion(context)
+    val lowPower = MotionQuality.lowPowerMode(context)
+    val reveal = remember(id) { Animatable(0f) }
+    val previousStage = remember(id) { intArrayOf(stage) }
+
+    LaunchedEffect(stage, reducedMotion, lowPower) {
+        val prior = previousStage[0]
+        previousStage[0] = stage
+        if (stage > prior && !reducedMotion) {
+            reveal.snapTo(1f)
+            reveal.animateTo(0f, tween(if (lowPower) 520 else 820))
+        } else if (reducedMotion && reveal.value != 0f) {
+            reveal.snapTo(0f)
+        }
+    }
+
     if (stage == 0) return
 
     val accent = when (id) {
@@ -186,6 +209,73 @@ fun BusinessGroup02Evolution(id: Int, level: Int, iconSize: Dp, modifier: Modifi
                 if (stage >= 7) {
                     drawArc(secondary.copy(.78f), -25f, 250f, false, Offset(s * .06f, s * .06f), Size(s * .88f, s * .88f), style = Stroke(s * .013f))
                     repeat(5) { i -> drawCircle(secondary, s * .008f, Offset(s * (.30f + i * .10f), s * .18f)) }
+                }
+            }
+        }
+
+        val revealIntensity = reveal.value.coerceIn(0f, 1f)
+        if (revealIntensity > 0f) {
+            val travel = 1f - revealIntensity
+            val sweepRadius = s * (.31f + .16f * travel)
+
+            // Expansion tiers assemble like powered machinery: a core ignition, segmented
+            // pressure rings and short orthogonal energy rails. This is transient only.
+            drawCircle(
+                brush = Brush.radialGradient(
+                    colors = listOf(
+                        Color.White.copy(alpha = .16f * revealIntensity),
+                        secondary.copy(alpha = .13f * revealIntensity),
+                        Color.Transparent
+                    ),
+                    center = center,
+                    radius = s * .48f
+                ),
+                radius = s * (.33f + .11f * travel),
+                center = center
+            )
+            drawCircle(
+                color = accent.copy(alpha = .78f * revealIntensity),
+                radius = sweepRadius,
+                center = center,
+                style = Stroke(s * (.010f + .006f * revealIntensity))
+            )
+            drawArc(
+                color = secondary.copy(alpha = .68f * revealIntensity),
+                startAngle = -34f + 28f * travel,
+                sweepAngle = 68f,
+                useCenter = false,
+                topLeft = Offset(center.x - sweepRadius * 1.08f, center.y - sweepRadius * 1.08f),
+                size = Size(sweepRadius * 2.16f, sweepRadius * 2.16f),
+                style = Stroke(s * .008f)
+            )
+            drawArc(
+                color = Color.White.copy(alpha = .46f * revealIntensity),
+                startAngle = 146f + 22f * travel,
+                sweepAngle = 54f,
+                useCenter = false,
+                topLeft = Offset(center.x - sweepRadius * .88f, center.y - sweepRadius * .88f),
+                size = Size(sweepRadius * 1.76f, sweepRadius * 1.76f),
+                style = Stroke(s * .005f)
+            )
+
+            val railLength = s * (.10f + .09f * travel)
+            val railOffset = s * (.28f + .10f * travel)
+            val railWidth = s * (.008f + .004f * revealIntensity)
+            drawLine(accent.copy(alpha = .66f * revealIntensity), Offset(center.x - railOffset, center.y), Offset(center.x - railOffset - railLength, center.y), railWidth)
+            drawLine(accent.copy(alpha = .66f * revealIntensity), Offset(center.x + railOffset, center.y), Offset(center.x + railOffset + railLength, center.y), railWidth)
+            drawLine(secondary.copy(alpha = .62f * revealIntensity), Offset(center.x, center.y - railOffset), Offset(center.x, center.y - railOffset - railLength), railWidth)
+            drawLine(secondary.copy(alpha = .62f * revealIntensity), Offset(center.x, center.y + railOffset), Offset(center.x, center.y + railOffset + railLength), railWidth)
+
+            if (!lowPower) {
+                repeat(4) { i ->
+                    val angle = i * PI.toFloat() / 2f + PI.toFloat() / 4f
+                    val nodeRadius = s * (.35f + .10f * travel)
+                    val node = Offset(
+                        center.x + cos(angle) * nodeRadius,
+                        center.y + sin(angle) * nodeRadius
+                    )
+                    drawCircle(Color.Black.copy(alpha = .25f * revealIntensity), s * .018f, node)
+                    drawCircle(if (i % 2 == 0) secondary else accent, s * .009f, node, alpha = .82f * revealIntensity)
                 }
             }
         }
