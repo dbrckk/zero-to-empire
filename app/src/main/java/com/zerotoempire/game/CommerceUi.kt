@@ -35,7 +35,7 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
     var showStore by remember { mutableStateOf(false) }
     var owned by remember { mutableStateOf<Set<StoreProduct>>(emptySet()) }
     var purchaseInFlight by remember { mutableStateOf<StoreProduct?>(null) }
-    var pendingPurchase by remember { mutableStateOf<StoreProduct?>(null) }
+    var pendingPurchases by remember { mutableStateOf<Set<StoreProduct>>(emptySet()) }
     var status by remember { mutableStateOf<String?>(null) }
     var adsAllowed by remember { mutableStateOf(false) }
     var privacyOptionsRequired by remember { mutableStateOf(false) }
@@ -43,7 +43,7 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
     DisposableEffect(billing, activity) {
         billing.connect()
         if (activity != null && consent != null) consent.gather { canRequestAds, error -> adsAllowed = canRequestAds; privacyOptionsRequired = consent.isPrivacyOptionsRequired(); if (canRequestAds) rewarded.preload(); if (error != null && !canRequestAds) status = "Privacy setup is incomplete: $error" }
-        billing.restore { result -> val restored = result.products; owned = restored.filterNot { it.consumable }.toSet(); vm.applyEntitlements(restored) }
+        billing.restore { result -> val restored = result.products; owned = restored.filterNot { it.consumable }.toSet(); if (purchaseInFlight == null) pendingPurchases = result.pendingProducts; vm.applyEntitlements(restored) }
         onDispose { billing.disconnect() }
     }
     DisposableEffect(lifecycleOwner, billing) {
@@ -56,6 +56,7 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
                     billing.restore { result ->
                         val restored = result.products
                         owned = restored.filterNot { it.consumable }.toSet()
+                        if (purchaseInFlight == null) pendingPurchases = result.pendingProducts
                         vm.applyEntitlements(restored)
                     }
                 }
@@ -87,41 +88,46 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
     if (showStore && activity != null) StoreDialog(
         owned = owned + buildSet { if (meta.adsRemoved) add(StoreProduct.REMOVE_ADS); if (meta.starterPackOwned) add(StoreProduct.STARTER_PACK) },
         purchaseInFlight = purchaseInFlight,
-        pendingPurchase = pendingPurchase,
+        pendingPurchases = pendingPurchases,
         onDismiss = { showStore = false },
         onRestore = { billing.restore { result ->
             val restored = result.products
             owned = restored.filterNot { it.consumable }.toSet()
+            if (purchaseInFlight == null) pendingPurchases = result.pendingProducts
             vm.applyEntitlements(restored)
             status = when (result) {
-                is RestoreResult.Success -> if (restored.isEmpty()) "No purchases found." else "Purchases restored."
+                is RestoreResult.Success -> when {
+                    restored.isNotEmpty() -> "Purchases restored."
+                    result.pendingProducts.isNotEmpty() -> "Payment is still pending Google Play confirmation."
+                    else -> "No purchases found."
+                }
                 is RestoreResult.Failed -> if (restored.isEmpty()) result.reason else "${result.reason} Some purchases were restored."
             }
         } },
         onPurchase = { product ->
             if (purchaseInFlight != null) return@StoreDialog
             purchaseInFlight = product
-            pendingPurchase = null
+            pendingPurchases = pendingPurchases - product
             billing.purchase(activity, product) { result ->
                 when (result) {
                     is PurchaseResult.Success -> {
                         purchaseInFlight = null
-                        pendingPurchase = null
+                        pendingPurchases = pendingPurchases - result.product
                         if (!result.product.consumable) owned = owned + result.product
                         vm.applyPurchase(result.product)
                         status = "Purchase completed."
                     }
                     PurchaseResult.Cancelled -> {
                         purchaseInFlight = null
-                        pendingPurchase = null
+                        pendingPurchases = pendingPurchases - product
                     }
                     PurchaseResult.Pending -> {
-                        pendingPurchase = product
+                        pendingPurchases = pendingPurchases + product
                         status = "Purchase pending. You can close the Store; the reward will unlock after Google Play confirms payment."
                     }
                     is PurchaseResult.Failed -> {
                         purchaseInFlight = null
-                        pendingPurchase = null
+                        pendingPurchases = pendingPurchases - product
                         status = result.reason
                     }
                 }
@@ -134,7 +140,7 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
 private fun StoreDialog(
     owned: Set<StoreProduct>,
     purchaseInFlight: StoreProduct?,
-    pendingPurchase: StoreProduct?,
+    pendingPurchases: Set<StoreProduct>,
     onDismiss: () -> Unit,
     onRestore: () -> Unit,
     onPurchase: (StoreProduct) -> Unit
@@ -155,7 +161,7 @@ private fun StoreDialog(
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Text("Purchases are handled by Google Play. Prices and final confirmation are shown by Google Play.", color = EmpireColors.TextSecondary, fontSize = 11.sp)
-                if (pendingPurchase != null) {
+                if (pendingPurchases.isNotEmpty()) {
                     Text(
                         "PAYMENT PENDING — Google Play has not confirmed this transaction yet. You can safely close and reopen the Store.",
                         color = EmpireColors.Gold,
@@ -163,10 +169,10 @@ private fun StoreDialog(
                         fontWeight = FontWeight.Bold
                     )
                 }
-                StoreRow("REMOVE ADS", "Lifetime removal of non-rewarded advertising. Reward videos remain optional.", StoreProduct.REMOVE_ADS in owned, purchaseInFlight, pendingPurchase, StoreProduct.REMOVE_ADS, MetaSpriteKind.LEGACY) { onPurchase(StoreProduct.REMOVE_ADS) }
-                StoreRow("STARTER PACK", "250 gems + 30 min ×2 income. One-time purchase.", StoreProduct.STARTER_PACK in owned, purchaseInFlight, pendingPurchase, StoreProduct.STARTER_PACK, MetaSpriteKind.BOOST) { onPurchase(StoreProduct.STARTER_PACK) }
-                StoreRow("120 GEMS", "Consumable gem pack.", false, purchaseInFlight, pendingPurchase, StoreProduct.GEM_PACK_SMALL, MetaSpriteKind.GEM) { onPurchase(StoreProduct.GEM_PACK_SMALL) }
-                StoreRow("650 GEMS", "Consumable gem pack.", false, purchaseInFlight, pendingPurchase, StoreProduct.GEM_PACK_MEDIUM, MetaSpriteKind.GEM) { onPurchase(StoreProduct.GEM_PACK_MEDIUM) }
+                StoreRow("REMOVE ADS", "Lifetime removal of non-rewarded advertising. Reward videos remain optional.", StoreProduct.REMOVE_ADS in owned, purchaseInFlight, pendingPurchases, StoreProduct.REMOVE_ADS, MetaSpriteKind.LEGACY) { onPurchase(StoreProduct.REMOVE_ADS) }
+                StoreRow("STARTER PACK", "250 gems + 30 min ×2 income. One-time purchase.", StoreProduct.STARTER_PACK in owned, purchaseInFlight, pendingPurchases, StoreProduct.STARTER_PACK, MetaSpriteKind.BOOST) { onPurchase(StoreProduct.STARTER_PACK) }
+                StoreRow("120 GEMS", "Consumable gem pack.", false, purchaseInFlight, pendingPurchases, StoreProduct.GEM_PACK_SMALL, MetaSpriteKind.GEM) { onPurchase(StoreProduct.GEM_PACK_SMALL) }
+                StoreRow("650 GEMS", "Consumable gem pack.", false, purchaseInFlight, pendingPurchases, StoreProduct.GEM_PACK_MEDIUM, MetaSpriteKind.GEM) { onPurchase(StoreProduct.GEM_PACK_MEDIUM) }
                 OutlinedButton(onClick = onRestore, enabled = purchaseInFlight == null, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text("RESTORE PURCHASES") }
             }
         },
@@ -182,14 +188,14 @@ private fun StoreRow(
     subtitle: String,
     owned: Boolean,
     purchaseInFlight: StoreProduct?,
-    pendingPurchase: StoreProduct?,
+    pendingPurchases: Set<StoreProduct>,
     product: StoreProduct,
     kind: MetaSpriteKind,
     purchase: () -> Unit
 ) {
-    val pending = pendingPurchase == product
+    val pending = product in pendingPurchases
     val processing = purchaseInFlight == product && !pending
-    val enabled = !owned && purchaseInFlight == null
+    val enabled = !owned && purchaseInFlight == null && !pending
     Surface(color = EmpireColors.Surface, shape = RoundedCornerShape(14.dp)) {
         Row(Modifier.fillMaxWidth().padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
             MetaSprite(kind, 38.dp, active = !owned)

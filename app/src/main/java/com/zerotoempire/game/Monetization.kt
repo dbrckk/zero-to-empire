@@ -43,11 +43,16 @@ sealed interface PurchaseResult {
 
 sealed interface RestoreResult {
     val products: List<StoreProduct>
+    val pendingProducts: Set<StoreProduct>
 
-    data class Success(override val products: List<StoreProduct>) : RestoreResult
+    data class Success(
+        override val products: List<StoreProduct>,
+        override val pendingProducts: Set<StoreProduct> = emptySet()
+    ) : RestoreResult
     data class Failed(
         val reason: String,
-        override val products: List<StoreProduct> = emptyList()
+        override val products: List<StoreProduct> = emptyList(),
+        override val pendingProducts: Set<StoreProduct> = emptySet()
     ) : RestoreResult
 }
 

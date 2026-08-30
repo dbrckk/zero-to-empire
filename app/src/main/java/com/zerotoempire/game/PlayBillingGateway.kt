@@ -161,10 +161,16 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
                 finishRestore(runId, RestoreResult.Failed(restoreFailure(result, "Google Play could not restore purchases")))
                 return@queryPurchasesAsync
             }
-            val purchased = PurchaseRecovery.distinctTransactions(
-                purchases.filter { it.purchaseState == Purchase.PurchaseState.PURCHASED },
+            val transactions = PurchaseRecovery.distinctTransactions(
+                purchases,
                 { it.purchaseToken }
             )
+            val pendingProducts = transactions
+                .filter { it.purchaseState == Purchase.PurchaseState.PENDING }
+                .flatMap { it.products }
+                .mapNotNull { id -> StoreProduct.entries.firstOrNull { it.productId == id } }
+                .toSet()
+            val purchased = transactions.filter { it.purchaseState == Purchase.PurchaseState.PURCHASED }
             val permanentOwned = purchased.flatMap { it.products }
                 .mapNotNull { id -> StoreProduct.entries.firstOrNull { it.productId == id && !it.consumable } }
                 .distinct()
@@ -176,7 +182,7 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
                 if (product == null) null else purchase to product
             }
             if (recoverable.isEmpty()) {
-                finishRestore(runId, RestoreResult.Success(permanentOwned))
+                finishRestore(runId, RestoreResult.Success(permanentOwned, pendingProducts))
                 return@queryPurchasesAsync
             }
 
@@ -192,11 +198,12 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
                     if (remaining == 0) {
                         val products = permanentOwned + recovered
                         val restoreResult = if (failedConsumables == 0) {
-                            RestoreResult.Success(products)
+                            RestoreResult.Success(products, pendingProducts)
                         } else {
                             RestoreResult.Failed(
                                 "Some purchases could not be restored. Check your connection and try again.",
-                                products
+                                products,
+                                pendingProducts
                             )
                         }
                         finishRestore(runId, restoreResult)
@@ -214,7 +221,7 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
         callbacks.forEachIndexed { index, callback ->
             val products = PurchaseRecovery.deliveryForWaiter(result.products, index)
             callback(when (result) {
-                is RestoreResult.Success -> RestoreResult.Success(products)
+                is RestoreResult.Success -> result.copy(products = products)
                 is RestoreResult.Failed -> result.copy(products = products)
             })
         }
