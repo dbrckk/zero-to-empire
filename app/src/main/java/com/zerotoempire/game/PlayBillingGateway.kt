@@ -16,7 +16,7 @@ import com.android.billingclient.api.Purchase
 
 class PlayBillingGateway(
     private val context: Context,
-    private val diagnostics: BillingDiagnostics = LocalBillingDiagnostics
+    private val diagnostics: BillingDiagnostics = if (BuildConfig.DEBUG) LocalBillingDiagnostics else NoOpBillingDiagnostics
 ) : PurchaseGateway {
     private var pendingResult: ((PurchaseResult) -> Unit)? = null
     private var pendingProduct: StoreProduct? = null

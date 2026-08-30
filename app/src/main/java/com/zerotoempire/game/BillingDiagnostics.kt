@@ -32,6 +32,10 @@ fun interface BillingDiagnostics {
     fun snapshot(): BillingDiagnosticSummary = BillingDiagnosticSummary(emptyList())
 }
 
+object NoOpBillingDiagnostics : BillingDiagnostics {
+    override fun record(diagnostic: BillingDiagnostic) = Unit
+}
+
 class InMemoryBillingDiagnostics : BillingDiagnostics {
     private val counts = ConcurrentHashMap<BillingDiagnostic, AtomicInteger>()
 
