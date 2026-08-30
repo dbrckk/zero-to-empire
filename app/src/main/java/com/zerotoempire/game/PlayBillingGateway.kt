@@ -126,7 +126,9 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
             val permanentOwned = purchased.flatMap { it.products }
                 .mapNotNull { id -> StoreProduct.entries.firstOrNull { it.productId == id && !it.consumable } }
                 .distinct()
-            purchased.filter { purchase -> purchase.products.any { id -> StoreProduct.entries.any { it.productId == id && !it.consumable } } }.forEach(::acknowledge)
+            purchased.filter { purchase -> purchase.products.any { id -> StoreProduct.entries.any { it.productId == id && !it.consumable } } }.forEach { purchase ->
+                acknowledge(purchase) { }
+            }
             val recoverable = purchased.mapNotNull { purchase ->
                 val product = purchase.products.asSequence().mapNotNull { id -> StoreProduct.entries.firstOrNull { it.productId == id && it.consumable } }.firstOrNull()
                 if (product == null) null else purchase to product
@@ -167,19 +169,34 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
                     // Keep the purchase unconsumed so Restore Purchases / next launch can recover it.
                     if (pendingResult != null) consume(purchase, product)
                 } else {
-                    acknowledge(purchase)
-                    pendingResult?.invoke(PurchaseResult.Success(product))
-                    pendingResult = null
+                    val callback = pendingResult
+                    if (callback == null) {
+                        // The purchase may have completed after process recreation. Restore Purchases
+                        // remains the source of entitlement recovery; still acknowledge promptly.
+                        acknowledge(purchase) { }
+                    } else {
+                        acknowledge(purchase) { result ->
+                            if (result.responseCode == BillingClient.BillingResponseCode.OK) {
+                                callback(PurchaseResult.Success(product))
+                            } else {
+                                callback(PurchaseResult.Failed("Google Play could not confirm the purchase: ${result.debugMessage}"))
+                            }
+                            if (pendingResult === callback) pendingResult = null
+                        }
+                    }
                 }
             }
             else -> Unit
         }
     }
 
-    private fun acknowledge(purchase: Purchase) {
-        if (purchase.isAcknowledged) return
+    private fun acknowledge(purchase: Purchase, onResult: (BillingResult) -> Unit) {
+        if (purchase.isAcknowledged) {
+            onResult(BillingResult.newBuilder().setResponseCode(BillingClient.BillingResponseCode.OK).build())
+            return
+        }
         val params = AcknowledgePurchaseParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()
-        billingClient.acknowledgePurchase(params) { }
+        billingClient.acknowledgePurchase(params, onResult)
     }
 
     private fun consume(purchase: Purchase, product: StoreProduct) {
