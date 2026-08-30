@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -169,6 +170,78 @@ fun BusinessArtIcon(id: Int, iconSize: Dp, modifier: Modifier = Modifier) {
                     BusinessGroup04Evolution(id, level, iconSize)
                 }
                 else -> PremiumBusinessSprite(id, level, iconSize)
+            }
+
+            // Early and mid-game assets now receive the same material finish as late-game
+            // machinery without adding another animation clock. These marks are deliberately
+            // sparse and level-gated so the base silhouettes remain readable at phone size.
+            if (id in 0..7 && level >= 25) {
+                Canvas(Modifier.size(iconSize)) {
+                    val s = size.minDimension
+                    val center = Offset(size.width / 2f, size.height / 2f)
+                    val tier = when {
+                        level >= 1000 -> 5
+                        level >= 500 -> 4
+                        level >= 250 -> 3
+                        level >= 100 -> 2
+                        else -> 1
+                    }
+                    val accent = when (id) {
+                        0 -> Color(0xFF78F56A)
+                        1 -> Color(0xFF58BFFF)
+                        2 -> Color(0xFFFF9A43)
+                        3 -> Color(0xFFB76CFF)
+                        4 -> Color(0xFF67E8FF)
+                        5 -> Color(0xFFFFD166)
+                        6 -> Color(0xFFFF776D)
+                        else -> Color(0xFFA98BFF)
+                    }
+
+                    drawCircle(
+                        color = accent.copy(alpha = .20f + tier * .025f),
+                        radius = s * .455f,
+                        center = center,
+                        style = Stroke(width = s * .0065f)
+                    )
+                    drawLine(
+                        color = Color.White.copy(alpha = .18f + tier * .025f),
+                        start = Offset(s * .25f, s * .20f),
+                        end = Offset(s * .46f, s * .11f),
+                        strokeWidth = s * .008f
+                    )
+                    drawLine(
+                        color = accent.copy(alpha = .24f),
+                        start = Offset(s * .54f, s * .89f),
+                        end = Offset(s * .75f, s * .80f),
+                        strokeWidth = s * .006f
+                    )
+
+                    if (tier >= 2) {
+                        val nodeCount = if (lowPower) 2 else 4
+                        repeat(nodeCount) { i ->
+                            val a = (2.0 * PI * i / nodeCount) + id * .23
+                            drawCircle(
+                                color = if (i % 2 == 0) accent else Color.White,
+                                radius = s * .009f,
+                                center = Offset(
+                                    center.x + cos(a).toFloat() * s * .445f,
+                                    center.y + sin(a).toFloat() * s * .445f
+                                ),
+                                alpha = .58f
+                            )
+                        }
+                    }
+                    if (tier >= 4 && !lowPower) {
+                        repeat(3) { i ->
+                            drawCircle(
+                                color = Color.White,
+                                radius = s * .0055f,
+                                center = Offset(s * (.39f + i * .11f), s * .105f),
+                                alpha = .72f
+                            )
+                        }
+                    }
+                }
             }
 
             if (buyMode != BuyMode.X1) {
