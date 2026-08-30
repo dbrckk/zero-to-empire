@@ -1,8 +1,12 @@
 package com.zerotoempire.game
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
@@ -10,6 +14,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import kotlin.math.PI
 import kotlin.math.cos
@@ -28,6 +33,23 @@ fun BusinessGroup01Evolution(id: Int, level: Int, iconSize: Dp, modifier: Modifi
         level >= 10 -> 1
         else -> 0
     }
+
+    val context = LocalContext.current
+    val reducedMotion = MotionQuality.reducedMotion(context)
+    val reveal = remember(id) { Animatable(0f) }
+    val previousStage = remember(id) { intArrayOf(stage) }
+
+    LaunchedEffect(stage, reducedMotion) {
+        val prior = previousStage[0]
+        previousStage[0] = stage
+        if (stage > prior && !reducedMotion) {
+            reveal.snapTo(1f)
+            reveal.animateTo(0f, tween(760))
+        } else if (reducedMotion && reveal.value != 0f) {
+            reveal.snapTo(0f)
+        }
+    }
+
     if (stage == 0) return
 
     val accent = when (id) {
@@ -200,6 +222,54 @@ fun BusinessGroup01Evolution(id: Int, level: Int, iconSize: Dp, modifier: Modifi
                     repeat(3) { i -> drawCircle(Color(0xFFFF72D8).copy(alpha = .56f), s * (.30f + i * .055f), Offset(s * .5f, s * .5f), style = Stroke(s * .008f)) }
                 }
                 if (stage >= 7) drawCircle(Color(0xFFFF72D8).copy(alpha = .82f), s * .46f, Offset(s * .5f, s * .5f), style = Stroke(s * .016f))
+            }
+        }
+
+        val revealIntensity = reveal.value.coerceIn(0f, 1f)
+        if (revealIntensity > 0f) {
+            val travel = 1f - revealIntensity
+            val ringRadius = s * (.30f + .18f * travel)
+
+            // A short materialization beat makes a tier unlock read as a true transformation,
+            // without creating another permanent animation loop.
+            drawCircle(
+                brush = Brush.radialGradient(
+                    colors = listOf(
+                        Color.White.copy(alpha = .18f * revealIntensity),
+                        accent.copy(alpha = .14f * revealIntensity),
+                        Color.Transparent
+                    ),
+                    center = center,
+                    radius = s * .48f
+                ),
+                radius = s * (.34f + .10f * travel),
+                center = center
+            )
+            drawCircle(
+                color = secondary.copy(alpha = .74f * revealIntensity),
+                radius = ringRadius,
+                center = center,
+                style = Stroke(width = s * (.010f + .008f * revealIntensity))
+            )
+            drawCircle(
+                color = Color.White.copy(alpha = .42f * revealIntensity),
+                radius = s * (.25f + .14f * travel),
+                center = center,
+                style = Stroke(width = s * .005f)
+            )
+
+            val rayCount = 8 + stage.coerceAtMost(4) * 2
+            repeat(rayCount) { i ->
+                val angle = 2f * PI.toFloat() * i / rayCount - PI.toFloat() / 2f
+                val inner = s * (.28f + .04f * travel)
+                val outer = s * (.36f + .12f * travel)
+                drawLine(
+                    color = if (i % 2 == 0) accent else secondary,
+                    start = Offset(center.x + cos(angle) * inner, center.y + sin(angle) * inner),
+                    end = Offset(center.x + cos(angle) * outer, center.y + sin(angle) * outer),
+                    strokeWidth = s * .007f,
+                    alpha = .58f * revealIntensity
+                )
             }
         }
     }
