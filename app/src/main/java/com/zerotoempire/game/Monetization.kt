@@ -24,7 +24,7 @@ interface PurchaseGateway {
      * Returns every recovered transaction. This is intentionally a List rather than a Set:
      * multiple interrupted purchases of the same consumable must each be credited exactly once.
      */
-    fun restore(onResult: (List<StoreProduct>) -> Unit)
+    fun restore(onResult: (RestoreResult) -> Unit)
 }
 
 enum class StoreProduct(val productId: String, val consumable: Boolean) {
@@ -39,6 +39,16 @@ sealed interface PurchaseResult {
     data object Cancelled : PurchaseResult
     data object Pending : PurchaseResult
     data class Failed(val reason: String) : PurchaseResult
+}
+
+sealed interface RestoreResult {
+    val products: List<StoreProduct>
+
+    data class Success(override val products: List<StoreProduct>) : RestoreResult
+    data class Failed(
+        val reason: String,
+        override val products: List<StoreProduct> = emptyList()
+    ) : RestoreResult
 }
 
 data class MonetizationState(

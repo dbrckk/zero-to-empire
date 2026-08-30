@@ -42,11 +42,11 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
     DisposableEffect(billing, activity) {
         billing.connect()
         if (activity != null && consent != null) consent.gather { canRequestAds, error -> adsAllowed = canRequestAds; privacyOptionsRequired = consent.isPrivacyOptionsRequired(); if (canRequestAds) rewarded.preload(); if (error != null && !canRequestAds) status = "Privacy setup is incomplete: $error" }
-        billing.restore { restored -> owned = restored.filterNot { it.consumable }.toSet(); vm.applyEntitlements(restored) }
+        billing.restore { result -> val restored = result.products; owned = restored.filterNot { it.consumable }.toSet(); vm.applyEntitlements(restored) }
         onDispose { billing.disconnect() }
     }
     DisposableEffect(lifecycleOwner, billing) {
-        val observer = LifecycleEventObserver { _, event -> if (event == Lifecycle.Event.ON_RESUME) billing.restore { restored -> owned = restored.filterNot { it.consumable }.toSet(); vm.applyEntitlements(restored) } }
+        val observer = LifecycleEventObserver { _, event -> if (event == Lifecycle.Event.ON_RESUME) billing.restore { result -> val restored = result.products; owned = restored.filterNot { it.consumable }.toSet(); vm.applyEntitlements(restored) } }
         lifecycleOwner.lifecycle.addObserver(observer); onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
     LaunchedEffect(activity, adsAllowed) {
@@ -73,7 +73,15 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
         owned = owned + buildSet { if (meta.adsRemoved) add(StoreProduct.REMOVE_ADS); if (meta.starterPackOwned) add(StoreProduct.STARTER_PACK) },
         purchaseInFlight = purchaseInFlight,
         onDismiss = { showStore = false },
-        onRestore = { billing.restore { restored -> owned = restored.filterNot { it.consumable }.toSet(); vm.applyEntitlements(restored); status = if (restored.isEmpty()) "No purchases found." else "Purchases restored." } },
+        onRestore = { billing.restore { result ->
+            val restored = result.products
+            owned = restored.filterNot { it.consumable }.toSet()
+            vm.applyEntitlements(restored)
+            status = when (result) {
+                is RestoreResult.Success -> if (restored.isEmpty()) "No purchases found." else "Purchases restored."
+                is RestoreResult.Failed -> if (restored.isEmpty()) result.reason else "${result.reason} Some purchases were restored."
+            }
+        } },
         onPurchase = { product ->
             if (purchaseInFlight != null) return@StoreDialog
             purchaseInFlight = product

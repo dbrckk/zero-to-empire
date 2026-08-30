@@ -17,7 +17,7 @@ import com.android.billingclient.api.Purchase
 class PlayBillingGateway(private val context: Context) : PurchaseGateway {
     private var pendingResult: ((PurchaseResult) -> Unit)? = null
     private var pendingProduct: StoreProduct? = null
-    private val restoreCallbacks = mutableListOf<(List<StoreProduct>) -> Unit>()
+    private val restoreCallbacks = mutableListOf<(RestoreResult) -> Unit>()
     private var connecting = false
     private var restoreInFlight = false
     private var restoreRunId = 0L
@@ -67,7 +67,7 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
                 if (result.responseCode == BillingClient.BillingResponseCode.OK) {
                     if (restoreCallbacks.isNotEmpty()) startRestoreQuery()
                 } else {
-                    failAllRestores()
+                    failAllRestores(restoreFailure(result, "Google Play Billing could not connect"))
                 }
             }
 
@@ -132,7 +132,7 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
         }
     }
 
-    override fun restore(onResult: (List<StoreProduct>) -> Unit) {
+    override fun restore(onResult: (RestoreResult) -> Unit) {
         restoreCallbacks += onResult
         if (restoreInFlight) return
         if (!billingClient.isReady) {
@@ -155,7 +155,7 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
             if (runId != restoreRunId) return@queryPurchasesAsync
             if (result.responseCode != BillingClient.BillingResponseCode.OK) {
                 reconnectIfTransient(result)
-                finishRestore(runId, emptyList())
+                finishRestore(runId, RestoreResult.Failed(restoreFailure(result, "Google Play could not restore purchases")))
                 return@queryPurchasesAsync
             }
             val purchased = PurchaseRecovery.distinctTransactions(
@@ -173,39 +173,56 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
                 if (product == null) null else purchase to product
             }
             if (recoverable.isEmpty()) {
-                finishRestore(runId, permanentOwned)
+                finishRestore(runId, RestoreResult.Success(permanentOwned))
                 return@queryPurchasesAsync
             }
 
             val recovered = mutableListOf<StoreProduct>()
+            var failedConsumables = 0
             var remaining = recoverable.size
             recoverable.forEach { (purchase, product) ->
                 consumeRecovered(purchase) { success ->
                     if (runId != restoreRunId) return@consumeRecovered
                     if (success) recovered += product
+                    else failedConsumables++
                     remaining--
-                    if (remaining == 0) finishRestore(runId, permanentOwned + recovered)
+                    if (remaining == 0) {
+                        val products = permanentOwned + recovered
+                        val restoreResult = if (failedConsumables == 0) {
+                            RestoreResult.Success(products)
+                        } else {
+                            RestoreResult.Failed(
+                                "Some purchases could not be restored. Check your connection and try again.",
+                                products
+                            )
+                        }
+                        finishRestore(runId, restoreResult)
+                    }
                 }
             }
         }
     }
 
-    private fun finishRestore(runId: Long, products: List<StoreProduct>) {
+    private fun finishRestore(runId: Long, result: RestoreResult) {
         if (runId != restoreRunId) return
         val callbacks = restoreCallbacks.toList()
         restoreCallbacks.clear()
         restoreInFlight = false
         callbacks.forEachIndexed { index, callback ->
-            callback(PurchaseRecovery.deliveryForWaiter(products, index))
+            val products = PurchaseRecovery.deliveryForWaiter(result.products, index)
+            callback(when (result) {
+                is RestoreResult.Success -> RestoreResult.Success(products)
+                is RestoreResult.Failed -> result.copy(products = products)
+            })
         }
     }
 
-    private fun failAllRestores() {
+    private fun failAllRestores(reason: String) {
         restoreRunId++
         val callbacks = restoreCallbacks.toList()
         restoreCallbacks.clear()
         restoreInFlight = false
-        callbacks.forEach { it(emptyList()) }
+        callbacks.forEach { it(RestoreResult.Failed(reason)) }
     }
 
     private fun processPurchase(purchase: Purchase) {
@@ -305,6 +322,9 @@ class PlayBillingGateway(private val context: Context) : PurchaseGateway {
     private fun reconnectIfTransient(result: BillingResult) {
         if (BillingFailurePolicy.resolve(result.failureKind(), result.debugMessage, "").shouldReconnect) connect()
     }
+
+    private fun restoreFailure(result: BillingResult, fallback: String): String =
+        BillingFailurePolicy.resolve(result.failureKind(), result.debugMessage, fallback).message
 
     private fun BillingResult.failureKind(): BillingFailureKind = when (responseCode) {
         BillingClient.BillingResponseCode.SERVICE_DISCONNECTED -> BillingFailureKind.SERVICE_DISCONNECTED
