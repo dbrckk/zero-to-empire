@@ -35,6 +35,7 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
     var showStore by remember { mutableStateOf(false) }
     var owned by remember { mutableStateOf<Set<StoreProduct>>(emptySet()) }
     var purchaseInFlight by remember { mutableStateOf<StoreProduct?>(null) }
+    var pendingPurchase by remember { mutableStateOf<StoreProduct?>(null) }
     var status by remember { mutableStateOf<String?>(null) }
     var adsAllowed by remember { mutableStateOf(false) }
     var privacyOptionsRequired by remember { mutableStateOf(false) }
@@ -86,6 +87,7 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
     if (showStore && activity != null) StoreDialog(
         owned = owned + buildSet { if (meta.adsRemoved) add(StoreProduct.REMOVE_ADS); if (meta.starterPackOwned) add(StoreProduct.STARTER_PACK) },
         purchaseInFlight = purchaseInFlight,
+        pendingPurchase = pendingPurchase,
         onDismiss = { showStore = false },
         onRestore = { billing.restore { result ->
             val restored = result.products
@@ -99,18 +101,27 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
         onPurchase = { product ->
             if (purchaseInFlight != null) return@StoreDialog
             purchaseInFlight = product
+            pendingPurchase = null
             billing.purchase(activity, product) { result ->
                 when (result) {
                     is PurchaseResult.Success -> {
                         purchaseInFlight = null
+                        pendingPurchase = null
                         if (!result.product.consumable) owned = owned + result.product
                         vm.applyPurchase(result.product)
                         status = "Purchase completed."
                     }
-                    PurchaseResult.Cancelled -> purchaseInFlight = null
-                    PurchaseResult.Pending -> status = "Purchase pending. Reward will unlock after Google Play confirms payment."
+                    PurchaseResult.Cancelled -> {
+                        purchaseInFlight = null
+                        pendingPurchase = null
+                    }
+                    PurchaseResult.Pending -> {
+                        pendingPurchase = product
+                        status = "Purchase pending. You can close the Store; the reward will unlock after Google Play confirms payment."
+                    }
                     is PurchaseResult.Failed -> {
                         purchaseInFlight = null
+                        pendingPurchase = null
                         status = result.reason
                     }
                 }
@@ -123,6 +134,7 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
 private fun StoreDialog(
     owned: Set<StoreProduct>,
     purchaseInFlight: StoreProduct?,
+    pendingPurchase: StoreProduct?,
     onDismiss: () -> Unit,
     onRestore: () -> Unit,
     onPurchase: (StoreProduct) -> Unit
@@ -143,10 +155,18 @@ private fun StoreDialog(
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Text("Purchases are handled by Google Play. Prices and final confirmation are shown by Google Play.", color = EmpireColors.TextSecondary, fontSize = 11.sp)
-                StoreRow("REMOVE ADS", "Lifetime removal of non-rewarded advertising. Reward videos remain optional.", StoreProduct.REMOVE_ADS in owned, purchaseInFlight, StoreProduct.REMOVE_ADS, MetaSpriteKind.LEGACY) { onPurchase(StoreProduct.REMOVE_ADS) }
-                StoreRow("STARTER PACK", "250 gems + 30 min ×2 income. One-time purchase.", StoreProduct.STARTER_PACK in owned, purchaseInFlight, StoreProduct.STARTER_PACK, MetaSpriteKind.BOOST) { onPurchase(StoreProduct.STARTER_PACK) }
-                StoreRow("120 GEMS", "Consumable gem pack.", false, purchaseInFlight, StoreProduct.GEM_PACK_SMALL, MetaSpriteKind.GEM) { onPurchase(StoreProduct.GEM_PACK_SMALL) }
-                StoreRow("650 GEMS", "Consumable gem pack.", false, purchaseInFlight, StoreProduct.GEM_PACK_MEDIUM, MetaSpriteKind.GEM) { onPurchase(StoreProduct.GEM_PACK_MEDIUM) }
+                if (pendingPurchase != null) {
+                    Text(
+                        "PAYMENT PENDING — Google Play has not confirmed this transaction yet. You can safely close and reopen the Store.",
+                        color = EmpireColors.Gold,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                StoreRow("REMOVE ADS", "Lifetime removal of non-rewarded advertising. Reward videos remain optional.", StoreProduct.REMOVE_ADS in owned, purchaseInFlight, pendingPurchase, StoreProduct.REMOVE_ADS, MetaSpriteKind.LEGACY) { onPurchase(StoreProduct.REMOVE_ADS) }
+                StoreRow("STARTER PACK", "250 gems + 30 min ×2 income. One-time purchase.", StoreProduct.STARTER_PACK in owned, purchaseInFlight, pendingPurchase, StoreProduct.STARTER_PACK, MetaSpriteKind.BOOST) { onPurchase(StoreProduct.STARTER_PACK) }
+                StoreRow("120 GEMS", "Consumable gem pack.", false, purchaseInFlight, pendingPurchase, StoreProduct.GEM_PACK_SMALL, MetaSpriteKind.GEM) { onPurchase(StoreProduct.GEM_PACK_SMALL) }
+                StoreRow("650 GEMS", "Consumable gem pack.", false, purchaseInFlight, pendingPurchase, StoreProduct.GEM_PACK_MEDIUM, MetaSpriteKind.GEM) { onPurchase(StoreProduct.GEM_PACK_MEDIUM) }
                 OutlinedButton(onClick = onRestore, enabled = purchaseInFlight == null, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text("RESTORE PURCHASES") }
             }
         },
@@ -162,11 +182,13 @@ private fun StoreRow(
     subtitle: String,
     owned: Boolean,
     purchaseInFlight: StoreProduct?,
+    pendingPurchase: StoreProduct?,
     product: StoreProduct,
     kind: MetaSpriteKind,
     purchase: () -> Unit
 ) {
-    val processing = purchaseInFlight == product
+    val pending = pendingPurchase == product
+    val processing = purchaseInFlight == product && !pending
     val enabled = !owned && purchaseInFlight == null
     Surface(color = EmpireColors.Surface, shape = RoundedCornerShape(14.dp)) {
         Row(Modifier.fillMaxWidth().padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -182,9 +204,9 @@ private fun StoreRow(
                 enabled = enabled,
                 modifier = Modifier
                     .heightIn(min = 48.dp)
-                    .semantics { contentDescription = when { owned -> "$title owned"; processing -> "$title purchase processing"; else -> "Buy $title" } }
+                    .semantics { contentDescription = when { owned -> "$title owned"; pending -> "$title payment pending Google Play confirmation"; processing -> "$title purchase processing"; else -> "Buy $title" } }
             ) {
-                Text(when { owned -> "OWNED"; processing -> "PROCESSING…"; else -> "BUY" }, fontSize = 10.sp)
+                Text(when { owned -> "OWNED"; pending -> "PENDING"; processing -> "PROCESSING…"; else -> "BUY" }, fontSize = 10.sp)
             }
         }
     }
