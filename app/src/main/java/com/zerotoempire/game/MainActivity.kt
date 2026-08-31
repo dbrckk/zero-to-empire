@@ -5,10 +5,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 
 class MainActivity : ComponentActivity() {
+    private lateinit var sfxEngine: PremiumSfxEngine
+    private lateinit var musicEngine: AdaptiveMusicEngine
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        GameSfxBus.attach(PremiumSfxEngine(applicationContext))
-        GameMusicBus.attach(AdaptiveMusicEngine(applicationContext))
+        sfxEngine = PremiumSfxEngine(applicationContext)
+        musicEngine = AdaptiveMusicEngine(applicationContext)
+        GameSfxBus.attach(sfxEngine)
+        GameMusicBus.attach(musicEngine)
         setContent { GrowthRuntimeRoot() }
     }
 
@@ -23,8 +28,8 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onDestroy() {
-        GameMusicBus.detach()
-        GameSfxBus.detach()
+        GameMusicBus.detach(musicEngine)
+        GameSfxBus.detach(sfxEngine)
         super.onDestroy()
     }
 }

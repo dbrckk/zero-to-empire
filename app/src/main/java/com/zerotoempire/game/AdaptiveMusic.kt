@@ -170,10 +170,29 @@ class AdaptiveMusicEngine(context: Context) {
 
 object GameMusicBus {
     @Volatile private var engine: AdaptiveMusicEngine? = null
-    fun attach(engine: AdaptiveMusicEngine) { this.engine?.release(); this.engine = engine; engine.start() }
+
+    @Synchronized
+    fun attach(engine: AdaptiveMusicEngine) {
+        this.engine?.release()
+        this.engine = engine
+        engine.start()
+    }
+
     fun resume() = engine?.resumePlayback() ?: Unit
     fun pause() = engine?.pausePlayback() ?: Unit
     fun setEmpireLevel(level: Int) = engine?.setEmpireLevel(level) ?: Unit
     fun setVolume(volume: Float) = engine?.setVolume(volume) ?: Unit
-    fun detach() { engine?.release(); engine = null }
+
+    @Synchronized
+    fun detach(expected: AdaptiveMusicEngine) {
+        if (engine !== expected) return
+        engine?.release()
+        engine = null
+    }
+
+    @Synchronized
+    fun detach() {
+        engine?.release()
+        engine = null
+    }
 }

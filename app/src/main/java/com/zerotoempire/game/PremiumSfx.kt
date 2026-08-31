@@ -128,7 +128,25 @@ class PremiumSfxEngine(context: Context) {
 
 object GameSfxBus {
     @Volatile private var engine: PremiumSfxEngine? = null
-    fun attach(engine: PremiumSfxEngine) { this.engine?.release(); this.engine = engine }
+
+    @Synchronized
+    fun attach(engine: PremiumSfxEngine) {
+        this.engine?.release()
+        this.engine = engine
+    }
+
     fun play(cue: PremiumSfxCue, volume: Float = 1f) = engine?.play(cue, volume) ?: Unit
-    fun detach() { engine?.release(); engine = null }
+
+    @Synchronized
+    fun detach(expected: PremiumSfxEngine) {
+        if (engine !== expected) return
+        engine?.release()
+        engine = null
+    }
+
+    @Synchronized
+    fun detach() {
+        engine?.release()
+        engine = null
+    }
 }
