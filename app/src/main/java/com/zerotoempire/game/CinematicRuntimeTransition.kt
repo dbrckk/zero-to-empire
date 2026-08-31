@@ -35,7 +35,9 @@ fun CinematicRuntimeTransitionOverlay(
     val phase = remember { Animatable(1f) }
     var previousEra by remember { mutableIntStateOf(eraIndex) }
 
-    LaunchedEffect(eraIndex, reducedMotion, compactScreen) {
+    // Size/configuration changes should not cancel an era impact already in flight.
+    // The next era change naturally samples the current compact-screen policy.
+    LaunchedEffect(eraIndex, reducedMotion) {
         val advanced = eraIndex > previousEra
         previousEra = eraIndex
         if (!advanced || reducedMotion) {
