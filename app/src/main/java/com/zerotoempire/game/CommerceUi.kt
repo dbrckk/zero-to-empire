@@ -125,6 +125,7 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
                         pendingPurchases = pendingPurchases - product
                     }
                     PurchaseResult.Pending -> {
+                        purchaseInFlight = null
                         pendingPurchases = pendingPurchases + product
                         status = "Purchase pending. You can close the Store; the reward will unlock after Google Play confirms payment."
                     }
