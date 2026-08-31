@@ -92,7 +92,9 @@ class PlayBillingGateway(
         // Never retain Activity/UI callbacks beyond the gateway lifecycle.
         clearPending()
         deferredPurchases.clear()
-        if (billingClient.isReady) billingClient.endConnection()
+        // End even an in-progress connection so a late setup callback cannot leave BillingClient
+        // connected after the owning screen/gateway has already been disposed.
+        billingClient.endConnection()
     }
 
     override fun purchase(activity: Activity, product: StoreProduct, onResult: (PurchaseResult) -> Unit) {
