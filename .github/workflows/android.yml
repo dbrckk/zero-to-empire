@@ -35,6 +35,23 @@ jobs:
         with:
           gradle-version: '8.13'
 
+      - name: Audit Play Store identity contract
+        run: |
+          set -euo pipefail
+          APP_GRADLE="app/build.gradle.kts"
+
+          # The Play listing identity must never drift between release candidates.
+          test "$(grep -Fc 'namespace = "com.zerotoempire.game"' "$APP_GRADLE")" -eq 1
+          test "$(grep -Fc 'applicationId = "com.zerotoempire.game"' "$APP_GRADLE")" -eq 1
+
+          # Store builds must keep version metadata wired through the validated
+          # VERSION_CODE / VERSION_NAME production properties rather than literals.
+          test "$(grep -Fc 'versionCode = releaseVersionCode' "$APP_GRADLE")" -eq 1
+          test "$(grep -Fc 'versionName = releaseVersionName' "$APP_GRADLE")" -eq 1
+          grep -Fq 'Signed release requires explicit VERSION_CODE and VERSION_NAME Gradle properties.' "$APP_GRADLE"
+          grep -Fq 'dependsOn(validateProductionRelease)' "$APP_GRADLE"
+          grep -Fq 'dependsOn("bundleRelease")' "$APP_GRADLE"
+
       - name: Audit save backup contract
         run: |
           set -euo pipefail
