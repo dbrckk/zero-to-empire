@@ -9,7 +9,7 @@ class RuntimePerformanceInvariantTest {
     fun endgameAtmosphereDoesNoWorkBeforeLateGame() {
         val source = source("EndgameAtmosphere.kt")
         val earlyReturn = source.indexOf("if (eraIndex < 7) return")
-        val animationClock = source.indexOf("rememberInfiniteTransition")
+        val animationClock = source.indexOf("rememberInfiniteTransition(label")
         val canvas = source.indexOf("Canvas(modifier)")
 
         assertTrue(earlyReturn >= 0)
@@ -21,7 +21,7 @@ class RuntimePerformanceInvariantTest {
     fun powerCoreKeepsReducedMotionOutsideInfiniteClock() {
         val source = source("EmpireCoreArt.kt")
         val reducedBranch = source.indexOf("if (reducedMotion)")
-        val animationClock = source.indexOf("rememberInfiniteTransition")
+        val animationClock = source.indexOf("rememberInfiniteTransition(label")
 
         assertTrue(reducedBranch >= 0)
         assertTrue(animationClock > reducedBranch)
