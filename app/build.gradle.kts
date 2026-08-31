@@ -159,6 +159,58 @@ android {
     kotlinOptions { jvmTarget = "17" }
 }
 
+val validateProductionRelease by tasks.registering {
+    group = "verification"
+    description = "Fails unless all metadata, signing and AdMob values required for a production release are configured."
+
+    doLast {
+        if (versionCodeProperty == null || versionNameProperty == null) {
+            throw GradleException(
+                "Production release requires explicit -PVERSION_CODE and -PVERSION_NAME."
+            )
+        }
+        if (!hasReleaseSigning) {
+            throw GradleException(
+                "Production release requires ZERO_EMPIRE_KEYSTORE_PATH, ZERO_EMPIRE_KEYSTORE_PASSWORD, " +
+                    "ZERO_EMPIRE_KEY_ALIAS and ZERO_EMPIRE_KEY_PASSWORD."
+            )
+        }
+        if (!file(releaseStorePath!!).isFile) {
+            throw GradleException("Production release keystore does not exist at ZERO_EMPIRE_KEYSTORE_PATH.")
+        }
+
+        val appId = productionAdMobAppId.get().trim()
+        val rewardedId = productionRewardedId.get().trim()
+        val interstitialId = productionInterstitialId.get().trim()
+
+        if (!adMobAppIdPattern.matches(appId) || appId.startsWith("ca-app-pub-3940256099942544")) {
+            throw GradleException("Production release requires a valid non-test ADMOB_APP_ID.")
+        }
+        if (!adMobAdUnitIdPattern.matches(rewardedId) || rewardedId.startsWith("ca-app-pub-3940256099942544")) {
+            throw GradleException("Production release requires a valid non-test REWARDED_AD_UNIT_ID.")
+        }
+        if (!adMobAdUnitIdPattern.matches(interstitialId) || interstitialId.startsWith("ca-app-pub-3940256099942544")) {
+            throw GradleException("Production release requires a valid non-test INTERSTITIAL_AD_UNIT_ID.")
+        }
+        if (rewardedId == interstitialId) {
+            throw GradleException("Production rewarded and interstitial ad unit IDs must be different.")
+        }
+    }
+}
+
+// Deliberately separate from ordinary bundleRelease so CI can keep producing an unsigned
+// release artifact while a real store build has one explicit, fail-closed entry point.
+val bundleProductionRelease by tasks.registering {
+    group = "build"
+    description = "Validates production configuration, then builds the signed Play Store release bundle."
+    dependsOn(validateProductionRelease)
+    dependsOn("bundleRelease")
+}
+
+tasks.named("bundleRelease") {
+    mustRunAfter(validateProductionRelease)
+}
+
 dependencies {
     implementation(platform("androidx.compose:compose-bom:2025.08.00"))
     implementation("androidx.activity:activity-compose:1.10.1")
