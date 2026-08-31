@@ -35,7 +35,7 @@ fun CinematicRuntimeTransitionOverlay(
     val phase = remember { Animatable(1f) }
     var previousEra by remember { mutableIntStateOf(eraIndex) }
 
-    LaunchedEffect(eraIndex, reducedMotion) {
+    LaunchedEffect(eraIndex, reducedMotion, compactScreen) {
         val advanced = eraIndex > previousEra
         previousEra = eraIndex
         if (!advanced || reducedMotion) {
@@ -43,10 +43,14 @@ fun CinematicRuntimeTransitionOverlay(
             return@LaunchedEffect
         }
         phase.snapTo(0f)
-        phase.animateTo(1f, animationSpec = tween(durationMillis = if (compactScreen) 480 else 560))
+        // The final 1.5% is visually negligible; ending there also removes
+        // the otherwise invisible animation tail from the composition clock.
+        phase.animateTo(
+            .985f,
+            animationSpec = tween(durationMillis = if (compactScreen) 472 else 552)
+        )
     }
 
-    // Stop drawing the nearly invisible tail to avoid needless full-screen work.
     if (!reducedMotion && phase.value < .985f) {
         val progress = phase.value.coerceIn(0f, 1f)
         val impact = (1f - progress).coerceIn(0f, 1f)
