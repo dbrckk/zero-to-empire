@@ -1,0 +1,358 @@
+ZERO → EMPIRE — AAA SPRITE PRODUCTION QUEUE
+Version: 1.0
+Status: source-of-truth companion to AAA_WORLD_SPRITE_BIBLE.md
+Goal: replace procedural placeholder art progressively with authored, layered 2.5D production assets without changing gameplay IDs, economy, save schema or monetization.
+
+1. CURRENT ART STATUS
+
+The current Ascendant City is a playable visual prototype built mostly with Jetpack Compose primitives:
+- Canvas paths, rectangles, ovals, lines and gradients for roads, foundations, pipes, skyline and shadows.
+- BusinessArtIcon for business silhouettes/evolution art.
+- EraVistaAAA for background atmosphere.
+- Compose text/surfaces for HUD and interaction labels.
+
+This is intentionally a structural prototype. It is NOT the final AAA asset pipeline. The final look must progressively replace placeholder/procedural building bodies with authored layered sprite masters and sprite sheets while keeping cheap procedural effects for glows, sparks, rings and traffic trails.
+
+2. ORIGINAL WORLD ART TARGET
+
+World: The Ascendant City.
+Visual fantasy: scrap yard → industrial district → commercial city → automation capital → vertical megacity → hypercity → orbital economy → planetary network → quantum dominion → stellar empire → singularity crown.
+Perspective: consistent portrait-mobile 2.5D, elevated three-quarter view, approximately 30–38 degree camera elevation.
+Lighting: upper-left warm key, cool environment fill, selective emissive machinery.
+Rule: dark material mass + selective energy accents. Never turn the whole world into neon.
+Reference quality principle: readable, lively tycoon world at first glance, but all architecture, characters, props, layouts and silhouettes remain original to ZERO → EMPIRE.
+
+3. CANONICAL BUSINESS PRODUCTION MATRIX
+
+There are 14 canonical business IDs. Never change these IDs for art reasons.
+Each ID requires 7 visual tiers: T0, T1, T2, T3, T4, T5, T6.
+Total building masters: 14 x 7 = 98.
+
+ID 00 — Foundry family A
+Primary motion: belt / piston.
+Secondary: welding flash, steam valve.
+Tier progression: improvised bench → workshop → machine hall → automated line → industrial landmark → giant forge → mastery forge.
+
+ID 01 — Foundry family B
+Primary motion: press / stamping mechanism.
+Secondary: warning beacon, moving crate.
+Tier progression: scrap press → compact press → factory press → synchronized press bank → heavy industry tower → megaforge press → crown press complex.
+
+ID 02 — Foundry family C
+Primary motion: furnace / rotating chamber.
+Secondary: heat vent, molten-energy pulse.
+Tier progression: burner → furnace → foundry block → automated furnace → district furnace → arc furnace megastructure → crown furnace.
+
+ID 03 — Foundry family D
+Primary motion: assembly / robotic tool.
+Secondary: sparks, material feeder.
+Tier progression: hand assembly → workshop → production cell → robot line → landmark plant → vertical factory → mastery fabrication hub.
+
+ID 04 — Expansion family A
+Primary motion: cargo loading.
+Secondary: shutter, scanner beam.
+Tier progression: loading bay → depot → logistics hub → automated terminal → district interchange → megahub → crown logistics nexus.
+
+ID 05 — Expansion family B
+Primary motion: service / commerce flow.
+Secondary: sign pulse, delivery pod.
+Tier progression: kiosk → storefront → commercial block → automated market → premium district anchor → vertical commerce tower → crown market complex.
+
+ID 06 — Expansion family C
+Primary motion: transport docking.
+Secondary: route indicators, vehicle pass.
+Tier progression: stop → station → terminal → autonomous station → district gateway → intercity megastation → crown transit nexus.
+
+ID 07 — Expansion family D
+Primary motion: infrastructure routing.
+Secondary: pumps, conduit pulse.
+Tier progression: utility shed → service plant → infrastructure hub → smart utility core → district backbone → city-scale utility tower → crown infrastructure node.
+
+ID 08 — Megastructure family A
+Primary motion: elevator / lift spine.
+Secondary: service drone, window energy chase.
+Tier progression: tower base → mid-rise → smart tower → vertical complex → skyline landmark → megatower → crown tower.
+
+ID 09 — Megastructure family B
+Primary motion: orbital / rotating ring.
+Secondary: docking arm, energy routing.
+Tier progression: research block → lab tower → advanced campus → automated research spire → district science landmark → quantum megaspire → crown research engine.
+
+ID 10 — Megastructure family C
+Primary motion: robotic service arms.
+Secondary: cargo drones, structural pulse.
+Tier progression: industrial tower → automated tower → vertical plant → megafactory → skyline factory → colossal production arcology → crown production arcology.
+
+ID 11 — Megastructure family D
+Primary motion: energy transfer.
+Secondary: antenna sweep, drone maintenance.
+Tier progression: grid node → energy station → power tower → smart grid spire → city energy landmark → planetary grid tower → crown grid nexus.
+
+ID 12 — Apex family A
+Primary motion: containment field / planetary ring.
+Secondary: orbital nodes, field shimmer.
+Tier progression: prototype apex core → stable apex engine → planetary-scale plant → field citadel → orbital landmark → stellar-scale machine → mastery stellar crown.
+
+ID 13 — Apex family B
+Primary motion: phase ring / singularity containment.
+Secondary: crystalline computation, reality distortion.
+Tier progression: phase lab → quantum engine → phase tower → quantum citadel → reality anchor → singularity megastructure → final Ascendant Crown.
+
+4. MASTER FILE CONTRACT
+
+For every business/tier generate or author a 2048x2048 transparent master.
+Subject footprint: max 80% of canvas.
+Transparent safe padding: minimum 8% each side.
+Pivot: bottom-center of ground footprint.
+No text, currency, UI, logos or level numbers baked into art.
+No rectangular background.
+Contact shadow is a separate layer.
+Perspective and lighting must remain identical across all tiers of the same business.
+
+Mandatory layers:
+base_ground
+building_back
+building_main
+building_front
+roof_static
+machine_static
+machine_moving_a
+machine_moving_b
+emissive_static
+emissive_pulse
+sign_static
+sign_glow
+foreground_occluder
+contact_shadow
+
+Optional layers when needed:
+door
+elevator
+fan
+conveyor
+vehicle
+worker
+smoke
+steam
+hologram
+energy_core
+construction_overlay
+mastery_crown
+
+5. FILE NAMING
+
+Layer master:
+zte_business_<ID>_t<TIER>_<layer>_v###.png
+
+Examples:
+zte_business_00_t0_building_main_v001.png
+zte_business_00_t0_machine_moving_a_v001.png
+zte_business_08_t4_elevator_v001.png
+zte_business_13_t6_mastery_crown_v001.png
+
+Animation sheet:
+zte_business_<ID>_t<TIER>_<animation>_se_sheet_v###.png
+
+Metadata:
+zte_business_<ID>_t<TIER>_<animation>_se_sheet_v###.json
+
+6. FRAME/SLICING CONTRACT
+
+Major building frame: 512x512.
+Character/vehicle frame: 256x256.
+Small FX frame: 128x128.
+Minimum transparent inter-frame padding: 4 px.
+Identical pivot in every frame.
+No per-frame trim.
+Order frames left-to-right, then top-to-bottom.
+
+Default budgets:
+idle micro-loop: 4–8 frames, 6–10 fps.
+production action: 8–16 frames, 10–15 fps.
+worker walk: 6–10 frames, 10–14 fps.
+construction/evolution one-shot: 10–20 frames or procedural tween.
+hero event: maximum 24 frames only when memory budget allows.
+
+7. REQUIRED ANIMATIONS PER BUSINESS
+
+Each business eventually receives:
+idle_loop
+production_loop
+upgrade_reveal
+manager_automated_loop
+
+Optional:
+construction_loop
+vehicle_dock
+steam_burst
+door_cycle
+service_drone
+mastery_loop
+
+Only one primary loop and at most two subtle secondary loops should be visible per lot at once.
+Decorative motion freezes under reduced-motion/battery-saver policy.
+Do not create an independent infinite Compose transition for every lot. Prefer a shared world phase/clock and stable per-ID phase offsets.
+
+8. CHARACTER PRODUCTION QUEUE
+
+Base world avatars:
+worker_mechanic
+worker_courier
+worker_technician
+worker_analyst
+worker_engineer
+worker_logistics
+worker_executive
+service_bot
+
+For each required avatar:
+idle_a
+idle_b
+walk_se
+walk_sw
+work
+carry
+celebrate
+
+World avatars should be readable at 48–72 dp. Simplify facial detail; silhouette, costume color and carried tool matter more at phone scale.
+Managers keep premium portrait art separately; hired managers receive a simplified world marker/avatar identity.
+
+9. VEHICLE/AMBIENT QUEUE
+
+Era 1–2:
+hand_cart
+forklift
+scrap_cargo_bot
+utility_trike
+
+Era 3–4:
+delivery_van
+autonomous_cart
+service_drone
+cargo_loader
+
+Era 5–6:
+city_pod
+sky_taxi
+maintenance_drone
+cargo_stream
+
+Era 7–8:
+launch_shuttle
+orbital_cargo_drone
+atmospheric_freighter
+
+Era 9–11:
+phase_courier
+quantum_drone
+stellar_skiff
+singularity_service_entity
+
+Vehicles are ambient only unless gameplay explicitly gains a mechanic later. They must never alter economy calculations.
+
+10. PROP KIT
+
+Reusable original Ascendant City kit:
+crate_small
+crate_heavy
+barrier
+lamp_industrial
+terminal
+pipe_straight
+pipe_elbow
+pipe_junction
+energy_conduit
+vent
+steam_stack
+antenna
+cargo_pad
+road_marker
+construction_frame
+warning_beacon
+maintenance_hatch
+drone_dock
+holo_marker
+
+Props should be reusable across several lots to create world cohesion and reduce texture memory.
+
+11. ERA MATERIAL PALETTES
+
+E1: patched steel, corrugated sheet, concrete, exposed copper, warm bulbs.
+E2: painted industrial steel, modular beams, safety paint.
+E3: anodized metal, glass inserts, commercial signage.
+E4: graphite + white composite + cobalt automation.
+E5: black glass + polished alloy + restrained neon.
+E6: monolithic ceramic-metal + structural energy channels.
+E7: aerospace composites + gold thermal accents.
+E8: adaptive clean surfaces + planetary infrastructure lighting.
+E9: dark metamaterial + crystal phase structures + violet/cyan accents.
+E10: radiant alloy + stellar gold + deep-space blue.
+E11: dark iridescent seamless surfaces + white-gold energy + crystalline computation.
+
+12. GENERATION PROMPT TEMPLATE
+
+Use this structure when generating a building master:
+
+"Original ZERO → EMPIRE Ascendant City business asset, [BUSINESS ID/FAMILY], tier [TIER], premium stylized mobile tycoon 2.5D building, elevated three-quarter view 30–38 degrees, strong readable silhouette at phone size, [ERA MATERIALS], upper-left warm key light, cool environment fill, restrained emissive machinery, substantial beveled architecture, transparent background, no text, no logo, no UI, no currency, no rectangular backdrop, animation-ready modular construction, clear ground contact, original design not copied from any existing game. Primary production mechanism: [MECHANISM]. Leave visual separation between static body and moving mechanism."
+
+For an individual layer add:
+"Render ONLY the [LAYER NAME] layer, aligned to the same 2048x2048 master canvas and bottom-center pivot, everything else transparent."
+
+13. QUALITY GATES BEFORE COMMITTING ART
+
+Every generated asset must pass all gates:
+A. Originality: no recognizable copied building, character or UI from another game.
+B. Silhouette: readable when previewed around 88 dp.
+C. Perspective: same camera family as existing world.
+D. Lighting: coherent with era.
+E. Layerability: moving parts visually separable.
+F. Pivot: bottom-center stable.
+G. Alpha: clean transparent edges, no accidental background matte.
+H. Compression: no visible halo/banding after Android packaging.
+I. Motion: frame-to-frame volume and pivot stable.
+J. Performance: texture size appropriate; no gratuitous large sheets.
+K. Reduced motion: static frame remains visually complete.
+L. Gameplay safety: art contains no economy logic or save changes.
+
+14. PRODUCTION ORDER
+
+Phase A — Era 1 vertical slice
+1. business 00 tiers T0/T1/T2
+2. business 01 tiers T0/T1
+3. business 02 tier T0
+4. business 03 tier T0
+5. Power Core Era 1 layered master
+6. mechanic + courier avatars
+7. forklift + hand cart
+8. Era 1 prop kit
+9. production loops for businesses 00–03
+10. upgrade reveals for businesses 00–03
+
+Phase B — complete Foundry family
+11. remaining tiers for IDs 00–03
+12. mastery layers and construction overlays
+
+Phase C — Expansion family IDs 04–07
+Phase D — Megastructure family IDs 08–11
+Phase E — Apex family IDs 12–13
+Phase F — era-specific traffic/characters/props
+Phase G — final memory/performance/animation QA
+
+15. INTEGRATION STRATEGY
+
+Do not replace every procedural asset at once.
+Use progressive replacement:
+- Keep current procedural Ascendant City as fallback.
+- Add authored sprites one business/tier at a time.
+- If an authored asset is unavailable, route to existing BusinessArtIcon.
+- Keep Compose/Canvas for cheap glows, shadows, conduits, sparks, income pops and transition rings.
+- Use authored PNG/layer assets for the expensive visual information: architecture, machinery, characters and distinctive vehicles.
+- Later introduce deterministic sprite metadata so slicing and pivots are data-driven instead of hard-coded.
+
+16. DEFINITION OF AAA FOR THIS PROJECT
+
+AAA-like here does not mean console-scale polygon count. It means every visible element has intentional art direction, coherent materials, strong silhouette, layered motion, tactile feedback, readable hierarchy, stable performance, polished transitions and a world that physically communicates progression.
+
+A screen full of gradients and cards is not sufficient.
+A screen full of random generated PNGs is not sufficient either.
+The target is a coherent authored world whose buildings, characters, props, lighting, animation timing and UI all look as if they belong to the same production pipeline.
