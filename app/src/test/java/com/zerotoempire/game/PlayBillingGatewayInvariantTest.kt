@@ -1,7 +1,7 @@
 package com.zerotoempire.game
 
 import java.nio.file.Files
-import java.nio.file.Path
+import java.nio.file.Paths
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -68,9 +68,9 @@ class PlayBillingGatewayInvariantTest {
 
     private fun gatewaySource(): String {
         val relative = "src/main/java/com/zerotoempire/game/PlayBillingGateway.kt"
-        val candidates = listOf(Path.of(relative), Path.of("app", relative))
+        val candidates = listOf(Paths.get(relative), Paths.get("app", relative))
         val path = candidates.firstOrNull(Files::isRegularFile)
-            ?: error("PlayBillingGateway.kt not found from ${Path.of("").toAbsolutePath()}")
-        return Files.readString(path)
+            ?: error("PlayBillingGateway.kt not found from ${Paths.get("").toAbsolutePath()}")
+        return String(Files.readAllBytes(path), Charsets.UTF_8)
     }
 }
