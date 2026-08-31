@@ -88,4 +88,43 @@ class PurchaseRecoveryTest {
             PurchaseRecovery.deliveryForWaiter(products, 2)
         )
     }
+
+    @Test
+    fun successfulRestoreRevokesPermanentEntitlementMissingFromPlay() {
+        assertEquals(
+            false,
+            PurchaseRecovery.permanentOwned(
+                product = StoreProduct.REMOVE_ADS,
+                currentOwned = true,
+                restoredProducts = emptySet(),
+                authoritative = true
+            )
+        )
+    }
+
+    @Test
+    fun failedRestoreNeverRevokesSavedPermanentEntitlement() {
+        assertEquals(
+            true,
+            PurchaseRecovery.permanentOwned(
+                product = StoreProduct.REMOVE_ADS,
+                currentOwned = true,
+                restoredProducts = emptySet(),
+                authoritative = false
+            )
+        )
+    }
+
+    @Test
+    fun successfulRestoreKeepsPermanentEntitlementConfirmedByPlay() {
+        assertEquals(
+            true,
+            PurchaseRecovery.permanentOwned(
+                product = StoreProduct.STARTER_PACK,
+                currentOwned = false,
+                restoredProducts = setOf(StoreProduct.STARTER_PACK),
+                authoritative = true
+            )
+        )
+    }
 }
