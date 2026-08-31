@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build-test-apk:
@@ -37,13 +37,30 @@ jobs:
           APK="app/build/outputs/apk/debug/app-debug.apk"
           test -s "$APK"
           sha256sum "$APK" > app/build/outputs/apk/debug/SHA256SUMS.txt
+          cp "$APK" app/build/outputs/apk/debug/ZeroToEmpire-Test.apk
 
       - name: Upload downloadable Android test build
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: ZeroToEmpire-Android-Test-APK
           path: |
-            app/build/outputs/apk/debug/app-debug.apk
+            app/build/outputs/apk/debug/ZeroToEmpire-Test.apk
             app/build/outputs/apk/debug/SHA256SUMS.txt
           if-no-files-found: error
           retention-days: 90
+
+      - name: Publish GitHub test release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG="android-test-${GITHUB_RUN_NUMBER}"
+          APK="app/build/outputs/apk/debug/ZeroToEmpire-Test.apk"
+          SUMS="app/build/outputs/apk/debug/SHA256SUMS.txt"
+          gh release create "$TAG" \
+            "$APK" \
+            "$SUMS" \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "Zero → Empire Android Test #${GITHUB_RUN_NUMBER}" \
+            --notes "Installable Android test APK generated from commit ${GITHUB_SHA}. This is a debug test build for direct device testing, not a Play Store production release."
