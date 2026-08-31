@@ -18,6 +18,14 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import kotlin.math.min
 
+private const val CINEMATIC_TRANSITION_END = .985f
+
+internal fun cinematicTransitionDurationMillis(compactScreen: Boolean): Int =
+    if (compactScreen) 472 else 552
+
+internal fun shouldRenderCinematicTransition(reducedMotion: Boolean, phase: Float): Boolean =
+    !reducedMotion && phase < CINEMATIC_TRANSITION_END
+
 /**
  * Lightweight full-screen punctuation for major era changes.
  * It owns no gameplay state, consumes no input, and is completely disabled
@@ -48,12 +56,12 @@ fun CinematicRuntimeTransitionOverlay(
         // The final 1.5% is visually negligible; ending there also removes
         // the otherwise invisible animation tail from the composition clock.
         phase.animateTo(
-            .985f,
-            animationSpec = tween(durationMillis = if (compactScreen) 472 else 552)
+            CINEMATIC_TRANSITION_END,
+            animationSpec = tween(durationMillis = cinematicTransitionDurationMillis(compactScreen))
         )
     }
 
-    if (!reducedMotion && phase.value < .985f) {
+    if (shouldRenderCinematicTransition(reducedMotion, phase.value)) {
         val progress = phase.value.coerceIn(0f, 1f)
         val impact = (1f - progress).coerceIn(0f, 1f)
         val cyan = Color(0xFF63E7FF)
