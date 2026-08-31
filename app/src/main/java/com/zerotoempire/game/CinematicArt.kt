@@ -33,6 +33,22 @@ fun ManagerPortrait(businessId: Int, size: Dp = 58.dp) {
         12 -> Color(0xFFFF68D8)
         else -> Color(0xFFFFE36E)
     }
+    val secondary = when (businessId.coerceAtLeast(0)) {
+        0 -> Color(0xFFFFD166)
+        1 -> Color(0xFF8CEBFF)
+        2 -> Color(0xFFFFD27A)
+        3 -> Color(0xFF71D8FF)
+        4 -> Color(0xFF8CFFDC)
+        5 -> Color(0xFF6FE3FF)
+        6 -> Color(0xFF78DFFF)
+        7 -> Color(0xFFFFB34D)
+        8 -> Color(0xFFFFF2B0)
+        9 -> Color(0xFF8C88FF)
+        10 -> Color(0xFF6EEBFF)
+        11 -> Color(0xFFFFC85A)
+        12 -> Color(0xFF6EEBFF)
+        else -> Color(0xFFC68BFF)
+    }
     val tier = when {
         businessId >= 12 -> 4
         businessId >= 8 -> 3
@@ -52,13 +68,18 @@ fun ManagerPortrait(businessId: Int, size: Dp = 58.dp) {
             val s = this.size.minDimension
             val c = Offset(this.size.width * .5f, this.size.height * .5f)
 
-            // Static layered lens/frame treatment: richer depth without adding animation work
-            // to manager lists or changing portrait layout dimensions.
+            // Dual-tone static lens treatment keeps each executive tied to the visual language
+            // of its business without introducing another animation clock in scrolling lists.
             drawCircle(
                 brush = Brush.radialGradient(
-                    colors = listOf(Color.Transparent, accent.copy(alpha = .055f), Color.Black.copy(alpha = .22f)),
-                    center = c,
-                    radius = s * .50f
+                    colors = listOf(
+                        Color.Transparent,
+                        secondary.copy(alpha = .035f),
+                        accent.copy(alpha = .060f),
+                        Color.Black.copy(alpha = .22f)
+                    ),
+                    center = Offset(c.x - s * .07f, c.y - s * .09f),
+                    radius = s * .52f
                 ),
                 radius = s * .488f,
                 center = c
@@ -74,6 +95,12 @@ fun ManagerPortrait(businessId: Int, size: Dp = 58.dp) {
                 radius = s * .470f,
                 center = c,
                 style = Stroke(width = s * .010f)
+            )
+            drawCircle(
+                color = secondary.copy(alpha = .24f),
+                radius = s * .458f,
+                center = c,
+                style = Stroke(width = s * .0045f)
             )
             drawCircle(
                 color = Color.White.copy(alpha = .10f),
@@ -100,6 +127,15 @@ fun ManagerPortrait(businessId: Int, size: Dp = 58.dp) {
                 style = Stroke(width = s * .006f)
             )
             drawArc(
+                color = secondary.copy(alpha = .32f),
+                startAngle = 132f,
+                sweepAngle = 52f + tier * 7f,
+                useCenter = false,
+                topLeft = Offset(s * .092f, s * .092f),
+                size = Size(s * .816f, s * .816f),
+                style = Stroke(width = s * .0045f)
+            )
+            drawArc(
                 color = Color.White.copy(alpha = .16f),
                 startAngle = 298f,
                 sweepAngle = 34f,
@@ -109,7 +145,8 @@ fun ManagerPortrait(businessId: Int, size: Dp = 58.dp) {
                 style = Stroke(width = s * .004f)
             )
 
-            // Small machined frame notches make each portrait read as an executive badge.
+            // Machined notches alternate both identity colors so silhouettes stay readable while
+            // higher tiers feel denser and more premium at the same physical portrait size.
             val notch = s * .035f
             val inset = s * .095f
             listOf(
@@ -117,9 +154,19 @@ fun ManagerPortrait(businessId: Int, size: Dp = 58.dp) {
                 Offset(s - inset, inset) to Offset(s - inset - notch, inset),
                 Offset(inset, s - inset) to Offset(inset + notch, s - inset),
                 Offset(s - inset, s - inset) to Offset(s - inset - notch, s - inset)
-            ).forEach { (start, end) ->
-                drawLine(accent.copy(alpha = .58f), start, end, s * .006f)
+            ).forEachIndexed { index, (start, end) ->
+                drawLine(
+                    color = if (index % 2 == 0) accent.copy(alpha = .62f) else secondary.copy(alpha = .58f),
+                    start = start,
+                    end = end,
+                    strokeWidth = s * .006f
+                )
             }
+
+            val crest = Offset(c.x, s * .075f)
+            drawCircle(Color.Black.copy(alpha = .52f), s * .018f, crest)
+            drawCircle(secondary.copy(alpha = .82f), s * .010f, crest)
+            drawCircle(Color.White.copy(alpha = .72f), s * .0035f, Offset(crest.x - s * .003f, crest.y - s * .003f))
 
             val markerCount = tier + 1
             val markerSpacing = s * .060f
@@ -128,7 +175,11 @@ fun ManagerPortrait(businessId: Int, size: Dp = 58.dp) {
                 val markerCenter = Offset(markerStart + index * markerSpacing, s * .925f)
                 drawCircle(Color.Black.copy(alpha = .58f), s * .016f, markerCenter)
                 drawCircle(
-                    color = if (index == markerCount - 1) Color.White.copy(alpha = .96f) else accent.copy(alpha = .84f),
+                    color = when {
+                        index == markerCount - 1 -> Color.White.copy(alpha = .96f)
+                        index % 2 == 0 -> accent.copy(alpha = .84f)
+                        else -> secondary.copy(alpha = .82f)
+                    },
                     radius = s * .010f,
                     center = markerCenter
                 )
