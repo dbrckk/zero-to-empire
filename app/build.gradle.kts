@@ -207,8 +207,12 @@ val bundleProductionRelease by tasks.registering {
     dependsOn("bundleRelease")
 }
 
-tasks.named("bundleRelease") {
-    mustRunAfter(validateProductionRelease)
+// Android creates variant tasks late in configuration. Configure lazily so ordinary CI
+// can still discover bundleRelease while the production gate keeps deterministic ordering.
+tasks.configureEach {
+    if (name == "bundleRelease") {
+        mustRunAfter(validateProductionRelease)
+    }
 }
 
 dependencies {
