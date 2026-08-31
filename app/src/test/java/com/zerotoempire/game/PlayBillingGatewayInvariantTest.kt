@@ -27,7 +27,11 @@ class PlayBillingGatewayInvariantTest {
 
     @Test
     fun latePurchaseUpdateCannotHijackNewActivePurchase() {
-        assertTrue(source.contains("purchases.firstOrNull { target.productId in it.products }"))
+        assertTrue(
+            source.contains(
+                "purchases.firstOrNull { target.productId in it.products && it.purchaseToken !in deferredPurchases }"
+            )
+        )
         assertOrdered(
             "processPurchase(activePurchase, target)",
             "purchases.filter { it.purchaseToken != activeToken }.forEach { processPurchase(it) }"

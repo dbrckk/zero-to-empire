@@ -49,9 +49,10 @@ class PlayBillingGateway(
             // A launch callback must only be completed by the product that was actually launched.
             // Updates for older pending transactions may arrive while a different purchase flow is
             // active, so process those independently instead of failing or hijacking the new flow.
+            // A token already deferred belongs to an older flow, even if it has the same product ID.
             val target = pendingProduct
             val activePurchase = if (pendingResult != null && target != null) {
-                purchases.firstOrNull { target.productId in it.products }
+                purchases.firstOrNull { target.productId in it.products && it.purchaseToken !in deferredPurchases }
             } else null
             if (activePurchase != null && target != null) {
                 processPurchase(activePurchase, target)
