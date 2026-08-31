@@ -22,15 +22,30 @@ object PurchaseRecovery {
     /** Consumables are transactional: only one restore waiter may receive them after consumption. */
     fun deliveryForWaiter(products: List<StoreProduct>, waiterIndex: Int): List<StoreProduct> =
         if (waiterIndex == 0) products else products.filterNot { it.consumable }
+
+    /**
+     * A complete successful Play restore is authoritative for permanent ownership. A failed or
+     * partial restore must remain non-destructive because absence may only reflect a transient
+     * Billing failure rather than a revoked entitlement.
+     */
+    fun permanentOwned(
+        product: StoreProduct,
+        currentOwned: Boolean,
+        restoredProducts: Set<StoreProduct>,
+        authoritative: Boolean
+    ): Boolean = product in restoredProducts || (!authoritative && currentOwned)
 }
 
 /**
- * List overload used by Billing restore. The existing Set member restores permanent entitlements,
+ * List overload used by Billing restore. The Set member restores permanent entitlements,
  * Starter Pack, and one occurrence of each recovered consumable. We then credit only duplicate
  * consumable transactions that a Set cannot represent.
  */
-fun GameViewModel.applyEntitlements(products: List<StoreProduct>) {
-    applyEntitlements(products.toSet())
+fun GameViewModel.applyEntitlements(
+    products: List<StoreProduct>,
+    authoritativePermanentEntitlements: Boolean = false
+) {
+    applyEntitlements(products.toSet(), authoritativePermanentEntitlements)
     val extraGems = PurchaseRecovery.extraConsumableGems(products)
     if (extraGems > 0) grantGems(extraGems)
 }
