@@ -56,7 +56,7 @@ class AdMobInterstitialGateway(private val context: Context) {
         onShown: () -> Unit = {},
         onClosed: () -> Unit = {}
     ) {
-        if (!enabled) {
+        if (!enabled || !activity.canHostFullScreenAd()) {
             onClosed()
             return
         }
@@ -81,6 +81,10 @@ class AdMobInterstitialGateway(private val context: Context) {
                 onClosed()
             }
         }
-        current.show(activity)
+        runCatching { current.show(activity) }
+            .onFailure {
+                preload()
+                onClosed()
+            }
     }
 }
