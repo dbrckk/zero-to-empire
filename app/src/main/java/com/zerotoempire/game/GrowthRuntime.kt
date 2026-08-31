@@ -68,6 +68,8 @@ fun GrowthRuntimeRoot(vm: GameViewModel = viewModel()) {
         // Draw ambience first. CommerceRoot contains every interactive surface.
         EndgameAtmosphere(eraIndex = eraIndex, modifier = Modifier.fillMaxSize())
         CommerceRoot(vm)
+        // Purely visual, input-transparent punctuation for major progression changes.
+        CinematicRuntimeTransitionOverlay(eraIndex = eraIndex, modifier = Modifier.fillMaxSize())
     }
 
     if (activity != null) {
