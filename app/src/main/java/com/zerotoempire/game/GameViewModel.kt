@@ -159,14 +159,27 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     fun challenges(): List<TimedChallenge> { ensureChallengeWeek(); return ChallengeRotation.current(_state.value, _meta.value) }
 
     fun claimMission(id: String): Boolean { val m=missions().firstOrNull{it.id==id}?:return false; if(!m.completed||m.claimed)return false; val g=safeGemAdd(_state.value.gems,m.rewardGems);_state.value=_state.value.copy(gems=g); _meta.value=_meta.value.copy(gems=g,claimedMissionIds=_meta.value.claimedMissionIds+id); scheduleSave(); return true }
-    fun claimAchievement(id: String): Boolean { val a=achievements().firstOrNull{it.id==id}?:return false; if(!a.unlocked||a.claimed)return false; val g=safeGemAdd(_state.value.gems,a.rewardGems);_state.value=_state.value.copy(gems=g); _meta.value=_meta.value.copy(gems=g,claimedAchievementIds=_meta.value.claimedAchievementIds+id); scheduleSave(); return true }
+    fun claimAchievement(id: String):Boolean { val a=achievements().firstOrNull{it.id==id}?:return false; if(!a.unlocked||a.claimed)return false; val g=safeGemAdd(_state.value.gems,a.rewardGems);_state.value=_state.value.copy(gems=g); _meta.value=_meta.value.copy(gems=g,claimedAchievementIds=_meta.value.claimedAchievementIds+id); scheduleSave(); return true }
     fun claimChallenge(id: String): Boolean { val c=challenges().firstOrNull{it.id==id}?:return false; if(!c.completed||c.claimed)return false; val g=safeGemAdd(_state.value.gems,c.rewardGems);_state.value=_state.value.copy(gems=g); _meta.value=_meta.value.copy(gems=g,claimedChallengeIds=_meta.value.claimedChallengeIds+id); _celebration.value=MajorCelebration("CHALLENGE COMPLETE","+${c.rewardGems} gems earned","★","WEEKLY"); scheduleSave(); return true }
 
-    fun applyEntitlements(products: Set<StoreProduct>) {
+    fun applyEntitlements(
+        products: Set<StoreProduct>,
+        authoritativePermanentEntitlements: Boolean = false
+    ) {
         val hadStarter = _meta.value.starterPackOwned
         val restoredStarter = StoreProduct.STARTER_PACK in products && !hadStarter
-        val hasRemoveAds = StoreProduct.REMOVE_ADS in products || _meta.value.adsRemoved
-        val hasStarter = StoreProduct.STARTER_PACK in products || hadStarter
+        val hasRemoveAds = PurchaseRecovery.permanentOwned(
+            StoreProduct.REMOVE_ADS,
+            _meta.value.adsRemoved,
+            products,
+            authoritativePermanentEntitlements
+        )
+        val hasStarter = PurchaseRecovery.permanentOwned(
+            StoreProduct.STARTER_PACK,
+            hadStarter,
+            products,
+            authoritativePermanentEntitlements
+        )
         val recoveredConsumableGems = (if (StoreProduct.GEM_PACK_SMALL in products) 120 else 0) + (if (StoreProduct.GEM_PACK_MEDIUM in products) 650 else 0)
         val restoredStarterGems = if (restoredStarter) 250 else 0
         val totalRecoveredGems = recoveredConsumableGems + restoredStarterGems
