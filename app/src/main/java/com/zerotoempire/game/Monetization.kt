@@ -4,6 +4,11 @@ import android.app.Activity
 
 /** Provider-neutral contracts: gameplay code never talks directly to billing or ad SDKs. */
 interface RewardedAdGateway {
+    /**
+     * Lets privacy-aware hosts disable ad work immediately. The default keeps test/fake
+     * implementations source-compatible while production gateways can actively invalidate loads.
+     */
+    fun setEnabled(enabled: Boolean) {}
     fun preload()
     fun isReady(): Boolean
     fun show(activity: Activity, placement: RewardPlacement, onReward: () -> Unit, onClosed: () -> Unit = {})
