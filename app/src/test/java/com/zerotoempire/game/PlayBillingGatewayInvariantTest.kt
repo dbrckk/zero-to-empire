@@ -54,11 +54,13 @@ class PlayBillingGatewayInvariantTest {
     }
 
     @Test
-    fun disconnectDropsAllUiCallbacks() {
+    fun disconnectDropsAllUiCallbacksAndAlwaysClosesBillingClient() {
         val function = source.substringAfter("override fun disconnect()")
             .substringBefore("override fun purchase(")
         assertTrue(function.contains("clearPending()"))
         assertTrue(function.contains("deferredPurchases.clear()"))
+        assertTrue(function.contains("billingClient.endConnection()"))
+        assertTrue(!function.contains("if (billingClient.isReady) billingClient.endConnection()"))
     }
 
     private fun assertOrdered(vararg snippets: String) {
