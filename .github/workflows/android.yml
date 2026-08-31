@@ -10,6 +10,12 @@ concurrency:
   group: android-ci-${{ github.ref }}
   cancel-in-progress: true
 
+# CI only reads repository contents and uploads workflow artifacts. Keep the
+# ephemeral GITHUB_TOKEN least-privileged so a compromised build step cannot
+# mutate repository state.
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
