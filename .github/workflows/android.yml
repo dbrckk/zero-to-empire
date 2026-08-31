@@ -35,6 +35,25 @@ jobs:
         with:
           gradle-version: '8.13'
 
+      - name: Audit save backup contract
+        run: |
+          set -euo pipefail
+          MANIFEST="app/src/main/AndroidManifest.xml"
+          LEGACY_RULES="app/src/main/res/xml/backup_rules.xml"
+          EXTRACTION_RULES="app/src/main/res/xml/data_extraction_rules.xml"
+          SAVE_PATH='datastore/zero_empire_save_v2.preferences_pb'
+
+          grep -Fq 'android:allowBackup="true"' "$MANIFEST"
+          grep -Fq 'android:fullBackupContent="@xml/backup_rules"' "$MANIFEST"
+          grep -Fq 'android:dataExtractionRules="@xml/data_extraction_rules"' "$MANIFEST"
+
+          test "$(grep -Fc "$SAVE_PATH" "$LEGACY_RULES")" -eq 1
+          test "$(grep -Fc "$SAVE_PATH" "$EXTRACTION_RULES")" -eq 2
+          test "$(grep -Fc '<include ' "$LEGACY_RULES")" -eq 1
+          test "$(grep -Fc '<include ' "$EXTRACTION_RULES")" -eq 2
+          grep -Fq '<cloud-backup>' "$EXTRACTION_RULES"
+          grep -Fq '<device-transfer>' "$EXTRACTION_RULES"
+
       - name: Unit tests, release lint, debug, APK and app bundle builds
         run: gradle --no-daemon testDebugUnitTest testReleaseUnitTest lintRelease assembleDebug assembleRelease bundleRelease
 
