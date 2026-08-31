@@ -43,7 +43,7 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
     DisposableEffect(billing, activity) {
         billing.connect()
         if (activity != null && consent != null) consent.gather { canRequestAds, error -> adsAllowed = canRequestAds; rewarded.setEnabled(canRequestAds); privacyOptionsRequired = consent.isPrivacyOptionsRequired(); if (canRequestAds) rewarded.preload(); if (error != null && !canRequestAds) status = "Privacy setup is incomplete: $error" }
-        billing.restore { result -> val restored = result.products; owned = restored.filterNot { it.consumable }.toSet(); if (purchaseInFlight == null) pendingPurchases = result.pendingProducts; vm.applyEntitlements(restored) }
+        billing.restore { result -> val restored = result.products; owned = restored.filterNot { it.consumable }.toSet(); if (purchaseInFlight == null) pendingPurchases = result.pendingProducts; vm.applyEntitlements(restored, authoritativePermanentEntitlements = result is RestoreResult.Success) }
         onDispose { rewarded.setEnabled(false); billing.disconnect() }
     }
     DisposableEffect(lifecycleOwner, billing) {
@@ -57,7 +57,7 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
                         val restored = result.products
                         owned = restored.filterNot { it.consumable }.toSet()
                         if (purchaseInFlight == null) pendingPurchases = result.pendingProducts
-                        vm.applyEntitlements(restored)
+                        vm.applyEntitlements(restored, authoritativePermanentEntitlements = result is RestoreResult.Success)
                     }
                 }
                 else -> Unit
@@ -97,7 +97,7 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
             val restored = result.products
             owned = restored.filterNot { it.consumable }.toSet()
             if (purchaseInFlight == null) pendingPurchases = result.pendingProducts
-            vm.applyEntitlements(restored)
+            vm.applyEntitlements(restored, authoritativePermanentEntitlements = result is RestoreResult.Success)
             status = when (result) {
                 is RestoreResult.Success -> when {
                     restored.isNotEmpty() -> "Purchases restored."
