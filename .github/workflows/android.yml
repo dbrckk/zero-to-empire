@@ -52,6 +52,29 @@ jobs:
           grep -Fq 'dependsOn(validateProductionRelease)' "$APP_GRADLE"
           grep -Fq 'dependsOn("bundleRelease")' "$APP_GRADLE"
 
+      - name: Audit production monetization contract
+        run: |
+          set -euo pipefail
+          APP_GRADLE="app/build.gradle.kts"
+          CATALOG="app/src/main/java/com/zerotoempire/game/Monetization.kt"
+
+          # Production AdMob builds must stay fail-closed behind the explicit release gate.
+          grep -Fq 'providers.gradleProperty("ADMOB_APP_ID")' "$APP_GRADLE"
+          grep -Fq 'providers.gradleProperty("REWARDED_AD_UNIT_ID")' "$APP_GRADLE"
+          grep -Fq 'providers.gradleProperty("INTERSTITIAL_AD_UNIT_ID")' "$APP_GRADLE"
+          grep -Fq 'Production release requires a valid non-test ADMOB_APP_ID.' "$APP_GRADLE"
+          grep -Fq 'Production release requires a valid non-test REWARDED_AD_UNIT_ID.' "$APP_GRADLE"
+          grep -Fq 'Production release requires a valid non-test INTERSTITIAL_AD_UNIT_ID.' "$APP_GRADLE"
+          grep -Fq 'Production rewarded and interstitial ad unit IDs must be different.' "$APP_GRADLE"
+
+          # Keep the Play Billing integration and one-time product catalog stable across RCs.
+          test "$(grep -Fc 'implementation("com.android.billingclient:billing:9.1.0")' "$APP_GRADLE")" -eq 1
+          test "$(grep -Fc 'REMOVE_ADS("remove_ads_lifetime", false)' "$CATALOG")" -eq 1
+          test "$(grep -Fc 'STARTER_PACK("starter_pack", false)' "$CATALOG")" -eq 1
+          test "$(grep -Fc 'GEM_PACK_SMALL("gems_small", true)' "$CATALOG")" -eq 1
+          test "$(grep -Fc 'GEM_PACK_MEDIUM("gems_medium", true)' "$CATALOG")" -eq 1
+          test "$(grep -Ec '^[[:space:]]+[A-Z_]+\("[a-z0-9_]+", (true|false)\)[,;]?$' "$CATALOG")" -eq 4
+
       - name: Audit save backup contract
         run: |
           set -euo pipefail
