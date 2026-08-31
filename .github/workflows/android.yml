@@ -38,6 +38,29 @@ jobs:
       - name: Unit tests, release lint, debug, APK and app bundle builds
         run: gradle --no-daemon testDebugUnitTest testReleaseUnitTest lintRelease assembleDebug assembleRelease bundleRelease
 
+      - name: Audit release bundle contents
+        if: success()
+        run: |
+          set -euo pipefail
+          AAB="app/build/outputs/bundle/release/app-release.aab"
+          MAPPING="app/build/outputs/mapping/release/mapping.txt"
+          AUDIT_DIR="app/build/release-integrity"
+
+          test -s "$AAB"
+          test -s "$MAPPING"
+          mkdir -p "$AUDIT_DIR"
+
+          jar tf "$AAB" | LC_ALL=C sort > "$AUDIT_DIR/AAB_CONTENTS.txt"
+          grep -Fxq "BundleConfig.pb" "$AUDIT_DIR/AAB_CONTENTS.txt"
+          grep -Fxq "base/manifest/AndroidManifest.xml" "$AUDIT_DIR/AAB_CONTENTS.txt"
+          grep -Fxq "base/dex/classes.dex" "$AUDIT_DIR/AAB_CONTENTS.txt"
+
+          {
+            printf 'aab_bytes=%s\n' "$(wc -c < "$AAB")"
+            printf 'mapping_bytes=%s\n' "$(wc -c < "$MAPPING")"
+            printf 'aab_entries=%s\n' "$(wc -l < "$AUDIT_DIR/AAB_CONTENTS.txt")"
+          } > "$AUDIT_DIR/ARTIFACT_METADATA.txt"
+
       - name: Generate release integrity manifest
         if: success()
         run: |
