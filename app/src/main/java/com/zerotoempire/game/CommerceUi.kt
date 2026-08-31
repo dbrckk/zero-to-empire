@@ -42,9 +42,9 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
 
     DisposableEffect(billing, activity) {
         billing.connect()
-        if (activity != null && consent != null) consent.gather { canRequestAds, error -> adsAllowed = canRequestAds; privacyOptionsRequired = consent.isPrivacyOptionsRequired(); if (canRequestAds) rewarded.preload(); if (error != null && !canRequestAds) status = "Privacy setup is incomplete: $error" }
+        if (activity != null && consent != null) consent.gather { canRequestAds, error -> adsAllowed = canRequestAds; rewarded.setEnabled(canRequestAds); privacyOptionsRequired = consent.isPrivacyOptionsRequired(); if (canRequestAds) rewarded.preload(); if (error != null && !canRequestAds) status = "Privacy setup is incomplete: $error" }
         billing.restore { result -> val restored = result.products; owned = restored.filterNot { it.consumable }.toSet(); if (purchaseInFlight == null) pendingPurchases = result.pendingProducts; vm.applyEntitlements(restored) }
-        onDispose { billing.disconnect() }
+        onDispose { rewarded.setEnabled(false); billing.disconnect() }
     }
     DisposableEffect(lifecycleOwner, billing) {
         var leftForeground = false
@@ -80,7 +80,7 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
             Row(modifier = Modifier.align(Alignment.BottomCenter).padding(start = 16.dp, end = 16.dp, bottom = 86.dp).fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
                 FilledTonalButton(onClick = { showStore = true }, modifier = Modifier.weight(1f).heightIn(min = 48.dp), shape = RoundedCornerShape(16.dp), contentPadding = PaddingValues(vertical = 9.dp)) { MetaSprite(MetaSpriteKind.STORE, 23.dp); Spacer(Modifier.width(5.dp)); Text("STORE", fontSize = 9.sp, fontWeight = FontWeight.Black) }
                 FilledTonalButton(onClick = vm::requestProfitBoostAd, enabled = adsAllowed, modifier = Modifier.weight(1f).heightIn(min = 48.dp), shape = RoundedCornerShape(16.dp), contentPadding = PaddingValues(vertical = 9.dp)) { MetaSprite(MetaSpriteKind.BOOST, 23.dp, active = adsAllowed); Spacer(Modifier.width(5.dp)); Text("×2 BOOST", fontSize = 9.sp, fontWeight = FontWeight.Black) }
-                if (privacyOptionsRequired && consent != null) TextButton(onClick = { consent.showPrivacyOptions { error -> adsAllowed = consent.canRequestAds(); privacyOptionsRequired = consent.isPrivacyOptionsRequired(); if (adsAllowed) rewarded.preload(); if (error != null) status = error } }, modifier = Modifier.weight(.8f).heightIn(min = 48.dp)) { Text("PRIVACY", fontSize = 8.sp) }
+                if (privacyOptionsRequired && consent != null) TextButton(onClick = { consent.showPrivacyOptions { error -> adsAllowed = consent.canRequestAds(); rewarded.setEnabled(adsAllowed); privacyOptionsRequired = consent.isPrivacyOptionsRequired(); if (adsAllowed) rewarded.preload(); if (error != null) status = error } }, modifier = Modifier.weight(.8f).heightIn(min = 48.dp)) { Text("PRIVACY", fontSize = 8.sp) }
             }
         }
     }
