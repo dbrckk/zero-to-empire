@@ -79,7 +79,7 @@ class AdMobRewardedGateway(private val context: Context) : RewardedAdGateway {
         onReward: () -> Unit,
         onClosed: () -> Unit
     ) {
-        if (!enabled) {
+        if (!enabled || !activity.canHostFullScreenAd()) {
             onClosed()
             return
         }
@@ -101,11 +101,16 @@ class AdMobRewardedGateway(private val context: Context) : RewardedAdGateway {
                 onClosed()
             }
         }
-        ad.show(activity) {
-            if (!rewarded) {
-                rewarded = true
-                onReward()
+        runCatching {
+            ad.show(activity) {
+                if (!rewarded) {
+                    rewarded = true
+                    onReward()
+                }
             }
+        }.onFailure {
+            preload()
+            onClosed()
         }
     }
 }
