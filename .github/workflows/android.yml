@@ -75,6 +75,31 @@ jobs:
           test "$(grep -Fc 'GEM_PACK_MEDIUM("gems_medium", true)' "$CATALOG")" -eq 1
           test "$(grep -Ec '^[[:space:]]+[A-Z_]+\("[a-z0-9_]+", (true|false)\)[,;]?$' "$CATALOG")" -eq 4
 
+      - name: Audit Android device compatibility contract
+        run: |
+          set -euo pipefail
+          APP_GRADLE="app/build.gradle.kts"
+          MANIFEST="app/src/main/AndroidManifest.xml"
+          TRANSITION="app/src/main/java/com/zerotoempire/game/CinematicRuntimeTransition.kt"
+          TRANSITION_TEST="app/src/test/java/com/zerotoempire/game/CinematicRuntimeTransitionPolicyTest.kt"
+
+          # Keep the supported Android floor and current Play target explicit.
+          test "$(grep -Fc 'minSdk = 26' "$APP_GRADLE")" -eq 1
+          test "$(grep -Fc 'targetSdk = 36' "$APP_GRADLE")" -eq 1
+          test "$(grep -Fc 'compileSdk = 36' "$APP_GRADLE")" -eq 1
+
+          # MainActivity must remain free to recreate on rotation/configuration changes;
+          # Android should not be bypassed with a broad configChanges declaration.
+          if grep -Fq 'android:configChanges=' "$MANIFEST"; then
+            echo 'MainActivity must use normal Android recreation for configuration changes.' >&2
+            exit 1
+          fi
+
+          # Compact phones retain a dedicated lower-cost cinematic path and tests.
+          grep -Fq 'configuration.screenWidthDp < 360' "$TRANSITION"
+          grep -Fq 'if (compactScreen) 472 else 552' "$TRANSITION"
+          grep -Fq 'compactScreensUseShorterImpact' "$TRANSITION_TEST"
+
       - name: Audit save backup contract
         run: |
           set -euo pipefail
