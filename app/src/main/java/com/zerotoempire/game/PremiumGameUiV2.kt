@@ -88,7 +88,7 @@ fun PremiumZeroToEmpireApp(vm: GameViewModel) {
             Box(Modifier.fillMaxSize().padding(padding)) {
                 EmpireAmbientBackdrop(era.index, Modifier.fillMaxSize())
                 when (tab) {
-                    PremiumTab.EMPIRE -> PremiumEmpireTab(vm, state, buyMode)
+                    PremiumTab.EMPIRE -> AscendantCityEmpireWorld(vm, state, buyMode)
                     PremiumTab.MANAGERS -> PremiumManagersTab(vm, state)
                     PremiumTab.UPGRADES -> PremiumUpgradeTreeScreen(vm, state)
                     PremiumTab.GOALS -> PremiumGoalsTab(vm, state, meta)
