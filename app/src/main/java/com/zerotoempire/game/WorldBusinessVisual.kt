@@ -35,6 +35,7 @@ internal fun WorldBusinessVisual(
         2 to 0 -> R.drawable.zte_business_02_t0_runtime
         2 to 1 -> R.drawable.zte_business_02_t1_runtime
         3 to 0 -> R.drawable.zte_business_03_t0_runtime
+        3 to 1 -> R.drawable.zte_business_03_t1_runtime
         else -> null
     }
 
