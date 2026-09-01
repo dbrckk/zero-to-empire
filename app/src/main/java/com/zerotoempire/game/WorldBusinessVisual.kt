@@ -4,6 +4,8 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -58,18 +60,26 @@ internal fun WorldBusinessVisual(
         }
 
         val authoredSize = size * (1f + tier.coerceAtMost(6) * .055f)
-        Image(
-            painter = painterResource(drawable),
-            contentDescription = null,
-            modifier = modifier
-                .size(authoredSize)
-                .graphicsLayer {
-                    scaleX = reveal.value
-                    scaleY = reveal.value
-                    alpha = .72f + reveal.value * .28f
-                },
-            contentScale = ContentScale.Fit
-        )
+        Box(modifier = modifier.size(authoredSize)) {
+            Image(
+                painter = painterResource(drawable),
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer {
+                        scaleX = reveal.value
+                        scaleY = reveal.value
+                        alpha = .72f + reveal.value * .28f
+                    },
+                contentScale = ContentScale.Fit
+            )
+
+            // The first Foundry evolution gains authored worker traffic so the district
+            // reads as a living production space instead of a static icon collection.
+            if (businessId in 0..3 && tier >= 1) {
+                FoundryWorkerTraffic(Modifier.fillMaxSize())
+            }
+        }
     } else {
         BusinessArtIcon(businessId, level, size)
     }
