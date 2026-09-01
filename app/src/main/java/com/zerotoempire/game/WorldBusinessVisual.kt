@@ -17,7 +17,8 @@ import androidx.compose.ui.unit.Dp
 
 /**
  * Progressive runtime bridge from authored production assets to the live world.
- * Missing tiers deliberately fall back to BusinessArtIcon so rollout can happen safely asset by asset.
+ * Missing raster tiers deliberately use their authored Android vector master when available,
+ * then fall back to BusinessArtIcon. This keeps rollout safe while preserving visible evolution.
  */
 @Composable
 internal fun WorldBusinessVisual(
@@ -31,8 +32,11 @@ internal fun WorldBusinessVisual(
         0 to 0 -> R.drawable.zte_business_00_t0_runtime
         0 to 1 -> R.drawable.zte_business_00_t1_runtime
         1 to 0 -> R.drawable.zte_business_01_t0_runtime
+        1 to 1 -> R.drawable.zte_business_01_t1_runtime
         2 to 0 -> R.drawable.zte_business_02_t0_runtime
+        2 to 1 -> R.drawable.zte_business_02_t1_runtime
         3 to 0 -> R.drawable.zte_business_03_t0_runtime
+        3 to 1 -> R.drawable.zte_business_03_t1_runtime
         else -> null
     }
 
