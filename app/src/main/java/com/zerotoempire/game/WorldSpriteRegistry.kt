@@ -52,6 +52,7 @@ internal object WorldSpriteRegistry {
             1 to 0 -> "art/source/era01/corner_shop/t0/zte_business_01_t0_master.svg"
             1 to 1 -> "art/source/era01/corner_shop/t1/zte_business_01_t1_master.svg"
             2 to 0 -> "art/source/era01/furnace_stall/t0/zte_business_02_t0_master.svg"
+            2 to 1 -> "art/source/era01/furnace_stall/t1/zte_business_02_t1_master.svg"
             3 to 0 -> "art/source/era01/assembly_hub/t0/zte_business_03_t0_master.svg"
             else -> return null
         }
