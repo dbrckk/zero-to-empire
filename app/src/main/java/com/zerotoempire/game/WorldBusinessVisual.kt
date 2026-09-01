@@ -1,6 +1,7 @@
 package com.zerotoempire.game
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -28,7 +29,7 @@ internal fun WorldBusinessVisual(
         Image(
             painter = painterResource(drawable),
             contentDescription = null,
-            modifier = modifier,
+            modifier = modifier.size(size),
             contentScale = ContentScale.Fit
         )
     } else {
