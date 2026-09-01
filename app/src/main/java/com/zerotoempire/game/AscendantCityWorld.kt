@@ -260,7 +260,7 @@ private fun AscendantHeroLot(
                 drawOval(Color.Black.copy(alpha = .34f), Offset(left, baseY), Size(size.width * .76f, size.height * .18f))
                 drawLine(accent.copy(alpha = .22f), Offset(left + 8f, baseY + 8f), Offset(left + size.width * .65f, baseY + 2f), 3f)
             }
-            BusinessArtIcon(business.id, business.level, 88.dp)
+            WorldBusinessVisual(business.id, business.level, 88.dp)
         }
         Surface(
             color = EmpireColors.DeepSpace.copy(alpha = .84f),
@@ -301,7 +301,7 @@ private fun AscendantWorldLot(vm: GameViewModel, business: Business, state: Game
                 .clickable(enabled = affordable, role = Role.Button) { vm.buyBulk(business.id, mode) }
         ) {
             Row(Modifier.padding(horizontal = 10.dp, vertical = 9.dp), verticalAlignment = Alignment.CenterVertically) {
-                Box(Modifier.size(68.dp), contentAlignment = Alignment.Center) { BusinessArtIcon(business.id, business.level, 66.dp) }
+                Box(Modifier.size(68.dp), contentAlignment = Alignment.Center) { WorldBusinessVisual(business.id, business.level, 66.dp) }
                 Spacer(Modifier.width(9.dp))
                 Column(Modifier.weight(1f)) {
                     Text(business.name, color = EmpireColors.TextPrimary, fontSize = 15.sp, fontWeight = FontWeight.Black, maxLines = 1, overflow = TextOverflow.Ellipsis)
