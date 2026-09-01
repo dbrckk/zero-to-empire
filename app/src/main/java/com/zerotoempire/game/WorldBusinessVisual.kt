@@ -32,7 +32,6 @@ internal fun WorldBusinessVisual(
         0 to 0 -> R.drawable.zte_business_00_t0_runtime
         0 to 1 -> R.drawable.zte_business_00_t1_runtime
         1 to 0 -> R.drawable.zte_business_01_t0_runtime
-        1 to 1 -> R.drawable.zte_business_01_t1_runtime
         2 to 0 -> R.drawable.zte_business_02_t0_runtime
         3 to 0 -> R.drawable.zte_business_03_t0_runtime
         else -> null
@@ -55,8 +54,6 @@ internal fun WorldBusinessVisual(
             }
         }
 
-        // Authored tiers gain a little physical presence as the lot evolves, while the
-        // one-shot reveal keeps upgrades tactile without adding a permanent animation loop.
         val authoredSize = size * (1f + tier.coerceAtMost(6) * .055f)
         Image(
             painter = painterResource(drawable),
