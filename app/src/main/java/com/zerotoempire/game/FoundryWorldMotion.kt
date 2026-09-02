@@ -44,7 +44,7 @@ internal fun FoundryWorkerTraffic(modifier: Modifier = Modifier) {
         val p = phase.value
 
         Image(
-            painter = painterResource(R.drawable.zte_worker_foundry_t0_runtime),
+            painter = painterResource(R.drawable.zte_foundry_worker_idle_v1_runtime),
             contentDescription = null,
             modifier = Modifier
                 .size(34.dp)
@@ -58,7 +58,7 @@ internal fun FoundryWorkerTraffic(modifier: Modifier = Modifier) {
         )
 
         Image(
-            painter = painterResource(R.drawable.zte_worker_foundry_t0_runtime),
+            painter = painterResource(R.drawable.zte_foundry_worker_idle_v1_runtime),
             contentDescription = null,
             modifier = Modifier
                 .size(29.dp)
