@@ -15,10 +15,12 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import kotlin.math.abs
 
 /**
- * One shared motion phase for lightweight authored worker and delivery traffic in the Foundry district.
- * Decorative motion stops completely when Android animations are disabled or battery saver is active.
+ * One shared motion phase for lightweight authored worker, vehicle and machine activity
+ * in the Foundry district. Decorative motion stops completely when Android animations
+ * are disabled or battery saver is active.
  */
 @Composable
 internal fun FoundryWorkerTraffic(
@@ -75,8 +77,6 @@ internal fun FoundryWorkerTraffic(
                 }
         )
 
-        // Logistics-heavy lots get one authored delivery vehicle on the same animation clock.
-        // No extra infinite transition is created, keeping motion cost flat on compact phones.
         if (businessId == 1 || businessId == 3) {
             Image(
                 painter = painterResource(R.drawable.zte_foundry_delivery_v1_runtime),
@@ -94,8 +94,6 @@ internal fun FoundryWorkerTraffic(
             )
         }
 
-        // Industrial lots gain an authored forklift with a short, local route. It reuses the
-        // shared phase and freezes in a readable parking position when motion is reduced.
         if (businessId == 2 || businessId == 3) {
             Image(
                 painter = painterResource(R.drawable.zte_foundry_forklift_t0_runtime),
@@ -109,6 +107,27 @@ internal fun FoundryWorkerTraffic(
                         alpha = if (reducedMotion) .76f else .96f
                         scaleX = if (route < .5f) .72f else -.72f
                         scaleY = .72f
+                    }
+            )
+
+            // Authored spark/smoke activity gives industrial lots a visible production beat
+            // without introducing another animation clock. The overlay freezes to a subtle,
+            // readable state in reduced-motion / battery-saver mode.
+            Image(
+                painter = painterResource(R.drawable.zte_foundry_machine_activity_t0_runtime),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(if (businessId == 2) 45.dp else 39.dp)
+                    .graphicsLayer {
+                        val cycle = if (reducedMotion) .35f else (p * 3f) % 1f
+                        val pulse = 1f - abs(cycle * 2f - 1f)
+                        translationX = widthPx * if (businessId == 2) .51f else .57f
+                        translationY = heightPx * if (businessId == 2) .34f else .40f
+                        alpha = if (reducedMotion) .34f else (.28f + pulse * .64f)
+                        val activityScale = if (reducedMotion) .70f else (.66f + pulse * .18f)
+                        scaleX = activityScale
+                        scaleY = activityScale
+                        rotationZ = if (reducedMotion) 0f else (cycle - .5f) * 5f
                     }
             )
         }
