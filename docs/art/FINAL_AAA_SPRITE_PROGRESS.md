@@ -3,10 +3,10 @@
 Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains the canonical 235-item scope. This file is updated during generation so candidate art cannot be confused with DONE runtime assets.
 
 ## Official progress
-- DONE: **8 / 235**
-- ART VALIDATED: **11 / 235**
-- RUNTIME INTEGRATED: **11 / 235**
-- Generated candidates accepted as DONE: **8**
+- DONE: **11 / 235**
+- ART VALIDATED: **14 / 235**
+- RUNTIME INTEGRATED: **14 / 235**
+- Generated candidates accepted as DONE: **11**
 - Rule: only runtime-integrated, individually clean/transparent, manifest-matching assets with green Android CI increment DONE.
 
 ## Accepted assets
@@ -20,9 +20,12 @@ Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains t
 | `BLD-00-T5 — Street Stand T5` | 2048×2048 RGBA | PASS | `zte_business_00_t5_final.webp`, referenced | DONE; Android CI green |
 | `BLD-00-T6 — Street Stand T6` | 2048×2048 RGBA | PASS | `zte_business_00_t6_final.webp`, referenced | DONE; Android CI green |
 | `BLD-01-T0 — Corner Shop T0` | 2048×2048 RGBA | PASS | `zte_business_01_t0_final.webp`, referenced | DONE; Android CI green |
-| `BLD-01-T1 — Corner Shop T1` | 2048×2048 RGBA | PASS | `zte_business_01_t1_final.webp`, referenced | RUNTIME; CI pending |
-| `BLD-01-T2 — Corner Shop T2` | 2048×2048 RGBA | PASS | `zte_business_01_t2_final.webp`, referenced | RUNTIME; CI pending |
-| `BLD-01-T3 — Corner Shop T3` | 2048×2048 RGBA | PASS | `zte_business_01_t3_final.webp`, referenced | RUNTIME; CI pending |
+| `BLD-01-T1 — Corner Shop T1` | 2048×2048 RGBA | PASS | `zte_business_01_t1_final.webp`, referenced | DONE; Android CI green |
+| `BLD-01-T2 — Corner Shop T2` | 2048×2048 RGBA | PASS | `zte_business_01_t2_final.webp`, referenced | DONE; Android CI green |
+| `BLD-01-T3 — Corner Shop T3` | 2048×2048 RGBA | PASS | `zte_business_01_t3_final.webp`, referenced | DONE; Android CI green |
+| `BLD-01-T4 — Corner Shop T4` | 2048×2048 RGBA | PASS | `zte_business_01_t4_final.webp`, referenced | RUNTIME; CI pending |
+| `BLD-01-T5 — Corner Shop T5` | 2048×2048 RGBA | PASS | `zte_business_01_t5_final.webp`, referenced | RUNTIME; CI pending |
+| `BLD-01-T6 — Corner Shop T6` | 2048×2048 RGBA | PASS | `zte_business_01_t6_final.webp`, referenced | RUNTIME; CI pending |
 
 ## Current generated candidates
 | Candidate | Intended manifest item | State | Reason not DONE |
@@ -38,4 +41,4 @@ Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains t
 | Fire Station render | Unmapped | REJECTED | Baked readable text/logos and background. |
 
 ## Next production target
-`BLD-01-T4 — Corner Shop T4`: generate the advanced district-scale retail-production landmark with dense machinery and premium materials.
+`BLD-02-T0 — Furnace Stall T0`: generate the small improvised starter furnace stall with one clear smelting cue and no readable signage.
