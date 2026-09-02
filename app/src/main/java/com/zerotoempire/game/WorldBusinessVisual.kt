@@ -74,10 +74,13 @@ internal fun WorldBusinessVisual(
                 contentScale = ContentScale.Fit
             )
 
-            // The first Foundry evolution gains authored worker traffic so the district
+            // The first Foundry evolution gains authored worker/delivery traffic so the district
             // reads as a living production space instead of a static icon collection.
             if (businessId in 0..3 && tier >= 1) {
-                FoundryWorkerTraffic(Modifier.fillMaxSize())
+                FoundryWorkerTraffic(
+                    businessId = businessId,
+                    modifier = Modifier.fillMaxSize()
+                )
             }
         }
     } else {
