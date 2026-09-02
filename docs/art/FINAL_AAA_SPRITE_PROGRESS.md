@@ -4,8 +4,8 @@ Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains t
 
 ## Official progress
 - DONE: **0 / 235**
-- ART VALIDATED: **3 / 235**
-- RUNTIME INTEGRATED, CI PENDING: **3 / 235**
+- ART VALIDATED: **4 / 235**
+- RUNTIME INTEGRATED, CI PENDING: **4 / 235**
 - Generated candidates accepted as DONE: **0**
 - Rule: only runtime-integrated, individually clean/transparent, manifest-matching assets with green Android CI increment DONE.
 
@@ -15,6 +15,7 @@ Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains t
 | `BLD-00-T0 — Street Stand T0` | 2048×2048 RGBA | PASS — 69.7% transparent; 100.0% dominant | `zte_business_00_t0_final.webp`, referenced | RUNTIME; CI pending |
 | `BLD-00-T1 — Street Stand T1` | 2048×2048 RGBA | PASS | `zte_business_00_t1_final.webp`, referenced | RUNTIME; CI pending |
 | `BLD-00-T2 — Street Stand T2` | 2048×2048 RGBA | PASS | `zte_business_00_t2_final.webp`, referenced | RUNTIME; CI pending |
+| `BLD-00-T3 — Street Stand T3` | 2048×2048 RGBA | PASS | `zte_business_00_t3_final.webp`, referenced | RUNTIME; CI pending |
 
 ## Current generated candidates
 | Candidate | Intended manifest item | State | Reason not DONE |
@@ -30,4 +31,4 @@ Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains t
 | Fire Station render | Unmapped | REJECTED | Baked readable text/logos and background. |
 
 ## Next production target
-`BLD-00-T3 — Street Stand T3`: generate the automated complex with visible logistics, added verticality and controlled emissive accents.
+`BLD-00-T4 — Street Stand T4`: generate the advanced district-scale landmark with denser machinery and premium materials.
