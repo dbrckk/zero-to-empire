@@ -47,9 +47,19 @@ internal fun FoundryWorkerTraffic(
         val widthPx = constraints.maxWidth.toFloat()
         val heightPx = constraints.maxHeight.toFloat()
         val p = phase.value
+        val workerFrame = if (reducedMotion || ((p * 12f).toInt() and 1) == 0) {
+            R.drawable.zte_foundry_worker_idle_v1_runtime
+        } else {
+            R.drawable.zte_foundry_worker_walk_v1_runtime
+        }
+        val secondWorkerFrame = if (reducedMotion || (((p + .5f) * 12f).toInt() and 1) == 0) {
+            R.drawable.zte_foundry_worker_idle_v1_runtime
+        } else {
+            R.drawable.zte_foundry_worker_walk_v1_runtime
+        }
 
         Image(
-            painter = painterResource(R.drawable.zte_foundry_worker_idle_v1_runtime),
+            painter = painterResource(workerFrame),
             contentDescription = null,
             modifier = Modifier
                 .size(34.dp)
@@ -63,7 +73,7 @@ internal fun FoundryWorkerTraffic(
         )
 
         Image(
-            painter = painterResource(R.drawable.zte_foundry_worker_idle_v1_runtime),
+            painter = painterResource(secondWorkerFrame),
             contentDescription = null,
             modifier = Modifier
                 .size(29.dp)
