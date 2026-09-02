@@ -105,13 +105,19 @@ internal fun FoundryWorkerTraffic(
         }
 
         if (businessId == 2 || businessId == 3) {
+            val route = if (reducedMotion) .38f else (p + .63f) % 1f
+            val forkliftFrame = if (reducedMotion || route < .32f || route > .70f) {
+                R.drawable.zte_foundry_forklift_t0_runtime
+            } else {
+                R.drawable.zte_foundry_forklift_load_v1_runtime
+            }
+
             Image(
-                painter = painterResource(R.drawable.zte_foundry_forklift_t0_runtime),
+                painter = painterResource(forkliftFrame),
                 contentDescription = null,
                 modifier = Modifier
                     .size(41.dp)
                     .graphicsLayer {
-                        val route = if (reducedMotion) .38f else (p + .63f) % 1f
                         translationX = widthPx * (.34f + route * .24f)
                         translationY = heightPx * (.66f - route * .07f)
                         alpha = if (reducedMotion) .76f else .96f
