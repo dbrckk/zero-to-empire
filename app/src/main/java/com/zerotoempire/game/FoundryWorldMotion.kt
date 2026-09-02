@@ -93,5 +93,24 @@ internal fun FoundryWorkerTraffic(
                     }
             )
         }
+
+        // Industrial lots gain an authored forklift with a short, local route. It reuses the
+        // shared phase and freezes in a readable parking position when motion is reduced.
+        if (businessId == 2 || businessId == 3) {
+            Image(
+                painter = painterResource(R.drawable.zte_foundry_forklift_t0_runtime),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(41.dp)
+                    .graphicsLayer {
+                        val route = if (reducedMotion) .38f else (p + .63f) % 1f
+                        translationX = widthPx * (.34f + route * .24f)
+                        translationY = heightPx * (.66f - route * .07f)
+                        alpha = if (reducedMotion) .76f else .96f
+                        scaleX = if (route < .5f) .72f else -.72f
+                        scaleY = .72f
+                    }
+            )
+        }
     }
 }
