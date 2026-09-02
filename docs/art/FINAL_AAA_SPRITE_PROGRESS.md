@@ -4,8 +4,8 @@ Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains t
 
 ## Official progress
 - DONE: **18 / 235**
-- ART VALIDATED: **22 / 235**
-- RUNTIME INTEGRATED: **22 / 235**
+- ART VALIDATED: **23 / 235**
+- RUNTIME INTEGRATED: **23 / 235**
 - Generated candidates accepted as DONE: **18**
 - Rule: only runtime-integrated, individually clean/transparent, manifest-matching assets with green Android CI increment DONE.
 
@@ -34,6 +34,7 @@ Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains t
 | `BLD-02-T5 — Furnace Stall T5` | 2048×2048 RGBA | PASS | `zte_business_02_t5_final.webp`, referenced | RUNTIME; CI pending |
 | `BLD-02-T6 — Furnace Stall T6` | 2048×2048 RGBA | PASS | `zte_business_02_t6_final.webp`, referenced | RUNTIME; CI pending |
 | `BLD-03-T0 — Assembly Hub T0` | 2048×2048 RGBA | PASS | `zte_business_03_t0_final.webp`, referenced | RUNTIME; CI pending |
+| `BLD-03-T1 — Assembly Hub T1` | 2048×2048 RGBA | PASS — genuine alpha; 100.0% dominant | `zte_business_03_t1_final.webp`, referenced | RUNTIME; CI pending |
 
 ## Current generated candidates
 | Candidate | Intended manifest item | State | Reason not DONE |
@@ -47,6 +48,7 @@ Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains t
 | Police HQ render | Unmapped | REJECTED | Baked readable text/logos and background. |
 | Farm render | Unmapped | REJECTED | Baked FARM signage and background. |
 | Fire Station render | Unmapped | REJECTED | Baked readable text/logos and background. |
+| Assembly Hub T1 first render | BLD-03-T1 | REJECTED | Baked checkerboard background; source had no alpha channel. |
 
 ## Next production target
-`BLD-03-T1 — Assembly Hub T1`: generate the reinforced assembly workshop with dedicated powered tooling and stronger organization.
+`BLD-03-T2 — Assembly Hub T2`: generate the industrial expansion with a larger footprint and a clearly visible second active subsystem.
