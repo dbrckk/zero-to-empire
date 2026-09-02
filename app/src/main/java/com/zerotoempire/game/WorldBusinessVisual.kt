@@ -31,7 +31,7 @@ internal fun WorldBusinessVisual(
 ) {
     val tier = WorldSpriteRegistry.tierForLevel(level)
     val drawable = when (businessId to tier) {
-        0 to 0 -> R.drawable.zte_business_00_t0_runtime
+        0 to 0 -> R.drawable.zte_business_00_t0_final
         0 to 1 -> R.drawable.zte_business_00_t1_runtime
         1 to 0 -> R.drawable.zte_business_01_t0_runtime
         1 to 1 -> R.drawable.zte_business_01_t1_runtime
