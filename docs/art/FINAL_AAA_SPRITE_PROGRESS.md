@@ -4,8 +4,8 @@ Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains t
 
 ## Official progress
 - DONE: **11 / 235**
-- ART VALIDATED: **14 / 235**
-- RUNTIME INTEGRATED: **14 / 235**
+- ART VALIDATED: **15 / 235**
+- RUNTIME INTEGRATED: **15 / 235**
 - Generated candidates accepted as DONE: **11**
 - Rule: only runtime-integrated, individually clean/transparent, manifest-matching assets with green Android CI increment DONE.
 
@@ -26,6 +26,7 @@ Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains t
 | `BLD-01-T4 — Corner Shop T4` | 2048×2048 RGBA | PASS | `zte_business_01_t4_final.webp`, referenced | RUNTIME; CI pending |
 | `BLD-01-T5 — Corner Shop T5` | 2048×2048 RGBA | PASS | `zte_business_01_t5_final.webp`, referenced | RUNTIME; CI pending |
 | `BLD-01-T6 — Corner Shop T6` | 2048×2048 RGBA | PASS | `zte_business_01_t6_final.webp`, referenced | RUNTIME; CI pending |
+| `BLD-02-T0 — Furnace Stall T0` | 2048×2048 RGBA | PASS | `zte_business_02_t0_final.webp`, referenced | RUNTIME; CI pending |
 
 ## Current generated candidates
 | Candidate | Intended manifest item | State | Reason not DONE |
@@ -41,4 +42,4 @@ Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains t
 | Fire Station render | Unmapped | REJECTED | Baked readable text/logos and background. |
 
 ## Next production target
-`BLD-02-T0 — Furnace Stall T0`: generate the small improvised starter furnace stall with one clear smelting cue and no readable signage.
+`BLD-02-T1 — Furnace Stall T1`: generate the reinforced furnace stall with a dedicated powered air system, cleaner structure and stronger silhouette.
