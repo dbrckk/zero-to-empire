@@ -4,8 +4,8 @@ Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains t
 
 ## Official progress
 - DONE: **18 / 235**
-- ART VALIDATED: **21 / 235**
-- RUNTIME INTEGRATED: **21 / 235**
+- ART VALIDATED: **22 / 235**
+- RUNTIME INTEGRATED: **22 / 235**
 - Generated candidates accepted as DONE: **18**
 - Rule: only runtime-integrated, individually clean/transparent, manifest-matching assets with green Android CI increment DONE.
 
@@ -33,6 +33,7 @@ Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains t
 | `BLD-02-T4 — Furnace Stall T4` | 2048×2048 RGBA | PASS | `zte_business_02_t4_final.webp`, referenced | RUNTIME; CI pending |
 | `BLD-02-T5 — Furnace Stall T5` | 2048×2048 RGBA | PASS | `zte_business_02_t5_final.webp`, referenced | RUNTIME; CI pending |
 | `BLD-02-T6 — Furnace Stall T6` | 2048×2048 RGBA | PASS | `zte_business_02_t6_final.webp`, referenced | RUNTIME; CI pending |
+| `BLD-03-T0 — Assembly Hub T0` | 2048×2048 RGBA | PASS | `zte_business_03_t0_final.webp`, referenced | RUNTIME; CI pending |
 
 ## Current generated candidates
 | Candidate | Intended manifest item | State | Reason not DONE |
@@ -48,4 +49,4 @@ Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains t
 | Fire Station render | Unmapped | REJECTED | Baked readable text/logos and background. |
 
 ## Next production target
-`BLD-03-T0 — Assembly Hub T0`: generate the small improvised starter assembly hub with one clear manual assembly cue.
+`BLD-03-T1 — Assembly Hub T1`: generate the reinforced assembly workshop with dedicated powered tooling and stronger organization.
