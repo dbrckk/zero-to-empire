@@ -29,7 +29,7 @@ If a new runtime sprite is later required, it must be added here first and the d
 |---|---|---|---|---|
 | BLD-00-T0 | Street Stand T0 | Foundry / Street Stand — starter footprint, improvised materials, low verticality, one clear production cue. | `app/src/main/res/drawable-nodpi/zte_business_00_t0_final.webp` | RUNTIME |
 | BLD-00-T1 | Street Stand T1 | Foundry / Street Stand — reinforced footprint, dedicated machinery, cleaner structure, stronger silhouette. | `app/src/main/res/drawable-nodpi/zte_business_00_t1_final.webp` | RUNTIME |
-| BLD-00-T2 | Street Stand T2 | Foundry / Street Stand — commercialized/industrial expansion, second active subsystem, larger footprint. | `app/src/main/res/drawable-nodpi/zte_business_00_t2_final.webp` | TODO |
+| BLD-00-T2 | Street Stand T2 | Foundry / Street Stand — commercialized/industrial expansion, second active subsystem, larger footprint. | `app/src/main/res/drawable-nodpi/zte_business_00_t2_final.webp` | RUNTIME |
 | BLD-00-T3 | Street Stand T3 | Foundry / Street Stand — automated complex, visible logistics flow, more verticality and emissive accents. | `app/src/main/res/drawable-nodpi/zte_business_00_t3_final.webp` | TODO |
 | BLD-00-T4 | Street Stand T4 | Foundry / Street Stand — advanced district-scale facility, dense machinery, premium materials and strong landmark read. | `app/src/main/res/drawable-nodpi/zte_business_00_t4_final.webp` | TODO |
 | BLD-00-T5 | Street Stand T5 | Foundry / Street Stand — late-game megastructure, multi-stage production, large moving assemblies and energy routing. | `app/src/main/res/drawable-nodpi/zte_business_00_t5_final.webp` | TODO |
