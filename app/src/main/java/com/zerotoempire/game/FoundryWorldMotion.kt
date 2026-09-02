@@ -17,11 +17,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
 /**
- * One shared motion phase for lightweight authored worker traffic in the Foundry district.
+ * One shared motion phase for lightweight authored worker and delivery traffic in the Foundry district.
  * Decorative motion stops completely when Android animations are disabled or battery saver is active.
  */
 @Composable
-internal fun FoundryWorkerTraffic(modifier: Modifier = Modifier) {
+internal fun FoundryWorkerTraffic(
+    businessId: Int,
+    modifier: Modifier = Modifier
+) {
     val context = LocalContext.current
     val reducedMotion = remember(context) { MotionQuality.reducedMotion(context) }
     val phase = remember { Animatable(.18f) }
@@ -71,5 +74,24 @@ internal fun FoundryWorkerTraffic(modifier: Modifier = Modifier) {
                     scaleY = .82f
                 }
         )
+
+        // Logistics-heavy lots get one authored delivery vehicle on the same animation clock.
+        // No extra infinite transition is created, keeping motion cost flat on compact phones.
+        if (businessId == 1 || businessId == 3) {
+            Image(
+                painter = painterResource(R.drawable.zte_foundry_delivery_v1_runtime),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(46.dp)
+                    .graphicsLayer {
+                        val r = (p + .24f) % 1f
+                        translationX = widthPx * (.08f + r * .58f)
+                        translationY = heightPx * (.70f - r * .15f)
+                        alpha = if (reducedMotion) .74f else .94f
+                        scaleX = .78f
+                        scaleY = .78f
+                    }
+            )
+        }
     }
 }
