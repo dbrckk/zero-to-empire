@@ -48,16 +48,17 @@ internal fun FoundryWorkerTraffic(
         val heightPx = constraints.maxHeight.toFloat()
         val p = phase.value
 
-        // Four transparent raster frames replace the earlier two-pose vector worker cycle.
-        // They still use the single district clock and freeze deterministically in reduced motion.
+        // Four transparent raster frames run at ~10 fps from the existing shared district
+        // clock. The second worker is two frames out of phase so the crowd does not march
+        // in lockstep. Reduced motion remains a deterministic frozen pose.
         val workerFrames = intArrayOf(
             R.drawable.zte_foundry_worker_raster_f0,
             R.drawable.zte_foundry_worker_raster_f1,
             R.drawable.zte_foundry_worker_raster_f2,
             R.drawable.zte_foundry_worker_raster_f3
         )
-        val workerFrameIndex = if (reducedMotion) 0 else ((p * 16f).toInt() and 3)
-        val secondWorkerFrameIndex = if (reducedMotion) 0 else (((p + .5f) * 16f).toInt() and 3)
+        val workerFrameIndex = if (reducedMotion) 0 else ((p * 72f).toInt() and 3)
+        val secondWorkerFrameIndex = if (reducedMotion) 0 else (((p * 72f).toInt() + 2) and 3)
 
         Image(
             painter = painterResource(workerFrames[workerFrameIndex]),
@@ -65,9 +66,10 @@ internal fun FoundryWorkerTraffic(
             modifier = Modifier
                 .size(34.dp)
                 .graphicsLayer {
+                    val edgeFade = (minOf(p, 1f - p) * 12f).coerceIn(0f, 1f)
                     translationX = widthPx * (.19f + p * .24f)
                     translationY = heightPx * (.48f + p * .11f)
-                    alpha = if (reducedMotion) .76f else .92f
+                    alpha = if (reducedMotion) .76f else (.18f + edgeFade * .74f)
                     scaleX = .92f
                     scaleY = .92f
                 }
@@ -80,9 +82,10 @@ internal fun FoundryWorkerTraffic(
                 .size(29.dp)
                 .graphicsLayer {
                     val q = (p + .52f) % 1f
+                    val edgeFade = (minOf(q, 1f - q) * 12f).coerceIn(0f, 1f)
                     translationX = widthPx * (.73f - q * .20f)
                     translationY = heightPx * (.57f + q * .08f)
-                    alpha = if (reducedMotion) .62f else .82f
+                    alpha = if (reducedMotion) .62f else (.16f + edgeFade * .66f)
                     scaleX = -.82f
                     scaleY = .82f
                 }
