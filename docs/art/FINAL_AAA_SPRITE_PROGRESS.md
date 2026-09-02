@@ -3,10 +3,10 @@
 Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains the canonical 235-item scope. This file is updated during generation so candidate art cannot be confused with DONE runtime assets.
 
 ## Official progress
-- DONE: **15 / 235**
-- ART VALIDATED: **18 / 235**
-- RUNTIME INTEGRATED: **18 / 235**
-- Generated candidates accepted as DONE: **15**
+- DONE: **18 / 235**
+- ART VALIDATED: **21 / 235**
+- RUNTIME INTEGRATED: **21 / 235**
+- Generated candidates accepted as DONE: **18**
 - Rule: only runtime-integrated, individually clean/transparent, manifest-matching assets with green Android CI increment DONE.
 
 ## Accepted assets
@@ -27,9 +27,12 @@ Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains t
 | `BLD-01-T5 — Corner Shop T5` | 2048×2048 RGBA | PASS | `zte_business_01_t5_final.webp`, referenced | DONE; Android CI green |
 | `BLD-01-T6 — Corner Shop T6` | 2048×2048 RGBA | PASS | `zte_business_01_t6_final.webp`, referenced | DONE; Android CI green |
 | `BLD-02-T0 — Furnace Stall T0` | 2048×2048 RGBA | PASS | `zte_business_02_t0_final.webp`, referenced | DONE; Android CI green |
-| `BLD-02-T1 — Furnace Stall T1` | 2048×2048 RGBA | PASS | `zte_business_02_t1_final.webp`, referenced | RUNTIME; CI pending |
-| `BLD-02-T2 — Furnace Stall T2` | 2048×2048 RGBA | PASS | `zte_business_02_t2_final.webp`, referenced | RUNTIME; CI pending |
-| `BLD-02-T3 — Furnace Stall T3` | 2048×2048 RGBA | PASS | `zte_business_02_t3_final.webp`, referenced | RUNTIME; CI pending |
+| `BLD-02-T1 — Furnace Stall T1` | 2048×2048 RGBA | PASS | `zte_business_02_t1_final.webp`, referenced | DONE; Android CI green |
+| `BLD-02-T2 — Furnace Stall T2` | 2048×2048 RGBA | PASS | `zte_business_02_t2_final.webp`, referenced | DONE; Android CI green |
+| `BLD-02-T3 — Furnace Stall T3` | 2048×2048 RGBA | PASS | `zte_business_02_t3_final.webp`, referenced | DONE; Android CI green |
+| `BLD-02-T4 — Furnace Stall T4` | 2048×2048 RGBA | PASS | `zte_business_02_t4_final.webp`, referenced | RUNTIME; CI pending |
+| `BLD-02-T5 — Furnace Stall T5` | 2048×2048 RGBA | PASS | `zte_business_02_t5_final.webp`, referenced | RUNTIME; CI pending |
+| `BLD-02-T6 — Furnace Stall T6` | 2048×2048 RGBA | PASS | `zte_business_02_t6_final.webp`, referenced | RUNTIME; CI pending |
 
 ## Current generated candidates
 | Candidate | Intended manifest item | State | Reason not DONE |
@@ -45,4 +48,4 @@ Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains t
 | Fire Station render | Unmapped | REJECTED | Baked readable text/logos and background. |
 
 ## Next production target
-`BLD-02-T4 — Furnace Stall T4`: generate the advanced district-scale smelting landmark with dense machinery and premium materials.
+`BLD-03-T0 — Assembly Hub T0`: generate the small improvised starter assembly hub with one clear manual assembly cue.
