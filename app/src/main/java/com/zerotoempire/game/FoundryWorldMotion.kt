@@ -47,19 +47,20 @@ internal fun FoundryWorkerTraffic(
         val widthPx = constraints.maxWidth.toFloat()
         val heightPx = constraints.maxHeight.toFloat()
         val p = phase.value
-        val workerFrame = if (reducedMotion || ((p * 12f).toInt() and 1) == 0) {
-            R.drawable.zte_foundry_worker_idle_v1_runtime
-        } else {
-            R.drawable.zte_foundry_worker_walk_v1_runtime
-        }
-        val secondWorkerFrame = if (reducedMotion || (((p + .5f) * 12f).toInt() and 1) == 0) {
-            R.drawable.zte_foundry_worker_idle_v1_runtime
-        } else {
-            R.drawable.zte_foundry_worker_walk_v1_runtime
-        }
+
+        // Four transparent raster frames replace the earlier two-pose vector worker cycle.
+        // They still use the single district clock and freeze deterministically in reduced motion.
+        val workerFrames = intArrayOf(
+            R.drawable.zte_foundry_worker_raster_f0,
+            R.drawable.zte_foundry_worker_raster_f1,
+            R.drawable.zte_foundry_worker_raster_f2,
+            R.drawable.zte_foundry_worker_raster_f3
+        )
+        val workerFrameIndex = if (reducedMotion) 0 else ((p * 16f).toInt() and 3)
+        val secondWorkerFrameIndex = if (reducedMotion) 0 else (((p + .5f) * 16f).toInt() and 3)
 
         Image(
-            painter = painterResource(workerFrame),
+            painter = painterResource(workerFrames[workerFrameIndex]),
             contentDescription = null,
             modifier = Modifier
                 .size(34.dp)
@@ -73,7 +74,7 @@ internal fun FoundryWorkerTraffic(
         )
 
         Image(
-            painter = painterResource(secondWorkerFrame),
+            painter = painterResource(workerFrames[secondWorkerFrameIndex]),
             contentDescription = null,
             modifier = Modifier
                 .size(29.dp)
