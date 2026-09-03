@@ -103,6 +103,7 @@ internal fun WorldBusinessVisual(
         }
     } else {
         Box(modifier = modifier.size(size)) {
+            if (businessId == 7 && tier >= 4) ElectricArc(modifier = Modifier.fillMaxSize())
             if (businessId == 8 && tier >= 4) HologramScanSweep(modifier = Modifier.fillMaxSize())
             if (businessId == 9 && tier >= 4) DroneThruster(modifier = Modifier.fillMaxSize())
             if (businessId == 10 && tier >= 4) PhaseDistortion(modifier = Modifier.fillMaxSize())

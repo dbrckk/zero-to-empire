@@ -4,8 +4,8 @@ Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains t
 
 ## Official progress
 - DONE: **18 / 235**
-- ART VALIDATED: **30 / 235**
-- RUNTIME INTEGRATED: **30 / 235**
+- ART VALIDATED: **31 / 235**
+- RUNTIME INTEGRATED: **31 / 235**
 - Generated candidates accepted as DONE: **18**
 - Rule: only runtime-integrated, individually clean/transparent, manifest-matching assets with green Android CI increment DONE.
 
@@ -35,6 +35,7 @@ Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains t
 | `BLD-02-T6 — Furnace Stall T6` | 2048×2048 RGBA | PASS | `zte_business_02_t6_final.webp`, referenced | RUNTIME; CI pending |
 | `BLD-03-T0 — Assembly Hub T0` | 2048×2048 RGBA | PASS | `zte_business_03_t0_final.webp`, referenced | RUNTIME; CI pending |
 | `BLD-03-T1 — Assembly Hub T1` | 2048×2048 RGBA | PASS — genuine alpha; 100.0% dominant | `zte_business_03_t1_final.webp`, referenced | RUNTIME; CI pending |
+| `FX-10 — electric arc` | 8 × 128×128 RGBA, 4×2 sheet | PASS — 93.4% transparent; every cell populated and isolated | `zte_fx_10_final.webp`, animated at 8 fps on business 7 with reduced-motion freeze | RUNTIME; CI pending |
 | `FX-11 — hologram scan sweep` | 8 × 128×128 RGBA, 4×2 sheet | PASS — 65.1% transparent; every cell populated and isolated | `zte_fx_11_final.webp`, animated at 8 fps on business 8 with reduced-motion freeze | RUNTIME; CI pending |
 | `FX-12 — drone thruster` | 8 × 128×128 RGBA, 4×2 sheet | PASS — 82.5% transparent; every cell populated and isolated | `zte_fx_12_final.webp`, animated at 8 fps on business 9 with reduced-motion freeze | RUNTIME; CI pending |
 | `FX-13 — phase distortion` | 8 × 128×128 RGBA, 4×2 sheet | PASS — 70.0% transparent; every cell populated and isolated | `zte_fx_13_final.webp`, animated at 8 fps on business 10 with reduced-motion freeze | RUNTIME; CI pending |
@@ -58,10 +59,11 @@ Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains t
 | Assembly Hub T1 first render | BLD-03-T1 | REJECTED | Baked checkerboard background; source had no alpha channel. |
 
 ## Next production target
-`FX-10 — electric arc`: generate an 8-frame 128×128 transparent loop, working backward through the manifest as requested.
+`FX-09 — income pickup sparkle`: generate an 8-frame 128×128 transparent loop, working backward through the manifest as requested.
 
 ## Rejected during reverse-order production
 | Intended asset | Attempt | Reason |
 |---|---:|---|
 | `FX-17 — mastery crown shimmer` | 1 | Rejected: 2048×768 strip, non-square cells and touching halos; not retained. |
 | `FX-11 — hologram scan sweep` | 1 | Rejected: ambient cyan bloom connected multiple cells and eliminated transparent gutters. |
+| `FX-10 — electric arc` | 1 | Rejected: excessive blue bloom and over-wide branches reduced 128 px readability. |
