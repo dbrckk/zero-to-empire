@@ -100,6 +100,7 @@ internal fun WorldBusinessVisual(
             if (WorldSpriteRegistry.masteryForLevel(level)) {
                 MasteryCrownShimmer(modifier = Modifier.fillMaxSize())
             }
+            UpgradeConstructionFlash(trigger = level, modifier = Modifier.fillMaxSize())
         }
     } else {
         Box(modifier = modifier.size(size)) {
@@ -112,6 +113,7 @@ internal fun WorldBusinessVisual(
             if (businessId == 12 && tier >= 4) StellarFlare(modifier = Modifier.fillMaxSize())
             BusinessArtIcon(businessId, level, size)
             if (businessId == 13 && tier >= 4) SingularityLensPulse(modifier = Modifier.fillMaxSize())
+            UpgradeConstructionFlash(trigger = level, modifier = Modifier.fillMaxSize())
         }
     }
 }
