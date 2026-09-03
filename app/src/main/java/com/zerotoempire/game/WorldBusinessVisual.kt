@@ -103,6 +103,7 @@ internal fun WorldBusinessVisual(
         }
     } else {
         Box(modifier = modifier.size(size)) {
+            if (businessId == 10 && tier >= 4) PhaseDistortion(modifier = Modifier.fillMaxSize())
             if (businessId == 11 && tier >= 4) OrbitalIonTrail(modifier = Modifier.fillMaxSize())
             if (businessId == 12 && tier >= 4) StellarFlare(modifier = Modifier.fillMaxSize())
             BusinessArtIcon(businessId, level, size)
