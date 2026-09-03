@@ -40,7 +40,7 @@ def alpha_quality(im: Image.Image) -> None:
     if hi == 0:
         raise ValueError('empty alpha')
     # Reject images that are effectively opaque rectangles. Generated sheets/backgrounds must not pass.
-    transparent = sum(1 for p in a.getdata() if p <= 8)
+    transparent = sum(1 for p in a.get_flattened_data() if p <= 8)
     if transparent / (im.width * im.height) < 0.02:
         raise ValueError('insufficient transparent area; likely background/sheet')
 
@@ -77,6 +77,44 @@ def process(spec: dict) -> None:
     print(f'processed {asset_id}: {src.relative_to(ROOT)} -> {runtime.relative_to(ROOT)}')
 
 
+def process_sheet(spec: dict) -> None:
+    src = INBOX / spec['source']
+    asset_id = spec['id']
+    target = spec['target']
+    columns = int(spec['columns'])
+    rows = int(spec['rows'])
+    frame_size = int(spec['frame_size'])
+    padding_ratio = float(spec.get('padding_ratio', 0.10))
+    if not src.is_file():
+        raise FileNotFoundError(src)
+    with Image.open(src) as opened:
+        source = opened.convert('RGBA')
+    alpha_quality(source)
+    sheet = Image.new('RGBA', (columns * frame_size, rows * frame_size), (0, 0, 0, 0))
+    for row in range(rows):
+        top = round(row * source.height / rows)
+        bottom = round((row + 1) * source.height / rows)
+        for column in range(columns):
+            left = round(column * source.width / columns)
+            right = round((column + 1) * source.width / columns)
+            frame = trim_alpha(source.crop((left, top, right, bottom)))
+            frame = pad_square(frame, padding_ratio)
+            frame.thumbnail((frame_size, frame_size), Image.Resampling.LANCZOS)
+            cell = Image.new('RGBA', (frame_size, frame_size), (0, 0, 0, 0))
+            cell.alpha_composite(frame, ((frame_size - frame.width) // 2, (frame_size - frame.height) // 2))
+            sheet.alpha_composite(cell, (column * frame_size, row * frame_size))
+    alpha_quality(sheet)
+    PROCESSED.mkdir(parents=True, exist_ok=True)
+    RUNTIME.mkdir(parents=True, exist_ok=True)
+    sheet.save(PROCESSED / f'{asset_id}.png', 'PNG', optimize=True)
+    runtime = RUNTIME / target
+    if runtime.suffix.lower() == '.webp':
+        sheet.save(runtime, 'WEBP', lossless=True, method=6)
+    else:
+        sheet.save(runtime, 'PNG', optimize=True)
+    print(f'processed {asset_id}: {columns}x{rows} frames at {frame_size}px; {src.relative_to(ROOT)} -> {runtime.relative_to(ROOT)}')
+
+
 def main() -> None:
     if not MANIFEST.exists():
         print('No art/generated/assets.json; nothing to process.')
@@ -93,7 +131,10 @@ def main() -> None:
         seen.add(asset_id)
         if not target.startswith('zte_') or not target.endswith(('_final.webp', '_final.png')):
             raise ValueError(f'invalid final target: {target}')
-        process(spec)
+        if spec.get('kind') == 'sprite_sheet':
+            process_sheet(spec)
+        else:
+            process(spec)
 
 
 if __name__ == '__main__':

@@ -4,8 +4,8 @@ Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains t
 
 ## Official progress
 - DONE: **18 / 235**
-- ART VALIDATED: **23 / 235**
-- RUNTIME INTEGRATED: **23 / 235**
+- ART VALIDATED: **26 / 235**
+- RUNTIME INTEGRATED: **26 / 235**
 - Generated candidates accepted as DONE: **18**
 - Rule: only runtime-integrated, individually clean/transparent, manifest-matching assets with green Android CI increment DONE.
 
@@ -35,6 +35,9 @@ Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains t
 | `BLD-02-T6 — Furnace Stall T6` | 2048×2048 RGBA | PASS | `zte_business_02_t6_final.webp`, referenced | RUNTIME; CI pending |
 | `BLD-03-T0 — Assembly Hub T0` | 2048×2048 RGBA | PASS | `zte_business_03_t0_final.webp`, referenced | RUNTIME; CI pending |
 | `BLD-03-T1 — Assembly Hub T1` | 2048×2048 RGBA | PASS — genuine alpha; 100.0% dominant | `zte_business_03_t1_final.webp`, referenced | RUNTIME; CI pending |
+| `FX-15 — stellar flare` | 8 × 128×128 RGBA, 4×2 sheet | PASS — 66.8% transparent; every cell populated and isolated | `zte_fx_15_final.webp`, animated at 8 fps on Apex business 12 with reduced-motion freeze | RUNTIME; CI pending |
+| `FX-16 — singularity lens pulse` | 8 × 128×128 RGBA, 4×2 sheet | PASS — 76.3% transparent; every cell populated and isolated | `zte_fx_16_final.webp`, animated at 8 fps on Apex business 13 with reduced-motion freeze | RUNTIME; CI pending |
+| `FX-17 — mastery crown shimmer` | 8 × 128×128 RGBA, 4×2 sheet | PASS — 64.2% transparent; every cell populated and isolated | `zte_fx_17_final.webp`, animated at 8 fps with reduced-motion freeze | RUNTIME; CI pending |
 
 ## Current generated candidates
 | Candidate | Intended manifest item | State | Reason not DONE |
@@ -51,4 +54,9 @@ Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains t
 | Assembly Hub T1 first render | BLD-03-T1 | REJECTED | Baked checkerboard background; source had no alpha channel. |
 
 ## Next production target
-`BLD-03-T2 — Assembly Hub T2`: generate the industrial expansion with a larger footprint and a clearly visible second active subsystem.
+`FX-14 — orbital ion trail`: generate an 8-frame 128×128 transparent loop, working backward through the manifest as requested.
+
+## Rejected during reverse-order production
+| Intended asset | Attempt | Reason |
+|---|---:|---|
+| `FX-17 — mastery crown shimmer` | 1 | Rejected: 2048×768 strip, non-square cells and touching halos; not retained. |

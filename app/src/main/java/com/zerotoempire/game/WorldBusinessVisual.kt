@@ -97,8 +97,15 @@ internal fun WorldBusinessVisual(
                     modifier = Modifier.fillMaxSize()
                 )
             }
+            if (WorldSpriteRegistry.masteryForLevel(level)) {
+                MasteryCrownShimmer(modifier = Modifier.fillMaxSize())
+            }
         }
     } else {
-        BusinessArtIcon(businessId, level, size)
+        Box(modifier = modifier.size(size)) {
+            if (businessId == 12 && tier >= 4) StellarFlare(modifier = Modifier.fillMaxSize())
+            BusinessArtIcon(businessId, level, size)
+            if (businessId == 13 && tier >= 4) SingularityLensPulse(modifier = Modifier.fillMaxSize())
+        }
     }
 }

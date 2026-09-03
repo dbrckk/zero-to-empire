@@ -56,7 +56,7 @@ def validate(path: Path) -> None:
     lo, hi = alpha.getextrema()
     if hi == 0:
         raise ValueError('fully transparent')
-    transparent_ratio = sum(1 for p in alpha.getdata() if p <= 8) / (im.width * im.height)
+    transparent_ratio = sum(1 for p in alpha.get_flattened_data() if p <= 8) / (im.width * im.height)
     if transparent_ratio < 0.08:
         raise ValueError(f'background not transparent enough ({transparent_ratio:.1%})')
 
@@ -85,6 +85,35 @@ def validate(path: Path) -> None:
     print(f'isolated sprite OK: {path.relative_to(ROOT)}; transparent={transparent_ratio:.1%}; dominant={dominant:.1%}')
 
 
+def validate_sheet(path: Path, spec: dict) -> None:
+    with Image.open(path) as opened:
+        sheet = opened.convert('RGBA')
+    columns = int(spec['columns'])
+    rows = int(spec['rows'])
+    expected = int(spec['frame_count'])
+    if columns * rows != expected:
+        raise ValueError(f'invalid sheet layout: {columns}x{rows} != {expected} frames')
+    alpha = sheet.getchannel('A')
+    transparent_ratio = sum(1 for p in alpha.get_flattened_data() if p <= 8) / (sheet.width * sheet.height)
+    if transparent_ratio < 0.08:
+        raise ValueError(f'sheet background not transparent enough ({transparent_ratio:.1%})')
+    for row in range(rows):
+        top = round(row * sheet.height / rows)
+        bottom = round((row + 1) * sheet.height / rows)
+        for column in range(columns):
+            left = round(column * sheet.width / columns)
+            right = round((column + 1) * sheet.width / columns)
+            frame_alpha = sheet.crop((left, top, right, bottom)).getchannel('A')
+            if frame_alpha.getbbox() is None:
+                raise ValueError(f'empty frame at row={row}, column={column}')
+            comps = connected_components(frame_alpha)
+            total = sum(component[0] for component in comps)
+            dominant = comps[0][0] / total
+            if dominant < 0.72:
+                raise ValueError(f'fragmented frame at row={row}, column={column}; dominant component only {dominant:.1%}')
+    print(f'animation sheet OK: {path.relative_to(ROOT)}; frames={columns}x{rows}; transparent={transparent_ratio:.1%}')
+
+
 def main() -> None:
     if not MANIFEST.exists():
         print('No art/generated/assets.json; nothing to validate.')
@@ -93,7 +122,11 @@ def main() -> None:
     if not isinstance(specs, list):
         raise ValueError('assets.json must contain a JSON array')
     for spec in specs:
-        validate(INBOX / spec['source'])
+        path = INBOX / spec['source']
+        if spec.get('kind') == 'sprite_sheet':
+            validate_sheet(path, spec)
+        else:
+            validate(path)
 
 
 if __name__ == '__main__':
