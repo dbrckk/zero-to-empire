@@ -1,5 +1,16 @@
 package com.zerotoempire.game
 
+import android.provider.Settings
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
+import kotlinx.coroutines.delay
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -318,6 +329,28 @@ private fun AscendantWorldLot(vm: GameViewModel, business: Business, state: Game
 
 @Composable
 private fun AscendantCorePlaza(state: GameState, tap: () -> Unit, modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    val pulseSheet = remember { ImageBitmap.imageResource(context.resources, R.drawable.zte_fx_06_final) }
+    val motionEnabled = remember(context) {
+        Settings.Global.getFloat(context.contentResolver, Settings.Global.ANIMATOR_DURATION_SCALE, 1f) > 0f
+    }
+    var pulseToken by remember { mutableIntStateOf(0) }
+    var pulseFrame by remember { mutableIntStateOf(-1) }
+
+    LaunchedEffect(pulseToken) {
+        if (pulseToken == 0) return@LaunchedEffect
+        if (!motionEnabled) {
+            pulseFrame = 3
+            delay(80)
+        } else {
+            for (frame in 0 until 8) {
+                pulseFrame = frame
+                delay(42)
+            }
+        }
+        pulseFrame = -1
+    }
+
     Box(modifier.fillMaxWidth().height(118.dp), contentAlignment = Alignment.Center) {
         Box(
             Modifier.size(118.dp).background(
@@ -330,10 +363,26 @@ private fun AscendantCorePlaza(state: GameState, tap: () -> Unit, modifier: Modi
             shape = CircleShape,
             modifier = Modifier.size(98.dp)
                 .border(2.dp, EmpireColors.Gold.copy(alpha = .48f), CircleShape)
-                .clickable(role = Role.Button) { tap() }
+                .clickable(role = Role.Button) {
+                    pulseToken += 1
+                    tap()
+                }
         ) {
             Box(contentAlignment = Alignment.Center) {
                 EmpireCoreGlyph(Modifier.size(86.dp), EmpireEras.current(state.lifetimeCash).index)
+            }
+        }
+        if (pulseFrame >= 0) {
+            Canvas(Modifier.size(118.dp)) {
+                val frame = pulseFrame.coerceIn(0, 7)
+                val side = minOf(size.width, size.height).toInt()
+                drawImage(
+                    image = pulseSheet,
+                    srcOffset = IntOffset((frame % 4) * 128, (frame / 4) * 128),
+                    srcSize = IntSize(128, 128),
+                    dstOffset = IntOffset(((size.width - side) / 2f).toInt(), ((size.height - side) / 2f).toInt()),
+                    dstSize = IntSize(side, side)
+                )
             }
         }
         Surface(
