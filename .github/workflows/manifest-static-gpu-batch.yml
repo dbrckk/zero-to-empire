@@ -8,6 +8,7 @@ on:
       - '.github/workflows/manifest-static-gpu-batch.yml'
       - 'tools/sprites/manifest_batch_planner.py'
       - 'tools/sprites/hf_static_manifest_factory.py'
+      - 'tools/sprites/build_sprite_contact_sheet.py'
   schedule:
     - cron: '17 * * * *'
 
@@ -47,6 +48,7 @@ jobs:
           SHARD: ${{ matrix.shard }}
         run: |
           set -u -o pipefail
+          mkdir -p /tmp/shard-candidates
           python3 tools/sprites/manifest_batch_planner.py --kind ALL --count 36 > /tmp/plan.json
           python3 - <<'PY' > /tmp/targets.tsv
           import json, os
@@ -58,7 +60,7 @@ jobs:
                   print(f"{item['id']}\t{item['stem']}")
           PY
 
-          successes=()
+          successes=0
           failures=()
           attempts=0
           while IFS=$'\t' read -r asset_id stem; do
@@ -69,8 +71,10 @@ jobs:
             SPRITE_TARGET="$asset_id" python3 tools/sprites/hf_static_manifest_factory.py
             rc=$?
             set -e
-            if [ "$rc" -eq 0 ] && [ -s "art/incoming/final-sprites/${stem}.png" ]; then
-              successes+=("$stem")
+            candidate="art/incoming/final-sprites/${stem}.png"
+            if [ "$rc" -eq 0 ] && [ -s "$candidate" ]; then
+              cp "$candidate" "/tmp/shard-candidates/${stem}.png"
+              successes=$((successes + 1))
               continue
             fi
             if [ "$rc" -eq 75 ]; then
@@ -83,23 +87,15 @@ jobs:
           done < /tmp/targets.tsv
 
           echo "attempted_assets=$attempts"
-          echo "successful_assets=${#successes[@]}"
+          echo "successful_assets=$successes"
           if (( ${#failures[@]} )); then printf '%s\n' "${failures[@]}"; fi
-          if (( ${#successes[@]} == 0 )); then
+          if (( successes == 0 )); then
             echo 'has_files=false' >> "$GITHUB_OUTPUT"
             exit 0
           fi
           echo 'has_files=true' >> "$GITHUB_OUTPUT"
 
-      - name: Stage successful shard candidates
-        if: steps.batch.outputs.has_files == 'true'
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p /tmp/shard-candidates
-          cp art/incoming/final-sprites/*_final.png /tmp/shard-candidates/
-
-      - name: Upload successful shard candidates
+      - name: Upload only successful shard candidates
         if: steps.batch.outputs.has_files == 'true'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
@@ -109,7 +105,7 @@ jobs:
           retention-days: 3
 
   finalize:
-    name: Finalize and commit hourly batch
+    name: QA, finalize and commit hourly batch
     needs: generate
     if: always()
     runs-on: ubuntu-latest
@@ -123,29 +119,38 @@ jobs:
       - name: Install Pillow
         run: python3 -m pip install --disable-pip-version-check Pillow==11.3.0
 
-      - name: Download successful shard candidates
+      - name: Download only this run candidates
         uses: actions/download-artifact@v4
         with:
           pattern: gpu-static-shard-*
-          path: art/incoming/final-sprites
+          path: /tmp/generated-candidates
           merge-multiple: true
         continue-on-error: true
 
       - id: collect
-        name: Finalize all successful candidates once
+        name: QA and finalize successful candidates once
         shell: bash
         run: |
           set -euo pipefail
           shopt -s nullglob
-          files=(art/incoming/final-sprites/*_final.png)
+          files=(/tmp/generated-candidates/*_final.png)
           if (( ${#files[@]} == 0 )); then
             echo 'No generated candidates survived this hourly batch.'
             echo 'has_files=false' >> "$GITHUB_OUTPUT"
             exit 0
           fi
+
+          python3 tools/sprites/build_sprite_contact_sheet.py \
+            --files "${files[@]}" \
+            --output /tmp/batch-contact-sheet.png \
+            --report /tmp/batch-qa-report.json
+
+          mkdir -p art/incoming/final-sprites
           stems=()
           for file in "${files[@]}"; do
-            stems+=("$(basename "$file" .png)")
+            stem="$(basename "$file" .png)"
+            cp "$file" "art/incoming/final-sprites/${stem}.png"
+            stems+=("$stem")
           done
           export SPRITE_TARGETS="$(IFS=,; echo "${stems[*]}")"
           python3 tools/sprites/process_final_sprites.py
@@ -161,7 +166,7 @@ jobs:
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add art/incoming/final-sprites/ app/src/main/res/drawable-nodpi/
           if git diff --cached --quiet; then exit 0; fi
-          git commit -m 'art: finalize parallel hourly static sprite batch'
+          git commit -m 'art: finalize isolated parallel static sprite batch'
           git pull --rebase origin main
           git push
 
@@ -171,7 +176,8 @@ jobs:
         with:
           name: finalized-static-hourly-batch
           path: |
-            art/incoming/final-sprites/*_final.png
-            app/src/main/res/drawable-nodpi/*_final.webp
+            /tmp/generated-candidates/*_final.png
+            /tmp/batch-contact-sheet.png
+            /tmp/batch-qa-report.json
           if-no-files-found: error
           retention-days: 30
