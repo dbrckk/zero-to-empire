@@ -1,0 +1,115 @@
+name: Kaggle GPU Sprite Orchestrator
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '23 */6 * * *'
+
+permissions:
+  contents: write
+
+env:
+  KAGGLE_KERNEL: dbrckk/zero-to-empire-sprite-factory
+
+concurrency:
+  group: kaggle-gpu-sprite-orchestrator
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+      KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Require Kaggle credentials
+        shell: bash
+        run: |
+          test -n "$KAGGLE_USERNAME" || { echo 'Missing KAGGLE_USERNAME secret'; exit 1; }
+          test -n "$KAGGLE_KEY" || { echo 'Missing KAGGLE_KEY secret'; exit 1; }
+
+      - name: Install Kaggle CLI
+        run: python -m pip install --upgrade kaggle
+
+      - name: Authenticate
+        run: kaggle config view >/dev/null
+
+      - name: Submit GPU factory
+        run: kaggle kernels push -p kaggle
+
+      - name: Wait for Kaggle kernel
+        shell: bash
+        run: |
+          for i in $(seq 1 120); do
+            STATUS="$(kaggle kernels status "$KAGGLE_KERNEL" 2>&1 || true)"
+            echo "$STATUS"
+            if echo "$STATUS" | grep -qi 'complete'; then exit 0; fi
+            if echo "$STATUS" | grep -Eqi 'error|failed|cancel'; then exit 1; fi
+            sleep 60
+          done
+          echo 'Timed out waiting for Kaggle'
+          exit 1
+
+      - name: Download Kaggle outputs
+        run: |
+          rm -rf /tmp/kaggle-output
+          mkdir -p /tmp/kaggle-output
+          kaggle kernels output "$KAGGLE_KERNEL" -p /tmp/kaggle-output
+          find /tmp/kaggle-output -maxdepth 2 -type f -print
+
+      - name: Import candidate archive
+        shell: bash
+        run: |
+          ZIP="$(find /tmp/kaggle-output -type f -name 'zero-to-empire-kaggle-candidates.zip' | head -1)"
+          test -n "$ZIP" || { echo 'Candidate ZIP missing'; exit 1; }
+          mkdir -p /tmp/kaggle-candidates
+          unzip -q "$ZIP" -d /tmp/kaggle-candidates
+          mkdir -p art/incoming/final-sprites
+          find /tmp/kaggle-candidates -type f -name '*_final.png' -exec cp {} art/incoming/final-sprites/ \;
+          COUNT="$(find /tmp/kaggle-candidates -type f -name '*_final.png' | wc -l)"
+          echo "KAGGLE_IMPORTED=$COUNT"
+          test "$COUNT" -gt 0
+
+      - name: Build QA report
+        run: |
+          python tools/sprites/build_sprite_contact_sheet.py \
+            --input art/incoming/final-sprites \
+            --output /tmp/kaggle-contact-sheet.png \
+            --report /tmp/kaggle-qa-report.json
+
+      - name: Finalize requested candidates
+        shell: bash
+        run: |
+          TARGETS="$(find /tmp/kaggle-candidates -type f -name '*_final.png' -printf '%f\n' | sed 's/\.png$//' | paste -sd, -)"
+          test -n "$TARGETS"
+          SPRITE_TARGETS="$TARGETS" python tools/sprites/process_final_sprites.py
+
+      - name: Commit validated runtime batch
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add art/incoming/final-sprites app/src/main/res/drawable-nodpi
+          if git diff --cached --quiet; then
+            echo 'No new validated assets.'
+            exit 0
+          fi
+          git commit -m 'art: finalize Kaggle GPU sprite batch'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Upload QA artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kaggle-sprite-batch-qa
+          path: |
+            /tmp/kaggle-contact-sheet.png
+            /tmp/kaggle-qa-report.json
+          if-no-files-found: ignore
+          retention-days: 30
