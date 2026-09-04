@@ -10,7 +10,7 @@ on:
       - '.github/workflows/final-sprite-pipeline.yml'
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: final-sprite-pipeline-${{ github.ref }}
@@ -61,6 +61,21 @@ jobs:
           test "$count" -gt 0
           printf 'validated_final_runtime_assets=%s\n' "$count"
           find app/src/main/res/drawable-nodpi -maxdepth 1 -type f -name '*_final.webp' -print | LC_ALL=C sort
+
+      - name: Commit newly finalized runtime sprites
+        if: steps.candidates.outputs.has_candidates == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- app/src/main/res/drawable-nodpi/ && [ -z "$(git ls-files --others --exclude-standard app/src/main/res/drawable-nodpi/)" ]; then
+            echo 'No runtime sprite changes to commit.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add app/src/main/res/drawable-nodpi/*_final.webp
+          git commit -m 'art: finalize validated sprite runtime assets'
+          git push
 
       - name: Upload processed runtime sprites
         if: steps.candidates.outputs.has_candidates == 'true'
