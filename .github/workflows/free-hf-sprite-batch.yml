@@ -1,27 +1,26 @@
-name: Free HF Sprite Batch
+name: Instant Small FX Batch
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '7,22,37,52 * * * *'
   push:
     branches: [ main ]
     paths:
-      - 'tools/sprites/hf_sprite_factory.py'
+      - 'tools/sprites/procedural_fx_factory.py'
+      - 'tools/sprites/process_final_sprites.py'
       - '.github/workflows/free-hf-sprite-batch.yml'
 
 permissions:
   contents: write
 
 concurrency:
-  group: free-hf-sprite-batch
-  cancel-in-progress: false
+  group: instant-small-fx-batch
+  cancel-in-progress: true
 
 jobs:
   generate:
-    name: Generate ${{ matrix.target }}
+    name: Author ${{ matrix.target }}
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 5
     strategy:
       fail-fast: false
       max-parallel: 4
@@ -36,8 +35,6 @@ jobs:
           - target: FX-03
             stem: zte_fx_03_final
     env:
-      HF_TOKEN: ${{ secrets.HF_TOKEN }}
-      HF_SPACE_URL: https://mcp-tools-z-image-turbo.hf.space
       SPRITE_TARGET: ${{ matrix.target }}
     steps:
       - name: Checkout
@@ -48,36 +45,28 @@ jobs:
           python-version: '3.12'
       - name: Install deterministic image tooling
         run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
-      - name: Generate missing candidate
-        id: make
-        continue-on-error: true
+      - name: Generate native transparent FX sheet instantly
         shell: bash
         run: |
           set -euo pipefail
           if [ -s "art/incoming/final-sprites/${{ matrix.stem }}.png" ]; then
-            echo 'Candidate already exists; reusing it.'
-            exit 0
+            echo 'Candidate already exists; preserving it.'
+          else
+            python tools/sprites/procedural_fx_factory.py
           fi
-          if [ -z "${HF_TOKEN:-}" ]; then
-            echo 'Missing Actions secret HF_TOKEN.' >&2
-            exit 2
-          fi
-          python tools/sprites/hf_sprite_factory.py
-      - name: Upload candidate when available
-        if: always()
+      - name: Upload technically validated candidate
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: candidate-${{ matrix.target }}
           path: art/incoming/final-sprites/${{ matrix.stem }}.png
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 30
 
   finalize:
-    name: Finalize available art once
+    name: Finalize batch once
     needs: generate
-    if: always()
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 8
     steps:
       - name: Checkout latest main
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -89,33 +78,23 @@ jobs:
           python-version: '3.12'
       - name: Install deterministic image tooling
         run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
-      - name: Download available candidates
-        continue-on-error: true
+      - name: Download all four candidates
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           pattern: candidate-FX-*
           path: /tmp/zte-batch
           merge-multiple: true
-      - name: Stage and finalize available validated candidates
-        id: stage
+      - name: Stage and finalize all four once
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p art/incoming/final-sprites
-          if [ -d /tmp/zte-batch ]; then
-            find /tmp/zte-batch -type f -name 'zte_fx_*_final.png' -print -exec cp '{}' art/incoming/final-sprites/ ';'
-          fi
-          count=0
+          find /tmp/zte-batch -type f -name 'zte_fx_*_final.png' -print -exec cp '{}' art/incoming/final-sprites/ ';'
           for n in 00 01 02 03; do
-            [ -s "art/incoming/final-sprites/zte_fx_${n}_final.png" ] && count=$((count + 1))
+            test -s "art/incoming/final-sprites/zte_fx_${n}_final.png"
           done
-          echo "count=${count}" >> "$GITHUB_OUTPUT"
-          echo "Available batch candidates: ${count}/4"
-          if [ "$count" -gt 0 ]; then
-            python tools/sprites/process_final_sprites.py
-          fi
-      - name: Commit technically validated art immediately
-        if: steps.stage.outputs.count != '0'
+          python tools/sprites/process_final_sprites.py
+      - name: Commit all validated art in one push
         shell: bash
         run: |
           set -euo pipefail
@@ -123,18 +102,17 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add art/incoming/final-sprites/ app/src/main/res/drawable-nodpi/
           if git diff --cached --quiet; then
-            echo 'No new validated batch files to commit.'
+            echo 'No new validated small-FX files to commit.'
             exit 0
           fi
-          git commit -m 'art: finalize accelerated FX-00 through FX-03 batch'
+          git commit -m 'art: finalize instant FX-00 through FX-03 batch'
           git push
       - name: Upload finalized batch for visual inspection
-        if: steps.stage.outputs.count != '0'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: finalized-FX-00-FX-03
           path: |
             art/incoming/final-sprites/zte_fx_0[0-3]_final.png
             app/src/main/res/drawable-nodpi/zte_fx_0[0-3]_final.webp
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 30
