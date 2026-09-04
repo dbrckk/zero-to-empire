@@ -1,5 +1,6 @@
 package com.zerotoempire.game
 
+import android.graphics.BitmapFactory
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -9,15 +10,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
+private const val WarmPulseFrameSize = 128
+private const val WarmPulseColumns = 4
+private const val WarmPulseFrameCount = 8
+private const val WarmPulsePeakFrame = 4
+
 /**
- * Short-lived, Canvas-only feedback for successful asset purchases.
- * It deliberately has no idle animation: zero GPU/CPU cost between purchases.
+ * Short-lived feedback for successful asset purchases.
+ * FX-06 provides the authored warm energy pulse while Canvas sparks preserve
+ * scale-dependent punch without adding idle animation cost.
  */
 @Composable
 fun AssetPurchaseImpact(
@@ -28,9 +38,12 @@ fun AssetPurchaseImpact(
     val context = LocalContext.current
     val reduced = MotionQuality.reducedMotion(context)
     val lowPower = MotionQuality.lowPowerMode(context)
+    val sheet = remember(context) {
+        BitmapFactory.decodeResource(context.resources, R.drawable.zte_fx_06_final).asImageBitmap()
+    }
     val progress = remember { Animatable(1f) }
 
-    LaunchedEffect(serial) {
+    LaunchedEffect(serial, reduced, lowPower) {
         if (serial <= 0) return@LaunchedEffect
         progress.snapTo(0f)
         progress.animateTo(
@@ -58,21 +71,37 @@ fun AssetPurchaseImpact(
         val center = Offset(size.width * .18f, size.height * .50f)
         val min = size.minDimension
         val alpha = (1f - p) * intensity
-
-        drawCircle(
-            color = EmpireArtPalette.GoldHot.copy(alpha = alpha * .42f),
-            radius = min * (.08f + p * .32f),
-            center = center,
-            style = Stroke(width = 2.5f + intensity * 2f)
+        val frame = when {
+            reduced -> WarmPulsePeakFrame
+            lowPower -> ((p * 4f).toInt().coerceIn(0, 3) * 2).coerceAtMost(WarmPulseFrameCount - 1)
+            else -> (p * WarmPulseFrameCount).toInt().coerceIn(0, WarmPulseFrameCount - 1)
+        }
+        val pulseSize = (min * (.34f + intensity * .16f)).toInt().coerceAtLeast(1)
+        val pulseOffset = IntOffset(
+            x = (center.x - pulseSize / 2f).toInt(),
+            y = (center.y - pulseSize / 2f).toInt()
         )
-        drawCircle(
-            color = Color.White.copy(alpha = alpha * .22f),
-            radius = min * (.05f + p * .20f),
-            center = center,
-            style = Stroke(width = 1.5f)
+
+        drawImage(
+            image = sheet,
+            srcOffset = IntOffset(
+                x = (frame % WarmPulseColumns) * WarmPulseFrameSize,
+                y = (frame / WarmPulseColumns) * WarmPulseFrameSize
+            ),
+            srcSize = IntSize(WarmPulseFrameSize, WarmPulseFrameSize),
+            dstOffset = pulseOffset,
+            dstSize = IntSize(pulseSize, pulseSize),
+            alpha = if (reduced) intensity * .72f else intensity
         )
 
         if (!reduced) {
+            drawCircle(
+                color = EmpireArtPalette.GoldHot.copy(alpha = alpha * .24f),
+                radius = min * (.08f + p * .32f),
+                center = center,
+                style = Stroke(width = 2f + intensity * 1.5f)
+            )
+
             val sparks = if (lowPower) 7 else 13
             repeat(sparks) { i ->
                 val angle = i * (2f * PI.toFloat() / sparks) + .18f
