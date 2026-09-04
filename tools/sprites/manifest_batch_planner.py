@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """Build small GPU batches directly from the canonical sprite manifest.
 
-The planner excludes animation-heavy character/machine sheets from the generic
-static lane. Already-materialized candidates/runtime files are skipped even if
-the manifest ledger has not yet been reconciled.
+The planner excludes animation-heavy character/machine sheets and terrain from
+the generic static lane. Terrain has its own zero-GPU procedural authoring path.
+Already-materialized candidates/runtime files are skipped even if the manifest
+ledger has not yet been reconciled.
 
 For ALL batches, cheaper/easier-to-validate static families are attempted first
-(PRP -> TER -> VEH -> CORE -> BLD). This maximizes useful assets per scarce free
-GPU minute while preserving manifest order inside each family.
+(PRP -> VEH -> CORE -> BLD). This maximizes useful assets per scarce free GPU
+minute while preserving manifest order inside each family.
 """
 from __future__ import annotations
 
@@ -19,9 +20,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = ROOT / "docs/art/FINAL_AAA_SPRITE_MANIFEST.md"
 INCOMING = ROOT / "art/incoming/final-sprites"
-SUPPORTED = ("BLD-", "CORE-", "VEH-", "PRP-", "TER-")
+SUPPORTED = ("BLD-", "CORE-", "VEH-", "PRP-")
 ROW = re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$")
-FAST_PRIORITY = {"PRP": 0, "TER": 1, "VEH": 2, "CORE": 3, "BLD": 4}
+FAST_PRIORITY = {"PRP": 0, "VEH": 1, "CORE": 2, "BLD": 3}
 
 
 def rows():
@@ -53,7 +54,7 @@ def rows():
 
 def main() -> int:
     p = argparse.ArgumentParser()
-    p.add_argument("--kind", default="ALL", choices=["ALL", "BLD", "CORE", "VEH", "PRP", "TER"])
+    p.add_argument("--kind", default="ALL", choices=["ALL", "BLD", "CORE", "VEH", "PRP"])
     p.add_argument("--count", type=int, default=12)
     p.add_argument("--reverse", action="store_true")
     args = p.parse_args()
