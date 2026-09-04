@@ -4,13 +4,14 @@
 Input: art/incoming/final-sprites/*.png
 Output: app/src/main/res/drawable-nodpi/<same-stem>.webp
 
-This script does not invent missing artistic quality. It turns a valid isolated
-sprite into a deterministic Android-ready runtime asset and rejects sheets,
-baked backgrounds, weak transparency, undersized art and malformed framing.
+Single-sprite candidates are normalized onto a square runtime canvas. Small FX
+sprite sheets use their manifest-native 4x2 / 512x256 layout and are validated
+cell-by-cell instead of being mistaken for a contact sheet.
 """
 from collections import deque
 from pathlib import Path
 from PIL import Image
+import re
 import sys
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -24,6 +25,11 @@ ALPHA_CLEAN_THRESHOLD = 8
 MAX_ALPHA_COVERAGE = 0.70
 MAX_MAJOR_COMPONENTS = 1
 COARSE_SIZE = 128
+FX_SHEET_RE = re.compile(r"^zte_fx_(?:0[0-9]|1[0-7])_final$")
+FX_SHEET_SIZE = (512, 256)
+FX_CELL = 128
+FX_FRAMES = 8
+FX_PADDING = 4
 
 
 def fail(msg: str) -> None:
@@ -38,11 +44,7 @@ def alpha_coverage(alpha: Image.Image) -> float:
 
 
 def major_components(alpha: Image.Image) -> int:
-    """Count large disconnected visible regions on a coarse alpha mask.
-
-    This catches contact sheets/atlases while allowing tiny detached particles,
-    glows and shadows around a single authored subject.
-    """
+    """Count large disconnected visible regions on a coarse alpha mask."""
     small = alpha.resize((COARSE_SIZE, COARSE_SIZE), Image.Resampling.BILINEAR)
     px = small.load()
     seen = set()
@@ -59,7 +61,7 @@ def major_components(alpha: Image.Image) -> int:
             while q:
                 cx, cy = q.popleft()
                 area += 1
-                for nx, ny in ((cx - 1, cy), (cx + 1, cy), (cx, cy - 1), (cx, cy + 1)):
+                for nx, ny in ((cx - 1, cy), (cx + 1, cy), (cx, cy - 1), (cx, cy + 1), (cx, cy - 1), (cx, cy + 1)):
                     if 0 <= nx < COARSE_SIZE and 0 <= ny < COARSE_SIZE and (nx, ny) not in seen:
                         if px[nx, ny] >= 32:
                             seen.add((nx, ny))
@@ -77,11 +79,43 @@ def clean_alpha(im: Image.Image) -> Image.Image:
     return rgba
 
 
-def process(path: Path) -> None:
-    if not path.stem.endswith("_final"):
-        fail(f"{path.name}: filename must end in _final.png")
+def validate_fx_sheet(path: Path, im: Image.Image) -> None:
+    if im.size != FX_SHEET_SIZE:
+        fail(f"{path.name}: FX sheet must be 512x256 (4x2 of 128x128), got {im.width}x{im.height}")
 
-    im = clean_alpha(Image.open(path))
+    alpha = im.getchannel("A")
+    lo, hi = alpha.getextrema()
+    if hi == 0:
+        fail(f"{path.name}: fully transparent FX sheet")
+    if lo == 255:
+        fail(f"{path.name}: no transparent pixels; likely baked background")
+
+    for i in range(FX_FRAMES):
+        x0 = (i % 4) * FX_CELL
+        y0 = (i // 4) * FX_CELL
+        cell_a = alpha.crop((x0, y0, x0 + FX_CELL, y0 + FX_CELL))
+        if cell_a.getbbox() is None:
+            fail(f"{path.name}: FX frame {i} is empty")
+        edges = (
+            cell_a.crop((0, 0, FX_CELL, FX_PADDING)),
+            cell_a.crop((0, FX_CELL - FX_PADDING, FX_CELL, FX_CELL)),
+            cell_a.crop((0, 0, FX_PADDING, FX_CELL)),
+            cell_a.crop((FX_CELL - FX_PADDING, 0, FX_CELL, FX_CELL)),
+        )
+        if any(edge.getbbox() is not None for edge in edges):
+            fail(f"{path.name}: FX frame {i} violates >=4 px transparent padding")
+
+    OUT.mkdir(parents=True, exist_ok=True)
+    out = OUT / f"{path.stem}.webp"
+    im.save(out, "WEBP", lossless=True, method=6, exact=True)
+    size_kib = out.stat().st_size / 1024.0
+    print(
+        f"OK {path.name} -> {out.relative_to(ROOT)} 512x256 "
+        f"fx_frames=8 cell=128 padding>=4px coverage={alpha_coverage(alpha):.1%} size={size_kib:.1f}KiB"
+    )
+
+
+def process_single_sprite(path: Path, im: Image.Image) -> None:
     w, h = im.size
     if min(w, h) < MIN_DIM:
         fail(f"{path.name}: too small ({w}x{h}); minimum side is {MIN_DIM}px")
@@ -116,7 +150,6 @@ def process(path: Path) -> None:
     target_pad = max(32, int(subject_max * TARGET_PADDING_RATIO))
     canvas_side = min(MAX_DIM, max(MIN_DIM, subject_max + 2 * target_pad))
 
-    # Keep at least 16% total breathing room when source art is oversized.
     max_subject = int(canvas_side * 0.84)
     if max(sw, sh) > max_subject:
         scale = max_subject / max(sw, sh)
@@ -132,7 +165,6 @@ def process(path: Path) -> None:
     y = max(0, canvas_side - bottom_pad - sh)
     canvas.alpha_composite(subject, (x, y))
 
-    # Runtime gate: final canvas must still have transparent corners and padding.
     out_alpha = canvas.getchannel("A")
     if any(out_alpha.getpixel(pt) != 0 for pt in ((0, 0), (canvas_side - 1, 0), (0, canvas_side - 1), (canvas_side - 1, canvas_side - 1))):
         fail(f"{path.name}: non-transparent runtime corner after normalization")
@@ -146,6 +178,17 @@ def process(path: Path) -> None:
         f"OK {path.name} -> {out.relative_to(ROOT)} "
         f"{canvas_side}x{canvas_side} coverage={coverage:.1%} components={components} size={size_kib:.1f}KiB"
     )
+
+
+def process(path: Path) -> None:
+    if not path.stem.endswith("_final"):
+        fail(f"{path.name}: filename must end in _final.png")
+
+    im = clean_alpha(Image.open(path))
+    if FX_SHEET_RE.fullmatch(path.stem):
+        validate_fx_sheet(path, im)
+    else:
+        process_single_sprite(path, im)
 
 
 def main() -> None:
