@@ -132,10 +132,10 @@ def _fit_frame(obj: Image.Image, target_side: int, scale: float, opacity: int, r
     return frame
 
 
-def make_fx06(master: Image.Image) -> Image.Image:
+def make_energy_pulse(master: Image.Image, label: str) -> Image.Image:
     bbox = master.getbbox()
     if not bbox:
-        raise RuntimeError("FX-06 master is empty after alpha extraction")
+        raise RuntimeError(f"{label} master is empty after alpha extraction")
     obj = master.crop(bbox)
     sheet = Image.new("RGBA", (512, 256), (0, 0, 0, 0))
     scales = [0.38, 0.52, 0.68, 0.82, 0.90, 0.78, 0.58, 0.38]
@@ -145,6 +145,14 @@ def make_fx06(master: Image.Image) -> Image.Image:
         x0, y0 = (i % 4) * 128, (i // 4) * 128
         sheet.alpha_composite(frame, (x0 + (128 - frame.width) // 2, y0 + (128 - frame.height) // 2))
     return sheet
+
+
+def make_fx05(master: Image.Image) -> Image.Image:
+    return make_energy_pulse(master, "FX-05")
+
+
+def make_fx06(master: Image.Image) -> Image.Image:
+    return make_energy_pulse(master, "FX-06")
 
 
 def make_fx07(master: Image.Image) -> Image.Image:
@@ -197,9 +205,19 @@ def main() -> int:
     if not TOKEN:
         raise SystemExit("HF_TOKEN is required")
     INCOMING.mkdir(parents=True, exist_ok=True)
-    target = os.getenv("SPRITE_TARGET", "FX-07").upper()
+    target = os.getenv("SPRITE_TARGET", "FX-05").upper()
 
-    if target == "FX-06":
+    if target == "FX-05":
+        prompt = (
+            "AAA mobile game VFX asset, one single centered cyan energy pulse, compact circular electric "
+            "cyan blue plasma ring with a bright white-cyan core, crisp readable silhouette, premium industrial "
+            "sci-fi game effect, isolated object only, large empty margin, pure solid black background, no floor, "
+            "no smoke, no dust, no debris, no rocks, no character, no text, no logo, no UI, no border, no frame, "
+            "no sprite sheet, no multiple objects"
+        )
+        output_name = "zte_fx_05_final.png"
+        maker = make_fx05
+    elif target == "FX-06":
         prompt = (
             "AAA mobile game VFX asset, one single centered warm energy pulse, compact circular "
             "amber gold orange plasma ring with a bright white-gold core, crisp readable silhouette, "
