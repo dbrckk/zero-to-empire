@@ -1,0 +1,119 @@
+name: Free HF Sprite Batch
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'tools/sprites/hf_sprite_factory.py'
+      - '.github/workflows/free-hf-sprite-batch.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: free-hf-sprite-batch
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    name: Generate ${{ matrix.target }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        include:
+          - target: FX-00
+            stem: zte_fx_00_final
+          - target: FX-01
+            stem: zte_fx_01_final
+          - target: FX-02
+            stem: zte_fx_02_final
+          - target: FX-03
+            stem: zte_fx_03_final
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      HF_SPACE_URL: https://mcp-tools-z-image-turbo.hf.space
+      SPRITE_TARGET: ${{ matrix.target }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+      - name: Install deterministic image tooling
+        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
+      - name: Require authenticated Hugging Face access
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${HF_TOKEN:-}" ]; then echo 'Missing Actions secret HF_TOKEN.' >&2; exit 2; fi
+      - name: Generate and technically validate candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -s "art/incoming/final-sprites/${{ matrix.stem }}.png" ]; then
+            echo 'Candidate already exists; reusing it.'
+          else
+            python tools/sprites/hf_sprite_factory.py
+          fi
+      - name: Upload validated candidate
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: candidate-${{ matrix.target }}
+          path: art/incoming/final-sprites/${{ matrix.stem }}.png
+          if-no-files-found: error
+          retention-days: 30
+
+  finalize:
+    name: Finalize batch once
+    needs: generate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: main
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+      - name: Install deterministic image tooling
+        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
+      - name: Download all candidates
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          pattern: candidate-FX-*
+          path: /tmp/zte-batch
+          merge-multiple: true
+      - name: Stage candidates and finalize WebP once
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p art/incoming/final-sprites
+          find /tmp/zte-batch -maxdepth 2 -type f -name 'zte_fx_*_final.png' -print -exec cp '{}' art/incoming/final-sprites/ ';'
+          test "$(find art/incoming/final-sprites -maxdepth 1 -type f \( -name 'zte_fx_00_final.png' -o -name 'zte_fx_01_final.png' -o -name 'zte_fx_02_final.png' -o -name 'zte_fx_03_final.png' \) | wc -l)" -eq 4
+          python tools/sprites/process_final_sprites.py
+      - name: Commit validated art batch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add art/incoming/final-sprites/ app/src/main/res/drawable-nodpi/
+          if git diff --cached --quiet; then echo 'No new validated art to commit.'; exit 0; fi
+          git commit -m 'art: finalize FX-00 through FX-03 batch'
+          git push
+      - name: Upload finalized batch
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: finalized-FX-00-FX-03
+          path: |
+            art/incoming/final-sprites/zte_fx_0[0-3]_final.png
+            app/src/main/res/drawable-nodpi/zte_fx_0[0-3]_final.webp
+          if-no-files-found: error
+          retention-days: 30
