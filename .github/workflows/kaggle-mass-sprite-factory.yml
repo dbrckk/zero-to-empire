@@ -1,0 +1,118 @@
+name: Kaggle Mass Sprite Factory
+
+on:
+  workflow_dispatch:
+    inputs:
+      count:
+        description: Sprite attempts in this Kaggle batch
+        required: false
+        default: '60'
+  schedule:
+    - cron: '37 */6 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: kaggle-mass-sprite-factory
+  cancel-in-progress: false
+
+jobs:
+  kaggle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
+      KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+      SPRITE_COUNT: ${{ github.event.inputs.count || '60' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Check credentials
+        shell: bash
+        run: |
+          test -n "$KAGGLE_API_TOKEN" || { echo 'Missing KAGGLE_API_TOKEN'; exit 2; }
+          test -n "$KAGGLE_USERNAME" || { echo 'Missing KAGGLE_USERNAME'; exit 2; }
+
+      - name: Install Kaggle CLI
+        run: python -m pip install --upgrade kaggle
+
+      - name: Prepare Kaggle kernel
+        shell: bash
+        run: |
+          rm -rf /tmp/zte-kaggle
+          mkdir -p /tmp/zte-kaggle
+          cp kaggle/github_mass_factory.py /tmp/zte-kaggle/
+          sed "s/__KAGGLE_USERNAME__/${KAGGLE_USERNAME}/g" kaggle/kernel-metadata.template.json > /tmp/zte-kaggle/kernel-metadata.json
+          sed -i "s/COUNT = int(os.getenv('SPRITE_COUNT', '60'))/COUNT = ${SPRITE_COUNT}/" /tmp/zte-kaggle/github_mass_factory.py
+
+      - name: Push and start Kaggle GPU run
+        run: kaggle kernels push -p /tmp/zte-kaggle
+
+      - name: Wait for Kaggle
+        shell: bash
+        run: |
+          slug="${KAGGLE_USERNAME}/zero-to-empire-sprite-factory"
+          for i in $(seq 1 150); do
+            status="$(kaggle kernels status "$slug" 2>&1 || true)"
+            echo "$status"
+            if echo "$status" | grep -qi 'complete'; then exit 0; fi
+            if echo "$status" | grep -Eqi 'error|cancel|failed'; then exit 1; fi
+            sleep 60
+          done
+          echo 'Kaggle run timeout'
+          exit 1
+
+      - name: Download Kaggle outputs
+        shell: bash
+        run: |
+          rm -rf /tmp/kaggle-output
+          mkdir -p /tmp/kaggle-output
+          kaggle kernels output "${KAGGLE_USERNAME}/zero-to-empire-sprite-factory" -p /tmp/kaggle-output --force
+          find /tmp/kaggle-output -maxdepth 3 -type f -print
+
+      - name: Import exact candidates
+        shell: bash
+        run: |
+          shopt -s nullglob
+          files=(/tmp/kaggle-output/output/candidates/*_final.png /tmp/kaggle-output/candidates/*_final.png)
+          if [ ${#files[@]} -eq 0 ]; then echo 'No Kaggle candidates'; exit 1; fi
+          mkdir -p art/incoming/final-sprites
+          targets=()
+          for f in "${files[@]}"; do
+            cp "$f" art/incoming/final-sprites/
+            targets+=("$(basename "$f" .png)")
+          done
+          printf -v joined '%s,' "${targets[@]}"
+          echo "SPRITE_TARGETS=${joined%,}" >> "$GITHUB_ENV"
+
+      - name: Finalize exact batch
+        run: python tools/sprites/process_final_sprites.py
+
+      - name: Commit finalized runtime batch
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add art/incoming/final-sprites app/src/main/res/drawable-nodpi
+          if git diff --cached --quiet; then echo 'Nothing new to commit'; exit 0; fi
+          git commit -m 'art: finalize Kaggle GPU sprite batch'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Upload QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kaggle-sprite-batch
+          path: |
+            /tmp/kaggle-output/output/batch-contact-sheet.png
+            /tmp/kaggle-output/output/batch-qa-report.json
+            /tmp/kaggle-output/output/candidates/*.png
+            /tmp/kaggle-output/batch-contact-sheet.png
+            /tmp/kaggle-output/batch-qa-report.json
+            /tmp/kaggle-output/candidates/*.png
+          if-no-files-found: ignore
+          retention-days: 30
