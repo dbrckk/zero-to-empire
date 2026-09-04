@@ -1,0 +1,72 @@
+name: Free HF Sprite Factory
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Manifest asset ID to generate
+        required: true
+        default: FX-06
+  schedule:
+    - cron: '17 5 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: free-hf-sprite-factory
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      HF_SPACE: mcp-tools/Z-Image-Turbo
+      SPRITE_TARGET: ${{ inputs.target || 'FX-06' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+
+      - name: Install generator client and deterministic image tooling
+        run: python -m pip install --disable-pip-version-check 'gradio_client>=1.13,<2' 'huggingface_hub>=0.34,<2' 'Pillow==11.3.0'
+
+      - name: Require authenticated Hugging Face access
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${HF_TOKEN:-}" ]; then
+            echo 'Missing Actions secret HF_TOKEN.' >&2
+            exit 2
+          fi
+
+      - name: Generate and validate one candidate
+        run: python tools/sprites/hf_sprite_factory.py
+
+      - name: Commit validated candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- art/incoming/final-sprites/ && [ -z "$(git ls-files --others --exclude-standard art/incoming/final-sprites/)" ]; then
+            echo 'No new candidate to commit.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add art/incoming/final-sprites/
+          git commit -m "art: generate ${SPRITE_TARGET} candidate via free ZeroGPU"
+          git push
+
+      - name: Upload candidate for inspection
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: generated-${{ env.SPRITE_TARGET }}
+          path: art/incoming/final-sprites/*.png
+          if-no-files-found: error
+          retention-days: 30
