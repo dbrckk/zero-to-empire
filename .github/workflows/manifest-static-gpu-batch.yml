@@ -8,7 +8,7 @@ on:
         required: true
         default: ALL
         type: choice
-        options: [ALL, BLD, CORE, VEH, PRP]
+        options: [ALL, BLD, CORE, VEH, PRP, TER]
       count:
         description: Maximum assets to attempt in this batch
         required: true
@@ -21,7 +21,7 @@ on:
       - 'tools/sprites/process_final_sprites.py'
       - '.github/workflows/manifest-static-gpu-batch.yml'
   schedule:
-    - cron: '17 */6 * * *'
+    - cron: '17 * * * *'
 
 permissions:
   contents: write
