@@ -13,6 +13,12 @@ on:
         description: Maximum assets in this batch
         required: true
         default: '4'
+  push:
+    branches: [ main ]
+    paths:
+      - 'tools/sprites/manifest_batch_planner.py'
+      - 'tools/sprites/hf_static_manifest_factory.py'
+      - '.github/workflows/manifest-static-gpu-batch.yml'
   schedule:
     - cron: '17 * * * *'
 
