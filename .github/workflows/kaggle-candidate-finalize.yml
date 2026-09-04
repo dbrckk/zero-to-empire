@@ -1,0 +1,92 @@
+name: Finalize Kaggle Sprite Candidates
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'art/incoming/final-sprites/*_final.png'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: kaggle-candidate-finalize
+  cancel-in-progress: false
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: main
+          fetch-depth: 2
+
+      - name: Install Pillow
+        run: python3 -m pip install --disable-pip-version-check Pillow==11.3.0
+
+      - id: changed
+        name: Collect new Kaggle candidates
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          files=()
+          if [ "${{ github.event_name }}" = "push" ] && git rev-parse HEAD^ >/dev/null 2>&1; then
+            while IFS= read -r file; do
+              [[ "$file" == art/incoming/final-sprites/*_final.png ]] && [ -s "$file" ] && files+=("$file")
+            done < <(git diff --name-only --diff-filter=AM HEAD^ HEAD)
+          else
+            files=(art/incoming/final-sprites/*_final.png)
+          fi
+          if (( ${#files[@]} == 0 )); then
+            echo 'has_files=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          stems=()
+          for file in "${files[@]}"; do stems+=("$(basename "$file" .png)"); done
+          printf '%s\n' "${files[@]}" > /tmp/kaggle-files.txt
+          echo "SPRITE_TARGETS=$(IFS=,; echo "${stems[*]}")" >> "$GITHUB_ENV"
+          echo 'has_files=true' >> "$GITHUB_OUTPUT"
+          echo "candidate_count=${#files[@]}"
+
+      - name: Build QA contact sheet
+        if: steps.changed.outputs.has_files == 'true'
+        shell: bash
+        run: |
+          mapfile -t files < /tmp/kaggle-files.txt
+          python3 tools/sprites/build_sprite_contact_sheet.py \
+            --files "${files[@]}" \
+            --output art/production/kaggle-contact-sheet.png \
+            --report art/production/kaggle-qa-report.json
+
+      - name: Finalize technical candidates
+        if: steps.changed.outputs.has_files == 'true'
+        run: python3 tools/sprites/process_final_sprites.py
+
+      - name: Commit runtime outputs once
+        if: steps.changed.outputs.has_files == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add app/src/main/res/drawable-nodpi/ art/production/kaggle-qa-report.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'art: finalize Kaggle GPU sprite batch'
+          git pull --rebase origin main
+          git push
+
+      - name: Upload visual inspection bundle
+        if: steps.changed.outputs.has_files == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: kaggle-sprite-review
+          path: |
+            art/production/kaggle-contact-sheet.png
+            art/production/kaggle-qa-report.json
+          if-no-files-found: error
+          retention-days: 30
