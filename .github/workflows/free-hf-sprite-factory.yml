@@ -1,4 +1,4 @@
-name: Free HF Sprite Factory
+name: Free HF Sprite Factory (manual fallback)
 
 on:
   workflow_dispatch:
@@ -7,25 +7,13 @@ on:
         description: Manifest asset ID to generate
         required: true
         default: FX-04
-  schedule:
-    - cron: '17 5 * * *'
-  push:
-    branches: [ main ]
-    paths:
-      - 'tools/sprites/hf_sprite_factory.py'
-      - 'tools/sprites/process_final_sprites.py'
-      - 'tools/sprites/integrate_fx04_runtime.py'
-      - 'tools/sprites/integrate_fx05_runtime.py'
-      - 'tools/sprites/integrate_fx06_runtime.py'
-      - 'tools/sprites/integrate_fx07_runtime.py'
-      - '.github/workflows/free-hf-sprite-factory.yml'
 
 permissions:
   contents: write
 
 concurrency:
   group: free-hf-sprite-factory
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   generate:
@@ -34,7 +22,7 @@ jobs:
     env:
       HF_TOKEN: ${{ secrets.HF_TOKEN }}
       HF_SPACE_URL: https://mcp-tools-z-image-turbo.hf.space
-      SPRITE_TARGET: ${{ inputs.target || 'FX-04' }}
+      SPRITE_TARGET: ${{ inputs.target }}
     steps:
       - name: Checkout
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -92,7 +80,7 @@ jobs:
           gradle-version: '8.13'
       - name: Verify Android runtime integration
         run: gradle --no-daemon testDebugUnitTest testReleaseUnitTest lintRelease assembleDebug assembleRelease bundleRelease
-      - name: Commit only after generation, finalization and Android verification succeed
+      - name: Commit only after verification succeeds
         shell: bash
         run: |
           set -euo pipefail
