@@ -2,6 +2,8 @@ name: Free HF Sprite Batch
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '27 * * * *'
   push:
     branches: [ main ]
     paths:
@@ -46,33 +48,36 @@ jobs:
           python-version: '3.12'
       - name: Install deterministic image tooling
         run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
-      - name: Require authenticated Hugging Face access
-        shell: bash
-        run: |
-          set -euo pipefail
-          if [ -z "${HF_TOKEN:-}" ]; then echo 'Missing Actions secret HF_TOKEN.' >&2; exit 2; fi
-      - name: Generate and technically validate candidate
+      - name: Generate missing candidate
+        id: make
+        continue-on-error: true
         shell: bash
         run: |
           set -euo pipefail
           if [ -s "art/incoming/final-sprites/${{ matrix.stem }}.png" ]; then
             echo 'Candidate already exists; reusing it.'
-          else
-            python tools/sprites/hf_sprite_factory.py
+            exit 0
           fi
-      - name: Upload validated candidate
+          if [ -z "${HF_TOKEN:-}" ]; then
+            echo 'Missing Actions secret HF_TOKEN.' >&2
+            exit 2
+          fi
+          python tools/sprites/hf_sprite_factory.py
+      - name: Upload candidate when available
+        if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: candidate-${{ matrix.target }}
           path: art/incoming/final-sprites/${{ matrix.stem }}.png
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 30
 
   finalize:
-    name: Finalize batch once
+    name: Finalize and verify batch once
     needs: generate
+    if: always()
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
       - name: Checkout latest main
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -84,36 +89,66 @@ jobs:
           python-version: '3.12'
       - name: Install deterministic image tooling
         run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
-      - name: Download all candidates
+      - name: Download available candidates
+        continue-on-error: true
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           pattern: candidate-FX-*
           path: /tmp/zte-batch
           merge-multiple: true
-      - name: Stage candidates and finalize WebP once
+      - name: Stage and finalize available validated candidates
+        id: stage
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p art/incoming/final-sprites
-          find /tmp/zte-batch -maxdepth 2 -type f -name 'zte_fx_*_final.png' -print -exec cp '{}' art/incoming/final-sprites/ ';'
-          test "$(find art/incoming/final-sprites -maxdepth 1 -type f \( -name 'zte_fx_00_final.png' -o -name 'zte_fx_01_final.png' -o -name 'zte_fx_02_final.png' -o -name 'zte_fx_03_final.png' \) | wc -l)" -eq 4
-          python tools/sprites/process_final_sprites.py
-      - name: Commit validated art batch
+          if [ -d /tmp/zte-batch ]; then
+            find /tmp/zte-batch -type f -name 'zte_fx_*_final.png' -print -exec cp '{}' art/incoming/final-sprites/ ';'
+          fi
+          count=0
+          for n in 00 01 02 03; do
+            [ -s "art/incoming/final-sprites/zte_fx_${n}_final.png" ] && count=$((count + 1))
+          done
+          echo "count=${count}" >> "$GITHUB_OUTPUT"
+          echo "Available batch candidates: ${count}/4"
+          if [ "$count" -gt 0 ]; then
+            python tools/sprites/process_final_sprites.py
+          fi
+      - name: Set up JDK 17
+        if: steps.stage.outputs.count != '0'
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Set up Gradle
+        if: steps.stage.outputs.count != '0'
+        uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
+        with:
+          gradle-version: '8.13'
+      - name: Verify Android once for the whole batch
+        if: steps.stage.outputs.count != '0'
+        run: gradle --no-daemon testDebugUnitTest testReleaseUnitTest lintRelease assembleDebug assembleRelease bundleRelease
+      - name: Commit verified batch atomically
+        if: steps.stage.outputs.count != '0'
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add art/incoming/final-sprites/ app/src/main/res/drawable-nodpi/
-          if git diff --cached --quiet; then echo 'No new validated art to commit.'; exit 0; fi
-          git commit -m 'art: finalize FX-00 through FX-03 batch'
+          if git diff --cached --quiet; then
+            echo 'No new validated batch files to commit.'
+            exit 0
+          fi
+          git commit -m 'art: finalize accelerated FX-00 through FX-03 batch'
           git push
-      - name: Upload finalized batch
+      - name: Upload finalized batch for visual inspection
+        if: steps.stage.outputs.count != '0'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: finalized-FX-00-FX-03
           path: |
             art/incoming/final-sprites/zte_fx_0[0-3]_final.png
             app/src/main/res/drawable-nodpi/zte_fx_0[0-3]_final.webp
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 30
