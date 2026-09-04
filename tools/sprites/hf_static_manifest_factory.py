@@ -32,7 +32,7 @@ QUOTA_EXIT = 75
 
 
 def headers(json_body=False):
-    h = {"User-Agent": "zero-to-empire-manifest-factory/1.2"}
+    h = {"User-Agent": "zero-to-empire-manifest-factory/1.3"}
     if TOKEN:
         h["Authorization"] = f"Bearer {TOKEN}"
     if json_body:
@@ -129,7 +129,8 @@ def generate(prompt: str) -> Image.Image:
     raw = request(urllib.request.Request(url, headers=headers(), method="GET"), 120)
     tmp = ROOT / ".sprite_factory_download"
     tmp.mkdir(exist_ok=True)
-    p = tmp / "static_master.img"
+    safe_id = re.sub(r"[^A-Za-z0-9_.-]+", "_", ASSET_ID or "static")
+    p = tmp / f"{safe_id}.img"
     p.write_bytes(raw)
     return Image.open(p).convert("RGB")
 
