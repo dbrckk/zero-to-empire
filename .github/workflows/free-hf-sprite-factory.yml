@@ -9,6 +9,12 @@ on:
         default: FX-06
   schedule:
     - cron: '17 5 * * *'
+  push:
+    branches: [ main ]
+    paths:
+      - 'tools/sprites/hf_sprite_factory.py'
+      - 'tools/sprites/process_final_sprites.py'
+      - '.github/workflows/free-hf-sprite-factory.yml'
 
 permissions:
   contents: write
