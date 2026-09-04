@@ -1,13 +1,7 @@
-name: Final Sprite Pipeline
+name: Final Sprite Pipeline (manual fallback)
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ main ]
-    paths:
-      - 'art/incoming/final-sprites/**'
-      - 'tools/sprites/process_final_sprites.py'
-      - '.github/workflows/final-sprite-pipeline.yml'
 
 permissions:
   contents: write
@@ -41,26 +35,15 @@ jobs:
           files=(art/incoming/final-sprites/*.png)
           if (( ${#files[@]} == 0 )); then
             echo 'has_candidates=false' >> "$GITHUB_OUTPUT"
-            echo 'No PNG candidates: pipeline configuration check only.'
+            echo 'No PNG candidates.'
           else
             echo 'has_candidates=true' >> "$GITHUB_OUTPUT"
             printf 'Found %s candidate(s).\n' "${#files[@]}"
-            printf '%s\n' "${files[@]}"
           fi
 
       - name: Process and validate final sprite candidates
         if: steps.candidates.outputs.has_candidates == 'true'
         run: python tools/sprites/process_final_sprites.py
-
-      - name: Audit generated runtime assets
-        if: steps.candidates.outputs.has_candidates == 'true'
-        run: |
-          set -euo pipefail
-          test -d app/src/main/res/drawable-nodpi
-          count="$(find app/src/main/res/drawable-nodpi -maxdepth 1 -type f -name '*_final.webp' | wc -l)"
-          test "$count" -gt 0
-          printf 'validated_final_runtime_assets=%s\n' "$count"
-          find app/src/main/res/drawable-nodpi -maxdepth 1 -type f -name '*_final.webp' -print | LC_ALL=C sort
 
       - name: Commit newly finalized runtime sprites
         if: steps.candidates.outputs.has_candidates == 'true'
