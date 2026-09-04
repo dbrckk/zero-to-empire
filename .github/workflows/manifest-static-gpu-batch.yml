@@ -2,23 +2,9 @@ name: Manifest Static GPU Batch
 
 on:
   workflow_dispatch:
-    inputs:
-      kind:
-        description: Static asset family
-        required: true
-        default: PRP
-        type: choice
-        options: [PRP, ALL, VEH, CORE, BLD]
-      count:
-        description: Maximum assets to attempt in this batch
-        required: true
-        default: '12'
   push:
-    branches: [ main ]
+    branches: [main]
     paths:
-      - 'tools/sprites/manifest_batch_planner.py'
-      - 'tools/sprites/hf_static_manifest_factory.py'
-      - 'tools/sprites/process_final_sprites.py'
       - '.github/workflows/manifest-static-gpu-batch.yml'
   schedule:
     - cron: '17 * * * *'
@@ -32,92 +18,86 @@ concurrency:
 
 jobs:
   produce:
-    name: Plan, generate and finalize one static batch
+    name: Generate up to 12 props
     runs-on: ubuntu-latest
     timeout-minutes: 35
     env:
       HF_TOKEN: ${{ secrets.HF_TOKEN }}
       HF_SPACE_URL: https://mcp-tools-z-image-turbo.hf.space
-      KIND: ${{ github.event_name == 'schedule' && 'PRP' || inputs.kind || 'PRP' }}
-      COUNT: ${{ inputs.count || '12' }}
     steps:
-      - name: Checkout latest main once
+      - name: Checkout
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           ref: main
 
-      - name: Set up Python once
-        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
-        with:
-          python-version: '3.12'
-
-      - name: Install image tooling once
-        run: python -m pip install --disable-pip-version-check --only-binary=:all: 'Pillow==11.3.0'
+      - name: Install Pillow
+        run: python3 -m pip install --disable-pip-version-check Pillow==11.3.0
 
       - id: batch
-        name: Plan and consume GPU quota sequentially
+        name: Generate validated prop batch
         shell: bash
         run: |
           set -u -o pipefail
-          plan="$(python tools/sprites/manifest_batch_planner.py --kind "$KIND" --count "$COUNT")"
-          printf '%s' "$plan" > /tmp/zte-plan.json
-          python - <<'PY' > /tmp/zte-targets.tsv
+          python3 tools/sprites/manifest_batch_planner.py --kind PRP --count 12 > /tmp/plan.json
+          python3 - <<'PY' > /tmp/targets.tsv
           import json
-          with open('/tmp/zte-plan.json', encoding='utf-8') as f:
-              items = json.load(f)['include']
-          for item in items:
-              print(f"{item['id']}\t{item['stem']}")
+          with open('/tmp/plan.json', encoding='utf-8') as f:
+              for item in json.load(f)['include']:
+                  print(f"{item['id']}\t{item['stem']}")
           PY
-          planned="$(wc -l < /tmp/zte-targets.tsv)"
-          echo "planned_assets=$planned"
-          if [ "$planned" -eq 0 ]; then echo 'has_files=false' >> "$GITHUB_OUTPUT"; exit 0; fi
-          successes=(); failures=(); quota_exhausted=false
+
+          successes=()
           while IFS=$'\t' read -r asset_id stem; do
             [ -n "$asset_id" ] || continue
-            echo "=== GPU candidate $asset_id ==="
-            SPRITE_TARGET="$asset_id" python tools/sprites/hf_static_manifest_factory.py
+            echo "=== $asset_id ==="
+            set +e
+            SPRITE_TARGET="$asset_id" python3 tools/sprites/hf_static_manifest_factory.py
             rc=$?
+            set -e
             if [ "$rc" -eq 0 ] && [ -s "art/incoming/final-sprites/${stem}.png" ]; then
               successes+=("$stem")
-            elif [ "$rc" -eq 75 ]; then
-              failures+=("$asset_id:free-gpu-quota"); quota_exhausted=true; break
-            else
-              failures+=("$asset_id:generation-or-validation")
+              continue
             fi
-          done < /tmp/zte-targets.tsv
-          printf 'successful_assets=%s\n' "${#successes[@]}"
-          printf 'failed_or_deferred_assets=%s\n' "${#failures[@]}"
-          printf 'quota_exhausted=%s\n' "$quota_exhausted"
-          if (( ${#failures[@]} )); then printf '%s\n' "${failures[@]}"; fi
-          if (( ${#successes[@]} == 0 )); then echo 'has_files=false' >> "$GITHUB_OUTPUT"; exit 0; fi
+            if [ "$rc" -eq 75 ]; then
+              echo 'Free GPU quota exhausted; preserving successful candidates.'
+              break
+            fi
+            echo "Rejected $asset_id (rc=$rc); continuing."
+          done < /tmp/targets.tsv
+
+          echo "successful_assets=${#successes[@]}"
+          if (( ${#successes[@]} == 0 )); then
+            echo 'has_files=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           stems="$(IFS=,; echo "${successes[*]}")"
           echo "SPRITE_TARGETS=$stems" >> "$GITHUB_ENV"
           echo 'has_files=true' >> "$GITHUB_OUTPUT"
 
-      - name: Finalize only successful candidates
+      - name: Finalize successful candidates
         if: steps.batch.outputs.has_files == 'true'
-        run: python tools/sprites/process_final_sprites.py
+        run: python3 tools/sprites/process_final_sprites.py
 
-      - name: Commit successful subset once
+      - name: Commit validated batch
         if: steps.batch.outputs.has_files == 'true'
         shell: bash
         run: |
           set -euo pipefail
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add art/incoming/final-sprites/ app/src/main/res/drawable-nodpi/
           if git diff --cached --quiet; then exit 0; fi
-          git commit -m 'art: finalize manifest static GPU batch'
+          git commit -m 'art: finalize massive prop batch'
           git pull --rebase origin main
           git push
 
-      - name: Upload batch once for semantic inspection
+      - name: Upload inspection artifact
         if: steps.batch.outputs.has_files == 'true'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: finalized-static-manifest-batch
+          name: finalized-prop-batch
           path: |
-            art/incoming/final-sprites/*_final.png
-            app/src/main/res/drawable-nodpi/*_final.webp
+            art/incoming/final-sprites/zte_prop_*_final.png
+            app/src/main/res/drawable-nodpi/zte_prop_*_final.webp
           if-no-files-found: error
           retention-days: 30
