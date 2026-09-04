@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build small GPU batches directly from the canonical sprite manifest.
+"""Build large GPU batches directly from the canonical sprite manifest.
 
 The planner excludes animation-heavy character/machine sheets and terrain from
 the generic static lane. Terrain has its own zero-GPU procedural authoring path.
@@ -23,6 +23,7 @@ INCOMING = ROOT / "art/incoming/final-sprites"
 SUPPORTED = ("BLD-", "CORE-", "VEH-", "PRP-")
 ROW = re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$")
 FAST_PRIORITY = {"PRP": 0, "VEH": 1, "CORE": 2, "BLD": 3}
+MAX_BATCH = 36
 
 
 def rows():
@@ -55,11 +56,11 @@ def rows():
 def main() -> int:
     p = argparse.ArgumentParser()
     p.add_argument("--kind", default="ALL", choices=["ALL", "BLD", "CORE", "VEH", "PRP"])
-    p.add_argument("--count", type=int, default=12)
+    p.add_argument("--count", type=int, default=36)
     p.add_argument("--reverse", action="store_true")
     args = p.parse_args()
-    if not 1 <= args.count <= 12:
-        raise SystemExit("count must be between 1 and 12")
+    if not 1 <= args.count <= MAX_BATCH:
+        raise SystemExit(f"count must be between 1 and {MAX_BATCH}")
 
     items = [
         r for r in rows()
