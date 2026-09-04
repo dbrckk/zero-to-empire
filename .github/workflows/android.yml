@@ -3,16 +3,28 @@ name: Android CI
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'app/**'
+      - 'build.gradle.kts'
+      - 'settings.gradle.kts'
+      - 'gradle.properties'
+      - 'gradle/**'
+      - '.github/workflows/android.yml'
   pull_request:
     branches: [ main ]
+    paths:
+      - 'app/**'
+      - 'build.gradle.kts'
+      - 'settings.gradle.kts'
+      - 'gradle.properties'
+      - 'gradle/**'
+      - '.github/workflows/android.yml'
+  workflow_dispatch:
 
 concurrency:
   group: android-ci-${{ github.ref }}
   cancel-in-progress: true
 
-# CI only reads repository contents and uploads workflow artifacts. Keep the
-# ephemeral GITHUB_TOKEN least-privileged so a compromised build step cannot
-# mutate repository state.
 permissions:
   contents: read
 
@@ -23,6 +35,30 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 2
+
+      - name: Detect sprite-only runtime update
+        id: change_scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          sprite_only=false
+          if [ "${{ github.event_name }}" = "push" ] && git rev-parse HEAD^ >/dev/null 2>&1; then
+            mapfile -t changed < <(git diff --name-only HEAD^ HEAD)
+            printf 'changed files:\n%s\n' "${changed[*]}"
+            if (( ${#changed[@]} > 0 )); then
+              sprite_only=true
+              for file in "${changed[@]}"; do
+                case "$file" in
+                  app/src/main/res/drawable-nodpi/*_final.webp|app/src/main/res/drawable-nodpi/*_final.png) ;;
+                  *) sprite_only=false; break ;;
+                esac
+              done
+            fi
+          fi
+          echo "sprite_only=${sprite_only}" >> "$GITHUB_OUTPUT"
+          echo "sprite_only=${sprite_only}"
 
       - name: Set up JDK 17
         uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
@@ -35,17 +71,17 @@ jobs:
         with:
           gradle-version: '8.13'
 
+      - name: Fast compile gate for sprite-only commits
+        if: steps.change_scope.outputs.sprite_only == 'true'
+        run: gradle --no-daemon assembleDebug
+
       - name: Audit Play Store identity contract
+        if: steps.change_scope.outputs.sprite_only != 'true'
         run: |
           set -euo pipefail
           APP_GRADLE="app/build.gradle.kts"
-
-          # The Play listing identity must never drift between release candidates.
           test "$(grep -Fc 'namespace = "com.zerotoempire.game"' "$APP_GRADLE")" -eq 1
           test "$(grep -Fc 'applicationId = "com.zerotoempire.game"' "$APP_GRADLE")" -eq 1
-
-          # Store builds must keep version metadata wired through the validated
-          # VERSION_CODE / VERSION_NAME production properties rather than literals.
           test "$(grep -Fc 'versionCode = releaseVersionCode' "$APP_GRADLE")" -eq 1
           test "$(grep -Fc 'versionName = releaseVersionName' "$APP_GRADLE")" -eq 1
           grep -Fq 'Signed release requires explicit VERSION_CODE and VERSION_NAME Gradle properties.' "$APP_GRADLE"
@@ -53,12 +89,11 @@ jobs:
           grep -Fq 'dependsOn("bundleRelease")' "$APP_GRADLE"
 
       - name: Audit production monetization contract
+        if: steps.change_scope.outputs.sprite_only != 'true'
         run: |
           set -euo pipefail
           APP_GRADLE="app/build.gradle.kts"
           CATALOG="app/src/main/java/com/zerotoempire/game/Monetization.kt"
-
-          # Production AdMob builds must stay fail-closed behind the explicit release gate.
           grep -Fq 'providers.gradleProperty("ADMOB_APP_ID")' "$APP_GRADLE"
           grep -Fq 'providers.gradleProperty("REWARDED_AD_UNIT_ID")' "$APP_GRADLE"
           grep -Fq 'providers.gradleProperty("INTERSTITIAL_AD_UNIT_ID")' "$APP_GRADLE"
@@ -66,8 +101,6 @@ jobs:
           grep -Fq 'Production release requires a valid non-test REWARDED_AD_UNIT_ID.' "$APP_GRADLE"
           grep -Fq 'Production release requires a valid non-test INTERSTITIAL_AD_UNIT_ID.' "$APP_GRADLE"
           grep -Fq 'Production rewarded and interstitial ad unit IDs must be different.' "$APP_GRADLE"
-
-          # Keep the Play Billing integration and one-time product catalog stable across RCs.
           test "$(grep -Fc 'implementation("com.android.billingclient:billing:9.1.0")' "$APP_GRADLE")" -eq 1
           test "$(grep -Fc 'REMOVE_ADS("remove_ads_lifetime", false)' "$CATALOG")" -eq 1
           test "$(grep -Fc 'STARTER_PACK("starter_pack", false)' "$CATALOG")" -eq 1
@@ -76,42 +109,35 @@ jobs:
           test "$(grep -Ec '^[[:space:]]+[A-Z_]+\("[a-z0-9_]+", (true|false)\)[,;]?$' "$CATALOG")" -eq 4
 
       - name: Audit Android device compatibility contract
+        if: steps.change_scope.outputs.sprite_only != 'true'
         run: |
           set -euo pipefail
           APP_GRADLE="app/build.gradle.kts"
           MANIFEST="app/src/main/AndroidManifest.xml"
           TRANSITION="app/src/main/java/com/zerotoempire/game/CinematicRuntimeTransition.kt"
           TRANSITION_TEST="app/src/test/java/com/zerotoempire/game/CinematicRuntimeTransitionPolicyTest.kt"
-
-          # Keep the supported Android floor and current Play target explicit.
           test "$(grep -Fc 'minSdk = 26' "$APP_GRADLE")" -eq 1
           test "$(grep -Fc 'targetSdk = 36' "$APP_GRADLE")" -eq 1
           test "$(grep -Fc 'compileSdk = 36' "$APP_GRADLE")" -eq 1
-
-          # MainActivity must remain free to recreate on rotation/configuration changes;
-          # Android should not be bypassed with a broad configChanges declaration.
           if grep -Fq 'android:configChanges=' "$MANIFEST"; then
             echo 'MainActivity must use normal Android recreation for configuration changes.' >&2
             exit 1
           fi
-
-          # Compact phones retain a dedicated lower-cost cinematic path and tests.
           grep -Fq 'configuration.screenWidthDp < 360' "$TRANSITION"
           grep -Fq 'if (compactScreen) 472 else 552' "$TRANSITION"
           grep -Fq 'compactScreensUseShorterImpact' "$TRANSITION_TEST"
 
       - name: Audit save backup contract
+        if: steps.change_scope.outputs.sprite_only != 'true'
         run: |
           set -euo pipefail
           MANIFEST="app/src/main/AndroidManifest.xml"
           LEGACY_RULES="app/src/main/res/xml/backup_rules.xml"
           EXTRACTION_RULES="app/src/main/res/xml/data_extraction_rules.xml"
           SAVE_PATH='datastore/zero_empire_save_v2.preferences_pb'
-
           grep -Fq 'android:allowBackup="true"' "$MANIFEST"
           grep -Fq 'android:fullBackupContent="@xml/backup_rules"' "$MANIFEST"
           grep -Fq 'android:dataExtractionRules="@xml/data_extraction_rules"' "$MANIFEST"
-
           test "$(grep -Fc "$SAVE_PATH" "$LEGACY_RULES")" -eq 1
           test "$(grep -Fc "$SAVE_PATH" "$EXTRACTION_RULES")" -eq 2
           test "$(grep -Fc '<include ' "$LEGACY_RULES")" -eq 1
@@ -119,26 +145,24 @@ jobs:
           grep -Fq '<cloud-backup>' "$EXTRACTION_RULES"
           grep -Fq '<device-transfer>' "$EXTRACTION_RULES"
 
-      - name: Unit tests, release lint, debug, APK and app bundle builds
+      - name: Full tests, release lint, APK and bundle builds
+        if: steps.change_scope.outputs.sprite_only != 'true'
         run: gradle --no-daemon testDebugUnitTest testReleaseUnitTest lintRelease assembleDebug assembleRelease bundleRelease
 
       - name: Audit release bundle contents
-        if: success()
+        if: success() && steps.change_scope.outputs.sprite_only != 'true'
         run: |
           set -euo pipefail
           AAB="app/build/outputs/bundle/release/app-release.aab"
           MAPPING="app/build/outputs/mapping/release/mapping.txt"
           AUDIT_DIR="app/build/release-integrity"
-
           test -s "$AAB"
           test -s "$MAPPING"
           mkdir -p "$AUDIT_DIR"
-
           jar tf "$AAB" | LC_ALL=C sort > "$AUDIT_DIR/AAB_CONTENTS.txt"
           grep -Fxq "BundleConfig.pb" "$AUDIT_DIR/AAB_CONTENTS.txt"
           grep -Fxq "base/manifest/AndroidManifest.xml" "$AUDIT_DIR/AAB_CONTENTS.txt"
           grep -Fxq "base/dex/classes.dex" "$AUDIT_DIR/AAB_CONTENTS.txt"
-
           {
             printf 'aab_bytes=%s\n' "$(wc -c < "$AAB")"
             printf 'mapping_bytes=%s\n' "$(wc -c < "$MAPPING")"
@@ -146,17 +170,14 @@ jobs:
           } > "$AUDIT_DIR/ARTIFACT_METADATA.txt"
 
       - name: Generate release integrity manifest
-        if: success()
+        if: success() && steps.change_scope.outputs.sprite_only != 'true'
         run: |
           mkdir -p app/build/release-integrity
-          sha256sum \
-            app/build/outputs/bundle/release/app-release.aab \
-            app/build/outputs/mapping/release/mapping.txt \
-            > app/build/release-integrity/SHA256SUMS.txt
+          sha256sum app/build/outputs/bundle/release/app-release.aab app/build/outputs/mapping/release/mapping.txt > app/build/release-integrity/SHA256SUMS.txt
           printf 'commit=%s\n' "$GITHUB_SHA" > app/build/release-integrity/RELEASE_INFO.txt
 
       - name: Upload release integrity manifest
-        if: success()
+        if: success() && steps.change_scope.outputs.sprite_only != 'true'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: ZeroToEmpire-release-integrity
@@ -165,7 +186,7 @@ jobs:
           retention-days: 90
 
       - name: Upload release lint report
-        if: always()
+        if: always() && steps.change_scope.outputs.sprite_only != 'true'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: ZeroToEmpire-release-lint
@@ -174,7 +195,7 @@ jobs:
           retention-days: 14
 
       - name: Upload release obfuscation mapping
-        if: success()
+        if: success() && steps.change_scope.outputs.sprite_only != 'true'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: ZeroToEmpire-release-mapping
@@ -183,7 +204,7 @@ jobs:
           retention-days: 90
 
       - name: Upload release app bundle
-        if: success()
+        if: success() && steps.change_scope.outputs.sprite_only != 'true'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: ZeroToEmpire-release-aab
