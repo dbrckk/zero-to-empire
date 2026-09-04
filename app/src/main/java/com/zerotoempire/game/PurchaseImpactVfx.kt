@@ -45,6 +45,9 @@ fun AssetPurchaseImpact(
     val dustSheet = remember(context) {
         BitmapFactory.decodeResource(context.resources, R.drawable.zte_fx_07_final).asImageBitmap()
     }
+    val steamSheet = remember(context) {
+        BitmapFactory.decodeResource(context.resources, R.drawable.zte_fx_04_final).asImageBitmap()
+    }
     val progress = remember { Animatable(1f) }
 
     LaunchedEffect(serial, reduced, lowPower) {
@@ -117,6 +120,27 @@ fun AssetPurchaseImpact(
             ),
             dstSize = IntSize(dustSize, dustSize),
             alpha = if (reduced) intensity * .48f else intensity * .76f
+        )
+
+        val steamFrame = when {
+            reduced -> 3
+            lowPower -> ((p * 4f).toInt().coerceIn(0, 3) * 2).coerceAtMost(WarmPulseFrameCount - 1)
+            else -> (p * WarmPulseFrameCount).toInt().coerceIn(0, WarmPulseFrameCount - 1)
+        }
+        val steamSize = (min * (.30f + intensity * .10f)).toInt().coerceAtLeast(1)
+        drawImage(
+            image = steamSheet,
+            srcOffset = IntOffset(
+                x = (steamFrame % WarmPulseColumns) * WarmPulseFrameSize,
+                y = (steamFrame / WarmPulseColumns) * WarmPulseFrameSize
+            ),
+            srcSize = IntSize(WarmPulseFrameSize, WarmPulseFrameSize),
+            dstOffset = IntOffset(
+                x = (center.x + min * .08f - steamSize / 2f).toInt(),
+                y = (center.y - steamSize * .72f).toInt()
+            ),
+            dstSize = IntSize(steamSize, steamSize),
+            alpha = if (reduced) intensity * .28f else (1f - p) * intensity * .48f
         )
 
         if (!reduced) {
