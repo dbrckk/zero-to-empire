@@ -1,0 +1,147 @@
+name: Manifest Static GPU Batch
+
+on:
+  workflow_dispatch:
+    inputs:
+      kind:
+        description: Static asset family
+        required: true
+        default: ALL
+        type: choice
+        options: [ALL, BLD, CORE, VEH, PRP]
+      count:
+        description: Maximum assets in this batch
+        required: true
+        default: '4'
+  schedule:
+    - cron: '17 * * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: manifest-static-gpu-batch
+  cancel-in-progress: false
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      has_items: ${{ steps.plan.outputs.has_items }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: main
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+      - id: plan
+        name: Select next unmaterialized TODO assets
+        shell: bash
+        env:
+          KIND: ${{ inputs.kind || 'ALL' }}
+          COUNT: ${{ inputs.count || '4' }}
+        run: |
+          set -euo pipefail
+          matrix="$(python tools/sprites/manifest_batch_planner.py --kind "$KIND" --count "$COUNT")"
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+          count="$(printf '%s' "$matrix" | python -c 'import json,sys; print(len(json.load(sys.stdin)["include"]))')"
+          if [ "$count" -gt 0 ]; then echo 'has_items=true' >> "$GITHUB_OUTPUT"; else echo 'has_items=false' >> "$GITHUB_OUTPUT"; fi
+          echo "planned_assets=$count"
+
+  generate:
+    needs: plan
+    if: needs.plan.outputs.has_items == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJson(needs.plan.outputs.matrix) }}
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      HF_SPACE_URL: https://mcp-tools-z-image-turbo.hf.space
+      SPRITE_TARGET: ${{ matrix.id }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: main
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install image tooling
+        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
+      - name: Generate one isolated manifest candidate
+        run: python tools/sprites/hf_static_manifest_factory.py
+      - name: Upload technically validated candidate
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: candidate-${{ matrix.id }}
+          path: art/incoming/final-sprites/${{ matrix.stem }}.png
+          if-no-files-found: error
+          retention-days: 30
+
+  finalize:
+    needs: [plan, generate]
+    if: always() && needs.plan.outputs.has_items == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: main
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
+      - name: Download successful candidates only
+        continue-on-error: true
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          pattern: candidate-*
+          path: /tmp/zte-static-batch
+          merge-multiple: true
+      - id: stage
+        name: Stage successful subset and finalize only it
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p art/incoming/final-sprites
+          mapfile -t files < <(find /tmp/zte-static-batch -type f -name '*_final.png' 2>/dev/null | LC_ALL=C sort)
+          if (( ${#files[@]} == 0 )); then
+            echo 'has_files=false' >> "$GITHUB_OUTPUT"
+            echo 'No successful GPU candidates in this attempt.'
+            exit 0
+          fi
+          printf '%s\n' "${files[@]}"
+          cp "${files[@]}" art/incoming/final-sprites/
+          stems="$(printf '%s\n' "${files[@]##*/}" | sed 's/\.png$//' | paste -sd, -)"
+          echo "SPRITE_TARGETS=$stems" >> "$GITHUB_ENV"
+          echo 'has_files=true' >> "$GITHUB_OUTPUT"
+          python tools/sprites/process_final_sprites.py
+      - name: Commit successful subset once
+        if: steps.stage.outputs.has_files == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add art/incoming/final-sprites/ app/src/main/res/drawable-nodpi/
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'art: finalize manifest static GPU batch'
+          git pull --rebase origin main
+          git push
+      - name: Upload finalized subset for semantic inspection
+        if: steps.stage.outputs.has_files == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: finalized-static-manifest-batch
+          path: |
+            art/incoming/final-sprites/*_final.png
+            app/src/main/res/drawable-nodpi/*_final.webp
+          if-no-files-found: error
+          retention-days: 30
