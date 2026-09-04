@@ -10,8 +10,6 @@ from __future__ import annotations
 
 import json
 import os
-import sys
-import time
 import urllib.error
 import urllib.request
 from pathlib import Path
@@ -45,17 +43,7 @@ def _request(req: urllib.request.Request, timeout: int = 180) -> bytes:
 
 
 def generate(prompt: str) -> Path:
-    """Call the proven Gradio queue HTTP API and download the returned FileData URL."""
-    payload = {
-        "data": [
-            prompt,
-            "1024x1024 ( 1:1 )",
-            42,
-            8,
-            3.0,
-            True,
-        ]
-    }
+    payload = {"data": [prompt, "1024x1024 ( 1:1 )", 42, 8, 3.0, True]}
     post = urllib.request.Request(
         f"{SPACE_URL}/gradio_api/call/generate",
         data=json.dumps(payload).encode("utf-8"),
@@ -114,14 +102,12 @@ def generate(prompt: str) -> Path:
     out.write_bytes(_request(download, timeout=120))
     if out.stat().st_size < 1024:
         raise RuntimeError("Downloaded generator image is unexpectedly small")
-    # Pillow verifies the real format regardless of extension.
     with Image.open(out) as check:
         check.verify()
     return out
 
 
 def black_to_alpha(src: Path) -> Image.Image:
-    """Convert an intentionally pure-black FX backdrop into genuine alpha."""
     im = Image.open(src).convert("RGB")
     lum = im.convert("L")
     alpha = lum.point(lambda p: 0 if p < 12 else min(255, int((p - 12) * 1.35)))
@@ -131,8 +117,22 @@ def black_to_alpha(src: Path) -> Image.Image:
     return rgba
 
 
+def _fit_frame(obj: Image.Image, target_side: int, scale: float, opacity: int, rotation: float = 0.0) -> Image.Image:
+    factor = min(target_side / obj.width, target_side / obj.height) * scale
+    w = max(1, round(obj.width * factor))
+    h = max(1, round(obj.height * factor))
+    frame = obj.resize((w, h), Image.Resampling.LANCZOS)
+    if rotation:
+        frame = frame.rotate(rotation, resample=Image.Resampling.BICUBIC, expand=True)
+        if max(frame.size) > target_side:
+            f = target_side / max(frame.size)
+            frame = frame.resize((max(1, round(frame.width * f)), max(1, round(frame.height * f))), Image.Resampling.LANCZOS)
+    a = frame.getchannel("A").point(lambda p, o=opacity: p * o // 255)
+    frame.putalpha(a)
+    return frame
+
+
 def make_fx06(master: Image.Image) -> Image.Image:
-    """Derive a deterministic 8-frame 4x2 warm pulse sheet from one clean master."""
     bbox = master.getbbox()
     if not bbox:
         raise RuntimeError("FX-06 master is empty after alpha extraction")
@@ -141,15 +141,30 @@ def make_fx06(master: Image.Image) -> Image.Image:
     scales = [0.38, 0.52, 0.68, 0.82, 0.90, 0.78, 0.58, 0.38]
     opacities = [90, 145, 205, 255, 235, 185, 125, 55]
     for i, (scale, opacity) in enumerate(zip(scales, opacities)):
-        max_side = 108
-        factor = min(max_side / obj.width, max_side / obj.height) * scale
-        w = max(1, round(obj.width * factor))
-        h = max(1, round(obj.height * factor))
-        frame = obj.resize((w, h), Image.Resampling.LANCZOS)
-        a = frame.getchannel("A").point(lambda p, o=opacity: p * o // 255)
-        frame.putalpha(a)
+        frame = _fit_frame(obj, 108, scale, opacity)
         x0, y0 = (i % 4) * 128, (i // 4) * 128
-        sheet.alpha_composite(frame, (x0 + (128 - w) // 2, y0 + (128 - h) // 2))
+        sheet.alpha_composite(frame, (x0 + (128 - frame.width) // 2, y0 + (128 - frame.height) // 2))
+    return sheet
+
+
+def make_fx07(master: Image.Image) -> Image.Image:
+    """Derive an 8-frame construction dust/debris one-shot from one clean authored burst."""
+    bbox = master.getbbox()
+    if not bbox:
+        raise RuntimeError("FX-07 master is empty after alpha extraction")
+    obj = master.crop(bbox)
+    sheet = Image.new("RGBA", (512, 256), (0, 0, 0, 0))
+    scales = [0.28, 0.42, 0.58, 0.72, 0.84, 0.90, 0.94, 0.96]
+    opacities = [95, 155, 220, 255, 220, 165, 105, 50]
+    rotations = [0, -3, 3, -2, 2, -1, 1, 0]
+    y_offsets = [10, 7, 4, 1, -2, -4, -6, -8]
+    for i, (scale, opacity, rotation, yoff) in enumerate(zip(scales, opacities, rotations, y_offsets)):
+        frame = _fit_frame(obj, 104, scale, opacity, rotation)
+        x0, y0 = (i % 4) * 128, (i // 4) * 128
+        x = x0 + (128 - frame.width) // 2
+        y = y0 + (128 - frame.height) // 2 + yoff
+        y = max(y0 + 6, min(y, y0 + 128 - 6 - frame.height))
+        sheet.alpha_composite(frame, (x, y))
     return sheet
 
 
@@ -182,23 +197,37 @@ def main() -> int:
     if not TOKEN:
         raise SystemExit("HF_TOKEN is required")
     INCOMING.mkdir(parents=True, exist_ok=True)
-    target = os.getenv("SPRITE_TARGET", "FX-06").upper()
-    if target != "FX-06":
+    target = os.getenv("SPRITE_TARGET", "FX-07").upper()
+
+    if target == "FX-06":
+        prompt = (
+            "AAA mobile game VFX asset, one single centered warm energy pulse, compact circular "
+            "amber gold orange plasma ring with a bright white-gold core, crisp readable silhouette, "
+            "premium industrial sci-fi game effect, isolated object only, large empty margin, pure solid "
+            "black background, no floor, no smoke, no dust, no debris, no rocks, no character, no text, "
+            "no logo, no UI, no border, no frame, no sprite sheet, no multiple objects"
+        )
+        output_name = "zte_fx_06_final.png"
+        maker = make_fx06
+    elif target == "FX-07":
+        prompt = (
+            "AAA mobile game VFX asset, one single centered construction dust and debris burst, compact "
+            "warm tan ochre dust cloud with a few small bright stone and metal fragments, energetic outward "
+            "impact shape, crisp readable silhouette at tiny mobile size, premium industrial game effect, "
+            "isolated effect only, large empty margin, pure solid black background, no floor, no building, "
+            "no tools, no character, no text, no logo, no UI, no border, no frame, no sprite sheet, no multiple objects"
+        )
+        output_name = "zte_fx_07_final.png"
+        maker = make_fx07
+    else:
         raise SystemExit(f"Unsupported target for this conservative worker: {target}")
 
-    prompt = (
-        "AAA mobile game VFX asset, one single centered warm energy pulse, compact circular "
-        "amber gold orange plasma ring with a bright white-gold core, crisp readable silhouette, "
-        "premium industrial sci-fi game effect, isolated object only, large empty margin, pure solid "
-        "black background, no floor, no smoke, no dust, no debris, no rocks, no character, no text, "
-        "no logo, no UI, no border, no frame, no sprite sheet, no multiple objects"
-    )
     print(f"Generating {target} through {SPACE_URL}")
     raw = generate(prompt)
     master = black_to_alpha(raw)
-    sheet = make_fx06(master)
+    sheet = maker(master)
     validate_fx_sheet(sheet)
-    out = INCOMING / "zte_fx_06_final.png"
+    out = INCOMING / output_name
     sheet.save(out, "PNG", optimize=True)
     print(f"VALIDATED_CANDIDATE={out.relative_to(ROOT)}")
     return 0
