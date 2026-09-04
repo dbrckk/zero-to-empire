@@ -1,0 +1,41 @@
+name: Sprite Production Plan
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
+      - 'tools/sprites/plan_sprite_batches.py'
+      - '.github/workflows/sprite-production-plan.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sprite-production-plan-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+
+      - name: Build deterministic production lanes
+        run: python tools/sprites/plan_sprite_batches.py
+
+      - name: Publish batch plan
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: sprite-production-plan
+          path: art/production/sprite_batch_plan.*
+          if-no-files-found: error
+          retention-days: 14
