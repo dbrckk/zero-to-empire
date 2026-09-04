@@ -10,6 +10,7 @@ stop immediately instead of wasting runner time retrying every remaining asset.
 from __future__ import annotations
 
 import json
+import math
 import os
 import re
 import urllib.error
@@ -17,7 +18,7 @@ import urllib.request
 from collections import deque
 from pathlib import Path
 
-from PIL import Image, ImageFilter
+from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = ROOT / "docs/art/FINAL_AAA_SPRITE_MANIFEST.md"
@@ -32,7 +33,7 @@ QUOTA_EXIT = 75
 
 
 def headers(json_body=False):
-    h = {"User-Agent": "zero-to-empire-manifest-factory/1.3"}
+    h = {"User-Agent": "zero-to-empire-manifest-factory/1.4"}
     if TOKEN:
         h["Authorization"] = f"Bearer {TOKEN}"
     if json_body:
@@ -135,9 +136,69 @@ def generate(prompt: str) -> Image.Image:
     return Image.open(p).convert("RGB")
 
 
+def _border_reference(im: Image.Image) -> tuple[int, int, int]:
+    w, h = im.size
+    px = im.load()
+    samples = []
+    stride = max(1, min(w, h) // 128)
+    for x in range(0, w, stride):
+        samples.append(px[x, 0]); samples.append(px[x, h - 1])
+    for y in range(0, h, stride):
+        samples.append(px[0, y]); samples.append(px[w - 1, y])
+    # Median resists occasional edge glows while tracking the generated background.
+    channels = [sorted(c[i] for c in samples) for i in range(3)]
+    mid = len(samples) // 2
+    return tuple(ch[mid] for ch in channels)
+
+
 def isolate(im: Image.Image) -> Image.Image:
-    lum = im.convert("L")
-    alpha = lum.point(lambda p: 0 if p < 10 else min(255, int((p - 10) * 1.42))).filter(ImageFilter.GaussianBlur(.3))
+    """Remove only border-connected background, preserving enclosed dark materials."""
+    im = im.convert("RGB")
+    w, h = im.size
+    px = im.load()
+    bg = _border_reference(im)
+    # Black-background generations vary slightly because of compression/glow.
+    hard = 28.0
+    soft = 74.0
+
+    def dist(rgb):
+        return math.sqrt(sum((rgb[i] - bg[i]) ** 2 for i in range(3)))
+
+    background = bytearray(w * h)
+    q = deque()
+
+    def push(x, y):
+        idx = y * w + x
+        if background[idx] or dist(px[x, y]) > soft:
+            return
+        background[idx] = 1
+        q.append((x, y))
+
+    for x in range(w):
+        push(x, 0); push(x, h - 1)
+    for y in range(h):
+        push(0, y); push(w - 1, y)
+
+    while q:
+        x, y = q.popleft()
+        if x: push(x - 1, y)
+        if x + 1 < w: push(x + 1, y)
+        if y: push(x, y - 1)
+        if y + 1 < h: push(x, y + 1)
+
+    alpha = Image.new("L", (w, h), 255)
+    apx = alpha.load()
+    for y in range(h):
+        row = y * w
+        for x in range(w):
+            if not background[row + x]:
+                continue
+            d = dist(px[x, y])
+            if d <= hard:
+                apx[x, y] = 0
+            else:
+                apx[x, y] = max(0, min(255, round(255 * (d - hard) / (soft - hard))))
+
     rgba = im.convert("RGBA")
     rgba.putalpha(alpha)
     return rgba
