@@ -18,9 +18,9 @@ concurrency:
 
 jobs:
   produce:
-    name: Generate up to 12 props
+    name: Generate up to 36 static sprites
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 58
     env:
       HF_TOKEN: ${{ secrets.HF_TOKEN }}
       HF_SPACE_URL: https://mcp-tools-z-image-turbo.hf.space
@@ -34,11 +34,11 @@ jobs:
         run: python3 -m pip install --disable-pip-version-check Pillow==11.3.0
 
       - id: batch
-        name: Generate validated prop batch
+        name: Generate validated static batch
         shell: bash
         run: |
           set -u -o pipefail
-          python3 tools/sprites/manifest_batch_planner.py --kind PRP --count 12 > /tmp/plan.json
+          python3 tools/sprites/manifest_batch_planner.py --kind ALL --count 36 > /tmp/plan.json
           python3 - <<'PY' > /tmp/targets.tsv
           import json
           with open('/tmp/plan.json', encoding='utf-8') as f:
@@ -47,9 +47,11 @@ jobs:
           PY
 
           successes=()
+          attempts=0
           while IFS=$'\t' read -r asset_id stem; do
             [ -n "$asset_id" ] || continue
-            echo "=== $asset_id ==="
+            attempts=$((attempts + 1))
+            echo "=== $attempts/36 $asset_id ==="
             set +e
             SPRITE_TARGET="$asset_id" python3 tools/sprites/hf_static_manifest_factory.py
             rc=$?
@@ -65,6 +67,7 @@ jobs:
             echo "Rejected $asset_id (rc=$rc); continuing."
           done < /tmp/targets.tsv
 
+          echo "attempted_assets=$attempts"
           echo "successful_assets=${#successes[@]}"
           if (( ${#successes[@]} == 0 )); then
             echo 'has_files=false' >> "$GITHUB_OUTPUT"
@@ -87,7 +90,7 @@ jobs:
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add art/incoming/final-sprites/ app/src/main/res/drawable-nodpi/
           if git diff --cached --quiet; then exit 0; fi
-          git commit -m 'art: finalize massive prop batch'
+          git commit -m 'art: finalize massive static sprite batch'
           git pull --rebase origin main
           git push
 
@@ -95,9 +98,9 @@ jobs:
         if: steps.batch.outputs.has_files == 'true'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: finalized-prop-batch
+          name: finalized-static-batch
           path: |
-            art/incoming/final-sprites/zte_prop_*_final.png
-            app/src/main/res/drawable-nodpi/zte_prop_*_final.webp
+            art/incoming/final-sprites/*_final.png
+            app/src/main/res/drawable-nodpi/*_final.webp
           if-no-files-found: error
           retention-days: 30
