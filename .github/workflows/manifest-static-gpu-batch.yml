@@ -6,6 +6,8 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/manifest-static-gpu-batch.yml'
+      - 'tools/sprites/manifest_batch_planner.py'
+      - 'tools/sprites/hf_static_manifest_factory.py'
   schedule:
     - cron: '17 * * * *'
 
@@ -17,10 +19,15 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  produce:
-    name: Generate up to 36 static sprites
+  generate:
+    name: GPU shard ${{ matrix.shard }} / 3
     runs-on: ubuntu-latest
-    timeout-minutes: 58
+    timeout-minutes: 32
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        shard: [0, 1, 2]
     env:
       HF_TOKEN: ${{ secrets.HF_TOKEN }}
       HF_SPACE_URL: https://mcp-tools-z-image-turbo.hf.space
@@ -34,24 +41,30 @@ jobs:
         run: python3 -m pip install --disable-pip-version-check Pillow==11.3.0
 
       - id: batch
-        name: Generate validated static batch
+        name: Generate one third of 36 hourly attempts
         shell: bash
+        env:
+          SHARD: ${{ matrix.shard }}
         run: |
           set -u -o pipefail
           python3 tools/sprites/manifest_batch_planner.py --kind ALL --count 36 > /tmp/plan.json
           python3 - <<'PY' > /tmp/targets.tsv
-          import json
+          import json, os
+          shard = int(os.environ['SHARD'])
           with open('/tmp/plan.json', encoding='utf-8') as f:
-              for item in json.load(f)['include']:
+              items = json.load(f)['include']
+          for index, item in enumerate(items):
+              if index % 3 == shard:
                   print(f"{item['id']}\t{item['stem']}")
           PY
 
           successes=()
+          failures=()
           attempts=0
           while IFS=$'\t' read -r asset_id stem; do
             [ -n "$asset_id" ] || continue
             attempts=$((attempts + 1))
-            echo "=== $attempts/36 $asset_id ==="
+            echo "=== shard $SHARD attempt $attempts: $asset_id ==="
             set +e
             SPRITE_TARGET="$asset_id" python3 tools/sprites/hf_static_manifest_factory.py
             rc=$?
@@ -61,28 +74,86 @@ jobs:
               continue
             fi
             if [ "$rc" -eq 75 ]; then
-              echo 'Free GPU quota exhausted; preserving successful candidates.'
+              failures+=("$asset_id:quota")
+              echo 'Free GPU quota exhausted on this shard; preserving successes.'
               break
             fi
+            failures+=("$asset_id:rejected")
             echo "Rejected $asset_id (rc=$rc); continuing."
           done < /tmp/targets.tsv
 
           echo "attempted_assets=$attempts"
           echo "successful_assets=${#successes[@]}"
+          if (( ${#failures[@]} )); then printf '%s\n' "${failures[@]}"; fi
           if (( ${#successes[@]} == 0 )); then
             echo 'has_files=false' >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          stems="$(IFS=,; echo "${successes[*]}")"
-          echo "SPRITE_TARGETS=$stems" >> "$GITHUB_ENV"
           echo 'has_files=true' >> "$GITHUB_OUTPUT"
 
-      - name: Finalize successful candidates
+      - name: Stage successful shard candidates
         if: steps.batch.outputs.has_files == 'true'
-        run: python3 tools/sprites/process_final_sprites.py
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/shard-candidates
+          cp art/incoming/final-sprites/*_final.png /tmp/shard-candidates/
 
-      - name: Commit validated batch
+      - name: Upload successful shard candidates
         if: steps.batch.outputs.has_files == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: gpu-static-shard-${{ matrix.shard }}
+          path: /tmp/shard-candidates/*.png
+          if-no-files-found: error
+          retention-days: 3
+
+  finalize:
+    name: Finalize and commit hourly batch
+    needs: generate
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: main
+
+      - name: Install Pillow
+        run: python3 -m pip install --disable-pip-version-check Pillow==11.3.0
+
+      - name: Download successful shard candidates
+        uses: actions/download-artifact@v4
+        with:
+          pattern: gpu-static-shard-*
+          path: art/incoming/final-sprites
+          merge-multiple: true
+        continue-on-error: true
+
+      - id: collect
+        name: Finalize all successful candidates once
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          files=(art/incoming/final-sprites/*_final.png)
+          if (( ${#files[@]} == 0 )); then
+            echo 'No generated candidates survived this hourly batch.'
+            echo 'has_files=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          stems=()
+          for file in "${files[@]}"; do
+            stems+=("$(basename "$file" .png)")
+          done
+          export SPRITE_TARGETS="$(IFS=,; echo "${stems[*]}")"
+          python3 tools/sprites/process_final_sprites.py
+          echo "finalized_assets=${#stems[@]}"
+          echo 'has_files=true' >> "$GITHUB_OUTPUT"
+
+      - name: Commit validated hourly batch once
+        if: steps.collect.outputs.has_files == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -90,15 +161,15 @@ jobs:
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add art/incoming/final-sprites/ app/src/main/res/drawable-nodpi/
           if git diff --cached --quiet; then exit 0; fi
-          git commit -m 'art: finalize massive static sprite batch'
+          git commit -m 'art: finalize parallel hourly static sprite batch'
           git pull --rebase origin main
           git push
 
-      - name: Upload inspection artifact
-        if: steps.batch.outputs.has_files == 'true'
+      - name: Upload semantic inspection batch
+        if: steps.collect.outputs.has_files == 'true'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: finalized-static-batch
+          name: finalized-static-hourly-batch
           path: |
             art/incoming/final-sprites/*_final.png
             app/src/main/res/drawable-nodpi/*_final.webp
