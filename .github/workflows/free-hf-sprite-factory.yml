@@ -6,7 +6,7 @@ on:
       target:
         description: Manifest asset ID to generate
         required: true
-        default: FX-05
+        default: FX-04
   schedule:
     - cron: '17 5 * * *'
   push:
@@ -14,6 +14,7 @@ on:
     paths:
       - 'tools/sprites/hf_sprite_factory.py'
       - 'tools/sprites/process_final_sprites.py'
+      - 'tools/sprites/integrate_fx04_runtime.py'
       - 'tools/sprites/integrate_fx05_runtime.py'
       - 'tools/sprites/integrate_fx06_runtime.py'
       - 'tools/sprites/integrate_fx07_runtime.py'
@@ -33,80 +34,64 @@ jobs:
     env:
       HF_TOKEN: ${{ secrets.HF_TOKEN }}
       HF_SPACE_URL: https://mcp-tools-z-image-turbo.hf.space
-      SPRITE_TARGET: ${{ inputs.target || 'FX-05' }}
+      SPRITE_TARGET: ${{ inputs.target || 'FX-04' }}
     steps:
       - name: Checkout
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-
       - name: Set up Python
         uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: '3.12'
-
       - name: Install deterministic image tooling
         run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
-
       - name: Resolve target paths
         id: target
         shell: bash
         run: |
           set -euo pipefail
           case "${SPRITE_TARGET}" in
+            FX-04) stem='zte_fx_04_final' ;;
             FX-05) stem='zte_fx_05_final' ;;
             FX-06) stem='zte_fx_06_final' ;;
             FX-07) stem='zte_fx_07_final' ;;
             *) echo "Unsupported target ${SPRITE_TARGET}" >&2; exit 2 ;;
           esac
           echo "stem=${stem}" >> "$GITHUB_OUTPUT"
-          if [ -s "art/incoming/final-sprites/${stem}.png" ]; then
-            echo 'candidate_exists=true' >> "$GITHUB_OUTPUT"
-          else
-            echo 'candidate_exists=false' >> "$GITHUB_OUTPUT"
-          fi
-
+          if [ -s "art/incoming/final-sprites/${stem}.png" ]; then echo 'candidate_exists=true' >> "$GITHUB_OUTPUT"; else echo 'candidate_exists=false' >> "$GITHUB_OUTPUT"; fi
       - name: Require authenticated Hugging Face access
         if: steps.target.outputs.candidate_exists != 'true'
         shell: bash
         run: |
           set -euo pipefail
-          if [ -z "${HF_TOKEN:-}" ]; then
-            echo 'Missing Actions secret HF_TOKEN.' >&2
-            exit 2
-          fi
-
+          if [ -z "${HF_TOKEN:-}" ]; then echo 'Missing Actions secret HF_TOKEN.' >&2; exit 2; fi
       - name: Generate and validate one candidate
         if: steps.target.outputs.candidate_exists != 'true'
         run: python tools/sprites/hf_sprite_factory.py
-
       - name: Finalize candidate into runtime WebP
         run: python tools/sprites/process_final_sprites.py
-
+      - name: Integrate FX-04 runtime
+        if: env.SPRITE_TARGET == 'FX-04'
+        run: python tools/sprites/integrate_fx04_runtime.py
       - name: Integrate FX-05 runtime
         if: env.SPRITE_TARGET == 'FX-05'
         run: python tools/sprites/integrate_fx05_runtime.py
-
       - name: Integrate FX-06 runtime
         if: env.SPRITE_TARGET == 'FX-06'
         run: python tools/sprites/integrate_fx06_runtime.py
-
       - name: Integrate FX-07 runtime
         if: env.SPRITE_TARGET == 'FX-07'
         run: python tools/sprites/integrate_fx07_runtime.py
-
       - name: Set up JDK 17
         uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
         with:
           distribution: temurin
           java-version: '17'
-
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
         with:
           gradle-version: '8.13'
-
       - name: Verify Android runtime integration
         run: gradle --no-daemon testDebugUnitTest testReleaseUnitTest lintRelease assembleDebug assembleRelease bundleRelease
-
       - name: Commit only after generation, finalization and Android verification succeed
         shell: bash
         run: |
@@ -114,13 +99,9 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add art/incoming/final-sprites/ app/src/main/res/drawable-nodpi/ app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt app/src/main/java/com/zerotoempire/game/PurchaseImpactVfx.kt
-          if git diff --cached --quiet; then
-            echo 'No validated runtime changes to commit.'
-            exit 0
-          fi
+          if git diff --cached --quiet; then echo 'No validated runtime changes to commit.'; exit 0; fi
           git commit -m "art: integrate ${SPRITE_TARGET} validated runtime asset"
           git push
-
       - name: Upload candidate for inspection
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
@@ -128,7 +109,6 @@ jobs:
           path: art/incoming/final-sprites/${{ steps.target.outputs.stem }}.png
           if-no-files-found: error
           retention-days: 30
-
       - name: Upload finalized runtime sprite
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
