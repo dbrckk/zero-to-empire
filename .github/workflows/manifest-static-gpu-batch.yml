@@ -79,15 +79,23 @@ jobs:
 
           successes=()
           failures=()
+          quota_exhausted=false
           while IFS=$'\t' read -r asset_id stem; do
             [ -n "$asset_id" ] || continue
             echo "=== GPU candidate $asset_id ==="
-            if SPRITE_TARGET="$asset_id" python tools/sprites/hf_static_manifest_factory.py; then
+            SPRITE_TARGET="$asset_id" python tools/sprites/hf_static_manifest_factory.py
+            rc=$?
+            if [ "$rc" -eq 0 ]; then
               if [ -s "art/incoming/final-sprites/${stem}.png" ]; then
                 successes+=("$stem")
               else
                 failures+=("$asset_id:no-output")
               fi
+            elif [ "$rc" -eq 75 ]; then
+              failures+=("$asset_id:free-gpu-quota")
+              quota_exhausted=true
+              echo 'Free GPU quota exhausted; stopping immediately and preserving successes.'
+              break
             else
               failures+=("$asset_id:generation-or-validation")
               echo "Rejected/deferred $asset_id; continuing batch."
@@ -96,6 +104,7 @@ jobs:
 
           printf 'successful_assets=%s\n' "${#successes[@]}"
           printf 'failed_or_deferred_assets=%s\n' "${#failures[@]}"
+          printf 'quota_exhausted=%s\n' "$quota_exhausted"
           if (( ${#failures[@]} )); then printf '%s\n' "${failures[@]}"; fi
           if (( ${#successes[@]} == 0 )); then
             echo 'has_files=false' >> "$GITHUB_OUTPUT"
