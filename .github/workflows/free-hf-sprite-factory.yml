@@ -6,7 +6,7 @@ on:
       target:
         description: Manifest asset ID to generate
         required: true
-        default: FX-07
+        default: FX-05
   schedule:
     - cron: '17 5 * * *'
   push:
@@ -14,6 +14,7 @@ on:
     paths:
       - 'tools/sprites/hf_sprite_factory.py'
       - 'tools/sprites/process_final_sprites.py'
+      - 'tools/sprites/integrate_fx05_runtime.py'
       - 'tools/sprites/integrate_fx06_runtime.py'
       - 'tools/sprites/integrate_fx07_runtime.py'
       - '.github/workflows/free-hf-sprite-factory.yml'
@@ -32,7 +33,7 @@ jobs:
     env:
       HF_TOKEN: ${{ secrets.HF_TOKEN }}
       HF_SPACE_URL: https://mcp-tools-z-image-turbo.hf.space
-      SPRITE_TARGET: ${{ inputs.target || 'FX-07' }}
+      SPRITE_TARGET: ${{ inputs.target || 'FX-05' }}
     steps:
       - name: Checkout
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -51,6 +52,7 @@ jobs:
         run: |
           set -euo pipefail
           case "${SPRITE_TARGET}" in
+            FX-05) stem='zte_fx_05_final' ;;
             FX-06) stem='zte_fx_06_final' ;;
             FX-07) stem='zte_fx_07_final' ;;
             *) echo "Unsupported target ${SPRITE_TARGET}" >&2; exit 2 ;;
@@ -78,6 +80,10 @@ jobs:
 
       - name: Finalize candidate into runtime WebP
         run: python tools/sprites/process_final_sprites.py
+
+      - name: Integrate FX-05 runtime
+        if: env.SPRITE_TARGET == 'FX-05'
+        run: python tools/sprites/integrate_fx05_runtime.py
 
       - name: Integrate FX-06 runtime
         if: env.SPRITE_TARGET == 'FX-06'
