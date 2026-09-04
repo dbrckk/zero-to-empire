@@ -6,9 +6,9 @@ on:
       kind:
         description: Static asset family
         required: true
-        default: ALL
+        default: PRP
         type: choice
-        options: [ALL, BLD, CORE, VEH, PRP]
+        options: [PRP, ALL, VEH, CORE, BLD]
       count:
         description: Maximum assets to attempt in this batch
         required: true
@@ -38,7 +38,7 @@ jobs:
     env:
       HF_TOKEN: ${{ secrets.HF_TOKEN }}
       HF_SPACE_URL: https://mcp-tools-z-image-turbo.hf.space
-      KIND: ${{ inputs.kind || 'ALL' }}
+      KIND: ${{ github.event_name == 'schedule' && 'PRP' || inputs.kind || 'PRP' }}
       COUNT: ${{ inputs.count || '12' }}
     steps:
       - name: Checkout latest main once
@@ -50,10 +50,9 @@ jobs:
         uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: '3.12'
-          cache: pip
 
       - name: Install image tooling once
-        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
+        run: python -m pip install --disable-pip-version-check --only-binary=:all: 'Pillow==11.3.0'
 
       - id: batch
         name: Plan and consume GPU quota sequentially
@@ -69,48 +68,28 @@ jobs:
           for item in items:
               print(f"{item['id']}\t{item['stem']}")
           PY
-
           planned="$(wc -l < /tmp/zte-targets.tsv)"
           echo "planned_assets=$planned"
-          if [ "$planned" -eq 0 ]; then
-            echo 'has_files=false' >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          successes=()
-          failures=()
-          quota_exhausted=false
+          if [ "$planned" -eq 0 ]; then echo 'has_files=false' >> "$GITHUB_OUTPUT"; exit 0; fi
+          successes=(); failures=(); quota_exhausted=false
           while IFS=$'\t' read -r asset_id stem; do
             [ -n "$asset_id" ] || continue
             echo "=== GPU candidate $asset_id ==="
             SPRITE_TARGET="$asset_id" python tools/sprites/hf_static_manifest_factory.py
             rc=$?
-            if [ "$rc" -eq 0 ]; then
-              if [ -s "art/incoming/final-sprites/${stem}.png" ]; then
-                successes+=("$stem")
-              else
-                failures+=("$asset_id:no-output")
-              fi
+            if [ "$rc" -eq 0 ] && [ -s "art/incoming/final-sprites/${stem}.png" ]; then
+              successes+=("$stem")
             elif [ "$rc" -eq 75 ]; then
-              failures+=("$asset_id:free-gpu-quota")
-              quota_exhausted=true
-              echo 'Free GPU quota exhausted; stopping immediately and preserving successes.'
-              break
+              failures+=("$asset_id:free-gpu-quota"); quota_exhausted=true; break
             else
               failures+=("$asset_id:generation-or-validation")
-              echo "Rejected/deferred $asset_id; continuing batch."
             fi
           done < /tmp/zte-targets.tsv
-
           printf 'successful_assets=%s\n' "${#successes[@]}"
           printf 'failed_or_deferred_assets=%s\n' "${#failures[@]}"
           printf 'quota_exhausted=%s\n' "$quota_exhausted"
           if (( ${#failures[@]} )); then printf '%s\n' "${failures[@]}"; fi
-          if (( ${#successes[@]} == 0 )); then
-            echo 'has_files=false' >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
+          if (( ${#successes[@]} == 0 )); then echo 'has_files=false' >> "$GITHUB_OUTPUT"; exit 0; fi
           stems="$(IFS=,; echo "${successes[*]}")"
           echo "SPRITE_TARGETS=$stems" >> "$GITHUB_ENV"
           echo 'has_files=true' >> "$GITHUB_OUTPUT"
@@ -127,10 +106,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add art/incoming/final-sprites/ app/src/main/res/drawable-nodpi/
-          if git diff --cached --quiet; then
-            echo 'No new validated static assets to commit.'
-            exit 0
-          fi
+          if git diff --cached --quiet; then exit 0; fi
           git commit -m 'art: finalize manifest static GPU batch'
           git pull --rebase origin main
           git push
