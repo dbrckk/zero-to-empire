@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Generate one static manifest asset through the free HF Space.
 
-Supported fast GPU lane: buildings, Power Core, vehicles and props. Animation
-sheets and terrain stay out of this worker because their contracts differ.
+Supported fast GPU lane: buildings, Power Core, vehicles, props and static
+terrain/infrastructure modules. Animation sheets remain on dedicated workers.
 
 Exit code 75 means the free GPU quota is exhausted. Batch workflows use this to
 stop immediately instead of wasting runner time retrying every remaining asset.
@@ -26,13 +26,13 @@ SPACE_URL = os.getenv("HF_SPACE_URL", "https://mcp-tools-z-image-turbo.hf.space"
 TOKEN = os.environ.get("HF_TOKEN", "").strip()
 ASSET_ID = os.environ.get("SPRITE_TARGET", "").strip().upper()
 ROW = re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$")
-SUPPORTED = ("BLD-", "CORE-", "VEH-", "PRP-")
-TARGET_SIDE = {"BLD": 2048, "CORE": 1536, "VEH": 1536, "PRP": 1024}
+SUPPORTED = ("BLD-", "CORE-", "VEH-", "PRP-", "TER-")
+TARGET_SIDE = {"BLD": 2048, "CORE": 1536, "VEH": 1536, "PRP": 1024, "TER": 1024}
 QUOTA_EXIT = 75
 
 
 def headers(json_body=False):
-    h = {"User-Agent": "zero-to-empire-manifest-factory/1.1"}
+    h = {"User-Agent": "zero-to-empire-manifest-factory/1.2"}
     if TOKEN:
         h["Authorization"] = f"Bearer {TOKEN}"
     if json_body:
@@ -73,12 +73,13 @@ def prompt_for(asset_id, name, description):
         "CORE": "single complete power reactor core on compact cradle, clear 2.5D three-quarter 34 degree camera, iconic readable silhouette",
         "VEH": "single complete vehicle, three-quarter side view, contact-center pivot, readable traffic direction, compact soft contact shadow",
         "PRP": "single complete industrial prop, three-quarter 2.5D view, clear readable silhouette at mobile size",
+        "TER": "single seamless terrain or infrastructure module, fixed 2.5D three-quarter 34 degree camera, clean connector geometry and readable edge treatment, no surrounding scene",
     }[kind]
     return (
         "AAA premium mobile strategy game production sprite, " + contract + ", "
         + name + ". " + description + " "
         "Consistent upper-left key light, cool fill, selective warm amber and cyan emissive accents, physically plausible premium materials. "
-        "Isolated asset only on pure solid black background with large empty margin. No scene, no floor plane, no environment backdrop, "
+        "Isolated asset only on pure solid black background with large empty margin. No scene, no floor plane beyond the requested terrain module, no environment backdrop, "
         "no UI, no border, no frame, no watermark, no logo, no letters, no readable text, no numbers, no brand signage, no multiple objects."
     )
 
@@ -193,7 +194,7 @@ def validate(im: Image.Image):
 
 def main():
     if not TOKEN: raise SystemExit("HF_TOKEN is required")
-    if not ASSET_ID or not ASSET_ID.startswith(SUPPORTED): raise SystemExit("SPRITE_TARGET must be BLD/CORE/VEH/PRP")
+    if not ASSET_ID or not ASSET_ID.startswith(SUPPORTED): raise SystemExit("SPRITE_TARGET must be BLD/CORE/VEH/PRP/TER")
     rid,name,desc,runtime,status = manifest_item(ASSET_ID)
     if status != "TODO":
         raise SystemExit(f"{rid} is {status}, refusing duplicate generation")
