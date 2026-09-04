@@ -2,8 +2,8 @@
 """Instant deterministic small-FX factory for Zero -> Empire.
 
 Generates FX-00..FX-03 as native 8-frame 4x2 transparent sheets without GPU.
-The goal is to remove ZeroGPU quota/queue time for effects that are cheaper and
-more controllable to author procedurally than by raster generation.
+Supports one target via SPRITE_TARGET or a comma-separated batch via
+SPRITE_TARGETS. Batch mode avoids repeated runner/process startup overhead.
 """
 from __future__ import annotations
 
@@ -21,6 +21,7 @@ COLS = 4
 FRAMES = 8
 SIZE = (512, 256)
 PAD = 6
+SUPPORTED = ("FX-00", "FX-01", "FX-02", "FX-03")
 
 
 def layer() -> Image.Image:
@@ -68,7 +69,6 @@ def flame(frame: int, plasma: bool) -> Image.Image:
     base_y = 94
     height = (78 if plasma else 58) * (0.82 + 0.18 * math.sin(math.pi * (phase + .15)))
     width = 30 if plasma else 22
-    # layered rising hot lobes; deterministic jitter makes every frame materially different
     for j in range(11 if plasma else 8):
         t = j / (10 if plasma else 7)
         y = base_y - t * height
@@ -84,7 +84,6 @@ def flame(frame: int, plasma: bool) -> Image.Image:
         else:
             c = (255, 245, 205, 230)
         g.ellipse((cx+wobble-rx, y-ry, cx+wobble+rx, y+ry), fill=c)
-    # white-hot base core
     core_w = 13 if plasma else 9
     core_h = 24 if plasma else 17
     g.ellipse((cx-core_w, base_y-core_h, cx+core_w, base_y+2), fill=(255, 252, 224, 245))
@@ -163,13 +162,30 @@ def build(target: str) -> Image.Image:
     return sheet
 
 
+def targets_from_env() -> list[str]:
+    raw = os.getenv("SPRITE_TARGETS", "").strip()
+    if raw:
+        targets = [part.strip().upper() for part in raw.split(",") if part.strip()]
+    else:
+        targets = [os.getenv("SPRITE_TARGET", "FX-03").upper()]
+    invalid = [target for target in targets if target not in SUPPORTED]
+    if invalid:
+        raise SystemExit(f"unsupported procedural targets: {', '.join(invalid)}")
+    return list(dict.fromkeys(targets))
+
+
 def main() -> int:
-    target = os.getenv("SPRITE_TARGET", "FX-03").upper()
-    num = target.split("-")[-1]
     INCOMING.mkdir(parents=True, exist_ok=True)
-    out = INCOMING / f"zte_fx_{num}_final.png"
-    build(target).save(out, "PNG", optimize=True)
-    print(f"PROCEDURAL_VALIDATED={out.relative_to(ROOT)}")
+    targets = targets_from_env()
+    for target in targets:
+        num = target.split("-")[-1]
+        out = INCOMING / f"zte_fx_{num}_final.png"
+        if out.is_file() and out.stat().st_size > 0:
+            print(f"PROCEDURAL_REUSE={out.relative_to(ROOT)}")
+            continue
+        build(target).save(out, "PNG", optimize=True)
+        print(f"PROCEDURAL_VALIDATED={out.relative_to(ROOT)}")
+    print(f"PROCEDURAL_BATCH_COUNT={len(targets)}")
     return 0
 
 
