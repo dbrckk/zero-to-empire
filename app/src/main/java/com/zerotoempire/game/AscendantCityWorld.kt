@@ -330,12 +330,28 @@ private fun AscendantWorldLot(vm: GameViewModel, business: Business, state: Game
 @Composable
 private fun AscendantCorePlaza(state: GameState, tap: () -> Unit, modifier: Modifier = Modifier) {
     val context = LocalContext.current
+    val cyanPulseSheet = remember { ImageBitmap.imageResource(context.resources, R.drawable.zte_fx_05_final) }
     val pulseSheet = remember { ImageBitmap.imageResource(context.resources, R.drawable.zte_fx_06_final) }
     val motionEnabled = remember(context) {
         Settings.Global.getFloat(context.contentResolver, Settings.Global.ANIMATOR_DURATION_SCALE, 1f) > 0f
     }
+    var cyanFrame by remember { mutableIntStateOf(0) }
     var pulseToken by remember { mutableIntStateOf(0) }
     var pulseFrame by remember { mutableIntStateOf(-1) }
+
+    LaunchedEffect(motionEnabled) {
+        if (!motionEnabled) {
+            cyanFrame = 3
+        } else {
+            while (true) {
+                for (frame in 0 until 8) {
+                    cyanFrame = frame
+                    delay(110)
+                }
+                delay(440)
+            }
+        }
+    }
 
     LaunchedEffect(pulseToken) {
         if (pulseToken == 0) return@LaunchedEffect
@@ -358,6 +374,17 @@ private fun AscendantCorePlaza(state: GameState, tap: () -> Unit, modifier: Modi
                 CircleShape
             )
         )
+        Canvas(Modifier.size(110.dp)) {
+            val frame = cyanFrame.coerceIn(0, 7)
+            val side = minOf(size.width, size.height).toInt()
+            drawImage(
+                image = cyanPulseSheet,
+                srcOffset = IntOffset((frame % 4) * 128, (frame / 4) * 128),
+                srcSize = IntSize(128, 128),
+                dstOffset = IntOffset(((size.width - side) / 2f).toInt(), ((size.height - side) / 2f).toInt()),
+                dstSize = IntSize(side, side)
+            )
+        }
         Surface(
             color = EmpireColors.DeepSpace.copy(alpha = .86f),
             shape = CircleShape,
