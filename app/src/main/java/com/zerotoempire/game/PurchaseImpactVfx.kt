@@ -23,6 +23,7 @@ private const val WarmPulseFrameSize = 128
 private const val WarmPulseColumns = 4
 private const val WarmPulseFrameCount = 8
 private const val WarmPulsePeakFrame = 4
+private const val ConstructionDustPeakFrame = 3
 
 /**
  * Short-lived feedback for successful asset purchases.
@@ -40,6 +41,9 @@ fun AssetPurchaseImpact(
     val lowPower = MotionQuality.lowPowerMode(context)
     val sheet = remember(context) {
         BitmapFactory.decodeResource(context.resources, R.drawable.zte_fx_06_final).asImageBitmap()
+    }
+    val dustSheet = remember(context) {
+        BitmapFactory.decodeResource(context.resources, R.drawable.zte_fx_07_final).asImageBitmap()
     }
     val progress = remember { Animatable(1f) }
 
@@ -92,6 +96,27 @@ fun AssetPurchaseImpact(
             dstOffset = pulseOffset,
             dstSize = IntSize(pulseSize, pulseSize),
             alpha = if (reduced) intensity * .72f else intensity
+        )
+
+        val dustFrame = when {
+            reduced -> ConstructionDustPeakFrame
+            lowPower -> ((p * 4f).toInt().coerceIn(0, 3) * 2).coerceAtMost(WarmPulseFrameCount - 1)
+            else -> (p * WarmPulseFrameCount).toInt().coerceIn(0, WarmPulseFrameCount - 1)
+        }
+        val dustSize = (min * (.42f + intensity * .14f)).toInt().coerceAtLeast(1)
+        drawImage(
+            image = dustSheet,
+            srcOffset = IntOffset(
+                x = (dustFrame % WarmPulseColumns) * WarmPulseFrameSize,
+                y = (dustFrame / WarmPulseColumns) * WarmPulseFrameSize
+            ),
+            srcSize = IntSize(WarmPulseFrameSize, WarmPulseFrameSize),
+            dstOffset = IntOffset(
+                x = (center.x - dustSize / 2f).toInt(),
+                y = (center.y - dustSize * .36f).toInt()
+            ),
+            dstSize = IntSize(dustSize, dustSize),
+            alpha = if (reduced) intensity * .48f else intensity * .76f
         )
 
         if (!reduced) {
