@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Build deterministic production lanes from the canonical AAA sprite manifest.
 
-The planner is deliberately generation-backend agnostic. It prevents the project
-from falling back to one-asset-at-a-time orchestration by grouping remaining
-assets according to the cheapest safe production path.
+The planner is generation-backend agnostic. It groups remaining assets by the
+cheapest safe production path and, critically, treats already-materialized art
+as integration work even when the human ledger is stale.
 """
 from __future__ import annotations
 
@@ -14,19 +14,18 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = ROOT / "docs/art/FINAL_AAA_SPRITE_MANIFEST.md"
+INCOMING = ROOT / "art/incoming/final-sprites"
 OUT = ROOT / "art/production"
 ROW = re.compile(
     r"^\|\s*(?P<id>[^|]+?)\s*\|\s*(?P<asset>[^|]+?)\s*\|\s*(?P<description>[^|]+?)\s*\|\s*`(?P<runtime>[^`]+)`\s*\|\s*(?P<status>TODO|ART|CLEAN|RUNTIME|DONE|BLOCKED)\s*\|$"
 )
 
-# Batch sizes are intentionally asymmetric: CPU/procedural work is cheap, static
-# GPU candidates can be produced moderately wide, while animated sheets remain
-# small so semantic inspection does not become the next bottleneck.
 BATCH_SIZE = {
-    "procedural": 16,
-    "gpu-static": 8,
+    "procedural-fx": 18,
+    "procedural-terrain": 14,
+    "gpu-static": 12,
     "gpu-animation": 4,
-    "integration-only": 24,
+    "integration-only": 32,
     "blocked": 24,
 }
 
@@ -38,29 +37,30 @@ class Asset:
     runtime: str
     status: str
     lane: str
+    materialized: bool
 
 
-def classify(asset_id: str, description: str, status: str, runtime: str) -> str:
+def is_materialized(runtime: str) -> bool:
+    runtime_path = ROOT / runtime
+    stem = Path(runtime).stem
+    candidate = INCOMING / f"{stem}.png"
+    return runtime_path.exists() or candidate.exists()
+
+
+def classify(asset_id: str, description: str, status: str, runtime: str, materialized: bool) -> str:
     if status == "BLOCKED":
         return "blocked"
-    if status in {"ART", "CLEAN", "RUNTIME"}:
-        # Already paid the expensive authoring cost; prioritize integration/CI.
+    if materialized or status in {"ART", "CLEAN", "RUNTIME"}:
         return "integration-only"
 
     aid = asset_id.upper()
     text = f"{description} {runtime}".lower()
-
-    # Small VFX are the safest lane for deterministic procedural authoring.
     if aid.startswith("FX-"):
-        return "procedural"
-
-    # Character pose/cycle sheets and anything explicitly animated require a
-    # dedicated animation-aware path. Do not fake these from one static master.
+        return "procedural-fx"
+    if aid.startswith("TER-"):
+        return "procedural-terrain"
     if aid.startswith("CHR-") or any(k in text for k in ("sheet", "frames", "cycle", "walk", "idle", "animation", "animated")):
         return "gpu-animation"
-
-    # Buildings, vehicles, props, terrain and static machinery can share the
-    # isolated-object GPU lane, with category-specific prompts/normalization.
     return "gpu-static"
 
 
@@ -75,7 +75,8 @@ def main() -> int:
         if not m:
             continue
         d = m.groupdict()
-        rows.append(Asset(**d, lane=classify(d["id"], d["description"], d["status"], d["runtime"])))
+        materialized = is_materialized(d["runtime"])
+        rows.append(Asset(**d, materialized=materialized, lane=classify(d["id"], d["description"], d["status"], d["runtime"], materialized)))
 
     if len(rows) != 235:
         raise SystemExit(f"Manifest parsing safety check failed: expected 235 rows, got {len(rows)}")
@@ -89,6 +90,7 @@ def main() -> int:
         "manifest_total": len(rows),
         "done": len(rows) - len(remaining),
         "remaining": len(remaining),
+        "materialized_remaining": sum(a.materialized for a in remaining),
         "lanes": {},
     }
     for lane, assets in lanes.items():
@@ -100,32 +102,28 @@ def main() -> int:
         }
 
     OUT.mkdir(parents=True, exist_ok=True)
-    json_path = OUT / "sprite_batch_plan.json"
-    json_path.write_text(json.dumps(plan, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    (OUT / "sprite_batch_plan.json").write_text(json.dumps(plan, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     md = [
-        "# Sprite production batch plan",
-        "",
+        "# Sprite production batch plan", "",
         f"- Manifest: **{plan['manifest_total']}**",
         f"- DONE: **{plan['done']}**",
         f"- Remaining: **{plan['remaining']}**",
-        "",
-        "| Lane | Assets | Batch size | Batches |",
-        "|---|---:|---:|---:|",
+        f"- Already materialized but not DONE: **{plan['materialized_remaining']}**",
+        "", "| Lane | Assets | Batch size | Batches |", "|---|---:|---:|---:|",
     ]
     for lane, info in plan["lanes"].items():
         md.append(f"| {lane} | {info['count']} | {info['batch_size']} | {len(info['batches'])} |")
     md += ["", "## Next batches", ""]
     for lane, info in plan["lanes"].items():
-        if not info["batches"]:
-            continue
-        ids = ", ".join(a["id"] for a in info["batches"][0])
-        md.append(f"- **{lane}:** {ids}")
+        if info["batches"]:
+            md.append(f"- **{lane}:** " + ", ".join(a["id"] for a in info["batches"][0]))
     (OUT / "sprite_batch_plan.md").write_text("\n".join(md) + "\n", encoding="utf-8")
 
     print(json.dumps({
         "done": plan["done"],
         "remaining": plan["remaining"],
+        "materialized_remaining": plan["materialized_remaining"],
         "lane_counts": {k: v["count"] for k, v in plan["lanes"].items()},
         "batch_counts": {k: len(v["batches"]) for k, v in plan["lanes"].items()},
     }, separators=(",", ":")))
