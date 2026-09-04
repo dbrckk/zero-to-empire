@@ -3,6 +3,9 @@
 
 Supported fast GPU lane: buildings, Power Core, vehicles and props. Animation
 sheets and terrain stay out of this worker because their contracts differ.
+
+Exit code 75 means the free GPU quota is exhausted. Batch workflows use this to
+stop immediately instead of wasting runner time retrying every remaining asset.
 """
 from __future__ import annotations
 
@@ -25,10 +28,11 @@ ASSET_ID = os.environ.get("SPRITE_TARGET", "").strip().upper()
 ROW = re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$")
 SUPPORTED = ("BLD-", "CORE-", "VEH-", "PRP-")
 TARGET_SIDE = {"BLD": 2048, "CORE": 1536, "VEH": 1536, "PRP": 1024}
+QUOTA_EXIT = 75
 
 
 def headers(json_body=False):
-    h = {"User-Agent": "zero-to-empire-manifest-factory/1.0"}
+    h = {"User-Agent": "zero-to-empire-manifest-factory/1.1"}
     if TOKEN:
         h["Authorization"] = f"Bearer {TOKEN}"
     if json_body:
@@ -42,7 +46,13 @@ def request(req, timeout=240):
             return r.read()
     except urllib.error.HTTPError as exc:
         body = exc.read().decode("utf-8", "replace")
+        low = body.lower()
+        if exc.code == 429 or any(term in low for term in ("quota", "zerogpu quota", "gpu quota", "daily limit")):
+            print(f"FREE_GPU_QUOTA_EXHAUSTED: HTTP {exc.code}")
+            raise SystemExit(QUOTA_EXIT) from exc
         raise RuntimeError(f"HF HTTP {exc.code}: {body[:600]}") from exc
+    except urllib.error.URLError as exc:
+        raise RuntimeError(f"HF request failed: {exc}") from exc
 
 
 def manifest_item(asset_id: str):
@@ -90,6 +100,10 @@ def generate(prompt: str) -> Image.Image:
             data = json.loads(line.split(":", 1)[1].strip())
             break
     if data is None:
+        low = sse.lower()
+        if any(term in low for term in ("quota", "zerogpu quota", "gpu quota", "daily limit")):
+            print("FREE_GPU_QUOTA_EXHAUSTED: SSE response")
+            raise SystemExit(QUOTA_EXIT)
         raise RuntimeError("HF generation did not complete")
 
     def find_url(v):
