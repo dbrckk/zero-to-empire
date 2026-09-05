@@ -25,7 +25,7 @@ private val worldTrafficSprites = intArrayOf(
     R.drawable.zte_vehicle_08_final, R.drawable.zte_vehicle_10_final,
     R.drawable.zte_vehicle_11_final, R.drawable.zte_vehicle_12_final,
     R.drawable.zte_vehicle_13_final, R.drawable.zte_vehicle_14_final,
-    R.drawable.zte_vehicle_15_final,
+    R.drawable.zte_vehicle_15_final, R.drawable.zte_vehicle_17_final,
 )
 
 private val worldPropSprites = intArrayOf(
@@ -39,6 +39,10 @@ private val worldPropSprites = intArrayOf(
     R.drawable.zte_prop_11_b_final, R.drawable.zte_prop_12_a_final,
     R.drawable.zte_prop_12_b_final, R.drawable.zte_prop_13_a_final,
     R.drawable.zte_prop_13_b_final,
+    R.drawable.zte_prop_00_a_final, R.drawable.zte_prop_00_b_final,
+    R.drawable.zte_prop_01_a_final, R.drawable.zte_prop_01_b_final,
+    R.drawable.zte_prop_02_a_final, R.drawable.zte_prop_03_a_final,
+    R.drawable.zte_prop_03_b_final, R.drawable.zte_prop_04_b_final,
 )
 
 @Composable
@@ -54,6 +58,7 @@ internal fun ReviewedWorldTraffic(modifier: Modifier = Modifier) {
                 Triple(.34f,.79f,.090f), Triple(.69f,.84f,.150f), Triple(.46f,.89f,.158f),
                 Triple(.57f,.94f,.090f), Triple(.51f,.33f,.088f), Triple(.61f,.48f,.100f),
                 Triple(.36f,.56f,.108f), Triple(.66f,.68f,.118f), Triple(.49f,.81f,.126f),
+                Triple(.73f,.55f,.112f),
             )
             vehiclePlacements.forEachIndexed { i, (x,y,w) -> drawSprite(vehicles[i], x,y,w,.72f,true) }
 
@@ -64,7 +69,9 @@ internal fun ReviewedWorldTraffic(modifier: Modifier = Modifier) {
                 Triple(.88f,.80f,.130f), Triple(.20f,.86f,.140f), Triple(.80f,.87f,.145f),
                 Triple(.10f,.91f,.135f), Triple(.90f,.92f,.135f), Triple(.25f,.94f,.125f),
                 Triple(.75f,.95f,.125f), Triple(.31f,.84f,.105f), Triple(.71f,.76f,.105f),
-                Triple(.91f,.68f,.110f),
+                Triple(.91f,.68f,.110f), Triple(.08f,.47f,.078f), Triple(.92f,.48f,.078f),
+                Triple(.07f,.56f,.082f), Triple(.93f,.58f,.082f), Triple(.09f,.66f,.088f),
+                Triple(.91f,.74f,.090f), Triple(.14f,.73f,.086f), Triple(.86f,.45f,.082f),
             )
             propPlacements.forEachIndexed { i, (x,y,w) -> drawSprite(props[i], x,y,w,.78f,false) }
         }
