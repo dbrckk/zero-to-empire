@@ -1,0 +1,93 @@
+name: Promote approved FLUX run 20
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/promote-flux-run20.yml']
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: promote-flux-run20
+  cancel-in-progress: false
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+
+      - name: Download reviewed run 20 candidates
+        uses: actions/download-artifact@v4
+        with:
+          name: kaggle-sprite-batch
+          run-id: 33972358035
+          github-token: ${{ github.token }}
+          path: /tmp/run20
+
+      - name: Install image tooling
+        run: python -m pip install --disable-pip-version-check Pillow==11.3.0
+
+      - name: Stage only semantically approved assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p art/incoming/final-sprites
+          approved=(
+            zte_prop_02_b_final zte_prop_04_a_final zte_prop_05_b_final
+            zte_prop_06_a_final zte_prop_06_b_final zte_prop_07_a_final zte_prop_07_b_final
+            zte_prop_08_a_final zte_prop_08_b_final zte_prop_09_a_final zte_prop_09_b_final
+            zte_prop_10_a_final zte_prop_10_b_final zte_prop_11_a_final zte_prop_11_b_final
+            zte_prop_12_a_final zte_prop_12_b_final zte_prop_13_a_final
+            zte_vehicle_00_final zte_vehicle_01_final zte_vehicle_02_final zte_vehicle_03_final
+            zte_vehicle_04_final zte_vehicle_05_final zte_vehicle_06_final zte_vehicle_07_final
+            zte_vehicle_08_final zte_vehicle_10_final
+          )
+          stems=()
+          for stem in "${approved[@]}"; do
+            src="/tmp/run20/output/candidates/${stem}.png"
+            test -s "$src" || { echo "Missing approved candidate: $src"; exit 2; }
+            cp "$src" "art/incoming/final-sprites/${stem}.png"
+            stems+=("$stem")
+          done
+          echo "SPRITE_TARGETS=$(IFS=,; echo "${stems[*]}")" >> "$GITHUB_ENV"
+          printf '%s\n' "${approved[@]}" > /tmp/approved-stems.txt
+          echo "Approved count: ${#approved[@]}"
+          echo 'Explicit rejects retained outside repo: zte_prop_13_b_final zte_vehicle_09_final'
+
+      - name: Revalidate exact approved batch
+        shell: bash
+        run: |
+          set -euo pipefail
+          files=()
+          while read -r stem; do files+=("art/incoming/final-sprites/${stem}.png"); done < /tmp/approved-stems.txt
+          python tools/sprites/build_sprite_contact_sheet.py \
+            --files "${files[@]}" \
+            --output art/production/flux-run20-approved-contact-sheet.png \
+            --report art/production/flux-run20-approved-qa.json
+
+      - name: Produce optimized runtime rasters
+        run: python tools/sprites/process_final_sprites.py
+
+      - name: Commit approved CLEAN assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          while read -r stem; do
+            git add "art/incoming/final-sprites/${stem}.png"
+            if [ -f "app/src/main/res/drawable-nodpi/${stem}.webp" ]; then git add "app/src/main/res/drawable-nodpi/${stem}.webp"; fi
+            if [ -f "app/src/main/res/drawable-nodpi/${stem}.png" ]; then git add "app/src/main/res/drawable-nodpi/${stem}.png"; fi
+          done < /tmp/approved-stems.txt
+          git add art/production/flux-run20-approved-qa.json
+          git commit -m 'art: add 28 reviewed FLUX static assets'
+          git pull --rebase origin main
+          git push
