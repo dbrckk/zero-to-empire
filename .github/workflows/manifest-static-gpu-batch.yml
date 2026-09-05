@@ -13,7 +13,7 @@ on:
     - cron: '17 * * * *'
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: manifest-static-gpu-batch
@@ -104,8 +104,8 @@ jobs:
           if-no-files-found: error
           retention-days: 3
 
-  finalize:
-    name: QA, finalize and commit hourly batch
+  inspect:
+    name: Technical QA artifact only
     needs: generate
     if: always()
     runs-on: ubuntu-latest
@@ -128,7 +128,7 @@ jobs:
         continue-on-error: true
 
       - id: collect
-        name: QA and finalize successful candidates once
+        name: Build semantic inspection evidence without touching runtime
         shell: bash
         run: |
           set -euo pipefail
@@ -139,42 +139,18 @@ jobs:
             echo 'has_files=false' >> "$GITHUB_OUTPUT"
             exit 0
           fi
-
           python3 tools/sprites/build_sprite_contact_sheet.py \
             --files "${files[@]}" \
             --output /tmp/batch-contact-sheet.png \
             --report /tmp/batch-qa-report.json
-
-          mkdir -p art/incoming/final-sprites
-          stems=()
-          for file in "${files[@]}"; do
-            stem="$(basename "$file" .png)"
-            cp "$file" "art/incoming/final-sprites/${stem}.png"
-            stems+=("$stem")
-          done
-          export SPRITE_TARGETS="$(IFS=,; echo "${stems[*]}")"
-          python3 tools/sprites/process_final_sprites.py
-          echo "finalized_assets=${#stems[@]}"
+          echo "candidate_assets=${#files[@]}"
           echo 'has_files=true' >> "$GITHUB_OUTPUT"
-
-      - name: Commit validated hourly batch once
-        if: steps.collect.outputs.has_files == 'true'
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add art/incoming/final-sprites/ app/src/main/res/drawable-nodpi/
-          if git diff --cached --quiet; then exit 0; fi
-          git commit -m 'art: finalize isolated parallel static sprite batch'
-          git pull --rebase origin main
-          git push
 
       - name: Upload semantic inspection batch
         if: steps.collect.outputs.has_files == 'true'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: finalized-static-hourly-batch
+          name: candidate-static-hourly-batch
           path: |
             /tmp/generated-candidates/*_final.png
             /tmp/batch-contact-sheet.png
