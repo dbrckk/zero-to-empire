@@ -1,0 +1,84 @@
+name: Promote approved FLUX run 22
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/promote-flux-run22.yml']
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: promote-flux-run22
+  cancel-in-progress: false
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+
+      - name: Download reviewed run 22 candidates
+        uses: actions/download-artifact@v4
+        with:
+          name: kaggle-sprite-batch
+          run-id: 33985760948
+          github-token: ${{ github.token }}
+          path: /tmp/run22
+
+      - name: Install image tooling
+        run: python -m pip install --disable-pip-version-check Pillow==11.3.0
+
+      - name: Stage only semantically approved assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p art/incoming/final-sprites
+          approved=(
+            zte_prop_13_b_final
+            zte_vehicle_11_final zte_vehicle_12_final zte_vehicle_13_final
+            zte_vehicle_14_final zte_vehicle_15_final
+          )
+          stems=()
+          for stem in "${approved[@]}"; do
+            src="/tmp/run22/output/candidates/${stem}.png"
+            test -s "$src" || { echo "Missing approved candidate: $src"; exit 2; }
+            cp "$src" "art/incoming/final-sprites/${stem}.png"
+            stems+=("$stem")
+          done
+          echo "SPRITE_TARGETS=$(IFS=,; echo "${stems[*]}")" >> "$GITHUB_ENV"
+          printf '%s\n' "${approved[@]}" > /tmp/approved-stems.txt
+          echo "Approved count: ${#approved[@]}"
+          echo 'Rejected after semantic review: VEH-09, VEH-16, VEH-17, CORE-T0..T6, BLD-03-T2..T6, BLD-04-T0..T6, BLD-05-T0'
+
+      - name: Revalidate exact approved batch
+        shell: bash
+        run: |
+          set -euo pipefail
+          files=()
+          while read -r stem; do files+=("art/incoming/final-sprites/${stem}.png"); done < /tmp/approved-stems.txt
+          python tools/sprites/build_sprite_contact_sheet.py --files "${files[@]}" --output /tmp/flux-run22-approved-contact-sheet.png --report art/production/flux-run22-approved-qa.json
+
+      - name: Produce optimized runtime rasters
+        run: python tools/sprites/process_final_sprites.py
+
+      - name: Commit approved CLEAN assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          while read -r stem; do
+            git add "art/incoming/final-sprites/${stem}.png"
+            test -f "app/src/main/res/drawable-nodpi/${stem}.webp" && git add "app/src/main/res/drawable-nodpi/${stem}.webp"
+          done < /tmp/approved-stems.txt
+          git add art/production/flux-run22-approved-qa.json
+          git commit -m 'art: add 6 reviewed FLUX run 22 assets'
+          git pull --rebase origin main
+          git push
