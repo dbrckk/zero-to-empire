@@ -27,8 +27,7 @@ def digest(path: Path) -> str:
 def ensure_gpu_compatible_torch() -> None:
     try:
         cap = subprocess.check_output(
-            ['nvidia-smi', '--query-gpu=compute_cap', '--format=csv,noheader'],
-            text=True,
+            ['nvidia-smi', '--query-gpu=compute_cap', '--format=csv,noheader'], text=True,
         ).splitlines()[0].strip()
     except Exception as exc:
         print(f'KAGGLE_GPU_CAPABILITY=unknown reason={exc}', flush=True)
@@ -56,52 +55,48 @@ def ensure_gpu_compatible_torch() -> None:
     subprocess.run(['python', '-c', probe], check=True)
 
 
-WORK.mkdir(parents=True, exist_ok=True)
-if REPO.exists():
-    shutil.rmtree(REPO)
-if OUT.exists():
-    shutil.rmtree(OUT)
-OUT.mkdir(parents=True)
+def ensure_flux_runtime() -> None:
+    """Install the exact stack documented by the pre-quantized FLUX checkpoint.
 
-subprocess.run(
-    ['git', 'clone', '--depth', '1', 'https://github.com/dbrckk/zero-to-empire.git', str(REPO)],
-    check=True,
-)
+    NF4 is supported by bitsandbytes on NVIDIA compute capability 6.0+, covering
+    both Kaggle P100 and T4. The split FLUX pipeline peaks far below 16 GB VRAM.
+    """
+    print('KAGGLE_ENGINE=flux1-schnell-nf4-split', flush=True)
+    subprocess.run([
+        'python', '-m', 'pip', 'install', '--quiet', '--upgrade',
+        'bitsandbytes==0.48.1', 'diffusers==0.35.1', 'peft==0.17.1',
+        'protobuf==5.29.5', 'sentencepiece==0.2.1', 'transformers==4.56.1',
+        'accelerate>=1.2', 'safetensors', 'Pillow',
+    ], check=True)
+    subprocess.run(['python', '-c',
+        "import torch,bitsandbytes,diffusers,transformers; "
+        "print('KAGGLE_FLUX_STACK=' + diffusers.__version__ + '/' + transformers.__version__ + '/' + bitsandbytes.__version__); "
+        "print('KAGGLE_FLUX_GPU=' + torch.cuda.get_device_name(0))"], check=True)
+
+
+WORK.mkdir(parents=True, exist_ok=True)
+if REPO.exists(): shutil.rmtree(REPO)
+if OUT.exists(): shutil.rmtree(OUT)
+OUT.mkdir(parents=True)
+subprocess.run(['git','clone','--depth','1','https://github.com/dbrckk/zero-to-empire.git',str(REPO)], check=True)
 os.chdir(REPO)
 ensure_gpu_compatible_torch()
+ensure_flux_runtime()
 
 incoming = REPO / 'art/incoming/final-sprites'
 before = {p.name: digest(p) for p in incoming.glob('*_final.png') if p.is_file()}
 print(f'KAGGLE_EXISTING_CANDIDATES={len(before)}', flush=True)
+subprocess.run(['python','-u','tools/sprites/kaggle_sprite_factory.py','--kind','ALL','--count',str(COUNT)], check=True)
 
-subprocess.run(
-    ['python', '-u', 'tools/sprites/kaggle_sprite_factory.py', '--kind', 'ALL', '--count', str(COUNT)],
-    check=True,
-)
-
-fresh = []
+fresh=[]
 for p in sorted(incoming.glob('*_final.png')):
-    if p.is_file() and (p.name not in before or before[p.name] != digest(p)):
-        fresh.append(p)
-
+    if p.is_file() and (p.name not in before or before[p.name] != digest(p)): fresh.append(p)
 print(f'KAGGLE_FRESH_CANDIDATES={len(fresh)}', flush=True)
-if not fresh:
-    raise SystemExit('No fresh candidate sprites produced by this run')
-
-qa = OUT / 'batch-contact-sheet.png'
-report = OUT / 'batch-qa-report.json'
-subprocess.run([
-    'python', 'tools/sprites/build_sprite_contact_sheet.py',
-    '--output', str(qa), '--report', str(report), '--files', *[str(x) for x in fresh],
-], check=True)
-
-candidate_dir = OUT / 'candidates'
-candidate_dir.mkdir()
-targets = []
+if not fresh: raise SystemExit('No fresh candidate sprites produced by this run')
+qa=OUT/'batch-contact-sheet.png'; report=OUT/'batch-qa-report.json'
+subprocess.run(['python','tools/sprites/build_sprite_contact_sheet.py','--output',str(qa),'--report',str(report),'--files',*[str(x) for x in fresh]], check=True)
+candidate_dir=OUT/'candidates'; candidate_dir.mkdir(); targets=[]
 for f in fresh:
-    dst = candidate_dir / f.name
-    shutil.copy2(f, dst)
-    targets.append({'file': f.name, 'sha256': digest(dst), 'bytes': dst.stat().st_size})
-(OUT / 'generated-targets.json').write_text(json.dumps({'count': len(targets), 'targets': targets}, indent=2), encoding='utf-8')
-print(f'KAGGLE_EXPORT_COUNT={len(fresh)}', flush=True)
-print('KAGGLE_OUTPUT_ONLY=1', flush=True)
+    dst=candidate_dir/f.name; shutil.copy2(f,dst); targets.append({'file':f.name,'sha256':digest(dst),'bytes':dst.stat().st_size})
+(OUT/'generated-targets.json').write_text(json.dumps({'count':len(targets),'engine':'FLUX.1-schnell NF4 split','targets':targets},indent=2),encoding='utf-8')
+print(f'KAGGLE_EXPORT_COUNT={len(fresh)}', flush=True); print('KAGGLE_OUTPUT_ONLY=1', flush=True)
