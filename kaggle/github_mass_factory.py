@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 """Kaggle entrypoint launched by GitHub Actions.
-Clones the canonical repo, generates a static sprite batch, QA-checks it,
-and exports only candidates created or changed by this run into
-/kaggle/working/output.
+Clones the canonical repo outside /kaggle/working so Kaggle exports only QA/output
+artifacts, generates a static sprite batch, and exports only fresh candidates.
 """
 import hashlib
+import json
 import os
 import shutil
 import subprocess
 from pathlib import Path
 
 WORK = Path('/kaggle/working')
-REPO = WORK / 'zero-to-empire'
+REPO = Path('/tmp/zero-to-empire')
 OUT = WORK / 'output'
 COUNT = int(os.getenv('SPRITE_COUNT', '60'))
 
@@ -25,12 +25,6 @@ def digest(path: Path) -> str:
 
 
 def ensure_gpu_compatible_torch() -> None:
-    """Kaggle may assign a Pascal P100 (sm_60).
-
-    Newer Kaggle PyTorch builds can drop sm_60 kernels. Pin a CUDA 12.1
-    PyTorch build that still supports P100 when such a GPU is assigned.
-    The actual sprite factory runs in a fresh Python process afterwards.
-    """
     try:
         cap = subprocess.check_output(
             ['nvidia-smi', '--query-gpu=compute_cap', '--format=csv,noheader'],
@@ -39,7 +33,6 @@ def ensure_gpu_compatible_torch() -> None:
     except Exception as exc:
         print(f'KAGGLE_GPU_CAPABILITY=unknown reason={exc}', flush=True)
         return
-
     print(f'KAGGLE_GPU_CAPABILITY={cap}', flush=True)
     try:
         major = int(cap.split('.', 1)[0])
@@ -48,19 +41,14 @@ def ensure_gpu_compatible_torch() -> None:
     if major >= 7:
         print('KAGGLE_TORCH_COMPAT=current', flush=True)
         return
-
     print('KAGGLE_TORCH_COMPAT=install_p100_build', flush=True)
-    subprocess.run(
-        [
-            'python', '-m', 'pip', 'install', '--quiet', '--upgrade', '--force-reinstall',
-            'torch==2.5.1', 'torchvision==0.20.1',
-            '--index-url', 'https://download.pytorch.org/whl/cu121',
-        ],
-        check=True,
-    )
+    subprocess.run([
+        'python', '-m', 'pip', 'install', '--quiet', '--upgrade', '--force-reinstall',
+        'torch==2.5.1', 'torchvision==0.20.1',
+        '--index-url', 'https://download.pytorch.org/whl/cu121',
+    ], check=True)
     probe = (
-        "import torch; "
-        "print('KAGGLE_TORCH_VERSION=' + torch.__version__); "
+        "import torch; print('KAGGLE_TORCH_VERSION=' + torch.__version__); "
         "print('KAGGLE_TORCH_CUDA=' + str(torch.version.cuda)); "
         "print('KAGGLE_TORCH_CAP=' + str(torch.cuda.get_device_capability(0))); "
         "x=torch.ones(1, device='cuda'); print('KAGGLE_TORCH_GPU_PROBE=' + str(x.item()))"
@@ -68,7 +56,7 @@ def ensure_gpu_compatible_torch() -> None:
     subprocess.run(['python', '-c', probe], check=True)
 
 
-os.chdir(WORK)
+WORK.mkdir(parents=True, exist_ok=True)
 if REPO.exists():
     shutil.rmtree(REPO)
 if OUT.exists():
@@ -80,7 +68,6 @@ subprocess.run(
     check=True,
 )
 os.chdir(REPO)
-
 ensure_gpu_compatible_torch()
 
 incoming = REPO / 'art/incoming/final-sprites'
@@ -94,10 +81,7 @@ subprocess.run(
 
 fresh = []
 for p in sorted(incoming.glob('*_final.png')):
-    if not p.is_file():
-        continue
-    current = digest(p)
-    if p.name not in before or before[p.name] != current:
+    if p.is_file() and (p.name not in before or before[p.name] != digest(p)):
         fresh.append(p)
 
 print(f'KAGGLE_FRESH_CANDIDATES={len(fresh)}', flush=True)
@@ -106,22 +90,18 @@ if not fresh:
 
 qa = OUT / 'batch-contact-sheet.png'
 report = OUT / 'batch-qa-report.json'
-subprocess.run(
-    [
-        'python',
-        'tools/sprites/build_sprite_contact_sheet.py',
-        '--output',
-        str(qa),
-        '--report',
-        str(report),
-        '--files',
-        *[str(x) for x in fresh],
-    ],
-    check=True,
-)
+subprocess.run([
+    'python', 'tools/sprites/build_sprite_contact_sheet.py',
+    '--output', str(qa), '--report', str(report), '--files', *[str(x) for x in fresh],
+], check=True)
 
 candidate_dir = OUT / 'candidates'
 candidate_dir.mkdir()
+targets = []
 for f in fresh:
-    shutil.copy2(f, candidate_dir / f.name)
+    dst = candidate_dir / f.name
+    shutil.copy2(f, dst)
+    targets.append({'file': f.name, 'sha256': digest(dst), 'bytes': dst.stat().st_size})
+(OUT / 'generated-targets.json').write_text(json.dumps({'count': len(targets), 'targets': targets}, indent=2), encoding='utf-8')
 print(f'KAGGLE_EXPORT_COUNT={len(fresh)}', flush=True)
+print('KAGGLE_OUTPUT_ONLY=1', flush=True)
