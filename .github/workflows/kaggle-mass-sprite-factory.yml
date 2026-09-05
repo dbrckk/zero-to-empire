@@ -19,7 +19,7 @@ on:
       - 'tools/sprites/kaggle_sprite_factory.py'
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: kaggle-mass-sprite-factory
@@ -95,30 +95,18 @@ jobs:
         shell: bash
         run: |
           if [ "${KAGGLE_FINAL_STATUS:-UNKNOWN}" != 'COMPLETE' ]; then exit 1; fi
-      - name: Import exact candidates
+      - name: Require fresh technically validated candidates
         shell: bash
         run: |
           shopt -s nullglob
           files=(/tmp/kaggle-output/output/candidates/*_final.png)
           if [ ${#files[@]} -eq 0 ]; then echo 'No fresh Kaggle candidates'; exit 1; fi
-          mkdir -p art/incoming/final-sprites
-          targets=()
-          for f in "${files[@]}"; do cp "$f" art/incoming/final-sprites/; targets+=("$(basename "$f" .png)"); done
-          printf -v joined '%s,' "${targets[@]}"
-          echo "SPRITE_TARGETS=${joined%,}" >> "$GITHUB_ENV"
-      - name: Finalize exact batch
-        run: python tools/sprites/process_final_sprites.py
-      - name: Commit finalized runtime batch
-        shell: bash
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add art/incoming/final-sprites app/src/main/res/drawable-nodpi
-          if git diff --cached --quiet; then exit 0; fi
-          git commit -m 'art: finalize Kaggle GPU sprite batch'
-          git pull --rebase origin main
-          git push origin HEAD:main
-      - name: Upload QA evidence
+          echo "KAGGLE_QA_PENDING=${#files[@]}"
+          python tools/sprites/build_sprite_contact_sheet.py \
+            --output /tmp/kaggle-output/output/github-contact-sheet.png \
+            --report /tmp/kaggle-output/output/github-qa-report.json \
+            --files "${files[@]}"
+      - name: Upload QA evidence for semantic approval
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -126,6 +114,8 @@ jobs:
           path: |
             /tmp/kaggle-output/output/batch-contact-sheet.png
             /tmp/kaggle-output/output/batch-qa-report.json
+            /tmp/kaggle-output/output/github-contact-sheet.png
+            /tmp/kaggle-output/output/github-qa-report.json
             /tmp/kaggle-output/output/candidates/*.png
             /tmp/kaggle-output/*.log
           if-no-files-found: ignore
