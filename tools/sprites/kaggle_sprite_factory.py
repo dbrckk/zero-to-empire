@@ -29,12 +29,17 @@ def concrete_subject(i):
  m=re.fullmatch(r'PRP-(\d{2})-([AB])',i['id'])
  if not m:return i['name']
  idx=int(m.group(1)); variant=m.group(2)
- a=['closed rugged supply crate','closed compact retail stock crate','closed heatproof tool chest','closed assembly parts bin','closed industrial logistics crate','closed sealed component case','closed reinforced tool locker','closed automation parts crate','closed high-tech cargo case','closed energy-cell storage box','closed precision maintenance chest','closed orbital supply container','closed phase-tech component crate','closed prestige equipment case']
- b=['single short utility pipe elbow','single compact safety barrier','single insulated service pipe elbow','single small control terminal','single utility bollard','single cable junction pedestal','single compact pipe manifold','single service terminal','single coolant pipe elbow','single power distribution post','single sensor bollard','single orbital service terminal','single phase conduit elbow','single prestige light bollard']
+ a=['rugged closed supply crate','compact closed retail stock crate','heatproof closed tool chest','closed assembly parts bin','closed industrial logistics crate','sealed component case','reinforced tool locker','closed automation parts crate','high-tech cargo case','energy-cell storage box','precision maintenance chest','orbital supply container','phase-tech component crate','prestige equipment case']
+ b=['90-degree utility pipe elbow fitting','compact safety barrier','90-degree insulated service pipe elbow fitting','small control terminal','utility bollard','cable junction pedestal','compact pipe manifold','service terminal','90-degree coolant pipe elbow fitting','power distribution post','sensor bollard','orbital service terminal','90-degree phase conduit elbow fitting','prestige light bollard']
  return (a if variant=='A' else b)[min(idx,13)]
 def prompt_for(i):
- s=concrete_subject(i); prefix={'BLD':'single industrial building','CORE':'single power reactor core','VEH':'single vehicle','PRP':'single standalone object'}[i['kind']]
- return f"{prefix}: {s}. One object only, centered, large in frame, complete silhouette, isolated game icon render, 34 degree isometric three-quarter view, plain black background, no ground, no environment, no collection, no variants, no diagram, no text, AAA mobile game art, upper-left light"
+ s=concrete_subject(i)
+ # Positive composition language is more reliable with SDXL-Lightning than a long list
+ # of prohibitions. "catalog/product photography" previously encouraged contact sheets.
+ if i['kind']=='PRP': return f"isolated {s}, one solitary object occupying the center of a square image, one continuous silhouette, close-up game inventory icon, three-quarter isometric view, matte black void around the object, AAA mobile strategy game prop, upper-left studio light, cyan and amber industrial accents"
+ if i['kind']=='VEH': return f"isolated {s}, one solitary complete vehicle centered in a square image, three-quarter isometric view, matte black void, AAA mobile strategy game vehicle, upper-left studio light"
+ if i['kind']=='CORE': return f"isolated {s}, one solitary complete reactor centered in a square image, three-quarter isometric view, matte black void, AAA mobile strategy game asset, upper-left studio light"
+ return f"isolated {s}, one solitary complete industrial building centered in a square image, three-quarter isometric view, matte black void, AAA mobile strategy game building, upper-left studio light"
 def load_pipe():
  token=os.getenv('HF_TOKEN') or None; print(f'KAGGLE_MODEL=begin base={BASE}',flush=True)
  unet=UNet2DConditionModel.from_config(BASE,subfolder='unet',token=token).to('cuda',torch.float16); ckpt=hf_hub_download(LIGHTNING_REPO,LIGHTNING_CKPT,token=token); unet.load_state_dict(load_file(ckpt,device='cuda'))
@@ -76,17 +81,13 @@ def components(alpha,threshold=32):
    if len(pts)>=int(128*128*.006):comps.append(pts)
  return sorted(comps,key=len,reverse=True)
 def single_subject_crop(master,kind):
- """Reject collections, then crop tightly around one dominant silhouette."""
  comps=components(master.getchannel('A'))
  if not comps:raise RuntimeError('empty isolated subject')
- total=sum(len(c) for c in comps); dominant=len(comps[0])/total
- important=sum(1 for c in comps if len(c)/total>=.08)
+ total=sum(len(c) for c in comps); dominant=len(comps[0])/total; important=sum(1 for c in comps if len(c)/total>=.08)
  if important>=2 or (len(comps)>=3 and dominant<.88):raise RuntimeError(f'multiple-object composition detected important={important} dominant={dominant:.2f}')
  xs=[x for x,y in comps[0]];ys=[y for x,y in comps[0]];w,h=master.size
  x0=max(0,int(min(xs)*w/128)-int(w*.025));y0=max(0,int(min(ys)*h/128)-int(h*.025));x1=min(w,int((max(xs)+1)*w/128)+int(w*.025));y1=min(h,int((max(ys)+1)*h/128)+int(h*.025))
- crop=master.crop((x0,y0,x1,y1))
- # A genuine icon subject should occupy a substantial fraction of its tight crop.
- a=crop.getchannel('A');fill=sum(a.histogram()[32:])/(crop.width*crop.height)
+ crop=master.crop((x0,y0,x1,y1));a=crop.getchannel('A');fill=sum(a.histogram()[32:])/(crop.width*crop.height)
  if fill<.20:raise RuntimeError(f'sparse/collection-like silhouette fill={fill:.1%}')
  return crop
 def normalize(crop,side):
@@ -109,8 +110,7 @@ def main():
  pipe=load_pipe();INCOMING.mkdir(parents=True,exist_ok=True);ok=rej=0
  for index,item in enumerate(items,1):
   try:
-   # Portrait-ish source canvas discourages horizontal catalog/contact-sheet layouts while retaining SDXL-native area.
-   image=pipe(prompt_for(item),num_inference_steps=4,guidance_scale=0,width=768,height=1024,generator=torch.Generator(device='cuda').manual_seed(args.seed+index)).images[0]
+   image=pipe(prompt_for(item),num_inference_steps=4,guidance_scale=0,width=1024,height=1024,generator=torch.Generator(device='cuda').manual_seed(args.seed+index)).images[0]
    isolated=isolate(image);subject=single_subject_crop(isolated,item['kind']);final=normalize(subject,TARGET_SIDE[item['kind']]);cov=validate(final,item['kind']);out=INCOMING/f"{item['stem']}.png";final.save(out,'PNG',optimize=True);ok+=1;print(f'KAGGLE_VALIDATED={out.relative_to(ROOT)} coverage={cov:.1%}',flush=True)
   except Exception as exc:rej+=1;print(f"KAGGLE_REJECTED={item['id']} reason={exc}",flush=True)
   finally:torch.cuda.empty_cache()
