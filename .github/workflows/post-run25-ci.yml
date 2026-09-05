@@ -1,0 +1,74 @@
+name: Reconcile reviewed run 25
+
+on:
+  workflow_run:
+    workflows: ['Android CI']
+    types: [completed]
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  reconcile:
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_sha == '1fcf2aa6a80f5266108c2790ab2549463510c8e9'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+
+      - name: Reconcile strict manifest and progress
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          manifest = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
+          text = manifest.read_text(encoding='utf-8')
+          done_ids = {
+              'PRP-00-A','PRP-00-B','PRP-01-A','PRP-01-B','PRP-02-A',
+              'PRP-03-A','PRP-03-B','PRP-04-B','VEH-17'
+          }
+          clean_ids = {f'CORE-T{i}' for i in range(7)}
+          lines=[]
+          for line in text.splitlines():
+              if line.startswith('| '):
+                  asset_id=line.split('|')[1].strip()
+                  if asset_id in done_ids:
+                      line=line.rsplit('|',2)[0] + '| DONE |'
+                  elif asset_id in clean_ids:
+                      line=line.rsplit('|',2)[0] + '| CLEAN |'
+              lines.append(line)
+          manifest.write_text('\n'.join(lines)+'\n', encoding='utf-8')
+
+          progress = Path('docs/art/FINAL_AAA_SPRITE_PROGRESS.md')
+          p = progress.read_text(encoding='utf-8')
+          p = p.replace('DONE: **52 / 235**','DONE: **61 / 235**')
+          p = p.replace('ART VALIDATED: **67 / 235**','ART VALIDATED: **83 / 235**')
+          p = p.replace('RUNTIME INTEGRATED: **67 / 235**','RUNTIME INTEGRATED: **76 / 235**')
+          p = p.replace('Generated candidates accepted as DONE: **52**','Generated candidates accepted as DONE: **61**')
+          marker='## Existing ART/RUNTIME assets not yet promoted to DONE\n'
+          section='''## Reviewed FLUX run 25 — 9 DONE, 7 CLEAN\nRun-25 semantic review accepted 16 assets. Eight missing props plus `VEH-17` are referenced in the active city stage and Android CI run `33997464241` completed successfully, so those nine are strict DONE. `CORE-T0` through `CORE-T6` passed semantic and technical review and have optimized runtime rasters, but remain CLEAN until their tier-aware Power Core runtime integration is completed and validated.\n\n### New strict DONE\n`PRP-00-A`, `PRP-00-B`, `PRP-01-A`, `PRP-01-B`, `PRP-02-A`, `PRP-03-A`, `PRP-03-B`, `PRP-04-B`, `VEH-17`.\n\n### CLEAN awaiting runtime integration\n`CORE-T0`, `CORE-T1`, `CORE-T2`, `CORE-T3`, `CORE-T4`, `CORE-T5`, `CORE-T6`.\n\n'''
+          if section not in p:
+              p=p.replace(marker,section+marker)
+          p=p.replace('1. Regenerate the remaining vehicle set with stricter semantics: `VEH-09`, `VEH-16`, `VEH-17`.','1. Regenerate the remaining vehicle set with stricter semantics: `VEH-09`, `VEH-16`.')
+          p=p.replace('2. Regenerate missing props regardless of stale unapproved candidate files: `PRP-00-A/B`, `PRP-01-A/B`, `PRP-02-A`, `PRP-03-A/B`, `PRP-04-B`, `PRP-05-A`.','2. Regenerate the remaining missing prop: `PRP-05-A`.')
+          p=p.replace('3. Regenerate Power Core tiers with explicit tier-defining geometry before any promotion.','3. Integrate the reviewed `CORE-T0` through `CORE-T6` rasters into the tier-aware Power Core runtime, then require green Android CI before DONE.')
+          progress.write_text(p, encoding='utf-8')
+          PY
+
+      - name: Commit reconciliation
+        shell: bash
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md docs/art/FINAL_AAA_SPRITE_PROGRESS.md
+          git commit -m 'docs: advance 9 reviewed run 25 assets to strict DONE'
+          git pull --rebase origin main
+          git push
+
+      - name: Launch next focused FLUX batch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run kaggle-mass-sprite-factory.yml -f count=30
