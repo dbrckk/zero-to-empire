@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 180
     env:
-      KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
+      KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
       KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
       SPRITE_COUNT: ${{ github.event.inputs.count || '60' }}
     steps:
@@ -33,7 +33,7 @@ jobs:
       - name: Check credentials
         shell: bash
         run: |
-          test -n "$KAGGLE_API_TOKEN" || { echo 'Missing KAGGLE_API_TOKEN'; exit 2; }
+          test -n "$KAGGLE_KEY" || { echo 'Missing KAGGLE_KEY'; exit 2; }
           test -n "$KAGGLE_USERNAME" || { echo 'Missing KAGGLE_USERNAME'; exit 2; }
 
       - name: Install Kaggle CLI
