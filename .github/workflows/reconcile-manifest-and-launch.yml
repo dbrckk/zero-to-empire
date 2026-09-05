@@ -1,0 +1,94 @@
+name: Reconcile strict sprite manifest and launch FLUX
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/reconcile-manifest-and-launch.yml']
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  reconcile-and-launch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+
+      - name: Reconcile canonical DONE rows
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
+          text = path.read_text(encoding='utf-8')
+          done = {
+              *(f'VEH-{i:02d}' for i in [0,1,2,3,4,5,6,7,8,10,11,12,13,14,15]),
+              'PRP-02-B','PRP-04-A','PRP-05-B','PRP-06-A','PRP-06-B',
+              'PRP-07-A','PRP-07-B','PRP-08-A','PRP-08-B','PRP-09-A','PRP-09-B',
+              'PRP-10-A','PRP-10-B','PRP-11-A','PRP-11-B','PRP-12-A','PRP-12-B',
+              'PRP-13-A','PRP-13-B',
+          }
+          lines = text.splitlines()
+          seen = set()
+          for n, line in enumerate(lines):
+              m = re.match(r'^\|\s*([^|]+?)\s*\|', line)
+              if not m:
+                  continue
+              asset_id = m.group(1).strip()
+              if asset_id in done:
+                  parts = line.split('|')
+                  parts[-2] = ' DONE '
+                  lines[n] = '|'.join(parts)
+                  seen.add(asset_id)
+          missing = sorted(done - seen)
+          if missing:
+              raise SystemExit(f'Missing manifest IDs: {missing}')
+
+          replacements = {
+              '- **DONE: 0 / 235**': '- **DONE: 52 / 235**',
+              '- Buildings: **0 / 98**': '- Buildings: **18 / 98**',
+              '- Vehicles: **0 / 18**': '- Vehicles: **15 / 18**',
+              '- Props: **0 / 28**': '- Props: **19 / 28**',
+          }
+          out = '\n'.join(lines) + ('\n' if text.endswith('\n') else '')
+          for old, new in replacements.items():
+              out = out.replace(old, new)
+          path.write_text(out, encoding='utf-8')
+          print(f'Reconciled {len(done)} non-building DONE rows; total strict DONE=52')
+          PY
+
+      - name: Commit canonical reconciliation
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          if git diff --quiet -- docs/art/FINAL_AAA_SPRITE_MANIFEST.md; then
+            echo 'Manifest already reconciled.'
+          else
+            git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md
+            git commit -m 'docs: reconcile 52 strict DONE sprites in canonical manifest'
+            git pull --rebase origin main
+            git push origin main
+          fi
+
+      - name: Launch next free FLUX batch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          sleep 5
+          gh api --method POST \
+            repos/${{ github.repository }}/actions/workflows/kaggle-mass-sprite-factory.yml/dispatches \
+            -f ref=main \
+            -f 'inputs[count]=30'
+          echo 'Next FLUX batch dispatched.'
