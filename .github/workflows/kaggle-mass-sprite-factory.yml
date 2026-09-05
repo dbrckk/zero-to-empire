@@ -16,6 +16,7 @@ on:
       - '.github/workflows/kaggle-mass-sprite-factory.yml'
       - 'kaggle/github_mass_factory.py'
       - 'kaggle/kernel-metadata.template.json'
+      - 'tools/sprites/kaggle_sprite_factory.py'
 
 permissions:
   contents: write
@@ -36,16 +37,13 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 2
-
       - name: Check credentials
         shell: bash
         run: |
           test -n "$KAGGLE_KEY" || { echo 'Missing KAGGLE_KEY'; exit 2; }
           test -n "$KAGGLE_USERNAME" || { echo 'Missing KAGGLE_USERNAME'; exit 2; }
-
       - name: Install runner dependencies
         run: python -m pip install --upgrade kaggle Pillow
-
       - name: Verify Kaggle authentication
         shell: bash
         run: |
@@ -57,7 +55,6 @@ jobs:
           print('Pillow OK', Image.__version__)
           PY
           echo 'Kaggle authentication OK'
-
       - name: Prepare Kaggle kernel
         shell: bash
         run: |
@@ -66,10 +63,8 @@ jobs:
           cp kaggle/github_mass_factory.py /tmp/zte-kaggle/
           sed "s/__KAGGLE_USERNAME__/${KAGGLE_USERNAME}/g" kaggle/kernel-metadata.template.json > /tmp/zte-kaggle/kernel-metadata.json
           sed -i "s/COUNT = int(os.getenv('SPRITE_COUNT', '60'))/COUNT = ${SPRITE_COUNT}/" /tmp/zte-kaggle/github_mass_factory.py
-
       - name: Push and start Kaggle GPU run
         run: kaggle kernels push -p /tmp/zte-kaggle
-
       - name: Wait for Kaggle
         id: wait-kaggle
         shell: bash
@@ -86,7 +81,6 @@ jobs:
           done
           echo "final_status=$final_status" >> "$GITHUB_OUTPUT"
           echo "KAGGLE_FINAL_STATUS=$final_status" >> "$GITHUB_ENV"
-
       - name: Download Kaggle outputs and kernel log
         if: always() && steps.wait-kaggle.outcome == 'success'
         shell: bash
@@ -96,16 +90,11 @@ jobs:
           kaggle kernels output "${KAGGLE_USERNAME}/zero-to-empire-sprite-factory" -p /tmp/kaggle-output --force || true
           find /tmp/kaggle-output/output -maxdepth 3 -type f -print 2>/dev/null || true
           find /tmp/kaggle-output -maxdepth 2 -type f -name '*.log' -print || true
-
       - name: Require successful Kaggle kernel
         if: always() && steps.wait-kaggle.outcome == 'success'
         shell: bash
         run: |
-          if [ "${KAGGLE_FINAL_STATUS:-UNKNOWN}" != 'COMPLETE' ]; then
-            echo "Kaggle kernel ended with ${KAGGLE_FINAL_STATUS:-UNKNOWN}. Kernel log is preserved in the QA artifact." >&2
-            exit 1
-          fi
-
+          if [ "${KAGGLE_FINAL_STATUS:-UNKNOWN}" != 'COMPLETE' ]; then exit 1; fi
       - name: Import exact candidates
         shell: bash
         run: |
@@ -114,28 +103,21 @@ jobs:
           if [ ${#files[@]} -eq 0 ]; then echo 'No fresh Kaggle candidates'; exit 1; fi
           mkdir -p art/incoming/final-sprites
           targets=()
-          for f in "${files[@]}"; do
-            cp "$f" art/incoming/final-sprites/
-            targets+=("$(basename "$f" .png)")
-          done
+          for f in "${files[@]}"; do cp "$f" art/incoming/final-sprites/; targets+=("$(basename "$f" .png)"); done
           printf -v joined '%s,' "${targets[@]}"
           echo "SPRITE_TARGETS=${joined%,}" >> "$GITHUB_ENV"
-          echo "KAGGLE_IMPORTED=${#files[@]}"
-
       - name: Finalize exact batch
         run: python tools/sprites/process_final_sprites.py
-
       - name: Commit finalized runtime batch
         shell: bash
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add art/incoming/final-sprites app/src/main/res/drawable-nodpi
-          if git diff --cached --quiet; then echo 'Nothing new to commit'; exit 0; fi
+          if git diff --cached --quiet; then exit 0; fi
           git commit -m 'art: finalize Kaggle GPU sprite batch'
           git pull --rebase origin main
           git push origin HEAD:main
-
       - name: Upload QA evidence
         if: always()
         uses: actions/upload-artifact@v4
