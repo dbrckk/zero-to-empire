@@ -1,74 +1,40 @@
 # FINAL AAA SPRITE PROGRESS — Zero → Empire
 
-Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains the canonical 235-item scope. This file is updated during generation so candidate art cannot be confused with DONE runtime assets.
+Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains the canonical 235-item scope. Candidate art is never confused with DONE runtime assets.
 
 ## Official progress
-- DONE: **18 / 235**
-- ART VALIDATED: **33 / 235**
-- RUNTIME INTEGRATED: **33 / 235**
-- Generated candidates accepted as DONE: **18**
+- DONE: **46 / 235**
+- ART VALIDATED: **61 / 235**
+- RUNTIME INTEGRATED: **61 / 235**
+- Generated candidates accepted as DONE: **46**
 - Rule: only runtime-integrated, individually clean/transparent, manifest-matching assets with green Android CI increment DONE.
 
-## Accepted assets
-| Asset | Master | Isolation | Runtime | State |
-|---|---|---|---|---|
-| `BLD-00-T0 — Street Stand T0` | 2048×2048 RGBA | PASS — 69.7% transparent; 100.0% dominant | `zte_business_00_t0_final.webp`, referenced | DONE; Android CI green |
-| `BLD-00-T1 — Street Stand T1` | 2048×2048 RGBA | PASS | `zte_business_00_t1_final.webp`, referenced | DONE; Android CI green |
-| `BLD-00-T2 — Street Stand T2` | 2048×2048 RGBA | PASS | `zte_business_00_t2_final.webp`, referenced | DONE; Android CI green |
-| `BLD-00-T3 — Street Stand T3` | 2048×2048 RGBA | PASS | `zte_business_00_t3_final.webp`, referenced | DONE; Android CI green |
-| `BLD-00-T4 — Street Stand T4` | 2048×2048 RGBA | PASS | `zte_business_00_t4_final.webp`, referenced | DONE; Android CI green |
-| `BLD-00-T5 — Street Stand T5` | 2048×2048 RGBA | PASS | `zte_business_00_t5_final.webp`, referenced | DONE; Android CI green |
-| `BLD-00-T6 — Street Stand T6` | 2048×2048 RGBA | PASS | `zte_business_00_t6_final.webp`, referenced | DONE; Android CI green |
-| `BLD-01-T0 — Corner Shop T0` | 2048×2048 RGBA | PASS | `zte_business_01_t0_final.webp`, referenced | DONE; Android CI green |
-| `BLD-01-T1 — Corner Shop T1` | 2048×2048 RGBA | PASS | `zte_business_01_t1_final.webp`, referenced | DONE; Android CI green |
-| `BLD-01-T2 — Corner Shop T2` | 2048×2048 RGBA | PASS | `zte_business_01_t2_final.webp`, referenced | DONE; Android CI green |
-| `BLD-01-T3 — Corner Shop T3` | 2048×2048 RGBA | PASS | `zte_business_01_t3_final.webp`, referenced | DONE; Android CI green |
-| `BLD-01-T4 — Corner Shop T4` | 2048×2048 RGBA | PASS | `zte_business_01_t4_final.webp`, referenced | DONE; Android CI green |
-| `BLD-01-T5 — Corner Shop T5` | 2048×2048 RGBA | PASS | `zte_business_01_t5_final.webp`, referenced | DONE; Android CI green |
-| `BLD-01-T6 — Corner Shop T6` | 2048×2048 RGBA | PASS | `zte_business_01_t6_final.webp`, referenced | DONE; Android CI green |
-| `BLD-02-T0 — Furnace Stall T0` | 2048×2048 RGBA | PASS | `zte_business_02_t0_final.webp`, referenced | DONE; Android CI green |
-| `BLD-02-T1 — Furnace Stall T1` | 2048×2048 RGBA | PASS | `zte_business_02_t1_final.webp`, referenced | DONE; Android CI green |
-| `BLD-02-T2 — Furnace Stall T2` | 2048×2048 RGBA | PASS | `zte_business_02_t2_final.webp`, referenced | DONE; Android CI green |
-| `BLD-02-T3 — Furnace Stall T3` | 2048×2048 RGBA | PASS | `zte_business_02_t3_final.webp`, referenced | DONE; Android CI green |
-| `BLD-02-T4 — Furnace Stall T4` | 2048×2048 RGBA | PASS | `zte_business_02_t4_final.webp`, referenced | RUNTIME; CI pending |
-| `BLD-02-T5 — Furnace Stall T5` | 2048×2048 RGBA | PASS | `zte_business_02_t5_final.webp`, referenced | RUNTIME; CI pending |
-| `BLD-02-T6 — Furnace Stall T6` | 2048×2048 RGBA | PASS | `zte_business_02_t6_final.webp`, referenced | RUNTIME; CI pending |
-| `BLD-03-T0 — Assembly Hub T0` | 2048×2048 RGBA | PASS | `zte_business_03_t0_final.webp`, referenced | RUNTIME; CI pending |
-| `BLD-03-T1 — Assembly Hub T1` | 2048×2048 RGBA | PASS — genuine alpha; 100.0% dominant | `zte_business_03_t1_final.webp`, referenced | RUNTIME; CI pending |
-| `FX-08 — upgrade construction flash` | 8 × 128×128 RGBA, 4×2 sheet | PASS — 90.4% transparent; every cell populated and isolated | `zte_fx_08_final.webp`, one-shot on business level changes with reduced-motion flash | RUNTIME; CI pending |
-| `FX-09 — income pickup sparkle` | 8 × 128×128 RGBA, 4×2 sheet | PASS — 93.9% transparent; every cell populated and isolated | `zte_fx_09_final.webp`, animated at 8 fps with a short rest on business 6; reduced-motion freeze | RUNTIME; CI pending |
-| `FX-10 — electric arc` | 8 × 128×128 RGBA, 4×2 sheet | PASS — 93.4% transparent; every cell populated and isolated | `zte_fx_10_final.webp`, animated at 8 fps on business 7 with reduced-motion freeze | RUNTIME; CI pending |
-| `FX-11 — hologram scan sweep` | 8 × 128×128 RGBA, 4×2 sheet | PASS — 65.1% transparent; every cell populated and isolated | `zte_fx_11_final.webp`, animated at 8 fps on business 8 with reduced-motion freeze | RUNTIME; CI pending |
-| `FX-12 — drone thruster` | 8 × 128×128 RGBA, 4×2 sheet | PASS — 82.5% transparent; every cell populated and isolated | `zte_fx_12_final.webp`, animated at 8 fps on business 9 with reduced-motion freeze | RUNTIME; CI pending |
-| `FX-13 — phase distortion` | 8 × 128×128 RGBA, 4×2 sheet | PASS — 70.0% transparent; every cell populated and isolated | `zte_fx_13_final.webp`, animated at 8 fps on business 10 with reduced-motion freeze | RUNTIME; CI pending |
-| `FX-14 — orbital ion trail` | 8 × 128×128 RGBA, 4×2 sheet | PASS — transparent; every cell populated and isolated | `zte_fx_14_final.webp`, animated at 8 fps on business 11 with reduced-motion freeze | RUNTIME; CI pending |
-| `FX-15 — stellar flare` | 8 × 128×128 RGBA, 4×2 sheet | PASS — 66.8% transparent; every cell populated and isolated | `zte_fx_15_final.webp`, animated at 8 fps on Apex business 12 with reduced-motion freeze | RUNTIME; CI pending |
-| `FX-16 — singularity lens pulse` | 8 × 128×128 RGBA, 4×2 sheet | PASS — 76.3% transparent; every cell populated and isolated | `zte_fx_16_final.webp`, animated at 8 fps on Apex business 13 with reduced-motion freeze | RUNTIME; CI pending |
-| `FX-17 — mastery crown shimmer` | 8 × 128×128 RGBA, 4×2 sheet | PASS — 64.2% transparent; every cell populated and isolated | `zte_fx_17_final.webp`, animated at 8 fps with reduced-motion freeze | RUNTIME; CI pending |
+## DONE baseline
+- `BLD-00-T0` through `BLD-02-T3`: **18 buildings**, individually validated, referenced, visible and Android CI green.
 
-## Current generated candidates
-| Candidate | Intended manifest item | State | Reason not DONE |
-|---|---|---|---|
-| Street Stand render | BLD-00-T0 | REJECTED | Background/vignette and baked sign/icon details; not clean transparent final runtime asset. |
-| Corner Shop render | BLD-01-T0 | REJECTED | Background plus baked readable SHOP/OPEN/24-7/promo text. |
-| Furnace render | BLD-02-T0 | REJECTED | Background/vignette and baked signage; not transparent final runtime asset. |
-| Clinic render | Unmapped | REJECTED | Does not map to a locked manifest building and contains baked text/signage. |
-| Tavern render | Unmapped | REJECTED | Does not map to locked Foundry target; background and baked TAVERN signage. |
-| Castle render | Unmapped | REJECTED | Does not map to locked current target; background. |
-| Police HQ render | Unmapped | REJECTED | Baked readable text/logos and background. |
-| Farm render | Unmapped | REJECTED | Baked FARM signage and background. |
-| Fire Station render | Unmapped | REJECTED | Baked readable text/logos and background. |
-| Assembly Hub T1 first render | BLD-03-T1 | REJECTED | Baked checkerboard background; source had no alpha channel. |
+## Reviewed FLUX batch — DONE
+Run-20 promotion retained only the **28 semantically approved** isolated masters. Promotion revalidated all 28, generated Android WebP runtime assets, and committed both master and runtime copies. They are referenced by `WorldTrafficArt.kt`, rendered as physical city-stage scenery by `AscendantCityStage`, and Android CI run `33981695482` completed green (full tests, release lint, APK and bundle builds).
 
-## Next production target
-`FX-07 — construction dust/debris`: generate an 8-frame 128×128 transparent one-shot, working backward through the manifest as requested.
+### Vehicles — 10 DONE
+`VEH-00`, `VEH-01`, `VEH-02`, `VEH-03`, `VEH-04`, `VEH-05`, `VEH-06`, `VEH-07`, `VEH-08`, `VEH-10`.
 
-## Rejected during reverse-order production
-| Intended asset | Attempt | Reason |
-|---|---:|---|
-| `FX-17 — mastery crown shimmer` | 1 | Rejected: 2048×768 strip, non-square cells and touching halos; not retained. |
-| `FX-11 — hologram scan sweep` | 1 | Rejected: ambient cyan bloom connected multiple cells and eliminated transparent gutters. |
-| `FX-10 — electric arc` | 1 | Rejected: excessive blue bloom and over-wide branches reduced 128 px readability. |
-| `FX-09 — income pickup sparkle` | 1 | Rejected: detached motes fragmented one frame; dominant component only 38.8%. |
-| `FX-09 — income pickup sparkle` | 2 | Rejected: peak frame touched the left canvas edge and clipped an important ray. |
-| `FX-08 — upgrade construction flash` | 1 | Rejected: peak frames exceeded safety margins and were too complex at 128 px. |
+Runtime files:
+`zte_vehicle_00_final.webp`, `zte_vehicle_01_final.webp`, `zte_vehicle_02_final.webp`, `zte_vehicle_03_final.webp`, `zte_vehicle_04_final.webp`, `zte_vehicle_05_final.webp`, `zte_vehicle_06_final.webp`, `zte_vehicle_07_final.webp`, `zte_vehicle_08_final.webp`, `zte_vehicle_10_final.webp`.
+
+### Props — 18 DONE
+`PRP-02-B`, `PRP-04-A`, `PRP-05-B`, `PRP-06-A`, `PRP-06-B`, `PRP-07-A`, `PRP-07-B`, `PRP-08-A`, `PRP-08-B`, `PRP-09-A`, `PRP-09-B`, `PRP-10-A`, `PRP-10-B`, `PRP-11-A`, `PRP-11-B`, `PRP-12-A`, `PRP-12-B`, `PRP-13-A`.
+
+Runtime files use the corresponding `zte_prop_*_final.webp` names and are placed off the cargo avenue with depth-scaled world pivots.
+
+## Existing ART/RUNTIME assets not yet promoted to DONE
+The following previously validated assets remain outside the DONE count until their own strict reconciliation is complete:
+- `BLD-02-T4`, `BLD-02-T5`, `BLD-02-T6`, `BLD-03-T0`, `BLD-03-T1`.
+- `FX-08` through `FX-17`.
+
+## Rejected candidates
+Rejected concept sheets, baked-background/signage renders, non-alpha renders, semantically wrong terrain, and the two rejected FLUX run-20 candidates remain excluded from all completion counts.
+
+## Next production targets
+1. Generate the missing vehicle set: `VEH-09`, `VEH-11` through `VEH-17`.
+2. Generate missing props: `PRP-00-A/B`, `PRP-01-A/B`, `PRP-02-A`, `PRP-03-A/B`, `PRP-04-B`, `PRP-05-A`, `PRP-13-B`.
+3. Continue machines, characters, Power Core and remaining buildings only through the same generate → technical QA → semantic QA → runtime → green-CI gate.
