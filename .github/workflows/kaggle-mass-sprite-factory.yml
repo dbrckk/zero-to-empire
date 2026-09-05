@@ -6,7 +6,7 @@ on:
       count:
         description: Sprite attempts in this Kaggle batch
         required: false
-        default: '2'
+        default: '1'
   schedule:
     - cron: '37 */6 * * *'
   push:
@@ -31,7 +31,7 @@ jobs:
     env:
       KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
       KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
-      SPRITE_COUNT: ${{ github.event.inputs.count || '2' }}
+      SPRITE_COUNT: ${{ github.event.inputs.count || '1' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -71,26 +71,40 @@ jobs:
         run: kaggle kernels push -p /tmp/zte-kaggle
 
       - name: Wait for Kaggle
+        id: wait-kaggle
         shell: bash
         run: |
+          set -u
           slug="${KAGGLE_USERNAME}/zero-to-empire-sprite-factory"
+          final_status='UNKNOWN'
           for i in $(seq 1 150); do
             status="$(kaggle kernels status "$slug" 2>&1 || true)"
             echo "$status"
-            if echo "$status" | grep -qi 'complete'; then exit 0; fi
-            if echo "$status" | grep -Eqi 'error|cancel|failed'; then exit 1; fi
+            if echo "$status" | grep -qi 'complete'; then final_status='COMPLETE'; break; fi
+            if echo "$status" | grep -Eqi 'error|cancel|failed'; then final_status='ERROR'; break; fi
             sleep 60
           done
-          echo 'Kaggle run timeout'
-          exit 1
+          echo "final_status=$final_status" >> "$GITHUB_OUTPUT"
+          echo "KAGGLE_FINAL_STATUS=$final_status" >> "$GITHUB_ENV"
 
-      - name: Download Kaggle outputs
+      - name: Download Kaggle outputs and kernel log
+        if: always() && steps.wait-kaggle.outcome == 'success'
         shell: bash
         run: |
           rm -rf /tmp/kaggle-output
           mkdir -p /tmp/kaggle-output
-          kaggle kernels output "${KAGGLE_USERNAME}/zero-to-empire-sprite-factory" -p /tmp/kaggle-output --force
+          kaggle kernels output "${KAGGLE_USERNAME}/zero-to-empire-sprite-factory" -p /tmp/kaggle-output --force || true
           find /tmp/kaggle-output/output -maxdepth 3 -type f -print 2>/dev/null || true
+          find /tmp/kaggle-output -maxdepth 2 -type f -name '*.log' -print || true
+
+      - name: Require successful Kaggle kernel
+        if: always() && steps.wait-kaggle.outcome == 'success'
+        shell: bash
+        run: |
+          if [ "${KAGGLE_FINAL_STATUS:-UNKNOWN}" != 'COMPLETE' ]; then
+            echo "Kaggle kernel ended with ${KAGGLE_FINAL_STATUS:-UNKNOWN}. Kernel log is preserved in the QA artifact." >&2
+            exit 1
+          fi
 
       - name: Import exact candidates
         shell: bash
@@ -131,5 +145,6 @@ jobs:
             /tmp/kaggle-output/output/batch-contact-sheet.png
             /tmp/kaggle-output/output/batch-qa-report.json
             /tmp/kaggle-output/output/candidates/*.png
+            /tmp/kaggle-output/*.log
           if-no-files-found: ignore
           retention-days: 30
