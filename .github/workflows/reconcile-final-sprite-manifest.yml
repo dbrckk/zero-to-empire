@@ -1,0 +1,66 @@
+name: Reconcile final sprite manifest
+
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/reconcile-final-sprite-manifest.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+      - name: Mark only strictly verified rows DONE
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
+          done = {
+              'VEH-00','VEH-01','VEH-02','VEH-03','VEH-04','VEH-05','VEH-06','VEH-07','VEH-08','VEH-10',
+              'VEH-11','VEH-12','VEH-13','VEH-14','VEH-15',
+              'PRP-02-B','PRP-04-A','PRP-05-B','PRP-06-A','PRP-06-B','PRP-07-A','PRP-07-B','PRP-08-A','PRP-08-B',
+              'PRP-09-A','PRP-09-B','PRP-10-A','PRP-10-B','PRP-11-A','PRP-11-B','PRP-12-A','PRP-12-B','PRP-13-A','PRP-13-B',
+          }
+          lines = path.read_text(encoding='utf-8').splitlines()
+          seen = set()
+          out = []
+          for line in lines:
+              if line.startswith('|'):
+                  cols = [c.strip() for c in line.split('|')[1:-1]]
+                  if len(cols) == 5 and cols[0] in done:
+                      cols[4] = 'DONE'
+                      line = '| ' + ' | '.join(cols) + ' |'
+                      seen.add(cols[0])
+              out.append(line)
+          missing = done - seen
+          if missing:
+              raise SystemExit(f'Missing manifest rows: {sorted(missing)}')
+          path.write_text('\n'.join(out) + '\n', encoding='utf-8')
+          done_count = 0
+          for line in out:
+              if not line.startswith('|'): continue
+              cols = [c.strip() for c in line.split('|')[1:-1]]
+              if len(cols) == 5 and cols[4] == 'DONE': done_count += 1
+          if done_count != 52:
+              raise SystemExit(f'Expected 52 strict DONE rows, got {done_count}')
+          print('MANIFEST_STRICT_DONE=52')
+          PY
+      - name: Commit canonical reconciliation
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md
+          git diff --cached --quiet && exit 0
+          git commit -m 'docs: mark 34 reviewed static assets strictly DONE'
+          git pull --rebase origin main
+          git push
