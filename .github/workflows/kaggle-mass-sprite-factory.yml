@@ -43,8 +43,8 @@ jobs:
           test -n "$KAGGLE_KEY" || { echo 'Missing KAGGLE_KEY'; exit 2; }
           test -n "$KAGGLE_USERNAME" || { echo 'Missing KAGGLE_USERNAME'; exit 2; }
 
-      - name: Install Kaggle CLI
-        run: python -m pip install --upgrade kaggle
+      - name: Install runner dependencies
+        run: python -m pip install --upgrade kaggle Pillow
 
       - name: Verify Kaggle authentication
         shell: bash
@@ -52,6 +52,10 @@ jobs:
           set -euo pipefail
           kaggle --version
           kaggle kernels list --mine --page-size 1 >/tmp/kaggle-auth-check.txt
+          python - <<'PY'
+          from PIL import Image
+          print('Pillow OK', Image.__version__)
+          PY
           echo 'Kaggle authentication OK'
 
       - name: Prepare Kaggle kernel
@@ -86,14 +90,14 @@ jobs:
           rm -rf /tmp/kaggle-output
           mkdir -p /tmp/kaggle-output
           kaggle kernels output "${KAGGLE_USERNAME}/zero-to-empire-sprite-factory" -p /tmp/kaggle-output --force
-          find /tmp/kaggle-output -maxdepth 3 -type f -print
+          find /tmp/kaggle-output/output -maxdepth 3 -type f -print 2>/dev/null || true
 
       - name: Import exact candidates
         shell: bash
         run: |
           shopt -s nullglob
-          files=(/tmp/kaggle-output/output/candidates/*_final.png /tmp/kaggle-output/candidates/*_final.png)
-          if [ ${#files[@]} -eq 0 ]; then echo 'No Kaggle candidates'; exit 1; fi
+          files=(/tmp/kaggle-output/output/candidates/*_final.png)
+          if [ ${#files[@]} -eq 0 ]; then echo 'No fresh Kaggle candidates'; exit 1; fi
           mkdir -p art/incoming/final-sprites
           targets=()
           for f in "${files[@]}"; do
@@ -102,6 +106,7 @@ jobs:
           done
           printf -v joined '%s,' "${targets[@]}"
           echo "SPRITE_TARGETS=${joined%,}" >> "$GITHUB_ENV"
+          echo "KAGGLE_IMPORTED=${#files[@]}"
 
       - name: Finalize exact batch
         run: python tools/sprites/process_final_sprites.py
@@ -126,8 +131,5 @@ jobs:
             /tmp/kaggle-output/output/batch-contact-sheet.png
             /tmp/kaggle-output/output/batch-qa-report.json
             /tmp/kaggle-output/output/candidates/*.png
-            /tmp/kaggle-output/batch-contact-sheet.png
-            /tmp/kaggle-output/batch-qa-report.json
-            /tmp/kaggle-output/candidates/*.png
           if-no-files-found: ignore
           retention-days: 30
