@@ -1,14 +1,9 @@
 #!/usr/bin/env python3
-"""Build large GPU batches directly from the canonical sprite manifest.
+"""Build candidate-only static GPU batches from the canonical sprite manifest.
 
-The planner excludes animation-heavy character/machine sheets and terrain from
-the generic static lane. Terrain has its own zero-GPU procedural authoring path.
-Already-materialized candidates/runtime files are skipped even if the manifest
-ledger has not yet been reconciled.
-
-For ALL batches, cheaper/easier-to-validate static families are attempted first
-(PRP -> VEH -> CORE -> BLD). This maximizes useful assets per scarce free GPU
-minute while preserving manifest order inside each family.
+Animation-heavy character/machine sheets and terrain stay outside this generic static lane.
+The canonical manifest status is authoritative: a TODO row remains eligible even when stale
+candidate/runtime files exist from an older pre-semantic-finalization workflow.
 """
 from __future__ import annotations
 
@@ -19,7 +14,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = ROOT / "docs/art/FINAL_AAA_SPRITE_MANIFEST.md"
-INCOMING = ROOT / "art/incoming/final-sprites"
 SUPPORTED = ("BLD-", "CORE-", "VEH-", "PRP-")
 ROW = re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$")
 FAST_PRIORITY = {"PRP": 0, "VEH": 1, "CORE": 2, "BLD": 3}
@@ -35,19 +29,15 @@ def rows():
         asset_id, name, description, runtime, status = [x.strip() for x in m.groups()]
         if not asset_id.startswith(SUPPORTED):
             continue
-        runtime_path = ROOT / runtime
-        stem = Path(runtime).stem
-        candidate = INCOMING / f"{stem}.png"
         kind = asset_id.split("-", 1)[0]
         yield {
             "id": asset_id,
             "name": name,
             "description": description,
             "runtime": runtime,
-            "stem": stem,
+            "stem": Path(runtime).stem,
             "status": status.upper(),
             "kind": kind,
-            "materialized": candidate.exists() or runtime_path.exists(),
             "order": order,
         }
         order += 1
@@ -65,7 +55,6 @@ def main() -> int:
     items = [
         r for r in rows()
         if r["status"] == "TODO"
-        and not r["materialized"]
         and (args.kind == "ALL" or r["kind"] == args.kind)
     ]
     if args.kind == "ALL":
@@ -74,7 +63,6 @@ def main() -> int:
         items.reverse()
     items = items[: args.count]
     for item in items:
-        item.pop("materialized", None)
         item.pop("order", None)
     print(json.dumps({"include": items}, separators=(",", ":")))
     return 0
