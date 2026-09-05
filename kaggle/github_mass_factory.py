@@ -24,6 +24,50 @@ def digest(path: Path) -> str:
     return h.hexdigest()
 
 
+def ensure_gpu_compatible_torch() -> None:
+    """Kaggle may assign a Pascal P100 (sm_60).
+
+    Newer Kaggle PyTorch builds can drop sm_60 kernels. Pin a CUDA 12.1
+    PyTorch build that still supports P100 when such a GPU is assigned.
+    The actual sprite factory runs in a fresh Python process afterwards.
+    """
+    try:
+        cap = subprocess.check_output(
+            ['nvidia-smi', '--query-gpu=compute_cap', '--format=csv,noheader'],
+            text=True,
+        ).splitlines()[0].strip()
+    except Exception as exc:
+        print(f'KAGGLE_GPU_CAPABILITY=unknown reason={exc}', flush=True)
+        return
+
+    print(f'KAGGLE_GPU_CAPABILITY={cap}', flush=True)
+    try:
+        major = int(cap.split('.', 1)[0])
+    except ValueError:
+        return
+    if major >= 7:
+        print('KAGGLE_TORCH_COMPAT=current', flush=True)
+        return
+
+    print('KAGGLE_TORCH_COMPAT=install_p100_build', flush=True)
+    subprocess.run(
+        [
+            'python', '-m', 'pip', 'install', '--quiet', '--upgrade', '--force-reinstall',
+            'torch==2.5.1', 'torchvision==0.20.1',
+            '--index-url', 'https://download.pytorch.org/whl/cu121',
+        ],
+        check=True,
+    )
+    probe = (
+        "import torch; "
+        "print('KAGGLE_TORCH_VERSION=' + torch.__version__); "
+        "print('KAGGLE_TORCH_CUDA=' + str(torch.version.cuda)); "
+        "print('KAGGLE_TORCH_CAP=' + str(torch.cuda.get_device_capability(0))); "
+        "x=torch.ones(1, device='cuda'); print('KAGGLE_TORCH_GPU_PROBE=' + str(x.item()))"
+    )
+    subprocess.run(['python', '-c', probe], check=True)
+
+
 os.chdir(WORK)
 if REPO.exists():
     shutil.rmtree(REPO)
@@ -36,6 +80,8 @@ subprocess.run(
     check=True,
 )
 os.chdir(REPO)
+
+ensure_gpu_compatible_torch()
 
 incoming = REPO / 'art/incoming/final-sprites'
 before = {p.name: digest(p) for p in incoming.glob('*_final.png') if p.is_file()}
