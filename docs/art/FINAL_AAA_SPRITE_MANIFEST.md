@@ -130,13 +130,13 @@ If a new runtime sprite is later required, it must be added here first and the d
 
 | ID | Asset | Description | Final runtime target | Status |
 |---|---|---|---|---|
-| CORE-T0 | Power Core T0 | salvaged mechanical core on improvised cradle; weak pulse and exposed conduits. | `app/src/main/res/drawable-nodpi/zte_power_core_t0_final.webp` | TODO |
-| CORE-T1 | Power Core T1 | reinforced industrial reactor; clear rotating/piston subsystem and stronger warm core. | `app/src/main/res/drawable-nodpi/zte_power_core_t1_final.webp` | TODO |
-| CORE-T2 | Power Core T2 | automated district reactor; dual-energy routing and articulated service arms. | `app/src/main/res/drawable-nodpi/zte_power_core_t2_final.webp` | TODO |
-| CORE-T3 | Power Core T3 | neon metropolitan core; holographic containment ring and cleaner premium shell. | `app/src/main/res/drawable-nodpi/zte_power_core_t3_final.webp` | TODO |
-| CORE-T4 | Power Core T4 | orbital-grade power nexus; levitating ring stack, stronger cyan routing and larger footprint. | `app/src/main/res/drawable-nodpi/zte_power_core_t4_final.webp` | TODO |
-| CORE-T5 | Power Core T5 | stellar collector core; multi-ring containment, stellar plasma motif and hero-scale silhouette. | `app/src/main/res/drawable-nodpi/zte_power_core_t5_final.webp` | TODO |
-| CORE-T6 | Power Core T6 | Singularity Crown; ultimate reality-bending core with iconic crown geometry and prestige treatment. | `app/src/main/res/drawable-nodpi/zte_power_core_t6_final.webp` | TODO |
+| CORE-T0 | Power Core T0 | salvaged mechanical core on improvised cradle; weak pulse and exposed conduits. | `app/src/main/res/drawable-nodpi/zte_power_core_t0_final.webp` | CLEAN |
+| CORE-T1 | Power Core T1 | reinforced industrial reactor; clear rotating/piston subsystem and stronger warm core. | `app/src/main/res/drawable-nodpi/zte_power_core_t1_final.webp` | CLEAN |
+| CORE-T2 | Power Core T2 | automated district reactor; dual-energy routing and articulated service arms. | `app/src/main/res/drawable-nodpi/zte_power_core_t2_final.webp` | CLEAN |
+| CORE-T3 | Power Core T3 | neon metropolitan core; holographic containment ring and cleaner premium shell. | `app/src/main/res/drawable-nodpi/zte_power_core_t3_final.webp` | CLEAN |
+| CORE-T4 | Power Core T4 | orbital-grade power nexus; levitating ring stack, stronger cyan routing and larger footprint. | `app/src/main/res/drawable-nodpi/zte_power_core_t4_final.webp` | CLEAN |
+| CORE-T5 | Power Core T5 | stellar collector core; multi-ring containment, stellar plasma motif and hero-scale silhouette. | `app/src/main/res/drawable-nodpi/zte_power_core_t5_final.webp` | CLEAN |
+| CORE-T6 | Power Core T6 | Singularity Crown; ultimate reality-bending core with iconic crown geometry and prestige treatment. | `app/src/main/res/drawable-nodpi/zte_power_core_t6_final.webp` | CLEAN |
 
 ## C. Characters — 24 / 24 planned
 
@@ -188,7 +188,7 @@ If a new runtime sprite is later required, it must be added here first and the d
 | VEH-14 | Apex stellar service craft | Final isolated vehicle sprite/sheet with contact shadow and direction/readability suitable for world traffic. | `app/src/main/res/drawable-nodpi/zte_vehicle_14_final.webp` | DONE |
 | VEH-15 | Orbital shuttle | Final isolated vehicle sprite/sheet with contact shadow and direction/readability suitable for world traffic. | `app/src/main/res/drawable-nodpi/zte_vehicle_15_final.webp` | DONE |
 | VEH-16 | Prestige executive hovercar | Final isolated vehicle sprite/sheet with contact shadow and direction/readability suitable for world traffic. | `app/src/main/res/drawable-nodpi/zte_vehicle_16_final.webp` | TODO |
-| VEH-17 | Singularity logistics drone swarm | Final isolated vehicle sprite/sheet with contact shadow and direction/readability suitable for world traffic. | `app/src/main/res/drawable-nodpi/zte_vehicle_17_final.webp` | TODO |
+| VEH-17 | Singularity logistics drone swarm | Final isolated vehicle sprite/sheet with contact shadow and direction/readability suitable for world traffic. | `app/src/main/res/drawable-nodpi/zte_vehicle_17_final.webp` | DONE |
 
 ## E. Machines — 28 / 28 planned
 
@@ -227,16 +227,16 @@ If a new runtime sprite is later required, it must be added here first and the d
 
 | ID | Prop | Description | Runtime target | Status |
 |---|---|---|---|---|
-| PRP-00-A | Street Stand operational prop | Business-specific crate/tool/storage/signage-without-text element that reinforces function and scale. | `app/src/main/res/drawable-nodpi/zte_prop_00_a_final.webp` | TODO |
-| PRP-00-B | Street Stand environmental prop | Business-specific pipe/terminal/barrier/garden/utility element for foreground dressing and occlusion. | `app/src/main/res/drawable-nodpi/zte_prop_00_b_final.webp` | TODO |
-| PRP-01-A | Corner Shop operational prop | Business-specific crate/tool/storage/signage-without-text element that reinforces function and scale. | `app/src/main/res/drawable-nodpi/zte_prop_01_a_final.webp` | TODO |
-| PRP-01-B | Corner Shop environmental prop | Business-specific pipe/terminal/barrier/garden/utility element for foreground dressing and occlusion. | `app/src/main/res/drawable-nodpi/zte_prop_01_b_final.webp` | TODO |
-| PRP-02-A | Furnace Stall operational prop | Business-specific crate/tool/storage/signage-without-text element that reinforces function and scale. | `app/src/main/res/drawable-nodpi/zte_prop_02_a_final.webp` | TODO |
+| PRP-00-A | Street Stand operational prop | Business-specific crate/tool/storage/signage-without-text element that reinforces function and scale. | `app/src/main/res/drawable-nodpi/zte_prop_00_a_final.webp` | DONE |
+| PRP-00-B | Street Stand environmental prop | Business-specific pipe/terminal/barrier/garden/utility element for foreground dressing and occlusion. | `app/src/main/res/drawable-nodpi/zte_prop_00_b_final.webp` | DONE |
+| PRP-01-A | Corner Shop operational prop | Business-specific crate/tool/storage/signage-without-text element that reinforces function and scale. | `app/src/main/res/drawable-nodpi/zte_prop_01_a_final.webp` | DONE |
+| PRP-01-B | Corner Shop environmental prop | Business-specific pipe/terminal/barrier/garden/utility element for foreground dressing and occlusion. | `app/src/main/res/drawable-nodpi/zte_prop_01_b_final.webp` | DONE |
+| PRP-02-A | Furnace Stall operational prop | Business-specific crate/tool/storage/signage-without-text element that reinforces function and scale. | `app/src/main/res/drawable-nodpi/zte_prop_02_a_final.webp` | DONE |
 | PRP-02-B | Furnace Stall environmental prop | Business-specific pipe/terminal/barrier/garden/utility element for foreground dressing and occlusion. | `app/src/main/res/drawable-nodpi/zte_prop_02_b_final.webp` | DONE |
-| PRP-03-A | Assembly Hub operational prop | Business-specific crate/tool/storage/signage-without-text element that reinforces function and scale. | `app/src/main/res/drawable-nodpi/zte_prop_03_a_final.webp` | TODO |
-| PRP-03-B | Assembly Hub environmental prop | Business-specific pipe/terminal/barrier/garden/utility element for foreground dressing and occlusion. | `app/src/main/res/drawable-nodpi/zte_prop_03_b_final.webp` | TODO |
+| PRP-03-A | Assembly Hub operational prop | Business-specific crate/tool/storage/signage-without-text element that reinforces function and scale. | `app/src/main/res/drawable-nodpi/zte_prop_03_a_final.webp` | DONE |
+| PRP-03-B | Assembly Hub environmental prop | Business-specific pipe/terminal/barrier/garden/utility element for foreground dressing and occlusion. | `app/src/main/res/drawable-nodpi/zte_prop_03_b_final.webp` | DONE |
 | PRP-04-A | Expansion Business 04 operational prop | Business-specific crate/tool/storage/signage-without-text element that reinforces function and scale. | `app/src/main/res/drawable-nodpi/zte_prop_04_a_final.webp` | DONE |
-| PRP-04-B | Expansion Business 04 environmental prop | Business-specific pipe/terminal/barrier/garden/utility element for foreground dressing and occlusion. | `app/src/main/res/drawable-nodpi/zte_prop_04_b_final.webp` | TODO |
+| PRP-04-B | Expansion Business 04 environmental prop | Business-specific pipe/terminal/barrier/garden/utility element for foreground dressing and occlusion. | `app/src/main/res/drawable-nodpi/zte_prop_04_b_final.webp` | DONE |
 | PRP-05-A | Expansion Business 05 operational prop | Business-specific crate/tool/storage/signage-without-text element that reinforces function and scale. | `app/src/main/res/drawable-nodpi/zte_prop_05_a_final.webp` | TODO |
 | PRP-05-B | Expansion Business 05 environmental prop | Business-specific pipe/terminal/barrier/garden/utility element for foreground dressing and occlusion. | `app/src/main/res/drawable-nodpi/zte_prop_05_b_final.webp` | DONE |
 | PRP-06-A | Expansion Business 06 operational prop | Business-specific crate/tool/storage/signage-without-text element that reinforces function and scale. | `app/src/main/res/drawable-nodpi/zte_prop_06_a_final.webp` | DONE |

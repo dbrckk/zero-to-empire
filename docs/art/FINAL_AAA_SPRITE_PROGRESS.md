@@ -3,10 +3,10 @@
 Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains the canonical 235-item scope. Candidate art is never confused with DONE runtime assets.
 
 ## Official progress
-- DONE: **52 / 235**
-- ART VALIDATED: **67 / 235**
-- RUNTIME INTEGRATED: **67 / 235**
-- Generated candidates accepted as DONE: **52**
+- DONE: **61 / 235**
+- ART VALIDATED: **83 / 235**
+- RUNTIME INTEGRATED: **76 / 235**
+- Generated candidates accepted as DONE: **61**
 - Rule: only runtime-integrated, individually clean/transparent, manifest-matching assets with green Android CI increment DONE.
 
 ## DONE baseline
@@ -30,6 +30,15 @@ Run-22 semantic review accepted **6** replacements/new assets: `PRP-13-B` and `V
 ### Props — 1 DONE
 `PRP-13-B`.
 
+## Reviewed FLUX run 25 — 9 DONE, 7 CLEAN
+Run-25 semantic review accepted 16 assets. Eight missing props plus `VEH-17` are referenced in the active city stage and Android CI run `33997464241` completed successfully, so those nine are strict DONE. `CORE-T0` through `CORE-T6` passed semantic and technical review and have optimized runtime rasters, but remain CLEAN until their tier-aware Power Core runtime integration is completed and validated.
+
+### New strict DONE
+`PRP-00-A`, `PRP-00-B`, `PRP-01-A`, `PRP-01-B`, `PRP-02-A`, `PRP-03-A`, `PRP-03-B`, `PRP-04-B`, `VEH-17`.
+
+### CLEAN awaiting runtime integration
+`CORE-T0`, `CORE-T1`, `CORE-T2`, `CORE-T3`, `CORE-T4`, `CORE-T5`, `CORE-T6`.
+
 ## Existing ART/RUNTIME assets not yet promoted to DONE
 The following previously validated assets remain outside the DONE count until their own strict reconciliation is complete:
 - `BLD-02-T4`, `BLD-02-T5`, `BLD-02-T6`, `BLD-03-T0`, `BLD-03-T1`.
@@ -39,8 +48,8 @@ The following previously validated assets remain outside the DONE count until th
 Technically valid but semantically wrong candidates remain excluded. This includes generic/non-progressive building renders, Power Core renders that omit their tier-defining mechanisms, `VEH-16` renders that still read as wheeled cars, `VEH-17` single-drone renders instead of a swarm, and the rejected `VEH-09` concept. `PRP-13-B` was rejected in run 20 but replaced by a valid run-22 generation and is now DONE.
 
 ## Next production targets
-1. Regenerate the remaining vehicle set with stricter semantics: `VEH-09`, `VEH-16`, `VEH-17`.
-2. Regenerate missing props regardless of stale unapproved candidate files: `PRP-00-A/B`, `PRP-01-A/B`, `PRP-02-A`, `PRP-03-A/B`, `PRP-04-B`, `PRP-05-A`.
-3. Regenerate Power Core tiers with explicit tier-defining geometry before any promotion.
+1. Regenerate the remaining vehicle set with stricter semantics: `VEH-09`, `VEH-16`.
+2. Regenerate the remaining missing prop: `PRP-05-A`.
+3. Integrate the reviewed `CORE-T0` through `CORE-T6` rasters into the tier-aware Power Core runtime, then require green Android CI before DONE.
 4. Rework building generation around coherent family/tier evolution; do not accept generic unrelated buildings.
 5. Continue machines, characters, terrain and FX only through the same generate → technical QA → semantic QA → runtime → green-CI gate.
