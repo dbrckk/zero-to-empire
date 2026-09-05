@@ -10,21 +10,17 @@ on:
   schedule:
     - cron: '37 */6 * * *'
   push:
-    branches:
-      - main
+    branches: [main]
     paths:
       - '.github/workflows/kaggle-mass-sprite-factory.yml'
       - 'kaggle/github_mass_factory.py'
       - 'kaggle/kernel-metadata.template.json'
       - 'tools/sprites/kaggle_sprite_factory.py'
-
 permissions:
   contents: read
-
 concurrency:
   group: kaggle-mass-sprite-factory
-  cancel-in-progress: false
-
+  cancel-in-progress: true
 jobs:
   kaggle:
     runs-on: ubuntu-latest
@@ -35,8 +31,7 @@ jobs:
       SPRITE_COUNT: ${{ github.event.inputs.count || '1' }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
+        with: {fetch-depth: 2}
       - name: Check credentials
         shell: bash
         run: |
@@ -58,8 +53,7 @@ jobs:
       - name: Prepare Kaggle kernel
         shell: bash
         run: |
-          rm -rf /tmp/zte-kaggle
-          mkdir -p /tmp/zte-kaggle
+          rm -rf /tmp/zte-kaggle; mkdir -p /tmp/zte-kaggle
           cp kaggle/github_mass_factory.py /tmp/zte-kaggle/
           sed "s/__KAGGLE_USERNAME__/${KAGGLE_USERNAME}/g" kaggle/kernel-metadata.template.json > /tmp/zte-kaggle/kernel-metadata.json
           sed -i "s/COUNT = int(os.getenv('SPRITE_COUNT', '60'))/COUNT = ${SPRITE_COUNT}/" /tmp/zte-kaggle/github_mass_factory.py
@@ -70,42 +64,33 @@ jobs:
         shell: bash
         run: |
           set -u
-          slug="${KAGGLE_USERNAME}/zero-to-empire-sprite-factory"
-          final_status='UNKNOWN'
+          slug="${KAGGLE_USERNAME}/zero-to-empire-sprite-factory"; final_status='UNKNOWN'
           for i in $(seq 1 150); do
-            status="$(kaggle kernels status "$slug" 2>&1 || true)"
-            echo "$status"
+            status="$(kaggle kernels status "$slug" 2>&1 || true)"; echo "$status"
             if echo "$status" | grep -qi 'complete'; then final_status='COMPLETE'; break; fi
             if echo "$status" | grep -Eqi 'error|cancel|failed'; then final_status='ERROR'; break; fi
             sleep 60
           done
-          echo "final_status=$final_status" >> "$GITHUB_OUTPUT"
-          echo "KAGGLE_FINAL_STATUS=$final_status" >> "$GITHUB_ENV"
+          echo "final_status=$final_status" >> "$GITHUB_OUTPUT"; echo "KAGGLE_FINAL_STATUS=$final_status" >> "$GITHUB_ENV"
       - name: Download Kaggle outputs and kernel log
         if: always() && steps.wait-kaggle.outcome == 'success'
         shell: bash
         run: |
-          rm -rf /tmp/kaggle-output
-          mkdir -p /tmp/kaggle-output
+          rm -rf /tmp/kaggle-output; mkdir -p /tmp/kaggle-output
           kaggle kernels output "${KAGGLE_USERNAME}/zero-to-empire-sprite-factory" -p /tmp/kaggle-output --force || true
           find /tmp/kaggle-output/output -maxdepth 3 -type f -print 2>/dev/null || true
           find /tmp/kaggle-output -maxdepth 2 -type f -name '*.log' -print || true
       - name: Require successful Kaggle kernel
         if: always() && steps.wait-kaggle.outcome == 'success'
         shell: bash
-        run: |
-          if [ "${KAGGLE_FINAL_STATUS:-UNKNOWN}" != 'COMPLETE' ]; then exit 1; fi
+        run: test "${KAGGLE_FINAL_STATUS:-UNKNOWN}" = 'COMPLETE'
       - name: Require fresh technically validated candidates
         shell: bash
         run: |
-          shopt -s nullglob
-          files=(/tmp/kaggle-output/output/candidates/*_final.png)
+          shopt -s nullglob; files=(/tmp/kaggle-output/output/candidates/*_final.png)
           if [ ${#files[@]} -eq 0 ]; then echo 'No fresh Kaggle candidates'; exit 1; fi
           echo "KAGGLE_QA_PENDING=${#files[@]}"
-          python tools/sprites/build_sprite_contact_sheet.py \
-            --output /tmp/kaggle-output/output/github-contact-sheet.png \
-            --report /tmp/kaggle-output/output/github-qa-report.json \
-            --files "${files[@]}"
+          python tools/sprites/build_sprite_contact_sheet.py --output /tmp/kaggle-output/output/github-contact-sheet.png --report /tmp/kaggle-output/output/github-qa-report.json --files "${files[@]}"
       - name: Upload QA evidence for semantic approval
         if: always()
         uses: actions/upload-artifact@v4
@@ -116,6 +101,7 @@ jobs:
             /tmp/kaggle-output/output/batch-qa-report.json
             /tmp/kaggle-output/output/github-contact-sheet.png
             /tmp/kaggle-output/output/github-qa-report.json
+            /tmp/kaggle-output/output/generated-targets.json
             /tmp/kaggle-output/output/candidates/*.png
             /tmp/kaggle-output/*.log
           if-no-files-found: ignore
