@@ -48,8 +48,13 @@ fun EmpireCoreGlyph(modifier: Modifier = Modifier, eraIndex: Int = 0) {
     val reducedMotion = MotionQuality.reducedMotion(context)
     val lowPower = MotionQuality.lowPowerMode(context)
 
+    // Keep accessibility / power-saving paths completely outside the infinite
+    // animation clock. This avoids allocating a perpetual transition when the
+    // renderer is required to remain static.
     val pulse: Float
-    if (reducedMotion || lowPower) {
+    if (reducedMotion) {
+        pulse = 1f
+    } else if (lowPower) {
         pulse = 1f
     } else {
         val infinite = rememberInfiniteTransition(label = "empireCoreRaster")
