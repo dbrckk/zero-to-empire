@@ -22,11 +22,10 @@ private val worldTrafficSprites = intArrayOf(
     R.drawable.zte_vehicle_02_final, R.drawable.zte_vehicle_03_final,
     R.drawable.zte_vehicle_04_final, R.drawable.zte_vehicle_05_final,
     R.drawable.zte_vehicle_06_final, R.drawable.zte_vehicle_07_final,
-    R.drawable.zte_vehicle_08_final, R.drawable.zte_vehicle_09_final,
-    R.drawable.zte_vehicle_10_final, R.drawable.zte_vehicle_11_final,
-    R.drawable.zte_vehicle_12_final, R.drawable.zte_vehicle_13_final,
-    R.drawable.zte_vehicle_14_final, R.drawable.zte_vehicle_15_final,
-    R.drawable.zte_vehicle_17_final,
+    R.drawable.zte_vehicle_08_final, R.drawable.zte_vehicle_10_final,
+    R.drawable.zte_vehicle_11_final, R.drawable.zte_vehicle_12_final,
+    R.drawable.zte_vehicle_13_final, R.drawable.zte_vehicle_14_final,
+    R.drawable.zte_vehicle_15_final, R.drawable.zte_vehicle_17_final,
 )
 
 private val worldPropSprites = intArrayOf(
@@ -57,12 +56,14 @@ internal fun ReviewedWorldTraffic(modifier: Modifier = Modifier) {
                 Triple(.45f,.37f,.090f), Triple(.54f,.43f,.105f), Triple(.43f,.50f,.112f),
                 Triple(.58f,.58f,.125f), Triple(.39f,.66f,.132f), Triple(.63f,.73f,.145f),
                 Triple(.34f,.79f,.090f), Triple(.69f,.84f,.150f), Triple(.46f,.89f,.158f),
-                Triple(.55f,.61f,.118f), Triple(.57f,.94f,.090f), Triple(.51f,.33f,.088f),
-                Triple(.61f,.48f,.100f), Triple(.36f,.56f,.108f), Triple(.66f,.68f,.118f),
-                Triple(.49f,.81f,.126f), Triple(.73f,.55f,.112f),
+                Triple(.57f,.94f,.090f), Triple(.51f,.33f,.088f), Triple(.61f,.48f,.100f),
+                Triple(.36f,.56f,.108f), Triple(.66f,.68f,.118f), Triple(.49f,.81f,.126f),
+                Triple(.73f,.55f,.112f),
             )
             vehiclePlacements.forEachIndexed { i, (x,y,w) -> drawSprite(vehicles[i], x,y,w,.72f,true) }
 
+            // All 28 prop slots are individually reviewed runtime assets. PRP-05-A was replaced by the
+            // run-29 reviewed master; rejected VEH-09 remains deliberately absent until a true maglev pod passes QA.
             val propPlacements = listOf(
                 Triple(.12f,.38f,.085f), Triple(.83f,.40f,.080f), Triple(.17f,.43f,.088f),
                 Triple(.16f,.48f,.095f), Triple(.82f,.51f,.100f), Triple(.13f,.59f,.110f),
