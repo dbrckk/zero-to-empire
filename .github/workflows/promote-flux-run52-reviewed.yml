@@ -1,0 +1,134 @@
+name: Promote reviewed FLUX run 52 assets
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/promote-flux-run52-reviewed.yml']
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: promote-flux-run52-reviewed
+  cancel-in-progress: false
+
+env:
+  SPRITE_TARGETS: zte_machine_03_0_final,zte_machine_11_1_final,zte_machine_12_0_final,zte_terrain_00_final,zte_terrain_01_final,zte_terrain_02_final,zte_terrain_03_final,zte_terrain_04_final,zte_terrain_06_final,zte_terrain_08_final,zte_terrain_11_final,zte_terrain_12_final,zte_terrain_13_final
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+
+      - name: Download reviewed run 52 evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: kaggle-sprite-batch
+          run-id: 34035487201
+          github-token: ${{ github.token }}
+          path: /tmp/run52
+
+      - name: Install image tooling
+        run: python -m pip install --disable-pip-version-check Pillow==11.3.0
+
+      - name: Stage only semantically approved assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p art/incoming/final-sprites art/production
+          IFS=',' read -ra targets <<< "$SPRITE_TARGETS"
+          files=()
+          for stem in "${targets[@]}"; do
+            src="/tmp/run52/output/candidates/${stem}.png"
+            test -s "$src"
+            cp "$src" "art/incoming/final-sprites/${stem}.png"
+            files+=("art/incoming/final-sprites/${stem}.png")
+          done
+          python tools/sprites/build_sprite_contact_sheet.py \
+            --files "${files[@]}" \
+            --output art/production/flux-run52-reviewed-contact-sheet.png \
+            --report art/production/flux-run52-reviewed-qa.json
+
+      - name: Produce optimized runtime rasters
+        run: python tools/sprites/process_final_sprites.py
+
+      - name: Integrate reviewed machines and terrain into active runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('app/src/main/java/com/zerotoempire/game/ReviewedMachineLayer.kt')
+          s=p.read_text()
+          replacements={
+            'R.drawable.zte_machine_02_0_final, R.drawable.zte_machine_02_1_final, R.drawable.zte_machine_03_1_final, R.drawable.zte_machine_04_0_final':
+            'R.drawable.zte_machine_02_0_final, R.drawable.zte_machine_02_1_final, R.drawable.zte_machine_03_0_final, R.drawable.zte_machine_03_1_final',
+            'R.drawable.zte_machine_10_1_final, R.drawable.zte_machine_11_0_final, R.drawable.zte_machine_12_1_final':
+            'R.drawable.zte_machine_10_1_final, R.drawable.zte_machine_11_0_final, R.drawable.zte_machine_11_1_final, R.drawable.zte_machine_12_1_final',
+            'R.drawable.zte_machine_13_0_final, R.drawable.zte_machine_13_1_final':
+            'R.drawable.zte_machine_12_0_final, R.drawable.zte_machine_13_0_final, R.drawable.zte_machine_13_1_final',
+          }
+          for old,new in replacements.items():
+              if old in s and new not in s: s=s.replace(old,new,1)
+          p.write_text(s)
+
+          t=Path('app/src/main/java/com/zerotoempire/game/ReviewedTerrainLayer.kt')
+          t.write_text('''package com.zerotoempire.game\n\nimport androidx.compose.foundation.Image\nimport androidx.compose.foundation.layout.Box\nimport androidx.compose.foundation.layout.fillMaxSize\nimport androidx.compose.foundation.layout.offset\nimport androidx.compose.foundation.layout.size\nimport androidx.compose.runtime.Composable\nimport androidx.compose.ui.Modifier\nimport androidx.compose.ui.layout.ContentScale\nimport androidx.compose.ui.res.painterResource\nimport androidx.compose.ui.unit.dp\n\n/** Strictly reviewed modular terrain from FLUX run 52, visible in the active city stage. */\n@Composable\ninternal fun ReviewedTerrainLayer(eraIndex: Int, modifier: Modifier = Modifier) {\n    val groups = listOf(\n        intArrayOf(R.drawable.zte_terrain_00_final, R.drawable.zte_terrain_01_final, R.drawable.zte_terrain_02_final, R.drawable.zte_terrain_03_final),\n        intArrayOf(R.drawable.zte_terrain_04_final, R.drawable.zte_terrain_06_final),\n        intArrayOf(R.drawable.zte_terrain_08_final, R.drawable.zte_terrain_11_final),\n        intArrayOf(R.drawable.zte_terrain_12_final, R.drawable.zte_terrain_13_final),\n    )\n    val group = when { eraIndex <= 1 -> groups[0]; eraIndex <= 3 -> groups[1]; eraIndex <= 5 -> groups[2]; else -> groups[3] }\n    Box(modifier.fillMaxSize()) {\n        group.forEachIndexed { index, resId ->\n            Image(\n                painter = painterResource(resId),\n                contentDescription = null,\n                contentScale = ContentScale.Fit,\n                modifier = Modifier.offset((14 + index * 82).dp, (610 + (index % 2) * 44).dp).size(92.dp),\n            )\n        }\n    }\n}\n''')
+
+          w=Path('app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt')
+          s=w.read_text()
+          anchor='        ReviewedMachineLayer(eraIndex, Modifier.fillMaxSize())\n'
+          insert='        ReviewedTerrainLayer(eraIndex, Modifier.fillMaxSize())\n        ReviewedMachineLayer(eraIndex, Modifier.fillMaxSize())\n'
+          if 'ReviewedTerrainLayer(eraIndex' not in s:
+              if anchor not in s: raise SystemExit('terrain runtime insertion anchor missing')
+              s=s.replace(anchor,insert,1)
+          w.write_text(s)
+          PY
+
+      - name: Mark reviewed assets RUNTIME and update ledger
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          ids={'MCH-03-0','MCH-11-1','MCH-12-0','TER-00','TER-01','TER-02','TER-03','TER-04','TER-06','TER-08','TER-11','TER-12','TER-13'}
+          p=Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
+          lines=p.read_text().splitlines(); out=[]
+          for line in lines:
+              if any(line.startswith(f'| {asset} |') for asset in ids):
+                  line=line.rsplit('|',2)[0]+'| RUNTIME |'
+              out.append(line)
+          p.write_text('\n'.join(out)+'\n')
+          q=Path('docs/art/FINAL_AAA_SPRITE_PROGRESS.md'); s=q.read_text()
+          s=s.replace('- ART VALIDATED: **108 / 235**','- ART VALIDATED: **121 / 235**')
+          s=s.replace('- RUNTIME INTEGRATED: **108 / 235**','- RUNTIME INTEGRATED: **121 / 235**')
+          note='''\n## Reviewed FLUX run 52 — 13 assets awaiting green CI\nSemantic QA accepted `MCH-03-0`, `MCH-11-1`, `MCH-12-0` plus terrain `TER-00`, `TER-01`, `TER-02`, `TER-03`, `TER-04`, `TER-06`, `TER-08`, `TER-11`, `TER-12`, `TER-13`. Rejected: `MCH-05-1` (wrong carousel read with detached dark base), `MCH-07-0` (crane-like loose suspended composition instead of a compact gantry), `TER-05` (baked arrows), `TER-07` (open frame rather than a complete square tile), `TER-09` (missing twin cyan maglev guide identity), `TER-10` (bridge-like structure rather than square service-deck tile), and `VEH-16` (still reads as a conventional car with wheel-like side volumes). Accepted assets are integrated and remain RUNTIME until Android CI is green.\n'''
+          if '## Reviewed FLUX run 52' not in s: s += note
+          q.write_text(s)
+          PY
+
+      - name: Commit reviewed run 52 batch
+        shell: bash
+        run: |
+          set -euo pipefail
+          IFS=',' read -ra targets <<< "$SPRITE_TARGETS"
+          for stem in "${targets[@]}"; do test -s "app/src/main/res/drawable-nodpi/${stem}.webp"; done
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add art/incoming/final-sprites/ \
+                  app/src/main/res/drawable-nodpi/ \
+                  art/production/flux-run52-reviewed-qa.json \
+                  app/src/main/java/com/zerotoempire/game/ReviewedMachineLayer.kt \
+                  app/src/main/java/com/zerotoempire/game/ReviewedTerrainLayer.kt \
+                  app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt \
+                  docs/art/FINAL_AAA_SPRITE_MANIFEST.md \
+                  docs/art/FINAL_AAA_SPRITE_PROGRESS.md
+          git commit -m 'art: integrate 13 reviewed run52 assets'
+          git pull --rebase origin main
+          git push
