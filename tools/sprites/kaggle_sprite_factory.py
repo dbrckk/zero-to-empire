@@ -38,8 +38,8 @@ def concrete_subject(i):
   return (a if v=='A' else b)[min(idx,13)]
  if i['kind']=='VEH':
   exact={
-   'VEH-09':'one enclosed maglev cargo pod, an elongated wheel-less freight capsule visibly hovering with a clean air gap; no rail, no track and no platform',
-   'VEH-16':'one prestige executive hovercar, a luxurious wheel-less anti-gravity sedan visibly hovering with a clear air gap and concealed levitation pods; absolutely no wheels or tires',
+   'VEH-09':'one enclosed maglev cargo pod: elongated wheel-less freight capsule visibly hovering over empty space with a strong clean air gap; absolutely no wheels, tires, wheel arches, rail, track, road or platform',
+   'VEH-16':'one prestige executive anti-gravity limousine hovercraft: luxurious smooth wheel-less body visibly floating over empty space with a strong clean air gap and concealed levitation pods; absolutely no wheels, tires or wheel arches; not a conventional sedan',
    'VEH-17':'a tight coordinated swarm of five distinct small singularity logistics drones in one compact formation, all five drones fully visible, no mothership',
   }
   return exact.get(i['id'],i['name'])
@@ -58,15 +58,13 @@ def concrete_subject(i):
 
 def prompt_for(i):
  s=concrete_subject(i); noun={'PRP':'prop','VEH':'vehicle composition','CORE':'reactor'}[i['kind']]
- required=(
-  f"Manifest target: {i['description']} "
-  "The defining mechanisms in that target are mandatory and must be visually obvious; do not replace them with generic sci-fi decoration. "
- )
+ # FLUX also uses a short CLIP-pooled embedding. Put non-negotiable subject semantics first so
+ # they remain inside the first 77 CLIP tokens instead of being truncated behind style boilerplate.
  return (
-  f"{required}Create exactly {s}. One centered {noun}, fully visible, isolated against a uniform pure black background. "
-  "Premium stylized 2.5D mobile strategy-game production asset, three-quarter isometric camera at 34 degrees, upper-left key light, cool fill, restrained cyan and amber industrial accents, crisp readable silhouette. "
-  "No environment, no scenery, no floor slab, no road, no pedestal unless explicitly required by the subject, no text, no logo, no labels, no UI, no contact sheet, no alternate variants. "
-  "Preserve generous empty black space on every edge."
+  f"Create exactly {s}. The subject definition is mandatory. One centered {noun}, fully visible, isolated on pure black. "
+  "No environment, scenery, floor slab, road, pedestal, text, logo, labels, UI, contact sheet or alternate variants. "
+  "Premium stylized 2.5D mobile strategy-game asset, three-quarter isometric camera 34 degrees, upper-left key light, cool fill, restrained cyan and amber accents, crisp silhouette. "
+  f"Manifest intent: {i['description']} Preserve generous empty black space on every edge."
  )
 
 def flux_generate(prompt,seed):
