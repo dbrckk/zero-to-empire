@@ -8,12 +8,14 @@ import json
 import os
 import shutil
 import subprocess
+import time
 from pathlib import Path
 
 WORK = Path('/kaggle/working')
 REPO = Path('/tmp/zero-to-empire')
 OUT = WORK / 'output'
 COUNT = int(os.getenv('SPRITE_COUNT', '60'))
+SEED = int(os.getenv('SPRITE_SEED', str(int(time.time()) % 2_000_000_000)))
 
 
 def digest(path: Path) -> str:
@@ -86,7 +88,10 @@ ensure_flux_runtime()
 incoming = REPO / 'art/incoming/final-sprites'
 before = {p.name: digest(p) for p in incoming.glob('*_final.png') if p.is_file()}
 print(f'KAGGLE_EXISTING_CANDIDATES={len(before)}', flush=True)
-subprocess.run(['python','-u','tools/sprites/kaggle_sprite_factory.py','--kind','ALL','--count',str(COUNT)], check=True)
+print(f'KAGGLE_BATCH_SEED={SEED}', flush=True)
+subprocess.run([
+    'python','-u','tools/sprites/kaggle_sprite_factory.py','--kind','ALL','--count',str(COUNT),'--seed',str(SEED)
+], check=True)
 
 fresh=[]
 for p in sorted(incoming.glob('*_final.png')):
@@ -98,5 +103,5 @@ subprocess.run(['python','tools/sprites/build_sprite_contact_sheet.py','--output
 candidate_dir=OUT/'candidates'; candidate_dir.mkdir(); targets=[]
 for f in fresh:
     dst=candidate_dir/f.name; shutil.copy2(f,dst); targets.append({'file':f.name,'sha256':digest(dst),'bytes':dst.stat().st_size})
-(OUT/'generated-targets.json').write_text(json.dumps({'count':len(targets),'engine':'FLUX.1-schnell NF4 split','targets':targets},indent=2),encoding='utf-8')
+(OUT/'generated-targets.json').write_text(json.dumps({'count':len(targets),'engine':'FLUX.1-schnell NF4 split','seed':SEED,'targets':targets},indent=2),encoding='utf-8')
 print(f'KAGGLE_EXPORT_COUNT={len(fresh)}', flush=True); print('KAGGLE_OUTPUT_ONLY=1', flush=True)
