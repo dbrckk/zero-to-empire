@@ -33,7 +33,7 @@ def concrete_subject(i):
  if i['kind']=='VEH':
   exact={
    'VEH-09':'ONE futuristic enclosed MAGLEV FREIGHT CAPSULE. It has ZERO wheels and ZERO circular wheel shapes. Its underside is a continuous smooth magnetic levitation hull with four glowing rectangular magnetic lift emitters. The entire capsule floats high above empty space with an unmistakable large visible air gap beneath every part of the hull. Long cargo-container proportions, no windshield-like car face, no road vehicle styling, no rail, no track, no platform',
-   'VEH-16':'ONE premium terrestrial ANTI-GRAVITY EXECUTIVE TRANSPORT POD. The body is a single seamless flattened lozenge-shaped armored shell with an integrated panoramic dark-glass passenger canopy. It is NOT a car, limousine, sedan, sports car, yacht, boat, aircraft or road vehicle. ABSOLUTELY NO wheels, tires, wheel arches, landing gear, legs, feet, skids, struts, pylons, posts, supports, propellers, fins below the hull, or separate objects underneath. The complete lower silhouette is ONE smooth uninterrupted convex surface. Nothing protrudes downward. A thin continuous cyan levitation light is embedded flush along the lower hull edge. The pod visibly hangs in empty space with a large clean air gap below the entire body. Premium black, pearl-metal and smoked-glass materials, long executive passenger proportions, flush side access seams. It must read immediately as an expensive wheel-less floating city transport pod, never as a conventional automobile and never as a craft standing on supports',
+   'VEH-16':'one luxury floating passenger capsule, seamless flattened lozenge shell, panoramic dark glass canopy, smooth uninterrupted convex underside, no wheels, no legs, no feet, no supports, nothing below the hull, thin cyan light seam embedded flush in the lower edge, large empty air gap beneath the entire capsule, pearl metal and black premium finish',
    'VEH-17':'a tight coordinated swarm of five distinct small singularity logistics drones in one compact formation, all five drones fully visible, no mothership'}
   return exact.get(i['id'],i['name'])
  if i['kind']=='CORE':
@@ -41,7 +41,10 @@ def concrete_subject(i):
   return exact[i['id']]
  return i['name']
 def prompt_for(i):
- s=concrete_subject(i); noun={'PRP':'prop','VEH':'vehicle composition','CORE':'reactor'}[i['kind']]
+ s=concrete_subject(i)
+ if i['id']=='VEH-16':
+  return f"AAA mobile strategy game sprite of {s}. Single centered floating transport pod, fully visible, three-quarter 34 degree view, isolated on pure black, generous empty margin, upper-left key light, cool fill. No road, floor, pedestal, text, logo, UI or other object."
+ noun={'PRP':'prop','VEH':'vehicle composition','CORE':'reactor'}[i['kind']]
  return f"Create exactly {s}. Mandatory silhouette and mechanism. One centered {noun}, fully visible, isolated on pure black. No environment, scenery, floor slab, road, pedestal, text, logo, labels, UI, contact sheet or alternate variants. Premium stylized 2.5D mobile strategy-game asset, three-quarter isometric camera 34 degrees, upper-left key light, cool fill, restrained cyan and amber accents, crisp silhouette. Manifest intent: {i['description']} Preserve generous empty black space on every edge."
 def flux_generate(prompt,seed):
  print('KAGGLE_FLUX_STAGE=encode',flush=True);text2=T5EncoderModel.from_pretrained(FLUX,subfolder='text_encoder_2',torch_dtype=torch.float16,device_map='cuda');pipe=FluxPipeline.from_pretrained(FLUX,text_encoder_2=text2,transformer=None,vae=None,torch_dtype=torch.float16,device_map='cuda')
