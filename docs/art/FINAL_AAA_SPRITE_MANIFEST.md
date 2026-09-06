@@ -130,13 +130,13 @@ If a new runtime sprite is later required, it must be added here first and the d
 
 | ID | Asset | Description | Final runtime target | Status |
 |---|---|---|---|---|
-| CORE-T0 | Power Core T0 | salvaged mechanical core on improvised cradle; weak pulse and exposed conduits. | `app/src/main/res/drawable-nodpi/zte_power_core_t0_final.webp` | CLEAN |
-| CORE-T1 | Power Core T1 | reinforced industrial reactor; clear rotating/piston subsystem and stronger warm core. | `app/src/main/res/drawable-nodpi/zte_power_core_t1_final.webp` | CLEAN |
-| CORE-T2 | Power Core T2 | automated district reactor; dual-energy routing and articulated service arms. | `app/src/main/res/drawable-nodpi/zte_power_core_t2_final.webp` | CLEAN |
-| CORE-T3 | Power Core T3 | neon metropolitan core; holographic containment ring and cleaner premium shell. | `app/src/main/res/drawable-nodpi/zte_power_core_t3_final.webp` | CLEAN |
-| CORE-T4 | Power Core T4 | orbital-grade power nexus; levitating ring stack, stronger cyan routing and larger footprint. | `app/src/main/res/drawable-nodpi/zte_power_core_t4_final.webp` | CLEAN |
-| CORE-T5 | Power Core T5 | stellar collector core; multi-ring containment, stellar plasma motif and hero-scale silhouette. | `app/src/main/res/drawable-nodpi/zte_power_core_t5_final.webp` | CLEAN |
-| CORE-T6 | Power Core T6 | Singularity Crown; ultimate reality-bending core with iconic crown geometry and prestige treatment. | `app/src/main/res/drawable-nodpi/zte_power_core_t6_final.webp` | CLEAN |
+| CORE-T0 | Power Core T0 | salvaged mechanical core on improvised cradle; weak pulse and exposed conduits. | `app/src/main/res/drawable-nodpi/zte_power_core_t0_final.webp` | DONE |
+| CORE-T1 | Power Core T1 | reinforced industrial reactor; clear rotating/piston subsystem and stronger warm core. | `app/src/main/res/drawable-nodpi/zte_power_core_t1_final.webp` | DONE |
+| CORE-T2 | Power Core T2 | automated district reactor; dual-energy routing and articulated service arms. | `app/src/main/res/drawable-nodpi/zte_power_core_t2_final.webp` | DONE |
+| CORE-T3 | Power Core T3 | neon metropolitan core; holographic containment ring and cleaner premium shell. | `app/src/main/res/drawable-nodpi/zte_power_core_t3_final.webp` | DONE |
+| CORE-T4 | Power Core T4 | orbital-grade power nexus; levitating ring stack, stronger cyan routing and larger footprint. | `app/src/main/res/drawable-nodpi/zte_power_core_t4_final.webp` | DONE |
+| CORE-T5 | Power Core T5 | stellar collector core; multi-ring containment, stellar plasma motif and hero-scale silhouette. | `app/src/main/res/drawable-nodpi/zte_power_core_t5_final.webp` | DONE |
+| CORE-T6 | Power Core T6 | Singularity Crown; ultimate reality-bending core with iconic crown geometry and prestige treatment. | `app/src/main/res/drawable-nodpi/zte_power_core_t6_final.webp` | DONE |
 
 ## C. Characters — 24 / 24 planned
 

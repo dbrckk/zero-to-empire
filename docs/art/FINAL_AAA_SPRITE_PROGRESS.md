@@ -3,10 +3,10 @@
 Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains the canonical 235-item scope. Candidate art is never confused with DONE runtime assets.
 
 ## Official progress
-- DONE: **61 / 235**
+- DONE: **68 / 235**
 - ART VALIDATED: **83 / 235**
-- RUNTIME INTEGRATED: **76 / 235**
-- Generated candidates accepted as DONE: **61**
+- RUNTIME INTEGRATED: **83 / 235**
+- Generated candidates accepted as DONE: **68**
 - Rule: only runtime-integrated, individually clean/transparent, manifest-matching assets with green Android CI increment DONE.
 
 ## DONE baseline
@@ -30,13 +30,13 @@ Run-22 semantic review accepted **6** replacements/new assets: `PRP-13-B` and `V
 ### Props — 1 DONE
 `PRP-13-B`.
 
-## Reviewed FLUX run 25 — 9 DONE, 7 CLEAN
-Run-25 semantic review accepted 16 assets. Eight missing props plus `VEH-17` are referenced in the active city stage and Android CI run `33997464241` completed successfully, so those nine are strict DONE. `CORE-T0` through `CORE-T6` passed semantic and technical review and have optimized runtime rasters, but remain CLEAN until their tier-aware Power Core runtime integration is completed and validated.
+## Reviewed FLUX run 25 — 16 DONE
+Run-25 semantic review accepted 16 assets. Eight missing props plus `VEH-17` are referenced in the active city stage and Android CI run `33997464241` completed successfully, so those nine are strict DONE. `CORE-T0` through `CORE-T6` are tier-aware runtime sprites in `AscendantCorePlaza`; Android CI run `34007328616` for commit `0aad3c58190c9650f278cbc7c67782baff1d3581` completed successfully, so all seven are strict DONE.
 
 ### New strict DONE
 `PRP-00-A`, `PRP-00-B`, `PRP-01-A`, `PRP-01-B`, `PRP-02-A`, `PRP-03-A`, `PRP-03-B`, `PRP-04-B`, `VEH-17`.
 
-### CLEAN awaiting runtime integration
+### Power Core — 7 DONE
 `CORE-T0`, `CORE-T1`, `CORE-T2`, `CORE-T3`, `CORE-T4`, `CORE-T5`, `CORE-T6`.
 
 ## Existing ART/RUNTIME assets not yet promoted to DONE
@@ -50,6 +50,5 @@ Technically valid but semantically wrong candidates remain excluded. This includ
 ## Next production targets
 1. Regenerate the remaining vehicle set with stricter semantics: `VEH-09`, `VEH-16`.
 2. Regenerate the remaining missing prop: `PRP-05-A`.
-3. Integrate the reviewed `CORE-T0` through `CORE-T6` rasters into the tier-aware Power Core runtime, then require green Android CI before DONE.
-4. Rework building generation around coherent family/tier evolution; do not accept generic unrelated buildings.
-5. Continue machines, characters, terrain and FX only through the same generate → technical QA → semantic QA → runtime → green-CI gate.
+3. Rework building generation around coherent family/tier evolution; do not accept generic unrelated buildings.
+4. Continue machines, characters, terrain and FX only through the same generate → technical QA → semantic QA → runtime → green-CI gate.
