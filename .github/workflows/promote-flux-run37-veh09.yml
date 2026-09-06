@@ -1,0 +1,91 @@
+name: Promote reviewed FLUX run 37 VEH-09
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/promote-flux-run37-veh09.yml']
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: promote-flux-run37-veh09
+  cancel-in-progress: false
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SPRITE_TARGETS: zte_vehicle_09_final
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+
+      - name: Download reviewed run 37 evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: kaggle-sprite-batch
+          run-id: 34018633870
+          github-token: ${{ github.token }}
+          path: /tmp/run37
+
+      - name: Install image tooling
+        run: python -m pip install --disable-pip-version-check Pillow==11.3.0
+
+      - name: Stage only semantically approved VEH-09
+        shell: bash
+        run: |
+          set -euo pipefail
+          src=/tmp/run37/output/candidates/zte_vehicle_09_final.png
+          test -s "$src"
+          mkdir -p art/incoming/final-sprites art/production
+          cp "$src" art/incoming/final-sprites/zte_vehicle_09_final.png
+          python tools/sprites/build_sprite_contact_sheet.py \
+            --files art/incoming/final-sprites/zte_vehicle_09_final.png \
+            --output art/production/flux-run37-veh09-approved-contact-sheet.png \
+            --report art/production/flux-run37-veh09-approved-qa.json
+
+      - name: Produce optimized runtime raster
+        run: python tools/sprites/process_final_sprites.py
+
+      - name: Integrate reviewed cargo pod in active world traffic
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('app/src/main/java/com/zerotoempire/game/WorldTrafficArt.kt')
+          s=p.read_text()
+          old='    R.drawable.zte_vehicle_08_final, R.drawable.zte_vehicle_10_final,\n'
+          new='    R.drawable.zte_vehicle_08_final, R.drawable.zte_vehicle_09_final,\n    R.drawable.zte_vehicle_10_final,\n'
+          if 'R.drawable.zte_vehicle_09_final' not in s:
+              if old not in s: raise SystemExit('vehicle insertion anchor missing')
+              s=s.replace(old,new,1)
+          oldp='                Triple(.73f,.55f,.112f),\n'
+          newp='                Triple(.73f,.55f,.112f), Triple(.28f,.62f,.104f),\n'
+          if 'Triple(.28f,.62f,.104f)' not in s:
+              if oldp not in s: raise SystemExit('placement insertion anchor missing')
+              s=s.replace(oldp,newp,1)
+          s=s.replace('rejected VEH-09 remains deliberately absent until a true maglev pod passes QA.',
+                      'run-37 VEH-09 is the reviewed wheel-less maglev cargo pod.')
+          p.write_text(s)
+          PY
+
+      - name: Commit approved asset and runtime integration
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s app/src/main/res/drawable-nodpi/zte_vehicle_09_final.webp
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add art/incoming/final-sprites/zte_vehicle_09_final.png \
+                  app/src/main/res/drawable-nodpi/zte_vehicle_09_final.webp \
+                  art/production/flux-run37-veh09-approved-qa.json \
+                  app/src/main/java/com/zerotoempire/game/WorldTrafficArt.kt
+          git commit -m 'art: integrate reviewed VEH-09 maglev cargo pod'
+          git pull --rebase origin main
+          git push
