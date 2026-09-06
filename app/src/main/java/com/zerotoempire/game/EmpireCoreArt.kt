@@ -4,91 +4,88 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
 /**
- * Pure visual power core. The parent already owns game state, so this renderer
- * deliberately does not create/collect another GameViewModel.
+ * Tier-aware production Power Core renderer.
+ *
+ * The seven reviewed FLUX masters are the canonical visual progression. Higher
+ * world eras intentionally retain the T6 Singularity Crown instead of falling
+ * back to procedural placeholder geometry.
  */
 @Composable
 fun EmpireCoreGlyph(modifier: Modifier = Modifier, eraIndex: Int = 0) {
     val context = LocalContext.current
+    val tier = eraIndex.coerceIn(0, 6)
+    val coreRes = remember(tier) {
+        intArrayOf(
+            R.drawable.zte_power_core_t0_final,
+            R.drawable.zte_power_core_t1_final,
+            R.drawable.zte_power_core_t2_final,
+            R.drawable.zte_power_core_t3_final,
+            R.drawable.zte_power_core_t4_final,
+            R.drawable.zte_power_core_t5_final,
+            R.drawable.zte_power_core_t6_final,
+        )[tier]
+    }
+    val core = remember(coreRes) { ImageBitmap.imageResource(context.resources, coreRes) }
     val reducedMotion = MotionQuality.reducedMotion(context)
     val lowPower = MotionQuality.lowPowerMode(context)
-    val era = eraIndex.coerceIn(0, 10)
 
-    val rotation: Float
-    val fastRotation: Float
     val pulse: Float
-    if (reducedMotion) {
-        rotation = 0f; fastRotation = 0f; pulse = .94f
+    if (reducedMotion || lowPower) {
+        pulse = 1f
     } else {
-        val rotationMs = if (lowPower) 18_000f else 12_000f
-        val fastRotationMs = if (lowPower) 8_000f else 4_800f
-        val pulseLegMs = if (lowPower) 2_100f else 1_400f
-        val masterMs = if (lowPower) 504_000f else 168_000f
-        val infinite = rememberInfiniteTransition(label = "empireCore")
-        val clock by infinite.animateFloat(
-            0f,
-            masterMs,
-            infiniteRepeatable(tween(masterMs.toInt(), easing = LinearEasing)),
-            label = "coreClock"
+        val infinite = rememberInfiniteTransition(label = "empireCoreRaster")
+        val animatedPulse by infinite.animateFloat(
+            initialValue = .94f,
+            targetValue = 1f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(1250, easing = FastOutSlowInEasing),
+                repeatMode = RepeatMode.Reverse,
+            ),
+            label = "coreRasterPulse",
         )
-        rotation = (clock % rotationMs) / rotationMs * 360f
-        fastRotation = (clock % fastRotationMs) / fastRotationMs * 360f
-        val pulseCycle = pulseLegMs * 2f
-        val pulsePosition = (clock % pulseCycle) / pulseLegMs
-        val pulseTriangle = if (pulsePosition <= 1f) pulsePosition else 2f - pulsePosition
-        pulse = .82f + .18f * FastOutSlowInEasing.transform(pulseTriangle.coerceIn(0f, 1f))
+        pulse = animatedPulse
     }
 
-    val accent = coreAccent(era)
-    val secondary = coreSecondary(era)
-    val intensity = (3 + era).coerceAtMost(if(lowPower)7 else 13)
-    val trailPoints = if(lowPower) 2 else 5
-
     Canvas(modifier) {
-        val s=size.minDimension; val center=Offset(size.width/2f,size.height/2f)
-        drawCircle(Brush.radialGradient(listOf(accent.copy(alpha=.20f*pulse),secondary.copy(alpha=.08f),Color.Transparent),center,s*.52f),s*.52f,center)
-        drawCoreDepthField(center,s,rotation,fastRotation,pulse,lowPower,accent,secondary)
-
-        repeat(intensity){i->
-            val angle=Math.toRadians((fastRotation+i*(360f/intensity)).toDouble())
-            val radius=s*(.31f+(i%4)*.04f)
-            repeat(trailPoints){trail->
-                val back=angle-trail*.072
-                val alpha=(.30f-trail*.05f).coerceAtLeast(.05f)
-                drawCircle(if(i%2==0)accent.copy(alpha=alpha) else secondary.copy(alpha=alpha),s*(.013f-trail*.0014f).coerceAtLeast(.006f),Offset(center.x+cos(back).toFloat()*radius,center.y+sin(back).toFloat()*radius))
-            }
-        }
-
-        drawCoreEraGeometry(era,center,s,rotation,fastRotation,pulse,lowPower,accent,secondary)
-
-        repeat((2+era/3).coerceAtMost(if(lowPower)3 else 5)){ring->
-            val radius=s*(.22f+ring*.065f)
-            drawCircle(if(ring%2==0)accent.copy(alpha=.58f) else secondary.copy(alpha=.48f),radius,center,style=Stroke(s*(.012f-ring*.001f)))
-            val nodes=(if(lowPower)3 else 5)+ring*2
-            repeat(nodes){i->
-                val angle=Math.toRadians((rotation*(if(ring%2==0)1 else -1)+i*(360f/nodes)).toDouble())
-                drawCircle(if(i%2==0)Color.White else accent,s*.013f,Offset(center.x+cos(angle).toFloat()*radius,center.y+sin(angle).toFloat()*radius))
-            }
-        }
-
-        if(era>=4 && !lowPower) repeat((era-1).coerceAtMost(10)){i->
-            val a=Math.toRadians((rotation*-1.25f+i*(360f/(era-1).coerceAtLeast(1))).toDouble())
-            drawLine(accent.copy(alpha=.20f),Offset(center.x+cos(a).toFloat()*s*.18f,center.y+sin(a).toFloat()*s*.18f),Offset(center.x+cos(a).toFloat()*s*.49f,center.y+sin(a).toFloat()*s*.49f),s*.006f)
-        }
+        val side = minOf(size.width, size.height) * pulse
+        val left = (size.width - side) / 2f
+        val top = (size.height - side) / 2f
+        val accent = coreAccent(tier)
+        drawCircle(
+            brush = Brush.radialGradient(
+                listOf(accent.copy(alpha = .20f), accent.copy(alpha = .06f), Color.Transparent),
+                center = center,
+                radius = size.minDimension * .50f,
+            ),
+            radius = size.minDimension * .50f,
+            center = center,
+        )
+        drawImage(
+            image = core,
+            srcOffset = IntOffset.Zero,
+            srcSize = IntSize(core.width, core.height),
+            dstOffset = IntOffset(left.toInt(), top.toInt()),
+            dstSize = IntSize(side.toInt().coerceAtLeast(1), side.toInt().coerceAtLeast(1)),
+        )
     }
 }
 
