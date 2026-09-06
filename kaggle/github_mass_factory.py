@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Kaggle entrypoint launched by GitHub Actions.
 Clones the canonical repo outside /kaggle/working so Kaggle exports only QA/output
-artifacts, generates a static sprite batch, and exports only fresh candidates.
+artifacts, generates a family-coherent building batch, and exports fresh candidates.
 """
 import hashlib
 import json
@@ -58,12 +58,7 @@ def ensure_gpu_compatible_torch() -> None:
 
 
 def ensure_flux_runtime() -> None:
-    """Install the exact stack documented by the pre-quantized FLUX checkpoint.
-
-    NF4 is supported by bitsandbytes on NVIDIA compute capability 6.0+, covering
-    both Kaggle P100 and T4. The split FLUX pipeline peaks far below 16 GB VRAM.
-    """
-    print('KAGGLE_ENGINE=flux1-schnell-nf4-split', flush=True)
+    print('KAGGLE_ENGINE=flux1-schnell-nf4-split-building-family', flush=True)
     subprocess.run([
         'python', '-m', 'pip', 'install', '--quiet', '--upgrade',
         'bitsandbytes==0.48.1', 'diffusers==0.35.1', 'peft==0.17.1',
@@ -91,7 +86,7 @@ before = {p.name: digest(p) for p in incoming.glob('*_final.png') if p.is_file()
 print(f'KAGGLE_EXISTING_CANDIDATES={len(before)}', flush=True)
 print(f'KAGGLE_BATCH_SEED={SEED}', flush=True)
 subprocess.run([
-    'python','-u','tools/sprites/kaggle_sprite_factory.py','--kind','ALL','--count',str(COUNT),'--seed',str(SEED)
+    'python','-u','tools/sprites/kaggle_building_family_factory.py','--count',str(COUNT),'--seed',str(SEED)
 ], check=True)
 
 fresh=[]
@@ -104,5 +99,5 @@ subprocess.run(['python','tools/sprites/build_sprite_contact_sheet.py','--output
 candidate_dir=OUT/'candidates'; candidate_dir.mkdir(); targets=[]
 for f in fresh:
     dst=candidate_dir/f.name; shutil.copy2(f,dst); targets.append({'file':f.name,'sha256':digest(dst),'bytes':dst.stat().st_size})
-(OUT/'generated-targets.json').write_text(json.dumps({'count':len(targets),'engine':'FLUX.1-schnell NF4 split','seed':SEED,'targets':targets},indent=2),encoding='utf-8')
+(OUT/'generated-targets.json').write_text(json.dumps({'count':len(targets),'engine':'FLUX.1-schnell NF4 split building-family','seed':SEED,'targets':targets},indent=2),encoding='utf-8')
 print(f'KAGGLE_EXPORT_COUNT={len(fresh)}', flush=True); print('KAGGLE_OUTPUT_ONLY=1', flush=True)
