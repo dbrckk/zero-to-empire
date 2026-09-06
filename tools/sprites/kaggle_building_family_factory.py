@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
 """Family-coherent FLUX building factory for Zero -> Empire.
 
-Strict v3: each family is generated from one immutable architectural anchor. Tier
-prompts describe additive upgrades only; the same family seed and the same exact
-anchor sentence are reused for every tier. Automatic family QA rejects a batch
-when silhouettes/camera drift too far, so unrelated buildings never reach the
-candidate artifact.
+Strict v4: anchored family evolution, reviewed-family aware scheduling and hard
+background rejection. Families already yielding semantically strong candidates
+are deprioritized while rejected/new families advance, preventing expensive
+repeat generation of the same acceptable rows.
 """
 from __future__ import annotations
 import argparse,gc,re
 from collections import deque
 from pathlib import Path
-print('KAGGLE_STARTUP=building-family-flux-v3-anchored-family-qa',flush=True)
+print('KAGGLE_STARTUP=building-family-flux-v4-priority-bgqa',flush=True)
 import torch
 from PIL import Image,ImageFilter
 from diffusers import FluxPipeline,FluxTransformer2DModel
@@ -20,6 +19,10 @@ ROOT=Path(__file__).resolve().parents[2];MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRIT
 ROW=re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$");BLD=re.compile(r'^BLD-(\d{2})-T([0-6])$')
 FAMILY_DNA={0:'street-side micro foundry kiosk; rust-dark steel frame, corrugated canopy, compact exposed workbench, amber furnace cue',1:'corner fabrication shop; chamfered L-shaped storefront shell, dark steel and concrete, sheltered loading bay, compact cyan service lights',2:'furnace works; squat heatproof masonry-and-steel shell, dominant orange-hot furnace chamber, twin exhaust stacks, heavy insulated piping',3:'assembly hub; LOW WIDE rectangular dark-steel production hall; central open robotic assembly spine; TWO symmetric side feeder bays; FOUR corner posts; flat ribbed roof frame; cyan status strips',4:'precision fabrication works; LOW WIDE graphite rectangular factory; THREE enclosed CNC bay modules across front; ribbed flat roof; right-side compact logistics dock; cyan corner strips',5:'energy-cell works; TALL SQUARE dark-alloy factory; central amber battery handling core visible through front; TWO symmetric side transfer bays; heavy square roof frame; cyan lower service strips',6:'coolant process plant; LOW WIDE silver-graphite rectangular pump house; TWO tall cylindrical reservoir towers fixed at rear-left and rear-right; central rigid coolant loop; cyan fluid pipes along base',7:'automation power works; WIDE rectangular high-tech factory; TWO overhead gantry rails; central power manifold; FOUR structural portal posts; cyan bus conduits',8:'heavy megastructure forge; massive armored rectangular base; central articulated forge bay; TWO reinforced side ribs; large front service aperture; warm forge core',9:'nanofabrication complex; sealed pearl-and-graphite square process block; central clean chamber; TWO smooth layered side shells; cyan routing ring',10:'orbital component works; dark-alloy rectangular logistics complex; central circular orbital assembly cradle embedded in roof; TWO cantilevered side bays; cyan levitation seams',11:'actuator megaworks; tall rectangular press tower; TWO symmetric articulated side frames; armored square base; central vertical orange press channel',12:'phase-matter foundry; pearl-alloy square facility; ONE luminous cyan containment ring fixed around central fabrication cradle; FOUR elegant vertical corner fins',13:'stellar precision works; dark-and-pearl square apex factory; crown-like FOUR-part roof geometry; bright contained central process core; warm stellar plus cyan accents'}
 TIER={0:'Keep anchor geometry bare and small. Improvised cladding. Add NOTHING except one production cue.',1:'KEEP EVERY anchor position. Reinforce walls and roof only; add one attached machinery enclosure.',2:'KEEP EVERY anchor position. Extend side walls slightly; add one attached second subsystem.',3:'KEEP EVERY anchor position. Add one vertical automation module and attached logistics conduit.',4:'KEEP EVERY anchor position. Thicken and premium-finish the same shell; add dense ATTACHED machinery.',5:'KEEP EVERY anchor position. Add attached multi-stage machinery and energy routing; preserve the original shell clearly.',6:'KEEP EVERY anchor position. Add vertical prestige crown ABOVE the same shell; original footprint and anchor modules remain plainly visible.'}
+# Run 56 produced semantically strong candidates for 03/05/06; do not spend the
+# next GPU wave regenerating them before promotion. Family 04 is first because
+# its previous batch had residual backdrop rectangles; then advance untouched families.
+PRIORITY=(4,7,8,9,10,11,12,13,3,5,6,0,1,2)
 def rows():
  for order,line in enumerate(MANIFEST.read_text(encoding='utf-8').splitlines()):
   m=ROW.match(line)
@@ -30,15 +33,16 @@ def select(items,count):
  by={}
  for i in items:by.setdefault(i['family'],[]).append(i)
  chosen=[]
- for fam in sorted(by):
+ rank={fam:n for n,fam in enumerate(PRIORITY)}
+ for fam in sorted(by,key=lambda f:(rank.get(f,999),f)):
   group=sorted(by[fam],key=lambda x:x['tier'])
-  if chosen and len(chosen)+len(group)>count:break
+  if chosen and len(chosen)+len(group)>count:continue
   chosen.extend(group)
   if len(chosen)>=count:break
  return chosen or items[:count]
 def anchor(i):return f"FIXED ARCHITECTURAL ANCHOR F{i['family']:02d}: {FAMILY_DNA[i['family']]}."
 def prompt(i):
- return (f"AAA premium mobile strategy BUILDING MASTER. {anchor(i)} THIS ANCHOR IS A HARD BLUEPRINT, NOT INSPIRATION. Tier {i['tier']} is the SAME physical building upgraded in place. DO NOT change footprint category, camera-facing facade, anchor module count, anchor module positions, structural frame positions, main roof geometry, production-core position, or base proportions. {TIER[i['tier']]} Never replace the building with another design. Exactly ONE connected self-contained building. Fixed 34 degree three-quarter orthographic-like 2.5D camera, identical framing, bottom-center grounding, upper-left key light, cool fill, restrained warm/cyan emissives. Isolated on pure black with generous margin. No detached props, neighboring structures, road, landscape, sky, city, floor rectangle, workers, vehicles, text, letters, numbers, currency, signage, badge, logo, watermark or UI.")
+ return (f"AAA premium mobile strategy BUILDING MASTER. {anchor(i)} THIS ANCHOR IS A HARD BLUEPRINT, NOT INSPIRATION. Tier {i['tier']} is the SAME physical building upgraded in place. DO NOT change footprint category, camera-facing facade, anchor module count, anchor module positions, structural frame positions, main roof geometry, production-core position, or base proportions. {TIER[i['tier']]} Never replace the building with another design. Exactly ONE connected self-contained building. Fixed 34 degree three-quarter orthographic-like 2.5D camera, identical framing, bottom-center grounding, upper-left key light, cool fill, restrained warm/cyan emissives. ISOLATION IS MANDATORY: one perfectly uniform RGB(0,0,0) black background touching every image edge, absolutely no gradient, vignette, halo, pedestal, shadow card, backdrop rectangle, studio panel or horizon. Generous empty margin. No detached props, neighboring structures, road, landscape, sky, city, floor rectangle, workers, vehicles, text, letters, numbers, currency, signage, badge, logo, watermark or UI.")
 def load_encode():
  t=T5EncoderModel.from_pretrained(FLUX,subfolder='text_encoder_2',torch_dtype=torch.float16,device_map='cuda');p=FluxPipeline.from_pretrained(FLUX,text_encoder_2=t,transformer=None,vae=None,torch_dtype=torch.float16,device_map='cuda');return t,p
 def load_diffuse():
@@ -49,8 +53,16 @@ def border_bg(im):
  for x in range(0,w,s):pts += [rgb.getpixel((x,0)),rgb.getpixel((x,h-1))]
  for y in range(0,h,s):pts += [rgb.getpixel((0,y)),rgb.getpixel((w-1,y))]
  pts.sort(key=sum);q=pts[:max(16,len(pts)//3)];return tuple(sum(p[k] for p in q)//len(q) for k in range(3))
+def edge_uniformity(im):
+ rgb=im.convert('RGB');w,h=rgb.size;s=max(1,min(w,h)//128);pts=[]
+ for x in range(0,w,s):pts += [rgb.getpixel((x,0)),rgb.getpixel((x,h-1))]
+ for y in range(0,h,s):pts += [rgb.getpixel((0,y)),rgb.getpixel((w-1,y))]
+ vals=[sum(p)/3 for p in pts];mean=sum(vals)/len(vals);var=sum((v-mean)**2 for v in vals)/len(vals)
+ return mean,var**.5
 def isolate(im):
- rgb=im.convert('RGB');w,h=rgb.size;bg=border_bg(rgb);px=rgb.load();dist=Image.new('L',(w,h));dp=dist.load()
+ rgb=im.convert('RGB');w,h=rgb.size;mean,sd=edge_uniformity(rgb)
+ if mean>18 or sd>12:raise RuntimeError(f'non-uniform/non-black border mean={mean:.1f} sd={sd:.1f}')
+ bg=border_bg(rgb);px=rgb.load();dist=Image.new('L',(w,h));dp=dist.load()
  for y in range(h):
   for x in range(w):
    r,g,b=px[x,y];dp[x,y]=min(255,int((((r-bg[0])**2+(g-bg[1])**2+(b-bg[2])**2)**.5)*3))
@@ -88,7 +100,6 @@ def family_shape_ok(images):
  sig=[silhouette_signature(x[1]) for x in images]
  if any(s is None for s in sig):return False
  widths=[s[0] for s in sig];heights=[s[1] for s in sig];cx=[s[2] for s in sig]
- # Allow upgrades to grow, but reject camera/footprint class changes typical of unrelated generations.
  return min(widths)/max(widths)>=.62 and min(heights)/max(heights)>=.48 and max(cx)-min(cx)<=8
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--count',type=int,default=30);ap.add_argument('--seed',type=int,default=43117);args=ap.parse_args();items=select(list(rows()),max(1,args.count));print('KAGGLE_BUILDING_PLAN='+','.join(i['id'] for i in items),flush=True)
