@@ -3,10 +3,10 @@
 Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains the canonical 235-item scope. Candidate art is never confused with DONE runtime assets.
 
 ## Official progress
-- DONE: **68 / 235**
-- ART VALIDATED: **83 / 235**
-- RUNTIME INTEGRATED: **83 / 235**
-- Generated candidates accepted as DONE: **68**
+- DONE: **69 / 235**
+- ART VALIDATED: **84 / 235**
+- RUNTIME INTEGRATED: **84 / 235**
+- Generated candidates accepted as DONE: **69**
 - Rule: only runtime-integrated, individually clean/transparent, manifest-matching assets with green Android CI increment DONE.
 
 ## DONE baseline
@@ -39,6 +39,9 @@ Run-25 semantic review accepted 16 assets. Eight missing props plus `VEH-17` are
 ### Power Core — 7 DONE
 `CORE-T0`, `CORE-T1`, `CORE-T2`, `CORE-T3`, `CORE-T4`, `CORE-T5`, `CORE-T6`.
 
+## Reviewed FLUX run 29 — 1 DONE
+The reviewed `PRP-05-A` replacement is referenced by `WorldTrafficArt.kt` in the active city stage. Android CI run `34010813072` for commit `e9b301f2a79d3451dbacb8c7a3e754889ea899ad` completed successfully, so `PRP-05-A` is strict DONE. The rejected `VEH-09` runtime was removed and remains TODO.
+
 ## Existing ART/RUNTIME assets not yet promoted to DONE
 The following previously validated assets remain outside the DONE count until their own strict reconciliation is complete:
 - `BLD-02-T4`, `BLD-02-T5`, `BLD-02-T6`, `BLD-03-T0`, `BLD-03-T1`.
@@ -49,6 +52,5 @@ Technically valid but semantically wrong candidates remain excluded. This includ
 
 ## Next production targets
 1. Regenerate the remaining vehicle set with stricter semantics: `VEH-09`, `VEH-16`.
-2. Regenerate the remaining missing prop: `PRP-05-A`.
-3. Rework building generation around coherent family/tier evolution; do not accept generic unrelated buildings.
-4. Continue machines, characters, terrain and FX only through the same generate → technical QA → semantic QA → runtime → green-CI gate.
+2. Rework building generation around coherent family/tier evolution; do not accept generic unrelated buildings.
+3. Continue machines, characters, terrain and FX only through the same generate → technical QA → semantic QA → runtime → green-CI gate.
