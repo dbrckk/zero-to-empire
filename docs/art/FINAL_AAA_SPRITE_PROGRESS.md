@@ -3,10 +3,10 @@
 Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains the canonical 235-item scope. Candidate art is never confused with DONE runtime assets.
 
 ## Official progress
-- DONE: **69 / 235**
-- ART VALIDATED: **84 / 235**
-- RUNTIME INTEGRATED: **84 / 235**
-- Generated candidates accepted as DONE: **69**
+- DONE: **70 / 235**
+- ART VALIDATED: **85 / 235**
+- RUNTIME INTEGRATED: **85 / 235**
+- Generated candidates accepted as DONE: **70**
 - Rule: only runtime-integrated, individually clean/transparent, manifest-matching assets with green Android CI increment DONE.
 
 ## DONE baseline
@@ -42,15 +42,18 @@ Run-25 semantic review accepted 16 assets. Eight missing props plus `VEH-17` are
 ## Reviewed FLUX run 29 — 1 DONE
 The reviewed `PRP-05-A` replacement is referenced by `WorldTrafficArt.kt` in the active city stage. Android CI run `34010813072` for commit `e9b301f2a79d3451dbacb8c7a3e754889ea899ad` completed successfully, so `PRP-05-A` is strict DONE. The rejected `VEH-09` runtime was removed and remains TODO.
 
+## Reviewed FLUX run 37 — 1 DONE
+`VEH-09` passed technical QA and semantic review as a wheel-less enclosed maglev freight capsule, was integrated into `WorldTrafficArt.kt`, and the Android runtime build completed successfully. It is strict DONE. `VEH-16` from the same run was rejected because it remained a conventional wheeled automobile.
+
 ## Existing ART/RUNTIME assets not yet promoted to DONE
 The following previously validated assets remain outside the DONE count until their own strict reconciliation is complete:
 - `BLD-02-T4`, `BLD-02-T5`, `BLD-02-T6`, `BLD-03-T0`, `BLD-03-T1`.
 - `FX-08` through `FX-17`.
 
 ## Rejected candidates
-Technically valid but semantically wrong candidates remain excluded. This includes generic/non-progressive building renders, Power Core renders that omit their tier-defining mechanisms, `VEH-16` renders that still read as wheeled cars, `VEH-17` single-drone renders instead of a swarm, and the rejected `VEH-09` concept. `PRP-13-B` was rejected in run 20 but replaced by a valid run-22 generation and is now DONE.
+Technically valid but semantically wrong candidates remain excluded. This includes generic/non-progressive building renders, Power Core renders that omit their tier-defining mechanisms, `VEH-16` renders that still read as wheeled cars, `VEH-17` single-drone renders instead of a swarm, and earlier rejected `VEH-09` concepts superseded by the valid run-37 replacement. `PRP-13-B` was rejected in run 20 but replaced by a valid run-22 generation and is now DONE.
 
 ## Next production targets
-1. Regenerate the remaining vehicle set with stricter semantics: `VEH-09`, `VEH-16`.
+1. Regenerate the remaining vehicle target with stricter semantics: `VEH-16`.
 2. Rework building generation around coherent family/tier evolution; do not accept generic unrelated buildings.
 3. Continue machines, characters, terrain and FX only through the same generate → technical QA → semantic QA → runtime → green-CI gate.
