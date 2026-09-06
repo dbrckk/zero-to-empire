@@ -2,9 +2,9 @@ name: Kaggle GPU Sprite Orchestrator
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '23 */6 * * *'
 
+# Legacy/manual fallback only. Scheduled production is handled by kaggle-mass-sprite-factory,
+# which uploads candidates for semantic review instead of committing them automatically.
 permissions:
   contents: write
 
