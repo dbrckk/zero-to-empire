@@ -23,12 +23,14 @@ jobs:
           ref: main
           fetch-depth: 2
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
 
       - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.13'
 
       - name: Verify runtime asset and active reference
         shell: bash
@@ -39,7 +41,7 @@ jobs:
           grep -q 'Triple(.28f,.62f,.104f)' app/src/main/java/com/zerotoempire/game/WorldTrafficArt.kt
 
       - name: Android sprite-runtime CI
-        run: ./gradlew :app:assembleDebug --no-daemon --stacktrace
+        run: gradle --no-daemon assembleDebug
 
       - name: Mark VEH-09 strict DONE after green build
         shell: bash
