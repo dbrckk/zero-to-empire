@@ -1,0 +1,84 @@
+name: Promote approved FLUX run 26
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/promote-flux-run26.yml']
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: promote-flux-run26
+  cancel-in-progress: false
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+
+      - name: Download reviewed run 26 candidates
+        uses: actions/download-artifact@v4
+        with:
+          name: kaggle-sprite-batch
+          run-id: 33997699212
+          github-token: ${{ github.token }}
+          path: /tmp/run26
+
+      - name: Install image tooling
+        run: python -m pip install --disable-pip-version-check Pillow==11.3.0
+
+      - name: Stage only semantically approved assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p art/incoming/final-sprites
+          approved=(zte_prop_05_a_final zte_vehicle_09_final)
+          stems=()
+          for stem in "${approved[@]}"; do
+            src="/tmp/run26/output/candidates/${stem}.png"
+            test -s "$src" || { echo "Missing approved candidate: $src"; exit 2; }
+            cp "$src" "art/incoming/final-sprites/${stem}.png"
+            stems+=("$stem")
+          done
+          echo "SPRITE_TARGETS=$(IFS=,; echo "${stems[*]}")" >> "$GITHUB_ENV"
+          printf '%s\n' "${approved[@]}" > /tmp/approved-stems.txt
+          echo "Approved count: ${#approved[@]}"
+          echo 'Explicit semantic reject retained outside repo: zte_vehicle_16_final (visible wheels/floor disc; not a hovercar)'
+
+      - name: Revalidate exact approved batch
+        shell: bash
+        run: |
+          set -euo pipefail
+          files=()
+          while read -r stem; do files+=("art/incoming/final-sprites/${stem}.png"); done < /tmp/approved-stems.txt
+          python tools/sprites/build_sprite_contact_sheet.py \
+            --files "${files[@]}" \
+            --output art/production/flux-run26-approved-contact-sheet.png \
+            --report art/production/flux-run26-approved-qa.json
+
+      - name: Produce optimized runtime rasters
+        run: python tools/sprites/process_final_sprites.py
+
+      - name: Commit approved CLEAN assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          while read -r stem; do
+            git add "art/incoming/final-sprites/${stem}.png"
+            if [ -f "app/src/main/res/drawable-nodpi/${stem}.webp" ]; then git add "app/src/main/res/drawable-nodpi/${stem}.webp"; fi
+            if [ -f "app/src/main/res/drawable-nodpi/${stem}.png" ]; then git add "app/src/main/res/drawable-nodpi/${stem}.png"; fi
+          done < /tmp/approved-stems.txt
+          git add art/production/flux-run26-approved-qa.json
+          git commit -m 'art: add 2 reviewed FLUX run 26 static assets'
+          git pull --rebase origin main
+          git push
