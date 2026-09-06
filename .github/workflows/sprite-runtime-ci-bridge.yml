@@ -1,0 +1,32 @@
+name: Sprite Runtime CI Bridge
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/sprite-runtime-ci-bridge.yml'
+  workflow_run:
+    workflows:
+      - 'Promote reviewed FLUX run 51 machines'
+      - 'Promote reviewed FLUX run 52 assets'
+      - 'Kaggle Candidate Finalize'
+    types: [completed]
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: sprite-runtime-ci-bridge
+  cancel-in-progress: false
+
+jobs:
+  dispatch-android:
+    if: github.event_name == 'push' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch Android CI on current main
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: gh workflow run android.yml --ref main
