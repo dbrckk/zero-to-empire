@@ -1,0 +1,78 @@
+name: Promote reviewed FLUX run 38 VEH-16
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/promote-flux-run38-veh16.yml']
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+
+      - name: Download exact reviewed run-38 artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/dbrckk/zero-to-empire/actions/artifacts/9985540610/zip -o /tmp/run38.zip
+          rm -rf /tmp/run38 && mkdir -p /tmp/run38
+          unzip -q /tmp/run38.zip -d /tmp/run38
+          test -s /tmp/run38/output/candidates/zte_vehicle_16_final.png
+          echo '4bedb35b4fe08a7e3d75ef2a2f70da1b6a0e0b5a78534807447cabd6dc8ddc61  /tmp/run38/output/candidates/zte_vehicle_16_final.png' | sha256sum -c -
+
+      - name: Revalidate and generate Android runtime asset
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --quiet Pillow
+          cp /tmp/run38/output/candidates/zte_vehicle_16_final.png art/incoming/final-sprites/zte_vehicle_16_final.png
+          SPRITE_TARGET=zte_vehicle_16_final.png python tools/sprites/process_final_sprites.py
+          test -s app/src/main/res/drawable-nodpi/zte_vehicle_16_final.webp
+          cp /tmp/run38/output/github-qa-report.json art/production/flux-run38-veh16-approved-qa.json
+
+      - name: Integrate reviewed hovercar into active world traffic
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('app/src/main/java/com/zerotoempire/game/WorldTrafficArt.kt')
+          s=p.read_text()
+          if 'R.drawable.zte_vehicle_16_final' not in s:
+              old='    R.drawable.zte_vehicle_13_final, R.drawable.zte_vehicle_14_final,\n    R.drawable.zte_vehicle_15_final, R.drawable.zte_vehicle_17_final,\n'
+              new='    R.drawable.zte_vehicle_13_final, R.drawable.zte_vehicle_14_final,\n    R.drawable.zte_vehicle_15_final, R.drawable.zte_vehicle_16_final,\n    R.drawable.zte_vehicle_17_final,\n'
+              if old not in s: raise SystemExit('vehicle sprite insertion anchor missing')
+              s=s.replace(old,new,1)
+              oldp='                Triple(.73f,.55f,.112f), Triple(.28f,.62f,.104f),\n'
+              newp='                Triple(.73f,.55f,.112f), Triple(.28f,.62f,.104f), Triple(.78f,.63f,.110f),\n'
+              if oldp not in s: raise SystemExit('vehicle placement insertion anchor missing')
+              s=s.replace(oldp,newp,1)
+          p.write_text(s)
+          PY
+
+      - name: Commit reviewed runtime integration
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add art/incoming/final-sprites/zte_vehicle_16_final.png \
+                  art/production/flux-run38-veh16-approved-qa.json \
+                  app/src/main/res/drawable-nodpi/zte_vehicle_16_final.webp \
+                  app/src/main/java/com/zerotoempire/game/WorldTrafficArt.kt
+          git commit -m 'art: integrate reviewed VEH-16 executive hovercar'
+          git pull --rebase origin main
+          git push
