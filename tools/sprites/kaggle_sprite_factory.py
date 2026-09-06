@@ -33,7 +33,7 @@ def concrete_subject(i):
  if i['kind']=='VEH':
   exact={
    'VEH-09':'ONE futuristic enclosed MAGLEV FREIGHT CAPSULE. It has ZERO wheels and ZERO circular wheel shapes. Its underside is a continuous smooth magnetic levitation hull with four glowing rectangular magnetic lift emitters. The entire capsule floats high above empty space with an unmistakable large visible air gap beneath every part of the hull. Long cargo-container proportions, no windshield-like car face, no road vehicle styling, no rail, no track, no platform',
-   'VEH-16':'one luxury floating passenger capsule, seamless flattened lozenge shell, panoramic dark glass canopy, smooth uninterrupted convex underside, no wheels, no legs, no feet, no supports, nothing below the hull, thin cyan light seam embedded flush in the lower edge, large empty air gap beneath the entire capsule, pearl metal and black premium finish',
+   'VEH-16':'one compact two-passenger prestige executive anti-gravity coupe, low sleek teardrop capsule body, approximately twice as long as tall, panoramic dark glass canopy, smooth uninterrupted rounded belly, cyan levitation glow embedded flush along the entire lower rim, visibly hovering with open empty air beneath the complete hull, pearl white metal and glossy black premium finish, no wheels, no wheel arches, no legs, no feet, no struts, no landing gear, no support hardware',
    'VEH-17':'a tight coordinated swarm of five distinct small singularity logistics drones in one compact formation, all five drones fully visible, no mothership'}
   return exact.get(i['id'],i['name'])
  if i['kind']=='CORE':
@@ -43,7 +43,7 @@ def concrete_subject(i):
 def prompt_for(i):
  s=concrete_subject(i)
  if i['id']=='VEH-16':
-  return f"AAA mobile strategy game sprite of {s}. Single centered floating transport pod, fully visible, three-quarter 34 degree view, isolated on pure black, generous empty margin, upper-left key light, cool fill. No road, floor, pedestal, text, logo, UI or other object."
+  return f"AAA mobile strategy game sprite of {s}. ONE small personal luxury hover coupe only, fully visible, three-quarter 34 degree view, floating high in empty space, isolated on pure black with generous margin. Low aerodynamic capsule silhouette, not a bus, van, shuttle or sedan. Upper-left key light, cool fill. No road, floor, pedestal, text, symbol, badge, logo, UI or other object."
  noun={'PRP':'prop','VEH':'vehicle composition','CORE':'reactor'}[i['kind']]
  return f"Create exactly {s}. Mandatory silhouette and mechanism. One centered {noun}, fully visible, isolated on pure black. No environment, scenery, floor slab, road, pedestal, text, logo, labels, UI, contact sheet or alternate variants. Premium stylized 2.5D mobile strategy-game asset, three-quarter isometric camera 34 degrees, upper-left key light, cool fill, restrained cyan and amber accents, crisp silhouette. Manifest intent: {i['description']} Preserve generous empty black space on every edge."
 def flux_generate(prompt,seed):
@@ -56,6 +56,8 @@ def flux_generate(prompt,seed):
 def border_background(im):
  rgb=im.convert('RGB');w,h=rgb.size;pts=[];s=max(1,min(w,h)//128)
  for x in range(0,w,s):pts += [rgb.getpixel((x,0)),rgb.getpixel((x,h-1))]
+ for y in range(h):
+  pass
  for y in range(0,h,s):pts += [rgb.getpixel((0,y)),rgb.getpixel((w-1,y))]
  pts.sort(key=sum);q=pts[:max(16,len(pts)//3)];return tuple(sum(p[i] for p in q)//len(q) for i in range(3))
 def isolate(im):
