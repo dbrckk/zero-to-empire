@@ -83,19 +83,6 @@ OUT.mkdir(parents=True)
 subprocess.run(['git','clone','--depth','1','https://github.com/dbrckk/zero-to-empire.git',str(REPO)], check=True)
 os.chdir(REPO)
 
-# VEH-16 repeatedly regressed toward ordinary sedans despite negative wording.
-# For the Kaggle production lane, replace the automotive-biased prompt with a
-# spacecraft/hover-skimmer silhouette while preserving the manifest's executive
-# prestige intent. Fail closed if the expected canonical phrase changes.
-factory_path = REPO / 'tools/sprites/kaggle_sprite_factory.py'
-factory_text = factory_path.read_text(encoding='utf-8')
-old_veh16 = "'VEH-16':'ONE futuristic EXECUTIVE ANTI-GRAVITY HOVER LIMOUSINE. It has ZERO wheels, ZERO tires, ZERO wheel arches and ZERO circular wheel-like details. Replace all wheel positions with four bright rectangular anti-gravity lift emitters visibly attached under the corners. The entire sleek luxury cabin floats high above empty space with a large unmistakable air gap. Smooth continuous side skirts and levitation hull, futuristic spacecraft-like executive transport, NOT a sedan and NOT a conventional automobile'"
-new_veh16 = "'VEH-16':'ONE premium executive anti-gravity PASSENGER SKIMMER, designed like a compact luxury spacecraft and hover yacht rather than any automobile. A single continuous boat-like levitation hull with a glass executive cabin on top. ZERO wheels, ZERO tires, ZERO wheel arches, ZERO hubs, ZERO circular wheel-like forms, ZERO grille, ZERO automotive headlights, ZERO road-car bumper, ZERO side mirrors. Four flat rectangular cyan anti-gravity emitters are recessed into the smooth underside, not mounted like wheels. The entire craft is visibly suspended high over empty space with a large clean air gap under the complete hull. Long elegant prestige silhouette, unmistakably futuristic airborne executive transport, not a car, sedan, SUV, wagon, van or limousine'"
-if old_veh16 not in factory_text:
-    raise SystemExit('Canonical VEH-16 prompt anchor changed; refusing unverified patch')
-factory_path.write_text(factory_text.replace(old_veh16, new_veh16, 1), encoding='utf-8')
-print('KAGGLE_VEH16_PROMPT_OVERRIDE=spacecraft-skimmer', flush=True)
-
 ensure_gpu_compatible_torch()
 ensure_flux_runtime()
 
