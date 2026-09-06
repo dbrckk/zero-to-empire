@@ -1,0 +1,60 @@
+name: Promote approved FLUX run 29
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/promote-flux-run29.yml']
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: promote-flux-run29
+  cancel-in-progress: false
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+      - name: Download reviewed run 29 candidates
+        uses: actions/download-artifact@v4
+        with:
+          name: kaggle-sprite-batch
+          run-id: 34008110197
+          github-token: ${{ github.token }}
+          path: /tmp/run29
+      - name: Install image tooling
+        run: python -m pip install --disable-pip-version-check Pillow==11.3.0
+      - name: Stage only semantically approved asset
+        shell: bash
+        run: |
+          set -euo pipefail
+          stem=zte_prop_05_a_final
+          mkdir -p art/incoming/final-sprites
+          src="/tmp/run29/output/candidates/${stem}.png"
+          test -s "$src"
+          cp "$src" "art/incoming/final-sprites/${stem}.png"
+          echo "SPRITE_TARGETS=${stem}" >> "$GITHUB_ENV"
+          echo "$stem" > /tmp/approved-stems.txt
+          echo 'Rejected and not promoted: zte_vehicle_09_final (wheeled van; not a wheel-less maglev cargo pod)'
+      - name: Revalidate exact approved asset
+        run: python tools/sprites/build_sprite_contact_sheet.py --files art/incoming/final-sprites/zte_prop_05_a_final.png --output art/production/flux-run29-approved-contact-sheet.png --report art/production/flux-run29-approved-qa.json
+      - name: Produce optimized runtime raster
+        run: python tools/sprites/process_final_sprites.py
+      - name: Commit approved clean asset
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add art/incoming/final-sprites/zte_prop_05_a_final.png app/src/main/res/drawable-nodpi/zte_prop_05_a_final.webp art/production/flux-run29-approved-qa.json
+          git commit -m 'art: add reviewed FLUX PRP-05-A'
+          git pull --rebase origin main
+          git push
