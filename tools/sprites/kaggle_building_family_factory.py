@@ -1,23 +1,25 @@
 #!/usr/bin/env python3
 """Family-coherent FLUX building factory for Zero -> Empire.
 
-Generates only TODO BLD rows from the canonical manifest. Every tier of a family
-uses the SAME latent seed and an explicit immutable architectural blueprint so
-tiers read as upgrades of one building instead of unrelated structures.
+Strict v3: each family is generated from one immutable architectural anchor. Tier
+prompts describe additive upgrades only; the same family seed and the same exact
+anchor sentence are reused for every tier. Automatic family QA rejects a batch
+when silhouettes/camera drift too far, so unrelated buildings never reach the
+candidate artifact.
 """
 from __future__ import annotations
 import argparse,gc,re
 from collections import deque
 from pathlib import Path
-print('KAGGLE_STARTUP=building-family-flux-v2-same-latent',flush=True)
+print('KAGGLE_STARTUP=building-family-flux-v3-anchored-family-qa',flush=True)
 import torch
 from PIL import Image,ImageFilter
 from diffusers import FluxPipeline,FluxTransformer2DModel
 from transformers import T5EncoderModel
 ROOT=Path(__file__).resolve().parents[2];MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md';INCOMING=ROOT/'art/incoming/final-sprites';FLUX='aniketppanchal/flux.1-schnell-nf4-pkg'
 ROW=re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$");BLD=re.compile(r'^BLD-(\d{2})-T([0-6])$')
-FAMILY_DNA={0:'street-side micro foundry kiosk; rust-dark steel frame, corrugated canopy, compact exposed workbench, amber furnace cue',1:'corner fabrication shop; chamfered L-shaped storefront shell, dark steel and concrete, sheltered loading bay, compact cyan service lights',2:'furnace works; squat heatproof masonry-and-steel shell, dominant orange-hot furnace chamber, twin exhaust stacks, heavy insulated piping',3:'assembly hub; modular dark-steel production hall, central robotic assembly spine, side feeder bays, overhead gantry language, cyan status lights',4:'precision fabrication works; clean graphite alloy factory, enclosed CNC bays, ribbed roof modules, compact logistics dock, restrained cyan accents',5:'energy-cell works; dark premium alloy shell, integrated battery handling carousel motif, insulated amber energy conduits, protected transfer bay',6:'coolant and process plant; silver-graphite industrial shell, integrated reservoir towers, rigid coolant loops, pump-house silhouette, cyan fluid accents',7:'automation and power works; rectangular high-tech factory, overhead gantry rails, integrated power manifold, strong structural portal frame, cyan bus conduits',8:'heavy megastructure forge; massive armored alloy base, monumental articulated production bay, reinforced ribs, large service apertures, warm forge accents',9:'nanofabrication complex; sealed pearl-and-graphite process blocks, central clean chamber, smooth layered shells, precision cyan energy routing',10:'orbital component works; dark alloy logistics complex, concentric orbital assembly motif embedded into structure, cantilevered bays, cyan levitation seams',11:'actuator megaworks; monumental vertical press-tower architecture, symmetric articulated side structures, armored base, dense power routing',12:'phase-matter foundry; pearl alloy apex facility, integrated luminous cyan containment-ring architecture, central fabrication cradle, elegant vertical fins',13:'stellar precision works; prestige dark-and-pearl apex factory, crown-like articulated roof geometry, bright contained process core, warm stellar plus cyan accents'}
-TIER={0:'starter footprint, improvised materials, low verticality, exactly one obvious production cue; small and humble but functional',1:'reinforce the SAME base shell; add dedicated machinery enclosure; only modest growth',2:'expand the SAME base shell laterally; add exactly one second integrated active subsystem',3:'upgrade the SAME shell with automation, visible logistics and one additional vertical module',4:'scale the SAME recognizable shell into a district facility; denser attached machinery and premium materials',5:'extend the SAME recognizable shell into a megastructure; multi-stage production, attached moving assemblies and energy routing',6:'ultimate evolution of the SAME recognizable shell; preserve its base geometry while adding maximum verticality and a prestige crown'}
+FAMILY_DNA={0:'street-side micro foundry kiosk; rust-dark steel frame, corrugated canopy, compact exposed workbench, amber furnace cue',1:'corner fabrication shop; chamfered L-shaped storefront shell, dark steel and concrete, sheltered loading bay, compact cyan service lights',2:'furnace works; squat heatproof masonry-and-steel shell, dominant orange-hot furnace chamber, twin exhaust stacks, heavy insulated piping',3:'assembly hub; LOW WIDE rectangular dark-steel production hall; central open robotic assembly spine; TWO symmetric side feeder bays; FOUR corner posts; flat ribbed roof frame; cyan status strips',4:'precision fabrication works; LOW WIDE graphite rectangular factory; THREE enclosed CNC bay modules across front; ribbed flat roof; right-side compact logistics dock; cyan corner strips',5:'energy-cell works; TALL SQUARE dark-alloy factory; central amber battery handling core visible through front; TWO symmetric side transfer bays; heavy square roof frame; cyan lower service strips',6:'coolant process plant; LOW WIDE silver-graphite rectangular pump house; TWO tall cylindrical reservoir towers fixed at rear-left and rear-right; central rigid coolant loop; cyan fluid pipes along base',7:'automation power works; WIDE rectangular high-tech factory; TWO overhead gantry rails; central power manifold; FOUR structural portal posts; cyan bus conduits',8:'heavy megastructure forge; massive armored rectangular base; central articulated forge bay; TWO reinforced side ribs; large front service aperture; warm forge core',9:'nanofabrication complex; sealed pearl-and-graphite square process block; central clean chamber; TWO smooth layered side shells; cyan routing ring',10:'orbital component works; dark-alloy rectangular logistics complex; central circular orbital assembly cradle embedded in roof; TWO cantilevered side bays; cyan levitation seams',11:'actuator megaworks; tall rectangular press tower; TWO symmetric articulated side frames; armored square base; central vertical orange press channel',12:'phase-matter foundry; pearl-alloy square facility; ONE luminous cyan containment ring fixed around central fabrication cradle; FOUR elegant vertical corner fins',13:'stellar precision works; dark-and-pearl square apex factory; crown-like FOUR-part roof geometry; bright contained central process core; warm stellar plus cyan accents'}
+TIER={0:'Keep anchor geometry bare and small. Improvised cladding. Add NOTHING except one production cue.',1:'KEEP EVERY anchor position. Reinforce walls and roof only; add one attached machinery enclosure.',2:'KEEP EVERY anchor position. Extend side walls slightly; add one attached second subsystem.',3:'KEEP EVERY anchor position. Add one vertical automation module and attached logistics conduit.',4:'KEEP EVERY anchor position. Thicken and premium-finish the same shell; add dense ATTACHED machinery.',5:'KEEP EVERY anchor position. Add attached multi-stage machinery and energy routing; preserve the original shell clearly.',6:'KEEP EVERY anchor position. Add vertical prestige crown ABOVE the same shell; original footprint and anchor modules remain plainly visible.'}
 def rows():
  for order,line in enumerate(MANIFEST.read_text(encoding='utf-8').splitlines()):
   m=ROW.match(line)
@@ -34,8 +36,9 @@ def select(items,count):
   chosen.extend(group)
   if len(chosen)>=count:break
  return chosen or items[:count]
+def anchor(i):return f"FIXED ARCHITECTURAL ANCHOR F{i['family']:02d}: {FAMILY_DNA[i['family']]}."
 def prompt(i):
- return (f"AAA premium mobile strategy BUILDING MASTER, {i['name']}. IMMUTABLE FAMILY BLUEPRINT: {FAMILY_DNA[i['family']]}. This is tier {i['tier']} of ONE upgrade sequence. It MUST look like the exact same building being upgraded in place, not a redesign, not another building. Preserve the same base footprint shape, facade orientation, main roofline, structural frame positions, production-core position, camera, proportions and material palette across all seven tiers. Tier change may ONLY add or reinforce attached modules while retaining the underlying blueprint. UPGRADE FOR THIS TIER: {TIER[i['tier']]}. Exactly ONE connected self-contained building. Portrait-friendly fixed 34 degree three-quarter orthographic-like 2.5D camera, bottom-center grounding, upper-left key light, cool fill, restrained warm/cyan emissives. Fully visible isolated building on pure black with generous margin. No detached props, neighboring structures, road, landscape, sky, city, floor rectangle, workers, vehicles, text, letters, numbers, currency, signage, badge, logo, watermark or UI. Manifest intent: {i['description']}")
+ return (f"AAA premium mobile strategy BUILDING MASTER. {anchor(i)} THIS ANCHOR IS A HARD BLUEPRINT, NOT INSPIRATION. Tier {i['tier']} is the SAME physical building upgraded in place. DO NOT change footprint category, camera-facing facade, anchor module count, anchor module positions, structural frame positions, main roof geometry, production-core position, or base proportions. {TIER[i['tier']]} Never replace the building with another design. Exactly ONE connected self-contained building. Fixed 34 degree three-quarter orthographic-like 2.5D camera, identical framing, bottom-center grounding, upper-left key light, cool fill, restrained warm/cyan emissives. Isolated on pure black with generous margin. No detached props, neighboring structures, road, landscape, sky, city, floor rectangle, workers, vehicles, text, letters, numbers, currency, signage, badge, logo, watermark or UI.")
 def load_encode():
  t=T5EncoderModel.from_pretrained(FLUX,subfolder='text_encoder_2',torch_dtype=torch.float16,device_map='cuda');p=FluxPipeline.from_pretrained(FLUX,text_encoder_2=t,transformer=None,vae=None,torch_dtype=torch.float16,device_map='cuda');return t,p
 def load_diffuse():
@@ -77,6 +80,16 @@ def finish(image,item):
  pad=int(side*.08)
  if any(e.getbbox() for e in (a.crop((0,0,side,pad)),a.crop((0,side-pad,side,side)),a.crop((0,0,pad,side)),a.crop((side-pad,0,side,side)))):raise RuntimeError('8-percent safety padding failed')
  return out,visible
+def silhouette_signature(im):
+ a=im.getchannel('A').resize((64,64),Image.Resampling.BILINEAR);b=a.point(lambda p:255 if p>=32 else 0);box=b.getbbox()
+ if not box:return None
+ x0,y0,x1,y1=box;return (x1-x0,y1-y0,(x0+x1)/2,(y0+y1)/2)
+def family_shape_ok(images):
+ sig=[silhouette_signature(x[1]) for x in images]
+ if any(s is None for s in sig):return False
+ widths=[s[0] for s in sig];heights=[s[1] for s in sig];cx=[s[2] for s in sig]
+ # Allow upgrades to grow, but reject camera/footprint class changes typical of unrelated generations.
+ return min(widths)/max(widths)>=.62 and min(heights)/max(heights)>=.48 and max(cx)-min(cx)<=8
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--count',type=int,default=30);ap.add_argument('--seed',type=int,default=43117);args=ap.parse_args();items=select(list(rows()),max(1,args.count));print('KAGGLE_BUILDING_PLAN='+','.join(i['id'] for i in items),flush=True)
  if not items:return
@@ -93,13 +106,22 @@ def main():
    packed=diff(height=1024,width=1024,num_inference_steps=4,guidance_scale=0.0,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),output_type='latent',max_sequence_length=384,generator=torch.Generator(device='cuda').manual_seed(family_seed)).images;latents.append((item,packed.cpu()));print(f"KAGGLE_DIFFUSED={item['id']} family_seed={family_seed}",flush=True)
   except Exception as exc:print(f"KAGGLE_REJECTED={item['id']} stage=diffuse reason={exc}",flush=True)
   finally:gc.collect();torch.cuda.empty_cache()
- del tr,diff,encoded;gc.collect();torch.cuda.empty_cache();dec=load_decode();ok=rej=0
+ del tr,diff,encoded;gc.collect();torch.cuda.empty_cache();dec=load_decode();decoded=[]
  for item,packed in latents:
   try:
    packed=packed.cuda();lat=dec._unpack_latents(packed,height=1024,width=1024,vae_scale_factor=dec.vae_scale_factor)/dec.vae.config.scaling_factor+dec.vae.config.shift_factor
    with torch.no_grad():tensor=dec.vae.decode(lat,return_dict=False)[0]
-   image=dec.image_processor.postprocess(tensor)[0];final,cov=finish(image,item);path=INCOMING/f"{item['stem']}.png";final.save(path,'PNG',optimize=True);ok+=1;print(f'KAGGLE_VALIDATED={path.relative_to(ROOT)} coverage={cov:.1%}',flush=True)
-  except Exception as exc:rej+=1;print(f"KAGGLE_REJECTED={item['id']} stage=decode reason={type(exc).__name__}: {exc}",flush=True)
+   image=dec.image_processor.postprocess(tensor)[0];final,cov=finish(image,item);decoded.append((item,final,cov))
+  except Exception as exc:print(f"KAGGLE_REJECTED={item['id']} stage=decode reason={type(exc).__name__}: {exc}",flush=True)
   finally:gc.collect();torch.cuda.empty_cache()
+ ok=rej=0;families={}
+ for rec in decoded:families.setdefault(rec[0]['family'],[]).append(rec)
+ for fam,recs in families.items():
+  recs.sort(key=lambda x:x[0]['tier'])
+  if len(recs)>=3 and not family_shape_ok(recs):
+   for item,_,_ in recs:print(f"KAGGLE_REJECTED={item['id']} stage=family_qa reason=silhouette-camera-drift",flush=True);rej+=1
+   continue
+  for item,final,cov in recs:
+   path=INCOMING/f"{item['stem']}.png";final.save(path,'PNG',optimize=True);ok+=1;print(f'KAGGLE_VALIDATED={path.relative_to(ROOT)} coverage={cov:.1%}',flush=True)
  print(f'KAGGLE_BUILDING_SUCCESS={ok} KAGGLE_BUILDING_REJECTED={rej} KAGGLE_BUILDING_ATTEMPTED={len(items)}',flush=True)
 if __name__=='__main__':main()
