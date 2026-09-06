@@ -1,0 +1,54 @@
+name: Reconcile strict Power Core status
+
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/reconcile-core-status.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+      - name: Mark green tier-aware cores DONE
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
+          lines=p.read_text().splitlines()
+          for i in range(7):
+              key=f'| CORE-T{i} |'
+              hits=[n for n,x in enumerate(lines) if x.startswith(key)]
+              if len(hits)!=1: raise SystemExit(f'{key} count={len(hits)}')
+              n=hits[0]
+              if not lines[n].endswith('| CLEAN |'): raise SystemExit(lines[n])
+              lines[n]=lines[n][:-len('| CLEAN |')]+'| DONE |'
+          p.write_text('\n'.join(lines)+'\n')
+
+          q=Path('docs/art/FINAL_AAA_SPRITE_PROGRESS.md')
+          s=q.read_text()
+          s=s.replace('- DONE: **61 / 235**','- DONE: **68 / 235**')
+          s=s.replace('- RUNTIME INTEGRATED: **76 / 235**','- RUNTIME INTEGRATED: **83 / 235**')
+          s=s.replace('- Generated candidates accepted as DONE: **61**','- Generated candidates accepted as DONE: **68**')
+          s=s.replace('## Reviewed FLUX run 25 — 9 DONE, 7 CLEAN','## Reviewed FLUX run 25 — 16 DONE')
+          s=s.replace('`CORE-T0` through `CORE-T6` passed semantic and technical review and have optimized runtime rasters, but remain CLEAN until their tier-aware Power Core runtime integration is completed and validated.','`CORE-T0` through `CORE-T6` are tier-aware runtime sprites in `AscendantCorePlaza`; Android CI run `34007328616` for commit `0aad3c58190c9650f278cbc7c67782baff1d3581` completed successfully, so all seven are strict DONE.')
+          s=s.replace('### CLEAN awaiting runtime integration\n`CORE-T0`, `CORE-T1`, `CORE-T2`, `CORE-T3`, `CORE-T4`, `CORE-T5`, `CORE-T6`.','### Power Core — 7 DONE\n`CORE-T0`, `CORE-T1`, `CORE-T2`, `CORE-T3`, `CORE-T4`, `CORE-T5`, `CORE-T6`.')
+          s=s.replace('3. Integrate the reviewed `CORE-T0` through `CORE-T6` rasters into the tier-aware Power Core runtime, then require green Android CI before DONE.\n4. Rework building generation around coherent family/tier evolution; do not accept generic unrelated buildings.\n5. Continue machines, characters, terrain and FX only through the same generate → technical QA → semantic QA → runtime → green-CI gate.','3. Rework building generation around coherent family/tier evolution; do not accept generic unrelated buildings.\n4. Continue machines, characters, terrain and FX only through the same generate → technical QA → semantic QA → runtime → green-CI gate.')
+          q.write_text(s)
+          PY
+      - name: Commit strict status
+        shell: bash
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md docs/art/FINAL_AAA_SPRITE_PROGRESS.md
+          git commit -m 'docs: mark tier-aware Power Cores strict DONE'
+          git pull --rebase origin main
+          git push
