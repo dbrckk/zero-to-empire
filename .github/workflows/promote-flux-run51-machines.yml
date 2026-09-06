@@ -1,0 +1,159 @@
+name: Promote reviewed FLUX run 51 machines
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/promote-flux-run51-machines.yml']
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: promote-flux-run51-machines
+  cancel-in-progress: false
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SPRITE_TARGETS: zte_machine_00_0_final,zte_machine_00_1_final,zte_machine_01_0_final,zte_machine_01_1_final,zte_machine_02_0_final,zte_machine_02_1_final,zte_machine_03_1_final,zte_machine_04_0_final,zte_machine_04_1_final,zte_machine_05_0_final,zte_machine_06_0_final,zte_machine_06_1_final,zte_machine_07_1_final,zte_machine_08_0_final,zte_machine_08_1_final,zte_machine_09_0_final,zte_machine_09_1_final,zte_machine_10_0_final,zte_machine_10_1_final,zte_machine_11_0_final,zte_machine_12_1_final,zte_machine_13_0_final,zte_machine_13_1_final
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+
+      - name: Download reviewed run 51 evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: kaggle-sprite-batch
+          run-id: 34032725768
+          github-token: ${{ github.token }}
+          path: /tmp/run51
+
+      - name: Install image tooling
+        run: python -m pip install --disable-pip-version-check Pillow==11.3.0
+
+      - name: Stage only semantically approved machines
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p art/incoming/final-sprites art/production
+          IFS=',' read -ra targets <<< "$SPRITE_TARGETS"
+          files=()
+          for stem in "${targets[@]}"; do
+            src="/tmp/run51/output/candidates/${stem}.png"
+            test -s "$src"
+            cp "$src" "art/incoming/final-sprites/${stem}.png"
+            files+=("art/incoming/final-sprites/${stem}.png")
+          done
+          python tools/sprites/build_sprite_contact_sheet.py \
+            --files "${files[@]}" \
+            --output art/production/flux-run51-machines-approved-contact-sheet.png \
+            --report art/production/flux-run51-machines-approved-qa.json
+
+      - name: Produce optimized runtime rasters
+        run: python tools/sprites/process_final_sprites.py
+
+      - name: Add reviewed machine runtime layer
+        shell: bash
+        run: |
+          cat > app/src/main/java/com/zerotoempire/game/ReviewedMachineLayer.kt <<'KOT'
+          package com.zerotoempire.game
+
+          import androidx.compose.foundation.Image
+          import androidx.compose.foundation.layout.Box
+          import androidx.compose.foundation.layout.fillMaxSize
+          import androidx.compose.foundation.layout.offset
+          import androidx.compose.foundation.layout.size
+          import androidx.compose.runtime.Composable
+          import androidx.compose.ui.Modifier
+          import androidx.compose.ui.layout.ContentScale
+          import androidx.compose.ui.res.painterResource
+          import androidx.compose.ui.unit.dp
+
+          /** Semantically reviewed run-51 machine masters, visible as era-specific production machinery. */
+          @Composable
+          internal fun ReviewedMachineLayer(eraIndex: Int, modifier: Modifier = Modifier) {
+              val groups = listOf(
+                  intArrayOf(R.drawable.zte_machine_00_0_final, R.drawable.zte_machine_00_1_final, R.drawable.zte_machine_01_0_final, R.drawable.zte_machine_01_1_final),
+                  intArrayOf(R.drawable.zte_machine_02_0_final, R.drawable.zte_machine_02_1_final, R.drawable.zte_machine_03_1_final, R.drawable.zte_machine_04_0_final),
+                  intArrayOf(R.drawable.zte_machine_04_1_final, R.drawable.zte_machine_05_0_final, R.drawable.zte_machine_06_0_final, R.drawable.zte_machine_06_1_final),
+                  intArrayOf(R.drawable.zte_machine_07_1_final, R.drawable.zte_machine_08_0_final, R.drawable.zte_machine_08_1_final),
+                  intArrayOf(R.drawable.zte_machine_09_0_final, R.drawable.zte_machine_09_1_final, R.drawable.zte_machine_10_0_final),
+                  intArrayOf(R.drawable.zte_machine_10_1_final, R.drawable.zte_machine_11_0_final, R.drawable.zte_machine_12_1_final),
+                  intArrayOf(R.drawable.zte_machine_13_0_final, R.drawable.zte_machine_13_1_final),
+              )
+              val ids = groups[eraIndex.coerceIn(0, groups.lastIndex)]
+              val x = listOf(18.dp, 94.dp, 188.dp, 270.dp)
+              val y = listOf(280.dp, 360.dp, 430.dp, 500.dp)
+              Box(modifier.fillMaxSize()) {
+                  ids.forEachIndexed { index, resId ->
+                      Image(
+                          painter = painterResource(resId),
+                          contentDescription = null,
+                          contentScale = ContentScale.Fit,
+                          modifier = Modifier.offset(x[index], y[index]).size(if (eraIndex >= 4) 54.dp else 48.dp),
+                      )
+                  }
+              }
+          }
+          KOT
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt')
+          s=p.read_text()
+          anchor='        ReviewedWorldTraffic(Modifier.fillMaxSize())\n'
+          insert='        ReviewedMachineLayer(eraIndex, Modifier.fillMaxSize())\n        ReviewedWorldTraffic(Modifier.fillMaxSize())\n'
+          if 'ReviewedMachineLayer(eraIndex' not in s:
+              if anchor not in s: raise SystemExit('machine runtime insertion anchor missing')
+              s=s.replace(anchor,insert,1)
+          p.write_text(s)
+          PY
+
+      - name: Mark reviewed machines RUNTIME and update ledger
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          ids={
+          'MCH-00-0','MCH-00-1','MCH-01-0','MCH-01-1','MCH-02-0','MCH-02-1','MCH-03-1',
+          'MCH-04-0','MCH-04-1','MCH-05-0','MCH-06-0','MCH-06-1','MCH-07-1','MCH-08-0','MCH-08-1',
+          'MCH-09-0','MCH-09-1','MCH-10-0','MCH-10-1','MCH-11-0','MCH-12-1','MCH-13-0','MCH-13-1'}
+          p=Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md'); lines=p.read_text().splitlines()
+          out=[]
+          for line in lines:
+              if any(line.startswith(f'| {asset} |') for asset in ids):
+                  line=line.rsplit('|',2)[0]+'| RUNTIME |'
+              out.append(line)
+          p.write_text('\n'.join(out)+'\n')
+          q=Path('docs/art/FINAL_AAA_SPRITE_PROGRESS.md'); s=q.read_text()
+          s=s.replace('- ART VALIDATED: **85 / 235**','- ART VALIDATED: **108 / 235**')
+          s=s.replace('- RUNTIME INTEGRATED: **85 / 235**','- RUNTIME INTEGRATED: **108 / 235**')
+          note='''\n## Reviewed FLUX run 51 — 23 machines awaiting green CI\nRun-51 produced 29 technically valid candidates. Semantic QA accepted 23 machine masters and rejected `MCH-03-0` (baked lettering), `MCH-05-1` (wrong battery-carousel read), `MCH-11-1` (detached underside sphere), `MCH-12-0` (missing required containment-ring identity), both terrain candidates (camera/connector mismatch; TER-01 also has a baked road marking), while `MCH-07-0` was not emitted as a technically valid candidate. The 23 accepted machines are integrated into the era-specific active city runtime layer and remain RUNTIME until Android CI is green.\n'''
+          if '## Reviewed FLUX run 51' not in s:
+              s += note
+          q.write_text(s)
+          PY
+
+      - name: Commit reviewed machine batch and runtime integration
+        shell: bash
+        run: |
+          set -euo pipefail
+          IFS=',' read -ra targets <<< "$SPRITE_TARGETS"
+          for stem in "${targets[@]}"; do test -s "app/src/main/res/drawable-nodpi/${stem}.webp"; done
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add art/incoming/final-sprites/ \
+                  app/src/main/res/drawable-nodpi/ \
+                  art/production/flux-run51-machines-approved-qa.json \
+                  app/src/main/java/com/zerotoempire/game/ReviewedMachineLayer.kt \
+                  app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt \
+                  docs/art/FINAL_AAA_SPRITE_MANIFEST.md \
+                  docs/art/FINAL_AAA_SPRITE_PROGRESS.md
+          git commit -m 'art: integrate 23 reviewed run51 machines'
+          git pull --rebase origin main
+          git push
