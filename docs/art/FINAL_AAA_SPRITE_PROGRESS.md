@@ -4,8 +4,8 @@ Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains t
 
 ## Official progress
 - DONE: **70 / 235**
-- ART VALIDATED: **108 / 235**
-- RUNTIME INTEGRATED: **108 / 235**
+- ART VALIDATED: **121 / 235**
+- RUNTIME INTEGRATED: **121 / 235**
 - Generated candidates accepted as DONE: **70**
 - Rule: only runtime-integrated, individually clean/transparent, manifest-matching assets with green Android CI increment DONE.
 
@@ -60,3 +60,6 @@ Technically valid but semantically wrong candidates remain excluded. This includ
 
 ## Reviewed FLUX run 51 — 23 machines awaiting green CI
 Run-51 produced 29 technically valid candidates. Semantic QA accepted 23 machine masters and rejected `MCH-03-0` (baked lettering), `MCH-05-1` (wrong battery-carousel read), `MCH-11-1` (detached underside sphere), `MCH-12-0` (missing required containment-ring identity), both terrain candidates (camera/connector mismatch; TER-01 also has a baked road marking), while `MCH-07-0` was not emitted as a technically valid candidate. The 23 accepted machines are integrated into the era-specific active city runtime layer and remain RUNTIME until Android CI is green.
+
+## Reviewed FLUX run 52 — 13 assets awaiting green CI
+Semantic QA accepted `MCH-03-0`, `MCH-11-1`, `MCH-12-0` plus terrain `TER-00`, `TER-01`, `TER-02`, `TER-03`, `TER-04`, `TER-06`, `TER-08`, `TER-11`, `TER-12`, `TER-13`. Rejected: `MCH-05-1` (wrong carousel read with detached dark base), `MCH-07-0` (crane-like loose suspended composition instead of a compact gantry), `TER-05` (baked arrows), `TER-07` (open frame rather than a complete square tile), `TER-09` (missing twin cyan maglev guide identity), `TER-10` (bridge-like structure rather than square service-deck tile), and `VEH-16` (still reads as a conventional car with wheel-like side volumes). Accepted assets are integrated and remain RUNTIME until Android CI is green.

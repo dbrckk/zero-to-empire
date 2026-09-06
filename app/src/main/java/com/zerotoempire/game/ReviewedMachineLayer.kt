@@ -16,12 +16,12 @@ import androidx.compose.ui.unit.dp
 internal fun ReviewedMachineLayer(eraIndex: Int, modifier: Modifier = Modifier) {
     val groups = listOf(
         intArrayOf(R.drawable.zte_machine_00_0_final, R.drawable.zte_machine_00_1_final, R.drawable.zte_machine_01_0_final, R.drawable.zte_machine_01_1_final),
-        intArrayOf(R.drawable.zte_machine_02_0_final, R.drawable.zte_machine_02_1_final, R.drawable.zte_machine_03_1_final, R.drawable.zte_machine_04_0_final),
+        intArrayOf(R.drawable.zte_machine_02_0_final, R.drawable.zte_machine_02_1_final, R.drawable.zte_machine_03_0_final, R.drawable.zte_machine_03_1_final),
         intArrayOf(R.drawable.zte_machine_04_1_final, R.drawable.zte_machine_05_0_final, R.drawable.zte_machine_06_0_final, R.drawable.zte_machine_06_1_final),
         intArrayOf(R.drawable.zte_machine_07_1_final, R.drawable.zte_machine_08_0_final, R.drawable.zte_machine_08_1_final),
         intArrayOf(R.drawable.zte_machine_09_0_final, R.drawable.zte_machine_09_1_final, R.drawable.zte_machine_10_0_final),
-        intArrayOf(R.drawable.zte_machine_10_1_final, R.drawable.zte_machine_11_0_final, R.drawable.zte_machine_12_1_final),
-        intArrayOf(R.drawable.zte_machine_13_0_final, R.drawable.zte_machine_13_1_final),
+        intArrayOf(R.drawable.zte_machine_10_1_final, R.drawable.zte_machine_11_0_final, R.drawable.zte_machine_11_1_final, R.drawable.zte_machine_12_1_final),
+        intArrayOf(R.drawable.zte_machine_12_0_final, R.drawable.zte_machine_13_0_final, R.drawable.zte_machine_13_1_final),
     )
     val ids = groups[eraIndex.coerceIn(0, groups.lastIndex)]
     val x = listOf(18.dp, 94.dp, 188.dp, 270.dp)

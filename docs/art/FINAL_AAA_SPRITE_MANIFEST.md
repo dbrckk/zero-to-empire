@@ -200,7 +200,7 @@ If a new runtime sprite is later required, it must be added here first and the d
 | MCH-01-1 | Corner Shop machine 2 | Foundry business 01: secondary logistics/energy mechanism; isolated moving parts, loop-safe pivot and 6–16 frame budget if animated. | `app/src/main/res/drawable-nodpi/zte_machine_01_1_final.webp` | RUNTIME |
 | MCH-02-0 | Furnace Stall machine 1 | Foundry business 02: primary production mechanism; isolated moving parts, loop-safe pivot and 6–16 frame budget if animated. | `app/src/main/res/drawable-nodpi/zte_machine_02_0_final.webp` | RUNTIME |
 | MCH-02-1 | Furnace Stall machine 2 | Foundry business 02: secondary logistics/energy mechanism; isolated moving parts, loop-safe pivot and 6–16 frame budget if animated. | `app/src/main/res/drawable-nodpi/zte_machine_02_1_final.webp` | RUNTIME |
-| MCH-03-0 | Assembly Hub machine 1 | Foundry business 03: primary production mechanism; isolated moving parts, loop-safe pivot and 6–16 frame budget if animated. | `app/src/main/res/drawable-nodpi/zte_machine_03_0_final.webp` | TODO |
+| MCH-03-0 | Assembly Hub machine 1 | Foundry business 03: primary production mechanism; isolated moving parts, loop-safe pivot and 6–16 frame budget if animated. | `app/src/main/res/drawable-nodpi/zte_machine_03_0_final.webp` | RUNTIME |
 | MCH-03-1 | Assembly Hub machine 2 | Foundry business 03: secondary logistics/energy mechanism; isolated moving parts, loop-safe pivot and 6–16 frame budget if animated. | `app/src/main/res/drawable-nodpi/zte_machine_03_1_final.webp` | RUNTIME |
 | MCH-04-0 | Expansion Business 04 machine 1 | Expansion business 04: primary production mechanism; isolated moving parts, loop-safe pivot and 6–16 frame budget if animated. | `app/src/main/res/drawable-nodpi/zte_machine_04_0_final.webp` | RUNTIME |
 | MCH-04-1 | Expansion Business 04 machine 2 | Expansion business 04: secondary logistics/energy mechanism; isolated moving parts, loop-safe pivot and 6–16 frame budget if animated. | `app/src/main/res/drawable-nodpi/zte_machine_04_1_final.webp` | RUNTIME |
@@ -217,8 +217,8 @@ If a new runtime sprite is later required, it must be added here first and the d
 | MCH-10-0 | Megastructure Business 10 machine 1 | Megastructure business 10: primary production mechanism; isolated moving parts, loop-safe pivot and 6–16 frame budget if animated. | `app/src/main/res/drawable-nodpi/zte_machine_10_0_final.webp` | RUNTIME |
 | MCH-10-1 | Megastructure Business 10 machine 2 | Megastructure business 10: secondary logistics/energy mechanism; isolated moving parts, loop-safe pivot and 6–16 frame budget if animated. | `app/src/main/res/drawable-nodpi/zte_machine_10_1_final.webp` | RUNTIME |
 | MCH-11-0 | Megastructure Business 11 machine 1 | Megastructure business 11: primary production mechanism; isolated moving parts, loop-safe pivot and 6–16 frame budget if animated. | `app/src/main/res/drawable-nodpi/zte_machine_11_0_final.webp` | RUNTIME |
-| MCH-11-1 | Megastructure Business 11 machine 2 | Megastructure business 11: secondary logistics/energy mechanism; isolated moving parts, loop-safe pivot and 6–16 frame budget if animated. | `app/src/main/res/drawable-nodpi/zte_machine_11_1_final.webp` | TODO |
-| MCH-12-0 | Apex Business 12 machine 1 | Apex business 12: primary production mechanism; isolated moving parts, loop-safe pivot and 6–16 frame budget if animated. | `app/src/main/res/drawable-nodpi/zte_machine_12_0_final.webp` | TODO |
+| MCH-11-1 | Megastructure Business 11 machine 2 | Megastructure business 11: secondary logistics/energy mechanism; isolated moving parts, loop-safe pivot and 6–16 frame budget if animated. | `app/src/main/res/drawable-nodpi/zte_machine_11_1_final.webp` | RUNTIME |
+| MCH-12-0 | Apex Business 12 machine 1 | Apex business 12: primary production mechanism; isolated moving parts, loop-safe pivot and 6–16 frame budget if animated. | `app/src/main/res/drawable-nodpi/zte_machine_12_0_final.webp` | RUNTIME |
 | MCH-12-1 | Apex Business 12 machine 2 | Apex business 12: secondary logistics/energy mechanism; isolated moving parts, loop-safe pivot and 6–16 frame budget if animated. | `app/src/main/res/drawable-nodpi/zte_machine_12_1_final.webp` | RUNTIME |
 | MCH-13-0 | Apex Business 13 machine 1 | Apex business 13: primary production mechanism; isolated moving parts, loop-safe pivot and 6–16 frame budget if animated. | `app/src/main/res/drawable-nodpi/zte_machine_13_0_final.webp` | RUNTIME |
 | MCH-13-1 | Apex Business 13 machine 2 | Apex business 13: secondary logistics/energy mechanism; isolated moving parts, loop-safe pivot and 6–16 frame budget if animated. | `app/src/main/res/drawable-nodpi/zte_machine_13_1_final.webp` | RUNTIME |
@@ -260,20 +260,20 @@ If a new runtime sprite is later required, it must be added here first and the d
 
 | ID | Asset | Description | Runtime target | Status |
 |---|---|---|---|---|
-| TER-00 | Foundry cracked industrial ground tile | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_00_final.webp` | TODO |
-| TER-01 | Foundry road/curb connector | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_01_final.webp` | TODO |
-| TER-02 | Foundry rail/cargo strip | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_02_final.webp` | TODO |
-| TER-03 | Foundry conduit trench | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_03_final.webp` | TODO |
-| TER-04 | Expansion clean commercial pavement | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_04_final.webp` | TODO |
+| TER-00 | Foundry cracked industrial ground tile | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_00_final.webp` | RUNTIME |
+| TER-01 | Foundry road/curb connector | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_01_final.webp` | RUNTIME |
+| TER-02 | Foundry rail/cargo strip | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_02_final.webp` | RUNTIME |
+| TER-03 | Foundry conduit trench | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_03_final.webp` | RUNTIME |
+| TER-04 | Expansion clean commercial pavement | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_04_final.webp` | RUNTIME |
 | TER-05 | Expansion multi-lane road connector | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_05_final.webp` | TODO |
-| TER-06 | Expansion loading pad | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_06_final.webp` | TODO |
+| TER-06 | Expansion loading pad | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_06_final.webp` | RUNTIME |
 | TER-07 | Expansion energy conduit | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_07_final.webp` | TODO |
-| TER-08 | Megastructure reinforced platform | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_08_final.webp` | TODO |
+| TER-08 | Megastructure reinforced platform | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_08_final.webp` | RUNTIME |
 | TER-09 | Megastructure maglev/rail connector | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_09_final.webp` | TODO |
 | TER-10 | Megastructure elevated service deck | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_10_final.webp` | TODO |
-| TER-11 | Megastructure energy spine | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_11_final.webp` | TODO |
-| TER-12 | Apex phase platform | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_12_final.webp` | TODO |
-| TER-13 | Apex singularity/stellar connector | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_13_final.webp` | TODO |
+| TER-11 | Megastructure energy spine | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_11_final.webp` | RUNTIME |
+| TER-12 | Apex phase platform | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_12_final.webp` | RUNTIME |
+| TER-13 | Apex singularity/stellar connector | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_13_final.webp` | RUNTIME |
 
 ## H. FX sprite sheets — 18 / 18 planned
 
