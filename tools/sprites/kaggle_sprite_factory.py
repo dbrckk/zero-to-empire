@@ -33,7 +33,7 @@ def concrete_subject(i):
  if i['kind']=='VEH':
   exact={
    'VEH-09':'ONE futuristic enclosed MAGLEV FREIGHT CAPSULE. It has ZERO wheels and ZERO circular wheel shapes. Its underside is a continuous smooth magnetic levitation hull with four glowing rectangular magnetic lift emitters. The entire capsule floats high above empty space with an unmistakable large visible air gap beneath every part of the hull. Long cargo-container proportions, no windshield-like car face, no road vehicle styling, no rail, no track, no platform',
-   'VEH-16':'ONE futuristic EXECUTIVE ANTI-GRAVITY HOVER LIMOUSINE. It has ZERO wheels, ZERO tires, ZERO wheel arches and ZERO circular wheel-like details. Replace all wheel positions with four bright rectangular anti-gravity lift emitters visibly attached under the corners. The entire sleek luxury cabin floats high above empty space with a large unmistakable air gap. Smooth continuous side skirts and levitation hull, futuristic spacecraft-like executive transport, NOT a sedan and NOT a conventional automobile',
+   'VEH-16':'ONE premium EXECUTIVE GRAV SHUTTLE for a futuristic city. Design it as a compact angular spacecraft-like passenger cabin, NOT as a car, limousine, sedan, sports car, yacht, boat, helicopter, aircraft or road vehicle. ABSOLUTELY NO wheels, tires, wheel arches, landing gear, legs, skids, struts, propellers or circular wheel-like parts. The lower half must be ONE uninterrupted smooth armored levitation hull with NO protrusions touching downward. A broad cyan anti-gravity glow band is built flush into the entire underside. The complete hull visibly floats above empty space with a large clean air gap. Luxury panoramic dark glass cabin, premium black and pearl-metal body, long executive proportions, four-door passenger transport cues expressed only as flush side seams. The silhouette must read immediately as an expensive terrestrial hover transport, with a flat continuous underside and nothing resembling wheels or supports',
    'VEH-17':'a tight coordinated swarm of five distinct small singularity logistics drones in one compact formation, all five drones fully visible, no mothership'}
   return exact.get(i['id'],i['name'])
  if i['kind']=='CORE':
@@ -109,7 +109,7 @@ def validate(im,kind,asset_id):
  if asset_id!='VEH-17' and len(comps)>1 and len(comps[0])/total<.92:raise RuntimeError(f'{len(comps)} significant disconnected subjects')
  return visible
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--kind',choices=['ALL','PRP','VEH','CORE'],default='ALL');ap.add_argument('--count',type=int,default=1);ap.add_argument('--seed',type=int,default=9105);args=ap.parse_args();items=list(manifest_rows());items=[x for x in items if args.kind=='ALL' or x['kind']==args.kind];items.sort(key=lambda x:(PRIORITY[x['kind']],x['order']));items=items[:max(1,args.count)];print(f'KAGGLE_PLAN={len(items)} engine=FLUX.1-schnell-NF4',flush=True)
+ ap=argparse.ArgumentParser();ap.add_argument('--kind',choices=['ALL','PRP','VEH','CORE'],default='ALL');ap.add_argument('--count',type=int,default=1);ap.add_argument('--seed',type=int,default=12217);args=ap.parse_args();items=list(manifest_rows());items=[x for x in items if args.kind=='ALL' or x['kind']==args.kind];items.sort(key=lambda x:(PRIORITY[x['kind']],x['order']));items=items[:max(1,args.count)];print(f'KAGGLE_PLAN={len(items)} engine=FLUX.1-schnell-NF4',flush=True)
  if not items:return
  INCOMING.mkdir(parents=True,exist_ok=True);ok=rej=0
  for index,item in enumerate(items,1):
