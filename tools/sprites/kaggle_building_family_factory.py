@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """Image-conditioned FLUX building family factory for Zero -> Empire.
 
-v5 replaces prompt-only same-seed tier generation with sequential img2img evolution.
-Each tier is conditioned on the previous tier image, so architectural identity is
-preserved while explicit additive upgrades create visible progression.
+v6 keeps sequential img2img evolution, gives CLIP a compact non-truncated control
+prompt, gives T5 the detailed production prompt, increases controlled tier evolution,
+and evaluates progression without the contradictory post-normalization size test.
 """
 from __future__ import annotations
 import argparse, gc, re
 from collections import deque
 from pathlib import Path
-print('KAGGLE_STARTUP=building-family-flux-v5-sequential-img2img', flush=True)
+print('KAGGLE_STARTUP=building-family-flux-v6-sequential-progression-qa', flush=True)
 import torch
 from PIL import Image, ImageFilter
 from diffusers import FluxPipeline, FluxImg2ImgPipeline, FluxTransformer2DModel
@@ -41,14 +41,15 @@ FAMILY_DNA = {
 TIER_DELTA = {
  0:'starter form: compact bare shell, improvised cladding, exactly one visible production cue, deliberately low verticality',
  1:'reinforced upgrade: keep the complete starter shell visible; add one attached machinery enclosure and reinforced roof ribs; modestly larger silhouette',
- 2:'industrial expansion: keep every existing module; extend both side walls slightly and add one attached second subsystem; clearly larger footprint than T1',
- 3:'automation upgrade: keep all prior modules; add one central vertical automation tower plus an attached logistics conduit; clearly taller than T2',
- 4:'advanced facility: keep all prior modules; thicken the same shell, add dense attached machinery and premium cladding; larger and more detailed than T3',
- 5:'late-game megastructure upgrade: keep the original shell readable; add a large attached upper production assembly, multi-stage machinery and visible energy routing; substantially larger than T4',
- 6:'ultimate mastered upgrade: preserve every core anchor; add a tall prestige crown directly above the same central structure and heroic attached machinery; tallest and most iconic tier',
+ 2:'industrial expansion: keep every existing module; extend both side walls and add one attached second subsystem; visibly larger footprint than T1',
+ 3:'automation upgrade: keep all prior modules; add one central vertical automation tower plus an attached logistics conduit; visibly taller than T2',
+ 4:'advanced facility: keep all prior modules; thicken the same shell, add dense attached machinery and premium cladding; visibly larger and more detailed than T3',
+ 5:'late-game megastructure upgrade: keep the original shell readable; add a large attached upper production assembly, multi-stage machinery and visible energy routing; dramatically larger than T4',
+ 6:'ultimate mastered upgrade: preserve every core anchor; add a tall prestige crown directly above the same central structure and heroic attached machinery; clearly tallest and most iconic tier',
 }
 PRIORITY = (4,7,9,8,10,11,12,13,3,5,6,0,1,2)
-STRENGTH = {1:.30, 2:.34, 3:.38, 4:.40, 5:.43, 6:.46}
+# Enough denoising to make tiers visibly evolve, while sequential conditioning preserves DNA.
+STRENGTH = {1:.34, 2:.42, 3:.50, 4:.56, 5:.62, 6:.68}
 
 def rows():
     for order,line in enumerate(MANIFEST.read_text(encoding='utf-8').splitlines()):
@@ -71,16 +72,23 @@ def select(items,count):
         if len(chosen)>=count: break
     return chosen or items[:count]
 
-def prompt(i):
-    return (
+def prompts(i):
+    # Keep the CLIP prompt intentionally short: FLUX CLIP is capped at 77 tokens.
+    short = (
+      f"AAA 2.5D strategy building, family F{i['family']:02d}, tier {i['tier']}. SAME building upgraded in place. "
+      f"Preserve facade, core anchors and camera. {TIER_DELTA[i['tier']]}. "
+      "One connected building, black background, no text, logo, people, vehicles or UI."
+    )
+    detailed = (
       f"AAA premium mobile strategy BUILDING MASTER. FIXED ARCHITECTURAL DNA F{i['family']:02d}: {FAMILY_DNA[i['family']]}. "
       f"Tier {i['tier']} is the SAME physical building upgraded in place. {TIER_DELTA[i['tier']]}. "
-      "ABSOLUTE CONTINUITY: same camera-facing facade, same core footprint, same production-core position, same structural anchor positions and same main roof orientation as the previous tier. "
+      "ABSOLUTE CONTINUITY: same camera-facing facade, same production-core position, same structural anchor positions and same main roof orientation as the previous tier. "
       "Only additive attached upgrades are allowed; never replace or redesign the building. Exactly one connected self-contained building. "
       "Fixed 34 degree three-quarter orthographic-like 2.5D camera, identical framing, bottom-center grounding, upper-left key light, cool fill, restrained warm/cyan emissives. "
       "ISOLATION MANDATORY: perfectly uniform RGB(0,0,0) black background touching every image edge; no gradient, vignette, halo, pedestal, backdrop rectangle, studio panel, horizon, road, landscape, sky or floor card. "
       "No detached props, workers, vehicles, readable text, letters, numbers, currency, signage, badge, logo, watermark or UI."
     )
+    return short,detailed
 
 def load_encode():
     t=T5EncoderModel.from_pretrained(FLUX,subfolder='text_encoder_2',torch_dtype=torch.float16,device_map='cuda')
@@ -172,10 +180,12 @@ def family_qa(recs):
     if max(s[2] for s in ss)-min(s[2] for s in ss)>6: return False,'camera-center-drift'
     adj=[iou(recs[n-1][1],recs[n][1]) for n in range(1,len(recs))]
     if min(adj)<.43: return False,f'identity-iou={min(adj):.2f}'
-    first,last=ss[0],ss[-1]
-    if last[4] < first[4]*1.08 and last[1] < first[1]*1.08 and last[0] < first[0]*1.08:
-        return False,'insufficient-tier-growth'
-    return True,f'min_iou={min(adj):.2f}'
+    # finish() deliberately normalizes every master to the Android canvas. Comparing
+    # post-normalization bbox size therefore cannot measure tier growth. Require a
+    # meaningful silhouette evolution instead, while adjacent IoU protects identity.
+    first_last=iou(recs[0][1],recs[-1][1])
+    if first_last>.95: return False,f'insufficient-tier-evolution-iou={first_last:.2f}'
+    return True,f'min_adj_iou={min(adj):.2f},first_last_iou={first_last:.2f}'
 
 def main():
     ap=argparse.ArgumentParser(); ap.add_argument('--count',type=int,default=30); ap.add_argument('--seed',type=int,default=43117); args=ap.parse_args()
@@ -185,7 +195,8 @@ def main():
     embeddings={}; t,enc=load_encode()
     for item in items:
         try:
-            with torch.no_grad(): pe,ppe,_=enc.encode_prompt(prompt=prompt(item),max_sequence_length=384)
+            short,detailed=prompts(item)
+            with torch.no_grad(): pe,ppe,_=enc.encode_prompt(prompt=short,prompt_2=detailed,max_sequence_length=384)
             embeddings[item['id']] = (pe.cpu(),ppe.cpu())
         except Exception as exc: print(f"KAGGLE_REJECTED={item['id']} stage=encode reason={exc}",flush=True)
     del t,enc; gc.collect(); torch.cuda.empty_cache()
@@ -207,11 +218,11 @@ def main():
                     mode='anchor'
                 else:
                     raw=imgpipe(image=previous,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),
-                                strength=STRENGTH.get(item['tier'],.36),num_inference_steps=8,guidance_scale=0.0,
+                                strength=STRENGTH.get(item['tier'],.50),num_inference_steps=8,guidance_scale=0.0,
                                 output_type='pil',max_sequence_length=384,generator=gen).images[0]
                     mode='img2img'
                 final,cov=finish(raw); recs.append((item,final,cov)); previous=raw.convert('RGB')
-                print(f"KAGGLE_RENDERED={item['id']} mode={mode} coverage={cov:.1%}",flush=True)
+                print(f"KAGGLE_RENDERED={item['id']} mode={mode} strength={STRENGTH.get(item['tier'],0):.2f} coverage={cov:.1%}",flush=True)
             except Exception as exc:
                 print(f"KAGGLE_REJECTED={item['id']} stage=render reason={type(exc).__name__}: {exc}",flush=True); failed=True; rejected+=1; break
             finally:
