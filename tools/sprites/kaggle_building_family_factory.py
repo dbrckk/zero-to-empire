@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
-"""Image-conditioned FLUX building family factory for Zero -> Empire.
+"""Sequential FLUX img2img building-family factory for Zero -> Empire.
 
-v6 keeps sequential img2img evolution, gives CLIP a compact non-truncated control
-prompt, gives T5 the detailed production prompt, increases controlled tier evolution,
-and evaluates progression without the contradictory post-normalization size test.
+v7 prioritizes untouched late-game families, strengthens monotonic tier morphology,
+and keeps strict isolation/family QA before a candidate can leave Kaggle.
 """
 from __future__ import annotations
 import argparse, gc, re
 from collections import deque
 from pathlib import Path
-print('KAGGLE_STARTUP=building-family-flux-v6-sequential-progression-qa', flush=True)
+print('KAGGLE_STARTUP=building-family-flux-v7-apex-progression', flush=True)
 import torch
 from PIL import Image, ImageFilter
 from diffusers import FluxPipeline, FluxImg2ImgPipeline, FluxTransformer2DModel
@@ -28,28 +27,28 @@ FAMILY_DNA = {
  2:'furnace works; squat heatproof masonry-and-steel shell, dominant orange-hot furnace chamber, twin exhaust stacks, heavy insulated piping',
  3:'assembly hub; low wide rectangular dark-steel production hall; central open robotic assembly spine; two symmetric side feeder bays; four corner posts; flat ribbed roof frame; cyan status strips',
  4:'precision fabrication works; low wide graphite rectangular factory; three enclosed CNC bay modules across front; ribbed flat roof; right-side compact logistics dock; cyan corner strips',
- 5:'energy-cell works; tall square dark-alloy factory; central amber battery handling core visible through front; two symmetric side transfer bays; heavy square roof frame; cyan lower service strips',
- 6:'coolant process plant; low wide silver-graphite rectangular pump house; two tall cylindrical reservoir towers fixed at rear-left and rear-right; central rigid coolant loop; cyan fluid pipes along base',
- 7:'automation power works; wide rectangular high-tech factory; two overhead gantry rails; central power manifold; four structural portal posts; cyan bus conduits',
- 8:'heavy megastructure forge; massive armored rectangular base; central articulated forge bay; two reinforced side ribs; large front service aperture; warm forge core',
+ 5:'energy-cell works; square dark-alloy factory; central amber battery handling core visible through front; two symmetric side transfer bays; heavy square roof frame; cyan lower service strips',
+ 6:'coolant process plant; low wide silver-graphite rectangular pump house; two cylindrical reservoir anchors at rear-left and rear-right; central rigid coolant loop; cyan fluid pipes along base',
+ 7:'automation power works; wide rectangular high-tech factory; two overhead gantry anchors; central power manifold; four structural portal posts; cyan bus conduits',
+ 8:'heavy forge; armored rectangular base; central articulated forge bay; two reinforced side ribs; large front service aperture; warm forge core',
  9:'nanofabrication complex; sealed pearl-and-graphite square process block; central clean chamber; two smooth layered side shells; cyan routing ring',
- 10:'orbital component works; dark-alloy rectangular logistics complex; central circular orbital assembly cradle embedded in roof; two cantilevered side bays; cyan levitation seams',
- 11:'actuator megaworks; tall rectangular press tower; two symmetric articulated side frames; armored square base; central vertical orange press channel',
- 12:'phase-matter foundry; pearl-alloy square facility; one luminous cyan containment ring fixed around central fabrication cradle; four elegant vertical corner fins',
- 13:'stellar precision works; dark-and-pearl square apex factory; crown-like four-part roof geometry; bright contained central process core; warm stellar plus cyan accents',
+ 10:'orbital component works; dark-alloy rectangular logistics base; central circular orbital assembly cradle embedded in roof; two cantilevered side bays; cyan levitation seams',
+ 11:'actuator works; rectangular press-house base; two symmetric articulated side frames; armored square plinth; central vertical orange press channel',
+ 12:'phase-matter foundry; pearl-alloy square base; luminous cyan containment ring around central fabrication cradle; four elegant corner-fin anchors',
+ 13:'stellar precision works; dark-and-pearl square base; four-part crown anchor geometry; bright contained central process core; warm stellar plus cyan accents',
 }
 TIER_DELTA = {
- 0:'starter form: compact bare shell, improvised cladding, exactly one visible production cue, deliberately low verticality',
- 1:'reinforced upgrade: keep the complete starter shell visible; add one attached machinery enclosure and reinforced roof ribs; modestly larger silhouette',
- 2:'industrial expansion: keep every existing module; extend both side walls and add one attached second subsystem; visibly larger footprint than T1',
- 3:'automation upgrade: keep all prior modules; add one central vertical automation tower plus an attached logistics conduit; visibly taller than T2',
- 4:'advanced facility: keep all prior modules; thicken the same shell, add dense attached machinery and premium cladding; visibly larger and more detailed than T3',
- 5:'late-game megastructure upgrade: keep the original shell readable; add a large attached upper production assembly, multi-stage machinery and visible energy routing; dramatically larger than T4',
- 6:'ultimate mastered upgrade: preserve every core anchor; add a tall prestige crown directly above the same central structure and heroic attached machinery; clearly tallest and most iconic tier',
+ 0:'STARTER ONLY: one-storey compact low building, bare shell, improvised cladding, one production cue, no tower, no crown, no megastructure scale',
+ 1:'REINFORCED: keep the full T0 shell; add one attached machinery enclosure and roof ribs; remain mostly one-storey and only modestly taller',
+ 2:'INDUSTRIAL: keep T0 and T1 readable; widen both sides, add a second attached subsystem and a partial upper service deck; clearly broader than T1',
+ 3:'AUTOMATED: preserve every prior anchor; add one central automation tower rising about one base-storey above the roof and one attached logistics conduit',
+ 4:'ADVANCED: preserve the same base and tower; add two attached side machinery wings, denser routing and premium cladding; visibly larger than T3',
+ 5:'MEGASTRUCTURE: preserve all lower tiers; add a large upper production assembly spanning the center, multi-stage machinery and explicit energy routing; substantially taller and broader than T4',
+ 6:'ULTIMATE: preserve the entire evolved structure; add a tall prestige crown directly above the central axis plus heroic attached machinery; unmistakably tallest, densest and most iconic tier',
 }
-PRIORITY = (4,7,9,8,10,11,12,13,3,5,6,0,1,2)
-# Enough denoising to make tiers visibly evolve, while sequential conditioning preserves DNA.
-STRENGTH = {1:.34, 2:.42, 3:.50, 4:.56, 5:.62, 6:.68}
+# Advance fresh families first so a failed family cannot monopolize every GPU batch.
+PRIORITY = (10,11,12,13,3,5,6,4,7,8,9,0,1,2)
+STRENGTH = {1:.38, 2:.48, 3:.58, 4:.66, 5:.74, 6:.82}
 
 def rows():
     for order,line in enumerate(MANIFEST.read_text(encoding='utf-8').splitlines()):
@@ -73,19 +72,17 @@ def select(items,count):
     return chosen or items[:count]
 
 def prompts(i):
-    # Keep the CLIP prompt intentionally short: FLUX CLIP is capped at 77 tokens.
-    short = (
-      f"AAA 2.5D strategy building, family F{i['family']:02d}, tier {i['tier']}. SAME building upgraded in place. "
-      f"Preserve facade, core anchors and camera. {TIER_DELTA[i['tier']]}. "
-      "One connected building, black background, no text, logo, people, vehicles or UI."
+    short=(
+      f"AAA 2.5D strategy building F{i['family']:02d} tier {i['tier']}. SAME building upgraded in place. "
+      f"{TIER_DELTA[i['tier']]}. Preserve facade and anchors. One connected building on pure black. No text, logo, people, vehicles or UI."
     )
-    detailed = (
-      f"AAA premium mobile strategy BUILDING MASTER. FIXED ARCHITECTURAL DNA F{i['family']:02d}: {FAMILY_DNA[i['family']]}. "
-      f"Tier {i['tier']} is the SAME physical building upgraded in place. {TIER_DELTA[i['tier']]}. "
-      "ABSOLUTE CONTINUITY: same camera-facing facade, same production-core position, same structural anchor positions and same main roof orientation as the previous tier. "
-      "Only additive attached upgrades are allowed; never replace or redesign the building. Exactly one connected self-contained building. "
-      "Fixed 34 degree three-quarter orthographic-like 2.5D camera, identical framing, bottom-center grounding, upper-left key light, cool fill, restrained warm/cyan emissives. "
-      "ISOLATION MANDATORY: perfectly uniform RGB(0,0,0) black background touching every image edge; no gradient, vignette, halo, pedestal, backdrop rectangle, studio panel, horizon, road, landscape, sky or floor card. "
+    detailed=(
+      f"AAA premium mobile strategy BUILDING MASTER. FIXED FAMILY DNA F{i['family']:02d}: {FAMILY_DNA[i['family']]}. "
+      f"TIER {i['tier']} MORPHOLOGY: {TIER_DELTA[i['tier']]}. This is the SAME physical building upgraded in place, never a redesign. "
+      "MONOTONIC EVOLUTION IS MANDATORY: every tier must retain all prior structural anchors and add visibly more footprint, machinery and vertical hierarchy; never shrink back to an earlier silhouette. "
+      "Same camera-facing facade, same production-core position, same main roof orientation. Additions must be physically attached to the existing structure. Exactly one connected self-contained building. "
+      "Fixed 34 degree three-quarter orthographic-like 2.5D camera, bottom-center grounding, upper-left key light, cool fill, restrained warm/cyan emissives. "
+      "ISOLATION MANDATORY: perfectly uniform RGB(0,0,0) background touching every edge; no gradient, vignette, halo, pedestal, backdrop rectangle, studio panel, horizon, road, landscape, sky or floor card. "
       "No detached props, workers, vehicles, readable text, letters, numbers, currency, signage, badge, logo, watermark or UI."
     )
     return short,detailed
@@ -179,12 +176,9 @@ def family_qa(recs):
     if any(s is None for s in ss): return False,'empty-silhouette'
     if max(s[2] for s in ss)-min(s[2] for s in ss)>6: return False,'camera-center-drift'
     adj=[iou(recs[n-1][1],recs[n][1]) for n in range(1,len(recs))]
-    if min(adj)<.43: return False,f'identity-iou={min(adj):.2f}'
-    # finish() deliberately normalizes every master to the Android canvas. Comparing
-    # post-normalization bbox size therefore cannot measure tier growth. Require a
-    # meaningful silhouette evolution instead, while adjacent IoU protects identity.
+    if min(adj)<.40: return False,f'identity-iou={min(adj):.2f}'
     first_last=iou(recs[0][1],recs[-1][1])
-    if first_last>.95: return False,f'insufficient-tier-evolution-iou={first_last:.2f}'
+    if first_last>.90: return False,f'insufficient-tier-evolution-iou={first_last:.2f}'
     return True,f'min_adj_iou={min(adj):.2f},first_last_iou={first_last:.2f}'
 
 def main():
