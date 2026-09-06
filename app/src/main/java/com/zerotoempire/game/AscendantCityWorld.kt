@@ -109,6 +109,7 @@ private fun AscendantCityStage(eraIndex: Int, modifier: Modifier = Modifier) {
             repeat(4){i->val y=h*(.34f+i*.155f);val left=i%2==0;val x=if(left)w*.035f else w*.595f;val pad=Path().apply{moveTo(x,y+h*.035f);lineTo(x+w*.25f,y);lineTo(x+w*.39f,y+h*.045f);lineTo(x+w*.13f,y+h*.083f);close()};drawPath(pad,Color(0xE5263034));drawPath(pad,EmpireColors.Cyan.copy(alpha=.12f),style=Stroke(2f));drawLine(EmpireColors.Gold.copy(alpha=.18f),Offset(x+w*.06f,y+h*.056f),Offset(x+w*.31f,y+h*.02f),3f)}
             drawRect(Color(0xFF0E151A),Offset(0f,h*.90f),Size(w*.16f,h*.10f));drawRect(Color(0xFF0E151A),Offset(w*.86f,h*.88f),Size(w*.14f,h*.12f))
         }
+        ReviewedMachineLayer(eraIndex, Modifier.fillMaxSize())
         ReviewedWorldTraffic(Modifier.fillMaxSize())
         Box(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color.Transparent,Color.Transparent,EmpireColors.Void.copy(alpha=.24f)))))
     }

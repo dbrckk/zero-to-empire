@@ -4,8 +4,8 @@ Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains t
 
 ## Official progress
 - DONE: **70 / 235**
-- ART VALIDATED: **85 / 235**
-- RUNTIME INTEGRATED: **85 / 235**
+- ART VALIDATED: **108 / 235**
+- RUNTIME INTEGRATED: **108 / 235**
 - Generated candidates accepted as DONE: **70**
 - Rule: only runtime-integrated, individually clean/transparent, manifest-matching assets with green Android CI increment DONE.
 
@@ -57,3 +57,6 @@ Technically valid but semantically wrong candidates remain excluded. This includ
 1. Regenerate the remaining vehicle target with stricter semantics: `VEH-16`.
 2. Rework building generation around coherent family/tier evolution; do not accept generic unrelated buildings.
 3. Continue machines, characters, terrain and FX only through the same generate → technical QA → semantic QA → runtime → green-CI gate.
+
+## Reviewed FLUX run 51 — 23 machines awaiting green CI
+Run-51 produced 29 technically valid candidates. Semantic QA accepted 23 machine masters and rejected `MCH-03-0` (baked lettering), `MCH-05-1` (wrong battery-carousel read), `MCH-11-1` (detached underside sphere), `MCH-12-0` (missing required containment-ring identity), both terrain candidates (camera/connector mismatch; TER-01 also has a baked road marking), while `MCH-07-0` was not emitted as a technically valid candidate. The 23 accepted machines are integrated into the era-specific active city runtime layer and remain RUNTIME until Android CI is green.
