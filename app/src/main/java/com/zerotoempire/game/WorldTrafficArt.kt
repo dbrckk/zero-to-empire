@@ -26,7 +26,8 @@ private val worldTrafficSprites = intArrayOf(
     R.drawable.zte_vehicle_10_final,
     R.drawable.zte_vehicle_11_final, R.drawable.zte_vehicle_12_final,
     R.drawable.zte_vehicle_13_final, R.drawable.zte_vehicle_14_final,
-    R.drawable.zte_vehicle_15_final, R.drawable.zte_vehicle_17_final,
+    R.drawable.zte_vehicle_15_final, R.drawable.zte_vehicle_16_final,
+    R.drawable.zte_vehicle_17_final,
 )
 
 private val worldPropSprites = intArrayOf(
@@ -59,7 +60,7 @@ internal fun ReviewedWorldTraffic(modifier: Modifier = Modifier) {
                 Triple(.34f,.79f,.090f), Triple(.69f,.84f,.150f), Triple(.46f,.89f,.158f),
                 Triple(.57f,.94f,.090f), Triple(.51f,.33f,.088f), Triple(.61f,.48f,.100f),
                 Triple(.36f,.56f,.108f), Triple(.66f,.68f,.118f), Triple(.49f,.81f,.126f),
-                Triple(.73f,.55f,.112f), Triple(.28f,.62f,.104f),
+                Triple(.73f,.55f,.112f), Triple(.28f,.62f,.104f), Triple(.78f,.63f,.110f),
             )
             vehiclePlacements.forEachIndexed { i, (x,y,w) -> drawSprite(vehicles[i], x,y,w,.72f,true) }
 
