@@ -1,0 +1,55 @@
+name: Reconcile reviewed PRP-05-A
+
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/reconcile-prp05a.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+      - name: Reconcile canonical manifest and progress
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          manifest = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
+          text = manifest.read_text(encoding='utf-8')
+          old = '| PRP-05-A | Expansion Business 05 operational prop | Business-specific crate/tool/storage/signage-without-text element that reinforces function and scale. | `app/src/main/res/drawable-nodpi/zte_prop_05_a_final.webp` | TODO |'
+          new = old[:-6] + 'DONE |'
+          if old not in text:
+              raise SystemExit('Expected PRP-05-A TODO row not found')
+          manifest.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          progress = Path('docs/art/FINAL_AAA_SPRITE_PROGRESS.md')
+          p = progress.read_text(encoding='utf-8')
+          p = p.replace('- DONE: **68 / 235**', '- DONE: **69 / 235**', 1)
+          p = p.replace('- ART VALIDATED: **83 / 235**', '- ART VALIDATED: **84 / 235**', 1)
+          p = p.replace('- RUNTIME INTEGRATED: **83 / 235**', '- RUNTIME INTEGRATED: **84 / 235**', 1)
+          p = p.replace('- Generated candidates accepted as DONE: **68**', '- Generated candidates accepted as DONE: **69**', 1)
+          anchor = '## Existing ART/RUNTIME assets not yet promoted to DONE\n'
+          section = '''## Reviewed FLUX run 29 — 1 DONE\nThe reviewed `PRP-05-A` replacement is referenced by `WorldTrafficArt.kt` in the active city stage. Android CI run `34010813072` for commit `e9b301f2a79d3451dbacb8c7a3e754889ea899ad` completed successfully, so `PRP-05-A` is strict DONE. The rejected `VEH-09` runtime was removed and remains TODO.\n\n'''
+          if section not in p:
+              if anchor not in p:
+                  raise SystemExit('Progress insertion anchor missing')
+              p = p.replace(anchor, section + anchor, 1)
+          p = p.replace('2. Regenerate the remaining missing prop: `PRP-05-A`.\n3. Rework building generation around coherent family/tier evolution; do not accept generic unrelated buildings.\n4. Continue machines, characters, terrain and FX only through the same generate → technical QA → semantic QA → runtime → green-CI gate.', '2. Rework building generation around coherent family/tier evolution; do not accept generic unrelated buildings.\n3. Continue machines, characters, terrain and FX only through the same generate → technical QA → semantic QA → runtime → green-CI gate.')
+          progress.write_text(p, encoding='utf-8')
+          PY
+      - name: Commit reconciliation
+        shell: bash
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md docs/art/FINAL_AAA_SPRITE_PROGRESS.md
+          git commit -m 'docs: mark reviewed PRP-05-A strict DONE'
+          git pull --rebase origin main
+          git push
