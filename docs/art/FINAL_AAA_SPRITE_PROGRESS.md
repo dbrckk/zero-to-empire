@@ -3,10 +3,10 @@
 Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains the canonical 235-item scope. Candidate art is never confused with DONE runtime assets.
 
 ## Official progress
-- DONE: **70 / 235**
+- DONE: **106 / 235**
 - ART VALIDATED: **121 / 235**
 - RUNTIME INTEGRATED: **121 / 235**
-- Generated candidates accepted as DONE: **70**
+- Generated candidates accepted as DONE: **106**
 - Rule: only runtime-integrated, individually clean/transparent, manifest-matching assets with green Android CI increment DONE.
 
 ## DONE baseline
@@ -55,11 +55,15 @@ Technically valid but semantically wrong candidates remain excluded. This includ
 
 ## Next production targets
 1. Regenerate the remaining vehicle target with stricter semantics: `VEH-16`.
-2. Rework building generation around coherent family/tier evolution; do not accept generic unrelated buildings.
-3. Continue machines, characters, terrain and FX only through the same generate → technical QA → semantic QA → runtime → green-CI gate.
+2. Continue coherent family/tier building production; promote only families that preserve architectural identity and pass semantic review.
+3. Regenerate the two rejected machines (`MCH-05-1`, `MCH-07-0`) and four rejected terrain connectors (`TER-05`, `TER-07`, `TER-09`, `TER-10`).
+4. Continue characters and FX only through the same generate → technical QA → semantic QA → runtime → green-CI gate.
 
-## Reviewed FLUX run 51 — 23 machines awaiting green CI
-Run-51 produced 29 technically valid candidates. Semantic QA accepted 23 machine masters and rejected `MCH-03-0` (baked lettering), `MCH-05-1` (wrong battery-carousel read), `MCH-11-1` (detached underside sphere), `MCH-12-0` (missing required containment-ring identity), both terrain candidates (camera/connector mismatch; TER-01 also has a baked road marking), while `MCH-07-0` was not emitted as a technically valid candidate. The 23 accepted machines are integrated into the era-specific active city runtime layer and remain RUNTIME until Android CI is green.
+## Reviewed FLUX run 51 — 23 machines DONE
+Run-51 produced 29 technically valid candidates. Semantic QA accepted 23 machine masters and rejected `MCH-03-0` (baked lettering), `MCH-05-1` (wrong battery-carousel read), `MCH-11-1` (detached underside sphere), `MCH-12-0` (missing required containment-ring identity), both terrain candidates (camera/connector mismatch; TER-01 also has a baked road marking), while `MCH-07-0` was not emitted as a technically valid candidate. The 23 accepted machines are integrated into the era-specific active city runtime layer. Android CI run `34047735544` on descendant commit `7ec8e75e57ba34c45a32f474d86ffb93b3230e30` completed successfully with those unchanged runtime assets present, so all 23 are strict DONE.
 
-## Reviewed FLUX run 52 — 13 assets awaiting green CI
-Semantic QA accepted `MCH-03-0`, `MCH-11-1`, `MCH-12-0` plus terrain `TER-00`, `TER-01`, `TER-02`, `TER-03`, `TER-04`, `TER-06`, `TER-08`, `TER-11`, `TER-12`, `TER-13`. Rejected: `MCH-05-1` (wrong carousel read with detached dark base), `MCH-07-0` (crane-like loose suspended composition instead of a compact gantry), `TER-05` (baked arrows), `TER-07` (open frame rather than a complete square tile), `TER-09` (missing twin cyan maglev guide identity), `TER-10` (bridge-like structure rather than square service-deck tile), and `VEH-16` (still reads as a conventional car with wheel-like side volumes). Accepted assets are integrated and remain RUNTIME until Android CI is green.
+## Reviewed FLUX run 52 — 13 assets DONE
+Semantic QA accepted `MCH-03-0`, `MCH-11-1`, `MCH-12-0` plus terrain `TER-00`, `TER-01`, `TER-02`, `TER-03`, `TER-04`, `TER-06`, `TER-08`, `TER-11`, `TER-12`, `TER-13`. Rejected: `MCH-05-1` (wrong carousel read with detached dark base), `MCH-07-0` (crane-like loose suspended composition instead of a compact gantry), `TER-05` (baked arrows), `TER-07` (open frame rather than a complete square tile), `TER-09` (missing twin cyan maglev guide identity), `TER-10` (bridge-like structure rather than square service-deck tile), and `VEH-16` (still reads as a conventional car with wheel-like side volumes). The 13 accepted assets are integrated and visible in the active city stage. Android CI run `34047735544` on descendant commit `7ec8e75e57ba34c45a32f474d86ffb93b3230e30` completed successfully with those unchanged runtime assets present, so all 13 are strict DONE.
+
+## Reviewed FLUX run 56 — semantic selection pending promotion
+The anchored-family generator produced 26 technically valid building candidates for `BLD-03-T2` through `BLD-06-T6`. Semantic review rejects the entire `BLD-04` family because residual dark background rectangles remain behind the isolated building. `BLD-03`, `BLD-05` and `BLD-06` preserve substantially stronger family identity and remain candidates for selective promotion; they do not count as DONE until runtime integration and a subsequent green Android CI.
