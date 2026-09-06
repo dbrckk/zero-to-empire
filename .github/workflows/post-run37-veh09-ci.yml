@@ -1,0 +1,88 @@
+name: Verify reviewed VEH-09 runtime
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/post-run37-veh09-ci.yml']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: post-run37-veh09-ci
+  cancel-in-progress: false
+
+jobs:
+  verify-and-finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Verify runtime asset and active reference
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s app/src/main/res/drawable-nodpi/zte_vehicle_09_final.webp
+          grep -q 'R.drawable.zte_vehicle_09_final' app/src/main/java/com/zerotoempire/game/WorldTrafficArt.kt
+          grep -q 'Triple(.28f,.62f,.104f)' app/src/main/java/com/zerotoempire/game/WorldTrafficArt.kt
+
+      - name: Android sprite-runtime CI
+        run: ./gradlew :app:assembleDebug --no-daemon --stacktrace
+
+      - name: Mark VEH-09 strict DONE after green build
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          m=Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
+          s=m.read_text()
+          pat=r'^(\|\s*VEH-09\s*\|.*\|\s*)(TODO|ART|CLEAN|RUNTIME)(\s*\|)$'
+          s2,n=re.subn(pat,r'\1DONE\3',s,count=1,flags=re.M)
+          if n!=1:
+              if not re.search(r'^\|\s*VEH-09\s*\|.*\|\s*DONE\s*\|$',s,re.M):
+                  raise SystemExit('VEH-09 manifest row not found')
+              s2=s
+          m.write_text(s2)
+
+          p=Path('docs/art/FINAL_AAA_SPRITE_PROGRESS.md')
+          t=p.read_text()
+          t=t.replace('- DONE: **69 / 235**','- DONE: **70 / 235**')
+          t=t.replace('- ART VALIDATED: **84 / 235**','- ART VALIDATED: **85 / 235**')
+          t=t.replace('- RUNTIME INTEGRATED: **84 / 235**','- RUNTIME INTEGRATED: **85 / 235**')
+          t=t.replace('- Generated candidates accepted as DONE: **69**','- Generated candidates accepted as DONE: **70**')
+          anchor='## Existing ART/RUNTIME assets not yet promoted to DONE\n'
+          note=('## Reviewed FLUX run 37 — 1 DONE\n'
+                '`VEH-09` passed technical QA and semantic review as a wheel-less enclosed maglev freight capsule, was integrated into `WorldTrafficArt.kt`, and the Android runtime build completed successfully. It is strict DONE. `VEH-16` from the same run was rejected because it remained a conventional wheeled automobile.\n\n')
+          if '## Reviewed FLUX run 37 — 1 DONE' not in t:
+              if anchor not in t: raise SystemExit('progress insertion anchor missing')
+              t=t.replace(anchor,note+anchor,1)
+          t=t.replace('and the rejected `VEH-09` concept.','and earlier rejected `VEH-09` concepts superseded by the valid run-37 replacement.')
+          t=t.replace('1. Regenerate the remaining vehicle set with stricter semantics: `VEH-09`, `VEH-16`.','1. Regenerate the remaining vehicle target with stricter semantics: `VEH-16`.')
+          p.write_text(t)
+          PY
+
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md docs/art/FINAL_AAA_SPRITE_PROGRESS.md
+          if git diff --cached --quiet; then
+            echo 'Ledger already finalized.'
+            exit 0
+          fi
+          git commit -m 'docs: mark reviewed VEH-09 strict DONE'
+          git pull --rebase origin main
+          git push
