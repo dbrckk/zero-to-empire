@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 """Sequential FLUX img2img building-family factory for Zero -> Empire.
 
-v7 prioritizes untouched late-game families, strengthens monotonic tier morphology,
-and keeps strict isolation/family QA before a candidate can leave Kaggle.
+v8 prioritizes untouched late-game families, strengthens monotonic tier morphology,
+and keeps strict isolation/family QA before a candidate can leave Kaggle. Isolation
+accepts a uniform neutral black/white/gray edge field because FLUX can invert the
+requested studio background while still producing a clean, safely detachable master.
 """
 from __future__ import annotations
 import argparse, gc, re
 from collections import deque
 from pathlib import Path
-print('KAGGLE_STARTUP=building-family-flux-v7-apex-progression', flush=True)
+print('KAGGLE_STARTUP=building-family-flux-v8-neutral-background-isolation', flush=True)
 import torch
 from PIL import Image, ImageFilter
 from diffusers import FluxPipeline, FluxImg2ImgPipeline, FluxTransformer2DModel
@@ -74,7 +76,7 @@ def select(items,count):
 def prompts(i):
     short=(
       f"AAA 2.5D strategy building F{i['family']:02d} tier {i['tier']}. SAME building upgraded in place. "
-      f"{TIER_DELTA[i['tier']]}. Preserve facade and anchors. One connected building on pure black. No text, logo, people, vehicles or UI."
+      f"{TIER_DELTA[i['tier']]}. Preserve facade and anchors. One connected isolated building on a perfectly uniform neutral studio background. No text, logo, people, vehicles or UI."
     )
     detailed=(
       f"AAA premium mobile strategy BUILDING MASTER. FIXED FAMILY DNA F{i['family']:02d}: {FAMILY_DNA[i['family']]}. "
@@ -82,7 +84,7 @@ def prompts(i):
       "MONOTONIC EVOLUTION IS MANDATORY: every tier must retain all prior structural anchors and add visibly more footprint, machinery and vertical hierarchy; never shrink back to an earlier silhouette. "
       "Same camera-facing facade, same production-core position, same main roof orientation. Additions must be physically attached to the existing structure. Exactly one connected self-contained building. "
       "Fixed 34 degree three-quarter orthographic-like 2.5D camera, bottom-center grounding, upper-left key light, cool fill, restrained warm/cyan emissives. "
-      "ISOLATION MANDATORY: perfectly uniform RGB(0,0,0) background touching every edge; no gradient, vignette, halo, pedestal, backdrop rectangle, studio panel, horizon, road, landscape, sky or floor card. "
+      "ISOLATION MANDATORY: perfectly uniform neutral achromatic background touching every edge; pure black, white or gray is acceptable; no gradient, vignette, halo, pedestal, backdrop rectangle, studio panel, horizon, road, landscape, sky or floor card. "
       "No detached props, workers, vehicles, readable text, letters, numbers, currency, signage, badge, logo, watermark or UI."
     )
     return short,detailed
@@ -108,12 +110,18 @@ def border_stats(im):
     for x in range(0,w,s): pts += [rgb.getpixel((x,0)),rgb.getpixel((x,h-1))]
     for y in range(0,h,s): pts += [rgb.getpixel((0,y)),rgb.getpixel((w-1,y))]
     vals=[sum(p)/3 for p in pts]; mean=sum(vals)/len(vals); var=sum((v-mean)**2 for v in vals)/len(vals)
-    pts.sort(key=sum); q=pts[:max(16,len(pts)//3)]; bg=tuple(sum(p[k] for p in q)//len(q) for k in range(3))
-    return bg,mean,var**.5
+    # Median-ish border estimate is robust for both near-black and near-white generations.
+    ordered=sorted(pts,key=sum); q=ordered[len(ordered)//3: max(len(ordered)//3+1, 2*len(ordered)//3)]
+    bg=tuple(sum(p[k] for p in q)//len(q) for k in range(3))
+    chroma=max(bg)-min(bg)
+    return bg,mean,var**.5,chroma
 
 def isolate(im):
-    rgb=im.convert('RGB'); w,h=rgb.size; bg,mean,sd=border_stats(rgb)
-    if mean>18 or sd>12: raise RuntimeError(f'non-uniform/non-black border mean={mean:.1f} sd={sd:.1f}')
+    rgb=im.convert('RGB'); w,h=rgb.size; bg,mean,sd,chroma=border_stats(rgb)
+    # Background brightness is irrelevant after alpha extraction. What matters is a
+    # uniform, neutral edge field: gradients/scenery and tinted halos remain rejected.
+    if sd>8 or chroma>14:
+        raise RuntimeError(f'non-uniform/non-neutral border mean={mean:.1f} sd={sd:.1f} chroma={chroma}')
     px=rgb.load(); dist=Image.new('L',(w,h)); dp=dist.load()
     for y in range(h):
         for x in range(w):
