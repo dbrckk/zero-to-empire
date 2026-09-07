@@ -15,7 +15,7 @@ def ensure_gpu():
  print('KAGGLE_GPU_CAPABILITY='+cap,flush=True)
  if int(cap.split('.')[0])<7:subprocess.run(['python','-m','pip','install','--quiet','--upgrade','--force-reinstall','torch==2.5.1','torchvision==0.20.1','--index-url','https://download.pytorch.org/whl/cu121'],check=True)
 def ensure_flux():
- print('KAGGLE_ENGINE=flux1-schnell-nf4-yield-router-v4',flush=True);subprocess.run(['python','-m','pip','install','--quiet','--upgrade','bitsandbytes==0.48.1','diffusers==0.35.1','peft==0.17.1','protobuf==5.29.5','sentencepiece==0.2.1','transformers==4.56.1','accelerate>=1.2','safetensors','Pillow'],check=True)
+ print('KAGGLE_ENGINE=flux1-schnell-nf4-yield-router-v5-semantic-guard',flush=True);subprocess.run(['python','-m','pip','install','--quiet','--upgrade','bitsandbytes==0.48.1','diffusers==0.35.1','peft==0.17.1','protobuf==5.29.5','sentencepiece==0.2.1','transformers==4.56.1','accelerate>=1.2','safetensors','Pillow'],check=True)
 def runtime_exists(runtime): return (REPO/runtime).is_file()
 def backlog():
  c={'BLD':0,'STATIC':0,'CHAR_FX':0,'SKIPPED_RUNTIME':0}
@@ -35,10 +35,9 @@ subprocess.run(['git','clone','--depth','1','https://github.com/dbrckk/zero-to-e
 incoming=REPO/'art/incoming/final-sprites';before={p.name:digest(p) for p in incoming.glob('*_final.png') if p.is_file()};q=backlog();print('KAGGLE_BACKLOG='+json.dumps(q,separators=(',',':')),flush=True);print(f'KAGGLE_BATCH_SEED={SEED}',flush=True)
 if q['BLD']>=5:
  lane='BUILDING_FAMILIES';effective=max(COUNT,42)
- factory=REPO/'tools/sprites/kaggle_building_family_factory.py';s=factory.read_text(encoding='utf-8')
- s=s.replace("if bm and status.upper()=='TODO': yield {'id':aid,'stem':Path(runtime).stem,'family':int(bm.group(1)),'tier':int(bm.group(2)),'order':order}","if bm and status.upper()=='TODO' and not (ROOT/runtime).is_file(): yield {'id':aid,'stem':Path(runtime).stem,'family':int(bm.group(1)),'tier':int(bm.group(2)),'order':order}")
- s=s.replace("PRIORITY=(10,11,12,13,3,5,6,4,7,8,9,0,1,2)","PRIORITY=(5,6,4,7,8,9,10,12,13,11,3,0,1,2)")
- factory.write_text(s,encoding='utf-8');cmd=['python','-u',str(factory),'--count',str(effective),'--seed',str(SEED)]
+ factory=REPO/'tools/sprites/kaggle_building_family_factory_v11.py'
+ if not factory.is_file():raise SystemExit('Missing strict v11 building family factory')
+ cmd=['python','-u',str(factory),'--count',str(effective),'--seed',str(SEED)]
 elif q['STATIC']:
  lane='STATIC';effective=max(COUNT,42);cmd=['python','-u','tools/sprites/kaggle_sprite_factory.py','--kind','ALL','--count',str(effective),'--seed',str(SEED)]
 else:raise SystemExit('No supported GPU backlog; character/FX lane requires dedicated sheet factory')
@@ -49,4 +48,4 @@ qa=OUT/'batch-contact-sheet.png';report=OUT/'batch-qa-report.json';subprocess.ru
 cdir=OUT/'candidates';cdir.mkdir();targets=[]
 for f in fresh:
  dst=cdir/f.name;shutil.copy2(f,dst);targets.append({'file':f.name,'sha256':digest(dst),'bytes':dst.stat().st_size})
-(OUT/'generated-targets.json').write_text(json.dumps({'count':len(targets),'engine':'FLUX.1-schnell NF4 yield-routed batch v4','lane':lane,'seed':SEED,'backlog':q,'targets':targets},indent=2),encoding='utf-8');print(f'KAGGLE_EXPORT_COUNT={len(fresh)}',flush=True);print('KAGGLE_OUTPUT_ONLY=1',flush=True)
+(OUT/'generated-targets.json').write_text(json.dumps({'count':len(targets),'engine':'FLUX.1-schnell NF4 yield-routed batch v5 semantic-guard','lane':lane,'seed':SEED,'backlog':q,'targets':targets},indent=2),encoding='utf-8');print(f'KAGGLE_EXPORT_COUNT={len(fresh)}',flush=True);print('KAGGLE_OUTPUT_ONLY=1',flush=True)
