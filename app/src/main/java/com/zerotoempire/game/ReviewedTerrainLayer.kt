@@ -11,13 +11,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
-/** Strictly reviewed modular terrain from FLUX runs 52, 66 and 68, visible in the active city stage. */
+/** Strictly reviewed modular terrain from FLUX runs 52, 66, 68 and 69, visible in the active city stage. */
 @Composable
 internal fun ReviewedTerrainLayer(eraIndex: Int, modifier: Modifier = Modifier) {
     val groups = listOf(
         intArrayOf(R.drawable.zte_terrain_00_final, R.drawable.zte_terrain_01_final, R.drawable.zte_terrain_02_final, R.drawable.zte_terrain_03_final),
         intArrayOf(R.drawable.zte_terrain_04_final, R.drawable.zte_terrain_05_final, R.drawable.zte_terrain_06_final),
-        intArrayOf(R.drawable.zte_terrain_08_final, R.drawable.zte_terrain_10_final, R.drawable.zte_terrain_11_final),
+        intArrayOf(R.drawable.zte_terrain_08_final, R.drawable.zte_terrain_09_final, R.drawable.zte_terrain_10_final, R.drawable.zte_terrain_11_final),
         intArrayOf(R.drawable.zte_terrain_12_final, R.drawable.zte_terrain_13_final),
     )
     val group = when { eraIndex <= 1 -> groups[0]; eraIndex <= 3 -> groups[1]; eraIndex <= 5 -> groups[2]; else -> groups[3] }

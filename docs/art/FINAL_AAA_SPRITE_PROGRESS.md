@@ -4,8 +4,8 @@ Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains t
 
 ## Official progress
 - DONE: **111 / 235**
-- ART VALIDATED: **126 / 235**
-- RUNTIME INTEGRATED: **126 / 235**
+- ART VALIDATED: **127 / 235**
+- RUNTIME INTEGRATED: **127 / 235**
 - Generated candidates accepted as DONE: **111**
 - Rule: only runtime-integrated, individually clean/transparent, manifest-matching assets with green Android CI increment DONE.
 
@@ -84,3 +84,7 @@ Run-66 semantic and full-resolution review accepted `TER-10` and `VEH-16`. `TER-
 
 ## Reviewed FLUX run 68 — 3 DONE
 Run-68 full-resolution review accepts `MCH-05-1`, `MCH-07-0` and `TER-05`. `MCH-05-1` now reads clearly as a compact radial battery carousel with repeated removable energy modules and no baked text; `MCH-07-0` is a compact framed production gantry with integrated tool head and work bed rather than a loose crane; `TER-05` is a complete multi-lane four-way expansion road connector with clean isolation and road-surface markings only. All three pass alpha, edge, dimension, coverage and safety-margin checks and are integrated into active runtime references. `TER-07` is rejected because it remains a generic platform rather than an energy conduit; `TER-09` is rejected because it remains a slab with a single luminous strip rather than the required maglev/rail connector identity. Android CI run `34081161392` completed successfully on descendant commit `860d2ea3c8a3acdcefc9a0737532fe6eb2f22e79` with all three run-68 runtime assets unchanged; all three are therefore strict DONE.
+
+
+## Reviewed FLUX run 69 — 1 asset awaiting green CI
+Run-69 emitted two technically passing terrain candidates. Full-resolution semantic review accepts only `TER-09`: it is a clean isolated four-way maglev/rail connector with continuous twin cyan guide rails, connector endpoints, no baked text/UI and no background rectangle. `TER-07` is rejected because it remains a platform tile with a local emitter rather than a seam-safe energy-conduit connector. `TER-09` is integrated into the active megastructure terrain runtime layer and remains RUNTIME until Android CI is green.
