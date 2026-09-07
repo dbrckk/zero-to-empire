@@ -24,34 +24,41 @@ An asset is not strict `DONE` until it is individually authored/generated, seman
 ## Current handoff — 2026-09-07
 ### Current trusted state
 - Strict committed progress ledger remains **112 / 235 DONE** until strict reconciliation proves a higher number.
-- `BLD-03-T2` through `BLD-03-T6` were integrated by run 75 (`e14b6897...`) but must still be reconciled against canonical manifest/progress and green CI before increasing strict DONE.
-- Run 77 (`34102566634`) produced 21 technically valid building candidates; full-resolution semantic review rejected **21 / 21**. Review: `docs/art/reviews/RUN_77_SEMANTIC_REVIEW.md`.
-- Run 78 (`34116344191`) produced no fresh accepted candidates; its failure evidence was used to improve retries and QA. Review: `docs/art/reviews/RUN_78_PIPELINE_REVIEW.md`.
-- **Wave 79** GitHub Actions run `34121697907` was launched from commit `604d2cc4...` and is currently still executing the Kaggle GPU wait step. Do not trigger another pulse while it is active because workflow concurrency cancels in-progress runs.
+- `BLD-03-T2` through `BLD-03-T6` were integrated by run 75 (`e14b6897...`) but still require canonical reconciliation/green-CI proof before increasing strict DONE.
+- Run 77 (`34102566634`) produced 21 technically valid building candidates; semantic review rejected 21/21.
+- Run 78 (`34116344191`) produced no fresh accepted candidates and motivated retry/QA changes.
+- Run 79 (`34121697907`) also produced **0 fresh candidates**. It was not an auth/infrastructure failure: the generator completed its planned families, then rejected them all through QA and exited because no fresh files were emitted.
 
-### Generator evolution
-- Canonical v12 retry-normalized generator was introduced after run 78.
-- New **v13 edge-segmentation** generator added at `tools/sprites/kaggle_building_family_factory_v13.py` in commit `388dcd6070b28db7fd7b475711c9d682b0a40c38`.
-- `kaggle/github_mass_factory.py` now routes future building waves through v13 in commit `0053152494757c468b64ee9083202c37714e377d`.
-- Wave 79 itself started before those two commits, so it remains a v12 run. v13 applies beginning with the next user-approved wave after wave 79 finishes.
+### Run 79 root-cause evidence
+1. Prompt warnings show repeated **CLIP 77-token truncation** and T5 `max_sequence_length=256` truncation. Critical negative constraints were therefore being dropped before inference.
+2. BLD-08 rendered T0→T6 but coverage grew only **22.1% → 25.7%** and was correctly rejected for insufficient growth.
+3. BLD-09 rendered T0→T6 but coverage grew only **25.0% → 28.8%** and was correctly rejected for insufficient growth.
+4. The v12/v13 post-processing normalized most non-T0 tiers into nearly the same display envelope, partially cancelling the visible tier growth requested from FLUX.
+5. Strict DONE delta from run 79: **+0**.
 
-### v13 production improvements
-1. **Edge-connected background segmentation** replaces global background-colour deletion. Only background-like pixels connected to the image borders are removed. This prevents grey/silver internal building materials from being accidentally punched out as alpha holes.
-2. Segmentation runs on a 256×256 topology proxy and is softly upscaled, reducing CPU cost while preserving clean edges.
-3. Background traversal has a bounded colour-distance tolerance, so object edges stop the flood even when the object shares neutral tones with the studio background.
-4. T0 remains constrained to a smaller frame envelope and explicitly prohibits towers, cranes, gantries and late-game mass.
-5. Later tiers receive up to three retries, while T0 keeps four retries.
-6. Family QA retains identity IoU, monotonic coverage/growth, horizontal drift and T0→T6 evolution gates.
-7. Ground-slab detection is stricter; detached-component dominance is stricter; internal-hole rejection is relaxed only enough to permit legitimate windows/cavities now that segmentation itself is safer.
-8. Future Kaggle metadata identifies the engine as `v7 edge-segmentation`, making run provenance explicit.
+### Generator evolution after run 79
+- Added **v14 prompt-safe-monotonic** generator at `tools/sprites/kaggle_building_family_factory_v14.py` (`572f1c381d683b2cc732872144fe1a59ab842033`).
+- `kaggle/github_mass_factory.py` routes future building waves through v14 (`071444d69928a94ce3a896a9ac81a5994b37f6d9`).
+- v14 keeps semantic prompts intentionally short so the family DNA, tier instruction, isolation contract and key negatives survive CLIP/T5 limits.
+- v14 preserves edge-connected background segmentation so neutral metallic interior materials are less likely to be deleted as background.
+- v14 introduces explicit monotonic final envelopes by tier: T0 is deliberately small and each tier gets a progressively larger permitted canvas footprint through T6.
+- v14 keeps adaptive retries, family identity IoU, growth, non-monotonicity, drift, slab, padding and detached-structure gates.
+- Family growth gate is now stricter because the output normalization itself deliberately exposes tier scale growth instead of hiding it.
+
+### Wave 80
+- Explicit user `Go` authorizes the next generation wave.
+- Trigger commit: `5202d20d7b99efffe2225604b4ee1f0b4f2cfede`.
+- Generator: `building-family-flux-v14-prompt-safe-monotonic`.
+- Requested batch count: 28 manifest tiers.
+- Objective: preserve prompt constraints and force unmistakable T0→T6 growth while retaining strict semantic QA.
 
 ## Immediate next actions — ordered
-1. Let wave 79 complete without launching another concurrent pulse.
-2. Retrieve its artifact/log immediately once complete.
-3. Inspect every emitted candidate at full resolution and perform strict semantic family review.
-4. Promote only coherent accepted families; integrate runtime paths/references and require green Android CI before incrementing strict DONE.
-5. If wave 79 yields no promotable family, launch the next user-approved wave with **v13 edge-segmentation** rather than rerunning v12 unchanged.
-6. Continue building families until the building backlog is exhausted, then route remaining static assets, characters and FX through dedicated strict production lanes.
+1. Track wave 80 to completion.
+2. Retrieve its artifact/log and inspect every emitted candidate at full resolution.
+3. Promote only coherent complete families with correct family identity, clean isolation and unmistakable starter→ultimate progression.
+4. Integrate accepted masters/runtime assets, reconcile manifest/progress and require green Android CI before increasing strict DONE.
+5. If v14 still produces no promotable family, use wave-80 evidence to adjust generation strategy rather than repeating unchanged seeds/settings.
+6. Once building backlog is exhausted, route remaining static assets, characters and FX through equally strict dedicated production lanes.
 7. Repeat generate → technical QA → semantic QA → promotion → runtime integration → green CI until **235 / 235 strict DONE**.
 
 ## Known unresolved art targets
