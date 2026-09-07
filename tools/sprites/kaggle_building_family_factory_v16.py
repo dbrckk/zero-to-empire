@@ -15,11 +15,11 @@ SPEC=importlib.util.spec_from_file_location('v15',HERE/'kaggle_building_family_f
 v15=importlib.util.module_from_spec(SPEC); SPEC.loader.exec_module(v15)
 v14=v15.v14
 
-print('KAGGLE_STARTUP=building-family-flux-v16-positive-source-locked',flush=True)
+print('KAGGLE_STARTUP=building-family-flux-v16.1-shape-first-source-locked',flush=True)
 
 # Preserve an approved family anchor instead of reinventing the scene at every tier.
-v14.STRENGTH.update({1:.24,2:.29,3:.34,4:.39,5:.44,6:.49})
-v14.STEPS.update({0:7,1:6,2:6,3:7,4:7,5:8,6:8})
+v14.STRENGTH.update({1:.22,2:.27,3:.32,4:.37,5:.42,6:.47})
+v14.STEPS.update({0:8,1:6,2:6,3:7,4:7,5:8,6:8})
 
 FAMILY={
  0:'street foundry kiosk, rectangular rust-steel shell, recessed amber furnace mouth, short roof exhaust',
@@ -38,6 +38,23 @@ FAMILY={
  13:'stellar manufacturing works, dark pearl industrial base, four integrated reactor petals, enclosed process core'
 }
 
+SHAPE={
+ 0:'low rectangular kiosk mass, one short roof cap',
+ 1:'low chamfered workshop block, broad front face',
+ 2:'broad low hall, twin compact roof stacks',
+ 3:'long horizontal hall, symmetric side volumes',
+ 4:'low wide CNC block, flat ribbed roof',
+ 5:'compact square block, protected central core',
+ 6:'low horizontal plant, compact exchanger masses',
+ 7:'very wide low factory, paired side wings',
+ 8:'heavy low armored block, broad enclosed press bay',
+ 9:'clean low block, symmetric wings around central ring',
+ 10:'broad base, enclosed circular center, attached radial rooms',
+ 11:'wide press-house block, contained internal frame volumes',
+ 12:'broad shielded block, enclosed central ring, symmetric wings',
+ 13:'broad industrial base, four compact integrated roof petals'
+}
+
 TIER={
  0:'starter, one storey, compact footprint, one primary production chamber, simple roofline',
  1:'reinforced, same identity, thicker shell, one attached utility room, clearer production bay',
@@ -54,14 +71,23 @@ STYLE=('premium AAA mobile strategy asset; stylized 2.5D industrial factory; 34-
 
 def prompts(i):
     family=FAMILY[i['family']]
+    shape=SHAPE[i['family']]
     tier=TIER[i['tier']]
-    short=f'Industrial factory sprite. {family}. {tier}. Isolated on uniform gray studio background.'
-    detail=(f'{STYLE}. Exactly one finished operating industrial production building. '
-            f'Design identity: {family}. Evolution state: {tier}. '
-            'Keep the same facade axis, roof direction, production core, material palette and attached-module logic across upgrades. '
-            'All visible equipment is enclosed, wall-mounted, roof-mounted, or structurally integrated into the factory. '
-            'Use compact mechanically plausible massing with a bottom-heavy mobile-readable silhouette. '
-            'End the building cleanly at its structural footprint with neutral gray studio background visible around the entire silhouette.')
+    if i['tier']==0:
+        # Phase 1: lock massing and family identity before introducing richer machinery detail.
+        short=f'Industrial factory sprite. {shape}. Starter one-storey factory. Uniform gray studio background.'
+        detail=(f'{STYLE}. Create one finished operating starter factory with this architectural massing: {shape}. '
+                f'Family identity: {family}. Keep the silhouette low, broad, bottom-heavy and compact. '
+                'Use one connected structural footprint and simple integrated roof equipment. '
+                'Neutral gray studio background remains clearly visible around the complete silhouette.')
+    else:
+        # Phase 2: evolve the approved shape conservatively and add only integrated industrial detail.
+        short=f'Industrial factory upgrade. {shape}. {tier}. Same factory identity. Gray studio background.'
+        detail=(f'{STYLE}. Upgrade the same approved factory in place. Design identity: {family}. Evolution state: {tier}. '
+                f'Preserve this source massing: {shape}. Keep the same facade axis, roof direction, production core and material palette. '
+                'Add only attached architectural volumes and structurally integrated production equipment. '
+                'Maintain a compact mechanically plausible bottom-heavy silhouette and one connected structural footprint. '
+                'Neutral gray studio background remains visible around the entire building.')
     return short,detail
 
 
@@ -94,11 +120,10 @@ def v16_anchor_score(final,cov):
     base=v15.anchor_score(final,cov)
     s=silhouette_metrics(final)
     penalty=0.0
-    # T0 must read as a starter factory, not a tower/monument or top-heavy machine.
-    if s['aspect'] < .78: penalty += (.78-s['aspect'])*1.4
-    if s['upper'] > .53: penalty += (s['upper']-.53)*2.2
-    if s['top_spike'] > .17: penalty += (s['top_spike']-.17)*2.5
-    if s['lower'] < .47: penalty += (.47-s['lower'])*1.7
+    if s['aspect'] < .82: penalty += (.82-s['aspect'])*1.6
+    if s['upper'] > .50: penalty += (s['upper']-.50)*2.5
+    if s['top_spike'] > .14: penalty += (s['top_spike']-.14)*3.0
+    if s['lower'] < .50: penalty += (.50-s['lower'])*2.0
     score=base-penalty
     print(f"KAGGLE_V16_SILHOUETTE aspect={s['aspect']:.2f} upper={s['upper']:.2f} lower={s['lower']:.2f} top={s['top_spike']:.2f} score={score:.3f}",flush=True)
     return score
