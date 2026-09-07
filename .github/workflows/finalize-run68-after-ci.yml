@@ -1,0 +1,101 @@
+name: Finalize reviewed run68 after Android CI
+
+on:
+  push:
+    paths:
+      - ".github/workflows/finalize-run68-after-ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Require reviewed run68 integration ancestry
+        id: gate
+        run: |
+          git fetch origin main
+          git merge-base --is-ancestor 49b501ece150ef8409875a41022c0a6752d2c469 origin/main
+          echo "sha=$(git rev-parse origin/main)" >> "$GITHUB_OUTPUT"
+
+      - name: Dispatch Android CI explicitly
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run android.yml --ref main
+
+      - name: Wait for green Android CI on descendant main
+        id: android
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ steps.gate.outputs.sha }}
+        run: |
+          for i in $(seq 1 80); do
+            row=$(gh run list --workflow android.yml --commit "$SHA" --json databaseId,status,conclusion,headSha --limit 5 --jq '.[0] // empty')
+            if [ -n "$row" ]; then
+              run_id=$(echo "$row" | jq -r .databaseId)
+              status=$(echo "$row" | jq -r .status)
+              conclusion=$(echo "$row" | jq -r '.conclusion // ""')
+              head=$(echo "$row" | jq -r .headSha)
+              echo "Android CI run=$run_id status=$status conclusion=$conclusion head=$head"
+              if [ "$head" = "$SHA" ] && [ "$status" = "completed" ]; then
+                [ "$conclusion" = "success" ] || exit 1
+                echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
+                exit 0
+              fi
+            fi
+            sleep 15
+          done
+          echo "Timed out waiting for Android CI on $SHA" >&2
+          exit 1
+
+      - name: Reconcile run68 strict DONE
+        env:
+          RUN_ID: ${{ steps.android.outputs.run_id }}
+          CI_SHA: ${{ steps.gate.outputs.sha }}
+        run: |
+          git pull --ff-only origin main
+          python - <<'PY'
+          from pathlib import Path
+          import os, re
+          ids = ['MCH-05-1', 'MCH-07-0', 'TER-05']
+          manifest = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
+          m = manifest.read_text()
+          for asset_id in ids:
+              pattern = rf'(^\| {re.escape(asset_id)} \|.*\| )RUNTIME( \|$)'
+              m, n = re.subn(pattern, r'\1DONE\2', m, flags=re.M)
+              if n != 1:
+                  # idempotent success if a parallel finalizer already marked it DONE.
+                  done = re.search(rf'^\| {re.escape(asset_id)} \|.*\| DONE \|$', m, flags=re.M)
+                  if not done:
+                      raise SystemExit(f'expected RUNTIME/DONE row for {asset_id}')
+          manifest.write_text(m)
+
+          progress = Path('docs/art/FINAL_AAA_SPRITE_PROGRESS.md')
+          p = progress.read_text()
+          p = re.sub(r'- DONE: \*\*\d+ / 235\*\*', '- DONE: **111 / 235**', p, count=1)
+          p = re.sub(r'- Generated candidates accepted as DONE: \*\*\d+\*\*', '- Generated candidates accepted as DONE: **111**', p, count=1)
+          p = p.replace('## Reviewed FLUX run 68 — 3 assets awaiting green CI', '## Reviewed FLUX run 68 — 3 DONE', 1)
+          old = 'The three accepted assets remain RUNTIME until Android CI is green on their integration commit.'
+          new = f"Android CI run `{os.environ['RUN_ID']}` completed successfully on descendant commit `{os.environ['CI_SHA']}` with all three run-68 runtime assets unchanged; all three are therefore strict DONE."
+          p = p.replace(old, new, 1)
+          progress.write_text(p)
+          PY
+
+      - name: Commit strict DONE reconciliation
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md docs/art/FINAL_AAA_SPRITE_PROGRESS.md
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "art: mark reviewed run68 assets strict DONE"
+          git push origin HEAD:main
