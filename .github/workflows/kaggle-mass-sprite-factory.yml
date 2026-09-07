@@ -115,11 +115,12 @@ jobs:
             /tmp/kaggle-output/output/github-contact-sheet.png
             /tmp/kaggle-output/output/github-qa-report.json
             /tmp/kaggle-output/output/generated-targets.json
+            /tmp/kaggle-output/output/branch-search-report.json
             /tmp/kaggle-output/output/candidates/*.png
             /tmp/kaggle-output/*.log
           if-no-files-found: ignore
           retention-days: 90
 
 # User-approved mass production only: manual workflow_dispatch or assistant pulse file after explicit Go/Continue.
-# High-throughput policy: target 56 attempts by default; every exported candidate must be individually covered by QA evidence.
-# Strict DONE still requires semantic review, runtime integration, manifest reconciliation and green Android CI.
+# High-throughput policy: target 56 manifest tiers by default; v15 may generate/test multiple branch variants per family.
+# Every exported candidate must be individually covered by QA evidence; strict DONE still requires semantic review, runtime integration and green Android CI.
