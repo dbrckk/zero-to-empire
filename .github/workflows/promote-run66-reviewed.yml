@@ -1,0 +1,143 @@
+name: Promote reviewed FLUX run 66
+
+on:
+  push:
+    paths:
+      - ".github/workflows/promote-run66-reviewed.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: promote-run66-reviewed
+  cancel-in-progress: false
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download reviewed run66 artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: kaggle-sprite-batch
+          path: /tmp/run66
+          github-token: ${{ github.token }}
+          run-id: 34075730717
+
+      - name: Validate and install accepted assets
+        shell: bash
+        run: |
+          python -m pip install --quiet Pillow
+          python - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          import json, re
+
+          root = Path('.')
+          artifact = Path('/tmp/run66')
+          candidates = artifact / 'output' / 'candidates'
+          if not candidates.exists():
+              hits = list(artifact.rglob('candidates'))
+              if not hits:
+                  raise SystemExit('run66 candidates directory not found')
+              candidates = hits[0]
+
+          accepted = {
+              'TER-10': ('zte_terrain_10_final.png', 'zte_terrain_10_final.webp', (512, 1024)),
+              'VEH-16': ('zte_vehicle_16_final.png', 'zte_vehicle_16_final.webp', (1024, 2048)),
+          }
+          rejected = ['MCH-05-1', 'MCH-07-0', 'TER-05', 'TER-07', 'TER-09']
+          runtime = root / 'app/src/main/res/drawable-nodpi'
+          runtime.mkdir(parents=True, exist_ok=True)
+          qa = {'source_run': 66, 'source_run_id': 34075730717, 'accepted': {}, 'rejected_semantic': rejected}
+
+          for asset_id, (src_name, dst_name, dimension_range) in accepted.items():
+              src = candidates / src_name
+              if not src.exists():
+                  raise SystemExit(f'missing accepted candidate: {src}')
+              im = Image.open(src).convert('RGBA')
+              w, h = im.size
+              if w != h or not (dimension_range[0] <= w <= dimension_range[1]):
+                  raise SystemExit(f'{asset_id}: invalid dimensions {im.size}')
+              alpha = im.getchannel('A')
+              bbox = alpha.getbbox()
+              if not bbox:
+                  raise SystemExit(f'{asset_id}: empty alpha')
+              left, top, right, bottom = bbox
+              margins = [left, top, w-right, h-bottom]
+              if min(margins) < int(w * 0.04):
+                  raise SystemExit(f'{asset_id}: unsafe margin {margins}')
+              edge_nonzero = sum(1 for px in list(alpha.crop((0,0,w,1)).getdata()) + list(alpha.crop((0,h-1,w,h)).getdata()) + list(alpha.crop((0,0,1,h)).getdata()) + list(alpha.crop((w-1,0,w,h)).getdata()) if px)
+              if edge_nonzero:
+                  raise SystemExit(f'{asset_id}: alpha touches edge')
+              coverage = sum(1 for px in alpha.getdata() if px) / (w*h)
+              if not (0.08 <= coverage <= 0.65):
+                  raise SystemExit(f'{asset_id}: suspicious coverage {coverage:.4f}')
+              im.save(runtime / dst_name, 'WEBP', quality=92, method=6)
+              qa['accepted'][asset_id] = {'source': src_name, 'runtime': dst_name, 'dimensions': [w,h], 'bbox': list(bbox), 'margins': margins, 'coverage': round(coverage, 6), 'edge_nonzero': edge_nonzero}
+
+          terrain_path = root / 'app/src/main/java/com/zerotoempire/game/ReviewedTerrainLayer.kt'
+          terrain = terrain_path.read_text()
+          old = 'intArrayOf(R.drawable.zte_terrain_08_final, R.drawable.zte_terrain_11_final),'
+          new = 'intArrayOf(R.drawable.zte_terrain_08_final, R.drawable.zte_terrain_10_final, R.drawable.zte_terrain_11_final),'
+          if old in terrain:
+              terrain = terrain.replace(old, new, 1)
+          elif 'R.drawable.zte_terrain_10_final' not in terrain:
+              raise SystemExit('unable to integrate TER-10 into ReviewedTerrainLayer')
+          terrain = terrain.replace('Strictly reviewed modular terrain from FLUX run 52', 'Strictly reviewed modular terrain from FLUX runs 52 and 66')
+          terrain_path.write_text(terrain)
+
+          manifest_path = root / 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
+          manifest = manifest_path.read_text()
+          for asset_id in ('TER-10', 'VEH-16'):
+              pat = re.compile(rf'^(\| {re.escape(asset_id)} \|.*\|) TODO \|$', re.M)
+              manifest, n = pat.subn(r'\1 RUNTIME |', manifest, count=1)
+              if n != 1 and not re.search(rf'^\| {re.escape(asset_id)} \|.*\| (RUNTIME|DONE) \|$', manifest, re.M):
+                  raise SystemExit(f'cannot mark {asset_id} RUNTIME')
+          manifest_path.write_text(manifest)
+
+          progress_path = root / 'docs/art/FINAL_AAA_SPRITE_PROGRESS.md'
+          progress = progress_path.read_text()
+          progress = progress.replace('- ART VALIDATED: **121 / 235**', '- ART VALIDATED: **123 / 235**', 1)
+          progress = progress.replace('- RUNTIME INTEGRATED: **121 / 235**', '- RUNTIME INTEGRATED: **123 / 235**', 1)
+          if '## Reviewed FLUX run 66 — 2 assets awaiting green CI' not in progress:
+              progress += '''\n\n## Reviewed FLUX run 66 — 2 assets awaiting green CI\nRun-66 semantic and full-resolution review accepted `TER-10` and `VEH-16`. `TER-10` is a clean elevated megastructure service deck with transparent isolation and safe margins; `VEH-16` is a distinct wheel-less prestige executive hovercar. Both pass technical alpha, edge, coverage and dimension checks and are integrated into active runtime references. Rejected: `MCH-05-1` (missing clear battery-carousel identity), `MCH-07-0` (crane-like loose load rather than compact gantry), `TER-05` (radial intersection rather than multi-lane connector), `TER-07` (platform rather than energy conduit), and `TER-09` (slab rather than twin-guide maglev connector). The two accepted assets remain RUNTIME until Android CI is green on their integration commit.\n'''
+          progress_path.write_text(progress)
+
+          qa_path = root / 'art/production/flux-run66-approved-qa.json'
+          qa_path.parent.mkdir(parents=True, exist_ok=True)
+          qa_path.write_text(json.dumps(qa, indent=2, sort_keys=True) + '\n')
+          PY
+
+      - name: Commit reviewed runtime assets
+        id: commit
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            app/src/main/res/drawable-nodpi/zte_terrain_10_final.webp \
+            app/src/main/res/drawable-nodpi/zte_vehicle_16_final.webp \
+            app/src/main/java/com/zerotoempire/game/ReviewedTerrainLayer.kt \
+            docs/art/FINAL_AAA_SPRITE_MANIFEST.md \
+            docs/art/FINAL_AAA_SPRITE_PROGRESS.md \
+            art/production/flux-run66-approved-qa.json
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "art: integrate reviewed run66 terrain and hovercar"
+          git push origin HEAD:main
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Dispatch Android CI for strict DONE gate
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run android.yml --ref main
