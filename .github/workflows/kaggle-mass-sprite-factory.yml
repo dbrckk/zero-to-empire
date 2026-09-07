@@ -97,11 +97,15 @@ jobs:
           import json, pathlib
           p=pathlib.Path('/tmp/kaggle-output/output/github-qa-report.json')
           d=json.loads(p.read_text())
-          rows=d if isinstance(d,list) else d.get('sprites',d.get('results',[]))
+          if isinstance(d,list):
+            rows=d
+          else:
+            rows=d.get('assets',d.get('sprites',d.get('results',[])))
           total=len(rows)
           failed=sum(1 for r in rows if str(r.get('status','PASS')).upper() not in ('PASS','OK','VALID'))
-          print(f'QA_REPORT_TOTAL={total} QA_REPORT_FAILED={failed}')
-          if total != len(list(pathlib.Path('/tmp/kaggle-output/output/candidates').glob('*_final.png'))):
+          expected=len(list(pathlib.Path('/tmp/kaggle-output/output/candidates').glob('*_final.png')))
+          print(f'QA_REPORT_TOTAL={total} QA_REPORT_FAILED={failed} QA_EXPECTED={expected}')
+          if total != expected:
             raise SystemExit('QA report does not cover every candidate')
           PY
       - name: Upload exhaustive QA evidence
