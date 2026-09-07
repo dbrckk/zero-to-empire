@@ -1,0 +1,202 @@
+name: Promote reviewed FLUX run 68
+
+on:
+  push:
+    paths:
+      - ".github/workflows/promote-reviewed-run68.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: promote-reviewed-run68
+  cancel-in-progress: false
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download exact run68 evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          rm -rf /tmp/run68
+          mkdir -p /tmp/run68
+          gh run download 34079408689 -n kaggle-sprite-batch -D /tmp/run68
+          test -f /tmp/run68/output/candidates/zte_machine_05_1_final.png
+          test -f /tmp/run68/output/candidates/zte_machine_07_0_final.png
+          test -f /tmp/run68/output/candidates/zte_terrain_05_final.png
+
+      - name: Validate and stage only semantically approved assets
+        run: |
+          python -m pip install --quiet Pillow
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          import json
+
+          accepted = {
+              'MCH-05-1': 'zte_machine_05_1_final.png',
+              'MCH-07-0': 'zte_machine_07_0_final.png',
+              'TER-05': 'zte_terrain_05_final.png',
+          }
+          source = Path('/tmp/run68/output/candidates')
+          runtime = Path('app/src/main/res/drawable-nodpi')
+          runtime.mkdir(parents=True, exist_ok=True)
+          report = {'source_run': 68, 'source_run_id': 34079408689, 'accepted': {}, 'rejected_semantic': ['TER-07', 'TER-09']}
+
+          for asset_id, name in accepted.items():
+              p = source / name
+              im = Image.open(p).convert('RGBA')
+              w, h = im.size
+              if min(w, h) < 512:
+                  raise SystemExit(f'{asset_id}: dimensions too small {im.size}')
+              a = im.getchannel('A')
+              bbox = a.getbbox()
+              if not bbox:
+                  raise SystemExit(f'{asset_id}: empty alpha')
+              l, t, r, b = bbox
+              margins = (l, t, w-r, h-b)
+              if min(margins) < max(4, int(min(w,h)*0.04)):
+                  raise SystemExit(f'{asset_id}: unsafe margins {margins}')
+              edge = sum(1 for x in range(w) if a.getpixel((x,0)) or a.getpixel((x,h-1))) + sum(1 for y in range(h) if a.getpixel((0,y)) or a.getpixel((w-1,y)))
+              if edge:
+                  raise SystemExit(f'{asset_id}: alpha touches edge ({edge})')
+              coverage = sum(1 for px in a.getdata() if px > 8) / (w*h)
+              if not (0.08 <= coverage <= 0.72):
+                  raise SystemExit(f'{asset_id}: suspicious alpha coverage {coverage:.4f}')
+              out = runtime / name.replace('.png', '.webp')
+              im.save(out, 'WEBP', lossless=True, method=6)
+              report['accepted'][asset_id] = {
+                  'source': name,
+                  'runtime': out.name,
+                  'dimensions': [w,h],
+                  'bbox': [l,t,r,b],
+                  'margins': list(margins),
+                  'coverage': round(coverage, 6),
+                  'edge_nonzero': edge,
+              }
+
+          qa = Path('art/production/flux-run68-approved-qa.json')
+          qa.parent.mkdir(parents=True, exist_ok=True)
+          qa.write_text(json.dumps(report, indent=2) + '\n')
+          PY
+
+      - name: Integrate reviewed assets and mark RUNTIME
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          machine = Path('app/src/main/java/com/zerotoempire/game/ReviewedMachineLayer.kt')
+          s = machine.read_text()
+          s = s.replace('/** Semantically reviewed run-51 machine masters, visible as era-specific production machinery. */', '/** Semantically reviewed FLUX machine masters, including run 68 stragglers, visible as era-specific production machinery. */')
+          s = s.replace('intArrayOf(R.drawable.zte_machine_04_1_final, R.drawable.zte_machine_05_0_final, R.drawable.zte_machine_06_0_final, R.drawable.zte_machine_06_1_final),', 'intArrayOf(R.drawable.zte_machine_04_1_final, R.drawable.zte_machine_05_0_final, R.drawable.zte_machine_05_1_final, R.drawable.zte_machine_06_0_final, R.drawable.zte_machine_06_1_final),')
+          s = s.replace('intArrayOf(R.drawable.zte_machine_07_1_final, R.drawable.zte_machine_08_0_final, R.drawable.zte_machine_08_1_final),', 'intArrayOf(R.drawable.zte_machine_07_0_final, R.drawable.zte_machine_07_1_final, R.drawable.zte_machine_08_0_final, R.drawable.zte_machine_08_1_final),')
+          machine.write_text(s)
+
+          terrain = Path('app/src/main/java/com/zerotoempire/game/ReviewedTerrainLayer.kt')
+          s = terrain.read_text()
+          s = s.replace('/** Strictly reviewed modular terrain from FLUX runs 52 and 66, visible in the active city stage. */', '/** Strictly reviewed modular terrain from FLUX runs 52, 66 and 68, visible in the active city stage. */')
+          s = s.replace('intArrayOf(R.drawable.zte_terrain_04_final, R.drawable.zte_terrain_06_final),', 'intArrayOf(R.drawable.zte_terrain_04_final, R.drawable.zte_terrain_05_final, R.drawable.zte_terrain_06_final),')
+          terrain.write_text(s)
+
+          manifest = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
+          m = manifest.read_text()
+          ids = ['MCH-05-1', 'MCH-07-0', 'TER-05']
+          for asset_id in ids:
+              pattern = rf'(^\| {re.escape(asset_id)} \|.*\| )TODO( \|$)'
+              m, n = re.subn(pattern, r'\1RUNTIME\2', m, flags=re.M)
+              if n != 1:
+                  raise SystemExit(f'expected one TODO row for {asset_id}, got {n}')
+          manifest.write_text(m)
+
+          progress = Path('docs/art/FINAL_AAA_SPRITE_PROGRESS.md')
+          p = progress.read_text()
+          p = re.sub(r'- ART VALIDATED: \*\*\d+ / 235\*\*', '- ART VALIDATED: **126 / 235**', p, count=1)
+          p = re.sub(r'- RUNTIME INTEGRATED: \*\*\d+ / 235\*\*', '- RUNTIME INTEGRATED: **126 / 235**', p, count=1)
+          p += '''\n\n## Reviewed FLUX run 68 — 3 assets awaiting green CI\nRun-68 full-resolution review accepts `MCH-05-1`, `MCH-07-0` and `TER-05`. `MCH-05-1` now reads clearly as a compact radial battery carousel with repeated removable energy modules and no baked text; `MCH-07-0` is a compact framed production gantry with integrated tool head and work bed rather than a loose crane; `TER-05` is a complete multi-lane four-way expansion road connector with clean isolation and road-surface markings only. All three pass alpha, edge, dimension, coverage and safety-margin checks and are integrated into active runtime references. `TER-07` is rejected because it remains a generic platform rather than an energy conduit; `TER-09` is rejected because it remains a slab with a single luminous strip rather than the required maglev/rail connector identity. The three accepted assets remain RUNTIME until Android CI is green on their integration commit.\n'''
+          progress.write_text(p)
+          PY
+
+      - name: Commit run68 runtime integration
+        id: integration
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/src/main/res/drawable-nodpi/zte_machine_05_1_final.webp \
+                  app/src/main/res/drawable-nodpi/zte_machine_07_0_final.webp \
+                  app/src/main/res/drawable-nodpi/zte_terrain_05_final.webp \
+                  app/src/main/java/com/zerotoempire/game/ReviewedMachineLayer.kt \
+                  app/src/main/java/com/zerotoempire/game/ReviewedTerrainLayer.kt \
+                  art/production/flux-run68-approved-qa.json \
+                  docs/art/FINAL_AAA_SPRITE_MANIFEST.md \
+                  docs/art/FINAL_AAA_SPRITE_PROGRESS.md
+          git commit -m "art: integrate 3 reviewed run68 stragglers"
+          git push origin HEAD:main
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Wait for Android CI on integration commit
+        id: android
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ steps.integration.outputs.sha }}
+        run: |
+          run_id=""
+          for i in $(seq 1 80); do
+            run_id=$(gh run list --workflow android.yml --commit "$SHA" --json databaseId,status,conclusion,headSha --limit 5 --jq '.[0].databaseId // empty')
+            if [ -n "$run_id" ]; then
+              status=$(gh run view "$run_id" --json status --jq .status)
+              conclusion=$(gh run view "$run_id" --json conclusion --jq .conclusion)
+              head=$(gh run view "$run_id" --json headSha --jq .headSha)
+              echo "Android CI run=$run_id status=$status conclusion=$conclusion head=$head"
+              [ "$head" = "$SHA" ] || { sleep 15; continue; }
+              if [ "$status" = "completed" ]; then
+                [ "$conclusion" = "success" ] || exit 1
+                echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
+                exit 0
+              fi
+            fi
+            sleep 15
+          done
+          echo "Timed out waiting for Android CI for $SHA" >&2
+          exit 1
+
+      - name: Promote run68 assets to strict DONE
+        env:
+          RUN_ID: ${{ steps.android.outputs.run_id }}
+          INTEGRATION_SHA: ${{ steps.integration.outputs.sha }}
+        run: |
+          git pull --ff-only origin main
+          python - <<'PY'
+          from pathlib import Path
+          import os, re
+          ids = ['MCH-05-1', 'MCH-07-0', 'TER-05']
+          manifest = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
+          m = manifest.read_text()
+          for asset_id in ids:
+              pattern = rf'(^\| {re.escape(asset_id)} \|.*\| )RUNTIME( \|$)'
+              m, n = re.subn(pattern, r'\1DONE\2', m, flags=re.M)
+              if n != 1:
+                  raise SystemExit(f'expected one RUNTIME row for {asset_id}, got {n}')
+          manifest.write_text(m)
+
+          progress = Path('docs/art/FINAL_AAA_SPRITE_PROGRESS.md')
+          p = progress.read_text()
+          p = re.sub(r'- DONE: \*\*\d+ / 235\*\*', '- DONE: **111 / 235**', p, count=1)
+          p = re.sub(r'- Generated candidates accepted as DONE: \*\*\d+\*\*', '- Generated candidates accepted as DONE: **111**', p, count=1)
+          p = p.replace('## Reviewed FLUX run 68 — 3 assets awaiting green CI', '## Reviewed FLUX run 68 — 3 DONE', 1)
+          old = 'The three accepted assets remain RUNTIME until Android CI is green on their integration commit.'
+          new = f"Android CI run `{os.environ['RUN_ID']}` completed successfully on integration commit `{os.environ['INTEGRATION_SHA']}`; all three accepted run-68 assets are therefore strict DONE."
+          p = p.replace(old, new, 1)
+          progress.write_text(p)
+          PY
+          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md docs/art/FINAL_AAA_SPRITE_PROGRESS.md
+          git commit -m "art: mark reviewed run68 assets strict DONE"
+          git push origin HEAD:main
