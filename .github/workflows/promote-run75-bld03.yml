@@ -1,0 +1,50 @@
+name: Promote reviewed run75 BLD-03
+
+on:
+  push:
+    paths:
+      - '.github/workflows/promote-run75-bld03.yml'
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: main
+          fetch-depth: 2
+      - name: Download reviewed run75 artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh run download 34092655164 -n kaggle-sprite-batch -D /tmp/r75
+      - name: Promote only semantically approved BLD-03 masters
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p art/incoming/final-sprites
+          for tier in 2 3 4 5 6; do
+            cp "/tmp/r75/candidates/zte_business_03_t${tier}_final.png" art/incoming/final-sprites/
+          done
+          python3 -m pip install --disable-pip-version-check Pillow==11.3.0
+          python3 tools/sprites/build_sprite_contact_sheet.py \
+            --files art/incoming/final-sprites/zte_business_03_t{2,3,4,5,6}_final.png \
+            --output art/production/run75-bld03-contact-sheet.png \
+            --report art/production/run75-bld03-qa.json
+          SPRITE_TARGETS=zte_business_03_t2_final,zte_business_03_t3_final,zte_business_03_t4_final,zte_business_03_t5_final,zte_business_03_t6_final \
+            python3 tools/sprites/process_final_sprites.py
+      - name: Commit masters and runtime batch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add art/incoming/final-sprites/zte_business_03_t{2,3,4,5,6}_final.png \
+                  app/src/main/res/drawable-nodpi/ \
+                  art/production/run75-bld03-qa.json
+          git commit -m 'art: integrate reviewed run75 BLD-03 T2-T6'
+          git pull --rebase origin main
+          git push
