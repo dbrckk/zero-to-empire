@@ -9,7 +9,7 @@ from __future__ import annotations
 import argparse,gc,re
 from collections import deque
 from pathlib import Path
-print('KAGGLE_STARTUP=flux-batched-v2',flush=True)
+print('KAGGLE_STARTUP=flux-batched-v3-straggler-semantics',flush=True)
 import torch
 from PIL import Image,ImageFilter
 from diffusers import FluxPipeline,FluxTransformer2DModel
@@ -25,7 +25,7 @@ MACHINE_PRIMARY=[
  'clean CNC fabrication cell with enclosed cutting head and compact rotary table',
  'industrial laser cutting head over a compact material fixture',
  'precision automated component assembler with twin synchronized tool heads',
- 'autonomous overhead gantry manipulator with compact suspended gripper',
+ 'compact enclosed rectangular gantry machine: four rigid short legs joined by a rectangular top frame, one captive XY toolhead moving inside the frame above a fixed work bed; every component attached, no dangling cargo, no crane hook, no suspended free load',
  'heavy automated forging manipulator with massive articulated clamp',
  'sealed nanofabrication chamber with visible central process vessel',
  'orbital component assembler with levitating concentric tool ring around a work cradle',
@@ -38,7 +38,7 @@ MACHINE_SECONDARY=[
  'industrial heat exchanger with twin pipes, pump housing and cooling fins',
  'compact parts conveyor with rotary indexing table and feeder bins integrated into one machine',
  'smart logistics transfer gate with enclosed roller bed and sensor mast integrated into the chassis',
- 'battery handling carousel with four enclosed energy-cell sockets and robotic transfer arm',
+ 'circular floor-mounted battery handling carousel with eight upright enclosed energy-cell canisters equally spaced around one central rotary hub, visible circular indexing ring and one short integrated transfer gripper; unmistakably a battery carousel, no crane boom, no conveyor box',
  'compact coolant circulation pump with manifold, transparent reservoir and rigid pipe loop',
  'industrial power distribution manifold with three insulated bus conduits and switching housing',
  'maglev cargo feeder with one continuous levitation trough and cyan guide seam',
@@ -53,11 +53,11 @@ TERRAIN_SUBJECTS={
  'TER-02':'one square embedded cargo rail strip tile, twin steel rails in rugged industrial decking, straight seamless connectors',
  'TER-03':'one square recessed conduit trench tile with removable steel grates and visible insulated utility pipes',
  'TER-04':'one square clean commercial pavement tile, premium concrete panels with restrained metal expansion joints',
- 'TER-05':'one square clean multi-lane road connector tile, dark asphalt with raised curb modules, no arrows or text markings',
+ 'TER-05':'one square orthogonal multi-lane ROAD CONNECTOR tile: exactly two parallel straight asphalt lanes crossing from one edge to the opposite edge, continuous raised curbs on both outer sides, flat rectangular road segment only; no intersection, no radial roads, no star shape, no arrows, no letters, no symbols',
  'TER-06':'one square industrial loading pad tile with reinforced metal corners and clean heavy-duty surface',
- 'TER-07':'one square energy conduit infrastructure tile with a flush cyan power channel embedded through the center',
+ 'TER-07':'one square POWER CONDUIT connector tile: one unmistakable thick glowing cyan energy channel runs straight from a large terminal socket on the left edge to a matching terminal socket on the right edge, embedded flush in armored decking; no platform centerpiece, no ring, no blank slab',
  'TER-08':'one square reinforced megastructure platform tile, layered dark alloy deck plates and structural edge ribs',
- 'TER-09':'one square maglev rail connector tile with twin flush cyan magnetic guide channels in a premium alloy deck',
+ 'TER-09':'one square MAGLEV RAIL CONNECTOR tile: exactly two long parallel cyan magnetic guide rails run straight and visibly from the near edge to the far edge, with matching twin terminal notches at both ends, embedded in premium dark alloy decking; unmistakable twin guideway, no blank slab, no road intersection',
  'TER-10':'one square elevated service deck module with structural underside lip, access panels and clean connector edges',
  'TER-11':'one square megastructure energy-spine tile with a broad flush cyan conduit embedded in armored decking',
  'TER-12':'one square apex phase platform tile with pearl alloy panels and a restrained flush cyan-violet phase ring pattern without symbols',
