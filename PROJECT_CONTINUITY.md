@@ -10,7 +10,7 @@
 - Never mark an objective complete from intent alone: record the commit/run/CI evidence that proves completion.
 
 ## Primary objective
-Bring **Zero → Empire** to full production completion, with the current immediate art objective being **100% of the canonical final sprite manifest**.
+Bring **Zero → Empire** to full production completion, with the immediate art objective being **100% of the canonical final sprite manifest**.
 
 Canonical art sources:
 - `docs/art/FINAL_AAA_SPRITE_MANIFEST.md`
@@ -23,47 +23,41 @@ An asset is not strict `DONE` until it is individually authored/generated, seman
 
 ## Current handoff — 2026-09-07
 ### Current trusted state
-- Strict committed progress ledger remains **112 / 235 DONE** until a later strict reconciliation proves a higher number.
-- `BLD-03-T2` through `BLD-03-T6` were integrated by run 75 (`e14b6897...`) but still require canonical reconciliation/green-CI proof before silently increasing strict DONE.
+- Strict committed progress ledger remains **112 / 235 DONE** until strict reconciliation proves a higher number.
+- `BLD-03-T2` through `BLD-03-T6` were integrated by run 75 (`e14b6897...`) but must still be reconciled against canonical manifest/progress and green CI before increasing strict DONE.
 - Run 77 (`34102566634`) produced 21 technically valid building candidates; full-resolution semantic review rejected **21 / 21**. Review: `docs/art/reviews/RUN_77_SEMANTIC_REVIEW.md`.
-- Run 78 (`34116344191`) returned Kaggle `ERROR`, but root-cause review shows the generator intentionally ended with zero fresh validated candidates rather than an infrastructure/authentication crash. Review: `docs/art/reviews/RUN_78_PIPELINE_REVIEW.md` (`cdfdcc56...`).
+- Run 78 (`34116344191`) produced no fresh accepted candidates; its failure evidence was used to improve retries and QA. Review: `docs/art/reviews/RUN_78_PIPELINE_REVIEW.md`.
+- **Wave 79** GitHub Actions run `34121697907` was launched from commit `604d2cc4...` and is currently still executing the Kaggle GPU wait step. Do not trigger another pulse while it is active because workflow concurrency cancels in-progress runs.
 
-### Run 78 evidence
-- Backlog at launch: `BLD=70`, `STATIC=0`, `CHAR_FX=24`, `SKIPPED_RUNTIME=14`.
-- Five families died immediately at T0 because one seed produced background/slab contamination: BLD-05, BLD-08, BLD-09, BLD-10, BLD-12.
-- BLD-13 rendered all tiers T0→T6 successfully with coverage growth **15.2% → 32.7%**.
-- Previous family QA rejected BLD-13 only because raw alpha centroid drift measured **7.9** against a fixed limit of **7**; this metric was judged too brittle after canonical bottom-center normalization.
-- Strict DONE delta from run 78: **+0**.
+### Generator evolution
+- Canonical v12 retry-normalized generator was introduced after run 78.
+- New **v13 edge-segmentation** generator added at `tools/sprites/kaggle_building_family_factory_v13.py` in commit `388dcd6070b28db7fd7b475711c9d682b0a40c38`.
+- `kaggle/github_mass_factory.py` now routes future building waves through v13 in commit `0053152494757c468b64ee9083202c37714e377d`.
+- Wave 79 itself started before those two commits, so it remains a v12 run. v13 applies beginning with the next user-approved wave after wave 79 finishes.
 
-### Generator evolution after run 78
-- Canonical `tools/sprites/kaggle_building_family_factory.py` upgraded directly to **v12 retry-normalized** (`4b42a628...`).
-- v12 is now the source of truth; no hidden temporary v11 mutation is required.
-- T0 gets up to **4 seed retries**; later tiers get adaptive retries and adaptive img2img strength.
-- QA now uses adjacent identity IoU, normalized bbox geometry, coverage progression, final-vs-initial growth, ground-slab detection, internal-hole detection and horizontal drift.
-- T0 uses a smaller canonical frame envelope to preserve starter-tier read.
-- Prompts explicitly prohibit floor cards, terrain slabs, horizons, workers, vehicles, pseudo-text, disconnected props and accidental alpha holes.
-- `kaggle/github_mass_factory.py` upgraded to deterministic **v6 retry-normalized** routing (`f01de81c...`).
-- Building waves are capped at **28 manifest tiers** so retries can spend compute on recovery instead of breadth.
-- `.github/workflows/kaggle-mass-sprite-factory.yml` now defaults to 28 and injects batch count with a validated regex instead of brittle source-string substitution (`0dba6f1d...`).
-- Pillow is pinned `<12` in the runner/kernel dependency path to eliminate the observed compatibility conflict with the Kaggle environment.
-
-### User-approved wave trigger mechanism
-- Mass generation remains user-controlled: manual `workflow_dispatch` or a push to `ops/sprite-wave-trigger.txt` after an explicit `Go` / `Continue`.
-- The current user instruction explicitly authorizes continuing and improving sprite production, so the next wave may be launched now.
+### v13 production improvements
+1. **Edge-connected background segmentation** replaces global background-colour deletion. Only background-like pixels connected to the image borders are removed. This prevents grey/silver internal building materials from being accidentally punched out as alpha holes.
+2. Segmentation runs on a 256×256 topology proxy and is softly upscaled, reducing CPU cost while preserving clean edges.
+3. Background traversal has a bounded colour-distance tolerance, so object edges stop the flood even when the object shares neutral tones with the studio background.
+4. T0 remains constrained to a smaller frame envelope and explicitly prohibits towers, cranes, gantries and late-game mass.
+5. Later tiers receive up to three retries, while T0 keeps four retries.
+6. Family QA retains identity IoU, monotonic coverage/growth, horizontal drift and T0→T6 evolution gates.
+7. Ground-slab detection is stricter; detached-component dominance is stricter; internal-hole rejection is relaxed only enough to permit legitimate windows/cavities now that segmentation itself is safer.
+8. Future Kaggle metadata identifies the engine as `v7 edge-segmentation`, making run provenance explicit.
 
 ## Immediate next actions — ordered
-1. Trigger **wave 79** using the v12/v6 retry-normalized pipeline.
-2. Inspect the run status and retrieve the QA artifact when produced.
-3. Review every emitted candidate at full resolution. Technical validation is not semantic approval.
-4. Promote only complete coherent families that preserve identity and unmistakably progress from tiny T0 starter to T6 ultimate structure.
-5. Reconcile `FINAL_AAA_SPRITE_MANIFEST.md` and `FINAL_AAA_SPRITE_PROGRESS.md` only after runtime integration and green Android CI.
-6. Continue successive user-approved waves until the building backlog is exhausted, then route static assets, character sheets and FX through equally strict dedicated factories.
+1. Let wave 79 complete without launching another concurrent pulse.
+2. Retrieve its artifact/log immediately once complete.
+3. Inspect every emitted candidate at full resolution and perform strict semantic family review.
+4. Promote only coherent accepted families; integrate runtime paths/references and require green Android CI before incrementing strict DONE.
+5. If wave 79 yields no promotable family, launch the next user-approved wave with **v13 edge-segmentation** rather than rerunning v12 unchanged.
+6. Continue building families until the building backlog is exhausted, then route remaining static assets, characters and FX through dedicated strict production lanes.
 7. Repeat generate → technical QA → semantic QA → promotion → runtime integration → green CI until **235 / 235 strict DONE**.
 
 ## Known unresolved art targets
 - Remaining building families/tiers after `BLD-03`, with coherent family identity and unmistakable monotonic T0→T6 growth.
 - `TER-07` Expansion energy conduit remains unresolved unless superseded by a later accepted promotion.
-- Character/FX backlog still requires its dedicated sheet-production lane once building/static routing no longer dominates.
+- Character/FX backlog still requires its dedicated sheet-production lane once buildings no longer dominate routing.
 - Any TODO/ART/RUNTIME item in the canonical manifest must pass the same strict completion gate.
 
 ## Operating principle
