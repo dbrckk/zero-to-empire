@@ -19,64 +19,70 @@ Canonical sources:
 ## Strict completion gate
 A sprite is strict DONE only after individual production, semantic correctness, technical/alpha validation, final runtime commit/reference, actual runtime visibility, manifest/progress reconciliation and green Android CI. Candidate count is never DONE count.
 
-## Current trusted state — 2026-09-07 17:36 +02:00
+## Current trusted state — 2026-09-07 17:58 +02:00
 - Strict ledger remains **112 / 235 DONE** pending evidence-based reconciliation.
 - BLD-03-T2..T6 from run 75 remain integrated but not added to strict count without canonical/CI proof.
-- Run 77: 21 technical candidates, 21/21 semantic rejection.
-- Runs 78 and 79: 0 accepted candidates.
-- Run 80 (`34125123246`) completed SUCCESS and exported 21 technically valid sprites, but semantic review rejected 21/21; strict delta +0.
+- Run 80 completed SUCCESS with 21 technical candidates but semantic review rejected 21/21; strict delta +0.
 
-## High-throughput + real validation policy
+## High-throughput + live-validation policy
 - Workflow default: 56 manifest tiers.
 - `cancel-in-progress: false` protects expensive active GPU runs.
 - Every exported sprite must be represented in QA evidence.
 - Full candidates, contact sheets, reports and logs retained for 90 days.
+- Buildings v15.1 perform contextual QA while generating: immediate rejection/regeneration of bad tiers and early branch abort.
+- Character and FX lanes also perform per-frame/per-sheet QA before export.
 - Strict semantic review, runtime integration and green Android CI remain mandatory.
 
-## Building generator — v15.1 live validation
-The user explicitly requested that validation happen **while sprites are being generated**, not only after the complete batch.
-
-Implemented in `tools/sprites/kaggle_building_family_factory_v15.py` commit `608ab41178a8080da1c30b7269b6c5d6c38da5d6`.
-Startup marker: `KAGGLE_STARTUP=building-family-flux-v15.1-live-validation`.
-
-Live validation behavior:
-1. Up to 4 T0 anchors are still generated, but each anchor is immediately scored and rejected before branch evolution when its starter coverage, slab score or compactness is unacceptable.
-2. Every T1→T6 render is validated immediately against the already-accepted previous branch frames.
-3. Live contextual gates currently check broad slab contamination, adjacent-family IoU/identity, severe coverage collapse, horizontal center drift, lack of growth from T0 and late-tier growth trajectory.
-4. A contextual failure triggers a fresh-seed regeneration of that tier rather than letting a bad image poison the rest of the family.
-5. Up to 3 contextual attempts are allowed for a tier.
-6. If all contextual attempts fail, the branch is **early-aborted** and later tiers are not generated, saving GPU time.
-7. Final full-family QA still runs after all live passes; live QA is an additional filter, not a weaker replacement.
-8. `branch-search-report.json` now records `context_attempts`, `live_rejections` and `early_aborts` so yield can be measured empirically.
-
-This should improve validated-sprite yield per GPU-hour by spending compute on branches that remain viable instead of completing obviously doomed families.
-
-## Wave 81 — active/current wave caveat
+## Wave 81 — still active
 - Trigger commit: `bfd3ea0fea08c78fa36f0d3ab5c100a1608a2566`.
 - GitHub Actions run: `34132705535`.
-- Wave 81 was already cloned/launched before commit `608ab411...`, so its running Kaggle kernel uses the earlier v15 multi-branch code and cannot safely be hot-patched without discarding the active GPU run.
-- Do not cancel it. The **next generation wave** will automatically use v15.1 live validation from `main`.
+- Workflow job: `101776405808`.
+- At 17:58 +02:00 it remains `in_progress` at `Wait for Kaggle`; setup/auth/kernel launch are green.
+- Wave 81 uses the earlier v15 multi-branch generator because it cloned before v15.1 live-validation landed.
+- Do not cancel or replace the active run. The next wave will use current `main` with live validation.
 
-## Character production lane
-- Dedicated factory: `tools/sprites/kaggle_character_sheet_factory_v1.py` (`5bec3b27922106c6d2120cf28b56a008aeb4b026`).
-- Routing commit `8fc1a3571600edac9e41d8dd5a1cc8b9b72e7f36` distinguishes CHR and FX backlog and routes characters after buildings/statics.
-- Character sheets use identity anchor + img2img pose evolution, edge-connected alpha isolation, fixed feet pivot and cycle/silhouette QA.
-- `character-sheet-report.json` retained by workflow commit `009dce7efbd038d42362cf56e55039602a5d3962`.
-- Dedicated FX lane remains unresolved.
+## Building generator — v15.1 live validation
+Commit `608ab41178a8080da1c30b7269b6c5d6c38da5d6`.
+- Up to 4 T0 anchors.
+- Immediate starter QA.
+- Every T1→T6 tier checked against prior accepted frames.
+- Fresh-seed retry on contextual failure.
+- Up to 3 contextual attempts per tier.
+- Early branch abort after repeated failure.
+- `branch-search-report.json` records context attempts, live rejections and early aborts.
+
+## Character lane
+- Factory: `tools/sprites/kaggle_character_sheet_factory_v1.py` (`5bec3b27922106c6d2120cf28b56a008aeb4b026`).
+- Routed automatically after building/static backlog via `kaggle/github_mass_factory.py`.
+- Identity anchor + img2img pose evolution, transparent isolation, fixed feet pivot, silhouette/cycle QA.
+- `character-sheet-report.json` retained in workflow artifacts.
+
+## FX lane — blocker removed
+Created `tools/sprites/kaggle_fx_sheet_factory_v1.py` in commit `80f59093fbe5ece291ee4f057e1b780c7b2539e5`.
+- Covers all manifest TODO FX sheets using deterministic procedural generation rather than wasting FLUX compute on simple transient effects.
+- Produces 8-frame transparent sheets at 256px cells.
+- Supports sparks, flames/plasma, smoke/steam/dust, energy pulses, electric arcs, scan sweep, thruster/trails, distortion/singularity and shimmer-style effects.
+- Live validation occurs per frame: non-empty alpha, coverage bounds, no edge contact.
+- Sheet QA checks adjacent duplicates and center drift.
+- Up to 4 regeneration attempts per FX sheet before rejection.
+- Emits `KAGGLE_FX_LIVE_PASS` / `KAGGLE_FX_LIVE_REJECT` and `fx-sheet-report.json`.
+
+Routing commit `f1b3cdf8839d9dcb13cd6386f09252e29cbcc883` updates `kaggle/github_mass_factory.py` to route remaining FX backlog through the dedicated factory instead of failing unsupported.
+Workflow commit `b0b95d0253715e37e2c1bde2ec64ed8e974a7f7b` preserves `fx-sheet-report.json` in the 90-day QA artifact.
 
 ## Immediate next actions
 1. Query run `34132705535` first on the next intervention.
-2. When wave 81 completes, retrieve logs, branch report, QA reports and every candidate PNG; perform strict full-resolution semantic review.
-3. For the next user-approved generation wave, use v15.1 and inspect `KAGGLE_LIVE_PASS`, `KAGGLE_LIVE_REJECT`, `KAGGLE_BRANCH_EARLY_ABORT` and report metrics to verify that in-generation validation improves yield.
-4. Tune live thresholds from measured false positives/false negatives rather than weakening final QA.
-5. Promote only genuinely valid families; integrate runtime/references, reconcile manifest/progress and require green Android CI before incrementing strict DONE.
-6. Build dedicated FX sheet factory.
+2. When wave 81 completes, retrieve logs, branch-search report, QA reports and all candidate PNGs; perform full-resolution semantic review.
+3. Launch the next user-approved wave only after extracting wave-81 evidence; it will use v15.1 live validation.
+4. Compare validated yield per GPU-hour against wave 81 using live rejection/abort metrics.
+5. Promote only genuinely valid families, integrate runtime/references, reconcile manifest/progress and require green Android CI before strict increment.
+6. Test the character and FX factories on Kaggle before relying on them for strict completion.
 7. Continue buildings → statics → characters → FX until **235 / 235 strict DONE**.
 
 ## Known unresolved targets
 - Remaining building families after BLD-03.
 - `TER-07` Expansion energy conduit unless superseded by accepted promotion.
-- Dedicated FX production lane.
+- Character/FX candidate factories now exist, but still require real Kaggle test runs and semantic review before any strict DONE credit.
 
 ## Operating principle
-Maximize **validated sprites per GPU-hour**. Validate as early as possible, regenerate locally when a tier fails, abort doomed branches early, preserve evidence, and keep final semantic/runtime/CI gates strict.
+Maximize **validated sprites per GPU-hour**. Validate early, regenerate locally, abort doomed work early, preserve evidence, and never weaken final semantic/runtime/CI gates.
