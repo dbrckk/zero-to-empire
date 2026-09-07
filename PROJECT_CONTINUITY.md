@@ -46,15 +46,18 @@ An asset is not strict `DONE` until it is individually authored/generated, seman
 - Family growth gate is now stricter because the output normalization itself deliberately exposes tier scale growth instead of hiding it.
 
 ### Wave 80
-- Explicit user `Go` authorizes the next generation wave.
+- Explicit user `Go` authorized this generation wave.
 - Trigger commit: `5202d20d7b99efffe2225604b4ee1f0b4f2cfede`.
+- GitHub Actions run: `34125123246`.
 - Generator: `building-family-flux-v14-prompt-safe-monotonic`.
 - Requested batch count: 28 manifest tiers.
 - Objective: preserve prompt constraints and force unmistakable T0→T6 growth while retaining strict semantic QA.
+- Last verified state during the current intervention: workflow job `101751899400` is still **in_progress** on the `Wait for Kaggle` step; authentication, checkout, dependency installation, kernel preparation and kernel push all completed successfully.
+- The canonical entrypoint was re-verified on `main`: `kaggle/github_mass_factory.py` explicitly routes `BUILDING_FAMILIES` to `tools/sprites/kaggle_building_family_factory_v14.py`, so wave 80 is using the intended v14 path.
 
 ## Immediate next actions — ordered
-1. Track wave 80 to completion.
-2. Retrieve its artifact/log and inspect every emitted candidate at full resolution.
+1. Let wave 80 complete without triggering a concurrent pulse, because the workflow concurrency group would cancel the active run.
+2. Retrieve its artifact/log immediately after completion and inspect every emitted candidate at full resolution.
 3. Promote only coherent complete families with correct family identity, clean isolation and unmistakable starter→ultimate progression.
 4. Integrate accepted masters/runtime assets, reconcile manifest/progress and require green Android CI before increasing strict DONE.
 5. If v14 still produces no promotable family, use wave-80 evidence to adjust generation strategy rather than repeating unchanged seeds/settings.
