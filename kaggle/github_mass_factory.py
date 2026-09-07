@@ -15,13 +15,17 @@ def ensure_gpu():
  print('KAGGLE_GPU_CAPABILITY='+cap,flush=True)
  if int(cap.split('.')[0])<7:subprocess.run(['python','-m','pip','install','--quiet','--upgrade','--force-reinstall','torch==2.5.1','torchvision==0.20.1','--index-url','https://download.pytorch.org/whl/cu121'],check=True)
 def ensure_flux():
- print('KAGGLE_ENGINE=flux1-schnell-nf4-yield-router-v3',flush=True);subprocess.run(['python','-m','pip','install','--quiet','--upgrade','bitsandbytes==0.48.1','diffusers==0.35.1','peft==0.17.1','protobuf==5.29.5','sentencepiece==0.2.1','transformers==4.56.1','accelerate>=1.2','safetensors','Pillow'],check=True)
+ print('KAGGLE_ENGINE=flux1-schnell-nf4-yield-router-v4',flush=True);subprocess.run(['python','-m','pip','install','--quiet','--upgrade','bitsandbytes==0.48.1','diffusers==0.35.1','peft==0.17.1','protobuf==5.29.5','sentencepiece==0.2.1','transformers==4.56.1','accelerate>=1.2','safetensors','Pillow'],check=True)
+def runtime_exists(runtime): return (REPO/runtime).is_file()
 def backlog():
- c={'BLD':0,'STATIC':0,'CHAR_FX':0}
+ c={'BLD':0,'STATIC':0,'CHAR_FX':0,'SKIPPED_RUNTIME':0}
  for line in (REPO/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md').read_text(encoding='utf-8').splitlines():
   m=ROW.match(line)
   if not m or m.group(5).strip().upper()!='TODO':continue
-  a=m.group(1).strip()
+  a=m.group(1).strip();runtime=m.group(4).strip()
+  # Canonical status can lag a successful promotion. Never spend GPU regenerating
+  # a TODO row whose exact final runtime asset is already committed.
+  if runtime_exists(runtime): c['SKIPPED_RUNTIME']+=1;continue
   if a.startswith('BLD-'):c['BLD']+=1
   elif a.startswith(('MCH-','TER-','PRP-','VEH-','CORE-')):c['STATIC']+=1
   elif a.startswith(('CHR-','FX-')):c['CHAR_FX']+=1
@@ -31,10 +35,10 @@ subprocess.run(['git','clone','--depth','1','https://github.com/dbrckk/zero-to-e
 incoming=REPO/'art/incoming/final-sprites';before={p.name:digest(p) for p in incoming.glob('*_final.png') if p.is_file()};q=backlog();print('KAGGLE_BACKLOG='+json.dumps(q,separators=(',',':')),flush=True);print(f'KAGGLE_BATCH_SEED={SEED}',flush=True)
 if q['BLD']>=5:
  lane='BUILDING_FAMILIES';effective=max(COUNT,42)
- # Run75 proved BLD-03 coherent while BLD-11 drifted. Prefer historically coherent
- # families 03/05/06/04/07/08/09 before expensive experimental late-game families.
- factory=REPO/'tools/sprites/kaggle_building_family_factory.py';s=factory.read_text(encoding='utf-8');s=s.replace("PRIORITY=(10,11,12,13,3,5,6,4,7,8,9,0,1,2)","PRIORITY=(3,5,6,4,7,8,9,10,12,13,11,0,1,2)");factory.write_text(s,encoding='utf-8')
- cmd=['python','-u',str(factory),'--count',str(effective),'--seed',str(SEED)]
+ factory=REPO/'tools/sprites/kaggle_building_family_factory.py';s=factory.read_text(encoding='utf-8')
+ s=s.replace("if bm and status.upper()=='TODO': yield {'id':aid,'stem':Path(runtime).stem,'family':int(bm.group(1)),'tier':int(bm.group(2)),'order':order}","if bm and status.upper()=='TODO' and not (ROOT/runtime).is_file(): yield {'id':aid,'stem':Path(runtime).stem,'family':int(bm.group(1)),'tier':int(bm.group(2)),'order':order}")
+ s=s.replace("PRIORITY=(10,11,12,13,3,5,6,4,7,8,9,0,1,2)","PRIORITY=(5,6,4,7,8,9,10,12,13,11,3,0,1,2)")
+ factory.write_text(s,encoding='utf-8');cmd=['python','-u',str(factory),'--count',str(effective),'--seed',str(SEED)]
 elif q['STATIC']:
  lane='STATIC';effective=max(COUNT,42);cmd=['python','-u','tools/sprites/kaggle_sprite_factory.py','--kind','ALL','--count',str(effective),'--seed',str(SEED)]
 else:raise SystemExit('No supported GPU backlog; character/FX lane requires dedicated sheet factory')
@@ -45,4 +49,4 @@ qa=OUT/'batch-contact-sheet.png';report=OUT/'batch-qa-report.json';subprocess.ru
 cdir=OUT/'candidates';cdir.mkdir();targets=[]
 for f in fresh:
  dst=cdir/f.name;shutil.copy2(f,dst);targets.append({'file':f.name,'sha256':digest(dst),'bytes':dst.stat().st_size})
-(OUT/'generated-targets.json').write_text(json.dumps({'count':len(targets),'engine':'FLUX.1-schnell NF4 yield-routed batch v3','lane':lane,'seed':SEED,'backlog':q,'targets':targets},indent=2),encoding='utf-8');print(f'KAGGLE_EXPORT_COUNT={len(fresh)}',flush=True);print('KAGGLE_OUTPUT_ONLY=1',flush=True)
+(OUT/'generated-targets.json').write_text(json.dumps({'count':len(targets),'engine':'FLUX.1-schnell NF4 yield-routed batch v4','lane':lane,'seed':SEED,'backlog':q,'targets':targets},indent=2),encoding='utf-8');print(f'KAGGLE_EXPORT_COUNT={len(fresh)}',flush=True);print('KAGGLE_OUTPUT_ONLY=1',flush=True)
