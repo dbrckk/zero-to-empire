@@ -1,0 +1,89 @@
+name: Finalize reviewed run66 after Android CI
+
+on:
+  push:
+    paths:
+      - ".github/workflows/finalize-run66-after-ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Require green Android CI 619 on run66 integration
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          for i in $(seq 1 60); do
+            status=$(gh run view 34078378863 --json status --jq .status)
+            conclusion=$(gh run view 34078378863 --json conclusion --jq .conclusion)
+            head=$(gh run view 34078378863 --json headSha --jq .headSha)
+            echo "Android CI #619 status=$status conclusion=$conclusion head=$head"
+            if [ "$head" != "bf980a1cd1d9a51ec2052cc4aa23d89422043688" ]; then
+              echo "Unexpected CI head" >&2
+              exit 1
+            fi
+            if [ "$status" = "completed" ]; then
+              [ "$conclusion" = "success" ] && exit 0
+              echo "Android CI #619 did not pass" >&2
+              exit 1
+            fi
+            sleep 15
+          done
+          echo "Timed out waiting for Android CI #619" >&2
+          exit 1
+
+      - name: Reconcile strict DONE ledger
+        shell: bash
+        run: |
+          git pull --ff-only origin main
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          manifest_path = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
+          m = manifest_path.read_text()
+
+          # Prior run51/52 assets already have green Android CI #618; canonical rows
+          # remained RUNTIME only because the ledger promotion had not been mirrored.
+          lines = []
+          for line in m.splitlines():
+              if line.startswith('| MCH-') and line.rstrip().endswith('| RUNTIME |'):
+                  line = line[:-len('RUNTIME |')] + 'DONE |'
+              elif line.startswith('| TER-') and line.rstrip().endswith('| RUNTIME |'):
+                  line = line[:-len('RUNTIME |')] + 'DONE |'
+              elif line.startswith('| VEH-16 ') and line.rstrip().endswith('| RUNTIME |'):
+                  line = line[:-len('RUNTIME |')] + 'DONE |'
+              lines.append(line)
+          m = '\n'.join(lines) + ('\n' if m.endswith('\n') else '')
+          manifest_path.write_text(m)
+
+          progress_path = Path('docs/art/FINAL_AAA_SPRITE_PROGRESS.md')
+          p = progress_path.read_text()
+          p = p.replace('- DONE: **106 / 235**', '- DONE: **108 / 235**', 1)
+          p = p.replace('- Generated candidates accepted as DONE: **106**', '- Generated candidates accepted as DONE: **108**', 1)
+          p = p.replace('## Reviewed FLUX run 66 — 2 assets awaiting green CI', '## Reviewed FLUX run 66 — 2 DONE', 1)
+          p = p.replace('The two accepted assets remain RUNTIME until Android CI is green on their integration commit.', 'Android CI run `34078378863` (#619) completed successfully on integration commit `bf980a1cd1d9a51ec2052cc4aa23d89422043688`; both accepted assets are therefore strict DONE.', 1)
+          progress_path.write_text(p)
+          PY
+
+      - name: Commit strict DONE reconciliation
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md docs/art/FINAL_AAA_SPRITE_PROGRESS.md
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "art: mark reviewed run66 assets strict DONE"
+          git push origin HEAD:main
