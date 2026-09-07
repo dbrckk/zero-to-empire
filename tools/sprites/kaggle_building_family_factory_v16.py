@@ -55,9 +55,7 @@ STYLE=('premium AAA mobile strategy asset; stylized 2.5D industrial factory; 34-
 def prompts(i):
     family=FAMILY[i['family']]
     tier=TIER[i['tier']]
-    # CLIP gets only the highest-value concepts so nothing critical falls beyond its short context window.
     short=f'Industrial factory sprite. {family}. {tier}. Isolated on uniform gray studio background.'
-    # T5 receives the complete positive design specification.
     detail=(f'{STYLE}. Exactly one finished operating industrial production building. '
             f'Design identity: {family}. Evolution state: {tier}. '
             'Keep the same facade axis, roof direction, production core, material palette and attached-module logic across upgrades. '
@@ -66,8 +64,48 @@ def prompts(i):
             'End the building cleanly at its structural footprint with neutral gray studio background visible around the entire silhouette.')
     return short,detail
 
+
+def silhouette_metrics(final):
+    """Return cheap shape features used before expensive branch evolution."""
+    m=v14.mask64(final)
+    b=m.getbbox()
+    if not b:
+        return {'aspect':0.0,'upper':1.0,'lower':0.0,'top_spike':1.0}
+    x0,y0,x1,y1=b; w=max(1,x1-x0); h=max(1,y1-y0)
+    px=m.load(); total=upper=lower=top=0
+    split=y0 + int(h*.48); top_end=y0 + max(1,int(h*.22))
+    for y in range(y0,y1):
+        for x in range(x0,x1):
+            if px[x,y] <= 0: continue
+            total += 1
+            if y < split: upper += 1
+            else: lower += 1
+            if y < top_end: top += 1
+    return {
+        'aspect': w/h,
+        'upper': upper/max(total,1),
+        'lower': lower/max(total,1),
+        'top_spike': top/max(total,1),
+    }
+
+
+def v16_anchor_score(final,cov):
+    """Prefer low, bottom-heavy industrial starters before evolving a family."""
+    base=v15.anchor_score(final,cov)
+    s=silhouette_metrics(final)
+    penalty=0.0
+    # T0 must read as a starter factory, not a tower/monument or top-heavy machine.
+    if s['aspect'] < .78: penalty += (.78-s['aspect'])*1.4
+    if s['upper'] > .53: penalty += (s['upper']-.53)*2.2
+    if s['top_spike'] > .17: penalty += (s['top_spike']-.17)*2.5
+    if s['lower'] < .47: penalty += (.47-s['lower'])*1.7
+    score=base-penalty
+    print(f"KAGGLE_V16_SILHOUETTE aspect={s['aspect']:.2f} upper={s['upper']:.2f} lower={s['lower']:.2f} top={s['top_spike']:.2f} score={score:.3f}",flush=True)
+    return score
+
 v14.prompts=prompts
 v15.prompts=prompts
+v15.anchor_score=v16_anchor_score
 
 # More anchor diversity; only the strongest anchors receive expensive tier evolution.
 v15.ANCHORS=6
