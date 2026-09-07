@@ -6,7 +6,7 @@ on:
       count:
         description: Sprite attempts in this Kaggle batch
         required: false
-        default: '28'
+        default: '56'
   push:
     paths:
       - 'ops/sprite-wave-trigger.txt'
@@ -14,7 +14,7 @@ permissions:
   contents: read
 concurrency:
   group: kaggle-mass-sprite-factory
-  cancel-in-progress: true
+  cancel-in-progress: false
 jobs:
   kaggle:
     runs-on: ubuntu-latest
@@ -22,7 +22,7 @@ jobs:
     env:
       KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
       KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
-      SPRITE_COUNT: ${{ github.event.inputs.count || '28' }}
+      SPRITE_COUNT: ${{ github.event.inputs.count || '56' }}
     steps:
       - uses: actions/checkout@v4
         with: {fetch-depth: 2}
@@ -93,7 +93,18 @@ jobs:
           if [ ${#files[@]} -eq 0 ]; then echo 'No fresh Kaggle candidates'; exit 1; fi
           echo "KAGGLE_QA_PENDING=${#files[@]}"
           python tools/sprites/build_sprite_contact_sheet.py --output /tmp/kaggle-output/output/github-contact-sheet.png --report /tmp/kaggle-output/output/github-qa-report.json --files "${files[@]}"
-      - name: Upload QA evidence for semantic approval
+          python - <<'PY'
+          import json, pathlib
+          p=pathlib.Path('/tmp/kaggle-output/output/github-qa-report.json')
+          d=json.loads(p.read_text())
+          rows=d if isinstance(d,list) else d.get('sprites',d.get('results',[]))
+          total=len(rows)
+          failed=sum(1 for r in rows if str(r.get('status','PASS')).upper() not in ('PASS','OK','VALID'))
+          print(f'QA_REPORT_TOTAL={total} QA_REPORT_FAILED={failed}')
+          if total != len(list(pathlib.Path('/tmp/kaggle-output/output/candidates').glob('*_final.png'))):
+            raise SystemExit('QA report does not cover every candidate')
+          PY
+      - name: Upload exhaustive QA evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -107,7 +118,8 @@ jobs:
             /tmp/kaggle-output/output/candidates/*.png
             /tmp/kaggle-output/*.log
           if-no-files-found: ignore
-          retention-days: 30
+          retention-days: 90
 
 # User-approved mass production only: manual workflow_dispatch or assistant pulse file after explicit Go/Continue.
-# Default building throughput: 28 manifest tiers plus adaptive retries.
+# High-throughput policy: target 56 attempts by default; every exported candidate must be individually covered by QA evidence.
+# Strict DONE still requires semantic review, runtime integration, manifest reconciliation and green Android CI.
