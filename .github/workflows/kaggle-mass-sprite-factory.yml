@@ -6,17 +6,7 @@ on:
       count:
         description: Sprite attempts in this Kaggle batch
         required: false
-        default: '28'
-  schedule:
-    - cron: '37 */6 * * *'
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/kaggle-mass-sprite-factory.yml'
-      - 'kaggle/github_mass_factory.py'
-      - 'kaggle/kernel-metadata.template.json'
-      - 'tools/sprites/kaggle_sprite_factory.py'
-      - 'tools/sprites/kaggle_building_family_factory.py'
+        default: '42'
 permissions:
   contents: read
 concurrency:
@@ -29,7 +19,7 @@ jobs:
     env:
       KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
       KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
-      SPRITE_COUNT: ${{ github.event.inputs.count || '28' }}
+      SPRITE_COUNT: ${{ github.event.inputs.count || '42' }}
     steps:
       - uses: actions/checkout@v4
         with: {fetch-depth: 2}
@@ -108,4 +98,4 @@ jobs:
           if-no-files-found: ignore
           retention-days: 30
 
-# Batch trigger marker: semantic-reroll-v12-final-ter07-energy-conduit-2026-09-07
+# Manual-only mass production; explicit user Go/Continue required. Default throughput: 42 attempts.
