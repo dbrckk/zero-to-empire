@@ -19,7 +19,7 @@ Canonical sources:
 ## Strict completion gate
 A sprite is strict DONE only after individual production, semantic correctness, technical/alpha validation, final runtime commit/reference, actual runtime visibility, manifest/progress reconciliation and green Android CI. Candidate count is never DONE count.
 
-## Current trusted state — 2026-09-07 19:51 +02:00
+## Current trusted state — 2026-09-07 20:26 +02:00
 - Strict ledger remains **112 / 235 DONE** pending evidence-based reconciliation.
 - BLD-03-T2..T6 from run 75 remain integrated but not added to strict count without canonical/CI proof.
 - Run 80: 21 technical candidates, semantic rejection 21/21; strict delta +0.
@@ -37,35 +37,36 @@ GitHub Actions run `34132705535`, artifact `10026804547`.
 - Trigger commit: `44ecebae70c3a52ca5a33d3d8f72c30783efafb4`.
 - GitHub Actions run: `34145936891`, job `101817872065`.
 - Requested 56 tiers.
-- At 19:51 +02:00 it remains `in_progress` at `Wait for Kaggle`; setup/auth/kernel launch are green.
-- It was triggered with v15.2 live semantic validation before v16 landed; do not discard the active run merely to hot-swap generators.
-- v15.2 adds live boom/slab detection, fresh-seed tier retries and early branch abort.
+- At 20:26 +02:00 it remains `in_progress` at `Wait for Kaggle`; setup/auth/kernel launch are green.
+- It was triggered with v15.2 live semantic validation before v16/v16.1 landed; do not discard the active run merely to hot-swap generators.
+- Job logs are not yet downloadable while the live blob is unavailable; inspect artifacts/logs immediately after completion.
 
 ## Generation-quality directive — prevent invalidation at source
 The user explicitly requires image generation itself to be substantially better so later semantic invalidation becomes exceptional rather than normal. The pipeline must therefore optimize **source quality first**, with QA acting as a safety net rather than the primary filter.
 
-## Building generator v16 — positive source locking
-Created `tools/sprites/kaggle_building_family_factory_v16.py` in commit `074ca0297aebfa8fce485e2456b4705f885950ef`, tightened encoder-safe prompts in `4e9f4f5612015a823917f744f0e918072049fd32`, and routed future building waves to v16 in `81f469593636623cb4751d7385743fb50e19b01b`.
-Startup marker: `KAGGLE_STARTUP=building-family-flux-v16-positive-source-locked`.
+## Building generator v16.1 — shape-first positive source locking
+Created from v16 and upgraded in commit `cd9e125482f4df2426803f3feda05cc423e423b2`.
+Startup marker: `KAGGLE_STARTUP=building-family-flux-v16.1-shape-first-source-locked`.
+Future building waves are routed to `tools/sprites/kaggle_building_family_factory_v16.py` by commit `81f469593636623cb4751d7385743fb50e19b01b`.
 
-v16 generation policy:
-1. Positive design cards per building family with concrete architectural identity and integrated production mechanism.
-2. Positive T0→T6 blueprints that describe attached industrial growth instead of vague prestige/hero concepts.
-3. No long negative-object lists in prompts; describe the desired finished object instead of repeatedly naming forbidden motifs.
-4. Encoder-aware prompting: short high-value CLIP prompt, complete design specification in T5.
-5. Conservative source locking through img2img strengths `.24,.29,.34,.39,.44,.49`.
-6. More inference steps: 6–8 depending on tier.
-7. Six T0 anchors per family; only the strongest two receive expensive tier evolution.
-8. v15.2 live QA remains underneath v16 for regeneration and early abort.
-9. Full-resolution semantic review remains mandatory, but should increasingly confirm quality rather than reject whole batches.
+v16.1 generation policy:
+1. **Positive family design cards** give each building a concrete industrial identity instead of generic industrial wording.
+2. **Dedicated SHAPE cards** define only architectural massing for each family: broad/low blocks, attached wings, compact roof masses, enclosed centers.
+3. **Two-phase prompting.** T0 is generated from shape/massing first with deliberately sparse machinery detail. T1→T6 then evolve that approved source and introduce only attached/integrated industrial detail.
+4. **No long forbidden-object lists.** Desired geometry and architecture are described positively so construction motifs are not made salient by the prompt itself.
+5. **Encoder-aware prompts.** CLIP receives only family shape + tier essentials; T5 receives the complete positive specification.
+6. **Stronger source locking.** Img2img strengths reduced further to `.22,.27,.32,.37,.42,.47` for T1→T6 so upgrades preserve the approved source instead of re-inventing the scene.
+7. **More deliberate T0 search.** T0 uses 8 inference steps; later tiers 6–8.
+8. **Six T0 anchors** per family; only the strongest two receive expensive full progression.
+9. v15.2 live boom/slab/context QA remains underneath v16.1 for retries and early branch abort.
+10. Strict semantic review remains mandatory, but target behavior is confirmation rather than routine rejection.
 
-## v16 silhouette-aware source filtering
-Added in commit `121a7728a6aa23e76648f18eef71353c09a08af4`.
-- Every T0 anchor is analyzed before branch evolution using its 64×64 alpha silhouette.
+## v16.1 silhouette-aware source filtering
+- Every T0 anchor is analyzed before expensive branch evolution using its 64×64 alpha silhouette.
 - Metrics: width/height aspect ratio, upper-mass fraction, lower-mass fraction and top-spike fraction.
-- Narrow/tall, top-heavy or spike-dominated starters are penalized in the anchor score because they are likely to drift toward towers, monuments or free-standing machinery.
-- Bottom-heavy, horizontally stable starter-factory silhouettes rank higher and are preferentially evolved.
-- Logs emit `KAGGLE_V16_SILHOUETTE ...` so acceptance/rejection thresholds can be tuned from real evidence.
+- Thresholds were tightened in v16.1: prefer aspect >= .82, upper mass <= .50, top spike <= .14 and lower mass >= .50.
+- Narrow/tall, top-heavy or spike-dominated starters are heavily penalized before branch selection.
+- Logs emit `KAGGLE_V16_SILHOUETTE ...` for empirical threshold tuning.
 
 ## Character lane
 - Factory: `tools/sprites/kaggle_character_sheet_factory_v1.py` (`5bec3b27922106c6d2120cf28b56a008aeb4b026`).
@@ -80,10 +81,10 @@ Added in commit `121a7728a6aa23e76648f18eef71353c09a08af4`.
 ## Immediate next actions
 1. Query wave 82 first on the next intervention.
 2. When wave 82 completes, retrieve logs/artifacts and measure whether v15.2 reduced crane/boom/slab contamination.
-3. Subsequent building waves use **v16 positive source locking + silhouette-aware anchor filtering** from current `main`.
-4. Measure semantic acceptance rate, not just candidate count; recurrent motifs must trigger design-card/generation changes before another large batch.
+3. Subsequent building waves use **v16.1 shape-first positive source locking + silhouette-aware anchor filtering** from current `main`.
+4. Measure semantic acceptance rate, not just candidate count; recurrent motifs must trigger source-generation changes before another large batch.
 5. Promote only genuinely valid families; integrate runtime/references, reconcile manifest/progress and require green Android CI before strict increment.
 6. Continue buildings → statics → characters → FX until **235 / 235 strict DONE**.
 
 ## Operating principle
-Generate the right asset first. Use precise positive design specifications, preserve approved source identity, reject bad source silhouettes before expensive evolution, validate during generation, and keep final QA strict. Optimize for **semantic acceptance rate × validated sprites per GPU-hour**, never raw image count alone.
+Generate the right asset first. Lock the correct architectural mass before adding detail, preserve approved source identity, reject bad source silhouettes before expensive evolution, validate during generation, and keep final QA strict. Optimize for **semantic acceptance rate × validated sprites per GPU-hour**, never raw image count alone.
