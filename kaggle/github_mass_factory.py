@@ -15,7 +15,7 @@ def ensure_gpu():
  print('KAGGLE_GPU_CAPABILITY='+cap,flush=True)
  if int(cap.split('.')[0])<7:subprocess.run(['python','-m','pip','install','--quiet','--upgrade','--force-reinstall','torch==2.5.1','torchvision==0.20.1','--index-url','https://download.pytorch.org/whl/cu121'],check=True)
 def ensure_flux():
- print('KAGGLE_ENGINE=yield-router-v11-all-lanes-live-qa',flush=True)
+ print('KAGGLE_ENGINE=yield-router-v12-positive-source-locked',flush=True)
  subprocess.run(['python','-m','pip','install','--quiet','--upgrade','bitsandbytes==0.48.1','diffusers==0.35.1','peft==0.17.1','protobuf==5.29.5','sentencepiece==0.2.1','transformers==4.56.1','accelerate>=1.2','safetensors','Pillow<12'],check=True)
 def runtime_exists(runtime): return (REPO/runtime).is_file()
 def backlog():
@@ -34,7 +34,7 @@ WORK.mkdir(parents=True,exist_ok=True);shutil.rmtree(REPO,ignore_errors=True);sh
 subprocess.run(['git','clone','--depth','1','https://github.com/dbrckk/zero-to-empire.git',str(REPO)],check=True);os.chdir(REPO);ensure_gpu();ensure_flux()
 incoming=REPO/'art/incoming/final-sprites';before={p.name:digest(p) for p in incoming.glob('*_final.png') if p.is_file()};q=backlog();print('KAGGLE_BACKLOG='+json.dumps(q,separators=(',',':')),flush=True);print(f'KAGGLE_BATCH_SEED={SEED}',flush=True)
 if q['BLD']>=5:
- lane='BUILDING_FAMILIES';effective=max(7,min(COUNT,56));cmd=['python','-u','tools/sprites/kaggle_building_family_factory_v15.py','--count',str(effective),'--seed',str(SEED)]
+ lane='BUILDING_FAMILIES';effective=max(7,min(COUNT,56));cmd=['python','-u','tools/sprites/kaggle_building_family_factory_v16.py','--count',str(effective),'--seed',str(SEED)]
 elif q['STATIC']:
  lane='STATIC';effective=max(14,min(COUNT,56));cmd=['python','-u','tools/sprites/kaggle_sprite_factory.py','--kind','ALL','--count',str(effective),'--seed',str(SEED)]
 elif q['CHR']:
@@ -52,4 +52,4 @@ qa=OUT/'batch-contact-sheet.png';report=OUT/'batch-qa-report.json';subprocess.ru
 cdir=OUT/'candidates';cdir.mkdir();targets=[]
 for f in fresh:
  dst=cdir/f.name;shutil.copy2(f,dst);targets.append({'file':f.name,'sha256':digest(dst),'bytes':dst.stat().st_size})
-(OUT/'generated-targets.json').write_text(json.dumps({'count':len(targets),'engine':'yield-router-v11-all-lanes-live-qa','lane':lane,'seed':SEED,'backlog':q,'targets':targets},indent=2),encoding='utf-8');print(f'KAGGLE_EXPORT_COUNT={len(fresh)}',flush=True);print('KAGGLE_OUTPUT_ONLY=1',flush=True)
+(OUT/'generated-targets.json').write_text(json.dumps({'count':len(targets),'engine':'yield-router-v12-positive-source-locked','lane':lane,'seed':SEED,'backlog':q,'targets':targets},indent=2),encoding='utf-8');print(f'KAGGLE_EXPORT_COUNT={len(fresh)}',flush=True);print('KAGGLE_OUTPUT_ONLY=1',flush=True)
