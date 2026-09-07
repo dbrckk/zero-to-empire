@@ -269,7 +269,7 @@ If a new runtime sprite is later required, it must be added here first and the d
 | TER-06 | Expansion loading pad | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_06_final.webp` | DONE |
 | TER-07 | Expansion energy conduit | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_07_final.webp` | TODO |
 | TER-08 | Megastructure reinforced platform | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_08_final.webp` | DONE |
-| TER-09 | Megastructure maglev/rail connector | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_09_final.webp` | RUNTIME |
+| TER-09 | Megastructure maglev/rail connector | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_09_final.webp` | DONE |
 | TER-10 | Megastructure elevated service deck | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_10_final.webp` | DONE |
 | TER-11 | Megastructure energy spine | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_11_final.webp` | DONE |
 | TER-12 | Apex phase platform | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_12_final.webp` | DONE |
