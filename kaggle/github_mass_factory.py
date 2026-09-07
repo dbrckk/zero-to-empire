@@ -15,7 +15,7 @@ def ensure_gpu():
  print('KAGGLE_GPU_CAPABILITY='+cap,flush=True)
  if int(cap.split('.')[0])<7:subprocess.run(['python','-m','pip','install','--quiet','--upgrade','--force-reinstall','torch==2.5.1','torchvision==0.20.1','--index-url','https://download.pytorch.org/whl/cu121'],check=True)
 def ensure_flux():
- print('KAGGLE_ENGINE=flux1-schnell-nf4-yield-router-v10-character-ready',flush=True)
+ print('KAGGLE_ENGINE=yield-router-v11-all-lanes-live-qa',flush=True)
  subprocess.run(['python','-m','pip','install','--quiet','--upgrade','bitsandbytes==0.48.1','diffusers==0.35.1','peft==0.17.1','protobuf==5.29.5','sentencepiece==0.2.1','transformers==4.56.1','accelerate>=1.2','safetensors','Pillow<12'],check=True)
 def runtime_exists(runtime): return (REPO/runtime).is_file()
 def backlog():
@@ -34,26 +34,22 @@ WORK.mkdir(parents=True,exist_ok=True);shutil.rmtree(REPO,ignore_errors=True);sh
 subprocess.run(['git','clone','--depth','1','https://github.com/dbrckk/zero-to-empire.git',str(REPO)],check=True);os.chdir(REPO);ensure_gpu();ensure_flux()
 incoming=REPO/'art/incoming/final-sprites';before={p.name:digest(p) for p in incoming.glob('*_final.png') if p.is_file()};q=backlog();print('KAGGLE_BACKLOG='+json.dumps(q,separators=(',',':')),flush=True);print(f'KAGGLE_BATCH_SEED={SEED}',flush=True)
 if q['BLD']>=5:
- lane='BUILDING_FAMILIES';effective=max(7,min(COUNT,56));factory=REPO/'tools/sprites/kaggle_building_family_factory_v15.py';cmd=['python','-u',str(factory),'--count',str(effective),'--seed',str(SEED)]
+ lane='BUILDING_FAMILIES';effective=max(7,min(COUNT,56));cmd=['python','-u','tools/sprites/kaggle_building_family_factory_v15.py','--count',str(effective),'--seed',str(SEED)]
 elif q['STATIC']:
  lane='STATIC';effective=max(14,min(COUNT,56));cmd=['python','-u','tools/sprites/kaggle_sprite_factory.py','--kind','ALL','--count',str(effective),'--seed',str(SEED)]
 elif q['CHR']:
  lane='CHARACTER_SHEETS';effective=max(4,min(COUNT,8));cmd=['python','-u','tools/sprites/kaggle_character_sheet_factory_v1.py','--count',str(effective),'--seed',str(SEED)]
 elif q['FX']:
- raise SystemExit('FX backlog remains unsupported; dedicated FX sheet factory required')
+ lane='FX_SHEETS';effective=max(1,min(COUNT,18));cmd=['python','-u','tools/sprites/kaggle_fx_sheet_factory_v1.py','--count',str(effective),'--seed',str(SEED)]
 else:raise SystemExit('No supported GPU backlog')
 print(f'KAGGLE_LANE={lane} KAGGLE_EFFECTIVE_COUNT={effective}',flush=True);subprocess.run(cmd,check=True)
 fresh=[p for p in sorted(incoming.glob('*_final.png')) if p.is_file() and (p.name not in before or before[p.name]!=digest(p))];print(f'KAGGLE_FRESH_CANDIDATES={len(fresh)}',flush=True)
 for srcname in ('branch-search-report.json',):
  src=incoming/srcname
  if src.is_file():shutil.copy2(src,OUT/srcname)
-chr_report=OUT/'character-sheet-report.json'
-if not chr_report.is_file():
- alt=Path('/kaggle/working/output/character-sheet-report.json')
- if alt.is_file() and alt.resolve()!=chr_report.resolve():shutil.copy2(alt,chr_report)
 if not fresh:raise SystemExit('No fresh candidate sprites produced by this run')
 qa=OUT/'batch-contact-sheet.png';report=OUT/'batch-qa-report.json';subprocess.run(['python','tools/sprites/build_sprite_contact_sheet.py','--output',str(qa),'--report',str(report),'--files',*[str(x) for x in fresh]],check=True)
 cdir=OUT/'candidates';cdir.mkdir();targets=[]
 for f in fresh:
  dst=cdir/f.name;shutil.copy2(f,dst);targets.append({'file':f.name,'sha256':digest(dst),'bytes':dst.stat().st_size})
-(OUT/'generated-targets.json').write_text(json.dumps({'count':len(targets),'engine':'FLUX.1-schnell NF4 yield-routed batch v10 character-ready','lane':lane,'seed':SEED,'backlog':q,'targets':targets},indent=2),encoding='utf-8');print(f'KAGGLE_EXPORT_COUNT={len(fresh)}',flush=True);print('KAGGLE_OUTPUT_ONLY=1',flush=True)
+(OUT/'generated-targets.json').write_text(json.dumps({'count':len(targets),'engine':'yield-router-v11-all-lanes-live-qa','lane':lane,'seed':SEED,'backlog':q,'targets':targets},indent=2),encoding='utf-8');print(f'KAGGLE_EXPORT_COUNT={len(fresh)}',flush=True);print('KAGGLE_OUTPUT_ONLY=1',flush=True)
