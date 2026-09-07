@@ -19,65 +19,70 @@ Canonical sources:
 ## Strict completion gate
 A sprite is strict DONE only after individual production, semantic correctness, technical/alpha validation, final runtime commit/reference, actual runtime visibility, manifest/progress reconciliation and green Android CI. Candidate count is never DONE count.
 
-## Current trusted state — 2026-09-07
+## Current trusted state — 2026-09-07 17:20 +02:00
 - Strict ledger remains **112 / 235 DONE** pending evidence-based reconciliation.
 - BLD-03-T2..T6 from run 75 remain integrated but not added to strict count without canonical/CI proof.
 - Run 77: 21 technical candidates, 21/21 semantic rejection.
 - Runs 78 and 79: 0 accepted candidates; their evidence drove retry, segmentation, prompt-length and monotonic-growth improvements.
 - Run 80 (`34125123246`) completed SUCCESS and exported **21 technically valid sprites** across BLD-08, BLD-09 and BLD-13.
-- Full-resolution semantic review rejected **21 / 21**; review recorded in `docs/art/reviews/RUN_80_SEMANTIC_REVIEW.md` (`65592dc6...`). Strict DONE delta: **+0**.
-
-## Run 80 evidence
-- v14 fixed the prior zero-yield problem and produced clear T0→T6 scale progression.
-- Technical alpha/geometry QA passed all 21 exports.
-- BLD-08 still contained people, a crane/hoist, platform/site-card treatment, signage/emblems and loose props.
-- BLD-09 drifted toward a civic/science-campus or monument complex and retained platform/site furniture.
-- BLD-13 drifted into civic/religious/castle-like tower architecture, violating industrial stellar-precision factory DNA.
-- The dominant blocker is now **semantic contamination**, not raw technical yield.
+- Full-resolution semantic review rejected **21 / 21**; review: `docs/art/reviews/RUN_80_SEMANTIC_REVIEW.md`. Strict DONE delta: +0.
 
 ## High-throughput + real validation policy
 The user explicitly wants many more sprites produced and tested while preserving genuine validation.
-- Workflow default is now **56 manifest tiers** (`31a22331...`).
-- `cancel-in-progress: false` prevents expensive active GPU waves from being destroyed by the next approved pulse.
-- Every exported sprite must be represented in QA evidence; mismatched coverage fails the QA step.
+- Workflow default: **56 manifest tiers**.
+- `cancel-in-progress: false` prevents expensive active GPU runs from being destroyed by the next approved pulse.
+- Every exported sprite must be represented in QA evidence; mismatched coverage fails QA.
 - Full candidates, contact sheets, reports and logs are retained for 90 days.
 - Strict semantic review, runtime integration and green Android CI remain mandatory.
 
 ## Generator evolution — v15 branch search
-Added `tools/sprites/kaggle_building_family_factory_v15.py` in commit `73a534056135670fe212e0b4906cede7dc00555f`.
+`tools/sprites/kaggle_building_family_factory_v15.py` (`73a534056135670fe212e0b4906cede7dc00555f`) uses multi-anchor branch search:
+1. Up to 4 T0 anchors per family.
+2. Early technical rejection of weak/contaminated anchors.
+3. Up to 2 surviving full T0→T6 branches.
+4. Branch scoring for identity, growth, compactness, slab contamination and drift.
+5. Export only the strongest complete branch plus `branch-search-report.json`.
+6. Stronger semantic negatives against people, flags, cranes, vehicles, roads, platforms, civic/religious/monument architecture.
 
-v15 strategy:
-1. Generate up to **4 different T0 anchors per family** instead of trusting one seed.
-2. Technically score/reject contaminated or badly framed anchors before spending GPU on full evolution.
-3. Evolve up to **2 strongest surviving branches** through T1→T6.
-4. Score completed branches for family identity IoU, growth, compactness, broad-slab contamination and horizontal drift.
-5. Export only the strongest complete branch while preserving a branch-search report.
-6. Stronger short prompts explicitly prohibit people/workers, flags, cranes/hoists, vehicles, roads, pavement/floor cards, signs/text and civic/religious/monument/castle architecture.
-7. Human/full-resolution semantic review remains the final gate.
-
-`kaggle/github_mass_factory.py` now routes building production to v15 (`0aa5c39f...`) and preserves `branch-search-report.json`.
-Workflow evidence packaging was updated in `d6fd2c01...`.
-
-## Wave 81 — active
+## Wave 81 — active checkpoint
 - Trigger commit: `bfd3ea0fea08c78fa36f0d3ab5c100a1608a2566`.
 - GitHub Actions run: **`34132705535`**.
+- Workflow job: `101776405808`.
 - Generator: `building-family-flux-v15-multibranch-semantic-safe`.
 - Requested count: **56** manifest tiers.
-- Objective: maximize validated sprites per GPU-hour using multi-anchor branch search and exhaustive QA.
-- Last verified state: **in_progress**.
+- At 17:20 +02:00 the job remains `in_progress` at **Wait for Kaggle**; setup/auth/kernel launch are green and artifact/QA steps are pending.
+- Do not interfere with the active Kaggle kernel.
+
+## Character production lane — prepared while wave 81 runs
+The previous future blocker where CHR/FX could not be routed has been partially removed.
+
+Created `tools/sprites/kaggle_character_sheet_factory_v1.py` in commit `5bec3b27922106c6d2120cf28b56a008aeb4b026`.
+Character factory design:
+1. Parses all 24 manifest `CHR-*` sheets (operator, technician, logistics worker, engineer × idle/walk/work/carry/repair/celebration).
+2. Generates a text-to-image identity anchor then conservative img2img pose frames to preserve face, clothing, proportions and camera.
+3. Uses edge-connected neutral-background alpha isolation.
+4. Normalizes every frame to a 256×256 cell with fixed feet baseline/pivot.
+5. Assembles complete 1024-wide sheets with action-specific frame counts (6–10 in v1).
+6. Rejects edge contact, non-full-body silhouettes, bad coverage, abrupt silhouette/identity jumps, duplicate adjacent frames, feet-pivot drift and excessive horizontal drift.
+7. Emits `character-sheet-report.json`; output remains candidate-only until full semantic review.
+
+Routing commit `8fc1a3571600edac9e41d8dd5a1cc8b9b72e7f36` updates `kaggle/github_mass_factory.py` to distinguish `CHR` and `FX` backlog and route character backlog to the dedicated factory when buildings/statics are exhausted. FX remains explicitly unsupported pending a dedicated FX factory.
+Workflow commit `009dce7efbd038d42362cf56e55039602a5d3962` now retains `character-sheet-report.json` in the 90-day QA artifact.
 
 ## Immediate next actions
 1. Query run `34132705535` first on the next intervention.
-2. When complete, retrieve logs, branch-search report, QA reports and all candidate PNGs.
-3. Review every exported family at full resolution; do not promote from branch score/technical QA alone.
-4. Promote only genuinely valid families, integrate runtime assets/references, reconcile manifest/progress and require green Android CI before incrementing strict DONE.
-5. Use wave-81 rejection reasons to further improve semantic yield without weakening gates.
-6. Continue through buildings, static assets, characters and FX until **235 / 235 strict DONE**.
+2. When complete, retrieve logs, branch-search report, QA reports and every candidate PNG.
+3. Review every exported family at full resolution; promote only genuinely valid families.
+4. Integrate accepted assets/references, reconcile manifest/progress and require green Android CI before incrementing strict DONE.
+5. Use wave-81 rejection reasons to improve semantic yield rather than weaken gates.
+6. Build a dedicated FX sheet factory so the final 18 FX sheets cannot block 235/235.
+7. Test the character factory on Kaggle before relying on it for strict completion.
+8. Continue buildings → statics → characters → FX until **235 / 235 strict DONE**.
 
 ## Known unresolved targets
 - Remaining building families after BLD-03.
 - `TER-07` Expansion energy conduit unless superseded by accepted promotion.
-- Dedicated character/FX production lane still required when building/static backlog falls.
+- Dedicated FX production lane still required.
 
 ## Operating principle
 Maximize **validated sprites per GPU-hour**, not raw images. Generate broadly, reject aggressively, preserve evidence, and only increase strict DONE after full integration and CI proof.
