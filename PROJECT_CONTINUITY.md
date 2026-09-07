@@ -21,54 +21,43 @@ Locked scope: **235 final deliverables**.
 ## Non-negotiable sprite completion gate
 An asset is not strict `DONE` until it is individually authored/generated, semantically correct, technically clean, transparent where required, committed to the final runtime path, actually referenced/visible in runtime, and validated by green Android CI. Candidate sheets, concept collages, technically valid but semantically wrong generations, or merely integrated files do not increment strict DONE.
 
-## Current handoff — 2026-09-07
+## Current handoff — 2026-09-07 15:30 +02:00
 ### Current trusted state
 - Strict committed progress ledger remains **112 / 235 DONE** until strict reconciliation proves a higher number.
 - `BLD-03-T2` through `BLD-03-T6` were integrated by run 75 (`e14b6897...`) but still require canonical reconciliation/green-CI proof before increasing strict DONE.
 - Run 77 (`34102566634`) produced 21 technically valid building candidates; semantic review rejected 21/21.
 - Run 78 (`34116344191`) produced no fresh accepted candidates and motivated retry/QA changes.
-- Run 79 (`34121697907`) also produced **0 fresh candidates**. It was not an auth/infrastructure failure: the generator completed its planned families, then rejected them all through QA and exited because no fresh files were emitted.
+- Run 79 (`34121697907`) produced 0 fresh accepted candidates and motivated prompt-length plus monotonic-envelope corrections.
 
-### Run 79 root-cause evidence
-1. Prompt warnings show repeated **CLIP 77-token truncation** and T5 `max_sequence_length=256` truncation. Critical negative constraints were therefore being dropped before inference.
-2. BLD-08 rendered T0→T6 but coverage grew only **22.1% → 25.7%** and was correctly rejected for insufficient growth.
-3. BLD-09 rendered T0→T6 but coverage grew only **25.0% → 28.8%** and was correctly rejected for insufficient growth.
-4. The v12/v13 post-processing normalized most non-T0 tiers into nearly the same display envelope, partially cancelling the visible tier growth requested from FLUX.
-5. Strict DONE delta from run 79: **+0**.
+### Active generator
+- Canonical building generator is **v14 prompt-safe-monotonic** at `tools/sprites/kaggle_building_family_factory_v14.py`.
+- `kaggle/github_mass_factory.py` routes BUILDING_FAMILIES directly to v14.
+- v14 uses short prompts, edge-connected background segmentation, tier-specific final envelopes, adaptive retries and family-level identity/growth/drift QA.
 
-### Generator evolution after run 79
-- Added **v14 prompt-safe-monotonic** generator at `tools/sprites/kaggle_building_family_factory_v14.py` (`572f1c381d683b2cc732872144fe1a59ab842033`).
-- `kaggle/github_mass_factory.py` routes future building waves through v14 (`071444d69928a94ce3a896a9ac81a5994b37f6d9`).
-- v14 keeps semantic prompts intentionally short so the family DNA, tier instruction, isolation contract and key negatives survive CLIP/T5 limits.
-- v14 preserves edge-connected background segmentation so neutral metallic interior materials are less likely to be deleted as background.
-- v14 introduces explicit monotonic final envelopes by tier: T0 is deliberately small and each tier gets a progressively larger permitted canvas footprint through T6.
-- v14 keeps adaptive retries, family identity IoU, growth, non-monotonicity, drift, slab, padding and detached-structure gates.
-- Family growth gate is now stricter because the output normalization itself deliberately exposes tier scale growth instead of hiding it.
-
-### Wave 80
-- Explicit user `Go` authorized this generation wave.
+### Wave 80 — live checkpoint
 - Trigger commit: `5202d20d7b99efffe2225604b4ee1f0b4f2cfede`.
 - GitHub Actions run: `34125123246`.
-- Generator: `building-family-flux-v14-prompt-safe-monotonic`.
-- Requested batch count: 28 manifest tiers.
-- Objective: preserve prompt constraints and force unmistakable T0→T6 growth while retaining strict semantic QA.
-- Last verified state during the current intervention: workflow job `101751899400` is still **in_progress** on the `Wait for Kaggle` step; authentication, checkout, dependency installation, kernel preparation and kernel push all completed successfully.
-- The canonical entrypoint was re-verified on `main`: `kaggle/github_mass_factory.py` explicitly routes `BUILDING_FAMILIES` to `tools/sprites/kaggle_building_family_factory_v14.py`, so wave 80 is using the intended v14 path.
+- Workflow job: `101751899400`.
+- Requested batch: 28 manifest tiers.
+- At **2026-09-07 15:30 +02:00**, the job is still `in_progress` at step **Wait for Kaggle**.
+- Steps already green: setup, checkout, credentials, runner dependencies, Kaggle authentication, kernel preparation, and kernel push/start.
+- Artifact download, kernel-success gate, fresh-candidate gate and QA-evidence upload are still pending because the Kaggle kernel has not finished.
+- Do **not** trigger a concurrent sprite pulse while run 80 is active: workflow concurrency can cancel the active GPU run and waste the current generation attempt.
 
 ## Immediate next actions — ordered
-1. Let wave 80 complete without triggering a concurrent pulse, because the workflow concurrency group would cancel the active run.
-2. Retrieve its artifact/log immediately after completion and inspect every emitted candidate at full resolution.
-3. Promote only coherent complete families with correct family identity, clean isolation and unmistakable starter→ultimate progression.
-4. Integrate accepted masters/runtime assets, reconcile manifest/progress and require green Android CI before increasing strict DONE.
-5. If v14 still produces no promotable family, use wave-80 evidence to adjust generation strategy rather than repeating unchanged seeds/settings.
-6. Once building backlog is exhausted, route remaining static assets, characters and FX through equally strict dedicated production lanes.
-7. Repeat generate → technical QA → semantic QA → promotion → runtime integration → green CI until **235 / 235 strict DONE**.
+1. On the next intervention, query run `34125123246` first.
+2. As soon as it completes, retrieve the kernel log and QA artifact.
+3. Inspect every emitted candidate/family at full resolution; do not promote from technical QA alone.
+4. Promote only coherent complete families with correct identity, isolation and unmistakable T0→T6 progression.
+5. Integrate accepted masters/runtime assets, reconcile manifest/progress and require green Android CI before increasing strict DONE.
+6. If v14 yields no promotable family, derive the next generator change from wave-80 evidence rather than repeating unchanged settings.
+7. Continue through buildings, remaining static assets, characters and FX until **235 / 235 strict DONE**.
 
 ## Known unresolved art targets
-- Remaining building families/tiers after `BLD-03`, with coherent family identity and unmistakable monotonic T0→T6 growth.
-- `TER-07` Expansion energy conduit remains unresolved unless superseded by a later accepted promotion.
-- Character/FX backlog still requires its dedicated sheet-production lane once buildings no longer dominate routing.
-- Any TODO/ART/RUNTIME item in the canonical manifest must pass the same strict completion gate.
+- Remaining building families/tiers after `BLD-03`.
+- `TER-07` Expansion energy conduit unless superseded by a later accepted promotion.
+- Character/FX backlog requires its dedicated production lane once buildings no longer dominate routing.
+- Every TODO/ART/RUNTIME manifest item remains subject to the strict completion gate.
 
 ## Operating principle
-Quality beats nominal throughput. A failed/rejected generation wave is valid QA evidence but is **not progress toward DONE**. Optimize the generator from failure evidence, then retry. Never replace a strict counter with an optimistic candidate count.
+Quality beats nominal throughput. Failed/rejected generation is QA evidence, not DONE progress. Never replace the strict counter with candidate counts.
