@@ -67,7 +67,10 @@ jobs:
         run: |
           set -u
           slug="${KAGGLE_USERNAME}/zero-to-empire-sprite-factory"; final_status='UNKNOWN'
-          for i in $(seq 1 150); do
+          # 135 minutes is intentionally below the 180-minute GitHub job ceiling.
+          # This leaves enough time to download partial outputs/logs and retain evidence
+          # instead of having the runner killed while still polling Kaggle.
+          for i in $(seq 1 135); do
             status="$(kaggle kernels status "$slug" 2>&1 || true)"; echo "$status"
             if echo "$status" | grep -qi 'complete'; then final_status='COMPLETE'; break; fi
             if echo "$status" | grep -Eqi 'error|cancel|failed'; then final_status='ERROR'; break; fi
