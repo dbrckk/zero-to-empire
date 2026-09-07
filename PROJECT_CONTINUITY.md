@@ -3,61 +3,59 @@
 > Persistent handoff file. Read this file before any new work on this repository and update it at every assistant intervention that changes goals, state, decisions, blockers, or next actions.
 
 ## Global continuity rule
-- This repository must always keep a recent, concrete record of the latest changes and the next objectives.
-- The assistant must update this file whenever it works on the repository and before ending an intervention that materially changes project state.
-- Do not rely on chat history as the only source of continuity.
-- Apply the same `PROJECT_CONTINUITY.md` convention to every actively worked repository going forward.
-- Never mark an objective complete from intent alone: record the commit/run/CI evidence that proves completion.
+- Keep a recent concrete record of changes, evidence, blockers and next objectives.
+- Update this file at every material assistant intervention.
+- Do not rely on chat history alone.
+- Apply the same `PROJECT_CONTINUITY.md` convention to every actively worked repository.
+- Never mark completion from intent or candidate generation alone.
 
 ## Primary objective
-Bring **Zero → Empire** to full production completion, with the immediate art objective being **100% of the canonical final sprite manifest**.
+Bring **Zero → Empire** to full production completion. Immediate art objective: **235 / 235 canonical final sprites strict DONE**.
 
-Canonical art sources:
+Canonical sources:
 - `docs/art/FINAL_AAA_SPRITE_MANIFEST.md`
 - `docs/art/FINAL_AAA_SPRITE_PROGRESS.md`
 
-Locked scope: **235 final deliverables**.
+## Strict completion gate
+A sprite is strict DONE only after individual production, semantic correctness, technical/alpha validation, final runtime commit/reference, actual runtime visibility, manifest/progress reconciliation and green Android CI. Candidate count is never DONE count.
 
-## Non-negotiable sprite completion gate
-An asset is not strict `DONE` until it is individually authored/generated, semantically correct, technically clean, transparent where required, committed to the final runtime path, actually referenced/visible in runtime, and validated by green Android CI. Candidate sheets, concept collages, technically valid but semantically wrong generations, or merely integrated files do not increment strict DONE.
+## Current trusted state — 2026-09-07
+- Strict ledger remains **112 / 235 DONE** pending evidence-based reconciliation.
+- BLD-03-T2..T6 from run 75 remain integrated but not added to strict count without canonical/CI proof.
+- Run 77: 21 technical candidates, 21/21 semantic rejection.
+- Runs 78 and 79: 0 accepted candidates; their evidence drove retry, segmentation, prompt-length and monotonic-growth improvements.
+- Active building generator: **v14 prompt-safe-monotonic**.
 
-## Current handoff — 2026-09-07 15:30 +02:00
-### Current trusted state
-- Strict committed progress ledger remains **112 / 235 DONE** until strict reconciliation proves a higher number.
-- `BLD-03-T2` through `BLD-03-T6` were integrated by run 75 (`e14b6897...`) but still require canonical reconciliation/green-CI proof before increasing strict DONE.
-- Run 77 (`34102566634`) produced 21 technically valid building candidates; semantic review rejected 21/21.
-- Run 78 (`34116344191`) produced no fresh accepted candidates and motivated retry/QA changes.
-- Run 79 (`34121697907`) produced 0 fresh accepted candidates and motivated prompt-length plus monotonic-envelope corrections.
+## User production directive — high throughput + real validation
+The user explicitly wants **many more sprites produced and tested, while still requiring genuine validation**. Production policy is therefore changed from conservative small batches to high-throughput candidate generation with exhaustive QA evidence, without weakening strict DONE.
 
-### Active generator
-- Canonical building generator is **v14 prompt-safe-monotonic** at `tools/sprites/kaggle_building_family_factory_v14.py`.
-- `kaggle/github_mass_factory.py` routes BUILDING_FAMILIES directly to v14.
-- v14 uses short prompts, edge-connected background segmentation, tier-specific final envelopes, adaptive retries and family-level identity/growth/drift QA.
+Implemented in workflow commit `31a2233126f2dd9eb7d3093edddd816abe486eac`:
+1. Default requested batch increased from **28 to 56 attempts** for future waves.
+2. Workflow concurrency now uses `cancel-in-progress: false` so a new approved pulse cannot destroy an expensive active GPU generation run.
+3. Every exported `*_final.png` must be represented in the generated GitHub QA report; a coverage mismatch fails the QA step.
+4. Both Kaggle-side and GitHub-side contact sheets/reports are retained.
+5. Full candidate PNGs and kernel logs remain in the evidence artifact.
+6. Evidence retention increased from **30 to 90 days** for later audits/re-review.
+7. High throughput does **not** relax semantic review or strict DONE gates.
 
-### Wave 80 — live checkpoint
+## Wave 80
+- Run: `34125123246`; job `101751899400`.
 - Trigger commit: `5202d20d7b99efffe2225604b4ee1f0b4f2cfede`.
-- GitHub Actions run: `34125123246`.
-- Workflow job: `101751899400`.
-- Requested batch: 28 manifest tiers.
-- At **2026-09-07 15:30 +02:00**, the job is still `in_progress` at step **Wait for Kaggle**.
-- Steps already green: setup, checkout, credentials, runner dependencies, Kaggle authentication, kernel preparation, and kernel push/start.
-- Artifact download, kernel-success gate, fresh-candidate gate and QA-evidence upload are still pending because the Kaggle kernel has not finished.
-- Do **not** trigger a concurrent sprite pulse while run 80 is active: workflow concurrency can cancel the active GPU run and waste the current generation attempt.
+- Wave 80 started under the previous 28-attempt configuration and remains in progress on Kaggle at the latest check.
+- Do not interfere with it. The new 56-attempt/exhaustive-QA workflow applies to subsequent waves.
 
-## Immediate next actions — ordered
-1. On the next intervention, query run `34125123246` first.
-2. As soon as it completes, retrieve the kernel log and QA artifact.
-3. Inspect every emitted candidate/family at full resolution; do not promote from technical QA alone.
-4. Promote only coherent complete families with correct identity, isolation and unmistakable T0→T6 progression.
-5. Integrate accepted masters/runtime assets, reconcile manifest/progress and require green Android CI before increasing strict DONE.
-6. If v14 yields no promotable family, derive the next generator change from wave-80 evidence rather than repeating unchanged settings.
-7. Continue through buildings, remaining static assets, characters and FX until **235 / 235 strict DONE**.
+## Immediate next actions
+1. Query wave 80 first on the next intervention.
+2. When complete, retrieve logs + complete artifact and review every emitted sprite/family.
+3. Promote only genuinely valid families; integrate and require green Android CI before incrementing strict DONE.
+4. For the next user-approved wave, use the new **56-attempt** policy and retain exhaustive QA evidence.
+5. Continue improving yield from measured rejection reasons rather than weakening gates.
+6. Finish buildings, then static assets, characters and FX with equivalent high-throughput + exhaustive validation lanes until **235 / 235 strict DONE**.
 
-## Known unresolved art targets
-- Remaining building families/tiers after `BLD-03`.
-- `TER-07` Expansion energy conduit unless superseded by a later accepted promotion.
-- Character/FX backlog requires its dedicated production lane once buildings no longer dominate routing.
-- Every TODO/ART/RUNTIME manifest item remains subject to the strict completion gate.
+## Known unresolved targets
+- Remaining building families after BLD-03.
+- `TER-07` Expansion energy conduit unless superseded by accepted promotion.
+- Dedicated character/FX production lane still required when building/static backlog falls.
 
 ## Operating principle
-Quality beats nominal throughput. Failed/rejected generation is QA evidence, not DONE progress. Never replace the strict counter with candidate counts.
+Maximize **validated sprites per GPU-hour**, not raw images. Generate broadly, reject aggressively, preserve evidence, and only increase strict DONE after full integration and CI proof.
