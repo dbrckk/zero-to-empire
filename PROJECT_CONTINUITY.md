@@ -19,70 +19,74 @@ Canonical sources:
 ## Strict completion gate
 A sprite is strict DONE only after individual production, semantic correctness, technical/alpha validation, final runtime commit/reference, actual runtime visibility, manifest/progress reconciliation and green Android CI. Candidate count is never DONE count.
 
-## Current trusted state — 2026-09-07 17:58 +02:00
+## Current trusted state — 2026-09-07 19:02 +02:00
 - Strict ledger remains **112 / 235 DONE** pending evidence-based reconciliation.
 - BLD-03-T2..T6 from run 75 remain integrated but not added to strict count without canonical/CI proof.
-- Run 80 completed SUCCESS with 21 technical candidates but semantic review rejected 21/21; strict delta +0.
+- Run 80: 21 technical candidates, semantic rejection 21/21; strict delta +0.
+- Run 81: Kaggle successfully generated and technically validated **56 / 56** candidates across 8 complete building families, but strict full-resolution semantic review rejected **56 / 56**; strict delta +0.
 
-## High-throughput + live-validation policy
-- Workflow default: 56 manifest tiers.
-- `cancel-in-progress: false` protects expensive active GPU runs.
-- Every exported sprite must be represented in QA evidence.
-- Full candidates, contact sheets, reports and logs retained for 90 days.
-- Buildings v15.1 perform contextual QA while generating: immediate rejection/regeneration of bad tiers and early branch abort.
-- Character and FX lanes also perform per-frame/per-sheet QA before export.
-- Strict semantic review, runtime integration and green Android CI remain mandatory.
+## Run 81 — exact evidence
+GitHub Actions run `34132705535`, artifact `10026804547`.
+- 56 exported candidates: BLD-04, BLD-05, BLD-08, BLD-09, BLD-10, BLD-11, BLD-12, BLD-13, each T0→T6.
+- 32 T0 anchor attempts, 16 completed branch attempts, 8 selected complete families.
+- Kaggle reported `KAGGLE_BUILDING_SUCCESS=56`, `KAGGLE_FRESH_CANDIDATES=56`, `QA_TOTAL=56 QA_AUTO_PASS=56`, `KAGGLE_EXPORT_COUNT=56`.
+- Semantic review: `docs/art/reviews/RUN_81_SEMANTIC_REVIEW.md` (`f239df13...`).
+- Dominant rejection pattern: construction cranes / orange boom arms across nearly all families, plus broad platform/site-card bases and loose site props.
+- Positive evidence: family continuity and T0→T6 growth are now strong; the pipeline is no longer a raw-yield problem.
 
-## Wave 81 — still active
-- Trigger commit: `bfd3ea0fea08c78fa36f0d3ab5c100a1608a2566`.
-- GitHub Actions run: `34132705535`.
-- Workflow job: `101776405808`.
-- At 17:58 +02:00 it remains `in_progress` at `Wait for Kaggle`; setup/auth/kernel launch are green.
-- Wave 81 uses the earlier v15 multi-branch generator because it cloned before v15.1 live-validation landed.
-- Do not cancel or replace the active run. The next wave will use current `main` with live validation.
+## Run 81 CI gate bug — fixed
+The GitHub job showed failure even though all 56 candidates existed because the workflow parsed QA reports using obsolete keys `sprites/results`, while the current report schema stores rows under `assets`.
+- Fixed in `.github/workflows/kaggle-mass-sprite-factory.yml` commit `6321ddc31fea331f46ed83310926dfe2e45f2e24`.
+- Future QA coverage gate accepts `assets`, with backward-compatible fallback to `sprites/results`.
+- This was a workflow parser bug, not a Kaggle generation failure.
 
-## Building generator — v15.1 live validation
-Commit `608ab41178a8080da1c30b7269b6c5d6c38da5d6`.
-- Up to 4 T0 anchors.
-- Immediate starter QA.
-- Every T1→T6 tier checked against prior accepted frames.
-- Fresh-seed retry on contextual failure.
-- Up to 3 contextual attempts per tier.
-- Early branch abort after repeated failure.
-- `branch-search-report.json` records context attempts, live rejections and early aborts.
+## Building generator — v15.2 live semantic validation
+Commit `9e1146622d47101ee9fe816955f02181a2cf35ff`.
+Startup marker: `KAGGLE_STARTUP=building-family-flux-v15.2-live-semantic-validation`.
+
+Changes derived directly from run 81:
+1. Prompts now demand a **finished operating industrial factory**, not a construction-site interpretation.
+2. Strong explicit negatives: crane, tower crane, jib, boom arm, hoist, gantry crane, scaffolding, temporary frame, workers, vehicles, roads, slabs/platforms/site cards and loose props.
+3. New `boom_score()` inspects the upper alpha silhouette for crane-like long thin horizontal structures.
+4. T0 anchors with boom contamination or slab score > .12 are rejected before branch evolution.
+5. T1→T6 live gate rejects boom contamination and slabs > .16 during generation.
+6. Failed tiers are regenerated with fresh seeds up to 3 contextual attempts; repeatedly bad branches are aborted early.
+7. Final branch score penalizes both max slab and max crane-boom contamination.
+8. Full semantic review remains mandatory because geometric heuristics cannot replace visual judgment.
+
+## Wave 82 — launched
+- Trigger commit: `44ecebae70c3a52ca5a33d3d8f72c30783efafb4`.
+- GitHub Actions run: **`34145936891`**.
+- Requested count: 56 manifest tiers.
+- Generator: `building-family-flux-v15.2-live-semantic-validation`.
+- Objective: preserve v15 multi-branch yield while rejecting crane-boom and slab contamination **during** generation.
+- Latest verified state: `queued` immediately after trigger.
+- Do not launch a conflicting additional wave while this one is queued/running.
 
 ## Character lane
 - Factory: `tools/sprites/kaggle_character_sheet_factory_v1.py` (`5bec3b27922106c6d2120cf28b56a008aeb4b026`).
-- Routed automatically after building/static backlog via `kaggle/github_mass_factory.py`.
+- Routed automatically after building/static backlog.
 - Identity anchor + img2img pose evolution, transparent isolation, fixed feet pivot, silhouette/cycle QA.
 - `character-sheet-report.json` retained in workflow artifacts.
 
-## FX lane — blocker removed
-Created `tools/sprites/kaggle_fx_sheet_factory_v1.py` in commit `80f59093fbe5ece291ee4f057e1b780c7b2539e5`.
-- Covers all manifest TODO FX sheets using deterministic procedural generation rather than wasting FLUX compute on simple transient effects.
-- Produces 8-frame transparent sheets at 256px cells.
-- Supports sparks, flames/plasma, smoke/steam/dust, energy pulses, electric arcs, scan sweep, thruster/trails, distortion/singularity and shimmer-style effects.
-- Live validation occurs per frame: non-empty alpha, coverage bounds, no edge contact.
-- Sheet QA checks adjacent duplicates and center drift.
-- Up to 4 regeneration attempts per FX sheet before rejection.
-- Emits `KAGGLE_FX_LIVE_PASS` / `KAGGLE_FX_LIVE_REJECT` and `fx-sheet-report.json`.
-
-Routing commit `f1b3cdf8839d9dcb13cd6386f09252e29cbcc883` updates `kaggle/github_mass_factory.py` to route remaining FX backlog through the dedicated factory instead of failing unsupported.
-Workflow commit `b0b95d0253715e37e2c1bde2ec64ed8e974a7f7b` preserves `fx-sheet-report.json` in the 90-day QA artifact.
+## FX lane
+- Factory: `tools/sprites/kaggle_fx_sheet_factory_v1.py` (`80f59093fbe5ece291ee4f057e1b780c7b2539e5`).
+- Routed by `f1b3cdf8839d9dcb13cd6386f09252e29cbcc883`.
+- Procedural 8-frame transparent sheets with live per-frame QA and sheet-level duplicate/drift QA.
+- `fx-sheet-report.json` retained by workflow.
 
 ## Immediate next actions
-1. Query run `34132705535` first on the next intervention.
-2. When wave 81 completes, retrieve logs, branch-search report, QA reports and all candidate PNGs; perform full-resolution semantic review.
-3. Launch the next user-approved wave only after extracting wave-81 evidence; it will use v15.1 live validation.
-4. Compare validated yield per GPU-hour against wave 81 using live rejection/abort metrics.
-5. Promote only genuinely valid families, integrate runtime/references, reconcile manifest/progress and require green Android CI before strict increment.
-6. Test the character and FX factories on Kaggle before relying on them for strict completion.
-7. Continue buildings → statics → characters → FX until **235 / 235 strict DONE**.
+1. Query run `34145936891` first on the next intervention.
+2. Verify v15.2 startup marker and inspect live metrics: `KAGGLE_ANCHOR_LIVE_REJECT`, `KAGGLE_LIVE_REJECT`, `KAGGLE_BRANCH_EARLY_ABORT`, boom/slab reasons.
+3. When complete, retrieve all artifacts and review every surviving family at full resolution.
+4. Compare wave-82 semantic yield against run 81; specifically measure whether cranes/site cards disappear rather than merely whether technical candidate count changes.
+5. Promote only genuinely valid families; integrate runtime/references, reconcile manifest/progress and require green Android CI before strict increment.
+6. Then continue buildings → statics → characters → FX until **235 / 235 strict DONE**.
 
 ## Known unresolved targets
 - Remaining building families after BLD-03.
 - `TER-07` Expansion energy conduit unless superseded by accepted promotion.
-- Character/FX candidate factories now exist, but still require real Kaggle test runs and semantic review before any strict DONE credit.
+- Character/FX factories exist but still need real production validation before strict DONE credit.
 
 ## Operating principle
-Maximize **validated sprites per GPU-hour**. Validate early, regenerate locally, abort doomed work early, preserve evidence, and never weaken final semantic/runtime/CI gates.
+Maximize **validated sprites per GPU-hour**. Preserve high candidate throughput, but move semantic rejection as early as possible so GPU time is spent on branches that can plausibly pass full-resolution review.
