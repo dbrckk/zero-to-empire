@@ -6,7 +6,7 @@ on:
       count:
         description: Sprite attempts in this Kaggle batch
         required: false
-        default: '30'
+        default: '28'
   schedule:
     - cron: '37 */6 * * *'
   push:
@@ -29,7 +29,7 @@ jobs:
     env:
       KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
       KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
-      SPRITE_COUNT: ${{ github.event.inputs.count || '30' }}
+      SPRITE_COUNT: ${{ github.event.inputs.count || '28' }}
     steps:
       - uses: actions/checkout@v4
         with: {fetch-depth: 2}
@@ -108,4 +108,4 @@ jobs:
           if-no-files-found: ignore
           retention-days: 30
 
-# Batch trigger marker: coherent-building-family-v2-2026-09-06
+# Batch trigger marker: semantic-reroll-v8-28-family-wave-2026-09-07
