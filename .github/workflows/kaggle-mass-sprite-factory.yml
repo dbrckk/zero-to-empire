@@ -7,6 +7,9 @@ on:
         description: Sprite attempts in this Kaggle batch
         required: false
         default: '42'
+  push:
+    paths:
+      - 'ops/sprite-wave-trigger.txt'
 permissions:
   contents: read
 concurrency:
@@ -98,4 +101,5 @@ jobs:
           if-no-files-found: ignore
           retention-days: 30
 
-# Manual-only mass production; explicit user Go/Continue required. Default throughput: 42 attempts.
+# User-approved mass production only: manual workflow_dispatch or assistant pulse file after explicit Go/Continue.
+# Default throughput: 42 attempts.
