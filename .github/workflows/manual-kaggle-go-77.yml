@@ -1,0 +1,16 @@
+name: Manual Kaggle Go 77
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/manual-kaggle-go-77.yml']
+permissions:
+  actions: write
+  contents: read
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch optimized mass factory
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run kaggle-mass-sprite-factory.yml --repo "${{ github.repository }}" -f count=42
