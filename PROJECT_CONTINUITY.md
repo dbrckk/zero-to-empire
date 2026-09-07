@@ -22,29 +22,35 @@ Locked scope: **235 final deliverables**.
 An asset is not strict `DONE` until it is individually authored/generated, semantically correct, technically clean, transparent where required, committed to the final runtime path, actually referenced/visible in runtime, and validated by green Android CI. Candidate sheets, concept collages, technically valid but semantically wrong generations, or merely integrated files do not increment strict DONE.
 
 ## Current handoff — 2026-09-07
-### Last known repository head before this continuity file
-`fce86ce05bd492bb86165c3fe2b79841a86f8e40` — `perf: harden building family generation and skip integrated assets`.
+### Current execution state
+- Strict committed progress ledger: **112 / 235 DONE** until a later strict reconciliation proves a higher number.
+- `BLD-03-T2` through `BLD-03-T6` were integrated by run 75 (`e14b6897...`) but still require canonical reconciliation/green-CI proof before silently increasing strict DONE.
+- Run 77 (`34102566634`) completed technically and produced 21 building candidates.
+- Full-resolution semantic review of run 77 rejected **21 / 21**. Review record: `docs/art/reviews/RUN_77_SEMANTIC_REVIEW.md` (`44d83fbf...`).
+- Run-77 rejection reasons: BLD-04 contains people/vehicles/text/ground slab and weak family progression; BLD-06 contains ground/background residue, alpha damage and weak tier growth; BLD-07 T0 is already a late-game multi-storey crane-equipped complex and the family lacks valid starter→ultimate progression.
+- No run-77 candidate is promoted. Strict DONE remains unchanged.
 
-### Recent material changes
-1. Run 75 produced a reviewed `BLD-03` Assembly Hub continuation and commit `e14b6897e32a557736a4e9c06d55b925864993d1` integrated `BLD-03-T2` through `BLD-03-T6` runtime/master files.
-2. Those five files must not be counted as strict DONE solely because they were integrated; reconcile manifest/progress/runtime references and require green Android CI evidence first.
-3. Commit `1325aa0fef2ab336c87a1f421d652c008d8f02d4` launched **Kaggle Mass Sprite Factory run 77**.
-4. GitHub Actions run `34102566634` / wave 77 completed successfully and produced a fresh technically validated QA artifact `kaggle-sprite-batch` (artifact id `10012165066`).
-5. Wave 77 still requires semantic/full-resolution review and selective promotion. Technical success alone is not art approval.
-6. The current building generator was hardened to `building-family-flux-v10-coherence-safe`; it skips runtime assets already present, lowers img2img strength to preserve family identity, prioritizes proven families, and strengthens rejection of detached/background/text contamination.
-7. Scheduled static GPU planning run `34110783613` on head `fce86ce...` completed successfully.
+### Generator evolution after run 77
+- Added `tools/sprites/kaggle_building_family_factory_v11.py` (`2f34a6f1...`).
+- Routed `kaggle/github_mass_factory.py` through v11 (`f2ac1945...`).
+- v11 adds: stricter T0 ceiling, much stronger no-people/no-vehicles/no-slab prompt contract, lower img2img drift, monotonic per-tier display scaling, anti-ground-slab heuristic, internal-alpha-hole guard, stronger adjacent-tier identity IOU, center-drift limit, and minimum family-growth checks.
+- Failed run-77 families 04/06/07 are deprioritized while v11 is proven on other remaining families.
 
-## Current trusted counters
-The committed progress ledger currently reports **112 / 235 strict DONE**. Do not silently inflate this number from run 75 or run 77 until their strict promotion gate is fully satisfied and the canonical ledger is reconciled.
+### User-approved wave trigger mechanism
+- `.github/workflows/kaggle-mass-sprite-factory.yml` now accepts a push only on `ops/sprite-wave-trigger.txt` in addition to manual `workflow_dispatch` (`a5a651f8...`).
+- This preserves the rule that mass GPU generation happens only after explicit user `Go` / `Continue`, while allowing the assistant to launch the approved wave directly.
+- `ops/sprite-wave-trigger.txt` was created for **wave 78** (`4750b26a...`).
+- GitHub Actions **Kaggle Mass Sprite Factory run 78** id `34116344191` is queued from that trigger and uses the v11 semantic-guard route.
 
 ## Immediate next actions — ordered
-1. Download and inspect wave 77 artifact `10012165066` at full resolution.
-2. Perform strict semantic QA against the manifest for every emitted candidate; reject anything with wrong family identity, insufficient T0→T6 progression, text/UI/background contamination, detached components, wrong camera, or wrong target semantics.
-3. Promote only accepted candidates to final runtime/master paths and wire them into active runtime references.
-4. Reconcile `FINAL_AAA_SPRITE_MANIFEST.md` and `FINAL_AAA_SPRITE_PROGRESS.md` with the actual promoted state.
-5. Run/verify Android CI and increment strict DONE only after green evidence.
-6. Continue additional Kaggle sprite waves on explicit `Go` / `Continue`, prioritizing remaining TODO assets and avoiding already integrated runtime targets.
-7. Repeat generate → technical QA → semantic QA → promotion → runtime integration → green CI until **235 / 235 strict DONE**.
+1. Wait for run 78 to complete; retrieve its QA artifact immediately when available.
+2. Inspect every emitted candidate at full resolution, not just the contact sheet.
+3. Reject any semantic mismatch, people/vehicles/text/UI, ground slab/background remnant, alpha damage, wrong family identity, starter-tier over-complexity, or non-monotonic family progression.
+4. Promote only accepted candidates to final runtime/master paths and wire them into active runtime references.
+5. Reconcile `FINAL_AAA_SPRITE_MANIFEST.md` and `FINAL_AAA_SPRITE_PROGRESS.md` with actual promoted state.
+6. Verify Android CI and increment strict DONE only on green evidence.
+7. On the next explicit user `Go` / `Continue`, update this continuity file and pulse `ops/sprite-wave-trigger.txt` for the next wave if generation is still required.
+8. Repeat generate → technical QA → semantic QA → promotion → runtime integration → green CI until **235 / 235 strict DONE**.
 
 ## Known unresolved art targets
 - Remaining building families/tiers after `BLD-03`, with coherent family identity and unmistakable monotonic T0→T6 growth.
