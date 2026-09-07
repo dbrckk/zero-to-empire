@@ -1,0 +1,157 @@
+name: Promote reviewed run69 TER-09
+
+on:
+  push:
+    paths:
+      - ".github/workflows/promote-reviewed-run69-ter09.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download reviewed run69 artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/run69
+          gh api repos/${{ github.repository }}/actions/artifacts/10003885918/zip > /tmp/run69.zip
+          unzip -q /tmp/run69.zip -d /tmp/run69
+          test -f /tmp/run69/output/candidates/zte_terrain_09_final.png
+
+      - name: Revalidate TER-09 and build runtime WebP
+        run: |
+          python -m pip install --quiet pillow
+          python - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          src = Path('/tmp/run69/output/candidates/zte_terrain_09_final.png')
+          out = Path('app/src/main/res/drawable-nodpi/zte_terrain_09_final.webp')
+          im = Image.open(src).convert('RGBA')
+          if im.size != (1024, 1024):
+              raise SystemExit(f'bad dimensions: {im.size}')
+          a = im.getchannel('A')
+          bbox = a.getbbox()
+          if not bbox:
+              raise SystemExit('empty alpha')
+          x0,y0,x1,y1 = bbox
+          # Connector endpoints may intentionally reach top/bottom edges, but side/background contamination is forbidden.
+          if x0 < 80 or x1 > 944:
+              raise SystemExit(f'unsafe horizontal bbox: {bbox}')
+          opaque = sum(1 for v in a.getdata() if v > 8)
+          coverage = opaque / (1024*1024)
+          if not (0.18 <= coverage <= 0.58):
+              raise SystemExit(f'bad coverage: {coverage:.3f}')
+          # Semantic review already established: clean twin-guide cyan maglev X-connector, no baked text/UI.
+          out.parent.mkdir(parents=True, exist_ok=True)
+          im.save(out, 'WEBP', lossless=True, method=6)
+          print('TER-09 validated', bbox, coverage, out.stat().st_size)
+          PY
+
+      - name: Integrate TER-09 runtime reference and ledgers
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          layer = Path('app/src/main/java/com/zerotoempire/game/ReviewedTerrainLayer.kt')
+          s = layer.read_text()
+          s = s.replace('FLUX runs 52, 66 and 68', 'FLUX runs 52, 66, 68 and 69')
+          old = 'intArrayOf(R.drawable.zte_terrain_08_final, R.drawable.zte_terrain_10_final, R.drawable.zte_terrain_11_final),'
+          new = 'intArrayOf(R.drawable.zte_terrain_08_final, R.drawable.zte_terrain_09_final, R.drawable.zte_terrain_10_final, R.drawable.zte_terrain_11_final),'
+          if old not in s and new not in s:
+              raise SystemExit('terrain runtime anchor not found')
+          s = s.replace(old, new)
+          layer.write_text(s)
+
+          manifest = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
+          m = manifest.read_text()
+          pat = r'(^\| TER-09 \|.*\| )TODO( \|$)'
+          m2, n = re.subn(pat, r'\1RUNTIME\2', m, flags=re.M)
+          if n != 1 and not re.search(r'^\| TER-09 \|.*\| (RUNTIME|DONE) \|$', m, flags=re.M):
+              raise SystemExit('TER-09 manifest row not found')
+          manifest.write_text(m2 if n else m)
+
+          progress = Path('docs/art/FINAL_AAA_SPRITE_PROGRESS.md')
+          p = progress.read_text()
+          p = re.sub(r'- ART VALIDATED: \*\*\d+ / 235\*\*', '- ART VALIDATED: **127 / 235**', p, count=1)
+          p = re.sub(r'- RUNTIME INTEGRATED: \*\*\d+ / 235\*\*', '- RUNTIME INTEGRATED: **127 / 235**', p, count=1)
+          if '## Reviewed FLUX run 69' not in p:
+              p += '\n\n## Reviewed FLUX run 69 — 1 asset awaiting green CI\nRun-69 emitted two technically passing terrain candidates. Full-resolution semantic review accepts only `TER-09`: it is a clean isolated four-way maglev/rail connector with continuous twin cyan guide rails, connector endpoints, no baked text/UI and no background rectangle. `TER-07` is rejected because it remains a platform tile with a local emitter rather than a seam-safe energy-conduit connector. `TER-09` is integrated into the active megastructure terrain runtime layer and remains RUNTIME until Android CI is green.\n'
+          progress.write_text(p)
+          PY
+
+      - name: Commit reviewed TER-09 runtime integration
+        id: integration
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/src/main/res/drawable-nodpi/zte_terrain_09_final.webp app/src/main/java/com/zerotoempire/game/ReviewedTerrainLayer.kt docs/art/FINAL_AAA_SPRITE_MANIFEST.md docs/art/FINAL_AAA_SPRITE_PROGRESS.md
+          git commit -m "art: integrate reviewed run69 TER-09"
+          git push origin HEAD:main
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Dispatch Android CI
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run android.yml --ref main
+
+      - name: Wait for green Android CI on integration commit
+        id: android
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ steps.integration.outputs.sha }}
+        run: |
+          for i in $(seq 1 80); do
+            row=$(gh run list --workflow android.yml --commit "$SHA" --json databaseId,status,conclusion,headSha --limit 5 --jq '.[0] // empty')
+            if [ -n "$row" ]; then
+              run_id=$(echo "$row" | jq -r .databaseId)
+              status=$(echo "$row" | jq -r .status)
+              conclusion=$(echo "$row" | jq -r '.conclusion // ""')
+              head=$(echo "$row" | jq -r .headSha)
+              echo "Android CI run=$run_id status=$status conclusion=$conclusion head=$head"
+              if [ "$head" = "$SHA" ] && [ "$status" = "completed" ]; then
+                [ "$conclusion" = "success" ] || exit 1
+                echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
+                exit 0
+              fi
+            fi
+            sleep 15
+          done
+          exit 1
+
+      - name: Mark TER-09 strict DONE
+        env:
+          RUN_ID: ${{ steps.android.outputs.run_id }}
+          CI_SHA: ${{ steps.integration.outputs.sha }}
+        run: |
+          git pull --rebase origin main
+          python - <<'PY'
+          from pathlib import Path
+          import os, re
+          manifest = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
+          m = manifest.read_text()
+          m, n = re.subn(r'(^\| TER-09 \|.*\| )RUNTIME( \|$)', r'\1DONE\2', m, flags=re.M)
+          if n != 1 and not re.search(r'^\| TER-09 \|.*\| DONE \|$', m, flags=re.M):
+              raise SystemExit('TER-09 RUNTIME row missing')
+          manifest.write_text(m)
+
+          progress = Path('docs/art/FINAL_AAA_SPRITE_PROGRESS.md')
+          p = progress.read_text()
+          p = re.sub(r'- DONE: \*\*\d+ / 235\*\*', '- DONE: **112 / 235**', p, count=1)
+          p = re.sub(r'- Generated candidates accepted as DONE: \*\*\d+\*\*', '- Generated candidates accepted as DONE: **112**', p, count=1)
+          p = p.replace('## Reviewed FLUX run 69 — 1 asset awaiting green CI', '## Reviewed FLUX run 69 — 1 DONE', 1)
+          p = p.replace('`TER-09` is integrated into the active megastructure terrain runtime layer and remains RUNTIME until Android CI is green.', f"`TER-09` is integrated into the active megastructure terrain runtime layer. Android CI run `{os.environ['RUN_ID']}` completed successfully on integration commit `{os.environ['CI_SHA']}`; `TER-09` is therefore strict DONE.", 1)
+          progress.write_text(p)
+          PY
+          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md docs/art/FINAL_AAA_SPRITE_PROGRESS.md
+          git commit -m "art: mark run69 TER-09 strict DONE"
+          git push origin HEAD:main
