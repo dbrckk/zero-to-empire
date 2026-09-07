@@ -6,7 +6,7 @@ on:
       count:
         description: Sprite attempts in this Kaggle batch
         required: false
-        default: '42'
+        default: '28'
   push:
     paths:
       - 'ops/sprite-wave-trigger.txt'
@@ -22,7 +22,7 @@ jobs:
     env:
       KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
       KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
-      SPRITE_COUNT: ${{ github.event.inputs.count || '42' }}
+      SPRITE_COUNT: ${{ github.event.inputs.count || '28' }}
     steps:
       - uses: actions/checkout@v4
         with: {fetch-depth: 2}
@@ -32,7 +32,7 @@ jobs:
           test -n "$KAGGLE_KEY" || { echo 'Missing KAGGLE_KEY'; exit 2; }
           test -n "$KAGGLE_USERNAME" || { echo 'Missing KAGGLE_USERNAME'; exit 2; }
       - name: Install runner dependencies
-        run: python -m pip install --upgrade kaggle Pillow
+        run: python -m pip install --upgrade kaggle 'Pillow<12'
       - name: Verify Kaggle authentication
         shell: bash
         run: |
@@ -50,7 +50,15 @@ jobs:
           rm -rf /tmp/zte-kaggle; mkdir -p /tmp/zte-kaggle
           cp kaggle/github_mass_factory.py /tmp/zte-kaggle/
           sed "s/__KAGGLE_USERNAME__/${KAGGLE_USERNAME}/g" kaggle/kernel-metadata.template.json > /tmp/zte-kaggle/kernel-metadata.json
-          sed -i "s/COUNT = int(os.getenv('SPRITE_COUNT', '60'))/COUNT = ${SPRITE_COUNT}/" /tmp/zte-kaggle/github_mass_factory.py
+          python - "$SPRITE_COUNT" <<'PY'
+          import re,sys
+          from pathlib import Path
+          p=Path('/tmp/zte-kaggle/github_mass_factory.py')
+          s=p.read_text()
+          s,n=re.subn(r"COUNT=int\(os\.getenv\('SPRITE_COUNT','\d+'\)\)",f"COUNT={int(sys.argv[1])}",s,count=1)
+          if n != 1: raise SystemExit('Failed to inject SPRITE_COUNT into Kaggle kernel')
+          p.write_text(s)
+          PY
       - name: Push and start Kaggle GPU run
         run: kaggle kernels push -p /tmp/zte-kaggle
       - name: Wait for Kaggle
@@ -102,4 +110,4 @@ jobs:
           retention-days: 30
 
 # User-approved mass production only: manual workflow_dispatch or assistant pulse file after explicit Go/Continue.
-# Default throughput: 42 attempts.
+# Default building throughput: 28 manifest tiers plus adaptive retries.
