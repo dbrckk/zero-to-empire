@@ -25,9 +25,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          src=/tmp/r75/output/candidates
+          test -d "$src" || src=/tmp/r75/candidates
           mkdir -p art/incoming/final-sprites
           for tier in 2 3 4 5 6; do
-            cp "/tmp/r75/candidates/zte_business_03_t${tier}_final.png" art/incoming/final-sprites/
+            test -f "$src/zte_business_03_t${tier}_final.png"
+            cp "$src/zte_business_03_t${tier}_final.png" art/incoming/final-sprites/
           done
           python3 -m pip install --disable-pip-version-check Pillow==11.3.0
           python3 tools/sprites/build_sprite_contact_sheet.py \
