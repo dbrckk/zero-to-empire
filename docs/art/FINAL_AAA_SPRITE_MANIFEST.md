@@ -187,7 +187,7 @@ If a new runtime sprite is later required, it must be added here first and the d
 | VEH-13 | Apex anti-grav cargo skiff | Final isolated vehicle sprite/sheet with contact shadow and direction/readability suitable for world traffic. | `app/src/main/res/drawable-nodpi/zte_vehicle_13_final.webp` | DONE |
 | VEH-14 | Apex stellar service craft | Final isolated vehicle sprite/sheet with contact shadow and direction/readability suitable for world traffic. | `app/src/main/res/drawable-nodpi/zte_vehicle_14_final.webp` | DONE |
 | VEH-15 | Orbital shuttle | Final isolated vehicle sprite/sheet with contact shadow and direction/readability suitable for world traffic. | `app/src/main/res/drawable-nodpi/zte_vehicle_15_final.webp` | DONE |
-| VEH-16 | Prestige executive hovercar | Final isolated vehicle sprite/sheet with contact shadow and direction/readability suitable for world traffic. | `app/src/main/res/drawable-nodpi/zte_vehicle_16_final.webp` | TODO |
+| VEH-16 | Prestige executive hovercar | Final isolated vehicle sprite/sheet with contact shadow and direction/readability suitable for world traffic. | `app/src/main/res/drawable-nodpi/zte_vehicle_16_final.webp` | RUNTIME |
 | VEH-17 | Singularity logistics drone swarm | Final isolated vehicle sprite/sheet with contact shadow and direction/readability suitable for world traffic. | `app/src/main/res/drawable-nodpi/zte_vehicle_17_final.webp` | DONE |
 
 ## E. Machines — 28 / 28 planned
@@ -270,7 +270,7 @@ If a new runtime sprite is later required, it must be added here first and the d
 | TER-07 | Expansion energy conduit | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_07_final.webp` | TODO |
 | TER-08 | Megastructure reinforced platform | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_08_final.webp` | RUNTIME |
 | TER-09 | Megastructure maglev/rail connector | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_09_final.webp` | TODO |
-| TER-10 | Megastructure elevated service deck | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_10_final.webp` | TODO |
+| TER-10 | Megastructure elevated service deck | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_10_final.webp` | RUNTIME |
 | TER-11 | Megastructure energy spine | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_11_final.webp` | RUNTIME |
 | TER-12 | Apex phase platform | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_12_final.webp` | RUNTIME |
 | TER-13 | Apex singularity/stellar connector | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_13_final.webp` | RUNTIME |

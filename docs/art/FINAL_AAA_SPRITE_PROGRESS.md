@@ -4,8 +4,8 @@ Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains t
 
 ## Official progress
 - DONE: **106 / 235**
-- ART VALIDATED: **121 / 235**
-- RUNTIME INTEGRATED: **121 / 235**
+- ART VALIDATED: **123 / 235**
+- RUNTIME INTEGRATED: **123 / 235**
 - Generated candidates accepted as DONE: **106**
 - Rule: only runtime-integrated, individually clean/transparent, manifest-matching assets with green Android CI increment DONE.
 
@@ -76,3 +76,7 @@ The first sequential img2img attempt (`building-family-flux-v5-sequential-img2im
 
 ## Reviewed FLUX run 63 — strict semantic rejection
 Run-63 emitted 21 technically passing candidates for `BLD-11`, `BLD-12` and `BLD-13`, but full-resolution review rejects the complete batch. `BLD-11-T2` through `T5` retain a large circular/rectangular backdrop field instead of a clean isolated sprite; `BLD-11-T4` also contains large baked lettering and unrelated flag/worker props. `BLD-12` does not preserve a monotonic apex progression, and `BLD-12-T6` contains baked `TIER 6` text plus a large ground/background remnant. `BLD-13` remains structurally near-static across tiers, includes detached decorative particles at `T4`, and `BLD-13-T6` contains multiple baked pseudo-word labels and small vehicle/worker-like props. None of run-63 is promoted. Automatic QA must reject backdrop-like high-coverage masks, baked-text contamination and non-monotonic family evolution before promotion.
+
+
+## Reviewed FLUX run 66 — 2 assets awaiting green CI
+Run-66 semantic and full-resolution review accepted `TER-10` and `VEH-16`. `TER-10` is a clean elevated megastructure service deck with transparent isolation and safe margins; `VEH-16` is a distinct wheel-less prestige executive hovercar. Both pass technical alpha, edge, coverage and dimension checks and are integrated into active runtime references. Rejected: `MCH-05-1` (missing clear battery-carousel identity), `MCH-07-0` (crane-like loose load rather than compact gantry), `TER-05` (radial intersection rather than multi-lane connector), `TER-07` (platform rather than energy conduit), and `TER-09` (slab rather than twin-guide maglev connector). The two accepted assets remain RUNTIME until Android CI is green on their integration commit.
