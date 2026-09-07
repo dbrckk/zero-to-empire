@@ -4,8 +4,8 @@ Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains t
 
 ## Official progress
 - DONE: **108 / 235**
-- ART VALIDATED: **123 / 235**
-- RUNTIME INTEGRATED: **123 / 235**
+- ART VALIDATED: **126 / 235**
+- RUNTIME INTEGRATED: **126 / 235**
 - Generated candidates accepted as DONE: **108**
 - Rule: only runtime-integrated, individually clean/transparent, manifest-matching assets with green Android CI increment DONE.
 
@@ -80,3 +80,7 @@ Run-63 emitted 21 technically passing candidates for `BLD-11`, `BLD-12` and `BLD
 
 ## Reviewed FLUX run 66 — 2 DONE
 Run-66 semantic and full-resolution review accepted `TER-10` and `VEH-16`. `TER-10` is a clean elevated megastructure service deck with transparent isolation and safe margins; `VEH-16` is a distinct wheel-less prestige executive hovercar. Both pass technical alpha, edge, coverage and dimension checks and are integrated into active runtime references. Rejected: `MCH-05-1` (missing clear battery-carousel identity), `MCH-07-0` (crane-like loose load rather than compact gantry), `TER-05` (radial intersection rather than multi-lane connector), `TER-07` (platform rather than energy conduit), and `TER-09` (slab rather than twin-guide maglev connector). Android CI run `34078378863` (#619) completed successfully on integration commit `bf980a1cd1d9a51ec2052cc4aa23d89422043688`; both accepted assets are therefore strict DONE.
+
+
+## Reviewed FLUX run 68 — 3 assets awaiting green CI
+Run-68 full-resolution review accepts `MCH-05-1`, `MCH-07-0` and `TER-05`. `MCH-05-1` now reads clearly as a compact radial battery carousel with repeated removable energy modules and no baked text; `MCH-07-0` is a compact framed production gantry with integrated tool head and work bed rather than a loose crane; `TER-05` is a complete multi-lane four-way expansion road connector with clean isolation and road-surface markings only. All three pass alpha, edge, dimension, coverage and safety-margin checks and are integrated into active runtime references. `TER-07` is rejected because it remains a generic platform rather than an energy conduit; `TER-09` is rejected because it remains a slab with a single luminous strip rather than the required maglev/rail connector identity. The three accepted assets remain RUNTIME until Android CI is green on their integration commit.
