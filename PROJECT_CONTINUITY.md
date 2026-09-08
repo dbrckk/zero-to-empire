@@ -5,7 +5,7 @@
 ## Primary objective
 Reach **235 / 235 canonical final sprites strict DONE**. Strict DONE requires semantic + technical validation, final runtime reference/visibility, manifest/progress reconciliation and green Android CI.
 
-## Trusted state — 2026-09-08 17:39 +02:00
+## Trusted state — 2026-09-08 18:08 +02:00
 - **112 / 235 strict DONE**.
 - Runs 80–84: strict delta +0.
 
@@ -14,17 +14,15 @@ Reach **235 / 235 canonical final sprites strict DONE**. Strict DONE requires se
 Startup: `building-family-flux-v16.3-isolated-static-source`.
 Goal: eliminate floor/site pads, cast-shadow cards, detached props and baked FX at generation source while preserving v16.2's reduction in crane/gantry contamination.
 
-## Wave 85 — RECOVERY ATTEMPT 2 STILL ACTIVE
+## Wave 85 — RECOVERY ATTEMPT 3 TRIGGERED
 - Source run `34224023209`, original job `102053645197`.
-- Original GitHub collector expired while Kaggle remained RUNNING; not a generator failure.
-- Recovery attempt 1: run `34238873539`, job `102103587968`, workflow success but `RECOVERY_FINAL_STATUS=UNKNOWN`; kernel still RUNNING and no outputs were exposed.
-- Recovery attempt 2 trigger commit `bcd28ecc548bd039f196f09d22b6cf169f0cc4ba`.
-- Recovery attempt 2: run `34244024044`, job `102121235025`, workflow run number 4.
-- Latest check at **17:39 +02:00**: still `in_progress` at `Wait for existing kernel only`.
-- Setup, checkout and Kaggle CLI install remain green; download/upload/report steps are pending.
-- No artifact exists yet for run `34244024044`.
-- Attempt 2 is non-destructive (`recover-existing-only`) and must not push or replace the existing kernel.
-- Do not launch a new building generation wave while attempt 2 is active.
+- Original GitHub collector expired while Kaggle remained RUNNING; this is not generator/semantic failure.
+- Recovery attempt 1: run `34238873539`, job `102103587968`: kernel remained RUNNING; no outputs.
+- Recovery attempt 2: run `34244024044`, job `102121235025`: completed success as a workflow, but logs show Kaggle remained `KernelWorkerStatus.RUNNING` through the final poll at 18:04 +02:00; `RECOVERY_FINAL_STATUS=UNKNOWN`; `kaggle kernels output` exposed no files; no artifact was uploaded.
+- Therefore wave85 has now outlived the original collector plus two 45-minute recovery windows. There is still no semantic evidence and no reason to mark the generator failed.
+- Recovery attempt 3 trigger commit `fed6c8b084e6216a4e231db0346ebb22c0e1b47e`, mode `recover-existing-only`.
+- Attempt 3 is non-destructive and must not push/replace the active Kaggle kernel.
+- Do not launch a new building generation kernel until wave85 becomes terminal or outputs become recoverable.
 
 ## Wave84 baseline
 Recovery artifact `10053866830`: v16.2 exported BLD-11/12/13 T0–T6 (21 technical candidates), semantic acceptance 0/21. Main remaining defects: slabs/ground patches, detached residue/props and baked FX.
@@ -37,7 +35,7 @@ Recovery artifact `10053866830`: v16.2 exported BLD-11/12/13 T0–T6 (21 technic
 - FX: `tools/sprites/kaggle_fx_sheet_factory_v1.py`, runtime 8-frame 4×2 512×256 atlas.
 
 ## Next actions
-1. Query recovery run `34244024044` first.
+1. Locate/query the GitHub recovery workflow run created by trigger `fed6c8b084e6216a4e231db0346ebb22c0e1b47e`.
 2. When terminal, fetch logs and artifact immediately.
 3. If outputs exist, inspect reports/contact sheets/all candidate PNGs and verify v16.3 startup.
 4. Full semantic review: slabs, shadows, detached residue/props, baked FX, cranes, people, vehicles, text, alpha defects, identity drift and progression.
