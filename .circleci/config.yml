@@ -1,77 +1,31 @@
+# Use the latest 2.1 version of CircleCI pipeline process engine.
+# See: https://circleci.com/docs/reference/configuration-reference/
 version: 2.1
 
+# Define a job to be invoked later in a workflow.
+# See: https://circleci.com/docs/guides/orchestrate/jobs-steps/#jobs-overview & https://circleci.com/docs/reference/configuration-reference/#jobs
 jobs:
-  recover-kaggle-sprite-run:
+  say-hello:
+    # Specify the execution environment. You can specify an image from Docker Hub or use one of our convenience images from CircleCI's Developer Hub.
+    # See: https://circleci.com/docs/guides/execution-managed/executor-intro/ & https://circleci.com/docs/reference/configuration-reference/#executor-job
     docker:
-      - image: cimg/python:3.12
-    resource_class: small
+      # Specify the version you desire here
+      # See: https://circleci.com/developer/images/image/cimg/base
+      - image: cimg/base:current
+
+    # Add steps to the job
+    # See: https://circleci.com/docs/guides/orchestrate/jobs-steps/#steps-overview & https://circleci.com/docs/reference/configuration-reference/#steps
     steps:
+      # Checkout the code as the first step.
       - checkout
-
       - run:
-          name: Gate CircleCI Kaggle recovery
-          command: |
-            set -euo pipefail
-            TRIGGER="ops/circleci-recovery-trigger.txt"
-            if [ ! -f "$TRIGGER" ] || ! grep -q '^active=true$' "$TRIGGER"; then
-              echo "CIRCLECI_KAGGLE_RECOVERY=SKIPPED"
-              circleci-agent step halt
-            fi
-            cat "$TRIGGER"
+          name: "Say hello"
+          command: "echo Hello, World!"
 
-      - run:
-          name: Verify Kaggle credentials
-          command: |
-            set -euo pipefail
-            test -n "${KAGGLE_USERNAME:-}" || { echo 'Missing KAGGLE_USERNAME in CircleCI project/context'; exit 2; }
-            test -n "${KAGGLE_KEY:-}" || { echo 'Missing KAGGLE_KEY in CircleCI project/context'; exit 2; }
-
-      - run:
-          name: Install Kaggle CLI
-          command: python -m pip install --upgrade kaggle
-
-      - run:
-          name: Monitor existing Kaggle kernel for up to 4.5 hours
-          no_output_timeout: 5h
-          command: |
-            set -u
-            mkdir -p /tmp/kaggle-recovery
-            slug="${KAGGLE_USERNAME}/zero-to-empire-sprite-factory"
-            final_status='UNKNOWN'
-            for i in $(seq 1 270); do
-              now="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-              status="$(kaggle kernels status "$slug" 2>&1 || true)"
-              printf '%s %s\n' "$now" "$status" | tee -a /tmp/kaggle-recovery/status.log
-              if echo "$status" | grep -qi 'complete'; then final_status='COMPLETE'; break; fi
-              if echo "$status" | grep -Eqi 'error|cancel|failed'; then final_status='ERROR'; break; fi
-              sleep 60
-            done
-            echo "$final_status" > /tmp/kaggle-recovery/final-status.txt
-            echo "CIRCLECI_KAGGLE_FINAL_STATUS=$final_status"
-
-      - run:
-          name: Download existing Kaggle outputs and log
-          when: always
-          command: |
-            set +e
-            mkdir -p /tmp/kaggle-recovery/output
-            kaggle kernels output "${KAGGLE_USERNAME}/zero-to-empire-sprite-factory" -p /tmp/kaggle-recovery/output --force 2>&1 | tee /tmp/kaggle-recovery/download.log
-            find /tmp/kaggle-recovery -maxdepth 5 -type f -print | sort | tee /tmp/kaggle-recovery/files.txt
-            exit 0
-
-      - store_artifacts:
-          path: /tmp/kaggle-recovery
-          destination: kaggle-recovered-sprite-batch
-
-      - run:
-          name: Require terminal Kaggle state
-          when: always
-          command: |
-            state="$(cat /tmp/kaggle-recovery/final-status.txt 2>/dev/null || echo UNKNOWN)"
-            echo "CIRCLECI_KAGGLE_FINAL_STATUS=$state"
-            test "$state" = COMPLETE || test "$state" = ERROR
-
+# Orchestrate jobs using workflows
+# See: https://circleci.com/docs/guides/orchestrate/workflows/ & https://circleci.com/docs/reference/configuration-reference/#workflows
 workflows:
-  circleci-kaggle-recovery:
+  say-hello-workflow: # This is the name of the workflow, feel free to change it to better match your workflow.
+    # Inside the workflow, you define the jobs you want to run.
     jobs:
-      - recover-kaggle-sprite-run
+      - say-hello
