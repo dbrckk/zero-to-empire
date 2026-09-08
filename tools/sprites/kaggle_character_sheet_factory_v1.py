@@ -9,7 +9,7 @@ from __future__ import annotations
 import argparse,gc,json,re
 from collections import deque
 from pathlib import Path
-print('KAGGLE_STARTUP=character-sheet-flux-v1-identity-pivot',flush=True)
+print('KAGGLE_STARTUP=character-sheet-flux-v1.1-identity-pivot-square-atlas',flush=True)
 import torch
 from PIL import Image,ImageFilter
 from diffusers import FluxPipeline,FluxImg2ImgPipeline,FluxTransformer2DModel
@@ -105,12 +105,10 @@ def isolate(im):
 def finish_frame(raw):
  m=isolate(raw);a=m.getchannel('A');bb=a.getbbox()
  if not bb:raise RuntimeError('empty alpha')
- # reject obvious edge contact and presentation cards
  w,h=m.size;pad=max(8,w//40)
  if any(e.getbbox() for e in (a.crop((0,0,w,pad)),a.crop((0,h-pad,w,h)),a.crop((0,0,pad,h)),a.crop((w-pad,0,w,h)))):raise RuntimeError('edge contact')
  crop=m.crop(bb);cw,ch=crop.size
  if ch<cw*.95:raise RuntimeError('not full-body character silhouette')
- # Normalize every frame into a 256x256 cell with a fixed feet baseline.
  scale=min(176/cw,218/ch); crop=crop.resize((max(1,round(cw*scale)),max(1,round(ch*scale))),Image.Resampling.LANCZOS)
  cell=Image.new('RGBA',(256,256));x=(256-crop.width)//2;y=238-crop.height;cell.alpha_composite(crop,(x,y))
  aa=cell.getchannel('A');cov=sum(aa.histogram()[8:])/(256*256)
@@ -140,9 +138,11 @@ def sheet_qa(frames):
  return True,f'min-iou={min(ious):.2f} pivot-drift={max(bottoms)-min(bottoms)}'
 
 def make_sheet(frames):
- cols=4;rows=(len(frames)+cols-1)//cols
- out=Image.new('RGBA',(cols*256,rows*256))
- for n,f in enumerate(frames):out.alpha_composite(f,((n%cols)*256,(n//cols)*256))
+ # Canonical character deliverable: fixed 1024x1024 transparent atlas.
+ # 256px cells in a 4x4 grid preserve stable runtime slicing; unused cells stay transparent.
+ if len(frames)>16:raise RuntimeError('character atlas supports at most 16 frames')
+ out=Image.new('RGBA',(1024,1024),(0,0,0,0))
+ for n,f in enumerate(frames):out.alpha_composite(f,((n%4)*256,(n//4)*256))
  return out
 
 def main():
@@ -150,7 +150,6 @@ def main():
  items=rows()[:max(1,args.count)];print('KAGGLE_CHARACTER_PLAN='+','.join(i['id'] for i in items),flush=True)
  if not items:return
  INCOMING.mkdir(parents=True,exist_ok=True);REPORT.parent.mkdir(parents=True,exist_ok=True)
- # Encode all frame prompts before loading transformer to conserve GPU memory.
  encs={};t,enc=load_encode()
  for i in items:
   hints=POSE_HINT[i['action']][:ACTION[i['action']][1]]
@@ -183,8 +182,10 @@ def main():
   ok,why=sheet_qa(frames)
   if not ok:
    print(f"KAGGLE_CHR_REJECTED={i['id']} reason={why}",flush=True);report.append({'id':i['id'],'status':'REJECT','reason':why,'frames':len(frames)});continue
-  p=INCOMING/f"{i['stem']}.png";make_sheet(frames).save(p,'PNG',optimize=True)
-  print(f"KAGGLE_CHR_VALIDATED={p.relative_to(ROOT)} {why}",flush=True);report.append({'id':i['id'],'status':'CANDIDATE','reason':why,'frames':len(frames),'file':p.name})
+  sheet=make_sheet(frames)
+  if sheet.size!=(1024,1024):raise RuntimeError(f'bad atlas size {sheet.size}')
+  p=INCOMING/f"{i['stem']}.png";sheet.save(p,'PNG',optimize=True)
+  print(f"KAGGLE_CHR_VALIDATED={p.relative_to(ROOT)} {why} atlas=1024x1024",flush=True);report.append({'id':i['id'],'status':'CANDIDATE','reason':why,'frames':len(frames),'atlas':'1024x1024','cell':'256x256','file':p.name})
  REPORT.write_text(json.dumps(report,indent=2),encoding='utf-8')
  print(f"KAGGLE_CHARACTER_CANDIDATES={sum(r['status']=='CANDIDATE' for r in report)} ATTEMPTED={len(items)}",flush=True)
 if __name__=='__main__':main()
