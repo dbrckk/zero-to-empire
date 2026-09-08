@@ -10,7 +10,11 @@ ROOT=Path(__file__).resolve().parents[2]
 MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
 INCOMING=ROOT/'art/incoming/final-sprites'; OUT=Path('/kaggle/working/output')
 ROW=re.compile(r'^\|\s*(FX-\d+)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$')
-FRAMES=8; CELL=256
+FRAMES=8
+RENDER_CELL=256
+RUNTIME_CELL=128
+RUNTIME_COLS=4
+RUNTIME_ROWS=2
 ONE_SHOT={'FX-00','FX-05','FX-06','FX-07'}
 LOOP={'FX-01','FX-02','FX-03','FX-04'}
 
@@ -20,13 +24,12 @@ def rows():
   if m and m.group(5).strip().upper()=='TODO':
    yield {'id':m.group(1),'name':m.group(2).strip(),'runtime':m.group(4).strip(),'stem':Path(m.group(4)).stem+'_final' if not Path(m.group(4)).stem.endswith('_final') else Path(m.group(4)).stem}
 
-def rgba(): return Image.new('RGBA',(CELL,CELL),(0,0,0,0))
+def rgba(): return Image.new('RGBA',(RENDER_CELL,RENDER_CELL),(0,0,0,0))
 def glow(layer,r): return layer.filter(ImageFilter.GaussianBlur(r))
 def add(dst,src): return Image.alpha_composite(dst,src)
 
 def particle_frame(kind,t,rng,item_id=''):
- im=rgba();d=ImageDraw.Draw(im);cx=cy=CELL//2
- # One-shot envelope: fast attack, readable middle, clean decay.
+ im=rgba();d=ImageDraw.Draw(im);cx=cy=RENDER_CELL//2
  env=max(0.0,math.sin(math.pi*min(1.0,max(0.0,t))))
  if 'spark' in kind or 'welding' in kind:
   count=max(4,round(26*env))
@@ -38,8 +41,6 @@ def particle_frame(kind,t,rng,item_id=''):
    phase=(j/7+t)%1; w=22+10*math.sin(phase*math.pi); h=72+34*math.sin(phase*math.pi); x=cx+rng.uniform(-18,18); y=cy+38-h*.55
    d.ellipse((x-w,y-h,x+w,y+h*.25),fill=((70,210,255,170) if 'plasma' in kind else (255,150,35,190)))
  elif 'dust' in kind:
-  # Construction impact: expanding dust plus discrete ballistic rubble fragments.
-  # The fragments are deliberately polygonal so FX-07 cannot collapse into generic smoke.
   dust_alpha=round(150*env)
   for j in range(max(4,round(14*env))):
    phase=min(1.0,j/14+t*.72); r=7+27*phase; x=cx+rng.uniform(-48,48)*(0.3+phase); y=cy+48-50*phase+rng.uniform(-8,8)
@@ -77,14 +78,13 @@ def particle_frame(kind,t,rng,item_id=''):
 def metrics(im):
  a=im.getchannel('A'); box=a.getbbox()
  if not box:return {'ok':False,'reason':'empty','coverage':0.0,'alpha_mass':0}
- x0,y0,x1,y1=box; data=list(a.getdata());cov=sum(1 for v in data if v>12)/(CELL*CELL); mass=sum(data)
- edge=(x0<=2 or y0<=2 or x1>=CELL-2 or y1>=CELL-2)
+ x0,y0,x1,y1=box; data=list(a.getdata());cov=sum(1 for v in data if v>12)/(RENDER_CELL*RENDER_CELL); mass=sum(data)
+ edge=(x0<=2 or y0<=2 or x1>=RENDER_CELL-2 or y1>=RENDER_CELL-2)
  return {'ok':not edge and .001<=cov<=.50,'coverage':cov,'alpha_mass':mass,'bbox':box,'edge':edge}
 
 def temporal_qa(item,report):
  masses=[m['alpha_mass'] for m in report]; peak=max(range(len(masses)),key=masses.__getitem__)
  if item['id'] in ONE_SHOT:
-  # A one-shot must peak away from the ends and visibly decay by its final frame.
   if peak in (0,len(masses)-1): raise RuntimeError(f'one-shot-peak-at-edge={peak}')
   if masses[-1] > masses[peak]*.58: raise RuntimeError('one-shot-insufficient-decay')
   return {'mode':'one-shot','peak_frame':peak,'decay_ratio':round(masses[-1]/max(1,masses[peak]),3)}
@@ -102,18 +102,21 @@ def sheet_for(item,seed):
  for f,m in zip(frames,report):
   a=f.getchannel('A').resize((32,32)); sig.append(bytes(a.getdata())); b=m['bbox']; centers.append(((b[0]+b[2])/2,(b[1]+b[3])/2))
  dup=sum(sig[i]==sig[i-1] for i in range(1,len(sig)))
- drift=max(math.hypot(x-CELL/2,y-CELL/2) for x,y in centers)
+ drift=max(math.hypot(x-RENDER_CELL/2,y-RENDER_CELL/2) for x,y in centers)
  if dup>1: raise RuntimeError(f'too-many-duplicate-frames={dup}')
  if drift>64: raise RuntimeError(f'center-drift={drift:.1f}')
  temporal=temporal_qa(item,report)
- sheet=Image.new('RGBA',(CELL*FRAMES,CELL),(0,0,0,0))
- for i,f in enumerate(frames): sheet.alpha_composite(f,(i*CELL,0))
- return sheet,{'frames':FRAMES,'cell':'256x256','layout':'horizontal-8','duplicate_adjacent':dup,'max_center_drift':round(drift,2),**temporal,'frame_metrics':report}
+ sheet=Image.new('RGBA',(RUNTIME_COLS*RUNTIME_CELL,RUNTIME_ROWS*RUNTIME_CELL),(0,0,0,0))
+ for i,f in enumerate(frames):
+  runtime=f.resize((RUNTIME_CELL,RUNTIME_CELL),Image.Resampling.LANCZOS)
+  sheet.alpha_composite(runtime,((i%RUNTIME_COLS)*RUNTIME_CELL,(i//RUNTIME_COLS)*RUNTIME_CELL))
+ if sheet.size!=(512,256): raise RuntimeError(f'bad-runtime-atlas-size={sheet.size}')
+ return sheet,{'frames':FRAMES,'render_cell':'256x256','runtime_cell':'128x128','layout':'4x2','atlas':'512x256','duplicate_adjacent':dup,'max_center_drift':round(drift,2),**temporal,'frame_metrics':report}
 
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--count',type=int,default=18);ap.add_argument('--seed',type=int,default=90210);args=ap.parse_args()
  INCOMING.mkdir(parents=True,exist_ok=True); OUT.mkdir(parents=True,exist_ok=True)
- rep={'engine':'procedural-fx-v1.1-temporal-qa','attempted':0,'accepted':0,'rejected':0,'runtime_contract':'candidate-only horizontal-8; runtime integration required before strict DONE','items':[]}
+ rep={'engine':'procedural-fx-v1.2-runtime-atlas','attempted':0,'accepted':0,'rejected':0,'runtime_contract':'8 frames; 4x2 atlas; 128x128 runtime cell; 512x256 texture; matches existing ElectricArc/DroneThruster loaders','items':[]}
  for item in list(rows())[:args.count]:
   rep['attempted']+=1; accepted=None; errors=[]
   for attempt in range(4):
@@ -122,7 +125,7 @@ def main():
    except Exception as e: errors.append(str(e)); print(f'KAGGLE_FX_LIVE_REJECT={item["id"]} attempt={attempt+1} reason={e}',flush=True)
   if not accepted:
    rep['rejected']+=1;rep['items'].append({'id':item['id'],'accepted':False,'errors':errors});continue
-  sheet,m,attempt=accepted; p=INCOMING/f"{item['stem']}.png"; sheet.save(p,'PNG',optimize=True); rep['accepted']+=1;rep['items'].append({'id':item['id'],'accepted':True,'attempt':attempt+1,**m}); print(f'KAGGLE_VALIDATED={p.relative_to(ROOT)}',flush=True)
+  sheet,m,attempt=accepted; p=INCOMING/f"{item['stem']}.png"; sheet.save(p,'PNG',optimize=True); rep['accepted']+=1;rep['items'].append({'id':item['id'],'accepted':True,'attempt':attempt+1,**m}); print(f'KAGGLE_VALIDATED={p.relative_to(ROOT)} atlas=512x256 layout=4x2',flush=True)
  (OUT/'fx-sheet-report.json').write_text(json.dumps(rep,indent=2),encoding='utf-8')
  print(f'KAGGLE_FX_SUCCESS={rep["accepted"]} KAGGLE_FX_REJECTED={rep["rejected"]}',flush=True)
  if rep['accepted']==0: raise SystemExit('No validated FX sheets')
