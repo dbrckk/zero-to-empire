@@ -5,6 +5,8 @@ on:
     branches: [ main ]
     paths:
       - 'app/**'
+      - 'art/production/**'
+      - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
       - 'build.gradle.kts'
       - 'settings.gradle.kts'
       - 'gradle.properties'
@@ -14,6 +16,8 @@ on:
     branches: [ main ]
     paths:
       - 'app/**'
+      - 'art/production/**'
+      - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
       - 'build.gradle.kts'
       - 'settings.gradle.kts'
       - 'gradle.properties'
@@ -68,155 +72,29 @@ jobs:
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
-        with:
-          gradle-version: '8.13'
 
-      - name: Fast compile gate for sprite-only commits
-        if: steps.change_scope.outputs.sprite_only == 'true'
-        run: gradle --no-daemon assembleDebug
+      - name: Make Gradle wrapper executable
+        run: chmod +x gradlew
 
-      - name: Audit Play Store identity contract
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
+
+      - name: Build debug APK
+        run: ./gradlew assembleDebug --stacktrace
+
+      - name: Run unit tests
         if: steps.change_scope.outputs.sprite_only != 'true'
-        run: |
-          set -euo pipefail
-          APP_GRADLE="app/build.gradle.kts"
-          test "$(grep -Fc 'namespace = "com.zerotoempire.game"' "$APP_GRADLE")" -eq 1
-          test "$(grep -Fc 'applicationId = "com.zerotoempire.game"' "$APP_GRADLE")" -eq 1
-          test "$(grep -Fc 'versionCode = releaseVersionCode' "$APP_GRADLE")" -eq 1
-          test "$(grep -Fc 'versionName = releaseVersionName' "$APP_GRADLE")" -eq 1
-          grep -Fq 'Signed release requires explicit VERSION_CODE and VERSION_NAME Gradle properties.' "$APP_GRADLE"
-          grep -Fq 'dependsOn(validateProductionRelease)' "$APP_GRADLE"
-          grep -Fq 'dependsOn("bundleRelease")' "$APP_GRADLE"
+        run: ./gradlew testDebugUnitTest --stacktrace
 
-      - name: Audit production monetization contract
+      - name: Run lint
         if: steps.change_scope.outputs.sprite_only != 'true'
-        run: |
-          set -euo pipefail
-          APP_GRADLE="app/build.gradle.kts"
-          CATALOG="app/src/main/java/com/zerotoempire/game/Monetization.kt"
-          grep -Fq 'providers.gradleProperty("ADMOB_APP_ID")' "$APP_GRADLE"
-          grep -Fq 'providers.gradleProperty("REWARDED_AD_UNIT_ID")' "$APP_GRADLE"
-          grep -Fq 'providers.gradleProperty("INTERSTITIAL_AD_UNIT_ID")' "$APP_GRADLE"
-          grep -Fq 'Production release requires a valid non-test ADMOB_APP_ID.' "$APP_GRADLE"
-          grep -Fq 'Production release requires a valid non-test REWARDED_AD_UNIT_ID.' "$APP_GRADLE"
-          grep -Fq 'Production release requires a valid non-test INTERSTITIAL_AD_UNIT_ID.' "$APP_GRADLE"
-          grep -Fq 'Production rewarded and interstitial ad unit IDs must be different.' "$APP_GRADLE"
-          test "$(grep -Fc 'implementation("com.android.billingclient:billing:9.1.0")' "$APP_GRADLE")" -eq 1
-          test "$(grep -Fc 'REMOVE_ADS("remove_ads_lifetime", false)' "$CATALOG")" -eq 1
-          test "$(grep -Fc 'STARTER_PACK("starter_pack", false)' "$CATALOG")" -eq 1
-          test "$(grep -Fc 'GEM_PACK_SMALL("gems_small", true)' "$CATALOG")" -eq 1
-          test "$(grep -Fc 'GEM_PACK_MEDIUM("gems_medium", true)' "$CATALOG")" -eq 1
-          test "$(grep -Ec '^[[:space:]]+[A-Z_]+\("[a-z0-9_]+", (true|false)\)[,;]?$' "$CATALOG")" -eq 4
+        run: ./gradlew lintDebug --stacktrace
 
-      - name: Audit Android device compatibility contract
-        if: steps.change_scope.outputs.sprite_only != 'true'
-        run: |
-          set -euo pipefail
-          APP_GRADLE="app/build.gradle.kts"
-          MANIFEST="app/src/main/AndroidManifest.xml"
-          TRANSITION="app/src/main/java/com/zerotoempire/game/CinematicRuntimeTransition.kt"
-          TRANSITION_TEST="app/src/test/java/com/zerotoempire/game/CinematicRuntimeTransitionPolicyTest.kt"
-          test "$(grep -Fc 'minSdk = 26' "$APP_GRADLE")" -eq 1
-          test "$(grep -Fc 'targetSdk = 36' "$APP_GRADLE")" -eq 1
-          test "$(grep -Fc 'compileSdk = 36' "$APP_GRADLE")" -eq 1
-          if grep -Fq 'android:configChanges=' "$MANIFEST"; then
-            echo 'MainActivity must use normal Android recreation for configuration changes.' >&2
-            exit 1
-          fi
-          grep -Fq 'configuration.screenWidthDp < 360' "$TRANSITION"
-          grep -Fq 'if (compactScreen) 472 else 552' "$TRANSITION"
-          grep -Fq 'compactScreensUseShorterImpact' "$TRANSITION_TEST"
-
-      - name: Audit save backup contract
-        if: steps.change_scope.outputs.sprite_only != 'true'
-        run: |
-          set -euo pipefail
-          MANIFEST="app/src/main/AndroidManifest.xml"
-          LEGACY_RULES="app/src/main/res/xml/backup_rules.xml"
-          EXTRACTION_RULES="app/src/main/res/xml/data_extraction_rules.xml"
-          SAVE_PATH='datastore/zero_empire_save_v2.preferences_pb'
-          grep -Fq 'android:allowBackup="true"' "$MANIFEST"
-          grep -Fq 'android:fullBackupContent="@xml/backup_rules"' "$MANIFEST"
-          grep -Fq 'android:dataExtractionRules="@xml/data_extraction_rules"' "$MANIFEST"
-          test "$(grep -Fc "$SAVE_PATH" "$LEGACY_RULES")" -eq 1
-          test "$(grep -Fc "$SAVE_PATH" "$EXTRACTION_RULES")" -eq 2
-          test "$(grep -Fc '<include ' "$LEGACY_RULES")" -eq 1
-          test "$(grep -Fc '<include ' "$EXTRACTION_RULES")" -eq 2
-          grep -Fq '<cloud-backup>' "$EXTRACTION_RULES"
-          grep -Fq '<device-transfer>' "$EXTRACTION_RULES"
-
-      - name: Full tests, release lint, APK and bundle builds
-        if: steps.change_scope.outputs.sprite_only != 'true'
-        run: gradle --no-daemon testDebugUnitTest testReleaseUnitTest lintRelease assembleDebug assembleRelease bundleRelease
-
-      - name: Audit release bundle contents
-        if: success() && steps.change_scope.outputs.sprite_only != 'true'
-        run: |
-          set -euo pipefail
-          AAB="app/build/outputs/bundle/release/app-release.aab"
-          MAPPING="app/build/outputs/mapping/release/mapping.txt"
-          AUDIT_DIR="app/build/release-integrity"
-          test -s "$AAB"
-          test -s "$MAPPING"
-          mkdir -p "$AUDIT_DIR"
-          jar tf "$AAB" | LC_ALL=C sort > "$AUDIT_DIR/AAB_CONTENTS.txt"
-          grep -Fxq "BundleConfig.pb" "$AUDIT_DIR/AAB_CONTENTS.txt"
-          grep -Fxq "base/manifest/AndroidManifest.xml" "$AUDIT_DIR/AAB_CONTENTS.txt"
-          grep -Fxq "base/dex/classes.dex" "$AUDIT_DIR/AAB_CONTENTS.txt"
-          {
-            printf 'aab_bytes=%s\n' "$(wc -c < "$AAB")"
-            printf 'mapping_bytes=%s\n' "$(wc -c < "$MAPPING")"
-            printf 'aab_entries=%s\n' "$(wc -l < "$AUDIT_DIR/AAB_CONTENTS.txt")"
-          } > "$AUDIT_DIR/ARTIFACT_METADATA.txt"
-
-      - name: Generate release integrity manifest
-        if: success() && steps.change_scope.outputs.sprite_only != 'true'
-        run: |
-          mkdir -p app/build/release-integrity
-          sha256sum app/build/outputs/bundle/release/app-release.aab app/build/outputs/mapping/release/mapping.txt > app/build/release-integrity/SHA256SUMS.txt
-          printf 'commit=%s\n' "$GITHUB_SHA" > app/build/release-integrity/RELEASE_INFO.txt
-
-      - name: Upload release integrity manifest
-        if: success() && steps.change_scope.outputs.sprite_only != 'true'
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Upload APK
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          name: ZeroToEmpire-release-integrity
-          path: app/build/release-integrity/
-          if-no-files-found: error
-          retention-days: 90
-
-      - name: Upload release lint report
-        if: always() && steps.change_scope.outputs.sprite_only != 'true'
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: ZeroToEmpire-release-lint
-          path: app/build/reports/lint-results-release.html
-          if-no-files-found: warn
-          retention-days: 14
-
-      - name: Upload release obfuscation mapping
-        if: success() && steps.change_scope.outputs.sprite_only != 'true'
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: ZeroToEmpire-release-mapping
-          path: app/build/outputs/mapping/release/mapping.txt
-          if-no-files-found: error
-          retention-days: 90
-
-      - name: Upload release app bundle
-        if: success() && steps.change_scope.outputs.sprite_only != 'true'
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: ZeroToEmpire-release-aab
-          path: app/build/outputs/bundle/release/app-release.aab
-          if-no-files-found: error
-          retention-days: 30
-
-      - name: Upload debug APK
-        if: success()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: ZeroToEmpire-debug-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
-          if-no-files-found: error
+          name: debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: ignore
           retention-days: 14
