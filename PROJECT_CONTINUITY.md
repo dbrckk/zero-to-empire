@@ -15,7 +15,7 @@ Bring **Zero → Empire** to full production completion. Immediate art objective
 ## Strict completion gate
 A sprite is strict DONE only after individual production, semantic correctness, technical/alpha validation, final runtime commit/reference, actual runtime visibility, manifest/progress reconciliation and green Android CI. Candidate count is never DONE count.
 
-## Current trusted state — 2026-09-08 15:15 +02:00
+## Current trusted state — 2026-09-08 16:31 +02:00
 - Strict ledger remains **112 / 235 DONE**.
 - Runs 80, 81, 82, 83 and 84 all have strict delta +0.
 
@@ -24,72 +24,50 @@ A sprite is strict DONE only after individual production, semantic correctness, 
 - Non-destructive recovery run `34219375395` completed SUCCESS.
 - Recovered artifact `10053866830`, `kaggle-recovered-sprite-batch`, ~33.6 MB.
 - Startup confirmed: `KAGGLE_STARTUP=building-family-flux-v16.2-shape-first-recursion-safe`.
-- Recursion bug is fixed: `KAGGLE_V16_SILHOUETTE` metrics executed normally.
 - Technical counters: 48 anchors, 16 branches, 128 context attempts, 61 live rejections, 13 early aborts.
 - 21 technically valid candidates exported: BLD-11, BLD-12, BLD-13 T0-T6.
-- Full semantic review: `docs/art/reviews/RUN_84_SEMANTIC_REVIEW.md`, commit `6adf057821d1bd92b19dbd1bba503744538f4859`.
+- Full semantic review: `docs/art/reviews/RUN_84_SEMANTIC_REVIEW.md`.
 - Semantic result: **0/21 promoted**.
-- Run84 is still a meaningful improvement over run82: dominant crane/gantry contamination is largely gone.
-- Remaining dominant defects: broad floor/site slabs, cast-shadow/ground patches, detached residue, loose props, and baked smoke/flame/steam.
+- Run84 reduced crane/gantry contamination substantially; remaining defects were floor/site slabs, ground patches, detached residue, loose props and baked FX.
 
 ## Building generator v16.3 — isolated static source
 File `tools/sprites/kaggle_building_family_factory_v16.py`.
-- Updated in commit `60656bdaa97e7a4821fb115472c31803eb6ba509`.
+- Commit `60656bdaa97e7a4821fb115472c31803eb6ba509`.
 - Startup marker: `building-family-flux-v16.3-isolated-static-source`.
-- Source evolution strengths reduced again to preserve clean anchors: T1..T6 = .20/.25/.30/.35/.40/.45.
-- Steps increased to 9/7/7/8/8/9/9 for cleaner source/detail convergence.
-- SHAPE cards explicitly require the foundation to end exactly under the wall/building footprint.
-- Family cards prefer attached/sealed service equipment instead of emitted or freestanding elements.
-- Static-object contract injected into T0 and T1-T6 prompts:
-  - visible object ends at structural foundation edge;
-  - neutral studio background starts immediately around the building;
-  - all pipes/tanks/vents/service modules physically attached;
-  - no surrounding pavement/floor/site pad/road/terrain/cast-shadow card;
-  - no barrels/crates/tools/vehicles/workers/detached props;
-  - no emitted smoke/steam/flame/sparks/particles;
-  - no text/labels/flags/signs/scenery.
-- Goal is generation-first cleanup, not post-hoc rejection.
+- Source strengths T1..T6 = .20/.25/.30/.35/.40/.45.
+- Static-object contract explicitly excludes surrounding floor/site pads, cast-shadow cards, detached props and emitted FX.
 
-## Wave 85 — ACTIVE
-- User authorized with `Go`.
+## Wave 85 — KAGGLE STILL RUNNING; RECOVERY REQUESTED
 - Trigger commit `fc21ec0e2faaec18ed1a0cc09e112aafa79a88c4`.
-- GitHub Actions run `34224023209`, job `102053645197`, run number 85.
-- Latest check at **15:15 +02:00**: still `in_progress` at `Wait for Kaggle`.
-- Setup, checkout, credentials, dependencies, Kaggle auth, kernel preparation and push/start are all green.
-- No workflow artifacts exist yet for run85, which is expected while Kaggle is still running.
-- Requested 56 tiers using `building-family-flux-v16.3-isolated-static-source`.
-- Objective: eliminate floor pads, cast-shadow cards, detached props and baked smoke/flame/steam at the source while preserving run84 crane reduction.
-- Do not launch a redundant building wave while run85 is active.
+- Original GitHub Actions run `34224023209`, job `102053645197`, run number 85.
+- GitHub collector completed `failure` at 16:20 +02:00 only because its 135-minute poll ended with `KAGGLE_FINAL_STATUS=UNKNOWN`.
+- Log shows Kaggle remained `KernelWorkerStatus.RUNNING` continuously through the final poll at 16:19 +02:00.
+- Download step ran but Kaggle exposed no outputs while the kernel was still active; therefore no artifact was uploaded.
+- This is **not a generator failure and not semantic evidence**.
+- Non-destructive recovery trigger updated for wave85 in commit `24e0bba86ac0a3d66c3c6a7f76bd19aed4a005a9` with `source_run=34224023209` and `mode=recover-existing-only`.
+- Immediate Actions query on that trigger commit returned no run yet; re-check on next intervention.
+- Do not push or launch another Kaggle kernel until the existing wave85 kernel reaches a terminal state and its outputs/log are recovered.
 
 ## CircleCI long-run recovery lane
-- User requested CircleCI for long Kaggle monitoring because GitHub collector windows are too short.
-- `.circleci/config.yml` monitors an existing Kaggle kernel up to 4.5 hours without `kaggle kernels push`.
-- CircleCI recovery trigger updated for wave85 in commit `7f45179142e94fd241edd49712d896a5fb65c742` with `source_run=34224023209`.
-- Latest GitHub combined-status checks still show no CircleCI statuses.
-- Therefore the repo-side CircleCI lane is armed but still not empirically firing/reporting through GitHub.
-- If CircleCI starts, prefer it for long monitoring/recovery of run85. If not, do not relaunch Kaggle merely because the GitHub collector expires; preserve evidence with the non-destructive recovery workflow.
+- `.circleci/config.yml` monitors an existing Kaggle kernel up to 4.5 hours without pushing a new kernel.
+- GitHub still has not shown a CircleCI status, so CircleCI execution remains unconfirmed.
+- Prefer CircleCI if it begins reporting; otherwise use the GitHub non-destructive recovery workflow.
 
 ## Character lane
 `tools/sprites/kaggle_character_sheet_factory_v1.py`, commit `4a48168166d47cbe47afc870aa8a8b65480e2b0b`.
-- Fixed canonical 1024×1024 RGBA atlas, 4×4 256px cells.
+- Canonical 1024×1024 RGBA atlas, 4×4 256px cells.
 
-## FX lane — proven runtime contract and v1.2 factory
-Concrete runtime evidence:
-- `app/src/main/java/com/zerotoempire/game/ElectricArc.kt`
-- `app/src/main/java/com/zerotoempire/game/DroneThruster.kt`
-Both use Compose `Canvas.drawImage` with 8 frames, 4×2 grid, 128×128 source frames => 512×256 atlas.
-FX factory commit `f22f4769aaef97a6ef19933c1a699461de6c00b9` outputs the matching 512×256 runtime atlas after 256px internal rendering and temporal QA.
-
-## Run 82 baseline
-Run `34145936891`, artifact `10030821750`: 28 technical exports, 28 semantic rejects, dominated by cranes/gantries/site construction motifs.
+## FX lane
+`tools/sprites/kaggle_fx_sheet_factory_v1.py`, commit `f22f4769aaef97a6ef19933c1a699461de6c00b9`.
+- Runtime contract: 8 frames, 4×2 grid, 128×128 runtime cell, 512×256 atlas.
 
 ## Immediate next actions
-1. Query run85 first on the next intervention.
-2. If CircleCI status appears, prefer it for long monitoring/recovery of run85.
-3. If run85 completes, retrieve all candidates/reports/logs and perform full semantic review, with special attention to floor pads/cast shadows/loose props/baked FX.
-4. Compare complete-family semantic acceptance against run84's 0/3 complete exported families.
-5. If the GitHub collector times out while Kaggle is still RUNNING, trigger non-destructive recovery for run85 and do not replace the kernel.
-6. Promote only complete genuinely valid families, then runtime refs + manifest/progress reconciliation + green Android CI before strict increment.
+1. Check for a recovery workflow run from commit `24e0bba86ac0a3d66c3c6a7f76bd19aed4a005a9`.
+2. If recovery is active, do not launch a redundant wave.
+3. When wave85 reaches terminal state, retrieve log, reports, contact sheets and every candidate.
+4. Perform full semantic review with special attention to floor pads, cast shadows, detached props, baked FX, cranes, people, vehicles, text and identity drift.
+5. Compare complete-family acceptance against run84's 0/3.
+6. Promote only genuinely valid complete families; then runtime refs, canonical manifest/progress reconciliation and green Android CI before strict increment.
 7. Continue buildings → statics → characters → FX until **235 / 235 strict DONE**.
 
 ## Operating principle
