@@ -1,0 +1,52 @@
+name: Recover Existing Kaggle Sprite Run
+
+on:
+  push:
+    paths:
+      - 'ops/kaggle-recovery-trigger.txt'
+permissions:
+  contents: read
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+      KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Kaggle CLI
+        run: python -m pip install --upgrade kaggle
+      - name: Wait for existing kernel only
+        id: wait
+        shell: bash
+        run: |
+          set -u
+          slug="${KAGGLE_USERNAME}/zero-to-empire-sprite-factory"; final_status='UNKNOWN'
+          for i in $(seq 1 45); do
+            status="$(kaggle kernels status "$slug" 2>&1 || true)"; echo "$status"
+            if echo "$status" | grep -qi 'complete'; then final_status='COMPLETE'; break; fi
+            if echo "$status" | grep -Eqi 'error|cancel|failed'; then final_status='ERROR'; break; fi
+            sleep 60
+          done
+          echo "final_status=$final_status" >> "$GITHUB_OUTPUT"
+      - name: Download existing outputs
+        if: always()
+        shell: bash
+        run: |
+          rm -rf /tmp/kaggle-output; mkdir -p /tmp/kaggle-output
+          kaggle kernels output "${KAGGLE_USERNAME}/zero-to-empire-sprite-factory" -p /tmp/kaggle-output --force || true
+          find /tmp/kaggle-output -maxdepth 4 -type f -print || true
+      - name: Upload recovered evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kaggle-recovered-sprite-batch
+          path: /tmp/kaggle-output/**
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Report kernel state
+        if: always()
+        run: echo "RECOVERY_FINAL_STATUS=${{ steps.wait.outputs.final_status }}"
+
+# Recovery only: this workflow NEVER pushes a new Kaggle kernel, so it cannot replace an active long-running generation.
