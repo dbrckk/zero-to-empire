@@ -15,7 +15,7 @@ Bring **Zero → Empire** to full production completion. Immediate art objective
 ## Strict completion gate
 A sprite is strict DONE only after individual production, semantic correctness, technical/alpha validation, final runtime commit/reference, actual runtime visibility, manifest/progress reconciliation and green Android CI. Candidate count is never DONE count.
 
-## Current trusted state — 2026-09-08 13:41 +02:00
+## Current trusted state — 2026-09-08 14:04 +02:00
 - Strict ledger remains **112 / 235 DONE**.
 - Runs 80, 81, 82, 83 and 84 all have strict delta +0.
 
@@ -38,9 +38,9 @@ File `tools/sprites/kaggle_building_family_factory_v16.py`.
 - Startup marker: `building-family-flux-v16.3-isolated-static-source`.
 - Source evolution strengths reduced again to preserve clean anchors: T1..T6 = .20/.25/.30/.35/.40/.45.
 - Steps increased to 9/7/7/8/8/9/9 for cleaner source/detail convergence.
-- SHAPE cards now explicitly require the foundation to end exactly under the wall/building footprint.
+- SHAPE cards explicitly require the foundation to end exactly under the wall/building footprint.
 - Family cards prefer attached/sealed service equipment instead of emitted or freestanding elements.
-- New static-object contract is injected into T0 and T1-T6 prompts:
+- Static-object contract injected into T0 and T1-T6 prompts:
   - visible object ends at structural foundation edge;
   - neutral studio background starts immediately around the building;
   - all pipes/tanks/vents/service modules physically attached;
@@ -50,13 +50,22 @@ File `tools/sprites/kaggle_building_family_factory_v16.py`.
   - no text/labels/flags/signs/scenery.
 - Goal is generation-first cleanup, not post-hoc rejection.
 
+## Wave 85 — LAUNCHED
+- User authorized with `Go`.
+- Trigger commit `fc21ec0e2faaec18ed1a0cc09e112aafa79a88c4`.
+- GitHub Actions run `34224023209`, run number 85.
+- Initial state observed: `queued`.
+- Requested 56 tiers using `building-family-flux-v16.3-isolated-static-source`.
+- Objective: eliminate floor pads, cast-shadow cards, detached props and baked smoke/flame/steam at the source while preserving run84 crane reduction.
+- Do not launch a redundant building wave while run85 is active.
+
 ## CircleCI long-run recovery lane
 - User requested CircleCI for long Kaggle monitoring because GitHub collector windows are too short.
-- `.circleci/config.yml` exists and monitors an existing Kaggle kernel up to 4.5 hours without `kaggle kernels push`.
-- Trigger marker exists in `ops/circleci-recovery-trigger.txt`.
-- No CircleCI status has appeared on GitHub commits so far, indicating the CircleCI GitHub push trigger is not firing or status reporting is disabled.
-- Repo-side CircleCI config is ready; one-time external CircleCI project trigger/environment configuration may still be required.
-- Until CircleCI actually fires, GitHub's non-destructive recovery lane remains usable for preserving long-running Kaggle outputs, but do not launch redundant kernels merely because a collector expired.
+- `.circleci/config.yml` monitors an existing Kaggle kernel up to 4.5 hours without `kaggle kernels push`.
+- CircleCI recovery trigger updated for wave85 in commit `7f45179142e94fd241edd49712d896a5fb65c742` with `source_run=34224023209`.
+- Immediate GitHub combined-status check on that commit still returned no CircleCI status.
+- Therefore repo-side CircleCI config is armed, but actual CircleCI trigger/status propagation is still not empirically confirmed.
+- If CircleCI starts, use it as the preferred long monitor/recovery path. If not, do not relaunch Kaggle merely because the GitHub collector expires; preserve evidence with the non-destructive recovery workflow.
 
 ## Character lane
 `tools/sprites/kaggle_character_sheet_factory_v1.py`, commit `4a48168166d47cbe47afc870aa8a8b65480e2b0b`.
@@ -73,10 +82,10 @@ FX factory commit `f22f4769aaef97a6ef19933c1a699461de6c00b9` outputs the matchin
 Run `34145936891`, artifact `10030821750`: 28 technical exports, 28 semantic rejects, dominated by cranes/gantries/site construction motifs.
 
 ## Immediate next actions
-1. Do not promote any run84 candidate.
-2. Prefer CircleCI for long monitoring once its push trigger is actually observed; otherwise preserve evidence using the existing non-destructive recovery workflow.
-3. Next building generation should use v16.3 and specifically measure whether floor pads/cast shadows/loose props/baked FX disappear while retaining run84's crane reduction.
-4. Full-resolution semantic review remains mandatory for every exported family.
+1. Query run85 first on the next intervention.
+2. If CircleCI status appears, prefer it for long monitoring/recovery of run85.
+3. If run85 completes, retrieve all candidates/reports/logs and perform full semantic review, with special attention to floor pads/cast shadows/loose props/baked FX.
+4. Compare complete-family semantic acceptance against run84's 0/3 complete exported families.
 5. Promote only complete genuinely valid families, then runtime refs + manifest/progress reconciliation + green Android CI before strict increment.
 6. Continue buildings → statics → characters → FX until **235 / 235 strict DONE**.
 
