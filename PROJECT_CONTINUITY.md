@@ -15,7 +15,7 @@ Bring **Zero → Empire** to full production completion. Immediate art objective
 ## Strict completion gate
 A sprite is strict DONE only after individual production, semantic correctness, technical/alpha validation, final runtime commit/reference, actual runtime visibility, manifest/progress reconciliation and green Android CI. Candidate count is never DONE count.
 
-## Current trusted state — 2026-09-08 14:04 +02:00
+## Current trusted state — 2026-09-08 14:38 +02:00
 - Strict ledger remains **112 / 235 DONE**.
 - Runs 80, 81, 82, 83 and 84 all have strict delta +0.
 
@@ -50,11 +50,12 @@ File `tools/sprites/kaggle_building_family_factory_v16.py`.
   - no text/labels/flags/signs/scenery.
 - Goal is generation-first cleanup, not post-hoc rejection.
 
-## Wave 85 — LAUNCHED
+## Wave 85 — ACTIVE
 - User authorized with `Go`.
 - Trigger commit `fc21ec0e2faaec18ed1a0cc09e112aafa79a88c4`.
-- GitHub Actions run `34224023209`, run number 85.
-- Initial state observed: `queued`.
+- GitHub Actions run `34224023209`, job `102053645197`, run number 85.
+- Latest check at 14:38 +02:00: `in_progress` at `Wait for Kaggle`.
+- Setup, checkout, credentials, dependencies, Kaggle auth, kernel preparation and push/start are all green.
 - Requested 56 tiers using `building-family-flux-v16.3-isolated-static-source`.
 - Objective: eliminate floor pads, cast-shadow cards, detached props and baked smoke/flame/steam at the source while preserving run84 crane reduction.
 - Do not launch a redundant building wave while run85 is active.
@@ -63,9 +64,9 @@ File `tools/sprites/kaggle_building_family_factory_v16.py`.
 - User requested CircleCI for long Kaggle monitoring because GitHub collector windows are too short.
 - `.circleci/config.yml` monitors an existing Kaggle kernel up to 4.5 hours without `kaggle kernels push`.
 - CircleCI recovery trigger updated for wave85 in commit `7f45179142e94fd241edd49712d896a5fb65c742` with `source_run=34224023209`.
-- Immediate GitHub combined-status check on that commit still returned no CircleCI status.
-- Therefore repo-side CircleCI config is armed, but actual CircleCI trigger/status propagation is still not empirically confirmed.
-- If CircleCI starts, use it as the preferred long monitor/recovery path. If not, do not relaunch Kaggle merely because the GitHub collector expires; preserve evidence with the non-destructive recovery workflow.
+- Latest GitHub commit-status check still reports `total_count=0`; no CircleCI status is being propagated yet.
+- Therefore the repo-side CircleCI lane is armed but still not empirically firing/reporting.
+- If CircleCI starts, prefer it for long monitoring/recovery of run85. If not, do not relaunch Kaggle merely because the GitHub collector expires; preserve evidence with the non-destructive recovery workflow.
 
 ## Character lane
 `tools/sprites/kaggle_character_sheet_factory_v1.py`, commit `4a48168166d47cbe47afc870aa8a8b65480e2b0b`.
