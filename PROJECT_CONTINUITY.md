@@ -15,18 +15,18 @@ Bring **Zero → Empire** to full production completion. Immediate art objective
 ## Strict completion gate
 A sprite is strict DONE only after individual production, semantic correctness, technical/alpha validation, final runtime commit/reference, actual runtime visibility, manifest/progress reconciliation and green Android CI. Candidate count is never DONE count.
 
-## Current trusted state — 2026-09-08 11:35 +02:00
+## Current trusted state — 2026-09-08 13:10 +02:00
 - Strict ledger remains **112 / 235 DONE**.
 - Run 80 semantic delta +0; run 81 +0; run 82 +0; run 83 +0.
 
-## Wave 84 — ACTIVE
+## Wave 84 — collector timed out; recovery triggered
 - Trigger commit `c51bb50d9e05e0498068b900844845a53585523e`.
 - GitHub Actions run `34200990117`, job `101979474170`, run number 84.
-- Latest check at 11:35 +02:00: still `in_progress` at `Wait for Kaggle`.
-- Checkout, credentials, dependency install, Kaggle auth, preparation and launch all green.
-- Requested 56 tiers with `building-family-flux-v16.2-shape-first-recursion-safe`.
-- Live job log endpoint currently returns 404 while job is active; do not interpret as failure.
-- Do not launch a redundant building wave while run84 is active.
+- Main GitHub collector finished `failure` only because the 135-minute polling window expired while Kaggle still reported `KernelWorkerStatus.RUNNING` continuously through the final poll.
+- No normal `kaggle-sprite-batch` artifact was available at collector shutdown; do not classify v16.2 semantic quality from this alone.
+- Recovery trigger updated in commit `8a3e49a2072f5782b98110e14ec3875a9a19b31d` for wave84/source run `34200990117` in `recover-existing-only` mode.
+- Recovery workflow never pushes a new Kaggle kernel and therefore cannot replace the existing long-running generation.
+- At the immediate post-trigger check no recovery Actions run had appeared yet; query the trigger commit/run list first on next intervention.
 
 ## Wave 83 — resolved code failure
 - Recovery proved v16.1 anchor-score recursion (`maximum recursion depth exceeded`).
@@ -37,45 +37,38 @@ A sprite is strict DONE only after individual production, semantic correctness, 
 `tools/sprites/kaggle_building_family_factory_v16.py`, recursion-safe scorer preserved through `V15_ANCHOR_SCORE`.
 - Shape-first T0, six anchors, silhouette filtering and conservative source-locked T1→T6.
 - Positive wording tightened for family 10, family 13 and T6 roof form.
+- Wave84 remains the first intended valid semantic experiment once its actual Kaggle outputs/logs are recovered.
 
 ## Character lane
 `tools/sprites/kaggle_character_sheet_factory_v1.py`, commit `4a48168166d47cbe47afc870aa8a8b65480e2b0b`.
 - Fixed canonical 1024×1024 RGBA atlas, 4×4 256px cells.
 
 ## FX lane — proven runtime contract and v1.2 factory
-Concrete runtime evidence found in:
+Concrete runtime evidence:
 - `app/src/main/java/com/zerotoempire/game/ElectricArc.kt`
 - `app/src/main/java/com/zerotoempire/game/DroneThruster.kt`
-Both use Compose `Canvas.drawImage` with:
-- 8 frames,
-- 4 columns × 2 rows,
-- 128×128 source frame,
-- resulting atlas 512×256.
-Therefore the previous 2048×256 horizontal candidate format was incompatible with the project's proven runtime convention.
+Both use Compose `Canvas.drawImage` with 8 frames, 4×2 grid, 128×128 source frames => 512×256 atlas.
 
-FX factory updated in commit `f22f4769aaef97a6ef19933c1a699461de6c00b9`:
+FX factory commit `f22f4769aaef97a6ef19933c1a699461de6c00b9`:
 - engine `procedural-fx-v1.2-runtime-atlas`;
-- renders internally at 256×256 for quality;
-- downsamples each validated frame to 128×128;
+- renders internally at 256×256, downsamples to 128×128;
 - packs exactly 4×2 => 512×256 RGBA;
-- hard assertion on atlas size;
-- report records `render_cell`, `runtime_cell`, `layout`, `atlas`;
-- preserves v1.1 temporal one-shot/loop QA and FX-07 polygonal debris.
-Runtime visibility and CI remain required before strict DONE, but atlas-format ambiguity is now resolved using existing production code rather than a new invented loader.
+- preserves one-shot/loop temporal QA and FX-07 ballistic polygonal debris.
+- Runtime visibility and green CI remain mandatory before strict DONE.
 
 ## Run 82 baseline
 Run `34145936891`, artifact `10030821750`: 28 technical exports, 28 semantic rejects due cranes/site contamination.
 
 ## Workflow reliability
-- `.github/workflows/kaggle-recover-existing-run.yml` preserves outputs/logs from long-running Kaggle kernels.
-- Main collector polls 135 minutes to reserve recovery time.
+- `.github/workflows/kaggle-recover-existing-run.yml` preserves outputs/logs from Kaggle kernels that outlive the 135-minute main collector.
+- Main collector failure at the 135-minute boundary is not itself a model/generator failure if Kaggle remains RUNNING.
 
 ## Immediate next actions
-1. Query wave84 first.
-2. When complete, retrieve all candidates/reports/logs and verify v16.2 startup, silhouette scoring without recursion, and full semantic quality.
-3. Compare semantic complete-family acceptance versus run82's 0/4.
-4. Promote only complete genuinely valid families, then runtime refs + manifest/progress reconciliation + green Android CI before strict increment.
-5. After building backlog is sufficiently reduced, exercise FX v1.2 against the proven 512×256 / 4×2 runtime contract and integrate only after actual visibility proof.
+1. Query Actions runs for head SHA `8a3e49a2072f5782b98110e14ec3875a9a19b31d` and find the recovery run.
+2. If recovery succeeds, download `kaggle-recovered-sprite-batch` and inspect `branch-search-report.json`, generated-targets, QA reports/contact sheets, candidates and kernel log.
+3. Verify startup `building-family-flux-v16.2-shape-first-recursion-safe`, ensure silhouette scoring runs without recursion, and measure complete-family semantic acceptance versus run82's 0/4.
+4. Reject cranes/gantries/booms, broad site cards, people, vehicles, text, detached props, civic/monument drift, identity drift or fake tier progression.
+5. Promote only complete genuinely valid families; then runtime refs + manifest/progress reconciliation + green Android CI before strict increment.
 6. Continue buildings → statics → characters → FX until **235 / 235 strict DONE**.
 
 ## Operating principle
