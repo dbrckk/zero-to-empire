@@ -5,17 +5,18 @@
 ## Primary objective
 Reach **235 / 235 canonical final sprites strict DONE**. Strict DONE requires semantic + technical validation, final runtime reference/visibility, manifest/progress reconciliation and green Android CI.
 
-## Trusted state — 2026-09-08 23:04 +02:00
+## Trusted state — 2026-09-08 23:05 +02:00
 - **112 / 235 strict DONE**.
 - No strict increment without all gates.
 
 ## Night intervention — reconcile reviewed run75 BLD-03 T2–T6
 - Added `.github/workflows/reconcile-run75-bld03-status.yml`, commit `8e7e18e876c04479fde60d7dec0f7c77cb677b6e`.
-- GitHub Actions run `34278218123`, job `102236382927`, started successfully and was in progress at last observation.
-- The reconciliation verifies, for every BLD-03 T2–T6 tier, that both the reviewed PNG master and final runtime WebP are non-empty, and that `art/production/run75-bld03-qa.json` exists before touching the canonical manifest.
-- It changes only `TODO -> RUNTIME`; it deliberately cannot mark these assets `DONE`.
-- This fixes an observed ledger inconsistency: the run75 promotion workflow explicitly calls the five masters `semantically approved`, processes them to final runtime assets, and commits them, while the canonical manifest still listed BLD-03 T2–T6 as TODO.
-- BLD-03 T2 runtime file was independently confirmed present on `main` with blob SHA `e5fe48c9b47aa2bf28e169371ab02649e9141276`; the workflow itself verifies all five tiers before commit.
+- GitHub Actions run `34278218123`, job `102236382927`, completed **success**.
+- The reconciliation verified, for every BLD-03 T2–T6 tier, that both the reviewed PNG master and final runtime WebP are non-empty, and that `art/production/run75-bld03-qa.json` exists before touching the canonical manifest.
+- It changed only `TODO -> RUNTIME`; it deliberately cannot mark these assets `DONE`.
+- This fixed an observed ledger inconsistency: the run75 promotion workflow explicitly calls the five masters `semantically approved`, processes them to final runtime assets, and commits them, while the canonical manifest still listed BLD-03 T2–T6 as TODO.
+- Reconciliation commit produced by the workflow: `1acf87c70e3dd7722a748a3eba4a01e76249f79e`.
+- BLD-03 T2 runtime file was independently confirmed present on `main` with blob SHA `e5fe48c9b47aa2bf28e169371ab02649e9141276`; the workflow verified all five tiers before commit.
 - Strict count remains 112/235 until runtime reference/visibility and green Android CI are proven.
 
 ## Building generator v16.4 — COMMITTED / STILL NOT EXECUTED CLEANLY
@@ -45,7 +46,7 @@ Core experiment: low-denoise tier evolution, T0–T3 massing then T4–T6 detail
 
 ## Productive reconciliation lane
 - Run75 integration commit `e14b6897e32a557736a4e9c06d55b925864993d1` contains reviewed BLD-03 T2–T6 masters and runtime WebP outputs; technical QA passes all five.
-- BLD-03 T2–T6 are now being reconciled to RUNTIME by run `34278218123`, not DONE.
+- BLD-03 T2–T6 are now canonical `RUNTIME`, not DONE.
 - Other ART/RUNTIME-integrated candidates to reconcile next: BLD-02-T4/T5/T6, BLD-03-T0/T1, FX-08..17.
 
 ## Alternative GPU backend investigation
@@ -54,7 +55,7 @@ Core experiment: low-denoise tier evolution, T0–T3 massing then T4–T6 detail
 - Keep Lightning as fallback work, but Kaggle remains preferred if Internet/GPU eligibility can be enabled on the new account.
 
 ## Next actions
-1. Observe run `34278218123`; if successful, verify the manifest commit and resulting Android CI before any strict promotion.
+1. Verify Android CI on reconciliation commit `1acf87c70e3dd7722a748a3eba4a01e76249f79e`.
 2. Prove runtime reference/visibility for BLD-03 T2–T6; only then consider DONE after green Android CI.
 3. Reconcile BLD-02-T4/T5/T6, BLD-03-T0/T1 and FX-08..17 using the same evidence-first approach.
 4. Do not retry Kaggle until the new account exposes usable GPU + Internet in its notebook UI.
