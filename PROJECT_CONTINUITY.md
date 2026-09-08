@@ -1,63 +1,48 @@
 # PROJECT CONTINUITY — Zero → Empire
 
-> Persistent handoff file. Read this file before any new work on this repository and update it at every assistant intervention that changes goals, state, decisions, blockers, or next actions.
-
-## Global continuity rule
-- Keep a recent concrete record of changes, evidence, blockers and next objectives.
-- Update this file at every material assistant intervention.
-- Do not rely on chat history alone.
-- Apply the same `PROJECT_CONTINUITY.md` convention to every actively worked repository.
-- Never mark completion from intent or candidate generation alone.
+> Persistent handoff file. Read before work and update at every material intervention. Never rely on chat history alone.
 
 ## Primary objective
-Bring **Zero → Empire** to full production completion. Immediate art objective: **235 / 235 canonical final sprites strict DONE**.
+Reach **235 / 235 canonical final sprites strict DONE**. Strict DONE requires semantic + technical validation, final runtime reference/visibility, manifest/progress reconciliation and green Android CI.
 
-## Strict completion gate
-A sprite is strict DONE only after individual production, semantic correctness, technical/alpha validation, final runtime commit/reference, actual runtime visibility, manifest/progress reconciliation and green Android CI. Candidate count is never DONE count.
-
-## Current trusted state — 2026-09-08
-- Strict ledger remains **112 / 235 DONE**.
-- Runs 80–84 have strict delta +0.
-
-## Wave 84 — recovered and semantically reviewed
-- Original Actions run `34200990117` outlived the GitHub collector.
-- Recovery run `34219375395` succeeded; artifact `10053866830`.
-- v16.2 exported 21 technical candidates: BLD-11/12/13 T0–T6; semantic result **0/21 promoted**.
-- It substantially reduced crane/gantry contamination; remaining defects were floor/site slabs, ground patches, detached residue, loose props and baked FX.
+## Trusted state — 2026-09-08
+- **112 / 235 strict DONE**.
+- Runs 80–84: strict delta +0.
 
 ## Building generator v16.3
-File `tools/sprites/kaggle_building_family_factory_v16.py`, commit `60656bdaa97e7a4821fb115472c31803eb6ba509`.
-Startup `building-family-flux-v16.3-isolated-static-source`.
-Static-object contract excludes surrounding floor/site pads, cast-shadow cards, detached props and emitted FX.
+`tools/sprites/kaggle_building_family_factory_v16.py`, commit `60656bdaa97e7a4821fb115472c31803eb6ba509`.
+Startup: `building-family-flux-v16.3-isolated-static-source`.
+Goal: eliminate floor/site pads, cast-shadow cards, detached props and baked FX at generation source while preserving v16.2's reduction in crane/gantry contamination.
 
-## Wave 85 — RECOVERY STILL ACTIVE
-- Source trigger `fc21ec0e2faaec18ed1a0cc09e112aafa79a88c4`.
-- Original Actions run `34224023209`, job `102053645197`, run 85.
-- Original collector ended failure after 135 minutes with `KAGGLE_FINAL_STATUS=UNKNOWN`; logs proved Kaggle still RUNNING at the final poll. This is not generator/semantic failure.
-- Recovery trigger commit `24e0bba86ac0a3d66c3c6a7f76bd19aed4a005a9`.
-- Recovery run `34238873539`, job `102103587968`, workflow `Recover Existing Kaggle Sprite Run`, run number 3.
-- Latest check: recovery remains `in_progress` at `Wait for existing kernel only`; setup, checkout and Kaggle CLI are green.
-- No recovery artifact exists yet; download/upload/report steps are still pending.
-- Recovery is non-destructive and does not push a replacement kernel.
-- Do not launch another building wave while this recovery remains active.
+## Wave 85 — KERNEL STILL RUNNING; RECOVERY ATTEMPT 2 REQUESTED
+- Source run `34224023209`, original job `102053645197`.
+- Original GitHub collector expired while Kaggle remained RUNNING; not a generator failure.
+- Recovery attempt 1: run `34238873539`, job `102103587968`, completed SUCCESS as a workflow but ended `RECOVERY_FINAL_STATUS=UNKNOWN`.
+- Its log shows the same Kaggle kernel was still `KernelWorkerStatus.RUNNING` on every poll through 15:16 UTC / 17:16 +02:00.
+- Because the kernel was still active, `kaggle kernels output` exposed no files; upload-artifact correctly reported no files and no artifact was created.
+- No semantic conclusion can be drawn from attempt 1.
+- Non-destructive recovery attempt 2 triggered by commit `bcd28ecc548bd039f196f09d22b6cf169f0cc4ba` via `ops/kaggle-recovery-trigger.txt`.
+- Attempt 2 remains `recover-existing-only`; it MUST NOT push or replace the existing kernel.
+- Do not launch a new building generation wave until wave85 reaches terminal state and outputs/log are recovered.
 
-## CircleCI long-run recovery lane
-`.circleci/config.yml` can monitor an existing Kaggle kernel without pushing a new one, but no CircleCI status has yet been observed on GitHub. GitHub recovery is currently authoritative for wave85.
+## Wave84 baseline
+Recovery artifact `10053866830`: v16.2 exported BLD-11/12/13 T0–T6 (21 technical candidates), semantic acceptance 0/21. Main remaining defects: slabs/ground patches, detached residue/props and baked FX.
 
-## Character lane
-`tools/sprites/kaggle_character_sheet_factory_v1.py`, commit `4a48168166d47cbe47afc870aa8a8b65480e2b0b`; canonical 1024×1024 RGBA atlas, 4×4 256px cells.
+## CircleCI
+`.circleci/config.yml` contains a long recovery lane, but no CircleCI status has been observed on GitHub. Do not assume it is executing.
 
-## FX lane
-`tools/sprites/kaggle_fx_sheet_factory_v1.py`, commit `f22f4769aaef97a6ef19933c1a699461de6c00b9`; runtime contract 8 frames, 4×2 grid, 128×128 runtime cell, 512×256 atlas.
+## Other prepared lanes
+- Character: `tools/sprites/kaggle_character_sheet_factory_v1.py`, canonical 1024×1024 RGBA 4×4 atlas.
+- FX: `tools/sprites/kaggle_fx_sheet_factory_v1.py`, runtime 8-frame 4×2 512×256 atlas.
 
-## Immediate next actions
-1. Query recovery run `34238873539` first.
-2. If still active, do not launch redundant generation.
-3. When terminal, fetch artifacts/logs and inspect all v16.3 candidates/reports.
-4. Perform full semantic review, especially floor pads, cast shadows, detached props, baked FX, cranes, people, vehicles, text and identity drift.
-5. Compare complete-family semantic acceptance against run84's 0/3.
-6. Promote only genuinely valid complete families, then runtime refs + manifest/progress reconciliation + green Android CI before strict increment.
-7. Continue buildings → statics → characters → FX until **235 / 235 strict DONE**.
+## Next actions
+1. Find/query the recovery workflow created from commit `bcd28ecc548bd039f196f09d22b6cf169f0cc4ba`.
+2. When terminal, fetch its logs and artifact immediately.
+3. If outputs exist, inspect reports/contact sheets/all candidate PNGs and verify v16.3 startup.
+4. Full semantic review: slabs, shadows, detached residue/props, baked FX, cranes, people, vehicles, text, alpha defects, identity drift and progression.
+5. Compare complete-family semantic acceptance to wave84's 0/3.
+6. Promote only complete valid families; strict increment only after runtime + manifest/progress + green Android CI.
+7. Continue buildings → statics → characters → FX until **235 / 235**.
 
 ## Operating principle
-Generate the right asset first. QA should confirm quality rather than reject whole batches. Optimize semantic acceptance rate × validated sprites/GPU-hour, preserve long-run evidence, and never inflate strict DONE.
+Generate the right asset first; QA should confirm rather than routinely reject. Optimize validated semantic yield, preserve evidence, and never inflate strict DONE.
