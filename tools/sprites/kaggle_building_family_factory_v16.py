@@ -14,8 +14,11 @@ HERE=Path(__file__).resolve().parent
 SPEC=importlib.util.spec_from_file_location('v15',HERE/'kaggle_building_family_factory_v15.py')
 v15=importlib.util.module_from_spec(SPEC); SPEC.loader.exec_module(v15)
 v14=v15.v14
+# Preserve the original v15 scorer BEFORE overriding v15.anchor_score.
+# Calling v15.anchor_score from inside the override would recurse forever.
+V15_ANCHOR_SCORE=v15.anchor_score
 
-print('KAGGLE_STARTUP=building-family-flux-v16.1-shape-first-source-locked',flush=True)
+print('KAGGLE_STARTUP=building-family-flux-v16.2-shape-first-recursion-safe',flush=True)
 
 # Preserve an approved family anchor instead of reinventing the scene at every tier.
 v14.STRENGTH.update({1:.22,2:.27,3:.32,4:.37,5:.42,6:.47})
@@ -32,10 +35,10 @@ FAMILY={
  7:'automation works, wide low tech factory, paired enclosed robot cells, attached production wings',
  8:'heavy forge, armored low production block, central orange forge chamber, enclosed press bay',
  9:'nanofabrication complex, pearl graphite block, sealed cyan process ring, symmetric cleanroom wings',
- 10:'orbital component works, dark alloy factory block, enclosed circular assembly cradle, radial service rooms',
+ 10:'orbital component works, dark alloy factory block, enclosed circular assembly chamber, radial service rooms',
  11:'actuator works, broad press-house factory, enclosed articulated press frames, reinforced roof shell',
  12:'phase foundry, pearl alloy production block, enclosed luminous containment ring, shielded process wings',
- 13:'stellar manufacturing works, dark pearl industrial base, four integrated reactor petals, enclosed process core'
+ 13:'stellar manufacturing works, dark pearl industrial base, four compact attached reactor housings, enclosed process core'
 }
 
 SHAPE={
@@ -52,7 +55,7 @@ SHAPE={
  10:'broad base, enclosed circular center, attached radial rooms',
  11:'wide press-house block, contained internal frame volumes',
  12:'broad shielded block, enclosed central ring, symmetric wings',
- 13:'broad industrial base, four compact integrated roof petals'
+ 13:'broad industrial base, four compact attached roof housings'
 }
 
 TIER={
@@ -62,7 +65,7 @@ TIER={
  3:'automated, larger factory, enclosed automation volume, two attached process modules, modest vertical rise',
  4:'advanced, broader connected factory, symmetric attached wings, denser enclosed machinery',
  5:'late-game, very large connected production complex, multiple enclosed process halls, stronger vertical core',
- 6:'ultimate, largest connected industrial footprint, tall enclosed production core, compact luminous roof crown'
+ 6:'ultimate, largest connected industrial footprint, tall enclosed production core, compact enclosed luminous roof reactor cap'
 }
 
 STYLE=('premium AAA mobile strategy asset; stylized 2.5D industrial factory; 34-degree orthographic three-quarter view; '
@@ -74,14 +77,12 @@ def prompts(i):
     shape=SHAPE[i['family']]
     tier=TIER[i['tier']]
     if i['tier']==0:
-        # Phase 1: lock massing and family identity before introducing richer machinery detail.
         short=f'Industrial factory sprite. {shape}. Starter one-storey factory. Uniform gray studio background.'
         detail=(f'{STYLE}. Create one finished operating starter factory with this architectural massing: {shape}. '
                 f'Family identity: {family}. Keep the silhouette low, broad, bottom-heavy and compact. '
                 'Use one connected structural footprint and simple integrated roof equipment. '
                 'Neutral gray studio background remains clearly visible around the complete silhouette.')
     else:
-        # Phase 2: evolve the approved shape conservatively and add only integrated industrial detail.
         short=f'Industrial factory upgrade. {shape}. {tier}. Same factory identity. Gray studio background.'
         detail=(f'{STYLE}. Upgrade the same approved factory in place. Design identity: {family}. Evolution state: {tier}. '
                 f'Preserve this source massing: {shape}. Keep the same facade axis, roof direction, production core and material palette. '
@@ -117,7 +118,7 @@ def silhouette_metrics(final):
 
 def v16_anchor_score(final,cov):
     """Prefer low, bottom-heavy industrial starters before evolving a family."""
-    base=v15.anchor_score(final,cov)
+    base=V15_ANCHOR_SCORE(final,cov)
     s=silhouette_metrics(final)
     penalty=0.0
     if s['aspect'] < .82: penalty += (.82-s['aspect'])*1.6
