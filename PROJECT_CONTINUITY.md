@@ -5,7 +5,7 @@
 ## Primary objective
 Reach **235 / 235 canonical final sprites strict DONE**. Strict DONE requires semantic + technical validation, final runtime reference/visibility, manifest/progress reconciliation and green Android CI.
 
-## Trusted state — 2026-09-08 17:34 +02:00
+## Trusted state — 2026-09-08 17:39 +02:00
 - **112 / 235 strict DONE**.
 - Runs 80–84: strict delta +0.
 
@@ -14,14 +14,14 @@ Reach **235 / 235 canonical final sprites strict DONE**. Strict DONE requires se
 Startup: `building-family-flux-v16.3-isolated-static-source`.
 Goal: eliminate floor/site pads, cast-shadow cards, detached props and baked FX at generation source while preserving v16.2's reduction in crane/gantry contamination.
 
-## Wave 85 — RECOVERY ATTEMPT 2 ACTIVE
+## Wave 85 — RECOVERY ATTEMPT 2 STILL ACTIVE
 - Source run `34224023209`, original job `102053645197`.
 - Original GitHub collector expired while Kaggle remained RUNNING; not a generator failure.
 - Recovery attempt 1: run `34238873539`, job `102103587968`, workflow success but `RECOVERY_FINAL_STATUS=UNKNOWN`; kernel still RUNNING and no outputs were exposed.
 - Recovery attempt 2 trigger commit `bcd28ecc548bd039f196f09d22b6cf169f0cc4ba`.
-- Recovery attempt 2 is confirmed as run `34244024044`, job `102121235025`, workflow run number 4.
-- Latest check at 17:34 +02:00: `in_progress` at `Wait for existing kernel only`.
-- Setup, checkout and Kaggle CLI install are green; download/upload/report steps are pending.
+- Recovery attempt 2: run `34244024044`, job `102121235025`, workflow run number 4.
+- Latest check at **17:39 +02:00**: still `in_progress` at `Wait for existing kernel only`.
+- Setup, checkout and Kaggle CLI install remain green; download/upload/report steps are pending.
 - No artifact exists yet for run `34244024044`.
 - Attempt 2 is non-destructive (`recover-existing-only`) and must not push or replace the existing kernel.
 - Do not launch a new building generation wave while attempt 2 is active.
