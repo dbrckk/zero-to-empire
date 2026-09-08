@@ -70,25 +70,24 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Set up Gradle
+      - name: Set up Gradle 8.13
         uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
+        with:
+          gradle-version: '8.13'
 
-      - name: Make Gradle wrapper executable
-        run: chmod +x gradlew
-
-      - name: Validate Gradle wrapper
-        uses: gradle/actions/wrapper-validation@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
+      - name: Verify Gradle toolchain
+        run: gradle --version
 
       - name: Build debug APK
-        run: ./gradlew assembleDebug --stacktrace
+        run: gradle assembleDebug --stacktrace
 
       - name: Run unit tests
         if: steps.change_scope.outputs.sprite_only != 'true'
-        run: ./gradlew testDebugUnitTest --stacktrace
+        run: gradle testDebugUnitTest --stacktrace
 
       - name: Run lint
         if: steps.change_scope.outputs.sprite_only != 'true'
-        run: ./gradlew lintDebug --stacktrace
+        run: gradle lintDebug --stacktrace
 
       - name: Upload APK
         if: always()
