@@ -15,28 +15,33 @@ Bring **Zero → Empire** to full production completion. Immediate art objective
 ## Strict completion gate
 A sprite is strict DONE only after individual production, semantic correctness, technical/alpha validation, final runtime commit/reference, actual runtime visibility, manifest/progress reconciliation and green Android CI. Candidate count is never DONE count.
 
-## Current trusted state — 2026-09-08 13:13 +02:00
+## Current trusted state — 2026-09-08 13:36 +02:00
 - Strict ledger remains **112 / 235 DONE**.
 - Run 80 semantic delta +0; run 81 +0; run 82 +0; run 83 +0.
 
-## Wave 84 — GitHub collector timed out; CircleCI recovery path activated
+## Wave 84 — Kaggle long-running, GitHub collector expired
 - Trigger commit `c51bb50d9e05e0498068b900844845a53585523e`.
 - GitHub Actions run `34200990117`, job `101979474170`, run number 84.
-- Main GitHub collector exhausted its 135-minute polling window while Kaggle still reported `KernelWorkerStatus.RUNNING` through the final poll.
-- No normal `kaggle-sprite-batch` artifact existed at GitHub collector shutdown; this is not a semantic failure of v16.2.
-- GitHub recovery trigger was already prepared for the existing kernel, but the user explicitly requested using CircleCI for long-running follow-up once GitHub Actions reaches its limit.
+- GitHub collector expired after the intended 135-minute polling window while Kaggle still reported `KernelWorkerStatus.RUNNING` continuously through the final poll.
+- No normal GitHub artifact was available at collector shutdown. This is not a semantic-quality verdict on v16.2.
+- Existing-kernel recovery was triggered via `ops/kaggle-recovery-trigger.txt`; recovery workflows must never push a replacement Kaggle kernel.
 
-## CircleCI long-running Kaggle recovery — ACTIVE CONFIGURATION
-- Added `.circleci/config.yml` in commit `4433f9ec427e95e1018e2084aac7f57533659c66`.
-- Added/activated `ops/circleci-recovery-trigger.txt` in commit `792fae00548a5d69846e81f4c949d24f4babf48c` for wave84/source run `34200990117`.
-- Workflow/job: `circleci-kaggle-recovery` / `recover-kaggle-sprite-run`.
-- The CircleCI job is **recovery-only**: it never runs `kaggle kernels push`, so it cannot overwrite or compete with the existing Kaggle generation.
-- It monitors the existing `zero-to-empire-sprite-factory` kernel for up to 270 minutes (4.5h), emitting status every minute.
-- It downloads existing Kaggle outputs/logs whether the kernel reaches COMPLETE, ERROR, or the CircleCI watch expires.
-- It stores `/tmp/kaggle-recovery` as CircleCI artifacts under `kaggle-recovered-sprite-batch`.
-- It requires CircleCI project/context environment variables `KAGGLE_USERNAME` and `KAGGLE_KEY`. These are separate from GitHub Actions secrets; if they are not already configured in CircleCI, the preflight will fail explicitly rather than silently.
-- Immediate GitHub combined-status lookup right after trigger commit returned no status entries yet; do not claim CircleCI job success/running until a CircleCI check/status is actually observed.
-- CircleCI config syntax follows current CircleCI 2.1 conventions; `run.no_output_timeout` is set to 5h, while the monitor itself emits output every minute.
+## CircleCI long-run recovery lane — repo ready, trigger not observed
+- User explicitly requested moving long-running recovery/monitoring to CircleCI because GitHub Actions reaches its collector limit.
+- `.circleci/config.yml` added in commit `4433f9ec427e95e1018e2084aac7f57533659c66`.
+- CircleCI job `recover-kaggle-sprite-run`:
+  - checks `ops/circleci-recovery-trigger.txt` for `active=true`;
+  - validates `KAGGLE_USERNAME` / `KAGGLE_KEY`;
+  - monitors the **existing** Kaggle kernel for up to 270 minutes (4.5h), printing status every minute;
+  - downloads existing Kaggle outputs/logs;
+  - stores `/tmp/kaggle-recovery` as CircleCI artifacts;
+  - contains no `kaggle kernels push`, so it cannot overwrite an active generation.
+- CircleCI trigger marker committed in `792fae00548a5d69846e81f4c949d24f4babf48c` for wave84.
+- GitHub combined-status checks on commits `4433f9ec...`, `792fae00...`, and `38fb0a89...` all returned **no CircleCI status entries** by 13:36 +02:00.
+- Public CircleCI project/pipeline lookup also yielded no indexable result.
+- Current evidence therefore indicates the repository-side CircleCI config is present, but a CircleCI pipeline trigger is not firing (or VCS status reporting is disabled). This cannot be solved purely by another repo commit if the CircleCI project has no active GitHub push trigger.
+- Current CircleCI docs confirm GitHub App projects require a configured trigger to listen for push events; once a pipeline is triggered, CircleCI normally reports status back to GitHub unless VCS status updates are disabled.
+- One-time external configuration if needed: CircleCI project → Project Settings → Triggers → add/enable a GitHub push trigger for this repository; ensure project environment contains `KAGGLE_USERNAME` and `KAGGLE_KEY`. After that, any push changing the trigger marker will start the long recovery job.
 
 ## Wave 83 — resolved code failure
 - Recovery proved v16.1 anchor-score recursion (`maximum recursion depth exceeded`).
@@ -47,7 +52,7 @@ A sprite is strict DONE only after individual production, semantic correctness, 
 `tools/sprites/kaggle_building_family_factory_v16.py`, recursion-safe scorer preserved through `V15_ANCHOR_SCORE`.
 - Shape-first T0, six anchors, silhouette filtering and conservative source-locked T1→T6.
 - Positive wording tightened for family 10, family 13 and T6 roof form.
-- Wave84 remains the first intended valid semantic experiment once its actual Kaggle outputs/logs are recovered.
+- Wave84 remains the first intended valid semantic experiment once actual Kaggle outputs/logs are recovered.
 
 ## Character lane
 `tools/sprites/kaggle_character_sheet_factory_v1.py`, commit `4a48168166d47cbe47afc870aa8a8b65480e2b0b`.
@@ -69,20 +74,13 @@ FX factory commit `f22f4769aaef97a6ef19933c1a699461de6c00b9`:
 ## Run 82 baseline
 Run `34145936891`, artifact `10030821750`: 28 technical exports, 28 semantic rejects due cranes/site contamination.
 
-## Workflow reliability
-- GitHub Actions main collector polls 135 minutes, then stops to avoid losing evidence to the hard runner ceiling.
-- `.github/workflows/kaggle-recover-existing-run.yml` remains available as a short recovery fallback.
-- For long Kaggle jobs after GitHub collector exhaustion, prefer the CircleCI recovery lane now that `.circleci/config.yml` exists.
-- CircleCI artifact storage is used for recovered evidence; do not mark sprites DONE merely because artifacts were collected.
-
 ## Immediate next actions
-1. Check whether CircleCI has posted a status/check for trigger commit `792fae00548a5d69846e81f4c949d24f4babf48c`.
-2. If CircleCI preflight fails for missing `KAGGLE_USERNAME`/`KAGGLE_KEY`, preserve that exact blocker; those variables must exist in the connected CircleCI project/context because GitHub secrets are not automatically shared with CircleCI.
-3. When CircleCI recovery completes, inspect recovered `branch-search-report.json`, generated-targets, QA/contact sheets, candidates and kernel log.
-4. Verify startup `building-family-flux-v16.2-shape-first-recursion-safe`, ensure silhouette scoring runs without recursion, and measure complete-family semantic acceptance versus run82's 0/4.
-5. Reject cranes/gantries/booms, broad site cards, people, vehicles, text, detached props, civic/monument drift, identity drift or fake tier progression.
-6. Promote only complete genuinely valid families; then runtime refs + manifest/progress reconciliation + green Android CI before strict increment.
-7. Continue buildings → statics → characters → FX until **235 / 235 strict DONE**.
+1. Prefer CircleCI for Kaggle jobs/recovery that can exceed the GitHub collector window once its GitHub push trigger is confirmed active.
+2. As soon as wave84 outputs are retrievable, inspect branch-search report, generated targets, QA/contact sheets, all candidates and kernel log.
+3. Verify startup `building-family-flux-v16.2-shape-first-recursion-safe`, ensure silhouette scoring runs without recursion, and measure complete-family semantic acceptance versus run82's 0/4.
+4. Reject cranes/gantries/booms, broad site cards, people, vehicles, text, detached props, civic/monument drift, identity drift or fake tier progression.
+5. Promote only complete genuinely valid families; then runtime refs + manifest/progress reconciliation + green Android CI before strict increment.
+6. Continue buildings → statics → characters → FX until **235 / 235 strict DONE**.
 
 ## Operating principle
-Generate the right asset first. Prefer evidence from existing runtime code over assumed formats. Use CircleCI for long-running Kaggle recovery after GitHub Actions reaches its collection ceiling, without ever launching a competing kernel.
+Generate the right asset first. Prefer CircleCI for genuinely long orchestration once its VCS trigger is active; do not misclassify an orchestration timeout as a generator-quality failure.
