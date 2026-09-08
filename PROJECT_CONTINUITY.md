@@ -15,35 +15,33 @@ Bring **Zero → Empire** to full production completion. Immediate art objective
 ## Strict completion gate
 A sprite is strict DONE only after individual production, semantic correctness, technical/alpha validation, final runtime commit/reference, actual runtime visibility, manifest/progress reconciliation and green Android CI. Candidate count is never DONE count.
 
-## Current trusted state — 2026-09-08 09:46 +02:00
+## Current trusted state — 2026-09-08
 - Strict ledger remains **112 / 235 DONE**.
 - Run 80 semantic delta +0; run 81 +0; run 82 +0; run 83 +0.
 
 ## Wave 83 — resolved: code failure, not semantic result
 - Trigger commit `153ab7be267a8a1c8169b0374bac86a411795af0`.
 - Original Actions run `34189278981` timed out its 135-minute collector while Kaggle was still running.
-- Non-destructive recovery run `34200649578` completed successfully and recovered artifact `10045663129` (`kaggle-recovered-sprite-batch`).
-- Recovery found Kaggle final state `ERROR` and retrieved `branch-search-report.json` plus full kernel log.
-- Root cause is definitive: v16.1 reintroduced anchor-score recursion. Log repeatedly reports `KAGGLE_ANCHOR_REJECTED=... reason=maximum recursion depth exceeded` after successfully rendering T0 anchors.
-- Final kernel counters: `anchors=48`, `branches=0`, `KAGGLE_BUILDING_SUCCESS=0`, `KAGGLE_BUILDING_REJECTED=56`, `KAGGLE_FRESH_CANDIDATES=0`.
-- Therefore wave83 provides **no valid semantic experiment** for shape-first quality: source images were rendered but scoring crashed before branch selection/evolution/export.
+- Recovery run `34200649578` completed successfully and recovered artifact `10045663129`.
+- Recovered evidence contains `branch-search-report.json` and the full Kaggle kernel log.
+- Definitive root cause: v16.1 anchor-score recursion. Recovered log repeatedly reports `maximum recursion depth exceeded` after T0 renders.
+- Final counters: 48 anchor attempts, 0 branches, 0 context attempts, 0 successful families, 0 fresh candidates.
+- Therefore run83 is not a valid semantic-quality test of shape-first generation; no family reached actual branch evolution/export.
 - No candidate promoted; strict delta +0.
 
 ## Building generator v16.2 — recursion-safe shape-first
 File `tools/sprites/kaggle_building_family_factory_v16.py`.
 - Fixed in commit `e69329d7fc97dbb02a003adbcd6a12e69c040f08`.
-- Startup marker now `KAGGLE_STARTUP=building-family-flux-v16.2-shape-first-recursion-safe`.
-- Critical fix: preserve `V15_ANCHOR_SCORE=v15.anchor_score` before override and call that preserved scorer inside `v16_anchor_score`; never call the overridden `v15.anchor_score` recursively.
-- Also tightened positive wording before the next empirical run:
-  - family 10 `assembly cradle` -> `enclosed circular assembly chamber`;
-  - family 13 `reactor petals` -> `four compact attached reactor housings`;
-  - T6 `luminous roof crown` -> `compact enclosed luminous roof reactor cap`.
+- Startup marker `KAGGLE_STARTUP=building-family-flux-v16.2-shape-first-recursion-safe`.
+- Preserves `V15_ANCHOR_SCORE=v15.anchor_score` before override and calls that immutable scorer from `v16_anchor_score`.
+- Positive wording also tightened: enclosed circular assembly chamber, compact attached reactor housings, compact enclosed luminous roof reactor cap.
 - Shape-first T0, six anchors, silhouette filtering and conservative source-locked T1→T6 remain active.
 
-## Wave 84 — launched
+## Wave 84 — ACTIVE
 - Trigger commit `c51bb50d9e05e0498068b900844845a53585523e`.
-- GitHub Actions run `34200990117`, run number 84.
-- Initial status: `queued`.
+- GitHub Actions run `34200990117`, job `101979474170`, run number 84.
+- Latest check: `in_progress` at `Wait for Kaggle`.
+- Checkout, credentials, dependency install, Kaggle authentication, kernel preparation and push/start are all green.
 - Requested 56 tiers with `building-family-flux-v16.2-shape-first-recursion-safe`.
 - This is the first valid intended empirical test of the shape-first architecture after the recursion repair.
 - Do not launch a redundant building wave while run84 is queued/running.
