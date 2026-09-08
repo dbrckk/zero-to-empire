@@ -15,7 +15,7 @@ Bring **Zero → Empire** to full production completion. Immediate art objective
 ## Strict completion gate
 A sprite is strict DONE only after individual production, semantic correctness, technical/alpha validation, final runtime commit/reference, actual runtime visibility, manifest/progress reconciliation and green Android CI. Candidate count is never DONE count.
 
-## Current trusted state — 2026-09-08 14:38 +02:00
+## Current trusted state — 2026-09-08 14:53 +02:00
 - Strict ledger remains **112 / 235 DONE**.
 - Runs 80, 81, 82, 83 and 84 all have strict delta +0.
 
@@ -54,9 +54,10 @@ File `tools/sprites/kaggle_building_family_factory_v16.py`.
 - User authorized with `Go`.
 - Trigger commit `fc21ec0e2faaec18ed1a0cc09e112aafa79a88c4`.
 - GitHub Actions run `34224023209`, job `102053645197`, run number 85.
-- Latest check at 14:38 +02:00: `in_progress` at `Wait for Kaggle`.
+- Latest check at 14:53 +02:00: still `in_progress` at `Wait for Kaggle`.
 - Setup, checkout, credentials, dependencies, Kaggle auth, kernel preparation and push/start are all green.
 - Requested 56 tiers using `building-family-flux-v16.3-isolated-static-source`.
+- Job-log fetch while active returned GitHub `BlobNotFound` 404; as with prior long-running jobs, this is not evidence of Kaggle failure.
 - Objective: eliminate floor pads, cast-shadow cards, detached props and baked smoke/flame/steam at the source while preserving run84 crane reduction.
 - Do not launch a redundant building wave while run85 is active.
 
@@ -64,8 +65,8 @@ File `tools/sprites/kaggle_building_family_factory_v16.py`.
 - User requested CircleCI for long Kaggle monitoring because GitHub collector windows are too short.
 - `.circleci/config.yml` monitors an existing Kaggle kernel up to 4.5 hours without `kaggle kernels push`.
 - CircleCI recovery trigger updated for wave85 in commit `7f45179142e94fd241edd49712d896a5fb65c742` with `source_run=34224023209`.
-- Latest GitHub commit-status check still reports `total_count=0`; no CircleCI status is being propagated yet.
-- Therefore the repo-side CircleCI lane is armed but still not empirically firing/reporting.
+- Latest GitHub combined-status check still reports no CircleCI statuses.
+- Therefore the repo-side CircleCI lane is armed but still not empirically firing/reporting through GitHub.
 - If CircleCI starts, prefer it for long monitoring/recovery of run85. If not, do not relaunch Kaggle merely because the GitHub collector expires; preserve evidence with the non-destructive recovery workflow.
 
 ## Character lane
@@ -87,8 +88,9 @@ Run `34145936891`, artifact `10030821750`: 28 technical exports, 28 semantic rej
 2. If CircleCI status appears, prefer it for long monitoring/recovery of run85.
 3. If run85 completes, retrieve all candidates/reports/logs and perform full semantic review, with special attention to floor pads/cast shadows/loose props/baked FX.
 4. Compare complete-family semantic acceptance against run84's 0/3 complete exported families.
-5. Promote only complete genuinely valid families, then runtime refs + manifest/progress reconciliation + green Android CI before strict increment.
-6. Continue buildings → statics → characters → FX until **235 / 235 strict DONE**.
+5. If the GitHub collector times out while Kaggle is still RUNNING, trigger non-destructive recovery for run85 and do not replace the kernel.
+6. Promote only complete genuinely valid families, then runtime refs + manifest/progress reconciliation + green Android CI before strict increment.
+7. Continue buildings → statics → characters → FX until **235 / 235 strict DONE**.
 
 ## Operating principle
 Generate the right asset first. QA should confirm quality rather than reject whole batches. Optimize semantic acceptance rate × validated sprites/GPU-hour, preserve long-run evidence, and never inflate strict DONE.
