@@ -10,6 +10,8 @@ on:
   push:
     paths:
       - 'ops/sprite-wave-trigger.txt'
+      - 'kaggle/github_mass_factory.py'
+      - '.github/workflows/kaggle-mass-sprite-factory.yml'
   schedule:
     - cron: '*/10 * * * *'
 
@@ -44,16 +46,18 @@ jobs:
           set -euo pipefail
           kaggle --version
           kaggle kernels list --mine --page-size 1 >/tmp/kaggle-auth-check.txt
-          python - <<'PY'
-          from PIL import Image
-          print('Pillow OK', Image.__version__)
-          PY
           echo 'Kaggle authentication OK'
-      - name: Prepare Kaggle kernel
+      - name: Prepare self-contained Kaggle kernel
         shell: bash
         run: |
+          set -euo pipefail
           rm -rf /tmp/zte-kaggle; mkdir -p /tmp/zte-kaggle
           cp kaggle/github_mass_factory.py /tmp/zte-kaggle/
+          tar -czf /tmp/zte-kaggle/repo_bundle.tar.gz \
+            docs/art/FINAL_AAA_SPRITE_MANIFEST.md \
+            tools/sprites \
+            app/src/main/res/drawable-nodpi \
+            art/incoming/final-sprites
           sed "s/__KAGGLE_USERNAME__/${KAGGLE_USERNAME}/g" kaggle/kernel-metadata.template.json > /tmp/zte-kaggle/kernel-metadata.json
           python - "$SPRITE_COUNT" <<'PY'
           import re,sys
@@ -64,6 +68,7 @@ jobs:
           if n != 1: raise SystemExit('Failed to inject SPRITE_COUNT into Kaggle kernel')
           p.write_text(s)
           PY
+          ls -lh /tmp/zte-kaggle/repo_bundle.tar.gz
       - name: Push and start Kaggle GPU run
         run: kaggle kernels push -p /tmp/zte-kaggle
       - name: Wait for Kaggle
@@ -103,12 +108,8 @@ jobs:
           p=pathlib.Path('/tmp/kaggle-output/output/github-qa-report.json')
           d=json.loads(p.read_text())
           rows=d if isinstance(d,list) else d.get('assets',d.get('sprites',d.get('results',[])))
-          total=len(rows)
-          failed=sum(1 for r in rows if str(r.get('status','PASS')).upper() not in ('PASS','OK','VALID'))
           expected=len(list(pathlib.Path('/tmp/kaggle-output/output/candidates').glob('*_final.png')))
-          print(f'QA_REPORT_TOTAL={total} QA_REPORT_FAILED={failed} QA_EXPECTED={expected}')
-          if total != expected:
-            raise SystemExit('QA report does not cover every candidate')
+          if len(rows) != expected: raise SystemExit('QA report does not cover every candidate')
           PY
       - name: Upload exhaustive QA evidence
         if: always()
@@ -129,5 +130,5 @@ jobs:
           if-no-files-found: ignore
           retention-days: 90
 
-# Automatic fallback lane: every 10 minutes while production remains incomplete.
-# Concurrency prevents overlapping Kaggle factory runs; generated candidates still require QA and strict promotion gates.
+# Self-contained Kaggle lane: GitHub source is bundled before submission, so Kaggle does not need github.com DNS.
+# Automatic retry every 10 minutes; concurrency prevents overlapping GPU runs.
