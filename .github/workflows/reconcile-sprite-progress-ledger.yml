@@ -5,6 +5,7 @@ on:
     paths:
       - '.github/workflows/reconcile-sprite-progress-ledger.yml'
       - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
+      - 'PROJECT_CONTINUITY.md'
   workflow_dispatch:
 
 permissions:
@@ -29,8 +30,9 @@ jobs:
           from collections import Counter
           from pathlib import Path
 
-          p = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          text = p.read_text(encoding='utf-8')
+          manifest = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
+          continuity = Path('PROJECT_CONTINUITY.md')
+          text = manifest.read_text(encoding='utf-8')
           row = re.compile(r'^\|\s*([^|]+?)\s*\|.*\|\s*(TODO|RUNTIME|DONE)\s*\|\s*$', re.M)
           rows = [(m.group(1).strip(), m.group(2)) for m in row.finditer(text)]
           if len(rows) != 235:
@@ -70,25 +72,33 @@ jobs:
               f'- Terrain/infrastructure: **{done["Terrain/infrastructure"]} / 14**',
               f'- FX: **{done["FX"]} / 18**',
           ])
-          pattern = re.compile(r'## Progress ledger\n.*?(?=\n### Next production target)', re.S)
-          if not pattern.search(text):
+          ledger_pattern = re.compile(r'## Progress ledger\n.*?(?=\n### Next production target)', re.S)
+          if not ledger_pattern.search(text):
               raise SystemExit('Progress ledger block not found')
-          updated = pattern.sub(ledger + '\n', text, count=1)
-          p.write_text(updated, encoding='utf-8')
+          updated = ledger_pattern.sub(ledger + '\n', text, count=1)
+          manifest.write_text(updated, encoding='utf-8')
+
+          continuity_text = continuity.read_text(encoding='utf-8')
+          trusted_pattern = re.compile(r'(?m)^- \*\*\d+ / 235 strict DONE\*\* according to the canonical row statuses used by project continuity; no strict increment was made in this intervention\.$')
+          trusted_line = f'- **{total_done} / 235 strict DONE** according to the canonical row statuses used by project continuity; no strict increment was made in this intervention.'
+          if not trusted_pattern.search(continuity_text):
+              raise SystemExit('Trusted strict-DONE line not found in PROJECT_CONTINUITY.md')
+          continuity.write_text(trusted_pattern.sub(trusted_line, continuity_text, count=1), encoding='utf-8')
+
           print(f'CANONICAL_ROWS={len(rows)} STRICT_DONE={total_done}')
           print('DONE_BY_FAMILY=' + repr(dict(done)))
           PY
-      - name: Commit ledger if stale
+      - name: Commit reconciled aggregate state if stale
         shell: bash
         run: |
-          if git diff --quiet -- docs/art/FINAL_AAA_SPRITE_MANIFEST.md; then
-            echo 'Progress ledger already canonical.'
+          if git diff --quiet -- docs/art/FINAL_AAA_SPRITE_MANIFEST.md PROJECT_CONTINUITY.md; then
+            echo 'Manifest ledger and continuity strict count already canonical.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md
-          git commit -m 'docs: reconcile strict sprite progress ledger'
+          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md PROJECT_CONTINUITY.md
+          git commit -m 'docs: reconcile strict sprite aggregate state'
           git push
 
 # This workflow never changes per-asset status. It only derives aggregate progress from canonical rows.
