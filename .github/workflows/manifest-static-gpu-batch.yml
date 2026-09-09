@@ -10,14 +10,14 @@ on:
       - 'tools/sprites/hf_static_manifest_factory.py'
       - 'tools/sprites/build_sprite_contact_sheet.py'
   schedule:
-    - cron: '17 * * * *'
+    - cron: '*/5 * * * *'
 
 permissions:
   contents: read
 
 concurrency:
   group: manifest-static-gpu-batch
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   generate:
@@ -42,7 +42,7 @@ jobs:
         run: python3 -m pip install --disable-pip-version-check Pillow==11.3.0
 
       - id: batch
-        name: Generate one third of 36 hourly attempts
+        name: Generate one third of 36 pending attempts
         shell: bash
         env:
           SHARD: ${{ matrix.shard }}
@@ -135,7 +135,7 @@ jobs:
           shopt -s nullglob
           files=(/tmp/generated-candidates/*_final.png)
           if (( ${#files[@]} == 0 )); then
-            echo 'No generated candidates survived this hourly batch.'
+            echo 'No generated candidates survived this batch.'
             echo 'has_files=false' >> "$GITHUB_OUTPUT"
             exit 0
           fi
@@ -150,7 +150,7 @@ jobs:
         if: steps.collect.outputs.has_files == 'true'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: candidate-static-hourly-batch
+          name: candidate-static-batch
           path: |
             /tmp/generated-candidates/*_final.png
             /tmp/batch-contact-sheet.png
