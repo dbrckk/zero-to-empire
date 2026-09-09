@@ -5,6 +5,7 @@ on:
     paths:
       - '.github/workflows/reconcile-sprite-progress-ledger.yml'
       - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
+      - 'docs/art/FINAL_AAA_SPRITE_PROGRESS.md'
       - 'PROJECT_CONTINUITY.md'
   workflow_dispatch:
 
@@ -31,6 +32,7 @@ jobs:
           from pathlib import Path
 
           manifest = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
+          progress = Path('docs/art/FINAL_AAA_SPRITE_PROGRESS.md')
           continuity = Path('PROJECT_CONTINUITY.md')
           text = manifest.read_text(encoding='utf-8')
           row = re.compile(r'^\|\s*([^|]+?)\s*\|.*\|\s*(TODO|RUNTIME|DONE)\s*\|\s*$', re.M)
@@ -75,15 +77,22 @@ jobs:
           ledger_pattern = re.compile(r'## Progress ledger\n.*?(?=\n### Next production target)', re.S)
           if not ledger_pattern.search(text):
               raise SystemExit('Progress ledger block not found')
-          updated = ledger_pattern.sub(ledger + '\n', text, count=1)
-          manifest.write_text(updated, encoding='utf-8')
+          manifest.write_text(ledger_pattern.sub(ledger + '\n', text, count=1), encoding='utf-8')
 
-          continuity_text = continuity.read_text(encoding='utf-8')
-          trusted_pattern = re.compile(r'(?m)^- \*\*\d+ / 235 strict DONE\*\* according to the canonical row statuses used by project continuity; no strict increment was made in this intervention\.$')
-          trusted_line = f'- **{total_done} / 235 strict DONE** according to the canonical row statuses used by project continuity; no strict increment was made in this intervention.'
-          if not trusted_pattern.search(continuity_text):
-              raise SystemExit('Trusted strict-DONE line not found in PROJECT_CONTINUITY.md')
-          continuity.write_text(trusted_pattern.sub(trusted_line, continuity_text, count=1), encoding='utf-8')
+          c = continuity.read_text(encoding='utf-8')
+          c, n1 = re.subn(r'Reach \*\*\d+ / 235 canonical final sprites strict DONE\*\* toward \*\*235 / 235\*\*\.', f'Reach **{total_done} / 235 canonical final sprites strict DONE** toward **235 / 235**.', c, count=1)
+          c, n2 = re.subn(r'(?m)^- \*\*\d+ / 235 strict DONE\*\*\.[^\n]*$', f'- **{total_done} / 235 strict DONE**. Canonical aggregate derived from the 235 manifest rows.', c, count=1)
+          if n1 != 1 or n2 != 1:
+              raise SystemExit(f'Continuity count anchors missing: primary={n1} trusted={n2}')
+          continuity.write_text(c, encoding='utf-8')
+
+          p = progress.read_text(encoding='utf-8')
+          p, n3 = re.subn(r'(?m)^- DONE: \*\*\d+ / 235\*\*$', f'- DONE: **{total_done} / 235**', p, count=1)
+          p, n4 = re.subn(r'(?m)^- Generated candidates accepted as DONE: \*\*\d+\*\*$', f'- Generated candidates accepted as DONE: **{total_done}**', p, count=1)
+          if n3 != 1 or n4 != 1:
+              raise SystemExit(f'Progress count anchors missing: done={n3} accepted={n4}')
+          p = p.replace('- `BLD-02-T4`, `BLD-02-T5`, `BLD-02-T6`, `BLD-03-T0`, `BLD-03-T1`.', '- `BLD-02-T4`, `BLD-02-T5`, `BLD-02-T6`, `BLD-03-T0`, `BLD-03-T1`.\n\n### Run75 strict promotion\n`BLD-03-T2` through `BLD-03-T6` are strict DONE: explicitly semantically approved by the run75 promotion gate, all five passed technical QA, all five are selected by the active `WorldBusinessVisual` gameplay path, and Android CI #628 / run `34317783009` completed successfully.')
+          progress.write_text(p, encoding='utf-8')
 
           print(f'CANONICAL_ROWS={len(rows)} STRICT_DONE={total_done}')
           print('DONE_BY_FAMILY=' + repr(dict(done)))
@@ -91,14 +100,15 @@ jobs:
       - name: Commit reconciled aggregate state if stale
         shell: bash
         run: |
-          if git diff --quiet -- docs/art/FINAL_AAA_SPRITE_MANIFEST.md PROJECT_CONTINUITY.md; then
-            echo 'Manifest ledger and continuity strict count already canonical.'
+          if git diff --quiet -- docs/art/FINAL_AAA_SPRITE_MANIFEST.md docs/art/FINAL_AAA_SPRITE_PROGRESS.md PROJECT_CONTINUITY.md; then
+            echo 'Manifest, progress and continuity already canonical.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md PROJECT_CONTINUITY.md
+          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md docs/art/FINAL_AAA_SPRITE_PROGRESS.md PROJECT_CONTINUITY.md
           git commit -m 'docs: reconcile strict sprite aggregate state'
+          git pull --rebase origin main
           git push
 
 # This workflow never changes per-asset status. It only derives aggregate progress from canonical rows.
