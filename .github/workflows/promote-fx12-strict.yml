@@ -1,0 +1,43 @@
+name: Promote proven FX-12 strict DONE
+
+on:
+  push:
+    paths:
+      - '.github/workflows/promote-fx12-strict.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Promote only FX-12 after strict evidence audit
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
+          s = p.read_text(encoding='utf-8')
+          old = '| FX-12 | drone thruster | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_12_final.webp` | RUNTIME |'
+          new = old[:-10] + 'DONE |'
+          if s.count(old) != 1:
+              raise SystemExit(f'Expected one FX-12 RUNTIME row, found {s.count(old)}')
+          p.write_text(s.replace(old, new, 1), encoding='utf-8')
+          PY
+          test -f app/src/main/res/drawable-nodpi/zte_fx_12_final.webp
+          grep -q 'R.drawable.zte_fx_12_final' app/src/main/java/com/zerotoempire/game/DroneThruster.kt
+          grep -q 'businessId == 9 && tier >= 4.*DroneThruster' app/src/main/java/com/zerotoempire/game/WorldBusinessVisual.kt
+      - name: Commit strict promotion
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md
+          git commit -m 'art: promote FX-12 to strict DONE'
+          git pull --rebase origin main
+          git push
