@@ -10,11 +10,16 @@ on:
   push:
     paths:
       - 'ops/sprite-wave-trigger.txt'
+  schedule:
+    - cron: '*/10 * * * *'
+
 permissions:
   contents: read
+
 concurrency:
   group: kaggle-mass-sprite-factory
   cancel-in-progress: false
+
 jobs:
   kaggle:
     runs-on: ubuntu-latest
@@ -67,9 +72,6 @@ jobs:
         run: |
           set -u
           slug="${KAGGLE_USERNAME}/zero-to-empire-sprite-factory"; final_status='UNKNOWN'
-          # 135 minutes is intentionally below the 180-minute GitHub job ceiling.
-          # This leaves enough time to download partial outputs/logs and retain evidence
-          # instead of having the runner killed while still polling Kaggle.
           for i in $(seq 1 135); do
             status="$(kaggle kernels status "$slug" 2>&1 || true)"; echo "$status"
             if echo "$status" | grep -qi 'complete'; then final_status='COMPLETE'; break; fi
@@ -100,10 +102,7 @@ jobs:
           import json, pathlib
           p=pathlib.Path('/tmp/kaggle-output/output/github-qa-report.json')
           d=json.loads(p.read_text())
-          if isinstance(d,list):
-            rows=d
-          else:
-            rows=d.get('assets',d.get('sprites',d.get('results',[])))
+          rows=d if isinstance(d,list) else d.get('assets',d.get('sprites',d.get('results',[])))
           total=len(rows)
           failed=sum(1 for r in rows if str(r.get('status','PASS')).upper() not in ('PASS','OK','VALID'))
           expected=len(list(pathlib.Path('/tmp/kaggle-output/output/candidates').glob('*_final.png')))
@@ -130,6 +129,5 @@ jobs:
           if-no-files-found: ignore
           retention-days: 90
 
-# User-approved mass production only: manual workflow_dispatch or assistant pulse file after explicit Go/Continue.
-# High-throughput policy: target 56 manifest tiers by default; generation lanes perform live QA where supported.
-# Character and FX lanes preserve per-sheet QA evidence. Strict DONE still requires semantic review, runtime integration and green Android CI.
+# Automatic fallback lane: every 10 minutes while production remains incomplete.
+# Concurrency prevents overlapping Kaggle factory runs; generated candidates still require QA and strict promotion gates.
