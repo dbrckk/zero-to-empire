@@ -8,6 +8,7 @@ on:
       - '.github/workflows/manifest-static-gpu-batch.yml'
       - 'tools/sprites/manifest_batch_planner.py'
       - 'tools/sprites/hf_static_manifest_factory.py'
+      - 'tools/sprites/multi_provider_static_manifest_factory.py'
       - 'tools/sprites/build_sprite_contact_sheet.py'
   schedule:
     - cron: '*/5 * * * *'
@@ -33,6 +34,9 @@ jobs:
     env:
       HF_TOKEN: ${{ secrets.HF_TOKEN }}
       HF_SPACE_URL: https://mcp-tools-z-image-turbo.hf.space
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_IMAGE_MODEL: '@cf/black-forest-labs/flux-1-schnell'
     steps:
       - name: Checkout
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -69,7 +73,7 @@ jobs:
             attempts=$((attempts + 1))
             echo "=== shard $SHARD attempt $attempts: $asset_id ==="
             set +e
-            SPRITE_TARGET="$asset_id" python3 tools/sprites/hf_static_manifest_factory.py
+            SPRITE_TARGET="$asset_id" python3 tools/sprites/multi_provider_static_manifest_factory.py
             rc=$?
             set -e
             candidate="art/incoming/final-sprites/${stem}.png"
@@ -79,8 +83,8 @@ jobs:
               continue
             fi
             if [ "$rc" -eq 75 ]; then
-              failures+=("$asset_id:quota")
-              echo 'Free GPU quota exhausted on this shard; preserving successes.'
+              failures+=("$asset_id:providers-unavailable")
+              echo 'All configured image providers unavailable; preserving successes.'
               break
             fi
             failures+=("$asset_id:rejected")
@@ -176,7 +180,6 @@ jobs:
         shell: bash
         run: |
           python3 - <<'PY' >> "$GITHUB_OUTPUT"
-          import re
           from pathlib import Path
           text = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md').read_text(encoding='utf-8')
           rows = []
