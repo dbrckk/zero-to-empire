@@ -3,7 +3,7 @@
 > Persistent handoff file. Read before work and update at every material intervention. Never rely on chat history alone.
 
 ## Primary objective
-Reach **124 / 235 canonical final sprites strict DONE** toward **235 / 235**. Strict DONE requires semantic + technical validation, final runtime reference/visibility, manifest/progress reconciliation and green Android CI. Never promote from file presence alone.
+Reach **125 / 235 canonical final sprites strict DONE** toward **235 / 235**. Strict DONE requires semantic + technical validation, final runtime reference/visibility, manifest/progress reconciliation and green Android CI. Never promote from file presence alone.
 
 ## Trusted state — 2026-09-09 10:33 +02:00
 - Fully reconciled aggregate: **124 / 235 strict DONE**; Buildings 23/98, Power Core 7/7, Characters 0/24, Vehicles 18/18, Machines 28/28, Props 28/28, Terrain/infrastructure 13/14, FX 7/18.
