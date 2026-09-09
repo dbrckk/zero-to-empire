@@ -3,10 +3,10 @@
 > Persistent handoff file. Read before work and update at every material intervention. Never rely on chat history alone.
 
 ## Primary objective
-Reach **118 / 235 canonical final sprites strict DONE** toward **235 / 235**. Strict DONE requires semantic + technical validation, final runtime reference/visibility, manifest/progress reconciliation and green Android CI. Never promote from file presence alone.
+Reach **119 / 235 canonical final sprites strict DONE** toward **235 / 235**. Strict DONE requires semantic + technical validation, final runtime reference/visibility, manifest/progress reconciliation and green Android CI. Never promote from file presence alone.
 
 ## Trusted state — 2026-09-09 08:31 +02:00
-- **118 / 235 strict DONE** pending aggregate reconciliation of the newly promoted FX-10 manifest row.
+- **119 / 235 strict DONE**. Canonical aggregate derived from the 235 manifest rows.
 - Last fully reconciled family totals: Buildings 23/98, Power Core 7/7, Characters 0/24, Vehicles 18/18, Machines 28/28, Props 28/28, Terrain/infrastructure 13/14, FX 1/18.
 - Reconcile Sprite Progress Ledger run `34319160277` completed **SUCCESS** for the 118-state.
 
