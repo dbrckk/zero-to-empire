@@ -63,6 +63,9 @@ The following previously validated assets remain outside the DONE count until th
 
 ### Run75 strict promotion
 `BLD-03-T2` through `BLD-03-T6` are strict DONE: explicitly semantically approved by the run75 promotion gate, all five passed technical QA, all five are selected by the active `WorldBusinessVisual` gameplay path, and Android CI #628 / run `34317783009` completed successfully.
+
+### Run75 strict promotion
+`BLD-03-T2` through `BLD-03-T6` are strict DONE: explicitly semantically approved by the run75 promotion gate, all five passed technical QA, all five are selected by the active `WorldBusinessVisual` gameplay path, and Android CI #628 / run `34317783009` completed successfully.
 - `FX-08` through `FX-17`.
 
 ## Rejected candidates
