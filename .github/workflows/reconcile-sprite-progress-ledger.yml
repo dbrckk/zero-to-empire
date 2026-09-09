@@ -1,0 +1,94 @@
+name: Reconcile Sprite Progress Ledger
+
+on:
+  push:
+    paths:
+      - '.github/workflows/reconcile-sprite-progress-ledger.yml'
+      - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: reconcile-sprite-progress-ledger
+  cancel-in-progress: false
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Recompute ledger from canonical rows
+        shell: bash
+        run: |
+          python - <<'PY'
+          import re
+          from collections import Counter
+          from pathlib import Path
+
+          p = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
+          text = p.read_text(encoding='utf-8')
+          row = re.compile(r'^\|\s*([^|]+?)\s*\|.*\|\s*(TODO|RUNTIME|DONE)\s*\|\s*$', re.M)
+          rows = [(m.group(1).strip(), m.group(2)) for m in row.finditer(text)]
+          if len(rows) != 235:
+              raise SystemExit(f'Expected exactly 235 canonical rows, found {len(rows)}')
+          if len({asset for asset, _ in rows}) != 235:
+              raise SystemExit('Canonical manifest contains duplicate asset IDs')
+
+          def family(asset):
+              if asset.startswith('BLD-'): return 'Buildings'
+              if asset.startswith('CORE-'): return 'Power Core'
+              if asset.startswith('CHR-'): return 'Characters'
+              if asset.startswith('VEH-'): return 'Vehicles'
+              if asset.startswith('MCH-'): return 'Machines'
+              if asset.startswith('PRP-'): return 'Props'
+              if asset.startswith(('TER-', 'INF-')): return 'Terrain/infrastructure'
+              if asset.startswith('FX-'): return 'FX'
+              raise SystemExit(f'Unknown canonical asset family: {asset}')
+
+          planned = Counter(family(a) for a, _ in rows)
+          done = Counter(family(a) for a, s in rows if s == 'DONE')
+          total_done = sum(done.values())
+          expected = {
+              'Buildings': 98, 'Power Core': 7, 'Characters': 24, 'Vehicles': 18,
+              'Machines': 28, 'Props': 28, 'Terrain/infrastructure': 14, 'FX': 18,
+          }
+          if dict(planned) != expected:
+              raise SystemExit(f'Canonical family totals changed unexpectedly: {dict(planned)}')
+
+          ledger = '## Progress ledger\n' + '\n'.join([
+              f'- **DONE: {total_done} / 235**',
+              f'- Buildings: **{done["Buildings"]} / 98**',
+              f'- Power Core: **{done["Power Core"]} / 7**',
+              f'- Characters: **{done["Characters"]} / 24**',
+              f'- Vehicles: **{done["Vehicles"]} / 18**',
+              f'- Machines: **{done["Machines"]} / 28**',
+              f'- Props: **{done["Props"]} / 28**',
+              f'- Terrain/infrastructure: **{done["Terrain/infrastructure"]} / 14**',
+              f'- FX: **{done["FX"]} / 18**',
+          ])
+          pattern = re.compile(r'## Progress ledger\n.*?(?=\n### Next production target)', re.S)
+          if not pattern.search(text):
+              raise SystemExit('Progress ledger block not found')
+          updated = pattern.sub(ledger + '\n', text, count=1)
+          p.write_text(updated, encoding='utf-8')
+          print(f'CANONICAL_ROWS={len(rows)} STRICT_DONE={total_done}')
+          print('DONE_BY_FAMILY=' + repr(dict(done)))
+          PY
+      - name: Commit ledger if stale
+        shell: bash
+        run: |
+          if git diff --quiet -- docs/art/FINAL_AAA_SPRITE_MANIFEST.md; then
+            echo 'Progress ledger already canonical.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md
+          git commit -m 'docs: reconcile strict sprite progress ledger'
+          git push
+
+# This workflow never changes per-asset status. It only derives aggregate progress from canonical rows.
