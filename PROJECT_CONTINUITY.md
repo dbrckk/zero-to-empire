@@ -5,19 +5,19 @@
 ## Primary objective
 Reach **119 / 235 canonical final sprites strict DONE** toward **235 / 235**. Strict DONE requires semantic + technical validation, final runtime reference/visibility, manifest/progress reconciliation and green Android CI. Never promote from file presence alone.
 
-## Trusted state — 2026-09-09 08:31 +02:00
+## Trusted state — 2026-09-09 08:33 +02:00
 - **119 / 235 strict DONE**. Canonical aggregate derived from the 235 manifest rows.
-- Last fully reconciled family totals: Buildings 23/98, Power Core 7/7, Characters 0/24, Vehicles 18/18, Machines 28/28, Props 28/28, Terrain/infrastructure 13/14, FX 1/18.
-- Reconcile Sprite Progress Ledger run `34319160277` completed **SUCCESS** for the 118-state.
+- Canonical family totals: Buildings 23/98, Power Core 7/7, Characters 0/24, Vehicles 18/18, Machines 28/28, Props 28/28, Terrain/infrastructure 13/14, FX 2/18.
+- Reconcile Sprite Progress Ledger run `34319385940` completed **SUCCESS** and synchronized manifest/progress/continuity to the 119-state.
 
-## Latest intervention — FX-10 strict evidence audit and canonical promotion
+## Latest intervention — FX-10 strict DONE
 - Audited `FX-10 — electric arc` provenance from commit `2a0684b154f6e0243322ddf35ecb0e9157cf5e41` (`art: add final electric arc FX`).
 - The production ledger in that commit records the accepted atlas as **8 x 128x128 RGBA, 4x2**, **93.4% transparent**, every cell populated and isolated. An earlier electric-arc attempt was explicitly rejected for excessive bloom and over-wide branches that damaged 128px readability.
 - `ElectricArc.kt` decodes `R.drawable.zte_fx_10_final`, uses exactly 8 frames / 4 columns / 128px cells at 125ms per frame, and freezes frame 0 under reduced motion.
 - Active gameplay visibility is explicit: `WorldBusinessVisual` invokes `ElectricArc` for business 7 at tier >= 4 in the active `AscendantCityEmpireWorld` route.
 - The FX-10 runtime file and active call site are unchanged in Android CI #628 / run `34317783009`, which completed **SUCCESS** and supplies the descendant green build/test/lint gate.
 - One-off promotion workflow `.github/workflows/promote-fx10-strict.yml`, commit `f31add95bf65ad59593cb4179a7b02f95d76f283`, completed **SUCCESS** as run `34319279960` and produced bot commit `e1fc13ceb3f43c02201d83b24ae7c372e3e0d5ed`, changing only FX-10 from `RUNTIME` to canonical `DONE`.
-- This continuity update triggers canonical reconciliation. Do not report 119 until the reconcile run succeeds.
+- Reconciliation run `34319385940` completed **SUCCESS`; official strict count increased **118 -> 119**, FX **1 -> 2 / 18**.
 
 ## Previous intervention — FX-09 strict DONE + reconciliation hardening
 - `FX-09 — income pickup sparkle` provenance commit `93e6ba0350da934a9e29e3848b1a0f61542989e5` records **8 x 128x128 RGBA, 4x2**, **93.9% transparent**, every cell populated/isolated after two rejected attempts.
@@ -54,12 +54,11 @@ Reach **119 / 235 canonical final sprites strict DONE** toward **235 / 235**. St
 - Building generator v16.4 remains committed at `fa41f56442a2e62227045b272676780c5a8f5ca8` and has not executed cleanly.
 
 ## Next actions
-1. Verify reconciliation triggered by this update; expected state if successful: **119 / 235**, FX **2 / 18**.
-2. Audit FX-11 next, then FX-12..17 individually; promote only complete strict-gate rows.
-3. Audit `BLD-02-T4..T6` and `BLD-03-T0..T1` semantic provenance; do not infer semantic acceptance from technical PASS alone.
-4. Audit FX-08 separately.
-5. Do not retry Kaggle until GPU + Internet are actually usable.
-6. Continue buildings -> statics -> characters -> FX until **235 / 235**.
+1. Audit FX-11 next, then FX-12..17 individually; promote only complete strict-gate rows.
+2. Audit `BLD-02-T4..T6` and `BLD-03-T0..T1` semantic provenance; do not infer semantic acceptance from technical PASS alone.
+3. Audit FX-08 separately.
+4. Do not retry Kaggle until GPU + Internet are actually usable.
+5. Continue buildings -> statics -> characters -> FX until **235 / 235**.
 
 ## Operating principle
 Generate/integrate the right asset first; QA confirms rather than inflates. Optimize validated semantic yield, preserve evidence, and never increase strict DONE without every gate.
