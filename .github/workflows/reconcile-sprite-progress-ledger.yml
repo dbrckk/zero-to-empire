@@ -81,7 +81,7 @@ jobs:
 
           c = continuity.read_text(encoding='utf-8')
           c, n1 = re.subn(r'Reach \*\*\d+ / 235 canonical final sprites strict DONE\*\* toward \*\*235 / 235\*\*\.', f'Reach **{total_done} / 235 canonical final sprites strict DONE** toward **235 / 235**.', c, count=1)
-          c, n2 = re.subn(r'(?m)^- \*\*\d+ / 235 strict DONE\*\*\.[^\n]*$', f'- **{total_done} / 235 strict DONE**. Canonical aggregate derived from the 235 manifest rows.', c, count=1)
+          c, n2 = re.subn(r'(?m)^- \*\*\d+ / 235 strict DONE\*\*[^\n]*$', f'- **{total_done} / 235 strict DONE**. Canonical aggregate derived from the 235 manifest rows.', c, count=1)
           if n1 != 1 or n2 != 1:
               raise SystemExit(f'Continuity count anchors missing: primary={n1} trusted={n2}')
           continuity.write_text(c, encoding='utf-8')
