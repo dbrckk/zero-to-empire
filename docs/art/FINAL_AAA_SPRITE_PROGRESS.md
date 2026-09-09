@@ -3,10 +3,10 @@
 Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains the canonical 235-item scope. Candidate art is never confused with DONE runtime assets.
 
 ## Official progress
-- DONE: **112 / 235**
+- DONE: **117 / 235**
 - ART VALIDATED: **127 / 235**
 - RUNTIME INTEGRATED: **127 / 235**
-- Generated candidates accepted as DONE: **112**
+- Generated candidates accepted as DONE: **117**
 - Rule: only runtime-integrated, individually clean/transparent, manifest-matching assets with green Android CI increment DONE.
 
 ## DONE baseline
@@ -48,6 +48,9 @@ The reviewed `PRP-05-A` replacement is referenced by `WorldTrafficArt.kt` in the
 ## Existing ART/RUNTIME assets not yet promoted to DONE
 The following previously validated assets remain outside the DONE count until their own strict reconciliation is complete:
 - `BLD-02-T4`, `BLD-02-T5`, `BLD-02-T6`, `BLD-03-T0`, `BLD-03-T1`.
+
+### Run75 strict promotion
+`BLD-03-T2` through `BLD-03-T6` are strict DONE: explicitly semantically approved by the run75 promotion gate, all five passed technical QA, all five are selected by the active `WorldBusinessVisual` gameplay path, and Android CI #628 / run `34317783009` completed successfully.
 - `FX-08` through `FX-17`.
 
 ## Rejected candidates
