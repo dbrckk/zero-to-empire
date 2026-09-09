@@ -37,10 +37,8 @@ jobs:
           text = manifest.read_text(encoding='utf-8')
           row = re.compile(r'^\|\s*([^|]+?)\s*\|.*\|\s*(TODO|RUNTIME|DONE)\s*\|\s*$', re.M)
           rows = [(m.group(1).strip(), m.group(2)) for m in row.finditer(text)]
-          if len(rows) != 235:
-              raise SystemExit(f'Expected exactly 235 canonical rows, found {len(rows)}')
-          if len({asset for asset, _ in rows}) != 235:
-              raise SystemExit('Canonical manifest contains duplicate asset IDs')
+          if len(rows) != 235 or len({a for a, _ in rows}) != 235:
+              raise SystemExit(f'Canonical manifest invalid: rows={len(rows)} unique={len({a for a, _ in rows})}')
 
           def family(asset):
               if asset.startswith('BLD-'): return 'Buildings'
@@ -56,10 +54,7 @@ jobs:
           planned = Counter(family(a) for a, _ in rows)
           done = Counter(family(a) for a, s in rows if s == 'DONE')
           total_done = sum(done.values())
-          expected = {
-              'Buildings': 98, 'Power Core': 7, 'Characters': 24, 'Vehicles': 18,
-              'Machines': 28, 'Props': 28, 'Terrain/infrastructure': 14, 'FX': 18,
-          }
+          expected = {'Buildings':98,'Power Core':7,'Characters':24,'Vehicles':18,'Machines':28,'Props':28,'Terrain/infrastructure':14,'FX':18}
           if dict(planned) != expected:
               raise SystemExit(f'Canonical family totals changed unexpectedly: {dict(planned)}')
 
@@ -75,27 +70,20 @@ jobs:
               f'- FX: **{done["FX"]} / 18**',
           ])
           ledger_pattern = re.compile(r'## Progress ledger\n.*?(?=\n### Next production target)', re.S)
-          if not ledger_pattern.search(text):
-              raise SystemExit('Progress ledger block not found')
+          if not ledger_pattern.search(text): raise SystemExit('Progress ledger block not found')
           manifest.write_text(ledger_pattern.sub(ledger + '\n', text, count=1), encoding='utf-8')
 
           c = continuity.read_text(encoding='utf-8')
           c, n1 = re.subn(r'Reach \*\*\d+ / 235 canonical final sprites strict DONE\*\* toward \*\*235 / 235\*\*\.', f'Reach **{total_done} / 235 canonical final sprites strict DONE** toward **235 / 235**.', c, count=1)
-          c, n2 = re.subn(r'(?m)^- \*\*\d+ / 235 strict DONE\*\*[^\n]*$', f'- **{total_done} / 235 strict DONE**. Canonical aggregate derived from the 235 manifest rows.', c, count=1)
-          if n1 != 1 or n2 != 1:
-              raise SystemExit(f'Continuity count anchors missing: primary={n1} trusted={n2}')
+          if n1 != 1: raise SystemExit(f'Continuity primary count anchor missing: {n1}')
           continuity.write_text(c, encoding='utf-8')
 
           p = progress.read_text(encoding='utf-8')
           p, n3 = re.subn(r'(?m)^- DONE: \*\*\d+ / 235\*\*$', f'- DONE: **{total_done} / 235**', p, count=1)
           p, n4 = re.subn(r'(?m)^- Generated candidates accepted as DONE: \*\*\d+\*\*$', f'- Generated candidates accepted as DONE: **{total_done}**', p, count=1)
-          if n3 != 1 or n4 != 1:
-              raise SystemExit(f'Progress count anchors missing: done={n3} accepted={n4}')
-          p = p.replace('- `BLD-02-T4`, `BLD-02-T5`, `BLD-02-T6`, `BLD-03-T0`, `BLD-03-T1`.', '- `BLD-02-T4`, `BLD-02-T5`, `BLD-02-T6`, `BLD-03-T0`, `BLD-03-T1`.\n\n### Run75 strict promotion\n`BLD-03-T2` through `BLD-03-T6` are strict DONE: explicitly semantically approved by the run75 promotion gate, all five passed technical QA, all five are selected by the active `WorldBusinessVisual` gameplay path, and Android CI #628 / run `34317783009` completed successfully.')
+          if n3 != 1 or n4 != 1: raise SystemExit(f'Progress anchors missing: done={n3} accepted={n4}')
           progress.write_text(p, encoding='utf-8')
-
-          print(f'CANONICAL_ROWS={len(rows)} STRICT_DONE={total_done}')
-          print('DONE_BY_FAMILY=' + repr(dict(done)))
+          print(f'CANONICAL_ROWS={len(rows)} STRICT_DONE={total_done} DONE_BY_FAMILY={dict(done)}')
           PY
       - name: Commit reconciled aggregate state if stale
         shell: bash
@@ -111,4 +99,4 @@ jobs:
           git pull --rebase origin main
           git push
 
-# This workflow never changes per-asset status. It only derives aggregate progress from canonical rows.
+# This workflow never changes per-asset status. It derives aggregate state from the canonical 235 rows.
