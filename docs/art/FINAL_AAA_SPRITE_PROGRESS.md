@@ -3,10 +3,10 @@
 Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains the canonical 235-item scope. Candidate art is never confused with DONE runtime assets.
 
 ## Official progress
-- DONE: **123 / 235**
+- DONE: **124 / 235**
 - ART VALIDATED: **127 / 235**
 - RUNTIME INTEGRATED: **127 / 235**
-- Generated candidates accepted as DONE: **123**
+- Generated candidates accepted as DONE: **124**
 - Rule: only runtime-integrated, individually clean/transparent, manifest-matching assets with green Android CI increment DONE.
 
 ## DONE baseline
