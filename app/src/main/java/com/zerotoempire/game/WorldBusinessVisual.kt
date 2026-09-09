@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.Dp
 
 /**
  * Progressive runtime bridge from authored production assets to the live world.
+ * Canonical BLD-02/03 tiers are resolved through canonicalBusinessRasterRes so the
+ * same tested T0..T6 contract drives both resource binding and visible gameplay.
  * Missing raster tiers deliberately fall back to BusinessArtIcon until their optimized
  * runtime resource is actually committed. Never reference a not-yet-packaged drawable.
  */
@@ -30,7 +32,7 @@ internal fun WorldBusinessVisual(
     modifier: Modifier = Modifier
 ) {
     val tier = WorldSpriteRegistry.tierForLevel(level)
-    val drawable = when (businessId to tier) {
+    val drawable = canonicalBusinessRasterRes(businessId, level) ?: when (businessId to tier) {
         0 to 0 -> R.drawable.zte_business_00_t0_final
         0 to 1 -> R.drawable.zte_business_00_t1_final
         0 to 2 -> R.drawable.zte_business_00_t2_final
@@ -45,15 +47,6 @@ internal fun WorldBusinessVisual(
         1 to 4 -> R.drawable.zte_business_01_t4_final
         1 to 5 -> R.drawable.zte_business_01_t5_final
         1 to 6 -> R.drawable.zte_business_01_t6_final
-        2 to 0 -> R.drawable.zte_business_02_t0_final
-        2 to 1 -> R.drawable.zte_business_02_t1_final
-        2 to 2 -> R.drawable.zte_business_02_t2_final
-        2 to 3 -> R.drawable.zte_business_02_t3_final
-        2 to 4 -> R.drawable.zte_business_02_t4_final
-        2 to 5 -> R.drawable.zte_business_02_t5_final
-        2 to 6 -> R.drawable.zte_business_02_t6_final
-        3 to 0 -> R.drawable.zte_business_03_t0_final
-        3 to 1 -> R.drawable.zte_business_03_t1_final
         else -> null
     }
 
