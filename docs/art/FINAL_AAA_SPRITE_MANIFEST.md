@@ -291,7 +291,7 @@ If a new runtime sprite is later required, it must be added here first and the d
 | FX-09 | income pickup sparkle | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_09_final.webp` | DONE |
 | FX-10 | electric arc | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_10_final.webp` | DONE |
 | FX-11 | hologram scan sweep | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_11_final.webp` |DONE |
-| FX-12 | drone thruster | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_12_final.webp` | RUNTIME |
+| FX-12 | drone thruster | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_12_final.webp` |DONE |
 | FX-13 | phase distortion | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_13_final.webp` | RUNTIME |
 | FX-14 | orbital ion trail | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_14_final.webp` | RUNTIME |
 | FX-15 | stellar flare | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_15_final.webp` | RUNTIME |
