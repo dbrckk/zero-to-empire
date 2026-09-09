@@ -11,6 +11,7 @@ on:
     paths:
       - 'ops/sprite-wave-trigger.txt'
       - 'kaggle/github_mass_factory.py'
+      - 'kaggle/kernel-metadata.template.json'
       - '.github/workflows/kaggle-mass-sprite-factory.yml'
   schedule:
     - cron: '*/10 * * * *'
@@ -47,17 +48,37 @@ jobs:
           kaggle --version
           kaggle kernels list --mine --page-size 1 >/tmp/kaggle-auth-check.txt
           echo 'Kaggle authentication OK'
-      - name: Prepare self-contained Kaggle kernel
+      - name: Build and publish sprite bundle dataset
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/zte-dataset; mkdir -p /tmp/zte-dataset
+          tar -czf /tmp/zte-dataset/repo_bundle.tar.gz \
+            docs/art/FINAL_AAA_SPRITE_MANIFEST.md \
+            tools/sprites \
+            app/src/main/res/drawable-nodpi \
+            art/incoming/final-sprites
+          cat > /tmp/zte-dataset/dataset-metadata.json <<JSON
+          {
+            "title": "Zero to Empire Sprite Bundle",
+            "id": "${KAGGLE_USERNAME}/zero-to-empire-sprite-bundle",
+            "licenses": [{"name": "CC0-1.0"}],
+            "isPrivate": true
+          }
+          JSON
+          DATASET="${KAGGLE_USERNAME}/zero-to-empire-sprite-bundle"
+          if kaggle datasets status "$DATASET" >/dev/null 2>&1; then
+            kaggle datasets version -p /tmp/zte-dataset -m "sprite bundle ${GITHUB_SHA}" --dir-mode zip
+          else
+            kaggle datasets create -p /tmp/zte-dataset --dir-mode zip
+          fi
+          ls -lh /tmp/zte-dataset/repo_bundle.tar.gz
+      - name: Prepare Kaggle kernel
         shell: bash
         run: |
           set -euo pipefail
           rm -rf /tmp/zte-kaggle; mkdir -p /tmp/zte-kaggle
           cp kaggle/github_mass_factory.py /tmp/zte-kaggle/
-          tar -czf /tmp/zte-kaggle/repo_bundle.tar.gz \
-            docs/art/FINAL_AAA_SPRITE_MANIFEST.md \
-            tools/sprites \
-            app/src/main/res/drawable-nodpi \
-            art/incoming/final-sprites
           sed "s/__KAGGLE_USERNAME__/${KAGGLE_USERNAME}/g" kaggle/kernel-metadata.template.json > /tmp/zte-kaggle/kernel-metadata.json
           python - "$SPRITE_COUNT" <<'PY'
           import re,sys
@@ -68,7 +89,6 @@ jobs:
           if n != 1: raise SystemExit('Failed to inject SPRITE_COUNT into Kaggle kernel')
           p.write_text(s)
           PY
-          ls -lh /tmp/zte-kaggle/repo_bundle.tar.gz
       - name: Push and start Kaggle GPU run
         run: kaggle kernels push -p /tmp/zte-kaggle
       - name: Wait for Kaggle
@@ -130,5 +150,5 @@ jobs:
           if-no-files-found: ignore
           retention-days: 90
 
-# Self-contained Kaggle lane: GitHub source is bundled before submission, so Kaggle does not need github.com DNS.
+# Kaggle receives the source bundle through a private Kaggle Dataset, avoiding github.com DNS dependency inside the GPU runtime.
 # Automatic retry every 10 minutes; concurrency prevents overlapping GPU runs.
