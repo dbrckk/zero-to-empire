@@ -14,6 +14,7 @@ on:
 
 permissions:
   contents: read
+  actions: write
 
 concurrency:
   group: manifest-static-gpu-batch
@@ -157,3 +158,56 @@ jobs:
             /tmp/batch-qa-report.json
           if-no-files-found: error
           retention-days: 30
+
+  requeue:
+    name: Requeue until 235 / 235
+    needs: [generate, inspect]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: main
+
+      - id: progress
+        name: Check canonical strict progress
+        shell: bash
+        run: |
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import re
+          from pathlib import Path
+          text = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md').read_text(encoding='utf-8')
+          rows = []
+          for line in text.splitlines():
+              if not line.startswith('|') or '`app/src/main/res/' not in line:
+                  continue
+              parts = [p.strip() for p in line.strip('|').split('|')]
+              if len(parts) < 5:
+                  continue
+              rows.append(parts[-1].upper())
+          done = sum(status == 'DONE' for status in rows)
+          total = len(rows)
+          print(f'done={done}')
+          print(f'total={total}')
+          print(f'incomplete={str(done < total).lower()}')
+          PY
+
+      - name: Wait 5 minutes before next check
+        if: steps.progress.outputs.incomplete == 'true'
+        run: sleep 300
+
+      - name: Dispatch next production cycle
+        if: steps.progress.outputs.incomplete == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api \
+            --method POST \
+            repos/${{ github.repository }}/actions/workflows/manifest-static-gpu-batch.yml/dispatches \
+            -f ref=main
+
+      - name: Stop at complete manifest
+        if: steps.progress.outputs.incomplete != 'true'
+        run: echo "Canonical sprite manifest complete; no requeue needed."
