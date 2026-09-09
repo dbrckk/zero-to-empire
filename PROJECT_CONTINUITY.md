@@ -5,60 +5,45 @@
 ## Primary objective
 Reach **119 / 235 canonical final sprites strict DONE** toward **235 / 235**. Strict DONE requires semantic + technical validation, final runtime reference/visibility, manifest/progress reconciliation and green Android CI. Never promote from file presence alone.
 
-## Trusted state — 2026-09-09 08:33 +02:00
-- **119 / 235 strict DONE**. Canonical aggregate derived from the 235 manifest rows.
-- Canonical family totals: Buildings 23/98, Power Core 7/7, Characters 0/24, Vehicles 18/18, Machines 28/28, Props 28/28, Terrain/infrastructure 13/14, FX 2/18.
-- Reconcile Sprite Progress Ledger run `34319385940` completed **SUCCESS** and synchronized manifest/progress/continuity to the 119-state.
+## Trusted state — 2026-09-09 08:54 +02:00
+- Last fully reconciled aggregate: **119 / 235 strict DONE**; Buildings 23/98, Power Core 7/7, Characters 0/24, Vehicles 18/18, Machines 28/28, Props 28/28, Terrain/infrastructure 13/14, FX 2/18.
+- Reconcile Sprite Progress Ledger run `34319385940` completed SUCCESS for that 119-state.
 
-## Latest intervention — FX-10 strict DONE
-- Audited `FX-10 — electric arc` provenance from commit `2a0684b154f6e0243322ddf35ecb0e9157cf5e41` (`art: add final electric arc FX`).
-- The production ledger in that commit records the accepted atlas as **8 x 128x128 RGBA, 4x2**, **93.4% transparent**, every cell populated and isolated. An earlier electric-arc attempt was explicitly rejected for excessive bloom and over-wide branches that damaged 128px readability.
-- `ElectricArc.kt` decodes `R.drawable.zte_fx_10_final`, uses exactly 8 frames / 4 columns / 128px cells at 125ms per frame, and freezes frame 0 under reduced motion.
-- Active gameplay visibility is explicit: `WorldBusinessVisual` invokes `ElectricArc` for business 7 at tier >= 4 in the active `AscendantCityEmpireWorld` route.
-- The FX-10 runtime file and active call site are unchanged in Android CI #628 / run `34317783009`, which completed **SUCCESS** and supplies the descendant green build/test/lint gate.
-- One-off promotion workflow `.github/workflows/promote-fx10-strict.yml`, commit `f31add95bf65ad59593cb4179a7b02f95d76f283`, completed **SUCCESS** as run `34319279960` and produced bot commit `e1fc13ceb3f43c02201d83b24ae7c372e3e0d5ed`, changing only FX-10 from `RUNTIME` to canonical `DONE`.
-- Reconciliation run `34319385940` completed **SUCCESS`; official strict count increased **118 -> 119**, FX **1 -> 2 / 18**.
+## Latest intervention — FX-11 strict evidence audit and canonical promotion
+- Audited `FX-11 — hologram scan sweep` provenance from commit `e254506bb6f86537dffbd6970dc85df8d01434d6` (`art: add final hologram scan FX`).
+- Production ledger records the accepted atlas as **8 x 128x128 RGBA, 4x2**, **65.1% transparent**, every cell populated and isolated. An earlier FX-11 attempt was explicitly rejected because ambient cyan bloom connected multiple cells and eliminated transparent gutters.
+- `HologramScanSweep.kt` decodes `R.drawable.zte_fx_11_final`, uses exactly 8 frames / 4 columns / 128px cells at 125ms per frame, and freezes frame 0 under reduced motion.
+- Active gameplay visibility is explicit: `WorldBusinessVisual` invokes `HologramScanSweep` for business 8 at tier >= 4 in the active city rendering route.
+- FX-11 runtime/call-site code predates and is unchanged in Android CI #628 / run `34317783009`, which completed SUCCESS and supplies the descendant green build/test/lint gate.
+- One-off promotion workflow `.github/workflows/promote-fx11-strict.yml`, commit `3daa956faf030e95d7c16b4a274bbb219bcf614b`, completed SUCCESS as run `34321018016`; it verified the exact manifest row, runtime resource and active call site before committing only FX-11 from RUNTIME to DONE.
+- This continuity update intentionally triggers canonical reconciliation. Do not report **120 / 235** until reconciliation succeeds.
 
-## Previous intervention — FX-09 strict DONE + reconciliation hardening
-- `FX-09 — income pickup sparkle` provenance commit `93e6ba0350da934a9e29e3848b1a0f61542989e5` records **8 x 128x128 RGBA, 4x2**, **93.9% transparent**, every cell populated/isolated after two rejected attempts.
-- `IncomePickupSparkle.kt` actively renders `R.drawable.zte_fx_09_final` on business 6 tier >= 4 with reduced-motion freeze.
-- Promotion run `34318904226` succeeded; bot commit `6224b995643685c2be910c832779e9c3ad88fc3b` marked FX-09 DONE.
-- Reconcile run `34319160277` succeeded after regex-hardening commit `896f880778b152fd814c3de0d4b1aa13d487d905`; official state became **118 / 235**, FX **1 / 18**.
-
-## Previous completed intervention — BLD-03 T2–T6 strict DONE
-- Android CI #628 / run `34317783009` completed **SUCCESS** for commit `cc06340730e7a81316dfa6b5bdd36dbec8b0ff3f`, proving the active canonical BLD-02/03 renderer compiles/tests/lints successfully.
-- Active runtime chain: `PremiumZeroToEmpireApp` -> `AscendantCityEmpireWorld` -> `AscendantHeroLot` / `AscendantWorldLot` -> `WorldBusinessVisual` -> `canonicalBusinessRasterRes` -> canonical Android WebP -> Compose `Image`.
-- Run75 explicitly semantically approved `BLD-03-T2` through `BLD-03-T6`; integration commit `e14b6897e32a557736a4e9c06d55b925864993d1` preserves 5/5 technical QA automatic-pass evidence.
-- Manifest repair/promotion run `34318174752` and reconciliation run `34318256472` completed SUCCESS, establishing 117 before FX promotions.
+## Previous strict promotions
+- FX-10 electric arc: provenance `2a0684b154f6e0243322ddf35ecb0e9157cf5e41`; 8x128 RGBA 4x2, 93.4% transparent, isolated cells; active business 7 tier>=4; promotion run `34319279960`; reconciliation `34319385940`; strict state became 119.
+- FX-09 income pickup sparkle: provenance `93e6ba0350da934a9e29e3848b1a0f61542989e5`; 8x128 RGBA 4x2, 93.9% transparent, isolated cells; active business 6 tier>=4; promotion run `34318904226`.
+- BLD-03 T2-T6: run75 semantically approved, 5/5 technical QA pass, active canonical renderer, Android CI #628 green; manifest promotion/reconciliation established 117 before FX promotions.
 
 ## Remaining reconciliation lane
-- `BLD-02-T4`, `BLD-02-T5`, `BLD-02-T6`, `BLD-03-T0`, `BLD-03-T1` remain `RUNTIME`. Runtime visibility is proven, but do not promote until their own semantic + technical evidence is explicitly established.
-- Continue auditing `FX-11` through `FX-17` individually; no blanket promotion.
-- `FX-08` requires its own audit.
+- `BLD-02-T4`, `BLD-02-T5`, `BLD-02-T6`, `BLD-03-T0`, `BLD-03-T1` remain RUNTIME. Runtime visibility is proven, but do not promote until their own semantic + technical evidence is explicitly established.
+- Continue auditing FX-12 through FX-17 individually; no blanket promotion.
+- FX-08 requires its own audit.
 
 ## Canonical business progression contract
-- `CanonicalBusinessTier.kt`, commit `f85c4ea5474d0e7e779e0341bf995ab74ef1c113`: `<10 T0`, `10..24 T1`, `25..49 T2`, `50..99 T3`, `100..249 T4`, `250..499 T5`, `>=500 T6`.
-- Gameplay milestones `0,10,25,50,100,250,500,1000` map to `T0,T1,T2,T3,T4,T5,T6,T6`.
-- `CanonicalBusinessRaster.kt`, commit `e5cf2cd73c8184586fe18ba47cf3399625fc4ad4`, compile-time binds BLD-02/03 resources.
-- Mapping/boundary tests are green on Android CI #627 / run `34313368691`.
-
-## Android CI baseline
-- Root-wrapper failure from #622 was repaired by commit `de1f0df61f2793aa6dcdb4ebcca3aec7ad6f4e09`, which provisions Gradle 8.13 explicitly.
-- #623 passed APK build, unit tests, lint and artifact upload.
-- #628 passed with unchanged FX-09/FX-10 runtime resources and active call sites.
+- `CanonicalBusinessTier.kt`: `<10 T0`, `10..24 T1`, `25..49 T2`, `50..99 T3`, `100..249 T4`, `250..499 T5`, `>=500 T6`.
+- `CanonicalBusinessRaster.kt` compile-time binds BLD-02/03 resources; mapping/boundary tests are green on Android CI #627 / run `34313368691`.
 
 ## GPU state / blockers
 - Kaggle new-account credentials are valid and kernel push works, but wave88 failed because runtime DNS/network access could not resolve `github.com`. Do not retrigger unchanged until notebook UI proves both usable GPU and Internet.
-- In the user-visible Kaggle notebook UI, GPU T4 x2 / P100 were still grayed at last check; phone verification was requested but not yet confirmed.
 - Lightning AI Studio exists and CLI access works, but `lit-t4-1` was unavailable in that cluster. No Lightning GPU execution has occurred.
 - Building generator v16.4 remains committed at `fa41f56442a2e62227045b272676780c5a8f5ca8` and has not executed cleanly.
 
 ## Next actions
-1. Audit FX-11 next, then FX-12..17 individually; promote only complete strict-gate rows.
-2. Audit `BLD-02-T4..T6` and `BLD-03-T0..T1` semantic provenance; do not infer semantic acceptance from technical PASS alone.
-3. Audit FX-08 separately.
-4. Do not retry Kaggle until GPU + Internet are actually usable.
-5. Continue buildings -> statics -> characters -> FX until **235 / 235**.
+1. Reconcile FX-11 promotion; only then accept 120/235.
+2. Audit FX-12, then FX-13..17 individually; promote only complete strict-gate rows.
+3. Audit BLD-02-T4..T6 and BLD-03-T0..T1 semantic provenance.
+4. Audit FX-08 separately.
+5. Do not retry Kaggle until GPU + Internet are actually usable.
+6. Continue until **235 / 235**.
 
 ## Operating principle
 Generate/integrate the right asset first; QA confirms rather than inflates. Optimize validated semantic yield, preserve evidence, and never increase strict DONE without every gate.
