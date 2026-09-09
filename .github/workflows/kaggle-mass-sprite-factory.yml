@@ -48,17 +48,32 @@ jobs:
           kaggle --version
           kaggle kernels list --mine --page-size 1 >/tmp/kaggle-auth-check.txt
           echo 'Kaggle authentication OK'
-      - name: Build and publish sprite bundle dataset
+      - name: Ensure ready sprite bundle dataset
         shell: bash
         run: |
           set -euo pipefail
+          DATASET="${KAGGLE_USERNAME}/zero-to-empire-sprite-bundle"
           rm -rf /tmp/zte-dataset; mkdir -p /tmp/zte-dataset
-          tar -czf /tmp/zte-dataset/repo_bundle.tar.gz \
-            docs/art/FINAL_AAA_SPRITE_MANIFEST.md \
-            tools/sprites \
-            app/src/main/res/drawable-nodpi \
-            art/incoming/final-sprites
-          cat > /tmp/zte-dataset/dataset-metadata.json <<JSON
+
+          # Do not create a new 114 MB version on every scheduled pulse. Reuse the
+          # current ready bundle whenever Kaggle already exposes it.
+          READY=0
+          if kaggle datasets status "$DATASET" >/dev/null 2>&1; then
+            if kaggle datasets files "$DATASET" --page-size 1000 > /tmp/kaggle-dataset-files.txt 2>/tmp/kaggle-dataset-files.err; then
+              if grep -q 'repo_bundle.tar.gz' /tmp/kaggle-dataset-files.txt; then
+                READY=1
+                echo 'KAGGLE_DATASET_REUSE=1'
+              fi
+            fi
+          fi
+
+          if [ "$READY" != 1 ]; then
+            tar -czf /tmp/zte-dataset/repo_bundle.tar.gz \
+              docs/art/FINAL_AAA_SPRITE_MANIFEST.md \
+              tools/sprites \
+              app/src/main/res/drawable-nodpi \
+              art/incoming/final-sprites
+            cat > /tmp/zte-dataset/dataset-metadata.json <<JSON
           {
             "title": "Zero to Empire Sprite Bundle",
             "id": "${KAGGLE_USERNAME}/zero-to-empire-sprite-bundle",
@@ -66,32 +81,30 @@ jobs:
             "isPrivate": true
           }
           JSON
-          DATASET="${KAGGLE_USERNAME}/zero-to-empire-sprite-bundle"
-          if kaggle datasets status "$DATASET" >/dev/null 2>&1; then
-            kaggle datasets version -p /tmp/zte-dataset -m "sprite bundle ${GITHUB_SHA}" --dir-mode zip
-          else
-            kaggle datasets create -p /tmp/zte-dataset --dir-mode zip
-          fi
-          ls -lh /tmp/zte-dataset/repo_bundle.tar.gz
-
-          # A newly created/versioned private dataset is not immediately resolvable as a
-          # kernel source. Wait until the exact payload is visible before pushing the GPU kernel.
-          READY=0
-          for i in $(seq 1 60); do
-            if kaggle datasets files "$DATASET" > /tmp/kaggle-dataset-files.txt 2>/tmp/kaggle-dataset-files.err; then
-              cat /tmp/kaggle-dataset-files.txt
-              if grep -q 'repo_bundle.tar.gz' /tmp/kaggle-dataset-files.txt; then
-                READY=1
-                echo 'KAGGLE_DATASET_READY=1'
-                break
-              fi
+            if kaggle datasets status "$DATASET" >/dev/null 2>&1; then
+              kaggle datasets version -p /tmp/zte-dataset -m "sprite bundle ${GITHUB_SHA}" --dir-mode zip
             else
-              cat /tmp/kaggle-dataset-files.err || true
+              kaggle datasets create -p /tmp/zte-dataset --dir-mode zip
             fi
-            echo "Waiting for Kaggle dataset propagation ($i/60)"
-            sleep 10
-          done
-          test "$READY" = 1 || { echo 'Kaggle dataset did not become readable within 10 minutes'; exit 75; }
+            ls -lh /tmp/zte-dataset/repo_bundle.tar.gz
+
+            # Version publication can take longer than the upload itself. Poll the
+            # complete file list, not only Kaggle's default first 20-file page.
+            for i in $(seq 1 180); do
+              STATUS="$(kaggle datasets status "$DATASET" --format json 2>/dev/null || true)"
+              echo "KAGGLE_DATASET_STATUS=${STATUS:-unknown}"
+              if kaggle datasets files "$DATASET" --page-size 1000 > /tmp/kaggle-dataset-files.txt 2>/tmp/kaggle-dataset-files.err; then
+                if grep -q 'repo_bundle.tar.gz' /tmp/kaggle-dataset-files.txt; then
+                  READY=1
+                  echo 'KAGGLE_DATASET_READY=1'
+                  break
+                fi
+              fi
+              echo "Waiting for Kaggle dataset publication ($i/180)"
+              sleep 10
+            done
+          fi
+          test "$READY" = 1 || { echo 'Kaggle dataset bundle not published within 30 minutes'; exit 75; }
       - name: Prepare Kaggle kernel
         shell: bash
         run: |
@@ -170,4 +183,4 @@ jobs:
           retention-days: 90
 
 # Kaggle receives the source bundle through a private Kaggle Dataset, avoiding github.com DNS dependency inside the GPU runtime.
-# Dataset propagation is gated before kernel submission; automatic retry remains every 10 minutes with non-overlapping GPU runs.
+# Ready datasets are reused; publication polling reads the complete file list before kernel submission.
