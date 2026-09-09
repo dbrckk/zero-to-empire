@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Kaggle high-throughput entrypoint for Zero -> Empire final sprite production."""
-import hashlib,json,os,re,shutil,subprocess,time
+import hashlib,json,os,re,shutil,subprocess,time,tarfile
 from pathlib import Path
 WORK=Path('/kaggle/working');REPO=Path('/tmp/zero-to-empire');OUT=WORK/'output';COUNT=int(os.getenv('SPRITE_COUNT','56'));SEED=int(os.getenv('SPRITE_SEED',str(int(time.time())%2_000_000_000)))
 ROW=re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$")
@@ -13,10 +13,16 @@ def ensure_gpu():
  try:cap=subprocess.check_output(['nvidia-smi','--query-gpu=compute_cap','--format=csv,noheader'],text=True).splitlines()[0].strip()
  except Exception as e:print('KAGGLE_GPU_CAPABILITY=unknown',e,flush=True);return
  print('KAGGLE_GPU_CAPABILITY='+cap,flush=True)
- if int(cap.split('.')[0])<7:subprocess.run(['python','-m','pip','install','--quiet','--upgrade','--force-reinstall','torch==2.5.1','torchvision==0.20.1','--index-url','https://download.pytorch.org/whl/cu121'],check=True)
 def ensure_flux():
  print('KAGGLE_ENGINE=yield-router-v12-positive-source-locked',flush=True)
- subprocess.run(['python','-m','pip','install','--quiet','--upgrade','bitsandbytes==0.48.1','diffusers==0.35.1','peft==0.17.1','protobuf==5.29.5','sentencepiece==0.2.1','transformers==4.56.1','accelerate>=1.2','safetensors','Pillow<12'],check=True)
+ required=['diffusers','transformers','accelerate','safetensors','torch','PIL']
+ missing=[]
+ for name in required:
+  try:__import__(name)
+  except Exception:missing.append(name)
+ if missing:
+  print('KAGGLE_MISSING_PACKAGES='+','.join(missing),flush=True)
+  subprocess.run(['python','-m','pip','install','--quiet','diffusers==0.35.1','transformers==4.56.1','accelerate>=1.2','safetensors','Pillow<12'],check=True)
 def runtime_exists(runtime): return (REPO/runtime).is_file()
 def backlog():
  c={'BLD':0,'STATIC':0,'CHR':0,'FX':0,'SKIPPED_RUNTIME':0}
@@ -31,8 +37,14 @@ def backlog():
   elif a.startswith('FX-'):c['FX']+=1
  return c
 WORK.mkdir(parents=True,exist_ok=True);shutil.rmtree(REPO,ignore_errors=True);shutil.rmtree(OUT,ignore_errors=True);OUT.mkdir(parents=True)
-subprocess.run(['git','clone','--depth','1','https://github.com/dbrckk/zero-to-empire.git',str(REPO)],check=True);os.chdir(REPO);ensure_gpu();ensure_flux()
-incoming=REPO/'art/incoming/final-sprites';before={p.name:digest(p) for p in incoming.glob('*_final.png') if p.is_file()};q=backlog();print('KAGGLE_BACKLOG='+json.dumps(q,separators=(',',':')),flush=True);print(f'KAGGLE_BATCH_SEED={SEED}',flush=True)
+bundles=[Path('/kaggle/src/repo_bundle.tar.gz'),Path('/kaggle/working/repo_bundle.tar.gz'),Path.cwd()/'repo_bundle.tar.gz']
+bundle=next((p for p in bundles if p.is_file()),None)
+if bundle is None:raise SystemExit('repo_bundle.tar.gz missing from Kaggle kernel payload')
+REPO.mkdir(parents=True,exist_ok=True)
+with tarfile.open(bundle,'r:gz') as t:t.extractall(REPO)
+print(f'KAGGLE_REPO_SOURCE=bundled:{bundle}',flush=True)
+os.chdir(REPO);ensure_gpu();ensure_flux()
+incoming=REPO/'art/incoming/final-sprites';incoming.mkdir(parents=True,exist_ok=True);before={p.name:digest(p) for p in incoming.glob('*_final.png') if p.is_file()};q=backlog();print('KAGGLE_BACKLOG='+json.dumps(q,separators=(',',':')),flush=True);print(f'KAGGLE_BATCH_SEED={SEED}',flush=True)
 if q['BLD']>=5:
  lane='BUILDING_FAMILIES';effective=max(7,min(COUNT,56));cmd=['python','-u','tools/sprites/kaggle_building_family_factory_v16.py','--count',str(effective),'--seed',str(SEED)]
 elif q['STATIC']:
