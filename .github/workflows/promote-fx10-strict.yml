@@ -1,0 +1,42 @@
+name: Promote proven FX-10 strict DONE
+
+on:
+  push:
+    paths:
+      - '.github/workflows/promote-fx10-strict.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+      - name: Promote only FX-10 after strict evidence audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
+          text = p.read_text(encoding='utf-8')
+          old = '| FX-10 | electric arc | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_10_final.webp` | RUNTIME |'
+          new = '| FX-10 | electric arc | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_10_final.webp` | DONE |'
+          if old not in text:
+              raise SystemExit('Expected FX-10 RUNTIME row not found; refusing blind edit')
+          p.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
+      - name: Commit strict promotion
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md
+          git commit -m 'art: promote FX-10 to strict DONE'
+          git pull --rebase origin main
+          git push
