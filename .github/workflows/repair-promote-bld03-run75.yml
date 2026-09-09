@@ -1,0 +1,47 @@
+name: Repair manifest and promote reviewed BLD-03 run75
+
+on:
+  push:
+    paths:
+      - '.github/workflows/repair-promote-bld03-run75.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Restore canonical manifest and promote proven run75 rows
+        shell: bash
+        run: |
+          set -euo pipefail
+          git show cc06340730e7a81316dfa6b5bdd36dbec8b0ff3f:docs/art/FINAL_AAA_SPRITE_MANIFEST.md > docs/art/FINAL_AAA_SPRITE_MANIFEST.md
+          for tier in 2 3 4 5 6; do
+            sed -i -E "/^\\| BLD-03-T${tier} \\|/ s/\\|RUNTIME \\|$/| DONE |/" docs/art/FINAL_AAA_SPRITE_MANIFEST.md
+          done
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
+          s=p.read_text()
+          for tier in range(2,7):
+              row=f'BLD-03-T{tier}'
+              line=next(x for x in s.splitlines() if x.startswith(f'| {row} |'))
+              assert line.endswith('| DONE |'), line
+          assert s.count('| DONE |') == 117, s.count('| DONE |')
+          p.write_text(s)
+          PY
+      - name: Commit strict promotion
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md
+          git commit -m 'art: promote BLD-03 T2-T6 to strict DONE'
+          git pull --rebase origin main
+          git push
