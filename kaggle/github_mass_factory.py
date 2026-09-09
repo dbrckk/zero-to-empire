@@ -15,8 +15,7 @@ def ensure_gpu():
  print('KAGGLE_GPU_CAPABILITY='+cap,flush=True)
 def ensure_flux():
  print('KAGGLE_ENGINE=yield-router-v12-positive-source-locked',flush=True)
- required=['diffusers','transformers','accelerate','safetensors','torch','PIL']
- missing=[]
+ required=['diffusers','transformers','accelerate','safetensors','torch','PIL'];missing=[]
  for name in required:
   try:__import__(name)
   except Exception:missing.append(name)
@@ -37,9 +36,12 @@ def backlog():
   elif a.startswith('FX-'):c['FX']+=1
  return c
 WORK.mkdir(parents=True,exist_ok=True);shutil.rmtree(REPO,ignore_errors=True);shutil.rmtree(OUT,ignore_errors=True);OUT.mkdir(parents=True)
-bundles=[Path('/kaggle/src/repo_bundle.tar.gz'),Path('/kaggle/working/repo_bundle.tar.gz'),Path.cwd()/'repo_bundle.tar.gz']
+bundles=[Path('/kaggle/input/zero-to-empire-sprite-bundle/repo_bundle.tar.gz'),Path('/kaggle/src/repo_bundle.tar.gz'),Path('/kaggle/working/repo_bundle.tar.gz'),Path.cwd()/'repo_bundle.tar.gz']
 bundle=next((p for p in bundles if p.is_file()),None)
-if bundle is None:raise SystemExit('repo_bundle.tar.gz missing from Kaggle kernel payload')
+if bundle is None:
+ found=list(Path('/kaggle/input').glob('**/repo_bundle.tar.gz')) if Path('/kaggle/input').exists() else []
+ bundle=found[0] if found else None
+if bundle is None:raise SystemExit('repo_bundle.tar.gz missing from Kaggle inputs')
 REPO.mkdir(parents=True,exist_ok=True)
 with tarfile.open(bundle,'r:gz') as t:t.extractall(REPO)
 print(f'KAGGLE_REPO_SOURCE=bundled:{bundle}',flush=True)
