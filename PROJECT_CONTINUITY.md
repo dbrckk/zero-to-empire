@@ -5,19 +5,20 @@
 ## Primary objective
 Reach **118 / 235 canonical final sprites strict DONE** toward **235 / 235**. Strict DONE requires semantic + technical validation, final runtime reference/visibility, manifest/progress reconciliation and green Android CI. Never promote from file presence alone.
 
-## Trusted state — 2026-09-09 08:26 +02:00
+## Trusted state — 2026-09-09 08:29 +02:00
 - **118 / 235 strict DONE**. Canonical aggregate derived from the 235 manifest rows.
-- Last fully reconciled family totals: Buildings 23/98, Power Core 7/7, Characters 0/24, Vehicles 18/18, Machines 28/28, Props 28/28, Terrain/infrastructure 13/14, FX 0/18.
-- Reconcile Sprite Progress Ledger run `34318256472` completed **SUCCESS** for the previous 117-state.
+- Canonical family totals: Buildings 23/98, Power Core 7/7, Characters 0/24, Vehicles 18/18, Machines 28/28, Props 28/28, Terrain/infrastructure 13/14, FX 1/18.
+- Reconcile Sprite Progress Ledger run `34319160277` completed **SUCCESS** after a robustness fix and synchronized manifest/progress/continuity to the 118-state.
 
-## Latest intervention — FX-09 strict evidence audit and canonical promotion
+## Latest intervention — FX-09 strict DONE + reconciliation hardening
 - Audited `FX-09 — income pickup sparkle` provenance from commit `93e6ba0350da934a9e29e3848b1a0f61542989e5`.
 - The production ledger in that commit records the accepted sheet as **8 x 128x128 RGBA, 4x2**, **93.9% transparent**, with every cell populated and isolated. Two earlier attempts were explicitly rejected for frame fragmentation and edge clipping before the accepted version was retained.
 - `IncomePickupSparkle.kt` decodes `R.drawable.zte_fx_09_final`, advances exactly 8 frames from a 4-column 128px atlas, and freezes to frame 0 under reduced motion.
 - Active gameplay visibility is explicit: `WorldBusinessVisual` invokes `IncomePickupSparkle` for business 6 at tier >= 4. This route is reached from the active `AscendantCityEmpireWorld` business rendering path.
 - The FX-09 runtime file and call site are unchanged in Android CI #628 / run `34317783009`, which completed **SUCCESS**; this supplies the descendant green Android build/test/lint gate for the audited asset.
 - One-off promotion workflow `.github/workflows/promote-fx09-strict.yml`, commit `88a1a0635c4f698fb4af65097bc1854eb923398e`, completed **SUCCESS** as run `34318904226` and produced bot commit `6224b995643685c2be910c832779e9c3ad88fc3b`, changing only FX-09 from `RUNTIME` to canonical `DONE`.
-- This continuity update intentionally triggers `Reconcile Sprite Progress Ledger`; do not claim the aggregate as 118 until that reconciliation succeeds and synchronizes manifest/progress/continuity.
+- The first post-promotion reconciliation run `34319072563` failed only because its continuity regex required a literal period immediately after the bold strict-count token; the canonical rows themselves were valid. Commit `896f880778b152fd814c3de0d4b1aa13d487d905` made that anchor suffix-tolerant.
+- Reconciliation run `34319160277` then completed **SUCCESS** and synchronized manifest/progress/continuity. Official strict count increased **117 -> 118**; FX is now **1 / 18**.
 
 ## Previous completed intervention — BLD-03 T2–T6 strict DONE
 - Android CI #628 / run `34317783009` completed **SUCCESS** for commit `cc06340730e7a81316dfa6b5bdd36dbec8b0ff3f`, proving the active canonical BLD-02/03 renderer compiles/tests/lints successfully.
@@ -49,9 +50,9 @@ Reach **118 / 235 canonical final sprites strict DONE** toward **235 / 235**. St
 - Building generator v16.4 remains committed at `fa41f56442a2e62227045b272676780c5a8f5ca8` and has not executed cleanly.
 
 ## Next actions
-1. Verify the reconciliation triggered by this continuity update; expected canonical aggregate if successful: **118 / 235**, FX **1 / 18**.
-2. Audit FX-10 next, then FX-11..17 individually; promote only complete strict-gate rows.
-3. Audit `BLD-02-T4..T6` and `BLD-03-T0..T1` semantic provenance; do not infer semantic acceptance from technical PASS alone.
+1. Audit FX-10 next, then FX-11..17 individually; promote only complete strict-gate rows.
+2. Audit `BLD-02-T4..T6` and `BLD-03-T0..T1` semantic provenance; do not infer semantic acceptance from technical PASS alone.
+3. Audit FX-08 separately.
 4. Do not retry Kaggle until GPU + Internet are actually usable.
 5. Continue buildings -> statics -> characters -> FX until **235 / 235**.
 
