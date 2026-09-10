@@ -54,20 +54,33 @@ jobs:
           set -euo pipefail
           DATASET="${KAGGLE_USERNAME}/zero-to-empire-sprite-bundle"
           rm -rf /tmp/zte-dataset; mkdir -p /tmp/zte-dataset
-
-          # Do not create a new 114 MB version on every scheduled pulse. Reuse the
-          # current ready bundle whenever Kaggle already exposes it.
           READY=0
-          if kaggle datasets status "$DATASET" >/dev/null 2>&1; then
-            if kaggle datasets files "$DATASET" --page-size 1000 > /tmp/kaggle-dataset-files.txt 2>/tmp/kaggle-dataset-files.err; then
-              if grep -q 'repo_bundle.tar.gz' /tmp/kaggle-dataset-files.txt; then
-                READY=1
-                echo 'KAGGLE_DATASET_REUSE=1'
-              fi
-            fi
+
+          # A 114 MB repo_bundle.tar.gz was successfully uploaded as dataset v4.
+          # Kaggle CLI 2.2.4 can report the dataset ready while `datasets files`
+          # returns no usable listing, so publication is gated by the authoritative
+          # dataset status/version instead of that flaky listing endpoint.
+          STATUS="$(kaggle datasets status "$DATASET" --format json 2>/dev/null || true)"
+          VERSION="$(python - "$STATUS" <<'PY'
+          import json,sys
+          try: print(int(json.loads(sys.argv[1]).get('current_version_number',0)))
+          except Exception: print(0)
+          PY
+          )"
+          STATE="$(python - "$STATUS" <<'PY'
+          import json,sys
+          try: print(str(json.loads(sys.argv[1]).get('status','')).lower())
+          except Exception: print('')
+          PY
+          )"
+          echo "KAGGLE_DATASET_STATE=${STATE:-unknown} VERSION=${VERSION:-0}"
+          if [ "$STATE" = ready ] && [ "${VERSION:-0}" -ge 4 ]; then
+            READY=1
+            echo 'KAGGLE_DATASET_REUSE=1'
           fi
 
           if [ "$READY" != 1 ]; then
+            PREV_VERSION="${VERSION:-0}"
             tar -czf /tmp/zte-dataset/repo_bundle.tar.gz \
               docs/art/FINAL_AAA_SPRITE_MANIFEST.md \
               tools/sprites \
@@ -88,23 +101,27 @@ jobs:
             fi
             ls -lh /tmp/zte-dataset/repo_bundle.tar.gz
 
-            # Version publication can take longer than the upload itself. Poll the
-            # complete file list, not only Kaggle's default first 20-file page.
+            # Wait until Kaggle reports a ready version newer than the one observed
+            # before upload. This avoids blocking on the unreliable file-list API.
             for i in $(seq 1 180); do
               STATUS="$(kaggle datasets status "$DATASET" --format json 2>/dev/null || true)"
-              echo "KAGGLE_DATASET_STATUS=${STATUS:-unknown}"
-              if kaggle datasets files "$DATASET" --page-size 1000 > /tmp/kaggle-dataset-files.txt 2>/tmp/kaggle-dataset-files.err; then
-                if grep -q 'repo_bundle.tar.gz' /tmp/kaggle-dataset-files.txt; then
-                  READY=1
-                  echo 'KAGGLE_DATASET_READY=1'
-                  break
-                fi
+              read -r STATE VERSION < <(python - "$STATUS" <<'PY'
+          import json,sys
+          try:
+              d=json.loads(sys.argv[1]); print(str(d.get('status','')).lower(), int(d.get('current_version_number',0)))
+          except Exception: print('',0)
+          PY
+              )
+              echo "KAGGLE_DATASET_STATE=${STATE:-unknown} VERSION=${VERSION:-0}"
+              if [ "$STATE" = ready ] && [ "${VERSION:-0}" -gt "$PREV_VERSION" ]; then
+                READY=1
+                echo 'KAGGLE_DATASET_READY=1'
+                break
               fi
-              echo "Waiting for Kaggle dataset publication ($i/180)"
               sleep 10
             done
           fi
-          test "$READY" = 1 || { echo 'Kaggle dataset bundle not published within 30 minutes'; exit 75; }
+          test "$READY" = 1 || { echo 'Kaggle dataset version not ready within 30 minutes'; exit 75; }
       - name: Prepare Kaggle kernel
         shell: bash
         run: |
@@ -183,4 +200,4 @@ jobs:
           retention-days: 90
 
 # Kaggle receives the source bundle through a private Kaggle Dataset, avoiding github.com DNS dependency inside the GPU runtime.
-# Ready datasets are reused; publication polling reads the complete file list before kernel submission.
+# Dataset readiness is gated by Kaggle status/version because its CLI file-list endpoint is unreliable for this bundle.
