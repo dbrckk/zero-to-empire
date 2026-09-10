@@ -1,0 +1,36 @@
+name: Lightning SSH Bootstrap
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/lightning-ssh-bootstrap.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  generate-keypair:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate dedicated SSH keypair
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p lightning-ssh
+          ssh-keygen -t ed25519 -C "zero-to-empire-lightning" -N "" -f lightning-ssh/id_ed25519
+          cp lightning-ssh/id_ed25519.pub lightning-ssh/LIGHTNING_PUBLIC_KEY.txt
+          chmod 600 lightning-ssh/id_ed25519
+          echo '===== COPY THIS PUBLIC KEY INTO LIGHTNING ====='
+          cat lightning-ssh/LIGHTNING_PUBLIC_KEY.txt
+          echo '==============================================='
+
+      - name: Upload keypair artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: lightning-ssh-keypair
+          path: |
+            lightning-ssh/id_ed25519
+            lightning-ssh/LIGHTNING_PUBLIC_KEY.txt
+          retention-days: 1
+          if-no-files-found: error
