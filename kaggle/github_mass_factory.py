@@ -35,14 +35,24 @@ def backlog():
   elif a.startswith('CHR-'):c['CHR']+=1
   elif a.startswith('FX-'):c['FX']+=1
  return c
-def resolve_bundle():
+def valid_tree(root):
+ return (root/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md').is_file() and (root/'tools/sprites').is_dir()
+def resolve_source():
  roots=[Path('/kaggle/input'),Path('/kaggle/src'),Path('/kaggle/working'),Path.cwd()]
+ # Kaggle datasets are normally mounted already unpacked. Prefer that native
+ # representation and avoid requiring the original tarball to survive ingestion.
+ for base in roots:
+  if not base.exists():continue
+  candidates=[base]
+  try:candidates.extend(p for p in base.iterdir() if p.is_dir())
+  except Exception:pass
+  for candidate in candidates:
+   if valid_tree(candidate):
+    print(f'KAGGLE_BUNDLE_TREE={candidate}',flush=True);return 'tree',candidate
  direct=[]
  for root in roots:
   if root.exists():direct.extend(root.glob('**/repo_bundle.tar.gz'))
- if direct:return direct[0]
- # Kaggle's --dir-mode zip can expose a dataset payload as a ZIP instead of the
- # original file. Inspect every mounted ZIP and extract only the expected bundle.
+ if direct:return 'tar',direct[0]
  scratch=WORK/'bundle-unwrapped';shutil.rmtree(scratch,ignore_errors=True);scratch.mkdir(parents=True,exist_ok=True)
  archives=[]
  for root in roots:
@@ -54,20 +64,22 @@ def resolve_bundle():
     if not hit:continue
     dst=scratch/'repo_bundle.tar.gz'
     with f.open(hit) as src,dst.open('wb') as out:shutil.copyfileobj(src,out)
-    print(f'KAGGLE_BUNDLE_UNWRAPPED={z}:{hit}',flush=True);return dst
+    print(f'KAGGLE_BUNDLE_UNWRAPPED={z}:{hit}',flush=True);return 'tar',dst
   except Exception as e:print(f'KAGGLE_ARCHIVE_SKIP={z}:{e}',flush=True)
- # Emit the mounted tree on failure so the next run is diagnosable without guessing.
  for root in roots:
   if root.exists():
    for p in list(root.glob('**/*'))[:200]:
     if p.is_file():print(f'KAGGLE_INPUT_FILE={p} bytes={p.stat().st_size}',flush=True)
- return None
+ return None,None
 WORK.mkdir(parents=True,exist_ok=True);shutil.rmtree(REPO,ignore_errors=True);shutil.rmtree(OUT,ignore_errors=True);OUT.mkdir(parents=True)
-bundle=resolve_bundle()
-if bundle is None:raise SystemExit('repo_bundle.tar.gz missing from Kaggle inputs')
-REPO.mkdir(parents=True,exist_ok=True)
-with tarfile.open(bundle,'r:gz') as t:t.extractall(REPO)
-print(f'KAGGLE_REPO_SOURCE=bundled:{bundle}',flush=True)
+source_kind,source=resolve_source()
+if source is None:raise SystemExit('sprite repository source missing from Kaggle inputs')
+if source_kind=='tree':
+ shutil.copytree(source,REPO,dirs_exist_ok=True)
+else:
+ REPO.mkdir(parents=True,exist_ok=True)
+ with tarfile.open(source,'r:gz') as t:t.extractall(REPO)
+print(f'KAGGLE_REPO_SOURCE={source_kind}:{source}',flush=True)
 os.chdir(REPO);ensure_gpu();ensure_flux()
 incoming=REPO/'art/incoming/final-sprites';incoming.mkdir(parents=True,exist_ok=True);before={p.name:digest(p) for p in incoming.glob('*_final.png') if p.is_file()};q=backlog();print('KAGGLE_BACKLOG='+json.dumps(q,separators=(',',':')),flush=True);print(f'KAGGLE_BATCH_SEED={SEED}',flush=True)
 if q['BLD']>=5:
