@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Kaggle high-throughput entrypoint for Zero -> Empire final sprite production."""
-import hashlib,json,os,re,shutil,subprocess,time,tarfile
+import hashlib,json,os,re,shutil,subprocess,time,tarfile,zipfile
 from pathlib import Path
 WORK=Path('/kaggle/working');REPO=Path('/tmp/zero-to-empire');OUT=WORK/'output';COUNT=int(os.getenv('SPRITE_COUNT','56'));SEED=int(os.getenv('SPRITE_SEED',str(int(time.time())%2_000_000_000)))
 ROW=re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$")
@@ -35,12 +35,35 @@ def backlog():
   elif a.startswith('CHR-'):c['CHR']+=1
   elif a.startswith('FX-'):c['FX']+=1
  return c
+def resolve_bundle():
+ roots=[Path('/kaggle/input'),Path('/kaggle/src'),Path('/kaggle/working'),Path.cwd()]
+ direct=[]
+ for root in roots:
+  if root.exists():direct.extend(root.glob('**/repo_bundle.tar.gz'))
+ if direct:return direct[0]
+ # Kaggle's --dir-mode zip can expose a dataset payload as a ZIP instead of the
+ # original file. Inspect every mounted ZIP and extract only the expected bundle.
+ scratch=WORK/'bundle-unwrapped';shutil.rmtree(scratch,ignore_errors=True);scratch.mkdir(parents=True,exist_ok=True)
+ archives=[]
+ for root in roots:
+  if root.exists():archives.extend(root.glob('**/*.zip'))
+ for z in archives:
+  try:
+   with zipfile.ZipFile(z) as f:
+    names=f.namelist();hit=next((n for n in names if Path(n).name=='repo_bundle.tar.gz'),None)
+    if not hit:continue
+    dst=scratch/'repo_bundle.tar.gz'
+    with f.open(hit) as src,dst.open('wb') as out:shutil.copyfileobj(src,out)
+    print(f'KAGGLE_BUNDLE_UNWRAPPED={z}:{hit}',flush=True);return dst
+  except Exception as e:print(f'KAGGLE_ARCHIVE_SKIP={z}:{e}',flush=True)
+ # Emit the mounted tree on failure so the next run is diagnosable without guessing.
+ for root in roots:
+  if root.exists():
+   for p in list(root.glob('**/*'))[:200]:
+    if p.is_file():print(f'KAGGLE_INPUT_FILE={p} bytes={p.stat().st_size}',flush=True)
+ return None
 WORK.mkdir(parents=True,exist_ok=True);shutil.rmtree(REPO,ignore_errors=True);shutil.rmtree(OUT,ignore_errors=True);OUT.mkdir(parents=True)
-bundles=[Path('/kaggle/input/zero-to-empire-sprite-bundle/repo_bundle.tar.gz'),Path('/kaggle/src/repo_bundle.tar.gz'),Path('/kaggle/working/repo_bundle.tar.gz'),Path.cwd()/'repo_bundle.tar.gz']
-bundle=next((p for p in bundles if p.is_file()),None)
-if bundle is None:
- found=list(Path('/kaggle/input').glob('**/repo_bundle.tar.gz')) if Path('/kaggle/input').exists() else []
- bundle=found[0] if found else None
+bundle=resolve_bundle()
 if bundle is None:raise SystemExit('repo_bundle.tar.gz missing from Kaggle inputs')
 REPO.mkdir(parents=True,exist_ok=True)
 with tarfile.open(bundle,'r:gz') as t:t.extractall(REPO)
