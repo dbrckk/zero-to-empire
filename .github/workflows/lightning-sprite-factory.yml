@@ -1,0 +1,55 @@
+name: Lightning Sprite Factory
+
+on:
+  workflow_dispatch:
+    inputs:
+      sprite_count:
+        description: Candidates to attempt in this wave
+        required: false
+        default: '56'
+      keep_studio_running:
+        description: Keep Lightning Studio running after the wave
+        required: false
+        default: 'false'
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lightning-sprite-factory
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      LIGHTNING_USER_ID: ${{ secrets.LIGHTNING_USER_ID }}
+      LIGHTNING_API_KEY: ${{ secrets.LIGHTNING_API_KEY }}
+      SPRITE_COUNT: ${{ inputs.sprite_count || '56' }}
+      LIGHTNING_STOP_AFTER: ${{ inputs.keep_studio_running == true && '0' || '1' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Require Lightning credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$LIGHTNING_USER_ID" || { echo 'Missing LIGHTNING_USER_ID repository secret'; exit 2; }
+          test -n "$LIGHTNING_API_KEY" || { echo 'Missing LIGHTNING_API_KEY repository secret'; exit 2; }
+
+      - name: Install Lightning SDK
+        run: python -m pip install --quiet --upgrade lightning-sdk
+
+      - name: Run Lightning T4 sprite wave
+        run: python -u tools/sprites/lightning_remote_runner.py
+
+      - name: Upload strict QA-only candidate artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: lightning-sprite-batch
+          path: lightning-output/
+          if-no-files-found: error
+          retention-days: 7
