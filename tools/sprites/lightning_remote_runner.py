@@ -6,20 +6,34 @@ import os
 import shutil
 from pathlib import Path
 
-from lightning_sdk import Machine, Studio
+from lightning_sdk import Machine, Studio, User
 
 STUDIO_NAME = os.getenv("LIGHTNING_STUDIO_NAME", "zero-to-empire-sprites")
-TEAMSPACE = os.environ["LIGHTNING_TEAMSPACE"]
-USERNAME = os.environ["LIGHTNING_USERNAME"]
 REMOTE_REPO = "zero-to-empire"
 LOCAL_OUT = Path("lightning-output")
 
 
+def resolve_scope() -> tuple[str, str]:
+    username = os.getenv("LIGHTNING_USERNAME")
+    teamspace = os.getenv("LIGHTNING_TEAMSPACE")
+    if username and teamspace:
+        return username, teamspace
+    user = User()
+    username = username or user.name
+    spaces = list(user.teamspaces)
+    if not spaces:
+        raise SystemExit("No Lightning teamspace available for the authenticated account")
+    teamspace = teamspace or spaces[0].name
+    print(f"LIGHTNING_SCOPE={username}/{teamspace}", flush=True)
+    return username, teamspace
+
+
 def main() -> None:
+    username, teamspace = resolve_scope()
     studio = Studio(
         name=STUDIO_NAME,
-        teamspace=TEAMSPACE,
-        user=USERNAME,
+        teamspace=teamspace,
+        user=username,
         create_ok=True,
     )
 
