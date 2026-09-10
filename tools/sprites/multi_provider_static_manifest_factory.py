@@ -48,6 +48,19 @@ def cloudflare_generate(prompt: str) -> Image.Image:
             body = json.loads(response.read().decode("utf-8"))
     except urllib.error.HTTPError as exc:
         detail = exc.read().decode("utf-8", "replace")
+        # Cloudflare returns HTTP 429 / Workers AI code 4006 when the daily free
+        # neuron allocation is exhausted. This is a provider-availability state,
+        # not an asset rejection. Preserve the same rc=75 contract used by HF so
+        # the shard stops immediately instead of spending requests on every target.
+        low = detail.lower()
+        if exc.code == 429 and (
+            "daily free allocation" in low
+            or "used up" in low
+            or '"code":4006' in low
+            or '"code": 4006' in low
+        ):
+            print("CLOUDFLARE_QUOTA_EXHAUSTED: daily Workers AI allocation unavailable")
+            raise SystemExit(factory.QUOTA_EXIT) from exc
         raise RuntimeError(f"Cloudflare HTTP {exc.code}: {detail[:600]}") from exc
     except urllib.error.URLError as exc:
         raise RuntimeError(f"Cloudflare request failed: {exc}") from exc
