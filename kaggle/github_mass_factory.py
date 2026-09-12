@@ -13,6 +13,18 @@ def ensure_gpu():
  try:cap=subprocess.check_output(['nvidia-smi','--query-gpu=compute_cap','--format=csv,noheader'],text=True).splitlines()[0].strip()
  except Exception as e:print('KAGGLE_GPU_CAPABILITY=unknown',e,flush=True);return
  print('KAGGLE_GPU_CAPABILITY='+cap,flush=True)
+ # Kaggle may allocate a Tesla P100 (Pascal, sm_60) while its newest
+ # preinstalled PyTorch wheel is built only for sm_70+. Pin a CUDA 12.4
+ # PyTorch wheel that still contains Pascal kernels before torch is imported.
+ if cap.startswith('6.'):
+  probe=subprocess.run(['python','-c',"import torch; print(' '.join(torch.cuda.get_arch_list()))"],capture_output=True,text=True)
+  arches=(probe.stdout or '').strip()
+  print('KAGGLE_TORCH_ARCHES='+arches,flush=True)
+  if 'sm_60' not in arches:
+   print('KAGGLE_PASCAL_TORCH_COMPAT_INSTALL=1',flush=True)
+   subprocess.run(['python','-m','pip','install','--quiet','--force-reinstall','--no-cache-dir','torch==2.6.0','--index-url','https://download.pytorch.org/whl/cu124'],check=True)
+   verify=subprocess.check_output(['python','-c',"import torch; print(torch.__version__); print(' '.join(torch.cuda.get_arch_list()))"],text=True).strip()
+   print('KAGGLE_PASCAL_TORCH_VERIFY='+verify.replace('\\n',' | '),flush=True)
 def ensure_flux():
  print('KAGGLE_ENGINE=yield-router-v12-positive-source-locked',flush=True)
  required=['diffusers','transformers','accelerate','safetensors','torch','PIL','bitsandbytes'];missing=[]
