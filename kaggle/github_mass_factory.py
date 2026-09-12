@@ -22,12 +22,12 @@ def ensure_gpu():
   print('KAGGLE_TORCH_ARCHES='+arches,flush=True)
   if 'sm_60' not in arches:
    print('KAGGLE_PASCAL_TORCH_COMPAT_INSTALL=1',flush=True)
-   subprocess.run(['python','-m','pip','install','--quiet','--force-reinstall','--no-cache-dir','torch==2.6.0','--index-url','https://download.pytorch.org/whl/cu124'],check=True)
+   subprocess.run(['python','-m','pip','install','--quiet','--force-reinstall','--no-cache-dir','torch==2.6.0','torchvision==0.21.0','--index-url','https://download.pytorch.org/whl/cu124'],check=True)
    verify=subprocess.check_output(['python','-c',"import torch; print(torch.__version__); print(' '.join(torch.cuda.get_arch_list()))"],text=True).strip()
    print('KAGGLE_PASCAL_TORCH_VERIFY='+verify.replace('\\n',' | '),flush=True)
 def ensure_flux():
  print('KAGGLE_ENGINE=yield-router-v12-positive-source-locked',flush=True)
- required=['diffusers','transformers','accelerate','safetensors','torch','PIL','bitsandbytes'];missing=[]
+ required=['diffusers','transformers','accelerate','safetensors','torch','torchvision','PIL','bitsandbytes'];missing=[]
  for name in required:
   try:__import__(name)
   except Exception:missing.append(name)
