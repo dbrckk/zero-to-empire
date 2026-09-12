@@ -15,13 +15,13 @@ def ensure_gpu():
  print('KAGGLE_GPU_CAPABILITY='+cap,flush=True)
 def ensure_flux():
  print('KAGGLE_ENGINE=yield-router-v12-positive-source-locked',flush=True)
- required=['diffusers','transformers','accelerate','safetensors','torch','PIL'];missing=[]
+ required=['diffusers','transformers','accelerate','safetensors','torch','PIL','bitsandbytes'];missing=[]
  for name in required:
   try:__import__(name)
   except Exception:missing.append(name)
  if missing:
   print('KAGGLE_MISSING_PACKAGES='+','.join(missing),flush=True)
-  subprocess.run(['python','-m','pip','install','--quiet','diffusers==0.35.1','transformers==4.56.1','accelerate>=1.2','safetensors','Pillow<12'],check=True)
+  subprocess.run(['python','-m','pip','install','--quiet','diffusers==0.35.1','transformers==4.56.1','accelerate>=1.2','safetensors','bitsandbytes>=0.46.1','Pillow<12'],check=True)
 def runtime_exists(runtime): return (REPO/runtime).is_file()
 def backlog():
  c={'BLD':0,'STATIC':0,'CHR':0,'FX':0,'SKIPPED_RUNTIME':0}
