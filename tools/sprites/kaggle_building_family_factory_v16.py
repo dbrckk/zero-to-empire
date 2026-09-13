@@ -61,14 +61,14 @@ TIER={
  6:'detail phase; preserve the established footprint and add a compact enclosed roof core plus integrated high-tier machinery'
 }
 STYLE=('premium AAA mobile strategy industrial asset, stylized 2.5D, 34-degree orthographic three-quarter camera, '
-       'graphite steel alloys, upper-left key light, cool fill, restrained amber/cyan emissive accents, neutral gray studio sweep')
+       'graphite steel alloys, upper-left key light, cool fill, restrained amber/cyan emissive accents, perfectly flat solid neutral gray background, no gradient, no vignette, no horizon, no shadow card')
 
 # Positive spatial formulation: describe what fills the lower silhouette instead of
 # repeatedly naming a floor/site. The model should see one product-like object.
 FOOTPRINT=(
  'The lowest visible silhouette is the building wall base itself: a compact solid rectangular or chamfered structural plinth contained directly beneath the walls. '
  'Its outer edge is flush with the exterior walls and never extends laterally beyond them. '
- 'Outside that wall base, the image is uninterrupted neutral gray studio background. '
+ 'Outside that wall base, the image is perfectly uniform neutral gray with constant RGB value to every edge. '
  'Every tank, pipe, vent, bay and service module is fused to the main architectural mass. '
  'Show exactly one self-contained factory object, centered with generous gray clearance on all sides. '
  'No people, vehicles, loose equipment, emitted effects, signage, scenery or secondary objects.'
@@ -76,7 +76,7 @@ FOOTPRINT=(
 
 def prompts(i):
     fam=FAMILY[i['family']]; shape=SHAPE[i['family']]; tier=TIER[i['tier']]
-    short=f'Centered isolated industrial factory product asset. {shape}. {tier}. One solid connected object on neutral gray studio.'
+    short=f'Centered isolated industrial factory product asset. {shape}. {tier}. One solid connected object on perfectly flat uniform neutral gray background.'
     if i['tier']<=3:
         phase='Build only the primary architectural massing. Prefer large contiguous wall/roof shapes over small decorative pieces.'
     else:
