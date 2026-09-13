@@ -146,9 +146,11 @@ jobs:
           echo "$status"
           if echo "$status" | grep -Eqi 'KernelWorkerStatus\.(RUNNING|QUEUED)|status "(RUNNING|QUEUED)"'; then
             echo 'reuse=true' >> "$GITHUB_OUTPUT"
+            echo 'KAGGLE_REUSE_ACTIVE_KERNEL=1' >> "$GITHUB_ENV"
             echo 'KAGGLE_REUSE_ACTIVE_KERNEL=1'
           else
             echo 'reuse=false' >> "$GITHUB_OUTPUT"
+            echo 'KAGGLE_REUSE_ACTIVE_KERNEL=0' >> "$GITHUB_ENV"
             echo 'KAGGLE_REUSE_ACTIVE_KERNEL=0'
           fi
 
@@ -178,12 +180,17 @@ jobs:
         run: |
           set -u
           slug="${KAGGLE_USERNAME}/zero-to-empire-sprite-factory"; final_status='UNKNOWN'
-          for i in $(seq 1 135); do
+          if [ "${KAGGLE_REUSE_ACTIVE_KERNEL:-0}" = 1 ]; then max_checks=20; else max_checks=135; fi
+          echo "KAGGLE_WAIT_CHECKS=$max_checks reuse=${KAGGLE_REUSE_ACTIVE_KERNEL:-0}"
+          for i in $(seq 1 "$max_checks"); do
             status="$(kaggle kernels status "$slug" 2>&1 || true)"; echo "$status"
             if echo "$status" | grep -qi 'complete'; then final_status='COMPLETE'; break; fi
             if echo "$status" | grep -Eqi 'error|cancel|failed'; then final_status='ERROR'; break; fi
             sleep 60
           done
+          if [ "$final_status" = UNKNOWN ] && [ "${KAGGLE_REUSE_ACTIVE_KERNEL:-0}" = 1 ]; then
+            echo 'KAGGLE_STALE_ACTIVE_KERNEL=1' >> "$GITHUB_ENV"
+          fi
           echo "final_status=$final_status" >> "$GITHUB_OUTPUT"; echo "KAGGLE_FINAL_STATUS=$final_status" >> "$GITHUB_ENV"
       - name: Download Kaggle outputs and kernel log
         if: always() && steps.wait-kaggle.outcome == 'success'
@@ -214,6 +221,14 @@ jobs:
               ))
           print(f"KAGGLE_STRICT_QA_PASS={len(rows)}")
           PY
+      - name: Fail fast on stale reused Kaggle kernel
+        if: always() && env.KAGGLE_STALE_ACTIVE_KERNEL == '1'
+        shell: bash
+        run: |
+          echo 'STALE_KAGGLE_KERNEL: existing RUNNING/QUEUED session produced no completed output within 20 minutes.'
+          echo 'Kaggle CLI cannot cancel this session by kernel slug; stop the stale session in Kaggle UI before a fresh GPU push.'
+          exit 78
+
       - name: Require successful Kaggle kernel
         if: always() && steps.wait-kaggle.outcome == 'success'
         shell: bash
