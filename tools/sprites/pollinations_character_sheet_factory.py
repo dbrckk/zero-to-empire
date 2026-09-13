@@ -109,7 +109,7 @@ def main():
         seed=(base+attempt*7919)%2147483647;frames=[]
         try:
             for fi,pose in enumerate(POSE_HINT[action][:ACTION[action][1]]):
-                frame,cov=finish_frame(fetch(prompt(role,action,pose),seed+fi*211),session)
+                frame,cov=finish_frame(fetch(prompt(role,action,pose),seed),session)
                 frames.append(frame);print(f'CHR_FRAME={aid} frame={fi} cov={cov:.3f}',flush=True)
             ok,why=sheet_qa(frames)
             if not ok: raise RuntimeError(why)
