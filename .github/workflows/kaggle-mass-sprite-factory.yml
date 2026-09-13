@@ -80,20 +80,21 @@ jobs:
           CURRENT_BUNDLE_SHA="$(git rev-parse HEAD:docs/art/FINAL_AAA_SPRITE_MANIFEST.md)-$(git rev-parse HEAD:tools/sprites)-$(git rev-parse HEAD:app/src/main/res/drawable-nodpi 2>/dev/null || echo none)"
           echo "CURRENT_BUNDLE_SHA=$CURRENT_BUNDLE_SHA"
           if [ "$STATE" = ready ] && [ "${VERSION:-0}" -ge 4 ]; then
-            rm -rf /tmp/zte-check; mkdir -p /tmp/zte-check
-            kaggle datasets download -d "$DATASET" -p /tmp/zte-check --unzip >/dev/null 2>&1 || true
-            PUBLISHED_SHA="$(find /tmp/zte-check -type f -name 'bundle-source-sha.txt' -print -quit | xargs -r cat 2>/dev/null || true)"
-            if [ "$PUBLISHED_SHA" = "$CURRENT_BUNDLE_SHA" ]; then
+            # Encode the source fingerprint in a tiny marker filename. Listing
+            # metadata is enough to verify freshness; no 114 MB bundle download.
+            FILES="$(kaggle datasets files "$DATASET" --page-size 200 2>/dev/null || true)"
+            MARKER="bundle-source-${CURRENT_BUNDLE_SHA}.txt"
+            if printf '%s\n' "$FILES" | grep -Fq "$MARKER"; then
               READY=1
               echo 'KAGGLE_DATASET_REUSE=1'
             else
-              echo "KAGGLE_DATASET_STALE=1 published=${PUBLISHED_SHA:-missing}"
+              echo 'KAGGLE_DATASET_STALE=1'
             fi
           fi
 
           if [ "$READY" != 1 ]; then
             PREV_VERSION="${VERSION:-0}"
-            printf '%s' "$CURRENT_BUNDLE_SHA" > /tmp/zte-dataset/bundle-source-sha.txt
+            : > "/tmp/zte-dataset/bundle-source-${CURRENT_BUNDLE_SHA}.txt"
             tar -czf /tmp/zte-dataset/repo_bundle.tar.gz \
               docs/art/FINAL_AAA_SPRITE_MANIFEST.md \
               tools/sprites \
