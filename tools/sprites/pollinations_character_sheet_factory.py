@@ -95,7 +95,7 @@ def sheet_qa(frames):
 
 def main():
     bld,rows=pending_rows()
-    if bld:
+    if bld and os.getenv('POLLINATIONS_CHR_FORCE','0') != '1':
         print(f'CHARACTER_DEFER_BUILDINGS_REMAIN={bld}')
         raise SystemExit(3)
     if not rows:
