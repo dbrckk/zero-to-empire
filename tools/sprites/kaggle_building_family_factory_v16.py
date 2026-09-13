@@ -119,12 +119,11 @@ def v164_anchor_score(final,cov):
 V15_LIVE_GATE=v15.live_gate
 
 def v164_slab_score(alpha):
-    """Detect a detached/site-like ground card without penalizing the factory's own broad base.
+    """Detect a detached/site-like lower card from silhouette geometry.
 
-    v15 counted every wide lower row as slab, so legitimate late-tier factories
-    with a broad wall base repeatedly failed at T4/T5. A site card is instead a
-    wide, thin lower component whose width expands materially beyond the main
-    body above it.
+    A real factory may legitimately become wider near its base. The forbidden
+    pattern is a thin, abrupt lower shelf/card: several consecutive rows that
+    jump materially wider than the rows immediately above and stay nearly flat.
     """
     sm=alpha.resize((128,128),v14.Image.Resampling.BILINEAR)
     px=sm.load()
@@ -132,12 +131,21 @@ def v164_slab_score(alpha):
     for y in range(8,124):
         xs=[x for x in range(4,124) if px[x,y]>=32]
         widths.append((y, (xs[-1]-xs[0]+1)/120 if xs else 0.0))
-    body=[w for y,w in widths if 42<=y<88 and w>0]
-    lower=[w for y,w in widths if 88<=y<122 and w>0]
-    if not body or not lower:return 0.0
-    body_ref=float(np.median(body))
-    suspicious=sum(w>.76 and w>body_ref*1.22 for w in lower)
-    return suspicious/max(len(lower),1)
+    score=0.0
+    for y,w in widths:
+        if y < 82 or w < .76:
+            continue
+        above=[aw for ay,aw in widths if y-12 <= ay <= y-4 and aw>0]
+        if not above:
+            continue
+        ref=float(np.median(above))
+        # Require an abrupt lateral shelf, not merely a broad continuous wall.
+        if w > ref*1.28 and (w-ref) > .12:
+            score += 1.0
+    # Normalize against the lower silhouette depth. A genuine thin card creates
+    # a sustained shelf signal; ordinary wall widening should remain near zero.
+    lower_rows=max(1,sum(1 for y,w in widths if y>=82 and w>0))
+    return score/lower_rows
 
 # Keep the strict no-site-card rule, but measure detached lateral expansion
 # rather than treating a legitimate broad building base as a floor slab.
