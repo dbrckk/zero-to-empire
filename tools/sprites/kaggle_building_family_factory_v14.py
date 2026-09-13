@@ -120,7 +120,7 @@ def render(i,prev,pe,ppe,base,img,seed):
    with torch.inference_mode():
     if prev is None:raw=base(height=1024,width=1024,num_inference_steps=STEPS[i['tier']],guidance_scale=0,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),output_type='pil',generator=gen).images[0];mode='anchor'
     else:
-     s=min(.80,max(.30,STRENGTH[i['tier']]+(attempt-1)*.04));raw=img(image=prev,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=s,num_inference_steps=STEPS[i['tier']],guidance_scale=0,output_type='pil',generator=gen).images[0];mode=f'img2img-s{s:.2f}'
+     s=min(.80,max(.12,STRENGTH[i['tier']]+(attempt-1)*.04));raw=img(image=prev,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=s,num_inference_steps=STEPS[i['tier']],guidance_scale=0,output_type='pil',generator=gen).images[0];mode=f'img2img-s{s:.2f}'
    final,cov=finish(raw,i['tier']);print(f"KAGGLE_RENDERED={i['id']} mode={mode} attempt={attempt+1} coverage={cov:.1%}",flush=True);return raw.convert('RGB'),final,cov
   except Exception as e:errs.append(str(e));print(f"KAGGLE_RETRY={i['id']} attempt={attempt+1} reason={e}",flush=True)
  raise RuntimeError('; '.join(errs[-3:]))
