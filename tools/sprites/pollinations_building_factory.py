@@ -111,7 +111,7 @@ def generate(row, seed=73117, session=None, report_path: Path | None = None):
     tmp=Path(f'/tmp/pollinations-{aid.lower()}-{int(seed)}.png')
     req=urllib.request.Request(url,headers={'User-Agent':'zero-to-empire-github-actions/1.0'})
     try:
-        with urllib.request.urlopen(req,timeout=180) as r:
+        with urllib.request.urlopen(req,timeout=90) as r:
             data=r.read()
     except Exception as e:
         raise RuntimeError('request failed: '+repr(e))
