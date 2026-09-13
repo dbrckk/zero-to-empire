@@ -31,83 +31,88 @@ def next_target():
 def isolate(im):
     rgb=im.convert('RGB'); w,h=rgb.size; px=rgb.load()
 
-    # Adaptive edge-seeded background removal. We do not lower downstream QA:
-    # this only replaces a brittle global border-variance precheck. Pixels are
-    # accepted as background only when they are color-contiguous with the image
-    # edge and locally similar to their flood-fill parent.
-    from collections import deque
-    bg=set()
-    q=deque()
+    # Robust border reference: tolerate mild gradients, but classify subject by
+    # distance from the median edge color instead of flooding through it.
+    samples=[]
     for x in range(w):
-        q.append((x,0)); q.append((x,h-1))
+        samples.append(px[x,0]); samples.append(px[x,h-1])
     for y in range(h):
-        q.append((0,y)); q.append((w-1,y))
+        samples.append(px[0,y]); samples.append(px[w-1,y])
+    med=tuple(sorted(v[i] for v in samples)[len(samples)//2] for i in range(3))
 
     def dist(a,b):
         return max(abs(a[i]-b[i]) for i in range(3))
 
+    mask=Image.new('L',(w,h),0); mp=mask.load()
+    for y in range(h):
+        for x in range(w):
+            d=dist(px[x,y],med)
+            if d>=30:
+                mp[x,y]=255
+            elif d>=22:
+                mp[x,y]=128
+
+    mask=mask.filter(ImageFilter.MedianFilter(3))
+    # Convert to binary for connectivity.
+    binary=mask.point(lambda v:255 if v>=96 else 0)
+    bp=binary.load()
+
+    # Remove only components touching the image boundary: these are background
+    # leakage/scenery by construction, never the centered isolated sprite.
+    from collections import deque
+    edge=set(); q=deque()
+    for x in range(w):
+        if bp[x,0]: q.append((x,0))
+        if bp[x,h-1]: q.append((x,h-1))
+    for y in range(h):
+        if bp[0,y]: q.append((0,y))
+        if bp[w-1,y]: q.append((w-1,y))
     while q:
         x,y=q.popleft()
-        if (x,y) in bg:
-            continue
-        # Edge seeds are always admitted. Interior expansion is conservative
-        # and follows only smooth background color changes.
-        if 0 < x < w-1 and 0 < y < h-1:
-            neigh=[]
-            if (x-1,y) in bg: neigh.append(px[x-1,y])
-            if (x+1,y) in bg: neigh.append(px[x+1,y])
-            if (x,y-1) in bg: neigh.append(px[x,y-1])
-            if (x,y+1) in bg: neigh.append(px[x,y+1])
-            if not neigh or min(dist(px[x,y],n) for n in neigh) > 14:
-                continue
-        bg.add((x,y))
+        if (x,y) in edge or not bp[x,y]: continue
+        edge.add((x,y))
         if x>0:q.append((x-1,y))
         if x+1<w:q.append((x+1,y))
         if y>0:q.append((x,y-1))
         if y+1<h:q.append((x,y+1))
 
-    # Build alpha from non-background pixels, then retain only the largest
-    # connected subject. This rejects edge-connected scenery/gradients rather
-    # than accepting them.
-    mask=Image.new('L',(w,h),0); mp=mask.load()
+    for x,y in edge:
+        bp[x,y]=0
+
+    # Score remaining components by area with a center preference so a detached
+    # bright prop cannot beat the intended centered building.
+    seen=set(); comps=[]
+    cx0,cy0=w/2,h/2
     for y in range(h):
         for x in range(w):
-            if (x,y) not in bg:
-                mp[x,y]=255
-    mask=mask.filter(ImageFilter.MedianFilter(3))
-    mp=mask.load(); seen=set(); comps=[]
-    for y in range(h):
-        for x in range(w):
-            if not mp[x,y] or (x,y) in seen:
-                continue
+            if not bp[x,y] or (x,y) in seen: continue
             comp=[]; qq=[(x,y)]; seen.add((x,y))
             while qq:
                 cx,cy=qq.pop(); comp.append((cx,cy))
                 for nx,ny in ((cx-1,cy),(cx+1,cy),(cx,cy-1),(cx,cy+1)):
-                    if 0<=nx<w and 0<=ny<h and mp[nx,ny] and (nx,ny) not in seen:
+                    if 0<=nx<w and 0<=ny<h and bp[nx,ny] and (nx,ny) not in seen:
                         seen.add((nx,ny)); qq.append((nx,ny))
-            comps.append(comp)
+            xs=[p[0] for p in comp]; ys=[p[1] for p in comp]
+            ccx=sum(xs)/len(xs); ccy=sum(ys)/len(ys)
+            center_penalty=1.0 + (((ccx-cx0)/(w/2))**2 + ((ccy-cy0)/(h/2))**2)
+            comps.append((len(comp)/center_penalty,comp))
     if not comps:
-        fail('no isolated subject after adaptive border flood fill')
+        fail('no isolated subject after border-component cleanup')
 
-    keep=set(max(comps,key=len))
-    # Reject pathological isolation where the retained component itself touches
-    # an edge; downstream QA would reject it anyway, so fail early.
-    if any(x in (0,w-1) or y in (0,h-1) for x,y in keep):
-        fail('isolated subject still touches image edge')
-
+    keep=set(max(comps,key=lambda z:z[0])[1])
     isolated=Image.new('RGBA',(w,h),(0,0,0,0)); dst=isolated.load()
     for x,y in keep:
         r,g,b=px[x,y]
         dst[x,y]=(r,g,b,255)
 
     bbox=isolated.getchannel('A').getbbox()
-    if not bbox:
-        fail('empty isolation after adaptive cleanup')
+    if not bbox: fail('empty isolation')
     subject=isolated.crop(bbox)
     sw,sh=subject.size
-    side=max(768, int(max(sw,sh)/0.72))
-    side=min(2048, side)
+
+    # Normalize to a canvas where the subject occupies at most 72% of a side.
+    side=max(768,int(max(sw,sh)/0.72))
+    side=min(2048,side)
     if max(sw,sh)>int(side*0.72):
         scale=(side*0.72)/max(sw,sh)
         subject=subject.resize((max(1,round(sw*scale)),max(1,round(sh*scale))),Image.Resampling.LANCZOS)
