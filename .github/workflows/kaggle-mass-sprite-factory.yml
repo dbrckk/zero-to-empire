@@ -73,13 +73,27 @@ jobs:
           PY
           )"
           echo "KAGGLE_DATASET_STATE=${STATE:-unknown} VERSION=${VERSION:-0}"
+
+          # Reuse only when the published bundle fingerprint matches the current
+          # sprite source tree. Version number alone is not sufficient: an older
+          # ready dataset can silently feed stale generators/manifest to a new kernel.
+          CURRENT_BUNDLE_SHA="$(git rev-parse HEAD:docs/art/FINAL_AAA_SPRITE_MANIFEST.md)-$(git rev-parse HEAD:tools/sprites)-$(git rev-parse HEAD:app/src/main/res/drawable-nodpi 2>/dev/null || echo none)"
+          echo "CURRENT_BUNDLE_SHA=$CURRENT_BUNDLE_SHA"
           if [ "$STATE" = ready ] && [ "${VERSION:-0}" -ge 4 ]; then
-            READY=1
-            echo 'KAGGLE_DATASET_REUSE=1'
+            rm -rf /tmp/zte-check; mkdir -p /tmp/zte-check
+            kaggle datasets download -d "$DATASET" -p /tmp/zte-check --unzip >/dev/null 2>&1 || true
+            PUBLISHED_SHA="$(find /tmp/zte-check -type f -name 'bundle-source-sha.txt' -print -quit | xargs -r cat 2>/dev/null || true)"
+            if [ "$PUBLISHED_SHA" = "$CURRENT_BUNDLE_SHA" ]; then
+              READY=1
+              echo 'KAGGLE_DATASET_REUSE=1'
+            else
+              echo "KAGGLE_DATASET_STALE=1 published=${PUBLISHED_SHA:-missing}"
+            fi
           fi
 
           if [ "$READY" != 1 ]; then
             PREV_VERSION="${VERSION:-0}"
+            printf '%s' "$CURRENT_BUNDLE_SHA" > /tmp/zte-dataset/bundle-source-sha.txt
             tar -czf /tmp/zte-dataset/repo_bundle.tar.gz \
               docs/art/FINAL_AAA_SPRITE_MANIFEST.md \
               tools/sprites \
@@ -192,6 +206,12 @@ jobs:
           rows=d if isinstance(d,list) else d.get('assets',d.get('sprites',d.get('results',[])))
           expected=len(list(pathlib.Path('/tmp/kaggle-output/output/candidates').glob('*_final.png')))
           if len(rows) != expected: raise SystemExit('QA report does not cover every candidate')
+          failed=[r for r in rows if not r.get('pass')]
+          if failed:
+              raise SystemExit('Strict technical QA rejected: ' + ', '.join(
+                  f"{r.get('file','?')}[{','.join(r.get('issues',[]))}]" for r in failed
+              ))
+          print(f"KAGGLE_STRICT_QA_PASS={len(rows)}")
           PY
       - name: Require successful Kaggle kernel
         if: always() && steps.wait-kaggle.outcome == 'success'
