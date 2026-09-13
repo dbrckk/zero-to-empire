@@ -32,7 +32,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install strict image tooling
-        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
+        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0' 'rembg[cpu]>=2.0.68,<3'
       - name: Generate one anonymous free candidate
         run: python -u tools/sprites/pollinations_building_factory.py
       - name: Resolve generated target
