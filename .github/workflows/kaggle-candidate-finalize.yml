@@ -52,6 +52,24 @@ jobs:
             --output art/production/kaggle-contact-sheet.png \
             --report art/production/kaggle-qa-report.json
 
+      - name: Require clean technical QA report
+        if: steps.changed.outputs.has_files == 'true'
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('art/production/kaggle-qa-report.json')
+          d=json.loads(p.read_text())
+          rows=d.get('assets', [])
+          if not rows:
+              raise SystemExit('QA report contains no candidate rows')
+          failed=[r for r in rows if not r.get('pass')]
+          if failed:
+              raise SystemExit('Technical QA rejected: ' + ', '.join(f"{r['file']}[{','.join(r.get('issues', []))}]" for r in failed))
+          print(f"STRICT_TECHNICAL_QA_PASS={len(rows)}")
+          PY
+
       - name: Finalize approved technical candidates
         if: steps.changed.outputs.has_files == 'true'
         run: python3 tools/sprites/process_final_sprites.py
