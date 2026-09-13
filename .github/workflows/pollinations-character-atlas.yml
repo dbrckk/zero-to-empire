@@ -39,6 +39,9 @@ jobs:
       - name: Sync canonical main
         run: git pull --ff-only origin main
 
+      - name: Compile character tooling
+        run: python -m py_compile tools/sprites/pollinations_character_sheet_factory.py tools/sprites/validate_runtime_asset.py
+
       - name: Check character lane readiness
         id: ready
         shell: bash
