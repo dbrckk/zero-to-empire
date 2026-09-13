@@ -2,7 +2,7 @@ name: Pollinations Building Candidate
 
 on:
   schedule:
-    - cron: '7,22,37,52 * * * *'
+    - cron: '*/5 * * * *'
   workflow_dispatch:
     inputs:
       target:
@@ -75,7 +75,18 @@ jobs:
         run: |
           stem='${{ steps.target.outputs.stem }}'
           SPRITE_TARGETS="$stem" python tools/sprites/process_final_sprites.py
-      - name: Persist strictly validated candidate as RUNTIME
+      - name: Second strict runtime validation
+        shell: bash
+        run: |
+          target="$(python - <<'PY'
+          import json
+          from pathlib import Path
+          print(json.loads(Path('art/production/pollinations-report.json').read_text())['target'])
+          PY
+          )"
+          python tools/sprites/validate_runtime_asset.py             --asset-id "$target"             --path "app/src/main/res/drawable-nodpi/${{ steps.target.outputs.stem }}.webp"             --report art/production/pollinations-runtime-qa.json
+
+      - name: Persist doubly validated candidate as DONE
         shell: bash
         run: |
           set -euo pipefail
@@ -91,14 +102,14 @@ jobs:
               if line.startswith('|'):
                   cols=[x.strip() for x in line.split('|')[1:-1]]
                   if len(cols)==5 and cols[0]==target and cols[4].upper()=='TODO':
-                      cols[4]='RUNTIME'
+                      cols[4]='DONE'
                       line='| '+' | '.join(cols)+' |'
                       changed+=1
               out.append(line)
           if changed!=1:
               raise SystemExit(f'Expected exactly one TODO manifest row for {target}, changed={changed}')
           manifest.write_text('\n'.join(out)+'\n',encoding='utf-8')
-          print(f'POLLINATIONS_MANIFEST_RUNTIME={target}')
+          print(f'POLLINATIONS_MANIFEST_DONE={target}')
           PY
           # Pull first, then re-apply only this target's manifest transition.
           # This avoids rebase conflicts with the reconciliation bot.
@@ -140,7 +151,7 @@ jobs:
               if line.startswith('|'):
                   cols=[x.strip() for x in line.split('|')[1:-1]]
                   if len(cols)==5 and cols[0]==target and cols[4].upper()=='TODO':
-                      cols[4]='RUNTIME'; line='| '+' | '.join(cols)+' |'; changed+=1
+                      cols[4]='DONE'; line='| '+' | '.join(cols)+' |'; changed+=1
               out.append(line)
           if changed!=1: raise SystemExit(f'Expected one fresh TODO row for {target}, changed={changed}')
           p.write_text('\n'.join(out)+'\n',encoding='utf-8')
@@ -151,6 +162,7 @@ jobs:
                   'app/src/main/res/drawable-nodpi/${{ steps.target.outputs.stem }}.webp' \
                   art/production/pollinations-report.json \
                   art/production/pollinations-qa.json \
+                  art/production/pollinations-runtime-qa.json \
                   docs/art/FINAL_AAA_SPRITE_MANIFEST.md
           git commit -m 'art: persist strict Pollinations building candidate'
           git push
@@ -163,6 +175,7 @@ jobs:
             app/src/main/res/drawable-nodpi/${{ steps.target.outputs.stem }}.webp
             art/production/pollinations-report.json
             art/production/pollinations-qa.json
+            art/production/pollinations-runtime-qa.json
             art/production/pollinations-contact-sheet.png
           if-no-files-found: error
           retention-days: 14
