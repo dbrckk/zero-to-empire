@@ -14,7 +14,7 @@ on:
       - '.github/workflows/pollinations-building-candidate.yml'
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: pollinations-building-candidate
@@ -69,6 +69,41 @@ jobs:
         run: |
           stem='${{ steps.target.outputs.stem }}'
           SPRITE_TARGETS="$stem" python tools/sprites/process_final_sprites.py
+      - name: Persist strictly validated candidate as RUNTIME
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report=json.loads(Path('art/production/pollinations-report.json').read_text())
+          target=report['target']
+          manifest=Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
+          lines=manifest.read_text(encoding='utf-8').splitlines()
+          out=[]; changed=0
+          for line in lines:
+              if line.startswith('|'):
+                  cols=[x.strip() for x in line.split('|')[1:-1]]
+                  if len(cols)==5 and cols[0]==target and cols[4].upper()=='TODO':
+                      cols[4]='RUNTIME'
+                      line='| '+' | '.join(cols)+' |'
+                      changed+=1
+              out.append(line)
+          if changed!=1:
+              raise SystemExit(f'Expected exactly one TODO manifest row for {target}, changed={changed}')
+          manifest.write_text('\n'.join(out)+'\n',encoding='utf-8')
+          print(f'POLLINATIONS_MANIFEST_RUNTIME={target}')
+          PY
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add '${{ steps.target.outputs.file }}' \
+                  'app/src/main/res/drawable-nodpi/${{ steps.target.outputs.stem }}.webp' \
+                  art/production/pollinations-report.json \
+                  art/production/pollinations-qa.json \
+                  docs/art/FINAL_AAA_SPRITE_MANIFEST.md
+          git commit -m 'art: persist strict Pollinations building candidate'
+          git pull --rebase origin main
+          git push
       - name: Upload candidate and QA evidence only
         uses: actions/upload-artifact@v4
         with:
