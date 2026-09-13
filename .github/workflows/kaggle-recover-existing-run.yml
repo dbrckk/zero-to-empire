@@ -53,22 +53,34 @@ jobs:
             --files "${files[@]}" \
             --output /tmp/kaggle-output/output/recovered-contact-sheet.png \
             --report /tmp/kaggle-output/output/recovered-qa-report.json
-          python3 - <<'PY'
+          python3 - <<'PY' > /tmp/recovered-pass-files.txt
           import json
           from pathlib import Path
           p=Path('/tmp/kaggle-output/output/recovered-qa-report.json')
           d=json.loads(p.read_text())
-          failed=[r for r in d['assets'] if not r.get('pass')]
+          rows=d.get('assets', [])
+          passed=[r for r in rows if r.get('pass')]
+          failed=[r for r in rows if not r.get('pass')]
+          for r in passed:
+              print('/tmp/kaggle-output/output/candidates/' + r['file'])
+          print(f"RECOVERED_QA_PASS={len(passed)} RECOVERED_QA_REJECT={len(failed)}", file=__import__('sys').stderr)
           if failed:
-              raise SystemExit('Recovered candidate technical QA failures: ' + ', '.join(r['file'] for r in failed))
-          print(f"RECOVERED_QA_PASS={len(d['assets'])}")
+              print('RECOVERED_QA_REJECTED=' + ','.join(r['file'] for r in failed), file=__import__('sys').stderr)
           PY
+          mapfile -t pass_files < /tmp/recovered-pass-files.txt
+          if (( ${#pass_files[@]} == 0 )); then
+            echo 'No recovered candidates passed strict technical QA.'
+            echo 'has_files=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           rm -rf art/incoming/final-sprites
           mkdir -p art/incoming/final-sprites
-          cp /tmp/kaggle-output/output/candidates/*_final.png art/incoming/final-sprites/
+          cp "${pass_files[@]}" art/incoming/final-sprites/
           stems=()
           for file in art/incoming/final-sprites/*_final.png; do stems+=("$(basename "$file" .png)"); done
           SPRITE_TARGETS="$(IFS=,; echo "${stems[*]}")" python3 tools/sprites/process_final_sprites.py
+          mkdir -p /tmp/kaggle-output/output/runtime
+          cp app/src/main/res/drawable-nodpi/*_final.webp /tmp/kaggle-output/output/runtime/ 2>/dev/null || true
           echo 'has_files=true' >> "$GITHUB_OUTPUT"
 
       - name: Upload recovered evidence
