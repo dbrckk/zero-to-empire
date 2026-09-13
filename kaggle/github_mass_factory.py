@@ -2,7 +2,7 @@
 """Kaggle high-throughput entrypoint for Zero -> Empire final sprite production."""
 import hashlib,json,os,re,shutil,subprocess,time,tarfile,zipfile
 from pathlib import Path
-WORK=Path('/kaggle/working');REPO=Path('/tmp/zero-to-empire');OUT=WORK/'output';COUNT=int(os.getenv('SPRITE_COUNT','56'));SEED=int(os.getenv('SPRITE_SEED',str(int(time.time())%2_000_000_000)))
+WORK=Path('/kaggle/working');REPO=Path('/tmp/zero-to-empire');OUT=WORK/'output';COUNT=int(os.getenv('SPRITE_COUNT','14'));SEED=int(os.getenv('SPRITE_SEED',str(int(time.time())%2_000_000_000)))
 ROW=re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$")
 def digest(p):
  h=hashlib.sha256()
@@ -103,14 +103,34 @@ elif q['CHR']:
 elif q['FX']:
  lane='FX_SHEETS';effective=max(1,min(COUNT,18));cmd=['python','-u','tools/sprites/kaggle_fx_sheet_factory_v1.py','--count',str(effective),'--seed',str(SEED)]
 else:raise SystemExit('No supported GPU backlog')
-print(f'KAGGLE_LANE={lane} KAGGLE_EFFECTIVE_COUNT={effective}',flush=True);subprocess.run(cmd,check=True)
-fresh=[p for p in sorted(incoming.glob('*_final.png')) if p.is_file() and (p.name not in before or before[p.name]!=digest(p))];print(f'KAGGLE_FRESH_CANDIDATES={len(fresh)}',flush=True)
+print(f'KAGGLE_LANE={lane} KAGGLE_EFFECTIVE_COUNT={effective}',flush=True)
+cdir=OUT/'candidates';cdir.mkdir(parents=True,exist_ok=True)
+def current_fresh():
+ return [p for p in sorted(incoming.glob('*_final.png')) if p.is_file() and (p.name not in before or before[p.name]!=digest(p))]
+def checkpoint_fresh():
+ fresh=current_fresh(); exported=0
+ for f in fresh:
+  try:
+   from PIL import Image
+   with Image.open(f) as im: im.verify()
+   dst=cdir/f.name
+   if not dst.exists() or digest(dst)!=digest(f): shutil.copy2(f,dst)
+   exported+=1
+  except Exception as e: print(f'KAGGLE_CHECKPOINT_SKIP={f.name}:{e}',flush=True)
+ if exported: print(f'KAGGLE_CHECKPOINT_COUNT={exported}',flush=True)
+ return fresh
+proc=subprocess.Popen(cmd)
+while proc.poll() is None:
+ checkpoint_fresh();time.sleep(20)
+checkpoint_fresh()
+if proc.returncode!=0: raise SystemExit(f'generator exited {proc.returncode}')
+fresh=current_fresh();print(f'KAGGLE_FRESH_CANDIDATES={len(fresh)}',flush=True)
 for srcname in ('branch-search-report.json',):
  src=incoming/srcname
  if src.is_file():shutil.copy2(src,OUT/srcname)
 if not fresh:raise SystemExit('No fresh candidate sprites produced by this run')
 qa=OUT/'batch-contact-sheet.png';report=OUT/'batch-qa-report.json';subprocess.run(['python','tools/sprites/build_sprite_contact_sheet.py','--output',str(qa),'--report',str(report),'--files',*[str(x) for x in fresh]],check=True)
-cdir=OUT/'candidates';cdir.mkdir();targets=[]
+cdir=OUT/'candidates';cdir.mkdir(parents=True,exist_ok=True);targets=[]
 for f in fresh:
  dst=cdir/f.name;shutil.copy2(f,dst);targets.append({'file':f.name,'sha256':digest(dst),'bytes':dst.stat().st_size})
 (OUT/'generated-targets.json').write_text(json.dumps({'count':len(targets),'engine':'yield-router-v12-positive-source-locked','lane':lane,'seed':SEED,'backlog':q,'targets':targets},indent=2),encoding='utf-8');print(f'KAGGLE_EXPORT_COUNT={len(fresh)}',flush=True);print('KAGGLE_OUTPUT_ONLY=1',flush=True)
