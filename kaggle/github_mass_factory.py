@@ -2,7 +2,7 @@
 """Kaggle high-throughput entrypoint for Zero -> Empire final sprite production."""
 import hashlib,json,os,re,shutil,subprocess,time,tarfile,zipfile
 from pathlib import Path
-WORK=Path('/kaggle/working');REPO=Path('/tmp/zero-to-empire');OUT=WORK/'output';COUNT=int(os.getenv('SPRITE_COUNT','14'));SEED=int(os.getenv('SPRITE_SEED',str(int(time.time())%2_000_000_000)))
+WORK=Path('/kaggle/working');REPO=Path('/tmp/zero-to-empire');OUT=WORK/'output';COUNT=int(os.getenv('SPRITE_COUNT','7'));SEED=int(os.getenv('SPRITE_SEED',str(int(time.time())%2_000_000_000)))
 ROW=re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$")
 def digest(p):
  h=hashlib.sha256()
