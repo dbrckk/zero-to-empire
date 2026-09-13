@@ -30,61 +30,81 @@ def next_target():
 
 def isolate(im):
     rgb=im.convert('RGB'); w,h=rgb.size; px=rgb.load()
-    samples=[]
+
+    # Adaptive edge-seeded background removal. We do not lower downstream QA:
+    # this only replaces a brittle global border-variance precheck. Pixels are
+    # accepted as background only when they are color-contiguous with the image
+    # edge and locally similar to their flood-fill parent.
+    from collections import deque
+    bg=set()
+    q=deque()
     for x in range(w):
-        samples+=(px[x,0],px[x,h-1])
+        q.append((x,0)); q.append((x,h-1))
     for y in range(h):
-        samples+=(px[0,y],px[w-1,y])
-    med=tuple(sorted(v[i] for v in samples)[len(samples)//2] for i in range(3))
-    dev=max(max(abs(v[i]-med[i]) for i in range(3)) for v in samples)
-    if dev>32: fail(f'bad border variance={dev}')
-    out=Image.new('RGBA',rgb.size,(0,0,0,0)); dst=out.load()
+        q.append((0,y)); q.append((w-1,y))
+
+    def dist(a,b):
+        return max(abs(a[i]-b[i]) for i in range(3))
+
+    while q:
+        x,y=q.popleft()
+        if (x,y) in bg:
+            continue
+        # Edge seeds are always admitted. Interior expansion is conservative
+        # and follows only smooth background color changes.
+        if 0 < x < w-1 and 0 < y < h-1:
+            neigh=[]
+            if (x-1,y) in bg: neigh.append(px[x-1,y])
+            if (x+1,y) in bg: neigh.append(px[x+1,y])
+            if (x,y-1) in bg: neigh.append(px[x,y-1])
+            if (x,y+1) in bg: neigh.append(px[x,y+1])
+            if not neigh or min(dist(px[x,y],n) for n in neigh) > 14:
+                continue
+        bg.add((x,y))
+        if x>0:q.append((x-1,y))
+        if x+1<w:q.append((x+1,y))
+        if y>0:q.append((x,y-1))
+        if y+1<h:q.append((x,y+1))
+
+    # Build alpha from non-background pixels, then retain only the largest
+    # connected subject. This rejects edge-connected scenery/gradients rather
+    # than accepting them.
+    mask=Image.new('L',(w,h),0); mp=mask.load()
     for y in range(h):
         for x in range(w):
-            p=px[x,y]; d=max(abs(p[i]-med[i]) for i in range(3))
-            a=0 if d<=18 else 255 if d>=42 else round((d-18)*255/24)
-            dst[x,y]=(p[0],p[1],p[2],a)
-    a=out.getchannel('A').filter(ImageFilter.MedianFilter(3))
-    # Remove any alpha component connected to an image edge. With a truly
-    # isolated centered building, edge-connected alpha is background leakage.
-    mask=a.point(lambda v: 255 if v>=32 else 0)
-    mp=mask.load(); seen=set(); stack=[]
-    for x in range(w):
-        if mp[x,0]: stack.append((x,0))
-        if mp[x,h-1]: stack.append((x,h-1))
-    for y in range(h):
-        if mp[0,y]: stack.append((0,y))
-        if mp[w-1,y]: stack.append((w-1,y))
-    while stack:
-        x,y=stack.pop()
-        if (x,y) in seen or not mp[x,y]: continue
-        seen.add((x,y)); mp[x,y]=0
-        if x>0: stack.append((x-1,y))
-        if x+1<w: stack.append((x+1,y))
-        if y>0: stack.append((x,y-1))
-        if y+1<h: stack.append((x,y+1))
-    # Keep only the largest remaining component to reject detached props.
-    seen=set(); comps=[]
+            if (x,y) not in bg:
+                mp[x,y]=255
+    mask=mask.filter(ImageFilter.MedianFilter(3))
+    mp=mask.load(); seen=set(); comps=[]
     for y in range(h):
         for x in range(w):
-            if not mp[x,y] or (x,y) in seen: continue
-            comp=[]; q=[(x,y)]; seen.add((x,y))
-            while q:
-                cx,cy=q.pop(); comp.append((cx,cy))
+            if not mp[x,y] or (x,y) in seen:
+                continue
+            comp=[]; qq=[(x,y)]; seen.add((x,y))
+            while qq:
+                cx,cy=qq.pop(); comp.append((cx,cy))
                 for nx,ny in ((cx-1,cy),(cx+1,cy),(cx,cy-1),(cx,cy+1)):
                     if 0<=nx<w and 0<=ny<h and mp[nx,ny] and (nx,ny) not in seen:
-                        seen.add((nx,ny)); q.append((nx,ny))
+                        seen.add((nx,ny)); qq.append((nx,ny))
             comps.append(comp)
-    if not comps: fail('no centered subject after border cleanup')
+    if not comps:
+        fail('no isolated subject after adaptive border flood fill')
+
     keep=set(max(comps,key=len))
-    cleaned=Image.new('RGBA',rgb.size,(0,0,0,0)); cp=cleaned.load()
-    src=out.load()
+    # Reject pathological isolation where the retained component itself touches
+    # an edge; downstream QA would reject it anyway, so fail early.
+    if any(x in (0,w-1) or y in (0,h-1) for x,y in keep):
+        fail('isolated subject still touches image edge')
+
+    isolated=Image.new('RGBA',(w,h),(0,0,0,0)); dst=isolated.load()
     for x,y in keep:
-        cp[x,y]=src[x,y]
-    a=cleaned.getchannel('A')
-    bbox=a.getbbox()
-    if not bbox: fail('empty isolation after component cleanup')
-    subject=cleaned.crop(bbox)
+        r,g,b=px[x,y]
+        dst[x,y]=(r,g,b,255)
+
+    bbox=isolated.getchannel('A').getbbox()
+    if not bbox:
+        fail('empty isolation after adaptive cleanup')
+    subject=isolated.crop(bbox)
     sw,sh=subject.size
     side=max(768, int(max(sw,sh)/0.72))
     side=min(2048, side)
