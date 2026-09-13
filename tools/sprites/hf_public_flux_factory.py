@@ -76,7 +76,7 @@ def main():
     row=next_target(); asset_id, name, desc, runtime, status=row
     prompt=prompt_for(asset_id,desc)
     token=os.getenv('HF_TOKEN') or None
-    client=Client('black-forest-labs/FLUX.1-schnell', token=token, verbose=False)
+    client=Client('black-forest-labs/FLUX.1-schnell', hf_token=token, verbose=False)
     api=client.view_api(return_format='dict')
     print('HF_PUBLIC_FLUX_API='+json.dumps(api)[:4000], flush=True)
     result=None; errors=[]
