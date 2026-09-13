@@ -13,7 +13,7 @@ on:
       - 'kaggle/github_mass_factory.py'
       - 'kaggle/kernel-metadata.template.json'
   schedule:
-    - cron: '17 * * * *'
+    - cron: '17 */6 * * *'
 
 permissions:
   contents: read
@@ -172,8 +172,21 @@ jobs:
           p.write_text(s)
           PY
       - name: Push and start Kaggle GPU run
+        id: push-kaggle
         if: steps.kernel-state.outputs.reuse != 'true'
-        run: kaggle kernels push -p /tmp/zte-kaggle
+        shell: bash
+        run: |
+          set +e
+          out="$(kaggle kernels push -p /tmp/zte-kaggle 2>&1)"
+          rc=$?
+          set -e
+          printf '%s\n' "$out"
+          if printf '%s\n' "$out" | grep -Fq 'Maximum weekly GPU quota'; then
+            echo 'KAGGLE_WEEKLY_GPU_QUOTA_EXHAUSTED=1' >> "$GITHUB_ENV"
+            echo 'quota_exhausted=true' >> "$GITHUB_OUTPUT"
+            exit 78
+          fi
+          exit "$rc"
       - name: Wait for Kaggle
         id: wait-kaggle
         shell: bash
