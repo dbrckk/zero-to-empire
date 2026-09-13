@@ -34,7 +34,7 @@ def fetch(prompt_text,seed):
     q=urllib.parse.quote(prompt_text,safe='')
     url=f'https://image.pollinations.ai/prompt/{q}?model=flux&width=512&height=512&seed={int(seed)}&nologo=true&private=true&enhance=false&safe=true'
     req=urllib.request.Request(url,headers={'User-Agent':'zero-to-empire-github-actions/1.0'})
-    with urllib.request.urlopen(req,timeout=180) as r: data=r.read()
+    with urllib.request.urlopen(req,timeout=90) as r: data=r.read()
     if len(data)<8000: raise RuntimeError(f'response too small: {len(data)}')
     p=Path('/tmp/chr-frame.png'); p.write_bytes(data)
     return Image.open(p).convert('RGBA')
