@@ -40,7 +40,13 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          f=$(find art/incoming/final-sprites -maxdepth 1 -type f -name 'zte_business_*_final.png' | tail -1)
+          f=$(python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('art/production/pollinations-report.json').read_text())
+          print(d['candidate'])
+          PY
+          )
           test -s "$f"
           echo "file=$f" >> "$GITHUB_OUTPUT"
           echo "stem=$(basename "$f" .png)" >> "$GITHUB_OUTPUT"
