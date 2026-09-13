@@ -77,7 +77,7 @@ jobs:
           # Reuse only when the published bundle fingerprint matches the current
           # sprite source tree. Version number alone is not sufficient: an older
           # ready dataset can silently feed stale generators/manifest to a new kernel.
-          CURRENT_BUNDLE_SHA="$(git rev-parse HEAD:docs/art/FINAL_AAA_SPRITE_MANIFEST.md)-$(git rev-parse HEAD:tools/sprites)-$(git rev-parse HEAD:app/src/main/res/drawable-nodpi 2>/dev/null || echo none)"
+          CURRENT_BUNDLE_SHA="$(git rev-parse HEAD:docs/art/FINAL_AAA_SPRITE_MANIFEST.md)-$(git rev-parse HEAD:tools/sprites)-$(git rev-parse HEAD:app/src/main/res/drawable-nodpi 2>/dev/null || echo none)-$(git rev-parse HEAD:art/incoming/final-sprites 2>/dev/null || echo none)"
           echo "CURRENT_BUNDLE_SHA=$CURRENT_BUNDLE_SHA"
           if [ "$STATE" = ready ] && [ "${VERSION:-0}" -ge 4 ]; then
             # Encode the source fingerprint in a tiny marker filename. Listing
