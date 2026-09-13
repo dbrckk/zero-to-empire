@@ -121,7 +121,24 @@ jobs:
             done
           fi
           test "$READY" = 1 || { echo 'Kaggle dataset version not ready within 30 minutes'; exit 75; }
+      - name: Reuse healthy Kaggle kernel when already active
+        id: kernel-state
+        shell: bash
+        run: |
+          set -u
+          slug="${KAGGLE_USERNAME}/zero-to-empire-sprite-factory"
+          status="$(kaggle kernels status "$slug" 2>&1 || true)"
+          echo "$status"
+          if echo "$status" | grep -Eqi 'KernelWorkerStatus\.(RUNNING|QUEUED)|status "(RUNNING|QUEUED)"'; then
+            echo 'reuse=true' >> "$GITHUB_OUTPUT"
+            echo 'KAGGLE_REUSE_ACTIVE_KERNEL=1'
+          else
+            echo 'reuse=false' >> "$GITHUB_OUTPUT"
+            echo 'KAGGLE_REUSE_ACTIVE_KERNEL=0'
+          fi
+
       - name: Prepare Kaggle kernel
+        if: steps.kernel-state.outputs.reuse != 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -138,6 +155,7 @@ jobs:
           p.write_text(s)
           PY
       - name: Push and start Kaggle GPU run
+        if: steps.kernel-state.outputs.reuse != 'true'
         run: kaggle kernels push -p /tmp/zte-kaggle
       - name: Wait for Kaggle
         id: wait-kaggle
