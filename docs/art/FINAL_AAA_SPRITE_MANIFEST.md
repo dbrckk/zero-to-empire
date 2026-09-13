@@ -267,7 +267,7 @@ If a new runtime sprite is later required, it must be added here first and the d
 | TER-04 | Expansion clean commercial pavement | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_04_final.webp` | DONE |
 | TER-05 | Expansion multi-lane road connector | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_05_final.webp` | DONE |
 | TER-06 | Expansion loading pad | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_06_final.webp` | DONE |
-| TER-07 | Expansion energy conduit | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_07_final.webp` | TODO |
+| TER-07 | Expansion energy conduit | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_07_final.webp` | DONE |
 | TER-08 | Megastructure reinforced platform | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_08_final.webp` | DONE |
 | TER-09 | Megastructure maglev/rail connector | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_09_final.webp` | DONE |
 | TER-10 | Megastructure elevated service deck | Seam-safe world tile/connector with transparent edges where required and no baked UI. | `app/src/main/res/drawable-nodpi/zte_terrain_10_final.webp` | DONE |
@@ -279,14 +279,14 @@ If a new runtime sprite is later required, it must be added here first and the d
 
 | ID | Asset | Description | Runtime target | Status |
 |---|---|---|---|---|
-| FX-00 | warm welding sparks | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_00_final.webp` | TODO |
-| FX-01 | small furnace flame | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_01_final.webp` | TODO |
-| FX-02 | large furnace/plasma flame | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_02_final.webp` | TODO |
-| FX-03 | industrial smoke puff | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_03_final.webp` | TODO |
-| FX-04 | steam vent | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_04_final.webp` | TODO |
-| FX-05 | cyan energy pulse | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_05_final.webp` | TODO |
-| FX-06 | warm energy pulse | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_06_final.webp` | TODO |
-| FX-07 | construction dust/debris | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_07_final.webp` | TODO |
+| FX-00 | warm welding sparks | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_00_final.webp` | DONE |
+| FX-01 | small furnace flame | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_01_final.webp` | DONE |
+| FX-02 | large furnace/plasma flame | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_02_final.webp` | DONE |
+| FX-03 | industrial smoke puff | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_03_final.webp` | DONE |
+| FX-04 | steam vent | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_04_final.webp` | DONE |
+| FX-05 | cyan energy pulse | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_05_final.webp` | DONE |
+| FX-06 | warm energy pulse | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_06_final.webp` | DONE |
+| FX-07 | construction dust/debris | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_07_final.webp` | DONE |
 | FX-08 | upgrade construction flash | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_08_final.webp` | RUNTIME |
 | FX-09 | income pickup sparkle | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_09_final.webp` | DONE |
 | FX-10 | electric arc | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_10_final.webp` | DONE |
