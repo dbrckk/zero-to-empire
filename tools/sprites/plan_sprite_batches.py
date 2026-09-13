@@ -23,8 +23,8 @@ ROW = re.compile(
 BATCH_SIZE = {
     "procedural-fx": 18,
     "procedural-terrain": 14,
-    "gpu-static": 12,
-    "gpu-animation": 4,
+    "gpu-static": 7,
+    "gpu-animation": 2,
     "integration-only": 32,
     "blocked": 24,
 }
@@ -86,11 +86,24 @@ def main() -> int:
     for asset in remaining:
         lanes[asset.lane].append(asset)
 
+    building_families: dict[str, list[str]] = {}
+    character_groups: dict[str, list[str]] = {}
+    for a in remaining:
+        if a.id.startswith("BLD-"):
+            family="-".join(a.id.split("-")[:2])
+            building_families.setdefault(family, []).append(a.id)
+        elif a.id.startswith("CHR-"):
+            parts=a.id.split("-")
+            group="-".join(parts[:2])
+            character_groups.setdefault(group, []).append(a.id)
+
     plan = {
         "manifest_total": len(rows),
         "done": len(rows) - len(remaining),
         "remaining": len(remaining),
         "materialized_remaining": sum(a.materialized for a in remaining),
+        "building_families": building_families,
+        "character_groups": character_groups,
         "lanes": {},
     }
     for lane, assets in lanes.items():
@@ -110,6 +123,8 @@ def main() -> int:
         f"- DONE: **{plan['done']}**",
         f"- Remaining: **{plan['remaining']}**",
         f"- Already materialized but not DONE: **{plan['materialized_remaining']}**",
+        f"- Remaining building families: **{len(plan['building_families'])}**",
+        f"- Remaining character groups: **{len(plan['character_groups'])}**",
         "", "| Lane | Assets | Batch size | Batches |", "|---|---:|---:|---:|",
     ]
     for lane, info in plan["lanes"].items():
