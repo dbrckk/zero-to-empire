@@ -116,6 +116,32 @@ def v164_anchor_score(final,cov):
 # Preserve strict slab gate. Add a tier-dependent adjacent-identity floor so late
 # tiers cannot replace the source with a fresh scene even if coverage grows.
 V15_LIVE_GATE=v15.live_gate
+
+def v164_slab_score(alpha):
+    """Detect a detached/site-like ground card without penalizing the factory's own broad base.
+
+    v15 counted every wide lower row as slab, so legitimate late-tier factories
+    with a broad wall base repeatedly failed at T4/T5. A site card is instead a
+    wide, thin lower component whose width expands materially beyond the main
+    body above it.
+    """
+    sm=alpha.resize((128,128),v14.Image.Resampling.BILINEAR)
+    px=sm.load()
+    widths=[]
+    for y in range(8,124):
+        xs=[x for x in range(4,124) if px[x,y]>=32]
+        widths.append((y, (xs[-1]-xs[0]+1)/120 if xs else 0.0))
+    body=[w for y,w in widths if 42<=y<88 and w>0]
+    lower=[w for y,w in widths if 88<=y<122 and w>0]
+    if not body or not lower:return 0.0
+    body_ref=float(np.median(body))
+    suspicious=sum(w>.76 and w>body_ref*1.22 for w in lower)
+    return suspicious/max(len(lower),1)
+
+# Keep the strict no-site-card rule, but measure detached lateral expansion
+# rather than treating a legitimate broad building base as a floor slab.
+v14.slab_score=v164_slab_score
+
 def v164_live_gate(recs,new_final,new_cov,tier):
     ok,reasons=V15_LIVE_GATE(recs,new_final,new_cov,tier)
     if recs:
