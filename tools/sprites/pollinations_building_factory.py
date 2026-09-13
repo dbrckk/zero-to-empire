@@ -44,9 +44,57 @@ def isolate(im):
             p=px[x,y]; d=max(abs(p[i]-med[i]) for i in range(3))
             a=0 if d<=18 else 255 if d>=42 else round((d-18)*255/24)
             dst[x,y]=(p[0],p[1],p[2],a)
-    a=out.getchannel('A').filter(ImageFilter.MedianFilter(3)); out.putalpha(a)
-    if not a.getbbox(): fail('empty isolation')
-    return out
+    a=out.getchannel('A').filter(ImageFilter.MedianFilter(3))
+    # Remove any alpha component connected to an image edge. With a truly
+    # isolated centered building, edge-connected alpha is background leakage.
+    mask=a.point(lambda v: 255 if v>=32 else 0)
+    mp=mask.load(); seen=set(); stack=[]
+    for x in range(w):
+        if mp[x,0]: stack.append((x,0))
+        if mp[x,h-1]: stack.append((x,h-1))
+    for y in range(h):
+        if mp[0,y]: stack.append((0,y))
+        if mp[w-1,y]: stack.append((w-1,y))
+    while stack:
+        x,y=stack.pop()
+        if (x,y) in seen or not mp[x,y]: continue
+        seen.add((x,y)); mp[x,y]=0
+        if x>0: stack.append((x-1,y))
+        if x+1<w: stack.append((x+1,y))
+        if y>0: stack.append((x,y-1))
+        if y+1<h: stack.append((x,y+1))
+    # Keep only the largest remaining component to reject detached props.
+    seen=set(); comps=[]
+    for y in range(h):
+        for x in range(w):
+            if not mp[x,y] or (x,y) in seen: continue
+            comp=[]; q=[(x,y)]; seen.add((x,y))
+            while q:
+                cx,cy=q.pop(); comp.append((cx,cy))
+                for nx,ny in ((cx-1,cy),(cx+1,cy),(cx,cy-1),(cx,cy+1)):
+                    if 0<=nx<w and 0<=ny<h and mp[nx,ny] and (nx,ny) not in seen:
+                        seen.add((nx,ny)); q.append((nx,ny))
+            comps.append(comp)
+    if not comps: fail('no centered subject after border cleanup')
+    keep=set(max(comps,key=len))
+    cleaned=Image.new('RGBA',rgb.size,(0,0,0,0)); cp=cleaned.load()
+    src=out.load()
+    for x,y in keep:
+        cp[x,y]=src[x,y]
+    a=cleaned.getchannel('A')
+    bbox=a.getbbox()
+    if not bbox: fail('empty isolation after component cleanup')
+    subject=cleaned.crop(bbox)
+    sw,sh=subject.size
+    side=max(768, int(max(sw,sh)/0.72))
+    side=min(2048, side)
+    if max(sw,sh)>int(side*0.72):
+        scale=(side*0.72)/max(sw,sh)
+        subject=subject.resize((max(1,round(sw*scale)),max(1,round(sh*scale))),Image.Resampling.LANCZOS)
+        sw,sh=subject.size
+    canvas=Image.new('RGBA',(side,side),(0,0,0,0))
+    canvas.alpha_composite(subject,((side-sw)//2,(side-sh)//2))
+    return canvas
 
 def main():
     aid,name,desc,runtime,status=next_target()
@@ -56,7 +104,7 @@ def main():
     prompt=(
       f'AAA premium mobile strategy game industrial factory sprite, family {int(fam)}, tier {tier}. {desc}. '
       'single connected factory only, centered, orthographic three-quarter view, graphite steel, amber and cyan emissive accents, '
-      'clean readable silhouette, no people, no vehicles, no text, no signs, no crane, no scenery, no road, no floor slab, no platform, '
+      'clean readable silhouette occupying no more than 65 percent of the canvas, generous empty margin on every side, no people, no vehicles, no text, no signs, no crane, no scenery, no road, no floor slab, no platform, '
       'perfectly flat uniform neutral gray background, no gradient, no vignette, no horizon'
     )
     q=urllib.parse.quote(prompt,safe='')
