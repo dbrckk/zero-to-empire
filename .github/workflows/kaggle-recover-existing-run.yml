@@ -15,8 +15,8 @@ jobs:
       KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
     steps:
       - uses: actions/checkout@v4
-      - name: Install Kaggle CLI
-        run: python -m pip install --upgrade kaggle
+      - name: Install recovery dependencies
+        run: python -m pip install --upgrade kaggle 'Pillow<12'
       - name: Wait for existing kernel only
         id: wait
         shell: bash
@@ -37,6 +37,40 @@ jobs:
           rm -rf /tmp/kaggle-output; mkdir -p /tmp/kaggle-output
           kaggle kernels output "${KAGGLE_USERNAME}/zero-to-empire-sprite-factory" -p /tmp/kaggle-output --force || true
           find /tmp/kaggle-output -maxdepth 4 -type f -print || true
+      - name: Strict QA for recovered candidates
+        id: qa
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          files=(/tmp/kaggle-output/output/candidates/*_final.png)
+          if (( ${#files[@]} == 0 )); then
+            echo 'No recovered candidates available for QA.'
+            echo 'has_files=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          python3 tools/sprites/build_sprite_contact_sheet.py \
+            --files "${files[@]}" \
+            --output /tmp/kaggle-output/output/recovered-contact-sheet.png \
+            --report /tmp/kaggle-output/output/recovered-qa-report.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('/tmp/kaggle-output/output/recovered-qa-report.json')
+          d=json.loads(p.read_text())
+          failed=[r for r in d['assets'] if not r.get('pass')]
+          if failed:
+              raise SystemExit('Recovered candidate technical QA failures: ' + ', '.join(r['file'] for r in failed))
+          print(f"RECOVERED_QA_PASS={len(d['assets'])}")
+          PY
+          rm -rf art/incoming/final-sprites
+          mkdir -p art/incoming/final-sprites
+          cp /tmp/kaggle-output/output/candidates/*_final.png art/incoming/final-sprites/
+          stems=()
+          for file in art/incoming/final-sprites/*_final.png; do stems+=("$(basename "$file" .png)"); done
+          SPRITE_TARGETS="$(IFS=,; echo "${stems[*]}")" python3 tools/sprites/process_final_sprites.py
+          echo 'has_files=true' >> "$GITHUB_OUTPUT"
+
       - name: Upload recovered evidence
         if: always()
         uses: actions/upload-artifact@v4
