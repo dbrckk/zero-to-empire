@@ -10,6 +10,7 @@ slab acceptance to manufacture yield.
 from __future__ import annotations
 import importlib.util
 from pathlib import Path
+import numpy as np
 
 HERE=Path(__file__).resolve().parent
 SPEC=importlib.util.spec_from_file_location('v15',HERE/'kaggle_building_family_factory_v15.py')
