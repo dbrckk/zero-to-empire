@@ -1,0 +1,82 @@
+name: HF Public FLUX Building Candidate
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Optional TODO building ID (e.g. BLD-04-T0)
+        required: false
+        default: ''
+  push:
+    branches: [main]
+    paths:
+      - 'tools/sprites/hf_public_flux_factory.py'
+      - '.github/workflows/hf-public-flux-building.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hf-public-flux-building
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      SPRITE_TARGET: ${{ inputs.target || '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install client and strict image tooling
+        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0' 'gradio_client>=1.13,<2'
+      - name: Generate one building candidate through public FLUX Space
+        run: python -u tools/sprites/hf_public_flux_factory.py
+      - name: Resolve generated target
+        id: target
+        shell: bash
+        run: |
+          set -euo pipefail
+          f=$(find art/incoming/final-sprites -maxdepth 1 -type f -name 'zte_business_*_final.png' -newer art/production/hf-public-flux-report.json 2>/dev/null | head -1 || true)
+          if [ -z "$f" ]; then
+            f=$(find art/incoming/final-sprites -maxdepth 1 -type f -name 'zte_business_*_final.png' | tail -1)
+          fi
+          test -s "$f"
+          echo "file=$f" >> "$GITHUB_OUTPUT"
+          echo "stem=$(basename "$f" .png)" >> "$GITHUB_OUTPUT"
+      - name: Strict technical QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          f='${{ steps.target.outputs.file }}'
+          python tools/sprites/build_sprite_contact_sheet.py --files "$f" --output art/production/hf-public-flux-contact-sheet.png --report art/production/hf-public-flux-qa.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('art/production/hf-public-flux-qa.json').read_text())
+          rows=d.get('assets',[])
+          if len(rows)!=1 or not rows[0].get('pass'):
+              raise SystemExit('Strict QA rejected public FLUX candidate: '+json.dumps(rows))
+          print('HF_PUBLIC_FLUX_STRICT_QA_PASS=1')
+          PY
+      - name: Verify runtime finalizer accepts candidate
+        shell: bash
+        run: |
+          stem='${{ steps.target.outputs.stem }}'
+          SPRITE_TARGETS="$stem" python tools/sprites/process_final_sprites.py
+      - name: Upload candidate and QA evidence only
+        uses: actions/upload-artifact@v4
+        with:
+          name: hf-public-flux-building-candidate
+          path: |
+            ${{ steps.target.outputs.file }}
+            app/src/main/res/drawable-nodpi/${{ steps.target.outputs.stem }}.webp
+            art/production/hf-public-flux-report.json
+            art/production/hf-public-flux-qa.json
+            art/production/hf-public-flux-contact-sheet.png
+          if-no-files-found: error
+          retention-days: 14
