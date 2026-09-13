@@ -101,11 +101,11 @@ incoming=REPO/'art/incoming/final-sprites';incoming.mkdir(parents=True,exist_ok=
 if q['BLD']>=5:
  lane='BUILDING_FAMILIES';effective=max(7,min(COUNT,56));cmd=['python','-u','tools/sprites/kaggle_building_family_factory_v16.py','--count',str(effective),'--seed',str(SEED)]
 elif q['STATIC']:
- lane='STATIC';effective=max(14,min(COUNT,56));cmd=['python','-u','tools/sprites/kaggle_sprite_factory.py','--kind','ALL','--count',str(effective),'--seed',str(SEED)]
+ lane='STATIC';effective=max(4,min(COUNT,7));cmd=['python','-u','tools/sprites/kaggle_sprite_factory.py','--kind','ALL','--count',str(effective),'--seed',str(SEED)]
 elif q['CHR']:
- lane='CHARACTER_SHEETS';effective=max(4,min(COUNT,8));cmd=['python','-u','tools/sprites/kaggle_character_sheet_factory_v1.py','--count',str(effective),'--seed',str(SEED)]
+ lane='CHARACTER_SHEETS';effective=max(1,min(COUNT,2));cmd=['python','-u','tools/sprites/kaggle_character_sheet_factory_v1.py','--count',str(effective),'--seed',str(SEED)]
 elif q['FX']:
- lane='FX_SHEETS';effective=max(1,min(COUNT,18));cmd=['python','-u','tools/sprites/kaggle_fx_sheet_factory_v1.py','--count',str(effective),'--seed',str(SEED)]
+ lane='FX_SHEETS';effective=max(1,min(COUNT,7));cmd=['python','-u','tools/sprites/kaggle_fx_sheet_factory_v1.py','--count',str(effective),'--seed',str(SEED)]
 else:raise SystemExit('No supported GPU backlog')
 print(f'KAGGLE_LANE={lane} KAGGLE_EFFECTIVE_COUNT={effective}',flush=True)
 cdir=OUT/'candidates';cdir.mkdir(parents=True,exist_ok=True)
