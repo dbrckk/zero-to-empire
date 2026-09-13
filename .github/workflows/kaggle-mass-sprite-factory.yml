@@ -161,10 +161,6 @@ jobs:
           kaggle kernels output "${KAGGLE_USERNAME}/zero-to-empire-sprite-factory" -p /tmp/kaggle-output --force || true
           find /tmp/kaggle-output/output -maxdepth 3 -type f -print 2>/dev/null || true
           find /tmp/kaggle-output -maxdepth 2 -type f -name '*.log' -print || true
-      - name: Require successful Kaggle kernel
-        if: always() && steps.wait-kaggle.outcome == 'success'
-        shell: bash
-        run: test "${KAGGLE_FINAL_STATUS:-UNKNOWN}" = 'COMPLETE'
       - name: Require fresh technically validated candidates
         shell: bash
         run: |
@@ -180,6 +176,10 @@ jobs:
           expected=len(list(pathlib.Path('/tmp/kaggle-output/output/candidates').glob('*_final.png')))
           if len(rows) != expected: raise SystemExit('QA report does not cover every candidate')
           PY
+      - name: Require successful Kaggle kernel
+        if: always() && steps.wait-kaggle.outcome == 'success'
+        shell: bash
+        run: test "${KAGGLE_FINAL_STATUS:-UNKNOWN}" = 'COMPLETE'
       - name: Upload exhaustive QA evidence
         if: always()
         uses: actions/upload-artifact@v4
