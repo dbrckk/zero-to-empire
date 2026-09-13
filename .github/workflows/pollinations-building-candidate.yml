@@ -8,7 +8,7 @@ on:
       batch_count:
         description: Strict building candidates to attempt in this run
         required: false
-        default: '6'
+        default: '8'
   push:
     branches: [main]
     paths:
@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
-      POLLINATIONS_BATCH_COUNT: ${{ inputs.batch_count || '6' }}
+      POLLINATIONS_BATCH_COUNT: ${{ inputs.batch_count || '8' }}
       POLLINATIONS_ATTEMPTS: '3'
       POLLINATIONS_BASE_SEED: ${{ github.run_id }}
     steps:
