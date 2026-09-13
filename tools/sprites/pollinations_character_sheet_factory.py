@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 import json, math, os, re, urllib.parse, urllib.request
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from PIL import Image
 from rembg import remove, new_session
@@ -108,8 +109,12 @@ def main():
     for attempt in range(attempts):
         seed=(base+attempt*7919)%2147483647;frames=[]
         try:
-            for fi,pose in enumerate(POSE_HINT[action][:ACTION[action][1]]):
-                frame,cov=finish_frame(fetch(prompt(role,action,pose),seed),session)
+            hints=POSE_HINT[action][:ACTION[action][1]]
+            prompts=[prompt(role,action,pose) for pose in hints]
+            with ThreadPoolExecutor(max_workers=min(3,len(prompts))) as ex:
+                raws=list(ex.map(lambda text: fetch(text,seed),prompts))
+            for fi,raw in enumerate(raws):
+                frame,cov=finish_frame(raw,session)
                 frames.append(frame);print(f'CHR_FRAME={aid} frame={fi} cov={cov:.3f}',flush=True)
             ok,why=sheet_qa(frames)
             if not ok: raise RuntimeError(why)
