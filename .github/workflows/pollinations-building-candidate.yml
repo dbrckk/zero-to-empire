@@ -31,6 +31,9 @@ jobs:
       SPRITE_TARGET: ${{ inputs.target || '' }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -104,7 +107,25 @@ jobs:
           cp art/production/pollinations-report.json /tmp/pollinations-report.json
           cp art/production/pollinations-qa.json /tmp/pollinations-qa.json
           git reset --hard HEAD
+          rm -f '${{ steps.target.outputs.file }}' 'app/src/main/res/drawable-nodpi/${{ steps.target.outputs.stem }}.webp'
           git pull --ff-only origin main
+          current_status="$(python - <<'PY'
+          import json
+          from pathlib import Path
+          target=json.loads(Path('/tmp/pollinations-report.json').read_text())['target']
+          status=''
+          for line in Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md').read_text().splitlines():
+              if line.startswith('|'):
+                  cols=[x.strip() for x in line.split('|')[1:-1]]
+                  if len(cols)==5 and cols[0]==target:
+                      status=cols[4].upper(); break
+          print(status)
+          PY
+          )"
+          if [ "$current_status" != "TODO" ]; then
+            echo "POLLINATIONS_SKIP_ALREADY_ADVANCED=$current_status"
+            exit 0
+          fi
           cp /tmp/pollinations-candidate.png '${{ steps.target.outputs.file }}'
           cp /tmp/pollinations-runtime.webp 'app/src/main/res/drawable-nodpi/${{ steps.target.outputs.stem }}.webp'
           cp /tmp/pollinations-report.json art/production/pollinations-report.json
