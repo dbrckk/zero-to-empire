@@ -28,7 +28,7 @@ def next_target():
     if not rows: fail('no TODO buildings')
     return rows[0]
 
-def isolate(im):
+def isolate(im, session=None):
     # CPU background removal via U²-Net/rembg. This is deterministic post-
     # processing on the GitHub runner; downstream QA thresholds remain unchanged.
     try:
@@ -38,7 +38,7 @@ def isolate(im):
 
     src=im.convert('RGBA')
     try:
-        cut=remove(src, alpha_matting=False)
+        cut=remove(src, session=session, alpha_matting=False)
     except Exception as e:
         fail('rembg failed: '+repr(e))
     if not isinstance(cut, Image.Image):
@@ -95,8 +95,8 @@ def isolate(im):
     canvas.alpha_composite(subject,((side-sw)//2,(side-sh)//2))
     return canvas
 
-def main():
-    aid,name,desc,runtime,status=next_target()
+def generate(row, seed=73117, session=None, report_path: Path | None = None):
+    aid,name,desc,runtime,status=row
     m=re.fullmatch(r'BLD-(\d{2})-T(\d)',aid)
     if not m: fail('bad target '+aid)
     fam,tier=m.groups()
@@ -107,25 +107,39 @@ def main():
       'perfectly flat uniform neutral gray background, no gradient, no vignette, no horizon'
     )
     q=urllib.parse.quote(prompt,safe='')
-    url=f'https://image.pollinations.ai/prompt/{q}?model=flux&width=1024&height=1024&seed=73117&nologo=true&private=true&enhance=false&safe=true'
-    tmp=Path('/tmp/pollinations.png')
+    url=f'https://image.pollinations.ai/prompt/{q}?model=flux&width=1024&height=1024&seed={int(seed)}&nologo=true&private=true&enhance=false&safe=true'
+    tmp=Path(f'/tmp/pollinations-{aid.lower()}-{int(seed)}.png')
     req=urllib.request.Request(url,headers={'User-Agent':'zero-to-empire-github-actions/1.0'})
     try:
         with urllib.request.urlopen(req,timeout=180) as r:
             data=r.read()
     except Exception as e:
-        fail('request failed: '+repr(e))
-    if len(data)<10000: fail(f'response too small: {len(data)} bytes')
+        raise RuntimeError('request failed: '+repr(e))
+    if len(data)<10000: raise RuntimeError(f'response too small: {len(data)} bytes')
     tmp.write_bytes(data)
     try: im=Image.open(tmp)
-    except Exception as e: fail('decode failed: '+repr(e))
-    isolated=isolate(im)
+    except Exception as e: raise RuntimeError('decode failed: '+repr(e))
+    isolated=isolate(im, session=session)
     stem=f'zte_business_{fam}_t{tier}_final'
     INCOMING.mkdir(parents=True,exist_ok=True)
     out=INCOMING/f'{stem}.png'
     isolated.save(out,'PNG',optimize=True)
-    REPORT.parent.mkdir(parents=True,exist_ok=True)
-    REPORT.write_text(json.dumps({'provider':'pollinations-anonymous','target':aid,'url_host':'image.pollinations.ai','candidate':str(out.relative_to(ROOT))},indent=2),encoding='utf-8')
+    report={
+      'provider':'pollinations-anonymous','target':aid,'seed':int(seed),
+      'url_host':'image.pollinations.ai','candidate':str(out.relative_to(ROOT))
+    }
+    rp=report_path or REPORT
+    rp.parent.mkdir(parents=True,exist_ok=True)
+    rp.write_text(json.dumps(report,indent=2),encoding='utf-8')
     print('POLLINATIONS_CANDIDATE='+str(out.relative_to(ROOT)))
+    return out, report
 
-if __name__=='__main__':main()
+def main():
+    row=next_target()
+    seed=int(os.getenv('POLLINATIONS_SEED','73117'))
+    try:
+        generate(row, seed=seed)
+    except Exception as e:
+        fail(str(e))
+
+if __name__=='__main__': main()
