@@ -62,6 +62,12 @@ def resolve_source():
   candidates=[base]
   try:candidates.extend(p for p in base.iterdir() if p.is_dir())
   except Exception:pass
+  # Kaggle may unpack a dataset directory (repo_bundle/) one level below the
+  # dataset mount. Search a shallow tree before falling back to archives.
+  try:
+   for p in base.glob('*/*'):
+    if p.is_dir(): candidates.append(p)
+  except Exception:pass
   for candidate in candidates:
    if valid_tree(candidate):
     print(f'KAGGLE_BUNDLE_TREE={candidate}',flush=True);return 'tree',candidate
