@@ -37,7 +37,7 @@ def run(cmd,env=None):
     return subprocess.run(cmd,cwd=ROOT,env=env,text=True,capture_output=True)
 
 def main():
-    count=max(1,min(int(os.getenv('POLLINATIONS_BATCH_COUNT','4')),6))
+    count=max(1,min(int(os.getenv('POLLINATIONS_BATCH_COUNT','8')),8))
     attempts=max(1,min(int(os.getenv('POLLINATIONS_ATTEMPTS','3')),4))
     base=int(os.getenv('POLLINATIONS_BASE_SEED','73117'))
     PROD.mkdir(parents=True,exist_ok=True)
