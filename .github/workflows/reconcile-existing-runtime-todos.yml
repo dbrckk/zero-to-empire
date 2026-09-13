@@ -30,7 +30,7 @@ jobs:
           import json
 
           MANIFEST=Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          TARGET_IDS={'TER-07',*(f'FX-{i:02d}' for i in range(8)),'FX-08','FX-17','BLD-02-T4','BLD-02-T5','BLD-02-T6','BLD-03-T0','BLD-03-T1'}
+          TARGET_IDS=None
           ALPHA=8
 
           def major_components(alpha):
@@ -52,10 +52,9 @@ jobs:
           for line in MANIFEST.read_text(encoding='utf-8').splitlines():
               if not line.startswith('|') or 'app/src/main/res/' not in line: continue
               cols=[c.strip() for c in line.split('|')[1:-1]]
-              if len(cols)==5 and cols[0] in TARGET_IDS: rows.append(cols)
-          seen={r[0] for r in rows}
-          missing=TARGET_IDS-seen
-          if missing: raise SystemExit('Missing manifest rows: '+','.join(sorted(missing)))
+              if len(cols)==5 and cols[4].upper() in {'TODO','RUNTIME'} and Path(cols[3].replace(chr(96),'')).is_file(): rows.append(cols)
+          if not rows:
+              print('No existing TODO/RUNTIME files require reconciliation')
 
           passed=[]; report=[]
           for asset_id,name,desc,runtime,status in rows:
