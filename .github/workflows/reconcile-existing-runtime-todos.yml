@@ -57,6 +57,8 @@ jobs:
               if len(cols)==5 and cols[4].upper() in {'TODO','RUNTIME'} and Path(cols[3].replace(chr(96),'')).is_file(): rows.append(cols)
           if not rows:
               print('No existing TODO/RUNTIME files require reconciliation')
+              Path('/tmp/runtime-pass.txt').write_text('',encoding='utf-8')
+              raise SystemExit(0)
 
           passed=[]; report=[]
           for asset_id,name,desc,runtime,status in rows:
