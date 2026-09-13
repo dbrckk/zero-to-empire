@@ -1,0 +1,70 @@
+name: Sprite Completion Gate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
+      - 'app/src/main/res/drawable-nodpi/**_final.webp'
+      - 'tools/sprites/audit_complete_sprite_manifest.py'
+      - 'tools/sprites/validate_runtime_asset.py'
+      - '.github/workflows/sprite-completion-gate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sprite-completion-gate
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Check completion state
+        id: state
+        shell: bash
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          from pathlib import Path
+          pending=0;total=0
+          for line in Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md').read_text().splitlines():
+              if not line.startswith('|') or 'app/src/main/res/' not in line: continue
+              cols=[c.strip() for c in line.split('|')[1:-1]]
+              if len(cols)!=5: continue
+              total+=1
+              pending += cols[4].upper()!='DONE'
+          print(f'total={total}')
+          print(f'pending={pending}')
+          print('complete=true' if total==235 and pending==0 else 'complete=false')
+          PY
+
+      - name: Install Pillow
+        if: steps.state.outputs.complete == 'true'
+        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
+
+      - name: Audit all 235 sprite runtimes
+        if: steps.state.outputs.complete == 'true'
+        run: python tools/sprites/audit_complete_sprite_manifest.py
+
+      - name: Commit final audit evidence
+        if: steps.state.outputs.complete == 'true'
+        shell: bash
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add art/production/final-sprite-completion-audit.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'art: record final 235-sprite completion audit'
+          git pull --rebase origin main
+          git push
