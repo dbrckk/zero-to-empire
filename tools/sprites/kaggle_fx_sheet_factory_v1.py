@@ -79,7 +79,7 @@ def metrics(im):
  a=im.getchannel('A'); box=a.getbbox()
  if not box:return {'ok':False,'reason':'empty','coverage':0.0,'alpha_mass':0}
  x0,y0,x1,y1=box; data=list(a.getdata());cov=sum(1 for v in data if v>12)/(RENDER_CELL*RENDER_CELL); mass=sum(data)
- edge=(x0<=2 or y0<=2 or x1>=RENDER_CELL-2 or y1>=RENDER_CELL-2)
+ edge=(x0<8 or y0<8 or x1>RENDER_CELL-8 or y1>RENDER_CELL-8)
  return {'ok':not edge and .001<=cov<=.50,'coverage':cov,'alpha_mass':mass,'bbox':box,'edge':edge}
 
 def temporal_qa(item,report):
