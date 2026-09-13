@@ -1,0 +1,77 @@
+name: Pollinations Building Candidate
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Optional TODO building ID
+        required: false
+        default: ''
+  push:
+    branches: [main]
+    paths:
+      - 'tools/sprites/pollinations_building_factory.py'
+      - '.github/workflows/pollinations-building-candidate.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pollinations-building-candidate
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      SPRITE_TARGET: ${{ inputs.target || '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install strict image tooling
+        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
+      - name: Generate one anonymous free candidate
+        run: python -u tools/sprites/pollinations_building_factory.py
+      - name: Resolve generated target
+        id: target
+        shell: bash
+        run: |
+          set -euo pipefail
+          f=$(find art/incoming/final-sprites -maxdepth 1 -type f -name 'zte_business_*_final.png' | tail -1)
+          test -s "$f"
+          echo "file=$f" >> "$GITHUB_OUTPUT"
+          echo "stem=$(basename "$f" .png)" >> "$GITHUB_OUTPUT"
+      - name: Strict technical QA
+        shell: bash
+        run: |
+          f='${{ steps.target.outputs.file }}'
+          python tools/sprites/build_sprite_contact_sheet.py --files "$f" --output art/production/pollinations-contact-sheet.png --report art/production/pollinations-qa.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('art/production/pollinations-qa.json').read_text())
+          rows=d.get('assets',[])
+          if len(rows)!=1 or not rows[0].get('pass'):
+              raise SystemExit('Strict QA rejected Pollinations candidate: '+json.dumps(rows))
+          print('POLLINATIONS_STRICT_QA_PASS=1')
+          PY
+      - name: Verify runtime finalizer accepts candidate
+        shell: bash
+        run: |
+          stem='${{ steps.target.outputs.stem }}'
+          SPRITE_TARGETS="$stem" python tools/sprites/process_final_sprites.py
+      - name: Upload candidate and QA evidence only
+        uses: actions/upload-artifact@v4
+        with:
+          name: pollinations-building-candidate
+          path: |
+            ${{ steps.target.outputs.file }}
+            app/src/main/res/drawable-nodpi/${{ steps.target.outputs.stem }}.webp
+            art/production/pollinations-report.json
+            art/production/pollinations-qa.json
+            art/production/pollinations-contact-sheet.png
+          if-no-files-found: error
+          retention-days: 14
