@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import re
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
@@ -18,6 +19,9 @@ ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_INPUT = ROOT / "art/incoming/final-sprites"
 DEFAULT_OUT = ROOT / "art/production/batch-contact-sheet.png"
 DEFAULT_REPORT = ROOT / "art/production/batch-qa-report.json"
+FX_RE = re.compile(r"^zte_fx_(?:0[0-9]|1[0-7])_final\.png$")
+CHR_RE = re.compile(r"^zte_chr_(?:op|tech|log|eng)_(idle|walk|work|carry|repair|celeb)_final\.png$")
+CHR_EXPECTED = {"idle": 6, "walk": 8, "work": 10, "carry": 8, "repair": 10, "celeb": 8}
 
 
 def alpha_bbox(im: Image.Image):
@@ -32,28 +36,67 @@ def inspect(path: Path) -> dict:
     visible = sum(hist[8:]) / pixels
     bbox = alpha_bbox(im)
     issues: list[str] = []
-    if not bbox:
-        issues.append("empty-alpha")
-        bbox_ratio = 0.0
-        edge_clear = True
+    edge_clear = True
+    bbox_ratio = 0.0 if not bbox else ((bbox[2]-bbox[0])*(bbox[3]-bbox[1]))/pixels
+
+    if FX_RE.fullmatch(path.name):
+        if im.size != (512, 256):
+            issues.append("bad-fx-atlas-size")
+        else:
+            for i in range(8):
+                x0=(i%4)*128; y0=(i//4)*128
+                cell=a.crop((x0,y0,x0+128,y0+128))
+                if cell.getbbox() is None:
+                    issues.append(f"fx-frame-{i}-empty")
+                    continue
+                edges=(cell.crop((0,0,128,4)),cell.crop((0,124,128,128)),cell.crop((0,0,4,128)),cell.crop((124,0,128,128)))
+                if any(e.getbbox() is not None for e in edges):
+                    issues.append(f"fx-frame-{i}-unsafe-padding")
+    elif (m := CHR_RE.fullmatch(path.name)):
+        if im.size != (1024, 1024):
+            issues.append("bad-character-atlas-size")
+        else:
+            expected=CHR_EXPECTED[m.group(1)]
+            for i in range(16):
+                x0=(i%4)*256; y0=(i//4)*256
+                cell=a.crop((x0,y0,x0+256,y0+256))
+                bb=cell.getbbox()
+                if i < expected:
+                    if bb is None:
+                        issues.append(f"chr-frame-{i}-empty")
+                        continue
+                    h=cell.histogram()
+                    cov=sum(h[8:])/(256*256)
+                    if not .10 <= cov <= .48:
+                        issues.append(f"chr-frame-{i}-coverage")
+                    edges=(cell.crop((0,0,256,8)),cell.crop((0,248,256,256)),cell.crop((0,0,8,256)),cell.crop((248,0,256,256)))
+                    if any(e.getbbox() is not None for e in edges):
+                        issues.append(f"chr-frame-{i}-unsafe-padding")
+                elif bb is not None:
+                    issues.append(f"chr-unused-cell-{i}-not-empty")
     else:
-        x0, y0, x1, y1 = bbox
-        bbox_ratio = ((x1-x0)*(y1-y0))/pixels
-        pad = max(4, round(min(im.size)*0.04))
-        edge_clear = x0 >= pad and y0 >= pad and x1 <= im.width-pad and y1 <= im.height-pad
-        if not edge_clear:
-            issues.append("unsafe-edge-padding")
-        if visible < .015:
-            issues.append("subject-too-small")
-        if visible > .70:
-            issues.append("coverage-too-high")
-        if bbox_ratio > .82:
-            issues.append("bbox-too-large")
-    if im.width != im.height:
-        issues.append("non-square-static-master")
-    if im.width < 512 or im.height < 512:
-        issues.append("master-too-small")
+        if not bbox:
+            issues.append("empty-alpha")
+        else:
+            x0, y0, x1, y1 = bbox
+            pad = max(4, round(min(im.size)*0.04))
+            edge_clear = x0 >= pad and y0 >= pad and x1 <= im.width-pad and y1 <= im.height-pad
+            if not edge_clear:
+                issues.append("unsafe-edge-padding")
+            if visible < .015:
+                issues.append("subject-too-small")
+            if visible > .70:
+                issues.append("coverage-too-high")
+            if bbox_ratio > .82:
+                issues.append("bbox-too-large")
+        if im.width != im.height:
+            issues.append("non-square-static-master")
+        if im.width < 512 or im.height < 512:
+            issues.append("master-too-small")
+
     lo, hi = a.getextrema()
+    if hi == 0 and "empty-alpha" not in issues:
+        issues.append("empty-alpha")
     if lo == 255:
         issues.append("no-transparency")
     return {
