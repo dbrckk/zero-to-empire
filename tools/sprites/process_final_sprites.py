@@ -31,10 +31,26 @@ MAX_ALPHA_COVERAGE = 0.70
 MAX_MAJOR_COMPONENTS = 1
 COARSE_SIZE = 128
 FX_SHEET_RE = re.compile(r"^zte_fx_(?:0[0-9]|1[0-7])_final$")
+CHR_SHEET_RE = re.compile(r"^zte_chr_(?:op|tech|log|eng)_(idle|walk|work|carry|repair|celeb)_final$")
 FX_SHEET_SIZE = (512, 256)
 FX_CELL = 128
 FX_FRAMES = 8
 FX_PADDING = 4
+CHR_SHEET_SIZE = (1024, 1024)
+CHR_CELL = 256
+CHR_COLS = 4
+CHR_ROWS = 4
+CHR_PADDING = 8
+CHR_EXPECTED_FRAMES = {
+    "idle": 6,
+    "walk": 8,
+    "work": 10,
+    "carry": 8,
+    "repair": 10,
+    "celeb": 8,
+}
+CHR_MIN_CELL_COVERAGE = 0.10
+CHR_MAX_CELL_COVERAGE = 0.48
 
 
 def fail(msg: str) -> None:
@@ -113,6 +129,49 @@ def validate_fx_sheet(path: Path, im: Image.Image) -> None:
     print(f"OK {path.name} -> {out.relative_to(ROOT)} 512x256 fx_frames=8 cell=128 padding>=4px coverage={alpha_coverage(alpha):.1%} size={size_kib:.1f}KiB")
 
 
+def validate_character_sheet(path: Path, im: Image.Image, action: str) -> None:
+    if im.size != CHR_SHEET_SIZE:
+        fail(f"{path.name}: character sheet must be 1024x1024 (4x4 of 256x256), got {im.width}x{im.height}")
+    expected = CHR_EXPECTED_FRAMES[action]
+    alpha = im.getchannel("A")
+    lo, hi = alpha.getextrema()
+    if hi == 0:
+        fail(f"{path.name}: fully transparent character sheet")
+    if lo == 255:
+        fail(f"{path.name}: no transparent pixels; likely baked background")
+    active = 0
+    for i in range(CHR_COLS * CHR_ROWS):
+        x0 = (i % CHR_COLS) * CHR_CELL
+        y0 = (i // CHR_COLS) * CHR_CELL
+        cell_a = alpha.crop((x0, y0, x0 + CHR_CELL, y0 + CHR_CELL))
+        bbox = cell_a.getbbox()
+        if i < expected:
+            if bbox is None:
+                fail(f"{path.name}: character frame {i} is empty; expected {expected} frames")
+            active += 1
+            hist = cell_a.histogram()
+            visible = sum(hist[ALPHA_CLEAN_THRESHOLD:]) / float(CHR_CELL * CHR_CELL)
+            if not CHR_MIN_CELL_COVERAGE <= visible <= CHR_MAX_CELL_COVERAGE:
+                fail(f"{path.name}: character frame {i} coverage {visible:.1%} outside {CHR_MIN_CELL_COVERAGE:.0%}-{CHR_MAX_CELL_COVERAGE:.0%}")
+            edges = (
+                cell_a.crop((0, 0, CHR_CELL, CHR_PADDING)),
+                cell_a.crop((0, CHR_CELL - CHR_PADDING, CHR_CELL, CHR_CELL)),
+                cell_a.crop((0, 0, CHR_PADDING, CHR_CELL)),
+                cell_a.crop((CHR_CELL - CHR_PADDING, 0, CHR_CELL, CHR_CELL)),
+            )
+            if any(edge.getbbox() is not None for edge in edges):
+                fail(f"{path.name}: character frame {i} violates >={CHR_PADDING}px transparent cell padding")
+        elif bbox is not None:
+            fail(f"{path.name}: unused character atlas cell {i} is not transparent")
+    if active != expected:
+        fail(f"{path.name}: expected {expected} active character frames, got {active}")
+    OUT.mkdir(parents=True, exist_ok=True)
+    out = OUT / f"{path.stem}.webp"
+    im.save(out, "WEBP", lossless=True, method=4, exact=True)
+    size_kib = out.stat().st_size / 1024.0
+    print(f"OK {path.name} -> {out.relative_to(ROOT)} 1024x1024 chr_frames={expected} cell=256 padding>={CHR_PADDING}px size={size_kib:.1f}KiB")
+
+
 def process_single_sprite(path: Path, im: Image.Image) -> None:
     w, h = im.size
     if min(w, h) < MIN_DIM:
@@ -168,8 +227,12 @@ def process(path: Path) -> None:
     im = clean_alpha(Image.open(path))
     if FX_SHEET_RE.fullmatch(path.stem):
         validate_fx_sheet(path, im)
-    else:
-        process_single_sprite(path, im)
+        return
+    chr_match = CHR_SHEET_RE.fullmatch(path.stem)
+    if chr_match:
+        validate_character_sheet(path, im, chr_match.group(1))
+        return
+    process_single_sprite(path, im)
 
 
 def requested_stems() -> set[str]:
