@@ -6,15 +6,14 @@ on:
       count:
         description: Sprite attempts in this Kaggle batch
         required: false
-        default: '14'
+        default: '7'
   push:
     paths:
       - 'ops/sprite-wave-trigger.txt'
       - 'kaggle/github_mass_factory.py'
       - 'kaggle/kernel-metadata.template.json'
-      - '.github/workflows/kaggle-mass-sprite-factory.yml'
   schedule:
-    - cron: '17 */3 * * *'
+    - cron: '17 * * * *'
 
 permissions:
   contents: read
@@ -30,7 +29,7 @@ jobs:
     env:
       KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
       KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
-      SPRITE_COUNT: ${{ github.event.inputs.count || '14' }}
+      SPRITE_COUNT: ${{ github.event.inputs.count || '7' }}
     steps:
       - uses: actions/checkout@v4
         with: {fetch-depth: 2}
