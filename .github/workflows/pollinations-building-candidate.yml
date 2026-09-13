@@ -5,14 +5,16 @@ on:
     - cron: '*/5 * * * *'
   workflow_dispatch:
     inputs:
-      target:
-        description: Optional TODO building ID
+      batch_count:
+        description: Strict building candidates to attempt in this run
         required: false
-        default: ''
+        default: '4'
   push:
     branches: [main]
     paths:
       - 'tools/sprites/pollinations_building_factory.py'
+      - 'tools/sprites/pollinations_building_batch.py'
+      - 'tools/sprites/validate_runtime_asset.py'
       - '.github/workflows/pollinations-building-candidate.yml'
       - 'ops/pollinations-building-trigger.txt'
 
@@ -26,156 +28,71 @@ concurrency:
 jobs:
   generate:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 45
     env:
-      SPRITE_TARGET: ${{ inputs.target || '' }}
+      POLLINATIONS_BATCH_COUNT: ${{ inputs.batch_count || '4' }}
+      POLLINATIONS_ATTEMPTS: '3'
+      POLLINATIONS_BASE_SEED: ${{ github.run_id }}
     steps:
       - uses: actions/checkout@v4
         with:
           ref: main
           fetch-depth: 2
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+
+      - name: Sync canonical main
+        run: git pull --ff-only origin main
+
       - name: Install strict image tooling
         run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0' 'rembg[cpu]>=2.0.68,<3'
-      - name: Generate one anonymous free candidate
-        run: python -u tools/sprites/pollinations_building_factory.py
-      - name: Resolve generated target
-        id: target
-        shell: bash
-        run: |
-          set -euo pipefail
-          f=$(python - <<'PY'
-          import json
-          from pathlib import Path
-          d=json.loads(Path('art/production/pollinations-report.json').read_text())
-          print(d['candidate'])
-          PY
-          )
-          test -s "$f"
-          echo "file=$f" >> "$GITHUB_OUTPUT"
-          echo "stem=$(basename "$f" .png)" >> "$GITHUB_OUTPUT"
-      - name: Strict technical QA
-        shell: bash
-        run: |
-          f='${{ steps.target.outputs.file }}'
-          python tools/sprites/build_sprite_contact_sheet.py --files "$f" --output art/production/pollinations-contact-sheet.png --report art/production/pollinations-qa.json
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          d=json.loads(Path('art/production/pollinations-qa.json').read_text())
-          rows=d.get('assets',[])
-          if len(rows)!=1 or not rows[0].get('pass'):
-              raise SystemExit('Strict QA rejected Pollinations candidate: '+json.dumps(rows))
-          print('POLLINATIONS_STRICT_QA_PASS=1')
-          PY
-      - name: Verify runtime finalizer accepts candidate
-        shell: bash
-        run: |
-          stem='${{ steps.target.outputs.stem }}'
-          SPRITE_TARGETS="$stem" python tools/sprites/process_final_sprites.py
-      - name: Second strict runtime validation
-        shell: bash
-        run: |
-          target="$(python - <<'PY'
-          import json
-          from pathlib import Path
-          print(json.loads(Path('art/production/pollinations-report.json').read_text())['target'])
-          PY
-          )"
-          python tools/sprites/validate_runtime_asset.py             --asset-id "$target"             --path "app/src/main/res/drawable-nodpi/${{ steps.target.outputs.stem }}.webp"             --report art/production/pollinations-runtime-qa.json
 
-      - name: Persist doubly validated candidate as DONE
+      - name: Generate and double-validate strict building batch
+        run: python -u tools/sprites/pollinations_building_batch.py
+
+      - name: Require at least one strict success
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('art/production/pollinations-batch-summary.json').read_text())
+          if not d.get('successes'):
+              raise SystemExit('No strict Pollinations building candidate passed this run')
+          print('STRICT_BATCH_DONE=' + ','.join(x['id'] for x in d['successes']))
+          if d.get('failures'):
+              print('STRICT_BATCH_BLOCKED=' + ','.join(x['id'] for x in d['failures']))
+          PY
+
+      - name: Commit only double-validated DONE sprites
         shell: bash
         run: |
           set -euo pipefail
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          report=json.loads(Path('art/production/pollinations-report.json').read_text())
-          target=report['target']
-          manifest=Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          lines=manifest.read_text(encoding='utf-8').splitlines()
-          out=[]; changed=0
-          for line in lines:
-              if line.startswith('|'):
-                  cols=[x.strip() for x in line.split('|')[1:-1]]
-                  if len(cols)==5 and cols[0]==target and cols[4].upper()=='TODO':
-                      cols[4]='DONE'
-                      line='| '+' | '.join(cols)+' |'
-                      changed+=1
-              out.append(line)
-          if changed!=1:
-              raise SystemExit(f'Expected exactly one TODO manifest row for {target}, changed={changed}')
-          manifest.write_text('\n'.join(out)+'\n',encoding='utf-8')
-          print(f'POLLINATIONS_MANIFEST_DONE={target}')
-          PY
-          # Pull first, then re-apply only this target's manifest transition.
-          # This avoids rebase conflicts with the reconciliation bot.
-          cp '${{ steps.target.outputs.file }}' /tmp/pollinations-candidate.png
-          cp 'app/src/main/res/drawable-nodpi/${{ steps.target.outputs.stem }}.webp' /tmp/pollinations-runtime.webp
-          cp art/production/pollinations-report.json /tmp/pollinations-report.json
-          cp art/production/pollinations-qa.json /tmp/pollinations-qa.json
-          git reset --hard HEAD
-          rm -f '${{ steps.target.outputs.file }}' 'app/src/main/res/drawable-nodpi/${{ steps.target.outputs.stem }}.webp'
-          git pull --ff-only origin main
-          current_status="$(python - <<'PY'
-          import json
-          from pathlib import Path
-          target=json.loads(Path('/tmp/pollinations-report.json').read_text())['target']
-          status=''
-          for line in Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md').read_text().splitlines():
-              if line.startswith('|'):
-                  cols=[x.strip() for x in line.split('|')[1:-1]]
-                  if len(cols)==5 and cols[0]==target:
-                      status=cols[4].upper(); break
-          print(status)
-          PY
-          )"
-          if [ "$current_status" != "TODO" ]; then
-            echo "POLLINATIONS_SKIP_ALREADY_ADVANCED=$current_status"
-            exit 0
-          fi
-          cp /tmp/pollinations-candidate.png '${{ steps.target.outputs.file }}'
-          cp /tmp/pollinations-runtime.webp 'app/src/main/res/drawable-nodpi/${{ steps.target.outputs.stem }}.webp'
-          cp /tmp/pollinations-report.json art/production/pollinations-report.json
-          cp /tmp/pollinations-qa.json art/production/pollinations-qa.json
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          target=json.loads(Path('art/production/pollinations-report.json').read_text())['target']
-          p=Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          lines=p.read_text(encoding='utf-8').splitlines(); out=[]; changed=0
-          for line in lines:
-              if line.startswith('|'):
-                  cols=[x.strip() for x in line.split('|')[1:-1]]
-                  if len(cols)==5 and cols[0]==target and cols[4].upper()=='TODO':
-                      cols[4]='DONE'; line='| '+' | '.join(cols)+' |'; changed+=1
-              out.append(line)
-          if changed!=1: raise SystemExit(f'Expected one fresh TODO row for {target}, changed={changed}')
-          p.write_text('\n'.join(out)+'\n',encoding='utf-8')
-          PY
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add '${{ steps.target.outputs.file }}' \
-                  'app/src/main/res/drawable-nodpi/${{ steps.target.outputs.stem }}.webp' \
-                  art/production/pollinations-report.json \
-                  art/production/pollinations-qa.json \
-                  art/production/pollinations-runtime-qa.json \
-                  docs/art/FINAL_AAA_SPRITE_MANIFEST.md
-          git commit -m 'art: persist strict Pollinations building candidate'
+          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md
+          git add app/src/main/res/drawable-nodpi/
+          git add art/incoming/final-sprites/
+          git add art/production/pollinations-*.json art/production/pollinations-*.png 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo 'No validated changes to commit'
+            exit 0
+          fi
+          git commit -m 'art: persist double-validated Pollinations building batch'
+          git pull --rebase origin main
           git push
-      - name: Upload candidate and QA evidence only
+
+      - name: Upload strict batch evidence
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: pollinations-building-candidate
+          name: pollinations-building-batch-evidence
           path: |
-            ${{ steps.target.outputs.file }}
-            app/src/main/res/drawable-nodpi/${{ steps.target.outputs.stem }}.webp
-            art/production/pollinations-report.json
-            art/production/pollinations-qa.json
-            art/production/pollinations-runtime-qa.json
-            art/production/pollinations-contact-sheet.png
-          if-no-files-found: error
+            art/production/pollinations-batch-summary.json
+            art/production/pollinations-*-report.json
+            art/production/pollinations-*-qa.json
+            art/production/pollinations-*-contact.png
+          if-no-files-found: warn
           retention-days: 14
