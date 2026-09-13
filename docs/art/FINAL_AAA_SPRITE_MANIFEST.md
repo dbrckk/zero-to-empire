@@ -45,11 +45,11 @@ If a new runtime sprite is later required, it must be added here first and the d
 | BLD-02-T1 | Furnace Stall T1 | Foundry / Furnace Stall — reinforced footprint, dedicated machinery, cleaner structure, stronger silhouette. | `app/src/main/res/drawable-nodpi/zte_business_02_t1_final.webp` | DONE |
 | BLD-02-T2 | Furnace Stall T2 | Foundry / Furnace Stall — commercialized/industrial expansion, second active subsystem, larger footprint. | `app/src/main/res/drawable-nodpi/zte_business_02_t2_final.webp` | DONE |
 | BLD-02-T3 | Furnace Stall T3 | Foundry / Furnace Stall — automated complex, visible logistics flow, more verticality and emissive accents. | `app/src/main/res/drawable-nodpi/zte_business_02_t3_final.webp` | DONE |
-| BLD-02-T4 | Furnace Stall T4 | Foundry / Furnace Stall — advanced district-scale facility, dense machinery, premium materials and strong landmark read. | `app/src/main/res/drawable-nodpi/zte_business_02_t4_final.webp` | RUNTIME |
-| BLD-02-T5 | Furnace Stall T5 | Foundry / Furnace Stall — late-game megastructure, multi-stage production, large moving assemblies and energy routing. | `app/src/main/res/drawable-nodpi/zte_business_02_t5_final.webp` | RUNTIME |
-| BLD-02-T6 | Furnace Stall T6 | Foundry / Furnace Stall — ultimate mastered structure, iconic silhouette, maximal verticality, prestige crown/hero treatment. | `app/src/main/res/drawable-nodpi/zte_business_02_t6_final.webp` | RUNTIME |
-| BLD-03-T0 | Assembly Hub T0 | Foundry / Assembly Hub — starter footprint, improvised materials, low verticality, one clear production cue. | `app/src/main/res/drawable-nodpi/zte_business_03_t0_final.webp` | RUNTIME |
-| BLD-03-T1 | Assembly Hub T1 | Foundry / Assembly Hub — reinforced footprint, dedicated machinery, cleaner structure, stronger silhouette. | `app/src/main/res/drawable-nodpi/zte_business_03_t1_final.webp` | RUNTIME |
+| BLD-02-T4 | Furnace Stall T4 | Foundry / Furnace Stall — advanced district-scale facility, dense machinery, premium materials and strong landmark read. | `app/src/main/res/drawable-nodpi/zte_business_02_t4_final.webp` | DONE |
+| BLD-02-T5 | Furnace Stall T5 | Foundry / Furnace Stall — late-game megastructure, multi-stage production, large moving assemblies and energy routing. | `app/src/main/res/drawable-nodpi/zte_business_02_t5_final.webp` | DONE |
+| BLD-02-T6 | Furnace Stall T6 | Foundry / Furnace Stall — ultimate mastered structure, iconic silhouette, maximal verticality, prestige crown/hero treatment. | `app/src/main/res/drawable-nodpi/zte_business_02_t6_final.webp` | DONE |
+| BLD-03-T0 | Assembly Hub T0 | Foundry / Assembly Hub — starter footprint, improvised materials, low verticality, one clear production cue. | `app/src/main/res/drawable-nodpi/zte_business_03_t0_final.webp` | DONE |
+| BLD-03-T1 | Assembly Hub T1 | Foundry / Assembly Hub — reinforced footprint, dedicated machinery, cleaner structure, stronger silhouette. | `app/src/main/res/drawable-nodpi/zte_business_03_t1_final.webp` | DONE |
 | BLD-03-T2 | Assembly Hub T2 | Foundry / Assembly Hub — commercialized/industrial expansion, second active subsystem, larger footprint. | `app/src/main/res/drawable-nodpi/zte_business_03_t2_final.webp` | DONE |
 | BLD-03-T3 | Assembly Hub T3 | Foundry / Assembly Hub — automated complex, visible logistics flow, more verticality and emissive accents. | `app/src/main/res/drawable-nodpi/zte_business_03_t3_final.webp` | DONE |
 | BLD-03-T4 | Assembly Hub T4 | Foundry / Assembly Hub — advanced district-scale facility, dense machinery, premium materials and strong landmark read. | `app/src/main/res/drawable-nodpi/zte_business_03_t4_final.webp` | DONE |
@@ -287,7 +287,7 @@ If a new runtime sprite is later required, it must be added here first and the d
 | FX-05 | cyan energy pulse | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_05_final.webp` | DONE |
 | FX-06 | warm energy pulse | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_06_final.webp` | DONE |
 | FX-07 | construction dust/debris | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_07_final.webp` | DONE |
-| FX-08 | upgrade construction flash | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_08_final.webp` | RUNTIME |
+| FX-08 | upgrade construction flash | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_08_final.webp` | DONE |
 | FX-09 | income pickup sparkle | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_09_final.webp` | DONE |
 | FX-10 | electric arc | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_10_final.webp` | DONE |
 | FX-11 | hologram scan sweep | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_11_final.webp` |DONE |
@@ -296,7 +296,7 @@ If a new runtime sprite is later required, it must be added here first and the d
 | FX-14 | orbital ion trail | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_14_final.webp` |DONE |
 | FX-15 | stellar flare | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_15_final.webp` |DONE |
 | FX-16 | singularity lens pulse | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_16_final.webp` |DONE |
-| FX-17 | mastery crown shimmer | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_17_final.webp` | RUNTIME |
+| FX-17 | mastery crown shimmer | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_17_final.webp` | DONE |
 
 ## Progress ledger
 - **DONE: 125 / 235**
