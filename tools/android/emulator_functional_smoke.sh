@@ -102,7 +102,7 @@ check_alive
 # Buy the first real business and verify the gameplay state changes.
 click_node "Street Stand" "before-street-stand-buy"
 sleep 2
-assert_ui_contains "LEVEL 1" "after-street-stand-buy"
+assert_ui_contains "LV 1" "after-street-stand-buy"
 
 # Commerce surface: open and close store without starting a purchase.
 click_node "STORE" "before-store"
@@ -127,7 +127,7 @@ adb shell am start -W -n "$ACT" > "$EVIDENCE/restart.txt"
 sleep 3
 check_alive
 assert_ui_contains "EMPIRE" "after-force-stop-restart"
-assert_ui_contains "LEVEL 1" "after-force-stop-restart-level"
+assert_ui_contains "LV 1" "after-force-stop-restart-level"
 
 # Short runtime soak to exercise the 250ms economy tick and 30s autosave loop.
 sleep 35
