@@ -30,11 +30,20 @@ def pending():
 
 def fetch(prompt,seed):
     q=urllib.parse.quote(prompt,safe='')
-    url=f'https://image.pollinations.ai/prompt/{q}?model=flux&width=768&height=768&seed={seed}&nologo=true&private=true&enhance=false&safe=true'
-    req=urllib.request.Request(url,headers={'User-Agent':'zero-to-empire-github-actions/1.0'})
-    with urllib.request.urlopen(req,timeout=180) as r:data=r.read()
-    if len(data)<10000:raise RuntimeError('small response')
-    p=Path('/tmp')/f'chr-{seed}.png';p.write_bytes(data);return Image.open(p).convert('RGBA')
+    last=None
+    for n,delay in enumerate((0,8,20,40)):
+      if delay: time.sleep(delay)
+      s=seed+n*7919
+      url=f'https://image.pollinations.ai/prompt/{q}?model=flux&width=768&height=768&seed={s}&nologo=true&private=true&enhance=false&safe=true'
+      req=urllib.request.Request(url,headers={'User-Agent':'zero-to-empire-github-actions/1.0','Accept':'image/*'})
+      try:
+        with urllib.request.urlopen(req,timeout=180) as r:data=r.read()
+        if len(data)<10000: raise RuntimeError(f'small response {len(data)}')
+        p=Path('/tmp')/f'chr-{s}.png';p.write_bytes(data);return Image.open(p).convert('RGBA')
+      except Exception as e:
+        last=e
+        print(f'POLLINATIONS_CHR_HTTP_RETRY seed={s} try={n+1} reason={e}',flush=True)
+    raise RuntimeError(f'pollinations request exhausted retries: {last}')
 
 def cutout(raw):
     from rembg import remove
