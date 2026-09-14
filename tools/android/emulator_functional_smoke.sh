@@ -129,8 +129,17 @@ check_alive
 assert_ui_contains "EMPIRE" "after-force-stop-restart"
 assert_ui_contains "LEVEL 1" "after-force-stop-restart-level"
 
+# Short runtime soak to exercise the 250ms economy tick and 30s autosave loop.
+sleep 35
+check_alive
+adb shell dumpsys meminfo "$PKG" > "$EVIDENCE/meminfo.txt"
 adb exec-out screencap -p > "$EVIDENCE/final.png"
 adb shell dumpsys activity activities > "$EVIDENCE/activity.txt"
 adb shell dumpsys window windows > "$EVIDENCE/window.txt"
 check_no_fatal
+if grep -E "ANR in $PKG|am_anr.*$PKG" "$EVIDENCE/logcat.txt"; then
+  fail "anr-detected"
+fi
+echo "FUNCTIONAL_PERSISTENCE_PASS=1"
+echo "FUNCTIONAL_SOAK_PASS=1"
 echo "FUNCTIONAL_SMOKE_PASS=1"
