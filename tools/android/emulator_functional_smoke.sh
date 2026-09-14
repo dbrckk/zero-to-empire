@@ -94,10 +94,15 @@ for tab in MANAGERS UPGRADES GOALS EMPIRE; do
   assert_ui_contains "$tab" "after-$tab"
 done
 
-# Core gameplay action: Power Core semantic button must be exposed and clickable.
+# Core gameplay action: one tap raises cash from 10 to at least 11.
 click_node "Power Core" "before-power-core"
 sleep 1
 check_alive
+
+# Buy the first real business and verify the gameplay state changes.
+click_node "Street Stand" "before-street-stand-buy"
+sleep 2
+assert_ui_contains "LEVEL 1" "after-street-stand-buy"
 
 # Commerce surface: open and close store without starting a purchase.
 click_node "STORE" "before-store"
@@ -122,6 +127,7 @@ adb shell am start -W -n "$ACT" > "$EVIDENCE/restart.txt"
 sleep 3
 check_alive
 assert_ui_contains "EMPIRE" "after-force-stop-restart"
+assert_ui_contains "LEVEL 1" "after-force-stop-restart-level"
 
 adb exec-out screencap -p > "$EVIDENCE/final.png"
 adb shell dumpsys activity activities > "$EVIDENCE/activity.txt"
