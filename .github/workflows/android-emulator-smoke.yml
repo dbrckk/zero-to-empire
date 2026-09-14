@@ -7,6 +7,7 @@ on:
     paths:
       - '.github/workflows/android-emulator-smoke.yml'
       - 'ops/android-emulator-smoke-trigger.txt'
+      - 'tools/android/emulator_functional_smoke.sh'
       - 'app/**'
       - 'build.gradle.kts'
       - 'settings.gradle.kts'
@@ -53,25 +54,7 @@ jobs:
           profile: pixel_6
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          script: |
-            test -s app/build/outputs/apk/debug/app-debug.apk
-            adb install -r app/build/outputs/apk/debug/app-debug.apk
-            adb shell am force-stop com.zerotoempire.game
-            adb logcat -c
-            adb shell am start -W -n com.zerotoempire.game/.MainActivity > /tmp/am-start.txt
-            cat /tmp/am-start.txt
-            grep -Eq 'Status: ok|Complete' /tmp/am-start.txt
-            sleep 8
-            adb shell pidof com.zerotoempire.game > /tmp/app-pid.txt
-            test -s /tmp/app-pid.txt
-            cat /tmp/app-pid.txt
-            adb shell dumpsys activity activities > /tmp/activity-dumpsys.txt
-            grep -F 'com.zerotoempire.game/.MainActivity' /tmp/activity-dumpsys.txt
-            adb shell dumpsys window windows > /tmp/window-dumpsys.txt
-            grep -F 'com.zerotoempire.game' /tmp/window-dumpsys.txt
-            adb exec-out screencap -p > /tmp/zero-to-empire-smoke.png
-            adb logcat -d > /tmp/zero-to-empire-logcat.txt
-            ! grep -E 'FATAL EXCEPTION|AndroidRuntime.*FATAL|Process: com\.zerotoempire\.game.*has died' /tmp/zero-to-empire-logcat.txt
+          script: bash tools/android/emulator_functional_smoke.sh
 
       - name: Upload smoke evidence
         if: always()
@@ -79,11 +62,6 @@ jobs:
         with:
           name: android-emulator-smoke-evidence
           path: |
-            /tmp/am-start.txt
-            /tmp/app-pid.txt
-            /tmp/activity-dumpsys.txt
-            /tmp/window-dumpsys.txt
-            /tmp/zero-to-empire-smoke.png
-            /tmp/zero-to-empire-logcat.txt
+            /tmp/zte-functional/**
           if-no-files-found: warn
           retention-days: 14
