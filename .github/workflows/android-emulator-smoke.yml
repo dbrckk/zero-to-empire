@@ -54,26 +54,24 @@ jobs:
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: |
-            set -eu
-            APK="app/build/outputs/apk/debug/app-debug.apk"
-            test -s "$APK"
-            adb install -r "$APK"
+            test -s app/build/outputs/apk/debug/app-debug.apk
+            adb install -r app/build/outputs/apk/debug/app-debug.apk
             adb shell am force-stop com.zerotoempire.game
             adb logcat -c
-            adb shell am start -W -n com.zerotoempire.game/.MainActivity | tee /tmp/am-start.txt
+            adb shell am start -W -n com.zerotoempire.game/.MainActivity > /tmp/am-start.txt
+            cat /tmp/am-start.txt
             grep -Eq 'Status: ok|Complete' /tmp/am-start.txt
             sleep 8
-            pid="$(adb shell pidof com.zerotoempire.game | tr -d '\r')"
-            test -n "$pid"
-            echo "APP_PID=$pid"
-            adb shell dumpsys activity activities | grep -F 'com.zerotoempire.game/.MainActivity'
-            adb shell dumpsys window windows | grep -F 'com.zerotoempire.game'
+            adb shell pidof com.zerotoempire.game > /tmp/app-pid.txt
+            test -s /tmp/app-pid.txt
+            cat /tmp/app-pid.txt
+            adb shell dumpsys activity activities > /tmp/activity-dumpsys.txt
+            grep -F 'com.zerotoempire.game/.MainActivity' /tmp/activity-dumpsys.txt
+            adb shell dumpsys window windows > /tmp/window-dumpsys.txt
+            grep -F 'com.zerotoempire.game' /tmp/window-dumpsys.txt
             adb exec-out screencap -p > /tmp/zero-to-empire-smoke.png
             adb logcat -d > /tmp/zero-to-empire-logcat.txt
-            if grep -E 'FATAL EXCEPTION|AndroidRuntime.*FATAL|Process: com\.zerotoempire\.game.*has died' /tmp/zero-to-empire-logcat.txt; then
-              echo "::error::Fatal Android runtime crash detected"
-              exit 1
-            fi
+            ! grep -E 'FATAL EXCEPTION|AndroidRuntime.*FATAL|Process: com\.zerotoempire\.game.*has died' /tmp/zero-to-empire-logcat.txt
 
       - name: Upload smoke evidence
         if: always()
@@ -82,6 +80,9 @@ jobs:
           name: android-emulator-smoke-evidence
           path: |
             /tmp/am-start.txt
+            /tmp/app-pid.txt
+            /tmp/activity-dumpsys.txt
+            /tmp/window-dumpsys.txt
             /tmp/zero-to-empire-smoke.png
             /tmp/zero-to-empire-logcat.txt
           if-no-files-found: warn
