@@ -2,13 +2,17 @@ name: Pollinations Character Atlas
 
 on:
   schedule:
-    - cron: '3,13,23,33,43,53 * * * *'
+    - cron: '2,17,32,47 * * * *'
   workflow_dispatch:
+    inputs:
+      batch_count:
+        description: Character atlases to attempt
+        required: false
+        default: '1'
   push:
     branches: [main]
     paths:
       - 'tools/sprites/pollinations_character_sheet_factory.py'
-      - 'tools/sprites/validate_runtime_asset.py'
       - '.github/workflows/pollinations-character-atlas.yml'
       - 'ops/pollinations-character-trigger.txt'
 
@@ -24,130 +28,84 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
-      POLLINATIONS_CHR_ATTEMPTS: '3'
-      POLLINATIONS_CHR_SEED: ${{ github.run_id }}
+      POLLINATIONS_CHR_BATCH: \${{ inputs.batch_count || '1' }}
+      POLLINATIONS_CHR_ATTEMPTS: '2'
+      POLLINATIONS_CHR_SEED: \${{ github.run_id }}
     steps:
       - uses: actions/checkout@v4
         with:
           ref: main
           fetch-depth: 2
-
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-
       - name: Sync canonical main
         run: git pull --ff-only origin main
-
-      - name: Compile character tooling
-        run: python -m py_compile tools/sprites/pollinations_character_sheet_factory.py tools/sprites/validate_runtime_asset.py
-
-      - name: Check character lane readiness
-        id: ready
-        shell: bash
-        run: |
-          python - <<'PY' >> "$GITHUB_OUTPUT"
-          from pathlib import Path
-          bld=chrn=0
-          for line in Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md').read_text().splitlines():
-              if not line.startswith('|'): continue
-              cols=[c.strip() for c in line.split('|')[1:-1]]
-              if len(cols)!=5 or cols[4].upper()!='TODO': continue
-              bld += cols[0].startswith('BLD-')
-              chrn += cols[0].startswith('CHR-')
-          print(f'bld={bld}')
-          print(f'chr={chrn}')
-          print('run=true' if bld==0 and chrn>0 else 'run=false')
-          PY
-
       - name: Cache rembg U2Net model
         uses: actions/cache@v4
         with:
           path: ~/.u2net
           key: rembg-u2net-v0.0.0
-
       - name: Install strict image tooling
-        if: steps.ready.outputs.run == 'true'
         run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0' 'rembg[cpu]>=2.0.68,<3'
-
-      - name: Generate strict character atlas candidate
-        if: steps.ready.outputs.run == 'true'
+      - name: Generate character atlas candidate
         run: python -u tools/sprites/pollinations_character_sheet_factory.py
-
-      - name: Resolve candidate
-        if: steps.ready.outputs.run == 'true'
-        id: target
+      - name: Double validate, finalize and mark DONE
         shell: bash
         run: |
-          python - <<'PY' >> "$GITHUB_OUTPUT"
-          import json
-          from pathlib import Path
-          d=json.loads(Path('art/production/pollinations-character-report.json').read_text())
-          p=Path(d['candidate'])
-          print(f"asset_id={d['target']}")
-          print(f"file={p}")
-          print(f"stem={p.stem}")
-          PY
-
-      - name: Strict atlas technical QA
-        if: steps.ready.outputs.run == 'true'
-        shell: bash
-        run: |
-          python tools/sprites/build_sprite_contact_sheet.py             --files '${{ steps.target.outputs.file }}'             --output art/production/pollinations-character-contact.png             --report art/production/pollinations-character-qa.json
+          set -euo pipefail
           python - <<'PY'
-          import json
+          import json, subprocess, os
           from pathlib import Path
-          rows=json.loads(Path('art/production/pollinations-character-qa.json').read_text()).get('assets',[])
-          if len(rows)!=1 or not rows[0].get('pass'):
-              raise SystemExit('Strict character atlas QA rejected: '+json.dumps(rows))
+          summary=json.loads(Path('art/production/pollinations-character-summary.json').read_text())
+          good=[x for x in summary if x.get('status')=='CANDIDATE']
+          if not good:
+              raise SystemExit('No strict character atlas candidate passed generation QA')
+          manifest=Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
+          lines=manifest.read_text(encoding='utf-8').splitlines()
+          for item in good:
+              aid=item['id']; runtime=None
+              for line in lines:
+                  if line.startswith('|') and aid in line:
+                      cols=[c.strip() for c in line.split('|')[1:-1]]
+                      if len(cols)==5 and cols[0]==aid:
+                          runtime=cols[3].replace(chr(96),''); stem=Path(runtime).stem; break
+              if not runtime: raise SystemExit('Manifest row missing '+aid)
+              subprocess.run(['python','tools/sprites/process_final_sprites.py'],check=True,env={**os.environ,'SPRITE_TARGETS':stem})
+              subprocess.run(['python','tools/sprites/validate_runtime_asset.py','--asset-id',aid,'--path',runtime,'--report',f'art/production/{stem}-runtime-qa.json'],check=True)
+              new=[]; changed=0
+              for line in lines:
+                  if line.startswith('|'):
+                      cols=[c.strip() for c in line.split('|')[1:-1]]
+                      if len(cols)==5 and cols[0]==aid and cols[4].upper()=='TODO':
+                          cols[4]='DONE'; line='| '+' | '.join(cols)+' |'; changed+=1
+                  new.append(line)
+              if changed!=1: raise SystemExit(f'Expected one TODO row for {aid}, changed={changed}')
+              lines=new
+              print('POLLINATIONS_CHR_DONE='+aid)
+          manifest.write_text('\n'.join(lines)+'\n',encoding='utf-8')
           PY
-
-      - name: Finalize character runtime
-        if: steps.ready.outputs.run == 'true'
+      - name: Commit only double-validated character atlases
         shell: bash
         run: |
-          SPRITE_TARGETS='${{ steps.target.outputs.stem }}' python tools/sprites/process_final_sprites.py
-
-      - name: Second strict runtime validation
-        if: steps.ready.outputs.run == 'true'
-        run: |
-          python tools/sprites/validate_runtime_asset.py             --asset-id '${{ steps.target.outputs.asset_id }}'             --path 'app/src/main/res/drawable-nodpi/${{ steps.target.outputs.stem }}.webp'             --report art/production/pollinations-character-runtime-qa.json
-
-      - name: Mark doubly validated character DONE
-        if: steps.ready.outputs.run == 'true'
-        shell: bash
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          aid='${{ steps.target.outputs.asset_id }}'
-          p=Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          lines=p.read_text(encoding='utf-8').splitlines();out=[];changed=0
-          for line in lines:
-              if line.startswith('|'):
-                  cols=[c.strip() for c in line.split('|')[1:-1]]
-                  if len(cols)==5 and cols[0]==aid and cols[4].upper()=='TODO':
-                      cols[4]='DONE';line='| '+' | '.join(cols)+' |';changed+=1
-              out.append(line)
-          if changed!=1: raise SystemExit(f'Expected one TODO row for {aid}, changed={changed}')
-          p.write_text('\n'.join(out)+'\n',encoding='utf-8')
-          PY
+          set -euo pipefail
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md
-          git add '${{ steps.target.outputs.file }}'
-          git add 'app/src/main/res/drawable-nodpi/${{ steps.target.outputs.stem }}.webp'
-          git add art/production/pollinations-character-*.json art/production/pollinations-character-*.png 2>/dev/null || true
+          git add app/src/main/res/drawable-nodpi/
+          git add art/incoming/final-sprites/
+          git add art/production/pollinations-character-summary.json art/production/*-runtime-qa.json 2>/dev/null || true
+          git diff --cached --quiet && exit 0
           git commit -m 'art: persist double-validated Pollinations character atlas'
           git pull --rebase origin main
           git push
-
       - name: Upload character QA evidence
-        if: always() && steps.ready.outputs.run == 'true'
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: pollinations-character-atlas-evidence
           path: |
-            art/production/pollinations-character-*.json
-            art/production/pollinations-character-*.png
+            art/production/pollinations-character-summary.json
+            art/production/*-runtime-qa.json
           if-no-files-found: warn
           retention-days: 14
