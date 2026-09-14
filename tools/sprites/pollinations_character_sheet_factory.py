@@ -34,7 +34,7 @@ def fetch(prompt,seed):
     for n,delay in enumerate((0,8,20,40)):
       if delay: time.sleep(delay)
       s=seed+n*7919
-      url=f'https://image.pollinations.ai/prompt/{q}?model=flux&width=768&height=768&seed={s}&nologo=true&private=true&enhance=false&safe=true'
+      url=f'https://image.pollinations.ai/prompt/{q}?model=flux&width=1024&height=1024&seed={s}&nologo=true&private=true&enhance=false&safe=true'
       req=urllib.request.Request(url,headers={'User-Agent':'zero-to-empire-github-actions/1.0','Accept':'image/*'})
       try:
         with urllib.request.urlopen(req,timeout=180) as r:data=r.read()
@@ -104,7 +104,7 @@ def main():
         frames=[];seed=base+ix*100000+att*10007
         try:
           for n,pose in enumerate(poses):
-            prompt=f"AAA premium mobile 2.5D full-body character frame. {ROLES[it['role']]}. {ACTIONS[it['action']][0]}; pose {pose}. Same single adult worker, same face, same clothes, same proportions. 34-degree three-quarter orthographic view, feet visible, centered, empty margin. No floor, scenery, text, logo, extra people, duplicated limbs, vehicle or building. Flat uniform neutral gray background."
+            prompt=f"AAA premium mobile 2.5D full-body character frame. {ROLES[it['role']]}. {ACTIONS[it['action']][0]}; pose {pose}. Same single adult worker, same face, same clothes, same proportions. 34-degree three-quarter orthographic view, feet visible, centered, generous empty margin. No floor, no scenery, no text, no logo, no extra people, no duplicated limbs, no vehicle, no building. Perfectly flat uniform neutral gray background, no gradient, no vignette, no horizon."
             frame,cov=cutout(fetch(prompt,seed+n*131));frames.append(frame);print(f"POLLINATIONS_CHR_FRAME={it['id']} n={n} cov={cov:.3f}",flush=True);time.sleep(1)
           ok,why=sheetqa(frames)
           if not ok:raise RuntimeError(why)
