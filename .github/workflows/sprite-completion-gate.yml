@@ -56,10 +56,21 @@ jobs:
 
       - name: Audit all 235 sprite runtimes
         if: steps.state.outputs.complete == 'true'
+        id: audit
+        continue-on-error: true
         run: python tools/sprites/audit_complete_sprite_manifest.py
 
+      - name: Upload full audit evidence
+        if: steps.state.outputs.complete == 'true' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: final-sprite-completion-audit
+          path: art/production/final-sprite-completion-audit.json
+          if-no-files-found: error
+          retention-days: 30
+
       - name: Commit final audit evidence
-        if: steps.state.outputs.complete == 'true'
+        if: steps.state.outputs.complete == 'true' && always()
         shell: bash
         run: |
           git config user.name github-actions[bot]
@@ -69,3 +80,9 @@ jobs:
           git commit -m 'art: record final 235-sprite completion audit'
           git pull --rebase origin main
           git push
+
+      - name: Enforce final audit result
+        if: steps.state.outputs.complete == 'true' && steps.audit.outcome != 'success'
+        run: |
+          echo "::error::Final 235-sprite runtime audit failed. See committed/uploaded audit evidence."
+          exit 1
