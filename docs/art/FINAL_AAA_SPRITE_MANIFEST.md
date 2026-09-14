@@ -121,10 +121,10 @@ If a new runtime sprite is later required, it must be added here first and the d
 | BLD-13-T0 | Apex Business 13 T0 | Apex / Apex Business 13 — starter footprint, improvised materials, low verticality, one clear production cue. | `app/src/main/res/drawable-nodpi/zte_business_13_t0_final.webp` | DONE |
 | BLD-13-T1 | Apex Business 13 T1 | Apex / Apex Business 13 — reinforced footprint, dedicated machinery, cleaner structure, stronger silhouette. | `app/src/main/res/drawable-nodpi/zte_business_13_t1_final.webp` | DONE |
 | BLD-13-T2 | Apex Business 13 T2 | Apex / Apex Business 13 — commercialized/industrial expansion, second active subsystem, larger footprint. | `app/src/main/res/drawable-nodpi/zte_business_13_t2_final.webp` | DONE |
-| BLD-13-T3 | Apex Business 13 T3 | Apex / Apex Business 13 — automated complex, visible logistics flow, more verticality and emissive accents. | `app/src/main/res/drawable-nodpi/zte_business_13_t3_final.webp` | TODO |
-| BLD-13-T4 | Apex Business 13 T4 | Apex / Apex Business 13 — advanced district-scale facility, dense machinery, premium materials and strong landmark read. | `app/src/main/res/drawable-nodpi/zte_business_13_t4_final.webp` | TODO |
-| BLD-13-T5 | Apex Business 13 T5 | Apex / Apex Business 13 — late-game megastructure, multi-stage production, large moving assemblies and energy routing. | `app/src/main/res/drawable-nodpi/zte_business_13_t5_final.webp` | TODO |
-| BLD-13-T6 | Apex Business 13 T6 | Apex / Apex Business 13 — ultimate mastered structure, iconic silhouette, maximal verticality, prestige crown/hero treatment. | `app/src/main/res/drawable-nodpi/zte_business_13_t6_final.webp` | TODO |
+| BLD-13-T3 | Apex Business 13 T3 | Apex / Apex Business 13 — automated complex, visible logistics flow, more verticality and emissive accents. | `app/src/main/res/drawable-nodpi/zte_business_13_t3_final.webp` | DONE |
+| BLD-13-T4 | Apex Business 13 T4 | Apex / Apex Business 13 — advanced district-scale facility, dense machinery, premium materials and strong landmark read. | `app/src/main/res/drawable-nodpi/zte_business_13_t4_final.webp` | DONE |
+| BLD-13-T5 | Apex Business 13 T5 | Apex / Apex Business 13 — late-game megastructure, multi-stage production, large moving assemblies and energy routing. | `app/src/main/res/drawable-nodpi/zte_business_13_t5_final.webp` | DONE |
+| BLD-13-T6 | Apex Business 13 T6 | Apex / Apex Business 13 — ultimate mastered structure, iconic silhouette, maximal verticality, prestige crown/hero treatment. | `app/src/main/res/drawable-nodpi/zte_business_13_t6_final.webp` | DONE |
 
 ## B. Power Core — 7 / 7 planned
 
