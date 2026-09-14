@@ -165,7 +165,7 @@ If a new runtime sprite is later required, it must be added here first and the d
 | CHR-ENG-WORK | Engineer work | primary work/tool loop, 8–16 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_eng_work_final.webp` | DONE |
 | CHR-ENG-CARRY | Engineer carry | carry crate/component movement cycle, 6–10 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_eng_carry_final.webp` | DONE |
 | CHR-ENG-REPAIR | Engineer repair | repair/welding/diagnostic loop, 8–16 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_eng_repair_final.webp` | DONE |
-| CHR-ENG-CELEB | Engineer celeb | short celebration/milestone one-shot, 8–12 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_eng_celeb_final.webp` | TODO |
+| CHR-ENG-CELEB | Engineer celeb | short celebration/milestone one-shot, 8–12 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_eng_celeb_final.webp` | DONE |
 
 ## D. Vehicles — 18 / 18 planned
 
