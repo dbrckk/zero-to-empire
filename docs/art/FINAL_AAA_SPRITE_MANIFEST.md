@@ -143,7 +143,7 @@ If a new runtime sprite is later required, it must be added here first and the d
 | ID | Sheet | Description | Runtime target | Status |
 |---|---|---|---|---|
 | CHR-OP-IDLE | Foundry operator idle | idle breathing/look-around loop, 4–8 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_op_idle_final.webp` | DONE |
-| CHR-OP-WALK | Foundry operator walk | walk cycle, 6–10 frames, consistent foot pivot; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_op_walk_final.webp` | TODO |
+| CHR-OP-WALK | Foundry operator walk | walk cycle, 6–10 frames, consistent foot pivot; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_op_walk_final.webp` | DONE |
 | CHR-OP-WORK | Foundry operator work | primary work/tool loop, 8–16 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_op_work_final.webp` | TODO |
 | CHR-OP-CARRY | Foundry operator carry | carry crate/component movement cycle, 6–10 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_op_carry_final.webp` | TODO |
 | CHR-OP-REPAIR | Foundry operator repair | repair/welding/diagnostic loop, 8–16 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_op_repair_final.webp` | TODO |
