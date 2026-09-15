@@ -119,10 +119,18 @@ for n in ET.parse(sys.argv[1]).getroot().iter('node'):
 raise SystemExit(2)
 PY
 )
-for _ in $(seq 1 2600); do adb shell input tap "$CORE_X" "$CORE_Y" >/dev/null; done
+# Batch taps through one adb shell process; this preserves real input events without
+# paying host-side adb startup latency thousands of times.
+python3 - "$CORE_X" "$CORE_Y" <<'PY' | adb shell >/dev/null
+import sys
+x,y=sys.argv[1],sys.argv[2]
+for _ in range(2700):
+    print(f"input tap {x} {y}")
+PY
 sleep 3
 click_node "MANAGERS" "before-manager-hire"
 assert_ui_contains "Maya" "manager-visible"
+assert_ui_contains "READY TO HIRE" "manager-affordable"
 click_node "HIRE" "before-manager-hire-action"
 sleep 2
 assert_ui_contains "HIRED" "after-manager-hire"
