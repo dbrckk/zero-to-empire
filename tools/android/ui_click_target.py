@@ -44,7 +44,7 @@ def _contains(rect, point) -> bool:
 def _safe_point(clickable, overlays):
     x1, y1, x2, y2 = clickable
     width, height = x2 - x1, y2 - y1
-    fractions = (0.5, 0.1, 0.9, 0.25, 0.75)
+    fractions = (0.5, 0.05, 0.95, 0.15, 0.85)
     points = [
         (int(x1 + width * fx), int(y1 + height * fy))
         for fy in fractions
