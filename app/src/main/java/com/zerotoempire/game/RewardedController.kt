@@ -24,9 +24,13 @@ fun RewardedController(
 
     LaunchedEffect(activity, gateway, vm, adsAllowed, meta.adsRemoved) {
         vm.rewardedRequests.collect { placement ->
-            if (!adsAllowed || meta.adsRemoved) return@collect
+            if (!adsAllowed || meta.adsRemoved) {
+                vm.onRewardedUnavailable(placement)
+                return@collect
+            }
             if (!gateway.isReady()) {
                 gateway.preload()
+                vm.onRewardedUnavailable(placement)
                 return@collect
             }
             gateway.show(
