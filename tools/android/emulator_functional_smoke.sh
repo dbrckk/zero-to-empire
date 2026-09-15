@@ -50,6 +50,19 @@ PY
   sleep 1
 }
 
+click_resolved_node() {
+  local needle="$1"
+  local dump_name="$2"
+  local coords x y
+  dump_ui "$dump_name"
+  coords=$(python3 "$SCRIPT_DIR/ui_click_target.py" "$EVIDENCE/$dump_name.xml" "$needle") || fail "click-target-not-found:$needle"
+  read -r x y <<<"$coords"
+  [[ "$x" =~ ^[0-9]+$ && "$y" =~ ^[0-9]+$ ]] || fail "invalid-click-target:$needle:$coords"
+  echo "CLICK_RESOLVED_NODE=$needle at=$x,$y"
+  adb shell input tap "$x" "$y"
+  sleep 1
+}
+
 assert_ui_contains() {
   local needle="$1"
   local dump_name="$2"
@@ -66,6 +79,46 @@ for n in ET.parse(path).getroot().iter('node'):
 print(f'UI_ASSERT_FAIL={needle}',file=sys.stderr)
 sys.exit(2)
 PY
+}
+
+assert_ui_not_contains() {
+  local needle="$1"
+  local dump_name="$2"
+  dump_ui "$dump_name"
+  python3 - "$EVIDENCE/$dump_name.xml" "$needle" <<'PY'
+import sys,xml.etree.ElementTree as ET
+path,needle=sys.argv[1],sys.argv[2]
+needle=needle.lower()
+for n in ET.parse(path).getroot().iter('node'):
+    text=(n.attrib.get('text','')+' '+n.attrib.get('content-desc','')).lower()
+    if needle in text:
+        print(f'UI_ASSERT_UNEXPECTED={needle}',file=sys.stderr)
+        sys.exit(2)
+print(f'UI_ASSERT_ABSENT_PASS={needle}')
+PY
+}
+
+complete_onboarding_if_present() {
+  local step probe
+  for step in 0 1 2 3 4 5; do
+    probe="onboarding-step-$step"
+    dump_ui "$probe"
+    if ! grep -Fq 'ZERO → EMPIRE' "$EVIDENCE/$probe.xml"; then
+      echo "FUNCTIONAL_ONBOARDING_PASS=steps-$step"
+      return 0
+    fi
+    if (( step >= 5 )); then
+      fail "onboarding-exceeded-max-steps:5"
+    fi
+    if grep -Fq 'CONTINUE' "$EVIDENCE/$probe.xml"; then
+      click_node "CONTINUE" "onboarding-before-continue-$step"
+    elif grep -Fq 'BUILD MY EMPIRE' "$EVIDENCE/$probe.xml"; then
+      click_resolved_node "BUILD MY EMPIRE" "onboarding-before-build-$step"
+    else
+      fail "onboarding-action-missing:step=$step"
+    fi
+  done
+  fail "onboarding-unexpected-loop-exit"
 }
 
 check_alive() {
@@ -90,38 +143,65 @@ check_alive
 dump_ui "initial"
 adb exec-out screencap -p > "$EVIDENCE/initial.png"
 
+# A fresh or restored emulator can enter the onboarding at different persisted
+# points. Intermediate pages expose CONTINUE, while the final page exposes the
+# explicit BUILD MY EMPIRE CTA. Accept only those known actions and keep the
+# whole flow bounded to the five visual onboarding steps.
+complete_onboarding_if_present
+
 for tab in MANAGERS UPGRADES GOALS EMPIRE; do
   click_node "$tab" "before-$tab"
   assert_ui_contains "$tab" "after-$tab"
 done
 
-click_node "Power Core" "before-power-core"
-sleep 1
+# POWER CORE has a non-clickable text label layered over part of its clickable
+# surface. Resolve the nearby clickable node and deliberately choose an uncovered
+# point, then prove that one real UI tap increased visible capital.
+click_resolved_node "Power Core" "before-power-core"
+CAPITAL_BEFORE=$(python3 "$SCRIPT_DIR/ui_economy_probe.py" capital "$EVIDENCE/before-power-core.xml") || fail "capital-probe-failed:before-power-core"
+dump_ui "after-power-core"
+CAPITAL_AFTER=$(python3 "$SCRIPT_DIR/ui_economy_probe.py" capital "$EVIDENCE/after-power-core.xml") || fail "capital-probe-failed:after-power-core"
+if ! python3 - "$CAPITAL_BEFORE" "$CAPITAL_AFTER" <<'PY'
+import sys
+raise SystemExit(0 if float(sys.argv[2]) > float(sys.argv[1]) else 1)
+PY
+then
+  fail "power-core-tap-not-credited:before=$CAPITAL_BEFORE after=$CAPITAL_AFTER"
+fi
+echo "POWER_CORE_TAP_PASS=before=$CAPITAL_BEFORE after=$CAPITAL_AFTER"
 check_alive
 
 click_node "Street Stand" "before-street-stand-buy"
 sleep 2
 assert_ui_contains "LV 1" "after-street-stand-buy"
 
-dump_ui "capital-core-location"
-read CORE_X CORE_Y < <(python3 - "$EVIDENCE/capital-core-location.xml" <<'PY'
-import re,sys,xml.etree.ElementTree as ET
-for n in ET.parse(sys.argv[1]).getroot().iter('node'):
-    text=(n.attrib.get('text','')+' '+n.attrib.get('content-desc','')).lower()
-    if 'power core' in text:
-        m=re.match(r'\[(\d+),(\d+)\]\[(\d+),(\d+)\]',n.attrib.get('bounds',''))
-        if m:
-            x1,y1,x2,y2=map(int,m.groups()); print((x1+x2)//2,(y1+y2)//2); raise SystemExit
-raise SystemExit(2)
-PY
-)
-python3 - "$CORE_X" "$CORE_Y" <<'PY' | adb shell >/dev/null
-import sys
-x,y=sys.argv[1],sys.argv[2]
-for _ in range(2700):
-    print(f"input tap {x} {y}")
-PY
+# The remaining smoke validates manager automation, offline earnings and durable
+# persistence; it does not need to spend minutes grinding 2,500 synthetic taps.
+# Seed only the debug APK after the real tap + purchase have been verified. The
+# release source set contains no SmokeSeedReceiver, enforced by the release
+# manifest allowlist in Android CI.
+adb shell am force-stop "$PKG"
+adb shell am broadcast \
+  --include-stopped-packages \
+  -a "$PKG.DEBUG_SMOKE_SEED" \
+  -n "$PKG/.SmokeSeedReceiver" \
+  --el cash 3000 > "$EVIDENCE/debug-seed.txt"
+adb shell am force-stop "$PKG"
+adb shell am start -W -n "$ACT" > "$EVIDENCE/debug-seed-restart.txt"
 sleep 3
+check_alive
+dump_ui "after-debug-seed"
+SEEDED_CAPITAL=$(python3 "$SCRIPT_DIR/ui_economy_probe.py" capital "$EVIDENCE/after-debug-seed.xml") || fail "capital-probe-failed:after-debug-seed"
+if ! python3 - "$SEEDED_CAPITAL" <<'PY'
+import sys
+raise SystemExit(0 if float(sys.argv[1]) >= 2500.0 else 1)
+PY
+then
+  fail "debug-seed-not-applied:capital=$SEEDED_CAPITAL"
+fi
+echo "DEBUG_SMOKE_SEED_PASS=capital=$SEEDED_CAPITAL"
+assert_ui_contains "LV 1" "after-debug-seed-level"
+
 click_node "MANAGERS" "before-manager-hire"
 assert_ui_contains "Maya" "manager-visible"
 assert_ui_contains "READY TO HIRE" "manager-affordable"
@@ -249,6 +329,7 @@ check_no_fatal
 if grep -E "ANR in $PKG|am_anr.*$PKG" "$EVIDENCE/logcat.txt"; then
   fail "anr-detected"
 fi
+echo "FUNCTIONAL_POWER_CORE_TAP_PASS=1"
 echo "FUNCTIONAL_MANAGER_AUTOMATION_PASS=1"
 echo "FUNCTIONAL_OFFLINE_ECONOMY_PASS=1"
 echo "FUNCTIONAL_RESTART_STATE_PASS=1"
