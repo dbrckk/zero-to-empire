@@ -221,7 +221,8 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         scheduleSave()
     }
 
-    fun applyPurchase(product: StoreProduct) {
+    fun applyPurchase(product: StoreProduct, transactionId: String) {
+        if (transactionId.isBlank()) return
         when (product) {
             StoreProduct.REMOVE_ADS -> _meta.value = _meta.value.copy(adsRemoved = true)
             StoreProduct.STARTER_PACK -> if (!_meta.value.starterPackOwned) { _state.value = _state.value.copy(gems = safeGemAdd(_state.value.gems, 250)); _meta.value = _meta.value.copy(gems = _state.value.gems, starterPackOwned = true); activateProfitBoost(30) }
