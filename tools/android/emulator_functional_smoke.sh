@@ -104,6 +104,32 @@ click_node "Street Stand" "before-street-stand-buy"
 sleep 2
 assert_ui_contains "LV 1" "after-street-stand-buy"
 
+# Build enough capital through legitimate gameplay for the first manager.
+# A level-1 Street Stand produces while active; repeated Power Core taps are real player actions.
+for _ in $(seq 1 2600); do
+  click_node "Power Core" "capital-power-core" >/dev/null
+done
+sleep 2
+click_node "MANAGERS" "before-manager-hire"
+assert_ui_contains "Maya" "manager-visible"
+click_node "HIRE" "before-manager-hire-action"
+sleep 2
+assert_ui_contains "HIRED" "after-manager-hire"
+click_node "EMPIRE" "return-empire-after-manager"
+
+# Runtime offline lifecycle: HOME must background the activity, and >30s must cross the production threshold.
+dump_ui "before-offline"
+adb shell input keyevent KEYCODE_HOME
+sleep 33
+adb shell am start -W -n "$ACT" > "$EVIDENCE/offline-return.txt"
+sleep 3
+check_alive
+dump_ui "after-offline"
+# The manager must remain hired after the lifecycle transition.
+click_node "MANAGERS" "offline-manager-tab"
+assert_ui_contains "HIRED" "offline-manager-still-hired"
+click_node "EMPIRE" "offline-return-empire"
+
 # Commerce surface: open and close store without starting a purchase.
 click_node "STORE" "before-store"
 assert_ui_contains "EMPIRE STORE" "store-open"
