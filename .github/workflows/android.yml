@@ -91,6 +91,31 @@ jobs:
         if: steps.change_scope.outputs.sprite_only != 'true'
         run: gradle lintDebug --stacktrace
 
+      - name: Build release AAB
+        if: steps.change_scope.outputs.sprite_only != 'true'
+        run: gradle bundleRelease --stacktrace
+
+      - name: Verify release bundle
+        if: steps.change_scope.outputs.sprite_only != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          AAB="app/build/outputs/bundle/release/app-release.aab"
+          test -s "$AAB"
+          unzip -t "$AAB" >/dev/null
+          sha256sum "$AAB" | tee release-aab.sha256
+
+      - name: Upload release AAB
+        if: steps.change_scope.outputs.sprite_only != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unsigned-release-aab
+          path: |
+            app/build/outputs/bundle/release/*.aab
+            release-aab.sha256
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Upload APK
         if: always()
         uses: actions/upload-artifact@v4
