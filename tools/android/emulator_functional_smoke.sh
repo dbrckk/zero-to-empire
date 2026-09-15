@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/ui_dump_retry.sh"
+
 PKG="com.zerotoempire.game"
 ACT="$PKG/.MainActivity"
 EVIDENCE="/tmp/zte-functional"
@@ -15,8 +18,7 @@ fail() {
 
 dump_ui() {
   local name="$1"
-  adb shell uiautomator dump /sdcard/window.xml >/dev/null
-  adb pull /sdcard/window.xml "$EVIDENCE/$name.xml" >/dev/null
+  ui_dump_with_retry "$EVIDENCE/$name.xml" || fail "ui-hierarchy-unavailable:$name"
 }
 
 click_node() {
@@ -247,7 +249,10 @@ check_no_fatal
 if grep -E "ANR in $PKG|am_anr.*$PKG" "$EVIDENCE/logcat.txt"; then
   fail "anr-detected"
 fi
-echo "FUNCTIONAL_MANAGER_AUTOMATION_PASS=1"\necho "FUNCTIONAL_OFFLINE_ECONOMY_PASS=1"
-echo "FUNCTIONAL_RESTART_STATE_PASS=1"\necho "FUNCTIONAL_PERSISTENCE_PASS=1"
-echo "FUNCTIONAL_AUTOSAVE_DURABILITY_PASS=1"\necho "FUNCTIONAL_SOAK_PASS=1"
+echo "FUNCTIONAL_MANAGER_AUTOMATION_PASS=1"
+echo "FUNCTIONAL_OFFLINE_ECONOMY_PASS=1"
+echo "FUNCTIONAL_RESTART_STATE_PASS=1"
+echo "FUNCTIONAL_PERSISTENCE_PASS=1"
+echo "FUNCTIONAL_AUTOSAVE_DURABILITY_PASS=1"
+echo "FUNCTIONAL_SOAK_PASS=1"
 echo "FUNCTIONAL_SMOKE_PASS=1"
