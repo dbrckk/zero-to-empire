@@ -43,6 +43,12 @@ fun RewardedController(
                         RewardPlacement.DAILY_BONUS,
                         RewardPlacement.EVENT_BONUS -> Unit
                     }
+                },
+                onClosed = {
+                    // If no reward was earned, release any placement-specific request
+                    // guard so the player can retry. Successful double-offline credit
+                    // clears its reward before this callback, making this a harmless no-op.
+                    vm.onRewardedUnavailable(placement)
                 }
             )
         }
