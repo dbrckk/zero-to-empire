@@ -144,9 +144,6 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
             offlineRewardAdPending = true
         }
     }
-    fun onRewardedAdClosed(placement: RewardPlacement) {
-        if (placement == RewardPlacement.DOUBLE_OFFLINE_EARNINGS) offlineRewardAdPending = false
-    }
     fun requestProfitBoostAd() { _rewardedRequests.tryEmit(RewardPlacement.PROFIT_BOOST) }
     fun canClaimDaily(): Boolean = _meta.value.lastDailyClaimEpochDay != LocalDate.now().toEpochDay()
 
