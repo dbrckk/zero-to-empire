@@ -108,7 +108,7 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
                         purchaseInFlight = null
                         pendingPurchases = pendingPurchases - result.product
                         if (!result.product.consumable) owned = owned + result.product
-                        vm.applyPurchase(result.product)
+                        vm.applyPurchase(result.product, result.transactionId)
                         status = "Purchase completed."
                     }
                     PurchaseResult.Cancelled -> {

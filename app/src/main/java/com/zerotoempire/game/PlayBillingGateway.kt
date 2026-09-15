@@ -282,7 +282,7 @@ class PlayBillingGateway(
                     deferred != null && product.consumable -> consumeDeferred(purchase, product, deferred.callback)
                     deferred != null -> acknowledge(purchase) { result ->
                         val purchaseResult = if (result.responseCode == BillingClient.BillingResponseCode.OK) {
-                            PurchaseResult.Success(product)
+                            PurchaseResult.Success(product, purchase.purchaseToken)
                         } else {
                             billingFailure(result, BillingOperation.ACKNOWLEDGE, "Google Play could not confirm the purchase", record = false)
                         }
@@ -291,7 +291,7 @@ class PlayBillingGateway(
                     activeCallback != null && product.consumable -> consume(purchase, product, activeCallback)
                     activeCallback != null -> acknowledge(purchase) { result ->
                         val purchaseResult = if (result.responseCode == BillingClient.BillingResponseCode.OK) {
-                            PurchaseResult.Success(product)
+                            PurchaseResult.Success(product, purchase.purchaseToken)
                         } else {
                             billingFailure(result, BillingOperation.ACKNOWLEDGE, "Google Play could not confirm the purchase", record = false)
                         }
@@ -356,7 +356,7 @@ class PlayBillingGateway(
         val params = ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()
         billingClient.consumeAsync(params) { result, _ ->
             val purchaseResult = if (result.responseCode == BillingClient.BillingResponseCode.OK) {
-                PurchaseResult.Success(product)
+                PurchaseResult.Success(product, purchase.purchaseToken)
             } else {
                 billingFailure(result, BillingOperation.CONSUME, "Google Play could not consume the purchase")
             }
@@ -368,7 +368,7 @@ class PlayBillingGateway(
         val params = ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()
         billingClient.consumeAsync(params) { result, _ ->
             val purchaseResult = if (result.responseCode == BillingClient.BillingResponseCode.OK) {
-                PurchaseResult.Success(product)
+                PurchaseResult.Success(product, purchase.purchaseToken)
             } else {
                 billingFailure(result, BillingOperation.CONSUME, "Google Play could not consume the purchase")
             }
