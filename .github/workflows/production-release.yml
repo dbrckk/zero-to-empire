@@ -93,6 +93,9 @@ jobs:
           grep -Fq "base/dex/classes.dex" production-aab-contents.txt
           grep -Fq "BundleConfig.pb" production-aab-contents.txt
           sha256sum "$AAB" | tee production-aab.sha256
+          MAPPING="app/build/outputs/mapping/release/mapping.txt"
+          test -s "$MAPPING" || { echo "::error::R8 mapping.txt missing from minified production build"; exit 1; }
+          sha256sum "$MAPPING" | tee production-mapping.sha256
           echo "PRODUCTION_RELEASE_GATE_PASS=1" | tee production-release-validation.txt
 
       - name: Upload signed production bundle
@@ -103,6 +106,8 @@ jobs:
             app/build/outputs/bundle/release/app-release.aab
             production-aab.sha256
             production-aab-contents.txt
+            app/build/outputs/mapping/release/mapping.txt
+            production-mapping.sha256
             production-release-validation.txt
           if-no-files-found: error
           retention-days: 30
