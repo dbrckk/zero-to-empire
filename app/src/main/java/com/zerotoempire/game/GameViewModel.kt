@@ -102,7 +102,9 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
             val metaSnapshot = _meta.value
             viewModelScope.launch {
                 repository.save(stateSnapshot, metaSnapshot, nowMillis)
-                saveDirty = false
+                // Do not clear saveDirty here: a foreground mutation may have arrived
+                // while this background snapshot was being written. The foreground
+                // coalescing worker owns that flag and will persist the newer state.
             }
         }
     }
