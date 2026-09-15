@@ -80,6 +80,9 @@ jobs:
       - name: Verify Gradle toolchain
         run: gradle --version
 
+      - name: Validate Android manifest policy
+        run: python3 tools/android/validate_manifest_policy.py
+
       - name: Build debug APK
         run: gradle assembleDebug --stacktrace
 
