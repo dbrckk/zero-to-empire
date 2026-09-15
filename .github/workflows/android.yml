@@ -116,9 +116,26 @@ jobs:
           r=ET.parse(p).getroot()
           A="{http://schemas.android.com/apk/res/android}"
           perms=sorted({n.get(A+"name") for n in r.findall("uses-permission") if n.get(A+"name")})
-          blocked={"android.permission.READ_CONTACTS","android.permission.WRITE_CONTACTS","android.permission.READ_SMS","android.permission.SEND_SMS","android.permission.RECORD_AUDIO","android.permission.CAMERA","android.permission.ACCESS_FINE_LOCATION","android.permission.ACCESS_COARSE_LOCATION","android.permission.READ_CALL_LOG","android.permission.WRITE_CALL_LOG"}
-          bad=sorted(blocked & set(perms))
-          if bad: raise SystemExit("Blocked merged-manifest permissions: "+", ".join(bad))
+          allowed_permissions={
+              "android.permission.ACCESS_ADSERVICES_AD_ID",
+              "android.permission.ACCESS_ADSERVICES_ATTRIBUTION",
+              "android.permission.ACCESS_ADSERVICES_TOPICS",
+              "android.permission.ACCESS_NETWORK_STATE",
+              "android.permission.FOREGROUND_SERVICE",
+              "android.permission.INTERNET",
+              "android.permission.WAKE_LOCK",
+              "com.android.vending.BILLING",
+              "com.google.android.gms.permission.AD_ID",
+              "com.zerotoempire.game.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION",
+          }
+          actual_permissions=set(perms)
+          if actual_permissions != allowed_permissions:
+              unexpected=sorted(actual_permissions-allowed_permissions)
+              missing=sorted(allowed_permissions-actual_permissions)
+              raise SystemExit(
+                  "Merged permission allowlist drift. "
+                  f"unexpected={unexpected} missing={missing} actual={perms}"
+              )
           app=r.find("application")
           if app is None: raise SystemExit("merged application missing")
           exported=[]
@@ -127,7 +144,12 @@ jobs:
                   if n.get(A+"exported")=="true":
                       exported.append((tag,n.get(A+"name")))
           exported=sorted(exported)
-          allowed_exported=[("activity","com.zerotoempire.game.MainActivity")]
+          allowed_exported=sorted([
+              ("activity","com.zerotoempire.game.MainActivity"),
+              ("receiver","androidx.profileinstaller.ProfileInstallReceiver"),
+              ("receiver","androidx.work.impl.diagnostics.DiagnosticsReceiver"),
+              ("service","androidx.work.impl.background.systemjob.SystemJobService"),
+          ])
           if exported != allowed_exported:
               unexpected=sorted(set(exported)-set(allowed_exported))
               missing=sorted(set(allowed_exported)-set(exported))
@@ -137,6 +159,7 @@ jobs:
               )
           print("MERGED_RELEASE_PERMISSIONS="+",".join(perms))
           print("MERGED_RELEASE_EXPORTED="+repr(exported))
+          print("MERGED_RELEASE_PERMISSION_ALLOWLIST_PASS=1")
           print("MERGED_RELEASE_EXPORTED_ALLOWLIST_PASS=1")
           print("MERGED_RELEASE_MANIFEST_PASS=1")
           PY
