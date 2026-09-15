@@ -71,7 +71,7 @@ class EconomyInvariantTest {
     @Test
     fun offlineRewardCannotExceedConfiguredCap() {
         val state = automatedState().copy(upgradeRanks = mapOf("offline" to 8))
-        val now = 1_000_000_000L
+        val now = 10_000_000_000L
         val reward = OfflineProgress.calculate(
             state,
             lastSeenMillis = now - 30L * 24L * 3600L * 1000L,
