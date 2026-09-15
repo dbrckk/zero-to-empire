@@ -154,8 +154,26 @@ sleep 33
 adb shell am start -W -n "$ACT" > "$EVIDENCE/offline-return.txt"
 sleep 3
 check_alive
-# Preserve the post-offline empire state as evidence before navigating away.
+# Preserve the post-offline empire state as evidence before navigating away and
+# require a visible economy delta. This validates that the offline interval was
+# actually applied instead of merely restoring the same persisted snapshot.
 dump_ui "after-offline-empire"
+python3 - "$EVIDENCE/before-offline.xml" "$EVIDENCE/after-offline-empire.xml" <<'PY'
+import sys,xml.etree.ElementTree as ET
+def visible(path):
+    ignored=("empire","managers","upgrades","goals","store")
+    out=[]
+    for n in ET.parse(path).getroot().iter('node'):
+        s=(n.attrib.get('text','')+' '+n.attrib.get('content-desc','')).strip()
+        if s and s.lower() not in ignored:
+            out.append(s)
+    return out
+before,after=visible(sys.argv[1]),visible(sys.argv[2])
+if before == after:
+    print("OFFLINE_ECONOMY_FAIL=no-visible-delta", file=sys.stderr)
+    raise SystemExit(2)
+print("OFFLINE_ECONOMY_PASS=1")
+PY
 click_node "MANAGERS" "offline-manager-tab"
 assert_ui_contains "HIRED" "offline-manager-still-hired"
 click_node "EMPIRE" "offline-return-empire"
@@ -192,7 +210,7 @@ check_no_fatal
 if grep -E "ANR in $PKG|am_anr.*$PKG" "$EVIDENCE/logcat.txt"; then
   fail "anr-detected"
 fi
-echo "FUNCTIONAL_MANAGER_AUTOMATION_PASS=1"
+echo "FUNCTIONAL_MANAGER_AUTOMATION_PASS=1"\necho "FUNCTIONAL_OFFLINE_ECONOMY_PASS=1"
 echo "FUNCTIONAL_PERSISTENCE_PASS=1"
 echo "FUNCTIONAL_SOAK_PASS=1"
 echo "FUNCTIONAL_SMOKE_PASS=1"
