@@ -97,7 +97,14 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         appForeground = false
         resetTickClock = true
         backgroundedAtMillis = nowMillis
-        if (loaded) viewModelScope.launch { persistNow() }
+        if (loaded) {
+            val stateSnapshot = _state.value
+            val metaSnapshot = _meta.value
+            viewModelScope.launch {
+                repository.save(stateSnapshot, metaSnapshot, nowMillis)
+                saveDirty = false
+            }
+        }
     }
 
     fun onAppForegrounded(nowMillis: Long = System.currentTimeMillis()) {
