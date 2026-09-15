@@ -50,6 +50,19 @@ PY
   sleep 1
 }
 
+click_resolved_node() {
+  local needle="$1"
+  local dump_name="$2"
+  local coords x y
+  dump_ui "$dump_name"
+  coords=$(python3 "$SCRIPT_DIR/ui_click_target.py" "$EVIDENCE/$dump_name.xml" "$needle") || fail "click-target-not-found:$needle"
+  read -r x y <<<"$coords"
+  [[ "$x" =~ ^[0-9]+$ && "$y" =~ ^[0-9]+$ ]] || fail "invalid-click-target:$needle:$coords"
+  echo "CLICK_RESOLVED_NODE=$needle at=$x,$y"
+  adb shell input tap "$x" "$y"
+  sleep 1
+}
+
 assert_ui_contains() {
   local needle="$1"
   local dump_name="$2"
@@ -95,58 +108,53 @@ for tab in MANAGERS UPGRADES GOALS EMPIRE; do
   assert_ui_contains "$tab" "after-$tab"
 done
 
-click_node "Power Core" "before-power-core"
-sleep 1
+# POWER CORE has a non-clickable text label layered over part of its clickable
+# surface. Resolve the nearby clickable node and deliberately choose an uncovered
+# point, then prove that one real UI tap increased visible capital.
+click_resolved_node "Power Core" "before-power-core"
+CAPITAL_BEFORE=$(python3 "$SCRIPT_DIR/ui_economy_probe.py" capital "$EVIDENCE/before-power-core.xml") || fail "capital-probe-failed:before-power-core"
+dump_ui "after-power-core"
+CAPITAL_AFTER=$(python3 "$SCRIPT_DIR/ui_economy_probe.py" capital "$EVIDENCE/after-power-core.xml") || fail "capital-probe-failed:after-power-core"
+if ! python3 - "$CAPITAL_BEFORE" "$CAPITAL_AFTER" <<'PY'
+import sys
+raise SystemExit(0 if float(sys.argv[2]) > float(sys.argv[1]) else 1)
+PY
+then
+  fail "power-core-tap-not-credited:before=$CAPITAL_BEFORE after=$CAPITAL_AFTER"
+fi
+echo "POWER_CORE_TAP_PASS=before=$CAPITAL_BEFORE after=$CAPITAL_AFTER"
 check_alive
 
 click_node "Street Stand" "before-street-stand-buy"
 sleep 2
 assert_ui_contains "LV 1" "after-street-stand-buy"
 
-dump_ui "capital-core-location"
-read CORE_X CORE_Y < <(python3 - "$EVIDENCE/capital-core-location.xml" <<'PY'
-import re,sys,xml.etree.ElementTree as ET
-for n in ET.parse(sys.argv[1]).getroot().iter('node'):
-    text=(n.attrib.get('text','')+' '+n.attrib.get('content-desc','')).lower()
-    if 'power core' in text:
-        m=re.match(r'\[(\d+),(\d+)\]\[(\d+),(\d+)\]',n.attrib.get('bounds',''))
-        if m:
-            x1,y1,x2,y2=map(int,m.groups()); print((x1+x2)//2,(y1+y2)//2); raise SystemExit
-raise SystemExit(2)
-PY
-)
-
-# Synthetic taps can outrun Compose/UI dispatch on a hosted emulator. Drive the
-# economy in bounded, paced batches and verify the visible capital after each
-# batch instead of assuming that every injected tap was delivered.
-CORE_CAPITAL_TARGET="${CORE_CAPITAL_TARGET:-2500}"
-CORE_TAPS_PER_BATCH="${CORE_TAPS_PER_BATCH:-400}"
-CORE_MAX_BATCHES="${CORE_MAX_BATCHES:-12}"
-CORE_TAP_DELAY_SECONDS="${CORE_TAP_DELAY_SECONDS:-0.05}"
-CAPITAL="0"
-for batch in $(seq 1 "$CORE_MAX_BATCHES"); do
-  python3 - "$CORE_X" "$CORE_Y" "$CORE_TAPS_PER_BATCH" "$CORE_TAP_DELAY_SECONDS" <<'PY' | adb shell >/dev/null
+# The remaining smoke validates manager automation, offline earnings and durable
+# persistence; it does not need to spend minutes grinding 2,500 synthetic taps.
+# Seed only the debug APK after the real tap + purchase have been verified. The
+# release source set contains no SmokeSeedReceiver, enforced by the release
+# manifest allowlist in Android CI.
+adb shell am force-stop "$PKG"
+adb shell am broadcast \
+  --include-stopped-packages \
+  -a "$PKG.DEBUG_SMOKE_SEED" \
+  -n "$PKG/.SmokeSeedReceiver" \
+  --el cash 3000 > "$EVIDENCE/debug-seed.txt"
+adb shell am force-stop "$PKG"
+adb shell am start -W -n "$ACT" > "$EVIDENCE/debug-seed-restart.txt"
+sleep 3
+check_alive
+dump_ui "after-debug-seed"
+SEEDED_CAPITAL=$(python3 "$SCRIPT_DIR/ui_economy_probe.py" capital "$EVIDENCE/after-debug-seed.xml") || fail "capital-probe-failed:after-debug-seed"
+if ! python3 - "$SEEDED_CAPITAL" <<'PY'
 import sys
-x,y,taps,delay=sys.argv[1],sys.argv[2],int(sys.argv[3]),sys.argv[4]
-for _ in range(taps):
-    print(f"input tap {x} {y}")
-    print(f"sleep {delay}")
+raise SystemExit(0 if float(sys.argv[1]) >= 2500.0 else 1)
 PY
-  sleep 1
-  dump_ui "capital-after-core-batch-$batch"
-  CAPITAL=$(python3 "$SCRIPT_DIR/ui_economy_probe.py" capital "$EVIDENCE/capital-after-core-batch-$batch.xml") || fail "capital-probe-failed:batch=$batch"
-  echo "CORE_CAPITAL_PROGRESS=batch=$batch capital=$CAPITAL target=$CORE_CAPITAL_TARGET"
-  if python3 - "$CAPITAL" "$CORE_CAPITAL_TARGET" <<'PY'
-import sys
-raise SystemExit(0 if float(sys.argv[1]) >= float(sys.argv[2]) else 1)
-PY
-  then
-    break
-  fi
-  if [[ "$batch" -eq "$CORE_MAX_BATCHES" ]]; then
-    fail "capital-target-not-reached:capital=$CAPITAL target=$CORE_CAPITAL_TARGET batches=$CORE_MAX_BATCHES"
-  fi
-done
+then
+  fail "debug-seed-not-applied:capital=$SEEDED_CAPITAL"
+fi
+echo "DEBUG_SMOKE_SEED_PASS=capital=$SEEDED_CAPITAL"
+assert_ui_contains "LV 1" "after-debug-seed-level"
 
 click_node "MANAGERS" "before-manager-hire"
 assert_ui_contains "Maya" "manager-visible"
@@ -275,6 +283,7 @@ check_no_fatal
 if grep -E "ANR in $PKG|am_anr.*$PKG" "$EVIDENCE/logcat.txt"; then
   fail "anr-detected"
 fi
+echo "FUNCTIONAL_POWER_CORE_TAP_PASS=1"
 echo "FUNCTIONAL_MANAGER_AUTOMATION_PASS=1"
 echo "FUNCTIONAL_OFFLINE_ECONOMY_PASS=1"
 echo "FUNCTIONAL_RESTART_STATE_PASS=1"
