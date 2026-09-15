@@ -35,12 +35,13 @@ class GameRepository(private val context: Context) {
         val highestEra = intPreferencesKey("highest_era_seen")
         val adsRemoved = booleanPreferencesKey("ads_removed")
         val starterPack = booleanPreferencesKey("starter_pack_owned")
+        val creditedPurchaseTokens = stringSetPreferencesKey("credited_purchase_tokens")
         fun level(id: Int) = intPreferencesKey("business_${id}_level")
         fun manager(id: Int) = booleanPreferencesKey("manager_$id")
         fun upgrade(id: String) = intPreferencesKey("upgrade_$id")
     }
 
-    data class Save(val state: GameState, val meta: PlayerMeta, val lastSeenMillis: Long)
+    data class Save(val state: GameState, val meta: PlayerMeta, val lastSeenMillis: Long, val creditedPurchaseTokens: Set<String>)
 
     suspend fun load(): Save {
         val p = context.gameDataStore.data.first()
@@ -93,10 +94,10 @@ class GameRepository(private val context: Context) {
             adsRemoved = p[Keys.adsRemoved] ?: false,
             starterPackOwned = p[Keys.starterPack] ?: false
         )
-        return Save(state, meta, (p[Keys.lastSeen] ?: 0L).coerceAtLeast(0L))
+        return Save(state, meta, (p[Keys.lastSeen] ?: 0L).coerceAtLeast(0L), p[Keys.creditedPurchaseTokens] ?: emptySet())
     }
 
-    suspend fun save(s: GameState, m: PlayerMeta, now: Long = System.currentTimeMillis()) {
+    suspend fun save(s: GameState, m: PlayerMeta, creditedPurchaseTokens: Set<String> = emptySet(), now: Long = System.currentTimeMillis()) {
         context.gameDataStore.edit { p ->
             p[Keys.cash] = EconomyMath.finite(s.cash)
             p[Keys.lifetime] = EconomyMath.finite(s.lifetimeCash)
@@ -120,6 +121,7 @@ class GameRepository(private val context: Context) {
             p[Keys.highestEra] = m.highestEraSeen.coerceIn(0, EmpireEras.catalog.lastIndex)
             p[Keys.adsRemoved] = m.adsRemoved
             p[Keys.starterPack] = m.starterPackOwned
+            p[Keys.creditedPurchaseTokens] = creditedPurchaseTokens
             s.businesses.forEach { p[Keys.level(it.id)] = it.level.coerceAtLeast(0) }
             Managers.catalog.forEach { p[Keys.manager(it.businessId)] = it.businessId in s.hiredManagerIds }
             Upgrades.catalog.forEach { upgrade -> p[Keys.upgrade(upgrade.id)] = (s.upgradeRanks[upgrade.id] ?: 0).coerceIn(0, upgrade.maxRank) }
