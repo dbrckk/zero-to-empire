@@ -33,6 +33,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
 
     private var loaded = false
     private var saveJob: Job? = null
+    private var saveDirty = false
     @Volatile private var appForeground = true
     @Volatile private var resetTickClock = true
     private var backgroundedAtMillis: Long = 0L
@@ -266,8 +267,24 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun checkEraUnlock(s:GameState){val era=EmpireEras.current(s.lifetimeCash);if(era.index>_meta.value.highestEraSeen){_meta.value=_meta.value.copy(highestEraSeen=era.index);_celebration.value=Celebrations.era(era);scheduleSave()}}
     private fun syncMetaCurrency(){_meta.value=_meta.value.copy(gems=_state.value.gems)}
-    private fun scheduleSave(){if(loaded){saveJob?.cancel();saveJob=viewModelScope.launch{delay(350L);if(appForeground)persistNow()}}}
-    private suspend fun persistNow(){if(loaded)repository.save(_state.value,_meta.value)}
+    private fun scheduleSave(){
+        if (!loaded) return
+        saveDirty = true
+        if (saveJob?.isActive == true) return
+        saveJob = viewModelScope.launch {
+            delay(350L)
+            while (appForeground && saveDirty) {
+                saveDirty = false
+                persistNow()
+                if (saveDirty) delay(350L)
+            }
+        }
+    }
+    private suspend fun persistNow(){
+        if (!loaded) return
+        repository.save(_state.value,_meta.value)
+        saveDirty = false
+    }
     private fun safeGemAdd(current:Int, amount:Int):Int = if(amount<=0) current else if(current>Int.MAX_VALUE-amount) Int.MAX_VALUE else current+amount
     private fun safeLongAdd(current:Long, amount:Long):Long = if(amount<=0) current else if(current>Long.MAX_VALUE-amount) Long.MAX_VALUE else current+amount
     override fun onCleared(){if(loaded&&appForeground){val s=_state.value;val m=_meta.value;viewModelScope.launch{repository.save(s,m)}};super.onCleared()}
