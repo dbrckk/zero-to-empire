@@ -8,6 +8,8 @@ on:
       - '.github/workflows/android-emulator-smoke.yml'
       - 'ops/android-emulator-smoke-trigger.txt'
       - 'tools/android/emulator_functional_smoke.sh'
+      - 'tools/android/ui_dump_retry.sh'
+      - 'tools/android/test_ui_dump_retry.py'
       - 'app/**'
       - 'build.gradle.kts'
       - 'settings.gradle.kts'
@@ -35,6 +37,9 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.13'
+
+      - name: Test emulator smoke helpers
+        run: python3 tools/android/test_ui_dump_retry.py
 
       - name: Build debug APK
         run: gradle --no-daemon assembleDebug
