@@ -73,6 +73,11 @@ fun GrowthRuntimeRoot(vm: GameViewModel = viewModel()) {
     }
 
     if (activity != null) {
+        RewardedController(
+            activity = activity,
+            adsAllowed = adsAllowed,
+            vm = vm
+        )
         InterstitialController(
             activity = activity,
             adsAllowed = adsAllowed,
