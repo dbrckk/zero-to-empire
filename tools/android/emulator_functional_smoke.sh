@@ -88,25 +88,19 @@ check_alive
 dump_ui "initial"
 adb exec-out screencap -p > "$EVIDENCE/initial.png"
 
-# Main navigation surfaces must all be reachable.
 for tab in MANAGERS UPGRADES GOALS EMPIRE; do
   click_node "$tab" "before-$tab"
   assert_ui_contains "$tab" "after-$tab"
 done
 
-# Core gameplay action: one tap raises cash from 10 to at least 11.
 click_node "Power Core" "before-power-core"
 sleep 1
 check_alive
 
-# Buy the first real business and verify the gameplay state changes.
 click_node "Street Stand" "before-street-stand-buy"
 sleep 2
 assert_ui_contains "LV 1" "after-street-stand-buy"
 
-# Build enough capital through legitimate gameplay for the first manager.
-# Repeated Power Core taps are real player actions; direct screen coordinates avoid thousands
-# of expensive UI hierarchy dumps while preserving the exact production interaction path.
 dump_ui "capital-core-location"
 read CORE_X CORE_Y < <(python3 - "$EVIDENCE/capital-core-location.xml" <<'PY'
 import re,sys,xml.etree.ElementTree as ET
@@ -119,8 +113,6 @@ for n in ET.parse(sys.argv[1]).getroot().iter('node'):
 raise SystemExit(2)
 PY
 )
-# Batch taps through one adb shell process; this preserves real input events without
-# paying host-side adb startup latency thousands of times.
 python3 - "$CORE_X" "$CORE_Y" <<'PY' | adb shell >/dev/null
 import sys
 x,y=sys.argv[1],sys.argv[2]
@@ -136,18 +128,38 @@ sleep 2
 assert_ui_contains "HIRED" "after-manager-hire"
 click_node "EMPIRE" "return-empire-after-manager"
 
-# Runtime offline lifecycle: HOME must background the activity, and >30s crosses eligibility.
+# Capture two idle UI snapshots with no player input. A hired manager should mutate
+# the rendered economy state while the app remains foregrounded.
+dump_ui "manager-auto-before"
+sleep 8
+dump_ui "manager-auto-after"
+python3 - "$EVIDENCE/manager-auto-before.xml" "$EVIDENCE/manager-auto-after.xml" <<'PY'
+import sys,xml.etree.ElementTree as ET
+def visible(path):
+    out=[]
+    for n in ET.parse(path).getroot().iter('node'):
+        s=(n.attrib.get('text','')+' '+n.attrib.get('content-desc','')).strip()
+        if s: out.append(s)
+    return out
+before,after=visible(sys.argv[1]),visible(sys.argv[2])
+if before == after:
+    print("MANAGER_AUTOMATION_FAIL=no-visible-economy-change", file=sys.stderr)
+    raise SystemExit(2)
+print("MANAGER_AUTOMATION_PASS=1")
+PY
+
 dump_ui "before-offline"
 adb shell input keyevent KEYCODE_HOME
 sleep 33
 adb shell am start -W -n "$ACT" > "$EVIDENCE/offline-return.txt"
 sleep 3
 check_alive
+# Preserve the post-offline empire state as evidence before navigating away.
+dump_ui "after-offline-empire"
 click_node "MANAGERS" "offline-manager-tab"
 assert_ui_contains "HIRED" "offline-manager-still-hired"
 click_node "EMPIRE" "offline-return-empire"
 
-# Commerce surface: open and close store without starting a purchase.
 click_node "STORE" "before-store"
 assert_ui_contains "EMPIRE STORE" "store-open"
 assert_ui_contains "RESTORE PURCHASES" "store-contents"
@@ -155,7 +167,6 @@ click_node "CLOSE" "store-before-close"
 sleep 1
 check_alive
 
-# Exercise Android lifecycle and verify process recovers cleanly.
 adb shell input keyevent KEYCODE_HOME
 sleep 2
 adb shell am start -W -n "$ACT" > "$EVIDENCE/relaunch.txt"
@@ -163,7 +174,6 @@ sleep 3
 check_alive
 assert_ui_contains "EMPIRE" "after-relaunch"
 
-# Verify app data actually exists after interaction and survives process restart.
 adb shell am force-stop "$PKG"
 sleep 1
 adb shell am start -W -n "$ACT" > "$EVIDENCE/restart.txt"
@@ -172,7 +182,6 @@ check_alive
 assert_ui_contains "EMPIRE" "after-force-stop-restart"
 assert_ui_contains "LV 1" "after-force-stop-restart-level"
 
-# Short runtime soak to exercise the 250ms economy tick and 30s autosave loop.
 sleep 35
 check_alive
 adb shell dumpsys meminfo "$PKG" > "$EVIDENCE/meminfo.txt"
@@ -183,6 +192,7 @@ check_no_fatal
 if grep -E "ANR in $PKG|am_anr.*$PKG" "$EVIDENCE/logcat.txt"; then
   fail "anr-detected"
 fi
+echo "FUNCTIONAL_MANAGER_AUTOMATION_PASS=1"
 echo "FUNCTIONAL_PERSISTENCE_PASS=1"
 echo "FUNCTIONAL_SOAK_PASS=1"
 echo "FUNCTIONAL_SMOKE_PASS=1"
