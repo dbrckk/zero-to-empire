@@ -39,10 +39,12 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     private var backgroundedAtMillis: Long = 0L
     private val offlineRewardAdGate = RewardRequestGate()
     private val profitBoostAdGate = RewardRequestGate()
+    private val creditedPurchaseTokens = mutableSetOf<String>()
 
     init {
         viewModelScope.launch {
             val save = repository.load()
+            creditedPurchaseTokens += save.creditedPurchaseTokens
             var restored = save.state
             val reward = OfflineProgress.calculate(restored, save.lastSeenMillis)
             if (reward.eligible) {
@@ -103,7 +105,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
             val stateSnapshot = _state.value
             val metaSnapshot = _meta.value
             viewModelScope.launch {
-                repository.save(stateSnapshot, metaSnapshot, nowMillis)
+                repository.save(stateSnapshot, metaSnapshot, creditedPurchaseTokens.toSet(), nowMillis)
                 // Do not clear saveDirty here: a foreground mutation may have arrived
                 // while this background snapshot was being written. The foreground
                 // coalescing worker owns that flag and will persist the newer state.
@@ -222,7 +224,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun applyPurchase(product: StoreProduct, transactionId: String) {
-        if (transactionId.isBlank()) return
+        if (transactionId.isBlank() || !creditedPurchaseTokens.add(transactionId)) return
         when (product) {
             StoreProduct.REMOVE_ADS -> _meta.value = _meta.value.copy(adsRemoved = true)
             StoreProduct.STARTER_PACK -> if (!_meta.value.starterPackOwned) { _state.value = _state.value.copy(gems = safeGemAdd(_state.value.gems, 250)); _meta.value = _meta.value.copy(gems = _state.value.gems, starterPackOwned = true); activateProfitBoost(30) }
