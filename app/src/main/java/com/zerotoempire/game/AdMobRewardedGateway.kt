@@ -90,16 +90,17 @@ class AdMobRewardedGateway(private val context: Context) : RewardedAdGateway {
         }
         rewardedAd = null
         var rewarded = false
+        var closed = false
+        fun closeOnce() {
+            if (closed) return
+            closed = true
+            preload()
+            onClosed()
+        }
         ad.fullScreenContentCallback = object : FullScreenContentCallback() {
-            override fun onAdDismissedFullScreenContent() {
-                preload()
-                onClosed()
-            }
+            override fun onAdDismissedFullScreenContent() = closeOnce()
 
-            override fun onAdFailedToShowFullScreenContent(adError: com.google.android.gms.ads.AdError) {
-                preload()
-                onClosed()
-            }
+            override fun onAdFailedToShowFullScreenContent(adError: com.google.android.gms.ads.AdError) = closeOnce()
         }
         runCatching {
             ad.show(activity) {
@@ -108,9 +109,6 @@ class AdMobRewardedGateway(private val context: Context) : RewardedAdGateway {
                     onReward()
                 }
             }
-        }.onFailure {
-            preload()
-            onClosed()
-        }
+        }.onFailure { closeOnce() }
     }
 }
