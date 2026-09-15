@@ -233,6 +233,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun rewardDoubleOffline() {
+        if (!offlineRewardAdGate.consume()) return
         val reward = _offlineReward.value ?: return
         if (!reward.eligible) return
         _state.value = _state.value.copy(
