@@ -103,7 +103,13 @@ jobs:
           AAB="app/build/outputs/bundle/release/app-release.aab"
           test -s "$AAB"
           unzip -t "$AAB" >/dev/null
+          unzip -l "$AAB" | tee release-aab-contents.txt
+          grep -Fq "base/manifest/AndroidManifest.xml" release-aab-contents.txt
+          grep -Fq "base/dex/classes.dex" release-aab-contents.txt
+          grep -Fq "BundleConfig.pb" release-aab-contents.txt
           sha256sum "$AAB" | tee release-aab.sha256
+          test "$(wc -c < "$AAB")" -gt 100000
+          echo "RELEASE_AAB_STRUCTURE_PASS=1" | tee release-aab-validation.txt
 
       - name: Upload release AAB
         if: steps.change_scope.outputs.sprite_only != 'true'
@@ -113,6 +119,8 @@ jobs:
           path: |
             app/build/outputs/bundle/release/*.aab
             release-aab.sha256
+            release-aab-contents.txt
+            release-aab-validation.txt
           if-no-files-found: error
           retention-days: 14
 
