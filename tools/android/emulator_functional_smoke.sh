@@ -115,13 +115,39 @@ for n in ET.parse(sys.argv[1]).getroot().iter('node'):
 raise SystemExit(2)
 PY
 )
-python3 - "$CORE_X" "$CORE_Y" <<'PY' | adb shell >/dev/null
+
+# Synthetic taps can outrun Compose/UI dispatch on a hosted emulator. Drive the
+# economy in bounded, paced batches and verify the visible capital after each
+# batch instead of assuming that every injected tap was delivered.
+CORE_CAPITAL_TARGET="${CORE_CAPITAL_TARGET:-2500}"
+CORE_TAPS_PER_BATCH="${CORE_TAPS_PER_BATCH:-400}"
+CORE_MAX_BATCHES="${CORE_MAX_BATCHES:-12}"
+CORE_TAP_DELAY_SECONDS="${CORE_TAP_DELAY_SECONDS:-0.05}"
+CAPITAL="0"
+for batch in $(seq 1 "$CORE_MAX_BATCHES"); do
+  python3 - "$CORE_X" "$CORE_Y" "$CORE_TAPS_PER_BATCH" "$CORE_TAP_DELAY_SECONDS" <<'PY' | adb shell >/dev/null
 import sys
-x,y=sys.argv[1],sys.argv[2]
-for _ in range(2700):
+x,y,taps,delay=sys.argv[1],sys.argv[2],int(sys.argv[3]),sys.argv[4]
+for _ in range(taps):
     print(f"input tap {x} {y}")
+    print(f"sleep {delay}")
 PY
-sleep 3
+  sleep 1
+  dump_ui "capital-after-core-batch-$batch"
+  CAPITAL=$(python3 "$SCRIPT_DIR/ui_economy_probe.py" capital "$EVIDENCE/capital-after-core-batch-$batch.xml") || fail "capital-probe-failed:batch=$batch"
+  echo "CORE_CAPITAL_PROGRESS=batch=$batch capital=$CAPITAL target=$CORE_CAPITAL_TARGET"
+  if python3 - "$CAPITAL" "$CORE_CAPITAL_TARGET" <<'PY'
+import sys
+raise SystemExit(0 if float(sys.argv[1]) >= float(sys.argv[2]) else 1)
+PY
+  then
+    break
+  fi
+  if [[ "$batch" -eq "$CORE_MAX_BATCHES" ]]; then
+    fail "capital-target-not-reached:capital=$CAPITAL target=$CORE_CAPITAL_TARGET batches=$CORE_MAX_BATCHES"
+  fi
+done
+
 click_node "MANAGERS" "before-manager-hire"
 assert_ui_contains "Maya" "manager-visible"
 assert_ui_contains "READY TO HIRE" "manager-affordable"
