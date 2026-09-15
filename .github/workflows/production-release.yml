@@ -1,0 +1,112 @@
+name: Production Release Gate
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_code:
+        description: Play Store versionCode (positive integer)
+        required: true
+        type: string
+      version_name:
+        description: Human-readable versionName
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-release
+  cancel-in-progress: false
+
+jobs:
+  signed-aab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      ZERO_EMPIRE_KEYSTORE_PASSWORD: ${{ secrets.ZERO_EMPIRE_KEYSTORE_PASSWORD }}
+      ZERO_EMPIRE_KEY_ALIAS: ${{ secrets.ZERO_EMPIRE_KEY_ALIAS }}
+      ZERO_EMPIRE_KEY_PASSWORD: ${{ secrets.ZERO_EMPIRE_KEY_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.13'
+
+      - name: Fail closed when production secrets are missing
+        shell: bash
+        env:
+          KEYSTORE_B64: ${{ secrets.ZERO_EMPIRE_KEYSTORE_BASE64 }}
+          ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID }}
+          REWARDED_AD_UNIT_ID: ${{ secrets.REWARDED_AD_UNIT_ID }}
+          INTERSTITIAL_AD_UNIT_ID: ${{ secrets.INTERSTITIAL_AD_UNIT_ID }}
+        run: |
+          set -euo pipefail
+          for name in KEYSTORE_B64 ZERO_EMPIRE_KEYSTORE_PASSWORD ZERO_EMPIRE_KEY_ALIAS ZERO_EMPIRE_KEY_PASSWORD ADMOB_APP_ID REWARDED_AD_UNIT_ID INTERSTITIAL_AD_UNIT_ID; do
+            test -n "${!name:-}" || { echo "::error::Missing required production secret: $name"; exit 1; }
+          done
+          [[ "${{ inputs.version_code }}" =~ ^[1-9][0-9]*$ ]] || { echo "::error::version_code must be a positive integer"; exit 1; }
+          test -n "${{ inputs.version_name }}" || exit 1
+
+      - name: Materialize upload keystore
+        shell: bash
+        env:
+          KEYSTORE_B64: ${{ secrets.ZERO_EMPIRE_KEYSTORE_BASE64 }}
+        run: |
+          set -euo pipefail
+          umask 077
+          printf '%s' "$KEYSTORE_B64" | base64 --decode > "$RUNNER_TEMP/zero-empire-upload.jks"
+          test -s "$RUNNER_TEMP/zero-empire-upload.jks"
+          echo "ZERO_EMPIRE_KEYSTORE_PATH=$RUNNER_TEMP/zero-empire-upload.jks" >> "$GITHUB_ENV"
+
+      - name: Validate keystore credentials
+        run: |
+          set -euo pipefail
+          keytool -list -keystore "$ZERO_EMPIRE_KEYSTORE_PATH" -storepass "$ZERO_EMPIRE_KEYSTORE_PASSWORD" -alias "$ZERO_EMPIRE_KEY_ALIAS" >/dev/null
+
+      - name: Build signed production AAB
+        env:
+          ORG_GRADLE_PROJECT_ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID }}
+          ORG_GRADLE_PROJECT_REWARDED_AD_UNIT_ID: ${{ secrets.REWARDED_AD_UNIT_ID }}
+          ORG_GRADLE_PROJECT_INTERSTITIAL_AD_UNIT_ID: ${{ secrets.INTERSTITIAL_AD_UNIT_ID }}
+        run: |
+          gradle --no-daemon bundleProductionRelease \
+            -PVERSION_CODE="${{ inputs.version_code }}" \
+            -PVERSION_NAME="${{ inputs.version_name }}" \
+            --stacktrace
+
+      - name: Verify production artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          AAB="app/build/outputs/bundle/release/app-release.aab"
+          test -s "$AAB"
+          unzip -t "$AAB" >/dev/null
+          unzip -l "$AAB" > production-aab-contents.txt
+          grep -Fq "base/manifest/AndroidManifest.xml" production-aab-contents.txt
+          grep -Fq "base/dex/classes.dex" production-aab-contents.txt
+          grep -Fq "BundleConfig.pb" production-aab-contents.txt
+          sha256sum "$AAB" | tee production-aab.sha256
+          echo "PRODUCTION_RELEASE_GATE_PASS=1" | tee production-release-validation.txt
+
+      - name: Upload signed production bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: zero-to-empire-production-${{ inputs.version_name }}-${{ inputs.version_code }}
+          path: |
+            app/build/outputs/bundle/release/app-release.aab
+            production-aab.sha256
+            production-aab-contents.txt
+            production-release-validation.txt
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Remove keystore
+        if: always()
+        run: rm -f "$RUNNER_TEMP/zero-empire-upload.jks"
