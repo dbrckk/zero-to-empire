@@ -81,6 +81,23 @@ sys.exit(2)
 PY
 }
 
+assert_ui_not_contains() {
+  local needle="$1"
+  local dump_name="$2"
+  dump_ui "$dump_name"
+  python3 - "$EVIDENCE/$dump_name.xml" "$needle" <<'PY'
+import sys,xml.etree.ElementTree as ET
+path,needle=sys.argv[1],sys.argv[2]
+needle=needle.lower()
+for n in ET.parse(path).getroot().iter('node'):
+    text=(n.attrib.get('text','')+' '+n.attrib.get('content-desc','')).lower()
+    if needle in text:
+        print(f'UI_ASSERT_UNEXPECTED={needle}',file=sys.stderr)
+        sys.exit(2)
+print(f'UI_ASSERT_ABSENT_PASS={needle}')
+PY
+}
+
 check_alive() {
   adb shell pidof "$PKG" | tr -d '\r\n' | grep -Eq '^[0-9]+' || fail "process-not-alive"
 }
@@ -102,6 +119,14 @@ sleep 5
 check_alive
 dump_ui "initial"
 adb exec-out screencap -p > "$EVIDENCE/initial.png"
+
+# Fresh installs intentionally start behind the onboarding modal. Complete that
+# flow before exercising background controls; otherwise taps can hit UI that is
+# visible in the accessibility tree but blocked by the modal touch layer.
+assert_ui_contains "ZERO → EMPIRE" "onboarding-visible"
+click_node "CONTINUE" "onboarding-before-continue"
+assert_ui_not_contains "ZERO → EMPIRE" "onboarding-dismissed"
+echo "FUNCTIONAL_ONBOARDING_PASS=1"
 
 for tab in MANAGERS UPGRADES GOALS EMPIRE; do
   click_node "$tab" "before-$tab"
