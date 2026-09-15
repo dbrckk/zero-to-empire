@@ -37,6 +37,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     @Volatile private var appForeground = true
     @Volatile private var resetTickClock = true
     private var backgroundedAtMillis: Long = 0L
+    private var offlineRewardAdPending = false
 
     init {
         viewModelScope.launch {
@@ -133,8 +134,16 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     fun setBuyMode(mode: BuyMode) { _buyMode.value = mode }
     fun completeOnboarding() { if (!_meta.value.onboardingCompleted) { _meta.value = _meta.value.copy(onboardingCompleted = true); scheduleSave() } }
     fun dismissCelebration() { _celebration.value = null }
-    fun dismissOfflineReward() { _offlineReward.value = null }
-    fun requestDoubleOfflineAd() { if (_offlineReward.value?.eligible == true) _rewardedRequests.tryEmit(RewardPlacement.DOUBLE_OFFLINE_EARNINGS) }
+    fun dismissOfflineReward() {
+        offlineRewardAdPending = false
+        _offlineReward.value = null
+    }
+    fun requestDoubleOfflineAd() {
+        if (offlineRewardAdPending || _offlineReward.value?.eligible != true) return
+        if (_rewardedRequests.tryEmit(RewardPlacement.DOUBLE_OFFLINE_EARNINGS)) {
+            offlineRewardAdPending = true
+        }
+    }
     fun requestProfitBoostAd() { _rewardedRequests.tryEmit(RewardPlacement.PROFIT_BOOST) }
     fun canClaimDaily(): Boolean = _meta.value.lastDailyClaimEpochDay != LocalDate.now().toEpochDay()
 
