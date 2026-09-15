@@ -282,8 +282,12 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     }
     private suspend fun persistNow(){
         if (!loaded) return
-        repository.save(_state.value,_meta.value)
+        // Clear before taking the snapshot. Mutations that arrive while DataStore writes
+        // will set the flag again and force the coalescing worker to perform another pass.
         saveDirty = false
+        val stateSnapshot = _state.value
+        val metaSnapshot = _meta.value
+        repository.save(stateSnapshot, metaSnapshot)
     }
     private fun safeGemAdd(current:Int, amount:Int):Int = if(amount<=0) current else if(current>Int.MAX_VALUE-amount) Int.MAX_VALUE else current+amount
     private fun safeLongAdd(current:Long, amount:Long):Long = if(amount<=0) current else if(current>Long.MAX_VALUE-amount) Long.MAX_VALUE else current+amount
