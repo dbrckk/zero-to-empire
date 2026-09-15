@@ -110,10 +110,13 @@ complete_onboarding_if_present() {
     if (( step >= 5 )); then
       fail "onboarding-exceeded-max-steps:5"
     fi
-    if ! grep -Fq 'CONTINUE' "$EVIDENCE/$probe.xml"; then
-      fail "onboarding-continue-missing:step=$step"
+    if grep -Fq 'CONTINUE' "$EVIDENCE/$probe.xml"; then
+      click_node "CONTINUE" "onboarding-before-continue-$step"
+    elif grep -Fq 'BUILD MY EMPIRE' "$EVIDENCE/$probe.xml"; then
+      click_resolved_node "BUILD MY EMPIRE" "onboarding-before-build-$step"
+    else
+      fail "onboarding-action-missing:step=$step"
     fi
-    click_node "CONTINUE" "onboarding-before-continue-$step"
   done
   fail "onboarding-unexpected-loop-exit"
 }
@@ -141,9 +144,9 @@ dump_ui "initial"
 adb exec-out screencap -p > "$EVIDENCE/initial.png"
 
 # A fresh or restored emulator can enter the onboarding at different persisted
-# points. The onboarding artwork defines five bounded steps (0..4), so advance
-# only while the modal is actually present and require a CONTINUE control at
-# every visible step. If it is already complete, this returns immediately.
+# points. Intermediate pages expose CONTINUE, while the final page exposes the
+# explicit BUILD MY EMPIRE CTA. Accept only those known actions and keep the
+# whole flow bounded to the five visual onboarding steps.
 complete_onboarding_if_present
 
 for tab in MANAGERS UPGRADES GOALS EMPIRE; do
