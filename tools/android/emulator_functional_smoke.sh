@@ -199,6 +199,26 @@ sleep 3
 check_alive
 assert_ui_contains "EMPIRE" "after-force-stop-restart"
 assert_ui_contains "LV 1" "after-force-stop-restart-level"
+# Manager ownership is durable state too; verify it survives a hard process restart,
+# not only the normal background/foreground lifecycle.
+click_node "MANAGERS" "restart-manager-tab"
+assert_ui_contains "HIRED" "after-force-stop-restart-manager"
+click_node "EMPIRE" "restart-return-empire"
+
+# Run a second short background/restart cycle to catch one-shot timestamp or
+# persistence bugs that only appear after offline state has already been consumed.
+dump_ui "cycle2-before"
+adb shell input keyevent KEYCODE_HOME
+sleep 5
+adb shell am force-stop "$PKG"
+adb shell am start -W -n "$ACT" > "$EVIDENCE/cycle2-restart.txt"
+sleep 3
+check_alive
+assert_ui_contains "LV 1" "cycle2-level"
+click_node "MANAGERS" "cycle2-manager-tab"
+assert_ui_contains "HIRED" "cycle2-manager"
+click_node "EMPIRE" "cycle2-return-empire"
+dump_ui "cycle2-after"
 
 sleep 35
 check_alive
@@ -211,6 +231,6 @@ if grep -E "ANR in $PKG|am_anr.*$PKG" "$EVIDENCE/logcat.txt"; then
   fail "anr-detected"
 fi
 echo "FUNCTIONAL_MANAGER_AUTOMATION_PASS=1"\necho "FUNCTIONAL_OFFLINE_ECONOMY_PASS=1"
-echo "FUNCTIONAL_PERSISTENCE_PASS=1"
+echo "FUNCTIONAL_RESTART_STATE_PASS=1"\necho "FUNCTIONAL_PERSISTENCE_PASS=1"
 echo "FUNCTIONAL_SOAK_PASS=1"
 echo "FUNCTIONAL_SMOKE_PASS=1"
