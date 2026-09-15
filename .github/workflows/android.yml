@@ -98,6 +98,39 @@ jobs:
         if: steps.change_scope.outputs.sprite_only != 'true'
         run: gradle bundleRelease --stacktrace
 
+      - name: Audit merged release manifest
+        if: steps.change_scope.outputs.sprite_only != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          MANIFEST="app/build/intermediates/merged_manifest/release/processReleaseMainManifest/AndroidManifest.xml"
+          if [ ! -s "$MANIFEST" ]; then
+            MANIFEST="$(find app/build/intermediates -path '*release*' -name AndroidManifest.xml -type f | head -n 1)"
+          fi
+          test -n "$MANIFEST"
+          test -s "$MANIFEST"
+          cp "$MANIFEST" merged-release-AndroidManifest.xml
+          python3 - <<'PY'
+          import xml.etree.ElementTree as ET
+          p="merged-release-AndroidManifest.xml"
+          r=ET.parse(p).getroot()
+          A="{http://schemas.android.com/apk/res/android}"
+          perms=sorted({n.get(A+"name") for n in r.findall("uses-permission") if n.get(A+"name")})
+          blocked={"android.permission.READ_CONTACTS","android.permission.WRITE_CONTACTS","android.permission.READ_SMS","android.permission.SEND_SMS","android.permission.RECORD_AUDIO","android.permission.CAMERA","android.permission.ACCESS_FINE_LOCATION","android.permission.ACCESS_COARSE_LOCATION","android.permission.READ_CALL_LOG","android.permission.WRITE_CALL_LOG"}
+          bad=sorted(blocked & set(perms))
+          if bad: raise SystemExit("Blocked merged-manifest permissions: "+", ".join(bad))
+          app=r.find("application")
+          if app is None: raise SystemExit("merged application missing")
+          exported=[]
+          for tag in ("activity","activity-alias","service","receiver","provider"):
+              for n in app.findall(tag):
+                  if n.get(A+"exported")=="true":
+                      exported.append((tag,n.get(A+"name")))
+          print("MERGED_RELEASE_PERMISSIONS="+",".join(perms))
+          print("MERGED_RELEASE_EXPORTED="+repr(exported))
+          print("MERGED_RELEASE_MANIFEST_PASS=1")
+          PY
+
       - name: Verify release bundle
         if: steps.change_scope.outputs.sprite_only != 'true'
         shell: bash
@@ -124,6 +157,7 @@ jobs:
             release-aab.sha256
             release-aab-contents.txt
             release-aab-validation.txt
+            merged-release-AndroidManifest.xml
           if-no-files-found: error
           retention-days: 14
 
