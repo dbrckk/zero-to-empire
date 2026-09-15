@@ -49,9 +49,16 @@ object BulkPurchase {
         if (total <= available * (1.0 + 1e-12)) return BulkQuote(requested, total)
         if (mode == BuyMode.MILESTONE) return BulkQuote(0, total)
 
-        var adjusted = requested
-        while (adjusted > 0 && cost(business, adjusted) > available) adjusted--
-        return BulkQuote(adjusted, cost(business, adjusted))
+        // The logarithmic estimate can overshoot near floating-point boundaries.
+        // Correct it with a bounded binary search instead of decrementing potentially
+        // hundreds of thousands of levels one by one.
+        var low = 0
+        var high = requested
+        while (low < high) {
+            val mid = low + (high - low + 1) / 2
+            if (cost(business, mid) <= available) low = mid else high = mid - 1
+        }
+        return BulkQuote(low, cost(business, low))
     }
 
     fun crossedMilestones(fromLevel: Int, toLevel: Int): List<Int> =
