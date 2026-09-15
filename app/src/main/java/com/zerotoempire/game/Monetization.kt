@@ -48,7 +48,7 @@ object StoreProductResolver {
 }
 
 sealed interface PurchaseResult {
-    data class Success(val product: StoreProduct) : PurchaseResult
+    data class Success(val product: StoreProduct, val transactionId: String) : PurchaseResult
     data object Cancelled : PurchaseResult
     data object Pending : PurchaseResult
     data class Failed(val reason: String) : PurchaseResult
