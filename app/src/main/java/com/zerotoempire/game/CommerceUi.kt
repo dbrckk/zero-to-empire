@@ -43,7 +43,7 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
     DisposableEffect(billing, activity) {
         billing.connect()
         if (activity != null && consent != null) consent.gather { canRequestAds, error -> adsAllowed = canRequestAds; rewarded.setEnabled(canRequestAds); privacyOptionsRequired = consent.isPrivacyOptionsRequired(); if (canRequestAds) rewarded.preload(); if (error != null && !canRequestAds) status = "Privacy setup is incomplete: $error" }
-        billing.restore { result -> val restored = result.products; owned = restored.filterNot { it.consumable }.toSet(); if (purchaseInFlight == null) pendingPurchases = result.pendingProducts; vm.applyEntitlements(restored, authoritativePermanentEntitlements = result is RestoreResult.Success) }
+        billing.restore { result -> val restored = result.products; if (result is RestoreResult.Success) owned = restored.filterNot { it.consumable }.toSet() else owned = owned + restored.filterNot { it.consumable }; if (purchaseInFlight == null) pendingPurchases = result.pendingProducts; vm.applyEntitlements(restored, authoritativePermanentEntitlements = result is RestoreResult.Success) }
         onDispose { rewarded.setEnabled(false); billing.disconnect() }
     }
     DisposableEffect(lifecycleOwner, billing) {
@@ -55,7 +55,7 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
                     leftForeground = false
                     billing.restore { result ->
                         val restored = result.products
-                        owned = restored.filterNot { it.consumable }.toSet()
+                        if (result is RestoreResult.Success) owned = restored.filterNot { it.consumable }.toSet() else owned = owned + restored.filterNot { it.consumable }
                         if (purchaseInFlight == null) pendingPurchases = result.pendingProducts
                         vm.applyEntitlements(restored, authoritativePermanentEntitlements = result is RestoreResult.Success)
                     }
@@ -86,7 +86,7 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
         } else null,
         onRestore = { billing.restore { result ->
             val restored = result.products
-            owned = restored.filterNot { it.consumable }.toSet()
+            if (result is RestoreResult.Success) owned = restored.filterNot { it.consumable }.toSet() else owned = owned + restored.filterNot { it.consumable }
             if (purchaseInFlight == null) pendingPurchases = result.pendingProducts
             vm.applyEntitlements(restored, authoritativePermanentEntitlements = result is RestoreResult.Success)
             status = when (result) {
