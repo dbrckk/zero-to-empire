@@ -33,4 +33,21 @@ if launchers[0].get(A+"exported") != "true":
 for activity in activities:
     if activity is not launchers[0] and activity.get(A+"exported") == "true":
         raise SystemExit("Unexpected exported activity: " + str(activity.get(A+"name")))
+# Backup is intentionally allowlisted to the single gameplay save file. Keep
+# analytics/consent/commerce state out of cloud backup and device transfer.
+import pathlib
+backup = ET.parse("app/src/main/res/xml/backup_rules.xml").getroot()
+legacy = {(n.get("domain"), n.get("path")) for n in backup.findall("include")}
+expected = {("file", "datastore/zero_empire_save_v2.preferences_pb")}
+if legacy != expected:
+    raise SystemExit(f"backup_rules.xml allowlist drift: {sorted(legacy)}")
+extract = ET.parse("app/src/main/res/xml/data_extraction_rules.xml").getroot()
+for section in ("cloud-backup", "device-transfer"):
+    node = extract.find(section)
+    if node is None:
+        raise SystemExit(f"data extraction section missing: {section}")
+    actual = {(n.get("domain"), n.get("path")) for n in node.findall("include")}
+    if actual != expected:
+        raise SystemExit(f"{section} allowlist drift: {sorted(actual)}")
+print("ANDROID_BACKUP_POLICY_PASS=1")
 print("ANDROID_MANIFEST_POLICY_PASS=1")
