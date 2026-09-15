@@ -12,6 +12,8 @@ on:
       - 'tools/android/test_ui_dump_retry.py'
       - 'tools/android/ui_economy_probe.py'
       - 'tools/android/test_ui_economy_probe.py'
+      - 'tools/android/ui_click_target.py'
+      - 'tools/android/test_ui_click_target.py'
       - 'app/**'
       - 'build.gradle.kts'
       - 'settings.gradle.kts'
@@ -44,6 +46,7 @@ jobs:
         run: |
           python3 tools/android/test_ui_dump_retry.py
           python3 tools/android/test_ui_economy_probe.py
+          python3 tools/android/test_ui_click_target.py
 
       - name: Build debug APK
         run: gradle --no-daemon assembleDebug
