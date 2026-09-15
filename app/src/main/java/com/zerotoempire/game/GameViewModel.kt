@@ -37,8 +37,8 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     @Volatile private var appForeground = true
     @Volatile private var resetTickClock = true
     private var backgroundedAtMillis: Long = 0L
-    private var offlineRewardAdPending = false
-    private var profitBoostAdPending = false
+    private val offlineRewardAdGate = RewardRequestGate()
+    private val profitBoostAdGate = RewardRequestGate()
 
     init {
         viewModelScope.launch {
@@ -136,27 +136,23 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     fun completeOnboarding() { if (!_meta.value.onboardingCompleted) { _meta.value = _meta.value.copy(onboardingCompleted = true); scheduleSave() } }
     fun dismissCelebration() { _celebration.value = null }
     fun dismissOfflineReward() {
-        offlineRewardAdPending = false
+        offlineRewardAdGate.release()
         _offlineReward.value = null
     }
     fun requestDoubleOfflineAd() {
-        if (offlineRewardAdPending || _offlineReward.value?.eligible != true) return
-        if (_rewardedRequests.tryEmit(RewardPlacement.DOUBLE_OFFLINE_EARNINGS)) {
-            offlineRewardAdPending = true
-        }
+        if (_offlineReward.value?.eligible != true || !offlineRewardAdGate.request()) return
+        if (!_rewardedRequests.tryEmit(RewardPlacement.DOUBLE_OFFLINE_EARNINGS)) offlineRewardAdGate.release()
     }
     fun onRewardedUnavailable(placement: RewardPlacement) {
         when (placement) {
-            RewardPlacement.DOUBLE_OFFLINE_EARNINGS -> offlineRewardAdPending = false
-            RewardPlacement.PROFIT_BOOST -> profitBoostAdPending = false
+            RewardPlacement.DOUBLE_OFFLINE_EARNINGS -> offlineRewardAdGate.release()
+            RewardPlacement.PROFIT_BOOST -> profitBoostAdGate.release()
             else -> Unit
         }
     }
     fun requestProfitBoostAd() {
-        if (profitBoostAdPending) return
-        if (_rewardedRequests.tryEmit(RewardPlacement.PROFIT_BOOST)) {
-            profitBoostAdPending = true
-        }
+        if (!profitBoostAdGate.request()) return
+        if (!_rewardedRequests.tryEmit(RewardPlacement.PROFIT_BOOST)) profitBoostAdGate.release()
     }
     fun canClaimDaily(): Boolean = _meta.value.lastDailyClaimEpochDay != LocalDate.now().toEpochDay()
 
@@ -248,8 +244,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         scheduleSave()
     }
     fun rewardProfitBoost() {
-        if (!profitBoostAdPending) return
-        profitBoostAdPending = false
+        if (!profitBoostAdGate.consume()) return
         activateProfitBoost(10)
         _celebration.value = MajorCelebration("OVERDRIVE ACTIVE", "All profits doubled for 10 minutes.", "⚡", "REWARDED")
     }
