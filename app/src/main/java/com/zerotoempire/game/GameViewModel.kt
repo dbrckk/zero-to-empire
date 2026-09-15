@@ -38,6 +38,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     @Volatile private var resetTickClock = true
     private var backgroundedAtMillis: Long = 0L
     private var offlineRewardAdPending = false
+    private var profitBoostAdPending = false
 
     init {
         viewModelScope.launch {
@@ -145,9 +146,18 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
     fun onRewardedUnavailable(placement: RewardPlacement) {
-        if (placement == RewardPlacement.DOUBLE_OFFLINE_EARNINGS) offlineRewardAdPending = false
+        when (placement) {
+            RewardPlacement.DOUBLE_OFFLINE_EARNINGS -> offlineRewardAdPending = false
+            RewardPlacement.PROFIT_BOOST -> profitBoostAdPending = false
+            else -> Unit
+        }
     }
-    fun requestProfitBoostAd() { _rewardedRequests.tryEmit(RewardPlacement.PROFIT_BOOST) }
+    fun requestProfitBoostAd() {
+        if (profitBoostAdPending) return
+        if (_rewardedRequests.tryEmit(RewardPlacement.PROFIT_BOOST)) {
+            profitBoostAdPending = true
+        }
+    }
     fun canClaimDaily(): Boolean = _meta.value.lastDailyClaimEpochDay != LocalDate.now().toEpochDay()
 
     fun ensureChallengeWeek() {
@@ -237,7 +247,12 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         _celebration.value = MajorCelebration("OFFLINE PROFITS ×2", "+${EmpireNumberFormat.compact(reward.cash)} bonus cash", "⚡", "REWARDED")
         scheduleSave()
     }
-    fun rewardProfitBoost() { activateProfitBoost(10); _celebration.value = MajorCelebration("OVERDRIVE ACTIVE", "All profits doubled for 10 minutes.", "⚡", "REWARDED") }
+    fun rewardProfitBoost() {
+        if (!profitBoostAdPending) return
+        profitBoostAdPending = false
+        activateProfitBoost(10)
+        _celebration.value = MajorCelebration("OVERDRIVE ACTIVE", "All profits doubled for 10 minutes.", "⚡", "REWARDED")
+    }
 
     fun tap() {
         ensureChallengeWeek()
