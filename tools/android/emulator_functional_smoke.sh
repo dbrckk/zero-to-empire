@@ -222,6 +222,23 @@ dump_ui "cycle2-after"
 
 sleep 35
 check_alive
+
+# Final durability checkpoint: force-stop after the autosave interval and require
+# both purchased business and hired manager to survive. This specifically proves
+# that the periodic save path commits durable state, rather than the test passing
+# only because an earlier lifecycle callback happened to save it.
+dump_ui "pre-autosave-restart"
+adb shell am force-stop "$PKG"
+sleep 1
+adb shell am start -W -n "$ACT" > "$EVIDENCE/autosave-restart.txt"
+sleep 3
+check_alive
+assert_ui_contains "LV 1" "autosave-restart-level"
+click_node "MANAGERS" "autosave-restart-manager-tab"
+assert_ui_contains "HIRED" "autosave-restart-manager"
+click_node "EMPIRE" "autosave-restart-return-empire"
+dump_ui "post-autosave-restart"
+
 adb shell dumpsys meminfo "$PKG" > "$EVIDENCE/meminfo.txt"
 adb exec-out screencap -p > "$EVIDENCE/final.png"
 adb shell dumpsys activity activities > "$EVIDENCE/activity.txt"
@@ -232,5 +249,5 @@ if grep -E "ANR in $PKG|am_anr.*$PKG" "$EVIDENCE/logcat.txt"; then
 fi
 echo "FUNCTIONAL_MANAGER_AUTOMATION_PASS=1"\necho "FUNCTIONAL_OFFLINE_ECONOMY_PASS=1"
 echo "FUNCTIONAL_RESTART_STATE_PASS=1"\necho "FUNCTIONAL_PERSISTENCE_PASS=1"
-echo "FUNCTIONAL_SOAK_PASS=1"
+echo "FUNCTIONAL_AUTOSAVE_DURABILITY_PASS=1"\necho "FUNCTIONAL_SOAK_PASS=1"
 echo "FUNCTIONAL_SMOKE_PASS=1"
