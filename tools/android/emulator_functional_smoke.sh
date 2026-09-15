@@ -105,11 +105,22 @@ sleep 2
 assert_ui_contains "LV 1" "after-street-stand-buy"
 
 # Build enough capital through legitimate gameplay for the first manager.
-# A level-1 Street Stand produces while active; repeated Power Core taps are real player actions.
-for _ in $(seq 1 2600); do
-  click_node "Power Core" "capital-power-core" >/dev/null
-done
-sleep 2
+# Repeated Power Core taps are real player actions; direct screen coordinates avoid thousands
+# of expensive UI hierarchy dumps while preserving the exact production interaction path.
+dump_ui "capital-core-location"
+read CORE_X CORE_Y < <(python3 - "$EVIDENCE/capital-core-location.xml" <<'PY'
+import re,sys,xml.etree.ElementTree as ET
+for n in ET.parse(sys.argv[1]).getroot().iter('node'):
+    text=(n.attrib.get('text','')+' '+n.attrib.get('content-desc','')).lower()
+    if 'power core' in text:
+        m=re.match(r'\[(\d+),(\d+)\]\[(\d+),(\d+)\]',n.attrib.get('bounds',''))
+        if m:
+            x1,y1,x2,y2=map(int,m.groups()); print((x1+x2)//2,(y1+y2)//2); raise SystemExit
+raise SystemExit(2)
+PY
+)
+for _ in $(seq 1 2600); do adb shell input tap "$CORE_X" "$CORE_Y" >/dev/null; done
+sleep 3
 click_node "MANAGERS" "before-manager-hire"
 assert_ui_contains "Maya" "manager-visible"
 click_node "HIRE" "before-manager-hire-action"
@@ -117,15 +128,13 @@ sleep 2
 assert_ui_contains "HIRED" "after-manager-hire"
 click_node "EMPIRE" "return-empire-after-manager"
 
-# Runtime offline lifecycle: HOME must background the activity, and >30s must cross the production threshold.
+# Runtime offline lifecycle: HOME must background the activity, and >30s crosses eligibility.
 dump_ui "before-offline"
 adb shell input keyevent KEYCODE_HOME
 sleep 33
 adb shell am start -W -n "$ACT" > "$EVIDENCE/offline-return.txt"
 sleep 3
 check_alive
-dump_ui "after-offline"
-# The manager must remain hired after the lifecycle transition.
 click_node "MANAGERS" "offline-manager-tab"
 assert_ui_contains "HIRED" "offline-manager-still-hired"
 click_node "EMPIRE" "offline-return-empire"
