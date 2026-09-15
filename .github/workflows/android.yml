@@ -126,8 +126,18 @@ jobs:
               for n in app.findall(tag):
                   if n.get(A+"exported")=="true":
                       exported.append((tag,n.get(A+"name")))
+          exported=sorted(exported)
+          allowed_exported=[("activity","com.zerotoempire.game.MainActivity")]
+          if exported != allowed_exported:
+              unexpected=sorted(set(exported)-set(allowed_exported))
+              missing=sorted(set(allowed_exported)-set(exported))
+              raise SystemExit(
+                  "Merged exported-component allowlist drift. "
+                  f"unexpected={unexpected} missing={missing} actual={exported}"
+              )
           print("MERGED_RELEASE_PERMISSIONS="+",".join(perms))
           print("MERGED_RELEASE_EXPORTED="+repr(exported))
+          print("MERGED_RELEASE_EXPORTED_ALLOWLIST_PASS=1")
           print("MERGED_RELEASE_MANIFEST_PASS=1")
           PY
 
