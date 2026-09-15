@@ -70,6 +70,20 @@ jobs:
           set -euo pipefail
           keytool -list -keystore "$ZERO_EMPIRE_KEYSTORE_PATH" -storepass "$ZERO_EMPIRE_KEYSTORE_PASSWORD" -alias "$ZERO_EMPIRE_KEY_ALIAS" >/dev/null
 
+      - name: Record release metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            echo "application_id=com.zerotoempire.game"
+            echo "version_code=${{ inputs.version_code }}"
+            echo "version_name=${{ inputs.version_name }}"
+            echo "git_sha=$GITHUB_SHA"
+            echo "git_ref=$GITHUB_REF"
+            echo "target_sdk=36"
+            echo "min_sdk=26"
+          } > production-release-metadata.txt
+
       - name: Build signed production AAB
         env:
           ORG_GRADLE_PROJECT_ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID }}
@@ -108,6 +122,7 @@ jobs:
             production-aab-contents.txt
             app/build/outputs/mapping/release/mapping.txt
             production-mapping.sha256
+            production-release-metadata.txt
             production-release-validation.txt
           if-no-files-found: error
           retention-days: 30
