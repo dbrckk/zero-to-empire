@@ -65,15 +65,6 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
         }
         lifecycleOwner.lifecycle.addObserver(observer); onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
-    LaunchedEffect(activity, adsAllowed) {
-        if (activity == null) return@LaunchedEffect
-        vm.rewardedRequests.collect { placement ->
-            if (!adsAllowed) { status = "Ads are unavailable until privacy choices are resolved."; return@collect }
-            if (!rewarded.isReady()) { rewarded.preload(); status = "Reward video is loading. Try again shortly."; return@collect }
-            rewarded.show(activity = activity, placement = placement, onReward = { when (placement) { RewardPlacement.DOUBLE_OFFLINE_EARNINGS -> vm.rewardDoubleOffline(); RewardPlacement.PROFIT_BOOST -> vm.rewardProfitBoost(); RewardPlacement.DAILY_BONUS -> vm.grantGems(10); RewardPlacement.EVENT_BONUS -> vm.activateProfitBoost(5) } })
-        }
-    }
-
     Box(Modifier.fillMaxSize()) {
         EmpireRoot(vm)
         if (activity != null) {
