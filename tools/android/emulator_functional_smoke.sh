@@ -98,6 +98,26 @@ print(f'UI_ASSERT_ABSENT_PASS={needle}')
 PY
 }
 
+complete_onboarding_if_present() {
+  local step probe
+  for step in 0 1 2 3 4 5; do
+    probe="onboarding-step-$step"
+    dump_ui "$probe"
+    if ! grep -Fq 'ZERO → EMPIRE' "$EVIDENCE/$probe.xml"; then
+      echo "FUNCTIONAL_ONBOARDING_PASS=steps-$step"
+      return 0
+    fi
+    if (( step >= 5 )); then
+      fail "onboarding-exceeded-max-steps:5"
+    fi
+    if ! grep -Fq 'CONTINUE' "$EVIDENCE/$probe.xml"; then
+      fail "onboarding-continue-missing:step=$step"
+    fi
+    click_node "CONTINUE" "onboarding-before-continue-$step"
+  done
+  fail "onboarding-unexpected-loop-exit"
+}
+
 check_alive() {
   adb shell pidof "$PKG" | tr -d '\r\n' | grep -Eq '^[0-9]+' || fail "process-not-alive"
 }
@@ -120,17 +140,11 @@ check_alive
 dump_ui "initial"
 adb exec-out screencap -p > "$EVIDENCE/initial.png"
 
-# Depending on restored/cleared emulator state, onboarding may already be marked
-# complete. If it is visible, dismiss it before touching the world underneath;
-# if absent, continue without making that state a false failure.
-dump_ui "onboarding-probe"
-if grep -Fq 'ZERO → EMPIRE' "$EVIDENCE/onboarding-probe.xml"; then
-  click_node "CONTINUE" "onboarding-before-continue"
-  assert_ui_not_contains "ZERO → EMPIRE" "onboarding-dismissed"
-  echo "FUNCTIONAL_ONBOARDING_PASS=dismissed"
-else
-  echo "FUNCTIONAL_ONBOARDING_PASS=already-complete"
-fi
+# A fresh or restored emulator can enter the onboarding at different persisted
+# points. The onboarding artwork defines five bounded steps (0..4), so advance
+# only while the modal is actually present and require a CONTINUE control at
+# every visible step. If it is already complete, this returns immediately.
+complete_onboarding_if_present
 
 for tab in MANAGERS UPGRADES GOALS EMPIRE; do
   click_node "$tab" "before-$tab"
