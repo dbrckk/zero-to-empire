@@ -25,4 +25,25 @@ class CanonicalCharacterRasterTest {
         val resources = ReviewedCharacterRole.entries.map(::reviewedCharacterIdleRasterRes)
         assertEquals(ReviewedCharacterRole.entries.size, resources.toSet().size)
     }
+
+    @Test
+    fun `documented authored character actions keep their production frame counts`() {
+        val expected = mapOf(
+            ReviewedCharacterAction.IDLE to 6,
+            ReviewedCharacterAction.WALK to 8,
+            ReviewedCharacterAction.WORK to 10,
+            ReviewedCharacterAction.CARRY to 8,
+            ReviewedCharacterAction.REPAIR to 10,
+            ReviewedCharacterAction.CELEBRATE to 8,
+        )
+        assertEquals(expected, ReviewedCharacterAction.entries.associateWith(::reviewedCharacterFrameCount))
+    }
+
+    @Test
+    fun `ambient population only loops actions documented as continuous`() {
+        assertEquals(
+            setOf(ReviewedCharacterAction.IDLE, ReviewedCharacterAction.WALK, ReviewedCharacterAction.WORK),
+            ReviewedCharacterAction.entries.filter(::reviewedCharacterActionLoopsAmbiently).toSet(),
+        )
+    }
 }
