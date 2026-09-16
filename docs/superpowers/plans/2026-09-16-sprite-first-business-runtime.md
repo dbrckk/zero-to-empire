@@ -4,7 +4,7 @@
 
 **Goal:** Make authored business WebP sprites the primary runtime art for Group 01 businesses that already have complete T0-T6 production sets.
 
-**Architecture:** Keep `canonicalBusinessTier(level)` as the single tier mapping. Extend `canonicalBusinessRasterRes(businessId, level)` so complete Group 01 sprite families resolve directly to Android drawables. Update the business visual composable to render the resolved raster first and retain procedural Canvas only when no canonical runtime asset exists; procedural mastery/VFX may remain layered above the raster.
+**Architecture:** Keep `canonicalBusinessTier(level)` as the tier contract and `canonicalBusinessRasterRes(businessId, level)` as the single resource resolver. `WorldBusinessVisual` already renders resolved raster assets first and uses procedural art only when resolution returns null; this slice removes the duplicate inline 0/1 map and extends the canonical resolver so the complete Group 01 family (IDs 0-3) follows one tested sprite-first path. Mastery/motion VFX remain layered separately.
 
 **Tech Stack:** Kotlin, Jetpack Compose, Android resources, JUnit4, GitHub Actions.
 
@@ -26,85 +26,26 @@
 - Modify: `app/src/test/java/com/zerotoempire/game/CanonicalBusinessRasterTest.kt`
 - Modify: `app/src/main/java/com/zerotoempire/game/CanonicalBusinessRaster.kt`
 
-**Interfaces:**
-- Consumes: `canonicalBusinessTier(level: Int): Int`
-- Produces: `canonicalBusinessRasterRes(businessId: Int, level: Int): Int?` resolving business IDs 0, 1, 2 and 3 for all T0-T6 tiers.
+- [x] **Step 1: Write the failing test** — require IDs 0-3 at all gameplay milestones and seven distinct T0-T6 resources.
+- [x] **Step 2: Verify RED** — Android CI #709 built successfully, then failed only the two expected `CanonicalBusinessRasterTest` assertions.
+- [x] **Step 3: Write minimal implementation** — add explicit ID 0/1 T0-T6 mappings to the existing canonical 2/3 mappings.
+- [ ] **Step 4: Verify GREEN** — exact-head Android CI pending.
 
-- [ ] **Step 1: Write the failing test**
-
-Change the resolver coverage tests so IDs 0, 1, 2 and 3 must resolve every gameplay milestone, each must expose seven distinct tier resources, 500 and 1000 must share T6, and only IDs outside the complete Group 01 set remain unsupported.
-
-- [ ] **Step 2: Run test to verify it fails**
-
-Run through Android CI: `gradle --no-daemon testDebugUnitTest`.
-Expected: `CanonicalBusinessRasterTest` fails because IDs 0 and 1 still return null.
-
-- [ ] **Step 3: Write minimal implementation**
-
-Add explicit T0-T6 `R.drawable.zte_business_00_*_final` and `R.drawable.zte_business_01_*_final` mappings to `canonicalBusinessRasterRes` without changing tier thresholds.
-
-- [ ] **Step 4: Run test to verify it passes**
-
-Run through Android CI: `gradle --no-daemon testDebugUnitTest`.
-Expected: all canonical raster tests pass.
-
-- [ ] **Step 5: Commit**
-
-Commit message: `feat(art): wire complete group01 business sprites`
-
-### Task 2: Prefer canonical raster art in the business composable
+### Task 2: Centralize sprite-first runtime selection
 
 **Files:**
-- Modify: the runtime business visual composable that currently chooses procedural business art.
-- Test: add or extend a pure resolver/policy test if selection logic needs extraction.
+- Modify: `app/src/main/java/com/zerotoempire/game/WorldBusinessVisual.kt`
 
-**Interfaces:**
-- Consumes: `canonicalBusinessRasterRes(businessId, level)`.
-- Produces: a stable sprite-first selection path where canonical raster is primary and procedural business art is fallback-only.
+**Observed baseline:** `WorldBusinessVisual` was already raster-first for IDs 0/1 through a duplicate local mapping and for IDs 2/3 through `canonicalBusinessRasterRes`.
 
-- [ ] **Step 1: Write the failing test**
-
-Extract a pure selection policy only if needed and assert that businesses 0-3 select canonical raster while an unsupported business selects procedural fallback.
-
-- [ ] **Step 2: Run test to verify it fails**
-
-Run `gradle --no-daemon testDebugUnitTest` in Android CI.
-Expected: the new policy test fails before production wiring exists.
-
-- [ ] **Step 3: Write minimal implementation**
-
-Render the canonical drawable with Compose `Image`/`painterResource` as the primary content. Keep existing procedural renderer only for `null` canonical resources. Preserve mastery/VFX layers separately.
-
-- [ ] **Step 4: Run test to verify it passes**
-
-Run unit tests plus debug build/lint through Android CI.
-Expected: green.
-
-- [ ] **Step 5: Commit**
-
-Commit message: `feat(art): prefer canonical business raster at runtime`
+- [x] **Step 1: Preserve the existing raster-first behavior** — no visual/economy behavior change required.
+- [x] **Step 2: Remove split-brain mapping** — delete the inline ID 0/1 resource switch and resolve all complete Group 01 sprites through `canonicalBusinessRasterRes`.
+- [x] **Step 3: Preserve fallback/VFX semantics** — unsupported business families still use `BusinessArtIcon`; mastery and motion effects remain layered over authored sprites.
+- [ ] **Step 4: Verify compile/tests/lint** — exact-head Android CI pending.
 
 ### Task 3: Verify release safety and runtime smoke
 
-**Files:**
-- No production changes unless verification exposes a regression.
-
-**Interfaces:**
-- Consumes: final branch head.
-- Produces: evidence that the sprite-first migration compiles, preserves release manifest policy, and does not break functional smoke.
-
-- [ ] **Step 1: Run Android CI**
-
-Expected: debug build, unit tests, lint, release AAB and merged release-manifest audit all pass.
-
-- [ ] **Step 2: Run Android Emulator Smoke**
-
-Expected: onboarding, power-core tap, Street Stand purchase, manager automation, offline earnings and restart persistence remain green.
-
-- [ ] **Step 3: Review PR diff**
-
-Confirm no economy/save/billing behavior changed and no binary asset replacement was introduced in this slice.
-
-- [ ] **Step 4: Merge only after fresh green evidence**
-
-Use squash merge after exact-head CI verification.
+- [ ] **Step 1: Android CI** — debug build, unit tests, lint, release AAB and merged release-manifest audit must pass.
+- [ ] **Step 2: Runtime smoke** — validate onboarding, Power Core, Street Stand, manager automation, offline earnings and restart persistence on the merged main head if the smoke workflow is main-only.
+- [x] **Step 3: Review PR scope** — changed files are limited to two art-runtime files, one art test and two design/plan docs; no economy/save/billing files changed.
+- [ ] **Step 4: Merge only after fresh green evidence** — squash merge after exact-head verification.
