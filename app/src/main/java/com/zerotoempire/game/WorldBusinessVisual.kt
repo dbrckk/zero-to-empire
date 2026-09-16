@@ -18,11 +18,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 
 /**
- * Progressive runtime bridge from authored production assets to the live world.
- * Canonical BLD-02/03 tiers are resolved through canonicalBusinessRasterRes so the
- * same tested T0..T6 contract drives both resource binding and visible gameplay.
- * Missing raster tiers deliberately fall back to BusinessArtIcon until their optimized
- * runtime resource is actually committed. Never reference a not-yet-packaged drawable.
+ * Sprite-first runtime bridge from authored production assets to the live world.
+ *
+ * Complete business sprite families resolve through canonicalBusinessRasterRes so
+ * a single tested T0..T6 contract drives both resource binding and visible gameplay.
+ * Businesses that are not yet part of that canonical contract deliberately retain
+ * their procedural fallback. Canvas remains reserved for motion/VFX/mastery layers.
  */
 @Composable
 internal fun WorldBusinessVisual(
@@ -32,23 +33,7 @@ internal fun WorldBusinessVisual(
     modifier: Modifier = Modifier
 ) {
     val tier = WorldSpriteRegistry.tierForLevel(level)
-    val drawable = canonicalBusinessRasterRes(businessId, level) ?: when (businessId to tier) {
-        0 to 0 -> R.drawable.zte_business_00_t0_final
-        0 to 1 -> R.drawable.zte_business_00_t1_final
-        0 to 2 -> R.drawable.zte_business_00_t2_final
-        0 to 3 -> R.drawable.zte_business_00_t3_final
-        0 to 4 -> R.drawable.zte_business_00_t4_final
-        0 to 5 -> R.drawable.zte_business_00_t5_final
-        0 to 6 -> R.drawable.zte_business_00_t6_final
-        1 to 0 -> R.drawable.zte_business_01_t0_final
-        1 to 1 -> R.drawable.zte_business_01_t1_final
-        1 to 2 -> R.drawable.zte_business_01_t2_final
-        1 to 3 -> R.drawable.zte_business_01_t3_final
-        1 to 4 -> R.drawable.zte_business_01_t4_final
-        1 to 5 -> R.drawable.zte_business_01_t5_final
-        1 to 6 -> R.drawable.zte_business_01_t6_final
-        else -> null
-    }
+    val drawable = canonicalBusinessRasterRes(businessId, level)
 
     if (drawable != null) {
         val context = LocalContext.current
