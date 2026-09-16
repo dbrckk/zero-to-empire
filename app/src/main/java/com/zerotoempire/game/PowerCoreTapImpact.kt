@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import kotlin.math.cos
 import kotlin.math.sin
@@ -19,8 +20,10 @@ import kotlin.math.sin
 /**
  * Short-lived, tap-triggered VFX for the Power Core.
  *
- * The authored semantic sprites now carry the visual identity. Runtime Canvas
- * work is deliberately limited to lightweight motion accents around them.
+ * Authored semantic sprites carry the primary visual identity whenever a
+ * source-verified color match exists. Runtime Canvas drawing is limited to
+ * lightweight motion accents and the violet-era fallback, for which no
+ * validated authored pulse exists yet.
  */
 @Composable
 fun PowerCoreTapImpact(serial: Int, eraIndex: Int, modifier: Modifier = Modifier) {
@@ -52,21 +55,24 @@ fun PowerCoreTapImpact(serial: Int, eraIndex: Int, modifier: Modifier = Modifier
         in 6..8 -> EmpireColors.Violet
         else -> EmpireColors.GoldBright
     }
+    val pulseEffect = powerCorePulseFx(eraIndex)
     val p = progress.value
     val fade = (1f - p).coerceIn(0f, 1f)
 
     Box(modifier) {
-        CanonicalFxSprite(
-            effect = CanonicalFx.RING_PULSE,
-            progress = p,
-            modifier = Modifier.fillMaxSize(),
-            alpha = .98f,
-            startScale = .48f,
-            endScale = 1.12f,
-        )
+        pulseEffect?.let { effect ->
+            CanonicalFxSprite(
+                effect = effect,
+                progress = p,
+                modifier = Modifier.fillMaxSize(),
+                alpha = .98f,
+                startScale = .48f,
+                endScale = 1.12f,
+            )
+        }
         if (!lowPower) {
             CanonicalFxSprite(
-                effect = CanonicalFx.SPARK,
+                effect = CanonicalFx.WELDING_SPARK_BURST,
                 progress = p,
                 modifier = Modifier.fillMaxSize(),
                 alpha = .76f,
@@ -78,8 +84,27 @@ fun PowerCoreTapImpact(serial: Int, eraIndex: Int, modifier: Modifier = Modifier
         Canvas(Modifier.fillMaxSize()) {
             val center = Offset(size.width / 2f, size.height / 2f)
             val min = size.minDimension
-            val sparkCount = if (lowPower) 4 else 8
 
+            if (pulseEffect == null) {
+                val primaryRadius = min * (.22f + .30f * p)
+                val secondaryRadius = min * (.16f + .22f * p)
+                drawCircle(
+                    color = accent.copy(alpha = fade * .78f),
+                    radius = primaryRadius,
+                    center = center,
+                    style = Stroke(width = min * (.018f - .010f * p).coerceAtLeast(.004f))
+                )
+                if (!lowPower) {
+                    drawCircle(
+                        color = Color.White.copy(alpha = fade * .34f),
+                        radius = secondaryRadius,
+                        center = center,
+                        style = Stroke(width = min * .005f)
+                    )
+                }
+            }
+
+            val sparkCount = if (lowPower) 4 else 8
             repeat(sparkCount) { index ->
                 val angle = index * (Math.PI * 2.0 / sparkCount) + serial * .37
                 val startRadius = min * (.21f + .08f * p)
