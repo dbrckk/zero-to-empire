@@ -1,0 +1,102 @@
+name: Unified Asset Candidate Pipeline
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'tools/assets/**'
+      - 'tools/sprites/hf_static_manifest_factory.py'
+      - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
+      - '.github/workflows/unified-asset-pipeline.yml'
+  workflow_dispatch:
+    inputs:
+      asset_id:
+        description: 'Exact authoritative manifest ID to generate'
+        required: true
+        type: string
+      provider:
+        description: 'Configured image provider'
+        required: true
+        default: 'hf-static'
+        type: choice
+        options:
+          - hf-static
+
+permissions:
+  contents: read
+
+concurrency:
+  group: unified-asset-${{ github.ref }}-${{ inputs.asset_id || 'tests' }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install deterministic image tooling
+        run: python -m pip install --disable-pip-version-check Pillow==11.3.0
+
+      - name: Run unified asset pipeline tests
+        run: python -m unittest discover -s tools/assets -p 'test_*.py' -v
+
+      - name: Compile pipeline entry points
+        run: |
+          python -m py_compile tools/assets/*.py tools/assets/providers/*.py
+          python -m py_compile tools/sprites/hf_static_manifest_factory.py
+
+  candidate:
+    if: github.event_name == 'workflow_dispatch'
+    needs: tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      SPRITE_TARGET: ${{ inputs.asset_id }}
+      HF_ASSET_LICENSE: provider-terms-review-required
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install deterministic image tooling
+        run: python -m pip install --disable-pip-version-check Pillow==11.3.0
+
+      - name: Inspect authoritative manifest identity
+        run: python tools/assets/asset_pipeline.py inspect --id '${{ inputs.asset_id }}'
+
+      - name: Generate one explicit candidate
+        run: python tools/assets/asset_pipeline.py prepare --id '${{ inputs.asset_id }}' --provider '${{ inputs.provider }}'
+
+      - name: Revalidate candidate and provenance
+        run: python tools/assets/asset_pipeline.py validate --id '${{ inputs.asset_id }}'
+
+      - name: Build human review contact sheet
+        shell: bash
+        run: |
+          set -euo pipefail
+          DIR="art/incoming/assets/${{ inputs.asset_id }}"
+          python tools/sprites/build_sprite_contact_sheet.py \
+            --files "$DIR/candidate.png" \
+            --output "$DIR/contact-sheet.png" \
+            --report "$DIR/contact-sheet-report.json"
+
+      - name: Upload review-only candidate bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: asset-candidate-${{ inputs.asset_id }}
+          path: art/incoming/assets/${{ inputs.asset_id }}/
+          if-no-files-found: error
+          retention-days: 30
