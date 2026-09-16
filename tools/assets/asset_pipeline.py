@@ -18,6 +18,7 @@ if str(ROOT) not in sys.path:
 from tools.assets.manifest import ManifestAsset, load_manifest, require_asset
 from tools.assets.metadata import CandidateMetadata, MetadataError, sha256_file, write_metadata
 from tools.assets.providers import ProviderResult
+from tools.assets.qa_report import build_report, write_report
 from tools.assets.static_processing import isolate, normalize, validate
 
 DEFAULT_MANIFEST = ROOT / "docs/art/FINAL_AAA_SPRITE_MANIFEST.md"
@@ -81,6 +82,7 @@ def prepare_candidate(
     )
     metadata.validate_against(asset)
     write_metadata(candidate_dir / "metadata.json", metadata)
+    write_report(candidate_dir, build_report(asset, candidate_dir))
     return candidate_dir
 
 
@@ -107,6 +109,7 @@ def validate_candidate(
         raise MetadataError("candidate content hash disagrees with metadata")
     with Image.open(candidate_path) as image:
         metrics = validate(image.convert("RGBA"))
+    write_report(candidate_dir, build_report(asset, candidate_dir))
     return metrics
 
 
