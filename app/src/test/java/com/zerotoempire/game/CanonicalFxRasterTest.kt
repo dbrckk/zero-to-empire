@@ -2,19 +2,18 @@ package com.zerotoempire.game
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class CanonicalFxRasterTest {
     @Test
-    fun `all semantic effects resolve to final authored sprites`() {
+    fun `verified authored effects resolve to their production sprite ids`() {
         val expected = mapOf(
-            CanonicalFx.COIN_BURST to R.drawable.zte_fx_coin_burst_final,
-            CanonicalFx.MONEY_RAIN to R.drawable.zte_fx_money_rain_final,
-            CanonicalFx.RANK_UP_FLARE to R.drawable.zte_fx_rank_up_flare_final,
-            CanonicalFx.RING_PULSE to R.drawable.zte_fx_ring_pulse_final,
-            CanonicalFx.SPARK to R.drawable.zte_fx_spark_final,
-            CanonicalFx.STARBURST to R.drawable.zte_fx_starburst_final,
+            CanonicalFx.WELDING_SPARK_BURST to R.drawable.zte_fx_00_final,
+            CanonicalFx.CYAN_ENERGY_PULSE to R.drawable.zte_fx_05_final,
+            CanonicalFx.WARM_ENERGY_PULSE to R.drawable.zte_fx_06_final,
+            CanonicalFx.CONSTRUCTION_DUST_BURST to R.drawable.zte_fx_07_final,
         )
 
         expected.forEach { (effect, resource) ->
@@ -24,9 +23,20 @@ class CanonicalFxRasterTest {
     }
 
     @Test
-    fun `semantic effects never silently share one sprite`() {
+    fun `verified semantic effects never silently share one sprite`() {
         val resources = CanonicalFx.entries.map(::canonicalFxRasterRes)
         assertEquals(CanonicalFx.entries.size, resources.toSet().size)
         assertTrue(resources.all { it != 0 })
+    }
+
+    @Test
+    fun `power core only uses authored pulse colors that actually exist`() {
+        assertEquals(CanonicalFx.WARM_ENERGY_PULSE, powerCorePulseFx(0))
+        assertEquals(CanonicalFx.WARM_ENERGY_PULSE, powerCorePulseFx(2))
+        assertEquals(CanonicalFx.CYAN_ENERGY_PULSE, powerCorePulseFx(3))
+        assertEquals(CanonicalFx.CYAN_ENERGY_PULSE, powerCorePulseFx(5))
+        assertNull(powerCorePulseFx(6))
+        assertNull(powerCorePulseFx(8))
+        assertEquals(CanonicalFx.WARM_ENERGY_PULSE, powerCorePulseFx(9))
     }
 }
