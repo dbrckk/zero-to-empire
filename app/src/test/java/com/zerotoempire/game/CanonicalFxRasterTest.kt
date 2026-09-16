@@ -39,4 +39,17 @@ class CanonicalFxRasterTest {
         assertNull(powerCorePulseFx(8))
         assertEquals(CanonicalFx.WARM_ENERGY_PULSE, powerCorePulseFx(9))
     }
+
+    @Test
+    fun `sprite sheet progress selects exactly one of eight frames`() {
+        assertEquals(0, canonicalFxFrameIndex(-1f))
+        assertEquals(0, canonicalFxFrameIndex(0f))
+        assertEquals(0, canonicalFxFrameIndex(.124f))
+        assertEquals(1, canonicalFxFrameIndex(.125f))
+        assertEquals(3, canonicalFxFrameIndex(.499f))
+        assertEquals(4, canonicalFxFrameIndex(.5f))
+        assertEquals(7, canonicalFxFrameIndex(.999f))
+        assertEquals(7, canonicalFxFrameIndex(1f))
+        assertEquals(7, canonicalFxFrameIndex(2f))
+    }
 }
