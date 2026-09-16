@@ -1,56 +1,142 @@
 package com.zerotoempire.game
 
 /**
- * Resolves canonical tiered raster art for the complete Group 01 business set.
+ * Compile-time binding for the complete authored business catalog.
  *
- * Business IDs 0..3 are compile-time bound to every canonical T0..T6 production
- * drawable. Businesses outside that complete authored set return null so callers
- * can retain their existing procedural fallback until their own sprite family is
- * wired through the same contract.
+ * Each business 0..13 owns seven production rasters (T0..T6). Keeping the
+ * opaque drawable names behind this resolver gives gameplay one canonical
+ * level-to-tier contract while making missing packaged art a compile error.
  */
+private val canonicalBusinessRasters = arrayOf(
+    intArrayOf(
+        R.drawable.zte_business_00_t0_final,
+        R.drawable.zte_business_00_t1_final,
+        R.drawable.zte_business_00_t2_final,
+        R.drawable.zte_business_00_t3_final,
+        R.drawable.zte_business_00_t4_final,
+        R.drawable.zte_business_00_t5_final,
+        R.drawable.zte_business_00_t6_final,
+    ),
+    intArrayOf(
+        R.drawable.zte_business_01_t0_final,
+        R.drawable.zte_business_01_t1_final,
+        R.drawable.zte_business_01_t2_final,
+        R.drawable.zte_business_01_t3_final,
+        R.drawable.zte_business_01_t4_final,
+        R.drawable.zte_business_01_t5_final,
+        R.drawable.zte_business_01_t6_final,
+    ),
+    intArrayOf(
+        R.drawable.zte_business_02_t0_final,
+        R.drawable.zte_business_02_t1_final,
+        R.drawable.zte_business_02_t2_final,
+        R.drawable.zte_business_02_t3_final,
+        R.drawable.zte_business_02_t4_final,
+        R.drawable.zte_business_02_t5_final,
+        R.drawable.zte_business_02_t6_final,
+    ),
+    intArrayOf(
+        R.drawable.zte_business_03_t0_final,
+        R.drawable.zte_business_03_t1_final,
+        R.drawable.zte_business_03_t2_final,
+        R.drawable.zte_business_03_t3_final,
+        R.drawable.zte_business_03_t4_final,
+        R.drawable.zte_business_03_t5_final,
+        R.drawable.zte_business_03_t6_final,
+    ),
+    intArrayOf(
+        R.drawable.zte_business_04_t0_final,
+        R.drawable.zte_business_04_t1_final,
+        R.drawable.zte_business_04_t2_final,
+        R.drawable.zte_business_04_t3_final,
+        R.drawable.zte_business_04_t4_final,
+        R.drawable.zte_business_04_t5_final,
+        R.drawable.zte_business_04_t6_final,
+    ),
+    intArrayOf(
+        R.drawable.zte_business_05_t0_final,
+        R.drawable.zte_business_05_t1_final,
+        R.drawable.zte_business_05_t2_final,
+        R.drawable.zte_business_05_t3_final,
+        R.drawable.zte_business_05_t4_final,
+        R.drawable.zte_business_05_t5_final,
+        R.drawable.zte_business_05_t6_final,
+    ),
+    intArrayOf(
+        R.drawable.zte_business_06_t0_final,
+        R.drawable.zte_business_06_t1_final,
+        R.drawable.zte_business_06_t2_final,
+        R.drawable.zte_business_06_t3_final,
+        R.drawable.zte_business_06_t4_final,
+        R.drawable.zte_business_06_t5_final,
+        R.drawable.zte_business_06_t6_final,
+    ),
+    intArrayOf(
+        R.drawable.zte_business_07_t0_final,
+        R.drawable.zte_business_07_t1_final,
+        R.drawable.zte_business_07_t2_final,
+        R.drawable.zte_business_07_t3_final,
+        R.drawable.zte_business_07_t4_final,
+        R.drawable.zte_business_07_t5_final,
+        R.drawable.zte_business_07_t6_final,
+    ),
+    intArrayOf(
+        R.drawable.zte_business_08_t0_final,
+        R.drawable.zte_business_08_t1_final,
+        R.drawable.zte_business_08_t2_final,
+        R.drawable.zte_business_08_t3_final,
+        R.drawable.zte_business_08_t4_final,
+        R.drawable.zte_business_08_t5_final,
+        R.drawable.zte_business_08_t6_final,
+    ),
+    intArrayOf(
+        R.drawable.zte_business_09_t0_final,
+        R.drawable.zte_business_09_t1_final,
+        R.drawable.zte_business_09_t2_final,
+        R.drawable.zte_business_09_t3_final,
+        R.drawable.zte_business_09_t4_final,
+        R.drawable.zte_business_09_t5_final,
+        R.drawable.zte_business_09_t6_final,
+    ),
+    intArrayOf(
+        R.drawable.zte_business_10_t0_final,
+        R.drawable.zte_business_10_t1_final,
+        R.drawable.zte_business_10_t2_final,
+        R.drawable.zte_business_10_t3_final,
+        R.drawable.zte_business_10_t4_final,
+        R.drawable.zte_business_10_t5_final,
+        R.drawable.zte_business_10_t6_final,
+    ),
+    intArrayOf(
+        R.drawable.zte_business_11_t0_final,
+        R.drawable.zte_business_11_t1_final,
+        R.drawable.zte_business_11_t2_final,
+        R.drawable.zte_business_11_t3_final,
+        R.drawable.zte_business_11_t4_final,
+        R.drawable.zte_business_11_t5_final,
+        R.drawable.zte_business_11_t6_final,
+    ),
+    intArrayOf(
+        R.drawable.zte_business_12_t0_final,
+        R.drawable.zte_business_12_t1_final,
+        R.drawable.zte_business_12_t2_final,
+        R.drawable.zte_business_12_t3_final,
+        R.drawable.zte_business_12_t4_final,
+        R.drawable.zte_business_12_t5_final,
+        R.drawable.zte_business_12_t6_final,
+    ),
+    intArrayOf(
+        R.drawable.zte_business_13_t0_final,
+        R.drawable.zte_business_13_t1_final,
+        R.drawable.zte_business_13_t2_final,
+        R.drawable.zte_business_13_t3_final,
+        R.drawable.zte_business_13_t4_final,
+        R.drawable.zte_business_13_t5_final,
+        R.drawable.zte_business_13_t6_final,
+    ),
+)
+
 internal fun canonicalBusinessRasterRes(businessId: Int, level: Int): Int? {
     val tier = canonicalBusinessTier(level)
-    return when (businessId) {
-        0 -> when (tier) {
-            0 -> R.drawable.zte_business_00_t0_final
-            1 -> R.drawable.zte_business_00_t1_final
-            2 -> R.drawable.zte_business_00_t2_final
-            3 -> R.drawable.zte_business_00_t3_final
-            4 -> R.drawable.zte_business_00_t4_final
-            5 -> R.drawable.zte_business_00_t5_final
-            6 -> R.drawable.zte_business_00_t6_final
-            else -> error("canonicalBusinessTier returned unsupported tier $tier")
-        }
-        1 -> when (tier) {
-            0 -> R.drawable.zte_business_01_t0_final
-            1 -> R.drawable.zte_business_01_t1_final
-            2 -> R.drawable.zte_business_01_t2_final
-            3 -> R.drawable.zte_business_01_t3_final
-            4 -> R.drawable.zte_business_01_t4_final
-            5 -> R.drawable.zte_business_01_t5_final
-            6 -> R.drawable.zte_business_01_t6_final
-            else -> error("canonicalBusinessTier returned unsupported tier $tier")
-        }
-        2 -> when (tier) {
-            0 -> R.drawable.zte_business_02_t0_final
-            1 -> R.drawable.zte_business_02_t1_final
-            2 -> R.drawable.zte_business_02_t2_final
-            3 -> R.drawable.zte_business_02_t3_final
-            4 -> R.drawable.zte_business_02_t4_final
-            5 -> R.drawable.zte_business_02_t5_final
-            6 -> R.drawable.zte_business_02_t6_final
-            else -> error("canonicalBusinessTier returned unsupported tier $tier")
-        }
-        3 -> when (tier) {
-            0 -> R.drawable.zte_business_03_t0_final
-            1 -> R.drawable.zte_business_03_t1_final
-            2 -> R.drawable.zte_business_03_t2_final
-            3 -> R.drawable.zte_business_03_t3_final
-            4 -> R.drawable.zte_business_03_t4_final
-            5 -> R.drawable.zte_business_03_t5_final
-            6 -> R.drawable.zte_business_03_t6_final
-            else -> error("canonicalBusinessTier returned unsupported tier $tier")
-        }
-        else -> null
-    }
+    return canonicalBusinessRasters.getOrNull(businessId)?.get(tier)
 }
