@@ -4,13 +4,14 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import kotlin.math.cos
 import kotlin.math.sin
@@ -18,10 +19,8 @@ import kotlin.math.sin
 /**
  * Short-lived, tap-triggered VFX for the Power Core.
  *
- * Unlike the ambient core aura this owns no infinite animation clock: work is
- * performed only after a successful tap. Reduced-motion users keep the existing
- * haptic/number feedback without this burst, while low-power mode uses fewer
- * particles and a shorter animation.
+ * The authored semantic sprites now carry the visual identity. Runtime Canvas
+ * work is deliberately limited to lightweight motion accents around them.
  */
 @Composable
 fun PowerCoreTapImpact(serial: Int, eraIndex: Int, modifier: Modifier = Modifier) {
@@ -54,48 +53,56 @@ fun PowerCoreTapImpact(serial: Int, eraIndex: Int, modifier: Modifier = Modifier
         else -> EmpireColors.GoldBright
     }
     val p = progress.value
-    val alpha = (1f - p).coerceIn(0f, 1f)
+    val fade = (1f - p).coerceIn(0f, 1f)
 
-    Canvas(modifier) {
-        val center = Offset(size.width / 2f, size.height / 2f)
-        val min = size.minDimension
-        val primaryRadius = min * (.22f + .30f * p)
-        val secondaryRadius = min * (.16f + .22f * p)
-
-        drawCircle(
-            color = accent.copy(alpha = alpha * .78f),
-            radius = primaryRadius,
-            center = center,
-            style = Stroke(width = min * (.018f - .010f * p).coerceAtLeast(.004f))
+    Box(modifier) {
+        CanonicalFxSprite(
+            effect = CanonicalFx.RING_PULSE,
+            progress = p,
+            modifier = Modifier.fillMaxSize(),
+            alpha = .98f,
+            startScale = .48f,
+            endScale = 1.12f,
         )
         if (!lowPower) {
-            drawCircle(
-                color = Color.White.copy(alpha = alpha * .34f),
-                radius = secondaryRadius,
-                center = center,
-                style = Stroke(width = min * .005f)
+            CanonicalFxSprite(
+                effect = CanonicalFx.SPARK,
+                progress = p,
+                modifier = Modifier.fillMaxSize(),
+                alpha = .76f,
+                startScale = .28f,
+                endScale = .88f,
             )
         }
 
-        val sparkCount = if (lowPower) 6 else 14
-        repeat(sparkCount) { index ->
-            val angle = index * (Math.PI * 2.0 / sparkCount) + serial * .37
-            val startRadius = min * (.20f + .08f * p)
-            val endRadius = min * (.29f + .24f * p) * if (index % 3 == 0) 1.08f else 1f
-            val start = Offset(
-                center.x + cos(angle).toFloat() * startRadius,
-                center.y + sin(angle).toFloat() * startRadius
-            )
-            val end = Offset(
-                center.x + cos(angle).toFloat() * endRadius,
-                center.y + sin(angle).toFloat() * endRadius
-            )
-            drawLine(
-                color = if (index % 2 == 0) accent.copy(alpha = alpha * .72f) else Color.White.copy(alpha = alpha * .44f),
-                start = start,
-                end = end,
-                strokeWidth = min * if (index % 3 == 0) .010f else .006f
-            )
+        Canvas(Modifier.fillMaxSize()) {
+            val center = Offset(size.width / 2f, size.height / 2f)
+            val min = size.minDimension
+            val sparkCount = if (lowPower) 4 else 8
+
+            repeat(sparkCount) { index ->
+                val angle = index * (Math.PI * 2.0 / sparkCount) + serial * .37
+                val startRadius = min * (.21f + .08f * p)
+                val endRadius = min * (.27f + .19f * p) * if (index % 3 == 0) 1.08f else 1f
+                val start = Offset(
+                    center.x + cos(angle).toFloat() * startRadius,
+                    center.y + sin(angle).toFloat() * startRadius
+                )
+                val end = Offset(
+                    center.x + cos(angle).toFloat() * endRadius,
+                    center.y + sin(angle).toFloat() * endRadius
+                )
+                drawLine(
+                    color = if (index % 2 == 0) {
+                        accent.copy(alpha = fade * .42f)
+                    } else {
+                        Color.White.copy(alpha = fade * .28f)
+                    },
+                    start = start,
+                    end = end,
+                    strokeWidth = min * if (index % 3 == 0) .007f else .004f
+                )
+            }
         }
     }
 }
