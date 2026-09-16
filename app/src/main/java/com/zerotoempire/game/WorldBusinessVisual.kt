@@ -20,10 +20,9 @@ import androidx.compose.ui.unit.Dp
 /**
  * Sprite-first runtime bridge from authored production assets to the live world.
  *
- * Complete business sprite families resolve through canonicalBusinessRasterRes so
- * a single tested T0..T6 contract drives both resource binding and visible gameplay.
- * Businesses that are not yet part of that canonical contract deliberately retain
- * their procedural fallback. Canvas remains reserved for motion/VFX/mastery layers.
+ * Every authored business family resolves through canonicalBusinessRasterRes so
+ * a single tested T0..T6 contract drives visible gameplay. Canvas drawing is kept
+ * only for motion, mastery, upgrade and late-tier VFX layered around primary art.
  */
 @Composable
 internal fun WorldBusinessVisual(
@@ -54,6 +53,11 @@ internal fun WorldBusinessVisual(
 
         val authoredSize = size * (1f + tier.coerceAtMost(6) * .055f)
         Box(modifier = modifier.size(authoredSize)) {
+            BusinessTierVfxBeforePrimary(
+                businessId = businessId,
+                tier = tier,
+                modifier = Modifier.fillMaxSize()
+            )
             Image(
                 painter = painterResource(drawable),
                 contentDescription = null,
@@ -66,9 +70,12 @@ internal fun WorldBusinessVisual(
                     },
                 contentScale = ContentScale.Fit
             )
+            BusinessTierVfxAfterPrimary(
+                businessId = businessId,
+                tier = tier,
+                modifier = Modifier.fillMaxSize()
+            )
 
-            // The first Foundry evolution gains authored worker/delivery traffic so the district
-            // reads as a living production space instead of a static icon collection.
             if (businessId in 0..3 && tier >= 1) {
                 FoundryWorkerTraffic(
                     businessId = businessId,
@@ -82,16 +89,53 @@ internal fun WorldBusinessVisual(
         }
     } else {
         Box(modifier = modifier.size(size)) {
-            if (businessId == 6 && tier >= 4) IncomePickupSparkle(modifier = Modifier.fillMaxSize())
-            if (businessId == 7 && tier >= 4) ElectricArc(modifier = Modifier.fillMaxSize())
-            if (businessId == 8 && tier >= 4) HologramScanSweep(modifier = Modifier.fillMaxSize())
-            if (businessId == 9 && tier >= 4) DroneThruster(modifier = Modifier.fillMaxSize())
-            if (businessId == 10 && tier >= 4) PhaseDistortion(modifier = Modifier.fillMaxSize())
-            if (businessId == 11 && tier >= 4) OrbitalIonTrail(modifier = Modifier.fillMaxSize())
-            if (businessId == 12 && tier >= 4) StellarFlare(modifier = Modifier.fillMaxSize())
+            BusinessTierVfxBeforePrimary(
+                businessId = businessId,
+                tier = tier,
+                modifier = Modifier.fillMaxSize()
+            )
             BusinessArtIcon(businessId, level, size)
-            if (businessId == 13 && tier >= 4) SingularityLensPulse(modifier = Modifier.fillMaxSize())
+            BusinessTierVfxAfterPrimary(
+                businessId = businessId,
+                tier = tier,
+                modifier = Modifier.fillMaxSize()
+            )
             UpgradeConstructionFlash(trigger = level, modifier = Modifier.fillMaxSize())
         }
+    }
+}
+
+/**
+ * Existing late-tier effects that visually sit behind their primary business art.
+ * Keeping them separate from the raster resolver prevents procedural VFX from
+ * becoming a fallback identity for businesses that already have authored sprites.
+ */
+@Composable
+private fun BusinessTierVfxBeforePrimary(
+    businessId: Int,
+    tier: Int,
+    modifier: Modifier = Modifier,
+) {
+    if (tier < 4) return
+    when (businessId) {
+        6 -> IncomePickupSparkle(modifier = modifier)
+        7 -> ElectricArc(modifier = modifier)
+        8 -> HologramScanSweep(modifier = modifier)
+        9 -> DroneThruster(modifier = modifier)
+        10 -> PhaseDistortion(modifier = modifier)
+        11 -> OrbitalIonTrail(modifier = modifier)
+        12 -> StellarFlare(modifier = modifier)
+    }
+}
+
+/** Effects that intentionally sit above the authored primary art. */
+@Composable
+private fun BusinessTierVfxAfterPrimary(
+    businessId: Int,
+    tier: Int,
+    modifier: Modifier = Modifier,
+) {
+    if (businessId == 13 && tier >= 4) {
+        SingularityLensPulse(modifier = modifier)
     }
 }
