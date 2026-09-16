@@ -3,16 +3,43 @@ package com.zerotoempire.game
 /**
  * Source-reviewed character roles backed by authored production sprites.
  *
- * This first runtime contract intentionally exposes only IDLE art. The wider
- * CHR catalogue also contains WALK/WORK/CARRY/REPAIR/CELEB poses, but those
- * are not treated as animation frames until their timing/transition semantics
- * are explicitly reviewed.
+ * Runtime raster bindings remain intentionally limited to assets that have
+ * completed the production pipeline. Action semantics below are documented by
+ * the character-sheet factory and do not imply that every action sheet is
+ * ready for runtime rendering.
  */
 internal enum class ReviewedCharacterRole {
     OPERATOR,
     TECHNICIAN,
     LOGISTICS,
     ENGINEER,
+}
+
+internal enum class ReviewedCharacterAction {
+    IDLE,
+    WALK,
+    WORK,
+    CARRY,
+    REPAIR,
+    CELEBRATE,
+}
+
+internal fun reviewedCharacterFrameCount(action: ReviewedCharacterAction): Int = when (action) {
+    ReviewedCharacterAction.IDLE -> 6
+    ReviewedCharacterAction.WALK -> 8
+    ReviewedCharacterAction.WORK -> 10
+    ReviewedCharacterAction.CARRY -> 8
+    ReviewedCharacterAction.REPAIR -> 10
+    ReviewedCharacterAction.CELEBRATE -> 8
+}
+
+internal fun reviewedCharacterActionLoopsAmbiently(action: ReviewedCharacterAction): Boolean = when (action) {
+    ReviewedCharacterAction.IDLE,
+    ReviewedCharacterAction.WALK,
+    ReviewedCharacterAction.WORK -> true
+    ReviewedCharacterAction.CARRY,
+    ReviewedCharacterAction.REPAIR,
+    ReviewedCharacterAction.CELEBRATE -> false
 }
 
 internal fun reviewedCharacterIdleRasterRes(role: ReviewedCharacterRole): Int = when (role) {
