@@ -20,7 +20,7 @@ jobs:
         with:
           python-version: "3.12"
       - run: python -m pip install --disable-pip-version-check Pillow==11.3.0
-      - name: Generate ONB-00 review-only candidate
+      - name: Generate ONB-00 review-only candidate v2
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
@@ -36,7 +36,7 @@ jobs:
               raise SystemExit('HF_TOKEN is required')
 
           class Provider:
-              name='hf-static'
+              name='hf-static-v2'
               source_type='generated'
               license='generated'
               def generate(self, asset: ManifestAsset, prompt: str) -> Image.Image:
@@ -44,11 +44,14 @@ jobs:
 
           asset=require_asset(load_manifest(Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')),'ONB-00')
           prompt=(
-              'AAA premium mobile strategy game authored onboarding illustration, single isolated Power Core ignition subject. '
-              + asset.description + ' Portrait-friendly 2.5D three-quarter presentation, iconic readable silhouette, '
-              'upper-left key light, cool fill, warm amber and cyan emissive energy, premium metal and glass materials. '
-              'Pure solid black background with large empty margin. No UI, no border, no frame, no watermark, no logo, '
-              'no readable text, no numbers, no collage, no multiple panels.'
+              'AAA premium mobile strategy game authored onboarding illustration. '
+              'One single compact futuristic Power Core reactor on a low circular cradle, ignition moment, radial energy burst from the center. '
+              'No people, no human silhouette, no character, no hands. '
+              'Portrait-friendly 2.5D three-quarter camera around 34 degrees, iconic readable silhouette at mobile size. '
+              'Upper-left key light, cool blue fill, warm gold core, selective cyan emissive ring, premium dark metal and glass materials. '
+              'Pure solid black background with large empty transparent-safe margin around the reactor. '
+              'No UI, no typography, no letters, no words, no labels, no code identifiers, no border, no frame, no watermark, no logo, '
+              'no readable text, no numbers, no collage, no multiple panels, no background scene, no floor beyond the compact reactor cradle.'
           )
           result=build_candidate(asset=asset,provider=Provider(),prompt=prompt,target_side=1024,candidate_root=Path('art/incoming/assets'))
           report,sheet=build_candidate_qa_artifacts(result.image_path.parent)
@@ -56,10 +59,10 @@ jobs:
           print(f'QA_REPORT={report}')
           print(f'CONTACT_SHEET={sheet}')
           PY
-      - name: Upload ONB-00 review bundle
+      - name: Upload ONB-00 review bundle v2
         uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08
         with:
-          name: unified-asset-ONB-00
+          name: unified-asset-ONB-00-v2
           path: art/incoming/assets/ONB-00
           if-no-files-found: error
           retention-days: 7
