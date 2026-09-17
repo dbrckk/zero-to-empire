@@ -135,9 +135,13 @@ jobs:
           expected = [
               candidate_dir / 'candidate.png',
               candidate_dir / 'metadata.json',
-              report_path,
-              sheet_path,
+              candidate_dir / 'qa-report.json',
+              candidate_dir / 'contact-sheet.png',
           ]
+          if report_path != candidate_dir / 'qa-report.json':
+              raise SystemExit(f'unexpected QA report path: {report_path}')
+          if sheet_path != candidate_dir / 'contact-sheet.png':
+              raise SystemExit(f'unexpected contact sheet path: {sheet_path}')
           missing = [str(path) for path in expected if not path.is_file()]
           if missing:
               raise SystemExit('missing review artifacts: ' + ', '.join(missing))
