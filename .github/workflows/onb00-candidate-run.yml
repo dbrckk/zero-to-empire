@@ -1,0 +1,65 @@
+name: ONB-00 Candidate Run
+
+on:
+  push:
+    branches:
+      - art/onb00-candidate-run
+    paths:
+      - .github/workflows/onb00-candidate-run.yml
+
+permissions:
+  contents: read
+
+jobs:
+  candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-python@b64ffcaf5b410884ad320a9cfac8866006a109aa
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --disable-pip-version-check Pillow==11.3.0
+      - name: Generate ONB-00 review-only candidate
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          from tools.assets.manifest import ManifestAsset, load_manifest, require_asset
+          from tools.assets.pipeline import build_candidate
+          from tools.assets.qa_report import build_candidate_qa_artifacts
+          from tools.sprites import hf_static_manifest_factory as hf
+
+          if not hf.TOKEN:
+              raise SystemExit('HF_TOKEN is required')
+
+          class Provider:
+              name='hf-static'
+              source_type='generated'
+              license='generated'
+              def generate(self, asset: ManifestAsset, prompt: str) -> Image.Image:
+                  return hf.generate(prompt)
+
+          asset=require_asset(load_manifest(Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')),'ONB-00')
+          prompt=(
+              'AAA premium mobile strategy game authored onboarding illustration, single isolated Power Core ignition subject. '
+              + asset.description + ' Portrait-friendly 2.5D three-quarter presentation, iconic readable silhouette, '
+              'upper-left key light, cool fill, warm amber and cyan emissive energy, premium metal and glass materials. '
+              'Pure solid black background with large empty margin. No UI, no border, no frame, no watermark, no logo, '
+              'no readable text, no numbers, no collage, no multiple panels.'
+          )
+          result=build_candidate(asset=asset,provider=Provider(),prompt=prompt,target_side=1024,candidate_root=Path('art/incoming/assets'))
+          report,sheet=build_candidate_qa_artifacts(result.image_path.parent)
+          print(f'CANDIDATE={result.image_path}')
+          print(f'QA_REPORT={report}')
+          print(f'CONTACT_SHEET={sheet}')
+          PY
+      - name: Upload ONB-00 review bundle
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08
+        with:
+          name: unified-asset-ONB-00
+          path: art/incoming/assets/ONB-00
+          if-no-files-found: error
+          retention-days: 7
