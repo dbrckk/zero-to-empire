@@ -55,6 +55,15 @@ class ManifestTest(unittest.TestCase):
         )
         self.assertEqual(asset.status, "DONE")
 
+    def test_real_manifest_defines_first_onboarding_authored_target(self):
+        manifest = Path("docs/art/FINAL_AAA_SPRITE_MANIFEST.md")
+        asset = require_asset(load_manifest(manifest), "ONB-00")
+        self.assertEqual(
+            asset.runtime_path,
+            "app/src/main/res/drawable-nodpi/zte_onboarding_00_final.webp",
+        )
+        self.assertEqual(asset.status, "TODO")
+
 
 if __name__ == "__main__":
     unittest.main()
