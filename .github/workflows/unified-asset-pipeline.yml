@@ -1,0 +1,158 @@
+name: Unified Asset Candidate Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      asset_id:
+        description: "Exact manifest asset ID to generate for review"
+        required: true
+        type: string
+      provider:
+        description: "Generation provider"
+        required: true
+        type: choice
+        default: hf-static
+        options:
+          - hf-static
+
+permissions:
+  contents: read
+
+jobs:
+  candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@b64ffcaf5b410884ad320a9cfac8866006a109aa # v5
+        with:
+          python-version: "3.12"
+
+      - name: Install candidate dependencies
+        run: python -m pip install --disable-pip-version-check Pillow==11.3.0
+
+      - name: Run asset pipeline unit tests
+        run: python -m unittest discover -s tools/assets -p 'test_*.py' -v
+
+      - name: Inspect exact manifest target
+        env:
+          ASSET_ID: ${{ inputs.asset_id }}
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          from tools.assets.manifest import load_manifest, require_asset
+
+          asset = require_asset(
+              load_manifest(Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')),
+              os.environ['ASSET_ID'],
+          )
+          if asset.status != 'TODO':
+              raise SystemExit(f'{asset.id} is {asset.status}; candidate generation requires TODO')
+          print(f'REVIEW_TARGET={asset.id}')
+          print(f'SEMANTIC_ROLE={asset.description}')
+          PY
+
+      - name: Prepare review-only candidate
+        env:
+          ASSET_ID: ${{ inputs.asset_id }}
+          SELECTED_PROVIDER: ${{ inputs.provider }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          from PIL import Image
+
+          from tools.assets.manifest import ManifestAsset, load_manifest, require_asset
+          from tools.assets.pipeline import build_candidate
+          from tools.sprites import hf_static_manifest_factory as hf
+
+          if os.environ['SELECTED_PROVIDER'] != 'hf-static':
+              raise SystemExit('unsupported provider')
+          if not os.environ.get('HF_TOKEN', '').strip():
+              raise SystemExit('HF_TOKEN is required')
+
+          class HfStaticReviewProvider:
+              name = 'hf-static'
+              source_type = 'generated'
+              license = 'generated'
+
+              def generate(self, asset: ManifestAsset, prompt: str) -> Image.Image:
+                  return hf.generate(prompt)
+
+          asset = require_asset(
+              load_manifest(Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')),
+              os.environ['ASSET_ID'],
+          )
+          prompt = (
+              'AAA premium mobile strategy game authored illustration, single isolated subject, '
+              + asset.name + '. ' + asset.description + ' '
+              'Portrait-friendly 2.5D three-quarter presentation, strong readable silhouette, '
+              'upper-left key light, cool fill, selective warm amber and cyan emissive accents, '
+              'premium physically plausible materials. Pure solid black background with large empty margin. '
+              'No UI, no border, no frame, no watermark, no logo, no readable text, no numbers, no collage, no multiple panels.'
+          )
+          result = build_candidate(
+              asset=asset,
+              provider=HfStaticReviewProvider(),
+              prompt=prompt,
+              target_side=1024,
+              candidate_root=Path('art/incoming/assets'),
+          )
+          print(f'CANDIDATE={result.image_path}')
+          print(f'METADATA={result.metadata_path}')
+          print(f'ALPHA_COVERAGE={result.coverage:.6f}')
+          print(f'DOMINANT_COMPONENT={result.dominant_component:.6f}')
+          PY
+
+      - name: Validate candidate and build QA artifacts
+        env:
+          ASSET_ID: ${{ inputs.asset_id }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          from tools.assets.manifest import load_manifest, require_asset
+          from tools.assets.metadata import CandidateMetadata
+          from tools.assets.qa_report import build_candidate_qa_artifacts
+
+          asset = require_asset(
+              load_manifest(Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')),
+              os.environ['ASSET_ID'],
+          )
+          candidate_dir = Path('art/incoming/assets') / asset.id
+          metadata = CandidateMetadata(**json.loads((candidate_dir / 'metadata.json').read_text(encoding='utf-8')))
+          metadata.validate_against(asset)
+          if metadata.review != 'pending':
+              raise SystemExit(f'candidate review must remain pending, got {metadata.review!r}')
+          report_path, sheet_path = build_candidate_qa_artifacts(candidate_dir)
+          expected = [
+              candidate_dir / 'candidate.png',
+              candidate_dir / 'metadata.json',
+              candidate_dir / 'qa-report.json',
+              candidate_dir / 'contact-sheet.png',
+          ]
+          if report_path != candidate_dir / 'qa-report.json':
+              raise SystemExit(f'unexpected QA report path: {report_path}')
+          if sheet_path != candidate_dir / 'contact-sheet.png':
+              raise SystemExit(f'unexpected contact sheet path: {sheet_path}')
+          missing = [str(path) for path in expected if not path.is_file()]
+          if missing:
+              raise SystemExit('missing review artifacts: ' + ', '.join(missing))
+          print(f'QA_REPORT={report_path}')
+          print(f'CONTACT_SHEET={sheet_path}')
+          PY
+
+      - name: Upload review bundle
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4
+        with:
+          name: unified-asset-${{ inputs.asset_id }}
+          path: art/incoming/assets/${{ inputs.asset_id }}
+          if-no-files-found: error
+          retention-days: 7
