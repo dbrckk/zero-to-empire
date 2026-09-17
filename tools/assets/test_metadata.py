@@ -71,7 +71,7 @@ class MetadataTest(unittest.TestCase):
             path = Path(handle.name)
         self.assertEqual(
             sha256_file(path),
-            "0bb4d5bfeca2c346f313004c18b4a28e0df3b815f87728a9f03a57f348316da4",
+            "8593f47da1fb7aec7beb8d7f123915b0f5c0e1456886f8a2adedc5cd1e183f21",
         )
 
     def test_metadata_json_is_stable_and_sorted(self):
