@@ -311,3 +311,9 @@ If a new runtime sprite is later required, it must be added here first and the d
 
 ### Next production target
 `FX-07 — construction dust/debris` (reverse-order production requested).
+
+## I. Onboarding authored illustrations
+
+| ID | Asset | Description | Runtime target | Status |
+|---|---|---|---|---|
+| ONB-00 | Onboarding step 0 primary illustration | Authored replacement for the current step-0 radial Power Core/ignition visual in `OnboardingStepArt`; isolated scene art with no baked UI text. | `app/src/main/res/drawable-nodpi/zte_onboarding_00_final.webp` | TODO |
