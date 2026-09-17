@@ -8,7 +8,7 @@ A row is `DONE` only when the asset is individually authored/generated, cleaned,
 Statuses: `TODO` → `ART` → `CLEAN` → `RUNTIME` → `DONE`. `BLOCKED` may be used with a note.
 
 ## Locked scope v1
-**Total final deliverables: 235** = 98 building masters + 7 Power Core + 24 character sheets + 18 vehicle sprites/sheets + 28 machine sheets + 28 prop sprites + 14 terrain/infrastructure sprites + 18 FX sheets.
+**Total final deliverables: 236** = 98 building masters + 7 Power Core + 24 character sheets + 18 vehicle sprites/sheets + 28 machine sheets + 28 prop sprites + 14 terrain/infrastructure sprites + 18 FX sheets + 1 onboarding illustration.
 
 If a new runtime sprite is later required, it must be added here first and the denominator updated explicitly.
 
@@ -299,7 +299,7 @@ If a new runtime sprite is later required, it must be added here first and the d
 | FX-17 | mastery crown shimmer | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_17_final.webp` | DONE |
 
 ## Progress ledger
-- **DONE: 125 / 235**
+- **DONE: 125 / 236**
 - Buildings: **23 / 98**
 - Power Core: **7 / 7**
 - Characters: **0 / 24**
