@@ -1,0 +1,46 @@
+name: Asset Pipeline CI
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'tools/assets/**'
+      - 'tools/sprites/audit_complete_sprite_manifest.py'
+      - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
+      - 'docs/art/UNIFIED_ASSET_PIPELINE.md'
+      - '.github/workflows/asset-pipeline-ci.yml'
+  push:
+    branches: [ main ]
+    paths:
+      - 'tools/assets/**'
+      - 'tools/sprites/audit_complete_sprite_manifest.py'
+      - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
+      - 'docs/art/UNIFIED_ASSET_PIPELINE.md'
+      - '.github/workflows/asset-pipeline-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: asset-pipeline-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@b64ffcaf5b410884ad320a9cfac8866006a109aa # v5
+        with:
+          python-version: '3.12'
+
+      - name: Run unified asset pipeline unit tests
+        run: python -m unittest discover -s tools/assets -p 'test_*.py' -v
+
+      - name: Audit authoritative sprite manifest
+        run: python tools/sprites/audit_complete_sprite_manifest.py
