@@ -129,6 +129,7 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
             }
         }
     )
+    if (showPrivacyPolicy) PrivacyPolicyDialog(onDismiss = { showPrivacyPolicy = false })
 }
 
 @Composable
@@ -137,6 +138,7 @@ private fun StoreDialog(
     purchaseInFlight: StoreProduct?,
     pendingPurchases: Set<StoreProduct>,
     onDismiss: () -> Unit,
+    onPrivacyPolicy: () -> Unit,
     onDiagnostics: (() -> Unit)?,
     onRestore: () -> Unit,
     onPurchase: (StoreProduct) -> Unit
