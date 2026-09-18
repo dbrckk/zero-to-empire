@@ -22,14 +22,14 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T19:17:53Z
+Generated: 2026-09-18T19:23:16Z
 
 ### Git
 - Branch: `main`
-- Head: `08493bec427e`
-- Commit date: 2026-09-18T21:16:46+02:00
-- Commit: chore(ai): align config with v6 bounded context
-- Tracked files: 1230
+- Head: `4e96d382e5e8`
+- Commit date: 2026-09-18T21:23:00+02:00
+- Commit: chore(ai): enable recent project hotset fallback
+- Tracked files: 1235
 
 ### Recently changed files
 - `.repo-standards.yml`
@@ -43,8 +43,6 @@ Generated: 2026-09-18T19:17:53Z
 - `marketing/play-store-listing.md`
 - `marketing/privacy-policy.md`
 - `tools/android/validate_release_privacy.py`
-- `app/src/main/res/drawable-nodpi/zte_onboarding_00_final.webp`
-- `art/production/onb-00-runtime-qa.json`
 
 ### Project signals
 - `build.gradle.kts`

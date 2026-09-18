@@ -25079,6 +25079,7 @@ adopted: true
 workflow_mode: unified-single-commit
 repo_brain: dbrckk/repo-brain@main
 repo_brain_fallback: portable-full-rebuild
+hotset_fallback: recent-project-state
 ai_context:
   index: .ai/index.md
   project_state: .ai/project-state.md

@@ -9,7 +9,6 @@ Summary: 2 success / 3 failure / 0 active
 - Android Emulator Smoke: completed / failure (c81c2945)
 - Reconcile reviewed run 25: completed / skipped (1d9ce7f0)
 - Android CI: completed / success (80983792)
-- Reconcile reviewed run 25: completed / skipped (1d9ce7f0)
 
 ## Latest failed run structure
 - Job: generate
