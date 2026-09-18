@@ -33,6 +33,7 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
     val rewarded = remember(context) { AdMobRewardedGateway(context.applicationContext) }
     val consent = remember(activity) { activity?.let(::PrivacyConsentManager) }
     var showStore by remember { mutableStateOf(false) }
+    var showPrivacyPolicy by remember { mutableStateOf(false) }
     var owned by remember { mutableStateOf<Set<StoreProduct>>(emptySet()) }
     var purchaseInFlight by remember { mutableStateOf<StoreProduct?>(null) }
     var pendingPurchases by remember { mutableStateOf<Set<StoreProduct>>(emptySet()) }
@@ -81,6 +82,7 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
         purchaseInFlight = purchaseInFlight,
         pendingPurchases = pendingPurchases,
         onDismiss = { showStore = false },
+        onPrivacyPolicy = { showPrivacyPolicy = true },
         onDiagnostics = if (BuildConfig.DEBUG) {
             { status = LocalBillingDiagnostics.snapshot().toSupportText() }
         } else null,
@@ -129,6 +131,7 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
             }
         }
     )
+    if (showPrivacyPolicy) PrivacyPolicyDialog(onDismiss = { showPrivacyPolicy = false })
 }
 
 @Composable
@@ -137,6 +140,7 @@ private fun StoreDialog(
     purchaseInFlight: StoreProduct?,
     pendingPurchases: Set<StoreProduct>,
     onDismiss: () -> Unit,
+    onPrivacyPolicy: () -> Unit,
     onDiagnostics: (() -> Unit)?,
     onRestore: () -> Unit,
     onPurchase: (StoreProduct) -> Unit
@@ -170,6 +174,7 @@ private fun StoreDialog(
                 StoreRow("120 GEMS", "Consumable gem pack.", false, purchaseInFlight, pendingPurchases, StoreProduct.GEM_PACK_SMALL, MetaSpriteKind.GEM) { onPurchase(StoreProduct.GEM_PACK_SMALL) }
                 StoreRow("650 GEMS", "Consumable gem pack.", false, purchaseInFlight, pendingPurchases, StoreProduct.GEM_PACK_MEDIUM, MetaSpriteKind.GEM) { onPurchase(StoreProduct.GEM_PACK_MEDIUM) }
                 OutlinedButton(onClick = onRestore, enabled = purchaseInFlight == null, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text("RESTORE PURCHASES") }
+                TextButton(onClick = onPrivacyPolicy, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text("PRIVACY POLICY") }
                 if (onDiagnostics != null) {
                     TextButton(onClick = onDiagnostics, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text("BILLING DIAGNOSTICS") }
                 }

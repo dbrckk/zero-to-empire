@@ -30,6 +30,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Validate release privacy and Data Safety
+        run: python3 tools/android/validate_release_privacy.py
+
       - uses: actions/setup-java@v5
         with:
           distribution: temurin

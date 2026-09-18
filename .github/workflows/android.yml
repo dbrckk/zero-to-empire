@@ -8,6 +8,12 @@ on:
       - 'art/production/**'
       - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
       - 'tools/android/**'
+      - 'marketing/privacy-policy.md'
+      - 'marketing/data-safety.md'
+      - 'marketing/play-store-listing.md'
+      - 'marketing/privacy-policy.md'
+      - 'marketing/data-safety.md'
+      - 'marketing/play-store-listing.md'
       - 'build.gradle.kts'
       - 'settings.gradle.kts'
       - 'gradle.properties'
@@ -82,6 +88,9 @@ jobs:
 
       - name: Validate Android manifest policy
         run: python3 tools/android/validate_manifest_policy.py
+
+      - name: Validate release privacy and Data Safety
+        run: python3 tools/android/validate_release_privacy.py
 
       - name: Build debug APK
         run: gradle assembleDebug --stacktrace

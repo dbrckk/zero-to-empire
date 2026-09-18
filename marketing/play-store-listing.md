@@ -76,6 +76,12 @@ Capture the final RC on at least:
 
 Do not claim physical-device validation in release notes unless the build was actually exercised on that device/profile.
 
+## Privacy and Data Safety sources
+
+- Public privacy-policy source: `marketing/privacy-policy.md` (must be hosted at an active public URL before production submission).
+- Data Safety working sheet: `marketing/data-safety.md` (must be reconciled against the exact production AAB and current SDK provider disclosures).
+- The app exposes a readable in-app privacy policy from the Store surface.
+
 ## Play Console items that cannot be completed from repository code alone
 
 Before production submission, complete and verify in Play Console:
