@@ -29,7 +29,7 @@ The content is organized as follows:
 ## Notes
 - Some files may have been excluded based on .gitignore rules and Repomix's configuration
 - Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
-- Only files matching these patterns are included: **/*.{py,js,mjs,cjs,ts,tsx,jsx,java,kt,kts,gd,groovy,gradle,toml,json,yaml,yml,sql,sh}, README.md, AGENTS.md, PROJECT_*.md
+- Only files matching these patterns are included: **/*.{py,js,mjs,cjs,ts,tsx,jsx,java,kt,kts,gd,groovy,gradle,toml,json,yaml,yml,sql,sh}
 - Files matching these patterns are excluded: .ai/**, **/node_modules/**, **/.gradle/**, **/build/**, **/dist/**, **/.venv/**, **/__pycache__/**, **/.pytest_cache/**, **/.git/**, **/coverage/**, **/*.lock, **/*.min.js, **/*.map, assets/**, art/**, art_sources/**, marketing/**, colab/**, kaggle/**, discovery-cache.json, health-snapshot.json, history.json
 - Files matching patterns in .gitignore are excluded
 - Files matching default ignore patterns are excluded
@@ -38,5956 +38,180 @@ The content is organized as follows:
 
 # Directory Structure
 ```
-.circleci/
-  config.yml
-.github/
-  workflows/
-    ai-repo-map.yml
-    android-emulator-smoke.yml
-    android.yml
-    asset-pipeline-ci.yml
-    build-test-apk.yml
-    final-aaa-assets.yml
-    final-sprite-pipeline.yml
-    finalize-run66-after-ci.yml
-    finalize-run68-after-ci.yml
-    free-hf-sprite-factory.yml
-    hf-public-flux-building.yml
-    instant-terrain-batch.yml
-    kaggle-candidate-finalize.yml
-    kaggle-gpu-orchestrator.yml
-    kaggle-mass-sprite-factory.yml
-    kaggle-recover-existing-run.yml
-    lightning-sprite-factory.yml
-    lightning-ssh-bootstrap.yml
-    manifest-static-gpu-batch.yml
-    manual-kaggle-go-77.yml
-    pollinations-building-candidate.yml
-    pollinations-character-atlas.yml
-    pollinations-character-smoke.yml
-    post-run25-ci.yml
-    post-run37-veh09-ci.yml
-    procedural-terrain-batch.yml
-    production-release.yml
-    promote-flux-run20.yml
-    promote-flux-run22.yml
-    promote-flux-run26.yml
-    promote-flux-run29.yml
-    promote-flux-run37-veh09.yml
-    promote-flux-run38-veh16.yml
-    promote-flux-run51-machines.yml
-    promote-flux-run52-reviewed.yml
-    promote-fx09-strict.yml
-    promote-fx10-strict.yml
-    promote-fx11-strict.yml
-    promote-fx12-strict.yml
-    promote-fx13-strict.yml
-    promote-fx14-strict.yml
-    promote-fx15-strict.yml
-    promote-fx16-strict.yml
-    promote-reviewed-run68.yml
-    promote-reviewed-run69-ter09.yml
-    promote-run66-reviewed.yml
-    promote-run75-bld03.yml
-    reconcile-core-status.yml
-    reconcile-existing-runtime-todos.yml
-    reconcile-final-sprite-manifest.yml
-    reconcile-manifest-and-launch.yml
-    reconcile-prp05a.yml
-    reconcile-run75-bld03-status.yml
-    reconcile-sprite-progress-ledger.yml
-    refine-run66-stragglers.yml
-    repair-promote-bld03-run75.yml
-    sprite-completion-gate.yml
-    sprite-production-plan.yml
-    sprite-runtime-ci-bridge.yml
-    unified-asset-pipeline.yml
-.serena/
-  project.yml
-app/
-  src/
-    debug/
-      java/
-        com/
-          zerotoempire/
-            game/
-              SmokeSeedReceiver.kt
-    main/
-      java/
-        com/
-          zerotoempire/
-            game/
-              AdaptiveMusic.kt
-              AdMobInterstitialGateway.kt
-              AdMobRewardedGateway.kt
-              Analytics.kt
-              AscendantCityWorld.kt
-              AscensionAdvisor.kt
-              BillingDiagnostics.kt
-              BillingFailurePolicy.kt
-              BulkPurchase.kt
-              BulkQuoteDock.kt
-              BusinessGroup01Art.kt
-              BusinessGroup01Evolution.kt
-              BusinessGroup02Art.kt
-              BusinessGroup02Evolution.kt
-              BusinessGroup03Art.kt
-              BusinessGroup03Evolution.kt
-              BusinessGroup04Art.kt
-              BusinessGroup04Evolution.kt
-              CanonicalBusinessRaster.kt
-              CanonicalBusinessTier.kt
-              CanonicalCharacterRaster.kt
-              CanonicalFxRaster.kt
-              CanonicalFxSprite.kt
-              Challenges.kt
-              ChallengeUi.kt
-              CinematicArt.kt
-              CinematicRuntimeTransition.kt
-              CommerceUi.kt
-              ContentUnlocks.kt
-              DrawScopeCompat.kt
-              DroneThruster.kt
-              DynastyProgression.kt
-              EconomyMath.kt
-              ElectricArc.kt
-              EmpireArt.kt
-              EmpireArtCompat.kt
-              EmpireCoreArt.kt
-              EmpireNumberFormat.kt
-              EndgameAtmosphere.kt
-              EndgameBusinessSprites.kt
-              EndgameManagerPortrait.kt
-              EndgameProgression.kt
-              EraVistaAAA.kt
-              EraVistaCinematicOverlay.kt
-              FoundryWorldMotion.kt
-              FullScreenAdActivityPolicy.kt
-              GameEconomy.kt
-              GameEngine.kt
-              GameFeel.kt
-              GameRepository.kt
-              GameTheme.kt
-              GameViewModel.kt
-              GrowthRuntime.kt
-              GrowthTelemetry.kt
-              HologramScanSweep.kt
-              IdentitySystems.kt
-              IdentityUi.kt
-              IncomePickupSparkle.kt
-              InterstitialController.kt
-              InterstitialPolicy.kt
-              LateGame.kt
-              LiveOps.kt
-              MainActivity.kt
-              ManagerGroup01Art.kt
-              ManagerGroup02Art.kt
-              ManagerGroup03Art.kt
-              Managers.kt
-              MasteryCrownShimmer.kt
-              MetaSpriteArt.kt
-              Monetization.kt
-              MotionQuality.kt
-              OfflineProgress.kt
-              OnboardingArt.kt
-              OrbitalIonTrail.kt
-              PhaseDistortion.kt
-              PlayBillingGateway.kt
-              PowerCoreTapImpact.kt
-              PremiumGameFeel.kt
-              PremiumGameFeelOverlay.kt
-              PremiumGameFeelV2.kt
-              PremiumGameUiV2.kt
-              PremiumGoalsCenter.kt
-              PremiumMotion.kt
-              PremiumSfx.kt
-              PremiumSprites.kt
-              PremiumUiCompat.kt
-              PrivacyConsentManager.kt
-              ProgressionSystems.kt
-              PurchaseCreditLedger.kt
-              PurchaseImpactVfx.kt
-              PurchaseRecovery.kt
-              Retention.kt
-              ReviewedCharacterLayer.kt
-              ReviewedMachineLayer.kt
-              ReviewedTerrainLayer.kt
-              RewardedController.kt
-              RewardRequestGate.kt
-              SfxRuntime.kt
-              SingularityLensPulse.kt
-              StellarFlare.kt
-              UpgradeConstructionFlash.kt
-              UpgradeProgression.kt
-              UpgradeTreeScreen.kt
-              UpgradeTreeUi.kt
-              ViralSystems.kt
-              ViralUi.kt
-              WorldBusinessVisual.kt
-              WorldMoneyFormat.kt
-              WorldSpriteRegistry.kt
-              WorldTrafficArt.kt
-    test/
-      java/
-        com/
-          zerotoempire/
-            game/
-              BillingDiagnosticsTest.kt
-              BillingFailurePolicyTest.kt
-              BulkPurchaseTest.kt
-              CanonicalBusinessRasterTest.kt
-              CanonicalBusinessTierTest.kt
-              CanonicalCharacterRasterTest.kt
-              CanonicalFxRasterTest.kt
-              ChallengeRotationTest.kt
-              CinematicRuntimeTransitionPolicyTest.kt
-              ContentUnlocksTest.kt
-              DynastyProgressionTest.kt
-              EconomyInvariantTest.kt
-              EconomyMathBoundaryTest.kt
-              EconomySafetyTest.kt
-              EconomyTest.kt
-              EmpireNumberFormatTest.kt
-              EndgameContentTest.kt
-              EndgameProgressionTest.kt
-              IdentitySystemsTest.kt
-              InterstitialPolicyTest.kt
-              LateGameTest.kt
-              LongCampaignInvariantTest.kt
-              NumericStabilityTest.kt
-              OfflineAutomationTest.kt
-              OfflineProgressBoundaryTest.kt
-              OfflineProgressLifecycleTest.kt
-              OfflineTemporalTest.kt
-              PlayableFlowTest.kt
-              PlayBillingGatewayInvariantTest.kt
-              PreDeviceSmokeInvariantTest.kt
-              PrestigeCycleTest.kt
-              PrestigeResetTest.kt
-              ProgressionCycleTest.kt
-              PurchaseCreditLedgerTest.kt
-              PurchaseRecoveryTest.kt
-              ReviewedTerrainLayerTest.kt
-              RewardRequestGateTest.kt
-              RuntimePerformanceInvariantTest.kt
-              StoreProductResolverTest.kt
-              UpgradeProgressionTest.kt
-              WeeklyChallengeTest.kt
-  build.gradle.kts
-docs/
-  ASCENDANT_CITY_ERA1_SPRITE_MANIFEST.json
-tools/
-  android/
-    emulator_functional_smoke.sh
-    test_ui_click_target.py
-    test_ui_dump_retry.py
-    test_ui_economy_probe.py
-    ui_click_target.py
-    ui_dump_retry.sh
-    ui_economy_probe.py
-    validate_manifest_policy.py
-  assets/
-    __init__.py
-    manifest.py
-    metadata.py
-    pipeline.py
-    qa_report.py
-    static_processing.py
-    test_manifest.py
-    test_metadata.py
-    test_pipeline.py
-    test_qa_report.py
-    test_static_processing.py
-    test_workflow_policy.py
-  sprites/
-    animation_batch_planner.py
-    audit_complete_sprite_manifest.py
-    build_sprite_contact_sheet.py
-    colab_mass_factory.py
-    hf_public_flux_factory.py
-    hf_sprite_factory.py
-    hf_static_manifest_factory.py
-    integrate_fx04_runtime.py
-    integrate_fx05_runtime.py
-    integrate_fx06_runtime.py
-    integrate_fx07_runtime.py
-    kaggle_building_family_factory_v11.py
-    kaggle_building_family_factory_v13.py
-    kaggle_building_family_factory_v14.py
-    kaggle_building_family_factory_v15.py
-    kaggle_building_family_factory_v16.py
-    kaggle_building_family_factory.py
-    kaggle_character_sheet_factory_v1.py
-    kaggle_fx_sheet_factory_v1.py
-    kaggle_sprite_factory.py
-    lightning_autopilot_loop.sh
-    lightning_install_autopilot.sh
-    lightning_remote_runner.py
-    lightning_studio_factory.py
-    manifest_batch_planner.py
-    multi_provider_static_manifest_factory.py
-    plan_sprite_batches.py
-    pollinations_building_batch.py
-    pollinations_building_factory.py
-    pollinations_character_sheet_factory.py
-    procedural_fx_factory.py
-    procedural_terrain_factory.py
-    process_final_sprites.py
-    validate_animation_sheet.py
-    validate_runtime_asset.py
-  process_final_assets.py
-  validate_isolated_sprite.py
-.repo-standards.yml
-AGENTS.md
+src/
+  debug/
+    java/
+      com/
+        zerotoempire/
+          game/
+            SmokeSeedReceiver.kt
+  main/
+    java/
+      com/
+        zerotoempire/
+          game/
+            AdaptiveMusic.kt
+            AdMobInterstitialGateway.kt
+            AdMobRewardedGateway.kt
+            Analytics.kt
+            AscendantCityWorld.kt
+            AscensionAdvisor.kt
+            BillingDiagnostics.kt
+            BillingFailurePolicy.kt
+            BulkPurchase.kt
+            BulkQuoteDock.kt
+            BusinessGroup01Art.kt
+            BusinessGroup01Evolution.kt
+            BusinessGroup02Art.kt
+            BusinessGroup02Evolution.kt
+            BusinessGroup03Art.kt
+            BusinessGroup03Evolution.kt
+            BusinessGroup04Art.kt
+            BusinessGroup04Evolution.kt
+            CanonicalBusinessRaster.kt
+            CanonicalBusinessTier.kt
+            CanonicalCharacterRaster.kt
+            CanonicalFxRaster.kt
+            CanonicalFxSprite.kt
+            Challenges.kt
+            ChallengeUi.kt
+            CinematicArt.kt
+            CinematicRuntimeTransition.kt
+            CommerceUi.kt
+            ContentUnlocks.kt
+            DrawScopeCompat.kt
+            DroneThruster.kt
+            DynastyProgression.kt
+            EconomyMath.kt
+            ElectricArc.kt
+            EmpireArt.kt
+            EmpireArtCompat.kt
+            EmpireCoreArt.kt
+            EmpireNumberFormat.kt
+            EndgameAtmosphere.kt
+            EndgameBusinessSprites.kt
+            EndgameManagerPortrait.kt
+            EndgameProgression.kt
+            EraVistaAAA.kt
+            EraVistaCinematicOverlay.kt
+            FoundryWorldMotion.kt
+            FullScreenAdActivityPolicy.kt
+            GameEconomy.kt
+            GameEngine.kt
+            GameFeel.kt
+            GameRepository.kt
+            GameTheme.kt
+            GameViewModel.kt
+            GrowthRuntime.kt
+            GrowthTelemetry.kt
+            HologramScanSweep.kt
+            IdentitySystems.kt
+            IdentityUi.kt
+            IncomePickupSparkle.kt
+            InterstitialController.kt
+            InterstitialPolicy.kt
+            LateGame.kt
+            LiveOps.kt
+            MainActivity.kt
+            ManagerGroup01Art.kt
+            ManagerGroup02Art.kt
+            ManagerGroup03Art.kt
+            Managers.kt
+            MasteryCrownShimmer.kt
+            MetaSpriteArt.kt
+            Monetization.kt
+            MotionQuality.kt
+            OfflineProgress.kt
+            OnboardingArt.kt
+            OrbitalIonTrail.kt
+            PhaseDistortion.kt
+            PlayBillingGateway.kt
+            PowerCoreTapImpact.kt
+            PremiumGameFeel.kt
+            PremiumGameFeelOverlay.kt
+            PremiumGameFeelV2.kt
+            PremiumGameUiV2.kt
+            PremiumGoalsCenter.kt
+            PremiumMotion.kt
+            PremiumSfx.kt
+            PremiumSprites.kt
+            PremiumUiCompat.kt
+            PrivacyConsentManager.kt
+            ProgressionSystems.kt
+            PurchaseCreditLedger.kt
+            PurchaseImpactVfx.kt
+            PurchaseRecovery.kt
+            Retention.kt
+            ReviewedCharacterLayer.kt
+            ReviewedMachineLayer.kt
+            ReviewedTerrainLayer.kt
+            RewardedController.kt
+            RewardRequestGate.kt
+            SfxRuntime.kt
+            SingularityLensPulse.kt
+            StellarFlare.kt
+            UpgradeConstructionFlash.kt
+            UpgradeProgression.kt
+            UpgradeTreeScreen.kt
+            UpgradeTreeUi.kt
+            ViralSystems.kt
+            ViralUi.kt
+            WorldBusinessVisual.kt
+            WorldMoneyFormat.kt
+            WorldSpriteRegistry.kt
+            WorldTrafficArt.kt
+  test/
+    java/
+      com/
+        zerotoempire/
+          game/
+            BillingDiagnosticsTest.kt
+            BillingFailurePolicyTest.kt
+            BulkPurchaseTest.kt
+            CanonicalBusinessRasterTest.kt
+            CanonicalBusinessTierTest.kt
+            CanonicalCharacterRasterTest.kt
+            CanonicalFxRasterTest.kt
+            ChallengeRotationTest.kt
+            CinematicRuntimeTransitionPolicyTest.kt
+            ContentUnlocksTest.kt
+            DynastyProgressionTest.kt
+            EconomyInvariantTest.kt
+            EconomyMathBoundaryTest.kt
+            EconomySafetyTest.kt
+            EconomyTest.kt
+            EmpireNumberFormatTest.kt
+            EndgameContentTest.kt
+            EndgameProgressionTest.kt
+            IdentitySystemsTest.kt
+            InterstitialPolicyTest.kt
+            LateGameTest.kt
+            LongCampaignInvariantTest.kt
+            NumericStabilityTest.kt
+            OfflineAutomationTest.kt
+            OfflineProgressBoundaryTest.kt
+            OfflineProgressLifecycleTest.kt
+            OfflineTemporalTest.kt
+            PlayableFlowTest.kt
+            PlayBillingGatewayInvariantTest.kt
+            PreDeviceSmokeInvariantTest.kt
+            PrestigeCycleTest.kt
+            PrestigeResetTest.kt
+            ProgressionCycleTest.kt
+            PurchaseCreditLedgerTest.kt
+            PurchaseRecoveryTest.kt
+            ReviewedTerrainLayerTest.kt
+            RewardRequestGateTest.kt
+            RuntimePerformanceInvariantTest.kt
+            StoreProductResolverTest.kt
+            UpgradeProgressionTest.kt
+            WeeklyChallengeTest.kt
 build.gradle.kts
-PROJECT_CONTINUITY.md
-README.md
-settings.gradle.kts
 ```
 
 # Files
 
-## File: .circleci/config.yml
-```yaml
-version: 2.1
-
-jobs:
-  recover-kaggle-sprite-run:
-    docker:
-      - image: cimg/python:3.12
-    resource_class: small
-    steps:
-      - checkout
-
-      - run:
-          name: Gate CircleCI Kaggle recovery
-          command: |
-            set -euo pipefail
-            TRIGGER="ops/circleci-recovery-trigger.txt"
-            if [ ! -f "$TRIGGER" ] || ! grep -q '^active=true$' "$TRIGGER"; then
-              echo "CIRCLECI_KAGGLE_RECOVERY=SKIPPED"
-              circleci-agent step halt
-            fi
-            cat "$TRIGGER"
-
-      - run:
-          name: Verify Kaggle credentials
-          command: |
-            set -euo pipefail
-            test -n "${KAGGLE_USERNAME:-}" || { echo 'Missing KAGGLE_USERNAME in CircleCI project/context'; exit 2; }
-            test -n "${KAGGLE_KEY:-}" || { echo 'Missing KAGGLE_KEY in CircleCI project/context'; exit 2; }
-
-      - run:
-          name: Install Kaggle CLI
-          command: python -m pip install --upgrade kaggle
-
-      - run:
-          name: Monitor existing Kaggle kernel for up to 4.5 hours
-          no_output_timeout: 5h
-          command: |
-            set -u
-            mkdir -p /tmp/kaggle-recovery
-            slug="${KAGGLE_USERNAME}/zero-to-empire-sprite-factory"
-            final_status='UNKNOWN'
-            for i in $(seq 1 270); do
-              now="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-              status="$(kaggle kernels status "$slug" 2>&1 || true)"
-              printf '%s %s\n' "$now" "$status" | tee -a /tmp/kaggle-recovery/status.log
-              if echo "$status" | grep -qi 'complete'; then final_status='COMPLETE'; break; fi
-              if echo "$status" | grep -Eqi 'error|cancel|failed'; then final_status='ERROR'; break; fi
-              sleep 60
-            done
-            echo "$final_status" > /tmp/kaggle-recovery/final-status.txt
-            echo "CIRCLECI_KAGGLE_FINAL_STATUS=$final_status"
-
-      - run:
-          name: Download existing Kaggle outputs and log
-          when: always
-          command: |
-            set +e
-            mkdir -p /tmp/kaggle-recovery/output
-            kaggle kernels output "${KAGGLE_USERNAME}/zero-to-empire-sprite-factory" -p /tmp/kaggle-recovery/output --force 2>&1 | tee /tmp/kaggle-recovery/download.log
-            find /tmp/kaggle-recovery -maxdepth 5 -type f -print | sort | tee /tmp/kaggle-recovery/files.txt
-            exit 0
-
-      - store_artifacts:
-          path: /tmp/kaggle-recovery
-          destination: kaggle-recovered-sprite-batch
-
-      - run:
-          name: Require terminal Kaggle state
-          when: always
-          command: |
-            state="$(cat /tmp/kaggle-recovery/final-status.txt 2>/dev/null || echo UNKNOWN)"
-            echo "CIRCLECI_KAGGLE_FINAL_STATUS=$state"
-            test "$state" = COMPLETE || test "$state" = ERROR
-
-workflows:
-  circleci-kaggle-recovery:
-    jobs:
-      - recover-kaggle-sprite-run
-```
-
-## File: .github/workflows/ai-repo-map.yml
-```yaml
-name: Repository standards
-
-on:
-  push:
-    branches: [main]
-    paths-ignore:
-      - ".ai/**"
-  workflow_dispatch:
-
-permissions:
-  contents: write
-
-concurrency:
-  group: repo-standards-${{ github.repository }}-${{ github.ref }}
-  cancel-in-progress: true
-
-jobs:
-  ai-context:
-    uses: dbrckk/repo-standards/.github/workflows/reusable-ai-repo-map.yml@v4
-
-  repo-health:
-    needs: ai-context
-    uses: dbrckk/repo-standards/.github/workflows/reusable-repo-health.yml@v4
-
-  project-state:
-    needs: repo-health
-    uses: dbrckk/repo-standards/.github/workflows/reusable-project-state.yml@v4
-
-  context-intelligence:
-    needs: project-state
-    uses: dbrckk/repo-standards/.github/workflows/reusable-context-intelligence.yml@v4
-```
-
-## File: .github/workflows/android-emulator-smoke.yml
-```yaml
-name: Android Emulator Smoke
-
-on:
-  workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/android-emulator-smoke.yml'
-      - 'ops/android-emulator-smoke-trigger.txt'
-      - 'tools/android/emulator_functional_smoke.sh'
-      - 'tools/android/ui_dump_retry.sh'
-      - 'tools/android/test_ui_dump_retry.py'
-      - 'tools/android/ui_economy_probe.py'
-      - 'tools/android/test_ui_economy_probe.py'
-      - 'tools/android/ui_click_target.py'
-      - 'tools/android/test_ui_click_target.py'
-      - 'app/**'
-      - 'build.gradle.kts'
-      - 'settings.gradle.kts'
-      - 'gradle.properties'
-
-permissions:
-  contents: read
-
-concurrency:
-  group: android-emulator-smoke
-  cancel-in-progress: true
-
-jobs:
-  smoke:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: '17'
-
-      - uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.13'
-
-      - name: Test emulator smoke helpers
-        run: |
-          python3 tools/android/test_ui_dump_retry.py
-          python3 tools/android/test_ui_economy_probe.py
-          python3 tools/android/test_ui_click_target.py
-
-      - name: Build debug APK
-        run: gradle --no-daemon assembleDebug
-
-      - name: Enable KVM
-        run: |
-          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-          sudo udevadm control --reload-rules
-          sudo udevadm trigger --name-match=kvm
-
-      - name: Emulator install and launch smoke
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 35
-          target: google_apis
-          arch: x86_64
-          profile: pixel_6
-          disable-animations: true
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          script: bash tools/android/emulator_functional_smoke.sh
-
-      - name: Upload smoke evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: android-emulator-smoke-evidence
-          path: |
-            /tmp/zte-functional/**
-          if-no-files-found: warn
-          retention-days: 14
-```
-
-## File: .github/workflows/android.yml
-```yaml
-name: Android CI
-
-on:
-  push:
-    branches: [ main ]
-    paths:
-      - 'app/**'
-      - 'art/production/**'
-      - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
-      - 'tools/android/**'
-      - 'build.gradle.kts'
-      - 'settings.gradle.kts'
-      - 'gradle.properties'
-      - 'gradle/**'
-      - '.github/workflows/android.yml'
-  pull_request:
-    branches: [ main ]
-    paths:
-      - 'app/**'
-      - 'art/production/**'
-      - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
-      - 'tools/android/**'
-      - 'build.gradle.kts'
-      - 'settings.gradle.kts'
-      - 'gradle.properties'
-      - 'gradle/**'
-      - '.github/workflows/android.yml'
-  workflow_dispatch:
-
-concurrency:
-  group: android-ci-${{ github.ref }}
-  cancel-in-progress: true
-
-permissions:
-  contents: read
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    timeout-minutes: 25
-    steps:
-      - name: Checkout
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-        with:
-          fetch-depth: 2
-
-      - name: Detect sprite-only runtime update
-        id: change_scope
-        shell: bash
-        run: |
-          set -euo pipefail
-          sprite_only=false
-          if [ "${{ github.event_name }}" = "push" ] && git rev-parse HEAD^ >/dev/null 2>&1; then
-            mapfile -t changed < <(git diff --name-only HEAD^ HEAD)
-            printf 'changed files:\n%s\n' "${changed[*]}"
-            if (( ${#changed[@]} > 0 )); then
-              sprite_only=true
-              for file in "${changed[@]}"; do
-                case "$file" in
-                  app/src/main/res/drawable-nodpi/*_final.webp|app/src/main/res/drawable-nodpi/*_final.png) ;;
-                  *) sprite_only=false; break ;;
-                esac
-              done
-            fi
-          fi
-          echo "sprite_only=${sprite_only}" >> "$GITHUB_OUTPUT"
-          echo "sprite_only=${sprite_only}"
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
-        with:
-          distribution: temurin
-          java-version: '17'
-
-      - name: Set up Gradle 8.13
-        uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
-        with:
-          gradle-version: '8.13'
-
-      - name: Verify Gradle toolchain
-        run: gradle --version
-
-      - name: Validate Android manifest policy
-        run: python3 tools/android/validate_manifest_policy.py
-
-      - name: Build debug APK
-        run: gradle assembleDebug --stacktrace
-
-      - name: Run unit tests
-        if: steps.change_scope.outputs.sprite_only != 'true'
-        run: gradle testDebugUnitTest --stacktrace
-
-      - name: Run lint
-        if: steps.change_scope.outputs.sprite_only != 'true'
-        run: gradle lintDebug --stacktrace
-
-      - name: Build release AAB
-        if: steps.change_scope.outputs.sprite_only != 'true'
-        run: gradle bundleRelease --stacktrace
-
-      - name: Audit merged release manifest
-        if: steps.change_scope.outputs.sprite_only != 'true'
-        shell: bash
-        run: |
-          set -euo pipefail
-          MANIFEST="app/build/intermediates/merged_manifest/release/processReleaseMainManifest/AndroidManifest.xml"
-          if [ ! -s "$MANIFEST" ]; then
-            MANIFEST="$(find app/build/intermediates -path '*release*' -name AndroidManifest.xml -type f | head -n 1)"
-          fi
-          test -n "$MANIFEST"
-          test -s "$MANIFEST"
-          cp "$MANIFEST" merged-release-AndroidManifest.xml
-          python3 - <<'PY'
-          import xml.etree.ElementTree as ET
-          p="merged-release-AndroidManifest.xml"
-          r=ET.parse(p).getroot()
-          A="{http://schemas.android.com/apk/res/android}"
-          perms=sorted({n.get(A+"name") for n in r.findall("uses-permission") if n.get(A+"name")})
-          allowed_permissions={
-              "android.permission.ACCESS_ADSERVICES_AD_ID",
-              "android.permission.ACCESS_ADSERVICES_ATTRIBUTION",
-              "android.permission.ACCESS_ADSERVICES_TOPICS",
-              "android.permission.ACCESS_NETWORK_STATE",
-              "android.permission.FOREGROUND_SERVICE",
-              "android.permission.INTERNET",
-              "android.permission.WAKE_LOCK",
-              "com.android.vending.BILLING",
-              "com.google.android.gms.permission.AD_ID",
-              "com.zerotoempire.game.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION",
-          }
-          actual_permissions=set(perms)
-          if actual_permissions != allowed_permissions:
-              unexpected=sorted(actual_permissions-allowed_permissions)
-              missing=sorted(allowed_permissions-actual_permissions)
-              raise SystemExit(
-                  "Merged permission allowlist drift. "
-                  f"unexpected={unexpected} missing={missing} actual={perms}"
-              )
-          app=r.find("application")
-          if app is None: raise SystemExit("merged application missing")
-          exported=[]
-          for tag in ("activity","activity-alias","service","receiver","provider"):
-              for n in app.findall(tag):
-                  if n.get(A+"exported")=="true":
-                      exported.append((tag,n.get(A+"name")))
-          exported=sorted(exported)
-          allowed_exported=sorted([
-              ("activity","com.zerotoempire.game.MainActivity"),
-              ("receiver","androidx.profileinstaller.ProfileInstallReceiver"),
-              ("receiver","androidx.work.impl.diagnostics.DiagnosticsReceiver"),
-              ("service","androidx.work.impl.background.systemjob.SystemJobService"),
-          ])
-          if exported != allowed_exported:
-              unexpected=sorted(set(exported)-set(allowed_exported))
-              missing=sorted(set(allowed_exported)-set(exported))
-              raise SystemExit(
-                  "Merged exported-component allowlist drift. "
-                  f"unexpected={unexpected} missing={missing} actual={exported}"
-              )
-          print("MERGED_RELEASE_PERMISSIONS="+",".join(perms))
-          print("MERGED_RELEASE_EXPORTED="+repr(exported))
-          print("MERGED_RELEASE_PERMISSION_ALLOWLIST_PASS=1")
-          print("MERGED_RELEASE_EXPORTED_ALLOWLIST_PASS=1")
-          print("MERGED_RELEASE_MANIFEST_PASS=1")
-          PY
-
-      - name: Verify release bundle
-        if: steps.change_scope.outputs.sprite_only != 'true'
-        shell: bash
-        run: |
-          set -euo pipefail
-          AAB="app/build/outputs/bundle/release/app-release.aab"
-          test -s "$AAB"
-          unzip -t "$AAB" >/dev/null
-          unzip -l "$AAB" | tee release-aab-contents.txt
-          grep -Fq "base/manifest/AndroidManifest.xml" release-aab-contents.txt
-          grep -Fq "base/dex/classes.dex" release-aab-contents.txt
-          grep -Fq "BundleConfig.pb" release-aab-contents.txt
-          sha256sum "$AAB" | tee release-aab.sha256
-          test "$(wc -c < "$AAB")" -gt 100000
-          echo "RELEASE_AAB_STRUCTURE_PASS=1" | tee release-aab-validation.txt
-
-      - name: Upload release AAB
-        if: steps.change_scope.outputs.sprite_only != 'true'
-        uses: actions/upload-artifact@v4
-        with:
-          name: unsigned-release-aab
-          path: |
-            app/build/outputs/bundle/release/*.aab
-            release-aab.sha256
-            release-aab-contents.txt
-            release-aab-validation.txt
-            merged-release-AndroidManifest.xml
-          if-no-files-found: error
-          retention-days: 14
-
-      - name: Upload APK
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: debug-apk
-          path: app/build/outputs/apk/debug/*.apk
-          if-no-files-found: ignore
-          retention-days: 14
-```
-
-## File: .github/workflows/asset-pipeline-ci.yml
-```yaml
-name: Asset Pipeline CI
-
-on:
-  pull_request:
-    branches: [ main ]
-    paths:
-      - 'tools/assets/**'
-      - 'tools/sprites/audit_complete_sprite_manifest.py'
-      - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
-      - 'docs/art/UNIFIED_ASSET_PIPELINE.md'
-      - '.github/workflows/asset-pipeline-ci.yml'
-  push:
-    branches: [ main ]
-    paths:
-      - 'tools/assets/**'
-      - 'tools/sprites/audit_complete_sprite_manifest.py'
-      - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
-      - 'docs/art/UNIFIED_ASSET_PIPELINE.md'
-      - '.github/workflows/asset-pipeline-ci.yml'
-  workflow_dispatch:
-
-permissions:
-  contents: read
-
-concurrency:
-  group: asset-pipeline-ci-${{ github.ref }}
-  cancel-in-progress: true
-
-jobs:
-  validate:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - name: Checkout
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-
-      - name: Set up Python 3.12
-        uses: actions/setup-python@b64ffcaf5b410884ad320a9cfac8866006a109aa # v5
-        with:
-          python-version: '3.12'
-
-      - name: Install manifest audit dependencies
-        run: python -m pip install --disable-pip-version-check Pillow==11.3.0
-
-      - name: Run unified asset pipeline unit tests
-        run: python -m unittest discover -s tools/assets -p 'test_*.py' -v
-
-      - name: Audit authoritative sprite manifest
-        run: python tools/sprites/audit_complete_sprite_manifest.py --allow-pending
-```
-
-## File: .github/workflows/build-test-apk.yml
-```yaml
-name: Build Test APK
-
-on:
-  workflow_dispatch:
-  push:
-    branches: [ main ]
-    paths:
-      - '.github/workflows/build-test-apk.yml'
-      - 'ops/build-test-apk-trigger.txt'
-
-permissions:
-  contents: write
-
-jobs:
-  build-test-apk:
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - name: Checkout
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
-        with:
-          distribution: temurin
-          java-version: '17'
-
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
-        with:
-          gradle-version: '8.13'
-
-      - name: Run debug unit tests
-        run: gradle --no-daemon testDebugUnitTest
-
-      - name: Build installable debug APK
-        run: gradle --no-daemon assembleDebug
-
-      - name: Verify APK
-        run: |
-          set -euo pipefail
-          APK="app/build/outputs/apk/debug/app-debug.apk"
-          test -s "$APK"
-          sha256sum "$APK" > app/build/outputs/apk/debug/SHA256SUMS.txt
-          cp "$APK" app/build/outputs/apk/debug/ZeroToEmpire-Test.apk
-
-      - name: Upload downloadable Android test build
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: ZeroToEmpire-Android-Test-APK
-          path: |
-            app/build/outputs/apk/debug/ZeroToEmpire-Test.apk
-            app/build/outputs/apk/debug/SHA256SUMS.txt
-          if-no-files-found: error
-          retention-days: 90
-
-      - name: Publish GitHub test release
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          TAG="android-test-${GITHUB_RUN_NUMBER}"
-          APK="app/build/outputs/apk/debug/ZeroToEmpire-Test.apk"
-          SUMS="app/build/outputs/apk/debug/SHA256SUMS.txt"
-          gh release create "$TAG" \
-            "$APK" \
-            "$SUMS" \
-            --repo "$GITHUB_REPOSITORY" \
-            --target "$GITHUB_SHA" \
-            --title "Zero → Empire Android Test #${GITHUB_RUN_NUMBER}" \
-            --notes "Installable Android test APK generated from commit ${GITHUB_SHA}. This is a debug test build for direct device testing, not a Play Store production release."
-```
-
-## File: .github/workflows/final-aaa-assets.yml
-```yaml
-name: Final AAA Asset Pipeline
-
-on:
-  workflow_dispatch:
-  push:
-    paths:
-      - 'art/generated/**/*.png'
-      - 'art/generated/**/*.webp'
-      - 'tools/validate_isolated_sprite.py'
-      - 'tools/process_final_assets.py'
-      - 'art/generator/SINGLE_SPRITE_GENERATOR.md'
-      - '.github/workflows/final-aaa-assets.yml'
-
-permissions:
-  contents: write
-
-concurrency:
-  group: final-aaa-assets-${{ github.ref }}
-  cancel-in-progress: false
-
-jobs:
-  process:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      - name: Install image tooling
-        run: python -m pip install --disable-pip-version-check Pillow==11.3.0
-
-      - name: Reject sheets, atlases and non-isolated art
-        run: python tools/validate_isolated_sprite.py
-
-      - name: Process generated art
-        run: python tools/process_final_assets.py
-
-      - name: Validate Android resource names
-        run: |
-          bad=$(find app/src/main/res/drawable-nodpi -maxdepth 1 -type f -name 'zte_*_final.*' -printf '%f\n' | grep -Ev '^[a-z0-9_]+\.(png|webp)$' || true)
-          test -z "$bad" || { echo "$bad"; exit 1; }
-
-      - name: Commit processed assets
-        run: |
-          if git diff --quiet -- app/src/main/res/drawable-nodpi art/processed; then
-            echo 'No processed asset changes.'
-            exit 0
-          fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add app/src/main/res/drawable-nodpi art/processed
-          git commit -m 'art: process generated sprites into runtime assets'
-          git push
-```
-
-## File: .github/workflows/final-sprite-pipeline.yml
-```yaml
-name: Final Sprite Pipeline (manual fallback)
-
-on:
-  workflow_dispatch:
-
-permissions:
-  contents: write
-
-concurrency:
-  group: final-sprite-pipeline-${{ github.ref }}
-  cancel-in-progress: true
-
-jobs:
-  process:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - name: Checkout
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-
-      - name: Set up Python
-        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
-        with:
-          python-version: '3.12'
-
-      - name: Install deterministic image tooling
-        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
-
-      - name: Detect sprite candidates
-        id: candidates
-        shell: bash
-        run: |
-          set -euo pipefail
-          shopt -s nullglob
-          files=(art/incoming/final-sprites/*.png)
-          if (( ${#files[@]} == 0 )); then
-            echo 'has_candidates=false' >> "$GITHUB_OUTPUT"
-            echo 'No PNG candidates.'
-          else
-            echo 'has_candidates=true' >> "$GITHUB_OUTPUT"
-            printf 'Found %s candidate(s).\n' "${#files[@]}"
-          fi
-
-      - name: Process and validate final sprite candidates
-        if: steps.candidates.outputs.has_candidates == 'true'
-        run: python tools/sprites/process_final_sprites.py
-
-      - name: Commit newly finalized runtime sprites
-        if: steps.candidates.outputs.has_candidates == 'true'
-        shell: bash
-        run: |
-          set -euo pipefail
-          if git diff --quiet -- app/src/main/res/drawable-nodpi/ && [ -z "$(git ls-files --others --exclude-standard app/src/main/res/drawable-nodpi/)" ]; then
-            echo 'No runtime sprite changes to commit.'
-            exit 0
-          fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add app/src/main/res/drawable-nodpi/*_final.webp
-          git commit -m 'art: finalize validated sprite runtime assets'
-          git push
-
-      - name: Upload processed runtime sprites
-        if: steps.candidates.outputs.has_candidates == 'true'
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: ZeroToEmpire-final-runtime-sprites
-          path: app/src/main/res/drawable-nodpi/*_final.webp
-          if-no-files-found: error
-          retention-days: 30
-```
-
-## File: .github/workflows/finalize-run66-after-ci.yml
-```yaml
-name: Finalize reviewed run66 after Android CI
-
-on:
-  push:
-    paths:
-      - ".github/workflows/finalize-run66-after-ci.yml"
-  workflow_dispatch:
-
-permissions:
-  contents: write
-  actions: read
-
-jobs:
-  finalize:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Require green Android CI 619 on run66 integration
-        env:
-          GH_TOKEN: ${{ github.token }}
-        shell: bash
-        run: |
-          for i in $(seq 1 60); do
-            status=$(gh run view 34078378863 --json status --jq .status)
-            conclusion=$(gh run view 34078378863 --json conclusion --jq .conclusion)
-            head=$(gh run view 34078378863 --json headSha --jq .headSha)
-            echo "Android CI #619 status=$status conclusion=$conclusion head=$head"
-            if [ "$head" != "bf980a1cd1d9a51ec2052cc4aa23d89422043688" ]; then
-              echo "Unexpected CI head" >&2
-              exit 1
-            fi
-            if [ "$status" = "completed" ]; then
-              [ "$conclusion" = "success" ] && exit 0
-              echo "Android CI #619 did not pass" >&2
-              exit 1
-            fi
-            sleep 15
-          done
-          echo "Timed out waiting for Android CI #619" >&2
-          exit 1
-
-      - name: Reconcile strict DONE ledger
-        shell: bash
-        run: |
-          git pull --ff-only origin main
-          python - <<'PY'
-          from pathlib import Path
-          import re
-
-          manifest_path = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          m = manifest_path.read_text()
-
-          # Prior run51/52 assets already have green Android CI #618; canonical rows
-          # remained RUNTIME only because the ledger promotion had not been mirrored.
-          lines = []
-          for line in m.splitlines():
-              if line.startswith('| MCH-') and line.rstrip().endswith('| RUNTIME |'):
-                  line = line[:-len('RUNTIME |')] + 'DONE |'
-              elif line.startswith('| TER-') and line.rstrip().endswith('| RUNTIME |'):
-                  line = line[:-len('RUNTIME |')] + 'DONE |'
-              elif line.startswith('| VEH-16 ') and line.rstrip().endswith('| RUNTIME |'):
-                  line = line[:-len('RUNTIME |')] + 'DONE |'
-              lines.append(line)
-          m = '\n'.join(lines) + ('\n' if m.endswith('\n') else '')
-          manifest_path.write_text(m)
-
-          progress_path = Path('docs/art/FINAL_AAA_SPRITE_PROGRESS.md')
-          p = progress_path.read_text()
-          p = p.replace('- DONE: **106 / 235**', '- DONE: **108 / 235**', 1)
-          p = p.replace('- Generated candidates accepted as DONE: **106**', '- Generated candidates accepted as DONE: **108**', 1)
-          p = p.replace('## Reviewed FLUX run 66 — 2 assets awaiting green CI', '## Reviewed FLUX run 66 — 2 DONE', 1)
-          p = p.replace('The two accepted assets remain RUNTIME until Android CI is green on their integration commit.', 'Android CI run `34078378863` (#619) completed successfully on integration commit `bf980a1cd1d9a51ec2052cc4aa23d89422043688`; both accepted assets are therefore strict DONE.', 1)
-          progress_path.write_text(p)
-          PY
-
-      - name: Commit strict DONE reconciliation
-        shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md docs/art/FINAL_AAA_SPRITE_PROGRESS.md
-          if git diff --cached --quiet; then
-            exit 0
-          fi
-          git commit -m "art: mark reviewed run66 assets strict DONE"
-          git push origin HEAD:main
-```
-
-## File: .github/workflows/finalize-run68-after-ci.yml
-```yaml
-name: Finalize reviewed run68 after Android CI
-
-on:
-  push:
-    paths:
-      - ".github/workflows/finalize-run68-after-ci.yml"
-  workflow_dispatch:
-
-permissions:
-  contents: write
-  actions: write
-
-jobs:
-  finalize:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Require reviewed run68 integration ancestry
-        id: gate
-        run: |
-          git fetch origin main
-          git merge-base --is-ancestor 49b501ece150ef8409875a41022c0a6752d2c469 origin/main
-          echo "sha=$(git rev-parse origin/main)" >> "$GITHUB_OUTPUT"
-
-      - name: Dispatch Android CI explicitly
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh workflow run android.yml --ref main
-
-      - name: Wait for green Android CI on descendant main
-        id: android
-        env:
-          GH_TOKEN: ${{ github.token }}
-          SHA: ${{ steps.gate.outputs.sha }}
-        run: |
-          for i in $(seq 1 80); do
-            row=$(gh run list --workflow android.yml --commit "$SHA" --json databaseId,status,conclusion,headSha --limit 5 --jq '.[0] // empty')
-            if [ -n "$row" ]; then
-              run_id=$(echo "$row" | jq -r .databaseId)
-              status=$(echo "$row" | jq -r .status)
-              conclusion=$(echo "$row" | jq -r '.conclusion // ""')
-              head=$(echo "$row" | jq -r .headSha)
-              echo "Android CI run=$run_id status=$status conclusion=$conclusion head=$head"
-              if [ "$head" = "$SHA" ] && [ "$status" = "completed" ]; then
-                [ "$conclusion" = "success" ] || exit 1
-                echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
-                exit 0
-              fi
-            fi
-            sleep 15
-          done
-          echo "Timed out waiting for Android CI on $SHA" >&2
-          exit 1
-
-      - name: Reconcile run68 strict DONE
-        env:
-          RUN_ID: ${{ steps.android.outputs.run_id }}
-          CI_SHA: ${{ steps.gate.outputs.sha }}
-        run: |
-          git pull --ff-only origin main
-          python - <<'PY'
-          from pathlib import Path
-          import os, re
-          ids = ['MCH-05-1', 'MCH-07-0', 'TER-05']
-          manifest = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          m = manifest.read_text()
-          for asset_id in ids:
-              pattern = rf'(^\| {re.escape(asset_id)} \|.*\| )RUNTIME( \|$)'
-              m, n = re.subn(pattern, r'\1DONE\2', m, flags=re.M)
-              if n != 1:
-                  # idempotent success if a parallel finalizer already marked it DONE.
-                  done = re.search(rf'^\| {re.escape(asset_id)} \|.*\| DONE \|$', m, flags=re.M)
-                  if not done:
-                      raise SystemExit(f'expected RUNTIME/DONE row for {asset_id}')
-          manifest.write_text(m)
-
-          progress = Path('docs/art/FINAL_AAA_SPRITE_PROGRESS.md')
-          p = progress.read_text()
-          p = re.sub(r'- DONE: \*\*\d+ / 235\*\*', '- DONE: **111 / 235**', p, count=1)
-          p = re.sub(r'- Generated candidates accepted as DONE: \*\*\d+\*\*', '- Generated candidates accepted as DONE: **111**', p, count=1)
-          p = p.replace('## Reviewed FLUX run 68 — 3 assets awaiting green CI', '## Reviewed FLUX run 68 — 3 DONE', 1)
-          old = 'The three accepted assets remain RUNTIME until Android CI is green on their integration commit.'
-          new = f"Android CI run `{os.environ['RUN_ID']}` completed successfully on descendant commit `{os.environ['CI_SHA']}` with all three run-68 runtime assets unchanged; all three are therefore strict DONE."
-          p = p.replace(old, new, 1)
-          progress.write_text(p)
-          PY
-
-      - name: Commit strict DONE reconciliation
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md docs/art/FINAL_AAA_SPRITE_PROGRESS.md
-          if git diff --cached --quiet; then
-            exit 0
-          fi
-          git commit -m "art: mark reviewed run68 assets strict DONE"
-          git push origin HEAD:main
-```
-
-## File: .github/workflows/free-hf-sprite-factory.yml
-```yaml
-name: Free HF Sprite Factory (manual fallback)
-
-on:
-  workflow_dispatch:
-    inputs:
-      target:
-        description: Manifest asset ID to generate
-        required: true
-        default: FX-04
-
-permissions:
-  contents: write
-
-concurrency:
-  group: free-hf-sprite-factory
-  cancel-in-progress: true
-
-jobs:
-  generate:
-    runs-on: ubuntu-latest
-    timeout-minutes: 35
-    env:
-      HF_TOKEN: ${{ secrets.HF_TOKEN }}
-      HF_SPACE_URL: https://mcp-tools-z-image-turbo.hf.space
-      SPRITE_TARGET: ${{ inputs.target }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-      - name: Set up Python
-        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
-        with:
-          python-version: '3.12'
-      - name: Install deterministic image tooling
-        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
-      - name: Resolve target paths
-        id: target
-        shell: bash
-        run: |
-          set -euo pipefail
-          case "${SPRITE_TARGET}" in
-            FX-04) stem='zte_fx_04_final' ;;
-            FX-05) stem='zte_fx_05_final' ;;
-            FX-06) stem='zte_fx_06_final' ;;
-            FX-07) stem='zte_fx_07_final' ;;
-            *) echo "Unsupported target ${SPRITE_TARGET}" >&2; exit 2 ;;
-          esac
-          echo "stem=${stem}" >> "$GITHUB_OUTPUT"
-          if [ -s "art/incoming/final-sprites/${stem}.png" ]; then echo 'candidate_exists=true' >> "$GITHUB_OUTPUT"; else echo 'candidate_exists=false' >> "$GITHUB_OUTPUT"; fi
-      - name: Require authenticated Hugging Face access
-        if: steps.target.outputs.candidate_exists != 'true'
-        shell: bash
-        run: |
-          set -euo pipefail
-          if [ -z "${HF_TOKEN:-}" ]; then echo 'Missing Actions secret HF_TOKEN.' >&2; exit 2; fi
-      - name: Generate and validate one candidate
-        if: steps.target.outputs.candidate_exists != 'true'
-        run: python tools/sprites/hf_sprite_factory.py
-      - name: Finalize candidate into runtime WebP
-        run: python tools/sprites/process_final_sprites.py
-      - name: Integrate FX-04 runtime
-        if: env.SPRITE_TARGET == 'FX-04'
-        run: python tools/sprites/integrate_fx04_runtime.py
-      - name: Integrate FX-05 runtime
-        if: env.SPRITE_TARGET == 'FX-05'
-        run: python tools/sprites/integrate_fx05_runtime.py
-      - name: Integrate FX-06 runtime
-        if: env.SPRITE_TARGET == 'FX-06'
-        run: python tools/sprites/integrate_fx06_runtime.py
-      - name: Integrate FX-07 runtime
-        if: env.SPRITE_TARGET == 'FX-07'
-        run: python tools/sprites/integrate_fx07_runtime.py
-      - name: Set up JDK 17
-        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
-        with:
-          distribution: temurin
-          java-version: '17'
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
-        with:
-          gradle-version: '8.13'
-      - name: Verify Android runtime integration
-        run: gradle --no-daemon testDebugUnitTest testReleaseUnitTest lintRelease assembleDebug assembleRelease bundleRelease
-      - name: Commit only after verification succeeds
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add art/incoming/final-sprites/ app/src/main/res/drawable-nodpi/ app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt app/src/main/java/com/zerotoempire/game/PurchaseImpactVfx.kt
-          if git diff --cached --quiet; then echo 'No validated runtime changes to commit.'; exit 0; fi
-          git commit -m "art: integrate ${SPRITE_TARGET} validated runtime asset"
-          git push
-      - name: Upload candidate for inspection
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: generated-${{ env.SPRITE_TARGET }}
-          path: art/incoming/final-sprites/${{ steps.target.outputs.stem }}.png
-          if-no-files-found: error
-          retention-days: 30
-      - name: Upload finalized runtime sprite
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: runtime-${{ env.SPRITE_TARGET }}
-          path: app/src/main/res/drawable-nodpi/${{ steps.target.outputs.stem }}.webp
-          if-no-files-found: error
-          retention-days: 30
-```
-
-## File: .github/workflows/hf-public-flux-building.yml
-```yaml
-name: HF Public FLUX Building Candidate
-
-on:
-  workflow_dispatch:
-    inputs:
-      target:
-        description: Optional TODO building ID (e.g. BLD-04-T0)
-        required: false
-        default: ''
-
-permissions:
-  contents: read
-
-concurrency:
-  group: hf-public-flux-building
-  cancel-in-progress: false
-
-jobs:
-  generate:
-    runs-on: ubuntu-latest
-    timeout-minutes: 35
-    env:
-      HF_TOKEN: ${{ secrets.HF_TOKEN }}
-      SPRITE_TARGET: ${{ inputs.target || '' }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Install client and strict image tooling
-        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0' 'gradio_client>=1.13,<2'
-      - name: Generate one building candidate through public FLUX Space
-        run: python -u tools/sprites/hf_public_flux_factory.py
-      - name: Resolve generated target
-        id: target
-        shell: bash
-        run: |
-          set -euo pipefail
-          f=$(find art/incoming/final-sprites -maxdepth 1 -type f -name 'zte_business_*_final.png' -newer art/production/hf-public-flux-report.json 2>/dev/null | head -1 || true)
-          if [ -z "$f" ]; then
-            f=$(find art/incoming/final-sprites -maxdepth 1 -type f -name 'zte_business_*_final.png' | tail -1)
-          fi
-          test -s "$f"
-          echo "file=$f" >> "$GITHUB_OUTPUT"
-          echo "stem=$(basename "$f" .png)" >> "$GITHUB_OUTPUT"
-      - name: Strict technical QA
-        shell: bash
-        run: |
-          set -euo pipefail
-          f='${{ steps.target.outputs.file }}'
-          python tools/sprites/build_sprite_contact_sheet.py --files "$f" --output art/production/hf-public-flux-contact-sheet.png --report art/production/hf-public-flux-qa.json
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          d=json.loads(Path('art/production/hf-public-flux-qa.json').read_text())
-          rows=d.get('assets',[])
-          if len(rows)!=1 or not rows[0].get('pass'):
-              raise SystemExit('Strict QA rejected public FLUX candidate: '+json.dumps(rows))
-          print('HF_PUBLIC_FLUX_STRICT_QA_PASS=1')
-          PY
-      - name: Verify runtime finalizer accepts candidate
-        shell: bash
-        run: |
-          stem='${{ steps.target.outputs.stem }}'
-          SPRITE_TARGETS="$stem" python tools/sprites/process_final_sprites.py
-      - name: Upload candidate and QA evidence only
-        uses: actions/upload-artifact@v4
-        with:
-          name: hf-public-flux-building-candidate
-          path: |
-            ${{ steps.target.outputs.file }}
-            app/src/main/res/drawable-nodpi/${{ steps.target.outputs.stem }}.webp
-            art/production/hf-public-flux-report.json
-            art/production/hf-public-flux-qa.json
-            art/production/hf-public-flux-contact-sheet.png
-          if-no-files-found: error
-          retention-days: 14
-```
-
-## File: .github/workflows/instant-terrain-batch.yml
-```yaml
-name: Instant Terrain Batch
-
-on:
-  workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - tools/sprites/procedural_terrain_factory.py
-      - .github/workflows/instant-terrain-batch.yml
-
-permissions:
-  contents: write
-
-concurrency:
-  group: instant-terrain-batch
-  cancel-in-progress: true
-
-jobs:
-  author:
-    runs-on: ubuntu-latest
-    timeout-minutes: 8
-    steps:
-      - name: Checkout
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-        with:
-          ref: main
-
-      - name: Install Pillow
-        run: python3 -m pip install --disable-pip-version-check Pillow==11.3.0
-
-      - name: Author terrain
-        run: python3 tools/sprites/procedural_terrain_factory.py
-
-      - name: Verify batch
-        shell: bash
-        run: |
-          set -euo pipefail
-          for n in 00 01 02 03 04 05 06 07 08 09 10 11 12 13; do
-            test -s "art/incoming/final-sprites/zte_terrain_${n}_final.png"
-            test -s "app/src/main/res/drawable-nodpi/zte_terrain_${n}_final.webp"
-          done
-
-      - name: Commit batch
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add art/incoming/final-sprites/zte_terrain_*_final.png app/src/main/res/drawable-nodpi/zte_terrain_*_final.webp
-          if git diff --cached --quiet; then
-            echo "Terrain batch already materialized."
-            exit 0
-          fi
-          git commit -m "art: materialize instant terrain batch"
-          git pull --rebase origin main
-          git push
-
-      - name: Upload inspection artifact
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        with:
-          name: finalized-terrain-batch
-          path: |
-            art/incoming/final-sprites/zte_terrain_*_final.png
-            app/src/main/res/drawable-nodpi/zte_terrain_*_final.webp
-          if-no-files-found: error
-          retention-days: 30
-```
-
-## File: .github/workflows/kaggle-candidate-finalize.yml
-```yaml
-name: Finalize Kaggle Sprite Candidates
-
-on:
-  workflow_dispatch:
-
-permissions:
-  contents: write
-
-concurrency:
-  group: kaggle-candidate-finalize
-  cancel-in-progress: false
-
-jobs:
-  finalize:
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - name: Checkout
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-        with:
-          ref: main
-          fetch-depth: 2
-
-      - name: Install Pillow
-        run: python3 -m pip install --disable-pip-version-check Pillow==11.3.0
-
-      - id: changed
-        name: Collect manually approved candidates
-        shell: bash
-        run: |
-          set -euo pipefail
-          shopt -s nullglob
-          files=(art/incoming/final-sprites/*_final.png)
-          if (( ${#files[@]} == 0 )); then
-            echo 'has_files=false' >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          stems=()
-          for file in "${files[@]}"; do stems+=("$(basename "$file" .png)"); done
-          printf '%s\n' "${files[@]}" > /tmp/kaggle-files.txt
-          echo "SPRITE_TARGETS=$(IFS=,; echo "${stems[*]}")" >> "$GITHUB_ENV"
-          echo 'has_files=true' >> "$GITHUB_OUTPUT"
-          echo "candidate_count=${#files[@]}"
-
-      - name: Build QA contact sheet
-        if: steps.changed.outputs.has_files == 'true'
-        shell: bash
-        run: |
-          mapfile -t files < /tmp/kaggle-files.txt
-          python3 tools/sprites/build_sprite_contact_sheet.py \
-            --files "${files[@]}" \
-            --output art/production/kaggle-contact-sheet.png \
-            --report art/production/kaggle-qa-report.json
-
-      - name: Require clean technical QA report
-        if: steps.changed.outputs.has_files == 'true'
-        shell: bash
-        run: |
-          python3 - <<'PY'
-          import json
-          from pathlib import Path
-          p=Path('art/production/kaggle-qa-report.json')
-          d=json.loads(p.read_text())
-          rows=d.get('assets', [])
-          if not rows:
-              raise SystemExit('QA report contains no candidate rows')
-          failed=[r for r in rows if not r.get('pass')]
-          if failed:
-              raise SystemExit('Technical QA rejected: ' + ', '.join(f"{r['file']}[{','.join(r.get('issues', []))}]" for r in failed))
-          print(f"STRICT_TECHNICAL_QA_PASS={len(rows)}")
-          PY
-
-      - name: Finalize approved technical candidates
-        if: steps.changed.outputs.has_files == 'true'
-        run: python3 tools/sprites/process_final_sprites.py
-
-      - name: Mark only finalized approved targets DONE
-        if: steps.changed.outputs.has_files == 'true'
-        shell: bash
-        run: |
-          python3 - <<'PY'
-          import os
-          from pathlib import Path
-
-          manifest=Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          targets={x.strip() for x in os.environ['SPRITE_TARGETS'].split(',') if x.strip()}
-          if not targets:
-              raise SystemExit('No explicit finalized targets')
-
-          lines=manifest.read_text(encoding='utf-8').splitlines()
-          changed=0
-          seen=set()
-          out=[]
-          for line in lines:
-              if not line.startswith('|') or '`app/src/main/res/' not in line:
-                  out.append(line); continue
-              parts=[p.strip() for p in line.strip('|').split('|')]
-              if len(parts) != 5:
-                  out.append(line); continue
-              asset_id,name,desc,runtime,status=parts
-              runtime_path=runtime.strip('`')
-              stem=Path(runtime_path).stem
-              if stem in targets:
-                  seen.add(stem)
-                  p=Path(runtime_path)
-                  if not p.is_file() or p.stat().st_size == 0:
-                      raise SystemExit(f'Finalized runtime missing for {asset_id}: {runtime_path}')
-                  if status.upper() != 'DONE':
-                      parts[4]='DONE'
-                      line='| ' + ' | '.join(parts) + ' |'
-                      changed += 1
-              out.append(line)
-
-          missing=targets-seen
-          if missing:
-              raise SystemExit('Finalized targets absent from canonical manifest: ' + ', '.join(sorted(missing)))
-          manifest.write_text('\n'.join(out)+'\n',encoding='utf-8')
-          print(f'MANIFEST_NEW_DONE={changed}')
-          PY
-      - name: Commit runtime outputs once
-        if: steps.changed.outputs.has_files == 'true'
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add app/src/main/res/drawable-nodpi/ art/production/kaggle-qa-report.json docs/art/FINAL_AAA_SPRITE_MANIFEST.md
-          if git diff --cached --quiet; then exit 0; fi
-          git commit -m 'art: finalize approved Kaggle GPU sprite batch'
-          git pull --rebase origin main
-          git push
-
-      - name: Upload visual inspection bundle
-        if: steps.changed.outputs.has_files == 'true'
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: kaggle-sprite-review
-          path: |
-            art/production/kaggle-contact-sheet.png
-            art/production/kaggle-qa-report.json
-          if-no-files-found: error
-          retention-days: 30
-```
-
-## File: .github/workflows/kaggle-gpu-orchestrator.yml
-```yaml
-name: Kaggle GPU Sprite Orchestrator
-
-on:
-  workflow_dispatch:
-
-# Legacy/manual fallback only. Scheduled production is handled by kaggle-mass-sprite-factory,
-# which uploads candidates for semantic review instead of committing them automatically.
-permissions:
-  contents: write
-
-env:
-  KAGGLE_KERNEL: dbrckk/zero-to-empire-sprite-factory
-
-concurrency:
-  group: kaggle-gpu-sprite-orchestrator
-  cancel-in-progress: false
-
-jobs:
-  generate:
-    runs-on: ubuntu-latest
-    timeout-minutes: 180
-    env:
-      KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
-      KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Require Kaggle credentials
-        shell: bash
-        run: |
-          test -n "$KAGGLE_USERNAME" || { echo 'Missing KAGGLE_USERNAME secret'; exit 1; }
-          test -n "$KAGGLE_KEY" || { echo 'Missing KAGGLE_KEY secret'; exit 1; }
-
-      - name: Install Kaggle CLI
-        run: python -m pip install --upgrade kaggle
-
-      - name: Authenticate
-        run: kaggle config view >/dev/null
-
-      - name: Submit GPU factory
-        run: kaggle kernels push -p kaggle
-
-      - name: Wait for Kaggle kernel
-        shell: bash
-        run: |
-          for i in $(seq 1 120); do
-            STATUS="$(kaggle kernels status "$KAGGLE_KERNEL" 2>&1 || true)"
-            echo "$STATUS"
-            if echo "$STATUS" | grep -qi 'complete'; then exit 0; fi
-            if echo "$STATUS" | grep -Eqi 'error|failed|cancel'; then exit 1; fi
-            sleep 60
-          done
-          echo 'Timed out waiting for Kaggle'
-          exit 1
-
-      - name: Download Kaggle outputs
-        run: |
-          rm -rf /tmp/kaggle-output
-          mkdir -p /tmp/kaggle-output
-          kaggle kernels output "$KAGGLE_KERNEL" -p /tmp/kaggle-output
-          find /tmp/kaggle-output -maxdepth 2 -type f -print
-
-      - name: Import candidate archive
-        shell: bash
-        run: |
-          ZIP="$(find /tmp/kaggle-output -type f -name 'zero-to-empire-kaggle-candidates.zip' | head -1)"
-          test -n "$ZIP" || { echo 'Candidate ZIP missing'; exit 1; }
-          mkdir -p /tmp/kaggle-candidates
-          unzip -q "$ZIP" -d /tmp/kaggle-candidates
-          mkdir -p art/incoming/final-sprites
-          find /tmp/kaggle-candidates -type f -name '*_final.png' -exec cp {} art/incoming/final-sprites/ \;
-          COUNT="$(find /tmp/kaggle-candidates -type f -name '*_final.png' | wc -l)"
-          echo "KAGGLE_IMPORTED=$COUNT"
-          test "$COUNT" -gt 0
-
-      - name: Build QA report
-        run: |
-          python tools/sprites/build_sprite_contact_sheet.py \
-            --input art/incoming/final-sprites \
-            --output /tmp/kaggle-contact-sheet.png \
-            --report /tmp/kaggle-qa-report.json
-
-      - name: Finalize requested candidates
-        shell: bash
-        run: |
-          TARGETS="$(find /tmp/kaggle-candidates -type f -name '*_final.png' -printf '%f\n' | sed 's/\.png$//' | paste -sd, -)"
-          test -n "$TARGETS"
-          SPRITE_TARGETS="$TARGETS" python tools/sprites/process_final_sprites.py
-
-      - name: Commit validated runtime batch
-        shell: bash
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add art/incoming/final-sprites app/src/main/res/drawable-nodpi
-          if git diff --cached --quiet; then
-            echo 'No new validated assets.'
-            exit 0
-          fi
-          git commit -m 'art: finalize Kaggle GPU sprite batch'
-          git pull --rebase origin main
-          git push origin HEAD:main
-
-      - name: Upload QA artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: kaggle-sprite-batch-qa
-          path: |
-            /tmp/kaggle-contact-sheet.png
-            /tmp/kaggle-qa-report.json
-          if-no-files-found: ignore
-          retention-days: 30
-```
-
-## File: .github/workflows/kaggle-mass-sprite-factory.yml
-```yaml
-name: Kaggle Mass Sprite Factory
-
-on:
-  workflow_dispatch:
-    inputs:
-      count:
-        description: Sprite attempts in this Kaggle batch
-        required: false
-        default: '7'
-  push:
-    paths:
-      - 'ops/sprite-wave-trigger.txt'
-      - 'kaggle/github_mass_factory.py'
-      - 'kaggle/kernel-metadata.template.json'
-  schedule:
-    - cron: '17 */6 * * *'
-
-permissions:
-  contents: read
-
-concurrency:
-  group: kaggle-mass-sprite-factory
-  cancel-in-progress: false
-
-jobs:
-  kaggle:
-    runs-on: ubuntu-latest
-    timeout-minutes: 180
-    env:
-      KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
-      KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
-      SPRITE_COUNT: ${{ github.event.inputs.count || '7' }}
-    steps:
-      - uses: actions/checkout@v4
-        with: {fetch-depth: 2}
-      - name: Check credentials
-        shell: bash
-        run: |
-          test -n "$KAGGLE_KEY" || { echo 'Missing KAGGLE_KEY'; exit 2; }
-          test -n "$KAGGLE_USERNAME" || { echo 'Missing KAGGLE_USERNAME'; exit 2; }
-      - name: Install runner dependencies
-        run: python -m pip install --upgrade kaggle 'Pillow<12'
-      - name: Verify Kaggle authentication
-        shell: bash
-        run: |
-          set -euo pipefail
-          kaggle --version
-          kaggle kernels list --mine --page-size 1 >/tmp/kaggle-auth-check.txt
-          echo 'Kaggle authentication OK'
-      - name: Ensure ready sprite bundle dataset
-        shell: bash
-        run: |
-          set -euo pipefail
-          DATASET="${KAGGLE_USERNAME}/zero-to-empire-sprite-bundle"
-          rm -rf /tmp/zte-dataset; mkdir -p /tmp/zte-dataset
-          READY=0
-
-          # A 114 MB repo_bundle.tar.gz was successfully uploaded as dataset v4.
-          # Kaggle CLI 2.2.4 can report the dataset ready while `datasets files`
-          # returns no usable listing, so publication is gated by the authoritative
-          # dataset status/version instead of that flaky listing endpoint.
-          STATUS="$(kaggle datasets status "$DATASET" --format json 2>/dev/null || true)"
-          VERSION="$(python - "$STATUS" <<'PY'
-          import json,sys
-          try: print(int(json.loads(sys.argv[1]).get('current_version_number',0)))
-          except Exception: print(0)
-          PY
-          )"
-          STATE="$(python - "$STATUS" <<'PY'
-          import json,sys
-          try: print(str(json.loads(sys.argv[1]).get('status','')).lower())
-          except Exception: print('')
-          PY
-          )"
-          echo "KAGGLE_DATASET_STATE=${STATE:-unknown} VERSION=${VERSION:-0}"
-
-          # Reuse only when the published bundle fingerprint matches the current
-          # sprite source tree. Version number alone is not sufficient: an older
-          # ready dataset can silently feed stale generators/manifest to a new kernel.
-          CURRENT_BUNDLE_SHA="$(git rev-parse HEAD:docs/art/FINAL_AAA_SPRITE_MANIFEST.md)-$(git rev-parse HEAD:tools/sprites)-$(git rev-parse HEAD:app/src/main/res/drawable-nodpi 2>/dev/null || echo none)-$(git rev-parse HEAD:art/incoming/final-sprites 2>/dev/null || echo none)"
-          echo "CURRENT_BUNDLE_SHA=$CURRENT_BUNDLE_SHA"
-          if [ "$STATE" = ready ] && [ "${VERSION:-0}" -ge 4 ]; then
-            # Encode the source fingerprint in a tiny marker filename. Listing
-            # metadata is enough to verify freshness; no 114 MB bundle download.
-            FILES="$(kaggle datasets files "$DATASET" --page-size 200 2>/dev/null || true)"
-            MARKER="bundle-source-${CURRENT_BUNDLE_SHA}.txt"
-            if printf '%s\n' "$FILES" | grep -Fq "$MARKER"; then
-              READY=1
-              echo 'KAGGLE_DATASET_REUSE=1'
-            else
-              echo 'KAGGLE_DATASET_STALE=1'
-            fi
-          fi
-
-          if [ "$READY" != 1 ]; then
-            PREV_VERSION="${VERSION:-0}"
-            : > "/tmp/zte-dataset/bundle-source-${CURRENT_BUNDLE_SHA}.txt"
-            tar -czf /tmp/zte-dataset/repo_bundle.tar.gz \
-              docs/art/FINAL_AAA_SPRITE_MANIFEST.md \
-              tools/sprites \
-              app/src/main/res/drawable-nodpi \
-              art/incoming/final-sprites
-            cat > /tmp/zte-dataset/dataset-metadata.json <<JSON
-          {
-            "title": "Zero to Empire Sprite Bundle",
-            "id": "${KAGGLE_USERNAME}/zero-to-empire-sprite-bundle",
-            "licenses": [{"name": "CC0-1.0"}],
-            "isPrivate": true
-          }
-          JSON
-            if kaggle datasets status "$DATASET" >/dev/null 2>&1; then
-              kaggle datasets version -p /tmp/zte-dataset -m "sprite bundle ${GITHUB_SHA}" --dir-mode zip
-            else
-              kaggle datasets create -p /tmp/zte-dataset --dir-mode zip
-            fi
-            ls -lh /tmp/zte-dataset/repo_bundle.tar.gz
-
-            # Wait until Kaggle reports a ready version newer than the one observed
-            # before upload. This avoids blocking on the unreliable file-list API.
-            for i in $(seq 1 180); do
-              STATUS="$(kaggle datasets status "$DATASET" --format json 2>/dev/null || true)"
-              read -r STATE VERSION < <(python - "$STATUS" <<'PY'
-          import json,sys
-          try:
-              d=json.loads(sys.argv[1]); print(str(d.get('status','')).lower(), int(d.get('current_version_number',0)))
-          except Exception: print('',0)
-          PY
-              )
-              echo "KAGGLE_DATASET_STATE=${STATE:-unknown} VERSION=${VERSION:-0}"
-              if [ "$STATE" = ready ] && [ "${VERSION:-0}" -gt "$PREV_VERSION" ]; then
-                READY=1
-                echo 'KAGGLE_DATASET_READY=1'
-                break
-              fi
-              sleep 10
-            done
-          fi
-          test "$READY" = 1 || { echo 'Kaggle dataset version not ready within 30 minutes'; exit 75; }
-      - name: Reuse healthy Kaggle kernel when already active
-        id: kernel-state
-        shell: bash
-        run: |
-          set -u
-          slug="${KAGGLE_USERNAME}/zero-to-empire-sprite-factory"
-          status="$(kaggle kernels status "$slug" 2>&1 || true)"
-          echo "$status"
-          if echo "$status" | grep -Eqi 'KernelWorkerStatus\.(RUNNING|QUEUED)|status "(RUNNING|QUEUED)"'; then
-            echo 'reuse=true' >> "$GITHUB_OUTPUT"
-            echo 'KAGGLE_REUSE_ACTIVE_KERNEL=1' >> "$GITHUB_ENV"
-            echo 'KAGGLE_REUSE_ACTIVE_KERNEL=1'
-          else
-            echo 'reuse=false' >> "$GITHUB_OUTPUT"
-            echo 'KAGGLE_REUSE_ACTIVE_KERNEL=0' >> "$GITHUB_ENV"
-            echo 'KAGGLE_REUSE_ACTIVE_KERNEL=0'
-          fi
-
-      - name: Prepare Kaggle kernel
-        if: steps.kernel-state.outputs.reuse != 'true'
-        shell: bash
-        run: |
-          set -euo pipefail
-          rm -rf /tmp/zte-kaggle; mkdir -p /tmp/zte-kaggle
-          cp kaggle/github_mass_factory.py /tmp/zte-kaggle/
-          sed "s/__KAGGLE_USERNAME__/${KAGGLE_USERNAME}/g" kaggle/kernel-metadata.template.json > /tmp/zte-kaggle/kernel-metadata.json
-          python - "$SPRITE_COUNT" <<'PY'
-          import re,sys
-          from pathlib import Path
-          p=Path('/tmp/zte-kaggle/github_mass_factory.py')
-          s=p.read_text()
-          s,n=re.subn(r"COUNT=int\(os\.getenv\('SPRITE_COUNT','\d+'\)\)",f"COUNT={int(sys.argv[1])}",s,count=1)
-          if n != 1: raise SystemExit('Failed to inject SPRITE_COUNT into Kaggle kernel')
-          p.write_text(s)
-          PY
-      - name: Push and start Kaggle GPU run
-        id: push-kaggle
-        if: steps.kernel-state.outputs.reuse != 'true'
-        shell: bash
-        run: |
-          set +e
-          out="$(kaggle kernels push -p /tmp/zte-kaggle 2>&1)"
-          rc=$?
-          set -e
-          printf '%s\n' "$out"
-          if printf '%s\n' "$out" | grep -Fq 'Maximum weekly GPU quota'; then
-            echo 'KAGGLE_WEEKLY_GPU_QUOTA_EXHAUSTED=1' >> "$GITHUB_ENV"
-            echo 'quota_exhausted=true' >> "$GITHUB_OUTPUT"
-            exit 78
-          fi
-          exit "$rc"
-      - name: Wait for Kaggle
-        id: wait-kaggle
-        shell: bash
-        run: |
-          set -u
-          slug="${KAGGLE_USERNAME}/zero-to-empire-sprite-factory"; final_status='UNKNOWN'
-          if [ "${KAGGLE_REUSE_ACTIVE_KERNEL:-0}" = 1 ]; then max_checks=20; else max_checks=135; fi
-          echo "KAGGLE_WAIT_CHECKS=$max_checks reuse=${KAGGLE_REUSE_ACTIVE_KERNEL:-0}"
-          for i in $(seq 1 "$max_checks"); do
-            status="$(kaggle kernels status "$slug" 2>&1 || true)"; echo "$status"
-            if echo "$status" | grep -qi 'complete'; then final_status='COMPLETE'; break; fi
-            if echo "$status" | grep -Eqi 'error|cancel|failed'; then final_status='ERROR'; break; fi
-            sleep 60
-          done
-          if [ "$final_status" = UNKNOWN ] && [ "${KAGGLE_REUSE_ACTIVE_KERNEL:-0}" = 1 ]; then
-            echo 'KAGGLE_STALE_ACTIVE_KERNEL=1' >> "$GITHUB_ENV"
-          fi
-          echo "final_status=$final_status" >> "$GITHUB_OUTPUT"; echo "KAGGLE_FINAL_STATUS=$final_status" >> "$GITHUB_ENV"
-      - name: Download Kaggle outputs and kernel log
-        if: always() && steps.wait-kaggle.outcome == 'success'
-        shell: bash
-        run: |
-          rm -rf /tmp/kaggle-output; mkdir -p /tmp/kaggle-output
-          kaggle kernels output "${KAGGLE_USERNAME}/zero-to-empire-sprite-factory" -p /tmp/kaggle-output --force || true
-          find /tmp/kaggle-output/output -maxdepth 3 -type f -print 2>/dev/null || true
-          find /tmp/kaggle-output -maxdepth 2 -type f -name '*.log' -print || true
-      - name: Require fresh technically validated candidates
-        shell: bash
-        run: |
-          shopt -s nullglob; files=(/tmp/kaggle-output/output/candidates/*_final.png)
-          if [ ${#files[@]} -eq 0 ]; then echo 'No fresh Kaggle candidates'; exit 1; fi
-          echo "KAGGLE_QA_PENDING=${#files[@]}"
-          python tools/sprites/build_sprite_contact_sheet.py --output /tmp/kaggle-output/output/github-contact-sheet.png --report /tmp/kaggle-output/output/github-qa-report.json --files "${files[@]}"
-          python - <<'PY'
-          import json, pathlib
-          p=pathlib.Path('/tmp/kaggle-output/output/github-qa-report.json')
-          d=json.loads(p.read_text())
-          rows=d if isinstance(d,list) else d.get('assets',d.get('sprites',d.get('results',[])))
-          expected=len(list(pathlib.Path('/tmp/kaggle-output/output/candidates').glob('*_final.png')))
-          if len(rows) != expected: raise SystemExit('QA report does not cover every candidate')
-          failed=[r for r in rows if not r.get('pass')]
-          if failed:
-              raise SystemExit('Strict technical QA rejected: ' + ', '.join(
-                  f"{r.get('file','?')}[{','.join(r.get('issues',[]))}]" for r in failed
-              ))
-          print(f"KAGGLE_STRICT_QA_PASS={len(rows)}")
-          PY
-      - name: Fail fast on stale reused Kaggle kernel
-        if: always() && env.KAGGLE_STALE_ACTIVE_KERNEL == '1'
-        shell: bash
-        run: |
-          echo 'STALE_KAGGLE_KERNEL: existing RUNNING/QUEUED session produced no completed output within 20 minutes.'
-          echo 'Kaggle CLI cannot cancel this session by kernel slug; stop the stale session in Kaggle UI before a fresh GPU push.'
-          exit 78
-
-      - name: Require successful Kaggle kernel
-        if: always() && steps.wait-kaggle.outcome == 'success'
-        shell: bash
-        run: test "${KAGGLE_FINAL_STATUS:-UNKNOWN}" = 'COMPLETE'
-      - name: Upload exhaustive QA evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: kaggle-sprite-batch
-          path: |
-            /tmp/kaggle-output/output/batch-contact-sheet.png
-            /tmp/kaggle-output/output/batch-qa-report.json
-            /tmp/kaggle-output/output/github-contact-sheet.png
-            /tmp/kaggle-output/output/github-qa-report.json
-            /tmp/kaggle-output/output/generated-targets.json
-            /tmp/kaggle-output/output/branch-search-report.json
-            /tmp/kaggle-output/output/character-sheet-report.json
-            /tmp/kaggle-output/output/fx-sheet-report.json
-            /tmp/kaggle-output/output/candidates/*.png
-            /tmp/kaggle-output/*.log
-          if-no-files-found: ignore
-          retention-days: 90
-
-# Kaggle receives the source bundle through a private Kaggle Dataset, avoiding github.com DNS dependency inside the GPU runtime.
-# Dataset readiness is gated by Kaggle status/version because its CLI file-list endpoint is unreliable for this bundle.
-```
-
-## File: .github/workflows/kaggle-recover-existing-run.yml
-```yaml
-name: Recover Existing Kaggle Sprite Run
-
-on:
-  push:
-    paths:
-      - 'ops/kaggle-recovery-trigger.txt'
-permissions:
-  contents: read
-jobs:
-  recover:
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    env:
-      KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
-      KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install recovery dependencies
-        run: python -m pip install --upgrade kaggle 'Pillow<12'
-      - name: Wait for existing kernel only
-        id: wait
-        shell: bash
-        run: |
-          set -u
-          slug="${KAGGLE_USERNAME}/zero-to-empire-sprite-factory"; final_status='UNKNOWN'
-          for i in $(seq 1 45); do
-            status="$(kaggle kernels status "$slug" 2>&1 || true)"; echo "$status"
-            if echo "$status" | grep -qi 'complete'; then final_status='COMPLETE'; break; fi
-            if echo "$status" | grep -Eqi 'error|cancel|failed'; then final_status='ERROR'; break; fi
-            sleep 60
-          done
-          echo "final_status=$final_status" >> "$GITHUB_OUTPUT"
-      - name: Download existing outputs
-        if: always()
-        shell: bash
-        run: |
-          rm -rf /tmp/kaggle-output; mkdir -p /tmp/kaggle-output
-          kaggle kernels output "${KAGGLE_USERNAME}/zero-to-empire-sprite-factory" -p /tmp/kaggle-output --force || true
-          find /tmp/kaggle-output -maxdepth 4 -type f -print || true
-      - name: Strict QA for recovered candidates
-        id: qa
-        shell: bash
-        run: |
-          set -euo pipefail
-          shopt -s nullglob
-          files=(/tmp/kaggle-output/output/candidates/*_final.png)
-          if (( ${#files[@]} == 0 )); then
-            echo 'No recovered candidates available for QA.'
-            echo 'has_files=false' >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          python3 tools/sprites/build_sprite_contact_sheet.py \
-            --files "${files[@]}" \
-            --output /tmp/kaggle-output/output/recovered-contact-sheet.png \
-            --report /tmp/kaggle-output/output/recovered-qa-report.json
-          python3 - <<'PY' > /tmp/recovered-pass-files.txt
-          import json
-          from pathlib import Path
-          p=Path('/tmp/kaggle-output/output/recovered-qa-report.json')
-          d=json.loads(p.read_text())
-          rows=d.get('assets', [])
-          passed=[r for r in rows if r.get('pass')]
-          failed=[r for r in rows if not r.get('pass')]
-          for r in passed:
-              print('/tmp/kaggle-output/output/candidates/' + r['file'])
-          print(f"RECOVERED_QA_PASS={len(passed)} RECOVERED_QA_REJECT={len(failed)}", file=__import__('sys').stderr)
-          if failed:
-              print('RECOVERED_QA_REJECTED=' + ','.join(r['file'] for r in failed), file=__import__('sys').stderr)
-          PY
-          mapfile -t pass_files < /tmp/recovered-pass-files.txt
-          if (( ${#pass_files[@]} == 0 )); then
-            echo 'No recovered candidates passed strict technical QA.'
-            echo 'has_files=false' >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          rm -rf art/incoming/final-sprites
-          mkdir -p art/incoming/final-sprites
-          cp "${pass_files[@]}" art/incoming/final-sprites/
-          stems=()
-          for file in art/incoming/final-sprites/*_final.png; do stems+=("$(basename "$file" .png)"); done
-          SPRITE_TARGETS="$(IFS=,; echo "${stems[*]}")" python3 tools/sprites/process_final_sprites.py
-          mkdir -p /tmp/kaggle-output/output/runtime
-          cp app/src/main/res/drawable-nodpi/*_final.webp /tmp/kaggle-output/output/runtime/ 2>/dev/null || true
-          echo 'has_files=true' >> "$GITHUB_OUTPUT"
-
-      - name: Upload recovered evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: kaggle-recovered-sprite-batch
-          path: /tmp/kaggle-output/**
-          if-no-files-found: warn
-          retention-days: 90
-      - name: Report kernel state
-        if: always()
-        run: echo "RECOVERY_FINAL_STATUS=${{ steps.wait.outputs.final_status }}"
-
-# Recovery only: this workflow NEVER pushes a new Kaggle kernel, so it cannot replace an active long-running generation.
-```
-
-## File: .github/workflows/lightning-sprite-factory.yml
-```yaml
-name: Lightning Sprite Factory
-
-on:
-  workflow_dispatch:
-    inputs:
-      sprite_count:
-        description: Candidates to attempt in this wave
-        required: false
-        default: '56'
-      keep_studio_running:
-        description: Keep Lightning Studio running after the wave
-        required: false
-        default: 'false'
-        type: boolean
-
-permissions:
-  contents: read
-
-concurrency:
-  group: lightning-sprite-factory
-  cancel-in-progress: false
-
-jobs:
-  generate:
-    runs-on: ubuntu-latest
-    timeout-minutes: 180
-    env:
-      LIGHTNING_USER_ID: ${{ secrets.LIGHTNING_USER_ID }}
-      LIGHTNING_API_KEY: ${{ secrets.LIGHTNING_API_KEY }}
-      SPRITE_COUNT: ${{ inputs.sprite_count || '56' }}
-      LIGHTNING_STOP_AFTER: ${{ inputs.keep_studio_running == true && '0' || '1' }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Require Lightning credentials
-        shell: bash
-        run: |
-          set -euo pipefail
-          test -n "$LIGHTNING_USER_ID" || { echo 'Missing LIGHTNING_USER_ID repository secret'; exit 2; }
-          test -n "$LIGHTNING_API_KEY" || { echo 'Missing LIGHTNING_API_KEY repository secret'; exit 2; }
-
-      - name: Install Lightning SDK
-        run: python -m pip install --quiet --upgrade lightning-sdk
-
-      - name: Run Lightning T4 sprite wave
-        run: python -u tools/sprites/lightning_remote_runner.py
-
-      - name: Upload strict QA-only candidate artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: lightning-sprite-batch
-          path: lightning-output/
-          if-no-files-found: error
-          retention-days: 7
-```
-
-## File: .github/workflows/lightning-ssh-bootstrap.yml
-```yaml
-name: Lightning SSH Bootstrap
-
-on:
-  workflow_dispatch:
-  push:
-    paths:
-      - '.github/workflows/lightning-ssh-bootstrap.yml'
-
-permissions:
-  contents: read
-
-jobs:
-  generate-keypair:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Generate dedicated SSH keypair
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p lightning-ssh
-          ssh-keygen -t ed25519 -C "zero-to-empire-lightning" -N "" -f lightning-ssh/id_ed25519
-          cp lightning-ssh/id_ed25519.pub lightning-ssh/LIGHTNING_PUBLIC_KEY.txt
-          chmod 600 lightning-ssh/id_ed25519
-          echo '===== COPY THIS PUBLIC KEY INTO LIGHTNING ====='
-          cat lightning-ssh/LIGHTNING_PUBLIC_KEY.txt
-          echo '==============================================='
-
-      - name: Upload keypair artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: lightning-ssh-keypair
-          path: |
-            lightning-ssh/id_ed25519
-            lightning-ssh/LIGHTNING_PUBLIC_KEY.txt
-          retention-days: 1
-          if-no-files-found: error
-```
-
-## File: .github/workflows/manifest-static-gpu-batch.yml
-```yaml
-name: Manifest Static GPU Batch
-
-on:
-  workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/manifest-static-gpu-batch.yml'
-      - 'tools/sprites/manifest_batch_planner.py'
-      - 'tools/sprites/hf_static_manifest_factory.py'
-      - 'tools/sprites/multi_provider_static_manifest_factory.py'
-      - 'tools/sprites/build_sprite_contact_sheet.py'
-  schedule:
-    - cron: '23 * * * *'
-
-permissions:
-  contents: read
-  actions: write
-
-concurrency:
-  group: manifest-static-gpu-batch
-  cancel-in-progress: false
-
-jobs:
-  generate:
-    name: GPU shard ${{ matrix.shard }} / 3
-    runs-on: ubuntu-latest
-    timeout-minutes: 32
-    strategy:
-      fail-fast: false
-      max-parallel: 3
-      matrix:
-        shard: [0, 1, 2]
-    env:
-      HF_TOKEN: ${{ secrets.HF_TOKEN }}
-      HF_SPACE_URL: https://mcp-tools-z-image-turbo.hf.space
-      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      CLOUDFLARE_IMAGE_MODEL: '@cf/black-forest-labs/flux-1-schnell'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-        with:
-          ref: main
-
-      - name: Install Pillow
-        run: python3 -m pip install --disable-pip-version-check Pillow==11.3.0
-
-      - id: batch
-        name: Generate one third of 36 pending attempts
-        shell: bash
-        env:
-          SHARD: ${{ matrix.shard }}
-        run: |
-          set -u -o pipefail
-          mkdir -p /tmp/shard-candidates
-          python3 tools/sprites/manifest_batch_planner.py --kind ALL --count 36 > /tmp/plan.json
-          python3 - <<'PY' > /tmp/targets.tsv
-          import json, os
-          shard = int(os.environ['SHARD'])
-          with open('/tmp/plan.json', encoding='utf-8') as f:
-              items = json.load(f)['include']
-          for index, item in enumerate(items):
-              if index % 3 == shard:
-                  print(f"{item['id']}\t{item['stem']}")
-          PY
-
-          successes=0
-          failures=()
-          attempts=0
-          while IFS=$'\t' read -r asset_id stem; do
-            [ -n "$asset_id" ] || continue
-            attempts=$((attempts + 1))
-            echo "=== shard $SHARD attempt $attempts: $asset_id ==="
-            set +e
-            SPRITE_TARGET="$asset_id" python3 tools/sprites/multi_provider_static_manifest_factory.py
-            rc=$?
-            set -e
-            candidate="art/incoming/final-sprites/${stem}.png"
-            if [ "$rc" -eq 0 ] && [ -s "$candidate" ]; then
-              cp "$candidate" "/tmp/shard-candidates/${stem}.png"
-              successes=$((successes + 1))
-              continue
-            fi
-            if [ "$rc" -eq 75 ]; then
-              failures+=("$asset_id:providers-unavailable")
-              echo 'All configured image providers unavailable; preserving successes.'
-              break
-            fi
-            failures+=("$asset_id:rejected")
-            echo "Rejected $asset_id (rc=$rc); continuing."
-          done < /tmp/targets.tsv
-
-          echo "attempted_assets=$attempts"
-          echo "successful_assets=$successes"
-          if (( ${#failures[@]} )); then printf '%s\n' "${failures[@]}"; fi
-          if (( successes == 0 )); then
-            echo 'has_files=false' >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          echo 'has_files=true' >> "$GITHUB_OUTPUT"
-
-      - name: Upload only successful shard candidates
-        if: steps.batch.outputs.has_files == 'true'
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: gpu-static-shard-${{ matrix.shard }}
-          path: /tmp/shard-candidates/*.png
-          if-no-files-found: error
-          retention-days: 3
-
-  inspect:
-    name: Technical QA artifact only
-    needs: generate
-    if: always()
-    runs-on: ubuntu-latest
-    timeout-minutes: 12
-    steps:
-      - name: Checkout latest main
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-        with:
-          ref: main
-
-      - name: Install Pillow
-        run: python3 -m pip install --disable-pip-version-check Pillow==11.3.0
-
-      - name: Download only this run candidates
-        uses: actions/download-artifact@v4
-        with:
-          pattern: gpu-static-shard-*
-          path: /tmp/generated-candidates
-          merge-multiple: true
-        continue-on-error: true
-
-      - id: collect
-        name: Build semantic inspection evidence without touching runtime
-        shell: bash
-        run: |
-          set -euo pipefail
-          shopt -s nullglob
-          files=(/tmp/generated-candidates/*_final.png)
-          if (( ${#files[@]} == 0 )); then
-            echo 'No generated candidates survived this batch.'
-            echo 'has_files=false' >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          python3 tools/sprites/build_sprite_contact_sheet.py \
-            --files "${files[@]}" \
-            --output /tmp/batch-contact-sheet.png \
-            --report /tmp/batch-qa-report.json
-          echo "candidate_assets=${#files[@]}"
-          echo 'has_files=true' >> "$GITHUB_OUTPUT"
-
-      - name: Upload semantic inspection batch
-        if: steps.collect.outputs.has_files == 'true'
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: candidate-static-batch
-          path: |
-            /tmp/generated-candidates/*_final.png
-            /tmp/batch-contact-sheet.png
-            /tmp/batch-qa-report.json
-          if-no-files-found: error
-          retention-days: 30
-```
-
-## File: .github/workflows/manual-kaggle-go-77.yml
-```yaml
-name: Manual Kaggle Go 77
-on:
-  push:
-    branches: [main]
-    paths: ['.github/workflows/manual-kaggle-go-77.yml']
-permissions:
-  actions: write
-  contents: read
-jobs:
-  dispatch:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Dispatch optimized mass factory
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh workflow run kaggle-mass-sprite-factory.yml --repo "${{ github.repository }}" -f count=42
-```
-
-## File: .github/workflows/pollinations-building-candidate.yml
-```yaml
-name: Pollinations Building Candidate
-
-on:
-  schedule:
-    - cron: '*/5 * * * *'
-  workflow_dispatch:
-    inputs:
-      batch_count:
-        description: Strict building candidates to attempt in this run
-        required: false
-        default: '8'
-  push:
-    branches: [main]
-    paths:
-      - 'tools/sprites/pollinations_building_factory.py'
-      - 'tools/sprites/pollinations_building_batch.py'
-      - 'tools/sprites/validate_runtime_asset.py'
-      - '.github/workflows/pollinations-building-candidate.yml'
-      - 'ops/pollinations-building-trigger.txt'
-
-permissions:
-  contents: write
-
-concurrency:
-  group: pollinations-building-candidate
-  cancel-in-progress: false
-
-jobs:
-  generate:
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
-    env:
-      POLLINATIONS_BATCH_COUNT: ${{ inputs.batch_count || '8' }}
-      POLLINATIONS_ATTEMPTS: '3'
-      POLLINATIONS_BASE_SEED: ${{ github.run_id }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 2
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      - name: Sync canonical main
-        run: git pull --ff-only origin main
-
-      - name: Cache rembg U2Net model
-        uses: actions/cache@v4
-        with:
-          path: ~/.u2net
-          key: rembg-u2net-v0.0.0
-
-      - name: Install strict image tooling
-        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0' 'rembg[cpu]>=2.0.68,<3'
-
-      - name: Generate and double-validate strict building batch
-        run: python -u tools/sprites/pollinations_building_batch.py
-
-      - name: Require at least one strict success
-        shell: bash
-        run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          d=json.loads(Path('art/production/pollinations-batch-summary.json').read_text())
-          if not d.get('successes'):
-              raise SystemExit('No strict Pollinations building candidate passed this run')
-          print('STRICT_BATCH_DONE=' + ','.join(x['id'] for x in d['successes']))
-          if d.get('failures'):
-              print('STRICT_BATCH_BLOCKED=' + ','.join(x['id'] for x in d['failures']))
-          PY
-
-      - name: Commit only double-validated DONE sprites
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md
-          git add app/src/main/res/drawable-nodpi/
-          git add art/incoming/final-sprites/
-          git add art/production/pollinations-*.json art/production/pollinations-*.png 2>/dev/null || true
-          if git diff --cached --quiet; then
-            echo 'No validated changes to commit'
-            exit 0
-          fi
-          git commit -m 'art: persist double-validated Pollinations building batch'
-          git pull --rebase origin main
-          git push
-
-      - name: Upload strict batch evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: pollinations-building-batch-evidence
-          path: |
-            art/production/pollinations-batch-summary.json
-            art/production/pollinations-*-report.json
-            art/production/pollinations-*-qa.json
-            art/production/pollinations-*-contact.png
-          if-no-files-found: warn
-          retention-days: 14
-```
-
-## File: .github/workflows/pollinations-character-atlas.yml
-```yaml
-name: Pollinations Character Atlas
-
-on:
-  schedule:
-    - cron: '2,17,32,47 * * * *'
-  workflow_dispatch:
-    inputs:
-      batch_count:
-        description: Character atlases to attempt
-        required: false
-        default: '2'
-      chain_depth:
-        description: Internal auto-chain depth
-        required: false
-        default: '0'
-  push:
-    branches: [main]
-    paths:
-      - 'tools/sprites/pollinations_character_sheet_factory.py'
-      - '.github/workflows/pollinations-character-atlas.yml'
-      - 'ops/pollinations-character-trigger.txt'
-
-permissions:
-  contents: write
-  actions: write
-
-concurrency:
-  group: pollinations-character-atlas
-  cancel-in-progress: false
-
-jobs:
-  generate:
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
-    env:
-      POLLINATIONS_CHR_BATCH: ${{ inputs.batch_count || '2' }}
-      POLLINATIONS_CHR_ATTEMPTS: '2'
-      POLLINATIONS_CHR_SEED: ${{ github.run_id }}
-      POLLINATIONS_CHAIN_DEPTH: ${{ inputs.chain_depth || '0' }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 2
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Sync canonical main
-        run: git pull --ff-only origin main
-      - name: Cache rembg U2Net model
-        uses: actions/cache@v4
-        with:
-          path: ~/.u2net
-          key: rembg-u2net-v0.0.0
-      - name: Install strict image tooling
-        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0' 'rembg[cpu]>=2.0.68,<3'
-      - name: Generate character atlas candidate
-        run: python -u tools/sprites/pollinations_character_sheet_factory.py
-      - name: Double validate, finalize and mark DONE
-        shell: bash
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          import json, subprocess, os
-          from pathlib import Path
-          summary=json.loads(Path('art/production/pollinations-character-summary.json').read_text())
-          good=[x for x in summary if x.get('status')=='CANDIDATE']
-          if not good:
-              raise SystemExit('No strict character atlas candidate passed generation QA')
-          manifest=Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          lines=manifest.read_text(encoding='utf-8').splitlines()
-          for item in good:
-              aid=item['id']; runtime=None
-              for line in lines:
-                  if line.startswith('|') and aid in line:
-                      cols=[c.strip() for c in line.split('|')[1:-1]]
-                      if len(cols)==5 and cols[0]==aid:
-                          runtime=cols[3].replace(chr(96),''); stem=Path(runtime).stem; break
-              if not runtime: raise SystemExit('Manifest row missing '+aid)
-              subprocess.run(['python','tools/sprites/process_final_sprites.py'],check=True,env={**os.environ,'SPRITE_TARGETS':stem})
-              subprocess.run(['python','tools/sprites/validate_runtime_asset.py','--asset-id',aid,'--path',runtime,'--report',f'art/production/{stem}-runtime-qa.json'],check=True)
-              new=[]; changed=0
-              for line in lines:
-                  if line.startswith('|'):
-                      cols=[c.strip() for c in line.split('|')[1:-1]]
-                      if len(cols)==5 and cols[0]==aid and cols[4].upper()=='TODO':
-                          cols[4]='DONE'; line='| '+' | '.join(cols)+' |'; changed+=1
-                  new.append(line)
-              if changed!=1: raise SystemExit(f'Expected one TODO row for {aid}, changed={changed}')
-              lines=new
-              print('POLLINATIONS_CHR_DONE='+aid)
-          manifest.write_text('\n'.join(lines)+'\n',encoding='utf-8')
-          PY
-      - name: Commit only double-validated character atlases
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md
-          git add app/src/main/res/drawable-nodpi/
-          git add art/incoming/final-sprites/
-          git add art/production/pollinations-character-summary.json art/production/*-runtime-qa.json 2>/dev/null || true
-          git diff --cached --quiet && exit 0
-          git commit -m 'art: persist double-validated Pollinations character atlas'
-          git pull --rebase origin main
-          git push
-      - name: Upload character QA evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: pollinations-character-atlas-evidence
-          path: |
-            art/production/pollinations-character-summary.json
-            art/production/*-runtime-qa.json
-          if-no-files-found: warn
-          retention-days: 14
-
-      - name: Auto-chain until all character atlases are DONE
-        if: always()
-        env:
-          GH_TOKEN: ${{ github.token }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          remaining=$(python - <<'PY'
-          from pathlib import Path
-          n=0
-          p=Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          if p.exists():
-              for line in p.read_text(encoding='utf-8').splitlines():
-                  if not line.startswith('|') or 'CHR-' not in line:
-                      continue
-                  cols=[c.strip() for c in line.split('|')[1:-1]]
-                  if len(cols)==5 and cols[0].startswith('CHR-') and cols[4].upper()=='TODO':
-                      n+=1
-          print(n)
-          PY
-          )
-          depth="${POLLINATIONS_CHAIN_DEPTH:-0}"
-          echo "CHARACTER_TODO_REMAINING=$remaining"
-          echo "CHARACTER_CHAIN_DEPTH=$depth"
-          if [ "$remaining" -eq 0 ]; then
-            echo "SPRITE_MANIFEST_CHARACTER_COMPLETE=1"
-            exit 0
-          fi
-          if [ "$depth" -ge 40 ]; then
-            echo "::error::Auto-chain safety limit reached with $remaining character atlases still TODO."
-            exit 1
-          fi
-          next=$((depth+1))
-          sleep 20
-          gh workflow run "Pollinations Character Atlas" --ref main -f batch_count=2 -f chain_depth="$next"
-          echo "CHARACTER_CHAIN_DISPATCHED depth=$next remaining=$remaining"
-```
-
-## File: .github/workflows/pollinations-character-smoke.yml
-```yaml
-name: Pollinations Character Smoke
-
-on:
-  push:
-    branches: [main]
-    paths:
-      - 'tools/sprites/pollinations_character_sheet_factory.py'
-      - '.github/workflows/pollinations-character-smoke.yml'
-  workflow_dispatch:
-
-permissions:
-  contents: read
-
-concurrency:
-  group: pollinations-character-smoke
-  cancel-in-progress: true
-
-jobs:
-  smoke:
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
-    env:
-      POLLINATIONS_CHR_FORCE: '1'
-      POLLINATIONS_CHR_ATTEMPTS: '2'
-      POLLINATIONS_CHR_SEED: ${{ github.run_id }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      - name: Cache rembg U2Net model
-        uses: actions/cache@v4
-        with:
-          path: ~/.u2net
-          key: rembg-u2net-v0.0.0
-
-      - name: Install image tooling
-        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0' 'rembg[cpu]>=2.0.68,<3'
-
-      - name: Generate one forced atlas candidate
-        run: python -u tools/sprites/pollinations_character_sheet_factory.py
-
-      - name: Resolve candidate
-        id: target
-        shell: bash
-        run: |
-          python - <<'PY' >> "$GITHUB_OUTPUT"
-          import json
-          from pathlib import Path
-          d=json.loads(Path('art/production/pollinations-character-report.json').read_text())
-          p=Path(d['candidate'])
-          print(f"asset_id={d['target']}")
-          print(f"file={p}")
-          print(f"stem={p.stem}")
-          PY
-
-      - name: Strict atlas QA
-        run: |
-          python tools/sprites/build_sprite_contact_sheet.py             --files '${{ steps.target.outputs.file }}'             --output art/production/pollinations-character-smoke-contact.png             --report art/production/pollinations-character-smoke-qa.json
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          rows=json.loads(Path('art/production/pollinations-character-smoke-qa.json').read_text()).get('assets',[])
-          if len(rows)!=1 or not rows[0].get('pass'):
-              raise SystemExit('Character smoke QA rejected: '+json.dumps(rows))
-          PY
-
-      - name: Finalize and revalidate runtime
-        shell: bash
-        run: |
-          SPRITE_TARGETS='${{ steps.target.outputs.stem }}' python tools/sprites/process_final_sprites.py
-          python tools/sprites/validate_runtime_asset.py             --asset-id '${{ steps.target.outputs.asset_id }}'             --path 'app/src/main/res/drawable-nodpi/${{ steps.target.outputs.stem }}.webp'             --report art/production/pollinations-character-smoke-runtime-qa.json
-
-      - name: Upload smoke evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: pollinations-character-smoke-evidence
-          path: |
-            art/incoming/final-sprites/zte_chr_*_final.png
-            app/src/main/res/drawable-nodpi/zte_chr_*_final.webp
-            art/production/pollinations-character-*.json
-            art/production/pollinations-character-*.png
-          if-no-files-found: warn
-          retention-days: 7
-```
-
-## File: .github/workflows/post-run25-ci.yml
-```yaml
-name: Reconcile reviewed run 25
-
-on:
-  workflow_run:
-    workflows: ['Android CI']
-    types: [completed]
-
-permissions:
-  contents: write
-  actions: write
-
-jobs:
-  reconcile:
-    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_sha == '1fcf2aa6a80f5266108c2790ab2549463510c8e9'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 2
-
-      - name: Reconcile strict manifest and progress
-        shell: bash
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          manifest = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          text = manifest.read_text(encoding='utf-8')
-          done_ids = {
-              'PRP-00-A','PRP-00-B','PRP-01-A','PRP-01-B','PRP-02-A',
-              'PRP-03-A','PRP-03-B','PRP-04-B','VEH-17'
-          }
-          clean_ids = {f'CORE-T{i}' for i in range(7)}
-          lines=[]
-          for line in text.splitlines():
-              if line.startswith('| '):
-                  asset_id=line.split('|')[1].strip()
-                  if asset_id in done_ids:
-                      line=line.rsplit('|',2)[0] + '| DONE |'
-                  elif asset_id in clean_ids:
-                      line=line.rsplit('|',2)[0] + '| CLEAN |'
-              lines.append(line)
-          manifest.write_text('\n'.join(lines)+'\n', encoding='utf-8')
-
-          progress = Path('docs/art/FINAL_AAA_SPRITE_PROGRESS.md')
-          p = progress.read_text(encoding='utf-8')
-          p = p.replace('DONE: **52 / 235**','DONE: **61 / 235**')
-          p = p.replace('ART VALIDATED: **67 / 235**','ART VALIDATED: **83 / 235**')
-          p = p.replace('RUNTIME INTEGRATED: **67 / 235**','RUNTIME INTEGRATED: **76 / 235**')
-          p = p.replace('Generated candidates accepted as DONE: **52**','Generated candidates accepted as DONE: **61**')
-          marker='## Existing ART/RUNTIME assets not yet promoted to DONE\n'
-          section='''## Reviewed FLUX run 25 — 9 DONE, 7 CLEAN\nRun-25 semantic review accepted 16 assets. Eight missing props plus `VEH-17` are referenced in the active city stage and Android CI run `33997464241` completed successfully, so those nine are strict DONE. `CORE-T0` through `CORE-T6` passed semantic and technical review and have optimized runtime rasters, but remain CLEAN until their tier-aware Power Core runtime integration is completed and validated.\n\n### New strict DONE\n`PRP-00-A`, `PRP-00-B`, `PRP-01-A`, `PRP-01-B`, `PRP-02-A`, `PRP-03-A`, `PRP-03-B`, `PRP-04-B`, `VEH-17`.\n\n### CLEAN awaiting runtime integration\n`CORE-T0`, `CORE-T1`, `CORE-T2`, `CORE-T3`, `CORE-T4`, `CORE-T5`, `CORE-T6`.\n\n'''
-          if section not in p:
-              p=p.replace(marker,section+marker)
-          p=p.replace('1. Regenerate the remaining vehicle set with stricter semantics: `VEH-09`, `VEH-16`, `VEH-17`.','1. Regenerate the remaining vehicle set with stricter semantics: `VEH-09`, `VEH-16`.')
-          p=p.replace('2. Regenerate missing props regardless of stale unapproved candidate files: `PRP-00-A/B`, `PRP-01-A/B`, `PRP-02-A`, `PRP-03-A/B`, `PRP-04-B`, `PRP-05-A`.','2. Regenerate the remaining missing prop: `PRP-05-A`.')
-          p=p.replace('3. Regenerate Power Core tiers with explicit tier-defining geometry before any promotion.','3. Integrate the reviewed `CORE-T0` through `CORE-T6` rasters into the tier-aware Power Core runtime, then require green Android CI before DONE.')
-          progress.write_text(p, encoding='utf-8')
-          PY
-
-      - name: Commit reconciliation
-        shell: bash
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md docs/art/FINAL_AAA_SPRITE_PROGRESS.md
-          git commit -m 'docs: advance 9 reviewed run 25 assets to strict DONE'
-          git pull --rebase origin main
-          git push
-
-      - name: Launch next focused FLUX batch
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh workflow run kaggle-mass-sprite-factory.yml -f count=30
-```
-
-## File: .github/workflows/post-run37-veh09-ci.yml
-```yaml
-name: Verify reviewed VEH-09 runtime
-
-on:
-  workflow_dispatch:
-  push:
-    branches: [main]
-    paths: ['.github/workflows/post-run37-veh09-ci.yml']
-
-permissions:
-  contents: write
-
-concurrency:
-  group: post-run37-veh09-ci
-  cancel-in-progress: false
-
-jobs:
-  verify-and-finalize:
-    runs-on: ubuntu-latest
-    timeout-minutes: 35
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 2
-
-      - uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: '17'
-
-      - uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.13'
-
-      - name: Verify runtime asset and active reference
-        shell: bash
-        run: |
-          set -euo pipefail
-          test -s app/src/main/res/drawable-nodpi/zte_vehicle_09_final.webp
-          grep -q 'R.drawable.zte_vehicle_09_final' app/src/main/java/com/zerotoempire/game/WorldTrafficArt.kt
-          grep -q 'Triple(.28f,.62f,.104f)' app/src/main/java/com/zerotoempire/game/WorldTrafficArt.kt
-
-      - name: Android sprite-runtime CI
-        run: gradle --no-daemon assembleDebug
-
-      - name: Mark VEH-09 strict DONE after green build
-        shell: bash
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          from pathlib import Path
-          import re
-
-          m=Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          s=m.read_text()
-          pat=r'^(\|\s*VEH-09\s*\|.*\|\s*)(TODO|ART|CLEAN|RUNTIME)(\s*\|)$'
-          s2,n=re.subn(pat,r'\1DONE\3',s,count=1,flags=re.M)
-          if n!=1:
-              if not re.search(r'^\|\s*VEH-09\s*\|.*\|\s*DONE\s*\|$',s,re.M):
-                  raise SystemExit('VEH-09 manifest row not found')
-              s2=s
-          m.write_text(s2)
-
-          p=Path('docs/art/FINAL_AAA_SPRITE_PROGRESS.md')
-          t=p.read_text()
-          t=t.replace('- DONE: **69 / 235**','- DONE: **70 / 235**')
-          t=t.replace('- ART VALIDATED: **84 / 235**','- ART VALIDATED: **85 / 235**')
-          t=t.replace('- RUNTIME INTEGRATED: **84 / 235**','- RUNTIME INTEGRATED: **85 / 235**')
-          t=t.replace('- Generated candidates accepted as DONE: **69**','- Generated candidates accepted as DONE: **70**')
-          anchor='## Existing ART/RUNTIME assets not yet promoted to DONE\n'
-          note=('## Reviewed FLUX run 37 — 1 DONE\n'
-                '`VEH-09` passed technical QA and semantic review as a wheel-less enclosed maglev freight capsule, was integrated into `WorldTrafficArt.kt`, and the Android runtime build completed successfully. It is strict DONE. `VEH-16` from the same run was rejected because it remained a conventional wheeled automobile.\n\n')
-          if '## Reviewed FLUX run 37 — 1 DONE' not in t:
-              if anchor not in t: raise SystemExit('progress insertion anchor missing')
-              t=t.replace(anchor,note+anchor,1)
-          t=t.replace('and the rejected `VEH-09` concept.','and earlier rejected `VEH-09` concepts superseded by the valid run-37 replacement.')
-          t=t.replace('1. Regenerate the remaining vehicle set with stricter semantics: `VEH-09`, `VEH-16`.','1. Regenerate the remaining vehicle target with stricter semantics: `VEH-16`.')
-          p.write_text(t)
-          PY
-
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md docs/art/FINAL_AAA_SPRITE_PROGRESS.md
-          if git diff --cached --quiet; then
-            echo 'Ledger already finalized.'
-            exit 0
-          fi
-          git commit -m 'docs: mark reviewed VEH-09 strict DONE'
-          git pull --rebase origin main
-          git push
-```
-
-## File: .github/workflows/procedural-terrain-batch.yml
-```yaml
-name: Instant Terrain Batch
-
-on:
-  workflow_dispatch:
-  push:
-    branches: [ main ]
-    paths:
-      - 'tools/sprites/procedural_terrain_factory.py'
-      - '.github/workflows/procedural-terrain-batch.yml'
-
-permissions:
-  contents: write
-
-concurrency:
-  group: instant-terrain-batch
-  cancel-in-progress: true
-
-jobs:
-  author-finalize:
-    runs-on: ubuntu-latest
-    timeout-minutes: 6
-    steps:
-      - name: Checkout main
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-        with:
-          ref: main
-
-      - name: Set up Python
-        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
-        with:
-          python-version: '3.12'
-          cache: pip
-
-      - name: Install image tooling
-        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
-
-      - name: Author and technically validate all terrain in one process
-        run: python tools/sprites/procedural_terrain_factory.py
-
-      - name: Verify complete batch
-        shell: bash
-        run: |
-          set -euo pipefail
-          for n in $(seq -w 0 13); do
-            test -s "art/incoming/final-sprites/zte_terrain_${n}_final.png"
-            test -s "app/src/main/res/drawable-nodpi/zte_terrain_${n}_final.webp"
-          done
-
-      - name: Commit complete technically validated batch once
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add art/incoming/final-sprites/zte_terrain_*_final.png app/src/main/res/drawable-nodpi/zte_terrain_*_final.webp
-          if git diff --cached --quiet; then
-            echo 'Terrain batch already materialized.'
-            exit 0
-          fi
-          git commit -m 'art: materialize zero-GPU terrain batch'
-          git pull --rebase origin main
-          git push
-
-      - name: Upload terrain batch for semantic inspection
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: terrain-batch-semantic-inspection
-          path: |
-            art/incoming/final-sprites/zte_terrain_*_final.png
-            app/src/main/res/drawable-nodpi/zte_terrain_*_final.webp
-          if-no-files-found: error
-          retention-days: 30
-```
-
-## File: .github/workflows/production-release.yml
-```yaml
-name: Production Release Gate
-
-on:
-  workflow_dispatch:
-    inputs:
-      version_code:
-        description: Play Store versionCode (positive integer)
-        required: true
-        type: string
-      version_name:
-        description: Human-readable versionName
-        required: true
-        type: string
-
-permissions:
-  contents: read
-
-concurrency:
-  group: production-release
-  cancel-in-progress: false
-
-jobs:
-  signed-aab:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    env:
-      ZERO_EMPIRE_KEYSTORE_PASSWORD: ${{ secrets.ZERO_EMPIRE_KEYSTORE_PASSWORD }}
-      ZERO_EMPIRE_KEY_ALIAS: ${{ secrets.ZERO_EMPIRE_KEY_ALIAS }}
-      ZERO_EMPIRE_KEY_PASSWORD: ${{ secrets.ZERO_EMPIRE_KEY_PASSWORD }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: '17'
-
-      - uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.13'
-
-      - name: Fail closed when production secrets are missing
-        shell: bash
-        env:
-          KEYSTORE_B64: ${{ secrets.ZERO_EMPIRE_KEYSTORE_BASE64 }}
-          ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID }}
-          REWARDED_AD_UNIT_ID: ${{ secrets.REWARDED_AD_UNIT_ID }}
-          INTERSTITIAL_AD_UNIT_ID: ${{ secrets.INTERSTITIAL_AD_UNIT_ID }}
-        run: |
-          set -euo pipefail
-          for name in KEYSTORE_B64 ZERO_EMPIRE_KEYSTORE_PASSWORD ZERO_EMPIRE_KEY_ALIAS ZERO_EMPIRE_KEY_PASSWORD ADMOB_APP_ID REWARDED_AD_UNIT_ID INTERSTITIAL_AD_UNIT_ID; do
-            test -n "${!name:-}" || { echo "::error::Missing required production secret: $name"; exit 1; }
-          done
-          [[ "${{ inputs.version_code }}" =~ ^[1-9][0-9]*$ ]] || { echo "::error::version_code must be a positive integer"; exit 1; }
-          test -n "${{ inputs.version_name }}" || exit 1
-
-      - name: Materialize upload keystore
-        shell: bash
-        env:
-          KEYSTORE_B64: ${{ secrets.ZERO_EMPIRE_KEYSTORE_BASE64 }}
-        run: |
-          set -euo pipefail
-          umask 077
-          printf '%s' "$KEYSTORE_B64" | base64 --decode > "$RUNNER_TEMP/zero-empire-upload.jks"
-          test -s "$RUNNER_TEMP/zero-empire-upload.jks"
-          echo "ZERO_EMPIRE_KEYSTORE_PATH=$RUNNER_TEMP/zero-empire-upload.jks" >> "$GITHUB_ENV"
-
-      - name: Validate keystore credentials
-        run: |
-          set -euo pipefail
-          keytool -list -keystore "$ZERO_EMPIRE_KEYSTORE_PATH" -storepass "$ZERO_EMPIRE_KEYSTORE_PASSWORD" -alias "$ZERO_EMPIRE_KEY_ALIAS" >/dev/null
-
-      - name: Record release metadata
-        shell: bash
-        run: |
-          set -euo pipefail
-          {
-            echo "application_id=com.zerotoempire.game"
-            echo "version_code=${{ inputs.version_code }}"
-            echo "version_name=${{ inputs.version_name }}"
-            echo "git_sha=$GITHUB_SHA"
-            echo "git_ref=$GITHUB_REF"
-            echo "target_sdk=36"
-            echo "min_sdk=26"
-          } > production-release-metadata.txt
-
-      - name: Build signed production AAB
-        env:
-          ORG_GRADLE_PROJECT_ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID }}
-          ORG_GRADLE_PROJECT_REWARDED_AD_UNIT_ID: ${{ secrets.REWARDED_AD_UNIT_ID }}
-          ORG_GRADLE_PROJECT_INTERSTITIAL_AD_UNIT_ID: ${{ secrets.INTERSTITIAL_AD_UNIT_ID }}
-        run: |
-          gradle --no-daemon bundleProductionRelease \
-            -PVERSION_CODE="${{ inputs.version_code }}" \
-            -PVERSION_NAME="${{ inputs.version_name }}" \
-            --stacktrace
-
-      - name: Verify production artifact
-        shell: bash
-        run: |
-          set -euo pipefail
-          AAB="app/build/outputs/bundle/release/app-release.aab"
-          test -s "$AAB"
-          unzip -t "$AAB" >/dev/null
-          unzip -l "$AAB" > production-aab-contents.txt
-          grep -Fq "base/manifest/AndroidManifest.xml" production-aab-contents.txt
-          grep -Fq "base/dex/classes.dex" production-aab-contents.txt
-          grep -Fq "BundleConfig.pb" production-aab-contents.txt
-          sha256sum "$AAB" | tee production-aab.sha256
-          MAPPING="app/build/outputs/mapping/release/mapping.txt"
-          test -s "$MAPPING" || { echo "::error::R8 mapping.txt missing from minified production build"; exit 1; }
-          sha256sum "$MAPPING" | tee production-mapping.sha256
-          echo "PRODUCTION_RELEASE_GATE_PASS=1" | tee production-release-validation.txt
-
-      - name: Upload signed production bundle
-        uses: actions/upload-artifact@v4
-        with:
-          name: zero-to-empire-production-${{ inputs.version_name }}-${{ inputs.version_code }}
-          path: |
-            app/build/outputs/bundle/release/app-release.aab
-            production-aab.sha256
-            production-aab-contents.txt
-            app/build/outputs/mapping/release/mapping.txt
-            production-mapping.sha256
-            production-release-metadata.txt
-            production-release-validation.txt
-          if-no-files-found: error
-          retention-days: 30
-
-      - name: Remove keystore
-        if: always()
-        run: rm -f "$RUNNER_TEMP/zero-empire-upload.jks"
-```
-
-## File: .github/workflows/promote-flux-run20.yml
-```yaml
-name: Promote approved FLUX run 20
-
-on:
-  workflow_dispatch:
-  push:
-    branches: [main]
-    paths: ['.github/workflows/promote-flux-run20.yml']
-
-permissions:
-  actions: read
-  contents: write
-
-concurrency:
-  group: promote-flux-run20
-  cancel-in-progress: false
-
-jobs:
-  promote:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 2
-
-      - name: Download reviewed run 20 candidates
-        uses: actions/download-artifact@v4
-        with:
-          name: kaggle-sprite-batch
-          run-id: 33972358035
-          github-token: ${{ github.token }}
-          path: /tmp/run20
-
-      - name: Install image tooling
-        run: python -m pip install --disable-pip-version-check Pillow==11.3.0
-
-      - name: Stage only semantically approved assets
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p art/incoming/final-sprites
-          approved=(
-            zte_prop_02_b_final zte_prop_04_a_final zte_prop_05_b_final
-            zte_prop_06_a_final zte_prop_06_b_final zte_prop_07_a_final zte_prop_07_b_final
-            zte_prop_08_a_final zte_prop_08_b_final zte_prop_09_a_final zte_prop_09_b_final
-            zte_prop_10_a_final zte_prop_10_b_final zte_prop_11_a_final zte_prop_11_b_final
-            zte_prop_12_a_final zte_prop_12_b_final zte_prop_13_a_final
-            zte_vehicle_00_final zte_vehicle_01_final zte_vehicle_02_final zte_vehicle_03_final
-            zte_vehicle_04_final zte_vehicle_05_final zte_vehicle_06_final zte_vehicle_07_final
-            zte_vehicle_08_final zte_vehicle_10_final
-          )
-          stems=()
-          for stem in "${approved[@]}"; do
-            src="/tmp/run20/output/candidates/${stem}.png"
-            test -s "$src" || { echo "Missing approved candidate: $src"; exit 2; }
-            cp "$src" "art/incoming/final-sprites/${stem}.png"
-            stems+=("$stem")
-          done
-          echo "SPRITE_TARGETS=$(IFS=,; echo "${stems[*]}")" >> "$GITHUB_ENV"
-          printf '%s\n' "${approved[@]}" > /tmp/approved-stems.txt
-          echo "Approved count: ${#approved[@]}"
-          echo 'Explicit rejects retained outside repo: zte_prop_13_b_final zte_vehicle_09_final'
-
-      - name: Revalidate exact approved batch
-        shell: bash
-        run: |
-          set -euo pipefail
-          files=()
-          while read -r stem; do files+=("art/incoming/final-sprites/${stem}.png"); done < /tmp/approved-stems.txt
-          python tools/sprites/build_sprite_contact_sheet.py \
-            --files "${files[@]}" \
-            --output art/production/flux-run20-approved-contact-sheet.png \
-            --report art/production/flux-run20-approved-qa.json
-
-      - name: Produce optimized runtime rasters
-        run: python tools/sprites/process_final_sprites.py
-
-      - name: Commit approved CLEAN assets
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          while read -r stem; do
-            git add "art/incoming/final-sprites/${stem}.png"
-            if [ -f "app/src/main/res/drawable-nodpi/${stem}.webp" ]; then git add "app/src/main/res/drawable-nodpi/${stem}.webp"; fi
-            if [ -f "app/src/main/res/drawable-nodpi/${stem}.png" ]; then git add "app/src/main/res/drawable-nodpi/${stem}.png"; fi
-          done < /tmp/approved-stems.txt
-          git add art/production/flux-run20-approved-qa.json
-          git commit -m 'art: add 28 reviewed FLUX static assets'
-          git pull --rebase origin main
-          git push
-```
-
-## File: .github/workflows/promote-flux-run22.yml
-```yaml
-name: Promote approved FLUX run 25
-
-on:
-  workflow_dispatch:
-  push:
-    branches: [main]
-    paths: ['.github/workflows/promote-flux-run22.yml']
-
-permissions:
-  actions: read
-  contents: write
-
-concurrency:
-  group: promote-flux-reviewed
-  cancel-in-progress: false
-
-jobs:
-  promote:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 2
-
-      - name: Download reviewed run 25 candidates
-        uses: actions/download-artifact@v4
-        with:
-          name: kaggle-sprite-batch
-          run-id: 33995889779
-          github-token: ${{ github.token }}
-          path: /tmp/run25
-
-      - name: Install image tooling
-        run: python -m pip install --disable-pip-version-check Pillow==11.3.0
-
-      - name: Stage only semantically approved assets
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p art/incoming/final-sprites
-          approved=(
-            zte_power_core_t0_final zte_power_core_t1_final zte_power_core_t2_final
-            zte_power_core_t3_final zte_power_core_t4_final zte_power_core_t5_final zte_power_core_t6_final
-            zte_prop_00_a_final zte_prop_00_b_final zte_prop_01_a_final zte_prop_01_b_final
-            zte_prop_02_a_final zte_prop_03_a_final zte_prop_03_b_final zte_prop_04_b_final
-            zte_vehicle_17_final
-          )
-          stems=()
-          for stem in "${approved[@]}"; do
-            src="/tmp/run25/output/candidates/${stem}.png"
-            test -s "$src" || { echo "Missing approved candidate: $src"; exit 2; }
-            cp "$src" "art/incoming/final-sprites/${stem}.png"
-            stems+=("$stem")
-          done
-          echo "SPRITE_TARGETS=$(IFS=,; echo "${stems[*]}")" >> "$GITHUB_ENV"
-          printf '%s\n' "${approved[@]}" > /tmp/approved-stems.txt
-          echo "Approved count: ${#approved[@]}"
-          echo 'Rejected after semantic review: PRP-05-A, VEH-09'
-
-      - name: Revalidate exact approved batch
-        shell: bash
-        run: |
-          set -euo pipefail
-          files=()
-          while read -r stem; do files+=("art/incoming/final-sprites/${stem}.png"); done < /tmp/approved-stems.txt
-          python tools/sprites/build_sprite_contact_sheet.py --files "${files[@]}" --output /tmp/flux-run25-approved-contact-sheet.png --report art/production/flux-run25-approved-qa.json
-
-      - name: Produce optimized runtime rasters
-        run: python tools/sprites/process_final_sprites.py
-
-      - name: Commit approved CLEAN assets
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          while read -r stem; do
-            git add "art/incoming/final-sprites/${stem}.png"
-            test -f "app/src/main/res/drawable-nodpi/${stem}.webp" && git add "app/src/main/res/drawable-nodpi/${stem}.webp"
-          done < /tmp/approved-stems.txt
-          git add art/production/flux-run25-approved-qa.json
-          git commit -m 'art: add 16 reviewed FLUX run 25 assets'
-          git pull --rebase origin main
-          git push
-```
-
-## File: .github/workflows/promote-flux-run26.yml
-```yaml
-name: Promote approved FLUX run 26
-
-on:
-  workflow_dispatch:
-  push:
-    branches: [main]
-    paths: ['.github/workflows/promote-flux-run26.yml']
-
-permissions:
-  actions: read
-  contents: write
-
-concurrency:
-  group: promote-flux-run26
-  cancel-in-progress: false
-
-jobs:
-  promote:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 2
-
-      - name: Download reviewed run 26 candidates
-        uses: actions/download-artifact@v4
-        with:
-          name: kaggle-sprite-batch
-          run-id: 33997699212
-          github-token: ${{ github.token }}
-          path: /tmp/run26
-
-      - name: Install image tooling
-        run: python -m pip install --disable-pip-version-check Pillow==11.3.0
-
-      - name: Stage only semantically approved assets
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p art/incoming/final-sprites
-          approved=(zte_prop_05_a_final zte_vehicle_09_final)
-          stems=()
-          for stem in "${approved[@]}"; do
-            src="/tmp/run26/output/candidates/${stem}.png"
-            test -s "$src" || { echo "Missing approved candidate: $src"; exit 2; }
-            cp "$src" "art/incoming/final-sprites/${stem}.png"
-            stems+=("$stem")
-          done
-          echo "SPRITE_TARGETS=$(IFS=,; echo "${stems[*]}")" >> "$GITHUB_ENV"
-          printf '%s\n' "${approved[@]}" > /tmp/approved-stems.txt
-          echo "Approved count: ${#approved[@]}"
-          echo 'Explicit semantic reject retained outside repo: zte_vehicle_16_final (visible wheels/floor disc; not a hovercar)'
-
-      - name: Revalidate exact approved batch
-        shell: bash
-        run: |
-          set -euo pipefail
-          files=()
-          while read -r stem; do files+=("art/incoming/final-sprites/${stem}.png"); done < /tmp/approved-stems.txt
-          python tools/sprites/build_sprite_contact_sheet.py \
-            --files "${files[@]}" \
-            --output art/production/flux-run26-approved-contact-sheet.png \
-            --report art/production/flux-run26-approved-qa.json
-
-      - name: Produce optimized runtime rasters
-        run: python tools/sprites/process_final_sprites.py
-
-      - name: Commit approved CLEAN assets
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          while read -r stem; do
-            git add "art/incoming/final-sprites/${stem}.png"
-            if [ -f "app/src/main/res/drawable-nodpi/${stem}.webp" ]; then git add "app/src/main/res/drawable-nodpi/${stem}.webp"; fi
-            if [ -f "app/src/main/res/drawable-nodpi/${stem}.png" ]; then git add "app/src/main/res/drawable-nodpi/${stem}.png"; fi
-          done < /tmp/approved-stems.txt
-          git add art/production/flux-run26-approved-qa.json
-          git commit -m 'art: add 2 reviewed FLUX run 26 static assets'
-          git pull --rebase origin main
-          git push
-```
-
-## File: .github/workflows/promote-flux-run29.yml
-```yaml
-name: Promote approved FLUX run 29
-
-on:
-  workflow_dispatch:
-  push:
-    branches: [main]
-    paths: ['.github/workflows/promote-flux-run29.yml']
-
-permissions:
-  actions: read
-  contents: write
-
-concurrency:
-  group: promote-flux-run29
-  cancel-in-progress: false
-
-jobs:
-  promote:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 2
-      - name: Download reviewed run 29 candidates
-        uses: actions/download-artifact@v4
-        with:
-          name: kaggle-sprite-batch
-          run-id: 34008110197
-          github-token: ${{ github.token }}
-          path: /tmp/run29
-      - name: Install image tooling
-        run: python -m pip install --disable-pip-version-check Pillow==11.3.0
-      - name: Stage only semantically approved asset
-        shell: bash
-        run: |
-          set -euo pipefail
-          stem=zte_prop_05_a_final
-          mkdir -p art/incoming/final-sprites
-          src="/tmp/run29/output/candidates/${stem}.png"
-          test -s "$src"
-          cp "$src" "art/incoming/final-sprites/${stem}.png"
-          echo "SPRITE_TARGETS=${stem}" >> "$GITHUB_ENV"
-          echo "$stem" > /tmp/approved-stems.txt
-          echo 'Rejected and not promoted: zte_vehicle_09_final (wheeled van; not a wheel-less maglev cargo pod)'
-      - name: Revalidate exact approved asset
-        run: python tools/sprites/build_sprite_contact_sheet.py --files art/incoming/final-sprites/zte_prop_05_a_final.png --output art/production/flux-run29-approved-contact-sheet.png --report art/production/flux-run29-approved-qa.json
-      - name: Produce optimized runtime raster
-        run: python tools/sprites/process_final_sprites.py
-      - name: Commit approved clean asset
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add art/incoming/final-sprites/zte_prop_05_a_final.png app/src/main/res/drawable-nodpi/zte_prop_05_a_final.webp art/production/flux-run29-approved-qa.json
-          git commit -m 'art: add reviewed FLUX PRP-05-A'
-          git pull --rebase origin main
-          git push
-```
-
-## File: .github/workflows/promote-flux-run37-veh09.yml
-```yaml
-name: Promote reviewed FLUX run 37 VEH-09
-
-on:
-  workflow_dispatch:
-  push:
-    branches: [main]
-    paths: ['.github/workflows/promote-flux-run37-veh09.yml']
-
-permissions:
-  actions: read
-  contents: write
-
-concurrency:
-  group: promote-flux-run37-veh09
-  cancel-in-progress: false
-
-jobs:
-  promote:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    env:
-      SPRITE_TARGETS: zte_vehicle_09_final
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 2
-
-      - name: Download reviewed run 37 evidence
-        uses: actions/download-artifact@v4
-        with:
-          name: kaggle-sprite-batch
-          run-id: 34018633870
-          github-token: ${{ github.token }}
-          path: /tmp/run37
-
-      - name: Install image tooling
-        run: python -m pip install --disable-pip-version-check Pillow==11.3.0
-
-      - name: Stage only semantically approved VEH-09
-        shell: bash
-        run: |
-          set -euo pipefail
-          src=/tmp/run37/output/candidates/zte_vehicle_09_final.png
-          test -s "$src"
-          mkdir -p art/incoming/final-sprites art/production
-          cp "$src" art/incoming/final-sprites/zte_vehicle_09_final.png
-          python tools/sprites/build_sprite_contact_sheet.py \
-            --files art/incoming/final-sprites/zte_vehicle_09_final.png \
-            --output art/production/flux-run37-veh09-approved-contact-sheet.png \
-            --report art/production/flux-run37-veh09-approved-qa.json
-
-      - name: Produce optimized runtime raster
-        run: python tools/sprites/process_final_sprites.py
-
-      - name: Integrate reviewed cargo pod in active world traffic
-        shell: bash
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          p=Path('app/src/main/java/com/zerotoempire/game/WorldTrafficArt.kt')
-          s=p.read_text()
-          old='    R.drawable.zte_vehicle_08_final, R.drawable.zte_vehicle_10_final,\n'
-          new='    R.drawable.zte_vehicle_08_final, R.drawable.zte_vehicle_09_final,\n    R.drawable.zte_vehicle_10_final,\n'
-          if 'R.drawable.zte_vehicle_09_final' not in s:
-              if old not in s: raise SystemExit('vehicle insertion anchor missing')
-              s=s.replace(old,new,1)
-          oldp='                Triple(.73f,.55f,.112f),\n'
-          newp='                Triple(.73f,.55f,.112f), Triple(.28f,.62f,.104f),\n'
-          if 'Triple(.28f,.62f,.104f)' not in s:
-              if oldp not in s: raise SystemExit('placement insertion anchor missing')
-              s=s.replace(oldp,newp,1)
-          s=s.replace('rejected VEH-09 remains deliberately absent until a true maglev pod passes QA.',
-                      'run-37 VEH-09 is the reviewed wheel-less maglev cargo pod.')
-          p.write_text(s)
-          PY
-
-      - name: Commit approved asset and runtime integration
-        shell: bash
-        run: |
-          set -euo pipefail
-          test -s app/src/main/res/drawable-nodpi/zte_vehicle_09_final.webp
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add art/incoming/final-sprites/zte_vehicle_09_final.png \
-                  app/src/main/res/drawable-nodpi/zte_vehicle_09_final.webp \
-                  art/production/flux-run37-veh09-approved-qa.json \
-                  app/src/main/java/com/zerotoempire/game/WorldTrafficArt.kt
-          git commit -m 'art: integrate reviewed VEH-09 maglev cargo pod'
-          git pull --rebase origin main
-          git push
-```
-
-## File: .github/workflows/promote-flux-run38-veh16.yml
-```yaml
-name: Promote reviewed FLUX run 38 VEH-16
-
-on:
-  workflow_dispatch:
-  push:
-    branches: [main]
-    paths: ['.github/workflows/promote-flux-run38-veh16.yml']
-
-permissions:
-  contents: write
-  actions: read
-
-jobs:
-  promote:
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 2
-
-      - name: Download exact reviewed run-38 artifact
-        env:
-          GH_TOKEN: ${{ github.token }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          curl -L --fail -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
-            https://api.github.com/repos/dbrckk/zero-to-empire/actions/artifacts/9985540610/zip -o /tmp/run38.zip
-          rm -rf /tmp/run38 && mkdir -p /tmp/run38
-          unzip -q /tmp/run38.zip -d /tmp/run38
-          test -s /tmp/run38/output/candidates/zte_vehicle_16_final.png
-          echo '4bedb35b4fe08a7e3d75ef2a2f70da1b6a0e0b5a78534807447cabd6dc8ddc61  /tmp/run38/output/candidates/zte_vehicle_16_final.png' | sha256sum -c -
-
-      - name: Revalidate and generate Android runtime asset
-        shell: bash
-        run: |
-          set -euo pipefail
-          python -m pip install --quiet Pillow
-          cp /tmp/run38/output/candidates/zte_vehicle_16_final.png art/incoming/final-sprites/zte_vehicle_16_final.png
-          SPRITE_TARGET=zte_vehicle_16_final.png python tools/sprites/process_final_sprites.py
-          test -s app/src/main/res/drawable-nodpi/zte_vehicle_16_final.webp
-          cp /tmp/run38/output/github-qa-report.json art/production/flux-run38-veh16-approved-qa.json
-
-      - name: Integrate reviewed hovercar into active world traffic
-        shell: bash
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          from pathlib import Path
-          p=Path('app/src/main/java/com/zerotoempire/game/WorldTrafficArt.kt')
-          s=p.read_text()
-          if 'R.drawable.zte_vehicle_16_final' not in s:
-              old='    R.drawable.zte_vehicle_13_final, R.drawable.zte_vehicle_14_final,\n    R.drawable.zte_vehicle_15_final, R.drawable.zte_vehicle_17_final,\n'
-              new='    R.drawable.zte_vehicle_13_final, R.drawable.zte_vehicle_14_final,\n    R.drawable.zte_vehicle_15_final, R.drawable.zte_vehicle_16_final,\n    R.drawable.zte_vehicle_17_final,\n'
-              if old not in s: raise SystemExit('vehicle sprite insertion anchor missing')
-              s=s.replace(old,new,1)
-              oldp='                Triple(.73f,.55f,.112f), Triple(.28f,.62f,.104f),\n'
-              newp='                Triple(.73f,.55f,.112f), Triple(.28f,.62f,.104f), Triple(.78f,.63f,.110f),\n'
-              if oldp not in s: raise SystemExit('vehicle placement insertion anchor missing')
-              s=s.replace(oldp,newp,1)
-          p.write_text(s)
-          PY
-
-      - name: Commit reviewed runtime integration
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add art/incoming/final-sprites/zte_vehicle_16_final.png \
-                  art/production/flux-run38-veh16-approved-qa.json \
-                  app/src/main/res/drawable-nodpi/zte_vehicle_16_final.webp \
-                  app/src/main/java/com/zerotoempire/game/WorldTrafficArt.kt
-          git commit -m 'art: integrate reviewed VEH-16 executive hovercar'
-          git pull --rebase origin main
-          git push
-```
-
-## File: .github/workflows/promote-flux-run51-machines.yml
-```yaml
-name: Promote reviewed FLUX run 51 machines
-
-on:
-  workflow_dispatch:
-  push:
-    branches: [main]
-    paths: ['.github/workflows/promote-flux-run51-machines.yml']
-
-permissions:
-  actions: read
-  contents: write
-
-concurrency:
-  group: promote-flux-run51-machines
-  cancel-in-progress: false
-
-jobs:
-  promote:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    env:
-      SPRITE_TARGETS: zte_machine_00_0_final,zte_machine_00_1_final,zte_machine_01_0_final,zte_machine_01_1_final,zte_machine_02_0_final,zte_machine_02_1_final,zte_machine_03_1_final,zte_machine_04_0_final,zte_machine_04_1_final,zte_machine_05_0_final,zte_machine_06_0_final,zte_machine_06_1_final,zte_machine_07_1_final,zte_machine_08_0_final,zte_machine_08_1_final,zte_machine_09_0_final,zte_machine_09_1_final,zte_machine_10_0_final,zte_machine_10_1_final,zte_machine_11_0_final,zte_machine_12_1_final,zte_machine_13_0_final,zte_machine_13_1_final
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 2
-
-      - name: Download reviewed run 51 evidence
-        uses: actions/download-artifact@v4
-        with:
-          name: kaggle-sprite-batch
-          run-id: 34032725768
-          github-token: ${{ github.token }}
-          path: /tmp/run51
-
-      - name: Install image tooling
-        run: python -m pip install --disable-pip-version-check Pillow==11.3.0
-
-      - name: Stage only semantically approved machines
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p art/incoming/final-sprites art/production
-          IFS=',' read -ra targets <<< "$SPRITE_TARGETS"
-          files=()
-          for stem in "${targets[@]}"; do
-            src="/tmp/run51/output/candidates/${stem}.png"
-            test -s "$src"
-            cp "$src" "art/incoming/final-sprites/${stem}.png"
-            files+=("art/incoming/final-sprites/${stem}.png")
-          done
-          python tools/sprites/build_sprite_contact_sheet.py \
-            --files "${files[@]}" \
-            --output art/production/flux-run51-machines-approved-contact-sheet.png \
-            --report art/production/flux-run51-machines-approved-qa.json
-
-      - name: Produce optimized runtime rasters
-        run: python tools/sprites/process_final_sprites.py
-
-      - name: Add reviewed machine runtime layer
-        shell: bash
-        run: |
-          cat > app/src/main/java/com/zerotoempire/game/ReviewedMachineLayer.kt <<'KOT'
-          package com.zerotoempire.game
-
-          import androidx.compose.foundation.Image
-          import androidx.compose.foundation.layout.Box
-          import androidx.compose.foundation.layout.fillMaxSize
-          import androidx.compose.foundation.layout.offset
-          import androidx.compose.foundation.layout.size
-          import androidx.compose.runtime.Composable
-          import androidx.compose.ui.Modifier
-          import androidx.compose.ui.layout.ContentScale
-          import androidx.compose.ui.res.painterResource
-          import androidx.compose.ui.unit.dp
-
-          /** Semantically reviewed run-51 machine masters, visible as era-specific production machinery. */
-          @Composable
-          internal fun ReviewedMachineLayer(eraIndex: Int, modifier: Modifier = Modifier) {
-              val groups = listOf(
-                  intArrayOf(R.drawable.zte_machine_00_0_final, R.drawable.zte_machine_00_1_final, R.drawable.zte_machine_01_0_final, R.drawable.zte_machine_01_1_final),
-                  intArrayOf(R.drawable.zte_machine_02_0_final, R.drawable.zte_machine_02_1_final, R.drawable.zte_machine_03_1_final, R.drawable.zte_machine_04_0_final),
-                  intArrayOf(R.drawable.zte_machine_04_1_final, R.drawable.zte_machine_05_0_final, R.drawable.zte_machine_06_0_final, R.drawable.zte_machine_06_1_final),
-                  intArrayOf(R.drawable.zte_machine_07_1_final, R.drawable.zte_machine_08_0_final, R.drawable.zte_machine_08_1_final),
-                  intArrayOf(R.drawable.zte_machine_09_0_final, R.drawable.zte_machine_09_1_final, R.drawable.zte_machine_10_0_final),
-                  intArrayOf(R.drawable.zte_machine_10_1_final, R.drawable.zte_machine_11_0_final, R.drawable.zte_machine_12_1_final),
-                  intArrayOf(R.drawable.zte_machine_13_0_final, R.drawable.zte_machine_13_1_final),
-              )
-              val ids = groups[eraIndex.coerceIn(0, groups.lastIndex)]
-              val x = listOf(18.dp, 94.dp, 188.dp, 270.dp)
-              val y = listOf(280.dp, 360.dp, 430.dp, 500.dp)
-              Box(modifier.fillMaxSize()) {
-                  ids.forEachIndexed { index, resId ->
-                      Image(
-                          painter = painterResource(resId),
-                          contentDescription = null,
-                          contentScale = ContentScale.Fit,
-                          modifier = Modifier.offset(x[index], y[index]).size(if (eraIndex >= 4) 54.dp else 48.dp),
-                      )
-                  }
-              }
-          }
-          KOT
-          python - <<'PY'
-          from pathlib import Path
-          p=Path('app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt')
-          s=p.read_text()
-          anchor='        ReviewedWorldTraffic(Modifier.fillMaxSize())\n'
-          insert='        ReviewedMachineLayer(eraIndex, Modifier.fillMaxSize())\n        ReviewedWorldTraffic(Modifier.fillMaxSize())\n'
-          if 'ReviewedMachineLayer(eraIndex' not in s:
-              if anchor not in s: raise SystemExit('machine runtime insertion anchor missing')
-              s=s.replace(anchor,insert,1)
-          p.write_text(s)
-          PY
-
-      - name: Mark reviewed machines RUNTIME and update ledger
-        shell: bash
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          ids={
-          'MCH-00-0','MCH-00-1','MCH-01-0','MCH-01-1','MCH-02-0','MCH-02-1','MCH-03-1',
-          'MCH-04-0','MCH-04-1','MCH-05-0','MCH-06-0','MCH-06-1','MCH-07-1','MCH-08-0','MCH-08-1',
-          'MCH-09-0','MCH-09-1','MCH-10-0','MCH-10-1','MCH-11-0','MCH-12-1','MCH-13-0','MCH-13-1'}
-          p=Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md'); lines=p.read_text().splitlines()
-          out=[]
-          for line in lines:
-              if any(line.startswith(f'| {asset} |') for asset in ids):
-                  line=line.rsplit('|',2)[0]+'| RUNTIME |'
-              out.append(line)
-          p.write_text('\n'.join(out)+'\n')
-          q=Path('docs/art/FINAL_AAA_SPRITE_PROGRESS.md'); s=q.read_text()
-          s=s.replace('- ART VALIDATED: **85 / 235**','- ART VALIDATED: **108 / 235**')
-          s=s.replace('- RUNTIME INTEGRATED: **85 / 235**','- RUNTIME INTEGRATED: **108 / 235**')
-          note='''\n## Reviewed FLUX run 51 — 23 machines awaiting green CI\nRun-51 produced 29 technically valid candidates. Semantic QA accepted 23 machine masters and rejected `MCH-03-0` (baked lettering), `MCH-05-1` (wrong battery-carousel read), `MCH-11-1` (detached underside sphere), `MCH-12-0` (missing required containment-ring identity), both terrain candidates (camera/connector mismatch; TER-01 also has a baked road marking), while `MCH-07-0` was not emitted as a technically valid candidate. The 23 accepted machines are integrated into the era-specific active city runtime layer and remain RUNTIME until Android CI is green.\n'''
-          if '## Reviewed FLUX run 51' not in s:
-              s += note
-          q.write_text(s)
-          PY
-
-      - name: Commit reviewed machine batch and runtime integration
-        shell: bash
-        run: |
-          set -euo pipefail
-          IFS=',' read -ra targets <<< "$SPRITE_TARGETS"
-          for stem in "${targets[@]}"; do test -s "app/src/main/res/drawable-nodpi/${stem}.webp"; done
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add art/incoming/final-sprites/ \
-                  app/src/main/res/drawable-nodpi/ \
-                  art/production/flux-run51-machines-approved-qa.json \
-                  app/src/main/java/com/zerotoempire/game/ReviewedMachineLayer.kt \
-                  app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt \
-                  docs/art/FINAL_AAA_SPRITE_MANIFEST.md \
-                  docs/art/FINAL_AAA_SPRITE_PROGRESS.md
-          git commit -m 'art: integrate 23 reviewed run51 machines'
-          git pull --rebase origin main
-          git push
-
-# Trigger marker: run51-reviewed-machine-promotion-v2
-```
-
-## File: .github/workflows/promote-flux-run52-reviewed.yml
-```yaml
-name: Promote reviewed FLUX run 52 assets
-
-on:
-  workflow_dispatch:
-  push:
-    branches: [main]
-    paths: ['.github/workflows/promote-flux-run52-reviewed.yml']
-
-permissions:
-  actions: read
-  contents: write
-
-concurrency:
-  group: promote-flux-run52-reviewed
-  cancel-in-progress: false
-
-env:
-  SPRITE_TARGETS: zte_machine_03_0_final,zte_machine_11_1_final,zte_machine_12_0_final,zte_terrain_00_final,zte_terrain_01_final,zte_terrain_02_final,zte_terrain_03_final,zte_terrain_04_final,zte_terrain_06_final,zte_terrain_08_final,zte_terrain_11_final,zte_terrain_12_final,zte_terrain_13_final
-
-jobs:
-  promote:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 2
-
-      - name: Download reviewed run 52 evidence
-        uses: actions/download-artifact@v4
-        with:
-          name: kaggle-sprite-batch
-          run-id: 34035487201
-          github-token: ${{ github.token }}
-          path: /tmp/run52
-
-      - name: Install image tooling
-        run: python -m pip install --disable-pip-version-check Pillow==11.3.0
-
-      - name: Stage only semantically approved assets
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p art/incoming/final-sprites art/production
-          IFS=',' read -ra targets <<< "$SPRITE_TARGETS"
-          files=()
-          for stem in "${targets[@]}"; do
-            src="/tmp/run52/output/candidates/${stem}.png"
-            test -s "$src"
-            cp "$src" "art/incoming/final-sprites/${stem}.png"
-            files+=("art/incoming/final-sprites/${stem}.png")
-          done
-          python tools/sprites/build_sprite_contact_sheet.py \
-            --files "${files[@]}" \
-            --output art/production/flux-run52-reviewed-contact-sheet.png \
-            --report art/production/flux-run52-reviewed-qa.json
-
-      - name: Produce optimized runtime rasters
-        run: python tools/sprites/process_final_sprites.py
-
-      - name: Integrate reviewed machines and terrain into active runtime
-        shell: bash
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          from pathlib import Path
-          p=Path('app/src/main/java/com/zerotoempire/game/ReviewedMachineLayer.kt')
-          s=p.read_text()
-          replacements={
-            'R.drawable.zte_machine_02_0_final, R.drawable.zte_machine_02_1_final, R.drawable.zte_machine_03_1_final, R.drawable.zte_machine_04_0_final':
-            'R.drawable.zte_machine_02_0_final, R.drawable.zte_machine_02_1_final, R.drawable.zte_machine_03_0_final, R.drawable.zte_machine_03_1_final',
-            'R.drawable.zte_machine_10_1_final, R.drawable.zte_machine_11_0_final, R.drawable.zte_machine_12_1_final':
-            'R.drawable.zte_machine_10_1_final, R.drawable.zte_machine_11_0_final, R.drawable.zte_machine_11_1_final, R.drawable.zte_machine_12_1_final',
-            'R.drawable.zte_machine_13_0_final, R.drawable.zte_machine_13_1_final':
-            'R.drawable.zte_machine_12_0_final, R.drawable.zte_machine_13_0_final, R.drawable.zte_machine_13_1_final',
-          }
-          for old,new in replacements.items():
-              if old in s and new not in s: s=s.replace(old,new,1)
-          p.write_text(s)
-
-          t=Path('app/src/main/java/com/zerotoempire/game/ReviewedTerrainLayer.kt')
-          t.write_text('''package com.zerotoempire.game\n\nimport androidx.compose.foundation.Image\nimport androidx.compose.foundation.layout.Box\nimport androidx.compose.foundation.layout.fillMaxSize\nimport androidx.compose.foundation.layout.offset\nimport androidx.compose.foundation.layout.size\nimport androidx.compose.runtime.Composable\nimport androidx.compose.ui.Modifier\nimport androidx.compose.ui.layout.ContentScale\nimport androidx.compose.ui.res.painterResource\nimport androidx.compose.ui.unit.dp\n\n/** Strictly reviewed modular terrain from FLUX run 52, visible in the active city stage. */\n@Composable\ninternal fun ReviewedTerrainLayer(eraIndex: Int, modifier: Modifier = Modifier) {\n    val groups = listOf(\n        intArrayOf(R.drawable.zte_terrain_00_final, R.drawable.zte_terrain_01_final, R.drawable.zte_terrain_02_final, R.drawable.zte_terrain_03_final),\n        intArrayOf(R.drawable.zte_terrain_04_final, R.drawable.zte_terrain_06_final),\n        intArrayOf(R.drawable.zte_terrain_08_final, R.drawable.zte_terrain_11_final),\n        intArrayOf(R.drawable.zte_terrain_12_final, R.drawable.zte_terrain_13_final),\n    )\n    val group = when { eraIndex <= 1 -> groups[0]; eraIndex <= 3 -> groups[1]; eraIndex <= 5 -> groups[2]; else -> groups[3] }\n    Box(modifier.fillMaxSize()) {\n        group.forEachIndexed { index, resId ->\n            Image(\n                painter = painterResource(resId),\n                contentDescription = null,\n                contentScale = ContentScale.Fit,\n                modifier = Modifier.offset((14 + index * 82).dp, (610 + (index % 2) * 44).dp).size(92.dp),\n            )\n        }\n    }\n}\n''')
-
-          w=Path('app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt')
-          s=w.read_text()
-          anchor='        ReviewedMachineLayer(eraIndex, Modifier.fillMaxSize())\n'
-          insert='        ReviewedTerrainLayer(eraIndex, Modifier.fillMaxSize())\n        ReviewedMachineLayer(eraIndex, Modifier.fillMaxSize())\n'
-          if 'ReviewedTerrainLayer(eraIndex' not in s:
-              if anchor not in s: raise SystemExit('terrain runtime insertion anchor missing')
-              s=s.replace(anchor,insert,1)
-          w.write_text(s)
-          PY
-
-      - name: Mark reviewed assets RUNTIME and update ledger
-        shell: bash
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          ids={'MCH-03-0','MCH-11-1','MCH-12-0','TER-00','TER-01','TER-02','TER-03','TER-04','TER-06','TER-08','TER-11','TER-12','TER-13'}
-          p=Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          lines=p.read_text().splitlines(); out=[]
-          for line in lines:
-              if any(line.startswith(f'| {asset} |') for asset in ids):
-                  line=line.rsplit('|',2)[0]+'| RUNTIME |'
-              out.append(line)
-          p.write_text('\n'.join(out)+'\n')
-          q=Path('docs/art/FINAL_AAA_SPRITE_PROGRESS.md'); s=q.read_text()
-          s=s.replace('- ART VALIDATED: **108 / 235**','- ART VALIDATED: **121 / 235**')
-          s=s.replace('- RUNTIME INTEGRATED: **108 / 235**','- RUNTIME INTEGRATED: **121 / 235**')
-          note='''\n## Reviewed FLUX run 52 — 13 assets awaiting green CI\nSemantic QA accepted `MCH-03-0`, `MCH-11-1`, `MCH-12-0` plus terrain `TER-00`, `TER-01`, `TER-02`, `TER-03`, `TER-04`, `TER-06`, `TER-08`, `TER-11`, `TER-12`, `TER-13`. Rejected: `MCH-05-1` (wrong carousel read with detached dark base), `MCH-07-0` (crane-like loose suspended composition instead of a compact gantry), `TER-05` (baked arrows), `TER-07` (open frame rather than a complete square tile), `TER-09` (missing twin cyan maglev guide identity), `TER-10` (bridge-like structure rather than square service-deck tile), and `VEH-16` (still reads as a conventional car with wheel-like side volumes). Accepted assets are integrated and remain RUNTIME until Android CI is green.\n'''
-          if '## Reviewed FLUX run 52' not in s: s += note
-          q.write_text(s)
-          PY
-
-      - name: Commit reviewed run 52 batch
-        shell: bash
-        run: |
-          set -euo pipefail
-          IFS=',' read -ra targets <<< "$SPRITE_TARGETS"
-          for stem in "${targets[@]}"; do test -s "app/src/main/res/drawable-nodpi/${stem}.webp"; done
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add art/incoming/final-sprites/ \
-                  app/src/main/res/drawable-nodpi/ \
-                  art/production/flux-run52-reviewed-qa.json \
-                  app/src/main/java/com/zerotoempire/game/ReviewedMachineLayer.kt \
-                  app/src/main/java/com/zerotoempire/game/ReviewedTerrainLayer.kt \
-                  app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt \
-                  docs/art/FINAL_AAA_SPRITE_MANIFEST.md \
-                  docs/art/FINAL_AAA_SPRITE_PROGRESS.md
-          git commit -m 'art: integrate 13 reviewed run52 assets'
-          git pull --rebase origin main
-          git push
-```
-
-## File: .github/workflows/promote-fx09-strict.yml
-```yaml
-name: Promote proven FX-09 strict DONE
-
-on:
-  push:
-    paths:
-      - '.github/workflows/promote-fx09-strict.yml'
-
-permissions:
-  contents: write
-
-jobs:
-  promote:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 2
-      - name: Promote only FX-09 after strict evidence audit
-        shell: bash
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          from pathlib import Path
-          p = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          text = p.read_text(encoding='utf-8')
-          old = '| FX-09 | income pickup sparkle | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_09_final.webp` | RUNTIME |'
-          new = '| FX-09 | income pickup sparkle | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_09_final.webp` | DONE |'
-          if old not in text:
-              raise SystemExit('Expected FX-09 RUNTIME row not found; refusing blind edit')
-          p.write_text(text.replace(old, new, 1), encoding='utf-8')
-          PY
-      - name: Commit strict promotion
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md
-          git commit -m 'art: promote FX-09 to strict DONE'
-          git pull --rebase origin main
-          git push
-```
-
-## File: .github/workflows/promote-fx10-strict.yml
-```yaml
-name: Promote proven FX-10 strict DONE
-
-on:
-  push:
-    paths:
-      - '.github/workflows/promote-fx10-strict.yml'
-
-permissions:
-  contents: write
-
-jobs:
-  promote:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 2
-      - name: Promote only FX-10 after strict evidence audit
-        shell: bash
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          from pathlib import Path
-          p = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          text = p.read_text(encoding='utf-8')
-          old = '| FX-10 | electric arc | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_10_final.webp` | RUNTIME |'
-          new = '| FX-10 | electric arc | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_10_final.webp` | DONE |'
-          if old not in text:
-              raise SystemExit('Expected FX-10 RUNTIME row not found; refusing blind edit')
-          p.write_text(text.replace(old, new, 1), encoding='utf-8')
-          PY
-      - name: Commit strict promotion
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md
-          git commit -m 'art: promote FX-10 to strict DONE'
-          git pull --rebase origin main
-          git push
-```
-
-## File: .github/workflows/promote-fx11-strict.yml
-```yaml
-name: Promote proven FX-11 strict DONE
-
-on:
-  push:
-    paths:
-      - '.github/workflows/promote-fx11-strict.yml'
-  workflow_dispatch:
-
-permissions:
-  contents: write
-
-jobs:
-  promote:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Promote only FX-11 after strict evidence audit
-        shell: bash
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          p = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          s = p.read_text(encoding='utf-8')
-          old = '| FX-11 | hologram scan sweep | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_11_final.webp` | RUNTIME |'
-          new = old[:-10] + 'DONE |'
-          if old not in s:
-              raise SystemExit('FX-11 canonical RUNTIME row not found exactly')
-          if s.count(old) != 1:
-              raise SystemExit('FX-11 canonical row is not unique')
-          p.write_text(s.replace(old, new, 1), encoding='utf-8')
-          PY
-          test -f app/src/main/res/drawable-nodpi/zte_fx_11_final.webp
-          grep -q 'R.drawable.zte_fx_11_final' app/src/main/java/com/zerotoempire/game/HologramScanSweep.kt
-          grep -q 'businessId == 8 && tier >= 4.*HologramScanSweep' app/src/main/java/com/zerotoempire/game/WorldBusinessVisual.kt
-      - name: Commit strict promotion
-        shell: bash
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md
-          git commit -m 'art: promote FX-11 to strict DONE'
-          git pull --rebase origin main
-          git push
-```
-
-## File: .github/workflows/promote-fx12-strict.yml
-```yaml
-name: Promote proven FX-12 strict DONE
-
-on:
-  push:
-    paths:
-      - '.github/workflows/promote-fx12-strict.yml'
-  workflow_dispatch:
-
-permissions:
-  contents: write
-
-jobs:
-  promote:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Promote only FX-12 after strict evidence audit
-        shell: bash
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          p = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          s = p.read_text(encoding='utf-8')
-          old = '| FX-12 | drone thruster | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_12_final.webp` | RUNTIME |'
-          new = old[:-10] + 'DONE |'
-          if s.count(old) != 1:
-              raise SystemExit(f'Expected one FX-12 RUNTIME row, found {s.count(old)}')
-          p.write_text(s.replace(old, new, 1), encoding='utf-8')
-          PY
-          test -f app/src/main/res/drawable-nodpi/zte_fx_12_final.webp
-          grep -q 'R.drawable.zte_fx_12_final' app/src/main/java/com/zerotoempire/game/DroneThruster.kt
-          grep -q 'businessId == 9 && tier >= 4.*DroneThruster' app/src/main/java/com/zerotoempire/game/WorldBusinessVisual.kt
-      - name: Commit strict promotion
-        shell: bash
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md
-          git commit -m 'art: promote FX-12 to strict DONE'
-          git pull --rebase origin main
-          git push
-```
-
-## File: .github/workflows/promote-fx13-strict.yml
-```yaml
-name: Promote proven FX-13 strict DONE
-
-on:
-  push:
-    paths:
-      - '.github/workflows/promote-fx13-strict.yml'
-  workflow_dispatch:
-
-permissions:
-  contents: write
-
-jobs:
-  promote:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Promote only FX-13 after strict evidence audit
-        shell: bash
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          p = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          s = p.read_text(encoding='utf-8')
-          old = '| FX-13 | phase distortion | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_13_final.webp` | RUNTIME |'
-          new = old[:-10] + 'DONE |'
-          if s.count(old) != 1:
-              raise SystemExit(f'Expected exactly one FX-13 RUNTIME row, found {s.count(old)}')
-          p.write_text(s.replace(old, new, 1), encoding='utf-8')
-          PY
-          test -f app/src/main/res/drawable-nodpi/zte_fx_13_final.webp
-          grep -q 'R.drawable.zte_fx_13_final' app/src/main/java/com/zerotoempire/game/PhaseDistortion.kt
-          grep -q 'businessId == 10 && tier >= 4.*PhaseDistortion' app/src/main/java/com/zerotoempire/game/WorldBusinessVisual.kt
-      - name: Commit strict promotion
-        shell: bash
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md
-          git commit -m 'art: promote FX-13 to strict DONE'
-          git pull --rebase origin main
-          git push
-```
-
-## File: .github/workflows/promote-fx14-strict.yml
-```yaml
-name: Promote proven FX-14 strict DONE
-
-on:
-  push:
-    paths:
-      - '.github/workflows/promote-fx14-strict.yml'
-  workflow_dispatch:
-
-permissions:
-  contents: write
-
-jobs:
-  promote:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Promote only FX-14 after strict evidence audit
-        shell: bash
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          p = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          s = p.read_text(encoding='utf-8')
-          old = '| FX-14 | orbital ion trail | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_14_final.webp` | RUNTIME |'
-          new = old[:-10] + 'DONE |'
-          if s.count(old) != 1:
-              raise SystemExit(f'Expected exactly one FX-14 RUNTIME row, found {s.count(old)}')
-          p.write_text(s.replace(old, new, 1), encoding='utf-8')
-          PY
-          test -f app/src/main/res/drawable-nodpi/zte_fx_14_final.webp
-          grep -q 'R.drawable.zte_fx_14_final' app/src/main/java/com/zerotoempire/game/OrbitalIonTrail.kt
-          grep -q 'businessId == 11 && tier >= 4.*OrbitalIonTrail' app/src/main/java/com/zerotoempire/game/WorldBusinessVisual.kt
-      - name: Commit strict promotion
-        shell: bash
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md
-          git commit -m 'art: promote FX-14 to strict DONE'
-          git pull --rebase origin main
-          git push
-```
-
-## File: .github/workflows/promote-fx15-strict.yml
-```yaml
-name: Promote proven FX-15 strict DONE
-
-on:
-  push:
-    paths:
-      - '.github/workflows/promote-fx15-strict.yml'
-  workflow_dispatch:
-
-permissions:
-  contents: write
-
-jobs:
-  promote:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Promote only FX-15 after strict evidence audit
-        shell: bash
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          p = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          s = p.read_text(encoding='utf-8')
-          old = '| FX-15 | stellar flare | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_15_final.webp` | RUNTIME |'
-          new = old[:-10] + 'DONE |'
-          if s.count(old) != 1:
-              raise SystemExit(f'Expected exactly one FX-15 RUNTIME row, found {s.count(old)}')
-          p.write_text(s.replace(old, new, 1), encoding='utf-8')
-          PY
-          test -f app/src/main/res/drawable-nodpi/zte_fx_15_final.webp
-          grep -q 'R.drawable.zte_fx_15_final' app/src/main/java/com/zerotoempire/game/StellarFlare.kt
-          grep -q 'businessId == 12 && tier >= 4.*StellarFlare' app/src/main/java/com/zerotoempire/game/WorldBusinessVisual.kt
-      - name: Commit strict promotion
-        shell: bash
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md
-          git commit -m 'art: promote FX-15 to strict DONE'
-          git pull --rebase origin main
-          git push
-```
-
-## File: .github/workflows/promote-fx16-strict.yml
-```yaml
-name: Promote proven FX-16 strict DONE
-
-on:
-  push:
-    paths:
-      - '.github/workflows/promote-fx16-strict.yml'
-  workflow_dispatch:
-
-permissions:
-  contents: write
-
-jobs:
-  promote:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Promote only FX-16 after strict evidence audit
-        shell: bash
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          p = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          s = p.read_text(encoding='utf-8')
-          old = '| FX-16 | singularity lens pulse | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_16_final.webp` | RUNTIME |'
-          new = old[:-10] + 'DONE |'
-          if s.count(old) != 1:
-              raise SystemExit(f'Expected exactly one FX-16 RUNTIME row, found {s.count(old)}')
-          p.write_text(s.replace(old, new, 1), encoding='utf-8')
-          PY
-          test -f app/src/main/res/drawable-nodpi/zte_fx_16_final.webp
-          grep -q 'R.drawable.zte_fx_16_final' app/src/main/java/com/zerotoempire/game/SingularityLensPulse.kt
-          grep -q 'businessId == 13 && tier >= 4.*SingularityLensPulse' app/src/main/java/com/zerotoempire/game/WorldBusinessVisual.kt
-      - name: Commit strict promotion
-        shell: bash
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md
-          git commit -m 'art: promote FX-16 to strict DONE'
-          git pull --rebase origin main
-          git push
-```
-
-## File: .github/workflows/promote-reviewed-run68.yml
-```yaml
-name: Promote reviewed FLUX run 68
-
-on:
-  push:
-    paths:
-      - ".github/workflows/promote-reviewed-run68.yml"
-  workflow_dispatch:
-
-permissions:
-  contents: write
-  actions: read
-
-concurrency:
-  group: promote-reviewed-run68
-  cancel-in-progress: false
-
-jobs:
-  promote:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Download exact run68 evidence
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          rm -rf /tmp/run68
-          mkdir -p /tmp/run68
-          gh run download 34079408689 -n kaggle-sprite-batch -D /tmp/run68
-          test -f /tmp/run68/output/candidates/zte_machine_05_1_final.png
-          test -f /tmp/run68/output/candidates/zte_machine_07_0_final.png
-          test -f /tmp/run68/output/candidates/zte_terrain_05_final.png
-
-      - name: Validate and stage only semantically approved assets
-        run: |
-          python -m pip install --quiet Pillow
-          python - <<'PY'
-          from pathlib import Path
-          from PIL import Image
-          import json
-
-          accepted = {
-              'MCH-05-1': 'zte_machine_05_1_final.png',
-              'MCH-07-0': 'zte_machine_07_0_final.png',
-              'TER-05': 'zte_terrain_05_final.png',
-          }
-          source = Path('/tmp/run68/output/candidates')
-          runtime = Path('app/src/main/res/drawable-nodpi')
-          runtime.mkdir(parents=True, exist_ok=True)
-          report = {'source_run': 68, 'source_run_id': 34079408689, 'accepted': {}, 'rejected_semantic': ['TER-07', 'TER-09']}
-
-          for asset_id, name in accepted.items():
-              p = source / name
-              im = Image.open(p).convert('RGBA')
-              w, h = im.size
-              if min(w, h) < 512:
-                  raise SystemExit(f'{asset_id}: dimensions too small {im.size}')
-              a = im.getchannel('A')
-              bbox = a.getbbox()
-              if not bbox:
-                  raise SystemExit(f'{asset_id}: empty alpha')
-              l, t, r, b = bbox
-              margins = (l, t, w-r, h-b)
-              if min(margins) < max(4, int(min(w,h)*0.04)):
-                  raise SystemExit(f'{asset_id}: unsafe margins {margins}')
-              edge = sum(1 for x in range(w) if a.getpixel((x,0)) or a.getpixel((x,h-1))) + sum(1 for y in range(h) if a.getpixel((0,y)) or a.getpixel((w-1,y)))
-              if edge:
-                  raise SystemExit(f'{asset_id}: alpha touches edge ({edge})')
-              coverage = sum(1 for px in a.getdata() if px > 8) / (w*h)
-              if not (0.08 <= coverage <= 0.72):
-                  raise SystemExit(f'{asset_id}: suspicious alpha coverage {coverage:.4f}')
-              out = runtime / name.replace('.png', '.webp')
-              im.save(out, 'WEBP', lossless=True, method=6)
-              report['accepted'][asset_id] = {
-                  'source': name,
-                  'runtime': out.name,
-                  'dimensions': [w,h],
-                  'bbox': [l,t,r,b],
-                  'margins': list(margins),
-                  'coverage': round(coverage, 6),
-                  'edge_nonzero': edge,
-              }
-
-          qa = Path('art/production/flux-run68-approved-qa.json')
-          qa.parent.mkdir(parents=True, exist_ok=True)
-          qa.write_text(json.dumps(report, indent=2) + '\n')
-          PY
-
-      - name: Integrate reviewed assets and mark RUNTIME
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          import re
-
-          machine = Path('app/src/main/java/com/zerotoempire/game/ReviewedMachineLayer.kt')
-          s = machine.read_text()
-          s = s.replace('/** Semantically reviewed run-51 machine masters, visible as era-specific production machinery. */', '/** Semantically reviewed FLUX machine masters, including run 68 stragglers, visible as era-specific production machinery. */')
-          s = s.replace('intArrayOf(R.drawable.zte_machine_04_1_final, R.drawable.zte_machine_05_0_final, R.drawable.zte_machine_06_0_final, R.drawable.zte_machine_06_1_final),', 'intArrayOf(R.drawable.zte_machine_04_1_final, R.drawable.zte_machine_05_0_final, R.drawable.zte_machine_05_1_final, R.drawable.zte_machine_06_0_final, R.drawable.zte_machine_06_1_final),')
-          s = s.replace('intArrayOf(R.drawable.zte_machine_07_1_final, R.drawable.zte_machine_08_0_final, R.drawable.zte_machine_08_1_final),', 'intArrayOf(R.drawable.zte_machine_07_0_final, R.drawable.zte_machine_07_1_final, R.drawable.zte_machine_08_0_final, R.drawable.zte_machine_08_1_final),')
-          machine.write_text(s)
-
-          terrain = Path('app/src/main/java/com/zerotoempire/game/ReviewedTerrainLayer.kt')
-          s = terrain.read_text()
-          s = s.replace('/** Strictly reviewed modular terrain from FLUX runs 52 and 66, visible in the active city stage. */', '/** Strictly reviewed modular terrain from FLUX runs 52, 66 and 68, visible in the active city stage. */')
-          s = s.replace('intArrayOf(R.drawable.zte_terrain_04_final, R.drawable.zte_terrain_06_final),', 'intArrayOf(R.drawable.zte_terrain_04_final, R.drawable.zte_terrain_05_final, R.drawable.zte_terrain_06_final),')
-          terrain.write_text(s)
-
-          manifest = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          m = manifest.read_text()
-          ids = ['MCH-05-1', 'MCH-07-0', 'TER-05']
-          for asset_id in ids:
-              pattern = rf'(^\| {re.escape(asset_id)} \|.*\| )TODO( \|$)'
-              m, n = re.subn(pattern, r'\1RUNTIME\2', m, flags=re.M)
-              if n != 1:
-                  raise SystemExit(f'expected one TODO row for {asset_id}, got {n}')
-          manifest.write_text(m)
-
-          progress = Path('docs/art/FINAL_AAA_SPRITE_PROGRESS.md')
-          p = progress.read_text()
-          p = re.sub(r'- ART VALIDATED: \*\*\d+ / 235\*\*', '- ART VALIDATED: **126 / 235**', p, count=1)
-          p = re.sub(r'- RUNTIME INTEGRATED: \*\*\d+ / 235\*\*', '- RUNTIME INTEGRATED: **126 / 235**', p, count=1)
-          p += '''\n\n## Reviewed FLUX run 68 — 3 assets awaiting green CI\nRun-68 full-resolution review accepts `MCH-05-1`, `MCH-07-0` and `TER-05`. `MCH-05-1` now reads clearly as a compact radial battery carousel with repeated removable energy modules and no baked text; `MCH-07-0` is a compact framed production gantry with integrated tool head and work bed rather than a loose crane; `TER-05` is a complete multi-lane four-way expansion road connector with clean isolation and road-surface markings only. All three pass alpha, edge, dimension, coverage and safety-margin checks and are integrated into active runtime references. `TER-07` is rejected because it remains a generic platform rather than an energy conduit; `TER-09` is rejected because it remains a slab with a single luminous strip rather than the required maglev/rail connector identity. The three accepted assets remain RUNTIME until Android CI is green on their integration commit.\n'''
-          progress.write_text(p)
-          PY
-
-      - name: Commit run68 runtime integration
-        id: integration
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add app/src/main/res/drawable-nodpi/zte_machine_05_1_final.webp \
-                  app/src/main/res/drawable-nodpi/zte_machine_07_0_final.webp \
-                  app/src/main/res/drawable-nodpi/zte_terrain_05_final.webp \
-                  app/src/main/java/com/zerotoempire/game/ReviewedMachineLayer.kt \
-                  app/src/main/java/com/zerotoempire/game/ReviewedTerrainLayer.kt \
-                  art/production/flux-run68-approved-qa.json \
-                  docs/art/FINAL_AAA_SPRITE_MANIFEST.md \
-                  docs/art/FINAL_AAA_SPRITE_PROGRESS.md
-          git commit -m "art: integrate 3 reviewed run68 stragglers"
-          git push origin HEAD:main
-          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
-
-      - name: Wait for Android CI on integration commit
-        id: android
-        env:
-          GH_TOKEN: ${{ github.token }}
-          SHA: ${{ steps.integration.outputs.sha }}
-        run: |
-          run_id=""
-          for i in $(seq 1 80); do
-            run_id=$(gh run list --workflow android.yml --commit "$SHA" --json databaseId,status,conclusion,headSha --limit 5 --jq '.[0].databaseId // empty')
-            if [ -n "$run_id" ]; then
-              status=$(gh run view "$run_id" --json status --jq .status)
-              conclusion=$(gh run view "$run_id" --json conclusion --jq .conclusion)
-              head=$(gh run view "$run_id" --json headSha --jq .headSha)
-              echo "Android CI run=$run_id status=$status conclusion=$conclusion head=$head"
-              [ "$head" = "$SHA" ] || { sleep 15; continue; }
-              if [ "$status" = "completed" ]; then
-                [ "$conclusion" = "success" ] || exit 1
-                echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
-                exit 0
-              fi
-            fi
-            sleep 15
-          done
-          echo "Timed out waiting for Android CI for $SHA" >&2
-          exit 1
-
-      - name: Promote run68 assets to strict DONE
-        env:
-          RUN_ID: ${{ steps.android.outputs.run_id }}
-          INTEGRATION_SHA: ${{ steps.integration.outputs.sha }}
-        run: |
-          git pull --ff-only origin main
-          python - <<'PY'
-          from pathlib import Path
-          import os, re
-          ids = ['MCH-05-1', 'MCH-07-0', 'TER-05']
-          manifest = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          m = manifest.read_text()
-          for asset_id in ids:
-              pattern = rf'(^\| {re.escape(asset_id)} \|.*\| )RUNTIME( \|$)'
-              m, n = re.subn(pattern, r'\1DONE\2', m, flags=re.M)
-              if n != 1:
-                  raise SystemExit(f'expected one RUNTIME row for {asset_id}, got {n}')
-          manifest.write_text(m)
-
-          progress = Path('docs/art/FINAL_AAA_SPRITE_PROGRESS.md')
-          p = progress.read_text()
-          p = re.sub(r'- DONE: \*\*\d+ / 235\*\*', '- DONE: **111 / 235**', p, count=1)
-          p = re.sub(r'- Generated candidates accepted as DONE: \*\*\d+\*\*', '- Generated candidates accepted as DONE: **111**', p, count=1)
-          p = p.replace('## Reviewed FLUX run 68 — 3 assets awaiting green CI', '## Reviewed FLUX run 68 — 3 DONE', 1)
-          old = 'The three accepted assets remain RUNTIME until Android CI is green on their integration commit.'
-          new = f"Android CI run `{os.environ['RUN_ID']}` completed successfully on integration commit `{os.environ['INTEGRATION_SHA']}`; all three accepted run-68 assets are therefore strict DONE."
-          p = p.replace(old, new, 1)
-          progress.write_text(p)
-          PY
-          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md docs/art/FINAL_AAA_SPRITE_PROGRESS.md
-          git commit -m "art: mark reviewed run68 assets strict DONE"
-          git push origin HEAD:main
-```
-
-## File: .github/workflows/promote-reviewed-run69-ter09.yml
-```yaml
-name: Promote reviewed run69 TER-09
-
-on:
-  push:
-    paths:
-      - ".github/workflows/promote-reviewed-run69-ter09.yml"
-  workflow_dispatch:
-
-permissions:
-  contents: write
-  actions: write
-
-jobs:
-  promote:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Download reviewed run69 artifact
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          mkdir -p /tmp/run69
-          gh api repos/${{ github.repository }}/actions/artifacts/10003885918/zip > /tmp/run69.zip
-          unzip -q /tmp/run69.zip -d /tmp/run69
-          test -f /tmp/run69/output/candidates/zte_terrain_09_final.png
-
-      - name: Revalidate TER-09 and build runtime WebP
-        run: |
-          python -m pip install --quiet pillow
-          python - <<'PY'
-          from PIL import Image
-          from pathlib import Path
-          src = Path('/tmp/run69/output/candidates/zte_terrain_09_final.png')
-          out = Path('app/src/main/res/drawable-nodpi/zte_terrain_09_final.webp')
-          im = Image.open(src).convert('RGBA')
-          if im.size != (1024, 1024):
-              raise SystemExit(f'bad dimensions: {im.size}')
-          a = im.getchannel('A')
-          bbox = a.getbbox()
-          if not bbox:
-              raise SystemExit('empty alpha')
-          x0,y0,x1,y1 = bbox
-          # Connector endpoints may intentionally reach top/bottom edges, but side/background contamination is forbidden.
-          if x0 < 80 or x1 > 944:
-              raise SystemExit(f'unsafe horizontal bbox: {bbox}')
-          opaque = sum(1 for v in a.getdata() if v > 8)
-          coverage = opaque / (1024*1024)
-          if not (0.18 <= coverage <= 0.58):
-              raise SystemExit(f'bad coverage: {coverage:.3f}')
-          # Semantic review already established: clean twin-guide cyan maglev X-connector, no baked text/UI.
-          out.parent.mkdir(parents=True, exist_ok=True)
-          im.save(out, 'WEBP', lossless=True, method=6)
-          print('TER-09 validated', bbox, coverage, out.stat().st_size)
-          PY
-
-      - name: Integrate TER-09 runtime reference and ledgers
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          import re
-
-          layer = Path('app/src/main/java/com/zerotoempire/game/ReviewedTerrainLayer.kt')
-          s = layer.read_text()
-          s = s.replace('FLUX runs 52, 66 and 68', 'FLUX runs 52, 66, 68 and 69')
-          old = 'intArrayOf(R.drawable.zte_terrain_08_final, R.drawable.zte_terrain_10_final, R.drawable.zte_terrain_11_final),'
-          new = 'intArrayOf(R.drawable.zte_terrain_08_final, R.drawable.zte_terrain_09_final, R.drawable.zte_terrain_10_final, R.drawable.zte_terrain_11_final),'
-          if old not in s and new not in s:
-              raise SystemExit('terrain runtime anchor not found')
-          s = s.replace(old, new)
-          layer.write_text(s)
-
-          manifest = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          m = manifest.read_text()
-          pat = r'(^\| TER-09 \|.*\| )TODO( \|$)'
-          m2, n = re.subn(pat, r'\1RUNTIME\2', m, flags=re.M)
-          if n != 1 and not re.search(r'^\| TER-09 \|.*\| (RUNTIME|DONE) \|$', m, flags=re.M):
-              raise SystemExit('TER-09 manifest row not found')
-          manifest.write_text(m2 if n else m)
-
-          progress = Path('docs/art/FINAL_AAA_SPRITE_PROGRESS.md')
-          p = progress.read_text()
-          p = re.sub(r'- ART VALIDATED: \*\*\d+ / 235\*\*', '- ART VALIDATED: **127 / 235**', p, count=1)
-          p = re.sub(r'- RUNTIME INTEGRATED: \*\*\d+ / 235\*\*', '- RUNTIME INTEGRATED: **127 / 235**', p, count=1)
-          if '## Reviewed FLUX run 69' not in p:
-              p += '\n\n## Reviewed FLUX run 69 — 1 asset awaiting green CI\nRun-69 emitted two technically passing terrain candidates. Full-resolution semantic review accepts only `TER-09`: it is a clean isolated four-way maglev/rail connector with continuous twin cyan guide rails, connector endpoints, no baked text/UI and no background rectangle. `TER-07` is rejected because it remains a platform tile with a local emitter rather than a seam-safe energy-conduit connector. `TER-09` is integrated into the active megastructure terrain runtime layer and remains RUNTIME until Android CI is green.\n'
-          progress.write_text(p)
-          PY
-
-      - name: Commit reviewed TER-09 runtime integration
-        id: integration
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add app/src/main/res/drawable-nodpi/zte_terrain_09_final.webp app/src/main/java/com/zerotoempire/game/ReviewedTerrainLayer.kt docs/art/FINAL_AAA_SPRITE_MANIFEST.md docs/art/FINAL_AAA_SPRITE_PROGRESS.md
-          git commit -m "art: integrate reviewed run69 TER-09"
-          git push origin HEAD:main
-          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
-
-      - name: Dispatch Android CI
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh workflow run android.yml --ref main
-
-      - name: Wait for green Android CI on integration commit
-        id: android
-        env:
-          GH_TOKEN: ${{ github.token }}
-          SHA: ${{ steps.integration.outputs.sha }}
-        run: |
-          for i in $(seq 1 80); do
-            row=$(gh run list --workflow android.yml --commit "$SHA" --json databaseId,status,conclusion,headSha --limit 5 --jq '.[0] // empty')
-            if [ -n "$row" ]; then
-              run_id=$(echo "$row" | jq -r .databaseId)
-              status=$(echo "$row" | jq -r .status)
-              conclusion=$(echo "$row" | jq -r '.conclusion // ""')
-              head=$(echo "$row" | jq -r .headSha)
-              echo "Android CI run=$run_id status=$status conclusion=$conclusion head=$head"
-              if [ "$head" = "$SHA" ] && [ "$status" = "completed" ]; then
-                [ "$conclusion" = "success" ] || exit 1
-                echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
-                exit 0
-              fi
-            fi
-            sleep 15
-          done
-          exit 1
-
-      - name: Mark TER-09 strict DONE
-        env:
-          RUN_ID: ${{ steps.android.outputs.run_id }}
-          CI_SHA: ${{ steps.integration.outputs.sha }}
-        run: |
-          git pull --rebase origin main
-          python - <<'PY'
-          from pathlib import Path
-          import os, re
-          manifest = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          m = manifest.read_text()
-          m, n = re.subn(r'(^\| TER-09 \|.*\| )RUNTIME( \|$)', r'\1DONE\2', m, flags=re.M)
-          if n != 1 and not re.search(r'^\| TER-09 \|.*\| DONE \|$', m, flags=re.M):
-              raise SystemExit('TER-09 RUNTIME row missing')
-          manifest.write_text(m)
-
-          progress = Path('docs/art/FINAL_AAA_SPRITE_PROGRESS.md')
-          p = progress.read_text()
-          p = re.sub(r'- DONE: \*\*\d+ / 235\*\*', '- DONE: **112 / 235**', p, count=1)
-          p = re.sub(r'- Generated candidates accepted as DONE: \*\*\d+\*\*', '- Generated candidates accepted as DONE: **112**', p, count=1)
-          p = p.replace('## Reviewed FLUX run 69 — 1 asset awaiting green CI', '## Reviewed FLUX run 69 — 1 DONE', 1)
-          p = p.replace('`TER-09` is integrated into the active megastructure terrain runtime layer and remains RUNTIME until Android CI is green.', f"`TER-09` is integrated into the active megastructure terrain runtime layer. Android CI run `{os.environ['RUN_ID']}` completed successfully on integration commit `{os.environ['CI_SHA']}`; `TER-09` is therefore strict DONE.", 1)
-          progress.write_text(p)
-          PY
-          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md docs/art/FINAL_AAA_SPRITE_PROGRESS.md
-          git commit -m "art: mark run69 TER-09 strict DONE"
-          git push origin HEAD:main
-```
-
-## File: .github/workflows/promote-run66-reviewed.yml
-```yaml
-name: Promote reviewed FLUX run 66
-
-on:
-  push:
-    paths:
-      - ".github/workflows/promote-run66-reviewed.yml"
-  workflow_dispatch:
-
-permissions:
-  contents: write
-  actions: write
-
-concurrency:
-  group: promote-run66-reviewed
-  cancel-in-progress: false
-
-jobs:
-  promote:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Download reviewed run66 artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: kaggle-sprite-batch
-          path: /tmp/run66
-          github-token: ${{ github.token }}
-          run-id: 34075730717
-
-      - name: Validate and install accepted assets
-        shell: bash
-        run: |
-          python -m pip install --quiet Pillow
-          python - <<'PY'
-          from PIL import Image
-          from pathlib import Path
-          import json, re
-
-          root = Path('.')
-          artifact = Path('/tmp/run66')
-          candidates = artifact / 'output' / 'candidates'
-          if not candidates.exists():
-              hits = list(artifact.rglob('candidates'))
-              if not hits:
-                  raise SystemExit('run66 candidates directory not found')
-              candidates = hits[0]
-
-          accepted = {
-              'TER-10': ('zte_terrain_10_final.png', 'zte_terrain_10_final.webp', (512, 1024)),
-              'VEH-16': ('zte_vehicle_16_final.png', 'zte_vehicle_16_final.webp', (1024, 2048)),
-          }
-          rejected = ['MCH-05-1', 'MCH-07-0', 'TER-05', 'TER-07', 'TER-09']
-          runtime = root / 'app/src/main/res/drawable-nodpi'
-          runtime.mkdir(parents=True, exist_ok=True)
-          qa = {'source_run': 66, 'source_run_id': 34075730717, 'accepted': {}, 'rejected_semantic': rejected}
-
-          for asset_id, (src_name, dst_name, dimension_range) in accepted.items():
-              src = candidates / src_name
-              if not src.exists():
-                  raise SystemExit(f'missing accepted candidate: {src}')
-              im = Image.open(src).convert('RGBA')
-              w, h = im.size
-              if w != h or not (dimension_range[0] <= w <= dimension_range[1]):
-                  raise SystemExit(f'{asset_id}: invalid dimensions {im.size}')
-              alpha = im.getchannel('A')
-              bbox = alpha.getbbox()
-              if not bbox:
-                  raise SystemExit(f'{asset_id}: empty alpha')
-              left, top, right, bottom = bbox
-              margins = [left, top, w-right, h-bottom]
-              if min(margins) < int(w * 0.04):
-                  raise SystemExit(f'{asset_id}: unsafe margin {margins}')
-              edge_nonzero = sum(1 for px in list(alpha.crop((0,0,w,1)).getdata()) + list(alpha.crop((0,h-1,w,h)).getdata()) + list(alpha.crop((0,0,1,h)).getdata()) + list(alpha.crop((w-1,0,w,h)).getdata()) if px)
-              if edge_nonzero:
-                  raise SystemExit(f'{asset_id}: alpha touches edge')
-              coverage = sum(1 for px in alpha.getdata() if px) / (w*h)
-              if not (0.08 <= coverage <= 0.65):
-                  raise SystemExit(f'{asset_id}: suspicious coverage {coverage:.4f}')
-              im.save(runtime / dst_name, 'WEBP', quality=92, method=6)
-              qa['accepted'][asset_id] = {'source': src_name, 'runtime': dst_name, 'dimensions': [w,h], 'bbox': list(bbox), 'margins': margins, 'coverage': round(coverage, 6), 'edge_nonzero': edge_nonzero}
-
-          terrain_path = root / 'app/src/main/java/com/zerotoempire/game/ReviewedTerrainLayer.kt'
-          terrain = terrain_path.read_text()
-          old = 'intArrayOf(R.drawable.zte_terrain_08_final, R.drawable.zte_terrain_11_final),'
-          new = 'intArrayOf(R.drawable.zte_terrain_08_final, R.drawable.zte_terrain_10_final, R.drawable.zte_terrain_11_final),'
-          if old in terrain:
-              terrain = terrain.replace(old, new, 1)
-          elif 'R.drawable.zte_terrain_10_final' not in terrain:
-              raise SystemExit('unable to integrate TER-10 into ReviewedTerrainLayer')
-          terrain = terrain.replace('Strictly reviewed modular terrain from FLUX run 52', 'Strictly reviewed modular terrain from FLUX runs 52 and 66')
-          terrain_path.write_text(terrain)
-
-          manifest_path = root / 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
-          manifest = manifest_path.read_text()
-          for asset_id in ('TER-10', 'VEH-16'):
-              pat = re.compile(rf'^(\| {re.escape(asset_id)} \|.*\|) TODO \|$', re.M)
-              manifest, n = pat.subn(r'\1 RUNTIME |', manifest, count=1)
-              if n != 1 and not re.search(rf'^\| {re.escape(asset_id)} \|.*\| (RUNTIME|DONE) \|$', manifest, re.M):
-                  raise SystemExit(f'cannot mark {asset_id} RUNTIME')
-          manifest_path.write_text(manifest)
-
-          progress_path = root / 'docs/art/FINAL_AAA_SPRITE_PROGRESS.md'
-          progress = progress_path.read_text()
-          progress = progress.replace('- ART VALIDATED: **121 / 235**', '- ART VALIDATED: **123 / 235**', 1)
-          progress = progress.replace('- RUNTIME INTEGRATED: **121 / 235**', '- RUNTIME INTEGRATED: **123 / 235**', 1)
-          if '## Reviewed FLUX run 66 — 2 assets awaiting green CI' not in progress:
-              progress += '''\n\n## Reviewed FLUX run 66 — 2 assets awaiting green CI\nRun-66 semantic and full-resolution review accepted `TER-10` and `VEH-16`. `TER-10` is a clean elevated megastructure service deck with transparent isolation and safe margins; `VEH-16` is a distinct wheel-less prestige executive hovercar. Both pass technical alpha, edge, coverage and dimension checks and are integrated into active runtime references. Rejected: `MCH-05-1` (missing clear battery-carousel identity), `MCH-07-0` (crane-like loose load rather than compact gantry), `TER-05` (radial intersection rather than multi-lane connector), `TER-07` (platform rather than energy conduit), and `TER-09` (slab rather than twin-guide maglev connector). The two accepted assets remain RUNTIME until Android CI is green on their integration commit.\n'''
-          progress_path.write_text(progress)
-
-          qa_path = root / 'art/production/flux-run66-approved-qa.json'
-          qa_path.parent.mkdir(parents=True, exist_ok=True)
-          qa_path.write_text(json.dumps(qa, indent=2, sort_keys=True) + '\n')
-          PY
-
-      - name: Commit reviewed runtime assets
-        id: commit
-        shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add \
-            app/src/main/res/drawable-nodpi/zte_terrain_10_final.webp \
-            app/src/main/res/drawable-nodpi/zte_vehicle_16_final.webp \
-            app/src/main/java/com/zerotoempire/game/ReviewedTerrainLayer.kt \
-            docs/art/FINAL_AAA_SPRITE_MANIFEST.md \
-            docs/art/FINAL_AAA_SPRITE_PROGRESS.md \
-            art/production/flux-run66-approved-qa.json
-          if git diff --cached --quiet; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          git commit -m "art: integrate reviewed run66 terrain and hovercar"
-          git push origin HEAD:main
-          echo "changed=true" >> "$GITHUB_OUTPUT"
-
-      - name: Dispatch Android CI for strict DONE gate
-        if: steps.commit.outputs.changed == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh workflow run android.yml --ref main
-```
-
-## File: .github/workflows/promote-run75-bld03.yml
-```yaml
-name: Promote reviewed run75 BLD-03
-
-on:
-  push:
-    paths:
-      - '.github/workflows/promote-run75-bld03.yml'
-
-permissions:
-  actions: read
-  contents: write
-
-jobs:
-  promote:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-        with:
-          ref: main
-          fetch-depth: 2
-      - name: Download reviewed run75 artifact
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh run download 34092655164 -n kaggle-sprite-batch -D /tmp/r75
-      - name: Promote only semantically approved BLD-03 masters
-        shell: bash
-        run: |
-          set -euo pipefail
-          src=/tmp/r75/output/candidates
-          test -d "$src" || src=/tmp/r75/candidates
-          mkdir -p art/incoming/final-sprites
-          for tier in 2 3 4 5 6; do
-            test -f "$src/zte_business_03_t${tier}_final.png"
-            cp "$src/zte_business_03_t${tier}_final.png" art/incoming/final-sprites/
-          done
-          python3 -m pip install --disable-pip-version-check Pillow==11.3.0
-          python3 tools/sprites/build_sprite_contact_sheet.py \
-            --files art/incoming/final-sprites/zte_business_03_t{2,3,4,5,6}_final.png \
-            --output art/production/run75-bld03-contact-sheet.png \
-            --report art/production/run75-bld03-qa.json
-          SPRITE_TARGETS=zte_business_03_t2_final,zte_business_03_t3_final,zte_business_03_t4_final,zte_business_03_t5_final,zte_business_03_t6_final \
-            python3 tools/sprites/process_final_sprites.py
-      - name: Commit masters and runtime batch
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add art/incoming/final-sprites/zte_business_03_t{2,3,4,5,6}_final.png \
-                  app/src/main/res/drawable-nodpi/ \
-                  art/production/run75-bld03-qa.json
-          git commit -m 'art: integrate reviewed run75 BLD-03 T2-T6'
-          git pull --rebase origin main
-          git push
-```
-
-## File: .github/workflows/reconcile-core-status.yml
-```yaml
-name: Reconcile strict Power Core status
-
-on:
-  push:
-    branches: [main]
-    paths: ['.github/workflows/reconcile-core-status.yml']
-
-permissions:
-  contents: write
-
-jobs:
-  reconcile:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 2
-      - name: Mark green tier-aware cores DONE
-        shell: bash
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          p=Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          lines=p.read_text().splitlines()
-          for i in range(7):
-              key=f'| CORE-T{i} |'
-              hits=[n for n,x in enumerate(lines) if x.startswith(key)]
-              if len(hits)!=1: raise SystemExit(f'{key} count={len(hits)}')
-              n=hits[0]
-              if not lines[n].endswith('| CLEAN |'): raise SystemExit(lines[n])
-              lines[n]=lines[n][:-len('| CLEAN |')]+'| DONE |'
-          p.write_text('\n'.join(lines)+'\n')
-
-          q=Path('docs/art/FINAL_AAA_SPRITE_PROGRESS.md')
-          s=q.read_text()
-          s=s.replace('- DONE: **61 / 235**','- DONE: **68 / 235**')
-          s=s.replace('- RUNTIME INTEGRATED: **76 / 235**','- RUNTIME INTEGRATED: **83 / 235**')
-          s=s.replace('- Generated candidates accepted as DONE: **61**','- Generated candidates accepted as DONE: **68**')
-          s=s.replace('## Reviewed FLUX run 25 — 9 DONE, 7 CLEAN','## Reviewed FLUX run 25 — 16 DONE')
-          s=s.replace('`CORE-T0` through `CORE-T6` passed semantic and technical review and have optimized runtime rasters, but remain CLEAN until their tier-aware Power Core runtime integration is completed and validated.','`CORE-T0` through `CORE-T6` are tier-aware runtime sprites in `AscendantCorePlaza`; Android CI run `34007328616` for commit `0aad3c58190c9650f278cbc7c67782baff1d3581` completed successfully, so all seven are strict DONE.')
-          s=s.replace('### CLEAN awaiting runtime integration\n`CORE-T0`, `CORE-T1`, `CORE-T2`, `CORE-T3`, `CORE-T4`, `CORE-T5`, `CORE-T6`.','### Power Core — 7 DONE\n`CORE-T0`, `CORE-T1`, `CORE-T2`, `CORE-T3`, `CORE-T4`, `CORE-T5`, `CORE-T6`.')
-          s=s.replace('3. Integrate the reviewed `CORE-T0` through `CORE-T6` rasters into the tier-aware Power Core runtime, then require green Android CI before DONE.\n4. Rework building generation around coherent family/tier evolution; do not accept generic unrelated buildings.\n5. Continue machines, characters, terrain and FX only through the same generate → technical QA → semantic QA → runtime → green-CI gate.','3. Rework building generation around coherent family/tier evolution; do not accept generic unrelated buildings.\n4. Continue machines, characters, terrain and FX only through the same generate → technical QA → semantic QA → runtime → green-CI gate.')
-          q.write_text(s)
-          PY
-      - name: Commit strict status
-        shell: bash
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md docs/art/FINAL_AAA_SPRITE_PROGRESS.md
-          git commit -m 'docs: mark tier-aware Power Cores strict DONE'
-          git pull --rebase origin main
-          git push
-```
-
-## File: .github/workflows/reconcile-existing-runtime-todos.yml
-```yaml
-name: Reconcile existing runtime TODOs
-
-on:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/reconcile-existing-runtime-todos.yml'
-      - 'app/src/main/res/drawable-nodpi/**_final.webp'
-      - 'ops/runtime-reconcile-trigger.txt'
-  workflow_dispatch:
-
-permissions:
-  contents: write
-
-jobs:
-  reconcile:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 2
-      - name: Install Pillow
-        run: python -m pip install 'Pillow<12'
-      - name: Strictly validate existing TODO runtimes
-        shell: bash
-        run: |
-          python3 - <<'PY'
-          from collections import deque
-          from pathlib import Path
-          from PIL import Image
-          import json
-
-          MANIFEST=Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          TARGET_IDS=None
-          ALPHA=8
-
-          def major_components(alpha):
-              small=alpha.resize((128,128),Image.Resampling.BILINEAR)
-              px=small.load(); seen=set(); major=0; min_area=int(128*128*.012)
-              for y in range(128):
-                  for x in range(128):
-                      if (x,y) in seen or px[x,y] < 32: continue
-                      q=deque([(x,y)]); seen.add((x,y)); area=0
-                      while q:
-                          cx,cy=q.popleft(); area+=1
-                          for nx,ny in ((cx-1,cy),(cx+1,cy),(cx,cy-1),(cx,cy+1)):
-                              if 0<=nx<128 and 0<=ny<128 and (nx,ny) not in seen and px[nx,ny]>=32:
-                                  seen.add((nx,ny)); q.append((nx,ny))
-                      if area>=min_area: major+=1
-              return major
-
-          rows=[]
-          for line in MANIFEST.read_text(encoding='utf-8').splitlines():
-              if not line.startswith('|') or 'app/src/main/res/' not in line: continue
-              cols=[c.strip() for c in line.split('|')[1:-1]]
-              if len(cols)==5 and cols[4].upper() in {'TODO','RUNTIME'} and Path(cols[3].replace(chr(96),'')).is_file(): rows.append(cols)
-          if not rows:
-              print('No existing TODO/RUNTIME files require reconciliation')
-              Path('/tmp/runtime-pass.txt').write_text('',encoding='utf-8')
-              raise SystemExit(0)
-
-          passed=[]; report=[]
-          for asset_id,name,desc,runtime,status in rows:
-              p=Path(runtime.replace(chr(96),''))
-              issues=[]
-              if not p.is_file() or p.stat().st_size==0:
-                  issues.append('missing-runtime')
-                  report.append({'id':asset_id,'file':str(p),'pass':False,'issues':issues})
-                  continue
-              try:
-                  im=Image.open(p).convert('RGBA')
-              except Exception as e:
-                  issues.append('decode-failed:'+str(e))
-                  report.append({'id':asset_id,'file':str(p),'pass':False,'issues':issues})
-                  continue
-              a=im.getchannel('A'); lo,hi=a.getextrema()
-              if hi==0: issues.append('empty-alpha')
-              if lo==255: issues.append('no-transparency')
-              if asset_id.startswith('FX-'):
-                  if im.size!=(512,256): issues.append(f'bad-size:{im.width}x{im.height}')
-                  if im.size==(512,256):
-                      for i in range(8):
-                          x0=(i%4)*128; y0=(i//4)*128
-                          cell=a.crop((x0,y0,x0+128,y0+128))
-                          if cell.getbbox() is None:
-                              issues.append(f'frame-{i}-empty'); continue
-                          edges=(cell.crop((0,0,128,4)),cell.crop((0,124,128,128)),cell.crop((0,0,4,128)),cell.crop((124,0,128,128)))
-                          if any(e.getbbox() is not None for e in edges): issues.append(f'frame-{i}-padding')
-              else:
-                  if im.width!=im.height: issues.append('non-square-runtime')
-                  if min(im.size)<512 or max(im.size)>2048: issues.append(f'bad-size:{im.width}x{im.height}')
-                  hist=a.histogram(); coverage=sum(hist[ALPHA:])/(im.width*im.height)
-                  if coverage>.70: issues.append(f'coverage-too-high:{coverage:.3f}')
-                  if major_components(a)>1: issues.append('multiple-major-components')
-                  if any(a.getpixel(pt)!=0 for pt in ((0,0),(im.width-1,0),(0,im.height-1),(im.width-1,im.height-1))): issues.append('nontransparent-corner')
-              ok=not issues
-              if ok: passed.append(asset_id)
-              report.append({'id':asset_id,'file':str(p),'size':list(im.size),'bytes':p.stat().st_size,'pass':ok,'issues':issues})
-
-          Path('art/production').mkdir(parents=True,exist_ok=True)
-          Path('art/production/existing-runtime-qa.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
-          print(json.dumps(report,indent=2))
-          print('STRICT_EXISTING_RUNTIME_PASS='+','.join(sorted(passed)))
-          Path('/tmp/runtime-pass.txt').write_text('\n'.join(sorted(passed))+'\n',encoding='utf-8')
-          PY
-      - name: Mark only strict-pass existing runtimes DONE
-        shell: bash
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          manifest=Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          passed={x.strip() for x in Path('/tmp/runtime-pass.txt').read_text().splitlines() if x.strip()}
-          lines=manifest.read_text(encoding='utf-8').splitlines()
-          out=[]; changed=0
-          for line in lines:
-              if line.startswith('|'):
-                  cols=[c.strip() for c in line.split('|')[1:-1]]
-                  if len(cols)==5 and cols[0] in passed and cols[4].upper()!='DONE':
-                      cols[4]='DONE'; line='| '+' | '.join(cols)+' |'; changed+=1
-              out.append(line)
-          manifest.write_text('\n'.join(out)+'\n',encoding='utf-8')
-          print(f'MANIFEST_NEW_DONE={changed}')
-          PY
-      - name: Commit strict reconciliation
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md art/production/existing-runtime-qa.json
-          git diff --cached --quiet && exit 0
-          git commit -m 'sprites: reconcile strictly validated existing runtimes'
-          git pull --rebase origin main
-          git push
-```
-
-## File: .github/workflows/reconcile-final-sprite-manifest.yml
-```yaml
-name: Reconcile final sprite manifest
-
-on:
-  push:
-    branches: [main]
-    paths: ['.github/workflows/reconcile-final-sprite-manifest.yml']
-  workflow_dispatch:
-
-permissions:
-  contents: write
-
-jobs:
-  reconcile:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 2
-      - name: Mark only strictly verified rows DONE
-        shell: bash
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          path = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          done = {
-              'VEH-00','VEH-01','VEH-02','VEH-03','VEH-04','VEH-05','VEH-06','VEH-07','VEH-08','VEH-10',
-              'VEH-11','VEH-12','VEH-13','VEH-14','VEH-15',
-              'PRP-02-B','PRP-04-A','PRP-05-B','PRP-06-A','PRP-06-B','PRP-07-A','PRP-07-B','PRP-08-A','PRP-08-B',
-              'PRP-09-A','PRP-09-B','PRP-10-A','PRP-10-B','PRP-11-A','PRP-11-B','PRP-12-A','PRP-12-B','PRP-13-A','PRP-13-B',
-          }
-          lines = path.read_text(encoding='utf-8').splitlines()
-          seen = set()
-          out = []
-          for line in lines:
-              if line.startswith('|'):
-                  cols = [c.strip() for c in line.split('|')[1:-1]]
-                  if len(cols) == 5 and cols[0] in done:
-                      cols[4] = 'DONE'
-                      line = '| ' + ' | '.join(cols) + ' |'
-                      seen.add(cols[0])
-              out.append(line)
-          missing = done - seen
-          if missing:
-              raise SystemExit(f'Missing manifest rows: {sorted(missing)}')
-          path.write_text('\n'.join(out) + '\n', encoding='utf-8')
-          done_count = 0
-          for line in out:
-              if not line.startswith('|'): continue
-              cols = [c.strip() for c in line.split('|')[1:-1]]
-              if len(cols) == 5 and cols[4] == 'DONE': done_count += 1
-          if done_count != 52:
-              raise SystemExit(f'Expected 52 strict DONE rows, got {done_count}')
-          print('MANIFEST_STRICT_DONE=52')
-          PY
-      - name: Commit canonical reconciliation
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md
-          git diff --cached --quiet && exit 0
-          git commit -m 'docs: mark 34 reviewed static assets strictly DONE'
-          git pull --rebase origin main
-          git push
-```
-
-## File: .github/workflows/reconcile-manifest-and-launch.yml
-```yaml
-name: Reconcile strict sprite manifest and launch FLUX
-
-on:
-  workflow_dispatch:
-  push:
-    branches: [main]
-    paths: ['.github/workflows/reconcile-manifest-and-launch.yml']
-
-permissions:
-  contents: write
-  actions: write
-
-jobs:
-  reconcile-and-launch:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 2
-
-      - name: Reconcile canonical DONE rows
-        shell: bash
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          import re
-
-          path = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          text = path.read_text(encoding='utf-8')
-          done = {
-              *(f'VEH-{i:02d}' for i in [0,1,2,3,4,5,6,7,8,10,11,12,13,14,15]),
-              'PRP-02-B','PRP-04-A','PRP-05-B','PRP-06-A','PRP-06-B',
-              'PRP-07-A','PRP-07-B','PRP-08-A','PRP-08-B','PRP-09-A','PRP-09-B',
-              'PRP-10-A','PRP-10-B','PRP-11-A','PRP-11-B','PRP-12-A','PRP-12-B',
-              'PRP-13-A','PRP-13-B',
-          }
-          lines = text.splitlines()
-          seen = set()
-          for n, line in enumerate(lines):
-              m = re.match(r'^\|\s*([^|]+?)\s*\|', line)
-              if not m:
-                  continue
-              asset_id = m.group(1).strip()
-              if asset_id in done:
-                  parts = line.split('|')
-                  parts[-2] = ' DONE '
-                  lines[n] = '|'.join(parts)
-                  seen.add(asset_id)
-          missing = sorted(done - seen)
-          if missing:
-              raise SystemExit(f'Missing manifest IDs: {missing}')
-
-          replacements = {
-              '- **DONE: 0 / 235**': '- **DONE: 52 / 235**',
-              '- Buildings: **0 / 98**': '- Buildings: **18 / 98**',
-              '- Vehicles: **0 / 18**': '- Vehicles: **15 / 18**',
-              '- Props: **0 / 28**': '- Props: **19 / 28**',
-          }
-          out = '\n'.join(lines) + ('\n' if text.endswith('\n') else '')
-          for old, new in replacements.items():
-              out = out.replace(old, new)
-          path.write_text(out, encoding='utf-8')
-          print(f'Reconciled {len(done)} non-building DONE rows; total strict DONE=52')
-          PY
-
-      - name: Commit canonical reconciliation
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          if git diff --quiet -- docs/art/FINAL_AAA_SPRITE_MANIFEST.md; then
-            echo 'Manifest already reconciled.'
-          else
-            git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md
-            git commit -m 'docs: reconcile 52 strict DONE sprites in canonical manifest'
-            git pull --rebase origin main
-            git push origin main
-          fi
-
-      - name: Launch next free FLUX batch
-        env:
-          GH_TOKEN: ${{ github.token }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          sleep 5
-          gh api --method POST \
-            repos/${{ github.repository }}/actions/workflows/kaggle-mass-sprite-factory.yml/dispatches \
-            -f ref=main \
-            -f 'inputs[count]=30'
-          echo 'Next FLUX batch dispatched.'
-```
-
-## File: .github/workflows/reconcile-prp05a.yml
-```yaml
-name: Reconcile reviewed PRP-05-A
-
-on:
-  push:
-    branches: [main]
-    paths: ['.github/workflows/reconcile-prp05a.yml']
-
-permissions:
-  contents: write
-
-jobs:
-  reconcile:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 2
-      - name: Reconcile canonical manifest and progress
-        shell: bash
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          manifest = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          text = manifest.read_text(encoding='utf-8')
-          old = '| PRP-05-A | Expansion Business 05 operational prop | Business-specific crate/tool/storage/signage-without-text element that reinforces function and scale. | `app/src/main/res/drawable-nodpi/zte_prop_05_a_final.webp` | TODO |'
-          new = old[:-6] + 'DONE |'
-          if old not in text:
-              raise SystemExit('Expected PRP-05-A TODO row not found')
-          manifest.write_text(text.replace(old, new, 1), encoding='utf-8')
-
-          progress = Path('docs/art/FINAL_AAA_SPRITE_PROGRESS.md')
-          p = progress.read_text(encoding='utf-8')
-          p = p.replace('- DONE: **68 / 235**', '- DONE: **69 / 235**', 1)
-          p = p.replace('- ART VALIDATED: **83 / 235**', '- ART VALIDATED: **84 / 235**', 1)
-          p = p.replace('- RUNTIME INTEGRATED: **83 / 235**', '- RUNTIME INTEGRATED: **84 / 235**', 1)
-          p = p.replace('- Generated candidates accepted as DONE: **68**', '- Generated candidates accepted as DONE: **69**', 1)
-          anchor = '## Existing ART/RUNTIME assets not yet promoted to DONE\n'
-          section = '''## Reviewed FLUX run 29 — 1 DONE\nThe reviewed `PRP-05-A` replacement is referenced by `WorldTrafficArt.kt` in the active city stage. Android CI run `34010813072` for commit `e9b301f2a79d3451dbacb8c7a3e754889ea899ad` completed successfully, so `PRP-05-A` is strict DONE. The rejected `VEH-09` runtime was removed and remains TODO.\n\n'''
-          if section not in p:
-              if anchor not in p:
-                  raise SystemExit('Progress insertion anchor missing')
-              p = p.replace(anchor, section + anchor, 1)
-          p = p.replace('2. Regenerate the remaining missing prop: `PRP-05-A`.\n3. Rework building generation around coherent family/tier evolution; do not accept generic unrelated buildings.\n4. Continue machines, characters, terrain and FX only through the same generate → technical QA → semantic QA → runtime → green-CI gate.', '2. Rework building generation around coherent family/tier evolution; do not accept generic unrelated buildings.\n3. Continue machines, characters, terrain and FX only through the same generate → technical QA → semantic QA → runtime → green-CI gate.')
-          progress.write_text(p, encoding='utf-8')
-          PY
-      - name: Commit reconciliation
-        shell: bash
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md docs/art/FINAL_AAA_SPRITE_PROGRESS.md
-          git commit -m 'docs: mark reviewed PRP-05-A strict DONE'
-          git pull --rebase origin main
-          git push
-```
-
-## File: .github/workflows/reconcile-run75-bld03-status.yml
-```yaml
-name: Reconcile reviewed run75 BLD-03 status
-
-on:
-  push:
-    paths:
-      - '.github/workflows/reconcile-run75-bld03-status.yml'
-
-permissions:
-  contents: write
-
-jobs:
-  reconcile:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-        with:
-          ref: main
-          fetch-depth: 2
-      - name: Verify reviewed runtime assets and reconcile manifest
-        shell: bash
-        run: |
-          set -euo pipefail
-          manifest=docs/art/FINAL_AAA_SPRITE_MANIFEST.md
-          for tier in 2 3 4 5 6; do
-            runtime="app/src/main/res/drawable-nodpi/zte_business_03_t${tier}_final.webp"
-            master="art/incoming/final-sprites/zte_business_03_t${tier}_final.png"
-            test -s "$runtime"
-            test -s "$master"
-          done
-          test -s art/production/run75-bld03-qa.json
-          python3 - <<'PY'
-          from pathlib import Path
-          p=Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          s=p.read_text(encoding='utf-8')
-          changed=[]
-          for tier in range(2,7):
-              marker=f'| BLD-03-T{tier} |'
-              rows=[line for line in s.splitlines() if line.startswith(marker)]
-              if len(rows)!=1:
-                  raise SystemExit(f'Expected exactly one manifest row for BLD-03-T{tier}, got {len(rows)}')
-              old=rows[0]
-              if old.endswith('| DONE |') or old.endswith('| RUNTIME |'):
-                  continue
-              if not old.endswith('| TODO |'):
-                  raise SystemExit(f'Unexpected status for BLD-03-T{tier}: {old}')
-              new=old[:-7] + 'RUNTIME |'
-              s=s.replace(old,new,1)
-              changed.append(f'BLD-03-T{tier}')
-          p.write_text(s,encoding='utf-8')
-          print('RECONCILED='+','.join(changed) if changed else 'RECONCILED=none')
-          PY
-          git diff --check
-      - name: Commit reconciliation
-        shell: bash
-        run: |
-          set -euo pipefail
-          if git diff --quiet -- docs/art/FINAL_AAA_SPRITE_MANIFEST.md; then
-            echo 'Manifest already reconciled'; exit 0
-          fi
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md
-          git commit -m 'art: mark reviewed run75 BLD-03 T2-T6 runtime'
-          git pull --rebase origin main
-          git push
-
-# RUNTIME is intentionally not DONE: final strict promotion still requires explicit runtime visibility/reference proof and green Android CI.
-```
-
-## File: .github/workflows/reconcile-sprite-progress-ledger.yml
-```yaml
-name: Reconcile Sprite Progress Ledger
-
-on:
-  push:
-    paths:
-      - '.github/workflows/reconcile-sprite-progress-ledger.yml'
-      - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
-      - 'docs/art/FINAL_AAA_SPRITE_PROGRESS.md'
-      - 'PROJECT_CONTINUITY.md'
-  workflow_dispatch:
-
-permissions:
-  contents: write
-
-concurrency:
-  group: reconcile-sprite-progress-ledger
-  cancel-in-progress: false
-
-jobs:
-  reconcile:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Recompute ledger from canonical rows
-        shell: bash
-        run: |
-          python - <<'PY'
-          import re
-          from collections import Counter
-          from pathlib import Path
-
-          manifest = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          progress = Path('docs/art/FINAL_AAA_SPRITE_PROGRESS.md')
-          continuity = Path('PROJECT_CONTINUITY.md')
-          text = manifest.read_text(encoding='utf-8')
-          row = re.compile(r'^\|\s*([^|]+?)\s*\|.*\|\s*(TODO|RUNTIME|DONE)\s*\|\s*$', re.M)
-          rows = [(m.group(1).strip(), m.group(2)) for m in row.finditer(text)]
-          if len(rows) != 235 or len({a for a, _ in rows}) != 235:
-              raise SystemExit(f'Canonical manifest invalid: rows={len(rows)} unique={len({a for a, _ in rows})}')
-
-          def family(asset):
-              if asset.startswith('BLD-'): return 'Buildings'
-              if asset.startswith('CORE-'): return 'Power Core'
-              if asset.startswith('CHR-'): return 'Characters'
-              if asset.startswith('VEH-'): return 'Vehicles'
-              if asset.startswith('MCH-'): return 'Machines'
-              if asset.startswith('PRP-'): return 'Props'
-              if asset.startswith(('TER-', 'INF-')): return 'Terrain/infrastructure'
-              if asset.startswith('FX-'): return 'FX'
-              raise SystemExit(f'Unknown canonical asset family: {asset}')
-
-          planned = Counter(family(a) for a, _ in rows)
-          done = Counter(family(a) for a, s in rows if s == 'DONE')
-          total_done = sum(done.values())
-          expected = {'Buildings':98,'Power Core':7,'Characters':24,'Vehicles':18,'Machines':28,'Props':28,'Terrain/infrastructure':14,'FX':18}
-          if dict(planned) != expected:
-              raise SystemExit(f'Canonical family totals changed unexpectedly: {dict(planned)}')
-
-          ledger = '## Progress ledger\n' + '\n'.join([
-              f'- **DONE: {total_done} / 235**',
-              f'- Buildings: **{done["Buildings"]} / 98**',
-              f'- Power Core: **{done["Power Core"]} / 7**',
-              f'- Characters: **{done["Characters"]} / 24**',
-              f'- Vehicles: **{done["Vehicles"]} / 18**',
-              f'- Machines: **{done["Machines"]} / 28**',
-              f'- Props: **{done["Props"]} / 28**',
-              f'- Terrain/infrastructure: **{done["Terrain/infrastructure"]} / 14**',
-              f'- FX: **{done["FX"]} / 18**',
-          ])
-          ledger_pattern = re.compile(r'## Progress ledger\n.*?(?=\n### Next production target)', re.S)
-          if not ledger_pattern.search(text): raise SystemExit('Progress ledger block not found')
-          manifest.write_text(ledger_pattern.sub(ledger + '\n', text, count=1), encoding='utf-8')
-
-          c = continuity.read_text(encoding='utf-8')
-          c, n1 = re.subn(r'Reach \*\*\d+ / 235 canonical final sprites strict DONE\*\* toward \*\*235 / 235\*\*\.', f'Reach **{total_done} / 235 canonical final sprites strict DONE** toward **235 / 235**.', c, count=1)
-          if n1 != 1: raise SystemExit(f'Continuity primary count anchor missing: {n1}')
-          continuity.write_text(c, encoding='utf-8')
-
-          p = progress.read_text(encoding='utf-8')
-          p, n3 = re.subn(r'(?m)^- DONE: \*\*\d+ / 235\*\*$', f'- DONE: **{total_done} / 235**', p, count=1)
-          p, n4 = re.subn(r'(?m)^- Generated candidates accepted as DONE: \*\*\d+\*\*$', f'- Generated candidates accepted as DONE: **{total_done}**', p, count=1)
-          if n3 != 1 or n4 != 1: raise SystemExit(f'Progress anchors missing: done={n3} accepted={n4}')
-          progress.write_text(p, encoding='utf-8')
-          print(f'CANONICAL_ROWS={len(rows)} STRICT_DONE={total_done} DONE_BY_FAMILY={dict(done)}')
-          PY
-      - name: Commit reconciled aggregate state if stale
-        shell: bash
-        run: |
-          if git diff --quiet -- docs/art/FINAL_AAA_SPRITE_MANIFEST.md docs/art/FINAL_AAA_SPRITE_PROGRESS.md PROJECT_CONTINUITY.md; then
-            echo 'Manifest, progress and continuity already canonical.'
-            exit 0
-          fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md docs/art/FINAL_AAA_SPRITE_PROGRESS.md PROJECT_CONTINUITY.md
-          git commit -m 'docs: reconcile strict sprite aggregate state'
-          git pull --rebase origin main
-          git push
-
-# This workflow never changes per-asset status. It derives aggregate state from the canonical 235 rows.
-```
-
-## File: .github/workflows/refine-run66-stragglers.yml
-```yaml
-name: Refine rejected run66 stragglers
-
-on:
-  push:
-    paths:
-      - ".github/workflows/refine-run66-stragglers.yml"
-  workflow_dispatch:
-
-permissions:
-  contents: write
-  actions: write
-
-jobs:
-  refine:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Harden exact semantic prompts
-        shell: bash
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          p = Path('tools/sprites/kaggle_sprite_factory.py')
-          s = p.read_text()
-          replacements = {
-            "'battery handling carousel with four enclosed energy-cell sockets and robotic transfer arm'": "'circular floor-mounted battery handling carousel with eight upright enclosed energy-cell canisters equally spaced around one central rotary hub, visible circular indexing ring and one short integrated transfer gripper; unmistakably a battery carousel, no crane boom, no conveyor box'",
-            "'autonomous overhead gantry manipulator with compact suspended gripper'": "'compact enclosed rectangular gantry machine: four rigid short legs joined by a rectangular top frame, one captive XY toolhead moving inside the frame above a fixed work bed; every component attached, no dangling cargo, no crane hook, no suspended free load'",
-            "'TER-05':'one square clean multi-lane road connector tile, dark asphalt with raised curb modules, no arrows or text markings'": "'TER-05':'one square orthogonal multi-lane ROAD CONNECTOR tile: exactly two parallel straight asphalt lanes crossing from one edge to the opposite edge, continuous raised curbs on both outer sides, flat rectangular road segment only; no intersection, no radial roads, no star shape, no arrows, no letters, no symbols'",
-            "'TER-07':'one square energy conduit infrastructure tile with a flush cyan power channel embedded through the center'": "'TER-07':'one square POWER CONDUIT connector tile: one unmistakable thick glowing cyan energy channel runs straight from a large terminal socket on the left edge to a matching terminal socket on the right edge, embedded flush in armored decking; no platform centerpiece, no ring, no blank slab'",
-            "'TER-09':'one square maglev rail connector tile with twin flush cyan magnetic guide channels in a premium alloy deck'": "'TER-09':'one square MAGLEV RAIL CONNECTOR tile: exactly two long parallel cyan magnetic guide rails run straight and visibly from the near edge to the far edge, with matching twin terminal notches at both ends, embedded in premium dark alloy decking; unmistakable twin guideway, no blank slab, no road intersection'",
-          }
-          for old, new in replacements.items():
-              if old not in s:
-                  raise SystemExit(f'patch anchor missing: {old}')
-              s = s.replace(old, new, 1)
-          s = s.replace("print('KAGGLE_STARTUP=flux-batched-v2',flush=True)", "print('KAGGLE_STARTUP=flux-batched-v3-straggler-semantics',flush=True)", 1)
-          p.write_text(s)
-          PY
-
-      - name: Commit prompt hardening
-        id: commit
-        shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add tools/sprites/kaggle_sprite_factory.py
-          if git diff --cached --quiet; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          git commit -m "prod: harden remaining static sprite semantics"
-          git push origin HEAD:main
-          echo "changed=true" >> "$GITHUB_OUTPUT"
-
-      - name: Launch next free Kaggle batch
-        if: steps.commit.outputs.changed == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh workflow run kaggle-mass-sprite-factory.yml --ref main -f count=30
-```
-
-## File: .github/workflows/repair-promote-bld03-run75.yml
-```yaml
-name: Repair manifest and promote reviewed BLD-03 run75
-
-on:
-  push:
-    paths:
-      - '.github/workflows/repair-promote-bld03-run75.yml'
-
-permissions:
-  contents: write
-
-jobs:
-  reconcile:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-        with:
-          ref: main
-          fetch-depth: 0
-      - name: Restore canonical manifest and promote proven run75 rows
-        shell: bash
-        run: |
-          set -euo pipefail
-          git show cc06340730e7a81316dfa6b5bdd36dbec8b0ff3f:docs/art/FINAL_AAA_SPRITE_MANIFEST.md > docs/art/FINAL_AAA_SPRITE_MANIFEST.md
-          for tier in 2 3 4 5 6; do
-            sed -i -E "/^\\| BLD-03-T${tier} \\|/ s/\\|RUNTIME \\|$/| DONE |/" docs/art/FINAL_AAA_SPRITE_MANIFEST.md
-          done
-          python3 - <<'PY'
-          from pathlib import Path
-          p=Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          s=p.read_text()
-          for tier in range(2,7):
-              row=f'BLD-03-T{tier}'
-              line=next(x for x in s.splitlines() if x.startswith(f'| {row} |'))
-              assert line.endswith('| DONE |'), line
-          assert s.count('| DONE |') == 117, s.count('| DONE |')
-          p.write_text(s)
-          PY
-      - name: Commit strict promotion
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md
-          git commit -m 'art: promote BLD-03 T2-T6 to strict DONE'
-          git pull --rebase origin main
-          git push
-```
-
-## File: .github/workflows/sprite-completion-gate.yml
-```yaml
-name: Sprite Completion Gate
-
-on:
-  push:
-    branches: [main]
-    paths:
-      - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
-      - 'app/src/main/res/drawable-nodpi/**_final.webp'
-      - 'tools/sprites/audit_complete_sprite_manifest.py'
-      - 'tools/sprites/validate_runtime_asset.py'
-      - '.github/workflows/sprite-completion-gate.yml'
-      - 'ops/final-sprite-audit-trigger.txt'
-  workflow_dispatch:
-
-permissions:
-  contents: write
-
-concurrency:
-  group: sprite-completion-gate
-  cancel-in-progress: true
-
-jobs:
-  audit:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 2
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      - name: Check completion state
-        id: state
-        shell: bash
-        run: |
-          python - <<'PY' >> "$GITHUB_OUTPUT"
-          from pathlib import Path
-          pending=0;total=0
-          for line in Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md').read_text().splitlines():
-              if not line.startswith('|') or 'app/src/main/res/' not in line: continue
-              cols=[c.strip() for c in line.split('|')[1:-1]]
-              if len(cols)!=5: continue
-              total+=1
-              pending += cols[4].upper()!='DONE'
-          print(f'total={total}')
-          print(f'pending={pending}')
-          print('complete=true' if total==235 and pending==0 else 'complete=false')
-          PY
-
-      - name: Install Pillow
-        if: steps.state.outputs.complete == 'true'
-        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
-
-      - name: Audit all 235 sprite runtimes
-        if: steps.state.outputs.complete == 'true'
-        id: audit
-        continue-on-error: true
-        run: python tools/sprites/audit_complete_sprite_manifest.py
-
-      - name: Upload full audit evidence
-        if: steps.state.outputs.complete == 'true' && always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: final-sprite-completion-audit
-          path: art/production/final-sprite-completion-audit.json
-          if-no-files-found: error
-          retention-days: 30
-
-      - name: Commit final audit evidence
-        if: steps.state.outputs.complete == 'true' && always()
-        shell: bash
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add art/production/final-sprite-completion-audit.json
-          git diff --cached --quiet && exit 0
-          git commit -m 'art: record final 235-sprite completion audit'
-          git pull --rebase origin main
-          git push
-
-      - name: Enforce final audit result
-        if: steps.state.outputs.complete == 'true' && steps.audit.outcome != 'success'
-        run: |
-          echo "::error::Final 235-sprite runtime audit failed. See committed/uploaded audit evidence."
-          exit 1
-```
-
-## File: .github/workflows/sprite-production-plan.yml
-```yaml
-name: Sprite Production Plan
-
-on:
-  workflow_dispatch:
-  push:
-    branches: [ main ]
-    paths:
-      - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
-      - 'tools/sprites/plan_sprite_batches.py'
-      - '.github/workflows/sprite-production-plan.yml'
-
-permissions:
-  contents: read
-
-concurrency:
-  group: sprite-production-plan-${{ github.ref }}
-  cancel-in-progress: true
-
-jobs:
-  plan:
-    runs-on: ubuntu-latest
-    timeout-minutes: 3
-    steps:
-      - name: Checkout
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-
-      - name: Set up Python
-        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
-        with:
-          python-version: '3.12'
-
-      - name: Build deterministic production lanes
-        run: python tools/sprites/plan_sprite_batches.py
-
-      - name: Publish batch plan
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: sprite-production-plan
-          path: art/production/sprite_batch_plan.*
-          if-no-files-found: error
-          retention-days: 14
-```
-
-## File: .github/workflows/sprite-runtime-ci-bridge.yml
-```yaml
-name: Sprite Runtime CI Bridge
-
-on:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/sprite-runtime-ci-bridge.yml'
-  workflow_run:
-    workflows:
-      - 'Promote reviewed FLUX run 51 machines'
-      - 'Promote reviewed FLUX run 52 assets'
-      - 'Finalize Kaggle Sprite Candidates'
-    types: [completed]
-
-permissions:
-  actions: write
-  contents: read
-
-concurrency:
-  group: sprite-runtime-ci-bridge
-  cancel-in-progress: false
-
-jobs:
-  dispatch-android:
-    if: github.event_name == 'push' || github.event.workflow_run.conclusion == 'success'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Dispatch Android CI on current main
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-        run: gh workflow run android.yml --ref main
-```
-
-## File: .github/workflows/unified-asset-pipeline.yml
-```yaml
-name: Unified Asset Candidate Pipeline
-
-on:
-  workflow_dispatch:
-    inputs:
-      asset_id:
-        description: "Exact manifest asset ID to generate for review"
-        required: true
-        type: string
-      provider:
-        description: "Generation provider"
-        required: true
-        type: choice
-        default: hf-static
-        options:
-          - hf-static
-
-permissions:
-  contents: read
-
-jobs:
-  candidate:
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - name: Checkout
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-
-      - name: Set up Python 3.12
-        uses: actions/setup-python@b64ffcaf5b410884ad320a9cfac8866006a109aa # v5
-        with:
-          python-version: "3.12"
-
-      - name: Install candidate dependencies
-        run: python -m pip install --disable-pip-version-check Pillow==11.3.0
-
-      - name: Run asset pipeline unit tests
-        run: python -m unittest discover -s tools/assets -p 'test_*.py' -v
-
-      - name: Inspect exact manifest target
-        env:
-          ASSET_ID: ${{ inputs.asset_id }}
-        run: |
-          python - <<'PY'
-          import os
-          from pathlib import Path
-          from tools.assets.manifest import load_manifest, require_asset
-
-          asset = require_asset(
-              load_manifest(Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')),
-              os.environ['ASSET_ID'],
-          )
-          if asset.status != 'TODO':
-              raise SystemExit(f'{asset.id} is {asset.status}; candidate generation requires TODO')
-          print(f'REVIEW_TARGET={asset.id}')
-          print(f'SEMANTIC_ROLE={asset.description}')
-          PY
-
-      - name: Prepare review-only candidate
-        env:
-          ASSET_ID: ${{ inputs.asset_id }}
-          SELECTED_PROVIDER: ${{ inputs.provider }}
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: |
-          python - <<'PY'
-          import os
-          from pathlib import Path
-          from PIL import Image
-
-          from tools.assets.manifest import ManifestAsset, load_manifest, require_asset
-          from tools.assets.pipeline import build_candidate
-          from tools.sprites import hf_static_manifest_factory as hf
-
-          if os.environ['SELECTED_PROVIDER'] != 'hf-static':
-              raise SystemExit('unsupported provider')
-          if not os.environ.get('HF_TOKEN', '').strip():
-              raise SystemExit('HF_TOKEN is required')
-
-          class HfStaticReviewProvider:
-              name = 'hf-static'
-              source_type = 'generated'
-              license = 'generated'
-
-              def generate(self, asset: ManifestAsset, prompt: str) -> Image.Image:
-                  return hf.generate(prompt)
-
-          asset = require_asset(
-              load_manifest(Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')),
-              os.environ['ASSET_ID'],
-          )
-          prompt = (
-              'AAA premium mobile strategy game authored illustration, single isolated subject, '
-              + asset.name + '. ' + asset.description + ' '
-              'Portrait-friendly 2.5D three-quarter presentation, strong readable silhouette, '
-              'upper-left key light, cool fill, selective warm amber and cyan emissive accents, '
-              'premium physically plausible materials. Pure solid black background with large empty margin. '
-              'No UI, no border, no frame, no watermark, no logo, no readable text, no numbers, no collage, no multiple panels.'
-          )
-          result = build_candidate(
-              asset=asset,
-              provider=HfStaticReviewProvider(),
-              prompt=prompt,
-              target_side=1024,
-              candidate_root=Path('art/incoming/assets'),
-          )
-          print(f'CANDIDATE={result.image_path}')
-          print(f'METADATA={result.metadata_path}')
-          print(f'ALPHA_COVERAGE={result.coverage:.6f}')
-          print(f'DOMINANT_COMPONENT={result.dominant_component:.6f}')
-          PY
-
-      - name: Validate candidate and build QA artifacts
-        env:
-          ASSET_ID: ${{ inputs.asset_id }}
-        run: |
-          python - <<'PY'
-          import json
-          import os
-          from pathlib import Path
-
-          from tools.assets.manifest import load_manifest, require_asset
-          from tools.assets.metadata import CandidateMetadata
-          from tools.assets.qa_report import build_candidate_qa_artifacts
-
-          asset = require_asset(
-              load_manifest(Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')),
-              os.environ['ASSET_ID'],
-          )
-          candidate_dir = Path('art/incoming/assets') / asset.id
-          metadata = CandidateMetadata(**json.loads((candidate_dir / 'metadata.json').read_text(encoding='utf-8')))
-          metadata.validate_against(asset)
-          if metadata.review != 'pending':
-              raise SystemExit(f'candidate review must remain pending, got {metadata.review!r}')
-          report_path, sheet_path = build_candidate_qa_artifacts(candidate_dir)
-          expected = [
-              candidate_dir / 'candidate.png',
-              candidate_dir / 'metadata.json',
-              candidate_dir / 'qa-report.json',
-              candidate_dir / 'contact-sheet.png',
-          ]
-          if report_path != candidate_dir / 'qa-report.json':
-              raise SystemExit(f'unexpected QA report path: {report_path}')
-          if sheet_path != candidate_dir / 'contact-sheet.png':
-              raise SystemExit(f'unexpected contact sheet path: {sheet_path}')
-          missing = [str(path) for path in expected if not path.is_file()]
-          if missing:
-              raise SystemExit('missing review artifacts: ' + ', '.join(missing))
-          print(f'QA_REPORT={report_path}')
-          print(f'CONTACT_SHEET={sheet_path}')
-          PY
-
-      - name: Upload review bundle
-        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4
-        with:
-          name: unified-asset-${{ inputs.asset_id }}
-          path: art/incoming/assets/${{ inputs.asset_id }}
-          if-no-files-found: error
-          retention-days: 7
-```
-
-## File: .serena/project.yml
-```yaml
-project_name: "zero-to-empire"
-language_servers:
-  - kotlin
-ls_workspace_folders:
-  - "."
-ignore_all_files_in_gitignore: true
-ignored_paths:
-  - "**/.gradle/**"
-  - "**/build/**"
-  - "art/**"
-  - "marketing/**"
-  - "colab/**"
-  - "kaggle/**"
-read_only: false
-encoding: utf-8
-symbol_info_budget: 8
-initial_prompt: |
-  Use Serena's symbol and reference tools before reading whole files. Start with symbol overviews, find_symbol and find_referencing_symbols; fetch full file bodies only when required for the task. Prefer targeted edits and preserve the existing architecture.
-```
-
-## File: app/src/debug/java/com/zerotoempire/game/SmokeSeedReceiver.kt
+## File: src/debug/java/com/zerotoempire/game/SmokeSeedReceiver.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -6027,7 +251,7 @@ class SmokeSeedReceiver : BroadcastReceiver() {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/AdaptiveMusic.kt
+## File: src/main/java/com/zerotoempire/game/AdaptiveMusic.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -6229,7 +453,7 @@ object GameMusicBus {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/AdMobInterstitialGateway.kt
+## File: src/main/java/com/zerotoempire/game/AdMobInterstitialGateway.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -6323,7 +547,7 @@ class AdMobInterstitialGateway(private val context: Context) {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/AdMobRewardedGateway.kt
+## File: src/main/java/com/zerotoempire/game/AdMobRewardedGateway.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -6441,7 +665,7 @@ class AdMobRewardedGateway(private val context: Context) : RewardedAdGateway {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/Analytics.kt
+## File: src/main/java/com/zerotoempire/game/Analytics.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -6465,7 +689,7 @@ object NoOpAnalytics : GameAnalytics {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt
+## File: src/main/java/com/zerotoempire/game/AscendantCityWorld.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -6627,7 +851,7 @@ private fun AscendantCorePlaza(state:GameState,tap:()->Unit,modifier:Modifier=Mo
 @Composable private fun PurchaseModeRailWorld(vm:GameViewModel,selected:BuyMode){val modes=listOf(BuyMode.X1 to "×1",BuyMode.X10 to "×10",BuyMode.X25 to "×25",BuyMode.MILESTONE to "NEXT",BuyMode.MAX to "MAX");Row(Modifier.fillMaxWidth().padding(horizontal=14.dp),horizontalArrangement=Arrangement.spacedBy(5.dp)){modes.forEach{(mode,label)->val active=mode==selected;Surface(color=if(active)EmpireColors.Violet else EmpireColors.Surface,shape=RoundedCornerShape(12.dp),modifier=Modifier.weight(1f).height(42.dp).clickable{vm.setBuyMode(mode)}){Box(contentAlignment=Alignment.Center){Text(label,color=if(active)Color.White else EmpireColors.TextSecondary,fontSize=9.sp,fontWeight=FontWeight.Black)}}}}}
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/AscensionAdvisor.kt
+## File: src/main/java/com/zerotoempire/game/AscensionAdvisor.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -6698,7 +922,7 @@ fun AscensionAdvisor(state: GameState, modifier: Modifier = Modifier) {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/BillingDiagnostics.kt
+## File: src/main/java/com/zerotoempire/game/BillingDiagnostics.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -6765,7 +989,7 @@ object LocalBillingDiagnostics : BillingDiagnostics {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/BillingFailurePolicy.kt
+## File: src/main/java/com/zerotoempire/game/BillingFailurePolicy.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -6793,7 +1017,7 @@ object BillingFailurePolicy {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/BulkPurchase.kt
+## File: src/main/java/com/zerotoempire/game/BulkPurchase.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -6863,7 +1087,7 @@ object BulkPurchase {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/BulkQuoteDock.kt
+## File: src/main/java/com/zerotoempire/game/BulkQuoteDock.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -6966,7 +1190,7 @@ private fun compactMoney(value: Double): String {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt
+## File: src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -7207,7 +1431,7 @@ private fun DrawScope.drawGroupMastery(color:Color,breathe:Float,lowPower:Boolea
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt
+## File: src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -7487,7 +1711,7 @@ fun BusinessGroup01Evolution(id: Int, level: Int, iconSize: Dp, modifier: Modifi
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt
+## File: src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -7619,7 +1843,7 @@ private fun DrawScope.drawGroup02Spokes(color:Color,phase:Float,count:Int){val s
 private fun DrawScope.drawGroup02Crown(color:Color,phase:Float){val s=size.minDimension;drawArc(Color(0xFFFFD76A).copy(alpha=.65f),-35f+phase*16f,240f,false,Offset(s*.08f,s*.08f),Size(s*.84f,s*.84f),style=Stroke(s*.012f));drawArc(color.copy(alpha=.40f),160f-phase*12f,160f,false,Offset(s*.12f,s*.12f),Size(s*.76f,s*.76f),style=Stroke(s*.009f))}
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/BusinessGroup02Evolution.kt
+## File: src/main/java/com/zerotoempire/game/BusinessGroup02Evolution.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -7906,7 +2130,7 @@ fun BusinessGroup02Evolution(id: Int, level: Int, iconSize: Dp, modifier: Modifi
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/BusinessGroup03Art.kt
+## File: src/main/java/com/zerotoempire/game/BusinessGroup03Art.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -8061,7 +2285,7 @@ private fun DrawScope.drawGroup03Crown(color:Color,phase:Float){val s=size.minDi
 private fun DrawScope.drawGroup03Mastery(color:Color,pulse:Float,lowPower:Boolean){val s=size.minDimension;val c=Offset(s*.5f,s*.52f);drawCircle(Brush.radialGradient(listOf(Color.White.copy(alpha=.13f*pulse),color.copy(alpha=.10f),Color.Transparent),c,s*.52f),s*.52f,c);repeat(if(lowPower)5 else 10){i->val a=i*2f*PI.toFloat()/(if(lowPower)5 else 10);drawCircle(Color.White.copy(alpha=.75f),s*.006f,Offset(c.x+cos(a)*s*.46f,c.y+sin(a)*s*.46f))}}
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/BusinessGroup03Evolution.kt
+## File: src/main/java/com/zerotoempire/game/BusinessGroup03Evolution.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -8249,7 +2473,7 @@ fun BusinessGroup03Evolution(id: Int, level: Int, iconSize: Dp, modifier: Modifi
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/BusinessGroup04Art.kt
+## File: src/main/java/com/zerotoempire/game/BusinessGroup04Art.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -8333,7 +2557,7 @@ private fun DrawScope.drawTranscendentNexusFinal(stage:Int,phase:Float,pulse:Flo
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/BusinessGroup04Evolution.kt
+## File: src/main/java/com/zerotoempire/game/BusinessGroup04Evolution.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -8572,7 +2796,7 @@ fun BusinessGroup04Evolution(id: Int, level: Int, iconSize: Dp, modifier: Modifi
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/CanonicalBusinessRaster.kt
+## File: src/main/java/com/zerotoempire/game/CanonicalBusinessRaster.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -8718,7 +2942,7 @@ internal fun canonicalBusinessRasterRes(businessId: Int, level: Int): Int? {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/CanonicalBusinessTier.kt
+## File: src/main/java/com/zerotoempire/game/CanonicalBusinessTier.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -8741,7 +2965,7 @@ internal fun canonicalBusinessTier(level: Int): Int = when {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/CanonicalCharacterRaster.kt
+## File: src/main/java/com/zerotoempire/game/CanonicalCharacterRaster.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -8795,7 +3019,7 @@ internal fun reviewedCharacterIdleRasterRes(role: ReviewedCharacterRole): Int = 
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/CanonicalFxRaster.kt
+## File: src/main/java/com/zerotoempire/game/CanonicalFxRaster.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -8856,7 +3080,7 @@ internal fun powerCorePulseFx(eraIndex: Int): CanonicalFx? = when (eraIndex) {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/CanonicalFxSprite.kt
+## File: src/main/java/com/zerotoempire/game/CanonicalFxSprite.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -8936,7 +3160,7 @@ internal fun CanonicalFxSprite(
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/Challenges.kt
+## File: src/main/java/com/zerotoempire/game/Challenges.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -9010,7 +3234,7 @@ object BalanceGuard {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/ChallengeUi.kt
+## File: src/main/java/com/zerotoempire/game/ChallengeUi.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -9195,7 +3419,7 @@ private fun ChallengeDialog(
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/CinematicArt.kt
+## File: src/main/java/com/zerotoempire/game/CinematicArt.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -9396,7 +3620,7 @@ fun EraVista(eraIndex: Int, modifier: Modifier = Modifier) {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/CinematicRuntimeTransition.kt
+## File: src/main/java/com/zerotoempire/game/CinematicRuntimeTransition.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -9519,7 +3743,7 @@ fun CinematicRuntimeTransitionOverlay(
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/CommerceUi.kt
+## File: src/main/java/com/zerotoempire/game/CommerceUi.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -9747,7 +3971,7 @@ private tailrec fun Context.findActivity(): Activity? = when (this) {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/ContentUnlocks.kt
+## File: src/main/java/com/zerotoempire/game/ContentUnlocks.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -9814,7 +4038,7 @@ object ContentUnlocks {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/DrawScopeCompat.kt
+## File: src/main/java/com/zerotoempire/game/DrawScopeCompat.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -9831,7 +4055,7 @@ fun DrawScope.drawLine(start: Offset, end: Offset, strokeWidth: Float, color: Co
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/DroneThruster.kt
+## File: src/main/java/com/zerotoempire/game/DroneThruster.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -9886,7 +4110,7 @@ internal fun DroneThruster(modifier: Modifier = Modifier) {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/DynastyProgression.kt
+## File: src/main/java/com/zerotoempire/game/DynastyProgression.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -9967,7 +4191,7 @@ object DynastyProgression {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/EconomyMath.kt
+## File: src/main/java/com/zerotoempire/game/EconomyMath.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -10018,7 +4242,7 @@ object EconomyMath {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/ElectricArc.kt
+## File: src/main/java/com/zerotoempire/game/ElectricArc.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -10073,7 +4297,7 @@ internal fun ElectricArc(modifier: Modifier = Modifier) {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/EmpireArt.kt
+## File: src/main/java/com/zerotoempire/game/EmpireArt.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -10274,7 +4498,7 @@ private fun DrawScope.drawDyson(c: Color) { val s=size.minDimension; drawCircle(
 private fun DrawScope.drawGalaxy(c: Color) { val s=size.minDimension; drawCircle(EmpireArtPalette.White,s*.045f,Offset(s*.5f,s*.5f));repeat(3){ring->arc(c.copy(alpha=.9f-ring*.2f),s*(.18f+ring*.06f),s*(.27f+ring*.06f),s*(.82f-ring*.06f),s*(.73f-ring*.06f),25f+ring*42f,205f,s*(.045f-ring*.008f))};repeat(8){i->val a=i*.83f;drawCircle(if(i%2==0)EmpireArtPalette.Cyan else EmpireArtPalette.Magenta,s*.018f,Offset(s*.5f+cos(a)*s*(.23f+i*.012f),s*.5f+sin(a)*s*(.16f+i*.009f)))} }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/EmpireArtCompat.kt
+## File: src/main/java/com/zerotoempire/game/EmpireArtCompat.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -10644,7 +4868,7 @@ private fun compactMoney(value: Double): String {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/EmpireCoreArt.kt
+## File: src/main/java/com/zerotoempire/game/EmpireCoreArt.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -10861,7 +5085,7 @@ private fun DrawScope.drawCoreEraGeometry(era:Int,c:Offset,s:Float,rotation:Floa
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/EmpireNumberFormat.kt
+## File: src/main/java/com/zerotoempire/game/EmpireNumberFormat.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -10914,7 +5138,7 @@ object EmpireNumberFormat {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/EndgameAtmosphere.kt
+## File: src/main/java/com/zerotoempire/game/EndgameAtmosphere.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -11024,7 +5248,7 @@ fun EndgameAtmosphere(eraIndex: Int, modifier: Modifier = Modifier) {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/EndgameBusinessSprites.kt
+## File: src/main/java/com/zerotoempire/game/EndgameBusinessSprites.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -11113,7 +5337,7 @@ fun EndgameBusinessSprite(id: Int, level: Int, iconSize: Dp, modifier: Modifier 
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/EndgameManagerPortrait.kt
+## File: src/main/java/com/zerotoempire/game/EndgameManagerPortrait.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -11263,7 +5487,7 @@ fun EndgameManagerPortrait(businessId: Int, portraitSize: Dp) {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/EndgameProgression.kt
+## File: src/main/java/com/zerotoempire/game/EndgameProgression.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -11300,7 +5524,7 @@ object EndgameProgression {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/EraVistaAAA.kt
+## File: src/main/java/com/zerotoempire/game/EraVistaAAA.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -11481,7 +5705,7 @@ private fun DrawScope.drawRealityEra(w:Float,h:Float,d:Float,low:Boolean){val pi
 private fun DrawScope.drawTranscendentEra(w:Float,h:Float,d:Float,low:Boolean){val gold=Color(0xFFFFE36E);val violet=Color(0xFFC68BFF);val c=Offset(w*.5f,h*.45f);drawCircle(Brush.radialGradient(listOf(Color.White,gold.copy(alpha=.9f),violet.copy(alpha=.25f),Color.Transparent),c,h*.26f),h*.26f,c);repeat(3){r->drawCircle(if(r%2==0)gold else violet,h*(.15f+r*.07f),c,style=Stroke(3f-r*.45f))};repeat(if(low)6 else 12){i->val a=d*2f*PI.toFloat()+i*2f*PI.toFloat()/(if(low)6 else 12);drawLine(color=if(i%2==0)gold else violet,start=Offset(c.x+cos(a)*w*.11f,c.y+sin(a)*h*.08f),end=Offset(c.x+cos(a)*w*.34f,c.y+sin(a)*h*.27f),strokeWidth=2.4f)};drawCircle(Color.White,h*.05f,c)}
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/EraVistaCinematicOverlay.kt
+## File: src/main/java/com/zerotoempire/game/EraVistaCinematicOverlay.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -11583,7 +5807,7 @@ fun EraVistaCinematicOverlay(eraIndex: Int, modifier: Modifier = Modifier) {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/FoundryWorldMotion.kt
+## File: src/main/java/com/zerotoempire/game/FoundryWorldMotion.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -11742,7 +5966,7 @@ internal fun FoundryWorkerTraffic(
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/FullScreenAdActivityPolicy.kt
+## File: src/main/java/com/zerotoempire/game/FullScreenAdActivityPolicy.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -11756,7 +5980,7 @@ import android.app.Activity
 internal fun Activity.canHostFullScreenAd(): Boolean = !isFinishing && !isDestroyed
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/GameEconomy.kt
+## File: src/main/java/com/zerotoempire/game/GameEconomy.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -11780,7 +6004,7 @@ object GameEconomy {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/GameEngine.kt
+## File: src/main/java/com/zerotoempire/game/GameEngine.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -11866,7 +6090,7 @@ fun defaultBusinesses() = listOf(
 )
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/GameFeel.kt
+## File: src/main/java/com/zerotoempire/game/GameFeel.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -11923,7 +6147,7 @@ interface AudioGateway { fun play(cue: AudioCue) }
 enum class AudioCue { TAP, COIN, PURCHASE, MILESTONE, REWARD, PRESTIGE, UI_OPEN }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/GameRepository.kt
+## File: src/main/java/com/zerotoempire/game/GameRepository.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -12057,7 +6281,7 @@ class GameRepository(private val context: Context) {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/GameTheme.kt
+## File: src/main/java/com/zerotoempire/game/GameTheme.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -12090,7 +6314,7 @@ val EmpireColorScheme = darkColorScheme(
 )
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/GameViewModel.kt
+## File: src/main/java/com/zerotoempire/game/GameViewModel.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -12424,7 +6648,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/GrowthRuntime.kt
+## File: src/main/java/com/zerotoempire/game/GrowthRuntime.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -12522,7 +6746,7 @@ private tailrec fun Context.findGrowthActivity(): Activity? = when (this) {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/GrowthTelemetry.kt
+## File: src/main/java/com/zerotoempire/game/GrowthTelemetry.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -12567,7 +6791,7 @@ class LocalGrowthTelemetry(context: Context) : GrowthTelemetry {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/HologramScanSweep.kt
+## File: src/main/java/com/zerotoempire/game/HologramScanSweep.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -12622,7 +6846,7 @@ internal fun HologramScanSweep(modifier: Modifier = Modifier) {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/IdentitySystems.kt
+## File: src/main/java/com/zerotoempire/game/IdentitySystems.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -12698,7 +6922,7 @@ class GameAudioEngine {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/IdentityUi.kt
+## File: src/main/java/com/zerotoempire/game/IdentityUi.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -12833,7 +7057,7 @@ private fun CelebrationOverlay(item: MajorCelebration, onShown: () -> Unit, onDi
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/IncomePickupSparkle.kt
+## File: src/main/java/com/zerotoempire/game/IncomePickupSparkle.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -12892,7 +7116,7 @@ internal fun IncomePickupSparkle(modifier: Modifier = Modifier) {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/InterstitialController.kt
+## File: src/main/java/com/zerotoempire/game/InterstitialController.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -12953,7 +7177,7 @@ fun InterstitialController(
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/InterstitialPolicy.kt
+## File: src/main/java/com/zerotoempire/game/InterstitialPolicy.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -13035,7 +7259,7 @@ class InterstitialFrequencyStore(context: Context) {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/LateGame.kt
+## File: src/main/java/com/zerotoempire/game/LateGame.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -13082,7 +7306,7 @@ object LateGame {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/LiveOps.kt
+## File: src/main/java/com/zerotoempire/game/LiveOps.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -13122,7 +7346,7 @@ object DailyQuests {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/MainActivity.kt
+## File: src/main/java/com/zerotoempire/game/MainActivity.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -13204,7 +7428,7 @@ class MainActivity : ComponentActivity() {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/ManagerGroup01Art.kt
+## File: src/main/java/com/zerotoempire/game/ManagerGroup01Art.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -13287,7 +7511,7 @@ fun ManagerGroup01Portrait(businessId: Int, portraitSize: Dp) {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/ManagerGroup02Art.kt
+## File: src/main/java/com/zerotoempire/game/ManagerGroup02Art.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -13349,7 +7573,7 @@ fun ManagerGroup02Portrait(businessId: Int, portraitSize: Dp) {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/ManagerGroup03Art.kt
+## File: src/main/java/com/zerotoempire/game/ManagerGroup03Art.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -13465,7 +7689,7 @@ fun ManagerGroup03Portrait(businessId: Int, portraitSize: Dp) {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/Managers.kt
+## File: src/main/java/com/zerotoempire/game/Managers.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -13516,7 +7740,7 @@ object Upgrades {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/MasteryCrownShimmer.kt
+## File: src/main/java/com/zerotoempire/game/MasteryCrownShimmer.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -13581,7 +7805,7 @@ internal fun MasteryCrownShimmer(modifier: Modifier = Modifier) {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/MetaSpriteArt.kt
+## File: src/main/java/com/zerotoempire/game/MetaSpriteArt.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -13740,7 +7964,7 @@ fun NavSprite(tab: GameTab, selected: Boolean, size: Dp = 26.dp) {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/Monetization.kt
+## File: src/main/java/com/zerotoempire/game/Monetization.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -13821,7 +8045,7 @@ data class MonetizationState(
 )
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/MotionQuality.kt
+## File: src/main/java/com/zerotoempire/game/MotionQuality.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -13873,7 +8097,7 @@ object MotionQuality {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/OfflineProgress.kt
+## File: src/main/java/com/zerotoempire/game/OfflineProgress.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -13927,7 +8151,7 @@ object OfflineProgress {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/OnboardingArt.kt
+## File: src/main/java/com/zerotoempire/game/OnboardingArt.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -14017,7 +8241,7 @@ fun CelebrationBusinessSprite(businessId: Int, level: Int, size: androidx.compos
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/OrbitalIonTrail.kt
+## File: src/main/java/com/zerotoempire/game/OrbitalIonTrail.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -14079,7 +8303,7 @@ internal fun OrbitalIonTrail(modifier: Modifier = Modifier) {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/PhaseDistortion.kt
+## File: src/main/java/com/zerotoempire/game/PhaseDistortion.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -14134,7 +8358,7 @@ internal fun PhaseDistortion(modifier: Modifier = Modifier) {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt
+## File: src/main/java/com/zerotoempire/game/PlayBillingGateway.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -14557,7 +8781,7 @@ class PlayBillingGateway(
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/PowerCoreTapImpact.kt
+## File: src/main/java/com/zerotoempire/game/PowerCoreTapImpact.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -14694,7 +8918,7 @@ fun PowerCoreTapImpact(serial: Int, eraIndex: Int, modifier: Modifier = Modifier
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/PremiumGameFeel.kt
+## File: src/main/java/com/zerotoempire/game/PremiumGameFeel.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -14896,7 +9120,7 @@ private fun PremiumBurst(seed: Int) {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/PremiumGameFeelOverlay.kt
+## File: src/main/java/com/zerotoempire/game/PremiumGameFeelOverlay.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -14917,7 +9141,7 @@ fun PremiumGameFeelOverlay(state: GameState, modifier: Modifier = Modifier) {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/PremiumGameFeelV2.kt
+## File: src/main/java/com/zerotoempire/game/PremiumGameFeelV2.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -15156,7 +9380,7 @@ private fun SignalChip(label: String, value: String, modifier: Modifier = Modifi
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/PremiumGameUiV2.kt
+## File: src/main/java/com/zerotoempire/game/PremiumGameUiV2.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -15336,7 +9560,7 @@ private fun PremiumEmpireTab(vm: GameViewModel, state: GameState, buyMode: BuyMo
 private fun moneyV2(value:Double):String{if(!value.isFinite())return "∞";val v=value.coerceAtLeast(0.0);return when{v>=1e30->String.format("%.2fN",v/1e30);v>=1e27->String.format("%.2fO",v/1e27);v>=1e24->String.format("%.2fSp",v/1e24);v>=1e21->String.format("%.2fSx",v/1e21);v>=1e18->String.format("%.2fQi",v/1e18);v>=1e15->String.format("%.2fQa",v/1e15);v>=1e12->String.format("%.2fT",v/1e12);v>=1e9->String.format("%.2fB",v/1e9);v>=1e6->String.format("%.2fM",v/1e6);v>=1e3->String.format("%.2fK",v/1e3);else->String.format("%.0f",v)}}
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/PremiumGoalsCenter.kt
+## File: src/main/java/com/zerotoempire/game/PremiumGoalsCenter.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -15575,7 +9799,7 @@ private fun PremiumGoalCard(
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/PremiumMotion.kt
+## File: src/main/java/com/zerotoempire/game/PremiumMotion.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -15851,7 +10075,7 @@ fun EraTransitionOverlay(eraIndex: Int, visible: Boolean, modifier: Modifier = M
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/PremiumSfx.kt
+## File: src/main/java/com/zerotoempire/game/PremiumSfx.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -16007,7 +10231,7 @@ object GameSfxBus {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/PremiumSprites.kt
+## File: src/main/java/com/zerotoempire/game/PremiumSprites.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -16348,7 +10572,7 @@ private fun DrawScope.premiumGalacticExchange(c: Color, stage: Int, phase: Float
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/PremiumUiCompat.kt
+## File: src/main/java/com/zerotoempire/game/PremiumUiCompat.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -16360,7 +10584,7 @@ val BulkQuote.cost: Double
     get() = totalCost
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/PrivacyConsentManager.kt
+## File: src/main/java/com/zerotoempire/game/PrivacyConsentManager.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -16415,7 +10639,7 @@ class PrivacyConsentManager(private val activity: Activity) {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/ProgressionSystems.kt
+## File: src/main/java/com/zerotoempire/game/ProgressionSystems.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -16551,7 +10775,7 @@ object Progression {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/PurchaseCreditLedger.kt
+## File: src/main/java/com/zerotoempire/game/PurchaseCreditLedger.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -16567,7 +10791,7 @@ class PurchaseCreditLedger(initial: Collection<String> = emptyList()) {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/PurchaseImpactVfx.kt
+## File: src/main/java/com/zerotoempire/game/PurchaseImpactVfx.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -16741,7 +10965,7 @@ fun AssetPurchaseImpact(
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/PurchaseRecovery.kt
+## File: src/main/java/com/zerotoempire/game/PurchaseRecovery.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -16796,7 +11020,7 @@ fun GameViewModel.applyEntitlements(
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/Retention.kt
+## File: src/main/java/com/zerotoempire/game/Retention.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -16842,7 +11066,7 @@ object OnboardingCopy {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt
+## File: src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -16891,7 +11115,7 @@ internal fun ReviewedCharacterLayer(eraIndex: Int, modifier: Modifier = Modifier
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/ReviewedMachineLayer.kt
+## File: src/main/java/com/zerotoempire/game/ReviewedMachineLayer.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -16935,7 +11159,7 @@ internal fun ReviewedMachineLayer(eraIndex: Int, modifier: Modifier = Modifier) 
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/ReviewedTerrainLayer.kt
+## File: src/main/java/com/zerotoempire/game/ReviewedTerrainLayer.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -16973,7 +11197,7 @@ internal fun ReviewedTerrainLayer(eraIndex: Int, modifier: Modifier = Modifier) 
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/RewardedController.kt
+## File: src/main/java/com/zerotoempire/game/RewardedController.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -17033,7 +11257,7 @@ fun RewardedController(
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/RewardRequestGate.kt
+## File: src/main/java/com/zerotoempire/game/RewardRequestGate.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -17061,7 +11285,7 @@ class RewardRequestGate {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/SfxRuntime.kt
+## File: src/main/java/com/zerotoempire/game/SfxRuntime.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -17124,7 +11348,7 @@ private class SfxTracker {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/SingularityLensPulse.kt
+## File: src/main/java/com/zerotoempire/game/SingularityLensPulse.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -17189,7 +11413,7 @@ internal fun SingularityLensPulse(modifier: Modifier = Modifier) {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/StellarFlare.kt
+## File: src/main/java/com/zerotoempire/game/StellarFlare.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -17254,7 +11478,7 @@ internal fun StellarFlare(modifier: Modifier = Modifier) {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/UpgradeConstructionFlash.kt
+## File: src/main/java/com/zerotoempire/game/UpgradeConstructionFlash.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -17320,7 +11544,7 @@ internal fun UpgradeConstructionFlash(trigger: Int, modifier: Modifier = Modifie
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/UpgradeProgression.kt
+## File: src/main/java/com/zerotoempire/game/UpgradeProgression.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -17392,7 +11616,7 @@ object UpgradeProgression {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/UpgradeTreeScreen.kt
+## File: src/main/java/com/zerotoempire/game/UpgradeTreeScreen.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -17429,7 +11653,7 @@ fun PremiumUpgradeTreeScreen(vm: GameViewModel, state: GameState) {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/UpgradeTreeUi.kt
+## File: src/main/java/com/zerotoempire/game/UpgradeTreeUi.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -17707,7 +11931,7 @@ private fun UpgradeTreeNode(
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/ViralSystems.kt
+## File: src/main/java/com/zerotoempire/game/ViralSystems.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -17746,7 +11970,7 @@ object ReferralRewards {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/ViralUi.kt
+## File: src/main/java/com/zerotoempire/game/ViralUi.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -17802,7 +12026,7 @@ fun ViralShareChip(state: GameState) {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/WorldBusinessVisual.kt
+## File: src/main/java/com/zerotoempire/game/WorldBusinessVisual.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -17947,7 +12171,7 @@ private fun BusinessTierVfxAfterPrimary(
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/WorldMoneyFormat.kt
+## File: src/main/java/com/zerotoempire/game/WorldMoneyFormat.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -17974,7 +12198,7 @@ internal val moneyV2: (Double) -> String = { value ->
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/WorldSpriteRegistry.kt
+## File: src/main/java/com/zerotoempire/game/WorldSpriteRegistry.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -18046,7 +12270,7 @@ internal object WorldSpriteRegistry {
 }
 ```
 
-## File: app/src/main/java/com/zerotoempire/game/WorldTrafficArt.kt
+## File: src/main/java/com/zerotoempire/game/WorldTrafficArt.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -18143,7 +12367,7 @@ private fun DrawScope.drawSprite(image: ImageBitmap, xFraction: Float, yFraction
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/BillingDiagnosticsTest.kt
+## File: src/test/java/com/zerotoempire/game/BillingDiagnosticsTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -18187,7 +12411,7 @@ class BillingDiagnosticsTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/BillingFailurePolicyTest.kt
+## File: src/test/java/com/zerotoempire/game/BillingFailurePolicyTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -18223,7 +12447,7 @@ class BillingFailurePolicyTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/BulkPurchaseTest.kt
+## File: src/test/java/com/zerotoempire/game/BulkPurchaseTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -18259,7 +12483,7 @@ class BulkPurchaseTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/CanonicalBusinessRasterTest.kt
+## File: src/test/java/com/zerotoempire/game/CanonicalBusinessRasterTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -18309,7 +12533,7 @@ class CanonicalBusinessRasterTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/CanonicalBusinessTierTest.kt
+## File: src/test/java/com/zerotoempire/game/CanonicalBusinessTierTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -18349,7 +12573,7 @@ class CanonicalBusinessTierTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/CanonicalCharacterRasterTest.kt
+## File: src/test/java/com/zerotoempire/game/CanonicalCharacterRasterTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -18402,7 +12626,7 @@ class CanonicalCharacterRasterTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/CanonicalFxRasterTest.kt
+## File: src/test/java/com/zerotoempire/game/CanonicalFxRasterTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -18476,7 +12700,7 @@ class CanonicalFxRasterTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/ChallengeRotationTest.kt
+## File: src/test/java/com/zerotoempire/game/ChallengeRotationTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -18577,7 +12801,7 @@ class ChallengeRotationTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/CinematicRuntimeTransitionPolicyTest.kt
+## File: src/test/java/com/zerotoempire/game/CinematicRuntimeTransitionPolicyTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -18605,7 +12829,7 @@ class CinematicRuntimeTransitionPolicyTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/ContentUnlocksTest.kt
+## File: src/test/java/com/zerotoempire/game/ContentUnlocksTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -18673,7 +12897,7 @@ class ContentUnlocksTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/DynastyProgressionTest.kt
+## File: src/test/java/com/zerotoempire/game/DynastyProgressionTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -18733,7 +12957,7 @@ class DynastyProgressionTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/EconomyInvariantTest.kt
+## File: src/test/java/com/zerotoempire/game/EconomyInvariantTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -18831,7 +13055,7 @@ class EconomyInvariantTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/EconomyMathBoundaryTest.kt
+## File: src/test/java/com/zerotoempire/game/EconomyMathBoundaryTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -18897,7 +13121,7 @@ class EconomyMathBoundaryTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/EconomySafetyTest.kt
+## File: src/test/java/com/zerotoempire/game/EconomySafetyTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -18993,7 +13217,7 @@ class EconomySafetyTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/EconomyTest.kt
+## File: src/test/java/com/zerotoempire/game/EconomyTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -19011,7 +13235,7 @@ class EconomyTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/EmpireNumberFormatTest.kt
+## File: src/test/java/com/zerotoempire/game/EmpireNumberFormatTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -19036,7 +13260,7 @@ class EmpireNumberFormatTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/EndgameContentTest.kt
+## File: src/test/java/com/zerotoempire/game/EndgameContentTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -19074,7 +13298,7 @@ class EndgameContentTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/EndgameProgressionTest.kt
+## File: src/test/java/com/zerotoempire/game/EndgameProgressionTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -19108,7 +13332,7 @@ class EndgameProgressionTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/IdentitySystemsTest.kt
+## File: src/test/java/com/zerotoempire/game/IdentitySystemsTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -19144,7 +13368,7 @@ class IdentitySystemsTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/InterstitialPolicyTest.kt
+## File: src/test/java/com/zerotoempire/game/InterstitialPolicyTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -19265,7 +13489,7 @@ class InterstitialPolicyTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/LateGameTest.kt
+## File: src/test/java/com/zerotoempire/game/LateGameTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -19310,7 +13534,7 @@ class LateGameTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/LongCampaignInvariantTest.kt
+## File: src/test/java/com/zerotoempire/game/LongCampaignInvariantTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -19413,7 +13637,7 @@ class LongCampaignInvariantTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/NumericStabilityTest.kt
+## File: src/test/java/com/zerotoempire/game/NumericStabilityTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -19465,7 +13689,7 @@ class NumericStabilityTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/OfflineAutomationTest.kt
+## File: src/test/java/com/zerotoempire/game/OfflineAutomationTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -19533,7 +13757,7 @@ class OfflineAutomationTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/OfflineProgressBoundaryTest.kt
+## File: src/test/java/com/zerotoempire/game/OfflineProgressBoundaryTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -19606,7 +13830,7 @@ class OfflineProgressBoundaryTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/OfflineProgressLifecycleTest.kt
+## File: src/test/java/com/zerotoempire/game/OfflineProgressLifecycleTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -19680,7 +13904,7 @@ class OfflineProgressLifecycleTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/OfflineTemporalTest.kt
+## File: src/test/java/com/zerotoempire/game/OfflineTemporalTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -19728,7 +13952,7 @@ class OfflineTemporalTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/PlayableFlowTest.kt
+## File: src/test/java/com/zerotoempire/game/PlayableFlowTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -19852,7 +14076,7 @@ class PlayableFlowTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/PlayBillingGatewayInvariantTest.kt
+## File: src/test/java/com/zerotoempire/game/PlayBillingGatewayInvariantTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -19938,7 +14162,7 @@ class PlayBillingGatewayInvariantTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/PreDeviceSmokeInvariantTest.kt
+## File: src/test/java/com/zerotoempire/game/PreDeviceSmokeInvariantTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -20005,7 +14229,7 @@ class PreDeviceSmokeInvariantTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/PrestigeCycleTest.kt
+## File: src/test/java/com/zerotoempire/game/PrestigeCycleTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -20108,7 +14332,7 @@ class PrestigeCycleTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/PrestigeResetTest.kt
+## File: src/test/java/com/zerotoempire/game/PrestigeResetTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -20173,7 +14397,7 @@ class PrestigeResetTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/ProgressionCycleTest.kt
+## File: src/test/java/com/zerotoempire/game/ProgressionCycleTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -20245,7 +14469,7 @@ class ProgressionCycleTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/PurchaseCreditLedgerTest.kt
+## File: src/test/java/com/zerotoempire/game/PurchaseCreditLedgerTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -20285,7 +14509,7 @@ class PurchaseCreditLedgerTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/PurchaseRecoveryTest.kt
+## File: src/test/java/com/zerotoempire/game/PurchaseRecoveryTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -20419,7 +14643,7 @@ class PurchaseRecoveryTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/ReviewedTerrainLayerTest.kt
+## File: src/test/java/com/zerotoempire/game/ReviewedTerrainLayerTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -20448,7 +14672,7 @@ class ReviewedTerrainLayerTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/RewardRequestGateTest.kt
+## File: src/test/java/com/zerotoempire/game/RewardRequestGateTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -20487,7 +14711,7 @@ class RewardRequestGateTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt
+## File: src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -20545,7 +14769,7 @@ class RuntimePerformanceInvariantTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/StoreProductResolverTest.kt
+## File: src/test/java/com/zerotoempire/game/StoreProductResolverTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -20569,7 +14793,7 @@ class StoreProductResolverTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/UpgradeProgressionTest.kt
+## File: src/test/java/com/zerotoempire/game/UpgradeProgressionTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -20612,7 +14836,7 @@ class UpgradeProgressionTest {
 }
 ```
 
-## File: app/src/test/java/com/zerotoempire/game/WeeklyChallengeTest.kt
+## File: src/test/java/com/zerotoempire/game/WeeklyChallengeTest.kt
 ```kotlin
 package com.zerotoempire.game
 
@@ -20661,7 +14885,7 @@ class WeeklyChallengeTest {
 }
 ```
 
-## File: app/build.gradle.kts
+## File: build.gradle.kts
 ```kotlin
 plugins {
     id("com.android.application")
@@ -20898,4218 +15122,4 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     debugImplementation("androidx.compose.ui:ui-tooling")
 }
-```
-
-## File: docs/ASCENDANT_CITY_ERA1_SPRITE_MANIFEST.json
-```json
-{
-  "schemaVersion": 1,
-  "world": "Ascendant City",
-  "era": 1,
-  "eraName": "Scrappy Start",
-  "sourceBible": "docs/AAA_WORLD_SPRITE_BIBLE.md",
-  "artDirection": {
-    "camera": "2.5D three-quarter, elevated 30-38 degrees, portrait-mobile readable",
-    "masterCanvas": 2048,
-    "background": "transparent",
-    "keyLight": "upper-left warm-neutral",
-    "fillLight": "cool environment fill",
-    "materials": ["corrugated steel", "patched concrete", "painted scrap", "exposed cable", "oxidized alloy"],
-    "accentRule": "dark physical mass first; cyan energy and warm amber operational light only as selective accents",
-    "forbidden": ["baked UI text", "currency symbols", "logos", "rectangular background", "full-scene neon wash", "copied layouts or assets from other tycoon games"]
-  },
-  "runtimeRules": {
-    "maxPrimaryLoopsPerVisibleLot": 1,
-    "maxSecondaryLoopsPerVisibleLot": 2,
-    "reducedMotion": "freeze decorative loops while keeping state readability",
-    "lowPower": "same as reduced motion",
-    "sharedClock": true,
-    "touchHitboxIndependentFromTransparentPixels": true
-  },
-  "assets": [
-    {
-      "businessId": 0,
-      "workingName": "Scrap Intake Yard",
-      "family": "Foundry District",
-      "tier": 0,
-      "silhouette": "low asymmetrical scrap shed with angled roof, receiving hopper, exposed belt and compact generator",
-      "heroRead": "large receiving hopper at left, moving belt across center, warm sorting lamp at right",
-      "primaryLoop": "conveyor belt carrying scrap chunks toward the sorting press",
-      "secondaryLoops": ["small exhaust fan", "occasional welding spark"],
-      "layers": ["base_ground", "contact_shadow", "building_back", "building_main", "building_front", "roof_static", "machine_static", "conveyor", "machine_moving_a", "emissive_static", "emissive_pulse", "sign_static", "foreground_occluder"],
-      "anchors": {"pivot": [0.5, 0.88], "income": [0.5, 0.18], "upgrade": [0.82, 0.22], "manager": [0.18, 0.20]},
-      "animation": {"idleFrames": 6, "idleFps": 8, "productionFrames": 12, "productionFps": 12, "eventFrame": 8},
-      "exportBase": "zte_business_00_t0"
-    },
-    {
-      "businessId": 1,
-      "workingName": "Patchwork Press",
-      "family": "Foundry District",
-      "tier": 0,
-      "silhouette": "compact hydraulic press housed in a welded frame with pressure tank and cable bundles",
-      "heroRead": "vertical press ram, broad steel platen, amber pressure gauge cluster",
-      "primaryLoop": "press ram descends, compresses, rebounds with a short vibration settle",
-      "secondaryLoops": ["pressure gauge needle twitch", "steam puff after compression"],
-      "layers": ["base_ground", "contact_shadow", "building_back", "building_main", "building_front", "machine_static", "machine_moving_a", "machine_moving_b", "steam", "emissive_static", "emissive_pulse", "foreground_occluder"],
-      "anchors": {"pivot": [0.5, 0.88], "income": [0.5, 0.16], "upgrade": [0.84, 0.21], "manager": [0.16, 0.21]},
-      "animation": {"idleFrames": 4, "idleFps": 6, "productionFrames": 10, "productionFps": 12, "eventFrame": 6},
-      "exportBase": "zte_business_01_t0"
-    },
-    {
-      "businessId": 2,
-      "workingName": "Jury-Rig Foundry",
-      "family": "Foundry District",
-      "tier": 0,
-      "silhouette": "short furnace block with crooked chimney, crucible bay and external pipe cage",
-      "heroRead": "bright furnace mouth below center, chimney at rear, crucible rail in foreground",
-      "primaryLoop": "furnace breathes brighter as crucible rail advances and retracts",
-      "secondaryLoops": ["chimney smoke pulse", "tiny molten drip glow"],
-      "layers": ["base_ground", "contact_shadow", "building_back", "building_main", "building_front", "roof_static", "machine_static", "machine_moving_a", "emissive_static", "emissive_pulse", "smoke", "foreground_occluder"],
-      "anchors": {"pivot": [0.5, 0.89], "income": [0.52, 0.15], "upgrade": [0.82, 0.20], "manager": [0.17, 0.20]},
-      "animation": {"idleFrames": 6, "idleFps": 8, "productionFrames": 12, "productionFps": 12, "eventFrame": 7},
-      "exportBase": "zte_business_02_t0"
-    },
-    {
-      "businessId": 3,
-      "workingName": "Micro-Grid Workshop",
-      "family": "Foundry District",
-      "tier": 0,
-      "silhouette": "modular workshop around a crude generator coil with battery racks and overhead cable gantry",
-      "heroRead": "central coil, two uneven battery stacks, cable gantry framing the silhouette",
-      "primaryLoop": "generator coil charges from dim cyan to bright cyan and discharges into ground conduits",
-      "secondaryLoops": ["battery indicator chase", "small roof fan"],
-      "layers": ["base_ground", "contact_shadow", "building_back", "building_main", "building_front", "roof_static", "machine_static", "machine_moving_a", "emissive_static", "emissive_pulse", "energy_core", "foreground_occluder"],
-      "anchors": {"pivot": [0.5, 0.89], "income": [0.5, 0.14], "upgrade": [0.83, 0.21], "manager": [0.17, 0.21]},
-      "animation": {"idleFrames": 6, "idleFps": 8, "productionFrames": 10, "productionFps": 10, "eventFrame": 6},
-      "exportBase": "zte_business_03_t0"
-    }
-  ],
-  "sheetContract": {
-    "buildingFrame": [512, 512],
-    "paddingPx": 4,
-    "order": "left-to-right then top-to-bottom",
-    "fixedPivotAcrossFrames": true,
-    "noPerFrameTrim": true,
-    "metadataSidecar": true,
-    "metadataFields": ["frameWidth", "frameHeight", "columns", "rows", "frameCount", "fps", "loop", "pivotX", "pivotY", "hitbox", "events"]
-  },
-  "qa": [
-    "Readable at 88dp hero-lot size on a 360dp-wide phone",
-    "Readable silhouette without emissive FX",
-    "No text baked into art",
-    "Contact shadow isolated",
-    "Moving parts do not require repainting the full building",
-    "Pivot stable across every frame",
-    "Transparent padding preserved",
-    "Looks original to Zero to Empire and not derivative of a specific competitor asset"
-  ]
-}
-```
-
-## File: tools/android/emulator_functional_smoke.sh
-```bash
-#!/usr/bin/env bash
-set -euo pipefail
-
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/ui_dump_retry.sh"
-
-PKG="com.zerotoempire.game"
-ACT="$PKG/.MainActivity"
-EVIDENCE="/tmp/zte-functional"
-mkdir -p "$EVIDENCE"
-
-fail() {
-  echo "FUNCTIONAL_SMOKE_ERROR=$*" >&2
-  adb logcat -d > "$EVIDENCE/logcat-failure.txt" || true
-  adb exec-out screencap -p > "$EVIDENCE/failure.png" || true
-  exit 1
-}
-
-dump_ui() {
-  local name="$1"
-  ui_dump_with_retry "$EVIDENCE/$name.xml" || fail "ui-hierarchy-unavailable:$name"
-}
-
-click_node() {
-  local needle="$1"
-  local dump_name="$2"
-  dump_ui "$dump_name"
-  python3 - "$EVIDENCE/$dump_name.xml" "$needle" <<'PY'
-import re,sys,subprocess,xml.etree.ElementTree as ET
-path,needle=sys.argv[1],sys.argv[2]
-root=ET.parse(path).getroot()
-needle_l=needle.lower()
-matches=[]
-for n in root.iter('node'):
-    text=(n.attrib.get('text','')+' '+n.attrib.get('content-desc','')).strip()
-    if needle_l in text.lower():
-        b=n.attrib.get('bounds','')
-        m=re.match(r'\[(\d+),(\d+)\]\[(\d+),(\d+)\]',b)
-        if m:
-            x1,y1,x2,y2=map(int,m.groups())
-            area=max(1,(x2-x1)*(y2-y1))
-            matches.append((area,(x1+x2)//2,(y1+y2)//2,text,b))
-if not matches:
-    print(f'NODE_NOT_FOUND={needle}',file=sys.stderr);sys.exit(2)
-matches.sort()
-_,x,y,text,b=matches[0]
-print(f'CLICK_NODE={needle} matched={text!r} bounds={b} at={x},{y}')
-subprocess.run(['adb','shell','input','tap',str(x),str(y)],check=True)
-PY
-  sleep 1
-}
-
-click_resolved_node() {
-  local needle="$1"
-  local dump_name="$2"
-  local coords x y
-  dump_ui "$dump_name"
-  coords=$(python3 "$SCRIPT_DIR/ui_click_target.py" "$EVIDENCE/$dump_name.xml" "$needle") || fail "click-target-not-found:$needle"
-  read -r x y <<<"$coords"
-  [[ "$x" =~ ^[0-9]+$ && "$y" =~ ^[0-9]+$ ]] || fail "invalid-click-target:$needle:$coords"
-  echo "CLICK_RESOLVED_NODE=$needle at=$x,$y"
-  adb shell input tap "$x" "$y"
-  sleep 1
-}
-
-assert_ui_contains() {
-  local needle="$1"
-  local dump_name="$2"
-  dump_ui "$dump_name"
-  python3 - "$EVIDENCE/$dump_name.xml" "$needle" <<'PY'
-import sys,xml.etree.ElementTree as ET
-path,needle=sys.argv[1],sys.argv[2]
-needle=needle.lower()
-for n in ET.parse(path).getroot().iter('node'):
-    text=(n.attrib.get('text','')+' '+n.attrib.get('content-desc','')).lower()
-    if needle in text:
-        print(f'UI_ASSERT_PASS={needle}')
-        sys.exit(0)
-print(f'UI_ASSERT_FAIL={needle}',file=sys.stderr)
-sys.exit(2)
-PY
-}
-
-assert_ui_not_contains() {
-  local needle="$1"
-  local dump_name="$2"
-  dump_ui "$dump_name"
-  python3 - "$EVIDENCE/$dump_name.xml" "$needle" <<'PY'
-import sys,xml.etree.ElementTree as ET
-path,needle=sys.argv[1],sys.argv[2]
-needle=needle.lower()
-for n in ET.parse(path).getroot().iter('node'):
-    text=(n.attrib.get('text','')+' '+n.attrib.get('content-desc','')).lower()
-    if needle in text:
-        print(f'UI_ASSERT_UNEXPECTED={needle}',file=sys.stderr)
-        sys.exit(2)
-print(f'UI_ASSERT_ABSENT_PASS={needle}')
-PY
-}
-
-complete_onboarding_if_present() {
-  local step probe
-  for step in 0 1 2 3 4 5; do
-    probe="onboarding-step-$step"
-    dump_ui "$probe"
-    if ! grep -Fq 'ZERO → EMPIRE' "$EVIDENCE/$probe.xml"; then
-      echo "FUNCTIONAL_ONBOARDING_PASS=steps-$step"
-      return 0
-    fi
-    if (( step >= 5 )); then
-      fail "onboarding-exceeded-max-steps:5"
-    fi
-    if grep -Fq 'CONTINUE' "$EVIDENCE/$probe.xml"; then
-      click_node "CONTINUE" "onboarding-before-continue-$step"
-    elif grep -Fq 'BUILD MY EMPIRE' "$EVIDENCE/$probe.xml"; then
-      click_resolved_node "BUILD MY EMPIRE" "onboarding-before-build-$step"
-    else
-      fail "onboarding-action-missing:step=$step"
-    fi
-  done
-  fail "onboarding-unexpected-loop-exit"
-}
-
-check_alive() {
-  adb shell pidof "$PKG" | tr -d '\r\n' | grep -Eq '^[0-9]+' || fail "process-not-alive"
-}
-
-check_no_fatal() {
-  adb logcat -d > "$EVIDENCE/logcat.txt"
-  if grep -E "FATAL EXCEPTION|AndroidRuntime.*FATAL|Process: $PKG.*has died" "$EVIDENCE/logcat.txt"; then
-    fail "fatal-runtime-crash"
-  fi
-}
-
-APK="app/build/outputs/apk/debug/app-debug.apk"
-test -s "$APK" || fail "apk-missing"
-adb install -r "$APK" >/dev/null
-adb shell pm clear "$PKG" >/dev/null
-adb logcat -c
-adb shell am start -W -n "$ACT" > "$EVIDENCE/start.txt"
-sleep 5
-check_alive
-dump_ui "initial"
-adb exec-out screencap -p > "$EVIDENCE/initial.png"
-
-# A fresh or restored emulator can enter the onboarding at different persisted
-# points. Intermediate pages expose CONTINUE, while the final page exposes the
-# explicit BUILD MY EMPIRE CTA. Accept only those known actions and keep the
-# whole flow bounded to the five visual onboarding steps.
-complete_onboarding_if_present
-
-for tab in MANAGERS UPGRADES GOALS EMPIRE; do
-  click_node "$tab" "before-$tab"
-  assert_ui_contains "$tab" "after-$tab"
-done
-
-# POWER CORE has a non-clickable text label layered over part of its clickable
-# surface. Resolve the nearby clickable node and deliberately choose an uncovered
-# point, then prove that one real UI tap increased visible capital.
-click_resolved_node "Power Core" "before-power-core"
-CAPITAL_BEFORE=$(python3 "$SCRIPT_DIR/ui_economy_probe.py" capital "$EVIDENCE/before-power-core.xml") || fail "capital-probe-failed:before-power-core"
-dump_ui "after-power-core"
-CAPITAL_AFTER=$(python3 "$SCRIPT_DIR/ui_economy_probe.py" capital "$EVIDENCE/after-power-core.xml") || fail "capital-probe-failed:after-power-core"
-if ! python3 - "$CAPITAL_BEFORE" "$CAPITAL_AFTER" <<'PY'
-import sys
-raise SystemExit(0 if float(sys.argv[2]) > float(sys.argv[1]) else 1)
-PY
-then
-  fail "power-core-tap-not-credited:before=$CAPITAL_BEFORE after=$CAPITAL_AFTER"
-fi
-echo "POWER_CORE_TAP_PASS=before=$CAPITAL_BEFORE after=$CAPITAL_AFTER"
-check_alive
-
-click_node "Street Stand" "before-street-stand-buy"
-sleep 2
-assert_ui_contains "LV 1" "after-street-stand-buy"
-
-# The remaining smoke validates manager automation, offline earnings and durable
-# persistence; it does not need to spend minutes grinding 2,500 synthetic taps.
-# Seed only the debug APK after the real tap + purchase have been verified. The
-# release source set contains no SmokeSeedReceiver, enforced by the release
-# manifest allowlist in Android CI.
-adb shell am force-stop "$PKG"
-adb shell am broadcast \
-  --include-stopped-packages \
-  -a "$PKG.DEBUG_SMOKE_SEED" \
-  -n "$PKG/.SmokeSeedReceiver" \
-  --el cash 3000 > "$EVIDENCE/debug-seed.txt"
-adb shell am force-stop "$PKG"
-adb shell am start -W -n "$ACT" > "$EVIDENCE/debug-seed-restart.txt"
-sleep 3
-check_alive
-dump_ui "after-debug-seed"
-SEEDED_CAPITAL=$(python3 "$SCRIPT_DIR/ui_economy_probe.py" capital "$EVIDENCE/after-debug-seed.xml") || fail "capital-probe-failed:after-debug-seed"
-if ! python3 - "$SEEDED_CAPITAL" <<'PY'
-import sys
-raise SystemExit(0 if float(sys.argv[1]) >= 2500.0 else 1)
-PY
-then
-  fail "debug-seed-not-applied:capital=$SEEDED_CAPITAL"
-fi
-echo "DEBUG_SMOKE_SEED_PASS=capital=$SEEDED_CAPITAL"
-assert_ui_contains "LV 1" "after-debug-seed-level"
-
-click_node "MANAGERS" "before-manager-hire"
-assert_ui_contains "Maya" "manager-visible"
-assert_ui_contains "READY TO HIRE" "manager-affordable"
-click_node "HIRE" "before-manager-hire-action"
-sleep 2
-assert_ui_contains "HIRED" "after-manager-hire"
-click_node "EMPIRE" "return-empire-after-manager"
-
-# Capture two idle UI snapshots with no player input. A hired manager should mutate
-# the rendered economy state while the app remains foregrounded.
-dump_ui "manager-auto-before"
-sleep 8
-dump_ui "manager-auto-after"
-python3 - "$EVIDENCE/manager-auto-before.xml" "$EVIDENCE/manager-auto-after.xml" <<'PY'
-import sys,xml.etree.ElementTree as ET
-def visible(path):
-    out=[]
-    for n in ET.parse(path).getroot().iter('node'):
-        s=(n.attrib.get('text','')+' '+n.attrib.get('content-desc','')).strip()
-        if s: out.append(s)
-    return out
-before,after=visible(sys.argv[1]),visible(sys.argv[2])
-if before == after:
-    print("MANAGER_AUTOMATION_FAIL=no-visible-economy-change", file=sys.stderr)
-    raise SystemExit(2)
-print("MANAGER_AUTOMATION_PASS=1")
-PY
-
-dump_ui "before-offline"
-adb shell input keyevent KEYCODE_HOME
-sleep 33
-adb shell am start -W -n "$ACT" > "$EVIDENCE/offline-return.txt"
-sleep 3
-check_alive
-# Preserve the post-offline empire state as evidence before navigating away and
-# require a visible economy delta. This validates that the offline interval was
-# actually applied instead of merely restoring the same persisted snapshot.
-dump_ui "after-offline-empire"
-python3 - "$EVIDENCE/before-offline.xml" "$EVIDENCE/after-offline-empire.xml" <<'PY'
-import sys,xml.etree.ElementTree as ET
-def visible(path):
-    ignored=("empire","managers","upgrades","goals","store")
-    out=[]
-    for n in ET.parse(path).getroot().iter('node'):
-        s=(n.attrib.get('text','')+' '+n.attrib.get('content-desc','')).strip()
-        if s and s.lower() not in ignored:
-            out.append(s)
-    return out
-before,after=visible(sys.argv[1]),visible(sys.argv[2])
-if before == after:
-    print("OFFLINE_ECONOMY_FAIL=no-visible-delta", file=sys.stderr)
-    raise SystemExit(2)
-print("OFFLINE_ECONOMY_PASS=1")
-PY
-click_node "MANAGERS" "offline-manager-tab"
-assert_ui_contains "HIRED" "offline-manager-still-hired"
-click_node "EMPIRE" "offline-return-empire"
-
-click_node "STORE" "before-store"
-assert_ui_contains "EMPIRE STORE" "store-open"
-assert_ui_contains "RESTORE PURCHASES" "store-contents"
-click_node "CLOSE" "store-before-close"
-sleep 1
-check_alive
-
-adb shell input keyevent KEYCODE_HOME
-sleep 2
-adb shell am start -W -n "$ACT" > "$EVIDENCE/relaunch.txt"
-sleep 3
-check_alive
-assert_ui_contains "EMPIRE" "after-relaunch"
-
-adb shell am force-stop "$PKG"
-sleep 1
-adb shell am start -W -n "$ACT" > "$EVIDENCE/restart.txt"
-sleep 3
-check_alive
-assert_ui_contains "EMPIRE" "after-force-stop-restart"
-assert_ui_contains "LV 1" "after-force-stop-restart-level"
-# Manager ownership is durable state too; verify it survives a hard process restart,
-# not only the normal background/foreground lifecycle.
-click_node "MANAGERS" "restart-manager-tab"
-assert_ui_contains "HIRED" "after-force-stop-restart-manager"
-click_node "EMPIRE" "restart-return-empire"
-
-# Run a second short background/restart cycle to catch one-shot timestamp or
-# persistence bugs that only appear after offline state has already been consumed.
-dump_ui "cycle2-before"
-adb shell input keyevent KEYCODE_HOME
-sleep 5
-adb shell am force-stop "$PKG"
-adb shell am start -W -n "$ACT" > "$EVIDENCE/cycle2-restart.txt"
-sleep 3
-check_alive
-assert_ui_contains "LV 1" "cycle2-level"
-click_node "MANAGERS" "cycle2-manager-tab"
-assert_ui_contains "HIRED" "cycle2-manager"
-click_node "EMPIRE" "cycle2-return-empire"
-dump_ui "cycle2-after"
-
-sleep 35
-check_alive
-
-# Final durability checkpoint: force-stop after the autosave interval and require
-# both purchased business and hired manager to survive. This specifically proves
-# that the periodic save path commits durable state, rather than the test passing
-# only because an earlier lifecycle callback happened to save it.
-dump_ui "pre-autosave-restart"
-adb shell am force-stop "$PKG"
-sleep 1
-adb shell am start -W -n "$ACT" > "$EVIDENCE/autosave-restart.txt"
-sleep 3
-check_alive
-assert_ui_contains "LV 1" "autosave-restart-level"
-click_node "MANAGERS" "autosave-restart-manager-tab"
-assert_ui_contains "HIRED" "autosave-restart-manager"
-click_node "EMPIRE" "autosave-restart-return-empire"
-dump_ui "post-autosave-restart"
-
-adb shell dumpsys meminfo "$PKG" > "$EVIDENCE/meminfo.txt"
-adb exec-out screencap -p > "$EVIDENCE/final.png"
-adb shell dumpsys activity activities > "$EVIDENCE/activity.txt"
-adb shell dumpsys window windows > "$EVIDENCE/window.txt"
-check_no_fatal
-if grep -E "ANR in $PKG|am_anr.*$PKG" "$EVIDENCE/logcat.txt"; then
-  fail "anr-detected"
-fi
-echo "FUNCTIONAL_POWER_CORE_TAP_PASS=1"
-echo "FUNCTIONAL_MANAGER_AUTOMATION_PASS=1"
-echo "FUNCTIONAL_OFFLINE_ECONOMY_PASS=1"
-echo "FUNCTIONAL_RESTART_STATE_PASS=1"
-echo "FUNCTIONAL_PERSISTENCE_PASS=1"
-echo "FUNCTIONAL_AUTOSAVE_DURABILITY_PASS=1"
-echo "FUNCTIONAL_SOAK_PASS=1"
-echo "FUNCTIONAL_SMOKE_PASS=1"
-```
-
-## File: tools/android/test_ui_click_target.py
-```python
-MODULE_PATH = pathlib.Path(__file__).with_name("ui_click_target.py")
-spec = importlib.util.spec_from_file_location("ui_click_target", MODULE_PATH)
-click_target = importlib.util.module_from_spec(spec)
-⋮----
-class ClickTargetTest(unittest.TestCase)
-⋮----
-def write_xml(self, body: str) -> pathlib.Path
-⋮----
-handle = tempfile.NamedTemporaryFile("w", suffix=".xml", delete=False)
-⋮----
-def test_avoids_non_clickable_label_overlay(self)
-⋮----
-path = self.write_xml(
-⋮----
-def test_uses_direct_clickable_match(self)
-⋮----
-path = self.write_xml('<node text="HIRE" clickable="true" bounds="[20,20][120,80]" />')
-⋮----
-def test_fails_without_matching_clickable(self)
-⋮----
-path = self.write_xml('<node text="POWER CORE +1" clickable="false" bounds="[30,10][90,60]" />')
-```
-
-## File: tools/android/test_ui_dump_retry.py
-```python
-ROOT = pathlib.Path(__file__).resolve().parents[2]
-HELPER = ROOT / "tools" / "android" / "ui_dump_retry.sh"
-⋮----
-class UiDumpRetryTest(unittest.TestCase)
-⋮----
-def make_fake_adb(self, directory: pathlib.Path, *, failures_before_success: int) -> tuple[pathlib.Path, pathlib.Path]
-⋮----
-state = directory / "attempts.txt"
-⋮----
-fake_bin = directory / "bin"
-⋮----
-adb = fake_bin / "adb"
-⋮----
-def run_helper(self, fake_bin: pathlib.Path, output: pathlib.Path, attempts: int) -> subprocess.CompletedProcess[str]
-⋮----
-env = os.environ.copy()
-⋮----
-command = f"source {HELPER!s}; ui_dump_with_retry {output!s}"
-⋮----
-def test_retries_transient_null_root_and_writes_fresh_xml(self)
-⋮----
-directory = pathlib.Path(tmp)
-⋮----
-output = directory / "window.xml"
-⋮----
-result = self.run_helper(fake_bin, output, attempts=3)
-⋮----
-def test_fails_after_bounded_retries_without_stale_output(self)
-```
-
-## File: tools/android/test_ui_economy_probe.py
-```python
-MODULE_PATH = pathlib.Path(__file__).with_name("ui_economy_probe.py")
-spec = importlib.util.spec_from_file_location("ui_economy_probe", MODULE_PATH)
-probe = importlib.util.module_from_spec(spec)
-⋮----
-class EconomyProbeTest(unittest.TestCase)
-⋮----
-def write_xml(self, texts: list[str]) -> pathlib.Path
-⋮----
-handle = tempfile.NamedTemporaryFile("w", suffix=".xml", delete=False)
-nodes = "".join(f'<node text="{text}" content-desc="" />' for text in texts)
-⋮----
-def test_reads_plain_capital(self)
-⋮----
-path = self.write_xml(["CAPITAL", "801", "+1/s"])
-⋮----
-def test_reads_compact_capital(self)
-⋮----
-path = self.write_xml(["CAPITAL", "2.50K", "+24/s"])
-⋮----
-def test_money_suffixes(self)
-⋮----
-def test_rejects_missing_capital(self)
-⋮----
-path = self.write_xml(["NET WORTH", "801"])
-```
-
-## File: tools/android/ui_click_target.py
-```python
-#!/usr/bin/env python3
-⋮----
-_BOUNDS_RE = re.compile(r"^\[(\d+),(\d+)\]\[(\d+),(\d+)\]$")
-⋮----
-def _bounds(node)
-⋮----
-match = _BOUNDS_RE.match(node.attrib.get("bounds", ""))
-⋮----
-def _text(node) -> str
-⋮----
-def _center(rect)
-⋮----
-def _area(rect) -> int
-⋮----
-def _overlaps(a, b) -> bool
-⋮----
-def _contains(rect, point) -> bool
-⋮----
-def _safe_point(clickable, overlays)
-⋮----
-fractions = (0.5, 0.05, 0.95, 0.15, 0.85)
-points = [
-⋮----
-def find_click_target(path: pathlib.Path | str, needle: str) -> tuple[int, int]
-⋮----
-root = ET.parse(path).getroot()
-needle_l = needle.lower()
-nodes = list(root.iter("node"))
-matches = [
-⋮----
-direct = [(node, rect) for node, rect in matches if node.attrib.get("clickable") == "true"]
-⋮----
-overlays = [rect for _, rect in matches]
-nearby = []
-⋮----
-rect = _bounds(node)
-⋮----
-def main(argv: list[str]) -> int
-```
-
-## File: tools/android/ui_dump_retry.sh
-```bash
-#!/usr/bin/env bash
-
-ui_dump_with_retry() {
-  local output="${1:?output path required}"
-  local remote="${UI_DUMP_REMOTE_PATH:-/sdcard/window.xml}"
-  local attempts="${UI_DUMP_ATTEMPTS:-5}"
-  local delay_seconds="${UI_DUMP_RETRY_DELAY_SECONDS:-1}"
-  local attempt=1
-  local log="${output}.uiautomator.log"
-
-  rm -f "$output" "$log"
-  while (( attempt <= attempts )); do
-    rm -f "$output"
-    adb shell rm -f "$remote" >/dev/null 2>&1 || true
-
-    if adb shell uiautomator dump "$remote" >"$log" 2>&1 && \
-       adb pull "$remote" "$output" >/dev/null 2>&1 && \
-       [[ -s "$output" ]]; then
-      rm -f "$log"
-      return 0
-    fi
-
-    rm -f "$output"
-    if (( attempt < attempts )); then
-      sleep "$delay_seconds"
-    fi
-    attempt=$((attempt + 1))
-  done
-
-  echo "UI_DUMP_FAILED attempts=$attempts output=$output" >&2
-  if [[ -s "$log" ]]; then
-    cat "$log" >&2
-  fi
-  return 1
-}
-```
-
-## File: tools/android/ui_economy_probe.py
-```python
-#!/usr/bin/env python3
-⋮----
-_SUFFIXES = {
-_MONEY_RE = re.compile(r"^\s*([0-9]+(?:\.[0-9]+)?)\s*(Qa|Qi|Sx|Sp|[KMBTON])?\s*$")
-⋮----
-def parse_money(text: str) -> float
-⋮----
-match = _MONEY_RE.match(text)
-⋮----
-def read_capital(path: pathlib.Path | str) -> float
-⋮----
-texts: list[str] = []
-⋮----
-text = node.attrib.get("text", "").strip()
-⋮----
-def main(argv: list[str]) -> int
-```
-
-## File: tools/android/validate_manifest_policy.py
-```python
-#!/usr/bin/env python3
-⋮----
-path = sys.argv[1] if len(sys.argv) > 1 else "app/src/main/AndroidManifest.xml"
-root = ET.parse(path).getroot()
-A = "{http://schemas.android.com/apk/res/android}"
-permissions = {n.get(A+"name") for n in root.findall("uses-permission")}
-allowed = {"android.permission.INTERNET", "android.permission.ACCESS_NETWORK_STATE"}
-unexpected = sorted(p for p in permissions if p and p not in allowed)
-missing = sorted(allowed - permissions)
-⋮----
-app = root.find("application")
-⋮----
-activities = app.findall("activity")
-launchers = []
-⋮----
-actions={x.get(A+"name") for x in intent.findall("action")}
-cats={x.get(A+"name") for x in intent.findall("category")}
-⋮----
-# Backup is intentionally allowlisted to the single gameplay save file. Keep
-# analytics/consent/commerce state out of cloud backup and device transfer.
-⋮----
-backup = ET.parse("app/src/main/res/xml/backup_rules.xml").getroot()
-legacy = {(n.get("domain"), n.get("path")) for n in backup.findall("include")}
-expected = {("file", "datastore/zero_empire_save_v2.preferences_pb")}
-⋮----
-extract = ET.parse("app/src/main/res/xml/data_extraction_rules.xml").getroot()
-⋮----
-node = extract.find(section)
-⋮----
-actual = {(n.get("domain"), n.get("path")) for n in node.findall("include")}
-```
-
-## File: tools/assets/__init__.py
-```python
-"""Unified authored-asset production pipeline."""
-```
-
-## File: tools/assets/manifest.py
-```python
-ROW = re.compile(
-⋮----
-class ManifestError(ValueError)
-⋮----
-"""Raised when the authoritative art manifest cannot resolve safely."""
-⋮----
-@dataclass(frozen=True)
-class ManifestAsset
-⋮----
-id: str
-name: str
-description: str
-runtime_path: str
-status: str
-⋮----
-def load_manifest(path: Path) -> dict[str, ManifestAsset]
-⋮----
-assets: dict[str, ManifestAsset] = {}
-⋮----
-match = ROW.match(line)
-⋮----
-normalized_id = asset_id.upper()
-⋮----
-key = asset_id.strip().upper()
-```
-
-## File: tools/assets/metadata.py
-```python
-class MetadataError(ValueError)
-⋮----
-"""Raised when candidate provenance or manifest binding is invalid."""
-⋮----
-_ALLOWED_SOURCE_TYPES = frozenset({"generated", "external", "manual"})
-_ALLOWED_REVIEWS = frozenset({"pending", "accepted", "rejected"})
-⋮----
-@dataclass(frozen=True)
-class CandidateMetadata
-⋮----
-manifest_id: str
-semantic_role: str
-runtime_path: str
-source_type: str
-provider: str
-source_url: str | None
-license: str
-prompt_sha256: str
-asset_sha256: str
-review: str
-⋮----
-def validate_against(self, asset: ManifestAsset) -> None
-⋮----
-def sha256_file(path: Path) -> str
-⋮----
-digest = hashlib.sha256()
-⋮----
-def write_metadata(path: Path, metadata: CandidateMetadata) -> None
-⋮----
-payload = json.dumps(asdict(metadata), indent=2, sort_keys=True) + "\n"
-```
-
-## File: tools/assets/pipeline.py
-```python
-class AssetProvider(Protocol)
-⋮----
-name: str
-source_type: str
-license: str
-⋮----
-def generate(self, asset: ManifestAsset, prompt: str) -> Image.Image: ...
-⋮----
-@dataclass(frozen=True)
-class CandidateResult
-⋮----
-image_path: Path
-metadata_path: Path
-coverage: float
-dominant_component: float
-⋮----
-"""Generate and QA a review candidate without publishing to runtime resources."""
-⋮----
-generated = provider.generate(asset, prompt)
-candidate = normalize(isolate(generated), target_side)
-⋮----
-output_dir = candidate_root / asset.id
-⋮----
-image_path = output_dir / "candidate.png"
-metadata_path = output_dir / "metadata.json"
-⋮----
-metadata = CandidateMetadata(
-```
-
-## File: tools/assets/qa_report.py
-```python
-def build_candidate_qa_artifacts(candidate_dir: Path) -> tuple[Path, Path]
-⋮----
-"""Build deterministic technical-QA artifacts for one reviewed candidate."""
-candidate_dir = Path(candidate_dir)
-image_path = candidate_dir / "candidate.png"
-metadata_path = candidate_dir / "metadata.json"
-⋮----
-metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
-manifest_id = metadata.get("manifest_id")
-⋮----
-checks = inspect(image_path)
-sheet_path = candidate_dir / "contact-sheet.png"
-report_path = candidate_dir / "qa-report.json"
-⋮----
-report = {
-```
-
-## File: tools/assets/static_processing.py
-```python
-def _border_reference(im: Image.Image) -> tuple[int, int, int]
-⋮----
-px = im.load()
-samples = []
-stride = max(1, min(w, h) // 128)
-⋮----
-# Median resists occasional edge glows while tracking the generated background.
-channels = [sorted(c[i] for c in samples) for i in range(3)]
-mid = len(samples) // 2
-⋮----
-def isolate(im: Image.Image) -> Image.Image
-⋮----
-"""Remove only border-connected background, preserving enclosed dark materials."""
-im = im.convert("RGB")
-⋮----
-bg = _border_reference(im)
-# Black-background generations vary slightly because of compression/glow.
-hard = 28.0
-soft = 74.0
-⋮----
-def dist(rgb)
-⋮----
-background = bytearray(w * h)
-q = deque()
-⋮----
-def push(x, y)
-⋮----
-idx = y * w + x
-⋮----
-alpha = Image.new("L", (w, h), 255)
-apx = alpha.load()
-⋮----
-row = y * w
-⋮----
-d = dist(px[x, y])
-⋮----
-rgba = im.convert("RGBA")
-⋮----
-def components(alpha: Image.Image) -> tuple[int, float]
-⋮----
-small = alpha.resize((128, 128), Image.Resampling.BILINEAR)
-px = small.load(); seen=set(); areas=[]
-⋮----
-q=deque([(x,y)]); seen.add((x,y)); area=0
-⋮----
-total=sum(areas)
-⋮----
-def normalize(master: Image.Image, side: int) -> Image.Image
-⋮----
-bbox = master.getbbox()
-⋮----
-crop = master.crop(bbox)
-max_subject = int(side * .82)
-scale = min(max_subject / crop.width, max_subject / crop.height)
-crop = crop.resize((max(1, round(crop.width*scale)), max(1, round(crop.height*scale))), Image.Resampling.LANCZOS)
-out = Image.new("RGBA", (side, side), (0,0,0,0))
-x = (side-crop.width)//2
-bottom = int(side*.08)
-y = side-bottom-crop.height
-⋮----
-y = (side-crop.height)//2
-⋮----
-def validate(im: Image.Image)
-⋮----
-a = im.getchannel("A")
-⋮----
-visible = sum(a.histogram()[8:])/(im.width*im.height)
-⋮----
-pad = int(im.width*.04)
-edges=(a.crop((0,0,im.width,pad)),a.crop((0,im.height-pad,im.width,im.height)),a.crop((0,0,pad,im.height)),a.crop((im.width-pad,0,im.width,im.height)))
-```
-
-## File: tools/assets/test_manifest.py
-```python
-class ManifestTest(unittest.TestCase)
-⋮----
-def write_manifest(self, text: str) -> Path
-⋮----
-handle = tempfile.NamedTemporaryFile(
-⋮----
-def test_parses_exact_runtime_mapping(self)
-⋮----
-path = self.write_manifest(
-asset = load_manifest(path)["ONB-00"]
-⋮----
-def test_unknown_id_is_rejected(self)
-⋮----
-def test_duplicate_id_is_rejected(self)
-⋮----
-def test_real_manifest_mapping_is_exact(self)
-⋮----
-manifest = Path("docs/art/FINAL_AAA_SPRITE_MANIFEST.md")
-asset = require_asset(load_manifest(manifest), "BLD-00-T0")
-⋮----
-def test_real_manifest_defines_first_onboarding_authored_target(self)
-⋮----
-asset = require_asset(load_manifest(manifest), "ONB-00")
-```
-
-## File: tools/assets/test_metadata.py
-```python
-ASSET = ManifestAsset(
-⋮----
-def valid_metadata(**overrides)
-⋮----
-values = dict(
-⋮----
-class MetadataTest(unittest.TestCase)
-⋮----
-def test_exact_manifest_mapping_is_accepted(self)
-⋮----
-def test_runtime_path_spoof_is_rejected(self)
-⋮----
-meta = valid_metadata(
-⋮----
-def test_manifest_id_spoof_is_rejected(self)
-⋮----
-def test_semantic_role_spoof_is_rejected(self)
-⋮----
-def test_invalid_review_state_is_rejected(self)
-⋮----
-def test_invalid_source_type_is_rejected(self)
-⋮----
-def test_sha256_file_is_deterministic(self)
-⋮----
-path = Path(handle.name)
-⋮----
-def test_metadata_json_is_stable_and_sorted(self)
-⋮----
-path = Path(directory) / "metadata.json"
-meta = valid_metadata()
-⋮----
-text = path.read_text(encoding="utf-8")
-⋮----
-payload = json.loads(text)
-```
-
-## File: tools/assets/test_pipeline.py
-```python
-class FakeProvider
-⋮----
-name = "fake-provider"
-source_type = "generated"
-license = "test-only"
-⋮----
-def generate(self, asset: ManifestAsset, prompt: str) -> Image.Image
-⋮----
-image = Image.new("RGB", (256, 256), (0, 0, 0))
-⋮----
-class UnifiedCandidatePipelineTest(unittest.TestCase)
-⋮----
-def test_build_candidate_writes_review_artifacts_without_publishing_runtime_asset(self)
-⋮----
-asset = ManifestAsset(
-⋮----
-root = Path(tmp)
-runtime = root / asset.runtime_path
-result = build_candidate(
-⋮----
-def test_build_candidate_rejects_non_todo_manifest_asset(self)
-⋮----
-asset = ManifestAsset("PRP-DONE", "Done", "done prop", "drawable/done.png", "DONE")
-```
-
-## File: tools/assets/test_qa_report.py
-```python
-class CandidateQaReportTest(unittest.TestCase)
-⋮----
-def make_candidate(self, root: Path) -> Path
-⋮----
-candidate_dir = root / "ONB-00"
-⋮----
-image = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
-⋮----
-def test_builds_machine_readable_report_and_contact_sheet(self)
-⋮----
-candidate_dir = self.make_candidate(Path(tmp))
-⋮----
-payload = json.loads(report_path.read_text(encoding="utf-8"))
-⋮----
-def test_missing_candidate_image_is_rejected(self)
-⋮----
-candidate_dir = Path(tmp) / "ONB-00"
-⋮----
-def test_metadata_manifest_id_must_match_directory(self)
-⋮----
-metadata_path = candidate_dir / "metadata.json"
-metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
-```
-
-## File: tools/assets/test_static_processing.py
-```python
-class StaticProcessingCharacterizationTest(unittest.TestCase)
-⋮----
-def test_isolate_normalize_and_validate_preserve_existing_contract(self)
-⋮----
-source = Image.new("RGB", (256, 256), (0, 0, 0))
-⋮----
-isolated = isolate(source)
-⋮----
-normalized = normalize(isolated, 1024)
-⋮----
-def test_validate_rejects_subject_inside_four_percent_safety_edge(self)
-⋮----
-image = Image.new("RGBA", (256, 256), (0, 0, 0, 0))
-```
-
-## File: tools/assets/test_workflow_policy.py
-```python
-WORKFLOW = Path(".github/workflows/unified-asset-pipeline.yml")
-⋮----
-class UnifiedAssetWorkflowPolicyTest(unittest.TestCase)
-⋮----
-def workflow_text(self) -> str
-⋮----
-def test_workflow_is_manual_read_only_and_requires_explicit_asset_id(self)
-⋮----
-text = self.workflow_text()
-⋮----
-def test_workflow_cannot_mutate_repository_or_use_privileged_pr_trigger(self)
-⋮----
-text = self.workflow_text().lower()
-⋮----
-def test_workflow_emits_review_bundle_without_runtime_promotion(self)
-```
-
-## File: tools/sprites/animation_batch_planner.py
-```python
-#!/usr/bin/env python3
-"""Plan animation-heavy CHR/MCH deliverables from the canonical sprite manifest.
-
-This does not generate art. It turns vague manifest frame budgets into a stable
-production contract so future GPU workers and validators agree on frame count,
-cell size, sheet geometry, pivot rules and loop behavior before consuming quota.
-"""
-⋮----
-ROOT = Path(__file__).resolve().parents[2]
-MANIFEST = ROOT / "docs/art/FINAL_AAA_SPRITE_MANIFEST.md"
-INCOMING = ROOT / "art/incoming/final-sprites"
-ROW = re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$")
-MAX_BATCH = 16
-⋮----
-# Fixed targets chosen inside the manifest budgets. Keeping a deterministic count
-# makes sheet validation and runtime animation timing reproducible.
-CHR_FRAMES = {
-MCH_FRAMES = 8
-⋮----
-def frame_contract(asset_id: str) -> tuple[int, int, int, int, str]
-⋮----
-action = asset_id.rsplit("-", 1)[-1]
-frames = CHR_FRAMES[action]
-cell = 256
-columns = 4
-pivot = "feet-center"
-⋮----
-frames = MCH_FRAMES
-cell = 512
-⋮----
-pivot = "machine-base-center"
-rows = math.ceil(frames / columns)
-⋮----
-def items(kind: str)
-⋮----
-order = 0
-⋮----
-m = ROW.match(line)
-⋮----
-family = "CHR" if asset_id.startswith("CHR-") else "MCH" if asset_id.startswith("MCH-") else None
-⋮----
-stem = Path(runtime).stem
-candidate = INCOMING / f"{stem}.png"
-runtime_path = ROOT / runtime
-⋮----
-def main() -> int
-⋮----
-p = argparse.ArgumentParser()
-⋮----
-args = p.parse_args()
-⋮----
-planned = list(items(args.kind))[: args.count]
-```
-
-## File: tools/sprites/audit_complete_sprite_manifest.py
-```python
-#!/usr/bin/env python3
-⋮----
-ROOT=Path(__file__).resolve().parents[2]
-MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
-⋮----
-EXPECTED_ROWS=236
-⋮----
-def main()
-⋮----
-ap=argparse.ArgumentParser()
-⋮----
-args=ap.parse_args()
-⋮----
-rows=[]
-⋮----
-cols=[c.strip() for c in line.split('|')[1:-1]]
-⋮----
-pending=[r[0] for r in rows if r[4].upper()!='DONE']
-⋮----
-seen=set(); report=[]; failed=[]
-⋮----
-p=Path(runtime.replace(chr(96),''))
-⋮----
-r=validate(aid,p)
-⋮----
-out=ROOT/'art/production/final-sprite-completion-audit.json'
-```
-
-## File: tools/sprites/build_sprite_contact_sheet.py
-```python
-#!/usr/bin/env python3
-"""Build a compact visual QA sheet + machine-readable anomaly report.
-
-This is deliberately deterministic and model-free: it does not decide semantic
-correctness, but it catches common production defects and makes human semantic
-review of large batches fast.
-"""
-⋮----
-ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_INPUT = ROOT / "art/incoming/final-sprites"
-DEFAULT_OUT = ROOT / "art/production/batch-contact-sheet.png"
-DEFAULT_REPORT = ROOT / "art/production/batch-qa-report.json"
-FX_RE = re.compile(r"^zte_fx_(?:0[0-9]|1[0-7])_final\.png$")
-CHR_RE = re.compile(r"^zte_chr_(?:op|tech|log|eng)_(idle|walk|work|carry|repair|celeb)_final\.png$")
-CHR_EXPECTED = {"idle": 6, "walk": 8, "work": 10, "carry": 8, "repair": 10, "celeb": 8}
-⋮----
-def alpha_bbox(im: Image.Image)
-⋮----
-def inspect(path: Path) -> dict
-⋮----
-im = Image.open(path).convert("RGBA")
-a = im.getchannel("A")
-hist = a.histogram()
-pixels = im.width * im.height
-visible = sum(hist[8:]) / pixels
-bbox = alpha_bbox(im)
-issues: list[str] = []
-edge_clear = True
-bbox_ratio = 0.0 if not bbox else ((bbox[2]-bbox[0])*(bbox[3]-bbox[1]))/pixels
-⋮----
-x0=(i%4)*128; y0=(i//4)*128
-cell=a.crop((x0,y0,x0+128,y0+128))
-⋮----
-edges=(cell.crop((0,0,128,4)),cell.crop((0,124,128,128)),cell.crop((0,0,4,128)),cell.crop((124,0,128,128)))
-⋮----
-expected=CHR_EXPECTED[m.group(1)]
-⋮----
-x0=(i%4)*256; y0=(i//4)*256
-cell=a.crop((x0,y0,x0+256,y0+256))
-bb=cell.getbbox()
-⋮----
-h=cell.histogram()
-cov=sum(h[8:])/(256*256)
-⋮----
-edges=(cell.crop((0,0,256,8)),cell.crop((0,248,256,256)),cell.crop((0,0,8,256)),cell.crop((248,0,256,256)))
-⋮----
-pad = max(4, round(min(im.size)*0.04))
-edge_clear = x0 >= pad and y0 >= pad and x1 <= im.width-pad and y1 <= im.height-pad
-⋮----
-def checker(size: tuple[int, int], block=16) -> Image.Image
-⋮----
-out = Image.new("RGB", size, (235,235,235))
-d = ImageDraw.Draw(out)
-⋮----
-def make_sheet(paths: list[Path], results: list[dict], out: Path, cols=6)
-⋮----
-rows = max(1, math.ceil(len(paths)/cols))
-sheet = Image.new("RGB", (cols*tile_w, rows*tile_h), (32,32,36))
-draw = ImageDraw.Draw(sheet)
-font = ImageFont.load_default()
-⋮----
-preview = im.copy()
-⋮----
-bg = checker((276,276))
-px = (276-preview.width)//2
-py = (276-preview.height)//2
-⋮----
-status = "PASS" if result["pass"] else "CHECK"
-⋮----
-msg = ", ".join(result["issues"])
-⋮----
-def main() -> int
-⋮----
-ap = argparse.ArgumentParser()
-⋮----
-args = ap.parse_args()
-paths = [Path(x) for x in args.files] if args.files else sorted(args.input.glob(args.pattern))
-paths = [p for p in paths if p.exists() and p.stat().st_size > 0]
-⋮----
-results = [inspect(p) for p in paths]
-⋮----
-report = {
-```
-
-## File: tools/sprites/colab_mass_factory.py
-```python
-#!/usr/bin/env python3
-"""Google Colab high-throughput entrypoint for Zero -> Empire sprite production.
-
-Designed for an interactive Colab GPU runtime. It clones/updates the repository,
-routes to the highest-priority remaining sprite lane, and exports only fresh
-candidates plus technical QA evidence. It never promotes assets to DONE.
-"""
-⋮----
-WORK = Path('/content')
-REPO = WORK / 'zero-to-empire'
-OUT = WORK / 'sprite-output'
-COUNT = int(os.getenv('SPRITE_COUNT', '56'))
-SEED = int(os.getenv('SPRITE_SEED', str(int(time.time()) % 2_000_000_000)))
-REPO_URL = os.getenv('ZERO_TO_EMPIRE_REPO', 'https://github.com/dbrckk/zero-to-empire.git')
-ROW = re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$")
-⋮----
-def digest(path: Path) -> str
-⋮----
-h = hashlib.sha256()
-⋮----
-def sh(*args)
-⋮----
-def ensure_repo()
-⋮----
-def ensure_gpu()
-⋮----
-gpu = subprocess.check_output(
-⋮----
-def ensure_flux()
-⋮----
-required = ['diffusers', 'transformers', 'accelerate', 'safetensors', 'torch', 'PIL']
-missing = []
-⋮----
-def runtime_exists(runtime: str) -> bool
-⋮----
-def backlog()
-⋮----
-counts = {'BLD': 0, 'STATIC': 0, 'CHR': 0, 'FX': 0, 'SKIPPED_RUNTIME': 0}
-manifest = REPO / 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
-⋮----
-m = ROW.match(line)
-⋮----
-asset_id = m.group(1).strip()
-runtime = m.group(4).strip()
-⋮----
-def main()
-⋮----
-incoming = REPO / 'art/incoming/final-sprites'
-⋮----
-before = {p.name: digest(p) for p in incoming.glob('*_final.png') if p.is_file()}
-q = backlog()
-⋮----
-lane = 'BUILDING_FAMILIES'
-effective = max(7, min(COUNT, 56))
-cmd = ['python', '-u', 'tools/sprites/kaggle_building_family_factory_v16.py', '--count', str(effective), '--seed', str(SEED)]
-⋮----
-lane = 'STATIC'
-effective = max(14, min(COUNT, 56))
-cmd = ['python', '-u', 'tools/sprites/kaggle_sprite_factory.py', '--kind', 'ALL', '--count', str(effective), '--seed', str(SEED)]
-⋮----
-lane = 'CHARACTER_SHEETS'
-effective = max(4, min(COUNT, 8))
-cmd = ['python', '-u', 'tools/sprites/kaggle_character_sheet_factory_v1.py', '--count', str(effective), '--seed', str(SEED)]
-⋮----
-lane = 'FX_SHEETS'
-effective = max(1, min(COUNT, 18))
-cmd = ['python', '-u', 'tools/sprites/kaggle_fx_sheet_factory_v1.py', '--count', str(effective), '--seed', str(SEED)]
-⋮----
-fresh = [
-⋮----
-qa = OUT / 'batch-contact-sheet.png'
-report = OUT / 'batch-qa-report.json'
-⋮----
-cdir = OUT / 'candidates'
-⋮----
-targets = []
-⋮----
-dst = cdir / f.name
-⋮----
-archive = shutil.make_archive(str(WORK / 'zero-to-empire-colab-sprites'), 'zip', OUT)
-```
-
-## File: tools/sprites/hf_public_flux_factory.py
-```python
-#!/usr/bin/env python3
-⋮----
-ROOT=Path(__file__).resolve().parents[2]
-MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
-INCOMING=ROOT/'art/incoming/final-sprites'
-REPORT=ROOT/'art/production/hf-public-flux-report.json'
-⋮----
-def fail(msg)
-⋮----
-def next_target()
-⋮----
-explicit=os.getenv('SPRITE_TARGET','').strip().upper()
-rows=[]
-⋮----
-cols=[c.strip() for c in line.split('|')[1:-1]]
-⋮----
-def prompt_for(asset_id, desc)
-⋮----
-m=re.fullmatch(r'BLD-(\d{2})-T(\d)', asset_id)
-⋮----
-def isolate(im: Image.Image) -> Image.Image
-⋮----
-rgb=im.convert('RGB')
-# Estimate background from border pixels and require low-variance border.
-px=rgb.load(); w,h=rgb.size
-samples=[]
-⋮----
-med=tuple(sorted(v[i] for v in samples)[len(samples)//2] for i in range(3))
-dev=max(max(abs(v[i]-med[i]) for i in range(3)) for v in samples)
-⋮----
-src=rgb.load()
-rgba=Image.new('RGBA',rgb.size,(0,0,0,0)); out=rgba.load()
-⋮----
-p=src[x,y]
-d=max(abs(p[i]-med[i]) for i in range(3))
-if d<=18: a=0
-elif d>=42: a=255
-else: a=round((d-18)*255/24)
-⋮----
-a=rgba.getchannel('A').filter(ImageFilter.MedianFilter(3))
-⋮----
-def main()
-⋮----
-row=next_target(); asset_id, name, desc, runtime, status=row
-prompt=prompt_for(asset_id,desc)
-token=os.getenv('HF_TOKEN') or None
-client=Client('black-forest-labs/FLUX.1-schnell', hf_token=token, verbose=False)
-api=client.view_api(return_format='dict')
-⋮----
-result=None; errors=[]
-calls=[
-⋮----
-kwargs={k:v for k,v in call.items() if k!='args'}
-result=client.predict(*call['args'], **kwargs)
-⋮----
-# Gradio commonly returns (image, seed) or a filepath.
-candidate=result[0] if isinstance(result,(list,tuple)) else result
-⋮----
-candidate=candidate.get('path') or candidate.get('url')
-⋮----
-src=Path(str(candidate))
-⋮----
-im=Image.open(src)
-isolated=isolate(im)
-m=re.fullmatch(r'BLD-(\d{2})-T(\d)',asset_id)
-stem=f'zte_business_{m.group(1)}_t{m.group(2)}_final'
-⋮----
-out=INCOMING/f'{stem}.png'
-```
-
-## File: tools/sprites/hf_sprite_factory.py
-```python
-#!/usr/bin/env python3
-"""Zero -> Empire free sprite generation worker."""
-⋮----
-ROOT = Path(__file__).resolve().parents[2]
-INCOMING = ROOT / "art/incoming/final-sprites"
-SPACE_URL = os.getenv("HF_SPACE_URL", "https://mcp-tools-z-image-turbo.hf.space").rstrip("/")
-TOKEN = os.environ.get("HF_TOKEN", "").strip()
-⋮----
-def _headers(*, json_body: bool = False) -> dict[str, str]
-⋮----
-headers = {"User-Agent": "zero-to-empire-sprite-factory/2.0"}
-⋮----
-def _request(req: urllib.request.Request, timeout: int = 180) -> bytes
-⋮----
-body = exc.read().decode("utf-8", "replace")
-⋮----
-def generate(prompt: str) -> Path
-⋮----
-payload = {"data": [prompt, "1024x1024 ( 1:1 )", 42, 8, 3.0, True]}
-post = urllib.request.Request(f"{SPACE_URL}/gradio_api/call/generate", data=json.dumps(payload).encode(), headers=_headers(json_body=True), method="POST")
-response = json.loads(_request(post, timeout=60).decode())
-event_id = response.get("event_id")
-⋮----
-get = urllib.request.Request(f"{SPACE_URL}/gradio_api/call/generate/{event_id}", headers=_headers(), method="GET")
-sse = _request(get, timeout=240).decode("utf-8", "replace")
-complete_data = None
-current_event = None
-⋮----
-current_event = line.split(":", 1)[1].strip()
-⋮----
-complete_data = json.loads(line.split(":", 1)[1].strip())
-⋮----
-def find_url(value)
-⋮----
-url = value.get("url")
-⋮----
-found = find_url(child)
-⋮----
-image_url = find_url(complete_data)
-⋮----
-suffix = Path(image_url.split("?", 1)[0]).suffix.lower()
-⋮----
-suffix = ".img"
-tmp = ROOT / ".sprite_factory_download"
-⋮----
-out = tmp / f"hf_master{suffix}"
-⋮----
-def black_to_alpha(src: Path) -> Image.Image
-⋮----
-im = Image.open(src).convert("RGB")
-lum = im.convert("L")
-alpha = lum.point(lambda p: 0 if p < 12 else min(255, int((p - 12) * 1.35))).filter(ImageFilter.GaussianBlur(0.35))
-rgba = im.convert("RGBA")
-⋮----
-def _fit_frame(obj: Image.Image, target_side: int, scale: float, opacity: int, rotation: float = 0.0) -> Image.Image
-⋮----
-factor = min(target_side / obj.width, target_side / obj.height) * scale
-frame = obj.resize((max(1, round(obj.width * factor)), max(1, round(obj.height * factor))), Image.Resampling.LANCZOS)
-⋮----
-frame = frame.rotate(rotation, resample=Image.Resampling.BICUBIC, expand=True)
-⋮----
-f = target_side / max(frame.size)
-frame = frame.resize((max(1, round(frame.width * f)), max(1, round(frame.height * f))), Image.Resampling.LANCZOS)
-⋮----
-def _animated_sheet(master: Image.Image, *, label: str, target_side: int, scales, opacities, rotations, y_offsets) -> Image.Image
-⋮----
-bbox = master.getbbox()
-⋮----
-obj = master.crop(bbox)
-sheet = Image.new("RGBA", (512, 256), (0, 0, 0, 0))
-⋮----
-frame = _fit_frame(obj, target_side, scale, opacity, rotation)
-⋮----
-x = x0 + (128 - frame.width) // 2
-y = max(y0 + 6, min(y0 + (128 - frame.height) // 2 + yoff, y0 + 122 - frame.height))
-⋮----
-def make_fx00(master)
-⋮----
-def make_fx01(master)
-⋮----
-def make_fx02(master)
-⋮----
-def make_fx03(master)
-⋮----
-def make_fx04(master)
-⋮----
-def make_energy_pulse(master: Image.Image, label: str) -> Image.Image
-⋮----
-def make_fx05(master): return make_energy_pulse(master, "FX-05")
-def make_fx06(master): return make_energy_pulse(master, "FX-06")
-⋮----
-def make_fx07(master)
-⋮----
-def validate_fx_sheet(sheet: Image.Image) -> None
-⋮----
-cell = sheet.crop((x0, y0, x0 + 128, y0 + 128))
-⋮----
-a = cell.getchannel("A")
-edges = [a.crop((0,0,128,4)), a.crop((0,124,128,128)), a.crop((0,0,4,128)), a.crop((124,0,128,128))]
-⋮----
-SPECS = {
-⋮----
-def main() -> int
-⋮----
-target = os.getenv("SPRITE_TARGET", "FX-03").upper()
-⋮----
-sheet = maker(black_to_alpha(generate(prompt)))
-⋮----
-out = INCOMING / output_name
-```
-
-## File: tools/sprites/hf_static_manifest_factory.py
-```python
-#!/usr/bin/env python3
-"""Generate one static manifest asset through the free HF Space.
-
-Supported fast GPU lane: buildings, Power Core, vehicles, props and static
-terrain/infrastructure modules. Animation sheets remain on dedicated workers.
-
-Exit code 75 means the free GPU quota is exhausted. Batch workflows use this to
-stop immediately instead of wasting runner time retrying every remaining asset.
-"""
-⋮----
-ROOT = Path(__file__).resolve().parents[2]
-MANIFEST = ROOT / "docs/art/FINAL_AAA_SPRITE_MANIFEST.md"
-INCOMING = ROOT / "art/incoming/final-sprites"
-SPACE_URL = os.getenv("HF_SPACE_URL", "https://mcp-tools-z-image-turbo.hf.space").rstrip("/")
-TOKEN = os.environ.get("HF_TOKEN", "").strip()
-ASSET_ID = os.environ.get("SPRITE_TARGET", "").strip().upper()
-ROW = re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$")
-SUPPORTED = ("BLD-", "CORE-", "VEH-", "PRP-", "TER-")
-TARGET_SIDE = {"BLD": 2048, "CORE": 1536, "VEH": 1536, "PRP": 1024, "TER": 1024}
-QUOTA_EXIT = 75
-⋮----
-def headers(json_body=False)
-⋮----
-h = {"User-Agent": "zero-to-empire-manifest-factory/1.4"}
-⋮----
-def request(req, timeout=240)
-⋮----
-body = exc.read().decode("utf-8", "replace")
-low = body.lower()
-⋮----
-def manifest_item(asset_id: str)
-⋮----
-m = ROW.match(line)
-⋮----
-def prompt_for(asset_id, name, description)
-⋮----
-kind = asset_id.split("-", 1)[0]
-contract = {
-⋮----
-def generate(prompt: str) -> Image.Image
-⋮----
-payload = {"data": [prompt, "1024x1024 ( 1:1 )", 42, 8, 3.0, True]}
-req = urllib.request.Request(f"{SPACE_URL}/gradio_api/call/generate", data=json.dumps(payload).encode(), headers=headers(True), method="POST")
-event_id = json.loads(request(req, 60).decode()).get("event_id")
-⋮----
-req = urllib.request.Request(f"{SPACE_URL}/gradio_api/call/generate/{event_id}", headers=headers(), method="GET")
-sse = request(req, 240).decode("utf-8", "replace")
-data = None
-event = None
-⋮----
-event = line.split(":", 1)[1].strip()
-⋮----
-data = json.loads(line.split(":", 1)[1].strip())
-⋮----
-low = sse.lower()
-⋮----
-def find_url(v)
-⋮----
-u = v.get("url")
-⋮----
-r = find_url(child)
-⋮----
-url = find_url(data)
-⋮----
-raw = request(urllib.request.Request(url, headers=headers(), method="GET"), 120)
-tmp = ROOT / ".sprite_factory_download"
-⋮----
-safe_id = re.sub(r"[^A-Za-z0-9_.-]+", "_", ASSET_ID or "static")
-p = tmp / f"{safe_id}.img"
-⋮----
-def main()
-⋮----
-kind=rid.split("-",1)[0]
-final = normalize(isolate(generate(prompt_for(rid,name,desc))), TARGET_SIDE[kind])
-⋮----
-out=INCOMING/(Path(runtime).stem+".png")
-```
-
-## File: tools/sprites/integrate_fx04_runtime.py
-```python
-#!/usr/bin/env python3
-"""Idempotently integrate FX-04 steam vent into purchase feedback."""
-⋮----
-ROOT = Path(__file__).resolve().parents[2]
-PATH = ROOT / "app/src/main/java/com/zerotoempire/game/PurchaseImpactVfx.kt"
-text = PATH.read_text()
-⋮----
-anchor = '''    val dustSheet = remember(context) {
-replacement = anchor + '''    val steamSheet = remember(context) {
-⋮----
-text = text.replace(anchor, replacement, 1)
-⋮----
-anchor2 = '''        if (!reduced) {
-steam = '''        val steamFrame = when {
-⋮----
-text = text.replace(anchor2, steam, 1)
-```
-
-## File: tools/sprites/integrate_fx05_runtime.py
-```python
-#!/usr/bin/env python3
-"""Idempotently wire validated FX-05 cyan energy pulse into the power-core plaza."""
-⋮----
-ROOT = Path(__file__).resolve().parents[2]
-PATH = ROOT / "app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt"
-⋮----
-def main() -> None
-⋮----
-text = PATH.read_text()
-⋮----
-old_sheet = "    val pulseSheet = remember { ImageBitmap.imageResource(context.resources, R.drawable.zte_fx_06_final) }\n"
-new_sheet = (
-⋮----
-text = text.replace(old_sheet, new_sheet, 1)
-⋮----
-old_state = "    var pulseToken by remember { mutableIntStateOf(0) }\n    var pulseFrame by remember { mutableIntStateOf(-1) }\n\n"
-new_state = (
-⋮----
-text = text.replace(old_state, new_state, 1)
-⋮----
-old_surface = """        Surface(
-new_surface = """        Canvas(Modifier.size(110.dp)) {
-⋮----
-text = text.replace(old_surface, new_surface, 1)
-```
-
-## File: tools/sprites/integrate_fx06_runtime.py
-```python
-#!/usr/bin/env python3
-"""Idempotently wire the validated FX-06 warm pulse sheet into the power-core tap UI."""
-⋮----
-ROOT = Path(__file__).resolve().parents[2]
-PATH = ROOT / "app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt"
-⋮----
-IMPORT_ANCHOR = "package com.zerotoempire.game\n\n"
-RUNTIME_IMPORTS = """import android.provider.Settings\nimport androidx.compose.runtime.LaunchedEffect\nimport androidx.compose.runtime.getValue\nimport androidx.compose.runtime.mutableIntStateOf\nimport androidx.compose.runtime.setValue\nimport androidx.compose.ui.graphics.ImageBitmap\nimport androidx.compose.ui.platform.LocalContext\nimport androidx.compose.ui.res.imageResource\nimport androidx.compose.ui.unit.IntOffset\nimport androidx.compose.ui.unit.IntSize\nimport kotlinx.coroutines.delay\n"""
-⋮----
-OLD = '''@Composable
-⋮----
-NEW = '''@Composable
-⋮----
-def main() -> None
-⋮----
-text = PATH.read_text()
-⋮----
-text = text.replace(IMPORT_ANCHOR, IMPORT_ANCHOR + RUNTIME_IMPORTS, 1)
-text = text.replace(OLD, NEW, 1)
-```
-
-## File: tools/sprites/integrate_fx07_runtime.py
-```python
-#!/usr/bin/env python3
-"""Idempotently wire FX-07 construction dust/debris into purchase impact feedback."""
-⋮----
-ROOT = Path(__file__).resolve().parents[2]
-PATH = ROOT / "app/src/main/java/com/zerotoempire/game/PurchaseImpactVfx.kt"
-⋮----
-def main() -> None
-⋮----
-text = PATH.read_text()
-⋮----
-text = text.replace(
-⋮----
-anchor = '''        drawImage(
-replacement = anchor + '''
-⋮----
-text = text.replace(anchor, replacement, 1)
-```
-
-## File: tools/sprites/kaggle_building_family_factory_v11.py
-```python
-#!/usr/bin/env python3
-"""Strict sequential FLUX building-family factory.
-
-v11: run-77 hardening: monotonic display scale, stricter starter tiers,
-anti-slab/alpha-hole guards, lower img2img drift, and family-growth QA.
-"""
-⋮----
-ROOT=Path(__file__).resolve().parents[2]
-MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
-INCOMING=ROOT/'art/incoming/final-sprites'
-FLUX='aniketppanchal/flux.1-schnell-nf4-pkg'
-ROW=re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$")
-BLD=re.compile(r'^BLD-(\d{2})-T([0-6])$')
-⋮----
-DNA={
-DELTA={
-# Run-77 families 04/06/07 are deliberately deprioritized until the new guard proves itself.
-PRIORITY=(5,8,9,10,12,13,11,4,6,7,3,0,1,2)
-STRENGTH={1:.30,2:.36,3:.42,4:.48,5:.54,6:.60}
-TARGET_SCALE={0:.54,1:.59,2:.64,3:.69,4:.74,5:.79,6:.84}
-⋮----
-def rows()
-⋮----
-m=ROW.match(line)
-⋮----
-bm=BLD.fullmatch(aid)
-⋮----
-def select(items,count)
-⋮----
-by={}
-⋮----
-rank={f:n for n,f in enumerate(PRIORITY)};out=[]
-⋮----
-g=sorted(by[fam],key=lambda x:x['tier'])
-⋮----
-def prompts(i)
-⋮----
-tier=i['tier'];starter=(tier==0)
-s=(f"AAA premium 2.5D strategy building family {i['family']:02d} tier {tier}. "
-d=(f"Premium mobile strategy building master. Fixed family DNA: {DNA[i['family']]}. {DELTA[tier]}. "
-⋮----
-def load_encode()
-⋮----
-t=T5EncoderModel.from_pretrained(FLUX,subfolder='text_encoder_2',torch_dtype=torch.float16,device_map='cuda')
-p=FluxPipeline.from_pretrained(FLUX,text_encoder_2=t,transformer=None,vae=None,torch_dtype=torch.float16,device_map='cuda')
-⋮----
-def load_render()
-⋮----
-tr=FluxTransformer2DModel.from_pretrained(FLUX,subfolder='transformer',torch_dtype=torch.float16,device_map='cuda')
-base=FluxPipeline.from_pretrained(FLUX,text_encoder=None,text_encoder_2=None,tokenizer=None,tokenizer_2=None,transformer=tr,torch_dtype=torch.float16,device_map='cuda')
-⋮----
-img=FluxImg2ImgPipeline.from_pipe(base);img.vae.to(device='cuda',dtype=torch.float16)
-⋮----
-def border(im)
-⋮----
-rgb=im.convert('RGB');w,h=rgb.size;step=max(1,min(w,h)//128);pts=[]
-⋮----
-vals=[sum(p)/3 for p in pts];mean=sum(vals)/len(vals);sd=(sum((v-mean)**2 for v in vals)/len(vals))**.5
-q=sorted(pts,key=sum)[len(pts)//3:2*len(pts)//3];bg=tuple(sum(p[k] for p in q)//len(q) for k in range(3))
-⋮----
-def isolate(im)
-⋮----
-rgb=im.convert('RGB');w,h=rgb.size;bg,sd,chroma=border(rgb)
-⋮----
-px=rgb.load();mask=Image.new('L',(w,h));mp=mask.load()
-⋮----
-p=px[x,y];d=((p[0]-bg[0])**2+(p[1]-bg[1])**2+(p[2]-bg[2])**2)**.5
-⋮----
-mask=mask.filter(ImageFilter.GaussianBlur(.55));out=rgb.convert('RGBA');out.putalpha(mask);return out
-⋮----
-def components(alpha)
-⋮----
-sm=alpha.resize((128,128),Image.Resampling.BILINEAR);px=sm.load();seen=set();out=[]
-⋮----
-q=deque([(x,y)]);seen.add((x,y));pts=[]
-⋮----
-def internal_hole_ratio(alpha)
-⋮----
-# Estimate transparent holes fully enclosed by foreground on a small binary mask.
-sm=alpha.resize((96,96),Image.Resampling.BILINEAR).point(lambda p:255 if p>=48 else 0)
-px=sm.load();seen=set();q=deque()
-⋮----
-holes=sum(1 for y in range(96) for x in range(96) if px[x,y]==0 and (x,y) not in seen)
-fg=sum(1 for y in range(96) for x in range(96) if px[x,y]>0)
-⋮----
-def slab_score(alpha)
-⋮----
-bb=alpha.getbbox()
-⋮----
-a=alpha.crop(bb).resize((128,128),Image.Resampling.BILINEAR);px=a.load()
-rows=[]
-⋮----
-# Persistent near-full-width lower silhouette is usually a baked floor/platform.
-⋮----
-def finish(raw,tier)
-⋮----
-m=isolate(raw);cs=components(m.getchannel('A'))
-⋮----
-xs=[p[0] for p in cs[0]];ys=[p[1] for p in cs[0]];w,h=m.size
-box=(max(0,int(min(xs)*w/128)-30),max(0,int(min(ys)*h/128)-30),min(w,int((max(xs)+1)*w/128)+30),min(h,int((max(ys)+1)*h/128)+30))
-crop=m.crop(box);bb=crop.getbbox()
-⋮----
-crop=crop.crop(bb);a0=crop.getchannel('A')
-holes=internal_hole_ratio(a0);slab=slab_score(a0)
-⋮----
-side=2048;target=TARGET_SCALE[tier]
-scale=min(side*target/crop.width,side*(target-.03)/crop.height)
-crop=crop.resize((round(crop.width*scale),round(crop.height*scale)),Image.Resampling.LANCZOS)
-out=Image.new('RGBA',(side,side));out.alpha_composite(crop,((side-crop.width)//2,side-int(side*.09)-crop.height))
-a=out.getchannel('A');cov=sum(a.histogram()[8:])/(side*side)
-⋮----
-pad=int(side*.07)
-⋮----
-def mask64(im):return im.getchannel('A').resize((64,64),Image.Resampling.BILINEAR).point(lambda p:255 if p>=32 else 0)
-⋮----
-def iou(a,b)
-⋮----
-A=mask64(a);B=mask64(b);pa=A.load();pb=B.load();inter=union=0
-⋮----
-aa=pa[x,y]>0;bb=pb[x,y]>0;inter+=aa and bb;union+=aa or bb
-⋮----
-def centroid(im)
-⋮----
-a=mask64(im);px=a.load();pts=[(x,y) for y in range(64) for x in range(64) if px[x,y]>0]
-⋮----
-def bbox_size(im)
-⋮----
-bb=im.getchannel('A').getbbox();return (0,0) if not bb else (bb[2]-bb[0],bb[3]-bb[1])
-⋮----
-def family_qa(recs)
-⋮----
-adj=[iou(recs[n-1][1],recs[n][1]) for n in range(1,len(recs))]
-⋮----
-centers=[centroid(r[1]) for r in recs];drift=max(((x-centers[0][0])**2+(y-centers[0][1])**2)**.5 for x,y in centers)
-⋮----
-sizes=[bbox_size(r[1]) for r in recs];areas=[w*h for w,h in sizes]
-⋮----
-def main()
-⋮----
-ap=argparse.ArgumentParser();ap.add_argument('--count',type=int,default=42);ap.add_argument('--seed',type=int,default=43117);args=ap.parse_args()
-items=select(list(rows()),max(1,args.count));print('KAGGLE_BUILDING_PLAN='+','.join(i['id'] for i in items),flush=True)
-⋮----
-INCOMING.mkdir(parents=True,exist_ok=True);emb={};t,enc=load_encode()
-⋮----
-del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();by={}
-⋮----
-accepted=[];rejected=0
-⋮----
-group.sort(key=lambda x:x['tier']);recs=[];previous=None;failed=False
-⋮----
-pe,ppe=emb[i['id']];gen=torch.Generator(device='cuda').manual_seed(args.seed+fam*1000+i['tier']*17)
-⋮----
-raw=base(height=1024,width=1024,num_inference_steps=6,guidance_scale=0,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),output_type='pil',generator=gen).images[0];mode='anchor'
-⋮----
-raw=img(image=previous,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=STRENGTH.get(i['tier'],.45),num_inference_steps=10,guidance_scale=0,output_type='pil',generator=gen).images[0];mode='img2img'
-final,cov=finish(raw,i['tier']);recs.append((i,final,cov));previous=raw.convert('RGB')
-⋮----
-print(f"KAGGLE_REJECTED={i['id']} stage=render reason={type(e).__name__}: {e}",flush=True);failed=True;rejected+=1;break
-⋮----
-p=INCOMING/f"{i['stem']}.png";final.save(p,'PNG',optimize=True);accepted.append(i['id'])
-```
-
-## File: tools/sprites/kaggle_building_family_factory_v13.py
-```python
-#!/usr/bin/env python3
-"""Zero -> Empire FLUX building-family factory v13.
-
-Goals: preserve family identity, force visible T0->T6 growth, and produce clean
-transparent masters without deleting internal grey/metallic surfaces.
-"""
-⋮----
-ROOT = Path(__file__).resolve().parents[2]
-MANIFEST = ROOT / 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
-INCOMING = ROOT / 'art/incoming/final-sprites'
-FLUX = 'aniketppanchal/flux.1-schnell-nf4-pkg'
-ROW = re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$")
-BLD = re.compile(r'^BLD-(\d{2})-T([0-6])$')
-⋮----
-DNA = {
-DELTA = {
-# Start with families that showed some useful evolution in previous runs. Known
-# pathological 04/06/07 remain late until the new segmentation path is proven.
-PRIORITY = (13, 5, 8, 9, 10, 12, 11, 4, 6, 7, 3, 0, 1, 2)
-STRENGTH = {1:.34, 2:.42, 3:.50, 4:.58, 5:.66, 6:.72}
-STEPS = {0:5, 1:4, 2:4, 3:5, 4:5, 5:6, 6:6}
-RETRIES = {0:4, 1:3, 2:3, 3:3, 4:3, 5:3, 6:3}
-⋮----
-def rows()
-⋮----
-m = ROW.match(line)
-⋮----
-bm = BLD.fullmatch(aid)
-⋮----
-def select(items, count)
-⋮----
-by = {}
-⋮----
-rank = {f:n for n,f in enumerate(PRIORITY)}
-out = []
-⋮----
-group = sorted(by[fam], key=lambda x:x['tier'])
-⋮----
-def prompts(i)
-⋮----
-identity = f"AAA premium mobile 2.5D strategy building. Same persistent family {i['family']:02d}. Fixed DNA: {DNA[i['family']]}. {DELTA[i['tier']]}. "
-camera = "Exactly one connected building, 34 degree three-quarter orthographic camera, same orientation and camera center at every tier, bottom-center grounding, upper-left key light, cool fill, restrained cyan or warm emissives. "
-isolation = "Studio cutout render on a perfectly flat uniform neutral medium-gray background touching every image edge. Background only, no visible floor. No platform card, terrain slab, road, horizon, scenery, vignette, gradient or cast ground plane. "
-integrity = "Preserve facade, production core, roof orientation and structural anchors from the previous tier. Every new part is physically attached to the main building. No people, workers, vehicles, arrows, signs, labels, readable text, pseudo-text, letters, numbers, logos, watermark, UI, detached props, particles, debris, loose cables or disconnected pieces. Materials are continuous and intact. "
-starter = "Tier zero is unmistakably early-game and compact: one storey, low silhouette, sparse machinery, no tower, crane, gantry, upper deck or megastructure mass. " if i['tier'] == 0 else ""
-⋮----
-def load_encode()
-⋮----
-t5 = T5EncoderModel.from_pretrained(FLUX, subfolder='text_encoder_2', torch_dtype=torch.float16, device_map='cuda')
-pipe = FluxPipeline.from_pretrained(FLUX, text_encoder_2=t5, transformer=None, vae=None, torch_dtype=torch.float16, device_map='cuda')
-⋮----
-def load_render()
-⋮----
-tr = FluxTransformer2DModel.from_pretrained(FLUX, subfolder='transformer', torch_dtype=torch.float16, device_map='cuda')
-base = FluxPipeline.from_pretrained(FLUX, text_encoder=None, text_encoder_2=None, tokenizer=None, tokenizer_2=None, transformer=tr, torch_dtype=torch.float16, device_map='cuda')
-⋮----
-img = FluxImg2ImgPipeline.from_pipe(base)
-⋮----
-def border_stats(im)
-⋮----
-rgb = im.convert('RGB'); w,h = rgb.size; step = max(1, min(w,h)//128); pts=[]
-⋮----
-vals = [sum(p)/3 for p in pts]; mean = sum(vals)/len(vals)
-sd = (sum((v-mean)**2 for v in vals)/len(vals))**.5
-q = sorted(pts, key=sum)[len(pts)//3:2*len(pts)//3]
-bg = tuple(sum(p[k] for p in q)//len(q) for k in range(3))
-⋮----
-def edge_connected_alpha(im)
-⋮----
-"""Remove only background-like pixels connected to image edges.
-
-    Unlike global chroma-distance masking this cannot punch transparent holes into
-    enclosed metallic surfaces merely because their colour resembles the studio bg.
-    """
-rgb = im.convert('RGB'); w,h = rgb.size
-⋮----
-# Segment on 256px proxy for speed and topology, then upscale softly.
-proxy = rgb.resize((256,256), Image.Resampling.BILINEAR)
-px = proxy.load(); W=H=256
-def dist(p)
-seen=set(); q=deque()
-⋮----
-# Local tolerance permits gentle background compression/noise while preventing
-# traversal through stronger object edges.
-⋮----
-p=q.popleft()
-⋮----
-alpha = Image.new('L',(W,H),255); ap=alpha.load()
-⋮----
-# Slight erosion of background boundary removes halos without eating internals.
-alpha = alpha.filter(ImageFilter.MinFilter(3)).filter(ImageFilter.GaussianBlur(.55))
-alpha = alpha.resize((w,h), Image.Resampling.BILINEAR)
-out = rgb.convert('RGBA'); out.putalpha(alpha)
-⋮----
-def components(alpha)
-⋮----
-sm=alpha.resize((128,128),Image.Resampling.BILINEAR); px=sm.load(); seen=set(); out=[]
-⋮----
-q=deque([(x,y)]); seen.add((x,y)); pts=[]
-⋮----
-def ground_slab_score(alpha)
-⋮----
-sm=alpha.resize((128,128),Image.Resampling.BILINEAR); px=sm.load(); rows=[]
-⋮----
-def internal_hole_score(alpha)
-⋮----
-sm=alpha.resize((96,96),Image.Resampling.BILINEAR).point(lambda p:255 if p>=32 else 0); px=sm.load()
-exterior=set(); q=deque()
-⋮----
-inner={(x,y) for y in range(96) for x in range(96) if px[x,y]==0}-exterior
-largest=0
-⋮----
-start=inner.pop(); comp={start}; q=deque([start])
-⋮----
-largest=max(largest,len(comp))
-⋮----
-def finish(raw,tier)
-⋮----
-m=edge_connected_alpha(raw); a0=m.getchannel('A'); cs=components(a0)
-⋮----
-dominance=len(cs[0])/sum(map(len,cs))
-⋮----
-slab=ground_slab_score(a0)
-⋮----
-hole=internal_hole_score(a0)
-# Small windows/cavities are legitimate; only large accidental holes fail.
-⋮----
-xs=[p[0] for p in cs[0]]; ys=[p[1] for p in cs[0]]; w,h=m.size
-box=(max(0,int(min(xs)*w/128)-36),max(0,int(min(ys)*h/128)-36),min(w,int((max(xs)+1)*w/128)+36),min(h,int((max(ys)+1)*h/128)+36))
-crop=m.crop(box); bb=crop.getbbox()
-⋮----
-crop=crop.crop(bb); side=2048
-maxw=.70 if tier==0 else .78; maxh=.60 if tier==0 else .78
-scale=min(side*maxw/crop.width, side*maxh/crop.height)
-crop=crop.resize((round(crop.width*scale),round(crop.height*scale)),Image.Resampling.LANCZOS)
-out=Image.new('RGBA',(side,side)); out.alpha_composite(crop,((side-crop.width)//2,side-int(side*.10)-crop.height))
-a=out.getchannel('A'); cov=sum(a.histogram()[8:])/(side*side)
-⋮----
-pad=int(side*.08)
-⋮----
-def mask64(im): return im.getchannel('A').resize((64,64),Image.Resampling.BILINEAR).point(lambda p:255 if p>=32 else 0)
-⋮----
-def iou(a,b)
-⋮----
-A=mask64(a);B=mask64(b);pa=A.load();pb=B.load();inter=union=0
-⋮----
-aa=pa[x,y]>0; bb=pb[x,y]>0; inter+=aa and bb; union+=aa or bb
-⋮----
-def bbox_metrics(im)
-⋮----
-bb=mask64(im).getbbox()
-⋮----
-def family_qa(recs)
-⋮----
-adj=[iou(recs[n-1][1],recs[n][1]) for n in range(1,len(recs))]
-⋮----
-cov=[r[2] for r in recs]
-severe_drops=sum(1 for a,b in zip(cov,cov[1:]) if b<a*.90)
-⋮----
-growth=cov[-1]/max(cov[0],1e-9)
-⋮----
-boxes=[bbox_metrics(r[1]) for r in recs]; cx0=boxes[0][2]
-drift=max(abs(b[2]-cx0) for b in boxes)
-⋮----
-def render_with_retries(i, previous, pe, ppe, base, img, seed)
-⋮----
-errors=[]
-⋮----
-attempt_seed=seed + attempt*7919
-gen=torch.Generator(device='cuda').manual_seed(attempt_seed)
-⋮----
-raw=base(height=1024,width=1024,num_inference_steps=STEPS[i['tier']],guidance_scale=0,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),output_type='pil',generator=gen).images[0]
-mode='anchor'
-⋮----
-strength=min(.78,max(.28,STRENGTH.get(i['tier'],.5)+(attempt-1)*.035))
-raw=img(image=previous,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=STEPS[i['tier']],guidance_scale=0,output_type='pil',generator=gen).images[0]
-mode=f'img2img-s{strength:.2f}'
-⋮----
-def main()
-⋮----
-ap=argparse.ArgumentParser(); ap.add_argument('--count',type=int,default=28); ap.add_argument('--seed',type=int,default=43117); args=ap.parse_args()
-items=select(list(rows()),max(1,args.count)); print('KAGGLE_BUILDING_PLAN='+','.join(i['id'] for i in items),flush=True)
-⋮----
-emb={}; t5,enc=load_encode()
-⋮----
-tr,base,img=load_render(); by={}
-⋮----
-accepted=[]; rejected=0
-⋮----
-group.sort(key=lambda x:x['tier']); recs=[]; previous=None; failed=False
-⋮----
-print(f"KAGGLE_REJECTED={i['id']} stage=render reason={e}",flush=True); failed=True; rejected+=1; break
-⋮----
-p=INCOMING/f"{i['stem']}.png"; final.save(p,'PNG',optimize=True); accepted.append(i['id'])
-```
-
-## File: tools/sprites/kaggle_building_family_factory_v14.py
-```python
-#!/usr/bin/env python3
-"""FLUX building-family factory v14: short prompts + monotonic tier envelopes."""
-⋮----
-ROOT=Path(__file__).resolve().parents[2]; MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'; INCOMING=ROOT/'art/incoming/final-sprites'
-FLUX='aniketppanchal/flux.1-schnell-nf4-pkg'; ROW=re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$"); BLD=re.compile(r'^BLD-(\d{2})-T([0-6])$')
-DNA={0:'micro foundry kiosk, rust steel, amber furnace',1:'fabrication shop, chamfered storefront, loading bay',2:'furnace works, steel shell, twin stacks',3:'assembly hub, dark hall, robotic spine, feeder bays',4:'precision factory, graphite shell, CNC bays',5:'energy-cell works, square alloy shell, amber core',6:'coolant plant, silver graphite shell, cyan pipes',7:'automation works, wide tech factory, twin gantries',8:'heavy forge, armored base, warm forge core',9:'nanofab complex, pearl graphite block, cyan ring',10:'orbital works, dark alloy base, circular cradle',11:'actuator works, press house, articulated frames',12:'phase foundry, pearl alloy base, containment ring',13:'stellar works, dark pearl base, four-part crown'}
-TIER={0:'tiny one-storey starter; no tower or crane',1:'small reinforced upgrade; one attached module',2:'medium industrial upgrade; wider footprint',3:'large automated upgrade; compact central tower',4:'advanced upgrade; two attached wings',5:'megastructure; large upper assembly',6:'ultimate; tall prestige crown and heroic machinery'}
-PRIORITY=(13,5,8,9,10,12,11,4,6,7,3,0,1,2); STRENGTH={1:.34,2:.42,3:.50,4:.58,5:.66,6:.72}; STEPS={0:5,1:4,2:4,3:5,4:5,5:6,6:6}; RETRIES={0:4,1:3,2:3,3:3,4:3,5:3,6:3}
-ENV={0:(.50,.44),1:(.56,.50),2:(.62,.56),3:(.68,.62),4:(.74,.68),5:(.80,.74),6:(.84,.80)}
-def rows()
-⋮----
-m=ROW.match(line)
-⋮----
-aid,_,_,runtime,status=[x.strip() for x in m.groups()]; bm=BLD.fullmatch(aid)
-⋮----
-def select(items,count)
-⋮----
-by={}
-⋮----
-rank={f:n for n,f in enumerate(PRIORITY)}; out=[]
-⋮----
-g=sorted(by[fam],key=lambda x:x['tier'])
-⋮----
-def prompts(i)
-⋮----
-# Intentionally short: keep all semantic constraints inside CLIP/T5 limits.
-short=f"AAA 2.5D strategy building. {DNA[i['family']]}. {TIER[i['tier']]}. One connected isolated building. Gray studio background."
-detail=(f"Same family upgraded in place. {DNA[i['family']]}. {TIER[i['tier']]}. 34-degree orthographic view. "
-⋮----
-def load_encode()
-⋮----
-t=T5EncoderModel.from_pretrained(FLUX,subfolder='text_encoder_2',torch_dtype=torch.float16,device_map='cuda'); p=FluxPipeline.from_pretrained(FLUX,text_encoder_2=t,transformer=None,vae=None,torch_dtype=torch.float16,device_map='cuda'); return t,p
-def load_render()
-⋮----
-tr=FluxTransformer2DModel.from_pretrained(FLUX,subfolder='transformer',torch_dtype=torch.float16,device_map='cuda'); base=FluxPipeline.from_pretrained(FLUX,text_encoder=None,text_encoder_2=None,tokenizer=None,tokenizer_2=None,transformer=tr,torch_dtype=torch.float16,device_map='cuda'); base.vae.to(device='cuda',dtype=torch.float16); img=FluxImg2ImgPipeline.from_pipe(base); img.vae.to(device='cuda',dtype=torch.float16); return tr,base,img
-def border(im)
-⋮----
-rgb=im.convert('RGB');w,h=rgb.size;step=max(1,min(w,h)//128);pts=[]
-⋮----
-vals=[sum(p)/3 for p in pts];mean=sum(vals)/len(vals);sd=(sum((v-mean)**2 for v in vals)/len(vals))**.5;q=sorted(pts,key=sum)[len(pts)//3:2*len(pts)//3];bg=tuple(sum(p[k] for p in q)//len(q) for k in range(3));return bg,sd,max(bg)-min(bg)
-def isolate(im)
-⋮----
-rgb=im.convert('RGB');w,h=rgb.size;bg,sd,chroma=border(rgb)
-⋮----
-px=rgb.load(); seen=set(); q=deque();
-⋮----
-def dist(p):return ((p[0]-bg[0])**2+(p[1]-bg[1])**2+(p[2]-bg[2])**2)**.5
-⋮----
-p=q.popleft()
-⋮----
-mask=Image.new('L',(w,h),255);mp=mask.load()
-⋮----
-mask=mask.filter(ImageFilter.GaussianBlur(.7));out=rgb.convert('RGBA');out.putalpha(mask);return out
-def comps(alpha)
-⋮----
-sm=alpha.resize((128,128),Image.Resampling.BILINEAR);px=sm.load();seen=set();out=[]
-⋮----
-q=deque([(x,y)]);seen.add((x,y));pts=[]
-⋮----
-def slab_score(alpha)
-⋮----
-sm=alpha.resize((128,128),Image.Resampling.BILINEAR);px=sm.load();rows=[sum(px[x,y]>=32 for x in range(6,122))/116 for y in range(78,124)];return sum(v>.76 for v in rows)/len(rows)
-def finish(raw,tier)
-⋮----
-m=isolate(raw);cs=comps(m.getchannel('A'))
-⋮----
-xs=[p[0] for p in cs[0]];ys=[p[1] for p in cs[0]];w,h=m.size;box=(max(0,int(min(xs)*w/128)-24),max(0,int(min(ys)*h/128)-24),min(w,int((max(xs)+1)*w/128)+24),min(h,int((max(ys)+1)*h/128)+24));crop=m.crop(box);bb=crop.getbbox()
-⋮----
-crop=crop.crop(bb);side=2048;mw,mh=ENV[tier];scale=min(side*mw/crop.width,side*mh/crop.height);crop=crop.resize((round(crop.width*scale),round(crop.height*scale)),Image.Resampling.LANCZOS);out=Image.new('RGBA',(side,side));out.alpha_composite(crop,((side-crop.width)//2,side-int(side*.08)-crop.height));a=out.getchannel('A');cov=sum(a.histogram()[8:])/(side*side)
-⋮----
-pad=int(side*.06)
-⋮----
-def mask64(im):return im.getchannel('A').resize((64,64),Image.Resampling.BILINEAR).point(lambda p:255 if p>=32 else 0)
-def iou(a,b)
-⋮----
-A=mask64(a);B=mask64(b);pa=A.load();pb=B.load();inter=union=0
-⋮----
-for x in range(64):aa=pa[x,y]>0;bb=pb[x,y]>0;inter+=aa and bb;union+=aa or bb
-⋮----
-def bbox(im)
-⋮----
-b=mask64(im).getbbox();return (0,0,0,0) if not b else (b[2]-b[0],b[3]-b[1],(b[0]+b[2])/2,(b[1]+b[3])/2)
-def family_qa(recs)
-⋮----
-adj=[iou(recs[n-1][1],recs[n][1]) for n in range(1,len(recs))]
-⋮----
-cov=[r[2] for r in recs]
-⋮----
-drops=sum(b<a*.90 for a,b in zip(cov,cov[1:]))
-⋮----
-boxes=[bbox(r[1]) for r in recs];cx=boxes[0][2]
-⋮----
-def render(i,prev,pe,ppe,base,img,seed)
-⋮----
-errs=[]
-⋮----
-gen=torch.Generator(device='cuda').manual_seed(seed+attempt*7919)
-⋮----
-if prev is None:raw=base(height=1024,width=1024,num_inference_steps=STEPS[i['tier']],guidance_scale=0,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),output_type='pil',generator=gen).images[0];mode='anchor'
-⋮----
-s=min(.80,max(.12,STRENGTH[i['tier']]+(attempt-1)*.04));raw=img(image=prev,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=s,num_inference_steps=STEPS[i['tier']],guidance_scale=0,output_type='pil',generator=gen).images[0];mode=f'img2img-s{s:.2f}'
-⋮----
-def main()
-⋮----
-ap=argparse.ArgumentParser();ap.add_argument('--count',type=int,default=28);ap.add_argument('--seed',type=int,default=43117);args=ap.parse_args();items=select(list(rows()),max(1,args.count));print('KAGGLE_BUILDING_PLAN='+','.join(i['id'] for i in items),flush=True)
-⋮----
-INCOMING.mkdir(parents=True,exist_ok=True);emb={};t,enc=load_encode()
-⋮----
-del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();by={}
-⋮----
-accepted=[];rejected=0
-⋮----
-group.sort(key=lambda x:x['tier']);recs=[];prev=None;failed=False
-⋮----
-except Exception as e:print(f"KAGGLE_REJECTED={i['id']} stage=render reason={e}",flush=True);failed=True;break
-⋮----
-p=INCOMING/f"{i['stem']}.png";final.save(p,'PNG',optimize=True);accepted.append(i['id']);print(f"KAGGLE_VALIDATED={p.relative_to(ROOT)} coverage={cov:.1%} {why}",flush=True)
-```
-
-## File: tools/sprites/kaggle_building_family_factory_v15.py
-```python
-#!/usr/bin/env python3
-"""Building factory v15.2: multi-anchor search with live semantic/technical QA."""
-⋮----
-HERE=Path(__file__).resolve().parent
-SPEC=importlib.util.spec_from_file_location('v14',HERE/'kaggle_building_family_factory_v14.py')
-v14=importlib.util.module_from_spec(SPEC); SPEC.loader.exec_module(v14)
-⋮----
-ANCHORS=4
-BRANCHES=2
-CONTEXT_RETRIES=3
-⋮----
-def prompts(i)
-⋮----
-dna=v14.DNA[i['family']]; tier=v14.TIER[i['tier']]
-short=(f"AAA mobile isometric FINISHED INDUSTRIAL FACTORY. {dna}. {tier}. One connected completed production building only. Flat gray studio background.")
-detail=(f"Finished operating factory upgraded in place. {dna}. {tier}. 34-degree orthographic view. Preserve facade, production core and roof direction; all additions attached. "
-⋮----
-def boom_score(final)
-⋮----
-"""Detect crane-like thin long horizontal structures high above the main mass."""
-a=np.array(final.getchannel('A'))>24
-⋮----
-x0,x1=xs.min(),xs.max(); y0,y1=ys.min(),ys.max(); w=max(1,x1-x0+1); h=max(1,y1-y0+1)
-top_end=y0+max(1,int(h*.42)); rows=[]
-⋮----
-xx=np.where(a[y,x0:x1+1])[0]
-⋮----
-span=xx[-1]-xx[0]+1
-⋮----
-best=cur=0
-⋮----
-cur=cur+1 if hit else 0; best=max(best,cur)
-# A crane boom tends to be long but only a few pixels thick; substantial roof masses are thicker.
-thin_limit=max(4,int(h*.065))
-⋮----
-def anchor_score(final,cov)
-⋮----
-slab=v14.slab_score(final.getchannel('A')); boom=boom_score(final); target_penalty=abs(cov-.105)
-⋮----
-def live_gate(recs,new_final,new_cov,tier)
-⋮----
-reasons=[]
-slab=v14.slab_score(new_final.getchannel('A'))
-boom=boom_score(new_final)
-⋮----
-box=v14.bbox(new_final)
-⋮----
-prev=recs[-1][1]; prev_cov=recs[-1][2]
-ident=v14.iou(prev,new_final)
-⋮----
-start_cx=v14.bbox(recs[0][1])[2]
-⋮----
-start=recs[0][2]; minimum={4:1.28,5:1.45,6:1.70}[tier]
-⋮----
-def branch_score(recs)
-⋮----
-cov=[r[2] for r in recs]; adj=[v14.iou(recs[n-1][1],recs[n][1]) for n in range(1,len(recs))]
-boxes=[v14.bbox(r[1]) for r in recs]; cx=boxes[0][2]; drift=max(abs(b[2]-cx) for b in boxes)
-slabs=max(v14.slab_score(r[1].getchannel('A')) for r in recs)
-booms=max(boom_score(r[1]) for r in recs)
-growth=cov[-1]/max(cov[0],1e-6)
-score=min(adj)*2.0 + min(growth,3.0) - drift*.05 - slabs*3.2 - booms*1.8
-⋮----
-def render_contextual(i,prev,recs,pe,ppe,base,img,seed,report)
-⋮----
-last=[]
-⋮----
-msg=','.join(reasons);last.append(msg);report['live_rejections']+=1
-⋮----
-def main()
-⋮----
-ap=argparse.ArgumentParser();ap.add_argument('--count',type=int,default=56);ap.add_argument('--seed',type=int,default=73117);args=ap.parse_args()
-items=v14.select(list(v14.rows()),max(1,args.count));print('KAGGLE_BUILDING_PLAN='+','.join(i['id'] for i in items),flush=True)
-⋮----
-v14.INCOMING.mkdir(parents=True,exist_ok=True);emb={};t,enc=v14.load_encode()
-⋮----
-del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=v14.load_render();by={}
-⋮----
-report={'engine':'v15.2-live-semantic-validation','anchor_attempts':0,'branch_attempts':0,'context_attempts':0,'live_rejections':0,'early_aborts':0,'families':[]}
-accepted=[];rejected=0
-⋮----
-group.sort(key=lambda x:x['tier']);t0=group[0];pe0,ppe0=emb[t0['id']];anchors=[]
-⋮----
-sc=anchor_score(final,cov);slab=v14.slab_score(final.getchannel('A'));boom=boom_score(final)
-⋮----
-anchors.sort(key=lambda x:x[0],reverse=True);branches=[]
-⋮----
-report['branch_attempts']+=1;recs=[(t0,final0,cov0)];prev=raw0;failed=False
-⋮----
-report['early_aborts']+=1;print(f'KAGGLE_BRANCH_EARLY_ABORT=BLD-{fam:02d} branch={a+1} tier={i["tier"]} reason={e}',flush=True);failed=True;break
-⋮----
-branches.sort(key=lambda x:x[0],reverse=True);famrec={'family':fam,'anchors_generated':len(anchors),'branches_completed':len(branches)}
-⋮----
-p=v14.INCOMING/f"{i['stem']}.png";final.save(p,'PNG',optimize=True);accepted.append(i['id']);print(f'KAGGLE_VALIDATED={p.relative_to(v14.ROOT)} coverage={cov:.1%} selected_branch={a+1} score={bscore:.3f}',flush=True)
-```
-
-## File: tools/sprites/kaggle_building_family_factory_v16.py
-```python
-#!/usr/bin/env python3
-"""Building factory v16.4: footprint-locked two-phase family evolution.
-
-Wave85 proved that prose-only anti-ground instructions are insufficient. v16.4
-changes the source dynamics: very conservative tier evolution, a hard lower-mass
-footprint prior, and tier-specific growth that adds attached mass without asking
-FLUX for a surrounding site. Live QA remains strict; this version does not weaken
-slab acceptance to manufacture yield.
-"""
-⋮----
-HERE=Path(__file__).resolve().parent
-SPEC=importlib.util.spec_from_file_location('v15',HERE/'kaggle_building_family_factory_v15.py')
-v15=importlib.util.module_from_spec(SPEC); SPEC.loader.exec_module(v15)
-v14=v15.v14
-V15_ANCHOR_SCORE=v15.anchor_score
-⋮----
-# Phase A (T0-T3): preserve massing. Phase B (T4-T6): add detail/attached volumes
-# without the high denoise that caused wave85 to invent a new ground/site plane.
-⋮----
-FAMILY={
-SHAPE={
-TIER={
-STYLE=('premium AAA mobile strategy industrial asset, stylized 2.5D, 34-degree orthographic three-quarter camera, '
-⋮----
-# Positive spatial formulation: describe what fills the lower silhouette instead of
-# repeatedly naming a floor/site. The model should see one product-like object.
-FOOTPRINT=(
-⋮----
-def prompts(i)
-⋮----
-fam=FAMILY[i['family']]; shape=SHAPE[i['family']]; tier=TIER[i['tier']]
-short=f'Centered isolated industrial factory product asset. {shape}. {tier}. One solid connected object on perfectly flat uniform neutral gray background.'
-⋮----
-phase='Build only the primary architectural massing. Prefer large contiguous wall/roof shapes over small decorative pieces.'
-⋮----
-phase='Preserve the approved massing and silhouette. Add detail inside or directly onto existing walls/roof; do not redesign the object footprint.'
-detail=(f'{STYLE}. Family DNA: {fam}. Tier instruction: {tier}. {phase} '
-⋮----
-def silhouette_metrics(final)
-⋮----
-m=v14.mask64(final); b=m.getbbox()
-⋮----
-x0,y0,x1,y1=b; w=max(1,x1-x0);h=max(1,y1-y0);px=m.load();total=upper=lower=top=0
-split=y0+int(h*.48);top_end=y0+max(1,int(h*.22));base0=y0+int(h*.72);base_rows=[]
-⋮----
-row=0
-⋮----
-def v164_anchor_score(final,cov)
-⋮----
-base=V15_ANCHOR_SCORE(final,cov);s=silhouette_metrics(final);pen=0.
-⋮----
-# Prefer a substantial building base, but not a nearly full-width thin card.
-⋮----
-score=base-pen
-⋮----
-# Preserve strict slab gate. Add a tier-dependent adjacent-identity floor so late
-# tiers cannot replace the source with a fresh scene even if coverage grows.
-V15_LIVE_GATE=v15.live_gate
-⋮----
-def v164_slab_score(alpha)
-⋮----
-"""Detect a detached/site-like lower card from silhouette geometry.
-
-    A real factory may legitimately become wider near its base. The forbidden
-    pattern is a thin, abrupt lower shelf/card: several consecutive rows that
-    jump materially wider than the rows immediately above and stay nearly flat.
-    """
-sm=alpha.resize((128,128),v14.Image.Resampling.BILINEAR)
-px=sm.load()
-widths=[]
-⋮----
-xs=[x for x in range(4,124) if px[x,y]>=32]
-⋮----
-score=0.0
-⋮----
-above=[aw for ay,aw in widths if y-12 <= ay <= y-4 and aw>0]
-⋮----
-ref=float(np.median(above))
-# Require an abrupt lateral shelf, not merely a broad continuous wall.
-⋮----
-# Normalize against the lower silhouette depth. A genuine thin card creates
-# a sustained shelf signal; ordinary wall widening should remain near zero.
-lower_rows=max(1,sum(1 for y,w in widths if y>=82 and w>0))
-⋮----
-# Keep the strict no-site-card rule, but measure detached lateral expansion
-# rather than treating a legitimate broad building base as a floor slab.
-⋮----
-def v164_live_gate(recs,new_final,new_cov,tier)
-⋮----
-ident=v14.iou(recs[-1][1],new_final)
-floor={1:.48,2:.45,3:.42,4:.40,5:.38,6:.36}[tier]
-```
-
-## File: tools/sprites/kaggle_building_family_factory.py
-```python
-#!/usr/bin/env python3
-"""Robust sequential FLUX building-family factory for Zero -> Empire."""
-⋮----
-ROOT=Path(__file__).resolve().parents[2]
-MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
-INCOMING=ROOT/'art/incoming/final-sprites'
-FLUX='aniketppanchal/flux.1-schnell-nf4-pkg'
-ROW=re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$")
-BLD=re.compile(r'^BLD-(\d{2})-T([0-6])$')
-DNA={
-DELTA={0:'starter: very small one-storey shell, low roofline, sparse machinery, no tower or gantry',1:'reinforced: retain starter shell, add one attached machinery enclosure and roof ribs',2:'industrial: retain prior structure, widen footprint, add second attached subsystem and service deck',3:'automated: retain anchors, add compact central automation tower and attached logistics conduit',4:'advanced: retain base and tower, add two attached machinery wings and denser routing',5:'megastructure: retain all prior structure, add large upper production assembly and energy routing',6:'ultimate: retain entire evolved structure, add tall central prestige crown and heroic attached machinery'}
-PRIORITY=(13,5,8,9,10,12,11,4,6,7,3,0,1,2)
-STRENGTH={1:.34,2:.42,3:.50,4:.58,5:.66,6:.72}
-STEPS={0:5,1:4,2:4,3:5,4:5,5:6,6:6}
-RETRIES={0:4,1:2,2:2,3:2,4:2,5:2,6:2}
-⋮----
-def rows()
-⋮----
-m=ROW.match(line)
-⋮----
-bm=BLD.fullmatch(aid)
-⋮----
-def select(items,count)
-⋮----
-by={}
-⋮----
-rank={f:n for n,f in enumerate(PRIORITY)}; out=[]
-⋮----
-g=sorted(by[fam],key=lambda x:x['tier'])
-⋮----
-def prompts(i)
-⋮----
-base=(f"AAA premium mobile 2.5D strategy building, family {i['family']:02d}, tier {i['tier']}. "
-composition=("Same building upgraded in place; preserve facade, production core, roof orientation and structural anchors. "
-isolation=("CUTOUT PRODUCT RENDER on a perfectly flat uniform neutral medium-gray studio background touching every image edge. "
-negatives=("No people, workers, vehicles, roads, arrows, labels, signs, readable text, pseudo-text, letters, numbers, logos, watermark, UI, "
-tier0=("Tier zero must be unmistakably early-game: tiny one-storey footprint, low roofline, sparse machinery, no crane, no tower, no landmark mass. " if i['tier']==0 else "")
-⋮----
-def load_encode()
-⋮----
-t=T5EncoderModel.from_pretrained(FLUX,subfolder='text_encoder_2',torch_dtype=torch.float16,device_map='cuda')
-p=FluxPipeline.from_pretrained(FLUX,text_encoder_2=t,transformer=None,vae=None,torch_dtype=torch.float16,device_map='cuda')
-⋮----
-def load_render()
-⋮----
-tr=FluxTransformer2DModel.from_pretrained(FLUX,subfolder='transformer',torch_dtype=torch.float16,device_map='cuda')
-base=FluxPipeline.from_pretrained(FLUX,text_encoder=None,text_encoder_2=None,tokenizer=None,tokenizer_2=None,transformer=tr,torch_dtype=torch.float16,device_map='cuda')
-⋮----
-img=FluxImg2ImgPipeline.from_pipe(base); img.vae.to(device='cuda',dtype=torch.float16)
-⋮----
-def border(im)
-⋮----
-rgb=im.convert('RGB');w,h=rgb.size;step=max(1,min(w,h)//128);pts=[]
-⋮----
-vals=[sum(p)/3 for p in pts];mean=sum(vals)/len(vals);sd=(sum((v-mean)**2 for v in vals)/len(vals))**.5
-q=sorted(pts,key=sum)[len(pts)//3:2*len(pts)//3]
-bg=tuple(sum(p[k] for p in q)//len(q) for k in range(3))
-⋮----
-def isolate(im)
-⋮----
-rgb=im.convert('RGB');w,h=rgb.size;bg,sd,chroma=border(rgb)
-⋮----
-px=rgb.load();mask=Image.new('L',(w,h));mp=mask.load()
-⋮----
-p=px[x,y];d=((p[0]-bg[0])**2+(p[1]-bg[1])**2+(p[2]-bg[2])**2)**.5
-⋮----
-mask=mask.filter(ImageFilter.GaussianBlur(.65));out=rgb.convert('RGBA');out.putalpha(mask);return out
-⋮----
-def components(alpha)
-⋮----
-sm=alpha.resize((128,128),Image.Resampling.BILINEAR);px=sm.load();seen=set();out=[]
-⋮----
-q=deque([(x,y)]);seen.add((x,y));pts=[]
-⋮----
-def ground_slab_score(alpha)
-⋮----
-sm=alpha.resize((128,128),Image.Resampling.BILINEAR);px=sm.load();rows=[]
-⋮----
-def internal_hole_score(alpha)
-⋮----
-sm=alpha.resize((96,96),Image.Resampling.BILINEAR).point(lambda p:255 if p>=32 else 0)
-px=sm.load(); seen=set(); holes=[]
-q=deque()
-⋮----
-p=q.popleft()
-⋮----
-all_clear={(x,y) for y in range(96) for x in range(96) if px[x,y]==0}
-inner=all_clear-seen
-⋮----
-start=inner.pop(); comp={start};q=deque([start])
-⋮----
-def finish(raw,tier)
-⋮----
-m=isolate(raw);cs=components(m.getchannel('A'))
-⋮----
-a0=m.getchannel('A')
-slab=ground_slab_score(a0)
-⋮----
-hole=internal_hole_score(a0)
-⋮----
-xs=[p[0] for p in cs[0]];ys=[p[1] for p in cs[0]];w,h=m.size
-box=(max(0,int(min(xs)*w/128)-30),max(0,int(min(ys)*h/128)-30),min(w,int((max(xs)+1)*w/128)+30),min(h,int((max(ys)+1)*h/128)+30))
-crop=m.crop(box);bb=crop.getbbox()
-⋮----
-crop=crop.crop(bb);side=2048
-maxw=.72 if tier==0 else .78; maxh=.62 if tier==0 else .78
-scale=min(side*maxw/crop.width,side*maxh/crop.height)
-crop=crop.resize((round(crop.width*scale),round(crop.height*scale)),Image.Resampling.LANCZOS)
-out=Image.new('RGBA',(side,side));out.alpha_composite(crop,((side-crop.width)//2,side-int(side*.10)-crop.height))
-a=out.getchannel('A');cov=sum(a.histogram()[8:])/(side*side)
-lo=.055 if tier==0 else .07
-⋮----
-pad=int(side*.08)
-⋮----
-def mask64(im): return im.getchannel('A').resize((64,64),Image.Resampling.BILINEAR).point(lambda p:255 if p>=32 else 0)
-def iou(a,b)
-⋮----
-A=mask64(a);B=mask64(b);pa=A.load();pb=B.load();inter=union=0
-⋮----
-aa=pa[x,y]>0;bb=pb[x,y]>0;inter+=aa and bb;union+=aa or bb
-⋮----
-def bbox_metrics(im)
-⋮----
-bb=mask64(im).getbbox()
-⋮----
-def family_qa(recs)
-⋮----
-adj=[iou(recs[n-1][1],recs[n][1]) for n in range(1,len(recs))]
-⋮----
-cov=[r[2] for r in recs]
-drops=sum(1 for a,b in zip(cov,cov[1:]) if b<a*.92)
-⋮----
-boxes=[bbox_metrics(r[1]) for r in recs]
-cx0=boxes[0][2]; max_center=max(abs(b[2]-cx0) for b in boxes)
-⋮----
-def render_with_retries(i,previous,pe,ppe,base,img,seed)
-⋮----
-errors=[]
-⋮----
-attempt_seed=seed+attempt*7919
-gen=torch.Generator(device='cuda').manual_seed(attempt_seed)
-⋮----
-raw=base(height=1024,width=1024,num_inference_steps=STEPS[i['tier']],guidance_scale=0,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),output_type='pil',generator=gen).images[0];mode='anchor'
-⋮----
-strength=min(.78,max(.28,STRENGTH.get(i['tier'],.5)+(attempt-.5)*.04))
-raw=img(image=previous,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=STEPS[i['tier']],guidance_scale=0,output_type='pil',generator=gen).images[0];mode=f'img2img-s{strength:.2f}'
-⋮----
-def main()
-⋮----
-ap=argparse.ArgumentParser();ap.add_argument('--count',type=int,default=28);ap.add_argument('--seed',type=int,default=43117);args=ap.parse_args()
-items=select(list(rows()),max(1,args.count));print('KAGGLE_BUILDING_PLAN='+','.join(i['id'] for i in items),flush=True)
-⋮----
-INCOMING.mkdir(parents=True,exist_ok=True);emb={};t,enc=load_encode()
-⋮----
-del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();by={}
-⋮----
-accepted=[];rejected=0
-⋮----
-group.sort(key=lambda x:x['tier']);recs=[];previous=None;failed=False
-⋮----
-print(f"KAGGLE_REJECTED={i['id']} stage=render reason={e}",flush=True);failed=True;rejected+=1;break
-⋮----
-p=INCOMING/f"{i['stem']}.png";final.save(p,'PNG',optimize=True);accepted.append(i['id']);print(f"KAGGLE_VALIDATED={p.relative_to(ROOT)} coverage={cov:.1%} {why}",flush=True)
-```
-
-## File: tools/sprites/kaggle_character_sheet_factory_v1.py
-```python
-#!/usr/bin/env python3
-"""Dedicated FLUX character-sheet factory for Zero -> Empire.
-
-Produces one coherent animation sheet per manifest CHR-* target. The first frame
-is text-to-image; later frames are conservative img2img pose variations to keep
-identity/clothing/camera stable. Output remains candidate-only until semantic QA.
-"""
-⋮----
-ROOT=Path(__file__).resolve().parents[2]
-MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
-INCOMING=ROOT/'art/incoming/final-sprites'
-REPORT=Path('/kaggle/working/output/character-sheet-report.json')
-FLUX='aniketppanchal/flux.1-schnell-nf4-pkg'
-ROW=re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$")
-CHR=re.compile(r'^CHR-(OP|TECH|LOG|ENG)-(IDLE|WALK|WORK|CARRY|REPAIR|CELEB)$')
-ROLE={
-ACTION={
-POSE_HINT={
-⋮----
-def rows()
-⋮----
-out=[]
-⋮----
-m=ROW.match(line)
-⋮----
-cm=CHR.fullmatch(aid)
-⋮----
-def prompt(i,pose)
-⋮----
-def load_encode()
-⋮----
-t=T5EncoderModel.from_pretrained(FLUX,subfolder='text_encoder_2',torch_dtype=torch.float16,device_map='cuda')
-p=FluxPipeline.from_pretrained(FLUX,text_encoder_2=t,transformer=None,vae=None,torch_dtype=torch.float16,device_map='cuda')
-⋮----
-def load_render()
-⋮----
-tr=FluxTransformer2DModel.from_pretrained(FLUX,subfolder='transformer',torch_dtype=torch.float16,device_map='cuda')
-base=FluxPipeline.from_pretrained(FLUX,text_encoder=None,text_encoder_2=None,tokenizer=None,tokenizer_2=None,transformer=tr,torch_dtype=torch.float16,device_map='cuda')
-⋮----
-img=FluxImg2ImgPipeline.from_pipe(base); img.vae.to(device='cuda',dtype=torch.float16)
-⋮----
-def border_bg(im)
-⋮----
-rgb=im.convert('RGB');w,h=rgb.size;step=max(1,min(w,h)//96);pts=[]
-⋮----
-vals=[sum(p)/3 for p in pts];mean=sum(vals)/len(vals);sd=(sum((v-mean)**2 for v in vals)/len(vals))**.5
-q=sorted(pts,key=sum)[len(pts)//3:2*len(pts)//3];bg=tuple(sum(p[k] for p in q)//len(q) for k in range(3))
-⋮----
-def isolate(im)
-⋮----
-rgb=im.convert('RGB');w,h=rgb.size;bg=border_bg(rgb);px=rgb.load();seen=set();q=deque()
-⋮----
-def dist(p):return ((p[0]-bg[0])**2+(p[1]-bg[1])**2+(p[2]-bg[2])**2)**.5
-⋮----
-p=q.popleft()
-⋮----
-mask=Image.new('L',(w,h),255);mp=mask.load()
-⋮----
-mask=mask.filter(ImageFilter.GaussianBlur(.65));out=rgb.convert('RGBA');out.putalpha(mask)
-⋮----
-def finish_frame(raw)
-⋮----
-m=isolate(raw);a=m.getchannel('A');bb=a.getbbox()
-⋮----
-w,h=m.size;pad=max(8,w//40)
-⋮----
-crop=m.crop(bb);cw,ch=crop.size
-⋮----
-scale=min(176/cw,218/ch); crop=crop.resize((max(1,round(cw*scale)),max(1,round(ch*scale))),Image.Resampling.LANCZOS)
-cell=Image.new('RGBA',(256,256));x=(256-crop.width)//2;y=238-crop.height;cell.alpha_composite(crop,(x,y))
-aa=cell.getchannel('A');cov=sum(aa.histogram()[8:])/(256*256)
-⋮----
-def alpha_iou(a,b)
-⋮----
-A=a.getchannel('A').resize((64,64),Image.Resampling.BILINEAR).point(lambda p:255 if p>=32 else 0)
-B=b.getchannel('A').resize((64,64),Image.Resampling.BILINEAR).point(lambda p:255 if p>=32 else 0)
-pa,pb=A.load(),B.load();inter=union=0
-⋮----
-aa=pa[x,y]>0;bb=pb[x,y]>0;inter+=aa and bb;union+=aa or bb
-⋮----
-def sheet_qa(frames)
-⋮----
-ious=[alpha_iou(frames[n-1],frames[n]) for n in range(1,len(frames))]
-⋮----
-bottoms=[];centers=[]
-⋮----
-bb=f.getchannel('A').getbbox()
-⋮----
-def make_sheet(frames)
-⋮----
-# Canonical character deliverable: fixed 1024x1024 transparent atlas.
-# 256px cells in a 4x4 grid preserve stable runtime slicing; unused cells stay transparent.
-⋮----
-out=Image.new('RGBA',(1024,1024),(0,0,0,0))
-⋮----
-def main()
-⋮----
-ap=argparse.ArgumentParser();ap.add_argument('--count',type=int,default=8);ap.add_argument('--seed',type=int,default=19417);args=ap.parse_args()
-items=rows()[:max(1,args.count)];print('KAGGLE_CHARACTER_PLAN='+','.join(i['id'] for i in items),flush=True)
-⋮----
-encs={};t,enc=load_encode()
-⋮----
-hints=POSE_HINT[i['action']][:ACTION[i['action']][1]]
-⋮----
-text=prompt(i,pose)
-⋮----
-del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();report=[]
-⋮----
-frames=[];anchor_raw=None;fail=None
-⋮----
-ok=False
-⋮----
-gen=torch.Generator(device='cuda').manual_seed(args.seed+idx*10000+fi*211+attempt*7919)
-⋮----
-raw=base(height=1024,width=1024,num_inference_steps=5,guidance_scale=0,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),output_type='pil',generator=gen).images[0]
-anchor_raw=raw.convert('RGB')
-⋮----
-strength=min(.52,.32+fi*.018+attempt*.035)
-raw=img(image=anchor_raw,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=5,guidance_scale=0,output_type='pil',generator=gen).images[0]
-frame,cov=finish_frame(raw);frames.append(frame);ok=True;print(f"KAGGLE_CHR_FRAME={i['id']} frame={fi} attempt={attempt+1} cov={cov:.2f}",flush=True);break
-⋮----
-if not ok:fail=f'frame-{fi}-failed';break
-⋮----
-sheet=make_sheet(frames)
-⋮----
-p=INCOMING/f"{i['stem']}.png";sheet.save(p,'PNG',optimize=True)
-```
-
-## File: tools/sprites/kaggle_fx_sheet_factory_v1.py
-```python
-#!/usr/bin/env python3
-"""Validated procedural FX-sheet factory for Zero -> Empire.
-Candidate-only: outputs must still pass semantic/runtime/CI gates before strict DONE.
-"""
-⋮----
-ROOT=Path(__file__).resolve().parents[2]
-MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
-INCOMING=ROOT/'art/incoming/final-sprites'; OUT=Path('/kaggle/working/output')
-ROW=re.compile(r'^\|\s*(FX-\d+)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$')
-FRAMES=8
-RENDER_CELL=256
-RUNTIME_CELL=128
-RUNTIME_COLS=4
-RUNTIME_ROWS=2
-ONE_SHOT={'FX-00','FX-05','FX-06','FX-07'}
-LOOP={'FX-01','FX-02','FX-03','FX-04'}
-⋮----
-def rows()
-⋮----
-m=ROW.match(line)
-⋮----
-def rgba(): return Image.new('RGBA',(RENDER_CELL,RENDER_CELL),(0,0,0,0))
-def glow(layer,r): return layer.filter(ImageFilter.GaussianBlur(r))
-def add(dst,src): return Image.alpha_composite(dst,src)
-⋮----
-def particle_frame(kind,t,rng,item_id='')
-⋮----
-im=rgba();d=ImageDraw.Draw(im);cx=cy=RENDER_CELL//2
-env=max(0.0,math.sin(math.pi*min(1.0,max(0.0,t))))
-⋮----
-count=max(4,round(26*env))
-⋮----
-a=rng.uniform(-2.8,-.35); L=rng.uniform(18,70)*(0.45+0.55*env); x=cx+rng.uniform(-8,8); y=cy+rng.uniform(-4,8); x2=x+math.cos(a)*L; y2=y+math.sin(a)*L
-⋮----
-phase=(j/7+t)%1; w=22+10*math.sin(phase*math.pi); h=72+34*math.sin(phase*math.pi); x=cx+rng.uniform(-18,18); y=cy+38-h*.55
-⋮----
-dust_alpha=round(150*env)
-⋮----
-phase=min(1.0,j/14+t*.72); r=7+27*phase; x=cx+rng.uniform(-48,48)*(0.3+phase); y=cy+48-50*phase+rng.uniform(-8,8)
-⋮----
-direction=rng.uniform(math.pi*.12,math.pi*.88); speed=rng.uniform(30,82); flight=t
-x=cx+math.cos(direction)*speed*flight+rng.uniform(-8,8)
-y=cy+38-math.sin(direction)*speed*flight+58*(flight**2)
-rr=rng.randint(3,7); col=rng.choice(((116,105,88,round(230*env)),(145,126,96,round(220*env)),(91,91,88,round(220*env))))
-pts=[(x-rr,y),(x-rr*.25,y-rr),(x+rr,y-rr*.25),(x+rr*.55,y+rr),(x-rr*.5,y+rr*.65)]
-⋮----
-phase=(j/9+t)%1; r=10+34*phase; x=cx+rng.uniform(-35,35)*(0.4+phase); y=cy+55-95*phase+rng.uniform(-10,10)
-col=(210,225,235,110) if 'steam' in kind else (120,125,130,100)
-⋮----
-rr=24+72*env; col=(70,225,255,round(220*env)) if 'cyan' in kind else (255,185,70,round(220*env))
-⋮----
-pts=[(cx-78,cy+rng.uniform(-16,16))]
-⋮----
-y=38+180*t; d.rectangle((34,y-4,222,y+4),fill=(80,235,255,190)); d.rectangle((54,42,202,214),outline=(80,235,255,75),width=2)
-⋮----
-L=80+40*math.sin(math.pi*t); d.polygon([(cx-18,cy-35),(cx+18,cy-35),(cx+8,cy+L),(cx-8,cy+L)],fill=(80,210,255,165)); d.ellipse((cx-22,cy-42,cx+22,cy-15),fill=(210,250,255,230))
-⋮----
-rr=24+65*t; d.ellipse((cx-rr,cy-rr,cx+rr,cy+rr),outline=(255,220,120,180),width=6)
-⋮----
-def metrics(im)
-⋮----
-a=im.getchannel('A'); box=a.getbbox()
-⋮----
-x0,y0,x1,y1=box; data=list(a.getdata());cov=sum(1 for v in data if v>12)/(RENDER_CELL*RENDER_CELL); mass=sum(data)
-edge=(x0<8 or y0<8 or x1>RENDER_CELL-8 or y1>RENDER_CELL-8)
-⋮----
-def temporal_qa(item,report)
-⋮----
-masses=[m['alpha_mass'] for m in report]; peak=max(range(len(masses)),key=masses.__getitem__)
-⋮----
-def sheet_for(item,seed)
-⋮----
-frames=[]; report=[]
-⋮----
-rng=random.Random(seed+i*7919+int(item['id'].split('-')[1])*100003); f=particle_frame(item['name'].lower(),i/(FRAMES-1),rng,item['id']); m=metrics(f)
-⋮----
-sig=[]; centers=[]
-⋮----
-a=f.getchannel('A').resize((32,32)); sig.append(bytes(a.getdata())); b=m['bbox']; centers.append(((b[0]+b[2])/2,(b[1]+b[3])/2))
-dup=sum(sig[i]==sig[i-1] for i in range(1,len(sig)))
-drift=max(math.hypot(x-RENDER_CELL/2,y-RENDER_CELL/2) for x,y in centers)
-⋮----
-temporal=temporal_qa(item,report)
-sheet=Image.new('RGBA',(RUNTIME_COLS*RUNTIME_CELL,RUNTIME_ROWS*RUNTIME_CELL),(0,0,0,0))
-⋮----
-runtime=f.resize((RUNTIME_CELL,RUNTIME_CELL),Image.Resampling.LANCZOS)
-⋮----
-def main()
-⋮----
-ap=argparse.ArgumentParser();ap.add_argument('--count',type=int,default=18);ap.add_argument('--seed',type=int,default=90210);args=ap.parse_args()
-⋮----
-rep={'engine':'procedural-fx-v1.2-runtime-atlas','attempted':0,'accepted':0,'rejected':0,'runtime_contract':'8 frames; 4x2 atlas; 128x128 runtime cell; 512x256 texture; matches existing ElectricArc/DroneThruster loaders','items':[]}
-⋮----
-rep['attempted']+=1; accepted=None; errors=[]
-⋮----
-sheet,m=sheet_for(item,args.seed+attempt*104729); accepted=(sheet,m,attempt); print(f'KAGGLE_FX_LIVE_PASS={item["id"]} attempt={attempt+1} mode={m["mode"]}',flush=True);break
-⋮----
-sheet,m,attempt=accepted; p=INCOMING/f"{item['stem']}.png"; sheet.save(p,'PNG',optimize=True); rep['accepted']+=1;rep['items'].append({'id':item['id'],'accepted':True,'attempt':attempt+1,**m}); print(f'KAGGLE_VALIDATED={p.relative_to(ROOT)} atlas=512x256 layout=4x2',flush=True)
-```
-
-## File: tools/sprites/kaggle_sprite_factory.py
-```python
-#!/usr/bin/env python3
-"""High-throughput static Zero -> Empire FLUX candidate factory.
-
-The factory deliberately handles only manifest assets that can be reviewed as one
-isolated static master. Character and FX sheets stay on their dedicated animation
-pipelines; building tiers require a separate family-coherent generator.
-"""
-⋮----
-ROOT=Path(__file__).resolve().parents[2];MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md';INCOMING=ROOT/'art/incoming/final-sprites'
-ROW=re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$")
-SUPPORTED=('MCH-','TER-','PRP-','VEH-','CORE-');PRIORITY={'MCH':0,'TER':1,'PRP':2,'VEH':3,'CORE':4};TARGET_SIDE={'MCH':1024,'TER':1024,'CORE':1536,'VEH':1536,'PRP':1024};FLUX='aniketppanchal/flux.1-schnell-nf4-pkg'
-MACHINE_PRIMARY=[
-MACHINE_SECONDARY=[
-TERRAIN_SUBJECTS={
-def manifest_rows()
-⋮----
-order=0
-⋮----
-m=ROW.match(line)
-⋮----
-def concrete_subject(i)
-⋮----
-m=re.fullmatch(r'MCH-(\d{2})-([01])',i['id']);idx=int(m.group(1));variant=int(m.group(2));return (MACHINE_PRIMARY if variant==0 else MACHINE_SECONDARY)[idx]
-⋮----
-m=re.fullmatch(r'PRP-(\d{2})-([AB])',i['id']);idx=int(m.group(1));v=m.group(2)
-a=['rugged closed supply crate','compact closed retail stock crate','heatproof closed tool chest','closed assembly parts bin','closed industrial logistics crate','sealed component case','reinforced tool locker','closed automation parts crate','high-tech cargo case','energy-cell storage box','precision maintenance chest','orbital supply container','phase-tech component crate','prestige equipment case'];b=['90-degree utility pipe elbow fitting','compact safety barrier','90-degree insulated service pipe elbow fitting','small control terminal','utility bollard','cable junction pedestal','compact pipe manifold','service terminal','90-degree coolant pipe elbow fitting','power distribution post','sensor bollard','orbital service terminal','90-degree phase conduit elbow fitting','prestige light bollard'];return (a if v=='A' else b)[min(idx,13)]
-⋮----
-exact={'VEH-09':'ONE futuristic enclosed MAGLEV FREIGHT CAPSULE, ZERO wheels, continuous smooth magnetic levitation hull, four flush glowing rectangular magnetic lift emitters, large visible air gap beneath the entire hull, long cargo-container proportions, no road styling, rail, track or platform','VEH-16':'one compact two-passenger prestige anti-gravity coupe, low sleek teardrop capsule, panoramic dark glass canopy, completely blank unbranded featureless nose with no ornament at all, one continuous smooth rounded belly, thin cyan levitation light seam painted flush into the lower hull, large open empty air gap beneath the complete hull, pearl white and glossy black premium finish, zero wheels, wheel arches, legs, feet, struts, landing gear, skids, rails, blades, bars or pods','VEH-17':'a tight coordinated swarm of five distinct small singularity logistics drones in one compact formation, all five drones fully visible, no mothership'};return exact.get(i['id'],i['name'])
-⋮----
-def prompt_for(i)
-⋮----
-s=concrete_subject(i)
-⋮----
-noun={'PRP':'prop','VEH':'vehicle composition','CORE':'reactor'}[i['kind']];return f"Create exactly {s}. One centered {noun}, fully visible, isolated on pure black. No environment, floor, road, pedestal, text, logo, labels or UI. Premium stylized 2.5D mobile strategy asset, 34 degree three-quarter camera, upper-left key, cool fill, restrained cyan/amber accents. Manifest intent: {i['description']}. Generous empty black edge space."
-def load_encode()
-⋮----
-print('KAGGLE_FLUX_LOAD=encoder',flush=True);text2=T5EncoderModel.from_pretrained(FLUX,subfolder='text_encoder_2',torch_dtype=torch.float16,device_map='cuda');pipe=FluxPipeline.from_pretrained(FLUX,text_encoder_2=text2,transformer=None,vae=None,torch_dtype=torch.float16,device_map='cuda');return text2,pipe
-def load_diffuse()
-⋮----
-print('KAGGLE_FLUX_LOAD=transformer',flush=True);tr=FluxTransformer2DModel.from_pretrained(FLUX,subfolder='transformer',torch_dtype=torch.float16,device_map='cuda');pipe=FluxPipeline.from_pretrained(FLUX,text_encoder=None,text_encoder_2=None,tokenizer=None,tokenizer_2=None,transformer=tr,vae=None,torch_dtype=torch.float16,device_map='cuda');return tr,pipe
-def load_decode()
-def border_background(im)
-⋮----
-rgb=im.convert('RGB');w,h=rgb.size;s=max(1,min(w,h)//128);pts=[]
-⋮----
-pts.sort(key=sum);q=pts[:max(16,len(pts)//3)];return tuple(sum(p[i] for p in q)//len(q) for i in range(3))
-def isolate(im)
-⋮----
-rgb=im.convert('RGB');w,h=rgb.size;bg=border_background(rgb);px=rgb.load();dist=Image.new('L',(w,h));dp=dist.load()
-⋮----
-mask=dist.point(lambda p:0 if p<20 else 255 if p>58 else int((p-20)*255/38));mp=mask.load();seen=set();q=deque()
-⋮----
-mask=mask.filter(ImageFilter.GaussianBlur(.6));rgba=rgb.convert('RGBA');rgba.putalpha(mask);return rgba
-def components(alpha,threshold=32)
-⋮----
-small=alpha.resize((128,128),Image.Resampling.BILINEAR);px=small.load();seen=set();comps=[]
-⋮----
-q=deque([(x,y)]);seen.add((x,y));pts=[]
-⋮----
-def finish(image,item)
-⋮----
-master=isolate(image);comps=components(master.getchannel('A'))
-⋮----
-total=sum(map(len,comps));allow=item['id']=='VEH-17';dominant=len(comps[0])/total;important=sum(len(c)/total>=.08 for c in comps)
-⋮----
-selected=comps if allow else comps[:1];xs=[x for c in selected for x,y in c];ys=[y for c in selected for x,y in c];w,h=master.size
-crop=master.crop((max(0,int(min(xs)*w/128)-25),max(0,int(min(ys)*h/128)-25),min(w,int((max(xs)+1)*w/128)+25),min(h,int((max(ys)+1)*h/128)+25)));bbox=crop.getbbox()
-⋮----
-crop=crop.crop(bbox);side=TARGET_SIDE[item['kind']];subject_fraction=.76 if item['kind']=='TER' else .68;scale=min(side*subject_fraction/crop.width,side*subject_fraction/crop.height);crop=crop.resize((round(crop.width*scale),round(crop.height*scale)),Image.Resampling.LANCZOS);out=Image.new('RGBA',(side,side));bottom=.12 if item['kind']!='TER' else .10;out.alpha_composite(crop,((side-crop.width)//2,side-int(side*bottom)-crop.height));a=out.getchannel('A');lo,hi=a.getextrema();visible=sum(a.histogram()[8:])/(side*side)
-maxcov=.58 if item['kind'] in ('MCH','TER','PRP') else .70
-⋮----
-pad=int(side*.06)
-⋮----
-def main()
-⋮----
-ap=argparse.ArgumentParser();ap.add_argument('--kind',choices=['ALL','MCH','TER','PRP','VEH','CORE'],default='ALL');ap.add_argument('--count',type=int,default=30);ap.add_argument('--seed',type=int,default=12217);args=ap.parse_args();items=[x for x in manifest_rows() if args.kind=='ALL' or x['kind']==args.kind];items.sort(key=lambda x:(PRIORITY[x['kind']],x['order']));items=items[:max(1,args.count)];print(f'KAGGLE_PLAN={len(items)} targets={",".join(x["id"] for x in items)} engine=FLUX.1-schnell-NF4-batched-v2',flush=True)
-⋮----
-INCOMING.mkdir(parents=True,exist_ok=True);encoded=[];text2,enc=load_encode()
-⋮----
-del text2,enc;gc.collect();torch.cuda.empty_cache();tr,diff=load_diffuse();latents=[]
-⋮----
-pe=pe.cuda();ppe=ppe.cuda();packed=diff(height=1024,width=1024,num_inference_steps=4,guidance_scale=0.0,prompt_embeds=pe,pooled_prompt_embeds=ppe,output_type='latent',max_sequence_length=384,generator=torch.Generator(device='cuda').manual_seed(args.seed+index)).images;latents.append((item,packed.cpu()));print(f"KAGGLE_DIFFUSED={item['id']}",flush=True)
-⋮----
-del tr,diff,encoded;gc.collect();torch.cuda.empty_cache();dec=load_decode();ok=rej=0
-⋮----
-packed=packed.cuda();lat=dec._unpack_latents(packed,height=1024,width=1024,vae_scale_factor=dec.vae_scale_factor)/dec.vae.config.scaling_factor+dec.vae.config.shift_factor
-with torch.no_grad():tensor=dec.vae.decode(lat,return_dict=False)[0]
-image=dec.image_processor.postprocess(tensor)[0];final,cov=finish(image,item);out=INCOMING/f"{item['stem']}.png";final.save(out,'PNG',optimize=True);ok+=1;print(f'KAGGLE_VALIDATED={out.relative_to(ROOT)} coverage={cov:.1%}',flush=True)
-```
-
-## File: tools/sprites/lightning_autopilot_loop.sh
-```bash
-#!/usr/bin/env bash
-set -u
-
-REPO="$HOME/zero-to-empire"
-LOG="$HOME/zte-lightning-autopilot.log"
-LOCK="$HOME/.zte-lightning-autopilot.lock"
-INTERVAL="${LIGHTNING_SPRITE_INTERVAL_SECONDS:-300}"
-
-mkdir -p "$REPO"
-exec 9>"$LOCK"
-if ! flock -n 9; then
-  echo "$(date -Is) AUTOPILOT_ALREADY_RUNNING" >> "$LOG"
-  exit 0
-fi
-
-echo "$(date -Is) AUTOPILOT_STARTED interval=${INTERVAL}s" >> "$LOG"
-
-while true; do
-  {
-    echo "$(date -Is) WAVE_START"
-    cd "$REPO"
-    git fetch origin main
-    git reset --hard origin/main
-    export SPRITE_COUNT="${SPRITE_COUNT:-56}"
-    export SPRITE_SEED="$(date +%s)"
-    python -u tools/sprites/lightning_studio_factory.py
-    rc=$?
-    echo "$(date -Is) WAVE_END rc=$rc"
-  } >> "$LOG" 2>&1
-  sleep "$INTERVAL"
-done
-```
-
-## File: tools/sprites/lightning_install_autopilot.sh
-```bash
-#!/usr/bin/env bash
-set -euo pipefail
-
-REPO="$HOME/zero-to-empire"
-START_DIR="$HOME/.lightning_studio"
-START_FILE="$START_DIR/on_start.sh"
-LOG="$HOME/zte-lightning-autopilot.log"
-
-if [ -d "$REPO/.git" ]; then
-  git -C "$REPO" fetch origin main
-  git -C "$REPO" reset --hard origin/main
-else
-  rm -rf "$REPO"
-  git clone --depth 1 https://github.com/dbrckk/zero-to-empire.git "$REPO"
-fi
-
-mkdir -p "$START_DIR"
-cat > "$START_FILE" <<'EOF'
-#!/usr/bin/env bash
-set -u
-REPO="$HOME/zero-to-empire"
-if [ -d "$REPO/.git" ]; then
-  git -C "$REPO" fetch origin main >/dev/null 2>&1 || true
-  git -C "$REPO" reset --hard origin/main >/dev/null 2>&1 || true
-else
-  git clone --depth 1 https://github.com/dbrckk/zero-to-empire.git "$REPO" >/dev/null 2>&1 || true
-fi
-if [ -f "$REPO/tools/sprites/lightning_autopilot_loop.sh" ]; then
-  nohup bash "$REPO/tools/sprites/lightning_autopilot_loop.sh" >/dev/null 2>&1 &
-fi
-EOF
-chmod +x "$START_FILE"
-
-python - <<'PY'
-from lightning_sdk import Studio
-s = Studio()
-s.auto_sleep = False
-try:
-    urls = s.add_ports(8765)
-    if urls:
-        try:
-            print('LIGHTNING_OUTPUT_URL=' + urls[0].urls[0])
-        except Exception:
-            print('LIGHTNING_PORT_8765_EXPOSED=1')
-except Exception as exc:
-    print('LIGHTNING_PORT_WARNING=' + str(exc))
-PY
-
-pkill -f 'http.server 8765' >/dev/null 2>&1 || true
-mkdir -p "$REPO/.lightning-output"
-nohup python -m http.server 8765 --directory "$REPO/.lightning-output" >> "$LOG" 2>&1 &
-
-nohup bash "$REPO/tools/sprites/lightning_autopilot_loop.sh" >/dev/null 2>&1 &
-
-echo "AUTOPILOT_INSTALLED=1"
-echo "AUTOPILOT_LOG=$LOG"
-
-python - <<'PY'
-from lightning_sdk import Machine, Studio
-s = Studio()
-print('CURRENT_MACHINE=' + str(s.machine))
-if 'CPU' in str(s.machine).upper():
-    candidates = []
-    for name in ('T4','L4','L40S'):
-        m = getattr(Machine, name, None)
-        if m is not None:
-            candidates.append((name, m))
-    last = None
-    for name, machine in candidates:
-        try:
-            print('TRY_SWITCH_MACHINE=' + name, flush=True)
-            s.switch_machine(machine)
-            print('SWITCHED_MACHINE=' + name, flush=True)
-            break
-        except Exception as exc:
-            last = exc
-            print('SWITCH_FAILED_' + name + '=' + str(exc), flush=True)
-    else:
-        if last is not None:
-            print('GPU_SWITCH_REQUIRED_MANUALLY=1')
-PY
-```
-
-## File: tools/sprites/lightning_remote_runner.py
-```python
-#!/usr/bin/env python3
-"""Control a Lightning AI Studio from CI and retrieve strict QA-only outputs."""
-⋮----
-STUDIO_NAME = os.getenv("LIGHTNING_STUDIO_NAME", "zero-to-empire-sprites")
-REMOTE_REPO = "zero-to-empire"
-LOCAL_OUT = Path("lightning-output")
-⋮----
-def resolve_scope() -> tuple[str, str]
-⋮----
-username = os.getenv("LIGHTNING_USERNAME")
-teamspace = os.getenv("LIGHTNING_TEAMSPACE")
-⋮----
-user = User()
-username = username or user.name
-spaces = list(user.teamspaces)
-⋮----
-teamspace = teamspace or spaces[0].name
-⋮----
-def main() -> None
-⋮----
-studio = Studio(
-⋮----
-prep = r'''set -euo pipefail
-```
-
-## File: tools/sprites/lightning_studio_factory.py
-```python
-#!/usr/bin/env python3
-"""Run one strict candidate-generation wave inside a Lightning AI Studio.
-
-This script never promotes assets into the canonical manifest. It only exports
-fresh generated candidates plus technical QA evidence for later semantic review.
-"""
-⋮----
-ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT / ".lightning-output"
-INCOMING = ROOT / "art/incoming/final-sprites"
-COUNT = int(os.getenv("SPRITE_COUNT", "56"))
-SEED = int(os.getenv("SPRITE_SEED", str(int(time.time()) % 2_000_000_000)))
-ROW = re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$")
-⋮----
-def digest(path: Path) -> str
-⋮----
-h = hashlib.sha256()
-⋮----
-def require_gpu() -> None
-⋮----
-out = subprocess.check_output(
-⋮----
-def ensure_deps() -> None
-⋮----
-required = ["diffusers", "transformers", "accelerate", "safetensors", "torch", "PIL"]
-missing = []
-⋮----
-def backlog() -> dict[str, int]
-⋮----
-counts = {"BLD": 0, "STATIC": 0, "CHR": 0, "FX": 0, "SKIPPED_RUNTIME": 0}
-manifest = ROOT / "docs/art/FINAL_AAA_SPRITE_MANIFEST.md"
-⋮----
-m = ROW.match(line)
-⋮----
-asset_id = m.group(1).strip()
-runtime = m.group(4).strip()
-⋮----
-def choose_command(q: dict[str, int]) -> tuple[str, int, list[str]]
-⋮----
-n = max(7, min(COUNT, 56))
-⋮----
-n = max(14, min(COUNT, 56))
-⋮----
-n = max(4, min(COUNT, 8))
-⋮----
-n = max(1, min(COUNT, 18))
-⋮----
-def main() -> None
-⋮----
-before = {p.name: digest(p) for p in INCOMING.glob("*_final.png") if p.is_file()}
-q = backlog()
-⋮----
-fresh = [
-⋮----
-qa = OUT / "batch-contact-sheet.png"
-report = OUT / "batch-qa-report.json"
-⋮----
-cdir = OUT / "candidates"
-⋮----
-targets = []
-⋮----
-dst = cdir / src.name
-```
-
-## File: tools/sprites/manifest_batch_planner.py
-```python
-#!/usr/bin/env python3
-"""Build candidate-only static GPU batches from the canonical sprite manifest.
-
-Animation-heavy character/machine sheets and terrain stay outside this generic static lane.
-The canonical manifest status is authoritative: a TODO row remains eligible even when stale
-candidate/runtime files exist from an older pre-semantic-finalization workflow.
-"""
-⋮----
-ROOT = Path(__file__).resolve().parents[2]
-MANIFEST = ROOT / "docs/art/FINAL_AAA_SPRITE_MANIFEST.md"
-SUPPORTED = ("BLD-", "CORE-", "VEH-", "PRP-")
-ROW = re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$")
-FAST_PRIORITY = {"PRP": 0, "VEH": 1, "CORE": 2, "BLD": 3}
-MAX_BATCH = 36
-⋮----
-def rows()
-⋮----
-order = 0
-⋮----
-m = ROW.match(line)
-⋮----
-kind = asset_id.split("-", 1)[0]
-⋮----
-def main() -> int
-⋮----
-p = argparse.ArgumentParser()
-⋮----
-args = p.parse_args()
-⋮----
-items = [
-⋮----
-items = items[: args.count]
-```
-
-## File: tools/sprites/multi_provider_static_manifest_factory.py
-```python
-#!/usr/bin/env python3
-"""Generate one static manifest sprite with provider failover.
-
-Order:
-1. Hugging Face ZeroGPU when available.
-2. Cloudflare Workers AI FLUX.1 Schnell when HF quota/network is unavailable.
-
-The existing isolation, normalization and technical QA contract stays authoritative.
-"""
-⋮----
-CF_ACCOUNT_ID = os.environ.get("CLOUDFLARE_ACCOUNT_ID", "").strip()
-CF_API_TOKEN = os.environ.get("CLOUDFLARE_API_TOKEN", "").strip()
-CF_MODEL = os.environ.get("CLOUDFLARE_IMAGE_MODEL", "@cf/black-forest-labs/flux-1-schnell").strip()
-⋮----
-def cloudflare_generate(prompt: str) -> Image.Image
-⋮----
-model_path = CF_MODEL.replace("@cf/", "@cf/")
-url = f"https://api.cloudflare.com/client/v4/accounts/{CF_ACCOUNT_ID}/ai/run/{model_path}"
-payload = json.dumps({"prompt": prompt[:2048], "steps": 8}).encode("utf-8")
-req = urllib.request.Request(
-⋮----
-body = json.loads(response.read().decode("utf-8"))
-⋮----
-detail = exc.read().decode("utf-8", "replace")
-# Cloudflare returns HTTP 429 / Workers AI code 4006 when the daily free
-# neuron allocation is exhausted. This is a provider-availability state,
-# not an asset rejection. Preserve the same rc=75 contract used by HF so
-# the shard stops immediately instead of spending requests on every target.
-low = detail.lower()
-⋮----
-image_b64 = (body.get("result") or {}).get("image")
-⋮----
-def generate_with_failover(prompt: str) -> Image.Image
-⋮----
-hf_error = None
-⋮----
-hf_error = "HF quota exhausted"
-except Exception as exc:  # provider/network failure -> secondary provider
-hf_error = str(exc)
-⋮----
-def main() -> None
-⋮----
-asset_id = factory.ASSET_ID
-⋮----
-kind = rid.split("-", 1)[0]
-raw = generate_with_failover(factory.prompt_for(rid, name, desc))
-final = factory.normalize(factory.isolate(raw), factory.TARGET_SIDE[kind])
-⋮----
-out = factory.INCOMING / (Path(runtime).stem + ".png")
-```
-
-## File: tools/sprites/plan_sprite_batches.py
-```python
-#!/usr/bin/env python3
-"""Build deterministic production lanes from the canonical AAA sprite manifest.
-
-The planner is generation-backend agnostic. It groups remaining assets by the
-cheapest safe production path and, critically, treats already-materialized art
-as integration work even when the human ledger is stale.
-"""
-⋮----
-ROOT = Path(__file__).resolve().parents[2]
-MANIFEST = ROOT / "docs/art/FINAL_AAA_SPRITE_MANIFEST.md"
-INCOMING = ROOT / "art/incoming/final-sprites"
-OUT = ROOT / "art/production"
-ROW = re.compile(
-⋮----
-BATCH_SIZE = {
-⋮----
-@dataclass(frozen=True)
-class Asset
-⋮----
-id: str
-asset: str
-description: str
-runtime: str
-status: str
-lane: str
-materialized: bool
-⋮----
-def is_materialized(runtime: str) -> bool
-⋮----
-runtime_path = ROOT / runtime
-stem = Path(runtime).stem
-candidate = INCOMING / f"{stem}.png"
-⋮----
-def classify(asset_id: str, description: str, status: str, runtime: str, materialized: bool) -> str
-⋮----
-aid = asset_id.upper()
-text = f"{description} {runtime}".lower()
-⋮----
-def chunks(items: list[Asset], n: int) -> list[list[Asset]]
-⋮----
-def main() -> int
-⋮----
-rows: list[Asset] = []
-⋮----
-m = ROW.match(raw.strip())
-⋮----
-d = m.groupdict()
-materialized = is_materialized(d["runtime"])
-⋮----
-remaining = [a for a in rows if a.status != "DONE"]
-lanes: dict[str, list[Asset]] = {name: [] for name in BATCH_SIZE}
-⋮----
-building_families: dict[str, list[str]] = {}
-character_groups: dict[str, list[str]] = {}
-⋮----
-family="-".join(a.id.split("-")[:2])
-⋮----
-parts=a.id.split("-")
-group="-".join(parts[:2])
-⋮----
-plan = {
-⋮----
-batches = chunks(assets, BATCH_SIZE[lane])
-⋮----
-md = [
-```
-
-## File: tools/sprites/pollinations_building_batch.py
-```python
-#!/usr/bin/env python3
-⋮----
-ROOT=Path(__file__).resolve().parents[2]
-MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
-PROD=ROOT/'art/production'
-INCOMING=ROOT/'art/incoming/final-sprites'
-RUNTIME=ROOT/'app/src/main/res/drawable-nodpi'
-⋮----
-import pollinations_building_factory as pf  # noqa
-⋮----
-def rows()
-⋮----
-out=[]
-⋮----
-cols=[c.strip() for c in line.split('|')[1:-1]]
-⋮----
-def mark_done(asset_id:str)
-⋮----
-lines=MANIFEST.read_text(encoding='utf-8').splitlines()
-out=[]; changed=0
-⋮----
-cols[4]='DONE'; line='| '+' | '.join(cols)+' |'; changed+=1
-⋮----
-def run(cmd,env=None)
-⋮----
-def main()
-⋮----
-count=max(1,min(int(os.getenv('POLLINATIONS_BATCH_COUNT','8')),8))
-attempts=max(1,min(int(os.getenv('POLLINATIONS_ATTEMPTS','3')),4))
-base=int(os.getenv('POLLINATIONS_BASE_SEED','73117'))
-⋮----
-summary={'requested':count,'attempts_per_target':attempts,'successes':[],'failures':[]}
-⋮----
-session=new_session('u2net')
-⋮----
-pending=rows()
-⋮----
-row=pending[0]; aid=row[0]
-ok=False
-attempts_log=[]
-⋮----
-seed=(base + slot*1009 + attempt*7919) % 2147483647
-stem=None
-⋮----
-rp=PROD/f'pollinations-{aid.lower()}-report.json'
-⋮----
-stem=out.stem
-qa=PROD/f'pollinations-{aid.lower()}-qa.json'
-contact=PROD/f'pollinations-{aid.lower()}-contact.png'
-q=run([sys.executable,'tools/sprites/build_sprite_contact_sheet.py','--files',str(out.relative_to(ROOT)),'--output',str(contact.relative_to(ROOT)),'--report',str(qa.relative_to(ROOT))])
-qd=json.loads(qa.read_text()) if qa.exists() else {}
-qrows=qd.get('assets',[])
-⋮----
-env=os.environ.copy(); env['SPRITE_TARGETS']=stem
-fin=run([sys.executable,'tools/sprites/process_final_sprites.py'],env=env)
-runtime=RUNTIME/f'{stem}.webp'
-⋮----
-rqa=PROD/f'pollinations-{aid.lower()}-runtime-qa.json'
-rv=run([sys.executable,'tools/sprites/validate_runtime_asset.py','--asset-id',aid,'--path',str(runtime.relative_to(ROOT)),'--report',str(rqa.relative_to(ROOT))])
-⋮----
-data=json.loads(rqa.read_text()) if rqa.exists() else {'issues':['runtime-validator-failed']}
-⋮----
-ok=True
-```
-
-## File: tools/sprites/pollinations_building_factory.py
-```python
-#!/usr/bin/env python3
-⋮----
-ROOT=Path(__file__).resolve().parents[2]
-MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
-INCOMING=ROOT/'art/incoming/final-sprites'
-REPORT=ROOT/'art/production/pollinations-report.json'
-⋮----
-def fail(msg)
-⋮----
-def next_target()
-⋮----
-explicit=os.getenv('SPRITE_TARGET','').strip().upper()
-rows=[]
-⋮----
-cols=[c.strip() for c in line.split('|')[1:-1]]
-⋮----
-def isolate(im, session=None)
-⋮----
-# CPU background removal via U²-Net/rembg. This is deterministic post-
-# processing on the GitHub runner; downstream QA thresholds remain unchanged.
-⋮----
-src=im.convert('RGBA')
-⋮----
-cut=remove(src, session=session, alpha_matting=False)
-⋮----
-cut=Image.open(cut).convert('RGBA')
-⋮----
-cut=cut.convert('RGBA')
-⋮----
-a=cut.getchannel('A')
-# Hard-clean tiny matte haze so component analysis reflects real subject.
-a=a.point(lambda v: 0 if v<24 else 255 if v>224 else v)
-⋮----
-# Keep the dominant connected alpha component; detached props/debris are
-# rejected at source rather than hidden by a relaxed QA gate.
-binary=a.point(lambda v:255 if v>=64 else 0)
-bp=binary.load()
-seen=set(); comps=[]
-⋮----
-comp=[]; stack=[(x,y)]; seen.add((x,y))
-⋮----
-keep=set(max(comps,key=len))
-cleaned=Image.new('RGBA',(w,h),(0,0,0,0))
-srcpx=cut.load(); dst=cleaned.load()
-⋮----
-bbox=cleaned.getchannel('A').getbbox()
-⋮----
-subject=cleaned.crop(bbox)
-⋮----
-# Preserve enough detail while guaranteeing safe transparent margins.
-side=max(768, int(max(sw,sh)/0.68))
-side=min(2048, side)
-⋮----
-scale=(side*0.68)/max(sw,sh)
-subject=subject.resize((max(1,round(sw*scale)),max(1,round(sh*scale))),Image.Resampling.LANCZOS)
-⋮----
-canvas=Image.new('RGBA',(side,side),(0,0,0,0))
-⋮----
-def generate(row, seed=73117, session=None, report_path: Path | None = None)
-⋮----
-m=re.fullmatch(r'BLD-(\d{2})-T(\d)',aid)
-⋮----
-prompt=(
-q=urllib.parse.quote(prompt,safe='')
-url=f'https://image.pollinations.ai/prompt/{q}?model=flux&width=1024&height=1024&seed={int(seed)}&nologo=true&private=true&enhance=false&safe=true'
-tmp=Path(f'/tmp/pollinations-{aid.lower()}-{int(seed)}.png')
-req=urllib.request.Request(url,headers={'User-Agent':'zero-to-empire-github-actions/1.0'})
-⋮----
-data=r.read()
-⋮----
-try: im=Image.open(tmp)
-⋮----
-isolated=isolate(im, session=session)
-stem=f'zte_business_{fam}_t{tier}_final'
-⋮----
-out=INCOMING/f'{stem}.png'
-⋮----
-report={
-rp=report_path or REPORT
-⋮----
-def main()
-⋮----
-row=next_target()
-seed=int(os.getenv('POLLINATIONS_SEED','73117'))
-```
-
-## File: tools/sprites/pollinations_character_sheet_factory.py
-```python
-#!/usr/bin/env python3
-⋮----
-ROOT=Path(__file__).resolve().parents[2]
-MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
-INCOMING=ROOT/'art/incoming/final-sprites'
-OUT=ROOT/'art/production'
-ROLES={
-ACTIONS={'IDLE':('idle breathing and subtle look-around',6),'WALK':('walking cycle with alternating steps',8),'WORK':('operating a compact industrial hand tool',10),'CARRY':('carrying one compact industrial crate with both hands',8),'REPAIR':('repairing with compact diagnostic tool',10),'CELEB':('short restrained milestone celebration',8)}
-POSES={'IDLE':['neutral','weight left','neutral recovery','weight right','head left','head right'],'WALK':['left contact','left down','passing left','right contact','right down','passing right','left recovery','neutral passing'],'WORK':['tool ready','reach','contact','work low','work center','work high','pull back','inspect','tool down','neutral'],'CARRY':['carry neutral','left step','passing','right step','carry neutral recovery','left step recovery','passing recovery','right step recovery'],'REPAIR':['reach','tool contact','repair low','inspect','tool contact high','adjust','inspect side','tool contact','rise','neutral repair'],'CELEB':['neutral','arm starts up','arm half up','arm raised','small fist pump','arm half down','arm down','neutral recovery']}
-⋮----
-def pending()
-⋮----
-out=[]
-⋮----
-p=[x.strip() for x in line.split('|')[1:-1]]
-⋮----
-aid=p[0]
-z=aid.split('-')
-⋮----
-runtime=p[3].replace(chr(96),'')
-⋮----
-def fetch(prompt,seed)
-⋮----
-q=urllib.parse.quote(prompt,safe='')
-last=None
-⋮----
-s=(seed+n*7919) % 2147483647
-url=f'https://image.pollinations.ai/prompt/{q}?model=flux&width=1024&height=1024&seed={s}&nologo=true&private=true&enhance=false&safe=true'
-req=urllib.request.Request(url,headers={'User-Agent':'zero-to-empire-github-actions/1.0','Accept':'image/*'})
-⋮----
-with urllib.request.urlopen(req,timeout=180) as r:data=r.read()
-⋮----
-p=Path('/tmp')/f'chr-{s}.png';p.write_bytes(data);return Image.open(p).convert('RGBA')
-⋮----
-last=e
-⋮----
-def cutout(raw)
-⋮----
-im=remove(raw,alpha_matting=False).convert('RGBA')
-a=im.getchannel('A').point(lambda v:0 if v<24 else 255 if v>224 else v);im.putalpha(a)
-w,h=im.size;mask=a.point(lambda v:255 if v>=64 else 0);px=mask.load();seen=set();comps=[]
-⋮----
-q=[(x,y)];seen.add((x,y));comp=[]
-⋮----
-keep=set(max(comps,key=len));clean=Image.new('RGBA',(w,h),(0,0,0,0));src=im.load();dst=clean.load()
-⋮----
-bb=clean.getchannel('A').getbbox()
-⋮----
-crop=clean.crop(bb);cw,ch=crop.size
-⋮----
-s=min(176/cw,218/ch);crop=crop.resize((max(1,round(cw*s)),max(1,round(ch*s))),Image.Resampling.LANCZOS)
-cell=Image.new('RGBA',(256,256),(0,0,0,0));x=(256-crop.width)//2;y=238-crop.height
-⋮----
-cell.alpha_composite(crop,(x,y));aa=cell.getchannel('A');cov=sum(aa.histogram()[8:])/(256*256)
-⋮----
-def iou(a,b)
-⋮----
-A=a.getchannel('A').resize((64,64),Image.Resampling.BILINEAR).point(lambda p:255 if p>=32 else 0)
-B=b.getchannel('A').resize((64,64),Image.Resampling.BILINEAR).point(lambda p:255 if p>=32 else 0)
-pa,pb=A.load(),B.load();inter=union=0
-⋮----
-aa=pa[x,y]>0;bb=pb[x,y]>0;inter+=aa and bb;union+=aa or bb
-⋮----
-def sheetqa(frames)
-⋮----
-vals=[iou(frames[n-1],frames[n]) for n in range(1,len(frames))]
-⋮----
-b=[];c=[]
-⋮----
-bb=f.getchannel('A').getbbox();b.append(bb[3]);c.append((bb[0]+bb[2])/2)
-⋮----
-def main()
-⋮----
-items=pending()[:max(1,min(int(os.getenv('POLLINATIONS_CHR_BATCH','1')),2))]
-⋮----
-attempts=max(1,min(int(os.getenv('POLLINATIONS_CHR_ATTEMPTS','2')),3));base=int(os.getenv('POLLINATIONS_CHR_SEED','19417'))
-INCOMING.mkdir(parents=True,exist_ok=True);OUT.mkdir(parents=True,exist_ok=True);rep=[]
-⋮----
-fc=ACTIONS[it['action']][1];poses=POSES[it['action']][:fc];done=False;last=''
-⋮----
-frames=[];seed=(base+ix*100000+att*10007) % 2147483647
-⋮----
-prompt=f"AAA premium mobile 2.5D full-body character frame. {ROLES[it['role']]}. {ACTIONS[it['action']][0]}; pose {pose}. Same single adult worker, same face, same clothes, same proportions. 34-degree three-quarter orthographic view, feet visible, centered, generous empty margin. No floor, no scenery, no text, no logo, no extra people, no duplicated limbs, no vehicle, no building. Perfectly flat uniform neutral gray background, no gradient, no vignette, no horizon."
-⋮----
-sheet=Image.new('RGBA',(1024,1024),(0,0,0,0))
-⋮----
-p=INCOMING/f"{it['stem']}.png";sheet.save(p,'PNG',optimize=True)
-rep.append({'id':it['id'],'status':'CANDIDATE','file':p.name,'frames':fc,'qa':why});print(f"POLLINATIONS_CHR_VALIDATED={it['id']} {why}",flush=True);done=True;break
-except Exception as e:last=str(e);print(f"POLLINATIONS_CHR_RETRY={it['id']} attempt={att+1} reason={e}",flush=True)
-```
-
-## File: tools/sprites/procedural_fx_factory.py
-```python
-#!/usr/bin/env python3
-"""Instant deterministic small-FX factory for Zero -> Empire.
-
-Generates FX-00..FX-03 as native 8-frame 4x2 transparent sheets without GPU.
-Supports one target via SPRITE_TARGET or a comma-separated batch via
-SPRITE_TARGETS. Batch mode avoids repeated runner/process startup overhead.
-"""
-⋮----
-ROOT = Path(__file__).resolve().parents[2]
-INCOMING = ROOT / "art/incoming/final-sprites"
-CELL = 128
-COLS = 4
-FRAMES = 8
-SIZE = (512, 256)
-PAD = 6
-SUPPORTED = ("FX-00", "FX-01", "FX-02", "FX-03")
-⋮----
-def layer() -> Image.Image
-⋮----
-def composite_glow(base: Image.Image, glow: Image.Image, radius: float) -> None
-⋮----
-blurred = glow.filter(ImageFilter.GaussianBlur(radius))
-⋮----
-def sparks(frame: int) -> Image.Image
-⋮----
-rng = random.Random(7000 + frame)
-im = layer()
-glow = layer()
-d = ImageDraw.Draw(glow)
-⋮----
-phase = frame / 7.0
-core_r = max(2, round(3 + 4 * math.sin(math.pi * phase)))
-⋮----
-count = 8 + min(frame, 4) * 2
-reach = 18 + frame * 5
-⋮----
-a = (2 * math.pi * i / count) + rng.uniform(-0.16, 0.16)
-r0 = 6 + rng.uniform(0, 6)
-r1 = reach * rng.uniform(0.55, 1.0)
-⋮----
-col = (255, rng.randint(155, 225), rng.randint(35, 80), max(35, 245 - frame*24))
-⋮----
-rr = 1 if i % 2 else 2
-⋮----
-def flame(frame: int, plasma: bool) -> Image.Image
-⋮----
-rng = random.Random((9200 if plasma else 8100) + frame)
-⋮----
-g = ImageDraw.Draw(glow)
-⋮----
-cx = 64 + math.sin(frame * 1.7) * (2.5 if plasma else 1.8)
-base_y = 94
-height = (78 if plasma else 58) * (0.82 + 0.18 * math.sin(math.pi * (phase + .15)))
-width = 30 if plasma else 22
-⋮----
-t = j / (10 if plasma else 7)
-y = base_y - t * height
-wobble = math.sin(t * 7.0 + frame * .9) * (5.5 * t) + rng.uniform(-2.5, 2.5)
-rx = max(3, width * (1 - .62*t) * rng.uniform(.72, 1.08))
-ry = max(4, (14 if plasma else 11) * (1 - .30*t) * rng.uniform(.8, 1.2))
-⋮----
-c = (110, 230, 255, 185)
-⋮----
-c = (255, 118, 18, 230)
-⋮----
-c = (255, 194, 42, 235)
-⋮----
-c = (255, 245, 205, 230)
-⋮----
-core_w = 13 if plasma else 9
-core_h = 24 if plasma else 17
-⋮----
-def smoke(frame: int) -> Image.Image
-⋮----
-rng = random.Random(10300 + frame)
-⋮----
-soft = layer()
-d = ImageDraw.Draw(soft)
-p = frame / 7.0
-cx = 64 + math.sin(frame * 0.8) * 3
-cy = 80 - 22 * p
-count = 7 + frame
-⋮----
-a = rng.uniform(0, math.tau)
-radius = rng.uniform(5, 18 + 9*p)
-x = cx + math.cos(a) * radius * rng.uniform(.3, 1.0)
-y = cy + math.sin(a) * radius * .58
-rr = rng.uniform(8, 16) * (0.72 + .6*p)
-alpha = int((155 - frame*11) * rng.uniform(.65, 1.0))
-gray = rng.randint(105, 148)
-⋮----
-blurred = soft.filter(ImageFilter.GaussianBlur(4.1 + p*2.2))
-⋮----
-def ensure_padding(im: Image.Image) -> Image.Image
-⋮----
-bbox = im.getbbox()
-⋮----
-crop = im.crop(bbox)
-max_side = CELL - 2*PAD
-scale = min(max_side / crop.width, max_side / crop.height, 1.0)
-crop = crop.resize((max(1, round(crop.width*scale)), max(1, round(crop.height*scale))), Image.Resampling.LANCZOS)
-out = layer()
-⋮----
-def validate(sheet: Image.Image) -> None
-⋮----
-cell = sheet.crop((x0, y0, x0+CELL, y0+CELL))
-⋮----
-a = cell.getchannel("A")
-edges = [a.crop((0,0,CELL,4)), a.crop((0,CELL-4,CELL,CELL)), a.crop((0,0,4,CELL)), a.crop((CELL-4,0,CELL,CELL))]
-⋮----
-def build(target: str) -> Image.Image
-⋮----
-makers = {
-⋮----
-sheet = Image.new("RGBA", SIZE, (0,0,0,0))
-⋮----
-f = ensure_padding(makers[target](i))
-⋮----
-def targets_from_env() -> list[str]
-⋮----
-raw = os.getenv("SPRITE_TARGETS", "").strip()
-⋮----
-targets = [part.strip().upper() for part in raw.split(",") if part.strip()]
-⋮----
-targets = [os.getenv("SPRITE_TARGET", "FX-03").upper()]
-invalid = [target for target in targets if target not in SUPPORTED]
-⋮----
-def main() -> int
-⋮----
-targets = targets_from_env()
-⋮----
-num = target.split("-")[-1]
-out = INCOMING / f"zte_fx_{num}_final.png"
-```
-
-## File: tools/sprites/procedural_terrain_factory.py
-```python
-#!/usr/bin/env python3
-"""Deterministically author the 14 terrain/infrastructure masters without GPU.
-
-These are 1024x1024 RGBA isometric world tiles/connectors. The factory keeps a
-large transparent exterior margin, a consistent 34-degree-ish 2.5D read and
-category-specific industrial details. Technical validation is strict; semantic
-AAA acceptance remains a separate inspection gate.
-"""
-⋮----
-ROOT = Path(__file__).resolve().parents[2]
-INCOMING = ROOT / "art/incoming/final-sprites"
-RUNTIME = ROOT / "app/src/main/res/drawable-nodpi"
-SIDE = 1024
-⋮----
-MARGIN = 64
-⋮----
-NAMES = {
-⋮----
-ERA = {
-⋮----
-def diamond() -> list[tuple[int, int]]
-⋮----
-def era_for(i: int) -> int
-⋮----
-def inside_diamond(x: int, y: int) -> bool
-⋮----
-def add_texture(base: Image.Image, i: int, base_rgb: tuple[int,int,int]) -> None
-⋮----
-rng = random.Random(7100+i)
-px = base.load()
-⋮----
-x = rng.randrange(CX-RX, CX+RX)
-y = rng.randrange(CY-RY, CY+RY)
-⋮----
-delta = rng.randint(-13, 13)
-⋮----
-a = rng.randint(16, 42)
-⋮----
-def iso_line(draw: ImageDraw.ImageDraw, p1, p2, fill, width=8)
-⋮----
-def render(i: int) -> Image.Image
-⋮----
-era = era_for(i)
-⋮----
-im = Image.new("RGBA", (SIDE,SIDE), (0,0,0,0))
-d = ImageDraw.Draw(im, "RGBA")
-poly = diamond()
-⋮----
-# Shared inset border improves tile readability without baked UI semantics.
-inset = [(CX, CY-RY+28),(CX+RX-50,CY),(CX,CY+RY-28),(CX-RX+50,CY)]
-⋮----
-rng=random.Random(900+i)
-⋮----
-x=rng.randint(CX-290,CX+290); y=rng.randint(CY-130,CY+130)
-⋮----
-pts=[(x,y),(x+rng.randint(-35,35),y+rng.randint(8,28)),(x+rng.randint(-55,55),y+rng.randint(20,45))]
-⋮----
-road=(48,50,53,255) if era<2 else (40,47,56,255)
-⋮----
-x1=CX+k; y1=CY-k//3
-⋮----
-wide=38 if i in (11,13) else 26
-⋮----
-x=CX+k; y=CY-k//3
-⋮----
-glow=Image.new("RGBA", im.size,(0,0,0,0)); gd=ImageDraw.Draw(glow,"RGBA")
-⋮----
-glow=glow.filter(ImageFilter.GaussianBlur(15)); im.alpha_composite(glow)
-⋮----
-pad=[(CX,CY-150),(CX+265,CY-5),(CX,CY+150),(CX-265,CY+5)]
-⋮----
-pad=[(CX,CY-165),(CX+290,CY-10),(CX,CY+165),(CX-290,CY+10)]
-⋮----
-# Upper-left highlight + lower-right shadow preserve shared lighting contract.
-⋮----
-def validate(im: Image.Image, i: int) -> None
-⋮----
-a=im.getchannel("A")
-bbox=a.getbbox()
-⋮----
-coverage=sum(a.histogram()[8:])/(SIDE*SIDE)
-⋮----
-def main() -> int
-⋮----
-im=render(i); validate(im,i)
-stem=f"zte_terrain_{i:02d}_final"
-png=INCOMING/f"{stem}.png"; webp=RUNTIME/f"{stem}.webp"
-```
-
-## File: tools/sprites/process_final_sprites.py
-```python
-#!/usr/bin/env python3
-"""Technically finalize authored/generated Zero -> Empire sprite candidates.
-
-Input: art/incoming/final-sprites/*.png
-Output: app/src/main/res/drawable-nodpi/<same-stem>.webp
-
-Single-sprite candidates are normalized onto a square runtime canvas. Small FX
-sprite sheets use their manifest-native 4x2 / 512x256 layout and are validated
-cell-by-cell instead of being mistaken for a contact sheet.
-
-Set SPRITE_TARGET or SPRITE_TARGETS to process only newly produced assets. This
-prevents every batch from re-validating and re-encoding the full accumulated
-catalog.
-"""
-⋮----
-ROOT = Path(__file__).resolve().parents[2]
-INCOMING = ROOT / "art/incoming/final-sprites"
-OUT = ROOT / "app/src/main/res/drawable-nodpi"
-MIN_DIM = 512
-MAX_DIM = 2048
-MIN_PADDING_RATIO = 0.04
-TARGET_PADDING_RATIO = 0.08
-ALPHA_CLEAN_THRESHOLD = 8
-MAX_ALPHA_COVERAGE = 0.70
-MAX_MAJOR_COMPONENTS = 1
-COARSE_SIZE = 128
-FX_SHEET_RE = re.compile(r"^zte_fx_(?:0[0-9]|1[0-7])_final$")
-CHR_SHEET_RE = re.compile(r"^zte_chr_(?:op|tech|log|eng)_(idle|walk|work|carry|repair|celeb)_final$")
-FX_SHEET_SIZE = (512, 256)
-FX_CELL = 128
-FX_FRAMES = 8
-FX_PADDING = 4
-CHR_SHEET_SIZE = (1024, 1024)
-CHR_CELL = 256
-CHR_COLS = 4
-CHR_ROWS = 4
-CHR_PADDING = 8
-CHR_EXPECTED_FRAMES = {
-CHR_MIN_CELL_COVERAGE = 0.10
-CHR_MAX_CELL_COVERAGE = 0.48
-⋮----
-def fail(msg: str) -> None
-⋮----
-def alpha_coverage(alpha: Image.Image) -> float
-⋮----
-hist = alpha.histogram()
-visible = sum(hist[ALPHA_CLEAN_THRESHOLD:])
-⋮----
-def major_components(alpha: Image.Image) -> int
-⋮----
-"""Count large disconnected visible regions on a coarse alpha mask."""
-small = alpha.resize((COARSE_SIZE, COARSE_SIZE), Image.Resampling.BILINEAR)
-px = small.load()
-seen = set()
-major = 0
-min_area = int(COARSE_SIZE * COARSE_SIZE * 0.012)
-⋮----
-q = deque([(x, y)])
-⋮----
-area = 0
-⋮----
-def clean_alpha(im: Image.Image) -> Image.Image
-⋮----
-rgba = im.convert("RGBA")
-alpha = rgba.getchannel("A")
-alpha = alpha.point(lambda a: 0 if a < ALPHA_CLEAN_THRESHOLD else a)
-⋮----
-def validate_fx_sheet(path: Path, im: Image.Image) -> None
-⋮----
-alpha = im.getchannel("A")
-⋮----
-x0 = (i % 4) * FX_CELL
-y0 = (i // 4) * FX_CELL
-cell_a = alpha.crop((x0, y0, x0 + FX_CELL, y0 + FX_CELL))
-⋮----
-edges = (
-⋮----
-out = OUT / f"{path.stem}.webp"
-⋮----
-size_kib = out.stat().st_size / 1024.0
-⋮----
-def validate_character_sheet(path: Path, im: Image.Image, action: str) -> None
-⋮----
-expected = CHR_EXPECTED_FRAMES[action]
-⋮----
-active = 0
-⋮----
-x0 = (i % CHR_COLS) * CHR_CELL
-y0 = (i // CHR_COLS) * CHR_CELL
-cell_a = alpha.crop((x0, y0, x0 + CHR_CELL, y0 + CHR_CELL))
-bbox = cell_a.getbbox()
-⋮----
-hist = cell_a.histogram()
-visible = sum(hist[ALPHA_CLEAN_THRESHOLD:]) / float(CHR_CELL * CHR_CELL)
-⋮----
-def process_single_sprite(path: Path, im: Image.Image) -> None
-⋮----
-coverage = alpha_coverage(alpha)
-⋮----
-components = major_components(alpha)
-⋮----
-bbox = alpha.getbbox()
-⋮----
-required_x = max(8, int(w * MIN_PADDING_RATIO))
-required_y = max(8, int(h * MIN_PADDING_RATIO))
-⋮----
-subject = im.crop(bbox)
-⋮----
-subject_max = max(sw, sh)
-target_pad = max(32, int(subject_max * TARGET_PADDING_RATIO))
-canvas_side = min(MAX_DIM, max(MIN_DIM, subject_max + 2 * target_pad))
-max_subject = int(canvas_side * 0.84)
-⋮----
-scale = max_subject / max(sw, sh)
-subject = subject.resize((max(1, round(sw * scale)), max(1, round(sh * scale))), Image.Resampling.LANCZOS)
-⋮----
-canvas = Image.new("RGBA", (canvas_side, canvas_side), (0, 0, 0, 0))
-x = (canvas_side - sw) // 2
-bottom_pad = max(24, int(canvas_side * TARGET_PADDING_RATIO))
-y = max(0, canvas_side - bottom_pad - sh)
-⋮----
-out_alpha = canvas.getchannel("A")
-⋮----
-def process(path: Path) -> None
-⋮----
-im = clean_alpha(Image.open(path))
-⋮----
-chr_match = CHR_SHEET_RE.fullmatch(path.stem)
-⋮----
-def requested_stems() -> set[str]
-⋮----
-raw = os.getenv("SPRITE_TARGETS") or os.getenv("SPRITE_TARGET") or ""
-⋮----
-stems: set[str] = set()
-⋮----
-target = target.strip().upper()
-⋮----
-m = re.fullmatch(r"FX-(\d{2})", target)
-⋮----
-m = re.fullmatch(r"BLD-(\d{2})-T(\d)", target)
-⋮----
-def main() -> None
-⋮----
-files = sorted(INCOMING.glob("*.png")) if INCOMING.exists() else []
-wanted = requested_stems()
-⋮----
-by_stem = {p.stem: p for p in files}
-missing = wanted - by_stem.keys()
-⋮----
-files = [by_stem[stem] for stem in sorted(wanted)]
-```
-
-## File: tools/sprites/validate_animation_sheet.py
-```python
-#!/usr/bin/env python3
-"""Validate one CHR/MCH animation sheet against the deterministic production contract."""
-⋮----
-ROOT = Path(__file__).resolve().parents[2]
-⋮----
-def fail(msg: str) -> None
-⋮----
-def dominant_ratio(alpha: Image.Image) -> float
-⋮----
-small = alpha.resize((96, 96), Image.Resampling.BILINEAR)
-px = small.load(); seen=set(); areas=[]
-⋮----
-q=deque([(x,y)]); seen.add((x,y)); area=0
-⋮----
-def main() -> int
-⋮----
-p=argparse.ArgumentParser()
-⋮----
-args=p.parse_args()
-rows=math.ceil(args.frames/args.columns)
-expected=(args.columns*args.cell, rows*args.cell)
-im=Image.open(args.sheet).convert("RGBA")
-⋮----
-alpha=im.getchannel("A")
-⋮----
-reports=[]
-pivots=[]
-⋮----
-x=(i%args.columns)*args.cell; y=(i//args.columns)*args.cell
-cell=alpha.crop((x,y,x+args.cell,y+args.cell))
-bbox=cell.getbbox()
-⋮----
-coverage=sum(cell.histogram()[8:])/(args.cell*args.cell)
-⋮----
-dom=dominant_ratio(cell)
-⋮----
-pivot_x=(x0+x1)/2/args.cell
-pivot_y=y1/args.cell
-⋮----
-# Character feet/base pivots must stay stable enough to avoid visible jitter.
-xs=[p[0] for p in pivots]; ys=[p[1] for p in pivots]
-max_jitter=max(max(xs)-min(xs), max(ys)-min(ys))
-limit=.12 if args.family=="CHR" else .16
-⋮----
-result={"sheet":str(args.sheet),"family":args.family,"frames":args.frames,"cell":args.cell,"grid":[args.columns,rows],"pivot_jitter":round(max_jitter,4),"frames_report":reports}
-```
-
-## File: tools/sprites/validate_runtime_asset.py
-```python
-#!/usr/bin/env python3
-⋮----
-ALPHA=8
-CHR_RE=re.compile(r"^CHR-(OP|TECH|LOG|ENG)-(IDLE|WALK|WORK|CARRY|REPAIR|CELEB)$")
-CHR_FRAMES={"IDLE":6,"WALK":8,"WORK":10,"CARRY":8,"REPAIR":10,"CELEB":8}
-⋮----
-def major_components(alpha: Image.Image)->int
-⋮----
-small=alpha.resize((128,128),Image.Resampling.BILINEAR)
-px=small.load(); seen=set(); major=0; min_area=int(128*128*.012)
-⋮----
-q=deque([(x,y)]); seen.add((x,y)); area=0
-⋮----
-def validate(asset_id:str,path:Path)->dict
-⋮----
-issues=[]
-⋮----
-try: im=Image.open(path).convert("RGBA")
-⋮----
-a=im.getchannel("A"); lo,hi=a.getextrema()
-⋮----
-x0=(i%4)*128; y0=(i//4)*128
-cell=a.crop((x0,y0,x0+128,y0+128))
-⋮----
-edges=(cell.crop((0,0,128,4)),cell.crop((0,124,128,128)),cell.crop((0,0,4,128)),cell.crop((124,0,128,128)))
-⋮----
-expected=CHR_FRAMES[m.group(2)]
-⋮----
-x0=(i%4)*256; y0=(i//4)*256
-cell=a.crop((x0,y0,x0+256,y0+256)); bb=cell.getbbox()
-⋮----
-h=cell.histogram(); cov=sum(h[8:])/(256*256)
-⋮----
-edges=(cell.crop((0,0,256,8)),cell.crop((0,248,256,256)),cell.crop((0,0,8,256)),cell.crop((248,0,256,256)))
-⋮----
-hist=a.histogram(); coverage=sum(hist[ALPHA:])/(im.width*im.height)
-⋮----
-comps=major_components(a)
-⋮----
-def main()
-⋮----
-ap=argparse.ArgumentParser()
-⋮----
-a=ap.parse_args()
-result=validate(a.asset_id,a.path)
-```
-
-## File: tools/process_final_assets.py
-```python
-ROOT = Path(__file__).resolve().parents[1]
-INBOX = ROOT / 'art/generated'
-PROCESSED = ROOT / 'art/processed'
-RUNTIME = ROOT / 'app/src/main/res/drawable-nodpi'
-MANIFEST = INBOX / 'assets.json'
-⋮----
-def trim_alpha(im: Image.Image) -> Image.Image
-⋮----
-alpha = im.getchannel('A')
-bbox = alpha.getbbox()
-⋮----
-def pad_square(im: Image.Image, padding_ratio: float = 0.10) -> Image.Image
-⋮----
-side = max(w, h)
-pad = max(16, round(side * padding_ratio))
-canvas_side = side + pad * 2
-out = Image.new('RGBA', (canvas_side, canvas_side), (0, 0, 0, 0))
-# bottom-centre placement preserves the world pivot while retaining safety padding.
-x = (canvas_side - w) // 2
-y = canvas_side - pad - h
-⋮----
-def alpha_quality(im: Image.Image) -> None
-⋮----
-a = im.getchannel('A')
-⋮----
-# Reject images that are effectively opaque rectangles. Generated sheets/backgrounds must not pass.
-transparent = sum(1 for p in a.get_flattened_data() if p <= 8)
-⋮----
-def process(spec: dict) -> None
-⋮----
-src = INBOX / spec['source']
-asset_id = spec['id']
-target = spec['target']
-size = int(spec.get('runtime_size', 512))
-⋮----
-im = opened.convert('RGBA')
-⋮----
-im = trim_alpha(im)
-im = pad_square(im, float(spec.get('padding_ratio', 0.10)))
-⋮----
-canvas = Image.new('RGBA', (size, size), (0, 0, 0, 0))
-x = (size - im.width) // 2
-y = size - max(8, round(size * 0.08)) - im.height
-y = max(0, y)
-⋮----
-preview = PROCESSED / f'{asset_id}.png'
-⋮----
-runtime = RUNTIME / target
-⋮----
-def process_sheet(spec: dict) -> None
-⋮----
-columns = int(spec['columns'])
-rows = int(spec['rows'])
-frame_size = int(spec['frame_size'])
-padding_ratio = float(spec.get('padding_ratio', 0.10))
-⋮----
-source = opened.convert('RGBA')
-⋮----
-sheet = Image.new('RGBA', (columns * frame_size, rows * frame_size), (0, 0, 0, 0))
-⋮----
-top = round(row * source.height / rows)
-bottom = round((row + 1) * source.height / rows)
-⋮----
-left = round(column * source.width / columns)
-right = round((column + 1) * source.width / columns)
-frame = trim_alpha(source.crop((left, top, right, bottom)))
-frame = pad_square(frame, padding_ratio)
-⋮----
-cell = Image.new('RGBA', (frame_size, frame_size), (0, 0, 0, 0))
-⋮----
-def main() -> None
-⋮----
-specs = json.loads(MANIFEST.read_text(encoding='utf-8'))
-⋮----
-seen = set()
-```
-
-## File: tools/validate_isolated_sprite.py
-```python
-ROOT = Path(__file__).resolve().parents[1]
-INBOX = ROOT / 'art/generated'
-MANIFEST = INBOX / 'assets.json'
-⋮----
-def connected_components(alpha: Image.Image, threshold: int = 24)
-⋮----
-# Downsample for deterministic/cheap component analysis.
-max_side = 256
-scale = min(1.0, max_side / max(alpha.size))
-⋮----
-alpha = alpha.resize((max(1, round(alpha.width * scale)), max(1, round(alpha.height * scale))))
-⋮----
-px = alpha.load()
-seen = bytearray(w * h)
-comps = []
-⋮----
-def idx(x, y)
-⋮----
-i = idx(x, y)
-⋮----
-q = deque([(x, y)])
-⋮----
-count = 0
-minx = maxx = x
-miny = maxy = y
-⋮----
-ni = idx(nx, ny)
-⋮----
-def validate(path: Path) -> None
-⋮----
-im = opened.convert('RGBA')
-alpha = im.getchannel('A')
-⋮----
-transparent_ratio = sum(1 for p in alpha.get_flattened_data() if p <= 8) / (im.width * im.height)
-⋮----
-bbox = alpha.getbbox()
-⋮----
-margin = min(left, top, im.width-right, im.height-bottom)
-⋮----
-comps = connected_components(alpha)
-⋮----
-total = sum(c[0] for c in comps)
-major = [c for c in comps if c[0] / total >= 0.08]
-⋮----
-ratios = ', '.join(f'{c[0]/total:.1%}' for c in major[:6])
-⋮----
-# A single subject should normally form one dominant occupancy region rather than many equal cells.
-dominant = comps[0][0] / total
-⋮----
-def validate_sheet(path: Path, spec: dict) -> None
-⋮----
-sheet = opened.convert('RGBA')
-columns = int(spec['columns'])
-rows = int(spec['rows'])
-expected = int(spec['frame_count'])
-⋮----
-alpha = sheet.getchannel('A')
-transparent_ratio = sum(1 for p in alpha.get_flattened_data() if p <= 8) / (sheet.width * sheet.height)
-⋮----
-top = round(row * sheet.height / rows)
-bottom = round((row + 1) * sheet.height / rows)
-⋮----
-left = round(column * sheet.width / columns)
-right = round((column + 1) * sheet.width / columns)
-frame_alpha = sheet.crop((left, top, right, bottom)).getchannel('A')
-⋮----
-comps = connected_components(frame_alpha)
-total = sum(component[0] for component in comps)
-⋮----
-def main() -> None
-⋮----
-specs = json.loads(MANIFEST.read_text(encoding='utf-8'))
-⋮----
-path = INBOX / spec['source']
-```
-
-## File: .repo-standards.yml
-```yaml
-source: dbrckk/repo-standards
-ref: v4
-version: 4
-adopted: true
-ai_context:
-  index: .ai/index.md
-  project_state: .ai/project-state.md
-  change_impact: .ai/change-impact.md
-  architecture: .ai/architecture.json
-  commands: .ai/commands.json
-  repo_health: .ai/repo-health.md
-  repo_map: .ai/repo-map.md
-  segmented_maps: .ai/maps/
-workflow:
-  file: .github/workflows/ai-repo-map.yml
-  reusable_ai_map: .github/workflows/reusable-ai-repo-map.yml
-  reusable_health: .github/workflows/reusable-repo-health.yml
-  reusable_project_state: .github/workflows/reusable-project-state.yml
-  reusable_context_intelligence: .github/workflows/reusable-context-intelligence.yml
-```
-
-## File: AGENTS.md
-```markdown
-# Repository agent instructions
-
-This repository adopts the shared standards from `dbrckk/repo-standards`.
-
-Before substantial work:
-1. Read the central `AGENTS.md` and relevant files under `standards/` in `dbrckk/repo-standards`.
-2. Read `.ai/project-state.md`.
-3. Read `.ai/repo-health.md`.
-4. Read `.ai/repo-map.md`.
-5. Fetch only the task-relevant source files or symbols.
-
-Repository-specific rules:
-- Preserve the existing architecture and public interfaces unless the task requires a change.
-- Prefer the smallest coherent change.
-- Run the relevant tests, lint, build, or validation commands before declaring completion.
-- Update `.ai/project-state.md` when status, blockers, or next priority materially changes.
-```
-
-## File: build.gradle.kts
-```kotlin
-plugins {
-    id("com.android.application") version "8.12.1" apply false
-    id("org.jetbrains.kotlin.android") version "2.2.10" apply false
-    id("org.jetbrains.kotlin.plugin.compose") version "2.2.10" apply false
-}
-```
-
-## File: PROJECT_CONTINUITY.md
-```markdown
-# PROJECT CONTINUITY — Zero → Empire
-
-> Persistent handoff file. Read before work and update at every material intervention. Never rely on chat history alone.
-
-## Primary objective
-Reach **125 / 235 canonical final sprites strict DONE** toward **235 / 235**. Strict DONE requires semantic + technical validation, final runtime reference/visibility, manifest/progress reconciliation and green Android CI. Never promote from file presence alone.
-
-## Trusted state — 2026-09-09 10:33 +02:00
-- Fully reconciled aggregate: **124 / 235 strict DONE**; Buildings 23/98, Power Core 7/7, Characters 0/24, Vehicles 18/18, Machines 28/28, Props 28/28, Terrain/infrastructure 13/14, FX 7/18.
-- Reconcile Sprite Progress Ledger run `34329526375` completed SUCCESS after FX-15 and synchronized manifest/progress/continuity to 124.
-
-## Latest intervention — FX-16 strict evidence audit and canonical promotion
-- Audited `FX-16 — singularity lens pulse` provenance from commit `58444287c9ab76f53dedb40730c95731502cebd9` (`art: integrate pending foundry sprites and apex FX`).
-- Production ledger records the accepted atlas as **8 x 128x128 RGBA, 4x2**, **76.3% transparent**, with every cell populated and isolated.
-- `SingularityLensPulse.kt` decodes `R.drawable.zte_fx_16_final`, uses exactly 8 frames / 4 columns / 128px cells at 125ms per frame, and freezes frame 0 under reduced motion.
-- Active gameplay visibility is explicit: `WorldBusinessVisual` invokes `SingularityLensPulse` for Apex business 13 at tier >= 4 in the active city rendering route.
-- FX-16 runtime/call-site code predates and is unchanged in Android CI #628 / run `34317783009`, which completed SUCCESS and supplies the descendant green build/test/lint gate.
-- One-off promotion workflow `.github/workflows/promote-fx16-strict.yml`, commit `13cd59ad50d72eebff4e5ef934be15063be9023f`, completed SUCCESS as run `34329600834`; bot commit `2cf353d239e53f4c4eac0ee1ad408a90e8ce4763` changed only FX-16 from RUNTIME to DONE after verifying the exact manifest row, runtime resource and active call site.
-- This continuity update intentionally triggers canonical reconciliation. Do not report **125 / 235** until that reconciliation succeeds.
-
-## Previous strict promotions
-- FX-15 stellar flare: provenance `58444287c9ab76f53dedb40730c95731502cebd9`; 8x128 RGBA 4x2, 66.8% transparent, isolated cells; active business 12 tier>=4; promotion run `34329411998`; reconciliation `34329526375`; strict state became 124.
-- FX-14 orbital ion trail: provenance `d361322ac5541e44317c98734eadfc36db328a9a`; active business 11 tier>=4; promotion run `34329210343`; reconciliation `34329311278`.
-- FX-13 phase distortion: provenance `4cac096866878ddd0aa05307aa4357e5bdbc1800`; active business 10 tier>=4; promotion run `34321571309`; reconciliation `34321649961`.
-- FX-12, FX-11, FX-10 and FX-09 are strict DONE through their audited semantic/technical/runtime/CI lanes.
-- BLD-03 T2-T6: run75 semantic approval + 5/5 technical QA + active canonical renderer + Android CI #628 green.
-
-## Remaining reconciliation lane
-- `BLD-02-T4`, `BLD-02-T5`, `BLD-02-T6`, `BLD-03-T0`, `BLD-03-T1` remain RUNTIME pending explicit semantic provenance.
-- Audit FX-17 individually; no blanket promotion.
-- FX-08 requires its own audit.
-
-## GPU state / blockers
-- Kaggle credentials/push work, but wave88 runtime DNS could not resolve `github.com`; do not retrigger unchanged until notebook UI proves usable GPU + Internet.
-- Lightning AI Studio CLI works but requested T4 accelerator was unavailable in that cluster; no Lightning GPU execution yet.
-- Building generator v16.4 (`fa41f56442a2e62227045b272676780c5a8f5ca8`) remains unexecuted cleanly.
-
-## Next actions
-1. Reconcile FX-16 promotion; only then accept 125/235.
-2. Audit FX-17 individually.
-3. Audit BLD-02-T4..T6 and BLD-03-T0..T1 semantic provenance.
-4. Audit FX-08 separately.
-5. Do not retry Kaggle until GPU + Internet are actually usable.
-6. Continue until **235 / 235**.
-
-## Operating principle
-Generate/integrate the right asset first; QA confirms rather than inflates. Optimize validated semantic yield, preserve evidence, and never increase strict DONE without every gate.
-```
-
-## File: README.md
-```markdown
-# ZERO → EMPIRE
-
-A premium-feeling Android idle/incremental game built with Kotlin and Jetpack Compose.
-
-## Product pillars
-
-- Satisfying 5–30 second micro-loop
-- Meaningful offline progression
-- Layered automation and prestige
-- Fast visual feedback, haptics and motion
-- Rewarded ads that accelerate without blocking play
-- Ethical IAP and optional ad removal
-- Data-driven economy that can be balanced without rewriting UI
-- Viral, shareable progression milestones
-
-## Core loop
-
-Earn → Invest → Automate → Multiply → Unlock → Prestige → Expand
-
-The player starts with a tiny street stand and compounds their way through increasingly absurd economic scales: businesses, factories, cities, nations, planets and beyond.
-
-## Technical direction
-
-- Kotlin
-- Jetpack Compose + Material 3
-- MVVM / unidirectional state flow
-- Kotlin Coroutines + StateFlow
-- DataStore for durable local state
-- Google Play Billing integration layer
-- Ad provider abstraction
-- Offline earnings with capped, validated elapsed time
-- Deterministic economy formulas
-
-## Status
-
-Foundation in progress. The repository is being built incrementally from a clean Android project structure.
-```
-
-## File: settings.gradle.kts
-```kotlin
-pluginManagement {
-    repositories {
-        google()
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
-
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
-
-rootProject.name = "ZeroToEmpire"
-include(":app")
 ```
