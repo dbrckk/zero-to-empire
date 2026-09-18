@@ -1,0 +1,157 @@
+name: Temporary ONB-00 Clean Runtime Integration
+
+on:
+  push:
+    branches: [ ops/onb-00-integrate-clean ]
+    paths:
+      - '.github/workflows/onb-00-integrate-clean.yml'
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 2
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@b64ffcaf5b410884ad320a9cfac8866006a109aa # v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Pillow
+        run: python -m pip install --disable-pip-version-check Pillow==11.3.0
+
+      - name: Download accepted source artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/onb00
+          curl --fail --location \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/dbrckk/zero-to-empire/actions/artifacts/10556284227/zip" \
+            -o /tmp/onb00.zip
+          unzip -q /tmp/onb00.zip -d /tmp/onb00
+          test -s /tmp/onb00/candidate.png
+          test -s /tmp/onb00/metadata.json
+          test -s /tmp/onb00/qa-report.json
+
+      - name: Build clean runtime asset
+        run: |
+          python - <<'PY'
+          from collections import deque
+          from hashlib import sha256
+          import json
+          from pathlib import Path
+          from PIL import Image
+
+          source = Path('/tmp/onb00')
+          metadata = json.loads((source / 'metadata.json').read_text(encoding='utf-8'))
+          qa = json.loads((source / 'qa-report.json').read_text(encoding='utf-8'))
+
+          if metadata.get('manifest_id') != 'ONB-00':
+              raise SystemExit('manifest id mismatch')
+          if not qa.get('automatic_checks', {}).get('pass'):
+              raise SystemExit('source candidate automatic QA did not pass')
+
+          img = Image.open(source / 'candidate.png').convert('RGBA')
+          alpha = img.getchannel('A')
+          px = alpha.load()
+
+          # Remove the two detached decorative elements and their low-alpha halos
+          # without altering the authored main reactor body.
+          for y in range(300, 500):
+              for x in range(805, 960):
+                  px[x, y] = 0
+
+          img.putalpha(alpha)
+
+          # Verify the cleaned result has exactly one significant alpha component.
+          w, h = img.size
+          seen = bytearray(w * h)
+          components = []
+          for y in range(h):
+              for x in range(w):
+                  idx = y * w + x
+                  if seen[idx] or px[x, y] < 40:
+                      continue
+                  q = deque([(x, y)])
+                  seen[idx] = 1
+                  area = 0
+                  minx = maxx = x
+                  miny = maxy = y
+                  while q:
+                      cx, cy = q.popleft()
+                      area += 1
+                      minx, maxx = min(minx, cx), max(maxx, cx)
+                      miny, maxy = min(miny, cy), max(maxy, cy)
+                      for nx, ny in ((cx-1,cy),(cx+1,cy),(cx,cy-1),(cx,cy+1)):
+                          if 0 <= nx < w and 0 <= ny < h:
+                              nidx = ny * w + nx
+                              if not seen[nidx] and px[nx, ny] >= 40:
+                                  seen[nidx] = 1
+                                  q.append((nx, ny))
+                  if area >= 100:
+                      components.append((area, [minx, miny, maxx, maxy]))
+
+          components.sort(reverse=True)
+          if len(components) != 1:
+              raise SystemExit(f'expected one significant component, got {components}')
+
+          img = img.resize((640, 640), Image.Resampling.LANCZOS)
+          runtime = Path('/tmp/zte_onboarding_00_final.webp')
+          img.save(runtime, 'WEBP', quality=92, method=6)
+
+          report = {
+              'manifest_id': 'ONB-00',
+              'source_workflow_run': 35366380403,
+              'source_artifact_id': 10556284227,
+              'source_candidate_sha256': metadata.get('asset_sha256'),
+              'provider': metadata.get('provider'),
+              'prompt_sha256': metadata.get('prompt_sha256'),
+              'automatic_candidate_qa': 'pass',
+              'semantic_review': 'accepted_after_explicit_detached_artifact_mask',
+              'cleanup_mask': {'x': [805, 960], 'y': [300, 500]},
+              'significant_components_after_cleanup': components,
+              'runtime_dimensions': [640, 640],
+              'runtime_format': 'webp',
+              'runtime_size_bytes': runtime.stat().st_size,
+              'runtime_sha256': sha256(runtime.read_bytes()).hexdigest(),
+          }
+          Path('/tmp/onb-00-runtime-qa.json').write_text(
+              json.dumps(report, indent=2, sort_keys=True) + '\n',
+              encoding='utf-8',
+          )
+          print(json.dumps(report, indent=2, sort_keys=True))
+          PY
+
+      - name: Update runtime branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin art/onb-00-runtime
+          git checkout -B art/onb-00-runtime origin/art/onb-00-runtime
+
+          cp /tmp/zte_onboarding_00_final.webp \
+             app/src/main/res/drawable-nodpi/zte_onboarding_00_final.webp
+          cp /tmp/onb-00-runtime-qa.json \
+             art/production/onb-00-runtime-qa.json
+
+          git diff --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            app/src/main/res/drawable-nodpi/zte_onboarding_00_final.webp \
+            art/production/onb-00-runtime-qa.json
+          git commit -m "fix(art): clean ONB-00 detached visual artifacts"
+          git push --force origin HEAD:art/onb-00-runtime
