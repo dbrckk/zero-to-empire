@@ -139,8 +139,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          git fetch origin art/onb-00-runtime
-          git checkout -B art/onb-00-runtime origin/art/onb-00-runtime
+          git fetch origin main
+          git checkout -B fix/onb-00-clean-runtime origin/main
 
           cp /tmp/zte_onboarding_00_final.webp \
              app/src/main/res/drawable-nodpi/zte_onboarding_00_final.webp
@@ -154,4 +154,4 @@ jobs:
             app/src/main/res/drawable-nodpi/zte_onboarding_00_final.webp \
             art/production/onb-00-runtime-qa.json
           git commit -m "fix(art): clean ONB-00 detached visual artifacts"
-          git push --force origin HEAD:art/onb-00-runtime
+          git push --force origin HEAD:fix/onb-00-clean-runtime
