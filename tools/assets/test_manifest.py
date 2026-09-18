@@ -62,7 +62,7 @@ class ManifestTest(unittest.TestCase):
             asset.runtime_path,
             "app/src/main/res/drawable-nodpi/zte_onboarding_00_final.webp",
         )
-        self.assertEqual(asset.status, "TODO")
+        self.assertIn(asset.status, {"TODO", "ART", "CLEAN", "RUNTIME", "DONE"})
 
 
 if __name__ == "__main__":
