@@ -1,0 +1,104 @@
+name: Temporary ONB-00 Candidate V4
+
+on:
+  push:
+    branches: [ ops/onb-00-candidate-v4 ]
+    paths:
+      - '.github/workflows/onb-00-candidate-v4.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      ASSET_ID: ONB-00
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@b64ffcaf5b410884ad320a9cfac8866006a109aa # v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: python -m pip install --disable-pip-version-check Pillow==11.3.0
+
+      - name: Generate clean review-only ONB-00 candidate
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          from PIL import Image
+
+          from tools.assets.manifest import ManifestAsset, load_manifest, require_asset
+          from tools.assets.pipeline import build_candidate
+          from tools.sprites import hf_static_manifest_factory as hf
+
+          if not os.environ.get('HF_TOKEN', '').strip():
+              raise SystemExit('HF_TOKEN is required')
+
+          class HfStaticReviewProvider:
+              name = 'hf-static'
+              source_type = 'generated'
+              license = 'generated-provider-terms'
+
+              def generate(self, asset: ManifestAsset, prompt: str) -> Image.Image:
+                  return hf.generate(prompt)
+
+          asset = require_asset(
+              load_manifest(Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')),
+              os.environ['ASSET_ID'],
+          )
+          if asset.status != 'TODO':
+              raise SystemExit(f'{asset.id} is {asset.status}; expected TODO')
+
+          prompt = (
+              'AAA premium mobile strategy game onboarding illustration, one isolated hero object only. '
+              'A compact futuristic cylindrical power reactor core at the instant of ignition, one single contiguous machine body. '
+              'The full subject must read as one connected silhouette. No detached modules, no floating caps, no loose bolts, '
+              'no particles, no satellites, no orbiting objects, no free-floating lights, no separate dots, no debris. '
+              'Energy effects must be integrated into the body surface only; no detached halo, no external ring, no orbit line. '
+              'Warm amber internal reactor light with restrained cyan emissive strips, premium dark metal, strong readable silhouette, '
+              'portrait-friendly 2.5D three-quarter presentation, cinematic upper-left key light. '
+              'The object is suspended in empty space with no floor, no ground plane, no pedestal, no platform, no cast shadow. '
+              'Absolutely no text, no letters, no words, no numbers, no captions, no labels, no glyphs, no logo, no watermark, '
+              'no border, no frame, no code-like marks, no typography, no collage. '
+              'Pure uniform solid black background touching every edge with generous empty margin around the single object.'
+          )
+
+          result = build_candidate(
+              asset=asset,
+              provider=HfStaticReviewProvider(),
+              prompt=prompt,
+              target_side=1024,
+              candidate_root=Path('art/incoming/assets'),
+          )
+          print(f'CANDIDATE={result.image_path}')
+          print(f'COVERAGE={result.coverage:.6f}')
+          print(f'DOMINANT_COMPONENT={result.dominant_component:.6f}')
+          PY
+
+      - name: Build QA artifacts
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from tools.assets.qa_report import build_candidate_qa_artifacts
+
+          candidate_dir = Path('art/incoming/assets/ONB-00')
+          report_path, sheet_path = build_candidate_qa_artifacts(candidate_dir)
+          print(f'QA_REPORT={report_path}')
+          print(f'CONTACT_SHEET={sheet_path}')
+          PY
+
+      - name: Upload review bundle
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4
+        with:
+          name: onb-00-candidate-v4
+          path: art/incoming/assets/ONB-00
+          if-no-files-found: error
+          retention-days: 7
