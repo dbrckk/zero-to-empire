@@ -32,7 +32,7 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
     val billing = remember(context) { PlayBillingGateway(context.applicationContext) }
     val rewarded = remember(context) { AdMobRewardedGateway(context.applicationContext) }
     val consent = remember(activity) { activity?.let(::PrivacyConsentManager) }
-    var showStore by remember { mutableStateOf(false) }
+    var showStore by remember { mutableStateOf(false) }\n    var showPrivacyPolicy by remember { mutableStateOf(false) }
     var owned by remember { mutableStateOf<Set<StoreProduct>>(emptySet()) }
     var purchaseInFlight by remember { mutableStateOf<StoreProduct?>(null) }
     var pendingPurchases by remember { mutableStateOf<Set<StoreProduct>>(emptySet()) }
@@ -81,7 +81,7 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
         purchaseInFlight = purchaseInFlight,
         pendingPurchases = pendingPurchases,
         onDismiss = { showStore = false },
-        onDiagnostics = if (BuildConfig.DEBUG) {
+        onPrivacyPolicy = { showPrivacyPolicy = true },\n        onDiagnostics = if (BuildConfig.DEBUG) {
             { status = LocalBillingDiagnostics.snapshot().toSupportText() }
         } else null,
         onRestore = { billing.restore { result ->
@@ -169,7 +169,7 @@ private fun StoreDialog(
                 StoreRow("STARTER PACK", "250 gems + 30 min ×2 income. One-time purchase.", StoreProduct.STARTER_PACK in owned, purchaseInFlight, pendingPurchases, StoreProduct.STARTER_PACK, MetaSpriteKind.BOOST) { onPurchase(StoreProduct.STARTER_PACK) }
                 StoreRow("120 GEMS", "Consumable gem pack.", false, purchaseInFlight, pendingPurchases, StoreProduct.GEM_PACK_SMALL, MetaSpriteKind.GEM) { onPurchase(StoreProduct.GEM_PACK_SMALL) }
                 StoreRow("650 GEMS", "Consumable gem pack.", false, purchaseInFlight, pendingPurchases, StoreProduct.GEM_PACK_MEDIUM, MetaSpriteKind.GEM) { onPurchase(StoreProduct.GEM_PACK_MEDIUM) }
-                OutlinedButton(onClick = onRestore, enabled = purchaseInFlight == null, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text("RESTORE PURCHASES") }
+                OutlinedButton(onClick = onRestore, enabled = purchaseInFlight == null, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text("RESTORE PURCHASES") }\n                TextButton(onClick = onPrivacyPolicy, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text("PRIVACY POLICY") }
                 if (onDiagnostics != null) {
                     TextButton(onClick = onDiagnostics, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text("BILLING DIAGNOSTICS") }
                 }
