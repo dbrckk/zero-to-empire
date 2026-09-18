@@ -1,23 +1,13 @@
 # Change impact
 
-Base: 1d9ce7f0958d8bb24ea25859c12840ac892b97dc
-Head: c81c29450d06863021df9c7ca6d6f01f359ca2b9
+Base: 05d7653eaa6d70742317a412b39e4117ff0b3b4d
+Head: 4835ace7739d1cc069c43df0e22aefdf4db968c1
 
 ## Changed files
-- M .github/workflows/android.yml
-- M .github/workflows/production-release.yml
-- M app/src/main/java/com/zerotoempire/game/CommerceUi.kt
-- A app/src/main/java/com/zerotoempire/game/PrivacyPolicy.kt
-- A marketing/data-safety.md
-- M marketing/play-store-listing.md
-- A marketing/privacy-policy.md
-- A tools/android/validate_release_privacy.py
+- M AGENTS.md
 
 ## Affected areas
-- .github
-- app
-- marketing
-- tools
+- (root)
 
 ## Related test candidates
 - No direct filename-based test match detected.

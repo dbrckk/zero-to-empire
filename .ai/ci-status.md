@@ -1,14 +1,18 @@
 # CI status
 
-Summary: 4 success / 0 failure / 2 active
+Summary: 2 success / 3 failure / 0 active
 
-- Android CI: in_progress / pending (c81c2945)
-- Android Emulator Smoke: in_progress / pending (c81c2945)
+- Pollinations Building Candidate: completed / failure (05d7653e)
+- Pollinations Character Atlas: completed / failure (05d7653e)
+- Reconcile reviewed run 25: completed / skipped (05d7653e)
+- Android CI: completed / success (c81c2945)
+- Android Emulator Smoke: completed / failure (c81c2945)
 - Reconcile reviewed run 25: completed / skipped (1d9ce7f0)
 - Android CI: completed / success (80983792)
 - Reconcile reviewed run 25: completed / skipped (1d9ce7f0)
-- Android CI: completed / success (b571cd40)
-- Sprite Completion Gate: completed / success (b571cd40)
-- Reconcile existing runtime TODOs: completed / success (b571cd40)
+
+## Latest failed run structure
+- Job: generate
+  - Failed step: Generate and double-validate strict building batch
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

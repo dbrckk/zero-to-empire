@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T18:12:05Z
+Generated: 2026-09-18T19:07:40Z
 
 ### Git
 - Branch: `main`
-- Head: `c81c29450d06`
-- Commit date: 2026-09-18T20:11:45+02:00
-- Commit: feat(release): add in-app privacy policy and Data Safety gate
+- Head: `4835ace7739d`
+- Commit date: 2026-09-18T21:07:20+02:00
+- Commit: chore(ai): adopt bounded v6 context routing
 - Tracked files: 1230
 
 ### Recently changed files
+- `AGENTS.md`
 - `.github/workflows/android.yml`
 - `.github/workflows/production-release.yml`
 - `app/src/main/java/com/zerotoempire/game/CommerceUi.kt`
@@ -46,7 +47,6 @@ Generated: 2026-09-18T18:12:05Z
 - `docs/art/FINAL_AAA_SPRITE_MANIFEST.md`
 - `app/src/main/java/com/zerotoempire/game/OnboardingArt.kt`
 - `tools/assets/test_manifest.py`
-- `app/src/test/java/com/zerotoempire/game/BulkPurchaseTest.kt`
 
 ### Project signals
 - `build.gradle.kts`
