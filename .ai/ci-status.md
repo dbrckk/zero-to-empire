@@ -1,6 +1,6 @@
 # CI status
 
-Summary: 2 success / 3 failure / 0 active
+Summary: 1 success / 3 failure / 0 active
 
 - Pollinations Building Candidate: completed / failure (05d7653e)
 - Pollinations Character Atlas: completed / failure (05d7653e)
@@ -8,7 +8,6 @@ Summary: 2 success / 3 failure / 0 active
 - Android CI: completed / success (c81c2945)
 - Android Emulator Smoke: completed / failure (c81c2945)
 - Reconcile reviewed run 25: completed / skipped (1d9ce7f0)
-- Android CI: completed / success (80983792)
 
 ## Latest failed run structure
 - Job: generate

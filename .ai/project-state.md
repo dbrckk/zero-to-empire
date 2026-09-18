@@ -22,27 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T19:23:16Z
+Generated: 2026-09-18T19:28:49Z
 
 ### Git
 - Branch: `main`
-- Head: `4e96d382e5e8`
-- Commit date: 2026-09-18T21:23:00+02:00
-- Commit: chore(ai): enable recent project hotset fallback
-- Tracked files: 1235
+- Head: `78cf8ecd7a15`
+- Commit date: 2026-09-18T21:28:31+02:00
+- Commit: chore(ai): enable compact graph routing
+- Tracked files: 1239
 
 ### Recently changed files
 - `.repo-standards.yml`
 - `.github/workflows/ai-repo-map.yml`
 - `AGENTS.md`
-- `.github/workflows/android.yml`
-- `.github/workflows/production-release.yml`
-- `app/src/main/java/com/zerotoempire/game/CommerceUi.kt`
-- `app/src/main/java/com/zerotoempire/game/PrivacyPolicy.kt`
-- `marketing/data-safety.md`
-- `marketing/play-store-listing.md`
-- `marketing/privacy-policy.md`
-- `tools/android/validate_release_privacy.py`
 
 ### Project signals
 - `build.gradle.kts`
