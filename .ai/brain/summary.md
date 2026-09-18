@@ -1,8 +1,12 @@
 # Repo Brain
 
+- Index mode: full
 - Files indexed: 197
+- Files reparsed this run: 197
 - Symbols: 922
 - Internal import edges: 3
+- Impacted files: 0
+- Selected tests: 0
 
 ## Languages
 - kotlin: 155 files
@@ -31,11 +35,10 @@
 - app/src/main/java/com/zerotoempire/game/AdMobInterstitialGateway.kt: 10 symbols
 
 ## Agent routing
-- Search lookup.json first for direct symbol-to-file routing.
-- Use symbols.json only when broader symbol metadata is needed.
-- Use code-graph.json to inspect likely internal import relationships.
-- Use imports.json when a changed file crosses module boundaries.
-- Treat graph edges as static hints; verify source before editing.
+- Read impact.json first after project/change context.
+- Use selected-tests.json before broad validation.
+- Search lookup.json for symbol routing; ast-grep enrichment may provide exact ranges.
+- Verify source before editing.
 
 ## ast-grep enrichment
 - ast-grep outline: available
