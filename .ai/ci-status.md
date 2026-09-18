@@ -1,18 +1,14 @@
 # CI status
 
-Summary: 0 success / 1 failure / 7 active
+Summary: 4 success / 0 failure / 3 active
 
-- Reconcile Sprite Progress Ledger: in_progress / pending (e87d9879)
-- Reconcile existing runtime TODOs: in_progress / pending (e87d9879)
-- Android Emulator Smoke: in_progress / pending (e87d9879)
-- Asset Pipeline CI: in_progress / pending (e87d9879)
-- Sprite Completion Gate: in_progress / pending (e87d9879)
-- Android CI: in_progress / pending (e87d9879)
-- Sprite Production Plan: completed / failure (e87d9879)
-- Temporary ONB-00 Candidate V4: in_progress / pending (5fb85634)
-
-## Latest failed run structure
-- Job: plan
-  - Failed step: Build deterministic production lanes
+- Android CI: in_progress / pending (b571cd40)
+- Sprite Completion Gate: completed / success (b571cd40)
+- Reconcile existing runtime TODOs: in_progress / pending (b571cd40)
+- Android Emulator Smoke: in_progress / pending (b571cd40)
+- Reconcile reviewed run 25: completed / skipped (5c8b15f9)
+- Manifest Static GPU Batch: completed / success (5c8b15f9)
+- Android CI: completed / success (6cc11b73)
+- Temporary ONB-00 Clean Runtime Integration: completed / success (ab58e85b)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

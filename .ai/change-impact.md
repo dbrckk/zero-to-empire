@@ -1,20 +1,15 @@
 # Change impact
 
-Base: b7a443429e1e9415ec42353add0bb6c59a9b92c5
-Head: e87d9879e9718b96247cbd178a102186f57c5633
+Base: 5c8b15f99dab881c976fd4b1ca4a4c86cd5270c7
+Head: b571cd405a0828a02583a3f6a1f88729873ace36
 
 ## Changed files
-- M app/src/main/java/com/zerotoempire/game/OnboardingArt.kt
-- A app/src/main/res/drawable-nodpi/zte_onboarding_00_final.webp
-- A art/production/onb-00-runtime-qa.json
-- M docs/art/FINAL_AAA_SPRITE_MANIFEST.md
-- M tools/assets/test_manifest.py
+- M app/src/main/res/drawable-nodpi/zte_onboarding_00_final.webp
+- M art/production/onb-00-runtime-qa.json
 
 ## Affected areas
 - app
 - art
-- docs
-- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

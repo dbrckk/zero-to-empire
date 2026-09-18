@@ -22,25 +22,24 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T16:25:11Z
+Generated: 2026-09-18T16:39:21Z
 
 ### Git
 - Branch: `main`
-- Head: `e87d9879e971`
-- Commit date: 2026-09-18T18:24:51+02:00
-- Commit: feat(art): integrate authored ONB-00 onboarding illustration
+- Head: `b571cd405a08`
+- Commit date: 2026-09-18T18:39:02+02:00
+- Commit: fix(art): remove detached artifacts from ONB-00
 - Tracked files: 1226
 
 ### Recently changed files
-- `app/src/main/java/com/zerotoempire/game/OnboardingArt.kt`
 - `app/src/main/res/drawable-nodpi/zte_onboarding_00_final.webp`
 - `art/production/onb-00-runtime-qa.json`
+- `art/production/existing-runtime-qa.json`
 - `docs/art/FINAL_AAA_SPRITE_MANIFEST.md`
+- `app/src/main/java/com/zerotoempire/game/OnboardingArt.kt`
 - `tools/assets/test_manifest.py`
 - `app/src/test/java/com/zerotoempire/game/BulkPurchaseTest.kt`
 - `AGENTS.md`
-- `.repo-standards.yml`
-- `.github/workflows/ai-repo-map.yml`
 
 ### Project signals
 - `build.gradle.kts`
