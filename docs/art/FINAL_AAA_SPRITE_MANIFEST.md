@@ -316,4 +316,4 @@ If a new runtime sprite is later required, it must be added here first and the d
 
 | ID | Asset | Description | Runtime target | Status |
 |---|---|---|---|---|
-| ONB-00 | Onboarding step 0 primary illustration | Authored replacement for the current step-0 radial Power Core/ignition visual in `OnboardingStepArt`; isolated scene art with no baked UI text. | `app/src/main/res/drawable-nodpi/zte_onboarding_00_final.webp` | RUNTIME |
+| ONB-00 | Onboarding step 0 primary illustration | Authored replacement for the current step-0 radial Power Core/ignition visual in `OnboardingStepArt`; isolated scene art with no baked UI text. | `app/src/main/res/drawable-nodpi/zte_onboarding_00_final.webp` | DONE |
