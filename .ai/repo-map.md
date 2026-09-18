@@ -98,6 +98,7 @@ The content is organized as follows:
     reconcile-sprite-progress-ledger.yml
     refine-run66-stragglers.yml
     repair-promote-bld03-run75.yml
+    semantic-refresh.yml
     sprite-completion-gate.yml
     sprite-production-plan.yml
     sprite-runtime-ci-bridge.yml
@@ -5631,6 +5632,29 @@ jobs:
           git commit -m 'art: promote BLD-03 T2-T6 to strict DONE'
           git pull --rebase origin main
           git push
+```
+
+## File: .github/workflows/semantic-refresh.yml
+```yaml
+name: Precise semantic refresh
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 3 * * 1"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: semantic-refresh-${{ github.repository }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  semantic:
+    uses: dbrckk/repo-brain/.github/workflows/reusable-semantic.yml@main
+    with:
+      commit_changes: true
 ```
 
 ## File: .github/workflows/sprite-completion-gate.yml
@@ -25074,7 +25098,7 @@ path = INBOX / spec['source']
 ```yaml
 source: dbrckk/repo-standards
 ref: main
-version: 12
+version: 13
 adopted: true
 workflow_mode: unified-single-commit
 repo_brain: dbrckk/repo-brain@main
@@ -25109,6 +25133,8 @@ ai_context:
   brain_graph_shards: .ai/brain/graph-shards/
   brain_reverse_deps: .ai/brain/reverse-deps.json
   brain_architecture_mermaid: .ai/brain/architecture.mmd
+  brain_semantic_plan: .ai/brain/semantic-plan.json
+  brain_semantic_index: .ai/brain/semantic-index.json
   brain_hotset: .ai/brain/hotset.json
   brain_context_manifest: .ai/brain/context-manifest.json
   brain_context_packets: .ai/brain/context/
@@ -25119,6 +25145,7 @@ ai_context:
 workflow:
   file: .github/workflows/ai-repo-map.yml
   reusable_unified: .github/workflows/reusable-unified.yml
+  semantic_refresh: .github/workflows/semantic-refresh.yml
 ```
 
 ## File: AGENTS.md

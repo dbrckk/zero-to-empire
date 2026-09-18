@@ -22,18 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T19:34:13Z
+Generated: 2026-09-18T19:58:18Z
 
 ### Git
 - Branch: `main`
-- Head: `7aed2a962097`
-- Commit date: 2026-09-18T21:32:27+02:00
-- Commit: chore(ai): adopt graph-first agent routing
-- Tracked files: 1244
+- Head: `c0b56b82dc36`
+- Commit date: 2026-09-18T21:57:23+02:00
+- Commit: chore(ai): add precise semantic refresh
+- Tracked files: 1245
 
 ### Recently changed files
-- `AGENTS.md`
+- `.github/workflows/semantic-refresh.yml`
 - `.repo-standards.yml`
+- `AGENTS.md`
 
 ### Project signals
 - `build.gradle.kts`
