@@ -22,19 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T20:14:21Z
+Generated: 2026-09-18T20:52:21Z
 
 ### Git
 - Branch: `main`
-- Head: `733b2d1b4e2e`
-- Commit date: 2026-09-18T22:10:38+02:00
-- Commit: chore(ai): refresh Kotlin graph resolver
-- Tracked files: 1248
+- Head: `a3734232533c`
+- Commit date: 2026-09-18T22:50:55+02:00
+- Commit: chore(ai): enable same-package symbol graph enrichment
+- Tracked files: 1277
 
 ### Recently changed files
 - `.repo-standards.yml`
 - `.github/workflows/semantic-refresh.yml`
-- `AGENTS.md`
 
 ### Project signals
 - `build.gradle.kts`
