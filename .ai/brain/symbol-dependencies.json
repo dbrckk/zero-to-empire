@@ -4,5 +4,40 @@
   "scope": "symbols defined in changed source files",
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
-  "symbols": {}
+  "symbols": {
+    "BulkPurchaseTest": {
+      "source": {
+        "file": "app/src/test/java/com/zerotoempire/game/BulkPurchaseTest.kt",
+        "start": 6,
+        "end": 40
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BulkPurchase",
+          "definitions": [
+            {
+              "file": "app/src/main/java/com/zerotoempire/game/BulkPurchase.kt",
+              "line": 13,
+              "kind": "class",
+              "language": "kotlin"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "BuyMode",
+          "definitions": [
+            {
+              "file": "app/src/main/java/com/zerotoempire/game/BulkPurchase.kt",
+              "line": 5,
+              "kind": "class",
+              "language": "kotlin"
+            }
+          ],
+          "relation": "class_like"
+        }
+      ],
+      "dependency_count": 2
+    }
+  }
 }

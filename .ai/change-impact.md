@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 41ff943477b1cf48f9dfced66f9bf94c2f1dbb28
-Head: 8f8845b7bdff239124baefb244aaf445345e37a4
+Base: 709d08644477ad5ff9b8cd2c96ff3d7adf73ff81
+Head: eb8ae54cba038a832eddf91107f0c11c518e5b70
 
 ## Changed files
-- M AGENTS.md
+- M app/src/test/java/com/zerotoempire/game/BulkPurchaseTest.kt
 
 ## Affected areas
-- (root)
+- app
 
 ## Related test candidates
 - No direct filename-based test match detected.

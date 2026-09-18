@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T14:51:10Z
+Generated: 2026-09-18T15:42:42Z
 
 ### Git
 - Branch: `main`
-- Head: `8f8845b7bdff`
-- Commit date: 2026-09-18T16:50:47+02:00
-- Commit: chore(ai): adopt v10 reference routing
-- Tracked files: 1222
+- Head: `eb8ae54cba03`
+- Commit date: 2026-09-18T17:42:25+02:00
+- Commit: test(economy): guard exact single purchase cost
+- Tracked files: 1224
 
 ### Recently changed files
+- `app/src/test/java/com/zerotoempire/game/BulkPurchaseTest.kt`
 - `AGENTS.md`
 - `.repo-standards.yml`
 - `.github/workflows/ai-repo-map.yml`
