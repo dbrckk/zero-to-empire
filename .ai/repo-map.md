@@ -449,7 +449,7 @@ concurrency:
 
 jobs:
   repository-standards:
-    uses: dbrckk/repo-standards/.github/workflows/reusable-unified.yml@v6
+    uses: dbrckk/repo-standards/.github/workflows/reusable-unified.yml@v7
 ```
 
 ## File: .github/workflows/android-emulator-smoke.yml

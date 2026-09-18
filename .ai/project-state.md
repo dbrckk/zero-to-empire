@@ -22,18 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T09:34:56Z
+Generated: 2026-09-18T10:09:47Z
 
 ### Git
 - Branch: `main`
-- Head: `0f5c66db5077`
-- Commit date: 2026-09-18T11:34:16+02:00
-- Commit: chore: adopt repo standards v6
+- Head: `6dc7aefb84cd`
+- Commit date: 2026-09-18T12:09:28+02:00
+- Commit: ci: adopt repo standards v7
 - Tracked files: 1182
 
 ### Recently changed files
-- `.repo-standards.yml`
 - `.github/workflows/ai-repo-map.yml`
+- `.repo-standards.yml`
 - `AGENTS.md`
 
 ### Project signals

@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 82528e1be73dd87254f94d357334bcd973aad7a3
-Head: 0f5c66db50774121e4e1a0b9fccaedf18644c4b5
+Base: e9a0756a581e073f293f32be4a026a75dc883e57
+Head: 6dc7aefb84cd51543a9dda490eadef9b02b38094
 
 ## Changed files
-- M .repo-standards.yml
+- M .github/workflows/ai-repo-map.yml
 
 ## Affected areas
-- (root)
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.
