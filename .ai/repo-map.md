@@ -13926,6 +13926,7 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -13936,7 +13937,9 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import kotlin.math.PI
 import kotlin.math.cos
@@ -13944,6 +13947,15 @@ import kotlin.math.sin
 
 @Composable
 fun OnboardingStepArt(step: Int) {
+    if (step.coerceIn(0, 4) == 0) {
+        Image(
+            painter = painterResource(R.drawable.zte_onboarding_00_final),
+            contentDescription = null,
+            modifier = Modifier.size(220.dp),
+            contentScale = ContentScale.Fit,
+        )
+        return
+    }
     val context = LocalContext.current
     val reduced = MotionQuality.reducedMotion(context)
     val lowPower = MotionQuality.lowPowerMode(context)

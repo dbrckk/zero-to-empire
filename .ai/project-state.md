@@ -22,16 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T15:42:42Z
+Generated: 2026-09-18T16:25:11Z
 
 ### Git
 - Branch: `main`
-- Head: `eb8ae54cba03`
-- Commit date: 2026-09-18T17:42:25+02:00
-- Commit: test(economy): guard exact single purchase cost
-- Tracked files: 1224
+- Head: `e87d9879e971`
+- Commit date: 2026-09-18T18:24:51+02:00
+- Commit: feat(art): integrate authored ONB-00 onboarding illustration
+- Tracked files: 1226
 
 ### Recently changed files
+- `app/src/main/java/com/zerotoempire/game/OnboardingArt.kt`
+- `app/src/main/res/drawable-nodpi/zte_onboarding_00_final.webp`
+- `art/production/onb-00-runtime-qa.json`
+- `docs/art/FINAL_AAA_SPRITE_MANIFEST.md`
+- `tools/assets/test_manifest.py`
 - `app/src/test/java/com/zerotoempire/game/BulkPurchaseTest.kt`
 - `AGENTS.md`
 - `.repo-standards.yml`
