@@ -1,13 +1,13 @@
 # Change impact
 
-Base: e9a0756a581e073f293f32be4a026a75dc883e57
-Head: 6dc7aefb84cd51543a9dda490eadef9b02b38094
+Base: bf5cd48db8e745d1c15367d8b56180a38a2493ff
+Head: c2a39c4aab8d9ff3d159ef2beac287b36f945f36
 
 ## Changed files
-- M .github/workflows/ai-repo-map.yml
+- M AGENTS.md
 
 ## Affected areas
-- .github
+- (root)
 
 ## Related test candidates
 - No direct filename-based test match detected.

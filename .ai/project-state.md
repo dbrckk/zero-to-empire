@@ -22,19 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T10:09:47Z
+Generated: 2026-09-18T10:15:59Z
 
 ### Git
 - Branch: `main`
-- Head: `6dc7aefb84cd`
-- Commit date: 2026-09-18T12:09:28+02:00
-- Commit: ci: adopt repo standards v7
-- Tracked files: 1182
+- Head: `c2a39c4aab8d`
+- Commit date: 2026-09-18T12:10:42+02:00
+- Commit: chore(ai): route through Repo Brain
+- Tracked files: 1188
 
 ### Recently changed files
-- `.github/workflows/ai-repo-map.yml`
-- `.repo-standards.yml`
 - `AGENTS.md`
+- `.repo-standards.yml`
+- `.github/workflows/ai-repo-map.yml`
 
 ### Project signals
 - `build.gradle.kts`
