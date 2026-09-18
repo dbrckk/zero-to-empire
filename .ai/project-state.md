@@ -22,18 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T19:58:18Z
+Generated: 2026-09-18T20:14:21Z
 
 ### Git
 - Branch: `main`
-- Head: `c0b56b82dc36`
-- Commit date: 2026-09-18T21:57:23+02:00
-- Commit: chore(ai): add precise semantic refresh
-- Tracked files: 1245
+- Head: `733b2d1b4e2e`
+- Commit date: 2026-09-18T22:10:38+02:00
+- Commit: chore(ai): refresh Kotlin graph resolver
+- Tracked files: 1248
 
 ### Recently changed files
-- `.github/workflows/semantic-refresh.yml`
 - `.repo-standards.yml`
+- `.github/workflows/semantic-refresh.yml`
 - `AGENTS.md`
 
 ### Project signals
