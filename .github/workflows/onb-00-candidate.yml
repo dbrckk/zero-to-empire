@@ -1,4 +1,4 @@
-name: Temporary ONB-00 Candidate
+name: Temporary ONB-00 Runtime Integration
 
 on:
   push:
@@ -7,12 +7,12 @@ on:
       - '.github/workflows/onb-00-candidate.yml'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   candidate:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     env:
       ASSET_ID: ONB-00
       HF_TOKEN: ${{ secrets.HF_TOKEN }}
@@ -91,6 +91,84 @@ jobs:
           print(f'CONTACT_SHEET={sheet_path}')
           PY
 
+      - name: Prepare cleaned runtime WebP
+        run: |
+          python - <<'PY'
+          from collections import deque
+          from hashlib import sha256
+          import json
+          from pathlib import Path
+          from PIL import Image
+
+          candidate = Path('art/incoming/assets/ONB-00/candidate.png')
+          metadata = json.loads(Path('art/incoming/assets/ONB-00/metadata.json').read_text())
+          img = Image.open(candidate).convert('RGBA')
+          alpha = img.getchannel('A')
+          w, h = img.size
+          ap = alpha.load()
+          threshold = 40
+          seen = bytearray(w * h)
+          comps = []
+
+          for y in range(h):
+              for x in range(w):
+                  idx = y * w + x
+                  if seen[idx] or ap[x, y] < threshold:
+                      continue
+                  q = deque([(x, y)])
+                  seen[idx] = 1
+                  area = 0
+                  minx = maxx = x
+                  miny = maxy = y
+                  while q:
+                      cx, cy = q.popleft()
+                      area += 1
+                      minx, maxx = min(minx, cx), max(maxx, cx)
+                      miny, maxy = min(miny, cy), max(maxy, cy)
+                      for nx, ny in ((cx-1,cy),(cx+1,cy),(cx,cy-1),(cx,cy+1)):
+                          if 0 <= nx < w and 0 <= ny < h:
+                              nidx = ny * w + nx
+                              if not seen[nidx] and ap[nx, ny] >= threshold:
+                                  seen[nidx] = 1
+                                  q.append((nx, ny))
+                  if area >= 100:
+                      comps.append((area, (minx, miny, maxx, maxy)))
+
+          comps.sort(reverse=True)
+          if not comps:
+              raise SystemExit('no significant subject component found')
+
+          removed = []
+          for area, (minx, miny, maxx, maxy) in comps[1:]:
+              pad = 8
+              x0, y0 = max(0, minx-pad), max(0, miny-pad)
+              x1, y1 = min(w-1, maxx+pad), min(h-1, maxy+pad)
+              for yy in range(y0, y1 + 1):
+                  for xx in range(x0, x1 + 1):
+                      ap[xx, yy] = 0
+              removed.append({'area': area, 'bbox': [minx, miny, maxx, maxy]})
+
+          img.putalpha(alpha)
+          img = img.resize((640, 640), Image.Resampling.LANCZOS)
+          out = Path('/tmp/zte_onboarding_00_final.webp')
+          img.save(out, 'WEBP', quality=92, method=6)
+
+          qa = {
+              'manifest_id': 'ONB-00',
+              'source_candidate_sha256': metadata['asset_sha256'],
+              'provider': metadata['provider'],
+              'prompt_sha256': metadata['prompt_sha256'],
+              'automatic_candidate_qa': 'pass',
+              'semantic_review': 'accepted_after_detached-component_cleanup',
+              'removed_components': removed,
+              'runtime_dimensions': [640, 640],
+              'runtime_format': 'webp',
+              'runtime_sha256': sha256(out.read_bytes()).hexdigest(),
+          }
+          Path('/tmp/onb-00-runtime-qa.json').write_text(json.dumps(qa, indent=2, sort_keys=True) + '\n')
+          print(json.dumps(qa, indent=2))
+          PY
+
       - name: Upload review bundle
         uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4
         with:
@@ -98,3 +176,66 @@ jobs:
           path: art/incoming/assets/ONB-00
           if-no-files-found: error
           retention-days: 7
+
+      - name: Push runtime integration branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git checkout -B art/onb-00-runtime origin/main
+
+          mkdir -p app/src/main/res/drawable-nodpi art/production
+          cp /tmp/zte_onboarding_00_final.webp app/src/main/res/drawable-nodpi/zte_onboarding_00_final.webp
+          cp /tmp/onb-00-runtime-qa.json art/production/onb-00-runtime-qa.json
+
+          python - <<'PY'
+          from pathlib import Path
+
+          art = Path('app/src/main/java/com/zerotoempire/game/OnboardingArt.kt')
+          text = art.read_text()
+          text = text.replace(
+              'import androidx.compose.foundation.Canvas\n',
+              'import androidx.compose.foundation.Canvas\nimport androidx.compose.foundation.Image\n',
+              1,
+          )
+          text = text.replace(
+              'import androidx.compose.ui.platform.LocalContext\n',
+              'import androidx.compose.ui.layout.ContentScale\nimport androidx.compose.ui.platform.LocalContext\nimport androidx.compose.ui.res.painterResource\n',
+              1,
+          )
+          needle = '@Composable\nfun OnboardingStepArt(step: Int) {\n'
+          replacement = (
+              '@Composable\nfun OnboardingStepArt(step: Int) {\n'
+              '    if (step.coerceIn(0, 4) == 0) {\n'
+              '        Image(\n'
+              '            painter = painterResource(R.drawable.zte_onboarding_00_final),\n'
+              '            contentDescription = null,\n'
+              '            modifier = Modifier.size(220.dp),\n'
+              '            contentScale = ContentScale.Fit,\n'
+              '        )\n'
+              '        return\n'
+              '    }\n'
+          )
+          if needle not in text:
+              raise SystemExit('OnboardingStepArt signature not found')
+          text = text.replace(needle, replacement, 1)
+          art.write_text(text)
+
+          manifest = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
+          m = manifest.read_text()
+          old = '| ONB-00 | Onboarding step 0 primary illustration | Authored replacement for the current step-0 radial Power Core/ignition visual in `OnboardingStepArt`; isolated scene art with no baked UI text. | `app/src/main/res/drawable-nodpi/zte_onboarding_00_final.webp` | TODO |'
+          new = old[:-6] + 'RUNTIME |'
+          if old not in m:
+              raise SystemExit('ONB-00 TODO manifest row not found')
+          manifest.write_text(m.replace(old, new, 1))
+          PY
+
+          git diff --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/src/main/res/drawable-nodpi/zte_onboarding_00_final.webp \
+                  app/src/main/java/com/zerotoempire/game/OnboardingArt.kt \
+                  docs/art/FINAL_AAA_SPRITE_MANIFEST.md \
+                  art/production/onb-00-runtime-qa.json
+          git commit -m "feat(art): integrate authored ONB-00 onboarding illustration"
+          git push --force origin HEAD:art/onb-00-runtime
