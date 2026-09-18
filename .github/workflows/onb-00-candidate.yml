@@ -7,91 +7,46 @@ on:
       - '.github/workflows/onb-00-candidate.yml'
 
 permissions:
+  actions: read
   contents: write
 
 jobs:
-  candidate:
+  integrate:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
-    env:
-      ASSET_ID: ONB-00
-      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+    timeout-minutes: 15
     steps:
-      - name: Checkout
+      - name: Checkout operational branch
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 2
 
       - name: Set up Python 3.12
         uses: actions/setup-python@b64ffcaf5b410884ad320a9cfac8866006a109aa # v5
         with:
           python-version: "3.12"
 
-      - name: Install dependencies
+      - name: Install deterministic image tooling
         run: python -m pip install --disable-pip-version-check Pillow==11.3.0
 
-      - name: Generate review-only ONB-00 candidate
+      - name: Download accepted ONB-00 candidate artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
         run: |
-          python - <<'PY'
-          import os
-          from pathlib import Path
-          from PIL import Image
+          set -euo pipefail
+          mkdir -p /tmp/onb00-source
+          curl --fail --location \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/dbrckk/zero-to-empire/actions/artifacts/10556284227/zip" \
+            -o /tmp/onb00.zip
+          unzip -q /tmp/onb00.zip -d /tmp/onb00-source
+          test -s /tmp/onb00-source/candidate.png
+          test -s /tmp/onb00-source/metadata.json
+          test -s /tmp/onb00-source/qa-report.json
 
-          from tools.assets.manifest import ManifestAsset, load_manifest, require_asset
-          from tools.assets.pipeline import build_candidate
-          from tools.sprites import hf_static_manifest_factory as hf
-
-          if not os.environ.get('HF_TOKEN', '').strip():
-              raise SystemExit('HF_TOKEN is required')
-
-          class HfStaticReviewProvider:
-              name = 'hf-static'
-              source_type = 'generated'
-              license = 'generated-provider-terms'
-
-              def generate(self, asset: ManifestAsset, prompt: str) -> Image.Image:
-                  return hf.generate(prompt)
-
-          asset = require_asset(
-              load_manifest(Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')),
-              os.environ['ASSET_ID'],
-          )
-          if asset.status != 'TODO':
-              raise SystemExit(f'{asset.id} is {asset.status}; expected TODO')
-
-          prompt = (
-              'AAA premium mobile strategy game onboarding illustration, one isolated hero subject. '
-              'A compact futuristic power reactor core at the instant of ignition, built as one physically connected assembly. '
-              'No detached rings, no floating satellites, no separate particles, no disconnected secondary objects. '
-              'Any energy halo or arc must visually touch the reactor body and remain part of one dominant silhouette. '
-              'Warm amber core light, restrained cyan secondary emissive accents, premium dark metal, strong readable silhouette, '
-              'portrait-friendly 2.5D three-quarter presentation, cinematic upper-left key light. '
-              'Absolutely no text, no letters, no words, no numbers, no captions, no labels, no interface glyphs, '
-              'no logo, no watermark, no border, no frame, no code-like marks, no typography of any kind, no collage. '
-              'The reactor floats alone with no floor plane, no pedestal, no platform, no background panel, no ground shadow, no horizon, no scenery. '
-              'Pure uniform solid black background with generous empty margin around every side of the subject.'
-          )
-          result = build_candidate(
-              asset=asset,
-              provider=HfStaticReviewProvider(),
-              prompt=prompt,
-              target_side=1024,
-              candidate_root=Path('art/incoming/assets'),
-          )
-          print(f'CANDIDATE={result.image_path}')
-          PY
-
-      - name: Build QA artifacts
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          from tools.assets.qa_report import build_candidate_qa_artifacts
-
-          candidate_dir = Path('art/incoming/assets/ONB-00')
-          report_path, sheet_path = build_candidate_qa_artifacts(candidate_dir)
-          print(f'QA_REPORT={report_path}')
-          print(f'CONTACT_SHEET={sheet_path}')
-          PY
-
-      - name: Prepare cleaned runtime WebP
+      - name: Prepare reviewed runtime WebP
         run: |
           python - <<'PY'
           from collections import deque
@@ -100,15 +55,23 @@ jobs:
           from pathlib import Path
           from PIL import Image
 
-          candidate = Path('art/incoming/assets/ONB-00/candidate.png')
-          metadata = json.loads(Path('art/incoming/assets/ONB-00/metadata.json').read_text())
+          source = Path('/tmp/onb00-source')
+          candidate = source / 'candidate.png'
+          metadata = json.loads((source / 'metadata.json').read_text(encoding='utf-8'))
+          auto_qa = json.loads((source / 'qa-report.json').read_text(encoding='utf-8'))
+
+          if metadata.get('manifest_id') != 'ONB-00':
+              raise SystemExit('artifact manifest id is not ONB-00')
+          if auto_qa.get('manifest_id') not in (None, 'ONB-00'):
+              raise SystemExit('QA report manifest id mismatch')
+
           img = Image.open(candidate).convert('RGBA')
           alpha = img.getchannel('A')
           w, h = img.size
           ap = alpha.load()
           threshold = 40
           seen = bytearray(w * h)
-          comps = []
+          components = []
 
           for y in range(h):
               for x in range(w):
@@ -117,12 +80,12 @@ jobs:
                       continue
                   q = deque([(x, y)])
                   seen[idx] = 1
-                  area = 0
+                  pixels = []
                   minx = maxx = x
                   miny = maxy = y
                   while q:
                       cx, cy = q.popleft()
-                      area += 1
+                      pixels.append((cx, cy))
                       minx, maxx = min(minx, cx), max(maxx, cx)
                       miny, maxy = min(miny, cy), max(maxy, cy)
                       for nx, ny in ((cx-1,cy),(cx+1,cy),(cx,cy-1),(cx,cy+1)):
@@ -131,53 +94,52 @@ jobs:
                               if not seen[nidx] and ap[nx, ny] >= threshold:
                                   seen[nidx] = 1
                                   q.append((nx, ny))
-                  if area >= 100:
-                      comps.append((area, (minx, miny, maxx, maxy)))
+                  if len(pixels) >= 100:
+                      components.append({
+                          'area': len(pixels),
+                          'bbox': [minx, miny, maxx, maxy],
+                          'pixels': pixels,
+                      })
 
-          comps.sort(reverse=True)
-          if not comps:
+          components.sort(key=lambda c: c['area'], reverse=True)
+          if not components:
               raise SystemExit('no significant subject component found')
 
           removed = []
-          for area, (minx, miny, maxx, maxy) in comps[1:]:
-              pad = 8
-              x0, y0 = max(0, minx-pad), max(0, miny-pad)
-              x1, y1 = min(w-1, maxx+pad), min(h-1, maxy+pad)
-              for yy in range(y0, y1 + 1):
-                  for xx in range(x0, x1 + 1):
-                      ap[xx, yy] = 0
-              removed.append({'area': area, 'bbox': [minx, miny, maxx, maxy]})
+          for comp in components[1:]:
+              for x, y in comp['pixels']:
+                  ap[x, y] = 0
+              removed.append({'area': comp['area'], 'bbox': comp['bbox']})
 
           img.putalpha(alpha)
           img = img.resize((640, 640), Image.Resampling.LANCZOS)
-          out = Path('/tmp/zte_onboarding_00_final.webp')
-          img.save(out, 'WEBP', quality=92, method=6)
 
-          qa = {
+          runtime = Path('/tmp/zte_onboarding_00_final.webp')
+          img.save(runtime, 'WEBP', quality=92, method=6)
+
+          report = {
               'manifest_id': 'ONB-00',
-              'source_candidate_sha256': metadata['asset_sha256'],
-              'provider': metadata['provider'],
-              'prompt_sha256': metadata['prompt_sha256'],
+              'source_workflow_run': 35366380403,
+              'source_artifact_id': 10556284227,
+              'source_candidate_sha256': metadata.get('asset_sha256'),
+              'provider': metadata.get('provider'),
+              'prompt_sha256': metadata.get('prompt_sha256'),
               'automatic_candidate_qa': 'pass',
-              'semantic_review': 'accepted_after_detached-component_cleanup',
+              'semantic_review': 'accepted_after_detached_component_cleanup',
               'removed_components': removed,
               'runtime_dimensions': [640, 640],
               'runtime_format': 'webp',
-              'runtime_sha256': sha256(out.read_bytes()).hexdigest(),
+              'runtime_size_bytes': runtime.stat().st_size,
+              'runtime_sha256': sha256(runtime.read_bytes()).hexdigest(),
           }
-          Path('/tmp/onb-00-runtime-qa.json').write_text(json.dumps(qa, indent=2, sort_keys=True) + '\n')
-          print(json.dumps(qa, indent=2))
+          Path('/tmp/onb-00-runtime-qa.json').write_text(
+              json.dumps(report, indent=2, sort_keys=True) + '\n',
+              encoding='utf-8',
+          )
+          print(json.dumps(report, indent=2, sort_keys=True))
           PY
 
-      - name: Upload review bundle
-        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4
-        with:
-          name: onb-00-candidate
-          path: art/incoming/assets/ONB-00
-          if-no-files-found: error
-          retention-days: 7
-
-      - name: Push runtime integration branch
+      - name: Build runtime integration branch
         shell: bash
         run: |
           set -euo pipefail
@@ -185,27 +147,41 @@ jobs:
           git checkout -B art/onb-00-runtime origin/main
 
           mkdir -p app/src/main/res/drawable-nodpi art/production
-          cp /tmp/zte_onboarding_00_final.webp app/src/main/res/drawable-nodpi/zte_onboarding_00_final.webp
-          cp /tmp/onb-00-runtime-qa.json art/production/onb-00-runtime-qa.json
+          cp /tmp/zte_onboarding_00_final.webp \
+             app/src/main/res/drawable-nodpi/zte_onboarding_00_final.webp
+          cp /tmp/onb-00-runtime-qa.json \
+             art/production/onb-00-runtime-qa.json
 
           python - <<'PY'
           from pathlib import Path
+          import re
 
           art = Path('app/src/main/java/com/zerotoempire/game/OnboardingArt.kt')
-          text = art.read_text()
-          text = text.replace(
-              'import androidx.compose.foundation.Canvas\n',
-              'import androidx.compose.foundation.Canvas\nimport androidx.compose.foundation.Image\n',
-              1,
-          )
-          text = text.replace(
-              'import androidx.compose.ui.platform.LocalContext\n',
-              'import androidx.compose.ui.layout.ContentScale\nimport androidx.compose.ui.platform.LocalContext\nimport androidx.compose.ui.res.painterResource\n',
-              1,
-          )
-          needle = '@Composable\nfun OnboardingStepArt(step: Int) {\n'
-          replacement = (
-              '@Composable\nfun OnboardingStepArt(step: Int) {\n'
+          text = art.read_text(encoding='utf-8')
+
+          if 'import androidx.compose.foundation.Image\n' not in text:
+              text = text.replace(
+                  'import androidx.compose.foundation.Canvas\n',
+                  'import androidx.compose.foundation.Canvas\nimport androidx.compose.foundation.Image\n',
+                  1,
+              )
+          if 'import androidx.compose.ui.layout.ContentScale\n' not in text:
+              text = text.replace(
+                  'import androidx.compose.ui.platform.LocalContext\n',
+                  'import androidx.compose.ui.layout.ContentScale\nimport androidx.compose.ui.platform.LocalContext\n',
+                  1,
+              )
+          if 'import androidx.compose.ui.res.painterResource\n' not in text:
+              text = text.replace(
+                  'import androidx.compose.ui.platform.LocalContext\n',
+                  'import androidx.compose.ui.platform.LocalContext\nimport androidx.compose.ui.res.painterResource\n',
+                  1,
+              )
+
+          signature = '@Composable\nfun OnboardingStepArt(step: Int) {\n'
+          guard = (
+              '@Composable\n'
+              'fun OnboardingStepArt(step: Int) {\n'
               '    if (step.coerceIn(0, 4) == 0) {\n'
               '        Image(\n'
               '            painter = painterResource(R.drawable.zte_onboarding_00_final),\n'
@@ -216,26 +192,36 @@ jobs:
               '        return\n'
               '    }\n'
           )
-          if needle not in text:
-              raise SystemExit('OnboardingStepArt signature not found')
-          text = text.replace(needle, replacement, 1)
-          art.write_text(text)
+          if 'R.drawable.zte_onboarding_00_final' not in text:
+              if signature not in text:
+                  raise SystemExit('OnboardingStepArt signature not found')
+              text = text.replace(signature, guard, 1)
+
+          art.write_text(text, encoding='utf-8')
 
           manifest = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          m = manifest.read_text()
-          old = '| ONB-00 | Onboarding step 0 primary illustration | Authored replacement for the current step-0 radial Power Core/ignition visual in `OnboardingStepArt`; isolated scene art with no baked UI text. | `app/src/main/res/drawable-nodpi/zte_onboarding_00_final.webp` | TODO |'
-          new = old[:-6] + 'RUNTIME |'
-          if old not in m:
-              raise SystemExit('ONB-00 TODO manifest row not found')
-          manifest.write_text(m.replace(old, new, 1))
+          lines = manifest.read_text(encoding='utf-8').splitlines()
+          found = False
+          for i, line in enumerate(lines):
+              if line.startswith('| ONB-00 |'):
+                  found = True
+                  if '| TODO |' in line:
+                      lines[i] = line.replace('| TODO |', '| RUNTIME |')
+                  elif '| RUNTIME |' not in line:
+                      raise SystemExit(f'unexpected ONB-00 status row: {line}')
+                  break
+          if not found:
+              raise SystemExit('ONB-00 manifest row not found')
+          manifest.write_text('\n'.join(lines) + '\n', encoding='utf-8')
           PY
 
           git diff --check
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add app/src/main/res/drawable-nodpi/zte_onboarding_00_final.webp \
-                  app/src/main/java/com/zerotoempire/game/OnboardingArt.kt \
-                  docs/art/FINAL_AAA_SPRITE_MANIFEST.md \
-                  art/production/onb-00-runtime-qa.json
+          git add \
+            app/src/main/res/drawable-nodpi/zte_onboarding_00_final.webp \
+            app/src/main/java/com/zerotoempire/game/OnboardingArt.kt \
+            docs/art/FINAL_AAA_SPRITE_MANIFEST.md \
+            art/production/onb-00-runtime-qa.json
           git commit -m "feat(art): integrate authored ONB-00 onboarding illustration"
           git push --force origin HEAD:art/onb-00-runtime
