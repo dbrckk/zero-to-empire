@@ -204,6 +204,7 @@ app/
               PremiumSprites.kt
               PremiumUiCompat.kt
               PrivacyConsentManager.kt
+              PrivacyPolicy.kt
               ProgressionSystems.kt
               PurchaseCreditLedger.kt
               PurchaseImpactVfx.kt
@@ -286,6 +287,7 @@ tools/
     ui_dump_retry.sh
     ui_economy_probe.py
     validate_manifest_policy.py
+    validate_release_privacy.py
   assets/
     __init__.py
     manifest.py
@@ -547,6 +549,12 @@ on:
       - 'art/production/**'
       - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
       - 'tools/android/**'
+      - 'marketing/privacy-policy.md'
+      - 'marketing/data-safety.md'
+      - 'marketing/play-store-listing.md'
+      - 'marketing/privacy-policy.md'
+      - 'marketing/data-safety.md'
+      - 'marketing/play-store-listing.md'
       - 'build.gradle.kts'
       - 'settings.gradle.kts'
       - 'gradle.properties'
@@ -621,6 +629,9 @@ jobs:
 
       - name: Validate Android manifest policy
         run: python3 tools/android/validate_manifest_policy.py
+
+      - name: Validate release privacy and Data Safety
+        run: python3 tools/android/validate_release_privacy.py
 
       - name: Build debug APK
         run: gradle assembleDebug --stacktrace
@@ -3032,6 +3043,9 @@ jobs:
       ZERO_EMPIRE_KEY_PASSWORD: ${{ secrets.ZERO_EMPIRE_KEY_PASSWORD }}
     steps:
       - uses: actions/checkout@v4
+
+      - name: Validate release privacy and Data Safety
+        run: python3 tools/android/validate_release_privacy.py
 
       - uses: actions/setup-java@v5
         with:
@@ -9545,6 +9559,7 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
     val rewarded = remember(context) { AdMobRewardedGateway(context.applicationContext) }
     val consent = remember(activity) { activity?.let(::PrivacyConsentManager) }
     var showStore by remember { mutableStateOf(false) }
+    var showPrivacyPolicy by remember { mutableStateOf(false) }
     var owned by remember { mutableStateOf<Set<StoreProduct>>(emptySet()) }
     var purchaseInFlight by remember { mutableStateOf<StoreProduct?>(null) }
     var pendingPurchases by remember { mutableStateOf<Set<StoreProduct>>(emptySet()) }
@@ -9593,6 +9608,7 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
         purchaseInFlight = purchaseInFlight,
         pendingPurchases = pendingPurchases,
         onDismiss = { showStore = false },
+        onPrivacyPolicy = { showPrivacyPolicy = true },
         onDiagnostics = if (BuildConfig.DEBUG) {
             { status = LocalBillingDiagnostics.snapshot().toSupportText() }
         } else null,
@@ -9641,6 +9657,7 @@ fun CommerceRoot(vm: GameViewModel = viewModel()) {
             }
         }
     )
+    if (showPrivacyPolicy) PrivacyPolicyDialog(onDismiss = { showPrivacyPolicy = false })
 }
 
 @Composable
@@ -9649,6 +9666,7 @@ private fun StoreDialog(
     purchaseInFlight: StoreProduct?,
     pendingPurchases: Set<StoreProduct>,
     onDismiss: () -> Unit,
+    onPrivacyPolicy: () -> Unit,
     onDiagnostics: (() -> Unit)?,
     onRestore: () -> Unit,
     onPurchase: (StoreProduct) -> Unit
@@ -9682,6 +9700,7 @@ private fun StoreDialog(
                 StoreRow("120 GEMS", "Consumable gem pack.", false, purchaseInFlight, pendingPurchases, StoreProduct.GEM_PACK_SMALL, MetaSpriteKind.GEM) { onPurchase(StoreProduct.GEM_PACK_SMALL) }
                 StoreRow("650 GEMS", "Consumable gem pack.", false, purchaseInFlight, pendingPurchases, StoreProduct.GEM_PACK_MEDIUM, MetaSpriteKind.GEM) { onPurchase(StoreProduct.GEM_PACK_MEDIUM) }
                 OutlinedButton(onClick = onRestore, enabled = purchaseInFlight == null, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text("RESTORE PURCHASES") }
+                TextButton(onClick = onPrivacyPolicy, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text("PRIVACY POLICY") }
                 if (onDiagnostics != null) {
                     TextButton(onClick = onDiagnostics, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text("BILLING DIAGNOSTICS") }
                 }
@@ -16416,6 +16435,66 @@ class PrivacyConsentManager(private val activity: Activity) {
 }
 ```
 
+## File: app/src/main/java/com/zerotoempire/game/PrivacyPolicy.kt
+```kotlin
+package com.zerotoempire.game
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+
+internal const val PRIVACY_POLICY_VERSION = "2026-09-18"
+
+internal val PRIVACY_POLICY_SECTIONS: List<Pair<String, String>> = listOf(
+    "Overview" to
+        "ZERO → EMPIRE stores game progress and preferences on your device. The game does not require a developer account and does not send gameplay telemetry to a developer analytics server.",
+    "Advertising and consent" to
+        "The game uses Google User Messaging Platform to request and manage advertising consent where required. Google Mobile Ads may process device, advertising, diagnostic and interaction data according to Google's terms and your consent choices. Ad requests are disabled until the consent system reports that ads may be requested. Rewarded ads are optional. Interstitial ads, when enabled, are limited to natural progression breaks and can be disabled by the lifetime remove-ads purchase.",
+    "Purchases" to
+        "In-app purchases are processed by Google Play Billing. ZERO → EMPIRE receives purchase product identifiers and transaction tokens needed to deliver and restore entitlements. The game does not receive your full payment card details.",
+    "Local game data" to
+        "Progress, settings, purchase-delivery markers and limited local growth milestones are stored on-device. Android backup or device-transfer services may copy eligible local save data according to your Android and Google account settings.",
+    "Diagnostics" to
+        "The current build uses local Android logging and local preferences for development and gameplay diagnostics. It does not include a third-party developer analytics SDK.",
+    "Your choices" to
+        "You can use the in-game privacy options when Google requires an advertising privacy choice. You can also clear the app's local data through Android settings. Removing the app may remove local data, although platform backups can persist according to your Android backup settings.",
+    "Third-party services" to
+        "Google Play Billing, Google Mobile Ads and Google User Messaging Platform are Google services and may process data under Google's own privacy terms. Their behavior can vary by region, consent state and service configuration.",
+    "Contact and updates" to
+        "This policy applies to the current ZERO → EMPIRE Android release candidate. Material changes to data handling should be reflected here before a new production release. Privacy questions can be raised through the public ZERO → EMPIRE GitHub repository issue tracker."
+)
+
+@Composable
+internal fun PrivacyPolicyDialog(onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("PRIVACY POLICY") },
+        text = {
+            Column(
+                modifier = Modifier
+                    .heightIn(max = 520.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                Text("Version: $PRIVACY_POLICY_VERSION")
+                PRIVACY_POLICY_SECTIONS.forEach { (heading, body) ->
+                    Text("\n$heading\n$body")
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) { Text("CLOSE") }
+        }
+    )
+}
+```
+
 ## File: app/src/main/java/com/zerotoempire/game/ProgressionSystems.kt
 ```kotlin
 package com.zerotoempire.game
@@ -21576,6 +21655,39 @@ extract = ET.parse("app/src/main/res/xml/data_extraction_rules.xml").getroot()
 node = extract.find(section)
 ⋮----
 actual = {(n.get("domain"), n.get("path")) for n in node.findall("include")}
+```
+
+## File: tools/android/validate_release_privacy.py
+```python
+#!/usr/bin/env python3
+⋮----
+ROOT = Path(__file__).resolve().parents[2]
+⋮----
+BUILD = ROOT / "app/build.gradle.kts"
+COMMERCE = ROOT / "app/src/main/java/com/zerotoempire/game/CommerceUi.kt"
+IN_APP_POLICY = ROOT / "app/src/main/java/com/zerotoempire/game/PrivacyPolicy.kt"
+PUBLIC_POLICY = ROOT / "marketing/privacy-policy.md"
+DATA_SAFETY = ROOT / "marketing/data-safety.md"
+STORE_LISTING = ROOT / "marketing/play-store-listing.md"
+⋮----
+required_files = [BUILD, COMMERCE, IN_APP_POLICY, PUBLIC_POLICY, DATA_SAFETY, STORE_LISTING]
+missing = [str(path.relative_to(ROOT)) for path in required_files if not path.is_file()]
+⋮----
+build = BUILD.read_text(encoding="utf-8")
+commerce = COMMERCE.read_text(encoding="utf-8")
+in_app = IN_APP_POLICY.read_text(encoding="utf-8")
+public = PUBLIC_POLICY.read_text(encoding="utf-8")
+data_safety = DATA_SAFETY.read_text(encoding="utf-8")
+listing = STORE_LISTING.read_text(encoding="utf-8")
+⋮----
+sensitive_prefixes = (
+⋮----
+dependencies = re.findall(r'implementation\("([^"]+)"\)', build)
+sensitive_dependencies = sorted(
+⋮----
+required_public_headings = (
+⋮----
+required_in_app_terms = (
 ```
 
 ## File: tools/assets/__init__.py

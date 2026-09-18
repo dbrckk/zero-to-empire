@@ -4,5 +4,140 @@
   "scope": "symbols defined in changed source files",
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
-  "symbols": {}
+  "symbols": {
+    "CommerceRoot": {
+      "definition": {
+        "file": "app/src/main/java/com/zerotoempire/game/CommerceUi.kt",
+        "line": 27,
+        "kind": "symbol",
+        "language": "kotlin"
+      },
+      "occurrences": [
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/AdMobRewardedGateway.kt",
+          "line": 33,
+          "preview": "* CommerceRoot only enables this gateway after the privacy gate allows ad requests.",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/CommerceUi.kt",
+          "line": 27,
+          "preview": "fun CommerceRoot(vm: GameViewModel = viewModel()) {",
+          "definition_candidate": true
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/GrowthRuntime.kt",
+          "line": 68,
+          "preview": "// Draw ambience first. CommerceRoot contains every interactive surface.",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/GrowthRuntime.kt",
+          "line": 70,
+          "preview": "CommerceRoot(vm)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "StoreDialog": {
+      "definition": {
+        "file": "app/src/main/java/com/zerotoempire/game/CommerceUi.kt",
+        "line": 138,
+        "kind": "symbol",
+        "language": "kotlin"
+      },
+      "occurrences": [
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/CommerceUi.kt",
+          "line": 80,
+          "preview": "if (showStore && activity != null) StoreDialog(",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/CommerceUi.kt",
+          "line": 104,
+          "preview": "if (purchaseInFlight != null) return@StoreDialog",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/CommerceUi.kt",
+          "line": 138,
+          "preview": "private fun StoreDialog(",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "StoreRow": {
+      "definition": {
+        "file": "app/src/main/java/com/zerotoempire/game/CommerceUi.kt",
+        "line": 190,
+        "kind": "symbol",
+        "language": "kotlin"
+      },
+      "occurrences": [
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/CommerceUi.kt",
+          "line": 172,
+          "preview": "StoreRow(\"REMOVE ADS\", \"Lifetime removal of non-rewarded advertising. Reward videos remain optional.\", StoreProduct.REMOVE_ADS in owned, purchaseInFlight, pendingPurchases, StorePr",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/CommerceUi.kt",
+          "line": 173,
+          "preview": "StoreRow(\"STARTER PACK\", \"250 gems + 30 min \u00d72 income. One-time purchase.\", StoreProduct.STARTER_PACK in owned, purchaseInFlight, pendingPurchases, StoreProduct.STARTER_PACK, MetaS",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/CommerceUi.kt",
+          "line": 174,
+          "preview": "StoreRow(\"120 GEMS\", \"Consumable gem pack.\", false, purchaseInFlight, pendingPurchases, StoreProduct.GEM_PACK_SMALL, MetaSpriteKind.GEM) { onPurchase(StoreProduct.GEM_PACK_SMALL) }",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/CommerceUi.kt",
+          "line": 175,
+          "preview": "StoreRow(\"650 GEMS\", \"Consumable gem pack.\", false, purchaseInFlight, pendingPurchases, StoreProduct.GEM_PACK_MEDIUM, MetaSpriteKind.GEM) { onPurchase(StoreProduct.GEM_PACK_MEDIUM)",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/CommerceUi.kt",
+          "line": 190,
+          "preview": "private fun StoreRow(",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 5
+    },
+    "PrivacyPolicyDialog": {
+      "definition": {
+        "file": "app/src/main/java/com/zerotoempire/game/PrivacyPolicy.kt",
+        "line": 36,
+        "kind": "symbol",
+        "language": "kotlin"
+      },
+      "occurrences": [
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/CommerceUi.kt",
+          "line": 134,
+          "preview": "if (showPrivacyPolicy) PrivacyPolicyDialog(onDismiss = { showPrivacyPolicy = false })",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/PrivacyPolicy.kt",
+          "line": 36,
+          "preview": "internal fun PrivacyPolicyDialog(onDismiss: () -> Unit) {",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/android/validate_release_privacy.py",
+          "line": 71,
+          "preview": "if 'Text(\"PRIVACY POLICY\")' not in commerce or \"PrivacyPolicyDialog\" not in commerce:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    }
+  }
 }

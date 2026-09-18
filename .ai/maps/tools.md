@@ -47,6 +47,7 @@ android/
   ui_dump_retry.sh
   ui_economy_probe.py
   validate_manifest_policy.py
+  validate_release_privacy.py
 sprites/
   animation_batch_planner.py
   audit_complete_sprite_manifest.py
@@ -650,6 +651,39 @@ extract = ET.parse("app/src/main/res/xml/data_extraction_rules.xml").getroot()
 node = extract.find(section)
 ⋮----
 actual = {(n.get("domain"), n.get("path")) for n in node.findall("include")}
+```
+
+## File: android/validate_release_privacy.py
+```python
+#!/usr/bin/env python3
+⋮----
+ROOT = Path(__file__).resolve().parents[2]
+⋮----
+BUILD = ROOT / "app/build.gradle.kts"
+COMMERCE = ROOT / "app/src/main/java/com/zerotoempire/game/CommerceUi.kt"
+IN_APP_POLICY = ROOT / "app/src/main/java/com/zerotoempire/game/PrivacyPolicy.kt"
+PUBLIC_POLICY = ROOT / "marketing/privacy-policy.md"
+DATA_SAFETY = ROOT / "marketing/data-safety.md"
+STORE_LISTING = ROOT / "marketing/play-store-listing.md"
+⋮----
+required_files = [BUILD, COMMERCE, IN_APP_POLICY, PUBLIC_POLICY, DATA_SAFETY, STORE_LISTING]
+missing = [str(path.relative_to(ROOT)) for path in required_files if not path.is_file()]
+⋮----
+build = BUILD.read_text(encoding="utf-8")
+commerce = COMMERCE.read_text(encoding="utf-8")
+in_app = IN_APP_POLICY.read_text(encoding="utf-8")
+public = PUBLIC_POLICY.read_text(encoding="utf-8")
+data_safety = DATA_SAFETY.read_text(encoding="utf-8")
+listing = STORE_LISTING.read_text(encoding="utf-8")
+⋮----
+sensitive_prefixes = (
+⋮----
+dependencies = re.findall(r'implementation\("([^"]+)"\)', build)
+sensitive_dependencies = sorted(
+⋮----
+required_public_headings = (
+⋮----
+required_in_app_terms = (
 ```
 
 ## File: sprites/animation_batch_planner.py

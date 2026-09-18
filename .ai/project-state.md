@@ -22,16 +22,24 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T16:39:21Z
+Generated: 2026-09-18T18:12:05Z
 
 ### Git
 - Branch: `main`
-- Head: `b571cd405a08`
-- Commit date: 2026-09-18T18:39:02+02:00
-- Commit: fix(art): remove detached artifacts from ONB-00
-- Tracked files: 1226
+- Head: `c81c29450d06`
+- Commit date: 2026-09-18T20:11:45+02:00
+- Commit: feat(release): add in-app privacy policy and Data Safety gate
+- Tracked files: 1230
 
 ### Recently changed files
+- `.github/workflows/android.yml`
+- `.github/workflows/production-release.yml`
+- `app/src/main/java/com/zerotoempire/game/CommerceUi.kt`
+- `app/src/main/java/com/zerotoempire/game/PrivacyPolicy.kt`
+- `marketing/data-safety.md`
+- `marketing/play-store-listing.md`
+- `marketing/privacy-policy.md`
+- `tools/android/validate_release_privacy.py`
 - `app/src/main/res/drawable-nodpi/zte_onboarding_00_final.webp`
 - `art/production/onb-00-runtime-qa.json`
 - `art/production/existing-runtime-qa.json`
@@ -39,7 +47,6 @@ Generated: 2026-09-18T16:39:21Z
 - `app/src/main/java/com/zerotoempire/game/OnboardingArt.kt`
 - `tools/assets/test_manifest.py`
 - `app/src/test/java/com/zerotoempire/game/BulkPurchaseTest.kt`
-- `AGENTS.md`
 
 ### Project signals
 - `build.gradle.kts`
