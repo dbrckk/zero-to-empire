@@ -22,16 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T19:07:40Z
+Generated: 2026-09-18T19:17:53Z
 
 ### Git
 - Branch: `main`
-- Head: `4835ace7739d`
-- Commit date: 2026-09-18T21:07:20+02:00
-- Commit: chore(ai): adopt bounded v6 context routing
+- Head: `08493bec427e`
+- Commit date: 2026-09-18T21:16:46+02:00
+- Commit: chore(ai): align config with v6 bounded context
 - Tracked files: 1230
 
 ### Recently changed files
+- `.repo-standards.yml`
+- `.github/workflows/ai-repo-map.yml`
 - `AGENTS.md`
 - `.github/workflows/android.yml`
 - `.github/workflows/production-release.yml`
@@ -43,10 +45,6 @@ Generated: 2026-09-18T19:07:40Z
 - `tools/android/validate_release_privacy.py`
 - `app/src/main/res/drawable-nodpi/zte_onboarding_00_final.webp`
 - `art/production/onb-00-runtime-qa.json`
-- `art/production/existing-runtime-qa.json`
-- `docs/art/FINAL_AAA_SPRITE_MANIFEST.md`
-- `app/src/main/java/com/zerotoempire/game/OnboardingArt.kt`
-- `tools/assets/test_manifest.py`
 
 ### Project signals
 - `build.gradle.kts`
