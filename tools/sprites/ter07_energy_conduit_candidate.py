@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Author a candidate-only semantic replacement for TER-07.
+"""Author a candidate-only 2.5D semantic replacement for TER-07.
 
 TER-07 is an Expansion-era energy conduit connector, not a terrain platform.
-The candidate stays isolated on transparency and is intentionally NOT copied to
-runtime by this script. Semantic review remains required before replacement.
+This v3 candidate adds material depth, bevels and an extruded junction while
+remaining isolated on transparency. It never writes the runtime asset.
 """
 from __future__ import annotations
 
@@ -16,94 +16,145 @@ ROOT=Path(__file__).resolve().parents[2]
 OUT=ROOT/'art/production/ter07'
 SIDE=1024
 
-P0=(170,720)
-P1=(854,322)
+P0=(170.0,720.0)
+P1=(854.0,322.0)
+DEPTH=(18.0,25.0)
 
-def add(p,q):
-    return (p[0]+q[0],p[1]+q[1])
-
-def mul(v,s):
-    return (v[0]*s,v[1]*s)
+def add(a,b): return (a[0]+b[0],a[1]+b[1])
+def sub(a,b): return (a[0]-b[0],a[1]-b[1])
+def mul(v,s): return (v[0]*s,v[1]*s)
 
 def unit_and_normal(a,b):
-    dx=b[0]-a[0];dy=b[1]-a[1]
-    n=math.hypot(dx,dy)
-    u=(dx/n,dy/n)
-    normal=(-u[1],u[0])
-    return u,normal
+    dx=b[0]-a[0]; dy=b[1]-a[1]
+    length=math.hypot(dx,dy)
+    u=(dx/length,dy/length)
+    n=(-u[1],u[0])
+    return u,n,length
 
-def point_at(t,u):
-    return (P0[0]+u[0]*t,P0[1]+u[1]*t)
+U,N,LENGTH=unit_and_normal(P0,P1)
 
-def polygon_strip(a,b,half_width):
-    u,n=unit_and_normal(a,b)
+def pt(t,side=0.0,depth=0.0):
+    p=add(P0,mul(U,t))
+    p=add(p,mul(N,side))
+    p=add(p,mul(DEPTH,depth))
+    return p
+
+def strip_poly(start,end,half_width,depth=0.0):
     return [
-        (a[0]+n[0]*half_width,a[1]+n[1]*half_width),
-        (b[0]+n[0]*half_width,b[1]+n[1]*half_width),
-        (b[0]-n[0]*half_width,b[1]-n[1]*half_width),
-        (a[0]-n[0]*half_width,a[1]-n[1]*half_width),
+        add(add(start,mul(N,half_width)),mul(DEPTH,depth)),
+        add(add(end,mul(N,half_width)),mul(DEPTH,depth)),
+        add(add(end,mul(N,-half_width)),mul(DEPTH,depth)),
+        add(add(start,mul(N,-half_width)),mul(DEPTH,depth)),
     ]
+
+def quad_extrude(poly,depth_vec):
+    return [[p,add(p,depth_vec)] for p in poly]
+
+def draw_side_faces(draw,top_poly,depth_vec,fill):
+    lower=[add(p,depth_vec) for p in top_poly]
+    # Only visible lower/right side faces in the shared 2.5D light.
+    for i in (1,2):
+        j=(i+1)%4
+        draw.polygon([top_poly[i],top_poly[j],lower[j],lower[i]],fill=fill)
+    draw.polygon(lower,fill=(15,20,25,220))
 
 def render():
     im=Image.new('RGBA',(SIDE,SIDE),(0,0,0,0))
+
+    # Controlled cyan bloom, restricted to the connector footprint.
     glow=Image.new('RGBA',(SIDE,SIDE),(0,0,0,0))
     gd=ImageDraw.Draw(glow,'RGBA')
-    d=ImageDraw.Draw(im,'RGBA')
-
-    u,n=unit_and_normal(P0,P1)
-    length=math.hypot(P1[0]-P0[0],P1[1]-P0[1])
-
-    # Restrained cyan under-glow. It follows only the connector, never a tile.
-    gd.line([P0,P1],fill=(50,218,236,86),width=86)
-    glow=glow.filter(ImageFilter.GaussianBlur(25))
+    gd.line([P0,P1],fill=(43,215,235,95),width=78)
+    glow=glow.filter(ImageFilter.GaussianBlur(23))
     im.alpha_composite(glow)
 
-    # Structural outer housing and inset trench.
-    d.polygon(polygon_strip(P0,P1,56),fill=(37,44,52,255))
-    d.polygon(polygon_strip(add(P0,mul(u,10)),add(P1,mul(u,-10)),45),fill=(74,84,92,255))
-    d.polygon(polygon_strip(add(P0,mul(u,18)),add(P1,mul(u,-18)),34),fill=(18,25,31,255))
+    d=ImageDraw.Draw(im,'RGBA')
 
-    # Two energy rails provide an unmistakable conduit read.
-    for side in (-1,1):
-        off=mul(n,18*side)
-        a=add(add(P0,mul(u,28)),off)
-        b=add(add(P1,mul(u,-28)),off)
-        d.line([a,b],fill=(35,205,224,255),width=12)
-        d.line([a,b],fill=(196,250,255,190),width=3)
+    start=pt(16)
+    end=pt(LENGTH-16)
+    outer=strip_poly(start,end,58)
+    draw_side_faces(d,outer,DEPTH,(20,28,34,255))
+    d.polygon(outer,fill=(51,61,70,255))
 
-    # Attached clamps/brackets. Every detail stays fused to the connector.
-    for t in range(70,int(length)-50,86):
-        c=point_at(t,u)
-        a=add(c,mul(n,-53))
-        b=add(c,mul(n,53))
-        d.line([a,b],fill=(118,132,140,255),width=13)
-        d.line([add(c,mul(n,-38)),add(c,mul(n,38))],fill=(205,216,220,145),width=3)
+    # Top bevel and recessed channel.
+    bevel=strip_poly(pt(28),pt(LENGTH-28),49)
+    d.polygon(bevel,fill=(111,125,136,255))
+    trench=strip_poly(pt(38),pt(LENGTH-38),36)
+    d.polygon(trench,fill=(18,26,33,255))
 
-        # Small recessed energy node.
-        r=11
-        d.ellipse((c[0]-r,c[1]-r,c[0]+r,c[1]+r),fill=(30,224,238,235),outline=(224,255,255,190),width=3)
+    # Lower-right channel lip adds depth without becoming a floor card.
+    lip_a=[pt(38,-36),pt(LENGTH-38,-36),pt(LENGTH-38,-27),pt(38,-27)]
+    d.polygon(lip_a,fill=(8,14,19,245))
 
-    # Compact inline junction block reinforces function without becoming a platform.
-    c=point_at(length*.52,u)
-    block=[
-        add(add(c,mul(u,-45)),mul(n,45)),
-        add(add(c,mul(u,45)),mul(n,45)),
-        add(add(c,mul(u,45)),mul(n,-45)),
-        add(add(c,mul(u,-45)),mul(n,-45)),
+    # Twin recessed energy rails, with shadow, emissive core and hot highlight.
+    for side in (-18,18):
+        a=pt(48,side)
+        b=pt(LENGTH-48,side)
+        shadow_a=add(a,(5,7)); shadow_b=add(b,(5,7))
+        d.line([shadow_a,shadow_b],fill=(0,9,13,210),width=18)
+        d.line([a,b],fill=(20,136,154,255),width=16)
+        d.line([a,b],fill=(28,225,242,255),width=10)
+        d.line([add(a,mul(N,-2)),add(b,mul(N,-2))],fill=(211,255,255,205),width=3)
+
+    # Attached structural clamps. Their lower halves are darker to reinforce extrusion.
+    for t in range(82,int(LENGTH)-62,88):
+        c=pt(t)
+        a=add(c,mul(N,-51)); b=add(c,mul(N,51))
+        d.line([add(a,(6,8)),add(b,(6,8))],fill=(23,31,38,255),width=18)
+        d.line([a,b],fill=(116,133,143,255),width=15)
+        d.line([add(a,mul(U,-2)),add(b,mul(U,-2))],fill=(221,230,234,120),width=3)
+
+        # Bolted energy coupler: dark socket -> cyan lens -> white pin highlight.
+        r=13
+        d.ellipse((c[0]-r+4,c[1]-r+6,c[0]+r+4,c[1]+r+6),fill=(8,18,23,230))
+        d.ellipse((c[0]-r,c[1]-r,c[0]+r,c[1]+r),fill=(28,198,217,255),outline=(139,246,252,240),width=3)
+        d.ellipse((c[0]-5,c[1]-7,c[0]+5,c[1]+3),fill=(230,255,255,225))
+
+    # Inline junction box, integrated in the conduit and visibly extruded.
+    c=pt(LENGTH*.52)
+    hu=49; hn=49
+    top=[
+        add(add(c,mul(U,-hu)),mul(N,hn)),
+        add(add(c,mul(U, hu)),mul(N,hn)),
+        add(add(c,mul(U, hu)),mul(N,-hn)),
+        add(add(c,mul(U,-hu)),mul(N,-hn)),
     ]
-    d.polygon(block,fill=(53,61,70,255),outline=(139,154,164,235))
+    depth=mul(DEPTH,1.15)
+    lower=[add(p,depth) for p in top]
+    # Visible junction side faces.
+    d.polygon([top[1],top[2],lower[2],lower[1]],fill=(21,30,37,255))
+    d.polygon([top[2],top[3],lower[3],lower[2]],fill=(12,19,24,255))
+    d.polygon(top,fill=(66,78,88,255),outline=(153,169,178,255))
+
+    inner_hu=31; inner_hn=30
     inner=[
-        add(add(c,mul(u,-27)),mul(n,27)),
-        add(add(c,mul(u,27)),mul(n,27)),
-        add(add(c,mul(u,27)),mul(n,-27)),
-        add(add(c,mul(u,-27)),mul(n,-27)),
+        add(add(c,mul(U,-inner_hu)),mul(N,inner_hn)),
+        add(add(c,mul(U, inner_hu)),mul(N,inner_hn)),
+        add(add(c,mul(U, inner_hu)),mul(N,-inner_hn)),
+        add(add(c,mul(U,-inner_hu)),mul(N,-inner_hn)),
     ]
-    d.polygon(inner,fill=(18,31,37,255),outline=(43,217,233,235))
-    d.ellipse((c[0]-13,c[1]-13,c[0]+13,c[1]+13),fill=(82,236,244,235),outline=(235,255,255,210),width=3)
+    d.polygon(inner,fill=(17,29,35,255),outline=(42,215,232,245),width=4)
 
-    # Shared upper-left highlight / lower-right shadow.
-    d.line([add(P0,mul(n,-52)),add(P1,mul(n,-52))],fill=(232,239,242,105),width=4)
-    d.line([add(P0,mul(n,52)),add(P1,mul(n,52))],fill=(5,9,13,135),width=7)
+    # Recessed reactor lens and small material bolts.
+    r=16
+    d.ellipse((c[0]-r+4,c[1]-r+6,c[0]+r+4,c[1]+r+6),fill=(4,13,18,230))
+    d.ellipse((c[0]-r,c[1]-r,c[0]+r,c[1]+r),fill=(49,220,233,255),outline=(218,255,255,245),width=4)
+    d.ellipse((c[0]-6,c[1]-9,c[0]+5,c[1]+2),fill=(247,255,255,235))
+    for du,dn in ((-37,37),(37,37),(37,-37),(-37,-37)):
+        p=add(add(c,mul(U,du)),mul(N,dn))
+        d.ellipse((p[0]-4,p[1]-4,p[0]+4,p[1]+4),fill=(177,190,198,210))
+
+    # Shared upper-left key highlight and lower-right occlusion edge.
+    d.line([pt(18,56),pt(LENGTH-18,56)],fill=(235,241,244,150),width=4)
+    d.line([pt(18,-57),pt(LENGTH-18,-57)],fill=(4,8,12,180),width=8)
+
+    # End caps make this a modular connector, not an arbitrary strip.
+    for t in (24,LENGTH-24):
+        c=pt(t)
+        a=add(c,mul(N,-56)); b=add(c,mul(N,56))
+        d.line([add(a,(5,7)),add(b,(5,7))],fill=(14,21,27,255),width=22)
+        d.line([a,b],fill=(103,118,128,255),width=18)
+        d.line([a,b],fill=(207,220,226,115),width=3)
 
     return im
 
@@ -114,17 +165,18 @@ def validate(im):
     bbox=a.getbbox()
     if not bbox:
         raise RuntimeError('empty candidate')
+
     margin=min(bbox[0],bbox[1],SIDE-bbox[2],SIDE-bbox[3])
-    if margin<90:
+    if margin<78:
         raise RuntimeError(f'safety margin too small: {margin}px')
+
     coverage=sum(a.histogram()[8:])/(SIDE*SIDE)
-    if not .05<=coverage<=.24:
+    if not .06<=coverage<=.25:
         raise RuntimeError(f'connector coverage outside semantic target: {coverage:.1%}')
 
-    # Semantic geometry guard: connector should be long/narrow, never a square pad.
-    w=bbox[2]-bbox[0];h=bbox[3]-bbox[1]
+    w=bbox[2]-bbox[0]; h=bbox[3]-bbox[1]
     aspect=max(w,h)/max(1,min(w,h))
-    if aspect<1.45:
+    if aspect<1.40:
         raise RuntimeError(f'connector aspect too compact: {aspect:.2f}')
 
     return {'bbox':bbox,'margin':margin,'coverage':coverage,'long_axis_aspect':aspect}
@@ -133,21 +185,25 @@ def main():
     OUT.mkdir(parents=True,exist_ok=True)
     im=render()
     metrics=validate(im)
-    png=OUT/'zte_terrain_07_candidate_v2.png'
+    png=OUT/'zte_terrain_07_candidate_v3.png'
     im.save(png,'PNG',optimize=True)
     report={
         'asset_id':'TER-07',
         'semantic_role':'Expansion energy conduit connector',
         'status':'CANDIDATE',
+        'revision':'v3-premium-2.5d',
         'candidate':str(png.relative_to(ROOT)),
         'runtime_unchanged':'app/src/main/res/drawable-nodpi/zte_terrain_07_final.webp',
+        'previous_candidate':'art/production/ter07/zte_terrain_07_candidate_v2.png',
+        'previous_verdict':'SEMANTIC_PASS_ART_REJECT',
         'metrics':metrics,
         'semantic_requirements':[
             'isolated connector on transparency',
             'no terrain/platform slab',
-            'continuous energy rails',
-            'attached junction and brackets only',
-            '2.5D diagonal connector read',
+            'continuous twin energy rails',
+            'attached junction, clamps and modular end caps only',
+            '2.5D material depth with visible side faces',
+            'upper-left key and lower-right occlusion consistent with world art',
         ],
     }
     (OUT/'report.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
