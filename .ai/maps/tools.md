@@ -2842,17 +2842,27 @@ md = [
 ⋮----
 ROOT=Path(__file__).resolve().parents[2]
 MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
+QUEUE=ROOT/'art/production/controlled-building-regen-queue.json'
 PROD=ROOT/'art/production'
 INCOMING=ROOT/'art/incoming/final-sprites'
 RUNTIME=ROOT/'app/src/main/res/drawable-nodpi'
 ⋮----
 import pollinations_building_factory as pf  # noqa
 ⋮----
-def rows()
+def manifest_rows()
 ⋮----
-out=[]
+out={}
 ⋮----
 cols=[c.strip() for c in line.split('|')[1:-1]]
+⋮----
+def pending_rows()
+⋮----
+rows=manifest_rows()
+⋮----
+q=json.loads(QUEUE.read_text(encoding='utf-8'))
+out=[]
+⋮----
+aid=str(item.get('id','')).upper()
 ⋮----
 def mark_runtime(asset_id:str)
 ⋮----
@@ -2860,6 +2870,12 @@ lines=MANIFEST.read_text(encoding='utf-8').splitlines()
 out=[]; changed=0
 ⋮----
 cols[4]='RUNTIME'; line='| '+' | '.join(cols)+' |'; changed+=1
+⋮----
+def mark_queue(asset_id:str,status:str,seed:int)
+⋮----
+found=False
+⋮----
+found=True
 ⋮----
 def run(cmd,env=None)
 ⋮----
@@ -2869,13 +2885,14 @@ count=max(1,min(int(os.getenv('POLLINATIONS_BATCH_COUNT','8')),8))
 attempts=max(1,min(int(os.getenv('POLLINATIONS_ATTEMPTS','3')),4))
 base=int(os.getenv('POLLINATIONS_BASE_SEED','73117'))
 ⋮----
-summary={'requested':count,'attempts_per_target':attempts,'successes':[],'failures':[]}
+candidate_only = queued or os.getenv('POLLINATIONS_CANDIDATE_ONLY','').lower() in {'1','true','yes'}
+summary={
 ⋮----
 session=new_session('u2net')
 ⋮----
-pending=rows()
+targets=initial[:count]
 ⋮----
-row=pending[0]; aid=row[0]
+aid=row[0]
 ok=False
 attempts_log=[]
 ⋮----
@@ -2891,6 +2908,8 @@ q=run([sys.executable,'tools/sprites/build_sprite_contact_sheet.py','--files',st
 qd=json.loads(qa.read_text()) if qa.exists() else {}
 qrows=qd.get('assets',[])
 ⋮----
+ok=True
+⋮----
 env=os.environ.copy(); env['SPRITE_TARGETS']=stem
 fin=run([sys.executable,'tools/sprites/process_final_sprites.py'],env=env)
 runtime=RUNTIME/f'{stem}.webp'
@@ -2899,8 +2918,6 @@ rqa=PROD/f'pollinations-{aid.lower()}-runtime-qa.json'
 rv=run([sys.executable,'tools/sprites/validate_runtime_asset.py','--asset-id',aid,'--path',str(runtime.relative_to(ROOT)),'--report',str(rqa.relative_to(ROOT))])
 ⋮----
 data=json.loads(rqa.read_text()) if rqa.exists() else {'issues':['runtime-validator-failed']}
-⋮----
-ok=True
 ```
 
 ## File: sprites/pollinations_building_factory.py

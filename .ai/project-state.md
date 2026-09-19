@@ -22,16 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T11:38:31Z
+Generated: 2026-09-19T11:42:21Z
 
 ### Git
 - Branch: `main`
-- Head: `9d81a2977f8b`
-- Commit date: 2026-09-19T13:38:16+02:00
-- Commit: feat(world): animate reviewed city traffic (#53)
-- Tracked files: 1291
+- Head: `430f7231c9b9`
+- Commit date: 2026-09-19T13:42:03+02:00
+- Commit: art: restart controlled asset production (#57)
+- Tracked files: 1293
 
 ### Recently changed files
+- `.github/workflows/pollinations-building-candidate.yml`
+- `art/production/controlled-building-regen-queue.json`
+- `tools/sprites/pollinations_building_batch.py`
+- `docs/art/AAA_MANAGER_PORTRAIT_SPEC.md`
 - `app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt`
 - `app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt`
 - `app/src/main/java/com/zerotoempire/game/ReviewedMachineLayer.kt`
@@ -39,18 +43,6 @@ Generated: 2026-09-19T11:38:31Z
 - `app/src/test/java/com/zerotoempire/game/AmbientTrafficMotionTest.kt`
 - `app/src/main/java/com/zerotoempire/game/CanonicalCharacterRaster.kt`
 - `app/src/test/java/com/zerotoempire/game/CanonicalCharacterRasterTest.kt`
-- `.github/workflows/pollinations-building-candidate.yml`
-- `.github/workflows/kaggle-candidate-finalize.yml`
-- `.github/workflows/reconcile-existing-runtime-todos.yml`
-- `.github/workflows/reconcile-sprite-progress-ledger.yml`
-- `.github/workflows/sprite-completion-gate.yml`
-- `PROJECT_CONTINUITY.md`
-- `docs/art/AAA_HISTORICAL_PROMOTION_REVIEW.md`
-- `docs/art/FINAL_AAA_SPRITE_PROGRESS.md`
-- `tools/sprites/pollinations_building_batch.py`
-- `.github/workflows/android-emulator-smoke.yml`
-- `.github/workflows/android.yml`
-- `.github/workflows/production-release.yml`
 
 ### Project signals
 - `build.gradle.kts`
