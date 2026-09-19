@@ -1,12 +1,12 @@
 # Change impact
 
-Base: 27500c9fddce2387fafe9af3f377baf4970ff7c0
-Head: 430f7231c9b928f02aa4bba22a89c806f68b6a14
+Base: dd16fd67b9241cb76f13a8a9237463497ffcbbf5
+Head: f2e1f1ec6a0f1ae48fdee404fde89a961c027876
 
 ## Changed files
-- M .github/workflows/pollinations-building-candidate.yml
-- A art/production/controlled-building-regen-queue.json
-- M tools/sprites/pollinations_building_batch.py
+- M .github/workflows/pollinations-character-atlas.yml
+- A art/production/controlled-character-regen-queue.json
+- M tools/sprites/pollinations_character_sheet_factory.py
 
 ## Affected areas
 - .github

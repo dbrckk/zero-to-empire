@@ -22,16 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T11:42:21Z
+Generated: 2026-09-19T11:44:17Z
 
 ### Git
 - Branch: `main`
-- Head: `430f7231c9b9`
-- Commit date: 2026-09-19T13:42:03+02:00
-- Commit: art: restart controlled asset production (#57)
-- Tracked files: 1293
+- Head: `f2e1f1ec6a0f`
+- Commit date: 2026-09-19T13:44:00+02:00
+- Commit: art: restart controlled character asset production (#58)
+- Tracked files: 1295
 
 ### Recently changed files
+- `.github/workflows/pollinations-character-atlas.yml`
+- `art/production/controlled-character-regen-queue.json`
+- `tools/sprites/pollinations_character_sheet_factory.py`
 - `.github/workflows/pollinations-building-candidate.yml`
 - `art/production/controlled-building-regen-queue.json`
 - `tools/sprites/pollinations_building_batch.py`

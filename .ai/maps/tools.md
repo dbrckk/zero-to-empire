@@ -3016,20 +3016,27 @@ ROOT=Path(__file__).resolve().parents[2]
 MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
 INCOMING=ROOT/'art/incoming/final-sprites'
 OUT=ROOT/'art/production'
+QUEUE=OUT/'controlled-character-regen-queue.json'
 ROLES={
 ACTIONS={'IDLE':('idle breathing and subtle look-around',6),'WALK':('walking cycle with alternating steps',8),'WORK':('operating a compact industrial hand tool',10),'CARRY':('carrying one compact industrial crate with both hands',8),'REPAIR':('repairing with compact diagnostic tool',10),'CELEB':('short restrained milestone celebration',8)}
 POSES={'IDLE':['neutral','weight left','neutral recovery','weight right','head left','head right'],'WALK':['left contact','left down','passing left','right contact','right down','passing right','left recovery','neutral passing'],'WORK':['tool ready','reach','contact','work low','work center','work high','pull back','inspect','tool down','neutral'],'CARRY':['carry neutral','left step','passing','right step','carry neutral recovery','left step recovery','passing recovery','right step recovery'],'REPAIR':['reach','tool contact','repair low','inspect','tool contact high','adjust','inspect side','tool contact','rise','neutral repair'],'CELEB':['neutral','arm starts up','arm half up','arm raised','small fist pump','arm half down','arm down','neutral recovery']}
 ⋮----
 def pending()
 ⋮----
-out=[]
+manifest={}
 ⋮----
 p=[x.strip() for x in line.split('|')[1:-1]]
 ⋮----
-aid=p[0]
-z=aid.split('-')
+aid=p[0]; z=aid.split('-')
 ⋮----
 runtime=p[3].replace(chr(96),'')
+⋮----
+q=json.loads(QUEUE.read_text(encoding='utf-8'))
+out=[]
+⋮----
+aid=str(item.get('id','')).upper()
+⋮----
+def mark_queue(aid,status,seed=None)
 ⋮----
 def fetch(prompt,seed)
 ⋮----
@@ -3097,7 +3104,7 @@ prompt=f"AAA premium mobile 2.5D full-body character frame. {ROLES[it['role']]}.
 sheet=Image.new('RGBA',(1024,1024),(0,0,0,0))
 ⋮----
 p=INCOMING/f"{it['stem']}.png";sheet.save(p,'PNG',optimize=True)
-rep.append({'id':it['id'],'status':'CANDIDATE','file':p.name,'frames':fc,'qa':why});print(f"POLLINATIONS_CHR_VALIDATED={it['id']} {why}",flush=True);done=True;break
+mark_queue(it['id'],'CANDIDATE',seed);rep.append({'id':it['id'],'status':'CANDIDATE','file':p.name,'frames':fc,'qa':why});print(f"POLLINATIONS_CHR_VALIDATED={it['id']} {why}",flush=True);done=True;break
 except Exception as e:last=str(e);print(f"POLLINATIONS_CHR_RETRY={it['id']} attempt={att+1} reason={e}",flush=True)
 ```
 

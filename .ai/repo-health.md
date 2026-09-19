@@ -1,6 +1,6 @@
 # Repository health
 
-Generated: 2026-09-19T11:42:21Z
+Generated: 2026-09-19T11:44:18Z
 
 ## Core files
 - [x] README.md
@@ -13,5 +13,5 @@ Generated: 2026-09-19T11:42:21Z
 - settings.gradle.kts
 
 ## Markers
-- TODO/FIXME count: 71
-- tracked files: 1293
+- TODO/FIXME count: 66
+- tracked files: 1295

@@ -5,91 +5,207 @@
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
   "symbols": {
-    "manifest_rows": {
+    "pending": {
       "definition": {
-        "file": "tools/sprites/pollinations_building_batch.py",
-        "line": 16,
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "line": 19,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/kaggle_sprite_factory.py",
-          "line": 65,
-          "preview": "def manifest_rows():",
+          "file": "app/src/main/java/com/zerotoempire/game/CommerceUi.kt",
+          "line": 97,
+          "preview": "result.pendingProducts.isNotEmpty() -> \"Payment is still pending Google Play confirmation.\"",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/kaggle_sprite_factory.py",
-          "line": 146,
-          "preview": "ap=argparse.ArgumentParser();ap.add_argument('--kind',choices=['ALL','MCH','TER','PRP','VEH','CORE'],default='ALL');ap.add_argument('--count',type=int,default=30);ap.add_argument('",
+          "file": "app/src/main/java/com/zerotoempire/game/CommerceUi.kt",
+          "line": 123,
+          "preview": "status = \"Purchase pending. You can close the Store; the reward will unlock after Google Play confirms payment.\"",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/pollinations_building_batch.py",
+          "file": "app/src/main/java/com/zerotoempire/game/CommerceUi.kt",
+          "line": 200,
+          "preview": "val pending = product in pendingPurchases",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/CommerceUi.kt",
+          "line": 201,
+          "preview": "val processing = purchaseInFlight == product && !pending",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/CommerceUi.kt",
+          "line": 202,
+          "preview": "val enabled = !owned && purchaseInFlight == null && !pending",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/CommerceUi.kt",
+          "line": 217,
+          "preview": ".semantics { contentDescription = when { owned -> \"$title owned\"; pending -> \"$title payment pending Google Play confirmation\"; processing -> \"$title purchase processing\"; else -> ",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/CommerceUi.kt",
+          "line": 219,
+          "preview": "Text(when { owned -> \"OWNED\"; pending -> \"PENDING\"; processing -> \"PROCESSING\u2026\"; else -> \"BUY\" }, fontSize = 10.sp)",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
+          "line": 50,
+          "preview": "// Updates for older pending transactions may arrive while a different purchase flow is",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
+          "line": 268,
+          "preview": "// A pending transaction can remain unresolved for hours or days. Release the active",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/RewardRequestGate.kt",
+          "line": 5,
+          "preview": "private var pending = false",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/RewardRequestGate.kt",
+          "line": 8,
+          "preview": "if (pending) return false",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/RewardRequestGate.kt",
+          "line": 9,
+          "preview": "pending = true",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/RewardRequestGate.kt",
+          "line": 14,
+          "preview": "if (!pending) return false",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/RewardRequestGate.kt",
+          "line": 15,
+          "preview": "pending = false",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/RewardRequestGate.kt",
+          "line": 20,
+          "preview": "pending = false",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/RewardRequestGate.kt",
+          "line": 23,
+          "preview": "fun isPending(): Boolean = pending",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/PlayBillingGatewayInvariantTest.kt",
+          "line": 13,
+          "preview": "* the critical pending -> new purchase -> late confirmation routing rules under CI without adding",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/metadata.py",
           "line": 16,
-          "preview": "def manifest_rows():",
-          "definition_candidate": true
+          "preview": "_ALLOWED_REVIEWS = frozenset({\"pending\", \"accepted\", \"rejected\"})",
+          "definition_candidate": false
         },
         {
-          "file": "tools/sprites/pollinations_building_batch.py",
-          "line": 27,
-          "preview": "rows=manifest_rows()",
+          "file": "tools/assets/pipeline.py",
+          "line": 67,
+          "preview": "review=\"pending\",",
           "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 4
-    },
-    "pending_rows": {
-      "definition": {
-        "file": "tools/sprites/pollinations_building_batch.py",
-        "line": 26,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
+        },
         {
-          "file": "tools/sprites/pollinations_building_batch.py",
+          "file": "tools/assets/test_metadata.py",
+          "line": 35,
+          "preview": "review=\"pending\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_qa_report.py",
+          "line": 24,
+          "preview": "\"review\": \"pending\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_qa_report.py",
+          "line": 39,
+          "preview": "self.assertEqual(payload[\"review\"], \"pending\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_qa_report.py",
+          "line": 49,
+          "preview": "json.dumps({\"manifest_id\": \"ONB-00\", \"review\": \"pending\"}),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_complete_sprite_manifest.py",
+          "line": 16,
+          "preview": "ap.add_argument('--allow-pending',action='store_true',help='Validate DONE rows while allowing planned non-DONE manifest targets.')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_complete_sprite_manifest.py",
           "line": 26,
-          "preview": "def pending_rows():",
+          "preview": "pending=[r[0] for r in rows if r[4].upper()!='DONE']",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_complete_sprite_manifest.py",
+          "line": 27,
+          "preview": "if pending:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_complete_sprite_manifest.py",
+          "line": 28,
+          "preview": "print(f'SPRITE_COMPLETION_PENDING={len(pending)}')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_complete_sprite_manifest.py",
+          "line": 45,
+          "preview": "out.write_text(json.dumps({'total':len(rows),'pending':pending,'failed':failed,'assets':report},indent=2),encoding='utf-8')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_complete_sprite_manifest.py",
+          "line": 48,
+          "preview": "print(f'FINAL_SPRITE_AUDIT_PASS={len(rows)-len(pending)}/{len(rows)}')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 19,
+          "preview": "def pending():",
           "definition_candidate": true
         },
         {
-          "file": "tools/sprites/pollinations_building_batch.py",
-          "line": 78,
-          "preview": "initial, queued = pending_rows()",
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 118,
+          "preview": "items=pending()[:max(1,min(int(os.getenv('POLLINATIONS_CHR_BATCH','1')),2))]",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 2
-    },
-    "mark_runtime": {
-      "definition": {
-        "file": "tools/sprites/pollinations_building_batch.py",
-        "line": 42,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/pollinations_building_batch.py",
-          "line": 42,
-          "preview": "def mark_runtime(asset_id:str):",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/pollinations_building_batch.py",
-          "line": 135,
-          "preview": "mark_runtime(aid)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 2
+      "occurrence_count": 31
     },
     "mark_queue": {
       "definition": {
-        "file": "tools/sprites/pollinations_building_batch.py",
-        "line": 55,
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "line": 42,
         "kind": "function",
         "language": "python"
       },
@@ -98,7 +214,7 @@
           "file": "tools/sprites/pollinations_building_batch.py",
           "line": 55,
           "preview": "def mark_queue(asset_id:str,status:str,seed:int):",
-          "definition_candidate": true
+          "definition_candidate": false
         },
         {
           "file": "tools/sprites/pollinations_building_batch.py",
@@ -111,253 +227,304 @@
           "line": 145,
           "preview": "mark_queue(aid,'BLOCKED',seed)",
           "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 42,
+          "preview": "def mark_queue(aid,status,seed=None):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 135,
+          "preview": "mark_queue(it['id'],'CANDIDATE',seed);rep.append({'id':it['id'],'status':'CANDIDATE','file':p.name,'frames':fc,'qa':why});print(f\"POLLINATIONS_CHR_VALIDATED={it['id']} {why}\",flush",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 137,
+          "preview": "if not done:mark_queue(it['id'],'BLOCKED');rep.append({'id':it['id'],'status':'REJECT','reason':last})",
+          "definition_candidate": false
         }
       ],
-      "occurrence_count": 3
+      "occurrence_count": 6
     },
-    "run": {
+    "fetch": {
       "definition": {
-        "file": "tools/sprites/pollinations_building_batch.py",
-        "line": 70,
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "line": 52,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "app/build.gradle.kts",
-          "line": 114,
-          "preview": "// Debug/CI can run safely with Google's sample app id. Production can inject the real id",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/AdMobInterstitialGateway.kt",
-          "line": 63,
-          "preview": "val current = ad ?: run {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/AdMobRewardedGateway.kt",
-          "line": 86,
-          "preview": "val ad = rewardedAd ?: run {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/Challenges.kt",
-          "line": 39,
-          "preview": "TimedChallenge(\"$key:wealth\", \"Capital Surge\", \"Reach 10M lifetime cash in the current run.\", ChallengeMetric.LIFETIME_CASH, 10_000_000.0, 40, state.lifetimeCash, claimed(\"wealth\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/FoundryWorldMotion.kt",
-          "line": 51,
-          "preview": "// Four transparent raster frames run at ~10 fps from the existing shared district",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/IdentityUi.kt",
-          "line": 74,
-          "preview": "Triple(\"ASCEND\", \"When growth slows, reset the run for permanent Legacy power.\", \"RESET \u2192 RETURN STRONGER\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/ProgressionSystems.kt",
-          "line": 59,
-          "preview": "* Produces the next run after an ascension. Run-local cash, lifetime cash,",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/ProgressionSystems.kt",
-          "line": 62,
-          "preview": "* Returns null when the run has not earned any additional legacy point.",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/ProgressionSystems.kt",
-          "line": 96,
-          "preview": "a(\"million\", \"Millionaire\", \"Earn 1M lifetime cash in a run\", state.lifetimeCash >= 1e6, 10),",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/ProgressionSystems.kt",
-          "line": 97,
-          "preview": "a(\"century\", \"Industrial Machine\", \"Own 100 total asset levels in one run\", totalLevels >= 100L, 15),",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/ProgressionSystems.kt",
-          "line": 104,
-          "preview": "a(\"managers_5\", \"Executive Board\", \"Hire 5 managers in one run\", state.hiredManagerIds.size >= 5, 20),",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/ProgressionSystems.kt",
-          "line": 105,
-          "preview": "a(\"levels_1000\", \"Vertical Integration\", \"Own 1,000 total asset levels in one run\", totalLevels >= 1_000L, 25),",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/ProgressionSystems.kt",
-          "line": 116,
-          "preview": "a(\"all_managers\", \"Board of Fourteen\", \"Hire every manager in one run\", state.hiredManagerIds.size >= Managers.catalog.size, 60),",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/ReviewedMachineLayer.kt",
-          "line": 14,
-          "preview": "/** Semantically reviewed FLUX machine masters, including run 68 stragglers, visible as era-specific production machinery. */",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/UpgradeProgression.kt",
-          "line": 34,
-          "preview": "val previousUnlocked = index == 0 || run {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/test/java/com/zerotoempire/game/LongCampaignInvariantTest.kt",
-          "line": 24,
-          "preview": "assertNotNull(\"run at $lifetime should earn additional legacy\", reset)",
-          "definition_candidate": false
-        },
-        {
-          "file": "kaggle/github_mass_factory.py",
-          "line": 24,
-          "preview": "probe=subprocess.run(['python','-c',\"import torch; print(' '.join(torch.cuda.get_arch_list()))\"],capture_output=True,text=True)",
-          "definition_candidate": false
-        },
-        {
-          "file": "kaggle/github_mass_factory.py",
-          "line": 29,
-          "preview": "subprocess.run(['python','-m','pip','install','--quiet','--force-reinstall','--no-cache-dir','torch==2.6.0','torchvision==0.21.0','--index-url','https://download.pytorch.org/whl/cu",
-          "definition_candidate": false
-        },
-        {
-          "file": "kaggle/github_mass_factory.py",
-          "line": 40,
-          "preview": "subprocess.run(['python','-m','pip','install','--quiet','diffusers==0.35.1','transformers==4.56.1','accelerate>=1.2','safetensors','bitsandbytes>=0.46.1','Pillow<12'],check=True)",
-          "definition_candidate": false
-        },
-        {
-          "file": "kaggle/github_mass_factory.py",
-          "line": 141,
-          "preview": "if not fresh:raise SystemExit('No fresh candidate sprites produced by this run')",
-          "definition_candidate": false
-        },
-        {
-          "file": "kaggle/github_mass_factory.py",
-          "line": 142,
-          "preview": "qa=OUT/'batch-contact-sheet.png';report=OUT/'batch-qa-report.json';subprocess.run(['python','tools/sprites/build_sprite_contact_sheet.py','--output',str(qa),'--report',str(report),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/android/test_ui_dump_retry.py",
-          "line": 57,
-          "preview": "return subprocess.run([\"bash\", \"-c\", command], env=env, text=True, capture_output=True)",
-          "definition_candidate": false
-        },
-        {
           "file": "tools/sprites/colab_mass_factory.py",
-          "line": 35,
-          "preview": "subprocess.run(list(args), check=True)",
+          "line": 43,
+          "preview": "sh('git', '-C', str(REPO), 'fetch', '--depth', '1', 'origin', 'main')",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/colab_mass_factory.py",
-          "line": 137,
-          "preview": "subprocess.run(cmd, check=True)",
+          "file": "tools/sprites/lightning_remote_runner.py",
+          "line": 53,
+          "preview": "git fetch origin main",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/colab_mass_factory.py",
-          "line": 145,
-          "preview": "raise SystemExit('No fresh candidate sprites produced by this run')",
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 52,
+          "preview": "def fetch(prompt,seed):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 129,
+          "preview": "frame,cov=cutout(fetch(prompt,seed+n*131));frames.append(frame);print(f\"POLLINATIONS_CHR_FRAME={it['id']} n={n} cov={cov:.3f}\",flush=True);time.sleep(1)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "cutout": {
+      "definition": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "line": 69,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
+          "line": 89,
+          "preview": "isolation = \"Studio cutout render on a perfectly flat uniform neutral medium-gray background touching every image edge. Background only, no visible floor. No platform card, terrain",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/colab_mass_factory.py",
-          "line": 149,
-          "preview": "subprocess.run([",
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 69,
+          "preview": "def cutout(raw):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 129,
+          "preview": "frame,cov=cutout(fetch(prompt,seed+n*131));frames.append(frame);print(f\"POLLINATIONS_CHR_FRAME={it['id']} n={n} cov={cov:.3f}\",flush=True);time.sleep(1)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "iou": {
+      "definition": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "line": 97,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/kaggle_building_family_factory.py",
+          "line": 162,
+          "preview": "def iou(a,b):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory.py",
+          "line": 176,
+          "preview": "adj=[iou(recs[n-1][1],recs[n][1]) for n in range(1,len(recs))]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory.py",
+          "line": 177,
+          "preview": "if min(adj)<.34:return False,f'identity-iou={min(adj):.2f}'",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory.py",
+          "line": 185,
+          "preview": "if iou(recs[0][1],recs[-1][1])>.90:return False,'insufficient-evolution'",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory.py",
+          "line": 186,
+          "preview": "return True,f'min-adj-iou={min(adj):.2f} growth={cov[-1]/cov[0]:.2f}x drift={max_center:.1f}'",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/kaggle_building_family_factory_v11.py",
-          "line": 4,
-          "preview": "v11: run-77 hardening: monotonic display scale, stricter starter tiers,",
+          "line": 199,
+          "preview": "def iou(a,b):",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/kaggle_sprite_factory.py",
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 216,
+          "preview": "adj=[iou(recs[n-1][1],recs[n][1]) for n in range(1,len(recs))]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 217,
+          "preview": "if min(adj)<.50:return False,f'identity-iou={min(adj):.2f}'",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 224,
+          "preview": "if iou(recs[0][1],recs[-1][1])>.90:return False,'insufficient-silhouette-evolution'",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 225,
+          "preview": "return True,f'min-adj-iou={min(adj):.2f} growth={areas[-1]/areas[0]:.2f}x center-drift={drift:.1f}'",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
+          "line": 236,
+          "preview": "def iou(a,b):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
+          "line": 250,
+          "preview": "adj=[iou(recs[n-1][1],recs[n][1]) for n in range(1,len(recs))]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
+          "line": 251,
+          "preview": "if min(adj)<.33: return False,f'identity-iou={min(adj):.2f}'",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
+          "line": 260,
+          "preview": "if iou(recs[0][1],recs[-1][1])>.91: return False,'insufficient-evolution'",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
+          "line": 261,
+          "preview": "return True,f'min-adj-iou={min(adj):.2f} growth={growth:.2f}x drift={drift:.1f}'",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v14.py",
+          "line": 97,
+          "preview": "def iou(a,b):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v14.py",
+          "line": 106,
+          "preview": "adj=[iou(recs[n-1][1],recs[n][1]) for n in range(1,len(recs))]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v14.py",
+          "line": 107,
+          "preview": "if min(adj)<.28:return False,f'identity-iou={min(adj):.2f}'",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v14.py",
+          "line": 114,
+          "preview": "return True,f'iou={min(adj):.2f} growth={cov[-1]/cov[0]:.2f}x'",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v15.py",
           "line": 60,
-          "preview": "'TER-09':'one square MAGLEV RAIL CONNECTOR tile: exactly two long parallel cyan magnetic guide rails run straight and visibly from the near edge to the far edge, with matching twin",
+          "preview": "ident=v14.iou(prev,new_final)",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/lightning_studio_factory.py",
-          "line": 55,
-          "preview": "subprocess.run(",
+          "file": "tools/sprites/kaggle_building_family_factory_v15.py",
+          "line": 61,
+          "preview": "if ident<.25: reasons.append(f'adj-iou={ident:.2f}')",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/lightning_studio_factory.py",
-          "line": 117,
-          "preview": "subprocess.run(cmd, check=True)",
+          "file": "tools/sprites/kaggle_building_family_factory_v15.py",
+          "line": 74,
+          "preview": "cov=[r[2] for r in recs]; adj=[v14.iou(recs[n-1][1],recs[n][1]) for n in range(1,len(recs))]",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/lightning_studio_factory.py",
-          "line": 125,
-          "preview": "raise SystemExit(\"No fresh candidate sprites produced by this run\")",
+          "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+          "line": 157,
+          "preview": "ident=v14.iou(recs[-1][1],new_final)",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/lightning_studio_factory.py",
-          "line": 129,
-          "preview": "subprocess.run(",
+          "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+          "line": 159,
+          "preview": "if ident<floor and not any(r.startswith('adj-iou=') for r in reasons):reasons.append(f'footprint-iou={ident:.2f}<{floor:.2f}')",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/multi_provider_static_manifest_factory.py",
-          "line": 34,
-          "preview": "url = f\"https://api.cloudflare.com/client/v4/accounts/{CF_ACCOUNT_ID}/ai/run/{model_path}\"",
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 138,
+          "preview": "return True,f'min-iou={min(ious):.2f} pivot-drift={max(bottoms)-min(bottoms)}'",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/pollinations_building_batch.py",
-          "line": 70,
-          "preview": "def run(cmd,env=None):",
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 97,
+          "preview": "def iou(a,b):",
           "definition_candidate": true
         },
         {
-          "file": "tools/sprites/pollinations_building_batch.py",
-          "line": 71,
-          "preview": "return subprocess.run(cmd,cwd=ROOT,env=env,text=True,capture_output=True)",
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 107,
+          "preview": "vals=[iou(frames[n-1],frames[n]) for n in range(1,len(frames))]",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/pollinations_building_batch.py",
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
           "line": 108,
-          "preview": "q=run([sys.executable,'tools/sprites/build_sprite_contact_sheet.py','--files',str(out.relative_to(ROOT)),'--output',str(contact.relative_to(ROOT)),'--report',str(qa.relative_to(ROO",
+          "preview": "if min(vals)<.25:return False,f'iou={min(vals):.2f}'",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/pollinations_building_batch.py",
-          "line": 123,
-          "preview": "fin=run([sys.executable,'tools/sprites/process_final_sprites.py'],env=env)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/pollinations_building_batch.py",
-          "line": 129,
-          "preview": "rv=run([sys.executable,'tools/sprites/validate_runtime_asset.py','--asset-id',aid,'--path',str(runtime.relative_to(ROOT)),'--report',str(rqa.relative_to(ROOT))])",
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 115,
+          "preview": "return True,f'min-iou={min(vals):.2f}'",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 38
+      "occurrence_count": 29
+    },
+    "sheetqa": {
+      "definition": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "line": 106,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 106,
+          "preview": "def sheetqa(frames):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 130,
+          "preview": "ok,why=sheetqa(frames)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
     },
     "main": {
       "definition": {
-        "file": "tools/sprites/pollinations_building_batch.py",
-        "line": 73,
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "line": 117,
         "kind": "function",
         "language": "python"
       },
@@ -966,7 +1133,7 @@
           "file": "tools/sprites/pollinations_building_batch.py",
           "line": 73,
           "preview": "def main():",
-          "definition_candidate": true
+          "definition_candidate": false
         },
         {
           "file": "tools/sprites/pollinations_building_batch.py",
@@ -994,19 +1161,25 @@
         },
         {
           "file": "tools/sprites/pollinations_character_sheet_factory.py",
-          "line": 21,
+          "line": 22,
           "preview": "if not line.startswith('|') or 'CHR-' not in line or 'app/src/main/res/' not in line: continue",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/pollinations_character_sheet_factory.py",
-          "line": 96,
-          "preview": "def main():",
+          "line": 40,
+          "preview": "return [x for x in manifest.values() if x['status']=='TODO' and not (ROOT/('app/src/main/res/drawable-nodpi/'+x['stem']+'.webp')).is_file()]",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/pollinations_character_sheet_factory.py",
-          "line": 119,
+          "line": 117,
+          "preview": "def main():",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 140,
           "preview": "if __name__=='__main__':main()",
           "definition_candidate": false
         },
@@ -1074,12 +1247,6 @@
           "file": "tools/sprites/validate_animation_sheet.py",
           "line": 86,
           "preview": "raise SystemExit(main())",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/validate_runtime_asset.py",
-          "line": 74,
-          "preview": "def main():",
           "definition_candidate": false
         }
       ],
