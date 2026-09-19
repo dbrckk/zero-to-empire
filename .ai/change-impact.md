@@ -1,18 +1,15 @@
 # Change impact
 
-Base: 9a39bb26cde4dc9a8d5b7376a2bac8569ca3bf67
-Head: 1fcd5cb2ae1a26a3092885db0f225540ce487d35
+Base: c5fba9d9238fa26b1ce0365a36691f34b50bc3b0
+Head: a9e239ff5fe06555c7e8dd4161568a0b23cf7118
 
 ## Changed files
-- M art/production/controlled-building-regen-queue.json
 - M art/production/controlled-character-regen-queue.json
-- A art/production/semantic-review-controlled-pass-2.md
-- M tools/sprites/pollinations_building_batch.py
-- M tools/sprites/pollinations_building_factory.py
+- M ops/sprite-wave-trigger.txt
 
 ## Affected areas
 - art
-- tools
+- ops
 
 ## Related test candidates
 - No direct filename-based test match detected.

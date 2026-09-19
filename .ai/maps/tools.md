@@ -2155,6 +2155,7 @@ ROOT=Path(__file__).resolve().parents[2]
 MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
 INCOMING=ROOT/'art/incoming/final-sprites'
 REPORT=Path('/kaggle/working/output/character-sheet-report.json')
+QUEUE=ROOT/'art/production/controlled-character-regen-queue.json'
 FLUX='aniketppanchal/flux.1-schnell-nf4-pkg'
 ROW=re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$")
 CHR=re.compile(r'^CHR-(OP|TECH|LOG|ENG)-(IDLE|WALK|WORK|CARRY|REPAIR|CELEB)$')
@@ -2164,11 +2165,16 @@ POSE_HINT={
 ⋮----
 def rows()
 ⋮----
-out=[]
+catalog={}
 ⋮----
 m=ROW.match(line)
 ⋮----
 cm=CHR.fullmatch(aid)
+⋮----
+q=json.loads(QUEUE.read_text(encoding='utf-8'))
+controlled=[]
+⋮----
+aid=str(item.get('id','')).upper()
 ⋮----
 def prompt(i,pose)
 ⋮----

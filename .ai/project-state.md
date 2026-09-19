@@ -22,18 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T14:20:35Z
+Generated: 2026-09-19T14:22:28Z
 
 ### Git
 - Branch: `main`
-- Head: `1fcd5cb2ae1a`
-- Commit date: 2026-09-19T16:20:22+02:00
-- Commit: art: move BLD-04 to single-board pass 3 and pause character generation (#60)
+- Head: `a9e239ff5fe0`
+- Commit date: 2026-09-19T16:22:13+02:00
+- Commit: art: launch Kaggle identity-anchored Operator wave 1 (#63)
 - Tracked files: 1315
 
 ### Recently changed files
-- `art/production/controlled-building-regen-queue.json`
 - `art/production/controlled-character-regen-queue.json`
+- `ops/sprite-wave-trigger.txt`
+- `.github/workflows/kaggle-mass-sprite-factory.yml`
+- `kaggle/github_mass_factory.py`
+- `tools/sprites/kaggle_character_sheet_factory_v1.py`
+- `art/production/controlled-building-regen-queue.json`
 - `art/production/semantic-review-controlled-pass-2.md`
 - `tools/sprites/pollinations_building_batch.py`
 - `tools/sprites/pollinations_building_factory.py`
@@ -48,10 +52,6 @@ Generated: 2026-09-19T14:20:35Z
 - `art/incoming/final-sprites/zte_business_04_t6_final.png`
 - `art/production/pollinations-batch-summary.json`
 - `art/production/pollinations-bld-04-t0-contact.png`
-- `art/production/pollinations-bld-04-t0-qa.json`
-- `art/production/pollinations-bld-04-t0-report.json`
-- `art/production/pollinations-bld-04-t1-contact.png`
-- `art/production/pollinations-bld-04-t1-qa.json`
 
 ### Project signals
 - `build.gradle.kts`

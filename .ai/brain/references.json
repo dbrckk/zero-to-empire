@@ -5,395 +5,1795 @@
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
   "symbols": {
-    "manifest_rows": {
+    "digest": {
       "definition": {
-        "file": "tools/sprites/pollinations_building_batch.py",
+        "file": "kaggle/github_mass_factory.py",
+        "line": 11,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "kaggle/github_mass_factory.py",
+          "line": 11,
+          "preview": "def digest(p):",
+          "definition_candidate": true
+        },
+        {
+          "file": "kaggle/github_mass_factory.py",
+          "line": 113,
+          "preview": "incoming=REPO/'art/incoming/final-sprites';incoming.mkdir(parents=True,exist_ok=True);before={p.name:digest(p) for p in incoming.glob('*_final.png') if p.is_file()};q=backlog();pri",
+          "definition_candidate": false
+        },
+        {
+          "file": "kaggle/github_mass_factory.py",
+          "line": 128,
+          "preview": "return [p for p in sorted(incoming.glob('*_final.png')) if p.is_file() and (p.name not in before or before[p.name]!=digest(p))]",
+          "definition_candidate": false
+        },
+        {
+          "file": "kaggle/github_mass_factory.py",
+          "line": 136,
+          "preview": "if not dst.exists() or digest(dst)!=digest(f): shutil.copy2(f,dst)",
+          "definition_candidate": false
+        },
+        {
+          "file": "kaggle/github_mass_factory.py",
+          "line": 154,
+          "preview": "dst=cdir/f.name;shutil.copy2(f,dst);targets.append({'file':f.name,'sha256':digest(dst),'bytes':dst.stat().st_size})",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/metadata.py",
+          "line": 48,
+          "preview": "digest = hashlib.sha256()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/metadata.py",
+          "line": 51,
+          "preview": "digest.update(chunk)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/metadata.py",
+          "line": 52,
+          "preview": "return digest.hexdigest()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/colab_mass_factory.py",
+          "line": 26,
+          "preview": "def digest(path: Path) -> str:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/colab_mass_factory.py",
+          "line": 112,
+          "preview": "before = {p.name: digest(p) for p in incoming.glob('*_final.png') if p.is_file()}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/colab_mass_factory.py",
+          "line": 141,
+          "preview": "if p.is_file() and (p.name not in before or before[p.name] != digest(p))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/colab_mass_factory.py",
+          "line": 160,
+          "preview": "targets.append({'file': f.name, 'sha256': digest(dst), 'bytes': dst.stat().st_size})",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/lightning_studio_factory.py",
+          "line": 26,
+          "preview": "def digest(path: Path) -> str:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/lightning_studio_factory.py",
+          "line": 112,
+          "preview": "before = {p.name: digest(p) for p in INCOMING.glob(\"*_final.png\") if p.is_file()}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/lightning_studio_factory.py",
+          "line": 121,
+          "preview": "if p.is_file() and (p.name not in before or before[p.name] != digest(p))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/lightning_studio_factory.py",
+          "line": 140,
+          "preview": "targets.append({\"file\": src.name, \"sha256\": digest(dst), \"bytes\": dst.stat().st_size})",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 16
+    },
+    "ensure_gpu": {
+      "definition": {
+        "file": "kaggle/github_mass_factory.py",
         "line": 16,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/kaggle_sprite_factory.py",
-          "line": 65,
-          "preview": "def manifest_rows():",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_sprite_factory.py",
-          "line": 146,
-          "preview": "ap=argparse.ArgumentParser();ap.add_argument('--kind',choices=['ALL','MCH','TER','PRP','VEH','CORE'],default='ALL');ap.add_argument('--count',type=int,default=30);ap.add_argument('",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/pollinations_building_batch.py",
+          "file": "kaggle/github_mass_factory.py",
           "line": 16,
-          "preview": "def manifest_rows():",
+          "preview": "def ensure_gpu():",
           "definition_candidate": true
         },
         {
-          "file": "tools/sprites/pollinations_building_batch.py",
-          "line": 27,
-          "preview": "rows=manifest_rows()",
+          "file": "kaggle/github_mass_factory.py",
+          "line": 112,
+          "preview": "os.chdir(REPO);ensure_gpu();ensure_flux()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/colab_mass_factory.py",
+          "line": 47,
+          "preview": "def ensure_gpu():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/colab_mass_factory.py",
+          "line": 104,
+          "preview": "ensure_gpu()",
           "definition_candidate": false
         }
       ],
       "occurrence_count": 4
     },
-    "pending_rows": {
+    "ensure_flux": {
       "definition": {
-        "file": "tools/sprites/pollinations_building_batch.py",
-        "line": 26,
+        "file": "kaggle/github_mass_factory.py",
+        "line": 32,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/pollinations_building_batch.py",
-          "line": 26,
-          "preview": "def pending_rows():",
+          "file": "kaggle/github_mass_factory.py",
+          "line": 32,
+          "preview": "def ensure_flux():",
           "definition_candidate": true
         },
         {
-          "file": "tools/sprites/pollinations_building_batch.py",
-          "line": 78,
-          "preview": "initial, queued = pending_rows()",
+          "file": "kaggle/github_mass_factory.py",
+          "line": 112,
+          "preview": "os.chdir(REPO);ensure_gpu();ensure_flux()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/colab_mass_factory.py",
+          "line": 58,
+          "preview": "def ensure_flux():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/colab_mass_factory.py",
+          "line": 105,
+          "preview": "ensure_flux()",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 2
+      "occurrence_count": 4
     },
-    "mark_runtime": {
+    "runtime_exists": {
       "definition": {
-        "file": "tools/sprites/pollinations_building_batch.py",
+        "file": "kaggle/github_mass_factory.py",
+        "line": 41,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "kaggle/github_mass_factory.py",
+          "line": 41,
+          "preview": "def runtime_exists(runtime): return (REPO/runtime).is_file()",
+          "definition_candidate": true
+        },
+        {
+          "file": "kaggle/github_mass_factory.py",
+          "line": 55,
+          "preview": "if runtime_exists(runtime):c['SKIPPED_RUNTIME']+=1;continue",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/colab_mass_factory.py",
+          "line": 75,
+          "preview": "def runtime_exists(runtime: str) -> bool:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/colab_mass_factory.py",
+          "line": 88,
+          "preview": "if runtime_exists(runtime):",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "controlled_character_backlog": {
+      "definition": {
+        "file": "kaggle/github_mass_factory.py",
         "line": 42,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/pollinations_building_batch.py",
+          "file": "kaggle/github_mass_factory.py",
           "line": 42,
-          "preview": "def mark_runtime(asset_id:str):",
+          "preview": "def controlled_character_backlog():",
           "definition_candidate": true
         },
         {
-          "file": "tools/sprites/pollinations_building_batch.py",
-          "line": 176,
-          "preview": "mark_runtime(aid)",
+          "file": "kaggle/github_mass_factory.py",
+          "line": 50,
+          "preview": "c={'BLD':0,'STATIC':0,'CHR':0,'FX':0,'SKIPPED_RUNTIME':0,'CONTROLLED_CHR':controlled_character_backlog()}",
           "definition_candidate": false
         }
       ],
       "occurrence_count": 2
     },
-    "mark_queue": {
+    "backlog": {
       "definition": {
-        "file": "tools/sprites/pollinations_building_batch.py",
-        "line": 55,
+        "file": "kaggle/github_mass_factory.py",
+        "line": 49,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/pollinations_building_batch.py",
-          "line": 55,
-          "preview": "def mark_queue(asset_id:str,status:str,seed:int):",
+          "file": "kaggle/github_mass_factory.py",
+          "line": 49,
+          "preview": "def backlog():",
           "definition_candidate": true
         },
         {
-          "file": "tools/sprites/pollinations_building_batch.py",
-          "line": 120,
-          "preview": "mark_queue(aid,'CANDIDATE',seed)",
+          "file": "kaggle/github_mass_factory.py",
+          "line": 113,
+          "preview": "incoming=REPO/'art/incoming/final-sprites';incoming.mkdir(parents=True,exist_ok=True);before={p.name:digest(p) for p in incoming.glob('*_final.png') if p.is_file()};q=backlog();pri",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/pollinations_building_batch.py",
-          "line": 130,
-          "preview": "mark_queue(row[0],'BLOCKED',seed)",
+          "file": "kaggle/github_mass_factory.py",
+          "line": 124,
+          "preview": "else:raise SystemExit('No supported GPU backlog')",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/pollinations_building_batch.py",
-          "line": 157,
-          "preview": "mark_queue(aid,'CANDIDATE',seed)",
+          "file": "kaggle/github_mass_factory.py",
+          "line": 155,
+          "preview": "(OUT/'generated-targets.json').write_text(json.dumps({'count':len(targets),'engine':'yield-router-v12-positive-source-locked','lane':lane,'seed':SEED,'backlog':q,'targets':targets}",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/pollinations_building_batch.py",
-          "line": 186,
-          "preview": "mark_queue(aid,'BLOCKED',seed)",
+          "file": "tools/sprites/colab_mass_factory.py",
+          "line": 79,
+          "preview": "def backlog():",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/pollinations_character_sheet_factory.py",
-          "line": 61,
-          "preview": "def mark_queue(aid,status,seed=None):",
+          "file": "tools/sprites/colab_mass_factory.py",
+          "line": 113,
+          "preview": "q = backlog()",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/pollinations_character_sheet_factory.py",
-          "line": 217,
-          "preview": "mark_queue(it['id'],'CANDIDATE',seed)",
+          "file": "tools/sprites/colab_mass_factory.py",
+          "line": 134,
+          "preview": "raise SystemExit('No supported GPU backlog')",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/pollinations_character_sheet_factory.py",
-          "line": 227,
-          "preview": "mark_queue(it['id'],'BLOCKED')",
+          "file": "tools/sprites/colab_mass_factory.py",
+          "line": 167,
+          "preview": "'backlog': q,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/lightning_studio_factory.py",
+          "line": 65,
+          "preview": "def backlog() -> dict[str, int]:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/lightning_studio_factory.py",
+          "line": 101,
+          "preview": "raise SystemExit(\"No supported GPU backlog\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/lightning_studio_factory.py",
+          "line": 113,
+          "preview": "q = backlog()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/lightning_studio_factory.py",
+          "line": 143,
+          "preview": "json.dumps({\"count\": len(targets), \"engine\": \"lightning-ai-studio\", \"lane\": lane, \"seed\": SEED, \"backlog\": q, \"targets\": targets}, indent=2),",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 8
+      "occurrence_count": 12
     },
-    "run": {
+    "valid_tree": {
       "definition": {
-        "file": "tools/sprites/pollinations_building_batch.py",
-        "line": 70,
+        "file": "kaggle/github_mass_factory.py",
+        "line": 61,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "app/build.gradle.kts",
-          "line": 114,
-          "preview": "// Debug/CI can run safely with Google's sample app id. Production can inject the real id",
-          "definition_candidate": false
+          "file": "kaggle/github_mass_factory.py",
+          "line": 61,
+          "preview": "def valid_tree(root):",
+          "definition_candidate": true
         },
         {
-          "file": "app/src/main/java/com/zerotoempire/game/AdMobInterstitialGateway.kt",
+          "file": "kaggle/github_mass_factory.py",
+          "line": 79,
+          "preview": "if valid_tree(candidate):",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "resolve_source": {
+      "definition": {
+        "file": "kaggle/github_mass_factory.py",
+        "line": 63,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "kaggle/github_mass_factory.py",
           "line": 63,
-          "preview": "val current = ad ?: run {",
-          "definition_candidate": false
+          "preview": "def resolve_source():",
+          "definition_candidate": true
         },
         {
-          "file": "app/src/main/java/com/zerotoempire/game/AdMobRewardedGateway.kt",
-          "line": 86,
-          "preview": "val ad = rewardedAd ?: run {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/Challenges.kt",
-          "line": 39,
-          "preview": "TimedChallenge(\"$key:wealth\", \"Capital Surge\", \"Reach 10M lifetime cash in the current run.\", ChallengeMetric.LIFETIME_CASH, 10_000_000.0, 40, state.lifetimeCash, claimed(\"wealth\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/FoundryWorldMotion.kt",
-          "line": 51,
-          "preview": "// Four transparent raster frames run at ~10 fps from the existing shared district",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/IdentityUi.kt",
-          "line": 74,
-          "preview": "Triple(\"ASCEND\", \"When growth slows, reset the run for permanent Legacy power.\", \"RESET \u2192 RETURN STRONGER\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/ProgressionSystems.kt",
-          "line": 59,
-          "preview": "* Produces the next run after an ascension. Run-local cash, lifetime cash,",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/ProgressionSystems.kt",
-          "line": 62,
-          "preview": "* Returns null when the run has not earned any additional legacy point.",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/ProgressionSystems.kt",
-          "line": 96,
-          "preview": "a(\"million\", \"Millionaire\", \"Earn 1M lifetime cash in a run\", state.lifetimeCash >= 1e6, 10),",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/ProgressionSystems.kt",
-          "line": 97,
-          "preview": "a(\"century\", \"Industrial Machine\", \"Own 100 total asset levels in one run\", totalLevels >= 100L, 15),",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/ProgressionSystems.kt",
+          "file": "kaggle/github_mass_factory.py",
           "line": 104,
-          "preview": "a(\"managers_5\", \"Executive Board\", \"Hire 5 managers in one run\", state.hiredManagerIds.size >= 5, 20),",
+          "preview": "source_kind,source=resolve_source()",
           "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "current_fresh": {
+      "definition": {
+        "file": "kaggle/github_mass_factory.py",
+        "line": 127,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "kaggle/github_mass_factory.py",
+          "line": 127,
+          "preview": "def current_fresh():",
+          "definition_candidate": true
         },
         {
-          "file": "app/src/main/java/com/zerotoempire/game/ProgressionSystems.kt",
-          "line": 105,
-          "preview": "a(\"levels_1000\", \"Vertical Integration\", \"Own 1,000 total asset levels in one run\", totalLevels >= 1_000L, 25),",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/ProgressionSystems.kt",
-          "line": 116,
-          "preview": "a(\"all_managers\", \"Board of Fourteen\", \"Hire every manager in one run\", state.hiredManagerIds.size >= Managers.catalog.size, 60),",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/ReviewedMachineLayer.kt",
-          "line": 14,
-          "preview": "/** Semantically reviewed FLUX machine masters, including run 68 stragglers, visible as era-specific production machinery. */",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/UpgradeProgression.kt",
-          "line": 34,
-          "preview": "val previousUnlocked = index == 0 || run {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/test/java/com/zerotoempire/game/LongCampaignInvariantTest.kt",
-          "line": 24,
-          "preview": "assertNotNull(\"run at $lifetime should earn additional legacy\", reset)",
+          "file": "kaggle/github_mass_factory.py",
+          "line": 130,
+          "preview": "fresh=current_fresh(); exported=0",
           "definition_candidate": false
         },
         {
           "file": "kaggle/github_mass_factory.py",
-          "line": 24,
-          "preview": "probe=subprocess.run(['python','-c',\"import torch; print(' '.join(torch.cuda.get_arch_list()))\"],capture_output=True,text=True)",
+          "line": 146,
+          "preview": "fresh=current_fresh();print(f'KAGGLE_FRESH_CANDIDATES={len(fresh)}',flush=True)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "checkpoint_fresh": {
+      "definition": {
+        "file": "kaggle/github_mass_factory.py",
+        "line": 129,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "kaggle/github_mass_factory.py",
+          "line": 129,
+          "preview": "def checkpoint_fresh():",
+          "definition_candidate": true
+        },
+        {
+          "file": "kaggle/github_mass_factory.py",
+          "line": 143,
+          "preview": "checkpoint_fresh();time.sleep(20)",
           "definition_candidate": false
         },
         {
           "file": "kaggle/github_mass_factory.py",
+          "line": 144,
+          "preview": "checkpoint_fresh()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "rows": {
+      "definition": {
+        "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "line": 49,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/PremiumGameFeelV2.kt",
+          "line": 193,
+          "preview": "* Compact phone-safe status deck. It deliberately uses two rows instead of one",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/process_final_assets.py",
+          "line": 85,
+          "preview": "rows = int(spec['rows'])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/process_final_assets.py",
+          "line": 93,
+          "preview": "sheet = Image.new('RGBA', (columns * frame_size, rows * frame_size), (0, 0, 0, 0))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/process_final_assets.py",
+          "line": 94,
+          "preview": "for row in range(rows):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/process_final_assets.py",
+          "line": 95,
+          "preview": "top = round(row * source.height / rows)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/process_final_assets.py",
+          "line": 96,
+          "preview": "bottom = round((row + 1) * source.height / rows)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/process_final_assets.py",
+          "line": 115,
+          "preview": "print(f'processed {asset_id}: {columns}x{rows} frames at {frame_size}px; {src.relative_to(ROOT)} -> {runtime.relative_to(ROOT)}')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/animation_batch_planner.py",
+          "line": 47,
+          "preview": "rows = math.ceil(frames / columns)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/animation_batch_planner.py",
+          "line": 48,
+          "preview": "return frames, cell, columns, rows, pivot",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/animation_batch_planner.py",
+          "line": 66,
+          "preview": "frames, cell, cols, rows, pivot = frame_contract(asset_id)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/animation_batch_planner.py",
+          "line": 77,
+          "preview": "\"rows\": rows,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/animation_batch_planner.py",
+          "line": 79,
+          "preview": "\"sheet_height\": rows * cell,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_complete_sprite_manifest.py",
+          "line": 16,
+          "preview": "ap.add_argument('--allow-pending',action='store_true',help='Validate DONE rows while allowing planned non-DONE manifest targets.')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_complete_sprite_manifest.py",
+          "line": 19,
+          "preview": "rows=[]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_complete_sprite_manifest.py",
+          "line": 23,
+          "preview": "if len(cols)==5: rows.append(cols)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_complete_sprite_manifest.py",
+          "line": 24,
+          "preview": "if len(rows)!=EXPECTED_ROWS:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_complete_sprite_manifest.py",
+          "line": 25,
+          "preview": "raise SystemExit(f'Expected {EXPECTED_ROWS} canonical sprite rows, got {len(rows)}')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_complete_sprite_manifest.py",
+          "line": 26,
+          "preview": "pending=[r[0] for r in rows if r[4].upper()!='DONE']",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_complete_sprite_manifest.py",
+          "line": 33,
+          "preview": "for aid,name,desc,runtime,status in rows:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_complete_sprite_manifest.py",
+          "line": 45,
+          "preview": "out.write_text(json.dumps({'total':len(rows),'pending':pending,'failed':failed,'assets':report},indent=2),encoding='utf-8')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_complete_sprite_manifest.py",
+          "line": 48,
+          "preview": "print(f'FINAL_SPRITE_AUDIT_PASS={len(rows)-len(pending)}/{len(rows)}')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_sprite_contact_sheet.py",
+          "line": 127,
+          "preview": "rows = max(1, math.ceil(len(paths)/cols))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_sprite_contact_sheet.py",
+          "line": 128,
+          "preview": "sheet = Image.new(\"RGB\", (cols*tile_w, rows*tile_h), (32,32,36))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_public_flux_factory.py",
+          "line": 18,
+          "preview": "rows=[]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_public_flux_factory.py",
+          "line": 23,
+          "preview": "if cols[0].startswith('BLD-'): rows.append(cols)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_public_flux_factory.py",
+          "line": 25,
+          "preview": "for r in rows:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_public_flux_factory.py",
+          "line": 28,
+          "preview": "if not rows: fail('no TODO building targets remain')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_public_flux_factory.py",
           "line": 29,
-          "preview": "subprocess.run(['python','-m','pip','install','--quiet','--force-reinstall','--no-cache-dir','torch==2.6.0','torchvision==0.21.0','--index-url','https://download.pytorch.org/whl/cu",
+          "preview": "return rows[0]",
           "definition_candidate": false
         },
         {
-          "file": "kaggle/github_mass_factory.py",
-          "line": 40,
-          "preview": "subprocess.run(['python','-m','pip','install','--quiet','diffusers==0.35.1','transformers==4.56.1','accelerate>=1.2','safetensors','bitsandbytes>=0.46.1','Pillow<12'],check=True)",
+          "file": "tools/sprites/kaggle_building_family_factory.py",
+          "line": 27,
+          "preview": "def rows():",
           "definition_candidate": false
         },
         {
-          "file": "kaggle/github_mass_factory.py",
-          "line": 141,
-          "preview": "if not fresh:raise SystemExit('No fresh candidate sprites produced by this run')",
+          "file": "tools/sprites/kaggle_building_family_factory.py",
+          "line": 106,
+          "preview": "sm=alpha.resize((128,128),Image.Resampling.BILINEAR);px=sm.load();rows=[]",
           "definition_candidate": false
         },
         {
-          "file": "kaggle/github_mass_factory.py",
-          "line": 142,
-          "preview": "qa=OUT/'batch-contact-sheet.png';report=OUT/'batch-qa-report.json';subprocess.run(['python','tools/sprites/build_sprite_contact_sheet.py','--output',str(qa),'--report',str(report),",
+          "file": "tools/sprites/kaggle_building_family_factory.py",
+          "line": 107,
+          "preview": "for y in range(76,124): rows.append(sum(1 for x in range(6,122) if px[x,y]>=32)/116)",
           "definition_candidate": false
         },
         {
-          "file": "tools/android/test_ui_dump_retry.py",
-          "line": 57,
-          "preview": "return subprocess.run([\"bash\", \"-c\", command], env=env, text=True, capture_output=True)",
+          "file": "tools/sprites/kaggle_building_family_factory.py",
+          "line": 108,
+          "preview": "return sum(1 for v in rows if v>.72)/len(rows)",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/colab_mass_factory.py",
-          "line": 35,
-          "preview": "subprocess.run(list(args), check=True)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/colab_mass_factory.py",
-          "line": 137,
-          "preview": "subprocess.run(cmd, check=True)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/colab_mass_factory.py",
-          "line": 145,
-          "preview": "raise SystemExit('No fresh candidate sprites produced by this run')",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/colab_mass_factory.py",
-          "line": 149,
-          "preview": "subprocess.run([",
+          "file": "tools/sprites/kaggle_building_family_factory.py",
+          "line": 212,
+          "preview": "items=select(list(rows()),max(1,args.count));print('KAGGLE_BUILDING_PLAN='+','.join(i['id'] for i in items),flush=True)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/kaggle_building_family_factory_v11.py",
-          "line": 4,
-          "preview": "v11: run-77 hardening: monotonic display scale, stricter starter tiers,",
+          "line": 55,
+          "preview": "def rows():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 168,
+          "preview": "rows=[]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 169,
+          "preview": "for y in range(88,126):rows.append(sum(1 for x in range(128) if px[x,y]>=48)/128)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 171,
+          "preview": "return sum(1 for r in rows if r>.82)/len(rows)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 230,
+          "preview": "items=select(list(rows()),max(1,args.count));print('KAGGLE_BUILDING_PLAN='+','.join(i['id'] for i in items),flush=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
+          "line": 59,
+          "preview": "def rows():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
+          "line": 176,
+          "preview": "sm=alpha.resize((128,128),Image.Resampling.BILINEAR); px=sm.load(); rows=[]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
+          "line": 177,
+          "preview": "for y in range(76,124): rows.append(sum(1 for x in range(6,122) if px[x,y]>=32)/116)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
+          "line": 178,
+          "preview": "return sum(1 for v in rows if v>.72)/len(rows)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
+          "line": 291,
+          "preview": "items=select(list(rows()),max(1,args.count)); print('KAGGLE_BUILDING_PLAN='+','.join(i['id'] for i in items),flush=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v14.py",
+          "line": 18,
+          "preview": "def rows():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v14.py",
+          "line": 83,
+          "preview": "sm=alpha.resize((128,128),Image.Resampling.BILINEAR);px=sm.load();rows=[sum(px[x,y]>=32 for x in range(6,122))/116 for y in range(78,124)];return sum(v>.76 for v in rows)/len(rows)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v14.py",
+          "line": 128,
+          "preview": "ap=argparse.ArgumentParser();ap.add_argument('--count',type=int,default=28);ap.add_argument('--seed',type=int,default=43117);args=ap.parse_args();items=select(list(rows()),max(1,ar",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v15.py",
+          "line": 33,
+          "preview": "top_end=y0+max(1,int(h*.42)); rows=[]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v15.py",
+          "line": 36,
+          "preview": "if len(xx)<3: rows.append(False); continue",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v15.py",
+          "line": 38,
+          "preview": "rows.append(span>=w*.55)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v15.py",
+          "line": 40,
+          "preview": "for hit in rows:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v15.py",
+          "line": 101,
+          "preview": "items=v14.select(list(v14.rows()),max(1,args.count));print('KAGGLE_BUILDING_PLAN='+','.join(i['id'] for i in items),flush=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+          "line": 125,
+          "preview": "pattern is a thin, abrupt lower shelf/card: several consecutive rows that",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+          "line": 126,
+          "preview": "jump materially wider than the rows immediately above and stay nearly flat.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 49,
+          "preview": "def rows():",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 176,
+          "preview": "items=rows()[:max(1,args.count)];print('KAGGLE_CHARACTER_PLAN='+','.join(i['id'] for i in items),flush=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_fx_sheet_factory_v1.py",
+          "line": 21,
+          "preview": "def rows():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_fx_sheet_factory_v1.py",
+          "line": 120,
+          "preview": "for item in list(rows())[:args.count]:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/manifest_batch_planner.py",
+          "line": 23,
+          "preview": "def rows():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/manifest_batch_planner.py",
+          "line": 56,
+          "preview": "r for r in rows()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/plan_sprite_batches.py",
+          "line": 72,
+          "preview": "rows: list[Asset] = []",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/plan_sprite_batches.py",
+          "line": 79,
+          "preview": "rows.append(Asset(**d, materialized=materialized, lane=classify(d[\"id\"], d[\"description\"], d[\"status\"], d[\"runtime\"], materialized)))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/plan_sprite_batches.py",
+          "line": 81,
+          "preview": "if len(rows) != 235:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/plan_sprite_batches.py",
+          "line": 82,
+          "preview": "raise SystemExit(f\"Manifest parsing safety check failed: expected 235 rows, got {len(rows)}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/plan_sprite_batches.py",
+          "line": 84,
+          "preview": "remaining = [a for a in rows if a.status != \"DONE\"]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/plan_sprite_batches.py",
+          "line": 101,
+          "preview": "\"manifest_total\": len(rows),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/plan_sprite_batches.py",
+          "line": 102,
+          "preview": "\"done\": len(rows) - len(remaining),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_batch.py",
+          "line": 27,
+          "preview": "rows=manifest_rows()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_batch.py",
+          "line": 35,
+          "preview": "if aid not in rows:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_batch.py",
+          "line": 37,
+          "preview": "out.append(rows[aid])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_batch.py",
+          "line": 40,
+          "preview": "return [r for r in rows.values() if r[4].upper()=='TODO'], False",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_factory.py",
+          "line": 52,
+          "preview": "def generate_family(rows, seed=73117, session=None):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_factory.py",
+          "line": 53,
+          "preview": "if not rows:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_factory.py",
+          "line": 54,
+          "preview": "raise RuntimeError('empty family rows')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_factory.py",
+          "line": 57,
+          "preview": "for row in rows:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_factory.py",
+          "line": 114,
+          "preview": "rows=[]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_factory.py",
+          "line": 119,
+          "preview": "rows.append(cols)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_factory.py",
+          "line": 121,
+          "preview": "for r in rows:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_factory.py",
+          "line": 124,
+          "preview": "if not rows: fail('no TODO buildings')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_factory.py",
+          "line": 125,
+          "preview": "return rows[0]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 172,
+          "preview": "'Create one exact 4 columns by 4 rows animation atlas on a perfectly flat uniform neutral gray background. '",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/validate_animation_sheet.py",
+          "line": 45,
+          "preview": "rows=math.ceil(args.frames/args.columns)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/validate_animation_sheet.py",
+          "line": 46,
+          "preview": "expected=(args.columns*args.cell, rows*args.cell)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/validate_animation_sheet.py",
+          "line": 80,
+          "preview": "result={\"sheet\":str(args.sheet),\"family\":args.family,\"frames\":args.frames,\"cell\":args.cell,\"grid\":[args.columns,rows],\"pivot_jitter\":round(max_jitter,4),\"frames_report\":reports}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/validate_isolated_sprite.py",
+          "line": 92,
+          "preview": "rows = int(spec['rows'])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/validate_isolated_sprite.py",
+          "line": 94,
+          "preview": "if columns * rows != expected:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/validate_isolated_sprite.py",
+          "line": 95,
+          "preview": "raise ValueError(f'invalid sheet layout: {columns}x{rows} != {expected} frames')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/validate_isolated_sprite.py",
+          "line": 100,
+          "preview": "for row in range(rows):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/validate_isolated_sprite.py",
+          "line": 101,
+          "preview": "top = round(row * sheet.height / rows)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/validate_isolated_sprite.py",
+          "line": 102,
+          "preview": "bottom = round((row + 1) * sheet.height / rows)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/validate_isolated_sprite.py",
+          "line": 114,
+          "preview": "print(f'animation sheet OK: {path.relative_to(ROOT)}; frames={columns}x{rows}; transparent={transparent_ratio:.1%}')",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 90
+    },
+    "prompt": {
+      "definition": {
+        "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "line": 85,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/assets/pipeline.py",
+          "line": 20,
+          "preview": "def generate(self, asset: ManifestAsset, prompt: str) -> Image.Image: ...",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/pipeline.py",
+          "line": 35,
+          "preview": "prompt: str,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/pipeline.py",
+          "line": 44,
+          "preview": "if not prompt.strip():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/pipeline.py",
+          "line": 45,
+          "preview": "raise ValueError(\"prompt must not be empty\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/pipeline.py",
+          "line": 47,
+          "preview": "generated = provider.generate(asset, prompt)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/pipeline.py",
+          "line": 65,
+          "preview": "prompt_sha256=hashlib.sha256(prompt.encode(\"utf-8\")).hexdigest(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_pipeline.py",
+          "line": 16,
+          "preview": "def generate(self, asset: ManifestAsset, prompt: str) -> Image.Image:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_pipeline.py",
+          "line": 39,
+          "preview": "prompt=\"test prop on black background\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_pipeline.py",
+          "line": 58,
+          "preview": "prompt=\"done\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_public_flux_factory.py",
+          "line": 77,
+          "preview": "prompt=prompt_for(asset_id,desc)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_public_flux_factory.py",
+          "line": 84,
+          "preview": "dict(api_name='/infer', args=(prompt,73117,False,1024,1024,4)),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_public_flux_factory.py",
+          "line": 85,
+          "preview": "dict(fn_index=0, args=(prompt,73117,False,1024,1024,4)),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_public_flux_factory.py",
+          "line": 112,
+          "preview": "'target':asset_id,'prompt':prompt,'candidate':str(out.relative_to(ROOT))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_sprite_factory.py",
+          "line": 39,
+          "preview": "def generate(prompt: str) -> Path:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_sprite_factory.py",
+          "line": 40,
+          "preview": "payload = {\"data\": [prompt, \"1024x1024 ( 1:1 )\", 42, 8, 3.0, True]}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_sprite_factory.py",
+          "line": 196,
+          "preview": "prompt, output_name, maker = SPECS[target]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_sprite_factory.py",
+          "line": 198,
+          "preview": "sheet = maker(black_to_alpha(generate(prompt)))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_static_manifest_factory.py",
+          "line": 88,
+          "preview": "def generate(prompt: str) -> Image.Image:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_static_manifest_factory.py",
+          "line": 89,
+          "preview": "payload = {\"data\": [prompt, \"1024x1024 ( 1:1 )\", 42, 8, 3.0, True]}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory.py",
+          "line": 218,
+          "preview": "with torch.no_grad():pe,ppe,_=enc.encode_prompt(prompt=s,prompt_2=d,max_sequence_length=256)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 236,
+          "preview": "with torch.no_grad():pe,ppe,_=enc.encode_prompt(prompt=s,prompt_2=d,max_sequence_length=320)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
+          "line": 298,
+          "preview": "with torch.no_grad(): pe,ppe,_=enc.encode_prompt(prompt=short,prompt_2=long,max_sequence_length=256)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v14.py",
+          "line": 7,
+          "preview": "print('KAGGLE_STARTUP=building-family-flux-v14-prompt-safe-monotonic',flush=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v14.py",
+          "line": 133,
+          "preview": "with torch.no_grad():pe,ppe,_=enc.encode_prompt(prompt=s,prompt_2=d,max_sequence_length=192)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v15.py",
+          "line": 106,
+          "preview": "with torch.no_grad():pe,ppe,_=enc.encode_prompt(prompt=s,prompt_2=d,max_sequence_length=192)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 85,
+          "preview": "def prompt(i,pose):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 184,
+          "preview": "text=prompt(i,pose)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 185,
+          "preview": "with torch.no_grad():pe,ppe,_=enc.encode_prompt(prompt=text,prompt_2=text,max_sequence_length=192)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/kaggle_sprite_factory.py",
-          "line": 60,
-          "preview": "'TER-09':'one square MAGLEV RAIL CONNECTOR tile: exactly two long parallel cyan magnetic guide rails run straight and visibly from the near edge to the far edge, with matching twin",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/lightning_studio_factory.py",
-          "line": 55,
-          "preview": "subprocess.run(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/lightning_studio_factory.py",
-          "line": 117,
-          "preview": "subprocess.run(cmd, check=True)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/lightning_studio_factory.py",
-          "line": 125,
-          "preview": "raise SystemExit(\"No fresh candidate sprites produced by this run\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/lightning_studio_factory.py",
-          "line": 129,
-          "preview": "subprocess.run(",
+          "line": 151,
+          "preview": "with torch.no_grad():pe,ppe,_=enc.encode_prompt(prompt=prompt_for(item),max_sequence_length=384)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/multi_provider_static_manifest_factory.py",
-          "line": 34,
-          "preview": "url = f\"https://api.cloudflare.com/client/v4/accounts/{CF_ACCOUNT_ID}/ai/run/{model_path}\"",
+          "line": 29,
+          "preview": "def cloudflare_generate(prompt: str) -> Image.Image:",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/pollinations_building_batch.py",
-          "line": 70,
-          "preview": "def run(cmd,env=None):",
-          "definition_candidate": true
+          "file": "tools/sprites/multi_provider_static_manifest_factory.py",
+          "line": 35,
+          "preview": "payload = json.dumps({\"prompt\": prompt[:2048], \"steps\": 8}).encode(\"utf-8\")",
+          "definition_candidate": false
         },
         {
-          "file": "tools/sprites/pollinations_building_batch.py",
+          "file": "tools/sprites/multi_provider_static_manifest_factory.py",
+          "line": 74,
+          "preview": "def generate_with_failover(prompt: str) -> Image.Image:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/multi_provider_static_manifest_factory.py",
+          "line": 78,
+          "preview": "return factory.generate(prompt)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/multi_provider_static_manifest_factory.py",
+          "line": 88,
+          "preview": "return cloudflare_generate(prompt)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_factory.py",
+          "line": 40,
+          "preview": "def fetch_image(prompt:str, seed:int, width:int=1024, height:int=1024):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_factory.py",
+          "line": 41,
+          "preview": "q=urllib.parse.quote(prompt,safe='')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_factory.py",
+          "line": 42,
+          "preview": "url=f'https://image.pollinations.ai/prompt/{q}?model=flux&width={width}&height={height}&seed={int(seed)}&nologo=true&private=true&enhance=false&safe=true'",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_factory.py",
           "line": 71,
-          "preview": "return subprocess.run(cmd,cwd=ROOT,env=env,text=True,capture_output=True)",
+          "preview": "prompt=(",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/pollinations_building_batch.py",
-          "line": 110,
-          "preview": "q=run([sys.executable,'tools/sprites/build_sprite_contact_sheet.py','--files',str(out.relative_to(ROOT)),'--output',str(contact.relative_to(ROOT)),'--report',str(qa.relative_to(ROO",
+          "file": "tools/sprites/pollinations_building_factory.py",
+          "line": 82,
+          "preview": "raw=fetch_image(prompt,seed,1024,1024)",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/pollinations_building_batch.py",
-          "line": 149,
-          "preview": "q=run([sys.executable,'tools/sprites/build_sprite_contact_sheet.py','--files',str(out.relative_to(ROOT)),'--output',str(contact.relative_to(ROOT)),'--report',str(qa.relative_to(ROO",
+          "file": "tools/sprites/pollinations_building_factory.py",
+          "line": 202,
+          "preview": "prompt=(",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/pollinations_building_batch.py",
-          "line": 164,
-          "preview": "fin=run([sys.executable,'tools/sprites/process_final_sprites.py'],env=env)",
+          "file": "tools/sprites/pollinations_building_factory.py",
+          "line": 211,
+          "preview": "q=urllib.parse.quote(prompt,safe='')",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/pollinations_building_batch.py",
-          "line": 170,
-          "preview": "rv=run([sys.executable,'tools/sprites/validate_runtime_asset.py','--asset-id',aid,'--path',str(runtime.relative_to(ROOT)),'--report',str(rqa.relative_to(ROOT))])",
+          "file": "tools/sprites/pollinations_building_factory.py",
+          "line": 212,
+          "preview": "url=f'https://image.pollinations.ai/prompt/{q}?model=flux&width=1024&height=1024&seed={int(seed)}&nologo=true&private=true&enhance=false&safe=true'",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 73,
+          "preview": "def fetch(prompt,seed):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 74,
+          "preview": "q=urllib.parse.quote(prompt,safe='')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 80,
+          "preview": "url=f'https://image.pollinations.ai/prompt/{q}?model=flux&width=1024&height=1024&seed={s}&nologo=true&private=true&enhance=false&safe=true'",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 39
+      "occurrence_count": 45
+    },
+    "load_encode": {
+      "definition": {
+        "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "line": 91,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/kaggle_building_family_factory.py",
+          "line": 60,
+          "preview": "def load_encode():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory.py",
+          "line": 214,
+          "preview": "INCOMING.mkdir(parents=True,exist_ok=True);emb={};t,enc=load_encode()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 95,
+          "preview": "def load_encode():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 232,
+          "preview": "INCOMING.mkdir(parents=True,exist_ok=True);emb={};t,enc=load_encode()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
+          "line": 95,
+          "preview": "def load_encode():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
+          "line": 294,
+          "preview": "emb={}; t5,enc=load_encode()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v14.py",
+          "line": 41,
+          "preview": "def load_encode():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v14.py",
+          "line": 130,
+          "preview": "INCOMING.mkdir(parents=True,exist_ok=True);emb={};t,enc=load_encode()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v15.py",
+          "line": 103,
+          "preview": "v14.INCOMING.mkdir(parents=True,exist_ok=True);emb={};t,enc=v14.load_encode()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 91,
+          "preview": "def load_encode():",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 179,
+          "preview": "encs={};t,enc=load_encode()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_sprite_factory.py",
+          "line": 90,
+          "preview": "def load_encode():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_sprite_factory.py",
+          "line": 148,
+          "preview": "INCOMING.mkdir(parents=True,exist_ok=True);encoded=[];text2,enc=load_encode()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 13
+    },
+    "load_render": {
+      "definition": {
+        "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "line": 96,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/kaggle_building_family_factory.py",
+          "line": 65,
+          "preview": "def load_render():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory.py",
+          "line": 221,
+          "preview": "del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();by={}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 101,
+          "preview": "def load_render():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 239,
+          "preview": "del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();by={}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
+          "line": 101,
+          "preview": "def load_render():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
+          "line": 303,
+          "preview": "tr,base,img=load_render(); by={}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v14.py",
+          "line": 43,
+          "preview": "def load_render():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v14.py",
+          "line": 135,
+          "preview": "del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();by={}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v15.py",
+          "line": 108,
+          "preview": "del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=v14.load_render();by={}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 96,
+          "preview": "def load_render():",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 187,
+          "preview": "del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();report=[]",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 11
+    },
+    "border_bg": {
+      "definition": {
+        "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "line": 103,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 103,
+          "preview": "def border_bg(im):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 113,
+          "preview": "rgb=im.convert('RGB');w,h=rgb.size;bg=border_bg(rgb);px=rgb.load();seen=set();q=deque()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "isolate": {
+      "definition": {
+        "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "line": 112,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/assets/pipeline.py",
+          "line": 12,
+          "preview": "from tools.assets.static_processing import isolate, normalize, validate",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/pipeline.py",
+          "line": 48,
+          "preview": "candidate = normalize(isolate(generated), target_side)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/static_processing.py",
+          "line": 24,
+          "preview": "def isolate(im: Image.Image) -> Image.Image:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_static_processing.py",
+          "line": 5,
+          "preview": "from tools.assets.static_processing import isolate, normalize, validate",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_static_processing.py",
+          "line": 15,
+          "preview": "isolated = isolate(source)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_public_flux_factory.py",
+          "line": 44,
+          "preview": "def isolate(im: Image.Image) -> Image.Image:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_public_flux_factory.py",
+          "line": 103,
+          "preview": "isolated=isolate(im)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_static_manifest_factory.py",
+          "line": 21,
+          "preview": "from tools.assets.static_processing import isolate, normalize, validate",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_static_manifest_factory.py",
+          "line": 146,
+          "preview": "final = normalize(isolate(generate(prompt_for(rid,name,desc))), TARGET_SIDE[kind])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory.py",
+          "line": 81,
+          "preview": "def isolate(im):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory.py",
+          "line": 137,
+          "preview": "m=isolate(raw);cs=components(m.getchannel('A'))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 118,
+          "preview": "def isolate(im):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 175,
+          "preview": "m=isolate(raw);cs=components(m.getchannel('A'))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v14.py",
+          "line": 50,
+          "preview": "def isolate(im):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v14.py",
+          "line": 85,
+          "preview": "m=isolate(raw);cs=comps(m.getchannel('A'))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 112,
+          "preview": "def isolate(im):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 132,
+          "preview": "m=isolate(raw);a=m.getchannel('A');bb=a.getbbox()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_sprite_factory.py",
+          "line": 101,
+          "preview": "def isolate(im):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_sprite_factory.py",
+          "line": 132,
+          "preview": "master=isolate(image);comps=components(master.getchannel('A'))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/multi_provider_static_manifest_factory.py",
+          "line": 107,
+          "preview": "final = factory.normalize(factory.isolate(raw), factory.TARGET_SIDE[kind])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_factory.py",
+          "line": 87,
+          "preview": "isolated=isolate(crop,session=session)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_factory.py",
+          "line": 127,
+          "preview": "def isolate(im, session=None):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_factory.py",
+          "line": 224,
+          "preview": "isolated=isolate(im, session=session)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 23
+    },
+    "dist": {
+      "definition": {
+        "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "line": 116,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/assets/static_processing.py",
+          "line": 34,
+          "preview": "def dist(rgb):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/static_processing.py",
+          "line": 42,
+          "preview": "if background[idx] or dist(px[x, y]) > soft:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/static_processing.py",
+          "line": 66,
+          "preview": "d = dist(px[x, y])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
+          "line": 134,
+          "preview": "def dist(p):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
+          "line": 145,
+          "preview": "if dist(px[x,y]) > 27: continue",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v14.py",
+          "line": 56,
+          "preview": "def dist(p):return ((p[0]-bg[0])**2+(p[1]-bg[1])**2+(p[2]-bg[2])**2)**.5",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v14.py",
+          "line": 61,
+          "preview": "if dist(px[x,y])>27:continue",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 116,
+          "preview": "def dist(p):return ((p[0]-bg[0])**2+(p[1]-bg[1])**2+(p[2]-bg[2])**2)**.5",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 121,
+          "preview": "if dist(px[x,y])>28:continue",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_sprite_factory.py",
+          "line": 102,
+          "preview": "rgb=im.convert('RGB');w,h=rgb.size;bg=border_background(rgb);px=rgb.load();dist=Image.new('L',(w,h));dp=dist.load()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_sprite_factory.py",
+          "line": 106,
+          "preview": "mask=dist.point(lambda p:0 if p<20 else 255 if p>58 else int((p-20)*255/38));mp=mask.load();seen=set();q=deque()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 11
+    },
+    "finish_frame": {
+      "definition": {
+        "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "line": 131,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 131,
+          "preview": "def finish_frame(raw):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 202,
+          "preview": "frame,cov=finish_frame(raw);frames.append(frame);ok=True;print(f\"KAGGLE_CHR_FRAME={i['id']} frame={fi} attempt={attempt+1} cov={cov:.2f}\",flush=True);break",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "alpha_iou": {
+      "definition": {
+        "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "line": 144,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 144,
+          "preview": "def alpha_iou(a,b):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 155,
+          "preview": "ious=[alpha_iou(frames[n-1],frames[n]) for n in range(1,len(frames))]",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "sheet_qa": {
+      "definition": {
+        "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "line": 153,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 153,
+          "preview": "def sheet_qa(frames):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 208,
+          "preview": "ok,why=sheet_qa(frames)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "make_sheet": {
+      "definition": {
+        "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "line": 166,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/assets/qa_report.py",
+          "line": 6,
+          "preview": "from tools.sprites.build_sprite_contact_sheet import inspect, make_sheet",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/qa_report.py",
+          "line": 30,
+          "preview": "make_sheet([image_path], [checks], sheet_path, cols=1)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_sprite_contact_sheet.py",
+          "line": 125,
+          "preview": "def make_sheet(paths: list[Path], results: list[dict], out: Path, cols=6):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_sprite_contact_sheet.py",
+          "line": 165,
+          "preview": "make_sheet(paths, results, args.output)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 166,
+          "preview": "def make_sheet(frames):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 211,
+          "preview": "sheet=make_sheet(frames)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 6
     },
     "main": {
       "definition": {
-        "file": "tools/sprites/pollinations_building_batch.py",
-        "line": 73,
+        "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "line": 174,
         "kind": "function",
         "language": "python"
       },
@@ -880,13 +2280,13 @@
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 148,
+          "line": 174,
           "preview": "def main():",
-          "definition_candidate": false
+          "definition_candidate": true
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 191,
+          "line": 217,
           "preview": "if __name__=='__main__':main()",
           "definition_candidate": false
         },
@@ -1002,7 +2402,7 @@
           "file": "tools/sprites/pollinations_building_batch.py",
           "line": 73,
           "preview": "def main():",
-          "definition_candidate": true
+          "definition_candidate": false
         },
         {
           "file": "tools/sprites/pollinations_building_batch.py",
@@ -1120,720 +2520,6 @@
         }
       ],
       "occurrence_count": 120
-    },
-    "fetch_image": {
-      "definition": {
-        "file": "tools/sprites/pollinations_building_factory.py",
-        "line": 40,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/pollinations_building_factory.py",
-          "line": 40,
-          "preview": "def fetch_image(prompt:str, seed:int, width:int=1024, height:int=1024):",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/pollinations_building_factory.py",
-          "line": 82,
-          "preview": "raw=fetch_image(prompt,seed,1024,1024)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 2
-    },
-    "generate_family": {
-      "definition": {
-        "file": "tools/sprites/pollinations_building_factory.py",
-        "line": 52,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/pollinations_building_batch.py",
-          "line": 103,
-          "preview": "generated=pf.generate_family(targets,seed=seed,session=session)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/pollinations_building_factory.py",
-          "line": 52,
-          "preview": "def generate_family(rows, seed=73117, session=None):",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 2
-    },
-    "fail": {
-      "definition": {
-        "file": "tools/sprites/pollinations_building_factory.py",
-        "line": 108,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "app/build.gradle.kts",
-          "line": 202,
-          "preview": "// release artifact while a real store build has one explicit, fail-closed entry point.",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_public_flux_factory.py",
-          "line": 12,
-          "preview": "def fail(msg):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_public_flux_factory.py",
-          "line": 27,
-          "preview": "fail('requested target is not a TODO building: '+explicit)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_public_flux_factory.py",
-          "line": 28,
-          "preview": "if not rows: fail('no TODO building targets remain')",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_public_flux_factory.py",
-          "line": 33,
-          "preview": "if not m: fail('unsupported target '+asset_id)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_public_flux_factory.py",
-          "line": 55,
-          "preview": "if dev>28: fail(f'bad border variance={dev}')",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_public_flux_factory.py",
-          "line": 68,
-          "preview": "if not a.getbbox(): fail('empty isolation')",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_public_flux_factory.py",
-          "line": 75,
-          "preview": "fail('gradio_client unavailable: '+str(e))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_public_flux_factory.py",
-          "line": 94,
-          "preview": "if result is None: fail('generation failed: '+' | '.join(errors))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_public_flux_factory.py",
-          "line": 99,
-          "preview": "if not candidate: fail('no image path in Space response')",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_public_flux_factory.py",
-          "line": 101,
-          "preview": "if not src.exists(): fail('returned image is not a local downloaded file: '+str(candidate))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
-          "line": 215,
-          "preview": "# Small windows/cavities are legitimate; only large accidental holes fail.",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 163,
-          "preview": "frames=[];anchor_raw=None;fail=None",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 178,
-          "preview": "if not ok:fail=f'frame-{fi}-failed';break",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 180,
-          "preview": "if fail:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 181,
-          "preview": "report.append({'id':i['id'],'status':'REJECT','reason':fail,'frames':len(frames)});continue",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/pollinations_building_factory.py",
-          "line": 108,
-          "preview": "def fail(msg):",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/pollinations_building_factory.py",
-          "line": 123,
-          "preview": "fail('requested target not TODO building: '+explicit)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/pollinations_building_factory.py",
-          "line": 124,
-          "preview": "if not rows: fail('no TODO buildings')",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/pollinations_building_factory.py",
-          "line": 133,
-          "preview": "fail('rembg unavailable: '+repr(e))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/pollinations_building_factory.py",
-          "line": 139,
-          "preview": "fail('rembg failed: '+repr(e))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/pollinations_building_factory.py",
-          "line": 168,
-          "preview": "fail('rembg produced no subject')",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/pollinations_building_factory.py",
-          "line": 178,
-          "preview": "fail('empty isolation after component cleanup')",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/pollinations_building_factory.py",
-          "line": 197,
-          "preview": "if not m: fail('bad target '+aid)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/pollinations_building_factory.py",
-          "line": 245,
-          "preview": "fail(str(e))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/process_final_sprites.py",
-          "line": 56,
-          "preview": "def fail(msg: str) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/process_final_sprites.py",
-          "line": 104,
-          "preview": "fail(f\"{path.name}: FX sheet must be 512x256 (4x2 of 128x128), got {im.width}x{im.height}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/process_final_sprites.py",
-          "line": 108,
-          "preview": "fail(f\"{path.name}: fully transparent FX sheet\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/process_final_sprites.py",
-          "line": 110,
-          "preview": "fail(f\"{path.name}: no transparent pixels; likely baked background\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/process_final_sprites.py",
-          "line": 116,
-          "preview": "fail(f\"{path.name}: FX frame {i} is empty\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/process_final_sprites.py",
-          "line": 124,
-          "preview": "fail(f\"{path.name}: FX frame {i} violates >=4 px transparent padding\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/process_final_sprites.py",
-          "line": 134,
-          "preview": "fail(f\"{path.name}: character sheet must be 1024x1024 (4x4 of 256x256), got {im.width}x{im.height}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/process_final_sprites.py",
-          "line": 139,
-          "preview": "fail(f\"{path.name}: fully transparent character sheet\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/process_final_sprites.py",
-          "line": 141,
-          "preview": "fail(f\"{path.name}: no transparent pixels; likely baked background\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/process_final_sprites.py",
-          "line": 150,
-          "preview": "fail(f\"{path.name}: character frame {i} is empty; expected {expected} frames\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/process_final_sprites.py",
-          "line": 155,
-          "preview": "fail(f\"{path.name}: character frame {i} coverage {visible:.1%} outside {CHR_MIN_CELL_COVERAGE:.0%}-{CHR_MAX_CELL_COVERAGE:.0%}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/process_final_sprites.py",
-          "line": 163,
-          "preview": "fail(f\"{path.name}: character frame {i} violates >={CHR_PADDING}px transparent cell padding\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/process_final_sprites.py",
-          "line": 165,
-          "preview": "fail(f\"{path.name}: unused character atlas cell {i} is not transparent\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/process_final_sprites.py",
-          "line": 167,
-          "preview": "fail(f\"{path.name}: expected {expected} active character frames, got {active}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/process_final_sprites.py",
-          "line": 178,
-          "preview": "fail(f\"{path.name}: too small ({w}x{h}); minimum side is {MIN_DIM}px\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/process_final_sprites.py",
-          "line": 182,
-          "preview": "fail(f\"{path.name}: fully transparent\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/process_final_sprites.py",
-          "line": 184,
-          "preview": "fail(f\"{path.name}: no transparent pixels; likely baked background\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/process_final_sprites.py",
-          "line": 187,
-          "preview": "fail(f\"{path.name}: visible alpha covers {coverage:.1%}; likely baked background or sheet\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/process_final_sprites.py",
-          "line": 190,
-          "preview": "fail(f\"{path.name}: {components} major disconnected subjects; submit one sprite per file\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/process_final_sprites.py",
-          "line": 193,
-          "preview": "fail(f\"{path.name}: no visible subject after alpha cleanup\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/process_final_sprites.py",
-          "line": 198,
-          "preview": "fail(f\"{path.name}: insufficient transparent safety padding\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/process_final_sprites.py",
-          "line": 216,
-          "preview": "fail(f\"{path.name}: non-transparent runtime corner after normalization\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/process_final_sprites.py",
-          "line": 226,
-          "preview": "fail(f\"{path.name}: filename must end in _final.png\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/process_final_sprites.py",
-          "line": 266,
-          "preview": "fail(\"requested candidates missing: \" + \", \".join(sorted(missing)))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/validate_animation_sheet.py",
-          "line": 15,
-          "preview": "def fail(msg: str) -> None:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/validate_animation_sheet.py",
-          "line": 49,
-          "preview": "fail(f\"{args.sheet.name}: expected {expected[0]}x{expected[1]}, got {im.width}x{im.height}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/validate_animation_sheet.py",
-          "line": 52,
-          "preview": "fail(f\"{args.sheet.name}: no transparent pixels\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/validate_animation_sheet.py",
-          "line": 60,
-          "preview": "fail(f\"{args.sheet.name}: frame {i} empty\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/validate_animation_sheet.py",
-          "line": 63,
-          "preview": "fail(f\"{args.sheet.name}: frame {i} violates {args.padding}px transparent padding\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/validate_animation_sheet.py",
-          "line": 66,
-          "preview": "fail(f\"{args.sheet.name}: frame {i} coverage too high ({coverage:.1%})\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/validate_animation_sheet.py",
-          "line": 69,
-          "preview": "fail(f\"{args.sheet.name}: frame {i} fragmented subject ({dom:.1%} dominant)\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/validate_animation_sheet.py",
-          "line": 79,
-          "preview": "fail(f\"{args.sheet.name}: pivot jitter {max_jitter:.1%} exceeds {limit:.0%}\")",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 57
-    },
-    "next_target": {
-      "definition": {
-        "file": "tools/sprites/pollinations_building_factory.py",
-        "line": 112,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/hf_public_flux_factory.py",
-          "line": 16,
-          "preview": "def next_target():",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_public_flux_factory.py",
-          "line": 76,
-          "preview": "row=next_target(); asset_id, name, desc, runtime, status=row",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/pollinations_building_factory.py",
-          "line": 112,
-          "preview": "def next_target():",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/pollinations_building_factory.py",
-          "line": 240,
-          "preview": "row=next_target()",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 4
-    },
-    "isolate": {
-      "definition": {
-        "file": "tools/sprites/pollinations_building_factory.py",
-        "line": 127,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/assets/pipeline.py",
-          "line": 12,
-          "preview": "from tools.assets.static_processing import isolate, normalize, validate",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/pipeline.py",
-          "line": 48,
-          "preview": "candidate = normalize(isolate(generated), target_side)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/static_processing.py",
-          "line": 24,
-          "preview": "def isolate(im: Image.Image) -> Image.Image:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_static_processing.py",
-          "line": 5,
-          "preview": "from tools.assets.static_processing import isolate, normalize, validate",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_static_processing.py",
-          "line": 15,
-          "preview": "isolated = isolate(source)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_public_flux_factory.py",
-          "line": 44,
-          "preview": "def isolate(im: Image.Image) -> Image.Image:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_public_flux_factory.py",
-          "line": 103,
-          "preview": "isolated=isolate(im)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_static_manifest_factory.py",
-          "line": 21,
-          "preview": "from tools.assets.static_processing import isolate, normalize, validate",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_static_manifest_factory.py",
-          "line": 146,
-          "preview": "final = normalize(isolate(generate(prompt_for(rid,name,desc))), TARGET_SIDE[kind])",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_building_family_factory.py",
-          "line": 81,
-          "preview": "def isolate(im):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_building_family_factory.py",
-          "line": 137,
-          "preview": "m=isolate(raw);cs=components(m.getchannel('A'))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
-          "line": 118,
-          "preview": "def isolate(im):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
-          "line": 175,
-          "preview": "m=isolate(raw);cs=components(m.getchannel('A'))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_building_family_factory_v14.py",
-          "line": 50,
-          "preview": "def isolate(im):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_building_family_factory_v14.py",
-          "line": 85,
-          "preview": "m=isolate(raw);cs=comps(m.getchannel('A'))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 86,
-          "preview": "def isolate(im):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 106,
-          "preview": "m=isolate(raw);a=m.getchannel('A');bb=a.getbbox()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_sprite_factory.py",
-          "line": 101,
-          "preview": "def isolate(im):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_sprite_factory.py",
-          "line": 132,
-          "preview": "master=isolate(image);comps=components(master.getchannel('A'))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/multi_provider_static_manifest_factory.py",
-          "line": 107,
-          "preview": "final = factory.normalize(factory.isolate(raw), factory.TARGET_SIDE[kind])",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/pollinations_building_factory.py",
-          "line": 87,
-          "preview": "isolated=isolate(crop,session=session)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/pollinations_building_factory.py",
-          "line": 127,
-          "preview": "def isolate(im, session=None):",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/pollinations_building_factory.py",
-          "line": 224,
-          "preview": "isolated=isolate(im, session=session)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 23
-    },
-    "generate": {
-      "definition": {
-        "file": "tools/sprites/pollinations_building_factory.py",
-        "line": 194,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/GameEngine.kt",
-          "line": 50,
-          "preview": "/** All owned businesses generate while the player is active. */",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/LiveOps.kt",
-          "line": 18,
-          "preview": "DayOfWeek.SUNDAY -> LiveEvent(\"legacy_sunday\", \"Legacy Sunday\", \"Prestige runs generate faster progress.\", 1.35, \"\ud83d\udc51\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/Retention.kt",
-          "line": 36,
-          "preview": "\"Tap the core to generate your first capital.\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/Retention.kt",
-          "line": 37,
-          "preview": "\"Buy your first asset. Assets generate income every second while you play.\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/pipeline.py",
-          "line": 20,
-          "preview": "def generate(self, asset: ManifestAsset, prompt: str) -> Image.Image: ...",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/pipeline.py",
-          "line": 47,
-          "preview": "generated = provider.generate(asset, prompt)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_pipeline.py",
-          "line": 16,
-          "preview": "def generate(self, asset: ManifestAsset, prompt: str) -> Image.Image:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/animation_batch_planner.py",
-          "line": 4,
-          "preview": "This does not generate art. It turns vague manifest frame budgets into a stable",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_sprite_factory.py",
-          "line": 39,
-          "preview": "def generate(prompt: str) -> Path:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_sprite_factory.py",
-          "line": 41,
-          "preview": "post = urllib.request.Request(f\"{SPACE_URL}/gradio_api/call/generate\", data=json.dumps(payload).encode(), headers=_headers(json_body=True), method=\"POST\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_sprite_factory.py",
-          "line": 46,
-          "preview": "get = urllib.request.Request(f\"{SPACE_URL}/gradio_api/call/generate/{event_id}\", headers=_headers(), method=\"GET\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_sprite_factory.py",
-          "line": 198,
-          "preview": "sheet = maker(black_to_alpha(generate(prompt)))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_static_manifest_factory.py",
-          "line": 88,
-          "preview": "def generate(prompt: str) -> Image.Image:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_static_manifest_factory.py",
-          "line": 90,
-          "preview": "req = urllib.request.Request(f\"{SPACE_URL}/gradio_api/call/generate\", data=json.dumps(payload).encode(), headers=headers(True), method=\"POST\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_static_manifest_factory.py",
-          "line": 94,
-          "preview": "req = urllib.request.Request(f\"{SPACE_URL}/gradio_api/call/generate/{event_id}\", headers=headers(), method=\"GET\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_static_manifest_factory.py",
-          "line": 146,
-          "preview": "final = normalize(isolate(generate(prompt_for(rid,name,desc))), TARGET_SIDE[kind])",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/multi_provider_static_manifest_factory.py",
-          "line": 78,
-          "preview": "return factory.generate(prompt)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/pollinations_building_batch.py",
-          "line": 145,
-          "preview": "out,_=pf.generate(row,seed=seed,session=session,report_path=rp)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/pollinations_building_factory.py",
-          "line": 194,
-          "preview": "def generate(row, seed=73117, session=None, report_path: Path | None = None):",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/pollinations_building_factory.py",
-          "line": 243,
-          "preview": "generate(row, seed=seed)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 20
     }
   }
 }

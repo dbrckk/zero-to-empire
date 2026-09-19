@@ -1,18 +1,14 @@
 # CI status
 
-Summary: 2 success / 1 failure / 4 active
+Summary: 2 success / 0 failure / 4 active
 
-- Pollinations Character Atlas: in_progress / pending (1fcd5cb2)
-- Pollinations Building Candidate: in_progress / pending (1fcd5cb2)
-- Android CI: in_progress / pending (1fcd5cb2)
-- Reconcile reviewed run 25: completed / skipped (9a39bb26)
-- Kaggle Mass Sprite Factory: in_progress / pending (ee1a8205)
-- Android CI: completed / success (afd5bd47)
-- Pollinations Building Candidate: completed / success (9a39bb26)
-- Pollinations Character Atlas: completed / failure (9a39bb26)
-
-## Latest failed run structure
-- Job: generate
-  - Failed step: Require at least one candidate
+- Kaggle Mass Sprite Factory: pending / pending (a9e239ff)
+- Pollinations Character Atlas: completed / success (a9e239ff)
+- Android CI: pending / pending (a9e239ff)
+- Android CI: in_progress / pending (27494515)
+- Kaggle Mass Sprite Factory: completed / cancelled (27494515)
+- Kaggle Mass Sprite Factory: completed / cancelled (c5fba9d9)
+- Kaggle Mass Sprite Factory: in_progress / pending (519dd04b)
+- Pollinations Character Atlas: completed / success (1fcd5cb2)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.
