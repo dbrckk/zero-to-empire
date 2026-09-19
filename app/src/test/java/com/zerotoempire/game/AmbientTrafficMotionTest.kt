@@ -32,9 +32,9 @@ class AmbientTrafficMotionTest {
     fun `traffic alpha remains visible and bounded`() {
         repeat(180) { frame ->
             val sample = ambientTrafficMotion(frame, 0, .12f, .07f, false)
-            assertTrue(sample.alpha in .60f.. .98f)
-            assertTrue(sample.deltaX in -.061f.. .061f)
-            assertTrue(sample.deltaY in -.036f.. .036f)
+            assertTrue(sample.alpha in 0.60f..0.98f)
+            assertTrue(sample.deltaX in -0.061f..0.061f)
+            assertTrue(sample.deltaY in -0.036f..0.036f)
         }
     }
 }
