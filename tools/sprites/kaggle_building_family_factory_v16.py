@@ -18,7 +18,7 @@ v15=importlib.util.module_from_spec(SPEC); SPEC.loader.exec_module(v15)
 v14=v15.v14
 V15_ANCHOR_SCORE=v15.anchor_score
 
-print('KAGGLE_STARTUP=building-family-flux-v16.7-stronger-structural-evolution',flush=True)
+print('KAGGLE_STARTUP=building-family-flux-v16.8-tier-aware-structural-evolution',flush=True)
 
 # Phase A (T0-T3): preserve massing. Phase B (T4-T6): add detail/attached volumes
 # without the high denoise that caused wave85 to invent a new ground/site plane.
@@ -185,7 +185,7 @@ def v164_live_gate(recs,new_final,new_cov,tier):
         if ident<floor and not any(r.startswith('adj-iou=') for r in reasons):
             reasons.append(f'footprint-iou={ident:.2f}<{floor:.2f}')
         norm=normalized_silhouette_iou(recs[-1][1],new_final)
-        ceiling={1:.965,2:.955,3:.945,4:.935,5:.925,6:.915}[tier]
+        ceiling={1:.975,2:.960,3:.945,4:.935,5:.925,6:.915}[tier]
         if norm>ceiling:
             reasons.append(f'normalized-silhouette-iou={norm:.3f}>{ceiling:.3f}: tier is mostly a resize')
         print(f'KAGGLE_STRUCTURAL_EVOLUTION tier={tier} adj_iou={ident:.3f} normalized_iou={norm:.3f}',flush=True)
