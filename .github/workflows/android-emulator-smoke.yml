@@ -18,6 +18,22 @@ on:
       - 'build.gradle.kts'
       - 'settings.gradle.kts'
       - 'gradle.properties'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/android-emulator-smoke.yml'
+      - 'ops/android-emulator-smoke-trigger.txt'
+      - 'tools/android/emulator_functional_smoke.sh'
+      - 'tools/android/ui_dump_retry.sh'
+      - 'tools/android/test_ui_dump_retry.py'
+      - 'tools/android/ui_economy_probe.py'
+      - 'tools/android/test_ui_economy_probe.py'
+      - 'tools/android/ui_click_target.py'
+      - 'tools/android/test_ui_click_target.py'
+      - 'app/**'
+      - 'build.gradle.kts'
+      - 'settings.gradle.kts'
+      - 'gradle.properties'
 
 permissions:
   contents: read
@@ -31,14 +47,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
-      - uses: actions/setup-java@v5
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
         with:
           distribution: temurin
           java-version: '17'
 
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
         with:
           gradle-version: '8.13'
 
@@ -58,7 +74,7 @@ jobs:
           sudo udevadm trigger --name-match=kvm
 
       - name: Emulator install and launch smoke
-        uses: reactivecircus/android-emulator-runner@v2
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2
         with:
           api-level: 35
           target: google_apis
@@ -70,7 +86,7 @@ jobs:
 
       - name: Upload smoke evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: android-emulator-smoke-evidence
           path: |
