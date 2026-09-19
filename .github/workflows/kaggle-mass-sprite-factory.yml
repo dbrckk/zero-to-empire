@@ -77,7 +77,7 @@ jobs:
           # Reuse only when the published bundle fingerprint matches the current
           # sprite source tree. Version number alone is not sufficient: an older
           # ready dataset can silently feed stale generators/manifest to a new kernel.
-          CURRENT_BUNDLE_SHA="$(git rev-parse HEAD:docs/art/FINAL_AAA_SPRITE_MANIFEST.md)-$(git rev-parse HEAD:tools/sprites)-$(git rev-parse HEAD:app/src/main/res/drawable-nodpi 2>/dev/null || echo none)-$(git rev-parse HEAD:art/incoming/final-sprites 2>/dev/null || echo none)-$(git rev-parse HEAD:art/production/controlled-character-regen-queue.json 2>/dev/null || echo none)"
+          CURRENT_BUNDLE_SHA="$(git rev-parse HEAD:docs/art/FINAL_AAA_SPRITE_MANIFEST.md)-$(git rev-parse HEAD:tools/sprites)-$(git rev-parse HEAD:app/src/main/res/drawable-nodpi 2>/dev/null || echo none)-$(git rev-parse HEAD:art/incoming/final-sprites 2>/dev/null || echo none)-$(git rev-parse HEAD:art/production/controlled-character-regen-queue.json 2>/dev/null || echo none)-$(git rev-parse HEAD:art/production/controlled-building-regen-queue.json 2>/dev/null || echo none)"
           echo "CURRENT_BUNDLE_SHA=$CURRENT_BUNDLE_SHA"
           if [ "$STATE" = ready ] && [ "${VERSION:-0}" -ge 4 ]; then
             # Encode the source fingerprint in a tiny marker filename. Listing
@@ -101,6 +101,8 @@ jobs:
               app/src/main/res/drawable-nodpi \
               art/incoming/final-sprites \
               art/production/controlled-character-regen-queue.json
+            art/production/controlled-building-regen-queue.json \
+              art/production/controlled-building-regen-queue.json
             cat > /tmp/zte-dataset/dataset-metadata.json <<JSON
           {
             "title": "Zero to Empire Sprite Bundle",
@@ -235,6 +237,62 @@ jobs:
               ))
           print(f"KAGGLE_STRICT_QA_PASS={len(rows)}")
           PY
+      - name: Mark controlled building candidates awaiting semantic review
+        if: success()
+        shell: bash
+        env:
+          KAGGLE_RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+
+          generated=Path('/tmp/kaggle-output/output/generated-targets.json')
+          queue=Path('art/production/controlled-building-regen-queue.json')
+          manifest=Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
+          if not generated.is_file() or not queue.is_file():
+              print('CONTROLLED_BUILDING_STATE_SKIP=missing-files')
+              raise SystemExit(0)
+
+          g=json.loads(generated.read_text(encoding='utf-8'))
+          if g.get('lane')!='CONTROLLED_BUILDING_FAMILY':
+              print('CONTROLLED_BUILDING_STATE_SKIP=other-lane')
+              raise SystemExit(0)
+
+          stems={Path(x['file']).stem for x in g.get('targets',[]) if x.get('file')}
+          stem_to_id={}
+          for line in manifest.read_text(encoding='utf-8').splitlines():
+              if not line.startswith('|') or 'BLD-' not in line or 'app/src/main/res/' not in line:
+                  continue
+              cols=[x.strip() for x in line.split('|')[1:-1]]
+              if len(cols)!=5:
+                  continue
+              stem_to_id[Path(cols[3].replace(chr(96),'')).stem]=cols[0]
+
+          produced={stem_to_id[s] for s in stems if s in stem_to_id}
+          q=json.loads(queue.read_text(encoding='utf-8'))
+          changed=0
+          for item in q.get('targets',[]):
+              aid=str(item.get('id','')).upper()
+              if aid in produced and str(item.get('status','')).upper()=='PENDING_KAGGLE':
+                  item['status']='AWAITING_REVIEW'
+                  item['kaggle_run_id']=int(os.environ['KAGGLE_RUN_ID'])
+                  changed+=1
+          queue.write_text(json.dumps(q,indent=2)+'\n',encoding='utf-8')
+          print(f'CONTROLLED_BUILDING_AWAITING_REVIEW={changed}')
+          PY
+
+          if git diff --quiet -- art/production/controlled-building-regen-queue.json; then
+            exit 0
+          fi
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add art/production/controlled-building-regen-queue.json
+          git commit -m 'art: mark Kaggle building candidates awaiting review'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
       - name: Mark controlled character candidates awaiting semantic review
         if: success()
         shell: bash

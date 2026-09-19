@@ -9,7 +9,7 @@ from __future__ import annotations
 import argparse,gc,json,re
 from collections import deque
 from pathlib import Path
-print('KAGGLE_STARTUP=character-sheet-flux-v1.1-identity-pivot-square-atlas',flush=True)
+print('KAGGLE_STARTUP=character-sheet-flux-v1.2-stylized-single-subject-gate',flush=True)
 import torch
 from PIL import Image,ImageFilter
 from diffusers import FluxPipeline,FluxImg2ImgPipeline,FluxTransformer2DModel
@@ -83,10 +83,10 @@ def rows():
  ]
 
 def prompt(i,pose):
- return (f"AAA mobile 2.5D full-body {ROLE[i['role']]}. {ACTION[i['action']][0]}; {pose}. "
-         "Same single adult worker, same face, same clothing, same proportions. 34-degree three-quarter orthographic game view. "
-         "Feet fully visible. Isolated on flat neutral gray studio background touching all image edges. "
-         "No floor card, scenery, text, logo, extra people, duplicated limbs, detached props, vehicle or building.")
+ return (f"AAA stylized mobile 2.5D strategy-game character sprite, NON-PHOTOREALISTIC, painterly 3D game render. {ROLE[i['role']]}. {ACTION[i['action']][0]}; {pose}. "
+         "Exactly ONE adult worker only. Same single character identity, same face shape, same hair/helmet, same clothing, same colors and same body proportions. "
+         "34-degree three-quarter orthographic game view, simplified readable facial detail, premium game-art materials, feet fully visible. "
+         "Isolated on flat neutral gray studio background touching all image edges. No second person, no clone, no companion, no crowd, no floor card, scenery, text, logo, duplicated limbs, detached props, vehicle or building.")
 
 def load_encode():
  t=T5EncoderModel.from_pretrained(FLUX,subfolder='text_encoder_2',torch_dtype=torch.float16,device_map='cuda')
@@ -135,6 +135,9 @@ def finish_frame(raw):
  if any(e.getbbox() for e in (a.crop((0,0,w,pad)),a.crop((0,h-pad,w,h)),a.crop((0,0,pad,h)),a.crop((w-pad,0,w,h)))):raise RuntimeError('edge contact')
  crop=m.crop(bb);cw,ch=crop.size
  if ch<cw*.95:raise RuntimeError('not full-body character silhouette')
+ # Two side-by-side people produce an abnormally wide full-body silhouette.
+ # Reject before resizing so technical QA cannot normalize a multi-person frame into a valid-looking cell.
+ if cw/ch>.72:raise RuntimeError(f'too-wide/multiple-subject silhouette ratio={cw/ch:.2f}')
  scale=min(176/cw,218/ch); crop=crop.resize((max(1,round(cw*scale)),max(1,round(ch*scale))),Image.Resampling.LANCZOS)
  cell=Image.new('RGBA',(256,256));x=(256-crop.width)//2;y=238-crop.height;cell.alpha_composite(crop,(x,y))
  aa=cell.getchannel('A');cov=sum(aa.histogram()[8:])/(256*256)

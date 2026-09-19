@@ -3,10 +3,10 @@
 Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains the canonical 236-item scope. Candidate art is never confused with DONE runtime assets.
 
 ## Official progress
-- DONE: **125 / 236**
-- ART VALIDATED: **127 / 236**
-- RUNTIME INTEGRATED: **127 / 236**
-- Generated candidates accepted as DONE: **125**
+- DONE: **126 / 236**
+- ART VALIDATED: **128 / 236**
+- RUNTIME INTEGRATED: **128 / 236**
+- Generated candidates accepted as DONE: **126**
 - Rule: only runtime-integrated, individually clean/transparent, manifest-matching assets with green Android CI increment DONE.
 
 ## DONE baseline
@@ -106,3 +106,7 @@ Run-68 full-resolution review accepts `MCH-05-1`, `MCH-07-0` and `TER-05`. `MCH-
 
 ## Reviewed FLUX run 69 — 1 DONE
 Run-69 emitted two technically passing terrain candidates. Full-resolution semantic review accepts only `TER-09`: it is a clean isolated four-way maglev/rail connector with continuous twin cyan guide rails, connector endpoints, no baked text/UI and no background rectangle. `TER-07` is rejected because it remains a platform tile with a local emitter rather than a seam-safe energy-conduit connector. `TER-09` is integrated into the active megastructure terrain runtime layer. Android CI run `34082861081` completed successfully on integration commit `f5330df22ef8aac233dbe648451137910e306e15`; `TER-09` is therefore strict DONE.
+
+
+## Reviewed TER-07 v3 — 1 DONE
+The dedicated TER-07 v3 replacement passed semantic review as a seam-safe Expansion energy conduit, was promoted to the exact runtime target, and Android CI run `35449178232` completed successfully on promotion commit `1e9a12dbb80a61cd7c114f0e0edcc42c37ca0996`. The integration commit `9c13b61226b8c13a8b6f3f6755555de23fa68bc5` preserves that reviewed runtime. TER-07 is therefore strict DONE, bringing terrain/infrastructure to **14 / 14** and total strict progress to **126 / 236**.

@@ -21,14 +21,9 @@ These families must preserve recognizable family identity while showing clear T0
 
 Each must have correct 4×2 / 8-frame runtime structure where applicable, clean padding, semantic match to its manifest role, active runtime visibility and reduced-motion behavior.
 
-## Terrain requiring evidence reconciliation
+## Resolved examples
 
-- TER-07
-
-The sprite must read as the required energy-conduit connector, remain seam-safe and isolated, and be visibly integrated in the correct terrain layer.
-
-## Resolved example
-
+- TER-07: dedicated v3 semantic review + exact runtime promotion; Android CI run `35449178232` is green. Keep it resolved unless the runtime asset changes.
 - ONB-00 was initially promoted by generic runtime reconciliation, but later received an explicit authored integration plus a dedicated visual cleanup/review. Keep its dedicated provenance evidence rather than relying on the generic promotion.
 
 ## Promotion policy
