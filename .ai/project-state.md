@@ -22,13 +22,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T10:05:10Z
+Generated: 2026-09-19T10:34:08Z
 
 ### Git
 - Branch: `main`
-- Head: `32eed67f8697`
-- Commit date: 2026-09-19T12:04:55+02:00
-- Commit: ci(release): harden production gate and PR coverage (#47)
+- Head: `23abdae2e387`
+- Commit date: 2026-09-19T12:33:53+02:00
+- Commit: ci: migrate release gates to Node 24 actions (#48)
 - Tracked files: 1287
 
 ### Recently changed files
