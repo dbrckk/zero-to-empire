@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       batch_count:
-        description: Character atlases to attempt
+        description: Character atlas candidates to attempt
         required: false
         default: '2'
       chain_depth:
@@ -17,6 +17,7 @@ on:
     branches: [main]
     paths:
       - 'tools/sprites/pollinations_character_sheet_factory.py'
+      - 'art/production/controlled-character-regen-queue.json'
       - '.github/workflows/pollinations-character-atlas.yml'
       - 'ops/pollinations-character-trigger.txt'
 
@@ -47,108 +48,93 @@ jobs:
           python-version: '3.12'
       - name: Sync canonical main
         run: git pull --ff-only origin main
+      - name: Check controlled character queue
+        id: gate
+        shell: bash
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+          p=Path('art/production/controlled-character-regen-queue.json')
+          pending=0
+          if p.exists():
+              q=json.loads(p.read_text(encoding='utf-8'))
+              pending=sum(1 for x in q.get('targets',[]) if str(x.get('status','')).upper()=='PENDING')
+          print(f'pending={pending}')
+          print(f'should_generate={str(pending > 0).lower()}')
+          PY
       - name: Cache rembg U2Net model
+        if: steps.gate.outputs.should_generate == 'true'
         uses: actions/cache@v4
         with:
           path: ~/.u2net
           key: rembg-u2net-v0.0.0
       - name: Install strict image tooling
+        if: steps.gate.outputs.should_generate == 'true'
         run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0' 'rembg[cpu]>=2.0.68,<3'
-      - name: Generate character atlas candidate
+      - name: Generate character atlas candidates
+        if: steps.gate.outputs.should_generate == 'true'
         run: python -u tools/sprites/pollinations_character_sheet_factory.py
-      - name: Double validate, finalize and mark DONE
+      - name: Require at least one candidate
+        if: steps.gate.outputs.should_generate == 'true'
         shell: bash
         run: |
-          set -euo pipefail
           python - <<'PY'
-          import json, subprocess, os
+          import json
           from pathlib import Path
-          summary=json.loads(Path('art/production/pollinations-character-summary.json').read_text())
-          good=[x for x in summary if x.get('status')=='CANDIDATE']
+          d=json.loads(Path('art/production/pollinations-character-summary.json').read_text())
+          good=[x for x in d if x.get('status')=='CANDIDATE']
           if not good:
-              raise SystemExit('No strict character atlas candidate passed generation QA')
-          manifest=Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          lines=manifest.read_text(encoding='utf-8').splitlines()
-          for item in good:
-              aid=item['id']; runtime=None
-              for line in lines:
-                  if line.startswith('|') and aid in line:
-                      cols=[c.strip() for c in line.split('|')[1:-1]]
-                      if len(cols)==5 and cols[0]==aid:
-                          runtime=cols[3].replace(chr(96),''); stem=Path(runtime).stem; break
-              if not runtime: raise SystemExit('Manifest row missing '+aid)
-              subprocess.run(['python','tools/sprites/process_final_sprites.py'],check=True,env={**os.environ,'SPRITE_TARGETS':stem})
-              subprocess.run(['python','tools/sprites/validate_runtime_asset.py','--asset-id',aid,'--path',runtime,'--report',f'art/production/{stem}-runtime-qa.json'],check=True)
-              new=[]; changed=0
-              for line in lines:
-                  if line.startswith('|'):
-                      cols=[c.strip() for c in line.split('|')[1:-1]]
-                      if len(cols)==5 and cols[0]==aid and cols[4].upper()=='TODO':
-                          cols[4]='DONE'; line='| '+' | '.join(cols)+' |'; changed+=1
-                  new.append(line)
-              if changed!=1: raise SystemExit(f'Expected one TODO row for {aid}, changed={changed}')
-              lines=new
-              print('POLLINATIONS_CHR_DONE='+aid)
-          manifest.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+              raise SystemExit('No character atlas candidate passed generation QA')
+          print('CHARACTER_CANDIDATES=' + ','.join(x['id'] for x in good))
           PY
-      - name: Commit only double-validated character atlases
+      - name: Commit candidates and QA evidence only
+        if: steps.gate.outputs.should_generate == 'true'
         shell: bash
         run: |
           set -euo pipefail
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md
-          git add app/src/main/res/drawable-nodpi/
+          git add art/production/controlled-character-regen-queue.json
           git add art/incoming/final-sprites/
-          git add art/production/pollinations-character-summary.json art/production/*-runtime-qa.json 2>/dev/null || true
+          git add art/production/pollinations-character-summary.json
           git diff --cached --quiet && exit 0
-          git commit -m 'art: persist double-validated Pollinations character atlas'
+          git commit -m 'art: persist controlled character atlas candidates'
           git pull --rebase origin main
           git push
       - name: Upload character QA evidence
-        if: always()
+        if: steps.gate.outputs.should_generate == 'true' && always()
         uses: actions/upload-artifact@v4
         with:
           name: pollinations-character-atlas-evidence
           path: |
             art/production/pollinations-character-summary.json
-            art/production/*-runtime-qa.json
+            art/production/controlled-character-regen-queue.json
+            art/incoming/final-sprites/zte_chr_*_final.png
           if-no-files-found: warn
           retention-days: 14
-
-      - name: Auto-chain until all character atlases are DONE
-        if: always()
+      - name: Auto-chain controlled queue
+        if: steps.gate.outputs.should_generate == 'true' && always()
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
           remaining=$(python - <<'PY'
+          import json
           from pathlib import Path
-          n=0
-          p=Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          if p.exists():
-              for line in p.read_text(encoding='utf-8').splitlines():
-                  if not line.startswith('|') or 'CHR-' not in line:
-                      continue
-                  cols=[c.strip() for c in line.split('|')[1:-1]]
-                  if len(cols)==5 and cols[0].startswith('CHR-') and cols[4].upper()=='TODO':
-                      n+=1
-          print(n)
+          p=Path('art/production/controlled-character-regen-queue.json')
+          q=json.loads(p.read_text(encoding='utf-8')) if p.exists() else {}
+          print(sum(1 for x in q.get('targets',[]) if str(x.get('status','')).upper()=='PENDING'))
           PY
           )
           depth="${POLLINATIONS_CHAIN_DEPTH:-0}"
-          echo "CHARACTER_TODO_REMAINING=$remaining"
-          echo "CHARACTER_CHAIN_DEPTH=$depth"
-          if [ "$remaining" -eq 0 ]; then
-            echo "SPRITE_MANIFEST_CHARACTER_COMPLETE=1"
-            exit 0
-          fi
-          if [ "$depth" -ge 40 ]; then
-            echo "::error::Auto-chain safety limit reached with $remaining character atlases still TODO."
+          echo "CHARACTER_QUEUE_REMAINING=$remaining"
+          if [ "$remaining" -eq 0 ]; then exit 0; fi
+          if [ "$depth" -ge 8 ]; then
+            echo "::error::Controlled character chain safety limit reached."
             exit 1
           fi
           next=$((depth+1))
           sleep 20
           gh workflow run "Pollinations Character Atlas" --ref main -f batch_count=2 -f chain_depth="$next"
-          echo "CHARACTER_CHAIN_DISPATCHED depth=$next remaining=$remaining"
