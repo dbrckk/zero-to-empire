@@ -1,0 +1,74 @@
+name: FX Historical Review Evidence
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fx-historical-review-evidence.yml'
+      - 'ops/fx-review-trigger.txt'
+
+permissions:
+  contents: read
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install image tooling
+        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
+      - name: Build exact runtime FX contact sheet
+        shell: bash
+        run: |
+          set -euo pipefail
+          files=(
+            app/src/main/res/drawable-nodpi/zte_fx_00_final.webp
+            app/src/main/res/drawable-nodpi/zte_fx_01_final.webp
+            app/src/main/res/drawable-nodpi/zte_fx_02_final.webp
+            app/src/main/res/drawable-nodpi/zte_fx_03_final.webp
+            app/src/main/res/drawable-nodpi/zte_fx_04_final.webp
+            app/src/main/res/drawable-nodpi/zte_fx_05_final.webp
+            app/src/main/res/drawable-nodpi/zte_fx_06_final.webp
+            app/src/main/res/drawable-nodpi/zte_fx_07_final.webp
+            app/src/main/res/drawable-nodpi/zte_fx_08_final.webp
+            app/src/main/res/drawable-nodpi/zte_fx_17_final.webp
+          )
+          for f in "${files[@]}"; do test -s "$f"; done
+          mkdir -p /tmp/fx-review
+          python tools/sprites/build_sprite_contact_sheet.py \
+            --output /tmp/fx-review/fx-historical-contact-sheet.png \
+            --report /tmp/fx-review/fx-historical-qa.json \
+            --files "${files[@]}"
+      - name: Record runtime metadata
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          import json, hashlib
+          rows=[]
+          for n in list(range(9))+[17]:
+              p=Path(f'app/src/main/res/drawable-nodpi/zte_fx_{n:02d}_final.webp')
+              with Image.open(p) as im:
+                  rows.append({
+                      'id':f'FX-{n:02d}',
+                      'path':str(p),
+                      'size':list(im.size),
+                      'mode':im.mode,
+                      'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),
+                      'bytes':p.stat().st_size,
+                  })
+          Path('/tmp/fx-review/fx-runtime-metadata.json').write_text(json.dumps(rows,indent=2),encoding='utf-8')
+          PY
+      - name: Upload review evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: fx-historical-review-evidence
+          path: /tmp/fx-review/
+          if-no-files-found: error
+          retention-days: 30
