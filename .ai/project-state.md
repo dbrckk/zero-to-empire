@@ -22,16 +22,25 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T10:34:08Z
+Generated: 2026-09-19T10:40:43Z
 
 ### Git
 - Branch: `main`
-- Head: `23abdae2e387`
-- Commit date: 2026-09-19T12:33:53+02:00
-- Commit: ci: migrate release gates to Node 24 actions (#48)
-- Tracked files: 1287
+- Head: `6c6da59e7b6e`
+- Commit date: 2026-09-19T12:40:27+02:00
+- Commit: art: restore semantic AAA promotion gate (#49)
+- Tracked files: 1288
 
 ### Recently changed files
+- `.github/workflows/kaggle-candidate-finalize.yml`
+- `.github/workflows/pollinations-building-candidate.yml`
+- `.github/workflows/reconcile-existing-runtime-todos.yml`
+- `.github/workflows/reconcile-sprite-progress-ledger.yml`
+- `.github/workflows/sprite-completion-gate.yml`
+- `PROJECT_CONTINUITY.md`
+- `docs/art/AAA_HISTORICAL_PROMOTION_REVIEW.md`
+- `docs/art/FINAL_AAA_SPRITE_PROGRESS.md`
+- `tools/sprites/pollinations_building_batch.py`
 - `.github/workflows/android-emulator-smoke.yml`
 - `.github/workflows/android.yml`
 - `.github/workflows/production-release.yml`

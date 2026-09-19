@@ -1575,7 +1575,7 @@ jobs:
         if: steps.changed.outputs.has_files == 'true'
         run: python3 tools/sprites/process_final_sprites.py
 
-      - name: Mark only finalized approved targets DONE
+      - name: Mark finalized technical targets RUNTIME
         if: steps.changed.outputs.has_files == 'true'
         shell: bash
         run: |
@@ -1606,8 +1606,8 @@ jobs:
                   p=Path(runtime_path)
                   if not p.is_file() or p.stat().st_size == 0:
                       raise SystemExit(f'Finalized runtime missing for {asset_id}: {runtime_path}')
-                  if status.upper() != 'DONE':
-                      parts[4]='DONE'
+                  if status.upper() not in {'RUNTIME','DONE'}:
+                      parts[4]='RUNTIME'
                       line='| ' + ' | '.join(parts) + ' |'
                       changed += 1
               out.append(line)
@@ -1616,7 +1616,7 @@ jobs:
           if missing:
               raise SystemExit('Finalized targets absent from canonical manifest: ' + ', '.join(sorted(missing)))
           manifest.write_text('\n'.join(out)+'\n',encoding='utf-8')
-          print(f'MANIFEST_NEW_DONE={changed}')
+          print(f'MANIFEST_NEW_RUNTIME={changed}')
           PY
       - name: Commit runtime outputs once
         if: steps.changed.outputs.has_files == 'true'
@@ -2483,10 +2483,10 @@ jobs:
       - name: Install strict image tooling
         run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0' 'rembg[cpu]>=2.0.68,<3'
 
-      - name: Generate and double-validate strict building batch
+      - name: Generate and technically validate building batch
         run: python -u tools/sprites/pollinations_building_batch.py
 
-      - name: Require at least one strict success
+      - name: Require at least one technical success
         shell: bash
         run: |
           python - <<'PY'
@@ -2495,12 +2495,12 @@ jobs:
           d=json.loads(Path('art/production/pollinations-batch-summary.json').read_text())
           if not d.get('successes'):
               raise SystemExit('No strict Pollinations building candidate passed this run')
-          print('STRICT_BATCH_DONE=' + ','.join(x['id'] for x in d['successes']))
+          print('STRICT_BATCH_RUNTIME=' + ','.join(x['id'] for x in d['successes']))
           if d.get('failures'):
               print('STRICT_BATCH_BLOCKED=' + ','.join(x['id'] for x in d['failures']))
           PY
 
-      - name: Commit only double-validated DONE sprites
+      - name: Commit technically validated RUNTIME sprites
         shell: bash
         run: |
           set -euo pipefail
@@ -5048,7 +5048,7 @@ jobs:
           fetch-depth: 2
       - name: Install Pillow
         run: python -m pip install 'Pillow<12'
-      - name: Strictly validate existing TODO runtimes
+      - name: Technically validate existing pending runtimes
         shell: bash
         run: |
           python3 - <<'PY'
@@ -5130,7 +5130,7 @@ jobs:
           print('STRICT_EXISTING_RUNTIME_PASS='+','.join(sorted(passed)))
           Path('/tmp/runtime-pass.txt').write_text('\n'.join(sorted(passed))+'\n',encoding='utf-8')
           PY
-      - name: Mark only strict-pass existing runtimes DONE
+      - name: Mark technical-pass existing runtimes RUNTIME
         shell: bash
         run: |
           python3 - <<'PY'
@@ -5142,11 +5142,11 @@ jobs:
           for line in lines:
               if line.startswith('|'):
                   cols=[c.strip() for c in line.split('|')[1:-1]]
-                  if len(cols)==5 and cols[0] in passed and cols[4].upper()!='DONE':
-                      cols[4]='DONE'; line='| '+' | '.join(cols)+' |'; changed+=1
+                  if len(cols)==5 and cols[0] in passed and cols[4].upper() not in {'RUNTIME','DONE'}:
+                      cols[4]='RUNTIME'; line='| '+' | '.join(cols)+' |'; changed+=1
               out.append(line)
           manifest.write_text('\n'.join(out)+'\n',encoding='utf-8')
-          print(f'MANIFEST_NEW_DONE={changed}')
+          print(f'MANIFEST_NEW_RUNTIME={changed}')
           PY
       - name: Commit strict reconciliation
         shell: bash
@@ -5469,6 +5469,7 @@ on:
       - '.github/workflows/reconcile-sprite-progress-ledger.yml'
       - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
       - 'docs/art/FINAL_AAA_SPRITE_PROGRESS.md'
+      - 'docs/art/AAA_HISTORICAL_PROMOTION_REVIEW.md'
       - 'PROJECT_CONTINUITY.md'
   workflow_dispatch:
 
@@ -5483,7 +5484,7 @@ jobs:
   reconcile:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
       - name: Recompute ledger from canonical rows
@@ -5497,10 +5498,12 @@ jobs:
           manifest = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
           progress = Path('docs/art/FINAL_AAA_SPRITE_PROGRESS.md')
           continuity = Path('PROJECT_CONTINUITY.md')
+          review = Path('docs/art/AAA_HISTORICAL_PROMOTION_REVIEW.md')
+
           text = manifest.read_text(encoding='utf-8')
           row = re.compile(r'^\|\s*([^|]+?)\s*\|.*\|\s*(TODO|RUNTIME|DONE)\s*\|\s*$', re.M)
           rows = [(m.group(1).strip(), m.group(2)) for m in row.finditer(text)]
-          if len(rows) != 235 or len({a for a, _ in rows}) != 235:
+          if len(rows) != 236 or len({a for a, _ in rows}) != 236:
               raise SystemExit(f'Canonical manifest invalid: rows={len(rows)} unique={len({a for a, _ in rows})}')
 
           def family(asset):
@@ -5512,41 +5515,63 @@ jobs:
               if asset.startswith('PRP-'): return 'Props'
               if asset.startswith(('TER-', 'INF-')): return 'Terrain/infrastructure'
               if asset.startswith('FX-'): return 'FX'
+              if asset.startswith('ONB-'): return 'Onboarding'
               raise SystemExit(f'Unknown canonical asset family: {asset}')
 
           planned = Counter(family(a) for a, _ in rows)
-          done = Counter(family(a) for a, s in rows if s == 'DONE')
-          total_done = sum(done.values())
-          expected = {'Buildings':98,'Power Core':7,'Characters':24,'Vehicles':18,'Machines':28,'Props':28,'Terrain/infrastructure':14,'FX':18}
+          manifest_done = Counter(family(a) for a, s in rows if s == 'DONE')
+          manifest_total_done = sum(manifest_done.values())
+          expected = {'Buildings':98,'Power Core':7,'Characters':24,'Vehicles':18,'Machines':28,'Props':28,'Terrain/infrastructure':14,'FX':18,'Onboarding':1}
           if dict(planned) != expected:
               raise SystemExit(f'Canonical family totals changed unexpectedly: {dict(planned)}')
 
+          progress_text = progress.read_text(encoding='utf-8')
+          trusted = re.search(r'(?m)^- DONE: \*\*(\d+) / 236\*\*$', progress_text)
+          if not trusted:
+              raise SystemExit('Trusted strict progress anchor missing')
+          trusted_done = int(trusted.group(1))
+
+          review_text = review.read_text(encoding='utf-8')
+          review_open = '**Status: OPEN**' in review_text
+          if review_open:
+              print(f'STRICT_RECONCILIATION_FROZEN=1 TRUSTED_DONE={trusted_done} MANIFEST_DONE={manifest_total_done}')
+              print('Historical semantic review is OPEN; manifest DONE flags are not allowed to overwrite the trusted strict ledger.')
+              raise SystemExit(0)
+
+          if manifest_total_done < trusted_done:
+              raise SystemExit(f'Manifest DONE regressed below trusted strict count: manifest={manifest_total_done} trusted={trusted_done}')
+
           ledger = '## Progress ledger\n' + '\n'.join([
-              f'- **DONE: {total_done} / 235**',
-              f'- Buildings: **{done["Buildings"]} / 98**',
-              f'- Power Core: **{done["Power Core"]} / 7**',
-              f'- Characters: **{done["Characters"]} / 24**',
-              f'- Vehicles: **{done["Vehicles"]} / 18**',
-              f'- Machines: **{done["Machines"]} / 28**',
-              f'- Props: **{done["Props"]} / 28**',
-              f'- Terrain/infrastructure: **{done["Terrain/infrastructure"]} / 14**',
-              f'- FX: **{done["FX"]} / 18**',
+              f'- **DONE: {manifest_total_done} / 236**',
+              f'- Buildings: **{manifest_done["Buildings"]} / 98**',
+              f'- Power Core: **{manifest_done["Power Core"]} / 7**',
+              f'- Characters: **{manifest_done["Characters"]} / 24**',
+              f'- Vehicles: **{manifest_done["Vehicles"]} / 18**',
+              f'- Machines: **{manifest_done["Machines"]} / 28**',
+              f'- Props: **{manifest_done["Props"]} / 28**',
+              f'- Terrain/infrastructure: **{manifest_done["Terrain/infrastructure"]} / 14**',
+              f'- FX: **{manifest_done["FX"]} / 18**',
+              f'- Onboarding: **{manifest_done["Onboarding"]} / 1**',
           ])
           ledger_pattern = re.compile(r'## Progress ledger\n.*?(?=\n### Next production target)', re.S)
-          if not ledger_pattern.search(text): raise SystemExit('Progress ledger block not found')
+          if not ledger_pattern.search(text):
+              raise SystemExit('Progress ledger block not found')
           manifest.write_text(ledger_pattern.sub(ledger + '\n', text, count=1), encoding='utf-8')
 
           c = continuity.read_text(encoding='utf-8')
-          c, n1 = re.subn(r'Reach \*\*\d+ / 235 canonical final sprites strict DONE\*\* toward \*\*235 / 235\*\*\.', f'Reach **{total_done} / 235 canonical final sprites strict DONE** toward **235 / 235**.', c, count=1)
-          if n1 != 1: raise SystemExit(f'Continuity primary count anchor missing: {n1}')
+          c, n1 = re.subn(r'Reach \*\*\d+ / 236 canonical final sprites strict DONE\*\* toward \*\*236 / 236\*\*\.',
+                          f'Reach **{manifest_total_done} / 236 canonical final sprites strict DONE** toward **236 / 236**.', c, count=1)
+          if n1 != 1:
+              raise SystemExit(f'Continuity primary count anchor missing: {n1}')
           continuity.write_text(c, encoding='utf-8')
 
-          p = progress.read_text(encoding='utf-8')
-          p, n3 = re.subn(r'(?m)^- DONE: \*\*\d+ / 235\*\*$', f'- DONE: **{total_done} / 235**', p, count=1)
-          p, n4 = re.subn(r'(?m)^- Generated candidates accepted as DONE: \*\*\d+\*\*$', f'- Generated candidates accepted as DONE: **{total_done}**', p, count=1)
-          if n3 != 1 or n4 != 1: raise SystemExit(f'Progress anchors missing: done={n3} accepted={n4}')
+          p = progress_text
+          p, n3 = re.subn(r'(?m)^- DONE: \*\*\d+ / 236\*\*$', f'- DONE: **{manifest_total_done} / 236**', p, count=1)
+          p, n4 = re.subn(r'(?m)^- Generated candidates accepted as DONE: \*\*\d+\*\*$', f'- Generated candidates accepted as DONE: **{manifest_total_done}**', p, count=1)
+          if n3 != 1 or n4 != 1:
+              raise SystemExit(f'Progress anchors missing: done={n3} accepted={n4}')
           progress.write_text(p, encoding='utf-8')
-          print(f'CANONICAL_ROWS={len(rows)} STRICT_DONE={total_done} DONE_BY_FAMILY={dict(done)}')
+          print(f'CANONICAL_ROWS={len(rows)} STRICT_DONE={manifest_total_done} DONE_BY_FAMILY={dict(manifest_done)}')
           PY
       - name: Commit reconciled aggregate state if stale
         shell: bash
@@ -5562,7 +5587,7 @@ jobs:
           git pull --rebase origin main
           git push
 
-# This workflow never changes per-asset status. It derives aggregate state from the canonical 235 rows.
+# This workflow never changes per-asset status. It derives aggregate state from the canonical 236 rows.
 ```
 
 ## File: .github/workflows/refine-run66-stragglers.yml
@@ -5714,6 +5739,7 @@ on:
     branches: [main]
     paths:
       - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
+      - 'docs/art/AAA_HISTORICAL_PROMOTION_REVIEW.md'
       - 'app/src/main/res/drawable-nodpi/**_final.webp'
       - 'tools/sprites/audit_complete_sprite_manifest.py'
       - 'tools/sprites/validate_runtime_asset.py'
@@ -5732,7 +5758,7 @@ jobs:
   audit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: main
           fetch-depth: 2
@@ -5748,6 +5774,8 @@ jobs:
           python - <<'PY' >> "$GITHUB_OUTPUT"
           from pathlib import Path
           pending=0;total=0
+          review=Path('docs/art/AAA_HISTORICAL_PROMOTION_REVIEW.md').read_text(encoding='utf-8')
+          semantic_closed='**Status: CLOSED**' in review
           for line in Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md').read_text().splitlines():
               if not line.startswith('|') or 'app/src/main/res/' not in line: continue
               cols=[c.strip() for c in line.split('|')[1:-1]]
@@ -5756,14 +5784,15 @@ jobs:
               pending += cols[4].upper()!='DONE'
           print(f'total={total}')
           print(f'pending={pending}')
-          print('complete=true' if total==235 and pending==0 else 'complete=false')
+          print(f'semantic_closed={str(semantic_closed).lower()}')
+          print('complete=true' if total==236 and pending==0 and semantic_closed else 'complete=false')
           PY
 
       - name: Install Pillow
         if: steps.state.outputs.complete == 'true'
         run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
 
-      - name: Audit all 235 sprite runtimes
+      - name: Audit all 236 sprite runtimes
         if: steps.state.outputs.complete == 'true'
         id: audit
         continue-on-error: true
@@ -5771,7 +5800,7 @@ jobs:
 
       - name: Upload full audit evidence
         if: steps.state.outputs.complete == 'true' && always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: final-sprite-completion-audit
           path: art/production/final-sprite-completion-audit.json
@@ -5786,14 +5815,14 @@ jobs:
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add art/production/final-sprite-completion-audit.json
           git diff --cached --quiet && exit 0
-          git commit -m 'art: record final 235-sprite completion audit'
+          git commit -m 'art: record final 236-sprite completion audit'
           git pull --rebase origin main
           git push
 
       - name: Enforce final audit result
         if: steps.state.outputs.complete == 'true' && steps.audit.outcome != 'success'
         run: |
-          echo "::error::Final 235-sprite runtime audit failed. See committed/uploaded audit evidence."
+          echo "::error::Final 236-sprite runtime audit failed. See committed/uploaded audit evidence."
           exit 1
 ```
 
@@ -24275,12 +24304,12 @@ out=[]
 ⋮----
 cols=[c.strip() for c in line.split('|')[1:-1]]
 ⋮----
-def mark_done(asset_id:str)
+def mark_runtime(asset_id:str)
 ⋮----
 lines=MANIFEST.read_text(encoding='utf-8').splitlines()
 out=[]; changed=0
 ⋮----
-cols[4]='DONE'; line='| '+' | '.join(cols)+' |'; changed+=1
+cols[4]='RUNTIME'; line='| '+' | '.join(cols)+' |'; changed+=1
 ⋮----
 def run(cmd,env=None)
 ⋮----
@@ -25271,7 +25300,7 @@ plugins {
 > Persistent handoff file. Read before work and update at every material intervention. Never rely on chat history alone.
 
 ## Primary objective
-Reach **125 / 235 canonical final sprites strict DONE** toward **235 / 235**. Strict DONE requires semantic + technical validation, final runtime reference/visibility, manifest/progress reconciliation and green Android CI. Never promote from file presence alone.
+Reach **125 / 236 canonical final sprites strict DONE** toward **236 / 236**. Strict DONE requires semantic + technical validation, final runtime reference/visibility, manifest/progress reconciliation and green Android CI. Never promote from file presence alone.
 
 ## Trusted state — 2026-09-09 10:33 +02:00
 - Fully reconciled aggregate: **124 / 235 strict DONE**; Buildings 23/98, Power Core 7/7, Characters 0/24, Vehicles 18/18, Machines 28/28, Props 28/28, Terrain/infrastructure 13/14, FX 7/18.
@@ -25309,7 +25338,7 @@ Reach **125 / 235 canonical final sprites strict DONE** toward **235 / 235**. St
 3. Audit BLD-02-T4..T6 and BLD-03-T0..T1 semantic provenance.
 4. Audit FX-08 separately.
 5. Do not retry Kaggle until GPU + Internet are actually usable.
-6. Continue until **235 / 235**.
+6. Continue until **236 / 236**.
 
 ## Operating principle
 Generate/integrate the right asset first; QA confirms rather than inflates. Optimize validated semantic yield, preserve evidence, and never increase strict DONE without every gate.

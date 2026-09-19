@@ -2854,12 +2854,12 @@ out=[]
 ⋮----
 cols=[c.strip() for c in line.split('|')[1:-1]]
 ⋮----
-def mark_done(asset_id:str)
+def mark_runtime(asset_id:str)
 ⋮----
 lines=MANIFEST.read_text(encoding='utf-8').splitlines()
 out=[]; changed=0
 ⋮----
-cols[4]='DONE'; line='| '+' | '.join(cols)+' |'; changed+=1
+cols[4]='RUNTIME'; line='| '+' | '.join(cols)+' |'; changed+=1
 ⋮----
 def run(cmd,env=None)
 ⋮----

@@ -1,14 +1,18 @@
 # CI status
 
-Summary: 3 success / 0 failure / 2 active
+Summary: 2 success / 2 failure / 3 active
 
-- Android Emulator Smoke: in_progress / pending (23abdae2)
-- Android CI: in_progress / pending (23abdae2)
-- Reconcile reviewed run 25: completed / skipped (aecfe9ad)
-- Reconcile reviewed run 25: completed / skipped (aecfe9ad)
-- Android CI: completed / success (a7d5bae0)
-- Android Emulator Smoke: completed / success (a7d5bae0)
-- Android Emulator Smoke: completed / cancelled (32eed67f)
-- Android CI: completed / success (32eed67f)
+- Reconcile reviewed run 25: completed / skipped (6c6da59e)
+- Sprite Completion Gate: in_progress / pending (6c6da59e)
+- Reconcile Sprite Progress Ledger: completed / success (6c6da59e)
+- Pollinations Building Candidate: in_progress / pending (6c6da59e)
+- Reconcile existing runtime TODOs: in_progress / pending (6c6da59e)
+- Reconcile Sprite Progress Ledger: completed / success (f2788031)
+- Reconcile Sprite Progress Ledger: completed / failure (cf11caad)
+- Reconcile Sprite Progress Ledger: completed / failure (fe4c4ad8)
+
+## Latest failed run structure
+- Job: reconcile
+  - Failed step: Commit reconciled aggregate state if stale
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

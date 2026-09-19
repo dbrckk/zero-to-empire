@@ -1,15 +1,24 @@
 # Change impact
 
-Base: aecfe9adef66213f8f81bf09ada9060478e32974
-Head: 23abdae2e387b33d6b235bcfa470331214089738
+Base: cd2e436b047a3755bc34e995f06b2cf7fa80d1b6
+Head: 6c6da59e7b6e74ca9886cd7ad6d0308c0513a82e
 
 ## Changed files
-- M .github/workflows/android-emulator-smoke.yml
-- M .github/workflows/android.yml
-- M .github/workflows/production-release.yml
+- M .github/workflows/kaggle-candidate-finalize.yml
+- M .github/workflows/pollinations-building-candidate.yml
+- M .github/workflows/reconcile-existing-runtime-todos.yml
+- M .github/workflows/reconcile-sprite-progress-ledger.yml
+- M .github/workflows/sprite-completion-gate.yml
+- M PROJECT_CONTINUITY.md
+- A docs/art/AAA_HISTORICAL_PROMOTION_REVIEW.md
+- M docs/art/FINAL_AAA_SPRITE_PROGRESS.md
+- M tools/sprites/pollinations_building_batch.py
 
 ## Affected areas
 - .github
+- (root)
+- docs
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.
