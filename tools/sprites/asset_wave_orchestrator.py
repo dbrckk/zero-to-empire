@@ -35,6 +35,15 @@ def choose(q):
 
     active_build=controlled_ids(BUILDING_QUEUE)
     active_char=controlled_ids(CHAR_QUEUE)
+    # Controlled queues may contain historical rejected/paused rows. Only statuses that
+    # actually require a currently running/next controlled pass block opening new work.
+    def actionable(path):
+        if not path.is_file(): return set()
+        data=json.loads(path.read_text(encoding='utf-8'))
+        active={'PENDING','PENDING_KAGGLE','IN_PROGRESS','CANDIDATE','AWAITING_REVIEW'}
+        return {str(x.get('id','')).upper() for x in data.get('targets',[]) if str(x.get('status','')).upper() in active}
+    active_build=actionable(BUILDING_QUEUE)
+    active_char=actionable(CHAR_QUEUE)
     if active_build:
         fam=sorted({x.rsplit('-T',1)[0] for x in active_build if x.startswith('BLD-')})
         return {'action':'WAIT_OR_CONTINUE_EXISTING','lane':'building-family','families':fam,'strict_done':done,'target':target}
