@@ -1,20 +1,18 @@
 {
   "mode": "candidate-only",
-  "reason": "Kaggle identity-anchored wave 1: regenerate only Operator IDLE and WALK via first-frame FLUX anchor + conservative img2img; candidates remain review-only",
+  "reason": "Kaggle wave 2: retry Operator IDLE/WALK with stylized non-photorealistic prompting and hard single-subject silhouette QA; candidates remain review-only",
   "targets": [
     {
       "id": "CHR-OP-IDLE",
-      "status": "AWAITING_REVIEW",
-      "previous_verdict": "REJECT_PASS_2",
-      "review_reason": "Pass 3 uses Kaggle FLUX identity anchor + img2img. Await semantic review before any runtime change.",
-      "kaggle_run_id": 35448527236
+      "status": "PENDING_KAGGLE",
+      "previous_verdict": "REJECT_PASS_3_STYLE",
+      "review_reason": "Kaggle pass 3 preserved identity but remained too photorealistic and too static for the canonical stylized 2.5D game-art direction. Retry with explicit non-photorealistic styling."
     },
     {
       "id": "CHR-OP-WALK",
-      "status": "AWAITING_REVIEW",
-      "previous_verdict": "REJECT_PASS_2",
-      "review_reason": "Pass 3 uses Kaggle FLUX identity anchor + img2img. Await semantic review before any runtime change.",
-      "kaggle_run_id": 35448527236
+      "status": "PENDING_KAGGLE",
+      "previous_verdict": "REJECT_PASS_3_MULTI_SUBJECT",
+      "review_reason": "Kaggle pass 3 rendered two workers in every walk frame. Retry only after the single-subject silhouette-width gate is active."
     },
     {
       "id": "CHR-OP-WORK",
