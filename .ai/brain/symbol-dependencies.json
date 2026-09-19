@@ -5,37 +5,70 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "prompts": {
+    "main": {
       "source": {
-        "file": "tools/sprites/kaggle_building_family_factory_v16.py",
-        "start": 84,
-        "end": 93
+        "file": "tools/sprites/asset_queue_utils.py",
+        "start": 9,
+        "end": 129
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "silhouette_metrics": {
+    "strict_progress": {
       "source": {
-        "file": "tools/sprites/kaggle_building_family_factory_v16.py",
-        "start": 95,
-        "end": 110
+        "file": "tools/sprites/asset_wave_orchestrator.py",
+        "start": 20,
+        "end": 23
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "v164_anchor_score": {
+    "controlled_ids": {
       "source": {
-        "file": "tools/sprites/kaggle_building_family_factory_v16.py",
-        "start": 112,
-        "end": 122
+        "file": "tools/sprites/asset_wave_orchestrator.py",
+        "start": 25,
+        "end": 28
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "choose": {
+      "source": {
+        "file": "tools/sprites/asset_wave_orchestrator.py",
+        "start": 30,
+        "end": 69
       },
       "symbol_dependencies": [
         {
-          "symbol": "silhouette_metrics",
+          "symbol": "actionable",
           "definitions": [
             {
-              "file": "tools/sprites/kaggle_building_family_factory_v16.py",
-              "line": 95,
+              "file": "tools/sprites/asset_wave_orchestrator.py",
+              "line": 40,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "controlled_ids",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_wave_orchestrator.py",
+              "line": 25,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "strict_progress",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_wave_orchestrator.py",
+              "line": 20,
               "kind": "function",
               "language": "python"
             }
@@ -43,39 +76,33 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 1
+      "dependency_count": 3
     },
-    "v164_slab_score": {
+    "actionable": {
       "source": {
-        "file": "tools/sprites/kaggle_building_family_factory_v16.py",
-        "start": 128,
-        "end": 155
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "normalized_silhouette_iou": {
-      "source": {
-        "file": "tools/sprites/kaggle_building_family_factory_v16.py",
-        "start": 161,
-        "end": 178
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "v164_live_gate": {
-      "source": {
-        "file": "tools/sprites/kaggle_building_family_factory_v16.py",
-        "start": 180,
-        "end": 192
+        "file": "tools/sprites/asset_wave_orchestrator.py",
+        "start": 40,
+        "end": 160
       },
       "symbol_dependencies": [
         {
-          "symbol": "normalized_silhouette_iou",
+          "symbol": "choose",
           "definitions": [
             {
-              "file": "tools/sprites/kaggle_building_family_factory_v16.py",
-              "line": 161,
+              "file": "tools/sprites/asset_wave_orchestrator.py",
+              "line": 30,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "main",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_wave_orchestrator.py",
+              "line": 71,
               "kind": "function",
               "language": "python"
             }
@@ -83,7 +110,7 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 1
+      "dependency_count": 2
     }
   }
 }

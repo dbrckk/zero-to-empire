@@ -45,6 +45,7 @@ The content is organized as follows:
     ai-repo-map.yml
     android-emulator-smoke.yml
     android.yml
+    asset-autofactory.yml
     asset-pipeline-ci.yml
     build-test-apk.yml
     final-aaa-assets.yml
@@ -308,6 +309,8 @@ tools/
     test_workflow_policy.py
   sprites/
     animation_batch_planner.py
+    asset_queue_utils.py
+    asset_wave_orchestrator.py
     audit_complete_sprite_manifest.py
     build_sprite_contact_sheet.py
     colab_mass_factory.py
@@ -779,6 +782,101 @@ jobs:
           path: app/build/outputs/apk/debug/*.apk
           if-no-files-found: ignore
           retention-days: 14
+```
+
+## File: .github/workflows/asset-autofactory.yml
+```yaml
+name: Asset Autofactory
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 * * * *'
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: asset-autofactory
+  cancel-in-progress: false
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      action: ${{ steps.plan.outputs.action }}
+      lane: ${{ steps.plan.outputs.lane }}
+      assets: ${{ steps.plan.outputs.assets }}
+      family: ${{ steps.plan.outputs.family }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - id: plan
+        name: Plan next safe wave
+        run: python tools/sprites/asset_wave_orchestrator.py --github-output
+      - name: Persist planner snapshot
+        run: python tools/sprites/asset_wave_orchestrator.py > /tmp/asset-autofactory-plan.json
+      - uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4
+        with:
+          name: asset-autofactory-plan
+          path: /tmp/asset-autofactory-plan.json
+          retention-days: 14
+
+  dispatch:
+    needs: plan
+    if: needs.plan.outputs.action == 'QUEUE'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Mark wave in progress
+        env:
+          ASSETS: ${{ needs.plan.outputs.assets }}
+        run: python tools/sprites/asset_queue_utils.py --assets "$ASSETS" --status IN_PROGRESS --increment-attempts
+      - name: Commit queue state
+        env:
+          ASSETS: ${{ needs.plan.outputs.assets }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add art/production/master-asset-queue.json
+          git commit -m "art(auto): start asset wave $ASSETS"
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Dispatch supported production lane
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LANE: ${{ needs.plan.outputs.lane }}
+        run: |
+          case "$LANE" in
+            building-family)
+              gh workflow run kaggle-mass-sprite-factory.yml
+              ;;
+            character-atlas)
+              gh workflow run pollinations-character-atlas.yml
+              ;;
+            terrain)
+              gh workflow run procedural-terrain-batch.yml
+              ;;
+            fx)
+              gh workflow run final-aaa-assets.yml
+              ;;
+            static)
+              echo "Static lane requires review-safe provider dispatch; leaving IN_PROGRESS evidence for next reconciliation."
+              ;;
+            machine)
+              echo "Machine lane requires animation-aware dispatch; leaving IN_PROGRESS evidence for next reconciliation."
+              ;;
+            *)
+              echo "Unsupported lane: $LANE"; exit 1
+              ;;
+          esac
+
+  target:
+    needs: plan
+    if: needs.plan.outputs.action == 'STOP'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Asset autofactory stopped safely. Target reached or no eligible automatic work remains."
 ```
 
 ## File: .github/workflows/asset-pipeline-ci.yml
@@ -22939,6 +23037,88 @@ p = argparse.ArgumentParser()
 args = p.parse_args()
 ⋮----
 planned = list(items(args.kind))[: args.count]
+```
+
+## File: tools/sprites/asset_queue_utils.py
+```python
+#!/usr/bin/env python3
+"""Master queue mutations used by the asset autofactory."""
+⋮----
+ROOT=Path(__file__).resolve().parents[2]
+Q=ROOT/'art/production/master-asset-queue.json'
+⋮----
+def main()
+⋮----
+p=argparse.ArgumentParser();p.add_argument('--status',required=True);p.add_argument('--assets',required=True);p.add_argument('--increment-attempts',action='store_true');a=p.parse_args()
+d=json.loads(Q.read_text(encoding='utf-8')); ids={x for x in a.assets.split(',') if x}
+found=set()
+⋮----
+missing=ids-found
+```
+
+## File: tools/sprites/asset_wave_orchestrator.py
+```python
+#!/usr/bin/env python3
+"""Plan the next safe asset-production wave toward 235/236 strict DONE.
+
+This planner NEVER promotes art. It only chooses generation/reconciliation work.
+Historical manifest DONE flags are intentionally ignored until strict evidence is normalized.
+"""
+⋮----
+ROOT=Path(__file__).resolve().parents[2]
+QUEUE=ROOT/'art/production/master-asset-queue.json'
+PROGRESS=ROOT/'docs/art/FINAL_AAA_SPRITE_PROGRESS.md'
+BUILDING_QUEUE=ROOT/'art/production/controlled-building-regen-queue.json'
+CHAR_QUEUE=ROOT/'art/production/controlled-character-regen-queue.json'
+⋮----
+STRICT_RE=re.compile(r'DONE:\s*\*\*(\d+)\s*/\s*(\d+)\*\*')
+⋮----
+def strict_progress()
+⋮----
+m=STRICT_RE.search(PROGRESS.read_text(encoding='utf-8'))
+⋮----
+def controlled_ids(path)
+⋮----
+d=json.loads(path.read_text(encoding='utf-8'))
+⋮----
+def choose(q)
+⋮----
+target=int(q.get('target_strict_done',235))
+⋮----
+active_build=controlled_ids(BUILDING_QUEUE)
+active_char=controlled_ids(CHAR_QUEUE)
+# Controlled queues may contain historical rejected/paused rows. Only statuses that
+# actually require a currently running/next controlled pass block opening new work.
+def actionable(path)
+⋮----
+data=json.loads(path.read_text(encoding='utf-8'))
+active={'PENDING','PENDING_KAGGLE','IN_PROGRESS','CANDIDATE','AWAITING_REVIEW'}
+⋮----
+active_build=actionable(BUILDING_QUEUE)
+active_char=actionable(CHAR_QUEUE)
+⋮----
+fam=sorted({x.rsplit('-T',1)[0] for x in active_build if x.startswith('BLD-')})
+⋮----
+pending=[a for a in q['assets'] if a.get('status') in {'PENDING','RECONCILE','REJECTED','BLOCKED'} and a.get('attempts',0)<a.get('max_attempts',5)]
+⋮----
+first=pending[0]
+lane=first['lane']
+⋮----
+family=first['family']
+assets=[a['id'] for a in pending if a['lane']==lane and a.get('family')==family]
+⋮----
+role=first.get('family')
+assets=[a['id'] for a in pending if a['lane']==lane and a.get('family')==role]
+⋮----
+assets=[a['id'] for a in pending if a['lane']==lane][:8]
+⋮----
+def main()
+⋮----
+ap=argparse.ArgumentParser();ap.add_argument('--github-output',action='store_true');args=ap.parse_args()
+q=json.loads(QUEUE.read_text(encoding='utf-8'))
+plan=choose(q)
+⋮----
+p=Path(os.environ['GITHUB_OUTPUT'])
 ```
 
 ## File: tools/sprites/audit_complete_sprite_manifest.py

@@ -1,17 +1,19 @@
 # Change impact
 
-Base: 33f54de4c99e09bac6d8cfeb4a9aeae393c7f439
-Head: 66d1734c76b2d7763c56c92f68f3e0eeb46e5857
+Base: fba0a2867f7ebe5338e93dd23b2495700689ad20
+Head: 9135ed6bee26058fbd042b7a44ff352dd9eda698
 
 ## Changed files
-- M art/production/controlled-building-regen-queue.json
-- A art/production/semantic-review-bld04-kaggle-pass-5.md
-- M ops/sprite-wave-trigger.txt
-- M tools/sprites/kaggle_building_family_factory_v16.py
+- A .github/workflows/asset-autofactory.yml
+- A art/production/master-asset-queue.json
+- A docs/art/AUTOMATED_ASSET_FACTORY.md
+- A tools/sprites/asset_queue_utils.py
+- A tools/sprites/asset_wave_orchestrator.py
 
 ## Affected areas
+- .github
 - art
-- ops
+- docs
 - tools
 
 ## Related test candidates

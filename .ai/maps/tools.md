@@ -50,6 +50,8 @@ android/
   validate_release_privacy.py
 sprites/
   animation_batch_planner.py
+  asset_queue_utils.py
+  asset_wave_orchestrator.py
   audit_complete_sprite_manifest.py
   build_sprite_contact_sheet.py
   colab_mass_factory.py
@@ -742,6 +744,88 @@ p = argparse.ArgumentParser()
 args = p.parse_args()
 ⋮----
 planned = list(items(args.kind))[: args.count]
+```
+
+## File: sprites/asset_queue_utils.py
+```python
+#!/usr/bin/env python3
+"""Master queue mutations used by the asset autofactory."""
+⋮----
+ROOT=Path(__file__).resolve().parents[2]
+Q=ROOT/'art/production/master-asset-queue.json'
+⋮----
+def main()
+⋮----
+p=argparse.ArgumentParser();p.add_argument('--status',required=True);p.add_argument('--assets',required=True);p.add_argument('--increment-attempts',action='store_true');a=p.parse_args()
+d=json.loads(Q.read_text(encoding='utf-8')); ids={x for x in a.assets.split(',') if x}
+found=set()
+⋮----
+missing=ids-found
+```
+
+## File: sprites/asset_wave_orchestrator.py
+```python
+#!/usr/bin/env python3
+"""Plan the next safe asset-production wave toward 235/236 strict DONE.
+
+This planner NEVER promotes art. It only chooses generation/reconciliation work.
+Historical manifest DONE flags are intentionally ignored until strict evidence is normalized.
+"""
+⋮----
+ROOT=Path(__file__).resolve().parents[2]
+QUEUE=ROOT/'art/production/master-asset-queue.json'
+PROGRESS=ROOT/'docs/art/FINAL_AAA_SPRITE_PROGRESS.md'
+BUILDING_QUEUE=ROOT/'art/production/controlled-building-regen-queue.json'
+CHAR_QUEUE=ROOT/'art/production/controlled-character-regen-queue.json'
+⋮----
+STRICT_RE=re.compile(r'DONE:\s*\*\*(\d+)\s*/\s*(\d+)\*\*')
+⋮----
+def strict_progress()
+⋮----
+m=STRICT_RE.search(PROGRESS.read_text(encoding='utf-8'))
+⋮----
+def controlled_ids(path)
+⋮----
+d=json.loads(path.read_text(encoding='utf-8'))
+⋮----
+def choose(q)
+⋮----
+target=int(q.get('target_strict_done',235))
+⋮----
+active_build=controlled_ids(BUILDING_QUEUE)
+active_char=controlled_ids(CHAR_QUEUE)
+# Controlled queues may contain historical rejected/paused rows. Only statuses that
+# actually require a currently running/next controlled pass block opening new work.
+def actionable(path)
+⋮----
+data=json.loads(path.read_text(encoding='utf-8'))
+active={'PENDING','PENDING_KAGGLE','IN_PROGRESS','CANDIDATE','AWAITING_REVIEW'}
+⋮----
+active_build=actionable(BUILDING_QUEUE)
+active_char=actionable(CHAR_QUEUE)
+⋮----
+fam=sorted({x.rsplit('-T',1)[0] for x in active_build if x.startswith('BLD-')})
+⋮----
+pending=[a for a in q['assets'] if a.get('status') in {'PENDING','RECONCILE','REJECTED','BLOCKED'} and a.get('attempts',0)<a.get('max_attempts',5)]
+⋮----
+first=pending[0]
+lane=first['lane']
+⋮----
+family=first['family']
+assets=[a['id'] for a in pending if a['lane']==lane and a.get('family')==family]
+⋮----
+role=first.get('family')
+assets=[a['id'] for a in pending if a['lane']==lane and a.get('family')==role]
+⋮----
+assets=[a['id'] for a in pending if a['lane']==lane][:8]
+⋮----
+def main()
+⋮----
+ap=argparse.ArgumentParser();ap.add_argument('--github-output',action='store_true');args=ap.parse_args()
+q=json.loads(QUEUE.read_text(encoding='utf-8'))
+plan=choose(q)
+⋮----
+p=Path(os.environ['GITHUB_OUTPUT'])
 ```
 
 ## File: sprites/audit_complete_sprite_manifest.py

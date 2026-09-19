@@ -22,16 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T16:09:03Z
+Generated: 2026-09-19T16:23:17Z
 
 ### Git
 - Branch: `main`
-- Head: `66d1734c76b2`
-- Commit date: 2026-09-19T18:08:49+02:00
-- Commit: art: strengthen BLD-04 structural evolution pass 6 (#75)
-- Tracked files: 1334
+- Head: `9135ed6bee26`
+- Commit date: 2026-09-19T18:23:03+02:00
+- Commit: art: add master autofactory toward 235 strict assets (#76)
+- Tracked files: 1339
 
 ### Recently changed files
+- `.github/workflows/asset-autofactory.yml`
+- `art/production/master-asset-queue.json`
+- `docs/art/AUTOMATED_ASSET_FACTORY.md`
+- `tools/sprites/asset_queue_utils.py`
+- `tools/sprites/asset_wave_orchestrator.py`
 - `art/production/controlled-building-regen-queue.json`
 - `art/production/semantic-review-bld04-kaggle-pass-5.md`
 - `ops/sprite-wave-trigger.txt`
