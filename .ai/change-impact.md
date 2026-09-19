@@ -1,7 +1,7 @@
 # Change impact
 
-Base: 25ff594acbc91d9ee251ff9e67870b5babdae36a
-Head: c8e77be1fd7faf049928f57a5abedc3e1292d828
+Base: 0eca1d6f15ea5388ebef30b161ace3810ea33117
+Head: 16bcdec9a78cf720f9040b890d70a2553b80b8cf
 
 ## Changed files
 - M ops/sprite-wave-trigger.txt

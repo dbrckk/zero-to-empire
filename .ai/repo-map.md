@@ -2104,7 +2104,7 @@ permissions:
 
 concurrency:
   group: kaggle-mass-sprite-factory
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   kaggle:
@@ -2117,6 +2117,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with: {fetch-depth: 2}
+      - name: Reject stale generator snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main --quiet
+          current="$(git rev-parse HEAD:tools/sprites/kaggle_building_family_factory_v16.py)"
+          latest="$(git rev-parse origin/main:tools/sprites/kaggle_building_family_factory_v16.py)"
+          echo "KAGGLE_GENERATOR_CURRENT=$current"
+          echo "KAGGLE_GENERATOR_LATEST=$latest"
+          if [ "$current" != "$latest" ]; then
+            echo "::error::Stale Kaggle generator snapshot; a newer main generator exists."
+            exit 78
+          fi
+
       - name: Check credentials
         shell: bash
         run: |
@@ -24608,7 +24622,13 @@ ident=v14.iou(recs[-1][1],new_final)
 floor={1:.45,2:.42,3:.39,4:.36,5:.34,6:.32}[tier]
 ⋮----
 norm=normalized_silhouette_iou(recs[-1][1],new_final)
+anchor_norm=normalized_silhouette_iou(recs[0][1],new_final)
 ceiling={1:.975,2:.960,3:.945,4:.935,5:.925,6:.915}[tier]
+anchor_ceiling={1:.985,2:.955,3:.925,4:.895,5:.865,6:.835}[tier]
+# Early tiers must visibly change from the previous tier. Late tiers may
+# refine an already-evolved silhouette, but only if cumulative departure
+# from T0 is strong enough. This prevents clone ladders without forcing
+# every prestige/detail tier to redesign the footprint from scratch.
 ⋮----
 halo=alpha_halo_ratio(new_final)
 ```
