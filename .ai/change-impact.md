@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 3e1c49ff7da7329a122fa97f1671c721cd4eb1ff
-Head: 13595f2d65b162bbd27a8a17b5eb24235d640cfc
+Base: 595e07c24f14427476366bcef241a15caa5c298d
+Head: d868c1a77465d1b3ed54b4b5b889e64772fea038
 
 ## Changed files
-- M ops/sprite-wave-trigger.txt
+- M docs/art/FINAL_AAA_SPRITE_PROGRESS.md
 
 ## Affected areas
-- ops
+- docs
 
 ## Related test candidates
 - No direct filename-based test match detected.

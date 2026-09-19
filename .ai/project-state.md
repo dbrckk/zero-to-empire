@@ -22,16 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T14:53:00Z
+Generated: 2026-09-19T14:56:09Z
 
 ### Git
 - Branch: `main`
-- Head: `13595f2d65b1`
-- Commit date: 2026-09-19T16:52:44+02:00
-- Commit: ci(art): trigger controlled BLD-04 Kaggle wave
+- Head: `d868c1a77465`
+- Commit date: 2026-09-19T16:55:52+02:00
+- Commit: docs(art): align production targets with current reviewed state
 - Tracked files: 1331
 
 ### Recently changed files
+- `docs/art/FINAL_AAA_SPRITE_PROGRESS.md`
+- `tools/sprites/kaggle_building_family_factory_v16.py`
 - `ops/sprite-wave-trigger.txt`
 - `.github/workflows/kaggle-mass-sprite-factory.yml`
 - `art/production/controlled-building-regen-queue.json`
@@ -39,16 +41,9 @@ Generated: 2026-09-19T14:53:00Z
 - `art/production/semantic-review-kaggle-character-pass-3.md`
 - `docs/art/AAA_HISTORICAL_PROMOTION_REVIEW.md`
 - `docs/art/FINAL_AAA_SPRITE_MANIFEST.md`
-- `docs/art/FINAL_AAA_SPRITE_PROGRESS.md`
 - `kaggle/github_mass_factory.py`
 - `tools/sprites/kaggle_building_family_factory_v14.py`
 - `tools/sprites/kaggle_character_sheet_factory_v1.py`
-- `app/src/main/res/drawable-nodpi/zte_terrain_07_final.webp`
-- `art/production/ter07/runtime-promotion-v3.json`
-- `art/production/ter07/runtime-qa-v3.json`
-- `.github/workflows/promote-ter07-v3.yml`
-- `art/production/ter07/semantic-review-v3.md`
-- `tools/sprites/promote_ter07_v3.py`
 
 ### Project signals
 - `build.gradle.kts`
