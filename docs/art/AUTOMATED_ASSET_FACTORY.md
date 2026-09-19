@@ -1,34 +1,91 @@
-# Automated Asset Factory
+# Automated Asset Factory — 235 production target
 
-Goal: drive the canonical 236-sprite scope toward **235 strict DONE** with minimal manual intervention without converting technical validity into fake semantic approval.
+## Goal
 
-## Safety invariants
+Drive the 235 gameplay-production assets (all canonical sprite deliverables except `ONB-00`) through generation and technical QA with minimal manual intervention.
 
-1. `FINAL_AAA_SPRITE_PROGRESS.md` is the trusted strict count while historical manifest DONE flags are under reconciliation.
-2. Generation never means DONE.
-3. BLD/CHR/MCH/FX require semantic approval before runtime promotion.
-4. Runtime promotion requires technical QA, exact runtime mapping, visible gameplay integration and green Android CI.
-5. The factory stops at 235/236 by design, leaving one manual safety slot.
-6. Per-asset retry budgets prevent infinite paid/free compute loops.
-7. Existing controlled building/character queues take precedence over opening new work.
+The factory intentionally keeps **production completion** separate from **strict DONE**.
 
-## Automation loop
+- Canonical manifest scope: 236
+- Autofactory production target: 235
+- Excluded from this loop: `ONB-00`
+- Trusted strict baseline at creation: 126 / 235
+- Remaining strict-review set: 109
+  - 75 buildings
+  - 24 character sheets
+  - 10 historical FX
 
-Hourly or manual dispatch:
+## Safety contract
 
-`plan -> select lane/family -> mark IN_PROGRESS -> dispatch specialized generator -> QA/review evidence -> reconcile -> next wave`
+The autofactory may automatically:
 
-The orchestrator intentionally refuses to trust the manifest's historical DONE labels as strict evidence. The queue begins in `RECONCILE` and is normalized as strict per-asset evidence is made machine-readable.
+1. queue generation;
+2. run Kaggle/technical producers;
+3. retry failed technical generations;
+4. move to the next family/role;
+5. gather FX runtime evidence;
+6. persist run IDs, attempts and review backlog.
 
-## Lanes
+It may **not** automatically:
 
-- `building-family`: Kaggle sequential family generation, seven tiers together.
-- `character-atlas`: role/action atlas generation.
-- `terrain`: dedicated terrain pipeline.
-- `fx`: FX-specific production.
-- `static`: CORE/VEH/PRP; review-safe static provider required before automatic dispatch.
-- `machine`: animation-aware generator required before automatic dispatch.
+- declare semantic/visual approval;
+- promote an unreviewed candidate to strict DONE;
+- overwrite the strict ledger merely because a runtime file exists;
+- bypass the historical review gate.
 
-## Completion rule
+## Autonomous order
 
-The workflow may automate generation, retries, QA, evidence and scheduling. It must not automatically invent semantic approval. Strict DONE remains gated by reviewed evidence + runtime integration + green Android CI.
+### Buildings
+
+Whole-family candidate generation is prioritized:
+
+`BLD-04 → BLD-07 → BLD-11 → BLD-12 → BLD-13 → BLD-02 → BLD-03 → BLD-05 → BLD-06 → BLD-08 → BLD-09 → BLD-10`.
+
+Whole-family generation is intentional even when only part of an early family remains unresolved, because tier coherence must be judged against the complete T0→T6 lineage.
+
+### Characters
+
+Roles are produced in this order:
+
+`CHR-OP → CHR-TECH → CHR-LOG → CHR-ENG`.
+
+The Kaggle lane produces at most two sheets per run. The workflow keeps dispatching until the active controlled role queue is exhausted.
+
+### FX
+
+The ten historical FX (`FX-00..08`, `FX-17`) use exact-runtime evidence reconciliation first. A failed semantic review can later requeue individual FX for regeneration.
+
+## Retry behavior
+
+Each unresolved asset has an automatic attempt counter.
+
+At 8 automatic attempts, it becomes `BLOCKED_AUTOMATION_LIMIT` and the factory moves on instead of creating an infinite loop.
+
+## Completion states
+
+`art/production/master-asset-queue.json` is the machine-readable authority for the factory.
+
+Important states:
+
+- `DONE`: already part of the trusted strict baseline.
+- `PENDING*`: ready for automated work.
+- `DISPATCHED`: producer dispatch recorded.
+- `AWAITING_REVIEW`: candidate/evidence exists and needs semantic review.
+- `BLOCKED_AUTOMATION_LIMIT`: automation exhausted; manual intervention required.
+
+When all 235 assets are either strict DONE or have reached a review-ready production state, the workflow emits:
+
+`PRODUCTION_235_COMPLETE_REVIEW_BACKLOG`
+
+That does **not** mean 235/235 strict DONE. Strict DONE continues to require the full promotion policy from `AAA_HISTORICAL_PROMOTION_REVIEW.md`.
+
+## Trigger model
+
+`.github/workflows/asset-autofactory.yml` runs:
+
+- after Kaggle Mass Sprite Factory completes;
+- after FX Historical Review Evidence completes;
+- every 30 minutes as a recovery heartbeat;
+- manually via workflow dispatch.
+
+This makes the chain self-resuming after failures, quota delays and GitHub runner interruptions.

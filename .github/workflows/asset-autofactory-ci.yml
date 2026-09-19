@@ -1,0 +1,60 @@
+name: Asset Autofactory CI
+
+on:
+  pull_request:
+    paths:
+      - 'tools/sprites/asset_queue_utils.py'
+      - 'tools/sprites/asset_wave_orchestrator.py'
+      - 'art/production/master-asset-queue.json'
+      - '.github/workflows/asset-autofactory.yml'
+      - '.github/workflows/asset-autofactory-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+
+      - name: Compile autofactory Python
+        run: python -m py_compile tools/sprites/asset_queue_utils.py tools/sprites/asset_wave_orchestrator.py
+
+      - name: Exercise queue reconciliation without dispatch
+        env:
+          AUTOF_KAGGLE_BUSY: '1'
+          AUTOF_FX_BUSY: '1'
+        run: python -u tools/sprites/asset_wave_orchestrator.py
+
+      - name: Enforce 235-target invariants
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          q=json.loads(Path('art/production/master-asset-queue.json').read_text())
+          s=json.loads(Path('art/production/autofactory-state.json').read_text())
+          assets=q['assets']
+          assert q['target_total']==235
+          assert len(assets)==235
+          assert len({x['id'] for x in assets})==235
+          assert 'ONB-00' not in {x['id'] for x in assets}
+          assert sum(x['strict_status']=='DONE' for x in assets)==126
+          assert sum(x['strict_status']!='DONE' for x in assets)==109
+          assert sum(x['lane']=='kaggle-building-family' and x['strict_status']!='DONE' for x in assets)==75
+          assert sum(x['lane']=='kaggle-character-sheet' and x['strict_status']!='DONE' for x in assets)==24
+          assert sum(x['lane']=='fx-runtime-reconciliation' and x['strict_status']!='DONE' for x in assets)==10
+          assert s['action'].startswith('WAIT_') or s['action'] in {
+              'PRODUCTION_235_COMPLETE_REVIEW_BACKLOG',
+              'NO_AUTOMATIC_WORK_AVAILABLE',
+              'STOP_STRICT_TARGET_REACHED',
+          }, s['action']
+          print('ASSET_AUTOFACTORY_CI_PASS=1')
+          PY
