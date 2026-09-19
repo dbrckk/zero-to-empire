@@ -1,0 +1,73 @@
+name: TER-07 Isolated Conduit Candidate
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/sprites/ter07_energy_conduit_candidate.py'
+      - '.github/workflows/ter07-energy-conduit-candidate.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ter07-energy-conduit-candidate
+  cancel-in-progress: true
+
+jobs:
+  candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install deterministic image tooling
+        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
+
+      - name: Author candidate
+        run: python tools/sprites/ter07_energy_conduit_candidate.py
+
+      - name: Technical QA
+        run: |
+          python tools/sprites/build_sprite_contact_sheet.py \
+            --files art/production/ter07/zte_terrain_07_candidate_v2.png \
+            --output art/production/ter07/contact.png \
+            --report art/production/ter07/qa.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('art/production/ter07/qa.json').read_text())
+          rows=d.get('assets',[])
+          if len(rows)!=1 or not rows[0].get('pass'):
+              raise SystemExit('TER-07 candidate failed technical contact-sheet QA')
+          print('TER07_TECHNICAL_QA_PASS=1')
+          PY
+
+      - name: Commit candidate evidence only
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add art/production/ter07/
+          git diff --cached --quiet && exit 0
+          git commit -m 'art: persist TER-07 semantic replacement candidate'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Upload semantic review bundle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ter07-energy-conduit-candidate
+          path: art/production/ter07/
+          if-no-files-found: error
+          retention-days: 30
