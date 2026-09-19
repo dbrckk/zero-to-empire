@@ -111,6 +111,7 @@ private fun AscendantCityStage(eraIndex: Int, modifier: Modifier = Modifier) {
         }
         ReviewedTerrainLayer(eraIndex, Modifier.fillMaxSize())
         ReviewedMachineLayer(eraIndex, Modifier.fillMaxSize())
+        ReviewedCharacterLayer(eraIndex, Modifier.fillMaxSize())
         ReviewedWorldTraffic(Modifier.fillMaxSize())
         Box(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color.Transparent,Color.Transparent,EmpireColors.Void.copy(alpha=.24f)))))
     }
