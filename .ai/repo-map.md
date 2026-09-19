@@ -24705,7 +24705,26 @@ session=new_session('u2net')
 ⋮----
 targets=initial[:count]
 ⋮----
+families={row[0].split('-T')[0] for row in targets}
+⋮----
+family_attempts=[]
+⋮----
+seed=(base + attempt*7919) % 2147483647
+⋮----
+generated=pf.generate_family(targets,seed=seed,session=session)
+all_ok=True
+qa_rows=[]
+⋮----
 aid=row[0]
+qa=PROD/f'pollinations-{aid.lower()}-qa.json'
+contact=PROD/f'pollinations-{aid.lower()}-contact.png'
+q=run([sys.executable,'tools/sprites/build_sprite_contact_sheet.py','--files',str(out.relative_to(ROOT)),'--output',str(contact.relative_to(ROOT)),'--report',str(qa.relative_to(ROOT))])
+qd=json.loads(qa.read_text()) if qa.exists() else {}
+rows_qa=qd.get('assets',[])
+passed=(q.returncode==0 and len(rows_qa)==1 and rows_qa[0].get('pass'))
+⋮----
+all_ok=False
+⋮----
 ok=False
 attempts_log=[]
 ⋮----
@@ -24715,10 +24734,7 @@ stem=None
 rp=PROD/f'pollinations-{aid.lower()}-report.json'
 ⋮----
 stem=out.stem
-qa=PROD/f'pollinations-{aid.lower()}-qa.json'
-contact=PROD/f'pollinations-{aid.lower()}-contact.png'
-q=run([sys.executable,'tools/sprites/build_sprite_contact_sheet.py','--files',str(out.relative_to(ROOT)),'--output',str(contact.relative_to(ROOT)),'--report',str(qa.relative_to(ROOT))])
-qd=json.loads(qa.read_text()) if qa.exists() else {}
+⋮----
 qrows=qd.get('assets',[])
 ⋮----
 ok=True
@@ -24745,6 +24761,43 @@ REPORT=ROOT/'art/production/pollinations-report.json'
 FAMILY_IDENTITY={
 ⋮----
 TIER_LANGUAGE={
+⋮----
+def fetch_image(prompt:str, seed:int, width:int=1024, height:int=1024)
+⋮----
+q=urllib.parse.quote(prompt,safe='')
+url=f'https://image.pollinations.ai/prompt/{q}?model=flux&width={width}&height={height}&seed={int(seed)}&nologo=true&private=true&enhance=false&safe=true'
+tmp=Path(f'/tmp/pollinations-board-{int(seed)}-{width}x{height}.png')
+req=urllib.request.Request(url,headers={'User-Agent':'zero-to-empire-github-actions/1.0'})
+⋮----
+data=r.read()
+⋮----
+def generate_family(rows, seed=73117, session=None)
+⋮----
+parsed=[]
+family=None
+⋮----
+aid=row[0]
+m=re.fullmatch(r'BLD-(\d{2})-T(\d)',aid)
+⋮----
+family=int(fam)
+⋮----
+identity=FAMILY_IDENTITY.get(family,f'industrial business family {family}')
+tiers='; '.join(f'T{tier}: {TIER_LANGUAGE[tier]}' for tier,_ in parsed)
+prompt=(
+raw=fetch_image(prompt,seed,1024,1024)
+outputs=[]
+⋮----
+col=idx%4; r=idx//4
+crop=raw.crop((col*256,r*512,(col+1)*256,(r+1)*512))
+isolated=isolate(crop,session=session)
+⋮----
+fam=f'{family:02d}'
+stem=f'zte_business_{fam}_t{tier}_final'
+⋮----
+out=INCOMING/f'{stem}.png'
+⋮----
+report={
+rp=ROOT/'art/production'/f'pollinations-{aid.lower()}-report.json'
 ⋮----
 def fail(msg)
 ⋮----
@@ -24799,27 +24852,17 @@ canvas=Image.new('RGBA',(side,side),(0,0,0,0))
 ⋮----
 def generate(row, seed=73117, session=None, report_path: Path | None = None)
 ⋮----
-m=re.fullmatch(r'BLD-(\d{2})-T(\d)',aid)
-⋮----
 fam_i=int(fam); tier_i=int(tier)
 identity=FAMILY_IDENTITY.get(fam_i,f'industrial business family {fam_i}')
 tier_language=TIER_LANGUAGE[tier_i]
-prompt=(
-q=urllib.parse.quote(prompt,safe='')
+⋮----
 url=f'https://image.pollinations.ai/prompt/{q}?model=flux&width=1024&height=1024&seed={int(seed)}&nologo=true&private=true&enhance=false&safe=true'
 tmp=Path(f'/tmp/pollinations-{aid.lower()}-{int(seed)}.png')
-req=urllib.request.Request(url,headers={'User-Agent':'zero-to-empire-github-actions/1.0'})
-⋮----
-data=r.read()
 ⋮----
 try: im=Image.open(tmp)
 ⋮----
 isolated=isolate(im, session=session)
-stem=f'zte_business_{fam}_t{tier}_final'
 ⋮----
-out=INCOMING/f'{stem}.png'
-⋮----
-report={
 rp=report_path or REPORT
 ⋮----
 def main()

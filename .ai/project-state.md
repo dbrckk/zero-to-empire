@@ -22,27 +22,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T12:45:01Z
+Generated: 2026-09-19T14:20:35Z
 
 ### Git
 - Branch: `main`
-- Head: `ec5c1b5836f4`
-- Commit date: 2026-09-19T14:44:44+02:00
-- Commit: art: improve semantic coherence of generated assets (#59)
-- Tracked files: 1314
+- Head: `1fcd5cb2ae1a`
+- Commit date: 2026-09-19T16:20:22+02:00
+- Commit: art: move BLD-04 to single-board pass 3 and pause character generation (#60)
+- Tracked files: 1315
 
 ### Recently changed files
 - `art/production/controlled-building-regen-queue.json`
 - `art/production/controlled-character-regen-queue.json`
-- `art/production/semantic-review-controlled-pass-1.md`
+- `art/production/semantic-review-controlled-pass-2.md`
 - `tools/sprites/pollinations_building_batch.py`
 - `tools/sprites/pollinations_building_factory.py`
-- `tools/sprites/pollinations_character_sheet_factory.py`
-- `art/incoming/final-sprites/zte_chr_op_carry_final.png`
-- `art/incoming/final-sprites/zte_chr_op_work_final.png`
-- `art/production/pollinations-character-summary.json`
-- `art/incoming/final-sprites/zte_chr_op_idle_final.png`
 - `art/incoming/final-sprites/zte_chr_op_walk_final.png`
+- `art/production/pollinations-character-summary.json`
 - `art/incoming/final-sprites/zte_business_04_t0_final.png`
 - `art/incoming/final-sprites/zte_business_04_t1_final.png`
 - `art/incoming/final-sprites/zte_business_04_t2_final.png`
@@ -52,6 +48,10 @@ Generated: 2026-09-19T12:45:01Z
 - `art/incoming/final-sprites/zte_business_04_t6_final.png`
 - `art/production/pollinations-batch-summary.json`
 - `art/production/pollinations-bld-04-t0-contact.png`
+- `art/production/pollinations-bld-04-t0-qa.json`
+- `art/production/pollinations-bld-04-t0-report.json`
+- `art/production/pollinations-bld-04-t1-contact.png`
+- `art/production/pollinations-bld-04-t1-qa.json`
 
 ### Project signals
 - `build.gradle.kts`

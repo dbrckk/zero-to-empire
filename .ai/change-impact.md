@@ -1,15 +1,14 @@
 # Change impact
 
-Base: b643c91f4dca055cf0c3ee708aa0352251025dc8
-Head: ec5c1b5836f49e749ce889936307ef6ba1e186d6
+Base: 9a39bb26cde4dc9a8d5b7376a2bac8569ca3bf67
+Head: 1fcd5cb2ae1a26a3092885db0f225540ce487d35
 
 ## Changed files
 - M art/production/controlled-building-regen-queue.json
 - M art/production/controlled-character-regen-queue.json
-- A art/production/semantic-review-controlled-pass-1.md
+- A art/production/semantic-review-controlled-pass-2.md
 - M tools/sprites/pollinations_building_batch.py
 - M tools/sprites/pollinations_building_factory.py
-- M tools/sprites/pollinations_character_sheet_factory.py
 
 ## Affected areas
 - art
