@@ -74,7 +74,7 @@ jobs:
         if: steps.changed.outputs.has_files == 'true'
         run: python3 tools/sprites/process_final_sprites.py
 
-      - name: Mark only finalized approved targets DONE
+      - name: Mark finalized technical targets RUNTIME
         if: steps.changed.outputs.has_files == 'true'
         shell: bash
         run: |
@@ -105,8 +105,8 @@ jobs:
                   p=Path(runtime_path)
                   if not p.is_file() or p.stat().st_size == 0:
                       raise SystemExit(f'Finalized runtime missing for {asset_id}: {runtime_path}')
-                  if status.upper() != 'DONE':
-                      parts[4]='DONE'
+                  if status.upper() not in {'RUNTIME','DONE'}:
+                      parts[4]='RUNTIME'
                       line='| ' + ' | '.join(parts) + ' |'
                       changed += 1
               out.append(line)
@@ -115,7 +115,7 @@ jobs:
           if missing:
               raise SystemExit('Finalized targets absent from canonical manifest: ' + ', '.join(sorted(missing)))
           manifest.write_text('\n'.join(out)+'\n',encoding='utf-8')
-          print(f'MANIFEST_NEW_DONE={changed}')
+          print(f'MANIFEST_NEW_RUNTIME={changed}')
           PY
       - name: Commit runtime outputs once
         if: steps.changed.outputs.has_files == 'true'
