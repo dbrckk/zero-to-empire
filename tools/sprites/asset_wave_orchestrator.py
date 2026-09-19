@@ -39,6 +39,41 @@ def by_id(queue: dict[str, Any]) -> dict[str, dict[str, Any]]:
 
 
 def update_from_trigger(queue: dict[str, Any]) -> None:
+    # Producer failures must never strand assets in DISPATCHED forever. The
+    # workflow_run event is authoritative: put the active Kaggle lane back into
+    # the controlled queue so the next autofactory cycle can retry it, subject
+    # to the per-asset attempt budget.
+    if TRIGGER_WORKFLOW == "Kaggle Mass Sprite Factory" and TRIGGER_CONCLUSION:
+        active = [
+            x for x in queue["assets"]
+            if x["pipeline_status"] == "DISPATCHED"
+            and x.get("last_generator") in {"kaggle-building-family", "kaggle-character-sheet"}
+        ]
+        if TRIGGER_CONCLUSION == "success":
+            # The producer writes AWAITING_REVIEW into the controlled queue.
+            # sync_controlled_queues() below will import that exact state.
+            for x in active:
+                x["last_run_id"] = int(TRIGGER_RUN_ID) if TRIGGER_RUN_ID else x.get("last_run_id")
+                x["last_error"] = None
+        else:
+            for x in active:
+                x["pipeline_status"] = "PENDING_KAGGLE"
+                x["last_run_id"] = int(TRIGGER_RUN_ID) if TRIGGER_RUN_ID else x.get("last_run_id")
+                x["last_error"] = f"Kaggle producer: {TRIGGER_CONCLUSION}; autonomous retry scheduled"
+
+            # Keep the specialized controlled queues aligned with master state.
+            for path in (BUILDING_QUEUE, CHARACTER_QUEUE):
+                controlled = load_json(path, {}) or {}
+                changed = False
+                for item in controlled.get("targets", []):
+                    aid = str(item.get("id", "")).upper()
+                    if any(x["id"] == aid for x in active):
+                        item["status"] = "PENDING_KAGGLE"
+                        item["autofactory_retry_after_run"] = int(TRIGGER_RUN_ID) if TRIGGER_RUN_ID else None
+                        changed = True
+                if changed:
+                    save_json(path, controlled)
+
     if TRIGGER_WORKFLOW == "FX Historical Review Evidence":
         target = [
             x for x in queue["assets"]
