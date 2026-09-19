@@ -2090,6 +2090,8 @@ on:
         required: false
         default: '7'
   push:
+    branches:
+      - main
     paths:
       - 'ops/sprite-wave-trigger.txt'
       - 'kaggle/github_mass_factory.py'

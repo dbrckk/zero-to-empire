@@ -1,14 +1,13 @@
 # Change impact
 
-Base: 302b8f6237da111ce699b856e15936a71b1083c7
-Head: 3d803b73015c6806f1d8378e181c8f3691995055
+Base: 57e6ba13fa2c81acb2bc6f19e141e96409a4b64c
+Head: 2ac6f8833a7868107684dde0fe53ff471b726b72
 
 ## Changed files
-- M art/production/controlled-building-regen-queue.json
-- M art/production/master-asset-queue.json
+- M .github/workflows/kaggle-mass-sprite-factory.yml
 
 ## Affected areas
-- art
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.
