@@ -1,5 +1,7 @@
 # AAA historical promotion review queue
 
+**Status: OPEN**
+
 This queue protects the visual-quality bar. It lists assets that were promoted by generic/automatic technical workflows at some point and therefore require explicit confirmation that a later semantic/art review, runtime visibility check, and green Android CI justify keeping `DONE`.
 
 **Rule:** technical validity (dimensions, transparency, alpha coverage, padding, file presence) is necessary but is not sufficient for `DONE`. Until explicit review evidence is confirmed, treat these entries as needing reconciliation rather than assuming they meet the AAA art-direction bar.
