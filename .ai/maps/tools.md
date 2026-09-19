@@ -749,83 +749,187 @@ planned = list(items(args.kind))[: args.count]
 ## File: sprites/asset_queue_utils.py
 ```python
 #!/usr/bin/env python3
-"""Master queue mutations used by the asset autofactory."""
+"""Shared state helpers for the 235-asset autonomous production queue.
+
+The master queue deliberately does not trust per-row DONE values from the legacy
+manifest while the historical semantic review is open. The strict baseline is
+defined by the reviewed ledger: 126/235 production assets are trusted, while
+75 buildings, 24 character sheets and 10 historical FX still require work.
+ONB-00 is outside the 235 production target.
+"""
 ⋮----
-ROOT=Path(__file__).resolve().parents[2]
-Q=ROOT/'art/production/master-asset-queue.json'
+ROOT = Path(__file__).resolve().parents[2]
+MANIFEST = ROOT / "docs/art/FINAL_AAA_SPRITE_MANIFEST.md"
+MASTER = ROOT / "art/production/master-asset-queue.json"
+BUILDING_QUEUE = ROOT / "art/production/controlled-building-regen-queue.json"
+CHARACTER_QUEUE = ROOT / "art/production/controlled-character-regen-queue.json"
+STATE = ROOT / "art/production/autofactory-state.json"
+SUMMARY = ROOT / "art/production/autofactory-summary.md"
 ⋮----
-def main()
+ROW = re.compile(
 ⋮----
-p=argparse.ArgumentParser();p.add_argument('--status',required=True);p.add_argument('--assets',required=True);p.add_argument('--increment-attempts',action='store_true');a=p.parse_args()
-d=json.loads(Q.read_text(encoding='utf-8')); ids={x for x in a.assets.split(',') if x}
-found=set()
+TARGET_TOTAL = 235
+STRICT_BASELINE = 126
+MAX_ATTEMPTS = 8
 ⋮----
-missing=ids-found
+BUILDING_PRIORITY = ["BLD-04", "BLD-07", "BLD-11", "BLD-12", "BLD-13",
+CHARACTER_PRIORITY = ["CHR-OP", "CHR-TECH", "CHR-LOG", "CHR-ENG"]
+⋮----
+def load_json(path: Path, default: Any = None) -> Any
+⋮----
+def save_json(path: Path, value: Any) -> None
+⋮----
+def manifest_rows() -> list[dict[str, str]]
+⋮----
+rows: list[dict[str, str]] = []
+⋮----
+m = ROW.match(line)
+⋮----
+def unresolved_ids() -> set[str]
+⋮----
+ids: set[str] = set()
+⋮----
+def default_asset(row: dict[str, str], unresolved: set[str]) -> dict[str, Any]
+⋮----
+asset_id = row["id"]
+needs = asset_id in unresolved
+⋮----
+group = "-".join(asset_id.split("-")[:2])
+⋮----
+role = asset_id.split("-")[1]
+⋮----
+group = "FX-HISTORICAL"
+⋮----
+def ensure_master() -> dict[str, Any]
+⋮----
+existing = load_json(MASTER, {}) or {}
+old = {x["id"]: x for x in existing.get("assets", []) if isinstance(x, dict) and x.get("id")}
+unresolved = unresolved_ids()
+assets: list[dict[str, Any]] = []
+⋮----
+base = default_asset(row, unresolved)
+prev = old.get(row["id"])
+⋮----
+queue = {
+⋮----
+def sync_controlled_queues(queue: dict[str, Any]) -> None
+⋮----
+by_id = {x["id"]: x for x in queue["assets"]}
+⋮----
+bq = load_json(BUILDING_QUEUE, {}) or {}
+⋮----
+aid = str(item.get("id", "")).upper()
+asset = by_id.get(aid)
+⋮----
+status = str(item.get("status", "")).upper()
+⋮----
+cq = load_json(CHARACTER_QUEUE, {}) or {}
+⋮----
+def stats(queue: dict[str, Any]) -> dict[str, Any]
+⋮----
+assets = queue["assets"]
+strict_done = sum(x["strict_status"] == "DONE" for x in assets)
+awaiting = sum(x["pipeline_status"] == "AWAITING_REVIEW" for x in assets)
+blocked = sum(str(x["pipeline_status"]).startswith(("BLOCKED", "PAUSED_AUTOMATION")) for x in assets)
+evidence = sum(x["pipeline_status"] in {"EVIDENCE_DISPATCHED", "AWAITING_REVIEW"} and x["lane"] == "fx-runtime-reconciliation" for x in assets)
+production_processed = sum(
+⋮----
+def write_summary(queue: dict[str, Any], decision: dict[str, Any]) -> None
+⋮----
+s = stats(queue)
+lines = [
 ```
 
 ## File: sprites/asset_wave_orchestrator.py
 ```python
 #!/usr/bin/env python3
-"""Plan the next safe asset-production wave toward 235/236 strict DONE.
+"""Autonomous producer for the 235-asset Zero -> Empire target.
 
-This planner NEVER promotes art. It only chooses generation/reconciliation work.
-Historical manifest DONE flags are intentionally ignored until strict evidence is normalized.
+This script only schedules production/evidence work. It never marks semantic
+approval or strict DONE automatically.
 """
 ⋮----
-ROOT=Path(__file__).resolve().parents[2]
-QUEUE=ROOT/'art/production/master-asset-queue.json'
-PROGRESS=ROOT/'docs/art/FINAL_AAA_SPRITE_PROGRESS.md'
-BUILDING_QUEUE=ROOT/'art/production/controlled-building-regen-queue.json'
-CHAR_QUEUE=ROOT/'art/production/controlled-character-regen-queue.json'
+TRIGGER_WORKFLOW = os.getenv("AUTOF_TRIGGER_WORKFLOW", "")
+TRIGGER_CONCLUSION = os.getenv("AUTOF_TRIGGER_CONCLUSION", "")
+TRIGGER_RUN_ID = os.getenv("AUTOF_TRIGGER_RUN_ID", "")
+KAGGLE_BUSY = os.getenv("AUTOF_KAGGLE_BUSY", "0") == "1"
+FX_BUSY = os.getenv("AUTOF_FX_BUSY", "0") == "1"
 ⋮----
-STRICT_RE=re.compile(r'DONE:\s*\*\*(\d+)\s*/\s*(\d+)\*\*')
+def by_id(queue: dict[str, Any]) -> dict[str, dict[str, Any]]
 ⋮----
-def strict_progress()
+def update_from_trigger(queue: dict[str, Any]) -> None
 ⋮----
-m=STRICT_RE.search(PROGRESS.read_text(encoding='utf-8'))
+target = [
 ⋮----
-def controlled_ids(path)
+def active_pending(path: Path) -> list[dict[str, Any]]
 ⋮----
-d=json.loads(path.read_text(encoding='utf-8'))
+q = load_json(path, {}) or {}
 ⋮----
-def choose(q)
+def mark_dispatch(queue: dict[str, Any], ids: list[str], generator: str) -> list[str]
 ⋮----
-target=int(q.get('target_strict_done',235))
+assets = by_id(queue)
+eligible: list[str] = []
 ⋮----
-active_build=controlled_ids(BUILDING_QUEUE)
-active_char=controlled_ids(CHAR_QUEUE)
-# Controlled queues may contain historical rejected/paused rows. Only statuses that
-# actually require a currently running/next controlled pass block opening new work.
-def actionable(path)
+x = assets.get(aid)
 ⋮----
-data=json.loads(path.read_text(encoding='utf-8'))
-active={'PENDING','PENDING_KAGGLE','IN_PROGRESS','CANDIDATE','AWAITING_REVIEW'}
+attempts = int(x.get("attempts") or 0)
 ⋮----
-active_build=actionable(BUILDING_QUEUE)
-active_char=actionable(CHAR_QUEUE)
+def building_family_ids(group: str) -> list[str]
 ⋮----
-fam=sorted({x.rsplit('-T',1)[0] for x in active_build if x.startswith('BLD-')})
+def prepare_building_group(queue: dict[str, Any], group: str) -> dict[str, Any]
 ⋮----
-pending=[a for a in q['assets'] if a.get('status') in {'PENDING','RECONCILE','REJECTED','BLOCKED'} and a.get('attempts',0)<a.get('max_attempts',5)]
+unresolved = [aid for aid in building_family_ids(group) if aid in assets and assets[aid]["strict_status"] != "DONE"]
 ⋮----
-first=pending[0]
-lane=first['lane']
+targets = []
 ⋮----
-family=first['family']
-assets=[a['id'] for a in pending if a['lane']==lane and a.get('family')==family]
+dispatched = mark_dispatch(queue, unresolved, "kaggle-building-family")
 ⋮----
-role=first.get('family')
-assets=[a['id'] for a in pending if a['lane']==lane and a.get('family')==role]
+def prepare_character_group(queue: dict[str, Any], group: str) -> dict[str, Any]
 ⋮----
-assets=[a['id'] for a in pending if a['lane']==lane][:8]
+group_assets = sorted(
 ⋮----
-def main()
+dispatched = mark_dispatch(queue, [x["id"] for x in targets[:2]], "kaggle-character-sheet")
 ⋮----
-ap=argparse.ArgumentParser();ap.add_argument('--github-output',action='store_true');args=ap.parse_args()
-q=json.loads(QUEUE.read_text(encoding='utf-8'))
-plan=choose(q)
+def next_group(queue: dict[str, Any], lane: str, priority: list[str]) -> str | None
 ⋮----
-p=Path(os.environ['GITHUB_OUTPUT'])
+groups = {
+⋮----
+def pending_ids_from_controlled(path: Path, queue: dict[str, Any]) -> list[str]
+⋮----
+ids = [str(x.get("id", "")).upper() for x in active_pending(path)]
+master = by_id(queue)
+⋮----
+def make_decision(queue: dict[str, Any]) -> dict[str, Any]
+⋮----
+s = stats(queue)
+⋮----
+# Existing controlled building work always has priority because the Kaggle
+# router itself prioritizes CONTROLLED_BLD over CONTROLLED_CHR.
+building_pending = pending_ids_from_controlled(BUILDING_QUEUE, queue)
+⋮----
+ids = mark_dispatch(queue, building_pending, "kaggle-building-family")
+⋮----
+group = next_group(queue, "kaggle-building-family", BUILDING_PRIORITY)
+⋮----
+prepared = prepare_building_group(queue, group)
+⋮----
+character_pending = pending_ids_from_controlled(CHARACTER_QUEUE, queue)
+⋮----
+ids = mark_dispatch(queue, character_pending[:2], "kaggle-character-sheet")
+⋮----
+group = next_group(queue, "kaggle-character-sheet", CHARACTER_PRIORITY)
+⋮----
+prepared = prepare_character_group(queue, group)
+⋮----
+fx = [
+⋮----
+refreshed = stats(queue)
+⋮----
+def main() -> int
+⋮----
+queue = ensure_master()
+⋮----
+decision = make_decision(queue)
 ```
 
 ## File: sprites/audit_complete_sprite_manifest.py

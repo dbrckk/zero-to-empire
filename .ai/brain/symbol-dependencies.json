@@ -5,70 +5,46 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "main": {
+    "load_json": {
       "source": {
         "file": "tools/sprites/asset_queue_utils.py",
-        "start": 9,
-        "end": 129
+        "start": 39,
+        "end": 42
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "strict_progress": {
+    "save_json": {
       "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 20,
-        "end": 23
+        "file": "tools/sprites/asset_queue_utils.py",
+        "start": 45,
+        "end": 47
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "controlled_ids": {
+    "manifest_rows": {
       "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 25,
-        "end": 28
+        "file": "tools/sprites/asset_queue_utils.py",
+        "start": 50,
+        "end": 67
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "choose": {
+    "unresolved_ids": {
       "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 30,
-        "end": 69
+        "file": "tools/sprites/asset_queue_utils.py",
+        "start": 70,
+        "end": 81
       },
       "symbol_dependencies": [
         {
-          "symbol": "actionable",
+          "symbol": "manifest_rows",
           "definitions": [
             {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 40,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "controlled_ids",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 25,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "strict_progress",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 20,
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 50,
               "kind": "function",
               "language": "python"
             }
@@ -76,21 +52,30 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 3
+      "dependency_count": 1
     },
-    "actionable": {
+    "default_asset": {
       "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 40,
-        "end": 160
+        "file": "tools/sprites/asset_queue_utils.py",
+        "start": 84,
+        "end": 114
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "ensure_master": {
+      "source": {
+        "file": "tools/sprites/asset_queue_utils.py",
+        "start": 117,
+        "end": 147
       },
       "symbol_dependencies": [
         {
-          "symbol": "choose",
+          "symbol": "default_asset",
           "definitions": [
             {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 30,
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 84,
               "kind": "function",
               "language": "python"
             }
@@ -98,11 +83,81 @@
           "relation": "same_file"
         },
         {
-          "symbol": "main",
+          "symbol": "load_json",
           "definitions": [
             {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 71,
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 39,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "manifest_rows",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 50,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "save_json",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 45,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "unresolved_ids",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 70,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 5
+    },
+    "sync_controlled_queues": {
+      "source": {
+        "file": "tools/sprites/asset_queue_utils.py",
+        "start": 150,
+        "end": 183
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "load_json",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 39,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "save_json",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 45,
               "kind": "function",
               "language": "python"
             }
@@ -111,6 +166,443 @@
         }
       ],
       "dependency_count": 2
+    },
+    "stats": {
+      "source": {
+        "file": "tools/sprites/asset_queue_utils.py",
+        "start": 186,
+        "end": 210
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "write_summary": {
+      "source": {
+        "file": "tools/sprites/asset_queue_utils.py",
+        "start": 213,
+        "end": 229
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "Asset",
+          "definitions": [
+            {
+              "file": "tools/sprites/plan_sprite_batches.py",
+              "line": 33,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "stats",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 186,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "by_id": {
+      "source": {
+        "file": "tools/sprites/asset_wave_orchestrator.py",
+        "start": 37,
+        "end": 38
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "update_from_trigger": {
+      "source": {
+        "file": "tools/sprites/asset_wave_orchestrator.py",
+        "start": 41,
+        "end": 57
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "active_pending": {
+      "source": {
+        "file": "tools/sprites/asset_wave_orchestrator.py",
+        "start": 60,
+        "end": 65
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "load_json",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 39,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "mark_dispatch": {
+      "source": {
+        "file": "tools/sprites/asset_wave_orchestrator.py",
+        "start": 68,
+        "end": 84
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "by_id",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_wave_orchestrator.py",
+              "line": 37,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "building_family_ids": {
+      "source": {
+        "file": "tools/sprites/asset_wave_orchestrator.py",
+        "start": 87,
+        "end": 88
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "prepare_building_group": {
+      "source": {
+        "file": "tools/sprites/asset_wave_orchestrator.py",
+        "start": 91,
+        "end": 110
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "building_family_ids",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_wave_orchestrator.py",
+              "line": 87,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "by_id",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_wave_orchestrator.py",
+              "line": 37,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "mark_dispatch",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_wave_orchestrator.py",
+              "line": 68,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "save_json",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 45,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 4
+    },
+    "prepare_character_group": {
+      "source": {
+        "file": "tools/sprites/asset_wave_orchestrator.py",
+        "start": 113,
+        "end": 133
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "by_id",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_wave_orchestrator.py",
+              "line": 37,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "mark_dispatch",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_wave_orchestrator.py",
+              "line": 68,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "save_json",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 45,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "next_group": {
+      "source": {
+        "file": "tools/sprites/asset_wave_orchestrator.py",
+        "start": 136,
+        "end": 151
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "pending_ids_from_controlled": {
+      "source": {
+        "file": "tools/sprites/asset_wave_orchestrator.py",
+        "start": 154,
+        "end": 162
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "active_pending",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_wave_orchestrator.py",
+              "line": 60,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "by_id",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_wave_orchestrator.py",
+              "line": 37,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "make_decision": {
+      "source": {
+        "file": "tools/sprites/asset_wave_orchestrator.py",
+        "start": 165,
+        "end": 237
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "mark_dispatch",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_wave_orchestrator.py",
+              "line": 68,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "next_group",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_wave_orchestrator.py",
+              "line": 136,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "pending_ids_from_controlled",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_wave_orchestrator.py",
+              "line": 154,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "prepare_building_group",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_wave_orchestrator.py",
+              "line": 91,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "prepare_character_group",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_wave_orchestrator.py",
+              "line": 113,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "stats",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 186,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 6
+    },
+    "main": {
+      "source": {
+        "file": "tools/sprites/asset_wave_orchestrator.py",
+        "start": 240,
+        "end": 360
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "ensure_master",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 117,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "make_decision",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_wave_orchestrator.py",
+              "line": 165,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "save_json",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 45,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "stats",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 186,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "sync_controlled_queues",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 150,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "update_from_trigger",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_wave_orchestrator.py",
+              "line": 41,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "write_summary",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 213,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 7
     }
   }
 }

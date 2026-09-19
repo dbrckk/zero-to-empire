@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T16:23:17Z
+Generated: 2026-09-19T16:31:05Z
 
 ### Git
 - Branch: `main`
-- Head: `9135ed6bee26`
-- Commit date: 2026-09-19T18:23:03+02:00
-- Commit: art: add master autofactory toward 235 strict assets (#76)
-- Tracked files: 1339
+- Head: `514767613d7d`
+- Commit date: 2026-09-19T18:30:53+02:00
+- Commit: fix(art): harden the 235-asset autofactory (#78)
+- Tracked files: 1340
 
 ### Recently changed files
+- `.github/workflows/asset-autofactory-ci.yml`
 - `.github/workflows/asset-autofactory.yml`
 - `art/production/master-asset-queue.json`
 - `docs/art/AUTOMATED_ASSET_FACTORY.md`

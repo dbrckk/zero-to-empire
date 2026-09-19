@@ -3,8 +3,8 @@
 - Index mode: incremental
 - Files indexed: 204
 - Files reparsed this run: 2
-- Symbols: 962
-- Internal import edges: 3
+- Symbols: 976
+- Internal import edges: 4
 - Impacted files: 2
 - Selected tests: 0
 
@@ -32,7 +32,7 @@
 - kaggle/github_mass_factory.py: 12 symbols
 - tools/sprites/kaggle_character_sheet_factory_v1.py: 12 symbols
 - app/src/main/java/com/zerotoempire/game/Challenges.kt: 11 symbols
-- tools/sprites/kaggle_sprite_factory.py: 11 symbols
+- tools/sprites/asset_wave_orchestrator.py: 11 symbols
 
 ## Agent routing
 - Read impact.json first after project/change context.
@@ -45,7 +45,7 @@
 - AST index mode: incremental
 - AST files reparsed this run: 2
 - outline files retained: 210
-- top-level items retained: 2854
+- top-level items retained: 2882
 - direct members retained: 678
 - symbol shards: 26
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard

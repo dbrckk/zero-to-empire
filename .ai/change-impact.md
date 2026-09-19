@@ -1,14 +1,15 @@
 # Change impact
 
-Base: fba0a2867f7ebe5338e93dd23b2495700689ad20
-Head: 9135ed6bee26058fbd042b7a44ff352dd9eda698
+Base: 8e60b062534526ce53dc2996bcca4ebb27b21bff
+Head: 514767613d7d1efe428f19232aa458c3d0e7e7fb
 
 ## Changed files
-- A .github/workflows/asset-autofactory.yml
-- A art/production/master-asset-queue.json
-- A docs/art/AUTOMATED_ASSET_FACTORY.md
-- A tools/sprites/asset_queue_utils.py
-- A tools/sprites/asset_wave_orchestrator.py
+- A .github/workflows/asset-autofactory-ci.yml
+- M .github/workflows/asset-autofactory.yml
+- M art/production/master-asset-queue.json
+- M docs/art/AUTOMATED_ASSET_FACTORY.md
+- M tools/sprites/asset_queue_utils.py
+- M tools/sprites/asset_wave_orchestrator.py
 
 ## Affected areas
 - .github

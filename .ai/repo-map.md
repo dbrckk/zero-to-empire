@@ -45,6 +45,7 @@ The content is organized as follows:
     ai-repo-map.yml
     android-emulator-smoke.yml
     android.yml
+    asset-autofactory-ci.yml
     asset-autofactory.yml
     asset-pipeline-ci.yml
     build-test-apk.yml
@@ -784,99 +785,197 @@ jobs:
           retention-days: 14
 ```
 
+## File: .github/workflows/asset-autofactory-ci.yml
+```yaml
+name: Asset Autofactory CI
+
+on:
+  pull_request:
+    paths:
+      - 'tools/sprites/asset_queue_utils.py'
+      - 'tools/sprites/asset_wave_orchestrator.py'
+      - 'art/production/master-asset-queue.json'
+      - '.github/workflows/asset-autofactory.yml'
+      - '.github/workflows/asset-autofactory-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+
+      - name: Compile autofactory Python
+        run: python -m py_compile tools/sprites/asset_queue_utils.py tools/sprites/asset_wave_orchestrator.py
+
+      - name: Exercise queue reconciliation without dispatch
+        env:
+          AUTOF_KAGGLE_BUSY: '1'
+          AUTOF_FX_BUSY: '1'
+        run: python -u tools/sprites/asset_wave_orchestrator.py
+
+      - name: Enforce 235-target invariants
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          q=json.loads(Path('art/production/master-asset-queue.json').read_text())
+          s=json.loads(Path('art/production/autofactory-state.json').read_text())
+          assets=q['assets']
+          assert q['target_total']==235
+          assert len(assets)==235
+          assert len({x['id'] for x in assets})==235
+          assert 'ONB-00' not in {x['id'] for x in assets}
+          assert sum(x['strict_status']=='DONE' for x in assets)==126
+          assert sum(x['strict_status']!='DONE' for x in assets)==109
+          assert sum(x['lane']=='kaggle-building-family' and x['strict_status']!='DONE' for x in assets)==75
+          assert sum(x['lane']=='kaggle-character-sheet' and x['strict_status']!='DONE' for x in assets)==24
+          assert sum(x['lane']=='fx-runtime-reconciliation' and x['strict_status']!='DONE' for x in assets)==10
+          assert s['action'].startswith('WAIT_') or s['action'] in {
+              'PRODUCTION_235_COMPLETE_REVIEW_BACKLOG',
+              'NO_AUTOMATIC_WORK_AVAILABLE',
+              'STOP_STRICT_TARGET_REACHED',
+          }, s['action']
+          print('ASSET_AUTOFACTORY_CI_PASS=1')
+          PY
+```
+
 ## File: .github/workflows/asset-autofactory.yml
 ```yaml
-name: Asset Autofactory
+name: Asset Autofactory 235
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: '17 * * * *'
+    - cron: '*/30 * * * *'
+  workflow_run:
+    workflows:
+      - 'Kaggle Mass Sprite Factory'
+      - 'FX Historical Review Evidence'
+    types: [completed]
 
 permissions:
   contents: write
   actions: write
 
 concurrency:
-  group: asset-autofactory
+  group: asset-autofactory-235
   cancel-in-progress: false
 
 jobs:
-  plan:
+  orchestrate:
     runs-on: ubuntu-latest
-    outputs:
-      action: ${{ steps.plan.outputs.action }}
-      lane: ${{ steps.plan.outputs.lane }}
-      assets: ${{ steps.plan.outputs.assets }}
-      family: ${{ steps.plan.outputs.family }}
+    timeout-minutes: 12
+    env:
+      GH_TOKEN: ${{ github.token }}
+      AUTOF_TRIGGER_WORKFLOW: ${{ github.event.workflow_run.name || '' }}
+      AUTOF_TRIGGER_CONCLUSION: ${{ github.event.workflow_run.conclusion || '' }}
+      AUTOF_TRIGGER_RUN_ID: ${{ github.event.workflow_run.id || '' }}
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-      - id: plan
-        name: Plan next safe wave
-        run: python tools/sprites/asset_wave_orchestrator.py --github-output
-      - name: Persist planner snapshot
-        run: python tools/sprites/asset_wave_orchestrator.py > /tmp/asset-autofactory-plan.json
-      - uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4
+      - name: Checkout canonical main
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          name: asset-autofactory-plan
-          path: /tmp/asset-autofactory-plan.json
-          retention-days: 14
+          ref: main
+          fetch-depth: 2
 
-  dispatch:
-    needs: plan
-    if: needs.plan.outputs.action == 'QUEUE'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-      - name: Mark wave in progress
-        env:
-          ASSETS: ${{ needs.plan.outputs.assets }}
-        run: python tools/sprites/asset_queue_utils.py --assets "$ASSETS" --status IN_PROGRESS --increment-attempts
-      - name: Commit queue state
-        env:
-          ASSETS: ${{ needs.plan.outputs.assets }}
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+
+      - name: Sync canonical main
+        shell: bash
+        run: git pull --ff-only origin main
+
+      - name: Detect producer activity
+        shell: bash
         run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add art/production/master-asset-queue.json
-          git commit -m "art(auto): start asset wave $ASSETS"
-          git pull --rebase origin main
-          git push origin HEAD:main
-      - name: Dispatch supported production lane
-        env:
-          GH_TOKEN: ${{ github.token }}
-          LANE: ${{ needs.plan.outputs.lane }}
+          set -euo pipefail
+          kaggle_busy="$(gh run list --workflow 'Kaggle Mass Sprite Factory' --limit 20 --json status --jq '[.[] | select(.status == "queued" or .status == "in_progress" or .status == "pending" or .status == "waiting")] | length')"
+          fx_busy="$(gh run list --workflow 'FX Historical Review Evidence' --limit 20 --json status --jq '[.[] | select(.status == "queued" or .status == "in_progress" or .status == "pending" or .status == "waiting")] | length')"
+          if [ "$kaggle_busy" -gt 0 ]; then echo 'AUTOF_KAGGLE_BUSY=1' >> "$GITHUB_ENV"; else echo 'AUTOF_KAGGLE_BUSY=0' >> "$GITHUB_ENV"; fi
+          if [ "$fx_busy" -gt 0 ]; then echo 'AUTOF_FX_BUSY=1' >> "$GITHUB_ENV"; else echo 'AUTOF_FX_BUSY=0' >> "$GITHUB_ENV"; fi
+          echo "KAGGLE_BUSY=$kaggle_busy FX_BUSY=$fx_busy"
+
+      - name: Reconcile queue and choose next autonomous wave
+        run: python -u tools/sprites/asset_wave_orchestrator.py
+
+      - name: Validate queue invariants
+        shell: bash
         run: |
-          case "$LANE" in
-            building-family)
-              gh workflow run kaggle-mass-sprite-factory.yml
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          q=json.loads(Path('art/production/master-asset-queue.json').read_text())
+          assert q['target_total']==235
+          assert len(q['assets'])==235
+          assert len({x['id'] for x in q['assets']})==235
+          strict=sum(x['strict_status']=='DONE' for x in q['assets'])
+          assert strict>=126, strict
+          assert all(x['id']!='ONB-00' for x in q['assets'])
+          d=json.loads(Path('art/production/autofactory-state.json').read_text())
+          print(f"AUTOF_QUEUE_OK=1 STRICT_DONE={strict} ACTION={d['action']}")
+          PY
+
+      - name: Persist autofactory state
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add             art/production/master-asset-queue.json             art/production/autofactory-state.json             art/production/autofactory-summary.md             art/production/controlled-building-regen-queue.json             art/production/controlled-character-regen-queue.json
+          if git diff --cached --quiet; then
+            echo 'No autofactory state change.'
+          else
+            git commit -m 'art(auto): advance 235-asset production queue'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+
+      - name: Dispatch chosen producer
+        shell: bash
+        run: |
+          set -euo pipefail
+          action="$(python -c "import json;print(json.load(open('art/production/autofactory-state.json'))['action'])")"
+          count="$(python -c "import json;print(json.load(open('art/production/autofactory-state.json')).get('count',0))")"
+          group="$(python -c "import json;print(json.load(open('art/production/autofactory-state.json')).get('group') or '')")"
+          echo "AUTOF_ACTION=$action GROUP=$group COUNT=$count"
+
+          case "$action" in
+            DISPATCH_KAGGLE_BUILDING)
+              gh workflow run 'Kaggle Mass Sprite Factory' --ref main -f count=7
               ;;
-            character-atlas)
-              gh workflow run pollinations-character-atlas.yml
+            DISPATCH_KAGGLE_CHARACTER)
+              gh workflow run 'Kaggle Mass Sprite Factory' --ref main -f count=2
               ;;
-            terrain)
-              gh workflow run procedural-terrain-batch.yml
+            DISPATCH_FX_EVIDENCE)
+              gh workflow run 'FX Historical Review Evidence' --ref main
               ;;
-            fx)
-              gh workflow run final-aaa-assets.yml
-              ;;
-            static)
-              echo "Static lane requires review-safe provider dispatch; leaving IN_PROGRESS evidence for next reconciliation."
-              ;;
-            machine)
-              echo "Machine lane requires animation-aware dispatch; leaving IN_PROGRESS evidence for next reconciliation."
+            WAIT_*|STOP_*|PRODUCTION_235_COMPLETE_REVIEW_BACKLOG|NO_AUTOMATIC_WORK_AVAILABLE)
+              echo "No producer dispatch required for $action"
               ;;
             *)
-              echo "Unsupported lane: $LANE"; exit 1
+              echo "::error::Unknown autofactory action: $action"
+              exit 2
               ;;
           esac
 
-  target:
-    needs: plan
-    if: needs.plan.outputs.action == 'STOP'
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Asset autofactory stopped safely. Target reached or no eligible automatic work remains."
+      - name: Publish run summary
+        if: always()
+        shell: bash
+        run: |
+          if [ -f art/production/autofactory-summary.md ]; then
+            cat art/production/autofactory-summary.md >> "$GITHUB_STEP_SUMMARY"
+          fi
 ```
 
 ## File: .github/workflows/asset-pipeline-ci.yml
@@ -23042,83 +23141,187 @@ planned = list(items(args.kind))[: args.count]
 ## File: tools/sprites/asset_queue_utils.py
 ```python
 #!/usr/bin/env python3
-"""Master queue mutations used by the asset autofactory."""
+"""Shared state helpers for the 235-asset autonomous production queue.
+
+The master queue deliberately does not trust per-row DONE values from the legacy
+manifest while the historical semantic review is open. The strict baseline is
+defined by the reviewed ledger: 126/235 production assets are trusted, while
+75 buildings, 24 character sheets and 10 historical FX still require work.
+ONB-00 is outside the 235 production target.
+"""
 ⋮----
-ROOT=Path(__file__).resolve().parents[2]
-Q=ROOT/'art/production/master-asset-queue.json'
+ROOT = Path(__file__).resolve().parents[2]
+MANIFEST = ROOT / "docs/art/FINAL_AAA_SPRITE_MANIFEST.md"
+MASTER = ROOT / "art/production/master-asset-queue.json"
+BUILDING_QUEUE = ROOT / "art/production/controlled-building-regen-queue.json"
+CHARACTER_QUEUE = ROOT / "art/production/controlled-character-regen-queue.json"
+STATE = ROOT / "art/production/autofactory-state.json"
+SUMMARY = ROOT / "art/production/autofactory-summary.md"
 ⋮----
-def main()
+ROW = re.compile(
 ⋮----
-p=argparse.ArgumentParser();p.add_argument('--status',required=True);p.add_argument('--assets',required=True);p.add_argument('--increment-attempts',action='store_true');a=p.parse_args()
-d=json.loads(Q.read_text(encoding='utf-8')); ids={x for x in a.assets.split(',') if x}
-found=set()
+TARGET_TOTAL = 235
+STRICT_BASELINE = 126
+MAX_ATTEMPTS = 8
 ⋮----
-missing=ids-found
+BUILDING_PRIORITY = ["BLD-04", "BLD-07", "BLD-11", "BLD-12", "BLD-13",
+CHARACTER_PRIORITY = ["CHR-OP", "CHR-TECH", "CHR-LOG", "CHR-ENG"]
+⋮----
+def load_json(path: Path, default: Any = None) -> Any
+⋮----
+def save_json(path: Path, value: Any) -> None
+⋮----
+def manifest_rows() -> list[dict[str, str]]
+⋮----
+rows: list[dict[str, str]] = []
+⋮----
+m = ROW.match(line)
+⋮----
+def unresolved_ids() -> set[str]
+⋮----
+ids: set[str] = set()
+⋮----
+def default_asset(row: dict[str, str], unresolved: set[str]) -> dict[str, Any]
+⋮----
+asset_id = row["id"]
+needs = asset_id in unresolved
+⋮----
+group = "-".join(asset_id.split("-")[:2])
+⋮----
+role = asset_id.split("-")[1]
+⋮----
+group = "FX-HISTORICAL"
+⋮----
+def ensure_master() -> dict[str, Any]
+⋮----
+existing = load_json(MASTER, {}) or {}
+old = {x["id"]: x for x in existing.get("assets", []) if isinstance(x, dict) and x.get("id")}
+unresolved = unresolved_ids()
+assets: list[dict[str, Any]] = []
+⋮----
+base = default_asset(row, unresolved)
+prev = old.get(row["id"])
+⋮----
+queue = {
+⋮----
+def sync_controlled_queues(queue: dict[str, Any]) -> None
+⋮----
+by_id = {x["id"]: x for x in queue["assets"]}
+⋮----
+bq = load_json(BUILDING_QUEUE, {}) or {}
+⋮----
+aid = str(item.get("id", "")).upper()
+asset = by_id.get(aid)
+⋮----
+status = str(item.get("status", "")).upper()
+⋮----
+cq = load_json(CHARACTER_QUEUE, {}) or {}
+⋮----
+def stats(queue: dict[str, Any]) -> dict[str, Any]
+⋮----
+assets = queue["assets"]
+strict_done = sum(x["strict_status"] == "DONE" for x in assets)
+awaiting = sum(x["pipeline_status"] == "AWAITING_REVIEW" for x in assets)
+blocked = sum(str(x["pipeline_status"]).startswith(("BLOCKED", "PAUSED_AUTOMATION")) for x in assets)
+evidence = sum(x["pipeline_status"] in {"EVIDENCE_DISPATCHED", "AWAITING_REVIEW"} and x["lane"] == "fx-runtime-reconciliation" for x in assets)
+production_processed = sum(
+⋮----
+def write_summary(queue: dict[str, Any], decision: dict[str, Any]) -> None
+⋮----
+s = stats(queue)
+lines = [
 ```
 
 ## File: tools/sprites/asset_wave_orchestrator.py
 ```python
 #!/usr/bin/env python3
-"""Plan the next safe asset-production wave toward 235/236 strict DONE.
+"""Autonomous producer for the 235-asset Zero -> Empire target.
 
-This planner NEVER promotes art. It only chooses generation/reconciliation work.
-Historical manifest DONE flags are intentionally ignored until strict evidence is normalized.
+This script only schedules production/evidence work. It never marks semantic
+approval or strict DONE automatically.
 """
 ⋮----
-ROOT=Path(__file__).resolve().parents[2]
-QUEUE=ROOT/'art/production/master-asset-queue.json'
-PROGRESS=ROOT/'docs/art/FINAL_AAA_SPRITE_PROGRESS.md'
-BUILDING_QUEUE=ROOT/'art/production/controlled-building-regen-queue.json'
-CHAR_QUEUE=ROOT/'art/production/controlled-character-regen-queue.json'
+TRIGGER_WORKFLOW = os.getenv("AUTOF_TRIGGER_WORKFLOW", "")
+TRIGGER_CONCLUSION = os.getenv("AUTOF_TRIGGER_CONCLUSION", "")
+TRIGGER_RUN_ID = os.getenv("AUTOF_TRIGGER_RUN_ID", "")
+KAGGLE_BUSY = os.getenv("AUTOF_KAGGLE_BUSY", "0") == "1"
+FX_BUSY = os.getenv("AUTOF_FX_BUSY", "0") == "1"
 ⋮----
-STRICT_RE=re.compile(r'DONE:\s*\*\*(\d+)\s*/\s*(\d+)\*\*')
+def by_id(queue: dict[str, Any]) -> dict[str, dict[str, Any]]
 ⋮----
-def strict_progress()
+def update_from_trigger(queue: dict[str, Any]) -> None
 ⋮----
-m=STRICT_RE.search(PROGRESS.read_text(encoding='utf-8'))
+target = [
 ⋮----
-def controlled_ids(path)
+def active_pending(path: Path) -> list[dict[str, Any]]
 ⋮----
-d=json.loads(path.read_text(encoding='utf-8'))
+q = load_json(path, {}) or {}
 ⋮----
-def choose(q)
+def mark_dispatch(queue: dict[str, Any], ids: list[str], generator: str) -> list[str]
 ⋮----
-target=int(q.get('target_strict_done',235))
+assets = by_id(queue)
+eligible: list[str] = []
 ⋮----
-active_build=controlled_ids(BUILDING_QUEUE)
-active_char=controlled_ids(CHAR_QUEUE)
-# Controlled queues may contain historical rejected/paused rows. Only statuses that
-# actually require a currently running/next controlled pass block opening new work.
-def actionable(path)
+x = assets.get(aid)
 ⋮----
-data=json.loads(path.read_text(encoding='utf-8'))
-active={'PENDING','PENDING_KAGGLE','IN_PROGRESS','CANDIDATE','AWAITING_REVIEW'}
+attempts = int(x.get("attempts") or 0)
 ⋮----
-active_build=actionable(BUILDING_QUEUE)
-active_char=actionable(CHAR_QUEUE)
+def building_family_ids(group: str) -> list[str]
 ⋮----
-fam=sorted({x.rsplit('-T',1)[0] for x in active_build if x.startswith('BLD-')})
+def prepare_building_group(queue: dict[str, Any], group: str) -> dict[str, Any]
 ⋮----
-pending=[a for a in q['assets'] if a.get('status') in {'PENDING','RECONCILE','REJECTED','BLOCKED'} and a.get('attempts',0)<a.get('max_attempts',5)]
+unresolved = [aid for aid in building_family_ids(group) if aid in assets and assets[aid]["strict_status"] != "DONE"]
 ⋮----
-first=pending[0]
-lane=first['lane']
+targets = []
 ⋮----
-family=first['family']
-assets=[a['id'] for a in pending if a['lane']==lane and a.get('family')==family]
+dispatched = mark_dispatch(queue, unresolved, "kaggle-building-family")
 ⋮----
-role=first.get('family')
-assets=[a['id'] for a in pending if a['lane']==lane and a.get('family')==role]
+def prepare_character_group(queue: dict[str, Any], group: str) -> dict[str, Any]
 ⋮----
-assets=[a['id'] for a in pending if a['lane']==lane][:8]
+group_assets = sorted(
 ⋮----
-def main()
+dispatched = mark_dispatch(queue, [x["id"] for x in targets[:2]], "kaggle-character-sheet")
 ⋮----
-ap=argparse.ArgumentParser();ap.add_argument('--github-output',action='store_true');args=ap.parse_args()
-q=json.loads(QUEUE.read_text(encoding='utf-8'))
-plan=choose(q)
+def next_group(queue: dict[str, Any], lane: str, priority: list[str]) -> str | None
 ⋮----
-p=Path(os.environ['GITHUB_OUTPUT'])
+groups = {
+⋮----
+def pending_ids_from_controlled(path: Path, queue: dict[str, Any]) -> list[str]
+⋮----
+ids = [str(x.get("id", "")).upper() for x in active_pending(path)]
+master = by_id(queue)
+⋮----
+def make_decision(queue: dict[str, Any]) -> dict[str, Any]
+⋮----
+s = stats(queue)
+⋮----
+# Existing controlled building work always has priority because the Kaggle
+# router itself prioritizes CONTROLLED_BLD over CONTROLLED_CHR.
+building_pending = pending_ids_from_controlled(BUILDING_QUEUE, queue)
+⋮----
+ids = mark_dispatch(queue, building_pending, "kaggle-building-family")
+⋮----
+group = next_group(queue, "kaggle-building-family", BUILDING_PRIORITY)
+⋮----
+prepared = prepare_building_group(queue, group)
+⋮----
+character_pending = pending_ids_from_controlled(CHARACTER_QUEUE, queue)
+⋮----
+ids = mark_dispatch(queue, character_pending[:2], "kaggle-character-sheet")
+⋮----
+group = next_group(queue, "kaggle-character-sheet", CHARACTER_PRIORITY)
+⋮----
+prepared = prepare_character_group(queue, group)
+⋮----
+fx = [
+⋮----
+refreshed = stats(queue)
+⋮----
+def main() -> int
+⋮----
+queue = ensure_master()
+⋮----
+decision = make_decision(queue)
 ```
 
 ## File: tools/sprites/audit_complete_sprite_manifest.py
