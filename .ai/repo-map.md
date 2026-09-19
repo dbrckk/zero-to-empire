@@ -1400,6 +1400,40 @@ jobs:
             --output /tmp/fx-review/fx-historical-contact-sheet.png \
             --report /tmp/fx-review/fx-historical-qa.json \
             --files "${files[@]}"
+      - name: Validate exact FX sheet runtime contract
+        shell: bash
+        run: |
+          set -uo pipefail
+          mkdir -p /tmp/fx-review/runtime-contract
+          failed=0
+          for n in 00 01 02 03 04 05 06 07 08 17; do
+            if python tools/sprites/validate_runtime_asset.py \
+              --asset-id "FX-$n" \
+              --path "app/src/main/res/drawable-nodpi/zte_fx_${n}_final.webp" \
+              --report "/tmp/fx-review/runtime-contract/FX-${n}.json"; then
+              echo "FX_RUNTIME_CONTRACT_PASS=FX-$n"
+            else
+              echo "FX_RUNTIME_CONTRACT_FAIL=FX-$n"
+              failed=$((failed+1))
+            fi
+          done
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          root=Path('/tmp/fx-review/runtime-contract')
+          rows=[json.loads(p.read_text()) for p in sorted(root.glob('FX-*.json'))]
+          Path('/tmp/fx-review/fx-runtime-contract-summary.json').write_text(
+              json.dumps({
+                  'total':len(rows),
+                  'pass':sum(bool(x.get('pass')) for x in rows),
+                  'fail':sum(not bool(x.get('pass')) for x in rows),
+                  'assets':rows,
+              },indent=2)+'\n',
+              encoding='utf-8'
+          )
+          PY
+          echo "FX_RUNTIME_CONTRACT_FAILURES=$failed"
+
       - name: Record runtime metadata
         shell: bash
         run: |

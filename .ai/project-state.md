@@ -22,21 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T14:57:09Z
+Generated: 2026-09-19T15:10:39Z
 
 ### Git
 - Branch: `main`
-- Head: `d50945d62c1e`
-- Commit date: 2026-09-19T16:56:55+02:00
-- Commit: ci(art): add exact runtime FX review evidence (#72)
+- Head: `50c1d39c5ff8`
+- Commit date: 2026-09-19T17:10:27+02:00
+- Commit: ci(art): validate historical FX with sheet-aware contract (#73)
 - Tracked files: 1332
 
 ### Recently changed files
 - `.github/workflows/fx-historical-review-evidence.yml`
+- `art/production/controlled-building-regen-queue.json`
 - `docs/art/FINAL_AAA_SPRITE_PROGRESS.md`
 - `tools/sprites/kaggle_building_family_factory_v16.py`
-- `ops/sprite-wave-trigger.txt`
-- `.github/workflows/kaggle-mass-sprite-factory.yml`
 
 ### Project signals
 - `build.gradle.kts`
