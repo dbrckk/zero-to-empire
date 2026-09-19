@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """FLUX building-family factory v14: short prompts + monotonic tier envelopes."""
 from __future__ import annotations
-import argparse,gc,re
+import argparse,gc,re,json
 from collections import deque
 from pathlib import Path
 print('KAGGLE_STARTUP=building-family-flux-v14-prompt-safe-monotonic',flush=True)
@@ -9,18 +9,33 @@ import torch
 from PIL import Image,ImageFilter
 from diffusers import FluxPipeline,FluxImg2ImgPipeline,FluxTransformer2DModel
 from transformers import T5EncoderModel
-ROOT=Path(__file__).resolve().parents[2]; MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'; INCOMING=ROOT/'art/incoming/final-sprites'
+ROOT=Path(__file__).resolve().parents[2]; MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'; INCOMING=ROOT/'art/incoming/final-sprites'; BUILD_QUEUE=ROOT/'art/production/controlled-building-regen-queue.json'
 FLUX='aniketppanchal/flux.1-schnell-nf4-pkg'; ROW=re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$"); BLD=re.compile(r'^BLD-(\d{2})-T([0-6])$')
 DNA={0:'micro foundry kiosk, rust steel, amber furnace',1:'fabrication shop, chamfered storefront, loading bay',2:'furnace works, steel shell, twin stacks',3:'assembly hub, dark hall, robotic spine, feeder bays',4:'precision factory, graphite shell, CNC bays',5:'energy-cell works, square alloy shell, amber core',6:'coolant plant, silver graphite shell, cyan pipes',7:'automation works, wide tech factory, twin gantries',8:'heavy forge, armored base, warm forge core',9:'nanofab complex, pearl graphite block, cyan ring',10:'orbital works, dark alloy base, circular cradle',11:'actuator works, press house, articulated frames',12:'phase foundry, pearl alloy base, containment ring',13:'stellar works, dark pearl base, four-part crown'}
 TIER={0:'tiny one-storey starter; no tower or crane',1:'small reinforced upgrade; one attached module',2:'medium industrial upgrade; wider footprint',3:'large automated upgrade; compact central tower',4:'advanced upgrade; two attached wings',5:'megastructure; large upper assembly',6:'ultimate; tall prestige crown and heroic machinery'}
 PRIORITY=(13,5,8,9,10,12,11,4,6,7,3,0,1,2); STRENGTH={1:.34,2:.42,3:.50,4:.58,5:.66,6:.72}; STEPS={0:5,1:4,2:4,3:5,4:5,5:6,6:6}; RETRIES={0:4,1:3,2:3,3:3,4:3,5:3,6:3}
 ENV={0:(.50,.44),1:(.56,.50),2:(.62,.56),3:(.68,.62),4:(.74,.68),5:(.80,.74),6:(.84,.80)}
 def rows():
+ catalog={}
  for order,line in enumerate(MANIFEST.read_text(encoding='utf-8').splitlines()):
   m=ROW.match(line)
   if not m: continue
   aid,_,_,runtime,status=[x.strip() for x in m.groups()]; bm=BLD.fullmatch(aid)
-  if bm and status.upper()=='TODO' and not (ROOT/runtime).is_file(): yield {'id':aid,'stem':Path(runtime).stem,'family':int(bm.group(1)),'tier':int(bm.group(2)),'order':order}
+  if not bm: continue
+  catalog[aid]={'id':aid,'stem':Path(runtime).stem,'family':int(bm.group(1)),'tier':int(bm.group(2)),'order':order,'status':status.upper(),'runtime':runtime}
+ if BUILD_QUEUE.is_file():
+  q=json.loads(BUILD_QUEUE.read_text(encoding='utf-8')); controlled=[]
+  for item in q.get('targets',[]):
+   if str(item.get('status','')).upper()!='PENDING_KAGGLE': continue
+   aid=str(item.get('id','')).upper()
+   if aid not in catalog: raise RuntimeError('controlled Kaggle building missing from manifest: '+aid)
+   controlled.append(catalog[aid])
+  if controlled:
+   print('KAGGLE_BUILDING_CONTROLLED_QUEUE='+','.join(x['id'] for x in controlled),flush=True)
+   for x in controlled: yield x
+   return
+ for x in catalog.values():
+  if x['status']=='TODO' and not (ROOT/x['runtime']).is_file(): yield x
 def select(items,count):
  by={}
  for i in items: by.setdefault(i['family'],[]).append(i)
