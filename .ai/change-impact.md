@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 57e6ba13fa2c81acb2bc6f19e141e96409a4b64c
-Head: 2ac6f8833a7868107684dde0fe53ff471b726b72
+Base: ed3c2729e2a173efb7865b0a11880c1d8b75eafd
+Head: 887276f8aaab2b7cebda214fa17d91e59dea703a
 
 ## Changed files
-- M .github/workflows/kaggle-mass-sprite-factory.yml
+- M ops/sprite-wave-trigger.txt
 
 ## Affected areas
-- .github
+- ops
 
 ## Related test candidates
 - No direct filename-based test match detected.

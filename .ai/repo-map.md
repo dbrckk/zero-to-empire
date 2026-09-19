@@ -24599,7 +24599,7 @@ ident=v14.iou(recs[-1][1],new_final)
 floor={1:.45,2:.42,3:.39,4:.36,5:.34,6:.32}[tier]
 ⋮----
 norm=normalized_silhouette_iou(recs[-1][1],new_final)
-ceiling={1:.965,2:.955,3:.945,4:.935,5:.925,6:.915}[tier]
+ceiling={1:.975,2:.960,3:.945,4:.935,5:.925,6:.915}[tier]
 ```
 
 ## File: tools/sprites/kaggle_building_family_factory.py

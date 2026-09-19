@@ -22,24 +22,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T18:48:42Z
+Generated: 2026-09-19T19:25:38Z
 
 ### Git
 - Branch: `main`
-- Head: `2ac6f8833a78`
-- Commit date: 2026-09-19T20:48:26+02:00
-- Commit: ci(art): restrict Kaggle push trigger to main (#82)
-- Tracked files: 1342
+- Head: `887276f8aaab`
+- Commit date: 2026-09-19T21:25:23+02:00
+- Commit: ci(art): trigger BLD-04 pass 7 (#84)
+- Tracked files: 1343
 
 ### Recently changed files
-- `.github/workflows/kaggle-mass-sprite-factory.yml`
 - `ops/sprite-wave-trigger.txt`
 - `art/production/controlled-building-regen-queue.json`
-- `art/production/master-asset-queue.json`
-- `.github/workflows/asset-autofactory.yml`
-- `tools/sprites/asset_wave_orchestrator.py`
+- `art/production/semantic-review-bld04-kaggle-pass-6.md`
+- `tools/sprites/kaggle_building_family_factory_v16.py`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
+- `.github/workflows/kaggle-mass-sprite-factory.yml`
 
 ### Project signals
 - `build.gradle.kts`
