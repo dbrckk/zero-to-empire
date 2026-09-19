@@ -97,7 +97,7 @@ def main():
         ok=False
         attempts_log=[]
         for attempt in range(attempts):
-            seed=(base + slot*1009 + attempt*7919) % 2147483647
+            seed=((base if candidate_only else base + slot*1009) + attempt*7919) % 2147483647
             stem=None
             try:
                 rp=PROD/f'pollinations-{aid.lower()}-report.json'

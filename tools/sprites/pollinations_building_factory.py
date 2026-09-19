@@ -9,6 +9,33 @@ MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
 INCOMING=ROOT/'art/incoming/final-sprites'
 REPORT=ROOT/'art/production/pollinations-report.json'
 
+FAMILY_IDENTITY={
+    0:'Street Stand, compact improvised street-production kiosk',
+    1:'Corner Shop, small neighborhood retail-production storefront',
+    2:'Workshop, compact mechanical fabrication workshop',
+    3:'Factory, industrial production plant',
+    4:'Tech Company, premium technology headquarters and R&D production campus',
+    5:'Megacity, dense futuristic urban production district',
+    6:'Moon Colony, pressurized lunar industrial colony',
+    7:'Mars Empire, monumental Martian industrial-government complex',
+    8:'Dyson Network, stellar-energy collection and routing complex',
+    9:'Galactic Exchange, interstellar trade and finance hub',
+    10:'Intergalactic Gateway, deep-space transit gateway complex',
+    11:'Cosmic Foundry, cosmic-scale fabrication facility',
+    12:'Reality Engine, exotic-physics reality-processing machine complex',
+    13:'Transcendent Nexus, apex civilization energy nexus',
+}
+
+TIER_LANGUAGE={
+    0:'starter version: smallest footprint, low verticality, one obvious core function, improvised but intentional construction',
+    1:'reinforced version: same base silhouette lineage, slightly larger footprint, stronger structure, one dedicated subsystem',
+    2:'expanded version: preserve the same family architecture while adding a second visible subsystem and more technical detail',
+    3:'automated version: same family DNA, visibly larger and taller, logistics/automation modules, controlled emissive accents',
+    4:'district-scale version: same unmistakable family identity, larger footprint and vertical landmark massing, dense machinery and premium materials',
+    5:'megastructure version: same architecture evolved upward, multi-stage production, major energy routing, substantially larger and more prestigious',
+    6:'mastered ultimate version: same family silhouette lineage at maximum scale and verticality, iconic crown/hero element, richest materials and systems',
+}
+
 def fail(msg):
     print('POLLINATIONS_ERROR='+msg)
     raise SystemExit(1)
@@ -100,11 +127,17 @@ def generate(row, seed=73117, session=None, report_path: Path | None = None):
     m=re.fullmatch(r'BLD-(\d{2})-T(\d)',aid)
     if not m: fail('bad target '+aid)
     fam,tier=m.groups()
+    fam_i=int(fam); tier_i=int(tier)
+    identity=FAMILY_IDENTITY.get(fam_i,f'industrial business family {fam_i}')
+    tier_language=TIER_LANGUAGE[tier_i]
     prompt=(
-      f'AAA premium mobile strategy game industrial factory sprite, family {int(fam)}, tier {tier}. {desc}. '
-      'single connected factory only, centered, orthographic three-quarter view, graphite steel, amber and cyan emissive accents, '
-      'clean readable silhouette occupying no more than 65 percent of the canvas, generous empty margin on every side, no people, no vehicles, no text, no signs, no crane, no scenery, no road, no floor slab, no platform, '
-      'perfectly flat uniform neutral gray background, no gradient, no vignette, no horizon'
+      f'AAA premium mobile tycoon game building sprite. Canonical family: {identity}. '
+      f'Tier {tier_i} of 6; {tier_language}. '
+      'This must look like an evolved version of the SAME architectural family across all tiers, not a different building type. '
+      'Maintain a consistent 34-degree three-quarter orthographic camera, upper-left warm-neutral key light, cool fill, graphite/dark premium massing with restrained cyan and warm amber emissive accents. '
+      'Single connected building only, centered, readable silhouette, subject occupies 58 to 66 percent of canvas, generous transparent-safe margin. '
+      'No people, no vehicles, no readable text, no signs, no logo, no detached props, no crane, no scenery, no road, no floor slab, no floating platform, no background architecture. '
+      'Perfectly flat uniform neutral gray background, no gradient, no vignette, no horizon.'
     )
     q=urllib.parse.quote(prompt,safe='')
     url=f'https://image.pollinations.ai/prompt/{q}?model=flux&width=1024&height=1024&seed={int(seed)}&nologo=true&private=true&enhance=false&safe=true'
