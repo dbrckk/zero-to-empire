@@ -1,15 +1,17 @@
 # Change impact
 
-Base: dd16fd67b9241cb76f13a8a9237463497ffcbbf5
-Head: f2e1f1ec6a0f1ae48fdee404fde89a961c027876
+Base: b643c91f4dca055cf0c3ee708aa0352251025dc8
+Head: ec5c1b5836f49e749ce889936307ef6ba1e186d6
 
 ## Changed files
-- M .github/workflows/pollinations-character-atlas.yml
-- A art/production/controlled-character-regen-queue.json
+- M art/production/controlled-building-regen-queue.json
+- M art/production/controlled-character-regen-queue.json
+- A art/production/semantic-review-controlled-pass-1.md
+- M tools/sprites/pollinations_building_batch.py
+- M tools/sprites/pollinations_building_factory.py
 - M tools/sprites/pollinations_character_sheet_factory.py
 
 ## Affected areas
-- .github
 - art
 - tools
 

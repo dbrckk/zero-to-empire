@@ -22,30 +22,36 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T11:44:17Z
+Generated: 2026-09-19T12:45:01Z
 
 ### Git
 - Branch: `main`
-- Head: `f2e1f1ec6a0f`
-- Commit date: 2026-09-19T13:44:00+02:00
-- Commit: art: restart controlled character asset production (#58)
-- Tracked files: 1295
+- Head: `ec5c1b5836f4`
+- Commit date: 2026-09-19T14:44:44+02:00
+- Commit: art: improve semantic coherence of generated assets (#59)
+- Tracked files: 1314
 
 ### Recently changed files
-- `.github/workflows/pollinations-character-atlas.yml`
-- `art/production/controlled-character-regen-queue.json`
-- `tools/sprites/pollinations_character_sheet_factory.py`
-- `.github/workflows/pollinations-building-candidate.yml`
 - `art/production/controlled-building-regen-queue.json`
+- `art/production/controlled-character-regen-queue.json`
+- `art/production/semantic-review-controlled-pass-1.md`
 - `tools/sprites/pollinations_building_batch.py`
-- `docs/art/AAA_MANAGER_PORTRAIT_SPEC.md`
-- `app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt`
-- `app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt`
-- `app/src/main/java/com/zerotoempire/game/ReviewedMachineLayer.kt`
-- `app/src/main/java/com/zerotoempire/game/WorldTrafficArt.kt`
-- `app/src/test/java/com/zerotoempire/game/AmbientTrafficMotionTest.kt`
-- `app/src/main/java/com/zerotoempire/game/CanonicalCharacterRaster.kt`
-- `app/src/test/java/com/zerotoempire/game/CanonicalCharacterRasterTest.kt`
+- `tools/sprites/pollinations_building_factory.py`
+- `tools/sprites/pollinations_character_sheet_factory.py`
+- `art/incoming/final-sprites/zte_chr_op_carry_final.png`
+- `art/incoming/final-sprites/zte_chr_op_work_final.png`
+- `art/production/pollinations-character-summary.json`
+- `art/incoming/final-sprites/zte_chr_op_idle_final.png`
+- `art/incoming/final-sprites/zte_chr_op_walk_final.png`
+- `art/incoming/final-sprites/zte_business_04_t0_final.png`
+- `art/incoming/final-sprites/zte_business_04_t1_final.png`
+- `art/incoming/final-sprites/zte_business_04_t2_final.png`
+- `art/incoming/final-sprites/zte_business_04_t3_final.png`
+- `art/incoming/final-sprites/zte_business_04_t4_final.png`
+- `art/incoming/final-sprites/zte_business_04_t5_final.png`
+- `art/incoming/final-sprites/zte_business_04_t6_final.png`
+- `art/production/pollinations-batch-summary.json`
+- `art/production/pollinations-bld-04-t0-contact.png`
 
 ### Project signals
 - `build.gradle.kts`

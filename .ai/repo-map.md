@@ -24709,7 +24709,7 @@ aid=row[0]
 ok=False
 attempts_log=[]
 ⋮----
-seed=(base + slot*1009 + attempt*7919) % 2147483647
+seed=((base if candidate_only else base + slot*1009) + attempt*7919) % 2147483647
 stem=None
 ⋮----
 rp=PROD/f'pollinations-{aid.lower()}-report.json'
@@ -24741,6 +24741,10 @@ ROOT=Path(__file__).resolve().parents[2]
 MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
 INCOMING=ROOT/'art/incoming/final-sprites'
 REPORT=ROOT/'art/production/pollinations-report.json'
+⋮----
+FAMILY_IDENTITY={
+⋮----
+TIER_LANGUAGE={
 ⋮----
 def fail(msg)
 ⋮----
@@ -24797,6 +24801,9 @@ def generate(row, seed=73117, session=None, report_path: Path | None = None)
 ⋮----
 m=re.fullmatch(r'BLD-(\d{2})-T(\d)',aid)
 ⋮----
+fam_i=int(fam); tier_i=int(tier)
+identity=FAMILY_IDENTITY.get(fam_i,f'industrial business family {fam_i}')
+tier_language=TIER_LANGUAGE[tier_i]
 prompt=(
 q=urllib.parse.quote(prompt,safe='')
 url=f'https://image.pollinations.ai/prompt/{q}?model=flux&width=1024&height=1024&seed={int(seed)}&nologo=true&private=true&enhance=false&safe=true'
@@ -24830,9 +24837,10 @@ MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
 INCOMING=ROOT/'art/incoming/final-sprites'
 OUT=ROOT/'art/production'
 QUEUE=OUT/'controlled-character-regen-queue.json'
+⋮----
 ROLES={
-ACTIONS={'IDLE':('idle breathing and subtle look-around',6),'WALK':('walking cycle with alternating steps',8),'WORK':('operating a compact industrial hand tool',10),'CARRY':('carrying one compact industrial crate with both hands',8),'REPAIR':('repairing with compact diagnostic tool',10),'CELEB':('short restrained milestone celebration',8)}
-POSES={'IDLE':['neutral','weight left','neutral recovery','weight right','head left','head right'],'WALK':['left contact','left down','passing left','right contact','right down','passing right','left recovery','neutral passing'],'WORK':['tool ready','reach','contact','work low','work center','work high','pull back','inspect','tool down','neutral'],'CARRY':['carry neutral','left step','passing','right step','carry neutral recovery','left step recovery','passing recovery','right step recovery'],'REPAIR':['reach','tool contact','repair low','inspect','tool contact high','adjust','inspect side','tool contact','rise','neutral repair'],'CELEB':['neutral','arm starts up','arm half up','arm raised','small fist pump','arm half down','arm down','neutral recovery']}
+ACTIONS={
+POSES={
 ⋮----
 def pending()
 ⋮----
@@ -24860,65 +24868,91 @@ s=(seed+n*7919) % 2147483647
 url=f'https://image.pollinations.ai/prompt/{q}?model=flux&width=1024&height=1024&seed={s}&nologo=true&private=true&enhance=false&safe=true'
 req=urllib.request.Request(url,headers={'User-Agent':'zero-to-empire-github-actions/1.0','Accept':'image/*'})
 ⋮----
-with urllib.request.urlopen(req,timeout=180) as r:data=r.read()
+data=r.read()
 ⋮----
-p=Path('/tmp')/f'chr-{s}.png';p.write_bytes(data);return Image.open(p).convert('RGBA')
+p=Path('/tmp')/f'chr-sheet-{s}.png'
 ⋮----
 last=e
 ⋮----
 def cutout(raw)
 ⋮----
 im=remove(raw,alpha_matting=False).convert('RGBA')
-a=im.getchannel('A').point(lambda v:0 if v<24 else 255 if v>224 else v);im.putalpha(a)
-w,h=im.size;mask=a.point(lambda v:255 if v>=64 else 0);px=mask.load();seen=set();comps=[]
+a=im.getchannel('A').point(lambda v:0 if v<24 else 255 if v>224 else v)
 ⋮----
-q=[(x,y)];seen.add((x,y));comp=[]
+mask=a.point(lambda v:255 if v>=64 else 0)
+px=mask.load(); seen=set(); comps=[]
 ⋮----
-keep=set(max(comps,key=len));clean=Image.new('RGBA',(w,h),(0,0,0,0));src=im.load();dst=clean.load()
+stack=[(x,y)]; seen.add((x,y)); comp=[]
+⋮----
+keep=set(max(comps,key=len))
+clean=Image.new('RGBA',(w,h),(0,0,0,0))
+src=im.load(); dst=clean.load()
 ⋮----
 bb=clean.getchannel('A').getbbox()
 ⋮----
-crop=clean.crop(bb);cw,ch=crop.size
+crop=clean.crop(bb); cw,ch=crop.size
 ⋮----
-s=min(176/cw,218/ch);crop=crop.resize((max(1,round(cw*s)),max(1,round(ch*s))),Image.Resampling.LANCZOS)
-cell=Image.new('RGBA',(256,256),(0,0,0,0));x=(256-crop.width)//2;y=238-crop.height
+s=min(176/cw,218/ch)
+crop=crop.resize((max(1,round(cw*s)),max(1,round(ch*s))),Image.Resampling.LANCZOS)
+cell=Image.new('RGBA',(256,256),(0,0,0,0))
+x=(256-crop.width)//2; y=238-crop.height
 ⋮----
-cell.alpha_composite(crop,(x,y));aa=cell.getchannel('A');cov=sum(aa.histogram()[8:])/(256*256)
+aa=cell.getchannel('A')
+cov=sum(aa.histogram()[8:])/(256*256)
 ⋮----
 def iou(a,b)
 ⋮----
 A=a.getchannel('A').resize((64,64),Image.Resampling.BILINEAR).point(lambda p:255 if p>=32 else 0)
 B=b.getchannel('A').resize((64,64),Image.Resampling.BILINEAR).point(lambda p:255 if p>=32 else 0)
-pa,pb=A.load(),B.load();inter=union=0
+pa,pb=A.load(),B.load(); inter=union=0
 ⋮----
-aa=pa[x,y]>0;bb=pb[x,y]>0;inter+=aa and bb;union+=aa or bb
+aa=pa[x,y]>0; bb=pb[x,y]>0
 ⋮----
 def sheetqa(frames)
 ⋮----
 vals=[iou(frames[n-1],frames[n]) for n in range(1,len(frames))]
 ⋮----
-b=[];c=[]
+bottoms=[]; centers=[]
 ⋮----
-bb=f.getchannel('A').getbbox();b.append(bb[3]);c.append((bb[0]+bb[2])/2)
+bb=frame.getchannel('A').getbbox()
+⋮----
+def sheet_prompt(item)
+⋮----
+action=item['action']; fc=ACTIONS[action][1]
+poses=', '.join(POSES[action][:fc])
+⋮----
+def extract_frames(raw,frame_count)
+⋮----
+raw=raw.resize((1024,1024),Image.Resampling.LANCZOS)
+frames=[]
+⋮----
+x=(n%4)*256; y=(n//4)*256
+cell_raw=raw.crop((x,y,x+256,y+256))
 ⋮----
 def main()
 ⋮----
 items=pending()[:max(1,min(int(os.getenv('POLLINATIONS_CHR_BATCH','1')),2))]
 ⋮----
-attempts=max(1,min(int(os.getenv('POLLINATIONS_CHR_ATTEMPTS','2')),3));base=int(os.getenv('POLLINATIONS_CHR_SEED','19417'))
-INCOMING.mkdir(parents=True,exist_ok=True);OUT.mkdir(parents=True,exist_ok=True);rep=[]
+attempts=max(1,min(int(os.getenv('POLLINATIONS_CHR_ATTEMPTS','2')),3))
+base=int(os.getenv('POLLINATIONS_CHR_SEED','19417'))
 ⋮----
-fc=ACTIONS[it['action']][1];poses=POSES[it['action']][:fc];done=False;last=''
+rep=[]
 ⋮----
-frames=[];seed=(base+ix*100000+att*10007) % 2147483647
+fc=ACTIONS[it['action']][1]
+done=False; last=''
 ⋮----
-prompt=f"AAA premium mobile 2.5D full-body character frame. {ROLES[it['role']]}. {ACTIONS[it['action']][0]}; pose {pose}. Same single adult worker, same face, same clothes, same proportions. 34-degree three-quarter orthographic view, feet visible, centered, generous empty margin. No floor, no scenery, no text, no logo, no extra people, no duplicated limbs, no vehicle, no building. Perfectly flat uniform neutral gray background, no gradient, no vignette, no horizon."
+seed=(base+ix*100000+att*10007) % 2147483647
+⋮----
+raw=fetch(sheet_prompt(it),seed)
+frames=extract_frames(raw,fc)
 ⋮----
 sheet=Image.new('RGBA',(1024,1024),(0,0,0,0))
 ⋮----
-p=INCOMING/f"{it['stem']}.png";sheet.save(p,'PNG',optimize=True)
-mark_queue(it['id'],'CANDIDATE',seed);rep.append({'id':it['id'],'status':'CANDIDATE','file':p.name,'frames':fc,'qa':why});print(f"POLLINATIONS_CHR_VALIDATED={it['id']} {why}",flush=True);done=True;break
-except Exception as e:last=str(e);print(f"POLLINATIONS_CHR_RETRY={it['id']} attempt={att+1} reason={e}",flush=True)
+p=INCOMING/f"{it['stem']}.png"
+⋮----
+done=True
+⋮----
+last=str(e)
 ```
 
 ## File: tools/sprites/procedural_fx_factory.py

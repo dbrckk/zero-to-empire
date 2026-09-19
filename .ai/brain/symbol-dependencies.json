@@ -5,64 +5,28 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "pending": {
+    "manifest_rows": {
       "source": {
-        "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 19,
+        "file": "tools/sprites/pollinations_building_batch.py",
+        "start": 16,
+        "end": 24
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "pending_rows": {
+      "source": {
+        "file": "tools/sprites/pollinations_building_batch.py",
+        "start": 26,
         "end": 40
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "mark_queue": {
-      "source": {
-        "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 42,
-        "end": 50
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "fetch": {
-      "source": {
-        "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 52,
-        "end": 67
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "cutout": {
-      "source": {
-        "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 69,
-        "end": 95
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "iou": {
-      "source": {
-        "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 97,
-        "end": 104
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "sheetqa": {
-      "source": {
-        "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 106,
-        "end": 115
       },
       "symbol_dependencies": [
         {
-          "symbol": "iou",
+          "symbol": "manifest_rows",
           "definitions": [
             {
-              "file": "tools/sprites/pollinations_character_sheet_factory.py",
-              "line": 97,
+              "file": "tools/sprites/pollinations_building_batch.py",
+              "line": 16,
               "kind": "function",
               "language": "python"
             }
@@ -72,42 +36,69 @@
       ],
       "dependency_count": 1
     },
+    "mark_runtime": {
+      "source": {
+        "file": "tools/sprites/pollinations_building_batch.py",
+        "start": 42,
+        "end": 53
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "mark_queue": {
+      "source": {
+        "file": "tools/sprites/pollinations_building_batch.py",
+        "start": 55,
+        "end": 68
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "run": {
+      "source": {
+        "file": "tools/sprites/pollinations_building_batch.py",
+        "start": 70,
+        "end": 71
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
     "main": {
       "source": {
-        "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 117,
-        "end": 139
+        "file": "tools/sprites/pollinations_building_batch.py",
+        "start": 73,
+        "end": 152
       },
       "symbol_dependencies": [
         {
-          "symbol": "cutout",
+          "symbol": "generate",
           "definitions": [
             {
-              "file": "tools/sprites/pollinations_character_sheet_factory.py",
-              "line": 69,
+              "file": "tools/sprites/pollinations_building_factory.py",
+              "line": 125,
               "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "fetch",
-          "definitions": [
-            {
-              "file": "tools/sprites/pollinations_character_sheet_factory.py",
-              "line": 52,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
+          "relation": "imported_module"
         },
         {
           "symbol": "mark_queue",
           "definitions": [
             {
-              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "file": "tools/sprites/pollinations_building_batch.py",
+              "line": 55,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "mark_runtime",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_building_batch.py",
               "line": 42,
               "kind": "function",
               "language": "python"
@@ -116,11 +107,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "pending",
+          "symbol": "pending_rows",
           "definitions": [
             {
-              "file": "tools/sprites/pollinations_character_sheet_factory.py",
-              "line": 19,
+              "file": "tools/sprites/pollinations_building_batch.py",
+              "line": 26,
               "kind": "function",
               "language": "python"
             }
@@ -128,11 +119,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "sheetqa",
+          "symbol": "run",
           "definitions": [
             {
-              "file": "tools/sprites/pollinations_character_sheet_factory.py",
-              "line": 106,
+              "file": "tools/sprites/pollinations_building_batch.py",
+              "line": 70,
               "kind": "function",
               "language": "python"
             }
@@ -141,6 +132,182 @@
         }
       ],
       "dependency_count": 5
+    },
+    "fail": {
+      "source": {
+        "file": "tools/sprites/pollinations_building_factory.py",
+        "start": 39,
+        "end": 41
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "next_target": {
+      "source": {
+        "file": "tools/sprites/pollinations_building_factory.py",
+        "start": 43,
+        "end": 56
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "fail",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_building_factory.py",
+              "line": 39,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "isolate": {
+      "source": {
+        "file": "tools/sprites/pollinations_building_factory.py",
+        "start": 58,
+        "end": 123
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "fail",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_building_factory.py",
+              "line": 39,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "generate": {
+      "source": {
+        "file": "tools/sprites/pollinations_building_factory.py",
+        "start": 125,
+        "end": 168
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "fail",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_building_factory.py",
+              "line": 39,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "isolate",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_building_factory.py",
+              "line": 58,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "pending": {
+      "source": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 32,
+        "end": 59
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "fetch": {
+      "source": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 73,
+        "end": 93
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "cutout": {
+      "source": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 95,
+        "end": 138
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "iou": {
+      "source": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 140,
+        "end": 148
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "sheetqa": {
+      "source": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 150,
+        "end": 164
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "iou",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 140,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "sheet_prompt": {
+      "source": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 166,
+        "end": 177
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "extract_frames": {
+      "source": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 179,
+        "end": 189
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "cutout",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 95,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
     }
   }
 }
