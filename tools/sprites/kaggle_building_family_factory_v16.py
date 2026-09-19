@@ -18,7 +18,7 @@ v15=importlib.util.module_from_spec(SPEC); SPEC.loader.exec_module(v15)
 v14=v15.v14
 V15_ANCHOR_SCORE=v15.anchor_score
 
-print('KAGGLE_STARTUP=building-family-flux-v16.4-footprint-locked-two-phase',flush=True)
+print('KAGGLE_STARTUP=building-family-flux-v16.5-canonical-runtime-identities',flush=True)
 
 # Phase A (T0-T3): preserve massing. Phase B (T4-T6): add detail/attached volumes
 # without the high denoise that caused wave85 to invent a new ground/site plane.
@@ -27,29 +27,36 @@ v14.STEPS.update({0:10,1:7,2:7,3:8,4:8,5:9,6:10})
 v14.RETRIES.update({0:5,1:3,2:3,3:3,4:3,5:3,6:3})
 
 FAMILY={
- 0:'street foundry kiosk, rectangular rust-steel shell, recessed amber furnace mouth, short enclosed roof exhaust housing',
- 1:'fabrication shop, chamfered graphite shell, enclosed machining bay, low rear loading recess',
- 2:'furnace works, broad low steel hall, twin short sealed heat-stack housings, central glowing furnace chamber',
- 3:'assembly hub, long dark production hall, enclosed robotic spine, symmetric attached feeder bays',
- 4:'precision CNC factory, low graphite rectangular shell, three recessed CNC bays, ribbed roof',
- 5:'energy-cell works, square alloy block, protected amber reactor core, attached capacitor rooms',
- 6:'coolant plant, silver graphite hall, integrated cyan coolant pipes, compact attached heat exchangers',
- 7:'automation works, wide low tech factory, paired enclosed robot cells, attached production wings',
- 8:'heavy forge, armored low production block, central orange forge chamber, enclosed press bay',
- 9:'nanofabrication complex, pearl graphite block, sealed cyan process ring, symmetric cleanroom wings',
- 10:'orbital component works, dark alloy factory block, enclosed circular assembly chamber, attached radial service rooms',
- 11:'actuator works, broad press-house factory, enclosed articulated press frames, reinforced roof shell',
- 12:'phase foundry, pearl alloy production block, enclosed luminous containment ring, shielded attached process wings',
- 13:'stellar manufacturing works, dark pearl industrial base, four compact attached reactor housings, enclosed process core'
+ 0:'Street Stand, compact improvised street-production kiosk, rust steel panels, one warm production core, simple canopy and utility housing',
+ 1:'Corner Shop, neighborhood retail-production storefront, chamfered graphite facade, enclosed service bay, compact rear utility volume',
+ 2:'Workshop, mechanical fabrication workshop, broad low steel shell, visible enclosed tooling bay, short exhaust housing and reinforced doors',
+ 3:'Factory, industrial production plant, long dark hall, enclosed automation spine, attached loading/feeder bays and integrated machinery',
+ 4:'Tech Company, futuristic R&D headquarters and production campus, graphite glass-and-alloy shell, central data core, attached lab wings, restrained cyan systems',
+ 5:'Megacity, dense futuristic urban-production district represented as one connected megastructure block, stacked towers, transit core, civic-industrial modules',
+ 6:'Moon Colony, pressurized lunar industrial colony, connected habitat domes and utility blocks, sealed service tunnels, ice-white alloy shell with cyan life-support accents',
+ 7:'Mars Empire, monumental Martian industrial-government complex, connected red-alloy palace-factory mass, central command spire, enclosed production wings',
+ 8:'Dyson Network, stellar-energy collection and routing complex, connected energy-harvesting megastructure, enclosed ring segments and power-transfer hubs',
+ 9:'Galactic Exchange, interstellar trade and finance hub, connected premium station-complex, central exchange core, docking/logistics wings, cyan-violet accents',
+ 10:'Intergalactic Gateway, deep-space transit gateway complex, massive enclosed portal architecture fused to service structures and energy routing',
+ 11:'Cosmic Foundry, cosmic-scale fabrication facility, dark alloy megaforge, enclosed stellar furnace core, attached fabrication wings and heavy machinery',
+ 12:'Reality Engine, exotic-physics reality-processing machine complex, pearl alloy structure, enclosed luminous containment rings, symmetric shielded process wings',
+ 13:'Transcendent Nexus, apex civilization energy nexus, dark pearl-and-gold connected megastructure, central transcendent core, radial attached systems and prestige crown'
 }
 SHAPE={
- 0:'low rectangular kiosk mass',1:'low chamfered workshop block',2:'broad low hall with twin compact roof housings',
- 3:'long horizontal hall with symmetric side volumes',4:'low wide CNC block with flat ribbed roof',
- 5:'compact square block with protected central core',6:'low horizontal plant with attached exchanger masses',
- 7:'very wide low factory with paired attached side wings',8:'heavy low armored block with broad enclosed press bay',
- 9:'clean low block with symmetric attached wings around central ring',10:'broad block with enclosed circular center and attached radial rooms',
- 11:'wide press-house block with contained internal frame volumes',12:'broad shielded block with enclosed central ring and symmetric attached wings',
- 13:'broad industrial block with four compact attached roof housings'
+ 0:'small low kiosk mass with one canopy and compact rear utility box',
+ 1:'low storefront block with clear front facade and one attached service volume',
+ 2:'broad low workshop hall with one enclosed tooling bay and short roof housing',
+ 3:'long industrial hall with central production spine and attached loading bays',
+ 4:'wide low-to-midrise tech headquarters with central data core and symmetric lab wings',
+ 5:'dense connected urban megablock with several integrated vertical tower masses around one transit core',
+ 6:'connected lunar colony cluster with sealed domes and rectangular habitat/utility masses on one structural base',
+ 7:'broad monumental red-alloy complex with central command mass and paired enclosed production wings',
+ 8:'connected stellar-energy megastructure with central power hub and enclosed ring/collector masses',
+ 9:'premium connected exchange hub with central station block and symmetric logistics/docking wings',
+ 10:'massive gateway frame fused into a broad service complex, one dominant portal opening inside one connected mass',
+ 11:'heavy cosmic foundry block with central furnace core and large attached fabrication wings',
+ 12:'broad shielded reality-engine structure with enclosed central containment ring and symmetric process wings',
+ 13:'radial apex nexus with central core, integrated attached systems and a compact prestige crown'
 }
 TIER={
  0:'starter shell; one storey; one production chamber',
