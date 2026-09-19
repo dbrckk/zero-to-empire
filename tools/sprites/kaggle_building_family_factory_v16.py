@@ -18,12 +18,12 @@ v15=importlib.util.module_from_spec(SPEC); SPEC.loader.exec_module(v15)
 v14=v15.v14
 V15_ANCHOR_SCORE=v15.anchor_score
 
-print('KAGGLE_STARTUP=building-family-flux-v16.6-structural-tier-evolution',flush=True)
+print('KAGGLE_STARTUP=building-family-flux-v16.7-stronger-structural-evolution',flush=True)
 
 # Phase A (T0-T3): preserve massing. Phase B (T4-T6): add detail/attached volumes
 # without the high denoise that caused wave85 to invent a new ground/site plane.
-v14.STRENGTH.update({1:.23,2:.28,3:.33,4:.38,5:.43,6:.48})
-v14.STEPS.update({0:10,1:8,2:8,3:9,4:10,5:11,6:12})
+v14.STRENGTH.update({1:.34,2:.39,3:.44,4:.49,5:.54,6:.59})
+v14.STEPS.update({0:10,1:9,2:9,3:10,4:11,5:12,6:13})
 v14.RETRIES.update({0:5,1:3,2:3,3:3,4:3,5:3,6:3})
 
 FAMILY={
@@ -194,6 +194,6 @@ def v164_live_gate(recs,new_final,new_cov,tier):
 v14.prompts=prompts;v15.prompts=prompts
 v15.anchor_score=v164_anchor_score
 v15.live_gate=v164_live_gate
-v15.ANCHORS=6;v15.BRANCHES=2;v15.CONTEXT_RETRIES=4
+v15.ANCHORS=6;v15.BRANCHES=3;v15.CONTEXT_RETRIES=5
 
 if __name__=='__main__':v15.main()
