@@ -102,6 +102,7 @@ The content is organized as follows:
     sprite-completion-gate.yml
     sprite-production-plan.yml
     sprite-runtime-ci-bridge.yml
+    ter07-energy-conduit-candidate.yml
     unified-asset-pipeline.yml
 .serena/
   project.yml
@@ -337,6 +338,7 @@ tools/
     procedural_fx_factory.py
     procedural_terrain_factory.py
     process_final_sprites.py
+    ter07_energy_conduit_candidate.py
     validate_animation_sheet.py
     validate_runtime_asset.py
   process_final_assets.py
@@ -5999,6 +6001,83 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: gh workflow run android.yml --ref main
+```
+
+## File: .github/workflows/ter07-energy-conduit-candidate.yml
+```yaml
+name: TER-07 Isolated Conduit Candidate
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/sprites/ter07_energy_conduit_candidate.py'
+      - '.github/workflows/ter07-energy-conduit-candidate.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ter07-energy-conduit-candidate
+  cancel-in-progress: true
+
+jobs:
+  candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install deterministic image tooling
+        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
+
+      - name: Author candidate
+        run: python tools/sprites/ter07_energy_conduit_candidate.py
+
+      - name: Technical QA
+        run: |
+          python tools/sprites/build_sprite_contact_sheet.py \
+            --files art/production/ter07/zte_terrain_07_candidate_v2.png \
+            --output art/production/ter07/contact.png \
+            --report art/production/ter07/qa.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('art/production/ter07/qa.json').read_text())
+          rows=d.get('assets',[])
+          if len(rows)!=1 or not rows[0].get('pass'):
+              raise SystemExit('TER-07 candidate failed technical contact-sheet QA')
+          print('TER07_TECHNICAL_QA_PASS=1')
+          PY
+
+      - name: Commit candidate evidence only
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add art/production/ter07/
+          git diff --cached --quiet && exit 0
+          git commit -m 'art: persist TER-07 semantic replacement candidate'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Upload semantic review bundle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ter07-energy-conduit-candidate
+          path: art/production/ter07/
+          if-no-files-found: error
+          retention-days: 30
 ```
 
 ## File: .github/workflows/unified-asset-pipeline.yml
@@ -25442,6 +25521,98 @@ by_stem = {p.stem: p for p in files}
 missing = wanted - by_stem.keys()
 ⋮----
 files = [by_stem[stem] for stem in sorted(wanted)]
+```
+
+## File: tools/sprites/ter07_energy_conduit_candidate.py
+```python
+#!/usr/bin/env python3
+"""Author a candidate-only semantic replacement for TER-07.
+
+TER-07 is an Expansion-era energy conduit connector, not a terrain platform.
+The candidate stays isolated on transparency and is intentionally NOT copied to
+runtime by this script. Semantic review remains required before replacement.
+"""
+⋮----
+ROOT=Path(__file__).resolve().parents[2]
+OUT=ROOT/'art/production/ter07'
+SIDE=1024
+⋮----
+P0=(170,720)
+P1=(854,322)
+⋮----
+def add(p,q)
+⋮----
+def mul(v,s)
+⋮----
+def unit_and_normal(a,b)
+⋮----
+dx=b[0]-a[0];dy=b[1]-a[1]
+n=math.hypot(dx,dy)
+u=(dx/n,dy/n)
+normal=(-u[1],u[0])
+⋮----
+def point_at(t,u)
+⋮----
+def polygon_strip(a,b,half_width)
+⋮----
+def render()
+⋮----
+im=Image.new('RGBA',(SIDE,SIDE),(0,0,0,0))
+glow=Image.new('RGBA',(SIDE,SIDE),(0,0,0,0))
+gd=ImageDraw.Draw(glow,'RGBA')
+d=ImageDraw.Draw(im,'RGBA')
+⋮----
+length=math.hypot(P1[0]-P0[0],P1[1]-P0[1])
+⋮----
+# Restrained cyan under-glow. It follows only the connector, never a tile.
+⋮----
+glow=glow.filter(ImageFilter.GaussianBlur(25))
+⋮----
+# Structural outer housing and inset trench.
+⋮----
+# Two energy rails provide an unmistakable conduit read.
+⋮----
+off=mul(n,18*side)
+a=add(add(P0,mul(u,28)),off)
+b=add(add(P1,mul(u,-28)),off)
+⋮----
+# Attached clamps/brackets. Every detail stays fused to the connector.
+⋮----
+c=point_at(t,u)
+a=add(c,mul(n,-53))
+b=add(c,mul(n,53))
+⋮----
+# Small recessed energy node.
+r=11
+⋮----
+# Compact inline junction block reinforces function without becoming a platform.
+c=point_at(length*.52,u)
+block=[
+⋮----
+inner=[
+⋮----
+# Shared upper-left highlight / lower-right shadow.
+⋮----
+def validate(im)
+⋮----
+a=im.getchannel('A')
+bbox=a.getbbox()
+⋮----
+margin=min(bbox[0],bbox[1],SIDE-bbox[2],SIDE-bbox[3])
+⋮----
+coverage=sum(a.histogram()[8:])/(SIDE*SIDE)
+⋮----
+# Semantic geometry guard: connector should be long/narrow, never a square pad.
+w=bbox[2]-bbox[0];h=bbox[3]-bbox[1]
+aspect=max(w,h)/max(1,min(w,h))
+⋮----
+def main()
+⋮----
+im=render()
+metrics=validate(im)
+png=OUT/'zte_terrain_07_candidate_v2.png'
+⋮----
+report={
 ```
 
 ## File: tools/sprites/validate_animation_sheet.py

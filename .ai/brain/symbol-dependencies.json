@@ -4,5 +4,177 @@
   "scope": "symbols defined in changed source files",
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
-  "symbols": {}
+  "symbols": {
+    "add": {
+      "source": {
+        "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+        "start": 22,
+        "end": 23
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "mul": {
+      "source": {
+        "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+        "start": 25,
+        "end": 26
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "unit_and_normal": {
+      "source": {
+        "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+        "start": 28,
+        "end": 33
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "point_at": {
+      "source": {
+        "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+        "start": 35,
+        "end": 36
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "polygon_strip": {
+      "source": {
+        "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+        "start": 38,
+        "end": 45
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "unit_and_normal",
+          "definitions": [
+            {
+              "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+              "line": 28,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "render": {
+      "source": {
+        "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+        "start": 47,
+        "end": 108
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "add",
+          "definitions": [
+            {
+              "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+              "line": 22,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "mul",
+          "definitions": [
+            {
+              "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+              "line": 25,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "point_at",
+          "definitions": [
+            {
+              "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+              "line": 35,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "polygon_strip",
+          "definitions": [
+            {
+              "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+              "line": 38,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "unit_and_normal",
+          "definitions": [
+            {
+              "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+              "line": 28,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 5
+    },
+    "validate": {
+      "source": {
+        "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+        "start": 110,
+        "end": 130
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "main": {
+      "source": {
+        "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+        "start": 132,
+        "end": 252
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "render",
+          "definitions": [
+            {
+              "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+              "line": 47,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "validate",
+          "definitions": [
+            {
+              "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+              "line": 110,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    }
+  }
 }

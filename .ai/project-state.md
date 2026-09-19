@@ -22,16 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T14:24:37Z
+Generated: 2026-09-19T14:29:24Z
 
 ### Git
 - Branch: `main`
-- Head: `75cef80a4837`
-- Commit date: 2026-09-19T16:24:23+02:00
-- Commit: art: move BLD-04 regeneration from Pollinations to Kaggle (#64)
-- Tracked files: 1317
+- Head: `2bec901c906e`
+- Commit date: 2026-09-19T16:29:10+02:00
+- Commit: art: author isolated TER-07 energy conduit candidate (#66)
+- Tracked files: 1319
 
 ### Recently changed files
+- `.github/workflows/ter07-energy-conduit-candidate.yml`
+- `tools/sprites/ter07_energy_conduit_candidate.py`
 - `art/production/controlled-building-regen-queue.json`
 - `art/production/controlled-character-regen-queue.json`
 - `ops/sprite-wave-trigger.txt`
@@ -41,8 +43,6 @@ Generated: 2026-09-19T14:24:37Z
 - `art/production/semantic-review-controlled-pass-2.md`
 - `tools/sprites/pollinations_building_batch.py`
 - `tools/sprites/pollinations_building_factory.py`
-- `art/incoming/final-sprites/zte_chr_op_walk_final.png`
-- `art/production/pollinations-character-summary.json`
 
 ### Project signals
 - `build.gradle.kts`

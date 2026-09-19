@@ -82,6 +82,7 @@ sprites/
   procedural_fx_factory.py
   procedural_terrain_factory.py
   process_final_sprites.py
+  ter07_energy_conduit_candidate.py
   validate_animation_sheet.py
   validate_runtime_asset.py
 process_final_assets.py
@@ -3571,6 +3572,98 @@ by_stem = {p.stem: p for p in files}
 missing = wanted - by_stem.keys()
 ⋮----
 files = [by_stem[stem] for stem in sorted(wanted)]
+```
+
+## File: sprites/ter07_energy_conduit_candidate.py
+```python
+#!/usr/bin/env python3
+"""Author a candidate-only semantic replacement for TER-07.
+
+TER-07 is an Expansion-era energy conduit connector, not a terrain platform.
+The candidate stays isolated on transparency and is intentionally NOT copied to
+runtime by this script. Semantic review remains required before replacement.
+"""
+⋮----
+ROOT=Path(__file__).resolve().parents[2]
+OUT=ROOT/'art/production/ter07'
+SIDE=1024
+⋮----
+P0=(170,720)
+P1=(854,322)
+⋮----
+def add(p,q)
+⋮----
+def mul(v,s)
+⋮----
+def unit_and_normal(a,b)
+⋮----
+dx=b[0]-a[0];dy=b[1]-a[1]
+n=math.hypot(dx,dy)
+u=(dx/n,dy/n)
+normal=(-u[1],u[0])
+⋮----
+def point_at(t,u)
+⋮----
+def polygon_strip(a,b,half_width)
+⋮----
+def render()
+⋮----
+im=Image.new('RGBA',(SIDE,SIDE),(0,0,0,0))
+glow=Image.new('RGBA',(SIDE,SIDE),(0,0,0,0))
+gd=ImageDraw.Draw(glow,'RGBA')
+d=ImageDraw.Draw(im,'RGBA')
+⋮----
+length=math.hypot(P1[0]-P0[0],P1[1]-P0[1])
+⋮----
+# Restrained cyan under-glow. It follows only the connector, never a tile.
+⋮----
+glow=glow.filter(ImageFilter.GaussianBlur(25))
+⋮----
+# Structural outer housing and inset trench.
+⋮----
+# Two energy rails provide an unmistakable conduit read.
+⋮----
+off=mul(n,18*side)
+a=add(add(P0,mul(u,28)),off)
+b=add(add(P1,mul(u,-28)),off)
+⋮----
+# Attached clamps/brackets. Every detail stays fused to the connector.
+⋮----
+c=point_at(t,u)
+a=add(c,mul(n,-53))
+b=add(c,mul(n,53))
+⋮----
+# Small recessed energy node.
+r=11
+⋮----
+# Compact inline junction block reinforces function without becoming a platform.
+c=point_at(length*.52,u)
+block=[
+⋮----
+inner=[
+⋮----
+# Shared upper-left highlight / lower-right shadow.
+⋮----
+def validate(im)
+⋮----
+a=im.getchannel('A')
+bbox=a.getbbox()
+⋮----
+margin=min(bbox[0],bbox[1],SIDE-bbox[2],SIDE-bbox[3])
+⋮----
+coverage=sum(a.histogram()[8:])/(SIDE*SIDE)
+⋮----
+# Semantic geometry guard: connector should be long/narrow, never a square pad.
+w=bbox[2]-bbox[0];h=bbox[3]-bbox[1]
+aspect=max(w,h)/max(1,min(w,h))
+⋮----
+def main()
+⋮----
+im=render()
+metrics=validate(im)
+png=OUT/'zte_terrain_07_candidate_v2.png'
+⋮----
+report={
 ```
 
 ## File: sprites/validate_animation_sheet.py

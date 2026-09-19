@@ -1,13 +1,15 @@
 # Change impact
 
-Base: d034c3bc2e7c4a97ba60ea449caef9bf359b4088
-Head: 75cef80a4837e2902e6414c656587a16c13ffeae
+Base: 5d257cb04429adc7a8ec80d3cc1c630bd8007d0b
+Head: 2bec901c906e31d8ad649665532f18a824121ba4
 
 ## Changed files
-- M art/production/controlled-building-regen-queue.json
+- A .github/workflows/ter07-energy-conduit-candidate.yml
+- A tools/sprites/ter07_energy_conduit_candidate.py
 
 ## Affected areas
-- art
+- .github
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.
