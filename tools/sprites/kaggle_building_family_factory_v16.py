@@ -18,7 +18,7 @@ v15=importlib.util.module_from_spec(SPEC); SPEC.loader.exec_module(v15)
 v14=v15.v14
 V15_ANCHOR_SCORE=v15.anchor_score
 
-print('KAGGLE_STARTUP=building-family-flux-v16.9-building-only-isolation',flush=True)
+print('KAGGLE_STARTUP=building-family-flux-v16.10-cumulative-evolution-gate',flush=True)
 
 # Phase A (T0-T3): preserve massing. Phase B (T4-T6): add detail/attached volumes
 # without the high denoise that caused wave85 to invent a new ground/site plane.
@@ -196,13 +196,22 @@ def v164_live_gate(recs,new_final,new_cov,tier):
         if ident<floor and not any(r.startswith('adj-iou=') for r in reasons):
             reasons.append(f'footprint-iou={ident:.2f}<{floor:.2f}')
         norm=normalized_silhouette_iou(recs[-1][1],new_final)
+        anchor_norm=normalized_silhouette_iou(recs[0][1],new_final)
         ceiling={1:.975,2:.960,3:.945,4:.935,5:.925,6:.915}[tier]
-        if norm>ceiling:
-            reasons.append(f'normalized-silhouette-iou={norm:.3f}>{ceiling:.3f}: tier is mostly a resize')
+        anchor_ceiling={1:.985,2:.955,3:.925,4:.895,5:.865,6:.835}[tier]
+        # Early tiers must visibly change from the previous tier. Late tiers may
+        # refine an already-evolved silhouette, but only if cumulative departure
+        # from T0 is strong enough. This prevents clone ladders without forcing
+        # every prestige/detail tier to redesign the footprint from scratch.
+        if norm>ceiling and anchor_norm>anchor_ceiling:
+            reasons.append(
+                f'normalized-silhouette-iou={norm:.3f}>{ceiling:.3f} and '
+                f'anchor-iou={anchor_norm:.3f}>{anchor_ceiling:.3f}: insufficient cumulative evolution'
+            )
         halo=alpha_halo_ratio(new_final)
         if halo>.055:
             reasons.append(f'alpha-halo-ratio={halo:.3f}>0.055: probable shadow/site smear')
-        print(f'KAGGLE_STRUCTURAL_EVOLUTION tier={tier} adj_iou={ident:.3f} normalized_iou={norm:.3f} halo={halo:.3f}',flush=True)
+        print(f'KAGGLE_STRUCTURAL_EVOLUTION tier={tier} adj_iou={ident:.3f} normalized_iou={norm:.3f} anchor_iou={anchor_norm:.3f} halo={halo:.3f}',flush=True)
     return (not reasons),reasons
 
 v14.prompts=prompts;v15.prompts=prompts
