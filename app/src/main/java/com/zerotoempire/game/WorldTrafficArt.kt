@@ -128,6 +128,36 @@ internal fun ReviewedWorldTraffic(
     }
 }
 
+internal data class AmbientTrafficMotion(
+    val deltaX: Float,
+    val deltaY: Float,
+    val alpha: Float,
+)
+
+internal fun ambientTrafficMotion(
+    worldFrame: Int,
+    phaseFrames: Int,
+    travelX: Float,
+    travelY: Float,
+    reducedMotion: Boolean,
+): AmbientTrafficMotion {
+    if (reducedMotion || (travelX == 0f && travelY == 0f)) {
+        return AmbientTrafficMotion(0f, 0f, .92f)
+    }
+
+    val cycleFrames = 180
+    val normalizedFrame = Math.floorMod(worldFrame + phaseFrames, cycleFrames)
+    val cycle = normalizedFrame.toFloat() / cycleFrames
+    val centered = cycle - .5f
+    val edgeFade = (min(cycle, 1f - cycle) * 10f).coerceIn(.25f, 1f)
+
+    return AmbientTrafficMotion(
+        deltaX = travelX * centered,
+        deltaY = travelY * centered,
+        alpha = .48f + edgeFade * .50f,
+    )
+}
+
 private data class TrafficSample(
     val x: Float,
     val y: Float,
@@ -139,19 +169,17 @@ private fun trafficSample(
     worldFrame: Int,
     reducedMotion: Boolean,
 ): TrafficSample {
-    if (reducedMotion || (placement.travelX == 0f && placement.travelY == 0f)) {
-        return TrafficSample(placement.x, placement.y, .92f)
-    }
-
-    val cycleFrames = 180
-    val cycle = ((worldFrame + placement.phaseFrames) % cycleFrames).toFloat() / cycleFrames
-    val centered = cycle - .5f
-    val edgeFade = (min(cycle, 1f - cycle) * 10f).coerceIn(.25f, 1f)
-
+    val motion = ambientTrafficMotion(
+        worldFrame = worldFrame,
+        phaseFrames = placement.phaseFrames,
+        travelX = placement.travelX,
+        travelY = placement.travelY,
+        reducedMotion = reducedMotion,
+    )
     return TrafficSample(
-        x = placement.x + placement.travelX * centered,
-        y = placement.y + placement.travelY * centered,
-        alpha = .48f + edgeFade * .50f,
+        x = placement.x + motion.deltaX,
+        y = placement.y + motion.deltaY,
+        alpha = motion.alpha,
     )
 }
 
