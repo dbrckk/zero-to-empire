@@ -1,11 +1,11 @@
 # FINAL AAA SPRITE PROGRESS — Zero → Empire
 
-Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains the canonical 235-item scope. Candidate art is never confused with DONE runtime assets.
+Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains the canonical 236-item scope. Candidate art is never confused with DONE runtime assets.
 
 ## Official progress
-- DONE: **125 / 235**
-- ART VALIDATED: **127 / 235**
-- RUNTIME INTEGRATED: **127 / 235**
+- DONE: **125 / 236**
+- ART VALIDATED: **127 / 236**
+- RUNTIME INTEGRATED: **127 / 236**
 - Generated candidates accepted as DONE: **125**
 - Rule: only runtime-integrated, individually clean/transparent, manifest-matching assets with green Android CI increment DONE.
 
