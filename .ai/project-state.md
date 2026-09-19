@@ -22,36 +22,27 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T14:22:28Z
+Generated: 2026-09-19T14:24:37Z
 
 ### Git
 - Branch: `main`
-- Head: `a9e239ff5fe0`
-- Commit date: 2026-09-19T16:22:13+02:00
-- Commit: art: launch Kaggle identity-anchored Operator wave 1 (#63)
-- Tracked files: 1315
+- Head: `75cef80a4837`
+- Commit date: 2026-09-19T16:24:23+02:00
+- Commit: art: move BLD-04 regeneration from Pollinations to Kaggle (#64)
+- Tracked files: 1317
 
 ### Recently changed files
+- `art/production/controlled-building-regen-queue.json`
 - `art/production/controlled-character-regen-queue.json`
 - `ops/sprite-wave-trigger.txt`
 - `.github/workflows/kaggle-mass-sprite-factory.yml`
 - `kaggle/github_mass_factory.py`
 - `tools/sprites/kaggle_character_sheet_factory_v1.py`
-- `art/production/controlled-building-regen-queue.json`
 - `art/production/semantic-review-controlled-pass-2.md`
 - `tools/sprites/pollinations_building_batch.py`
 - `tools/sprites/pollinations_building_factory.py`
 - `art/incoming/final-sprites/zte_chr_op_walk_final.png`
 - `art/production/pollinations-character-summary.json`
-- `art/incoming/final-sprites/zte_business_04_t0_final.png`
-- `art/incoming/final-sprites/zte_business_04_t1_final.png`
-- `art/incoming/final-sprites/zte_business_04_t2_final.png`
-- `art/incoming/final-sprites/zte_business_04_t3_final.png`
-- `art/incoming/final-sprites/zte_business_04_t4_final.png`
-- `art/incoming/final-sprites/zte_business_04_t5_final.png`
-- `art/incoming/final-sprites/zte_business_04_t6_final.png`
-- `art/production/pollinations-batch-summary.json`
-- `art/production/pollinations-bld-04-t0-contact.png`
 
 ### Project signals
 - `build.gradle.kts`
