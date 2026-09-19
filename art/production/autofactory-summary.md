@@ -5,7 +5,7 @@
 - Awaiting semantic review: **7**
 - Automation-blocked: **0**
 - Current action: **DISPATCH_KAGGLE_BUILDING**
-- Current group: **BLD-04**
+- Current group: **BLD-11**
 
 The autofactory may generate and technically validate candidates automatically,
 but it never promotes a visually unreviewed candidate to strict DONE.
