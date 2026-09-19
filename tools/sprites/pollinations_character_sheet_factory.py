@@ -7,6 +7,7 @@ ROOT=Path(__file__).resolve().parents[2]
 MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
 INCOMING=ROOT/'art/incoming/final-sprites'
 OUT=ROOT/'art/production'
+QUEUE=OUT/'controlled-character-regen-queue.json'
 ROLES={
 'OP':'foundry operator, dark workwear, rust-orange utility accents, gloves',
 'TECH':'industrial technician, graphite coveralls, cyan diagnostic accents, compact tool belt',
@@ -16,17 +17,37 @@ ACTIONS={'IDLE':('idle breathing and subtle look-around',6),'WALK':('walking cyc
 POSES={'IDLE':['neutral','weight left','neutral recovery','weight right','head left','head right'],'WALK':['left contact','left down','passing left','right contact','right down','passing right','left recovery','neutral passing'],'WORK':['tool ready','reach','contact','work low','work center','work high','pull back','inspect','tool down','neutral'],'CARRY':['carry neutral','left step','passing','right step','carry neutral recovery','left step recovery','passing recovery','right step recovery'],'REPAIR':['reach','tool contact','repair low','inspect','tool contact high','adjust','inspect side','tool contact','rise','neutral repair'],'CELEB':['neutral','arm starts up','arm half up','arm raised','small fist pump','arm half down','arm down','neutral recovery']}
 
 def pending():
-    out=[]
+    manifest={}
     for line in MANIFEST.read_text(encoding='utf-8').splitlines():
         if not line.startswith('|') or 'CHR-' not in line or 'app/src/main/res/' not in line: continue
         p=[x.strip() for x in line.split('|')[1:-1]]
-        if len(p)!=5 or p[4].upper()!='TODO': continue
-        aid=p[0]
-        z=aid.split('-')
+        if len(p)!=5: continue
+        aid=p[0]; z=aid.split('-')
         if len(z)!=3 or z[0]!='CHR' or z[1] not in ROLES or z[2] not in ACTIONS: continue
         runtime=p[3].replace(chr(96),'')
-        if not (ROOT/runtime).is_file(): out.append({'id':aid,'role':z[1],'action':z[2],'stem':Path(runtime).stem})
-    return out
+        manifest[aid]={'id':aid,'role':z[1],'action':z[2],'stem':Path(runtime).stem,'status':p[4].upper()}
+
+    if QUEUE.is_file():
+        q=json.loads(QUEUE.read_text(encoding='utf-8'))
+        out=[]
+        for item in q.get('targets',[]):
+            if str(item.get('status','')).upper()!='PENDING': continue
+            aid=str(item.get('id','')).upper()
+            if aid not in manifest: raise RuntimeError('queued character missing from manifest: '+aid)
+            out.append(manifest[aid])
+        if out: return out
+
+    return [x for x in manifest.values() if x['status']=='TODO' and not (ROOT/('app/src/main/res/drawable-nodpi/'+x['stem']+'.webp')).is_file()]
+
+def mark_queue(aid,status,seed=None):
+    if not QUEUE.is_file(): return
+    q=json.loads(QUEUE.read_text(encoding='utf-8'))
+    for item in q.get('targets',[]):
+        if str(item.get('id','')).upper()==aid:
+            item['status']=status
+            if seed is not None: item['seed']=seed
+            break
+    QUEUE.write_text(json.dumps(q,indent=2)+'\n',encoding='utf-8')
 
 def fetch(prompt,seed):
     q=urllib.parse.quote(prompt,safe='')
@@ -111,9 +132,9 @@ def main():
           sheet=Image.new('RGBA',(1024,1024),(0,0,0,0))
           for n,f in enumerate(frames):sheet.alpha_composite(f,((n%4)*256,(n//4)*256))
           p=INCOMING/f"{it['stem']}.png";sheet.save(p,'PNG',optimize=True)
-          rep.append({'id':it['id'],'status':'CANDIDATE','file':p.name,'frames':fc,'qa':why});print(f"POLLINATIONS_CHR_VALIDATED={it['id']} {why}",flush=True);done=True;break
+          mark_queue(it['id'],'CANDIDATE',seed);rep.append({'id':it['id'],'status':'CANDIDATE','file':p.name,'frames':fc,'qa':why});print(f"POLLINATIONS_CHR_VALIDATED={it['id']} {why}",flush=True);done=True;break
         except Exception as e:last=str(e);print(f"POLLINATIONS_CHR_RETRY={it['id']} attempt={att+1} reason={e}",flush=True)
-      if not done:rep.append({'id':it['id'],'status':'REJECT','reason':last})
+      if not done:mark_queue(it['id'],'BLOCKED');rep.append({'id':it['id'],'status':'REJECT','reason':last})
     (OUT/'pollinations-character-summary.json').write_text(json.dumps(rep,indent=2),encoding='utf-8')
     print('POLLINATIONS_CHR_CANDIDATES='+str(sum(x['status']=='CANDIDATE' for x in rep)),flush=True)
 if __name__=='__main__':main()
