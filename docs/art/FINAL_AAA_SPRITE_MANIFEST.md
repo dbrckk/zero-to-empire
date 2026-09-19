@@ -299,14 +299,14 @@ If a new runtime sprite is later required, it must be added here first and the d
 | FX-17 | mastery crown shimmer | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_17_final.webp` | DONE |
 
 ## Progress ledger
-- **DONE: 125 / 236**
+- **DONE: 126 / 236**
 - Buildings: **23 / 98**
 - Power Core: **7 / 7**
 - Characters: **0 / 24**
 - Vehicles: **18 / 18**
 - Machines: **28 / 28**
 - Props: **28 / 28**
-- Terrain/infrastructure: **13 / 14**
+- Terrain/infrastructure: **14 / 14**
 - FX: **8 / 18**
 
 ### Next production target
