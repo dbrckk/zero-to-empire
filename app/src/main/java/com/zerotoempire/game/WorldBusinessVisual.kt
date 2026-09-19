@@ -85,7 +85,7 @@ internal fun WorldBusinessVisual(
             if (WorldSpriteRegistry.masteryForLevel(level)) {
                 MasteryCrownShimmer(modifier = Modifier.fillMaxSize())
             }
-            UpgradeConstructionFlash(trigger = level, modifier = Modifier.fillMaxSize())
+            UpgradeConstructionFlash(level = level, modifier = Modifier.fillMaxSize())
         }
     } else {
         Box(modifier = modifier.size(size)) {
@@ -100,7 +100,7 @@ internal fun WorldBusinessVisual(
                 tier = tier,
                 modifier = Modifier.fillMaxSize()
             )
-            UpgradeConstructionFlash(trigger = level, modifier = Modifier.fillMaxSize())
+            UpgradeConstructionFlash(level = level, modifier = Modifier.fillMaxSize())
         }
     }
 }
