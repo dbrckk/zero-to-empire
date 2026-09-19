@@ -22,28 +22,25 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T18:02:43Z
+Generated: 2026-09-19T18:03:27Z
 
 ### Git
 - Branch: `main`
-- Head: `6ad554169153`
-- Commit date: 2026-09-19T20:02:27+02:00
-- Commit: ci(art): make 235-asset autofactory self-healing (#79)
+- Head: `3d803b73015c`
+- Commit date: 2026-09-19T20:03:14+02:00
+- Commit: art(auto): resume stranded BLD-04 autonomous wave (#80)
 - Tracked files: 1342
 
 ### Recently changed files
+- `art/production/controlled-building-regen-queue.json`
+- `art/production/master-asset-queue.json`
 - `.github/workflows/asset-autofactory.yml`
 - `tools/sprites/asset_wave_orchestrator.py`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
-- `art/production/master-asset-queue.json`
 - `.github/workflows/asset-autofactory-ci.yml`
 - `docs/art/AUTOMATED_ASSET_FACTORY.md`
 - `tools/sprites/asset_queue_utils.py`
-- `art/production/controlled-building-regen-queue.json`
-- `art/production/semantic-review-bld04-kaggle-pass-5.md`
-- `ops/sprite-wave-trigger.txt`
-- `tools/sprites/kaggle_building_family_factory_v16.py`
 
 ### Project signals
 - `build.gradle.kts`

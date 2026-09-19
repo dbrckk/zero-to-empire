@@ -1,15 +1,14 @@
 # Change impact
 
-Base: 0fd868780cf3c92bd5b4f12855a4b2e7621d7b2b
-Head: 6ad554169153256f743dad7ad57d0a7dd996c7e1
+Base: 302b8f6237da111ce699b856e15936a71b1083c7
+Head: 3d803b73015c6806f1d8378e181c8f3691995055
 
 ## Changed files
-- M .github/workflows/asset-autofactory.yml
-- M tools/sprites/asset_wave_orchestrator.py
+- M art/production/controlled-building-regen-queue.json
+- M art/production/master-asset-queue.json
 
 ## Affected areas
-- .github
-- tools
+- art
 
 ## Related test candidates
 - No direct filename-based test match detected.
