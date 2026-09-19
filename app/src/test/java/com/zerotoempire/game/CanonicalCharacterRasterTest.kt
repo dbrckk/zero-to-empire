@@ -21,9 +21,17 @@ class CanonicalCharacterRasterTest {
     }
 
     @Test
-    fun `reviewed idle roles never silently share one sprite`() {
-        val resources = ReviewedCharacterRole.entries.map(::reviewedCharacterIdleRasterRes)
-        assertEquals(ReviewedCharacterRole.entries.size, resources.toSet().size)
+    fun `all reviewed character action sheets resolve to distinct packaged assets`() {
+        val resources = ReviewedCharacterRole.entries.flatMap { role ->
+            ReviewedCharacterAction.entries.map { action ->
+                reviewedCharacterRasterRes(role, action)
+            }
+        }
+        assertEquals(
+            ReviewedCharacterRole.entries.size * ReviewedCharacterAction.entries.size,
+            resources.toSet().size,
+        )
+        resources.forEach { assertNotEquals(0, it) }
     }
 
     @Test
@@ -37,6 +45,22 @@ class CanonicalCharacterRasterTest {
             ReviewedCharacterAction.CELEBRATE to 8,
         )
         assertEquals(expected, ReviewedCharacterAction.entries.associateWith(::reviewedCharacterFrameCount))
+    }
+
+    @Test
+    fun `character atlas contract matches production sheets`() {
+        assertEquals(1024, REVIEWED_CHARACTER_ATLAS_SIDE)
+        assertEquals(256, REVIEWED_CHARACTER_CELL_SIDE)
+        assertEquals(4, REVIEWED_CHARACTER_COLUMNS)
+        assertEquals(4, REVIEWED_CHARACTER_ROWS)
+        assertEquals(
+            REVIEWED_CHARACTER_ATLAS_SIDE,
+            REVIEWED_CHARACTER_CELL_SIDE * REVIEWED_CHARACTER_COLUMNS,
+        )
+        assertEquals(
+            REVIEWED_CHARACTER_ATLAS_SIDE,
+            REVIEWED_CHARACTER_CELL_SIDE * REVIEWED_CHARACTER_ROWS,
+        )
     }
 
     @Test
