@@ -36,6 +36,75 @@ TIER_LANGUAGE={
     6:'mastered ultimate version: same family silhouette lineage at maximum scale and verticality, iconic crown/hero element, richest materials and systems',
 }
 
+
+def fetch_image(prompt:str, seed:int, width:int=1024, height:int=1024):
+    q=urllib.parse.quote(prompt,safe='')
+    url=f'https://image.pollinations.ai/prompt/{q}?model=flux&width={width}&height={height}&seed={int(seed)}&nologo=true&private=true&enhance=false&safe=true'
+    tmp=Path(f'/tmp/pollinations-board-{int(seed)}-{width}x{height}.png')
+    req=urllib.request.Request(url,headers={'User-Agent':'zero-to-empire-github-actions/1.0'})
+    with urllib.request.urlopen(req,timeout=120) as r:
+        data=r.read()
+    if len(data)<10000:
+        raise RuntimeError(f'response too small: {len(data)} bytes')
+    tmp.write_bytes(data)
+    return Image.open(tmp).convert('RGBA')
+
+def generate_family(rows, seed=73117, session=None):
+    if not rows:
+        raise RuntimeError('empty family rows')
+    parsed=[]
+    family=None
+    for row in rows:
+        aid=row[0]
+        m=re.fullmatch(r'BLD-(\d{2})-T(\d)',aid)
+        if not m:
+            raise RuntimeError('bad target '+aid)
+        fam,tier=m.groups()
+        if family is None:
+            family=int(fam)
+        if int(fam)!=family:
+            raise RuntimeError('mixed building families in family-board generation')
+        parsed.append((int(tier),row))
+    parsed.sort(key=lambda x:x[0])
+    identity=FAMILY_IDENTITY.get(family,f'industrial business family {family}')
+    tiers='; '.join(f'T{tier}: {TIER_LANGUAGE[tier]}' for tier,_ in parsed)
+    prompt=(
+        f'AAA premium mobile tycoon game architectural evolution board for ONE canonical family: {identity}. '
+        'Show exactly seven versions of the SAME building lineage in chronological progression T0 through T6. '
+        f'{tiers}. '
+        'Compose a clean 4-column by 2-row contact sheet: first seven cells are T0,T1,T2,T3,T4,T5,T6 in reading order; eighth cell empty. '
+        'Every occupied cell uses the same 34-degree three-quarter orthographic camera, same upper-left warm-neutral key light, same cool fill, same material palette and same core architectural DNA. '
+        'Progression must be strictly monotonic: each next tier is visibly larger, taller, denser, more automated and more prestigious than the previous tier while preserving recognizable base massing. '
+        'Graphite/dark premium structure, restrained cyan and warm amber emissive accents. One connected building per cell only. '
+        'No people, no vehicles, no text, no labels, no numbers, no logos, no detached props, no roads, no scenery, no floor slabs, no floating platforms, no background architecture, no borders. '
+        'Perfectly flat uniform neutral gray behind every cell.'
+    )
+    raw=fetch_image(prompt,seed,1024,1024)
+    outputs=[]
+    for idx,(tier,row) in enumerate(parsed):
+        col=idx%4; r=idx//4
+        crop=raw.crop((col*256,r*512,(col+1)*256,(r+1)*512))
+        isolated=isolate(crop,session=session)
+        aid=row[0]
+        fam=f'{family:02d}'
+        stem=f'zte_business_{fam}_t{tier}_final'
+        INCOMING.mkdir(parents=True,exist_ok=True)
+        out=INCOMING/f'{stem}.png'
+        isolated.save(out,'PNG',optimize=True)
+        report={
+            'provider':'pollinations-anonymous',
+            'target':aid,
+            'seed':int(seed),
+            'generation':'single-family-board',
+            'family':family,
+            'candidate':str(out.relative_to(ROOT))
+        }
+        rp=ROOT/'art/production'/f'pollinations-{aid.lower()}-report.json'
+        rp.write_text(json.dumps(report,indent=2),encoding='utf-8')
+        outputs.append((row,out,report))
+        print('POLLINATIONS_FAMILY_CANDIDATE='+aid+' '+str(out.relative_to(ROOT)))
+    return outputs
+
 def fail(msg):
     print('POLLINATIONS_ERROR='+msg)
     raise SystemExit(1)
