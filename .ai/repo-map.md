@@ -1850,11 +1850,13 @@ jobs:
           # ready dataset can silently feed stale generators/manifest to a new kernel.
           CURRENT_BUNDLE_SHA="$(git rev-parse HEAD:docs/art/FINAL_AAA_SPRITE_MANIFEST.md)-$(git rev-parse HEAD:tools/sprites)-$(git rev-parse HEAD:app/src/main/res/drawable-nodpi 2>/dev/null || echo none)-$(git rev-parse HEAD:art/incoming/final-sprites 2>/dev/null || echo none)-$(git rev-parse HEAD:art/production/controlled-character-regen-queue.json 2>/dev/null || echo none)-$(git rev-parse HEAD:art/production/controlled-building-regen-queue.json 2>/dev/null || echo none)"
           echo "CURRENT_BUNDLE_SHA=$CURRENT_BUNDLE_SHA"
+          BUNDLE_FINGERPRINT="$(printf '%s' "$CURRENT_BUNDLE_SHA" | sha256sum | cut -d' ' -f1)"
+          echo "BUNDLE_FINGERPRINT=$BUNDLE_FINGERPRINT"
           if [ "$STATE" = ready ] && [ "${VERSION:-0}" -ge 4 ]; then
             # Encode the source fingerprint in a tiny marker filename. Listing
             # metadata is enough to verify freshness; no 114 MB bundle download.
             FILES="$(kaggle datasets files "$DATASET" --page-size 200 2>/dev/null || true)"
-            MARKER="bundle-source-${CURRENT_BUNDLE_SHA}.txt"
+            MARKER="bundle-source-${BUNDLE_FINGERPRINT}.txt"
             if printf '%s\n' "$FILES" | grep -Fq "$MARKER"; then
               READY=1
               echo 'KAGGLE_DATASET_REUSE=1'
@@ -1865,14 +1867,13 @@ jobs:
 
           if [ "$READY" != 1 ]; then
             PREV_VERSION="${VERSION:-0}"
-            : > "/tmp/zte-dataset/bundle-source-${CURRENT_BUNDLE_SHA}.txt"
+            : > "/tmp/zte-dataset/bundle-source-${BUNDLE_FINGERPRINT}.txt"
             tar -czf /tmp/zte-dataset/repo_bundle.tar.gz \
               docs/art/FINAL_AAA_SPRITE_MANIFEST.md \
               tools/sprites \
               app/src/main/res/drawable-nodpi \
               art/incoming/final-sprites \
-              art/production/controlled-character-regen-queue.json
-            art/production/controlled-building-regen-queue.json \
+              art/production/controlled-character-regen-queue.json \
               art/production/controlled-building-regen-queue.json
             cat > /tmp/zte-dataset/dataset-metadata.json <<JSON
           {
@@ -2148,6 +2149,7 @@ jobs:
             /tmp/kaggle-output/output/fx-sheet-report.json
             /tmp/kaggle-output/output/candidates/*.png
             art/production/controlled-character-regen-queue.json
+            art/production/controlled-building-regen-queue.json
             /tmp/kaggle-output/*.log
           if-no-files-found: ignore
           retention-days: 90

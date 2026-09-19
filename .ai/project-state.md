@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T14:50:17Z
+Generated: 2026-09-19T14:53:00Z
 
 ### Git
 - Branch: `main`
-- Head: `2750f2def0c4`
-- Commit date: 2026-09-19T16:50:04+02:00
-- Commit: art: restart controlled Kaggle production v2 (#69)
+- Head: `13595f2d65b1`
+- Commit date: 2026-09-19T16:52:44+02:00
+- Commit: ci(art): trigger controlled BLD-04 Kaggle wave
 - Tracked files: 1331
 
 ### Recently changed files
+- `ops/sprite-wave-trigger.txt`
 - `.github/workflows/kaggle-mass-sprite-factory.yml`
 - `art/production/controlled-building-regen-queue.json`
 - `art/production/controlled-character-regen-queue.json`
@@ -48,10 +49,6 @@ Generated: 2026-09-19T14:50:17Z
 - `.github/workflows/promote-ter07-v3.yml`
 - `art/production/ter07/semantic-review-v3.md`
 - `tools/sprites/promote_ter07_v3.py`
-- `art/production/ter07/contact.png`
-- `art/production/ter07/qa.json`
-- `art/production/ter07/report.json`
-- `art/production/ter07/zte_terrain_07_candidate_v3.png`
 
 ### Project signals
 - `build.gradle.kts`
