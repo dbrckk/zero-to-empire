@@ -17,6 +17,7 @@ on:
       - 'gradle/**'
       - '.github/workflows/android.yml'
       - '.github/workflows/production-release.yml'
+      - '.github/workflows/android-emulator-smoke.yml'
   pull_request:
     branches: [ main ]
     paths:
@@ -33,6 +34,7 @@ on:
       - 'gradle/**'
       - '.github/workflows/android.yml'
       - '.github/workflows/production-release.yml'
+      - '.github/workflows/android-emulator-smoke.yml'
   workflow_dispatch:
 
 concurrency:
@@ -193,7 +195,7 @@ jobs:
 
       - name: Upload release AAB
         if: steps.change_scope.outputs.sprite_only != 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: unsigned-release-aab
           path: |
@@ -207,7 +209,7 @@ jobs:
 
       - name: Upload APK
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: debug-apk
           path: app/build/outputs/apk/debug/*.apk
