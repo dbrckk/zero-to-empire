@@ -1,0 +1,70 @@
+name: Promote TER-07 v3 Runtime
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/sprites/promote_ter07_v3.py'
+      - 'art/production/ter07/semantic-review-v3.md'
+      - '.github/workflows/promote-ter07-v3.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: promote-ter07-v3
+  cancel-in-progress: true
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install deterministic image tooling
+        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
+
+      - name: Promote exact reviewed candidate
+        run: python tools/sprites/promote_ter07_v3.py
+
+      - name: Validate canonical runtime
+        run: |
+          python tools/sprites/validate_runtime_asset.py \
+            --asset-id TER-07 \
+            --path app/src/main/res/drawable-nodpi/zte_terrain_07_final.webp \
+            --report art/production/ter07/runtime-qa-v3.json
+
+      - name: Commit runtime and evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add app/src/main/res/drawable-nodpi/zte_terrain_07_final.webp
+          git add art/production/ter07/runtime-promotion-v3.json
+          git add art/production/ter07/runtime-qa-v3.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'art: integrate reviewed TER-07 v3 runtime'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Upload promotion evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ter07-v3-runtime-promotion
+          path: |
+            art/production/ter07/runtime-promotion-v3.json
+            art/production/ter07/runtime-qa-v3.json
+            app/src/main/res/drawable-nodpi/zte_terrain_07_final.webp
+          if-no-files-found: error
+          retention-days: 30
