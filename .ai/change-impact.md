@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 595e07c24f14427476366bcef241a15caa5c298d
-Head: d868c1a77465d1b3ed54b4b5b889e64772fea038
+Base: a3741517b2e2506a7cce855e3ab78621ec1376a3
+Head: d50945d62c1e89e6583a9f7f29bd41c3a8967e8a
 
 ## Changed files
-- M docs/art/FINAL_AAA_SPRITE_PROGRESS.md
+- A .github/workflows/fx-historical-review-evidence.yml
 
 ## Affected areas
-- docs
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

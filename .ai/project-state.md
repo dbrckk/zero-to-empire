@@ -22,28 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T14:56:09Z
+Generated: 2026-09-19T14:57:09Z
 
 ### Git
 - Branch: `main`
-- Head: `d868c1a77465`
-- Commit date: 2026-09-19T16:55:52+02:00
-- Commit: docs(art): align production targets with current reviewed state
-- Tracked files: 1331
+- Head: `d50945d62c1e`
+- Commit date: 2026-09-19T16:56:55+02:00
+- Commit: ci(art): add exact runtime FX review evidence (#72)
+- Tracked files: 1332
 
 ### Recently changed files
+- `.github/workflows/fx-historical-review-evidence.yml`
 - `docs/art/FINAL_AAA_SPRITE_PROGRESS.md`
 - `tools/sprites/kaggle_building_family_factory_v16.py`
 - `ops/sprite-wave-trigger.txt`
 - `.github/workflows/kaggle-mass-sprite-factory.yml`
-- `art/production/controlled-building-regen-queue.json`
-- `art/production/controlled-character-regen-queue.json`
-- `art/production/semantic-review-kaggle-character-pass-3.md`
-- `docs/art/AAA_HISTORICAL_PROMOTION_REVIEW.md`
-- `docs/art/FINAL_AAA_SPRITE_MANIFEST.md`
-- `kaggle/github_mass_factory.py`
-- `tools/sprites/kaggle_building_family_factory_v14.py`
-- `tools/sprites/kaggle_character_sheet_factory_v1.py`
 
 ### Project signals
 - `build.gradle.kts`
