@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       batch_count:
-        description: Strict building candidates to attempt in this run
+        description: Building candidates to attempt in this run
         required: false
         default: '8'
   push:
@@ -15,6 +15,7 @@ on:
       - 'tools/sprites/pollinations_building_factory.py'
       - 'tools/sprites/pollinations_building_batch.py'
       - 'tools/sprites/validate_runtime_asset.py'
+      - 'art/production/controlled-building-regen-queue.json'
       - '.github/workflows/pollinations-building-candidate.yml'
       - 'ops/pollinations-building-trigger.txt'
 
@@ -46,24 +47,38 @@ jobs:
       - name: Sync canonical main
         run: git pull --ff-only origin main
 
-      - name: Check semantic review lock and pending targets
+      - name: Check production queue and semantic review lock
         id: gate
         shell: bash
         run: |
           python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
           from pathlib import Path
+
           review=Path('docs/art/AAA_HISTORICAL_PROMOTION_REVIEW.md').read_text(encoding='utf-8')
           review_open='**Status: OPEN**' in review
-          pending=0
+
+          queue_path=Path('art/production/controlled-building-regen-queue.json')
+          queue_pending=0
+          if queue_path.exists():
+              data=json.loads(queue_path.read_text(encoding='utf-8'))
+              queue_pending=sum(1 for x in data.get('targets',[]) if str(x.get('status','')).upper()=='PENDING')
+
+          todo_pending=0
           for line in Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md').read_text(encoding='utf-8').splitlines():
               if not line.startswith('|') or 'app/src/main/res/' not in line:
                   continue
               cols=[x.strip() for x in line.split('|')[1:-1]]
               if len(cols)==5 and cols[0].startswith('BLD-') and cols[4].upper()=='TODO':
-                  pending += 1
-          should_generate=(not review_open) and pending > 0
+                  todo_pending += 1
+
+          candidate_only=queue_pending > 0
+          should_generate=candidate_only or ((not review_open) and todo_pending > 0)
+
           print(f'review_open={str(review_open).lower()}')
-          print(f'pending_buildings={pending}')
+          print(f'queue_pending={queue_pending}')
+          print(f'todo_pending={todo_pending}')
+          print(f'candidate_only={str(candidate_only).lower()}')
           print(f'should_generate={str(should_generate).lower()}')
           PY
 
@@ -80,6 +95,8 @@ jobs:
 
       - name: Generate and technically validate building batch
         if: steps.gate.outputs.should_generate == 'true'
+        env:
+          POLLINATIONS_CANDIDATE_ONLY: ${{ steps.gate.outputs.candidate_only }}
         run: python -u tools/sprites/pollinations_building_batch.py
 
       - name: Require at least one technical success
@@ -91,13 +108,14 @@ jobs:
           from pathlib import Path
           d=json.loads(Path('art/production/pollinations-batch-summary.json').read_text())
           if not d.get('successes'):
-              raise SystemExit('No strict Pollinations building candidate passed this run')
-          print('STRICT_BATCH_RUNTIME=' + ','.join(x['id'] for x in d['successes']))
+              raise SystemExit('No Pollinations building candidate passed this run')
+          label='STRICT_BATCH_CANDIDATE' if d.get('mode')=='candidate-only' else 'STRICT_BATCH_RUNTIME'
+          print(label + '=' + ','.join(x['id'] for x in d['successes']))
           if d.get('failures'):
               print('STRICT_BATCH_BLOCKED=' + ','.join(x['id'] for x in d['failures']))
           PY
 
-      - name: Commit technically validated RUNTIME sprites
+      - name: Commit validated candidates and evidence
         if: steps.gate.outputs.should_generate == 'true'
         shell: bash
         run: |
@@ -105,6 +123,7 @@ jobs:
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md
+          git add art/production/controlled-building-regen-queue.json
           git add app/src/main/res/drawable-nodpi/
           git add art/incoming/final-sprites/
           git add art/production/pollinations-*.json art/production/pollinations-*.png 2>/dev/null || true
@@ -112,7 +131,11 @@ jobs:
             echo 'No validated changes to commit'
             exit 0
           fi
-          git commit -m 'art: persist double-validated Pollinations building batch'
+          if [ "${{ steps.gate.outputs.candidate_only }}" = "true" ]; then
+            git commit -m 'art: persist controlled Pollinations candidates'
+          else
+            git commit -m 'art: persist double-validated Pollinations runtime batch'
+          fi
           git pull --rebase origin main
           git push
 
