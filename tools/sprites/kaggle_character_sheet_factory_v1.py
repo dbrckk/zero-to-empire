@@ -19,6 +19,7 @@ ROOT=Path(__file__).resolve().parents[2]
 MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
 INCOMING=ROOT/'art/incoming/final-sprites'
 REPORT=Path('/kaggle/working/output/character-sheet-report.json')
+QUEUE=ROOT/'art/production/controlled-character-regen-queue.json'
 FLUX='aniketppanchal/flux.1-schnell-nf4-pkg'
 ROW=re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$")
 CHR=re.compile(r'^CHR-(OP|TECH|LOG|ENG)-(IDLE|WALK|WORK|CARRY|REPAIR|CELEB)$')
@@ -46,15 +47,40 @@ POSE_HINT={
 }
 
 def rows():
- out=[]
+ catalog={}
  for order,line in enumerate(MANIFEST.read_text(encoding='utf-8').splitlines()):
   m=ROW.match(line)
   if not m: continue
   aid,name,desc,runtime,status=[x.strip() for x in m.groups()]
   cm=CHR.fullmatch(aid)
-  if cm and status.upper()=='TODO' and not (ROOT/runtime).is_file():
-   out.append({'id':aid,'stem':Path(runtime).stem,'role':cm.group(1),'action':cm.group(2),'order':order})
- return out
+  if not cm: continue
+  catalog[aid]={
+   'id':aid,
+   'stem':Path(runtime).stem,
+   'role':cm.group(1),
+   'action':cm.group(2),
+   'order':order,
+   'manifest_status':status.upper(),
+   'runtime':runtime,
+  }
+
+ if QUEUE.is_file():
+  q=json.loads(QUEUE.read_text(encoding='utf-8'))
+  controlled=[]
+  for item in q.get('targets',[]):
+   if str(item.get('status','')).upper()!='PENDING_KAGGLE': continue
+   aid=str(item.get('id','')).upper()
+   if aid not in catalog:
+    raise RuntimeError('controlled Kaggle character missing from manifest: '+aid)
+   controlled.append(catalog[aid])
+  if controlled:
+   print('KAGGLE_CHARACTER_CONTROLLED_QUEUE='+','.join(x['id'] for x in controlled),flush=True)
+   return controlled
+
+ return [
+  x for x in catalog.values()
+  if x['manifest_status']=='TODO' and not (ROOT/x['runtime']).is_file()
+ ]
 
 def prompt(i,pose):
  return (f"AAA mobile 2.5D full-body {ROLE[i['role']]}. {ACTION[i['action']][0]}; {pose}. "
