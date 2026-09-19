@@ -18,7 +18,7 @@ v15=importlib.util.module_from_spec(SPEC); SPEC.loader.exec_module(v15)
 v14=v15.v14
 V15_ANCHOR_SCORE=v15.anchor_score
 
-print('KAGGLE_STARTUP=building-family-flux-v16.8-tier-aware-structural-evolution',flush=True)
+print('KAGGLE_STARTUP=building-family-flux-v16.9-building-only-isolation',flush=True)
 
 # Phase A (T0-T3): preserve massing. Phase B (T4-T6): add detail/attached volumes
 # without the high denoise that caused wave85 to invent a new ground/site plane.
@@ -31,7 +31,7 @@ FAMILY={
  1:'Corner Shop, neighborhood retail-production storefront, chamfered graphite facade, enclosed service bay, compact rear utility volume',
  2:'Workshop, mechanical fabrication workshop, broad low steel shell, visible enclosed tooling bay, short exhaust housing and reinforced doors',
  3:'Factory, industrial production plant, long dark hall, enclosed automation spine, attached loading/feeder bays and integrated machinery',
- 4:'Tech Company, futuristic R&D headquarters and production campus, graphite glass-and-alloy shell, central data core, attached lab wings, restrained cyan systems',
+ 4:'Tech Company, one single enclosed futuristic R&D headquarters building, graphite glass-and-alloy shell, central data core, attached lab wings fused directly to the main building, restrained cyan systems; never depict a campus, yard, parking area or surrounding site',
  5:'Megacity, dense futuristic urban-production district represented as one connected megastructure block, stacked towers, transit core, civic-industrial modules',
  6:'Moon Colony, pressurized lunar industrial colony, connected habitat domes and utility blocks, sealed service tunnels, ice-white alloy shell with cyan life-support accents',
  7:'Mars Empire, monumental Martian industrial-government complex, connected red-alloy palace-factory mass, central command spire, enclosed production wings',
@@ -77,8 +77,10 @@ FOOTPRINT=(
  'Its outer edge is flush with the exterior walls and never extends laterally beyond them. '
  'Outside that wall base, the image is perfectly uniform neutral gray with constant RGB value to every edge. '
  'Every tank, pipe, vent, bay and service module is fused to the main architectural mass. '
- 'Show exactly one self-contained factory object, centered with generous gray clearance on all sides. '
- 'No people, vehicles, loose equipment, emitted effects, signage, scenery or secondary objects.'
+ 'Show exactly one self-contained building object, centered with generous gray clearance on all sides. '
+ 'The asset ends at the exterior building walls: no pavement, parking lot, road, yard, plaza, foundation pad, display plinth, surrounding slab, ground plane or cast shadow. '
+ 'No people, vehicles, loose equipment, furniture, crates, tools, emitted effects, signage, scenery or secondary objects. '
+ 'Outside the building wall footprint there must be only perfectly uniform neutral gray background.'
 )
 
 def prompts(i):
@@ -177,6 +179,15 @@ def normalized_silhouette_iou(a,b):
             union += aa or bval
     return inter/max(union,1)
 
+def alpha_halo_ratio(final):
+    """Ratio of low-alpha fringe pixels to solid sprite pixels.
+    Large values usually indicate cast-shadow/site-smear that survived cutout.
+    """
+    a=np.asarray(final.getchannel('A'),dtype=np.uint8)
+    solid=np.count_nonzero(a>=160)
+    fringe=np.count_nonzero((a>=8)&(a<96))
+    return fringe/max(solid,1)
+
 def v164_live_gate(recs,new_final,new_cov,tier):
     ok,reasons=V15_LIVE_GATE(recs,new_final,new_cov,tier)
     if recs:
@@ -188,7 +199,10 @@ def v164_live_gate(recs,new_final,new_cov,tier):
         ceiling={1:.975,2:.960,3:.945,4:.935,5:.925,6:.915}[tier]
         if norm>ceiling:
             reasons.append(f'normalized-silhouette-iou={norm:.3f}>{ceiling:.3f}: tier is mostly a resize')
-        print(f'KAGGLE_STRUCTURAL_EVOLUTION tier={tier} adj_iou={ident:.3f} normalized_iou={norm:.3f}',flush=True)
+        halo=alpha_halo_ratio(new_final)
+        if halo>.055:
+            reasons.append(f'alpha-halo-ratio={halo:.3f}>0.055: probable shadow/site smear')
+        print(f'KAGGLE_STRUCTURAL_EVOLUTION tier={tier} adj_iou={ident:.3f} normalized_iou={norm:.3f} halo={halo:.3f}',flush=True)
     return (not reasons),reasons
 
 v14.prompts=prompts;v15.prompts=prompts
