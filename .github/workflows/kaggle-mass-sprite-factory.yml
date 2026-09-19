@@ -22,7 +22,7 @@ permissions:
 
 concurrency:
   group: kaggle-mass-sprite-factory
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   kaggle:
@@ -35,6 +35,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with: {fetch-depth: 2}
+      - name: Reject stale generator snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main --quiet
+          current="$(git rev-parse HEAD:tools/sprites/kaggle_building_family_factory_v16.py)"
+          latest="$(git rev-parse origin/main:tools/sprites/kaggle_building_family_factory_v16.py)"
+          echo "KAGGLE_GENERATOR_CURRENT=$current"
+          echo "KAGGLE_GENERATOR_LATEST=$latest"
+          if [ "$current" != "$latest" ]; then
+            echo "::error::Stale Kaggle generator snapshot; a newer main generator exists."
+            exit 78
+          fi
+
       - name: Check credentials
         shell: bash
         run: |
