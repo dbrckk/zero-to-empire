@@ -477,6 +477,22 @@ on:
       - 'build.gradle.kts'
       - 'settings.gradle.kts'
       - 'gradle.properties'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/android-emulator-smoke.yml'
+      - 'ops/android-emulator-smoke-trigger.txt'
+      - 'tools/android/emulator_functional_smoke.sh'
+      - 'tools/android/ui_dump_retry.sh'
+      - 'tools/android/test_ui_dump_retry.py'
+      - 'tools/android/ui_economy_probe.py'
+      - 'tools/android/test_ui_economy_probe.py'
+      - 'tools/android/ui_click_target.py'
+      - 'tools/android/test_ui_click_target.py'
+      - 'app/**'
+      - 'build.gradle.kts'
+      - 'settings.gradle.kts'
+      - 'gradle.properties'
 
 permissions:
   contents: read
@@ -490,14 +506,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
-      - uses: actions/setup-java@v5
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
         with:
           distribution: temurin
           java-version: '17'
 
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
         with:
           gradle-version: '8.13'
 
@@ -517,7 +533,7 @@ jobs:
           sudo udevadm trigger --name-match=kvm
 
       - name: Emulator install and launch smoke
-        uses: reactivecircus/android-emulator-runner@v2
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2
         with:
           api-level: 35
           target: google_apis
@@ -529,7 +545,7 @@ jobs:
 
       - name: Upload smoke evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: android-emulator-smoke-evidence
           path: |
@@ -553,6 +569,20 @@ on:
       - 'marketing/privacy-policy.md'
       - 'marketing/data-safety.md'
       - 'marketing/play-store-listing.md'
+      - 'build.gradle.kts'
+      - 'settings.gradle.kts'
+      - 'gradle.properties'
+      - 'gradle/**'
+      - '.github/workflows/android.yml'
+      - '.github/workflows/production-release.yml'
+      - '.github/workflows/android-emulator-smoke.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'app/**'
+      - 'art/production/**'
+      - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
+      - 'tools/android/**'
       - 'marketing/privacy-policy.md'
       - 'marketing/data-safety.md'
       - 'marketing/play-store-listing.md'
@@ -561,18 +591,8 @@ on:
       - 'gradle.properties'
       - 'gradle/**'
       - '.github/workflows/android.yml'
-  pull_request:
-    branches: [ main ]
-    paths:
-      - 'app/**'
-      - 'art/production/**'
-      - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
-      - 'tools/android/**'
-      - 'build.gradle.kts'
-      - 'settings.gradle.kts'
-      - 'gradle.properties'
-      - 'gradle/**'
-      - '.github/workflows/android.yml'
+      - '.github/workflows/production-release.yml'
+      - '.github/workflows/android-emulator-smoke.yml'
   workflow_dispatch:
 
 concurrency:
@@ -733,7 +753,7 @@ jobs:
 
       - name: Upload release AAB
         if: steps.change_scope.outputs.sprite_only != 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: unsigned-release-aab
           path: |
@@ -747,7 +767,7 @@ jobs:
 
       - name: Upload APK
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: debug-apk
           path: app/build/outputs/apk/debug/*.apk
@@ -3043,17 +3063,20 @@ jobs:
       ZERO_EMPIRE_KEY_ALIAS: ${{ secrets.ZERO_EMPIRE_KEY_ALIAS }}
       ZERO_EMPIRE_KEY_PASSWORD: ${{ secrets.ZERO_EMPIRE_KEY_PASSWORD }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Validate Android manifest policy
+        run: python3 tools/android/validate_manifest_policy.py
 
       - name: Validate release privacy and Data Safety
         run: python3 tools/android/validate_release_privacy.py
 
-      - uses: actions/setup-java@v5
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
         with:
           distribution: temurin
           java-version: '17'
 
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
         with:
           gradle-version: '8.13'
 
@@ -3125,19 +3148,44 @@ jobs:
           grep -Fq "base/dex/classes.dex" production-aab-contents.txt
           grep -Fq "BundleConfig.pb" production-aab-contents.txt
           sha256sum "$AAB" | tee production-aab.sha256
+
+          EXPECTED_CERT_SHA256="$(
+            keytool -list -v \
+              -keystore "$ZERO_EMPIRE_KEYSTORE_PATH" \
+              -storepass "$ZERO_EMPIRE_KEYSTORE_PASSWORD" \
+              -alias "$ZERO_EMPIRE_KEY_ALIAS" \
+              | sed -n 's/^[[:space:]]*SHA256: //p' \
+              | head -n 1
+          )"
+          ACTUAL_CERT_SHA256="$(
+            keytool -printcert -jarfile "$AAB" \
+              | sed -n 's/^[[:space:]]*SHA256: //p' \
+              | head -n 1
+          )"
+          test -n "$EXPECTED_CERT_SHA256"
+          test -n "$ACTUAL_CERT_SHA256"
+          if [ "$ACTUAL_CERT_SHA256" != "$EXPECTED_CERT_SHA256" ]; then
+            echo "::error::AAB signer certificate does not match the configured upload key"
+            exit 1
+          fi
+          jarsigner -verify "$AAB" | tee production-signature-validation.txt
+          grep -Fq "jar verified." production-signature-validation.txt
+          printf 'upload_cert_sha256=%s\n' "$ACTUAL_CERT_SHA256" >> production-signature-validation.txt
+
           MAPPING="app/build/outputs/mapping/release/mapping.txt"
           test -s "$MAPPING" || { echo "::error::R8 mapping.txt missing from minified production build"; exit 1; }
           sha256sum "$MAPPING" | tee production-mapping.sha256
           echo "PRODUCTION_RELEASE_GATE_PASS=1" | tee production-release-validation.txt
 
       - name: Upload signed production bundle
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: zero-to-empire-production-${{ inputs.version_name }}-${{ inputs.version_code }}
           path: |
             app/build/outputs/bundle/release/app-release.aab
             production-aab.sha256
             production-aab-contents.txt
+            production-signature-validation.txt
             app/build/outputs/mapping/release/mapping.txt
             production-mapping.sha256
             production-release-metadata.txt

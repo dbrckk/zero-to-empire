@@ -1,17 +1,14 @@
 # CI status
 
-Summary: 2 success / 5 failure / 0 active
+Summary: 2 success / 0 failure / 2 active
 
-- Pollinations Character Atlas: completed / failure (12160658)
-- Pollinations Building Candidate: completed / failure (12160658)
-- Manifest Static GPU Batch: completed / success (12160658)
-- Kaggle Mass Sprite Factory: completed / failure (12160658)
-- Pollinations Character Atlas: completed / failure (12160658)
-- Pollinations Building Candidate: completed / failure (12160658)
-- Manifest Static GPU Batch: completed / success (12160658)
-
-## Latest failed run structure
-- Job: generate
-  - Failed step: Double validate, finalize and mark DONE
+- Android Emulator Smoke: in_progress / pending (32eed67f)
+- Android CI: in_progress / pending (32eed67f)
+- Reconcile reviewed run 25: completed / skipped (947ddada)
+- Reconcile reviewed run 25: completed / skipped (947ddada)
+- Reconcile reviewed run 25: completed / skipped (947ddada)
+- Android Emulator Smoke: completed / success (dfaf5e5f)
+- Android CI: completed / success (dfaf5e5f)
+- Reconcile reviewed run 25: completed / skipped (947ddada)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

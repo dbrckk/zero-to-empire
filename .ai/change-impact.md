@@ -1,13 +1,15 @@
 # Change impact
 
-Base: f4f423ba888981f349df16ae3954af2b14651251
-Head: f59aceb9d7d6e50a38481ad5e8d3e2e1d1121763
+Base: 947ddada00e09ed8514702fe60f2e39cfd457dc7
+Head: 32eed67f8697d705608ca3973e2a5464214eea9c
 
 ## Changed files
-- M .repo-standards.yml
+- M .github/workflows/android-emulator-smoke.yml
+- M .github/workflows/android.yml
+- M .github/workflows/production-release.yml
 
 ## Affected areas
-- (root)
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

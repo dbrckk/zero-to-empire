@@ -22,16 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T07:38:28Z
+Generated: 2026-09-19T10:05:10Z
 
 ### Git
 - Branch: `main`
-- Head: `f59aceb9d7d6`
-- Commit date: 2026-09-19T09:37:26+02:00
-- Commit: chore(ai): adopt stable repo standards v20
-- Tracked files: 1286
+- Head: `32eed67f8697`
+- Commit date: 2026-09-19T12:04:55+02:00
+- Commit: ci(release): harden production gate and PR coverage (#47)
+- Tracked files: 1287
 
 ### Recently changed files
+- `.github/workflows/android-emulator-smoke.yml`
+- `.github/workflows/android.yml`
+- `.github/workflows/production-release.yml`
 - `.repo-standards.yml`
 
 ### Project signals
