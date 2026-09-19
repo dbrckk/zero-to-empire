@@ -1,0 +1,91 @@
+name: Asset Autofactory
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 * * * *'
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: asset-autofactory
+  cancel-in-progress: false
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      action: ${{ steps.plan.outputs.action }}
+      lane: ${{ steps.plan.outputs.lane }}
+      assets: ${{ steps.plan.outputs.assets }}
+      family: ${{ steps.plan.outputs.family }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - id: plan
+        name: Plan next safe wave
+        run: python tools/sprites/asset_wave_orchestrator.py --github-output
+      - name: Persist planner snapshot
+        run: python tools/sprites/asset_wave_orchestrator.py > /tmp/asset-autofactory-plan.json
+      - uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4
+        with:
+          name: asset-autofactory-plan
+          path: /tmp/asset-autofactory-plan.json
+          retention-days: 14
+
+  dispatch:
+    needs: plan
+    if: needs.plan.outputs.action == 'QUEUE'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Mark wave in progress
+        env:
+          ASSETS: ${{ needs.plan.outputs.assets }}
+        run: python tools/sprites/asset_queue_utils.py --assets "$ASSETS" --status IN_PROGRESS --increment-attempts
+      - name: Commit queue state
+        env:
+          ASSETS: ${{ needs.plan.outputs.assets }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add art/production/master-asset-queue.json
+          git commit -m "art(auto): start asset wave $ASSETS"
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Dispatch supported production lane
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LANE: ${{ needs.plan.outputs.lane }}
+        run: |
+          case "$LANE" in
+            building-family)
+              gh workflow run kaggle-mass-sprite-factory.yml
+              ;;
+            character-atlas)
+              gh workflow run pollinations-character-atlas.yml
+              ;;
+            terrain)
+              gh workflow run procedural-terrain-batch.yml
+              ;;
+            fx)
+              gh workflow run final-aaa-assets.yml
+              ;;
+            static)
+              echo "Static lane requires review-safe provider dispatch; leaving IN_PROGRESS evidence for next reconciliation."
+              ;;
+            machine)
+              echo "Machine lane requires animation-aware dispatch; leaving IN_PROGRESS evidence for next reconciliation."
+              ;;
+            *)
+              echo "Unsupported lane: $LANE"; exit 1
+              ;;
+          esac
+
+  target:
+    needs: plan
+    if: needs.plan.outputs.action == 'STOP'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Asset autofactory stopped safely. Target reached or no eligible automatic work remains."
