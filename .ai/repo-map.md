@@ -24593,6 +24593,15 @@ pa,pb=ca.load(),cb.load(); inter=union=0
 ⋮----
 aa=pa[x,y]>0; bval=pb[x,y]>0
 ⋮----
+def alpha_halo_ratio(final)
+⋮----
+"""Ratio of low-alpha fringe pixels to solid sprite pixels.
+    Large values usually indicate cast-shadow/site-smear that survived cutout.
+    """
+a=np.asarray(final.getchannel('A'),dtype=np.uint8)
+solid=np.count_nonzero(a>=160)
+fringe=np.count_nonzero((a>=8)&(a<96))
+⋮----
 def v164_live_gate(recs,new_final,new_cov,tier)
 ⋮----
 ident=v14.iou(recs[-1][1],new_final)
@@ -24600,6 +24609,8 @@ floor={1:.45,2:.42,3:.39,4:.36,5:.34,6:.32}[tier]
 ⋮----
 norm=normalized_silhouette_iou(recs[-1][1],new_final)
 ceiling={1:.975,2:.960,3:.945,4:.935,5:.925,6:.915}[tier]
+⋮----
+halo=alpha_halo_ratio(new_final)
 ```
 
 ## File: tools/sprites/kaggle_building_family_factory.py
