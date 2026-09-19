@@ -3,7 +3,7 @@ name: Asset Autofactory 235
 on:
   workflow_dispatch:
   schedule:
-    - cron: '*/30 * * * *'
+    - cron: '*/15 * * * *'
   workflow_run:
     workflows:
       - 'Kaggle Mass Sprite Factory'
@@ -89,6 +89,7 @@ jobs:
           fi
 
       - name: Dispatch chosen producer
+        id: dispatch
         shell: bash
         run: |
           set -euo pipefail
