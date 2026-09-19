@@ -1667,7 +1667,7 @@ p=INCOMING/f"{i['stem']}.png"; final.save(p,'PNG',optimize=True); accepted.appen
 #!/usr/bin/env python3
 """FLUX building-family factory v14: short prompts + monotonic tier envelopes."""
 ⋮----
-ROOT=Path(__file__).resolve().parents[2]; MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'; INCOMING=ROOT/'art/incoming/final-sprites'
+ROOT=Path(__file__).resolve().parents[2]; MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'; INCOMING=ROOT/'art/incoming/final-sprites'; BUILD_QUEUE=ROOT/'art/production/controlled-building-regen-queue.json'
 FLUX='aniketppanchal/flux.1-schnell-nf4-pkg'; ROW=re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$"); BLD=re.compile(r'^BLD-(\d{2})-T([0-6])$')
 DNA={0:'micro foundry kiosk, rust steel, amber furnace',1:'fabrication shop, chamfered storefront, loading bay',2:'furnace works, steel shell, twin stacks',3:'assembly hub, dark hall, robotic spine, feeder bays',4:'precision factory, graphite shell, CNC bays',5:'energy-cell works, square alloy shell, amber core',6:'coolant plant, silver graphite shell, cyan pipes',7:'automation works, wide tech factory, twin gantries',8:'heavy forge, armored base, warm forge core',9:'nanofab complex, pearl graphite block, cyan ring',10:'orbital works, dark alloy base, circular cradle',11:'actuator works, press house, articulated frames',12:'phase foundry, pearl alloy base, containment ring',13:'stellar works, dark pearl base, four-part crown'}
 TIER={0:'tiny one-storey starter; no tower or crane',1:'small reinforced upgrade; one attached module',2:'medium industrial upgrade; wider footprint',3:'large automated upgrade; compact central tower',4:'advanced upgrade; two attached wings',5:'megastructure; large upper assembly',6:'ultimate; tall prestige crown and heroic machinery'}
@@ -1675,9 +1675,15 @@ PRIORITY=(13,5,8,9,10,12,11,4,6,7,3,0,1,2); STRENGTH={1:.34,2:.42,3:.50,4:.58,5:
 ENV={0:(.50,.44),1:(.56,.50),2:(.62,.56),3:(.68,.62),4:(.74,.68),5:(.80,.74),6:(.84,.80)}
 def rows()
 ⋮----
+catalog={}
+⋮----
 m=ROW.match(line)
 ⋮----
 aid,_,_,runtime,status=[x.strip() for x in m.groups()]; bm=BLD.fullmatch(aid)
+⋮----
+q=json.loads(BUILD_QUEUE.read_text(encoding='utf-8')); controlled=[]
+⋮----
+aid=str(item.get('id','')).upper()
 ⋮----
 def select(items,count)
 ⋮----
@@ -2218,6 +2224,9 @@ m=isolate(raw);a=m.getchannel('A');bb=a.getbbox()
 w,h=m.size;pad=max(8,w//40)
 ⋮----
 crop=m.crop(bb);cw,ch=crop.size
+⋮----
+# Two side-by-side people produce an abnormally wide full-body silhouette.
+# Reject before resizing so technical QA cannot normalize a multi-person frame into a valid-looking cell.
 ⋮----
 scale=min(176/cw,218/ch); crop=crop.resize((max(1,round(cw*scale)),max(1,round(ch*scale))),Image.Resampling.LANCZOS)
 cell=Image.new('RGBA',(256,256));x=(256-crop.width)//2;y=238-crop.height;cell.alpha_composite(crop,(x,y))

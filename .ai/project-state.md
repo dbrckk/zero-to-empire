@@ -22,28 +22,36 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T14:35:06Z
+Generated: 2026-09-19T14:50:17Z
 
 ### Git
 - Branch: `main`
-- Head: `1e9a12dbb80a`
-- Commit date: 2026-09-19T16:34:53+02:00
-- Commit: art: promote reviewed TER-07 v3 to runtime (#68)
-- Tracked files: 1328
+- Head: `2750f2def0c4`
+- Commit date: 2026-09-19T16:50:04+02:00
+- Commit: art: restart controlled Kaggle production v2 (#69)
+- Tracked files: 1331
 
 ### Recently changed files
+- `.github/workflows/kaggle-mass-sprite-factory.yml`
+- `art/production/controlled-building-regen-queue.json`
+- `art/production/controlled-character-regen-queue.json`
+- `art/production/semantic-review-kaggle-character-pass-3.md`
+- `docs/art/AAA_HISTORICAL_PROMOTION_REVIEW.md`
+- `docs/art/FINAL_AAA_SPRITE_MANIFEST.md`
+- `docs/art/FINAL_AAA_SPRITE_PROGRESS.md`
+- `kaggle/github_mass_factory.py`
+- `tools/sprites/kaggle_building_family_factory_v14.py`
+- `tools/sprites/kaggle_character_sheet_factory_v1.py`
+- `app/src/main/res/drawable-nodpi/zte_terrain_07_final.webp`
+- `art/production/ter07/runtime-promotion-v3.json`
+- `art/production/ter07/runtime-qa-v3.json`
 - `.github/workflows/promote-ter07-v3.yml`
 - `art/production/ter07/semantic-review-v3.md`
 - `tools/sprites/promote_ter07_v3.py`
-- `art/production/controlled-character-regen-queue.json`
 - `art/production/ter07/contact.png`
 - `art/production/ter07/qa.json`
 - `art/production/ter07/report.json`
 - `art/production/ter07/zte_terrain_07_candidate_v3.png`
-- `.github/workflows/ter07-energy-conduit-candidate.yml`
-- `art/production/ter07/semantic-review-v2.md`
-- `tools/sprites/ter07_energy_conduit_candidate.py`
-- `art/production/ter07/zte_terrain_07_candidate_v2.png`
 
 ### Project signals
 - `build.gradle.kts`

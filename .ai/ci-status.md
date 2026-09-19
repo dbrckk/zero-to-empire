@@ -1,14 +1,18 @@
 # CI status
 
-Summary: 2 success / 0 failure / 5 active
+Summary: 0 success / 1 failure / 7 active
 
-- Promote TER-07 v3 Runtime: in_progress / pending (1e9a12db)
-- Android CI: pending / pending (1e9a12db)
-- Android CI: in_progress / pending (d69befed)
-- Android CI: in_progress / pending (09041fbf)
-- TER-07 Isolated Conduit Candidate: completed / success (09041fbf)
-- Manifest Static GPU Batch: completed / success (40ce52d8)
-- Android CI: in_progress / pending (bb1028ba)
-- Reconcile reviewed run 25: completed / skipped (17bf3fb5)
+- Kaggle Mass Sprite Factory: pending / pending (2750f2de)
+- Pollinations Character Atlas: in_progress / pending (2750f2de)
+- Android CI: in_progress / pending (2750f2de)
+- Sprite Completion Gate: in_progress / pending (2750f2de)
+- Asset Pipeline CI: in_progress / pending (2750f2de)
+- Pollinations Building Candidate: in_progress / pending (2750f2de)
+- Sprite Production Plan: completed / failure (2750f2de)
+- Reconcile Sprite Progress Ledger: in_progress / pending (2750f2de)
+
+## Latest failed run structure
+- Job: plan
+  - Failed step: Build deterministic production lanes
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

@@ -1848,7 +1848,7 @@ jobs:
           # Reuse only when the published bundle fingerprint matches the current
           # sprite source tree. Version number alone is not sufficient: an older
           # ready dataset can silently feed stale generators/manifest to a new kernel.
-          CURRENT_BUNDLE_SHA="$(git rev-parse HEAD:docs/art/FINAL_AAA_SPRITE_MANIFEST.md)-$(git rev-parse HEAD:tools/sprites)-$(git rev-parse HEAD:app/src/main/res/drawable-nodpi 2>/dev/null || echo none)-$(git rev-parse HEAD:art/incoming/final-sprites 2>/dev/null || echo none)-$(git rev-parse HEAD:art/production/controlled-character-regen-queue.json 2>/dev/null || echo none)"
+          CURRENT_BUNDLE_SHA="$(git rev-parse HEAD:docs/art/FINAL_AAA_SPRITE_MANIFEST.md)-$(git rev-parse HEAD:tools/sprites)-$(git rev-parse HEAD:app/src/main/res/drawable-nodpi 2>/dev/null || echo none)-$(git rev-parse HEAD:art/incoming/final-sprites 2>/dev/null || echo none)-$(git rev-parse HEAD:art/production/controlled-character-regen-queue.json 2>/dev/null || echo none)-$(git rev-parse HEAD:art/production/controlled-building-regen-queue.json 2>/dev/null || echo none)"
           echo "CURRENT_BUNDLE_SHA=$CURRENT_BUNDLE_SHA"
           if [ "$STATE" = ready ] && [ "${VERSION:-0}" -ge 4 ]; then
             # Encode the source fingerprint in a tiny marker filename. Listing
@@ -1872,6 +1872,8 @@ jobs:
               app/src/main/res/drawable-nodpi \
               art/incoming/final-sprites \
               art/production/controlled-character-regen-queue.json
+            art/production/controlled-building-regen-queue.json \
+              art/production/controlled-building-regen-queue.json
             cat > /tmp/zte-dataset/dataset-metadata.json <<JSON
           {
             "title": "Zero to Empire Sprite Bundle",
@@ -2006,6 +2008,62 @@ jobs:
               ))
           print(f"KAGGLE_STRICT_QA_PASS={len(rows)}")
           PY
+      - name: Mark controlled building candidates awaiting semantic review
+        if: success()
+        shell: bash
+        env:
+          KAGGLE_RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+
+          generated=Path('/tmp/kaggle-output/output/generated-targets.json')
+          queue=Path('art/production/controlled-building-regen-queue.json')
+          manifest=Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
+          if not generated.is_file() or not queue.is_file():
+              print('CONTROLLED_BUILDING_STATE_SKIP=missing-files')
+              raise SystemExit(0)
+
+          g=json.loads(generated.read_text(encoding='utf-8'))
+          if g.get('lane')!='CONTROLLED_BUILDING_FAMILY':
+              print('CONTROLLED_BUILDING_STATE_SKIP=other-lane')
+              raise SystemExit(0)
+
+          stems={Path(x['file']).stem for x in g.get('targets',[]) if x.get('file')}
+          stem_to_id={}
+          for line in manifest.read_text(encoding='utf-8').splitlines():
+              if not line.startswith('|') or 'BLD-' not in line or 'app/src/main/res/' not in line:
+                  continue
+              cols=[x.strip() for x in line.split('|')[1:-1]]
+              if len(cols)!=5:
+                  continue
+              stem_to_id[Path(cols[3].replace(chr(96),'')).stem]=cols[0]
+
+          produced={stem_to_id[s] for s in stems if s in stem_to_id}
+          q=json.loads(queue.read_text(encoding='utf-8'))
+          changed=0
+          for item in q.get('targets',[]):
+              aid=str(item.get('id','')).upper()
+              if aid in produced and str(item.get('status','')).upper()=='PENDING_KAGGLE':
+                  item['status']='AWAITING_REVIEW'
+                  item['kaggle_run_id']=int(os.environ['KAGGLE_RUN_ID'])
+                  changed+=1
+          queue.write_text(json.dumps(q,indent=2)+'\n',encoding='utf-8')
+          print(f'CONTROLLED_BUILDING_AWAITING_REVIEW={changed}')
+          PY
+
+          if git diff --quiet -- art/production/controlled-building-regen-queue.json; then
+            exit 0
+          fi
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add art/production/controlled-building-regen-queue.json
+          git commit -m 'art: mark Kaggle building candidates awaiting review'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
       - name: Mark controlled character candidates awaiting semantic review
         if: success()
         shell: bash
@@ -23691,7 +23749,7 @@ p=INCOMING/f"{i['stem']}.png"; final.save(p,'PNG',optimize=True); accepted.appen
 #!/usr/bin/env python3
 """FLUX building-family factory v14: short prompts + monotonic tier envelopes."""
 ⋮----
-ROOT=Path(__file__).resolve().parents[2]; MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'; INCOMING=ROOT/'art/incoming/final-sprites'
+ROOT=Path(__file__).resolve().parents[2]; MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'; INCOMING=ROOT/'art/incoming/final-sprites'; BUILD_QUEUE=ROOT/'art/production/controlled-building-regen-queue.json'
 FLUX='aniketppanchal/flux.1-schnell-nf4-pkg'; ROW=re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$"); BLD=re.compile(r'^BLD-(\d{2})-T([0-6])$')
 DNA={0:'micro foundry kiosk, rust steel, amber furnace',1:'fabrication shop, chamfered storefront, loading bay',2:'furnace works, steel shell, twin stacks',3:'assembly hub, dark hall, robotic spine, feeder bays',4:'precision factory, graphite shell, CNC bays',5:'energy-cell works, square alloy shell, amber core',6:'coolant plant, silver graphite shell, cyan pipes',7:'automation works, wide tech factory, twin gantries',8:'heavy forge, armored base, warm forge core',9:'nanofab complex, pearl graphite block, cyan ring',10:'orbital works, dark alloy base, circular cradle',11:'actuator works, press house, articulated frames',12:'phase foundry, pearl alloy base, containment ring',13:'stellar works, dark pearl base, four-part crown'}
 TIER={0:'tiny one-storey starter; no tower or crane',1:'small reinforced upgrade; one attached module',2:'medium industrial upgrade; wider footprint',3:'large automated upgrade; compact central tower',4:'advanced upgrade; two attached wings',5:'megastructure; large upper assembly',6:'ultimate; tall prestige crown and heroic machinery'}
@@ -23699,9 +23757,15 @@ PRIORITY=(13,5,8,9,10,12,11,4,6,7,3,0,1,2); STRENGTH={1:.34,2:.42,3:.50,4:.58,5:
 ENV={0:(.50,.44),1:(.56,.50),2:(.62,.56),3:(.68,.62),4:(.74,.68),5:(.80,.74),6:(.84,.80)}
 def rows()
 ⋮----
+catalog={}
+⋮----
 m=ROW.match(line)
 ⋮----
 aid,_,_,runtime,status=[x.strip() for x in m.groups()]; bm=BLD.fullmatch(aid)
+⋮----
+q=json.loads(BUILD_QUEUE.read_text(encoding='utf-8')); controlled=[]
+⋮----
+aid=str(item.get('id','')).upper()
 ⋮----
 def select(items,count)
 ⋮----
@@ -24242,6 +24306,9 @@ m=isolate(raw);a=m.getchannel('A');bb=a.getbbox()
 w,h=m.size;pad=max(8,w//40)
 ⋮----
 crop=m.crop(bb);cw,ch=crop.size
+⋮----
+# Two side-by-side people produce an abnormally wide full-body silhouette.
+# Reject before resizing so technical QA cannot normalize a multi-person frame into a valid-looking cell.
 ⋮----
 scale=min(176/cw,218/ch); crop=crop.resize((max(1,round(cw*scale)),max(1,round(ch*scale))),Image.Resampling.LANCZOS)
 cell=Image.new('RGBA',(256,256));x=(256-crop.width)//2;y=238-crop.height;cell.alpha_composite(crop,(x,y))

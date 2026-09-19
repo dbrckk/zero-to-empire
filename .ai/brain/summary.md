@@ -2,10 +2,10 @@
 
 - Index mode: incremental
 - Files indexed: 202
-- Files reparsed this run: 1
-- Symbols: 953
+- Files reparsed this run: 3
+- Symbols: 955
 - Internal import edges: 3
-- Impacted files: 1
+- Impacted files: 3
 - Selected tests: 0
 
 ## Languages
@@ -29,10 +29,10 @@
 - app/src/main/java/com/zerotoempire/game/PremiumSfx.kt: 13 symbols
 - app/src/main/java/com/zerotoempire/game/Analytics.kt: 12 symbols
 - app/src/test/java/com/zerotoempire/game/PurchaseRecoveryTest.kt: 12 symbols
+- kaggle/github_mass_factory.py: 12 symbols
 - tools/sprites/kaggle_character_sheet_factory_v1.py: 12 symbols
 - app/src/main/java/com/zerotoempire/game/Challenges.kt: 11 symbols
 - tools/sprites/kaggle_sprite_factory.py: 11 symbols
-- tools/sprites/ter07_energy_conduit_candidate.py: 11 symbols
 
 ## Agent routing
 - Read impact.json first after project/change context.
@@ -43,9 +43,9 @@
 ## ast-grep enrichment
 - ast-grep outline: available
 - AST index mode: incremental
-- AST files reparsed this run: 1
+- AST files reparsed this run: 3
 - outline files retained: 208
-- top-level items retained: 2829
+- top-level items retained: 2835
 - direct members retained: 678
 - symbol shards: 26
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard
