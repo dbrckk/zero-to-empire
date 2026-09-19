@@ -1,13 +1,14 @@
 # Change impact
 
-Base: 1b26f71b81e975a267511fdfcfac32fcff0a6c93
-Head: c4642c3c4bce3515b6864a7e4146fac230e6c699
+Base: 9e15fcbf2bfb5f53418c4c560959d16a8ad36234
+Head: 9d81a2977f8b12823619d948f36df9b03b89ca06
 
 ## Changed files
 - M app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt
-- M app/src/main/java/com/zerotoempire/game/CanonicalCharacterRaster.kt
 - M app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt
-- M app/src/test/java/com/zerotoempire/game/CanonicalCharacterRasterTest.kt
+- M app/src/main/java/com/zerotoempire/game/ReviewedMachineLayer.kt
+- M app/src/main/java/com/zerotoempire/game/WorldTrafficArt.kt
+- A app/src/test/java/com/zerotoempire/game/AmbientTrafficMotionTest.kt
 
 ## Affected areas
 - app

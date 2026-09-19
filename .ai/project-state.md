@@ -22,19 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T11:18:33Z
+Generated: 2026-09-19T11:38:31Z
 
 ### Git
 - Branch: `main`
-- Head: `c4642c3c4bce`
-- Commit date: 2026-09-19T13:18:19+02:00
-- Commit: feat(world): animate reviewed population atlases (#51)
-- Tracked files: 1290
+- Head: `9d81a2977f8b`
+- Commit date: 2026-09-19T13:38:16+02:00
+- Commit: feat(world): animate reviewed city traffic (#53)
+- Tracked files: 1291
 
 ### Recently changed files
 - `app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt`
-- `app/src/main/java/com/zerotoempire/game/CanonicalCharacterRaster.kt`
 - `app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt`
+- `app/src/main/java/com/zerotoempire/game/ReviewedMachineLayer.kt`
+- `app/src/main/java/com/zerotoempire/game/WorldTrafficArt.kt`
+- `app/src/test/java/com/zerotoempire/game/AmbientTrafficMotionTest.kt`
+- `app/src/main/java/com/zerotoempire/game/CanonicalCharacterRaster.kt`
 - `app/src/test/java/com/zerotoempire/game/CanonicalCharacterRasterTest.kt`
 - `.github/workflows/pollinations-building-candidate.yml`
 - `.github/workflows/kaggle-candidate-finalize.yml`
