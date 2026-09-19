@@ -1,13 +1,18 @@
 # Change impact
 
-Base: 2524caa812f99e2109fce2e3d5b11e9961c77011
-Head: 50c1d39c5ff8cc36e4f3cfcd78572468334a235e
+Base: 987448a2a2101970df9c2bc71e7e32b4f08ff1b1
+Head: 38a5bf85166d413a5b365da5e4123a56591e1cf3
 
 ## Changed files
-- M .github/workflows/fx-historical-review-evidence.yml
+- M art/production/controlled-building-regen-queue.json
+- A art/production/semantic-review-bld04-kaggle-pass-4.md
+- M ops/sprite-wave-trigger.txt
+- M tools/sprites/kaggle_building_family_factory_v16.py
 
 ## Affected areas
-- .github
+- art
+- ops
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

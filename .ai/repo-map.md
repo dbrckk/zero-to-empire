@@ -24173,10 +24173,28 @@ lower_rows=max(1,sum(1 for y,w in widths if y>=82 and w>0))
 # Keep the strict no-site-card rule, but measure detached lateral expansion
 # rather than treating a legitimate broad building base as a floor slab.
 ⋮----
+def normalized_silhouette_iou(a,b)
+⋮----
+"""Compare shape after removing pure scale/position differences.
+    Near-1.0 means the tier is basically the same silhouette resized.
+    """
+ma=a.getchannel('A').point(lambda p:255 if p>=32 else 0)
+mb=b.getchannel('A').point(lambda p:255 if p>=32 else 0)
+ba=ma.getbbox(); bb=mb.getbbox()
+⋮----
+ca=ma.crop(ba).resize((128,128),v14.Image.Resampling.NEAREST)
+cb=mb.crop(bb).resize((128,128),v14.Image.Resampling.NEAREST)
+pa,pb=ca.load(),cb.load(); inter=union=0
+⋮----
+aa=pa[x,y]>0; bval=pb[x,y]>0
+⋮----
 def v164_live_gate(recs,new_final,new_cov,tier)
 ⋮----
 ident=v14.iou(recs[-1][1],new_final)
-floor={1:.48,2:.45,3:.42,4:.40,5:.38,6:.36}[tier]
+floor={1:.45,2:.42,3:.39,4:.36,5:.34,6:.32}[tier]
+⋮----
+norm=normalized_silhouette_iou(recs[-1][1],new_final)
+ceiling={1:.965,2:.955,3:.945,4:.935,5:.925,6:.915}[tier]
 ```
 
 ## File: tools/sprites/kaggle_building_family_factory.py

@@ -22,20 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T15:10:39Z
+Generated: 2026-09-19T15:16:59Z
 
 ### Git
 - Branch: `main`
-- Head: `50c1d39c5ff8`
-- Commit date: 2026-09-19T17:10:27+02:00
-- Commit: ci(art): validate historical FX with sheet-aware contract (#73)
-- Tracked files: 1332
+- Head: `38a5bf85166d`
+- Commit date: 2026-09-19T17:16:46+02:00
+- Commit: art: require structural BLD-04 tier evolution (#74)
+- Tracked files: 1333
 
 ### Recently changed files
-- `.github/workflows/fx-historical-review-evidence.yml`
 - `art/production/controlled-building-regen-queue.json`
-- `docs/art/FINAL_AAA_SPRITE_PROGRESS.md`
+- `art/production/semantic-review-bld04-kaggle-pass-4.md`
+- `ops/sprite-wave-trigger.txt`
 - `tools/sprites/kaggle_building_family_factory_v16.py`
+- `.github/workflows/fx-historical-review-evidence.yml`
+- `docs/art/FINAL_AAA_SPRITE_PROGRESS.md`
 
 ### Project signals
 - `build.gradle.kts`
