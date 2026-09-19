@@ -859,6 +859,25 @@ def by_id(queue: dict[str, Any]) -> dict[str, dict[str, Any]]
 ⋮----
 def update_from_trigger(queue: dict[str, Any]) -> None
 ⋮----
+# Producer failures must never strand assets in DISPATCHED forever. The
+# workflow_run event is authoritative: put the active Kaggle lane back into
+# the controlled queue so the next autofactory cycle can retry it, subject
+# to the per-asset attempt budget.
+⋮----
+active = [
+⋮----
+# The producer writes AWAITING_REVIEW into the controlled queue.
+# sync_controlled_queues() below will import that exact state.
+⋮----
+# Keep the specialized controlled queues aligned with master state.
+⋮----
+controlled = load_json(path, {}) or {}
+changed = False
+⋮----
+aid = str(item.get("id", "")).upper()
+⋮----
+changed = True
+⋮----
 target = [
 ⋮----
 def active_pending(path: Path) -> list[dict[str, Any]]

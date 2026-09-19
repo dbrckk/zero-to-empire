@@ -22,28 +22,28 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T16:31:05Z
+Generated: 2026-09-19T18:02:43Z
 
 ### Git
 - Branch: `main`
-- Head: `514767613d7d`
-- Commit date: 2026-09-19T18:30:53+02:00
-- Commit: fix(art): harden the 235-asset autofactory (#78)
-- Tracked files: 1340
+- Head: `6ad554169153`
+- Commit date: 2026-09-19T20:02:27+02:00
+- Commit: ci(art): make 235-asset autofactory self-healing (#79)
+- Tracked files: 1342
 
 ### Recently changed files
-- `.github/workflows/asset-autofactory-ci.yml`
 - `.github/workflows/asset-autofactory.yml`
+- `tools/sprites/asset_wave_orchestrator.py`
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
 - `art/production/master-asset-queue.json`
+- `.github/workflows/asset-autofactory-ci.yml`
 - `docs/art/AUTOMATED_ASSET_FACTORY.md`
 - `tools/sprites/asset_queue_utils.py`
-- `tools/sprites/asset_wave_orchestrator.py`
 - `art/production/controlled-building-regen-queue.json`
 - `art/production/semantic-review-bld04-kaggle-pass-5.md`
 - `ops/sprite-wave-trigger.txt`
 - `tools/sprites/kaggle_building_family_factory_v16.py`
-- `art/production/semantic-review-bld04-kaggle-pass-4.md`
-- `.github/workflows/fx-historical-review-evidence.yml`
 
 ### Project signals
 - `build.gradle.kts`
