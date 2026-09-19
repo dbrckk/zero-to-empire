@@ -72,10 +72,11 @@ The following previously validated assets remain outside the DONE count until th
 Technically valid but semantically wrong candidates remain excluded. This includes generic/non-progressive building renders, Power Core renders that omit their tier-defining mechanisms, `VEH-16` renders that still read as wheeled cars, `VEH-17` single-drone renders instead of a swarm, and earlier rejected `VEH-09` concepts superseded by the valid run-37 replacement. `PRP-13-B` was rejected in run 20 but replaced by a valid run-22 generation and is now DONE.
 
 ## Next production targets
-1. Regenerate the remaining vehicle target with stricter semantics: `VEH-16`.
-2. Continue coherent family/tier building production; promote only families that preserve architectural identity and visibly satisfy the required T0 → T6 scale/complexity progression.
-3. Regenerate the two rejected machines (`MCH-05-1`, `MCH-07-0`) and four rejected terrain connectors (`TER-05`, `TER-07`, `TER-09`, `TER-10`).
-4. Continue characters and FX only through the same generate → technical QA → semantic QA → runtime → green-CI gate.
+1. Complete controlled `BLD-04-T0..T6` production with the Kaggle v16.5 canonical **Tech Company** identity; accept only a coherent same-family T0 → T6 evolution.
+2. Retry only `CHR-OP-IDLE` and `CHR-OP-WALK` with identity-anchored Kaggle generation, stylized non-photorealistic prompting, and the hard single-subject silhouette gate. Keep `WORK/CARRY` paused until this method passes semantic review.
+3. Reconcile historical FX evidence for `FX-00..FX-08` and `FX-17`; technical runtime presence alone must not promote them.
+4. Start manager portrait production only after the first character style is locked; first wave remains Maya, Noah, Ava, Leo under `AAA_MANAGER_PORTRAIT_SPEC.md`.
+5. After BLD-04 passes, move family-by-family through the remaining unresolved building families using the canonical runtime business identities, never generic placeholder names.
 
 ## Reviewed FLUX run 51 — 23 machines DONE
 Run-51 produced 29 technically valid candidates. Semantic QA accepted 23 machine masters and rejected `MCH-03-0` (baked lettering), `MCH-05-1` (wrong battery-carousel read), `MCH-11-1` (detached underside sphere), `MCH-12-0` (missing required containment-ring identity), both terrain candidates (camera/connector mismatch; TER-01 also has a baked road marking), while `MCH-07-0` was not emitted as a technically valid candidate. The 23 accepted machines are integrated into the era-specific active city runtime layer. Android CI run `34047735544` on descendant commit `7ec8e75e57ba34c45a32f474d86ffb93b3230e30` completed successfully with those unchanged runtime assets present, so all 23 are strict DONE.
