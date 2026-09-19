@@ -6,11 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -22,7 +18,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.delay
 
 private data class CharacterPlacement(
     val role: ReviewedCharacterRole,
@@ -41,22 +36,14 @@ private data class CharacterPlacement(
  * density high without starting one independent infinite animation per sprite.
  */
 @Composable
-internal fun ReviewedCharacterLayer(eraIndex: Int, modifier: Modifier = Modifier) {
+internal fun ReviewedCharacterLayer(
+    eraIndex: Int,
+    worldFrame: Int,
+    reducedMotion: Boolean,
+    modifier: Modifier = Modifier,
+) {
     val context = LocalContext.current
-    val reducedMotion = remember(context) { MotionQuality.reducedMotion(context) }
     val lateEraScale = if (eraIndex >= 4) 1.08f else 1f
-    var worldFrame by remember { mutableIntStateOf(0) }
-
-    LaunchedEffect(reducedMotion) {
-        if (reducedMotion) {
-            worldFrame = 0
-        } else {
-            while (true) {
-                delay(100)
-                worldFrame = (worldFrame + 1) % 10_000
-            }
-        }
-    }
 
     val placements = remember {
         listOf(

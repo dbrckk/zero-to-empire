@@ -35,6 +35,5 @@ internal fun ReviewedMachineLayer(eraIndex: Int, modifier: Modifier = Modifier) 
                 modifier = Modifier.offset(x[index], y[index]).size(if (eraIndex >= 4) 54.dp else 48.dp),
             )
         }
-        ReviewedCharacterLayer(eraIndex, Modifier.fillMaxSize())
     }
 }
