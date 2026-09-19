@@ -97,6 +97,21 @@ private fun AscendantCompactHud(state: GameState) {
 
 @Composable
 private fun AscendantCityStage(eraIndex: Int, modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    val reducedMotion = remember(context) { MotionQuality.reducedMotion(context) }
+    var ambientFrame by remember { mutableIntStateOf(0) }
+
+    LaunchedEffect(reducedMotion) {
+        if (reducedMotion) {
+            ambientFrame = 0
+        } else {
+            while (true) {
+                delay(100)
+                ambientFrame = (ambientFrame + 1) % 10_000
+            }
+        }
+    }
+
     Box(modifier.background(Brush.verticalGradient(listOf(Color(0xFF07101C), Color(0xFF101B24), Color(0xFF080D13))))) {
         EraVistaAAA(eraIndex, Modifier.fillMaxSize())
         Canvas(Modifier.fillMaxSize()) {
@@ -111,8 +126,17 @@ private fun AscendantCityStage(eraIndex: Int, modifier: Modifier = Modifier) {
         }
         ReviewedTerrainLayer(eraIndex, Modifier.fillMaxSize())
         ReviewedMachineLayer(eraIndex, Modifier.fillMaxSize())
-        ReviewedCharacterLayer(eraIndex, Modifier.fillMaxSize())
-        ReviewedWorldTraffic(Modifier.fillMaxSize())
+        ReviewedCharacterLayer(
+            eraIndex = eraIndex,
+            worldFrame = ambientFrame,
+            reducedMotion = reducedMotion,
+            modifier = Modifier.fillMaxSize(),
+        )
+        ReviewedWorldTraffic(
+            worldFrame = ambientFrame,
+            reducedMotion = reducedMotion,
+            modifier = Modifier.fillMaxSize(),
+        )
         Box(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color.Transparent,Color.Transparent,EmpireColors.Void.copy(alpha=.24f)))))
     }
 }
