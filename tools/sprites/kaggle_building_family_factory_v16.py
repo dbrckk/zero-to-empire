@@ -8,7 +8,7 @@ FLUX for a surrounding site. Live QA remains strict; this version does not weake
 slab acceptance to manufacture yield.
 """
 from __future__ import annotations
-import importlib.util
+import importlib.util,json
 from pathlib import Path
 import numpy as np
 
@@ -19,6 +19,48 @@ v14=v15.v14
 V15_ANCHOR_SCORE=v15.anchor_score
 
 print('KAGGLE_STARTUP=building-family-flux-v16.4-footprint-locked-two-phase',flush=True)
+
+QUEUE=v14.ROOT/'art/production/controlled-building-regen-queue.json'
+ORIGINAL_ROWS=v14.rows
+
+def controlled_rows():
+    catalog={}
+    for order,line in enumerate(v14.MANIFEST.read_text(encoding='utf-8').splitlines()):
+        m=v14.ROW.match(line)
+        if not m:
+            continue
+        aid,_,_,runtime,status=[x.strip() for x in m.groups()]
+        bm=v14.BLD.fullmatch(aid)
+        if not bm:
+            continue
+        catalog[aid]={
+            'id':aid,
+            'stem':Path(runtime).stem,
+            'family':int(bm.group(1)),
+            'tier':int(bm.group(2)),
+            'order':order,
+            'manifest_status':status.upper(),
+        }
+
+    if QUEUE.is_file():
+        q=json.loads(QUEUE.read_text(encoding='utf-8'))
+        selected=[]
+        for item in q.get('targets',[]):
+            if str(item.get('status','')).upper()!='PENDING_KAGGLE':
+                continue
+            aid=str(item.get('id','')).upper()
+            if aid not in catalog:
+                raise RuntimeError('controlled Kaggle building missing from manifest: '+aid)
+            selected.append(catalog[aid])
+        if selected:
+            print('KAGGLE_BUILDING_CONTROLLED_QUEUE='+','.join(x['id'] for x in selected),flush=True)
+            yield from sorted(selected,key=lambda x:(x['family'],x['tier']))
+            return
+
+    yield from ORIGINAL_ROWS()
+
+v14.rows=controlled_rows
+
 
 # Phase A (T0-T3): preserve massing. Phase B (T4-T6): add detail/attached volumes
 # without the high denoise that caused wave85 to invent a new ground/site plane.
@@ -31,7 +73,7 @@ FAMILY={
  1:'fabrication shop, chamfered graphite shell, enclosed machining bay, low rear loading recess',
  2:'furnace works, broad low steel hall, twin short sealed heat-stack housings, central glowing furnace chamber',
  3:'assembly hub, long dark production hall, enclosed robotic spine, symmetric attached feeder bays',
- 4:'precision CNC factory, low graphite rectangular shell, three recessed CNC bays, ribbed roof',
+ 4:'technology company R&D headquarters and production campus, low graphite shell, three recessed prototyping bays, compact server-reactor core, ribbed roof',
  5:'energy-cell works, square alloy block, protected amber reactor core, attached capacitor rooms',
  6:'coolant plant, silver graphite hall, integrated cyan coolant pipes, compact attached heat exchangers',
  7:'automation works, wide low tech factory, paired enclosed robot cells, attached production wings',
@@ -44,7 +86,7 @@ FAMILY={
 }
 SHAPE={
  0:'low rectangular kiosk mass',1:'low chamfered workshop block',2:'broad low hall with twin compact roof housings',
- 3:'long horizontal hall with symmetric side volumes',4:'low wide CNC block with flat ribbed roof',
+ 3:'long horizontal hall with symmetric side volumes',4:'low wide technology R&D headquarters block with flat ribbed roof and attached prototyping bays',
  5:'compact square block with protected central core',6:'low horizontal plant with attached exchanger masses',
  7:'very wide low factory with paired attached side wings',8:'heavy low armored block with broad enclosed press bay',
  9:'clean low block with symmetric attached wings around central ring',10:'broad block with enclosed circular center and attached radial rooms',

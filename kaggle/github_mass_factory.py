@@ -46,8 +46,15 @@ def controlled_character_backlog():
  except Exception:return 0
  return sum(1 for x in q.get('targets',[]) if str(x.get('status','')).upper()=='PENDING_KAGGLE')
 
+def controlled_building_backlog():
+ p=REPO/'art/production/controlled-building-regen-queue.json'
+ if not p.is_file(): return 0
+ try:q=json.loads(p.read_text(encoding='utf-8'))
+ except Exception:return 0
+ return sum(1 for x in q.get('targets',[]) if str(x.get('status','')).upper()=='PENDING_KAGGLE')
+
 def backlog():
- c={'BLD':0,'STATIC':0,'CHR':0,'FX':0,'SKIPPED_RUNTIME':0,'CONTROLLED_CHR':controlled_character_backlog()}
+ c={'BLD':0,'STATIC':0,'CHR':0,'FX':0,'SKIPPED_RUNTIME':0,'CONTROLLED_CHR':controlled_character_backlog(),'CONTROLLED_BLD':controlled_building_backlog()}
  for line in (REPO/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md').read_text(encoding='utf-8').splitlines():
   m=ROW.match(line)
   if not m or m.group(5).strip().upper()!='TODO':continue
@@ -113,6 +120,8 @@ os.chdir(REPO);ensure_gpu();ensure_flux()
 incoming=REPO/'art/incoming/final-sprites';incoming.mkdir(parents=True,exist_ok=True);before={p.name:digest(p) for p in incoming.glob('*_final.png') if p.is_file()};q=backlog();print('KAGGLE_BACKLOG='+json.dumps(q,separators=(',',':')),flush=True);print(f'KAGGLE_BATCH_SEED={SEED}',flush=True)
 if q.get('CONTROLLED_CHR',0)>0:
  lane='CONTROLLED_CHARACTER_SHEETS';effective=max(1,min(q['CONTROLLED_CHR'],min(COUNT,2)));cmd=['python','-u','tools/sprites/kaggle_character_sheet_factory_v1.py','--count',str(effective),'--seed',str(SEED)]
+elif q.get('CONTROLLED_BLD',0)>0:
+ lane='CONTROLLED_BUILDING_FAMILY';effective=max(7,min(q['CONTROLLED_BLD'],max(COUNT,7)));cmd=['python','-u','tools/sprites/kaggle_building_family_factory_v16.py','--count',str(effective),'--seed',str(SEED)]
 elif q['BLD']>=5:
  lane='BUILDING_FAMILIES';effective=max(7,min(COUNT,56));cmd=['python','-u','tools/sprites/kaggle_building_family_factory_v16.py','--count',str(effective),'--seed',str(SEED)]
 elif q['STATIC']:
