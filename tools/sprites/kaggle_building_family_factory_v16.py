@@ -18,12 +18,12 @@ v15=importlib.util.module_from_spec(SPEC); SPEC.loader.exec_module(v15)
 v14=v15.v14
 V15_ANCHOR_SCORE=v15.anchor_score
 
-print('KAGGLE_STARTUP=building-family-flux-v16.5-canonical-runtime-identities',flush=True)
+print('KAGGLE_STARTUP=building-family-flux-v16.6-structural-tier-evolution',flush=True)
 
 # Phase A (T0-T3): preserve massing. Phase B (T4-T6): add detail/attached volumes
 # without the high denoise that caused wave85 to invent a new ground/site plane.
-v14.STRENGTH.update({1:.16,2:.19,3:.22,4:.24,5:.26,6:.28})
-v14.STEPS.update({0:10,1:7,2:7,3:8,4:8,5:9,6:10})
+v14.STRENGTH.update({1:.23,2:.28,3:.33,4:.38,5:.43,6:.48})
+v14.STEPS.update({0:10,1:8,2:8,3:9,4:10,5:11,6:12})
 v14.RETRIES.update({0:5,1:3,2:3,3:3,4:3,5:3,6:3})
 
 FAMILY={
@@ -59,13 +59,13 @@ SHAPE={
  13:'radial apex nexus with central core, integrated attached systems and a compact prestige crown'
 }
 TIER={
- 0:'starter shell; one storey; one production chamber',
- 1:'massing phase; reinforce the same walls and add one small attached utility volume',
- 2:'massing phase; widen only the occupied building shell and add one attached production volume',
- 3:'massing phase; extend the connected hall and add an enclosed automation volume',
- 4:'detail phase; keep the established footprint silhouette and enrich attached machinery and wall articulation',
- 5:'detail phase; keep the established footprint silhouette and add enclosed process density plus a modest central rise',
- 6:'detail phase; preserve the established footprint and add a compact enclosed roof core plus integrated high-tier machinery'
+ 0:'starter shell; one storey; one production chamber; compact baseline silhouette',
+ 1:'structural evolution: preserve the core shell but add one clearly visible attached utility wing and reinforced entrance volume',
+ 2:'structural evolution: add a second attached lab/production wing and broaden the connected footprint; silhouette must visibly differ from T1',
+ 3:'structural evolution: add a taller central automation/data-core volume plus enclosed side machinery; increase verticality as well as footprint',
+ 4:'district-scale evolution: add a second-storey research block and dense attached service modules while preserving the same facade axis and family DNA',
+ 5:'megastructure evolution: add a substantial central tower/core, larger symmetric lab wings and premium enclosed energy-routing machinery; unmistakably larger and richer than T4',
+ 6:'mastery evolution: apex Tech Company headquarters with a distinct prestige crown/data core, multi-level connected lab wings and maximum integrated machinery; clearly evolved from T5, never merely scaled'
 }
 STYLE=('premium AAA mobile strategy industrial asset, stylized 2.5D, 34-degree orthographic three-quarter camera, '
        'graphite steel alloys, upper-left key light, cool fill, restrained amber/cyan emissive accents, perfectly flat solid neutral gray background, no gradient, no vignette, no horizon, no shadow card')
@@ -158,12 +158,37 @@ def v164_slab_score(alpha):
 # rather than treating a legitimate broad building base as a floor slab.
 v14.slab_score=v164_slab_score
 
+def normalized_silhouette_iou(a,b):
+    """Compare shape after removing pure scale/position differences.
+    Near-1.0 means the tier is basically the same silhouette resized.
+    """
+    ma=a.getchannel('A').point(lambda p:255 if p>=32 else 0)
+    mb=b.getchannel('A').point(lambda p:255 if p>=32 else 0)
+    ba=ma.getbbox(); bb=mb.getbbox()
+    if not ba or not bb:
+        return 0.0
+    ca=ma.crop(ba).resize((128,128),v14.Image.Resampling.NEAREST)
+    cb=mb.crop(bb).resize((128,128),v14.Image.Resampling.NEAREST)
+    pa,pb=ca.load(),cb.load(); inter=union=0
+    for y in range(128):
+        for x in range(128):
+            aa=pa[x,y]>0; bval=pb[x,y]>0
+            inter += aa and bval
+            union += aa or bval
+    return inter/max(union,1)
+
 def v164_live_gate(recs,new_final,new_cov,tier):
     ok,reasons=V15_LIVE_GATE(recs,new_final,new_cov,tier)
     if recs:
         ident=v14.iou(recs[-1][1],new_final)
-        floor={1:.48,2:.45,3:.42,4:.40,5:.38,6:.36}[tier]
-        if ident<floor and not any(r.startswith('adj-iou=') for r in reasons):reasons.append(f'footprint-iou={ident:.2f}<{floor:.2f}')
+        floor={1:.45,2:.42,3:.39,4:.36,5:.34,6:.32}[tier]
+        if ident<floor and not any(r.startswith('adj-iou=') for r in reasons):
+            reasons.append(f'footprint-iou={ident:.2f}<{floor:.2f}')
+        norm=normalized_silhouette_iou(recs[-1][1],new_final)
+        ceiling={1:.965,2:.955,3:.945,4:.935,5:.925,6:.915}[tier]
+        if norm>ceiling:
+            reasons.append(f'normalized-silhouette-iou={norm:.3f}>{ceiling:.3f}: tier is mostly a resize')
+        print(f'KAGGLE_STRUCTURAL_EVOLUTION tier={tier} adj_iou={ident:.3f} normalized_iou={norm:.3f}',flush=True)
     return (not reasons),reasons
 
 v14.prompts=prompts;v15.prompts=prompts
