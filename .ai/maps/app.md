@@ -805,6 +805,7 @@ private fun AscendantCityStage(eraIndex: Int, modifier: Modifier = Modifier) {
         }
         ReviewedTerrainLayer(eraIndex, Modifier.fillMaxSize())
         ReviewedMachineLayer(eraIndex, Modifier.fillMaxSize())
+        ReviewedCharacterLayer(eraIndex, Modifier.fillMaxSize())
         ReviewedWorldTraffic(Modifier.fillMaxSize())
         Box(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color.Transparent,Color.Transparent,EmpireColors.Void.copy(alpha=.24f)))))
     }
@@ -2973,10 +2974,9 @@ package com.zerotoempire.game
 /**
  * Source-reviewed character roles backed by authored production sprites.
  *
- * Runtime raster bindings remain intentionally limited to assets that have
- * completed the production pipeline. Action semantics below are documented by
- * the character-sheet factory and do not imply that every action sheet is
- * ready for runtime rendering.
+ * Every authored sheet uses the same 4x4 atlas contract (256px cells on a
+ * 1024px canvas). Runtime callers must render one frame at a time rather than
+ * displaying the whole atlas as a static image.
  */
 internal enum class ReviewedCharacterRole {
     OPERATOR,
@@ -2993,6 +2993,11 @@ internal enum class ReviewedCharacterAction {
     REPAIR,
     CELEBRATE,
 }
+
+internal const val REVIEWED_CHARACTER_ATLAS_SIDE = 1024
+internal const val REVIEWED_CHARACTER_CELL_SIDE = 256
+internal const val REVIEWED_CHARACTER_COLUMNS = 4
+internal const val REVIEWED_CHARACTER_ROWS = 4
 
 internal fun reviewedCharacterFrameCount(action: ReviewedCharacterAction): Int = when (action) {
     ReviewedCharacterAction.IDLE -> 6
@@ -3012,12 +3017,46 @@ internal fun reviewedCharacterActionLoopsAmbiently(action: ReviewedCharacterActi
     ReviewedCharacterAction.CELEBRATE -> false
 }
 
-internal fun reviewedCharacterIdleRasterRes(role: ReviewedCharacterRole): Int = when (role) {
-    ReviewedCharacterRole.OPERATOR -> R.drawable.zte_chr_op_idle_final
-    ReviewedCharacterRole.TECHNICIAN -> R.drawable.zte_chr_tech_idle_final
-    ReviewedCharacterRole.LOGISTICS -> R.drawable.zte_chr_log_idle_final
-    ReviewedCharacterRole.ENGINEER -> R.drawable.zte_chr_eng_idle_final
+internal fun reviewedCharacterRasterRes(
+    role: ReviewedCharacterRole,
+    action: ReviewedCharacterAction,
+): Int = when (role) {
+    ReviewedCharacterRole.OPERATOR -> when (action) {
+        ReviewedCharacterAction.IDLE -> R.drawable.zte_chr_op_idle_final
+        ReviewedCharacterAction.WALK -> R.drawable.zte_chr_op_walk_final
+        ReviewedCharacterAction.WORK -> R.drawable.zte_chr_op_work_final
+        ReviewedCharacterAction.CARRY -> R.drawable.zte_chr_op_carry_final
+        ReviewedCharacterAction.REPAIR -> R.drawable.zte_chr_op_repair_final
+        ReviewedCharacterAction.CELEBRATE -> R.drawable.zte_chr_op_celeb_final
+    }
+    ReviewedCharacterRole.TECHNICIAN -> when (action) {
+        ReviewedCharacterAction.IDLE -> R.drawable.zte_chr_tech_idle_final
+        ReviewedCharacterAction.WALK -> R.drawable.zte_chr_tech_walk_final
+        ReviewedCharacterAction.WORK -> R.drawable.zte_chr_tech_work_final
+        ReviewedCharacterAction.CARRY -> R.drawable.zte_chr_tech_carry_final
+        ReviewedCharacterAction.REPAIR -> R.drawable.zte_chr_tech_repair_final
+        ReviewedCharacterAction.CELEBRATE -> R.drawable.zte_chr_tech_celeb_final
+    }
+    ReviewedCharacterRole.LOGISTICS -> when (action) {
+        ReviewedCharacterAction.IDLE -> R.drawable.zte_chr_log_idle_final
+        ReviewedCharacterAction.WALK -> R.drawable.zte_chr_log_walk_final
+        ReviewedCharacterAction.WORK -> R.drawable.zte_chr_log_work_final
+        ReviewedCharacterAction.CARRY -> R.drawable.zte_chr_log_carry_final
+        ReviewedCharacterAction.REPAIR -> R.drawable.zte_chr_log_repair_final
+        ReviewedCharacterAction.CELEBRATE -> R.drawable.zte_chr_log_celeb_final
+    }
+    ReviewedCharacterRole.ENGINEER -> when (action) {
+        ReviewedCharacterAction.IDLE -> R.drawable.zte_chr_eng_idle_final
+        ReviewedCharacterAction.WALK -> R.drawable.zte_chr_eng_walk_final
+        ReviewedCharacterAction.WORK -> R.drawable.zte_chr_eng_work_final
+        ReviewedCharacterAction.CARRY -> R.drawable.zte_chr_eng_carry_final
+        ReviewedCharacterAction.REPAIR -> R.drawable.zte_chr_eng_repair_final
+        ReviewedCharacterAction.CELEBRATE -> R.drawable.zte_chr_eng_celeb_final
+    }
 }
+
+internal fun reviewedCharacterIdleRasterRes(role: ReviewedCharacterRole): Int =
+    reviewedCharacterRasterRes(role, ReviewedCharacterAction.IDLE)
 ```
 
 ## File: src/main/java/com/zerotoempire/game/CanonicalFxRaster.kt
@@ -11148,47 +11187,136 @@ object OnboardingCopy {
 ```kotlin
 package com.zerotoempire.game
 
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
 
 private data class CharacterPlacement(
     val role: ReviewedCharacterRole,
+    val action: ReviewedCharacterAction,
     val x: Dp,
     val y: Dp,
     val size: Dp,
+    val phaseFrames: Int,
 )
 
-/** Authored ambient population for the Ascendant city industrial midground. */
+/**
+ * Authored ambient population for the Ascendant city.
+ *
+ * The source assets are 4x4 atlases. This renderer crops one 256x256 cell per
+ * actor and advances all actors from one shared 10 fps clock, keeping visual
+ * density high without starting one independent infinite animation per sprite.
+ */
 @Composable
 internal fun ReviewedCharacterLayer(eraIndex: Int, modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    val reducedMotion = remember(context) { MotionQuality.reducedMotion(context) }
     val lateEraScale = if (eraIndex >= 4) 1.08f else 1f
-    val placements = listOf(
-        CharacterPlacement(ReviewedCharacterRole.OPERATOR, 38.dp, 318.dp, 42.dp),
-        CharacterPlacement(ReviewedCharacterRole.TECHNICIAN, 126.dp, 397.dp, 44.dp),
-        CharacterPlacement(ReviewedCharacterRole.LOGISTICS, 218.dp, 474.dp, 42.dp),
-        CharacterPlacement(ReviewedCharacterRole.ENGINEER, 292.dp, 349.dp, 44.dp),
-    )
+    var worldFrame by remember { mutableIntStateOf(0) }
+
+    LaunchedEffect(reducedMotion) {
+        if (reducedMotion) {
+            worldFrame = 0
+        } else {
+            while (true) {
+                delay(100)
+                worldFrame = (worldFrame + 1) % 10_000
+            }
+        }
+    }
+
+    val placements = remember {
+        listOf(
+            CharacterPlacement(ReviewedCharacterRole.OPERATOR, ReviewedCharacterAction.WORK, 34.dp, 306.dp, 45.dp, 0),
+            CharacterPlacement(ReviewedCharacterRole.TECHNICIAN, ReviewedCharacterAction.WALK, 112.dp, 374.dp, 42.dp, 3),
+            CharacterPlacement(ReviewedCharacterRole.LOGISTICS, ReviewedCharacterAction.WALK, 203.dp, 455.dp, 43.dp, 5),
+            CharacterPlacement(ReviewedCharacterRole.ENGINEER, ReviewedCharacterAction.WORK, 286.dp, 332.dp, 46.dp, 7),
+            CharacterPlacement(ReviewedCharacterRole.LOGISTICS, ReviewedCharacterAction.IDLE, 72.dp, 498.dp, 36.dp, 2),
+            CharacterPlacement(ReviewedCharacterRole.OPERATOR, ReviewedCharacterAction.WALK, 245.dp, 520.dp, 37.dp, 6),
+            CharacterPlacement(ReviewedCharacterRole.TECHNICIAN, ReviewedCharacterAction.WORK, 318.dp, 432.dp, 39.dp, 4),
+            CharacterPlacement(ReviewedCharacterRole.ENGINEER, ReviewedCharacterAction.IDLE, 156.dp, 535.dp, 35.dp, 1),
+        )
+    }
+
+    val atlases = remember {
+        placements
+            .map { it.role to it.action }
+            .distinct()
+            .associateWith { (role, action) ->
+                ImageBitmap.imageResource(
+                    context.resources,
+                    reviewedCharacterRasterRes(role, action),
+                )
+            }
+    }
 
     Box(modifier.fillMaxSize()) {
         placements.forEach { placement ->
-            Image(
-                painter = painterResource(reviewedCharacterIdleRasterRes(placement.role)),
-                contentDescription = null,
-                contentScale = ContentScale.Fit,
+            val frameCount = reviewedCharacterFrameCount(placement.action)
+            val frame = if (reducedMotion) {
+                placement.phaseFrames % frameCount
+            } else {
+                (worldFrame + placement.phaseFrames) % frameCount
+            }
+            val atlas = atlases.getValue(placement.role to placement.action)
+
+            CharacterAtlasFrame(
+                atlas = atlas,
+                frame = frame,
                 modifier = Modifier
                     .offset(placement.x, placement.y)
                     .size(placement.size * lateEraScale),
             )
         }
+    }
+}
+
+@Composable
+private fun CharacterAtlasFrame(
+    atlas: ImageBitmap,
+    frame: Int,
+    modifier: Modifier,
+) {
+    Canvas(modifier) {
+        val sourceFrame = frame.coerceIn(0, REVIEWED_CHARACTER_COLUMNS * REVIEWED_CHARACTER_ROWS - 1)
+        val srcX = (sourceFrame % REVIEWED_CHARACTER_COLUMNS) * REVIEWED_CHARACTER_CELL_SIDE
+        val srcY = (sourceFrame / REVIEWED_CHARACTER_COLUMNS) * REVIEWED_CHARACTER_CELL_SIDE
+        val side = minOf(size.width, size.height).toInt().coerceAtLeast(1)
+        val dstX = ((size.width - side) / 2f).toInt()
+        val dstY = ((size.height - side) / 2f).toInt()
+
+        drawOval(
+            color = Color.Black.copy(alpha = .22f),
+            topLeft = Offset(size.width * .23f, size.height * .78f),
+            size = Size(size.width * .54f, size.height * .11f),
+        )
+        drawImage(
+            image = atlas,
+            srcOffset = IntOffset(srcX, srcY),
+            srcSize = IntSize(REVIEWED_CHARACTER_CELL_SIDE, REVIEWED_CHARACTER_CELL_SIDE),
+            dstOffset = IntOffset(dstX, dstY),
+            dstSize = IntSize(side, side),
+        )
     }
 }
 ```
@@ -12684,9 +12812,17 @@ class CanonicalCharacterRasterTest {
     }
 
     @Test
-    fun `reviewed idle roles never silently share one sprite`() {
-        val resources = ReviewedCharacterRole.entries.map(::reviewedCharacterIdleRasterRes)
-        assertEquals(ReviewedCharacterRole.entries.size, resources.toSet().size)
+    fun `all reviewed character action sheets resolve to distinct packaged assets`() {
+        val resources = ReviewedCharacterRole.entries.flatMap { role ->
+            ReviewedCharacterAction.entries.map { action ->
+                reviewedCharacterRasterRes(role, action)
+            }
+        }
+        assertEquals(
+            ReviewedCharacterRole.entries.size * ReviewedCharacterAction.entries.size,
+            resources.toSet().size,
+        )
+        resources.forEach { assertNotEquals(0, it) }
     }
 
     @Test
@@ -12700,6 +12836,22 @@ class CanonicalCharacterRasterTest {
             ReviewedCharacterAction.CELEBRATE to 8,
         )
         assertEquals(expected, ReviewedCharacterAction.entries.associateWith(::reviewedCharacterFrameCount))
+    }
+
+    @Test
+    fun `character atlas contract matches production sheets`() {
+        assertEquals(1024, REVIEWED_CHARACTER_ATLAS_SIDE)
+        assertEquals(256, REVIEWED_CHARACTER_CELL_SIDE)
+        assertEquals(4, REVIEWED_CHARACTER_COLUMNS)
+        assertEquals(4, REVIEWED_CHARACTER_ROWS)
+        assertEquals(
+            REVIEWED_CHARACTER_ATLAS_SIDE,
+            REVIEWED_CHARACTER_CELL_SIDE * REVIEWED_CHARACTER_COLUMNS,
+        )
+        assertEquals(
+            REVIEWED_CHARACTER_ATLAS_SIDE,
+            REVIEWED_CHARACTER_CELL_SIDE * REVIEWED_CHARACTER_ROWS,
+        )
     }
 
     @Test

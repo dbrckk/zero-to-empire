@@ -2,17 +2,18 @@
 
 Summary: 4 success / 1 failure / 2 active
 
-- Pollinations Building Candidate: pending / pending (f1414a53)
-- Reconcile reviewed run 25: completed / skipped (6c6da59e)
-- Sprite Completion Gate: completed / success (6c6da59e)
-- Reconcile Sprite Progress Ledger: completed / success (6c6da59e)
-- Pollinations Building Candidate: in_progress / pending (6c6da59e)
-- Reconcile existing runtime TODOs: completed / success (6c6da59e)
-- Reconcile Sprite Progress Ledger: completed / success (f2788031)
-- Reconcile Sprite Progress Ledger: completed / failure (cf11caad)
+- Android CI: queued / pending (c4642c3c)
+- Android Emulator Smoke: in_progress / pending (c4642c3c)
+- Manifest Static GPU Batch: completed / success (1b26f71b)
+- Reconcile reviewed run 25: completed / skipped (1b26f71b)
+- Android CI: completed / success (5ab0441e)
+- Android Emulator Smoke: completed / success (5ab0441e)
+- Kaggle Mass Sprite Factory: completed / failure (1b26f71b)
+- Pollinations Building Candidate: completed / success (1b26f71b)
 
 ## Latest failed run structure
-- Job: reconcile
-  - Failed step: Commit reconciled aggregate state if stale
+- Job: kaggle
+  - Failed step: Require fresh technically validated candidates
+  - Failed step: Require successful Kaggle kernel
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

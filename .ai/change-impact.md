@@ -1,13 +1,16 @@
 # Change impact
 
-Base: 364caade0b65f1ce78c42b1c264b91dad0c3c4fd
-Head: f1414a533e03df8503ec1fb4129474dfe319f3bf
+Base: 1b26f71b81e975a267511fdfcfac32fcff0a6c93
+Head: c4642c3c4bce3515b6864a7e4146fac230e6c699
 
 ## Changed files
-- M .github/workflows/pollinations-building-candidate.yml
+- M app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt
+- M app/src/main/java/com/zerotoempire/game/CanonicalCharacterRaster.kt
+- M app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt
+- M app/src/test/java/com/zerotoempire/game/CanonicalCharacterRasterTest.kt
 
 ## Affected areas
-- .github
+- app
 
 ## Related test candidates
 - No direct filename-based test match detected.

@@ -22,16 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T10:41:44Z
+Generated: 2026-09-19T11:18:33Z
 
 ### Git
 - Branch: `main`
-- Head: `f1414a533e03`
-- Commit date: 2026-09-19T12:41:26+02:00
-- Commit: ci(art): freeze Pollinations generation during semantic review (#50)
+- Head: `c4642c3c4bce`
+- Commit date: 2026-09-19T13:18:19+02:00
+- Commit: feat(world): animate reviewed population atlases (#51)
 - Tracked files: 1290
 
 ### Recently changed files
+- `app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt`
+- `app/src/main/java/com/zerotoempire/game/CanonicalCharacterRaster.kt`
+- `app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt`
+- `app/src/test/java/com/zerotoempire/game/CanonicalCharacterRasterTest.kt`
 - `.github/workflows/pollinations-building-candidate.yml`
 - `.github/workflows/kaggle-candidate-finalize.yml`
 - `.github/workflows/reconcile-existing-runtime-todos.yml`
@@ -44,7 +48,6 @@ Generated: 2026-09-19T10:41:44Z
 - `.github/workflows/android-emulator-smoke.yml`
 - `.github/workflows/android.yml`
 - `.github/workflows/production-release.yml`
-- `.repo-standards.yml`
 
 ### Project signals
 - `build.gradle.kts`
