@@ -1,11 +1,11 @@
 # Change impact
 
-Base: 987448a2a2101970df9c2bc71e7e32b4f08ff1b1
-Head: 38a5bf85166d413a5b365da5e4123a56591e1cf3
+Base: 33f54de4c99e09bac6d8cfeb4a9aeae393c7f439
+Head: 66d1734c76b2d7763c56c92f68f3e0eeb46e5857
 
 ## Changed files
 - M art/production/controlled-building-regen-queue.json
-- A art/production/semantic-review-bld04-kaggle-pass-4.md
+- A art/production/semantic-review-bld04-kaggle-pass-5.md
 - M ops/sprite-wave-trigger.txt
 - M tools/sprites/kaggle_building_family_factory_v16.py
 

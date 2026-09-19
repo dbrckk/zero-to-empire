@@ -22,22 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T15:16:59Z
+Generated: 2026-09-19T16:09:03Z
 
 ### Git
 - Branch: `main`
-- Head: `38a5bf85166d`
-- Commit date: 2026-09-19T17:16:46+02:00
-- Commit: art: require structural BLD-04 tier evolution (#74)
-- Tracked files: 1333
+- Head: `66d1734c76b2`
+- Commit date: 2026-09-19T18:08:49+02:00
+- Commit: art: strengthen BLD-04 structural evolution pass 6 (#75)
+- Tracked files: 1334
 
 ### Recently changed files
 - `art/production/controlled-building-regen-queue.json`
-- `art/production/semantic-review-bld04-kaggle-pass-4.md`
+- `art/production/semantic-review-bld04-kaggle-pass-5.md`
 - `ops/sprite-wave-trigger.txt`
 - `tools/sprites/kaggle_building_family_factory_v16.py`
+- `art/production/semantic-review-bld04-kaggle-pass-4.md`
 - `.github/workflows/fx-historical-review-evidence.yml`
-- `docs/art/FINAL_AAA_SPRITE_PROGRESS.md`
 
 ### Project signals
 - `build.gradle.kts`
