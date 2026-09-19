@@ -1,0 +1,125 @@
+name: Asset Autofactory 235
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_run:
+    workflows:
+      - 'Kaggle Mass Sprite Factory'
+      - 'FX Historical Review Evidence'
+    types: [completed]
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: asset-autofactory-235
+  cancel-in-progress: false
+
+jobs:
+  orchestrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      GH_TOKEN: ${{ github.token }}
+      AUTOF_TRIGGER_WORKFLOW: ${{ github.event.workflow_run.name || '' }}
+      AUTOF_TRIGGER_CONCLUSION: ${{ github.event.workflow_run.conclusion || '' }}
+      AUTOF_TRIGGER_RUN_ID: ${{ github.event.workflow_run.id || '' }}
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: main
+          fetch-depth: 2
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+
+      - name: Sync canonical main
+        shell: bash
+        run: git pull --ff-only origin main
+
+      - name: Detect producer activity
+        shell: bash
+        run: |
+          set -euo pipefail
+          kaggle_busy="$(gh run list --workflow 'Kaggle Mass Sprite Factory' --limit 20 --json status --jq '[.[] | select(.status == "queued" or .status == "in_progress" or .status == "pending" or .status == "waiting")] | length')"
+          fx_busy="$(gh run list --workflow 'FX Historical Review Evidence' --limit 20 --json status --jq '[.[] | select(.status == "queued" or .status == "in_progress" or .status == "pending" or .status == "waiting")] | length')"
+          if [ "$kaggle_busy" -gt 0 ]; then echo 'AUTOF_KAGGLE_BUSY=1' >> "$GITHUB_ENV"; else echo 'AUTOF_KAGGLE_BUSY=0' >> "$GITHUB_ENV"; fi
+          if [ "$fx_busy" -gt 0 ]; then echo 'AUTOF_FX_BUSY=1' >> "$GITHUB_ENV"; else echo 'AUTOF_FX_BUSY=0' >> "$GITHUB_ENV"; fi
+          echo "KAGGLE_BUSY=$kaggle_busy FX_BUSY=$fx_busy"
+
+      - name: Reconcile queue and choose next autonomous wave
+        run: python -u tools/sprites/asset_wave_orchestrator.py
+
+      - name: Validate queue invariants
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          q=json.loads(Path('art/production/master-asset-queue.json').read_text())
+          assert q['target_total']==235
+          assert len(q['assets'])==235
+          assert len({x['id'] for x in q['assets']})==235
+          strict=sum(x['strict_status']=='DONE' for x in q['assets'])
+          assert strict>=126, strict
+          assert all(x['id']!='ONB-00' for x in q['assets'])
+          d=json.loads(Path('art/production/autofactory-state.json').read_text())
+          print(f"AUTOF_QUEUE_OK=1 STRICT_DONE={strict} ACTION={d['action']}")
+          PY
+
+      - name: Persist autofactory state
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add             art/production/master-asset-queue.json             art/production/autofactory-state.json             art/production/autofactory-summary.md             art/production/controlled-building-regen-queue.json             art/production/controlled-character-regen-queue.json
+          if git diff --cached --quiet; then
+            echo 'No autofactory state change.'
+          else
+            git commit -m 'art(auto): advance 235-asset production queue'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+
+      - name: Dispatch chosen producer
+        shell: bash
+        run: |
+          set -euo pipefail
+          action="$(python -c "import json;print(json.load(open('art/production/autofactory-state.json'))['action'])")"
+          count="$(python -c "import json;print(json.load(open('art/production/autofactory-state.json')).get('count',0))")"
+          group="$(python -c "import json;print(json.load(open('art/production/autofactory-state.json')).get('group') or '')")"
+          echo "AUTOF_ACTION=$action GROUP=$group COUNT=$count"
+
+          case "$action" in
+            DISPATCH_KAGGLE_BUILDING)
+              gh workflow run 'Kaggle Mass Sprite Factory' --ref main -f count=7
+              ;;
+            DISPATCH_KAGGLE_CHARACTER)
+              gh workflow run 'Kaggle Mass Sprite Factory' --ref main -f count=2
+              ;;
+            DISPATCH_FX_EVIDENCE)
+              gh workflow run 'FX Historical Review Evidence' --ref main
+              ;;
+            WAIT_*|STOP_*|PRODUCTION_235_COMPLETE_REVIEW_BACKLOG|NO_AUTOMATIC_WORK_AVAILABLE)
+              echo "No producer dispatch required for $action"
+              ;;
+            *)
+              echo "::error::Unknown autofactory action: $action"
+              exit 2
+              ;;
+          esac
+
+      - name: Publish run summary
+        if: always()
+        shell: bash
+        run: |
+          if [ -f art/production/autofactory-summary.md ]; then
+            cat art/production/autofactory-summary.md >> "$GITHUB_STEP_SUMMARY"
+          fi
