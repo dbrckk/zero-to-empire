@@ -89,6 +89,7 @@ The content is organized as follows:
     promote-reviewed-run69-ter09.yml
     promote-run66-reviewed.yml
     promote-run75-bld03.yml
+    promote-ter07-v3.yml
     reconcile-core-status.yml
     reconcile-existing-runtime-todos.yml
     reconcile-final-sprite-manifest.yml
@@ -338,6 +339,7 @@ tools/
     procedural_fx_factory.py
     procedural_terrain_factory.py
     process_final_sprites.py
+    promote_ter07_v3.py
     ter07_energy_conduit_candidate.py
     validate_animation_sheet.py
     validate_runtime_asset.py
@@ -5058,6 +5060,80 @@ jobs:
           git commit -m 'art: integrate reviewed run75 BLD-03 T2-T6'
           git pull --rebase origin main
           git push
+```
+
+## File: .github/workflows/promote-ter07-v3.yml
+```yaml
+name: Promote TER-07 v3 Runtime
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/sprites/promote_ter07_v3.py'
+      - 'art/production/ter07/semantic-review-v3.md'
+      - '.github/workflows/promote-ter07-v3.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: promote-ter07-v3
+  cancel-in-progress: true
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install deterministic image tooling
+        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
+
+      - name: Promote exact reviewed candidate
+        run: python tools/sprites/promote_ter07_v3.py
+
+      - name: Validate canonical runtime
+        run: |
+          python tools/sprites/validate_runtime_asset.py \
+            --asset-id TER-07 \
+            --path app/src/main/res/drawable-nodpi/zte_terrain_07_final.webp \
+            --report art/production/ter07/runtime-qa-v3.json
+
+      - name: Commit runtime and evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add app/src/main/res/drawable-nodpi/zte_terrain_07_final.webp
+          git add art/production/ter07/runtime-promotion-v3.json
+          git add art/production/ter07/runtime-qa-v3.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'art: integrate reviewed TER-07 v3 runtime'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Upload promotion evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ter07-v3-runtime-promotion
+          path: |
+            art/production/ter07/runtime-promotion-v3.json
+            art/production/ter07/runtime-qa-v3.json
+            app/src/main/res/drawable-nodpi/zte_terrain_07_final.webp
+          if-no-files-found: error
+          retention-days: 30
 ```
 
 ## File: .github/workflows/reconcile-core-status.yml
@@ -25521,6 +25597,49 @@ by_stem = {p.stem: p for p in files}
 missing = wanted - by_stem.keys()
 ⋮----
 files = [by_stem[stem] for stem in sorted(wanted)]
+```
+
+## File: tools/sprites/promote_ter07_v3.py
+```python
+#!/usr/bin/env python3
+"""Promote the explicitly reviewed TER-07 v3 candidate to Android runtime.
+
+This script is intentionally single-purpose. It refuses to generate art and only
+converts the already reviewed candidate to the canonical lossless WebP target.
+"""
+⋮----
+ROOT=Path(__file__).resolve().parents[2]
+SOURCE=ROOT/'art/production/ter07/zte_terrain_07_candidate_v3.png'
+REPORT=ROOT/'art/production/ter07/report.json'
+TARGET=ROOT/'app/src/main/res/drawable-nodpi/zte_terrain_07_final.webp'
+SIDE=1024
+⋮----
+def sha256(path:Path)->str
+⋮----
+h=hashlib.sha256()
+⋮----
+def validate(im:Image.Image)
+⋮----
+a=im.getchannel('A')
+bbox=a.getbbox()
+⋮----
+coverage=sum(a.histogram()[8:])/(SIDE*SIDE)
+margin=min(bbox[0],bbox[1],SIDE-bbox[2],SIDE-bbox[3])
+w=bbox[2]-bbox[0];h=bbox[3]-bbox[1]
+aspect=max(w,h)/max(1,min(w,h))
+⋮----
+def main()
+⋮----
+report=json.loads(REPORT.read_text(encoding='utf-8'))
+⋮----
+im=Image.open(SOURCE).convert('RGBA')
+metrics=validate(im)
+⋮----
+runtime=runtime.convert('RGBA')
+runtime_metrics=validate(runtime)
+⋮----
+evidence={
+out=ROOT/'art/production/ter07/runtime-promotion-v3.json'
 ```
 
 ## File: tools/sprites/ter07_energy_conduit_candidate.py

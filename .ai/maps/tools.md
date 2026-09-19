@@ -82,6 +82,7 @@ sprites/
   procedural_fx_factory.py
   procedural_terrain_factory.py
   process_final_sprites.py
+  promote_ter07_v3.py
   ter07_energy_conduit_candidate.py
   validate_animation_sheet.py
   validate_runtime_asset.py
@@ -3572,6 +3573,49 @@ by_stem = {p.stem: p for p in files}
 missing = wanted - by_stem.keys()
 ⋮----
 files = [by_stem[stem] for stem in sorted(wanted)]
+```
+
+## File: sprites/promote_ter07_v3.py
+```python
+#!/usr/bin/env python3
+"""Promote the explicitly reviewed TER-07 v3 candidate to Android runtime.
+
+This script is intentionally single-purpose. It refuses to generate art and only
+converts the already reviewed candidate to the canonical lossless WebP target.
+"""
+⋮----
+ROOT=Path(__file__).resolve().parents[2]
+SOURCE=ROOT/'art/production/ter07/zte_terrain_07_candidate_v3.png'
+REPORT=ROOT/'art/production/ter07/report.json'
+TARGET=ROOT/'app/src/main/res/drawable-nodpi/zte_terrain_07_final.webp'
+SIDE=1024
+⋮----
+def sha256(path:Path)->str
+⋮----
+h=hashlib.sha256()
+⋮----
+def validate(im:Image.Image)
+⋮----
+a=im.getchannel('A')
+bbox=a.getbbox()
+⋮----
+coverage=sum(a.histogram()[8:])/(SIDE*SIDE)
+margin=min(bbox[0],bbox[1],SIDE-bbox[2],SIDE-bbox[3])
+w=bbox[2]-bbox[0];h=bbox[3]-bbox[1]
+aspect=max(w,h)/max(1,min(w,h))
+⋮----
+def main()
+⋮----
+report=json.loads(REPORT.read_text(encoding='utf-8'))
+⋮----
+im=Image.open(SOURCE).convert('RGBA')
+metrics=validate(im)
+⋮----
+runtime=runtime.convert('RGBA')
+runtime_metrics=validate(runtime)
+⋮----
+evidence={
+out=ROOT/'art/production/ter07/runtime-promotion-v3.json'
 ```
 
 ## File: sprites/ter07_energy_conduit_candidate.py

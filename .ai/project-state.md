@@ -22,26 +22,28 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T14:32:14Z
+Generated: 2026-09-19T14:35:06Z
 
 ### Git
 - Branch: `main`
-- Head: `09041fbf395f`
-- Commit date: 2026-09-19T16:31:59+02:00
-- Commit: art: upgrade TER-07 conduit candidate to premium 2.5D v3 (#67)
-- Tracked files: 1324
+- Head: `1e9a12dbb80a`
+- Commit date: 2026-09-19T16:34:53+02:00
+- Commit: art: promote reviewed TER-07 v3 to runtime (#68)
+- Tracked files: 1328
 
 ### Recently changed files
-- `.github/workflows/ter07-energy-conduit-candidate.yml`
-- `art/production/ter07/semantic-review-v2.md`
-- `tools/sprites/ter07_energy_conduit_candidate.py`
+- `.github/workflows/promote-ter07-v3.yml`
+- `art/production/ter07/semantic-review-v3.md`
+- `tools/sprites/promote_ter07_v3.py`
+- `art/production/controlled-character-regen-queue.json`
 - `art/production/ter07/contact.png`
 - `art/production/ter07/qa.json`
 - `art/production/ter07/report.json`
+- `art/production/ter07/zte_terrain_07_candidate_v3.png`
+- `.github/workflows/ter07-energy-conduit-candidate.yml`
+- `art/production/ter07/semantic-review-v2.md`
+- `tools/sprites/ter07_energy_conduit_candidate.py`
 - `art/production/ter07/zte_terrain_07_candidate_v2.png`
-- `art/production/controlled-building-regen-queue.json`
-- `art/production/controlled-character-regen-queue.json`
-- `ops/sprite-wave-trigger.txt`
 
 ### Project signals
 - `build.gradle.kts`

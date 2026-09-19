@@ -1,12 +1,12 @@
 # Change impact
 
-Base: 40ce52d80444a04efca04fa8c474fc3d7d00c5ec
-Head: 09041fbf395f3707aef000178a4a57a767767a90
+Base: 9ef60cb8bdd1f4f74c88b056335dbffc7f216552
+Head: 1e9a12dbb80a61cd7c114f0e0edcc42c37ca0996
 
 ## Changed files
-- M .github/workflows/ter07-energy-conduit-candidate.yml
-- A art/production/ter07/semantic-review-v2.md
-- M tools/sprites/ter07_energy_conduit_candidate.py
+- A .github/workflows/promote-ter07-v3.yml
+- A art/production/ter07/semantic-review-v3.md
+- A tools/sprites/promote_ter07_v3.py
 
 ## Affected areas
 - .github
