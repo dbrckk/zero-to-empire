@@ -22,18 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T10:40:43Z
+Generated: 2026-09-19T10:41:44Z
 
 ### Git
 - Branch: `main`
-- Head: `6c6da59e7b6e`
-- Commit date: 2026-09-19T12:40:27+02:00
-- Commit: art: restore semantic AAA promotion gate (#49)
-- Tracked files: 1288
+- Head: `f1414a533e03`
+- Commit date: 2026-09-19T12:41:26+02:00
+- Commit: ci(art): freeze Pollinations generation during semantic review (#50)
+- Tracked files: 1290
 
 ### Recently changed files
-- `.github/workflows/kaggle-candidate-finalize.yml`
 - `.github/workflows/pollinations-building-candidate.yml`
+- `.github/workflows/kaggle-candidate-finalize.yml`
 - `.github/workflows/reconcile-existing-runtime-todos.yml`
 - `.github/workflows/reconcile-sprite-progress-ledger.yml`
 - `.github/workflows/sprite-completion-gate.yml`

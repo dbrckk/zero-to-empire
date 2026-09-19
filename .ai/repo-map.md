@@ -2474,19 +2474,44 @@ jobs:
       - name: Sync canonical main
         run: git pull --ff-only origin main
 
+      - name: Check semantic review lock and pending targets
+        id: gate
+        shell: bash
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          from pathlib import Path
+          review=Path('docs/art/AAA_HISTORICAL_PROMOTION_REVIEW.md').read_text(encoding='utf-8')
+          review_open='**Status: OPEN**' in review
+          pending=0
+          for line in Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md').read_text(encoding='utf-8').splitlines():
+              if not line.startswith('|') or 'app/src/main/res/' not in line:
+                  continue
+              cols=[x.strip() for x in line.split('|')[1:-1]]
+              if len(cols)==5 and cols[0].startswith('BLD-') and cols[4].upper()=='TODO':
+                  pending += 1
+          should_generate=(not review_open) and pending > 0
+          print(f'review_open={str(review_open).lower()}')
+          print(f'pending_buildings={pending}')
+          print(f'should_generate={str(should_generate).lower()}')
+          PY
+
       - name: Cache rembg U2Net model
+        if: steps.gate.outputs.should_generate == 'true'
         uses: actions/cache@v4
         with:
           path: ~/.u2net
           key: rembg-u2net-v0.0.0
 
       - name: Install strict image tooling
+        if: steps.gate.outputs.should_generate == 'true'
         run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0' 'rembg[cpu]>=2.0.68,<3'
 
       - name: Generate and technically validate building batch
+        if: steps.gate.outputs.should_generate == 'true'
         run: python -u tools/sprites/pollinations_building_batch.py
 
       - name: Require at least one technical success
+        if: steps.gate.outputs.should_generate == 'true'
         shell: bash
         run: |
           python - <<'PY'
@@ -2501,6 +2526,7 @@ jobs:
           PY
 
       - name: Commit technically validated RUNTIME sprites
+        if: steps.gate.outputs.should_generate == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -2519,7 +2545,7 @@ jobs:
           git push
 
       - name: Upload strict batch evidence
-        if: always()
+        if: steps.gate.outputs.should_generate == 'true' && always()
         uses: actions/upload-artifact@v4
         with:
           name: pollinations-building-batch-evidence
