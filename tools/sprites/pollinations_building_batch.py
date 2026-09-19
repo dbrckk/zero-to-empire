@@ -92,6 +92,47 @@ def main():
         raise SystemExit('rembg session init failed: '+repr(e))
 
     targets=initial[:count]
+
+    if candidate_only and len(targets) >= 2:
+        families={row[0].split('-T')[0] for row in targets}
+        if len(families)==1:
+            family_attempts=[]
+            for attempt in range(attempts):
+                seed=(base + attempt*7919) % 2147483647
+                try:
+                    generated=pf.generate_family(targets,seed=seed,session=session)
+                    all_ok=True
+                    qa_rows=[]
+                    for row,out,_ in generated:
+                        aid=row[0]
+                        qa=PROD/f'pollinations-{aid.lower()}-qa.json'
+                        contact=PROD/f'pollinations-{aid.lower()}-contact.png'
+                        q=run([sys.executable,'tools/sprites/build_sprite_contact_sheet.py','--files',str(out.relative_to(ROOT)),'--output',str(contact.relative_to(ROOT)),'--report',str(qa.relative_to(ROOT))])
+                        qd=json.loads(qa.read_text()) if qa.exists() else {}
+                        rows_qa=qd.get('assets',[])
+                        passed=(q.returncode==0 and len(rows_qa)==1 and rows_qa[0].get('pass'))
+                        qa_rows.append({'id':aid,'pass':passed,'issues':rows_qa})
+                        if not passed:
+                            all_ok=False
+                    if all_ok:
+                        for row,out,_ in generated:
+                            aid=row[0]
+                            mark_queue(aid,'CANDIDATE',seed)
+                            summary['successes'].append({'id':aid,'seed':seed,'candidate':str(out.relative_to(ROOT)),'generation':'single-family-board'})
+                        print('BATCH_FAMILY_CANDIDATE='+','.join(x['id'] for x in summary['successes']),flush=True)
+                        (PROD/'pollinations-batch-summary.json').write_text(json.dumps(summary,indent=2),encoding='utf-8')
+                        print(json.dumps(summary,indent=2))
+                        return
+                    family_attempts.append({'attempt':attempt+1,'seed':seed,'qa':qa_rows})
+                except Exception as e:
+                    family_attempts.append({'attempt':attempt+1,'seed':seed,'error':repr(e)})
+            for row in targets:
+                mark_queue(row[0],'BLOCKED',seed)
+            summary['failures'].append({'family':next(iter(families)),'attempts':family_attempts})
+            (PROD/'pollinations-batch-summary.json').write_text(json.dumps(summary,indent=2),encoding='utf-8')
+            print(json.dumps(summary,indent=2))
+            raise SystemExit(2)
+
     for slot,row in enumerate(targets):
         aid=row[0]
         ok=False
