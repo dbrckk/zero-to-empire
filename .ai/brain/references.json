@@ -8,7 +8,7 @@
     "add": {
       "definition": {
         "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-        "line": 22,
+        "line": 23,
         "kind": "function",
         "language": "python"
       },
@@ -369,110 +369,164 @@
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 22,
-          "preview": "def add(p,q):",
+          "line": 23,
+          "preview": "def add(a,b): return (a[0]+b[0],a[1]+b[1])",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 63,
-          "preview": "d.polygon(polygon_strip(add(P0,mul(u,10)),add(P1,mul(u,-10)),45),fill=(74,84,92,255))",
+          "line": 37,
+          "preview": "p=add(P0,mul(U,t))",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 64,
-          "preview": "d.polygon(polygon_strip(add(P0,mul(u,18)),add(P1,mul(u,-18)),34),fill=(18,25,31,255))",
+          "line": 38,
+          "preview": "p=add(p,mul(N,side))",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 69,
-          "preview": "a=add(add(P0,mul(u,28)),off)",
+          "line": 39,
+          "preview": "p=add(p,mul(DEPTH,depth))",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 70,
-          "preview": "b=add(add(P1,mul(u,-28)),off)",
+          "line": 44,
+          "preview": "add(add(start,mul(N,half_width)),mul(DEPTH,depth)),",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 77,
-          "preview": "a=add(c,mul(n,-53))",
+          "line": 45,
+          "preview": "add(add(end,mul(N,half_width)),mul(DEPTH,depth)),",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 78,
-          "preview": "b=add(c,mul(n,53))",
+          "line": 46,
+          "preview": "add(add(end,mul(N,-half_width)),mul(DEPTH,depth)),",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 80,
-          "preview": "d.line([add(c,mul(n,-38)),add(c,mul(n,38))],fill=(205,216,220,145),width=3)",
+          "line": 47,
+          "preview": "add(add(start,mul(N,-half_width)),mul(DEPTH,depth)),",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 89,
-          "preview": "add(add(c,mul(u,-45)),mul(n,45)),",
+          "line": 51,
+          "preview": "return [[p,add(p,depth_vec)] for p in poly]",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 90,
-          "preview": "add(add(c,mul(u,45)),mul(n,45)),",
+          "line": 54,
+          "preview": "lower=[add(p,depth_vec) for p in top_poly]",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 91,
-          "preview": "add(add(c,mul(u,45)),mul(n,-45)),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 92,
-          "preview": "add(add(c,mul(u,-45)),mul(n,-45)),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 96,
-          "preview": "add(add(c,mul(u,-27)),mul(n,27)),",
+          "line": 93,
+          "preview": "shadow_a=add(a,(5,7)); shadow_b=add(b,(5,7))",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
           "line": 97,
-          "preview": "add(add(c,mul(u,27)),mul(n,27)),",
+          "preview": "d.line([add(a,mul(N,-2)),add(b,mul(N,-2))],fill=(211,255,255,205),width=3)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 98,
-          "preview": "add(add(c,mul(u,27)),mul(n,-27)),",
+          "line": 102,
+          "preview": "a=add(c,mul(N,-51)); b=add(c,mul(N,51))",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 99,
-          "preview": "add(add(c,mul(u,-27)),mul(n,-27)),",
+          "line": 103,
+          "preview": "d.line([add(a,(6,8)),add(b,(6,8))],fill=(23,31,38,255),width=18)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
           "line": 105,
-          "preview": "d.line([add(P0,mul(n,-52)),add(P1,mul(n,-52))],fill=(232,239,242,105),width=4)",
+          "preview": "d.line([add(a,mul(U,-2)),add(b,mul(U,-2))],fill=(221,230,234,120),width=3)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 106,
-          "preview": "d.line([add(P0,mul(n,52)),add(P1,mul(n,52))],fill=(5,9,13,135),width=7)",
+          "line": 117,
+          "preview": "add(add(c,mul(U,-hu)),mul(N,hn)),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 118,
+          "preview": "add(add(c,mul(U, hu)),mul(N,hn)),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 119,
+          "preview": "add(add(c,mul(U, hu)),mul(N,-hn)),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 120,
+          "preview": "add(add(c,mul(U,-hu)),mul(N,-hn)),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 123,
+          "preview": "lower=[add(p,depth) for p in top]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 131,
+          "preview": "add(add(c,mul(U,-inner_hu)),mul(N,inner_hn)),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 132,
+          "preview": "add(add(c,mul(U, inner_hu)),mul(N,inner_hn)),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 133,
+          "preview": "add(add(c,mul(U, inner_hu)),mul(N,-inner_hn)),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 134,
+          "preview": "add(add(c,mul(U,-inner_hu)),mul(N,-inner_hn)),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 144,
+          "preview": "p=add(add(c,mul(U,du)),mul(N,dn))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 154,
+          "preview": "a=add(c,mul(N,-56)); b=add(c,mul(N,56))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 155,
+          "preview": "d.line([add(a,(5,7)),add(b,(5,7))],fill=(14,21,27,255),width=22)",
           "definition_candidate": false
         },
         {
@@ -500,7 +554,30 @@
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 81
+      "occurrence_count": 90
+    },
+    "sub": {
+      "definition": {
+        "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+        "line": 24,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/hf_static_manifest_factory.py",
+          "line": 133,
+          "preview": "safe_id = re.sub(r\"[^A-Za-z0-9_.-]+\", \"_\", ASSET_ID or \"static\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 24,
+          "preview": "def sub(a,b): return (a[0]-b[0],a[1]-b[1])",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 2
     },
     "mul": {
       "definition": {
@@ -513,217 +590,341 @@
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
           "line": 25,
-          "preview": "def mul(v,s):",
+          "preview": "def mul(v,s): return (v[0]*s,v[1]*s)",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 63,
-          "preview": "d.polygon(polygon_strip(add(P0,mul(u,10)),add(P1,mul(u,-10)),45),fill=(74,84,92,255))",
+          "line": 37,
+          "preview": "p=add(P0,mul(U,t))",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 64,
-          "preview": "d.polygon(polygon_strip(add(P0,mul(u,18)),add(P1,mul(u,-18)),34),fill=(18,25,31,255))",
+          "line": 38,
+          "preview": "p=add(p,mul(N,side))",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 68,
-          "preview": "off=mul(n,18*side)",
+          "line": 39,
+          "preview": "p=add(p,mul(DEPTH,depth))",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 69,
-          "preview": "a=add(add(P0,mul(u,28)),off)",
+          "line": 44,
+          "preview": "add(add(start,mul(N,half_width)),mul(DEPTH,depth)),",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 70,
-          "preview": "b=add(add(P1,mul(u,-28)),off)",
+          "line": 45,
+          "preview": "add(add(end,mul(N,half_width)),mul(DEPTH,depth)),",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 77,
-          "preview": "a=add(c,mul(n,-53))",
+          "line": 46,
+          "preview": "add(add(end,mul(N,-half_width)),mul(DEPTH,depth)),",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 78,
-          "preview": "b=add(c,mul(n,53))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 80,
-          "preview": "d.line([add(c,mul(n,-38)),add(c,mul(n,38))],fill=(205,216,220,145),width=3)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 89,
-          "preview": "add(add(c,mul(u,-45)),mul(n,45)),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 90,
-          "preview": "add(add(c,mul(u,45)),mul(n,45)),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 91,
-          "preview": "add(add(c,mul(u,45)),mul(n,-45)),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 92,
-          "preview": "add(add(c,mul(u,-45)),mul(n,-45)),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 96,
-          "preview": "add(add(c,mul(u,-27)),mul(n,27)),",
+          "line": 47,
+          "preview": "add(add(start,mul(N,-half_width)),mul(DEPTH,depth)),",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
           "line": 97,
-          "preview": "add(add(c,mul(u,27)),mul(n,27)),",
+          "preview": "d.line([add(a,mul(N,-2)),add(b,mul(N,-2))],fill=(211,255,255,205),width=3)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 98,
-          "preview": "add(add(c,mul(u,27)),mul(n,-27)),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 99,
-          "preview": "add(add(c,mul(u,-27)),mul(n,-27)),",
+          "line": 102,
+          "preview": "a=add(c,mul(N,-51)); b=add(c,mul(N,51))",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
           "line": 105,
-          "preview": "d.line([add(P0,mul(n,-52)),add(P1,mul(n,-52))],fill=(232,239,242,105),width=4)",
+          "preview": "d.line([add(a,mul(U,-2)),add(b,mul(U,-2))],fill=(221,230,234,120),width=3)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 106,
-          "preview": "d.line([add(P0,mul(n,52)),add(P1,mul(n,52))],fill=(5,9,13,135),width=7)",
+          "line": 117,
+          "preview": "add(add(c,mul(U,-hu)),mul(N,hn)),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 118,
+          "preview": "add(add(c,mul(U, hu)),mul(N,hn)),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 119,
+          "preview": "add(add(c,mul(U, hu)),mul(N,-hn)),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 120,
+          "preview": "add(add(c,mul(U,-hu)),mul(N,-hn)),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 122,
+          "preview": "depth=mul(DEPTH,1.15)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 131,
+          "preview": "add(add(c,mul(U,-inner_hu)),mul(N,inner_hn)),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 132,
+          "preview": "add(add(c,mul(U, inner_hu)),mul(N,inner_hn)),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 133,
+          "preview": "add(add(c,mul(U, inner_hu)),mul(N,-inner_hn)),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 134,
+          "preview": "add(add(c,mul(U,-inner_hu)),mul(N,-inner_hn)),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 144,
+          "preview": "p=add(add(c,mul(U,du)),mul(N,dn))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 154,
+          "preview": "a=add(c,mul(N,-56)); b=add(c,mul(N,56))",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 19
+      "occurrence_count": 22
     },
     "unit_and_normal": {
       "definition": {
         "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-        "line": 28,
+        "line": 27,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 28,
+          "line": 27,
           "preview": "def unit_and_normal(a,b):",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 39,
-          "preview": "u,n=unit_and_normal(a,b)",
+          "line": 34,
+          "preview": "U,N,LENGTH=unit_and_normal(P0,P1)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "pt": {
+      "definition": {
+        "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+        "line": 36,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/process_final_sprites.py",
+          "line": 215,
+          "preview": "if any(out_alpha.getpixel(pt) != 0 for pt in ((0, 0), (canvas_side - 1, 0), (0, canvas_side - 1), (canvas_side - 1, canvas_side - 1))):",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 53,
-          "preview": "u,n=unit_and_normal(P0,P1)",
+          "line": 36,
+          "preview": "def pt(t,side=0.0,depth=0.0):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 73,
+          "preview": "start=pt(16)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 74,
+          "preview": "end=pt(LENGTH-16)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 80,
+          "preview": "bevel=strip_poly(pt(28),pt(LENGTH-28),49)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 82,
+          "preview": "trench=strip_poly(pt(38),pt(LENGTH-38),36)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 86,
+          "preview": "lip_a=[pt(38,-36),pt(LENGTH-38,-36),pt(LENGTH-38,-27),pt(38,-27)]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 91,
+          "preview": "a=pt(48,side)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 92,
+          "preview": "b=pt(LENGTH-48,side)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 101,
+          "preview": "c=pt(t)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 114,
+          "preview": "c=pt(LENGTH*.52)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 148,
+          "preview": "d.line([pt(18,56),pt(LENGTH-18,56)],fill=(235,241,244,150),width=4)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 149,
+          "preview": "d.line([pt(18,-57),pt(LENGTH-18,-57)],fill=(4,8,12,180),width=8)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 153,
+          "preview": "c=pt(t)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/validate_runtime_asset.py",
+          "line": 70,
+          "preview": "if any(a.getpixel(pt)!=0 for pt in ((0,0),(im.width-1,0),(0,im.height-1),(im.width-1,im.height-1))):",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 3
+      "occurrence_count": 15
     },
-    "point_at": {
+    "strip_poly": {
       "definition": {
         "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-        "line": 35,
+        "line": 42,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 35,
-          "preview": "def point_at(t,u):",
+          "line": 42,
+          "preview": "def strip_poly(start,end,half_width,depth=0.0):",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 76,
-          "preview": "c=point_at(t,u)",
+          "line": 75,
+          "preview": "outer=strip_poly(start,end,58)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 87,
-          "preview": "c=point_at(length*.52,u)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 3
-    },
-    "polygon_strip": {
-      "definition": {
-        "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-        "line": 38,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 38,
-          "preview": "def polygon_strip(a,b,half_width):",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 62,
-          "preview": "d.polygon(polygon_strip(P0,P1,56),fill=(37,44,52,255))",
+          "line": 80,
+          "preview": "bevel=strip_poly(pt(28),pt(LENGTH-28),49)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 63,
-          "preview": "d.polygon(polygon_strip(add(P0,mul(u,10)),add(P1,mul(u,-10)),45),fill=(74,84,92,255))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 64,
-          "preview": "d.polygon(polygon_strip(add(P0,mul(u,18)),add(P1,mul(u,-18)),34),fill=(18,25,31,255))",
+          "line": 82,
+          "preview": "trench=strip_poly(pt(38),pt(LENGTH-38),36)",
           "definition_candidate": false
         }
       ],
       "occurrence_count": 4
     },
+    "quad_extrude": {
+      "definition": {
+        "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+        "line": 50,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 50,
+          "preview": "def quad_extrude(poly,depth_vec):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "draw_side_faces": {
+      "definition": {
+        "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+        "line": 53,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 53,
+          "preview": "def draw_side_faces(draw,top_poly,depth_vec,fill):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 76,
+          "preview": "draw_side_faces(d,outer,DEPTH,(20,28,34,255))",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
     "render": {
       "definition": {
         "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-        "line": 47,
+        "line": 61,
         "kind": "function",
         "language": "python"
       },
@@ -808,13 +1009,13 @@
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 47,
+          "line": 61,
           "preview": "def render():",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 134,
+          "line": 186,
           "preview": "im=render()",
           "definition_candidate": false
         }
@@ -824,7 +1025,7 @@
     "validate": {
       "definition": {
         "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-        "line": 110,
+        "line": 161,
         "kind": "function",
         "language": "python"
       },
@@ -921,13 +1122,13 @@
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 110,
+          "line": 161,
           "preview": "def validate(im):",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 135,
+          "line": 187,
           "preview": "metrics=validate(im)",
           "definition_candidate": false
         },
@@ -967,7 +1168,7 @@
     "main": {
       "definition": {
         "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-        "line": 132,
+        "line": 184,
         "kind": "function",
         "language": "python"
       },
@@ -1676,19 +1877,19 @@
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 132,
+          "line": 184,
           "preview": "def main():",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 143,
+          "line": 196,
           "preview": "'runtime_unchanged':'app/src/main/res/drawable-nodpi/zte_terrain_07_final.webp',",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 159,
+          "line": 215,
           "preview": "raise SystemExit(main())",
           "definition_candidate": false
         }

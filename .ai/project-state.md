@@ -22,27 +22,26 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T14:29:24Z
+Generated: 2026-09-19T14:32:14Z
 
 ### Git
 - Branch: `main`
-- Head: `2bec901c906e`
-- Commit date: 2026-09-19T16:29:10+02:00
-- Commit: art: author isolated TER-07 energy conduit candidate (#66)
-- Tracked files: 1319
+- Head: `09041fbf395f`
+- Commit date: 2026-09-19T16:31:59+02:00
+- Commit: art: upgrade TER-07 conduit candidate to premium 2.5D v3 (#67)
+- Tracked files: 1324
 
 ### Recently changed files
 - `.github/workflows/ter07-energy-conduit-candidate.yml`
+- `art/production/ter07/semantic-review-v2.md`
 - `tools/sprites/ter07_energy_conduit_candidate.py`
+- `art/production/ter07/contact.png`
+- `art/production/ter07/qa.json`
+- `art/production/ter07/report.json`
+- `art/production/ter07/zte_terrain_07_candidate_v2.png`
 - `art/production/controlled-building-regen-queue.json`
 - `art/production/controlled-character-regen-queue.json`
 - `ops/sprite-wave-trigger.txt`
-- `.github/workflows/kaggle-mass-sprite-factory.yml`
-- `kaggle/github_mass_factory.py`
-- `tools/sprites/kaggle_character_sheet_factory_v1.py`
-- `art/production/semantic-review-controlled-pass-2.md`
-- `tools/sprites/pollinations_building_batch.py`
-- `tools/sprites/pollinations_building_factory.py`
 
 ### Project signals
 - `build.gradle.kts`

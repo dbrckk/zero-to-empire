@@ -3577,72 +3577,108 @@ files = [by_stem[stem] for stem in sorted(wanted)]
 ## File: sprites/ter07_energy_conduit_candidate.py
 ```python
 #!/usr/bin/env python3
-"""Author a candidate-only semantic replacement for TER-07.
+"""Author a candidate-only 2.5D semantic replacement for TER-07.
 
 TER-07 is an Expansion-era energy conduit connector, not a terrain platform.
-The candidate stays isolated on transparency and is intentionally NOT copied to
-runtime by this script. Semantic review remains required before replacement.
+This v3 candidate adds material depth, bevels and an extruded junction while
+remaining isolated on transparency. It never writes the runtime asset.
 """
 ⋮----
 ROOT=Path(__file__).resolve().parents[2]
 OUT=ROOT/'art/production/ter07'
 SIDE=1024
 ⋮----
-P0=(170,720)
-P1=(854,322)
+P0=(170.0,720.0)
+P1=(854.0,322.0)
+DEPTH=(18.0,25.0)
 ⋮----
-def add(p,q)
-⋮----
-def mul(v,s)
+def add(a,b): return (a[0]+b[0],a[1]+b[1])
+def sub(a,b): return (a[0]-b[0],a[1]-b[1])
+def mul(v,s): return (v[0]*s,v[1]*s)
 ⋮----
 def unit_and_normal(a,b)
 ⋮----
-dx=b[0]-a[0];dy=b[1]-a[1]
-n=math.hypot(dx,dy)
-u=(dx/n,dy/n)
-normal=(-u[1],u[0])
+dx=b[0]-a[0]; dy=b[1]-a[1]
+length=math.hypot(dx,dy)
+u=(dx/length,dy/length)
+n=(-u[1],u[0])
 ⋮----
-def point_at(t,u)
+def pt(t,side=0.0,depth=0.0)
 ⋮----
-def polygon_strip(a,b,half_width)
+p=add(P0,mul(U,t))
+p=add(p,mul(N,side))
+p=add(p,mul(DEPTH,depth))
+⋮----
+def strip_poly(start,end,half_width,depth=0.0)
+⋮----
+def quad_extrude(poly,depth_vec)
+⋮----
+def draw_side_faces(draw,top_poly,depth_vec,fill)
+⋮----
+lower=[add(p,depth_vec) for p in top_poly]
+# Only visible lower/right side faces in the shared 2.5D light.
+⋮----
+j=(i+1)%4
 ⋮----
 def render()
 ⋮----
 im=Image.new('RGBA',(SIDE,SIDE),(0,0,0,0))
+⋮----
+# Controlled cyan bloom, restricted to the connector footprint.
 glow=Image.new('RGBA',(SIDE,SIDE),(0,0,0,0))
 gd=ImageDraw.Draw(glow,'RGBA')
+⋮----
+glow=glow.filter(ImageFilter.GaussianBlur(23))
+⋮----
 d=ImageDraw.Draw(im,'RGBA')
 ⋮----
-length=math.hypot(P1[0]-P0[0],P1[1]-P0[1])
+start=pt(16)
+end=pt(LENGTH-16)
+outer=strip_poly(start,end,58)
 ⋮----
-# Restrained cyan under-glow. It follows only the connector, never a tile.
+# Top bevel and recessed channel.
+bevel=strip_poly(pt(28),pt(LENGTH-28),49)
 ⋮----
-glow=glow.filter(ImageFilter.GaussianBlur(25))
+trench=strip_poly(pt(38),pt(LENGTH-38),36)
 ⋮----
-# Structural outer housing and inset trench.
+# Lower-right channel lip adds depth without becoming a floor card.
+lip_a=[pt(38,-36),pt(LENGTH-38,-36),pt(LENGTH-38,-27),pt(38,-27)]
 ⋮----
-# Two energy rails provide an unmistakable conduit read.
+# Twin recessed energy rails, with shadow, emissive core and hot highlight.
 ⋮----
-off=mul(n,18*side)
-a=add(add(P0,mul(u,28)),off)
-b=add(add(P1,mul(u,-28)),off)
+a=pt(48,side)
+b=pt(LENGTH-48,side)
+shadow_a=add(a,(5,7)); shadow_b=add(b,(5,7))
 ⋮----
-# Attached clamps/brackets. Every detail stays fused to the connector.
+# Attached structural clamps. Their lower halves are darker to reinforce extrusion.
 ⋮----
-c=point_at(t,u)
-a=add(c,mul(n,-53))
-b=add(c,mul(n,53))
+c=pt(t)
+a=add(c,mul(N,-51)); b=add(c,mul(N,51))
 ⋮----
-# Small recessed energy node.
-r=11
+# Bolted energy coupler: dark socket -> cyan lens -> white pin highlight.
+r=13
 ⋮----
-# Compact inline junction block reinforces function without becoming a platform.
-c=point_at(length*.52,u)
-block=[
+# Inline junction box, integrated in the conduit and visibly extruded.
+c=pt(LENGTH*.52)
+hu=49; hn=49
+top=[
+depth=mul(DEPTH,1.15)
+lower=[add(p,depth) for p in top]
+# Visible junction side faces.
 ⋮----
+inner_hu=31; inner_hn=30
 inner=[
 ⋮----
-# Shared upper-left highlight / lower-right shadow.
+# Recessed reactor lens and small material bolts.
+r=16
+⋮----
+p=add(add(c,mul(U,du)),mul(N,dn))
+⋮----
+# Shared upper-left key highlight and lower-right occlusion edge.
+⋮----
+# End caps make this a modular connector, not an arbitrary strip.
+⋮----
+a=add(c,mul(N,-56)); b=add(c,mul(N,56))
 ⋮----
 def validate(im)
 ⋮----
@@ -3653,15 +3689,14 @@ margin=min(bbox[0],bbox[1],SIDE-bbox[2],SIDE-bbox[3])
 ⋮----
 coverage=sum(a.histogram()[8:])/(SIDE*SIDE)
 ⋮----
-# Semantic geometry guard: connector should be long/narrow, never a square pad.
-w=bbox[2]-bbox[0];h=bbox[3]-bbox[1]
+w=bbox[2]-bbox[0]; h=bbox[3]-bbox[1]
 aspect=max(w,h)/max(1,min(w,h))
 ⋮----
 def main()
 ⋮----
 im=render()
 metrics=validate(im)
-png=OUT/'zte_terrain_07_candidate_v2.png'
+png=OUT/'zte_terrain_07_candidate_v3.png'
 ⋮----
 report={
 ```
