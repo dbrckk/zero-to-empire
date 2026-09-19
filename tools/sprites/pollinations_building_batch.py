@@ -21,14 +21,14 @@ def rows():
             out.append(cols)
     return out
 
-def mark_done(asset_id:str):
+def mark_runtime(asset_id:str):
     lines=MANIFEST.read_text(encoding='utf-8').splitlines()
     out=[]; changed=0
     for line in lines:
         if line.startswith('|'):
             cols=[c.strip() for c in line.split('|')[1:-1]]
             if len(cols)==5 and cols[0]==asset_id and cols[4].upper()=='TODO':
-                cols[4]='DONE'; line='| '+' | '.join(cols)+' |'; changed+=1
+                cols[4]='RUNTIME'; line='| '+' | '.join(cols)+' |'; changed+=1
         out.append(line)
     if changed!=1: raise RuntimeError(f'expected one TODO row for {asset_id}, changed={changed}')
     MANIFEST.write_text('\n'.join(out)+'\n',encoding='utf-8')
@@ -83,9 +83,9 @@ def main():
                     attempts_log.append({'attempt':attempt+1,'seed':seed,'stage':'runtime-qa','issues':data.get('issues',[])})
                     runtime.unlink(missing_ok=True)
                     continue
-                mark_done(aid)
+                mark_runtime(aid)
                 summary['successes'].append({'id':aid,'seed':seed,'candidate':str(out.relative_to(ROOT)),'runtime':str(runtime.relative_to(ROOT))})
-                print(f'BATCH_DONE={aid} seed={seed}',flush=True)
+                print(f'BATCH_RUNTIME={aid} seed={seed}',flush=True)
                 ok=True
                 break
             except Exception as e:

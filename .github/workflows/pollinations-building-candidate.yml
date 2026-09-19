@@ -55,10 +55,10 @@ jobs:
       - name: Install strict image tooling
         run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0' 'rembg[cpu]>=2.0.68,<3'
 
-      - name: Generate and double-validate strict building batch
+      - name: Generate and technically validate building batch
         run: python -u tools/sprites/pollinations_building_batch.py
 
-      - name: Require at least one strict success
+      - name: Require at least one technical success
         shell: bash
         run: |
           python - <<'PY'
@@ -67,12 +67,12 @@ jobs:
           d=json.loads(Path('art/production/pollinations-batch-summary.json').read_text())
           if not d.get('successes'):
               raise SystemExit('No strict Pollinations building candidate passed this run')
-          print('STRICT_BATCH_DONE=' + ','.join(x['id'] for x in d['successes']))
+          print('STRICT_BATCH_RUNTIME=' + ','.join(x['id'] for x in d['successes']))
           if d.get('failures'):
               print('STRICT_BATCH_BLOCKED=' + ','.join(x['id'] for x in d['failures']))
           PY
 
-      - name: Commit only double-validated DONE sprites
+      - name: Commit technically validated RUNTIME sprites
         shell: bash
         run: |
           set -euo pipefail
