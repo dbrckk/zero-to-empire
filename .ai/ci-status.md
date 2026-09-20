@@ -1,14 +1,13 @@
 # CI status
 
-Summary: 4 success / 0 failure / 1 active
+Summary: 2 success / 0 failure / 4 active
 
-- Reconcile reviewed run 25: completed / skipped (74c2a8a4)
-- Asset Autofactory CI: completed / success (58f6cc74)
-- Asset Autofactory CI: completed / success (63739a10)
-- Reconcile reviewed run 25: completed / skipped (74c2a8a4)
-- Android CI: completed / success (74c2a8a4)
-- Android Emulator Smoke: in_progress / pending (74c2a8a4)
-- Reconcile reviewed run 25: completed / skipped (6ac8f007)
-- Android CI: completed / success (80d69944)
+- Reconcile reviewed run 25: in_progress / pending (3a14f0dd)
+- Reconcile existing runtime TODOs: in_progress / pending (3a14f0dd)
+- Android CI: in_progress / pending (fcfc89cf)
+- Reconcile Sprite Progress Ledger: completed / success (66074099)
+- Android CI: in_progress / pending (cea1452a)
+- Android CI: completed / cancelled (ddf29877)
+- Kaggle Mass Sprite Factory: completed / success (1d82a2a3)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

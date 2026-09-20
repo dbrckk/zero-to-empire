@@ -2290,6 +2290,30 @@ evolution = EVOLUTION[family]
 instruction = TIER[tier]
 short = (
 detail = (
+⋮----
+def architectural_band_fill(final, lo, hi)
+⋮----
+"""Mask fill inside the sprite bbox for a relative vertical band."""
+alpha=np.asarray(final.getchannel('A'),dtype=np.uint8)
+⋮----
+h=max(1,y1-y0)
+ya=y0+int(lo*h); yb=max(ya+1,y0+int(hi*h))
+band=alpha[ya:yb,x0:x1]>=32
+⋮----
+V15_BRANCH_SCORE=v15.branch_score
+⋮----
+def branch_score(recs)
+⋮----
+family=int(recs[0][0]['family'])
+⋮----
+signatures=[]
+⋮----
+upper=architectural_band_fill(final,.20,.50)
+lower=architectural_band_fill(final,.58,.88)
+⋮----
+offenders=[x for x in signatures if x[2]>.76 and x[1]<.58]
+⋮----
+details=','.join(f'{aid}(upper={upper:.2f},lower={lower:.2f})' for aid,upper,lower in offenders)
 ```
 
 ## File: sprites/kaggle_building_family_factory.py

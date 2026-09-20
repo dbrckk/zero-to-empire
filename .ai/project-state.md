@@ -22,23 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T08:38:13Z
+Generated: 2026-09-20T11:16:35Z
 
 ### Git
 - Branch: `main`
-- Head: `75e5e4f63478`
-- Commit date: 2026-09-20T10:37:58+02:00
-- Commit: fix(art): correct autofactory retry eligibility (#116)
-- Tracked files: 1357
+- Head: `3a14f0ddfe88`
+- Commit date: 2026-09-20T13:16:20+02:00
+- Commit: ci(art): reconcile 143 strict asset state
+- Tracked files: 1358
 
 ### Recently changed files
-- `tools/sprites/asset_wave_orchestrator.py`
-- `app/src/main/java/com/zerotoempire/game/IndustrialBusinessFx.kt`
-- `app/src/main/java/com/zerotoempire/game/WorldBusinessVisual.kt`
-- `art/production/bld12-v17-retry.md`
+- `ops/runtime-reconcile-trigger.txt`
+- `art/production/semantic-review-bld07-kaggle-run-35499130912.md`
+- `PROJECT_CONTINUITY.md`
+- `tools/sprites/kaggle_building_family_factory_v17.py`
 - `art/production/master-asset-queue.json`
-- `tools/android/emulator_functional_smoke.sh`
-- `ops/sprite-wave-trigger.txt`
 
 ### Project signals
 - `build.gradle.kts`

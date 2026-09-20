@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 74c2a8a47742cb6d63b7a05d94398c4f81e7b60b
-Head: 75e5e4f63478d3ccfddd09f61c51a74a9efa21f0
+Base: fcfc89cfff58571e700dde6489cd8c9af2b345ae
+Head: 3a14f0ddfe882fed373e705d63a1c3052b7c03d9
 
 ## Changed files
-- M tools/sprites/asset_wave_orchestrator.py
+- M ops/runtime-reconcile-trigger.txt
 
 ## Affected areas
-- tools
+- ops
 
 ## Related test candidates
 - No direct filename-based test match detected.
