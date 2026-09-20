@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T18:41:47Z
+Generated: 2026-09-20T19:10:47Z
 
 ### Git
 - Branch: `main`
-- Head: `d9f843b8339b`
-- Commit date: 2026-09-20T20:41:24+02:00
-- Commit: art: add action-specific motion gates for character sheets
-- Tracked files: 1375
+- Head: `c287dd9a23b1`
+- Commit date: 2026-09-20T21:10:29+02:00
+- Commit: art: kick v18.1 BLD-04 retry
+- Tracked files: 1376
 
 ### Recently changed files
-- `tools/sprites/kaggle_character_sheet_factory_v1.py`
+- `ops/autofactory-kick.txt`
+- `art/production/semantic-review-bld04-kaggle-run-35528759546.md`
 - `art/production/generation-rejection-ledger.json`
+- `art/production/controlled-building-regen-queue.json`
 - `art/production/master-asset-queue.json`
-- `tools/sprites/kaggle_building_family_factory_v17.py`
-- `tools/sprites/kaggle_building_family_factory_v16.py`
 
 ### Project signals
 - `build.gradle.kts`

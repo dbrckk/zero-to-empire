@@ -1,13 +1,13 @@
 # Change impact
 
-Base: db9d7012a9b11984cafa63bf1649f7858b81212d
-Head: d9f843b8339bfd30e6bc991cc63cd03680682134
+Base: c39eac6feb1309e23d1576fb6f338f9db7a6a340
+Head: c287dd9a23b101a0d8109a6697425cea3573bd8e
 
 ## Changed files
-- M tools/sprites/kaggle_character_sheet_factory_v1.py
+- M ops/autofactory-kick.txt
 
 ## Affected areas
-- tools
+- ops
 
 ## Related test candidates
 - No direct filename-based test match detected.
