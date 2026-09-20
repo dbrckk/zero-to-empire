@@ -2332,6 +2332,9 @@ adj=[v1610.normalized_silhouette_iou(recs[n-1][1],recs[n][1]) for n in range(1,l
 anchor=[v1610.normalized_silhouette_iou(recs[0][1],recs[n][1]) for n in range(1,len(recs))]
 ⋮----
 failures=[]
+# T1 may retain a very similar outer shell if the family then proves
+# strong cumulative evolution. Avoid rejecting a good branch on tiny
+# mask noise around the old .955 boundary.
 ```
 
 ## File: sprites/kaggle_building_family_factory.py

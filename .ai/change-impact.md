@@ -1,14 +1,14 @@
 # Change impact
 
-Base: c8019c0c8c4ffd43b44615f1df041943da08f4a8
-Head: f0f10c713715593e55ec22940f1631aa6ac863ef
+Base: 827eb622431ced0c2e3dd35a97f61d6ce00ab110
+Head: 99735f905572919c8849f1c54e155ca55818aced
 
 ## Changed files
-- M .github/workflows/asset-autofactory-ci.yml
-- M tools/sprites/asset_queue_utils.py
+- A art/production/semantic-review-bld12-v17.2-gate-calibration-run-35507534445.md
+- M tools/sprites/kaggle_building_family_factory_v17.py
 
 ## Affected areas
-- .github
+- art
 - tools
 
 ## Related test candidates
