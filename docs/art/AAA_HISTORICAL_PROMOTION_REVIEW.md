@@ -16,8 +16,9 @@ These families must preserve recognizable family identity while showing clear T0
 
 ## FX requiring evidence reconciliation
 
-- FX-00 through FX-08
-- FX-17
+- FX-01 through FX-03
+
+Resolved in the 2026-09-20 historical FX review: FX-00, FX-04, FX-05, FX-06, FX-07, FX-08 and FX-17.
 
 Each must have correct 4×2 / 8-frame runtime structure where applicable, clean padding, semantic match to its manifest role, active runtime visibility and reduced-motion behavior.
 
@@ -40,4 +41,5 @@ A future `DONE` transition requires all of the following:
 
 Automatic candidate-generation/finalization workflows may advance only to `RUNTIME`. They must never set `DONE`.
 
-- `BLD-11-T0..T6`: resolved by dedicated semantic review of Kaggle run `35473600052`; exact reviewed masters promoted to runtime by commit `2633da6851e6888387330650e2d75d7794c1df1f`. Strict bookkeeping moves to DONE only with green Android CI on the reconciliation PR.
+- `BLD-11-T0..T6`: resolved by dedicated semantic review of Kaggle run `35473600052`; exact reviewed masters promoted to runtime by commit `2633da6851e6888387330650e2d75d7794c1df1f`.
+- `FX-00`, `FX-04`, `FX-05`, `FX-06`, `FX-07`, `FX-08`, `FX-17`: resolved by historical evidence run `35493610023`, sheet-aware 4×2 runtime contract, exact canonical runtime references and explicit reduced-motion behavior.
