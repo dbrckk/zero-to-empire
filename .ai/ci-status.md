@@ -1,15 +1,15 @@
 # CI status
 
-Summary: 2 success / 1 failure / 2 active
+Summary: 4 success / 1 failure / 2 active
 
-- Android CI: in_progress / pending (99735f90)
-- Kaggle Mass Sprite Factory: in_progress / pending (827eb622)
-- Asset Autofactory 235: completed / success (b7ca85cd)
-- Reconcile reviewed run 25: completed / skipped (c8019c0c)
-- Reconcile reviewed run 25: completed / skipped (c8019c0c)
-- Reconcile reviewed run 25: completed / skipped (d1083dab)
-- Kaggle Mass Sprite Factory: completed / failure (d1083dab)
-- Android CI: completed / success (d1083dab)
+- Asset Autofactory 235: in_progress / pending (2e71790b)
+- Android CI: in_progress / pending (2e71790b)
+- Manifest Static GPU Batch: completed / success (264ec453)
+- Pollinations Character Atlas: completed / success (264ec453)
+- Pollinations Building Candidate: completed / success (264ec453)
+- Reconcile reviewed run 25: completed / skipped (264ec453)
+- Android CI: completed / success (99735f90)
+- Kaggle Mass Sprite Factory: completed / failure (827eb622)
 
 ## Latest failed run structure
 - Job: kaggle

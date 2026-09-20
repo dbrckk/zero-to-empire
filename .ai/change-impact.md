@@ -1,14 +1,18 @@
 # Change impact
 
-Base: 827eb622431ced0c2e3dd35a97f61d6ce00ab110
-Head: 99735f905572919c8849f1c54e155ca55818aced
+Base: 264ec45332bc37355eaf86ce734b5e4966622694
+Head: 2e71790bd75cc89756e86478159ddce22d600e6e
 
 ## Changed files
-- A art/production/semantic-review-bld12-v17.2-gate-calibration-run-35507534445.md
+- M .github/workflows/asset-autofactory.yml
+- A art/production/semantic-review-bld12-v17.4-calibration-run-35508938195.md
+- A ops/autofactory-kick.txt
 - M tools/sprites/kaggle_building_family_factory_v17.py
 
 ## Affected areas
+- .github
 - art
+- ops
 - tools
 
 ## Related test candidates

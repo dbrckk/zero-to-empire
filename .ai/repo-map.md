@@ -860,6 +860,9 @@ name: Asset Autofactory 235
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - 'ops/autofactory-kick.txt'
   schedule:
     - cron: '*/15 * * * *'
   workflow_run:

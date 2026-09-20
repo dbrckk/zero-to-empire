@@ -22,26 +22,26 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T11:56:32Z
+Generated: 2026-09-20T13:35:59Z
 
 ### Git
 - Branch: `main`
-- Head: `99735f905572`
-- Commit date: 2026-09-20T13:56:15+02:00
-- Commit: fix(art): calibrate BLD-12 structural gate against v17.2 evidence
-- Tracked files: 1360
+- Head: `f7c60dfc6c97`
+- Commit date: 2026-09-20T13:35:26Z
+- Commit: art(auto): advance 235-asset production queue
+- Tracked files: 1362
 
 ### Recently changed files
-- `art/production/semantic-review-bld12-v17.2-gate-calibration-run-35507534445.md`
+- `art/production/master-asset-queue.json`
+- `.github/workflows/asset-autofactory.yml`
+- `art/production/semantic-review-bld12-v17.4-calibration-run-35508938195.md`
+- `ops/autofactory-kick.txt`
 - `tools/sprites/kaggle_building_family_factory_v17.py`
+- `art/production/semantic-review-bld12-v17.2-gate-calibration-run-35507534445.md`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
-- `art/production/master-asset-queue.json`
 - `.github/workflows/asset-autofactory-ci.yml`
 - `tools/sprites/asset_queue_utils.py`
-- `art/production/controlled-building-regen-queue.json`
-- `art/production/semantic-review-bld12-kaggle-run-35503929393.md`
-- `ops/runtime-reconcile-trigger.txt`
 
 ### Project signals
 - `build.gradle.kts`
