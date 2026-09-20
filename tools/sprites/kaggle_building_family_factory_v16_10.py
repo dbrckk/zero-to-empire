@@ -68,7 +68,7 @@ TIER={
  6:'mastery evolution: apex Tech Company headquarters with a distinct prestige crown/data core, multi-level connected lab wings and maximum integrated machinery; clearly evolved from T5, never merely scaled'
 }
 STYLE=('premium AAA mobile strategy industrial asset, stylized 2.5D, 34-degree orthographic three-quarter camera, '
-       'graphite steel alloys, upper-left key light, cool fill, restrained amber/cyan emissive accents, perfectly flat solid neutral gray background, no gradient, no vignette, no horizon, no shadow card')
+       'graphite steel alloys, upper-left key light, cool fill, restrained amber/cyan emissive accents, shadowless catalog render, perfectly flat solid neutral gray background, no gradient, no vignette, no horizon, no shadow card')
 
 # Positive spatial formulation: describe what fills the lower silhouette instead of
 # repeatedly naming a floor/site. The model should see one product-like object.
@@ -78,8 +78,9 @@ FOOTPRINT=(
  'Outside that wall base, the image is perfectly uniform neutral gray with constant RGB value to every edge. '
  'Every tank, pipe, vent, bay and service module is fused to the main architectural mass. '
  'Show exactly one self-contained building object, centered with generous gray clearance on all sides. '
- 'The asset ends at the exterior building walls: no pavement, parking lot, road, yard, plaza, foundation pad, display plinth, surrounding slab, ground plane or cast shadow. '
- 'No people, vehicles, loose equipment, furniture, crates, tools, emitted effects, signage, scenery or secondary objects. '
+ 'The asset ends at the exterior building walls: no pavement, parking lot, road, yard, plaza, foundation pad, display plinth, surrounding slab, ground plane, contact shadow, cast shadow or ambient floor shadow. The building should visually float against the gray for clean mask extraction. '
+ 'All facade panels are blank architectural surfaces: zero text, pseudo-text, letters, numbers, logos, glyphs, labels, signage, decals, warning marks or readable symbols. '
+ 'No people, vehicles, loose equipment, furniture, crates, tools, emitted effects, scenery or secondary objects. '
  'Outside the building wall footprint there must be only perfectly uniform neutral gray background.'
 )
 
