@@ -148,7 +148,12 @@ def prepare_building_group(queue: dict[str, Any], group: str) -> dict[str, Any]:
 def prepare_character_group(queue: dict[str, Any], group: str) -> dict[str, Any]:
     assets = by_id(queue)
     group_assets = sorted(
-        [x for x in queue["assets"] if x["group"] == group and x["strict_status"] != "DONE"],
+        [
+            x for x in queue["assets"]
+            if x["group"] == group
+            and x["strict_status"] != "DONE"
+            and x["pipeline_status"] != "PAUSED"
+        ],
         key=lambda x: x["id"],
     )
     targets = []
@@ -175,7 +180,7 @@ def next_group(queue: dict[str, Any], lane: str, priority: list[str]) -> str | N
         if x["lane"] == lane
         and x["strict_status"] != "DONE"
         and x["pipeline_status"] in {
-            "PENDING", "PENDING_KAGGLE", "PAUSED", "BLOCKED",
+            "PENDING", "PENDING_KAGGLE", "BLOCKED",
             "REJECT", "REJECTED", "REJECTED_SEMANTIC", "BLOCKED_AUTOMATION_LIMIT"
         }
         and int(x.get("attempts") or 0) < MAX_ATTEMPTS
