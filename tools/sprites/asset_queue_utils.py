@@ -2,9 +2,9 @@
 """Shared state helpers for the 235-asset autonomous production queue.
 
 The master queue deliberately does not trust per-row DONE values from the legacy
-manifest while the historical semantic review is open. The strict baseline is defined by the reviewed ledger. BLD-11 and seven
-historical FX have now been explicitly reconciled; unresolved work remains in
-building families, 24 character sheets and FX-01/02/03.
+manifest while historical semantic review is open. The strict baseline is defined by the reviewed ledger. BLD-11 and all
+historical FX have now been explicitly reconciled; unresolved work remains only in
+building families and 24 character sheets.
 ONB-00 is outside the 235 production target.
 """
 from __future__ import annotations
@@ -27,7 +27,7 @@ ROW = re.compile(
 )
 
 TARGET_TOTAL = 235
-STRICT_BASELINE = 140
+STRICT_BASELINE = 143
 MAX_ATTEMPTS = 8
 
 BUILDING_PRIORITY = ["BLD-04", "BLD-07", "BLD-11", "BLD-12", "BLD-13",
@@ -76,9 +76,8 @@ def unresolved_ids() -> set[str]:
             continue
         ids.update(f"BLD-{family:02d}-T{tier}" for tier in range(7))
     ids.update(r["id"] for r in manifest_rows() if r["id"].startswith("CHR-"))
-    ids.update({"FX-01", "FX-02", "FX-03"})
-    if len(ids) != 95:
-        raise RuntimeError(f"Strict unresolved set drifted: expected 95, got {len(ids)}")
+    if len(ids) != 92:
+        raise RuntimeError(f"Strict unresolved set drifted: expected 92, got {len(ids)}")
     return ids
 
 
