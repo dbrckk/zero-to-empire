@@ -6,6 +6,9 @@ on:
     paths:
       - 'tools/assets/**'
       - 'tools/sprites/audit_complete_sprite_manifest.py'
+      - 'tools/sprites/kaggle_*factory*.py'
+      - 'kaggle/github_mass_factory.py'
+      - 'art/production/generation-rejection-ledger.json'
       - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
       - 'docs/art/UNIFIED_ASSET_PIPELINE.md'
       - '.github/workflows/asset-pipeline-ci.yml'
@@ -14,6 +17,9 @@ on:
     paths:
       - 'tools/assets/**'
       - 'tools/sprites/audit_complete_sprite_manifest.py'
+      - 'tools/sprites/kaggle_*factory*.py'
+      - 'kaggle/github_mass_factory.py'
+      - 'art/production/generation-rejection-ledger.json'
       - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
       - 'docs/art/UNIFIED_ASSET_PIPELINE.md'
       - '.github/workflows/asset-pipeline-ci.yml'
@@ -41,6 +47,34 @@ jobs:
 
       - name: Install manifest audit dependencies
         run: python -m pip install --disable-pip-version-check Pillow==11.3.0
+
+      - name: Compile production sprite generators
+        run: |
+          python -m py_compile \
+            kaggle/github_mass_factory.py \
+            tools/sprites/kaggle_character_sheet_factory_v1.py \
+            tools/sprites/kaggle_building_family_factory_v14.py \
+            tools/sprites/kaggle_building_family_factory_v15.py \
+            tools/sprites/kaggle_building_family_factory_v16.py \
+            tools/sprites/kaggle_building_family_factory_v16_10.py \
+            tools/sprites/kaggle_building_family_factory_v17.py
+
+      - name: Validate rejection-memory schema
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('art/production/generation-rejection-ledger.json')
+          d=json.loads(p.read_text())
+          assert d.get('schema_version')==1
+          rows=d.get('entries')
+          assert isinstance(rows,list) and rows
+          for i,row in enumerate(rows):
+              assert isinstance(row.get('reason'),str) and row['reason'].strip(), i
+              assert isinstance(row.get('prompt_hint'),str) and row['prompt_hint'].strip(), i
+              assert row.get('target_prefix') or row.get('role'), i
+          print(f"REJECTION_MEMORY_SCHEMA_PASS={len(rows)}")
+          PY
 
       - name: Run unified asset pipeline unit tests
         run: python -m unittest discover -s tools/assets -p 'test_*.py' -v
