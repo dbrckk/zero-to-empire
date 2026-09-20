@@ -182,6 +182,7 @@ app/
               IdentitySystems.kt
               IdentityUi.kt
               IncomePickupSparkle.kt
+              IndustrialBusinessFx.kt
               InterstitialController.kt
               InterstitialPolicy.kt
               LateGame.kt
@@ -837,11 +838,11 @@ jobs:
           assert len(assets)==235
           assert len({x['id'] for x in assets})==235
           assert 'ONB-00' not in {x['id'] for x in assets}
-          assert sum(x['strict_status']=='DONE' for x in assets)==126
-          assert sum(x['strict_status']!='DONE' for x in assets)==109
-          assert sum(x['lane']=='kaggle-building-family' and x['strict_status']!='DONE' for x in assets)==75
+          assert sum(x['strict_status']=='DONE' for x in assets)==140
+          assert sum(x['strict_status']!='DONE' for x in assets)==95
+          assert sum(x['lane']=='kaggle-building-family' and x['strict_status']!='DONE' for x in assets)==68
           assert sum(x['lane']=='kaggle-character-sheet' and x['strict_status']!='DONE' for x in assets)==24
-          assert sum(x['lane']=='fx-runtime-reconciliation' and x['strict_status']!='DONE' for x in assets)==10
+          assert sum(x['lane']=='fx-runtime-reconciliation' and x['strict_status']!='DONE' for x in assets)==3
           assert s['action'].startswith('WAIT_') or s['action'] in {
               'PRODUCTION_235_COMPLETE_REVIEW_BACKLOG',
               'NO_AUTOMATIC_WORK_AVAILABLE',
@@ -2266,6 +2267,12 @@ jobs:
           set -euo pipefail
           rm -rf /tmp/zte-kaggle; mkdir -p /tmp/zte-kaggle
           cp kaggle/github_mass_factory.py /tmp/zte-kaggle/
+          mkdir -p /tmp/zte-kaggle/tools/sprites
+          cp tools/sprites/kaggle_building_family_factory_v16.py \
+             tools/sprites/kaggle_building_family_factory_v16_10.py \
+             tools/sprites/kaggle_building_family_factory_v15.py \
+             tools/sprites/kaggle_building_family_factory_v14.py \
+             /tmp/zte-kaggle/tools/sprites/
           sed "s/__KAGGLE_USERNAME__/${KAGGLE_USERNAME}/g" kaggle/kernel-metadata.template.json > /tmp/zte-kaggle/kernel-metadata.json
           EXPECTED_GENERATOR_SHA="$(sha256sum tools/sprites/kaggle_building_family_factory_v16.py | cut -d' ' -f1)"
           echo "EXPECTED_GENERATOR_SHA=$EXPECTED_GENERATOR_SHA"
@@ -2274,6 +2281,20 @@ jobs:
           from pathlib import Path
           p=Path('/tmp/zte-kaggle/github_mass_factory.py')
           s=p.read_text()
+          import base64,io,zipfile
+          names=[
+              'kaggle_building_family_factory_v16.py',
+              'kaggle_building_family_factory_v16_10.py',
+              'kaggle_building_family_factory_v15.py',
+              'kaggle_building_family_factory_v14.py',
+          ]
+          buf=io.BytesIO()
+          with zipfile.ZipFile(buf,'w',zipfile.ZIP_DEFLATED) as z:
+              for name in names:
+                  z.write(Path('tools/sprites')/name,arcname=name)
+          payload=base64.b64encode(buf.getvalue()).decode('ascii')
+          s,n=re.subn(r"GENERATOR_OVERLAY_B64=''",f"GENERATOR_OVERLAY_B64='{payload}'",s,count=1)
+          if n != 1: raise SystemExit('Failed to inject GENERATOR_OVERLAY_B64 into Kaggle kernel')
           s,n=re.subn(r"COUNT=int\(os\.getenv\('SPRITE_COUNT','\d+'\)\)",f"COUNT={int(sys.argv[1])}",s,count=1)
           if n != 1: raise SystemExit('Failed to inject SPRITE_COUNT into Kaggle kernel')
           s,n=re.subn(r"EXPECTED_GENERATOR_SHA=os\.getenv\('EXPECTED_GENERATOR_SHA',''\)\.strip\(\)",f"EXPECTED_GENERATOR_SHA='{sys.argv[2]}'",s,count=1)
@@ -13781,6 +13802,129 @@ internal fun IncomePickupSparkle(modifier: Modifier = Modifier) {
 }
 ```
 
+## File: app/src/main/java/com/zerotoempire/game/IndustrialBusinessFx.kt
+```kotlin
+package com.zerotoempire.game
+
+import android.graphics.BitmapFactory
+import androidx.compose.foundation.Canvas
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
+import kotlinx.coroutines.delay
+
+private const val IndustrialFxFrameSize = 128
+private const val IndustrialFxColumns = 4
+private const val IndustrialFxFrameCount = 8
+
+private enum class IndustrialFxKind {
+    SMALL_FURNACE,
+    LARGE_PLASMA,
+    SMOKE,
+}
+
+@Composable
+private fun IndustrialFxLoop(
+    kind: IndustrialFxKind,
+    modifier: Modifier = Modifier,
+) {
+    val context = LocalContext.current
+    // Read snapshot-backed motion policy directly so Battery Saver / animation
+    // changes recompose this loop without requiring the world stage to restart.
+    val reducedMotion = MotionQuality.reducedMotion(context)
+    val lowPower = MotionQuality.lowPowerMode(context)
+    val resource = when (kind) {
+        IndustrialFxKind.SMALL_FURNACE -> R.drawable.zte_fx_01_final
+        IndustrialFxKind.LARGE_PLASMA -> R.drawable.zte_fx_02_final
+        IndustrialFxKind.SMOKE -> R.drawable.zte_fx_03_final
+    }
+    val sheet: ImageBitmap = remember(resource) {
+        BitmapFactory.decodeResource(context.resources, resource).asImageBitmap()
+    }
+    var frame by remember { mutableIntStateOf(0) }
+
+    LaunchedEffect(kind, reducedMotion, lowPower) {
+        frame = when (kind) {
+            IndustrialFxKind.SMALL_FURNACE -> 3
+            IndustrialFxKind.LARGE_PLASMA -> 4
+            IndustrialFxKind.SMOKE -> 3
+        }
+        if (!reducedMotion) {
+            while (true) {
+                delay(if (lowPower) 250 else 125)
+                frame = (frame + if (lowPower) 2 else 1) % IndustrialFxFrameCount
+            }
+        }
+    }
+
+    Canvas(modifier) {
+        val side = when (kind) {
+            IndustrialFxKind.SMALL_FURNACE -> size.minDimension * .24f
+            IndustrialFxKind.LARGE_PLASMA -> size.minDimension * .34f
+            IndustrialFxKind.SMOKE -> size.minDimension * .28f
+        }
+        val destination = when (kind) {
+            IndustrialFxKind.SMALL_FURNACE -> Offset(size.width * .18f, size.height * .49f)
+            IndustrialFxKind.LARGE_PLASMA -> Offset(size.width * .34f, size.height * .40f)
+            IndustrialFxKind.SMOKE -> Offset(size.width * .56f, size.height * .06f)
+        }
+        drawImage(
+            image = sheet,
+            srcOffset = IntOffset(
+                (frame % IndustrialFxColumns) * IndustrialFxFrameSize,
+                (frame / IndustrialFxColumns) * IndustrialFxFrameSize,
+            ),
+            srcSize = IntSize(IndustrialFxFrameSize, IndustrialFxFrameSize),
+            dstOffset = IntOffset(destination.x.toInt(), destination.y.toInt()),
+            dstSize = IntSize(side.toInt().coerceAtLeast(1), side.toInt().coerceAtLeast(1)),
+            alpha = when (kind) {
+                IndustrialFxKind.SMALL_FURNACE -> .72f
+                IndustrialFxKind.LARGE_PLASMA -> .68f
+                IndustrialFxKind.SMOKE -> .46f
+            },
+        )
+    }
+}
+
+/**
+ * Brings the remaining historical industrial FX into visible gameplay without
+ * replacing the authored building identity. Reduced-motion users receive a
+ * stable representative frame; battery saver advances at half cadence.
+ */
+@Composable
+internal fun IndustrialBusinessFx(
+    businessId: Int,
+    tier: Int,
+    modifier: Modifier = Modifier,
+) {
+    when (businessId) {
+        2 -> {
+            if (tier >= 2) {
+                IndustrialFxLoop(IndustrialFxKind.SMALL_FURNACE, modifier)
+            }
+        }
+        3 -> {
+            if (tier >= 2) {
+                IndustrialFxLoop(IndustrialFxKind.SMOKE, modifier)
+            }
+            if (tier >= 4) {
+                IndustrialFxLoop(IndustrialFxKind.LARGE_PLASMA, modifier)
+            }
+        }
+    }
+}
+```
+
 ## File: app/src/main/java/com/zerotoempire/game/InterstitialController.kt
 ```kotlin
 package com.zerotoempire.game
@@ -18917,6 +19061,11 @@ internal fun WorldBusinessVisual(
                 tier = tier,
                 modifier = Modifier.fillMaxSize()
             )
+            IndustrialBusinessFx(
+                businessId = businessId,
+                tier = tier,
+                modifier = Modifier.fillMaxSize()
+            )
 
             if (businessId in 0..3 && tier >= 1) {
                 FoundryWorkerTraffic(
@@ -18938,6 +19087,11 @@ internal fun WorldBusinessVisual(
             )
             BusinessArtIcon(businessId, level, size)
             BusinessTierVfxAfterPrimary(
+                businessId = businessId,
+                tier = tier,
+                modifier = Modifier.fillMaxSize()
+            )
+            IndustrialBusinessFx(
                 businessId = businessId,
                 tier = tier,
                 modifier = Modifier.fillMaxSize()
@@ -22368,6 +22522,33 @@ check_alive() {
   adb shell pidof "$PKG" | tr -d '\r\n' | grep -Eq '^[0-9]+' || fail "process-not-alive"
 }
 
+dismiss_launcher_anr_if_present() {
+  local attempt probe coords x y
+  for attempt in 1 2 3; do
+    probe="$EVIDENCE/system-dialog-$attempt.xml"
+    if ! ui_dump_with_retry "$probe"; then
+      return 0
+    fi
+    if ! grep -Fq "Pixel Launcher isn't responding" "$probe"; then
+      return 0
+    fi
+    echo "SYSTEM_FLAKE_DETECTED=pixel-launcher-anr attempt=$attempt"
+    coords=$(python3 "$SCRIPT_DIR/ui_click_target.py" "$probe" "Wait" 2>/dev/null || true)
+    if [[ -n "$coords" ]]; then
+      read -r x y <<<"$coords"
+      if [[ "$x" =~ ^[0-9]+$ && "$y" =~ ^[0-9]+$ ]]; then
+        adb shell input tap "$x" "$y"
+        sleep 2
+        continue
+      fi
+    fi
+    # Android's standard ANR dialog uses KEYCODE_ENTER on the focused action
+    # only as a last resort. Never force-stop the app under test here.
+    adb shell input keyevent KEYCODE_BACK || true
+    sleep 2
+  done
+}
+
 check_no_fatal() {
   adb logcat -d > "$EVIDENCE/logcat.txt"
   if grep -E "FATAL EXCEPTION|AndroidRuntime.*FATAL|Process: $PKG.*has died" "$EVIDENCE/logcat.txt"; then
@@ -22382,6 +22563,7 @@ adb shell pm clear "$PKG" >/dev/null
 adb logcat -c
 adb shell am start -W -n "$ACT" > "$EVIDENCE/start.txt"
 sleep 5
+dismiss_launcher_anr_if_present
 check_alive
 dump_ui "initial"
 adb exec-out screencap -p > "$EVIDENCE/initial.png"
@@ -23242,9 +23424,9 @@ planned = list(items(args.kind))[: args.count]
 """Shared state helpers for the 235-asset autonomous production queue.
 
 The master queue deliberately does not trust per-row DONE values from the legacy
-manifest while the historical semantic review is open. The strict baseline is
-defined by the reviewed ledger: 126/235 production assets are trusted, while
-75 buildings, 24 character sheets and 10 historical FX still require work.
+manifest while the historical semantic review is open. The strict baseline is defined by the reviewed ledger. BLD-11 and seven
+historical FX have now been explicitly reconciled; unresolved work remains in
+building families, 24 character sheets and FX-01/02/03.
 ONB-00 is outside the 235 production target.
 """
 ⋮----
@@ -23259,7 +23441,7 @@ SUMMARY = ROOT / "art/production/autofactory-summary.md"
 ROW = re.compile(
 ⋮----
 TARGET_TOTAL = 235
-STRICT_BASELINE = 126
+STRICT_BASELINE = 140
 MAX_ATTEMPTS = 8
 ⋮----
 BUILDING_PRIORITY = ["BLD-04", "BLD-07", "BLD-11", "BLD-12", "BLD-13",

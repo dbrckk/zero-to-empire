@@ -22,20 +22,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T06:03:00Z
+Generated: 2026-09-20T08:38:13Z
 
 ### Git
 - Branch: `main`
-- Head: `4738149cfa1c`
-- Commit date: 2026-09-20T08:02:46+02:00
-- Commit: fix(art): resolve nested BLD-11 artifact candidate path (#98)
-- Tracked files: 1349
+- Head: `75e5e4f63478`
+- Commit date: 2026-09-20T10:37:58+02:00
+- Commit: fix(art): correct autofactory retry eligibility (#116)
+- Tracked files: 1357
 
 ### Recently changed files
-- `.github/workflows/promote-reviewed-bld11.yml`
+- `tools/sprites/asset_wave_orchestrator.py`
+- `app/src/main/java/com/zerotoempire/game/IndustrialBusinessFx.kt`
+- `app/src/main/java/com/zerotoempire/game/WorldBusinessVisual.kt`
+- `art/production/bld12-v17-retry.md`
 - `art/production/master-asset-queue.json`
-- `.github/workflows/kaggle-mass-sprite-factory.yml`
-- `kaggle/github_mass_factory.py`
+- `tools/android/emulator_functional_smoke.sh`
+- `ops/sprite-wave-trigger.txt`
 
 ### Project signals
 - `build.gradle.kts`

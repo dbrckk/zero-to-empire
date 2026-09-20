@@ -224,6 +224,33 @@ check_alive() {
   adb shell pidof "$PKG" | tr -d '\r\n' | grep -Eq '^[0-9]+' || fail "process-not-alive"
 }
 
+dismiss_launcher_anr_if_present() {
+  local attempt probe coords x y
+  for attempt in 1 2 3; do
+    probe="$EVIDENCE/system-dialog-$attempt.xml"
+    if ! ui_dump_with_retry "$probe"; then
+      return 0
+    fi
+    if ! grep -Fq "Pixel Launcher isn't responding" "$probe"; then
+      return 0
+    fi
+    echo "SYSTEM_FLAKE_DETECTED=pixel-launcher-anr attempt=$attempt"
+    coords=$(python3 "$SCRIPT_DIR/ui_click_target.py" "$probe" "Wait" 2>/dev/null || true)
+    if [[ -n "$coords" ]]; then
+      read -r x y <<<"$coords"
+      if [[ "$x" =~ ^[0-9]+$ && "$y" =~ ^[0-9]+$ ]]; then
+        adb shell input tap "$x" "$y"
+        sleep 2
+        continue
+      fi
+    fi
+    # Android's standard ANR dialog uses KEYCODE_ENTER on the focused action
+    # only as a last resort. Never force-stop the app under test here.
+    adb shell input keyevent KEYCODE_BACK || true
+    sleep 2
+  done
+}
+
 check_no_fatal() {
   adb logcat -d > "$EVIDENCE/logcat.txt"
   if grep -E "FATAL EXCEPTION|AndroidRuntime.*FATAL|Process: $PKG.*has died" "$EVIDENCE/logcat.txt"; then
@@ -238,6 +265,7 @@ adb shell pm clear "$PKG" >/dev/null
 adb logcat -c
 adb shell am start -W -n "$ACT" > "$EVIDENCE/start.txt"
 sleep 5
+dismiss_launcher_anr_if_present
 check_alive
 dump_ui "initial"
 adb exec-out screencap -p > "$EVIDENCE/initial.png"
@@ -753,9 +781,9 @@ planned = list(items(args.kind))[: args.count]
 """Shared state helpers for the 235-asset autonomous production queue.
 
 The master queue deliberately does not trust per-row DONE values from the legacy
-manifest while the historical semantic review is open. The strict baseline is
-defined by the reviewed ledger: 126/235 production assets are trusted, while
-75 buildings, 24 character sheets and 10 historical FX still require work.
+manifest while the historical semantic review is open. The strict baseline is defined by the reviewed ledger. BLD-11 and seven
+historical FX have now been explicitly reconciled; unresolved work remains in
+building families, 24 character sheets and FX-01/02/03.
 ONB-00 is outside the 235 production target.
 """
 ⋮----
@@ -770,7 +798,7 @@ SUMMARY = ROOT / "art/production/autofactory-summary.md"
 ROW = re.compile(
 ⋮----
 TARGET_TOTAL = 235
-STRICT_BASELINE = 126
+STRICT_BASELINE = 140
 MAX_ATTEMPTS = 8
 ⋮----
 BUILDING_PRIORITY = ["BLD-04", "BLD-07", "BLD-11", "BLD-12", "BLD-13",

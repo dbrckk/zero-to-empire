@@ -1,19 +1,14 @@
 # CI status
 
-Summary: 2 success / 3 failure / 3 active
+Summary: 4 success / 0 failure / 1 active
 
-- Promote reviewed BLD-11: pending / pending (4738149c)
-- Promote reviewed BLD-11: in_progress / pending (5319b39f)
-- Kaggle Mass Sprite Factory: in_progress / pending (9fc9f950)
-- Asset Autofactory 235: completed / success (c20694a0)
-- Kaggle Mass Sprite Factory: completed / failure (e0b4540b)
-- Kaggle Mass Sprite Factory: completed / failure (2baabe3c)
-- Asset Autofactory 235: completed / success (5b69a7ed)
-- Kaggle Mass Sprite Factory: completed / failure (5b69a7ed)
-
-## Latest failed run structure
-- Job: kaggle
-  - Failed step: Require fresh technically validated candidates
-  - Failed step: Require successful Kaggle kernel
+- Reconcile reviewed run 25: completed / skipped (74c2a8a4)
+- Asset Autofactory CI: completed / success (58f6cc74)
+- Asset Autofactory CI: completed / success (63739a10)
+- Reconcile reviewed run 25: completed / skipped (74c2a8a4)
+- Android CI: completed / success (74c2a8a4)
+- Android Emulator Smoke: in_progress / pending (74c2a8a4)
+- Reconcile reviewed run 25: completed / skipped (6ac8f007)
+- Android CI: completed / success (80d69944)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 9fc9f950a4cb4a6ef6966f626fd9e8e1a05f8d7b
-Head: 4738149cfa1cd92c3e6f816d60a081fd01eba16e
+Base: 74c2a8a47742cb6d63b7a05d94398c4f81e7b60b
+Head: 75e5e4f63478d3ccfddd09f61c51a74a9efa21f0
 
 ## Changed files
-- M .github/workflows/promote-reviewed-bld11.yml
+- M tools/sprites/asset_wave_orchestrator.py
 
 ## Affected areas
-- .github
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

@@ -1,112 +1,13 @@
 {
   "entries": {
-    "514b2fa9a3f186d22f2318bc8c086167afc3a37928db75d4a69d7ba415915474": {
+    "0479d36b8b37e43b940a5c67695c321ae5cc4adc23af5bb0cfd2879dbb39a272": {
       "route": {
         "budget": {
           "confidence": "high",
           "expand_to": 12,
           "max_files": 3,
           "requested_max_files": 12,
-          "score_margin": 6,
-          "tier": "narrow",
-          "top_score": 49
-        },
-        "candidate_count": 161,
-        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
-        "files": [
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "engine",
-              "game"
-            ],
-            "path": "app/src/main/java/com/zerotoempire/game/GameEngine.kt",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 49,
-            "symbols": [
-              "Business",
-              "GameState",
-              "businessIncome",
-              "defaultBusinesses"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "engine",
-              "game"
-            ],
-            "path": "app/src/main/java/com/zerotoempire/game/AdaptiveMusic.kt",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 43,
-            "symbols": [
-              "AdaptiveMusicEngine",
-              "GameMusicBus",
-              "attach",
-              "detach",
-              "pause",
-              "pausePlayback",
-              "release",
-              "renderLoop",
-              "requestAudioFocusAndPlay",
-              "resume",
-              "resumePlayback",
-              "setEmpireLevel",
-              "setVolume",
-              "start"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "engine",
-              "game"
-            ],
-            "path": "app/src/main/java/com/zerotoempire/game/IdentitySystems.kt",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 43,
-            "symbols": [
-              "Celebrations",
-              "EmpireEra",
-              "EmpireEras",
-              "GameAudioEngine",
-              "MajorCelebration",
-              "current",
-              "era",
-              "milestone",
-              "next",
-              "prestige",
-              "purchase",
-              "release",
-              "reward",
-              "tap"
-            ]
-          }
-        ],
-        "generated_by": "dbrckk/repo-brain-v8",
-        "schema_version": 1,
-        "task": "game engine",
-        "terms": [
-          "game",
-          "engine"
-        ]
-      },
-      "task": "game engine"
-    },
-    "537eb78be69a71a17666fe5ba5ee0b548e2e6ec44500a28d7e54b6f33805ec4a": {
-      "route": {
-        "budget": {
-          "confidence": "high",
-          "expand_to": 12,
-          "max_files": 3,
-          "requested_max_files": 12,
-          "score_margin": 6,
+          "score_margin": 2,
           "tier": "narrow",
           "top_score": 39
         },
@@ -116,75 +17,67 @@
           {
             "learning_score": 0,
             "matched_terms": [
-              "income",
-              "progression"
+              "consent",
+              "privacy"
             ],
-            "path": "app/src/test/java/com/zerotoempire/game/ProgressionCycleTest.kt",
+            "path": "app/src/main/java/com/zerotoempire/game/PrivacyPolicy.kt",
             "reasons": [
               "search-index"
             ],
             "score": 39,
             "symbols": [
-              "ProgressionCycleTest",
-              "repeatedPrestigeOfflineCyclePreservesOnlyPermanentProgress"
+              "PrivacyPolicyDialog"
             ]
           },
           {
             "learning_score": 0,
             "matched_terms": [
-              "income",
-              "progression"
+              "consent",
+              "privacy"
             ],
-            "path": "app/src/test/java/com/zerotoempire/game/PlayableFlowTest.kt",
+            "path": "app/src/main/java/com/zerotoempire/game/PrivacyConsentManager.kt",
             "reasons": [
               "search-index"
             ],
-            "score": 33,
+            "score": 37,
             "symbols": [
-              "PlayableFlowTest",
-              "bulkMilestonePurchaseTargetsNextPowerSpike",
-              "endgameContentRemainsEconomicallyFiniteAtUnlockScale",
-              "freshPlayerCanBuyFirstAssetAndStartPassiveIncome",
-              "managerHireActuallyImprovesAssociatedProduction",
-              "offlineProgressPaysPositiveCappedIncomeForAutomatedEmpire",
-              "playerCanCompleteMultiplePrestigeCycles",
-              "prestigeBecomesAvailableAndCreatesPermanentPower"
+              "PrivacyConsentManager",
+              "canRequestAds",
+              "gather",
+              "isPrivacyOptionsRequired",
+              "publish",
+              "showPrivacyOptions"
             ]
           },
           {
             "learning_score": 0,
             "matched_terms": [
-              "income",
-              "progression"
+              "consent",
+              "privacy"
             ],
-            "path": "app/src/test/java/com/zerotoempire/game/EconomySafetyTest.kt",
+            "path": "app/src/main/java/com/zerotoempire/game/CommerceUi.kt",
             "reasons": [
               "search-index"
             ],
             "score": 29,
             "symbols": [
-              "EconomySafetyTest",
-              "extremeGameStateNeverProducesNaNOrInfinity",
-              "finiteClampsNanInfinityAndOverflow",
-              "growthCostRemainsFiniteAtExtremeLevel",
-              "prestigeCannotRepeatWithoutNewRunProgress",
-              "prestigeResetPreservesPermanentResourcesAndBoost",
-              "prestigeRewardHandlesNonFiniteInputs",
-              "safeAddSaturatesInsteadOfOverflowing"
+              "CommerceRoot",
+              "StoreDialog",
+              "StoreRow"
             ]
           }
         ],
         "generated_by": "dbrckk/repo-brain-v8",
         "schema_version": 1,
-        "task": "income progression",
+        "task": "privacy consent",
         "terms": [
-          "income",
-          "progression"
+          "privacy",
+          "consent"
         ]
       },
-      "task": "income progression"
+      "task": "privacy consent"
     },
-    "5551f78710983432be80b922d075bbb76fdc5622b0d17cee96da86884e01699c": {
+    "3d88de6d92f6a5b9061df8054929e94ab6104f481c663b40e20ad1c0002aaa07": {
       "route": {
         "budget": {
           "confidence": "high",
@@ -195,7 +88,7 @@
           "tier": "narrow",
           "top_score": 43
         },
-        "candidate_count": 37,
+        "candidate_count": 70,
         "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
         "files": [
           {
@@ -288,176 +181,6 @@
         ]
       },
       "task": "purchase billing"
-    },
-    "5628ae83bbcd29a4036690c23869c033f701c61003938d273f23c10c3193293b": {
-      "route": {
-        "budget": {
-          "confidence": "high",
-          "expand_to": 12,
-          "max_files": 3,
-          "requested_max_files": 12,
-          "score_margin": 6,
-          "tier": "narrow",
-          "top_score": 39
-        },
-        "candidate_count": 44,
-        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
-        "files": [
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "income",
-              "progression"
-            ],
-            "path": "app/src/test/java/com/zerotoempire/game/ProgressionCycleTest.kt",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 39,
-            "symbols": [
-              "ProgressionCycleTest",
-              "repeatedPrestigeOfflineCyclePreservesOnlyPermanentProgress"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "income",
-              "progression"
-            ],
-            "path": "app/src/test/java/com/zerotoempire/game/PlayableFlowTest.kt",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 33,
-            "symbols": [
-              "PlayableFlowTest",
-              "bulkMilestonePurchaseTargetsNextPowerSpike",
-              "endgameContentRemainsEconomicallyFiniteAtUnlockScale",
-              "freshPlayerCanBuyFirstAssetAndStartPassiveIncome",
-              "managerHireActuallyImprovesAssociatedProduction",
-              "offlineProgressPaysPositiveCappedIncomeForAutomatedEmpire",
-              "playerCanCompleteMultiplePrestigeCycles",
-              "prestigeBecomesAvailableAndCreatesPermanentPower"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "income",
-              "progression"
-            ],
-            "path": "app/src/test/java/com/zerotoempire/game/EconomySafetyTest.kt",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 29,
-            "symbols": [
-              "EconomySafetyTest",
-              "extremeGameStateNeverProducesNaNOrInfinity",
-              "finiteClampsNanInfinityAndOverflow",
-              "growthCostRemainsFiniteAtExtremeLevel",
-              "prestigeCannotRepeatWithoutNewRunProgress",
-              "prestigeResetPreservesPermanentResourcesAndBoost",
-              "prestigeRewardHandlesNonFiniteInputs",
-              "safeAddSaturatesInsteadOfOverflowing"
-            ]
-          }
-        ],
-        "generated_by": "dbrckk/repo-brain-v8",
-        "schema_version": 1,
-        "task": "income progression",
-        "terms": [
-          "income",
-          "progression"
-        ]
-      },
-      "task": "income progression"
-    },
-    "56e0cfde7d6fdf5174f4de90cb1bdb1cb2bada8a2af2ed173162d4fb627cceb3": {
-      "route": {
-        "budget": {
-          "confidence": "high",
-          "expand_to": 12,
-          "max_files": 3,
-          "requested_max_files": 12,
-          "score_margin": 6,
-          "tier": "narrow",
-          "top_score": 39
-        },
-        "candidate_count": 38,
-        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
-        "files": [
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "income",
-              "progression"
-            ],
-            "path": "app/src/test/java/com/zerotoempire/game/ProgressionCycleTest.kt",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 39,
-            "symbols": [
-              "ProgressionCycleTest",
-              "repeatedPrestigeOfflineCyclePreservesOnlyPermanentProgress"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "income",
-              "progression"
-            ],
-            "path": "app/src/test/java/com/zerotoempire/game/PlayableFlowTest.kt",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 33,
-            "symbols": [
-              "PlayableFlowTest",
-              "bulkMilestonePurchaseTargetsNextPowerSpike",
-              "endgameContentRemainsEconomicallyFiniteAtUnlockScale",
-              "freshPlayerCanBuyFirstAssetAndStartPassiveIncome",
-              "managerHireActuallyImprovesAssociatedProduction",
-              "offlineProgressPaysPositiveCappedIncomeForAutomatedEmpire",
-              "playerCanCompleteMultiplePrestigeCycles",
-              "prestigeBecomesAvailableAndCreatesPermanentPower"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "income",
-              "progression"
-            ],
-            "path": "app/src/test/java/com/zerotoempire/game/EconomySafetyTest.kt",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 29,
-            "symbols": [
-              "EconomySafetyTest",
-              "extremeGameStateNeverProducesNaNOrInfinity",
-              "finiteClampsNanInfinityAndOverflow",
-              "growthCostRemainsFiniteAtExtremeLevel",
-              "prestigeCannotRepeatWithoutNewRunProgress",
-              "prestigeResetPreservesPermanentResourcesAndBoost",
-              "prestigeRewardHandlesNonFiniteInputs",
-              "safeAddSaturatesInsteadOfOverflowing"
-            ]
-          }
-        ],
-        "generated_by": "dbrckk/repo-brain-v8",
-        "schema_version": 1,
-        "task": "income progression",
-        "terms": [
-          "income",
-          "progression"
-        ]
-      },
-      "task": "income progression"
     },
     "5a4fdd43d20a5d54bdaa74a0fbea5f3cb2b6c9f419a8a10c92e88d16b19ec7ad": {
       "route": {
@@ -6906,6 +6629,91 @@
       },
       "task": "game engine"
     },
+    "c800daee040273556e5c7809aa76e94583972beda2b8188ad19b173025af9793": {
+      "route": {
+        "budget": {
+          "confidence": "high",
+          "expand_to": 12,
+          "max_files": 3,
+          "requested_max_files": 12,
+          "score_margin": 6,
+          "tier": "narrow",
+          "top_score": 39
+        },
+        "candidate_count": 77,
+        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
+        "files": [
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "income",
+              "progression"
+            ],
+            "path": "app/src/test/java/com/zerotoempire/game/ProgressionCycleTest.kt",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 39,
+            "symbols": [
+              "ProgressionCycleTest",
+              "repeatedPrestigeOfflineCyclePreservesOnlyPermanentProgress"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "income",
+              "progression"
+            ],
+            "path": "app/src/test/java/com/zerotoempire/game/PlayableFlowTest.kt",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 33,
+            "symbols": [
+              "PlayableFlowTest",
+              "bulkMilestonePurchaseTargetsNextPowerSpike",
+              "endgameContentRemainsEconomicallyFiniteAtUnlockScale",
+              "freshPlayerCanBuyFirstAssetAndStartPassiveIncome",
+              "managerHireActuallyImprovesAssociatedProduction",
+              "offlineProgressPaysPositiveCappedIncomeForAutomatedEmpire",
+              "playerCanCompleteMultiplePrestigeCycles",
+              "prestigeBecomesAvailableAndCreatesPermanentPower"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "income",
+              "progression"
+            ],
+            "path": "app/src/test/java/com/zerotoempire/game/EconomySafetyTest.kt",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 29,
+            "symbols": [
+              "EconomySafetyTest",
+              "extremeGameStateNeverProducesNaNOrInfinity",
+              "finiteClampsNanInfinityAndOverflow",
+              "growthCostRemainsFiniteAtExtremeLevel",
+              "prestigeCannotRepeatWithoutNewRunProgress",
+              "prestigeResetPreservesPermanentResourcesAndBoost",
+              "prestigeRewardHandlesNonFiniteInputs",
+              "safeAddSaturatesInsteadOfOverflowing"
+            ]
+          }
+        ],
+        "generated_by": "dbrckk/repo-brain-v8",
+        "schema_version": 1,
+        "task": "income progression",
+        "terms": [
+          "income",
+          "progression"
+        ]
+      },
+      "task": "income progression"
+    },
     "c82027f63a8bc4aea3967b348ebc60beb0848a241de7f93489e60b52d2d07ce6": {
       "route": {
         "budget": {
@@ -7865,6 +7673,105 @@
         ]
       },
       "task": "privacy consent"
+    },
+    "d28781793a333871e28c4593d4f9e1146daf3bdbbb58bfc8de95de094a8637c3": {
+      "route": {
+        "budget": {
+          "confidence": "high",
+          "expand_to": 12,
+          "max_files": 3,
+          "requested_max_files": 12,
+          "score_margin": 6,
+          "tier": "narrow",
+          "top_score": 49
+        },
+        "candidate_count": 195,
+        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
+        "files": [
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "engine",
+              "game"
+            ],
+            "path": "app/src/main/java/com/zerotoempire/game/GameEngine.kt",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 49,
+            "symbols": [
+              "Business",
+              "GameState",
+              "businessIncome",
+              "defaultBusinesses"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "engine",
+              "game"
+            ],
+            "path": "app/src/main/java/com/zerotoempire/game/AdaptiveMusic.kt",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 43,
+            "symbols": [
+              "AdaptiveMusicEngine",
+              "GameMusicBus",
+              "attach",
+              "detach",
+              "pause",
+              "pausePlayback",
+              "release",
+              "renderLoop",
+              "requestAudioFocusAndPlay",
+              "resume",
+              "resumePlayback",
+              "setEmpireLevel",
+              "setVolume",
+              "start"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "engine",
+              "game"
+            ],
+            "path": "app/src/main/java/com/zerotoempire/game/IdentitySystems.kt",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 43,
+            "symbols": [
+              "Celebrations",
+              "EmpireEra",
+              "EmpireEras",
+              "GameAudioEngine",
+              "MajorCelebration",
+              "current",
+              "era",
+              "milestone",
+              "next",
+              "prestige",
+              "purchase",
+              "release",
+              "reward",
+              "tap"
+            ]
+          }
+        ],
+        "generated_by": "dbrckk/repo-brain-v8",
+        "schema_version": 1,
+        "task": "game engine",
+        "terms": [
+          "game",
+          "engine"
+        ]
+      },
+      "task": "game engine"
     },
     "d81667b2b9168cde741601fe688191fe3cbb1800dccb3bdfb4985d430cf409cd": {
       "route": {
@@ -8992,6 +8899,80 @@
         ]
       },
       "task": "income progression"
+    },
+    "e9e43f4636820b33fa36420c8558f1c70ac9877f5bd16f3c166aa5549c652dce": {
+      "route": {
+        "budget": {
+          "confidence": "high",
+          "expand_to": 12,
+          "max_files": 3,
+          "requested_max_files": 12,
+          "score_margin": 6,
+          "tier": "narrow",
+          "top_score": 37
+        },
+        "candidate_count": 83,
+        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
+        "files": [
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "offline",
+              "progress"
+            ],
+            "path": "app/src/main/java/com/zerotoempire/game/OfflineProgress.kt",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 37,
+            "symbols": [
+              "OfflineProgress",
+              "OfflineReward",
+              "calculate"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "offline",
+              "progress"
+            ],
+            "path": "app/src/test/java/com/zerotoempire/game/ProgressionCycleTest.kt",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 31,
+            "symbols": [
+              "ProgressionCycleTest",
+              "repeatedPrestigeOfflineCyclePreservesOnlyPermanentProgress"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "offline",
+              "progress"
+            ],
+            "path": "app/src/main/java/com/zerotoempire/game/GameEconomy.kt",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 29,
+            "symbols": [
+              "GameEconomy",
+              "milestoneMultiplier"
+            ]
+          }
+        ],
+        "generated_by": "dbrckk/repo-brain-v8",
+        "schema_version": 1,
+        "task": "offline progress",
+        "terms": [
+          "offline",
+          "progress"
+        ]
+      },
+      "task": "offline progress"
     },
     "e9eb35c5c7dfe632d130bda80e06d95db18ab6be37a4210f48e77b6243752a2e": {
       "route": {
@@ -11055,6 +11036,136 @@
       "task": "game engine"
     }
   },
-  "generated_by": "dbrckk/repo-brain-query-cache-v1",
+  "generated_by": "dbrckk/repo-brain-query-cache-v2",
+  "order": [
+    "5a4fdd43d20a5d54bdaa74a0fbea5f3cb2b6c9f419a8a10c92e88d16b19ec7ad",
+    "5b639b6767a79904521066597c86e0eb488233c0ba0adc501be67d7c6a3e98c5",
+    "5e0c57be56012cc1185e8fa63ce179661eb707f351a8664661a3a6bcc2879c22",
+    "5e223138a3dd6b64af4b0f2b15eb3c5b10195d263fb69cbcd46daa5a1bd09145",
+    "60cffbdf42acea229e99b549a0d2b245c0637a0782970813c91e4051371538eb",
+    "62073e7dc9820ccbcf5047afbb7aa53bb4d33e6bfe41ae944c663bb522537bae",
+    "658dcd14c1f6c5642f862a7c0a3010df6870d20912b385f0a5faf2afd9c47d4b",
+    "6723fb4246b479b0f9e4dbf31026e391e96489fe524c63e230f337d7d148f999",
+    "675d86cb0dd203b6d4c2e8678d96bd8eda9a6254b69bdc34215694700a2f0a8f",
+    "67c35a9e41cc6f1a064d90e950d3dd8bbe176ff0d168bda324723ff4a80c076a",
+    "6a1e5ce3d0b33185719656c9e2a014dc3ae7b4c5e8d6712d1226f91fc02f0041",
+    "6aba103054d9697f850c31053d48ec9fcf1c562be5055042d005a7449cc64133",
+    "6abc95ec429e04140e68562d8036ecb555c8bdfa043223abeed946610d458b49",
+    "7014a9488f3f87ad71505a981bb6a43ba3bfc2a14cf6b93de467196076b66ea1",
+    "719ce944e8be27a233720090d521900f348e8e712f11d8d3e05a05d13b2e9fa7",
+    "722f13fe276b377ba0809075a096a8286465226de1c08b0e9e2239bcf67dbef1",
+    "723a8ec62c20fd2c3b6a07e6e59c144fd38befce87c5dd68f496cbed79107ac5",
+    "73b8b3f1daf2a9f5b5277839fd70c7c921b7dbb3ecae496afa48ac5e65ca8c1b",
+    "754566fa99a21c074d25c51230dca5b4850f4d3180dd595969aaae39e68da10a",
+    "75df91853d6950ff3dd72c90067f61a151e70a74f9e055cf4118f6b2258e8bc4",
+    "75dfba109104372e664fd97fd9f309a1437513444f098345da9bda6313c261a0",
+    "76803011612ad0b8427f91070ec5a261fadaf4592953d5d201d666bc6ada50b1",
+    "7a37da32c37ffc2092267b7d2030a44216d20117bb31ed3916ff3ba3eee14ad9",
+    "7a89761fecb1497a7a689679f7b7fffc10ec15524058bd8496ba122042bcdfd5",
+    "7ab8a0627f1ac8d4955848b2249ca3d8061774e825f54c0bd7b7ea7871b5cb3e",
+    "7d7047e0f8bae32ad0ce1cc0379501dc6bc5d28684708b46bcd1e784add04020",
+    "80196ab7240b07a78b262ee94444aae88e57d8ca56709e0668923dc82baa69b8",
+    "82bb4ece918835ceb330cf511e573125f4d0e6542ad98a68eaff1a21bf4d5333",
+    "847bd198547333feb2dc83a30f1f22002ce8adf8cdaadaf87ec324cd51741fa3",
+    "88691ed688ff63fa39fd11cdf3045ccccf004d5b7f30d36920df1250ea89df3c",
+    "8aba0719a665e4fe0adabc155ae484d92462db8368b71b8f250aa0186b982997",
+    "8d595d1fba5562fc84614ffb4dd2263b86b67836a3b8c26dba8a90c4c8966352",
+    "8db218fccedafc34d925a9e05cfa50d99b73bab9d491fc15d82fd6267c435495",
+    "9126027023738a0d48fb53d496edd9c195924307c5e37c23dfc30877bbd56858",
+    "94f831b3be652e3c427567ca242802d18aa580a7f757f2d4ae0d8fd72ae8d595",
+    "9560311aa50d29ea87c66551d8fac61e726e0cd870d50c27a6159c8eae447c6c",
+    "95da61098c626a4ec09941506e5bbcc1282c25625dd0cef22aaa14cd9e1c9293",
+    "95f3a26636563144ccaf75340e5c67828e7ff017d66324895375a16031263ede",
+    "960c78f911d17d9c0ad269cfa2a264661bab91a830e7aee2d6ef96cde6b15316",
+    "96c9d443180c529cdc8f4b86892063c10d2c8123bd18c93bf697f412d865c3fd",
+    "981dbb7f7827df86a9df79f03c386427b142603df7b8c87fd82d7a568cc3e7df",
+    "99aa8bd1827e7130fb982a4d20a358fc647d417493555fd6489bb2ba05e02835",
+    "9be5b9ab48b1acdd50d74d32fef513480d04e6a462392a6b41eebadd5f8f7e08",
+    "9d7c7b811bd3fecd4145c41b3e3f3de117579bf7be8c273d2a9093b8cd25ceaa",
+    "9da356a552660a6dbf0c15574cd93b761fc546a3ca7265f9cc4ff6a29633ca33",
+    "9e34567afdc512aa837d6b64d9f307099638cb4fbea0ba81dc3ac008c032fb4d",
+    "a3a15fa71d20135ab275a0930e3bcd61dbbe956621803a4038d70a53d4f789c5",
+    "a4b168d7c6e6bda0f097ad058eceb4c332eeadad725538ade0521ebe40ba5375",
+    "a55684afc18fdffbdd596c67fe931ba643550a01e41cb4fa865990acac49bd95",
+    "a8bb935d93b7e2770ed02b1cf04af65616f215ff0207b8a12e09861e04635746",
+    "aa56fa156c8ad27af18937c82400f00f09dff6d551ce1b96bee44e1c0a532b47",
+    "aa66e1043bcc0095f7ba4cfb790fc29a133e41afacc3b5829500e2b2c2a022b2",
+    "aa71c449b0f16d929e06d574b648a8788c32fdebfc05009a2ac9c127b905cfe6",
+    "abdf5c0f63f8b1c6dd7633d16385f3b05ed8fb56a81cfddb23dce18c8cfc160a",
+    "aca4ee62870ee3c02d27b9e558ecb0585b99c4e56d1deaadb57aaf421eb5bb77",
+    "ad6ad0b08dfbc0fefe944e9eefc356cb7816efa2ff2e3b590586c2a0fe471ffe",
+    "ad86df380285c5179db94220dc0a4f8dda4a3c5496fcac9f345a724d37bc305a",
+    "b2077dcb6701f1bdf52b4bcaf50ce3535a5d0f5b7513bafdb7c1c7580638592a",
+    "b2c4f18caba345ccdd59594da417c225e64e70f2cf447cfbc58053a15bc9824c",
+    "b2e6462af4e78390a08198b3a8398c646d9c12aa3353a1865f10050e5b6933b3",
+    "b61af3647168544f758a92b238244d90a1c124037adf8ff4ed727fcfcfabd253",
+    "b6dad68a7949cee807a74767bca067e1dfa2eec50a576dd8cf92daff902b5e7f",
+    "b931ce947dfe3df97f4102e4f896254597a0824913369b98069e008540b05330",
+    "b958504cf958e5a8fe94e7a80df90d0a4a27af8189006d832f6e66d9b7727d99",
+    "bb6a3a941aa5899816c4f75a44ddab764e0092a332e4ae47e12b39026df15a5f",
+    "bd0603866068c72828c8e90855c6470fc5fab139228aea65680750d0689551f2",
+    "bd8e917d279b17b3a8ba52ab8458fa6440a725556cb2453190f48ce792952979",
+    "bed3ae106ad3a7318c059299d38c3ecb1028ee17b0fc6d44fe71f58c27bb982f",
+    "c00c1143d163b18f6634eafdf69f74d2b7a9b1d37f62c5085e2d846d04d72a89",
+    "c1e10ad350d11fb46dc7330735689e7216db85bfae5c317180163b39e92c051d",
+    "c231d6486405a640c7dbbbcda9562fa06781d41806b46fe0e4a38f15cb68cf51",
+    "c3c9c6b9b8d598270d482c658fb6d0bb63316711fd88655a7ae63be07043bff2",
+    "c435fb30af866f96e8bb396999bcf10fc1a8911f567e532128ef8e52c7aef449",
+    "c470bfee99b6d39bfbc56c904bba4ba83984efdeb0a1412ed87046a9c34d1713",
+    "c70b94251adc1871bcf350b46ff52653aeb73fdf62c6f5b4a878f6f049f2b199",
+    "c82027f63a8bc4aea3967b348ebc60beb0848a241de7f93489e60b52d2d07ce6",
+    "c9677acd5b860bd15882ffcd7a5d2b9fc8a280771bd68080b1126c373b0a7903",
+    "c9a01a44b55ebf4a07ddf4695386bce38d51252248d3b93d509b056aa956adcd",
+    "c9d74f8cc0a97bf8095e327c3aab95237519ea1dbb7ff2c72d18473563c1c47c",
+    "caa6c7a33ddcbf47f766c81b4b9e16c3dfdec58eb1ad3b907c72e0f3d0778790",
+    "cd799807b036f9ee28c872caa78f9a512bd19a86bdbd6dbf57eec2f9b8f4ff1c",
+    "ce7327cf17d3b24d484fb47c9c9d061e05c3380a1b05908b7e86a111c18808ea",
+    "cf8eafb1815b3894f173883dd354c4e459e919af281cba794557000292742279",
+    "cfeaf32607bd9255440b93ab1aea7e1ce7c30647cf22b1950e2d339c73e2f719",
+    "cffce827641cf91a624b633d022c5f272c538c510e68984cf51826bb756f9aaf",
+    "d147aa6d4241b8c6fc8f773668c99bf2be272fc7a83f9b20d3a675835887387d",
+    "d81667b2b9168cde741601fe688191fe3cbb1800dccb3bdfb4985d430cf409cd",
+    "dbd3c9bfb57e9f7d96efa8cc738b8b6cf4d6622d1bf442f0c65c258168978eed",
+    "dfc529bf8ae3e6afada08d02336674ed9ae8033962f0caa8eeebc31108bfc1f9",
+    "dfd9ddd00ac0965713b6d683c639b8cb76b3ccef2ae7843dd0412ecc4d3bb1f4",
+    "e0dcd988ff719eba7842a041a4d0c1a6bb6b91dbf7737aa71f19a8f876c8c826",
+    "e1a62c0e31eaee0aa3c9adbb10ade62195f8e06e90de053cf0d8b254825bf22f",
+    "e2edfaf8c38071ca8c98d80e0a4dbee00bdb8c53dafea6b9502fa9225ebb923e",
+    "e2fd2ee5a3b1f9723e66fba989814070b01504a0582a174976178d0142fb5834",
+    "e3375c0c0bbe94078db6504fa9ab16d7313942ec4ea4dbc4c2097b93bb09741b",
+    "e532e5724a8b3f414511b24825bede8ac57f998749d515ab2f8486caeff9d9ed",
+    "e625c6aad1b9268784937b18892dbc2dbf2506c3433f6db2951e37abbdc500e2",
+    "e820dbf2132a589c3e1a2ea7b4c5b8f583e0a3e34c8a9987d62192a02c79dcf2",
+    "e9479da0d81a282c21c2e25f3bacf4cf9ecbfaa9820bf8d54e7a179441d69581",
+    "e9eb35c5c7dfe632d130bda80e06d95db18ab6be37a4210f48e77b6243752a2e",
+    "ea6c8c8e1594ce7abe3188df411b1e50c1e553024bb0c619e9efd43d2fe43fb2",
+    "ec406be36de6283801b3458c8cf57d5fb79333e4b3fab416c4267952340be149",
+    "ed33c1d4f8b4cfbbf15aa3e08075b88acbd05e542a8110ee6036031dd6687782",
+    "ed5df66cf32a060b811f9b3f186b77229fd5d7eb23a2f683fb0d7b98f1929d4d",
+    "ef93335cf4b186335b73576e66ff0fe571d36e51724eadf502f884acf5ec2fe7",
+    "efc1a90cb59fba3689bcc2532c09f168eb3f73f0386aeb9fbb03be7cf8df32e0",
+    "f02100de81e3490b7fc5b1610ed6624dfe1ae0fcadb484aa6062d59d6f95f4e1",
+    "f2f788b9f7b326f90e382d7091f4a9a0aac56b805f59bbba0e857f4cdb1a160e",
+    "f2fb3a7e4ad9edcab4374f1df2f726e5eb6855cc27cec979396e7bbfbac83c27",
+    "f3f299c9e47a9599805844db26921d56ece8e5e9db407914e3010df51f5912ee",
+    "f3f8c49b0eb89e9d43430b2214315017f3f3ab995718a547644c0b4f8404caa5",
+    "f3fd0bc9f7bf46b08248236f20b38b19a32adaedddaab12f72a122ea05c3c873",
+    "f58162516b5076cf5c91defc21f3b8b8ba920c0289bb361f0b4ae4b43cd3e811",
+    "f5b967242108f195f950e2f981ce103022684bd04432bbe2a50d7120838f4061",
+    "f5be880b3e4377a2b88849ea01f72af83ba549b9ff7990a7bba1dcdb7fe90b75",
+    "f5c2a60e229027100d04f4d59e7a91b645dc0a14e10b5d18c649c5d7ef17eedb",
+    "f736a9404388d962d4435a27499be3c124534254951ee9da69ff61655a31a464",
+    "fab498240dd918169748bfa6d3c8730c57bcc0f934bb14a7352c2fe06bf473c2",
+    "fb082be84dd661e2d78de0f10b3c7be00fd3e8bd53be4284c42cd13f98472c0b",
+    "fc8cf172da350903a63879d3793203078fb117d09ffca838b7707a8e35989bdd",
+    "fccd4578a16d7d2ef83da909c5e8bb7b926719f185d187ba09e1bb9d583239f9",
+    "fe7790f5d37989ea22eb8a1248d7d2940b468dce046621d5d3bcdc1df460dba7",
+    "fec53f3aac8a6bd551a0d259aa48ab0efff32160a3e7d2c2409667c5420c2284",
+    "3d88de6d92f6a5b9061df8054929e94ab6104f481c663b40e20ad1c0002aaa07",
+    "c800daee040273556e5c7809aa76e94583972beda2b8188ad19b173025af9793",
+    "0479d36b8b37e43b940a5c67695c321ae5cc4adc23af5bb0cfd2879dbb39a272",
+    "e9e43f4636820b33fa36420c8558f1c70ac9877f5bd16f3c166aa5549c652dce",
+    "d28781793a333871e28c4593d4f9e1146daf3bdbbb58bfc8de95de094a8637c3"
+  ],
   "schema_version": 1
 }
