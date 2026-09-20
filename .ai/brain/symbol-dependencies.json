@@ -5,37 +5,64 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "prompts": {
+    "digest": {
       "source": {
-        "file": "tools/sprites/kaggle_building_family_factory_v16.py",
-        "start": 57,
-        "end": 75
+        "file": "kaggle/github_mass_factory.py",
+        "start": 11,
+        "end": 15
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "silhouette_metrics": {
+    "ensure_gpu": {
       "source": {
-        "file": "tools/sprites/kaggle_building_family_factory_v16_10.py",
-        "start": 97,
-        "end": 112
+        "file": "kaggle/github_mass_factory.py",
+        "start": 16,
+        "end": 26
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "v164_anchor_score": {
+    "ensure_flux": {
       "source": {
-        "file": "tools/sprites/kaggle_building_family_factory_v16_10.py",
-        "start": 114,
-        "end": 124
+        "file": "kaggle/github_mass_factory.py",
+        "start": 27,
+        "end": 35
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "runtime_exists": {
+      "source": {
+        "file": "kaggle/github_mass_factory.py",
+        "start": 36,
+        "end": 36
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "controlled_queue_backlog": {
+      "source": {
+        "file": "kaggle/github_mass_factory.py",
+        "start": 37,
+        "end": 42
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "controlled_character_backlog": {
+      "source": {
+        "file": "kaggle/github_mass_factory.py",
+        "start": 43,
+        "end": 43
       },
       "symbol_dependencies": [
         {
-          "symbol": "silhouette_metrics",
+          "symbol": "controlled_queue_backlog",
           "definitions": [
             {
-              "file": "tools/sprites/kaggle_building_family_factory_v16_10.py",
-              "line": 97,
+              "file": "kaggle/github_mass_factory.py",
+              "line": 37,
               "kind": "function",
               "language": "python"
             }
@@ -45,46 +72,41 @@
       ],
       "dependency_count": 1
     },
-    "v164_slab_score": {
+    "controlled_building_backlog": {
       "source": {
-        "file": "tools/sprites/kaggle_building_family_factory_v16_10.py",
-        "start": 130,
-        "end": 157
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "normalized_silhouette_iou": {
-      "source": {
-        "file": "tools/sprites/kaggle_building_family_factory_v16_10.py",
-        "start": 163,
-        "end": 180
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "alpha_halo_ratio": {
-      "source": {
-        "file": "tools/sprites/kaggle_building_family_factory_v16_10.py",
-        "start": 182,
-        "end": 189
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "v164_live_gate": {
-      "source": {
-        "file": "tools/sprites/kaggle_building_family_factory_v16_10.py",
-        "start": 191,
-        "end": 215
+        "file": "kaggle/github_mass_factory.py",
+        "start": 44,
+        "end": 44
       },
       "symbol_dependencies": [
         {
-          "symbol": "alpha_halo_ratio",
+          "symbol": "controlled_queue_backlog",
           "definitions": [
             {
-              "file": "tools/sprites/kaggle_building_family_factory_v16_10.py",
-              "line": 182,
+              "file": "kaggle/github_mass_factory.py",
+              "line": 37,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "backlog": {
+      "source": {
+        "file": "kaggle/github_mass_factory.py",
+        "start": 45,
+        "end": 56
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "controlled_building_backlog",
+          "definitions": [
+            {
+              "file": "kaggle/github_mass_factory.py",
+              "line": 44,
               "kind": "function",
               "language": "python"
             }
@@ -92,11 +114,110 @@
           "relation": "same_file"
         },
         {
-          "symbol": "normalized_silhouette_iou",
+          "symbol": "controlled_character_backlog",
           "definitions": [
             {
-              "file": "tools/sprites/kaggle_building_family_factory_v16_10.py",
-              "line": 163,
+              "file": "kaggle/github_mass_factory.py",
+              "line": 43,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "runtime_exists",
+          "definitions": [
+            {
+              "file": "kaggle/github_mass_factory.py",
+              "line": 36,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "valid_tree": {
+      "source": {
+        "file": "kaggle/github_mass_factory.py",
+        "start": 57,
+        "end": 58
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "resolve_source": {
+      "source": {
+        "file": "kaggle/github_mass_factory.py",
+        "start": 59,
+        "end": 99
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "valid_tree",
+          "definitions": [
+            {
+              "file": "kaggle/github_mass_factory.py",
+              "line": 57,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "current_fresh": {
+      "source": {
+        "file": "kaggle/github_mass_factory.py",
+        "start": 133,
+        "end": 133
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "digest",
+          "definitions": [
+            {
+              "file": "kaggle/github_mass_factory.py",
+              "line": 11,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "checkpoint_fresh": {
+      "source": {
+        "file": "kaggle/github_mass_factory.py",
+        "start": 134,
+        "end": 145
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "current_fresh",
+          "definitions": [
+            {
+              "file": "kaggle/github_mass_factory.py",
+              "line": 133,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "digest",
+          "definitions": [
+            {
+              "file": "kaggle/github_mass_factory.py",
+              "line": 11,
               "kind": "function",
               "language": "python"
             }

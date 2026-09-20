@@ -2177,7 +2177,8 @@ jobs:
           # Reuse only when the published bundle fingerprint matches the current
           # sprite source tree. Version number alone is not sufficient: an older
           # ready dataset can silently feed stale generators/manifest to a new kernel.
-          CURRENT_BUNDLE_SHA="$(git rev-parse HEAD:docs/art/FINAL_AAA_SPRITE_MANIFEST.md)-$(git rev-parse HEAD:tools/sprites)-$(git rev-parse HEAD:app/src/main/res/drawable-nodpi 2>/dev/null || echo none)-$(git rev-parse HEAD:art/incoming/final-sprites 2>/dev/null || echo none)-$(git rev-parse HEAD:art/production/controlled-character-regen-queue.json 2>/dev/null || echo none)-$(git rev-parse HEAD:art/production/controlled-building-regen-queue.json 2>/dev/null || echo none)"
+          GENERATOR_SHA="$(sha256sum tools/sprites/kaggle_building_family_factory_v16.py | cut -d' ' -f1)"
+          CURRENT_BUNDLE_SHA="$(git rev-parse HEAD:docs/art/FINAL_AAA_SPRITE_MANIFEST.md)-$(git rev-parse HEAD:tools/sprites)-$(git rev-parse HEAD:app/src/main/res/drawable-nodpi 2>/dev/null || echo none)-$(git rev-parse HEAD:art/incoming/final-sprites 2>/dev/null || echo none)-$(git rev-parse HEAD:art/production/controlled-character-regen-queue.json 2>/dev/null || echo none)-$(git rev-parse HEAD:art/production/controlled-building-regen-queue.json 2>/dev/null || echo none)-${GENERATOR_SHA}"
           echo "CURRENT_BUNDLE_SHA=$CURRENT_BUNDLE_SHA"
           BUNDLE_FINGERPRINT="$(printf '%s' "$CURRENT_BUNDLE_SHA" | sha256sum | cut -d' ' -f1)"
           echo "BUNDLE_FINGERPRINT=$BUNDLE_FINGERPRINT"
@@ -2266,13 +2267,17 @@ jobs:
           rm -rf /tmp/zte-kaggle; mkdir -p /tmp/zte-kaggle
           cp kaggle/github_mass_factory.py /tmp/zte-kaggle/
           sed "s/__KAGGLE_USERNAME__/${KAGGLE_USERNAME}/g" kaggle/kernel-metadata.template.json > /tmp/zte-kaggle/kernel-metadata.json
-          python - "$SPRITE_COUNT" <<'PY'
+          EXPECTED_GENERATOR_SHA="$(sha256sum tools/sprites/kaggle_building_family_factory_v16.py | cut -d' ' -f1)"
+          echo "EXPECTED_GENERATOR_SHA=$EXPECTED_GENERATOR_SHA"
+          python - "$SPRITE_COUNT" "$EXPECTED_GENERATOR_SHA" <<'PY'
           import re,sys
           from pathlib import Path
           p=Path('/tmp/zte-kaggle/github_mass_factory.py')
           s=p.read_text()
           s,n=re.subn(r"COUNT=int\(os\.getenv\('SPRITE_COUNT','\d+'\)\)",f"COUNT={int(sys.argv[1])}",s,count=1)
           if n != 1: raise SystemExit('Failed to inject SPRITE_COUNT into Kaggle kernel')
+          s,n=re.subn(r"EXPECTED_GENERATOR_SHA=os\.getenv\('EXPECTED_GENERATOR_SHA',''\)\.strip\(\)",f"EXPECTED_GENERATOR_SHA='{sys.argv[2]}'",s,count=1)
+          if n != 1: raise SystemExit('Failed to inject EXPECTED_GENERATOR_SHA into Kaggle kernel')
           p.write_text(s)
           PY
       - name: Push and start Kaggle GPU run

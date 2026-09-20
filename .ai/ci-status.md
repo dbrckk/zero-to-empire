@@ -1,15 +1,15 @@
 # CI status
 
-Summary: 2 success / 2 failure / 4 active
+Summary: 3 success / 4 failure / 1 active
 
-- Pollinations Building Candidate: in_progress / pending (0d83ee81)
-- Kaggle Mass Sprite Factory: in_progress / pending (0d83ee81)
-- Android CI: in_progress / pending (0d83ee81)
-- Android CI: in_progress / pending (2500dda5)
-- Kaggle Mass Sprite Factory: completed / failure (e818c46a)
-- Asset Autofactory 235: completed / success (c788c40a)
-- Kaggle Mass Sprite Factory: completed / failure (c788c40a)
-- Pollinations Character Atlas: completed / success (d7738c71)
+- Kaggle Mass Sprite Factory: in_progress / pending (e0b4540b)
+- Kaggle Mass Sprite Factory: completed / failure (2baabe3c)
+- Asset Autofactory 235: completed / success (5b69a7ed)
+- Kaggle Mass Sprite Factory: completed / failure (5b69a7ed)
+- Asset Autofactory 235: completed / success (07f31025)
+- Kaggle Mass Sprite Factory: completed / failure (07f31025)
+- Kaggle Mass Sprite Factory: completed / failure (a34bb6d6)
+- Asset Autofactory 235: completed / success (b61be914)
 
 ## Latest failed run structure
 - Job: kaggle

@@ -1,15 +1,15 @@
 # Change impact
 
-Base: e818c46a6ef9bc5567a001a96be5a70a1ff619b9
-Head: 0d83ee81151693caeb6f0aa576a23a9248ba32a0
+Base: 2baabe3ce77093d4b72e5fb85a3358207872d0a0
+Head: e0b4540b8cf990915ad350abb815cd24c3888f2e
 
 ## Changed files
-- M art/production/controlled-building-regen-queue.json
-- M ops/sprite-wave-trigger.txt
+- M .github/workflows/kaggle-mass-sprite-factory.yml
+- M kaggle/github_mass_factory.py
 
 ## Affected areas
-- art
-- ops
+- .github
+- kaggle
 
 ## Related test candidates
 - No direct filename-based test match detected.
