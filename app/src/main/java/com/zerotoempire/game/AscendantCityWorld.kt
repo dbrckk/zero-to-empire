@@ -126,6 +126,12 @@ private fun AscendantCityStage(eraIndex: Int, modifier: Modifier = Modifier) {
         }
         ReviewedTerrainLayer(eraIndex, Modifier.fillMaxSize())
         ReviewedMachineLayer(eraIndex, Modifier.fillMaxSize())
+        AmbientProductionFxLayer(
+            eraIndex = eraIndex,
+            worldFrame = ambientFrame,
+            reducedMotion = reducedMotion,
+            modifier = Modifier.fillMaxSize(),
+        )
         ReviewedCharacterLayer(
             eraIndex = eraIndex,
             worldFrame = ambientFrame,
@@ -138,6 +144,83 @@ private fun AscendantCityStage(eraIndex: Int, modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxSize(),
         )
         Box(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color.Transparent,Color.Transparent,EmpireColors.Void.copy(alpha=.24f)))))
+    }
+}
+
+@Composable
+private fun AmbientProductionFxLayer(
+    eraIndex: Int,
+    worldFrame: Int,
+    reducedMotion: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    val baseProgress = if (reducedMotion) .42f else ((worldFrame % 24) / 24f)
+    val secondaryProgress = if (reducedMotion) .58f else (((worldFrame + 9) % 24) / 24f)
+
+    Box(modifier) {
+        when (eraIndex) {
+            in 0..2 -> {
+                CanonicalFxSprite(
+                    effect = CanonicalFx.SMALL_FURNACE_FLAME,
+                    progress = baseProgress,
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .padding(start = 54.dp, top = 248.dp)
+                        .size(58.dp),
+                    alpha = .72f,
+                    startScale = .62f,
+                    endScale = .90f,
+                )
+                CanonicalFxSprite(
+                    effect = CanonicalFx.INDUSTRIAL_SMOKE_PUFF,
+                    progress = secondaryProgress,
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .padding(start = 76.dp, top = 194.dp)
+                        .size(72.dp),
+                    alpha = .44f,
+                    startScale = .62f,
+                    endScale = 1.04f,
+                )
+            }
+            in 3..6 -> {
+                CanonicalFxSprite(
+                    effect = CanonicalFx.LARGE_PLASMA_FLAME,
+                    progress = baseProgress,
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(end = 64.dp, top = 222.dp)
+                        .size(64.dp),
+                    alpha = .66f,
+                    startScale = .66f,
+                    endScale = .96f,
+                )
+                CanonicalFxSprite(
+                    effect = CanonicalFx.INDUSTRIAL_SMOKE_PUFF,
+                    progress = secondaryProgress,
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(end = 88.dp, top = 174.dp)
+                        .size(70.dp),
+                    alpha = .34f,
+                    startScale = .62f,
+                    endScale = 1.02f,
+                )
+            }
+            else -> {
+                CanonicalFxSprite(
+                    effect = CanonicalFx.MASTERY_CROWN_SHIMMER,
+                    progress = baseProgress,
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(top = 104.dp)
+                        .size(78.dp),
+                    alpha = .56f,
+                    startScale = .58f,
+                    endScale = .92f,
+                )
+            }
+        }
     }
 }
 
