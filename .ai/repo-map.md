@@ -4922,8 +4922,13 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          src=/tmp/bld11/output/candidates
-          test -d "$src" || src=/tmp/bld11/candidates
+          src="$(find /tmp/bld11 -type d -path '*/output/candidates' -print -quit)"
+          if [ -z "$src" ]; then
+            src="$(find /tmp/bld11 -type d -name candidates -print -quit)"
+          fi
+          test -n "$src"
+          test -d "$src"
+          echo "BLD11_ARTIFACT_SOURCE=$src"
           mkdir -p art/incoming/final-sprites
           for tier in 0 1 2 3 4 5 6; do
             test -s "$src/zte_business_11_t${tier}_final.png"

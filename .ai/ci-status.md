@@ -1,15 +1,15 @@
 # CI status
 
-Summary: 3 success / 4 failure / 1 active
+Summary: 2 success / 3 failure / 3 active
 
-- Kaggle Mass Sprite Factory: in_progress / pending (e0b4540b)
+- Promote reviewed BLD-11: pending / pending (4738149c)
+- Promote reviewed BLD-11: in_progress / pending (5319b39f)
+- Kaggle Mass Sprite Factory: in_progress / pending (9fc9f950)
+- Asset Autofactory 235: completed / success (c20694a0)
+- Kaggle Mass Sprite Factory: completed / failure (e0b4540b)
 - Kaggle Mass Sprite Factory: completed / failure (2baabe3c)
 - Asset Autofactory 235: completed / success (5b69a7ed)
 - Kaggle Mass Sprite Factory: completed / failure (5b69a7ed)
-- Asset Autofactory 235: completed / success (07f31025)
-- Kaggle Mass Sprite Factory: completed / failure (07f31025)
-- Kaggle Mass Sprite Factory: completed / failure (a34bb6d6)
-- Asset Autofactory 235: completed / success (b61be914)
 
 ## Latest failed run structure
 - Job: kaggle

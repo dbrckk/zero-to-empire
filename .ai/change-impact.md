@@ -1,15 +1,13 @@
 # Change impact
 
-Base: 2baabe3ce77093d4b72e5fb85a3358207872d0a0
-Head: e0b4540b8cf990915ad350abb815cd24c3888f2e
+Base: 9fc9f950a4cb4a6ef6966f626fd9e8e1a05f8d7b
+Head: 4738149cfa1cd92c3e6f816d60a081fd01eba16e
 
 ## Changed files
-- M .github/workflows/kaggle-mass-sprite-factory.yml
-- M kaggle/github_mass_factory.py
+- M .github/workflows/promote-reviewed-bld11.yml
 
 ## Affected areas
 - .github
-- kaggle
 
 ## Related test candidates
 - No direct filename-based test match detected.

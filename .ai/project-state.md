@@ -22,19 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T06:00:37Z
+Generated: 2026-09-20T06:03:00Z
 
 ### Git
 - Branch: `main`
-- Head: `e0b4540b8cf9`
-- Commit date: 2026-09-20T08:00:20+02:00
-- Commit: fix(kaggle): verify mounted bundle generator fingerprint (#97)
+- Head: `4738149cfa1c`
+- Commit date: 2026-09-20T08:02:46+02:00
+- Commit: fix(art): resolve nested BLD-11 artifact candidate path (#98)
 - Tracked files: 1349
 
 ### Recently changed files
+- `.github/workflows/promote-reviewed-bld11.yml`
+- `art/production/master-asset-queue.json`
 - `.github/workflows/kaggle-mass-sprite-factory.yml`
 - `kaggle/github_mass_factory.py`
-- `art/production/master-asset-queue.json`
 
 ### Project signals
 - `build.gradle.kts`
