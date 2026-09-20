@@ -33,8 +33,8 @@ private fun IndustrialFxLoop(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val reducedMotion = remember(context) { MotionQuality.reducedMotion(context) }
-    val lowPower = remember(context) { MotionQuality.lowPowerMode(context) }
+    val reducedMotion = MotionQuality.reducedMotion(context)
+    val lowPower = MotionQuality.lowPowerMode(context)
     val resource = when (kind) {
         IndustrialFxKind.SMALL_FURNACE -> R.drawable.zte_fx_01_final
         IndustrialFxKind.LARGE_PLASMA -> R.drawable.zte_fx_02_final
