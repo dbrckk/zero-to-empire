@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T18:20:46Z
+Generated: 2026-09-20T18:23:38Z
 
 ### Git
 - Branch: `main`
-- Head: `b55660ebac08`
-- Commit date: 2026-09-20T20:20:29+02:00
-- Commit: art: kick autofactory after BLD-02 strict reconciliation
-- Tracked files: 1374
+- Head: `1e34471fcef5`
+- Commit date: 2026-09-20T20:23:23+02:00
+- Commit: art: kick autofactory after BLD-03 strict reconciliation
+- Tracked files: 1375
 
 ### Recently changed files
 - `ops/autofactory-kick.txt`
-- `art/production/semantic-review-bld02-runtime-vs-kaggle-run-35526471402.md`
 - `art/production/autofactory-summary.md`
 - `art/production/autofactory-state.json`
-- `art/production/controlled-building-regen-queue.json`
+- `art/production/semantic-review-bld03-existing-runtime.md`
+- `art/production/generation-rejection-ledger.json`
 
 ### Project signals
 - `build.gradle.kts`
