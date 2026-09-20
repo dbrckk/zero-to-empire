@@ -49,6 +49,8 @@ jobs:
             exit 78
           fi
 
+      - name: Compile sprite generators
+        run: python -m py_compile tools/sprites/kaggle_building_family_factory_v16.py tools/sprites/kaggle_character_sheet_factory_v1.py kaggle/github_mass_factory.py
       - name: Check credentials
         shell: bash
         run: |
@@ -120,7 +122,8 @@ jobs:
               app/src/main/res/drawable-nodpi \
               art/incoming/final-sprites \
               art/production/controlled-character-regen-queue.json \
-              art/production/controlled-building-regen-queue.json
+              art/production/controlled-building-regen-queue.json \
+              art/production/generation-rejection-ledger.json
             cat > /tmp/zte-dataset/dataset-metadata.json <<JSON
           {
             "title": "Zero to Empire Sprite Bundle",
@@ -187,6 +190,7 @@ jobs:
              tools/sprites/kaggle_building_family_factory_v16_10.py \
              tools/sprites/kaggle_building_family_factory_v15.py \
              tools/sprites/kaggle_building_family_factory_v14.py \
+             tools/sprites/kaggle_character_sheet_factory_v1.py \
              /tmp/zte-kaggle/tools/sprites/
           sed "s/__KAGGLE_USERNAME__/${KAGGLE_USERNAME}/g" kaggle/kernel-metadata.template.json > /tmp/zte-kaggle/kernel-metadata.json
           EXPECTED_GENERATOR_SHA="$(sha256sum tools/sprites/kaggle_building_family_factory_v16.py | cut -d' ' -f1)"
@@ -202,6 +206,7 @@ jobs:
               'kaggle_building_family_factory_v16_10.py',
               'kaggle_building_family_factory_v15.py',
               'kaggle_building_family_factory_v14.py',
+              'kaggle_character_sheet_factory_v1.py',
           ]
           buf=io.BytesIO()
           with zipfile.ZipFile(buf,'w',zipfile.ZIP_DEFLATED) as z:

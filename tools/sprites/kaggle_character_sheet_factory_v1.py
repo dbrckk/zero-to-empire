@@ -9,7 +9,7 @@ from __future__ import annotations
 import argparse,gc,json,re
 from collections import deque
 from pathlib import Path
-print('KAGGLE_STARTUP=character-sheet-flux-v1.3-cross-animation-identity-lock',flush=True)
+print('KAGGLE_STARTUP=character-sheet-flux-v1.4-compact-prompts-adaptive-retry',flush=True)
 import torch
 from PIL import Image,ImageFilter
 from diffusers import FluxPipeline,FluxImg2ImgPipeline,FluxTransformer2DModel
@@ -20,6 +20,7 @@ MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
 INCOMING=ROOT/'art/incoming/final-sprites'
 REPORT=Path('/kaggle/working/output/character-sheet-report.json')
 QUEUE=ROOT/'art/production/controlled-character-regen-queue.json'
+REJECTION_LEDGER=ROOT/'art/production/generation-rejection-ledger.json'
 FLUX='aniketppanchal/flux.1-schnell-nf4-pkg'
 ROW=re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$")
 CHR=re.compile(r'^CHR-(OP|TECH|LOG|ENG)-(IDLE|WALK|WORK|CARRY|REPAIR|CELEB)$')
@@ -82,11 +83,55 @@ def rows():
   if x['manifest_status']=='TODO' and not (ROOT/x['runtime']).is_file()
  ]
 
-def prompt(i,pose):
- return (f"AAA stylized mobile 2.5D strategy-game character sprite, NON-PHOTOREALISTIC, painterly 3D game render. {ROLE[i['role']]}. {ACTION[i['action']][0]}; {pose}. "
-         "Exactly ONE adult worker only. Same single character identity, same face shape, same hair/helmet, same clothing, same colors and same body proportions. "
-         "34-degree three-quarter orthographic game view, simplified readable facial detail, premium game-art materials, feet fully visible. "
-         "Isolated on flat neutral gray studio background touching all image edges. No second person, no clone, no companion, no crowd, no floor card, scenery, text, logo, duplicated limbs, detached props, vehicle or building.")
+def rejection_hints(i):
+ hints=[]
+ if REJECTION_LEDGER.is_file():
+  try:
+   data=json.loads(REJECTION_LEDGER.read_text(encoding='utf-8'))
+   for row in data.get('entries',[]):
+    prefix=str(row.get('target_prefix','')).upper()
+    role=str(row.get('role','')).upper()
+    if (prefix and i['id'].startswith(prefix)) or (role and role==i['role']):
+     hint=str(row.get('prompt_hint','')).strip()
+     if hint and hint not in hints:hints.append(hint)
+  except Exception as e:
+   print('KAGGLE_CHR_REJECTION_MEMORY_SKIP='+str(e),flush=True)
+ return ' '.join(hints[-3:])
+
+def prompt_pair(i,pose,mode='default'):
+ # CLIP has a short context window. Keep identity/framing/single-subject rules
+ # in a compact front-loaded prompt and reserve detail/negatives for T5.
+ role=i['role'];action=i['action']
+ core=(f"stylized 2.5D game sprite, exactly one adult {ROLE[role]}, full body, "
+       f"34-degree orthographic three-quarter view, {ACTION[action][0]}, {pose}, isolated")
+ if mode=='framing':
+  core += ", smaller centered subject, generous empty border"
+ elif mode=='single':
+  core += ", one person only, single connected human silhouette"
+ elif mode=='identity':
+  core += ", preserve exact face headgear clothing colors proportions"
+ if len(core.split())>55:
+  raise RuntimeError('CLIP core prompt too long: '+str(len(core.split())))
+ detail=(f"AAA NON-PHOTOREALISTIC painterly 3D mobile strategy-game character. {ROLE[role]}. "
+         f"Action: {ACTION[action][0]}; pose: {pose}. Exactly ONE adult worker. "
+         "Preserve the same face shape, hair or helmet, clothing, palette and body proportions across every frame and animation. "
+         "Feet fully visible; centered with safe transparent padding after isolation; flat neutral gray studio background. "
+         "No second person, clone, companion, crowd, floor card, scenery, text, logo, duplicated limbs, detached props, vehicle or building. "
+         + rejection_hints(i))
+ if mode=='framing':
+  detail += " Keep the full figure clearly inside frame with at least ten percent empty margin on every side."
+ elif mode=='single':
+  detail += " Render one worker only; never depict a second body, reflection, duplicate or companion."
+ elif mode=='identity':
+  detail += " Do not redesign the person; preserve headgear, face, jacket, gloves and accent colors exactly."
+ return core,detail
+
+def retry_mode(reason,attempt):
+ if attempt==0:return 'default'
+ r=(reason or '').lower()
+ if 'edge contact' in r or 'coverage=' in r or 'full-body' in r:return 'framing'
+ if 'too-wide' in r or 'multiple-subject' in r:return 'single'
+ return 'identity'
 
 def load_encode():
  t=T5EncoderModel.from_pretrained(FLUX,subfolder='text_encoder_2',torch_dtype=torch.float16,device_map='cuda')
@@ -166,6 +211,23 @@ def sheet_qa(frames):
  if max(centers)-min(centers)>34:return False,'horizontal-drift'
  return True,f'min-iou={min(ious):.2f} pivot-drift={max(bottoms)-min(bottoms)}'
 
+def appearance_signature(cell):
+ rgba=cell.convert('RGBA');a=rgba.getchannel('A');bb=a.getbbox()
+ if not bb:return (0.0,)*6
+ x0,y0,x1,y1=bb;h=max(1,y1-y0)
+ bands=((y0,y0+int(.38*h)),(y0+int(.38*h),y0+int(.78*h)))
+ out=[]
+ for ya,yb in bands:
+  crop=rgba.crop((x0,ya,x1,max(ya+1,yb)))
+  ca=crop.getchannel('A');pix=list(crop.convert('RGB').getdata());mask=list(ca.getdata())
+  vals=[p for p,m in zip(pix,mask) if m>=48]
+  if not vals:out.extend((0.0,0.0,0.0));continue
+  out.extend(sum(p[k] for p in vals)/len(vals) for k in range(3))
+ return tuple(out)
+
+def appearance_distance(a,b):
+ return sum(abs(x-y) for x,y in zip(appearance_signature(a),appearance_signature(b)))/6.0
+
 def make_sheet(frames):
  # Canonical character deliverable: fixed 1024x1024 transparent atlas.
  # 256px cells in a 4x4 grid preserve stable runtime slicing; unused cells stay transparent.
@@ -184,15 +246,20 @@ def main():
   hints=POSE_HINT[i['action']][:ACTION[i['action']][1]]
   encs[i['id']]=[]
   for pose in hints:
-   text=prompt(i,pose)
-   with torch.no_grad():pe,ppe,_=enc.encode_prompt(prompt=text,prompt_2=text,max_sequence_length=192)
-   encs[i['id']].append((pe.cpu(),ppe.cpu()))
- del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();report=[];role_anchor={}
+   variants={}
+   for mode in ('default','framing','single','identity'):
+    clip_text,t5_text=prompt_pair(i,pose,mode)
+    with torch.no_grad():pe,ppe,_=enc.encode_prompt(prompt=clip_text,prompt_2=t5_text,max_sequence_length=192)
+    variants[mode]=(pe.cpu(),ppe.cpu())
+   encs[i['id']].append(variants)
+ del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();report=[];role_anchor={};role_reference_cell={}
  for idx,i in enumerate(items):
-  frames=[];anchor_raw=None;fail=None
-  for fi,(pe,ppe) in enumerate(encs[i['id']]):
-   ok=False
+  frames=[];anchor_raw=None;fail=None;retry_reasons=[]
+  for fi,variants in enumerate(encs[i['id']]):
+   ok=False;last_reason=''
    for attempt in range(3):
+    mode=retry_mode(last_reason,attempt)
+    pe,ppe=variants[mode]
     gen=torch.Generator(device='cuda').manual_seed(args.seed+idx*10000+fi*211+attempt*7919)
     try:
      with torch.inference_mode():
@@ -206,26 +273,40 @@ def main():
        else:
         # Start every later animation for this role from the exact same person.
         # Moderate img2img freedom changes pose while preserving face/headgear/clothes.
-        strength=min(.46,.34+attempt*.035)
+        strength=min(.44,.32+attempt*.03)
+        if mode=='identity':strength=max(.28,strength-.04)
         raw=img(image=shared,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=6,guidance_scale=0,output_type='pil',generator=gen).images[0]
         anchor_raw=raw.convert('RGB')
         print('KAGGLE_CHR_SHARED_IDENTITY='+i['id']+' role='+i['role']+f' strength={strength:.2f}',flush=True)
       else:
-       strength=min(.50,.30+fi*.016+attempt*.03)
+       strength=min(.48,.29+fi*.015+attempt*.025)
+       if mode in {'single','identity'}:strength=max(.24,strength-.035)
        raw=img(image=anchor_raw,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=6,guidance_scale=0,output_type='pil',generator=gen).images[0]
-     frame,cov=finish_frame(raw);frames.append(frame);ok=True;print(f"KAGGLE_CHR_FRAME={i['id']} frame={fi} attempt={attempt+1} cov={cov:.2f}",flush=True);break
-    except Exception as e:print(f"KAGGLE_CHR_RETRY={i['id']} frame={fi} attempt={attempt+1} reason={e}",flush=True)
+     frame,cov=finish_frame(raw);frames.append(frame);ok=True;print(f"KAGGLE_CHR_FRAME={i['id']} frame={fi} attempt={attempt+1} mode={mode} cov={cov:.2f}",flush=True);break
+    except Exception as e:
+     last_reason=str(e);retry_reasons.append(last_reason);print(f"KAGGLE_CHR_RETRY={i['id']} frame={fi} attempt={attempt+1} mode={mode} reason={e}",flush=True)
    if not ok:fail=f'frame-{fi}-failed';break
    gc.collect();torch.cuda.empty_cache()
   if fail:
-   report.append({'id':i['id'],'status':'REJECT','reason':fail,'frames':len(frames)});continue
+   report.append({'id':i['id'],'status':'REJECT','reason':fail,'frames':len(frames),'retry_reasons':retry_reasons});continue
   ok,why=sheet_qa(frames)
   if not ok:
-   print(f"KAGGLE_CHR_REJECTED={i['id']} reason={why}",flush=True);report.append({'id':i['id'],'status':'REJECT','reason':why,'frames':len(frames)});continue
+   print(f"KAGGLE_CHR_REJECTED={i['id']} reason={why}",flush=True);report.append({'id':i['id'],'status':'REJECT','reason':why,'frames':len(frames),'retry_reasons':retry_reasons});continue
+  identity_distance=0.0
+  ref=role_reference_cell.get(i['role'])
+  if ref is None:
+   role_reference_cell[i['role']]=frames[0].copy()
+  else:
+   identity_distance=appearance_distance(ref,frames[0])
+   print(f"KAGGLE_CHR_CROSS_ANIM_IDENTITY={i['id']} distance={identity_distance:.1f}",flush=True)
+   if identity_distance>48:
+    why=f'cross-animation-appearance-drift={identity_distance:.1f}'
+    print(f"KAGGLE_CHR_REJECTED={i['id']} reason={why}",flush=True)
+    report.append({'id':i['id'],'status':'REJECT','reason':why,'frames':len(frames),'retry_reasons':retry_reasons});continue
   sheet=make_sheet(frames)
   if sheet.size!=(1024,1024):raise RuntimeError(f'bad atlas size {sheet.size}')
   p=INCOMING/f"{i['stem']}.png";sheet.save(p,'PNG',optimize=True)
-  print(f"KAGGLE_CHR_VALIDATED={p.relative_to(ROOT)} {why} atlas=1024x1024",flush=True);report.append({'id':i['id'],'status':'CANDIDATE','reason':why,'frames':len(frames),'atlas':'1024x1024','cell':'256x256','file':p.name})
+  print(f"KAGGLE_CHR_VALIDATED={p.relative_to(ROOT)} {why} atlas=1024x1024",flush=True);report.append({'id':i['id'],'status':'CANDIDATE','reason':why,'frames':len(frames),'atlas':'1024x1024','cell':'256x256','file':p.name,'cross_animation_appearance_distance':round(identity_distance,2),'retry_reasons':retry_reasons})
  REPORT.write_text(json.dumps(report,indent=2),encoding='utf-8')
  print(f"KAGGLE_CHARACTER_CANDIDATES={sum(r['status']=='CANDIDATE' for r in report)} ATTEMPTED={len(items)}",flush=True)
 if __name__=='__main__':main()
