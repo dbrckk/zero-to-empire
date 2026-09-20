@@ -2303,6 +2303,8 @@ def family_aware_render(i, prev, pe, ppe, base, img, seed)
 """Give BLD-12 enough img2img freedom to produce real structural evolution."""
 tier = int(i['tier'])
 ⋮----
+# Break the inherited wheel silhouette early while keeping family DNA.
+⋮----
 old = v14.STRENGTH[tier]
 ⋮----
 def architectural_band_fill(final, lo, hi)
@@ -2386,6 +2388,8 @@ def family_aware_render(i, prev, pe, ppe, base, img, seed)
 ⋮----
 """Give BLD-12 enough img2img freedom to produce real structural evolution."""
 tier = int(i['tier'])
+⋮----
+# Break the inherited wheel silhouette early while keeping family DNA.
 ⋮----
 old = v14.STRENGTH[tier]
 ⋮----

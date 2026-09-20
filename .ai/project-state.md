@@ -22,25 +22,25 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T14:10:12Z
+Generated: 2026-09-20T15:05:20Z
 
 ### Git
 - Branch: `main`
-- Head: `23098f601d96`
-- Commit date: 2026-09-20T16:09:55+02:00
-- Commit: art: reject BLD-12 early clone tiers and strengthen v17.5
-- Tracked files: 1363
+- Head: `92d11c4a6181`
+- Commit date: 2026-09-20T17:05:03+02:00
+- Commit: art: force early BLD-12 architecture resets in v17.6
+- Tracked files: 1364
 
 ### Recently changed files
 - `art/production/controlled-building-regen-queue.json`
-- `art/production/semantic-review-bld12-kaggle-run-35513954813.md`
+- `art/production/semantic-review-bld12-kaggle-run-35515656009.md`
 - `ops/autofactory-kick.txt`
 - `tools/sprites/kaggle_building_family_factory_v16.py`
 - `tools/sprites/kaggle_building_family_factory_v17.py`
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
 - `art/production/master-asset-queue.json`
-- `.github/workflows/asset-autofactory.yml`
-- `art/production/semantic-review-bld12-v17.4-calibration-run-35508938195.md`
-- `art/production/semantic-review-bld12-v17.2-gate-calibration-run-35507534445.md`
+- `art/production/semantic-review-bld12-kaggle-run-35513954813.md`
 
 ### Project signals
 - `build.gradle.kts`
