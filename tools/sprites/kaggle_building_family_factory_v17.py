@@ -18,7 +18,7 @@ SPEC.loader.exec_module(v1610)
 v15 = v1610.v15
 v14 = v1610.v14
 
-print('KAGGLE_STARTUP=building-family-flux-v17.1-family-aware-platform-gate', flush=True)
+print('KAGGLE_STARTUP=building-family-flux-v17.2-family-aware-structural-gates', flush=True)
 
 # More image-to-image freedom than v16.10. The strict v16.10 live gate remains
 # active, so extra freedom cannot silently promote unrelated scenes/site cards.
@@ -54,6 +54,18 @@ EVOLUTION = {
     13: 'transcendent core, radial systems, prestige crown',
 }
 
+REALITY_TIER = {
+    0: 'compact enclosed containment-ring engine with two short symmetric shielded process wings and a low central exotic-physics core',
+    1: 'add one large fused rectangular process wing on each side and a visibly taller central containment housing; silhouette must change, not scale',
+    2: 'add a second outer containment ring segment plus substantial rear shield blocks; broaden the connected mass asymmetrically enough to alter the silhouette',
+    3: 'raise a tall central reality-core tower through the ring and add lower fused machinery volumes; clear vertical step-change from T2',
+    4: 'add a second elevated containment stage and four connected shield/process blocks, creating a stepped multi-level silhouette',
+    5: 'megastructure form: dominant elevated exotic-physics core, enlarged twin process wings, secondary ring architecture and dense fused energy-routing masses',
+    6: 'apex reality engine: multi-level central core with distinct crown, nested containment architecture and large integrated side systems; unmistakably evolved from T5',
+}
+
+REALITY_STRENGTH = {1:.48, 2:.56, 3:.64, 4:.71, 5:.77, 6:.80}
+
 
 def prompts(i):
     family = i['family']
@@ -61,7 +73,7 @@ def prompts(i):
     fam = v1610.FAMILY[family]
     shape = v1610.SHAPE[family]
     evolution = EVOLUTION[family]
-    instruction = TIER[tier]
+    instruction = REALITY_TIER[tier] if family == 12 else TIER[tier]
     short = (
         f'Centered isolated {fam}. {shape}. Tier {tier}: {instruction}. '
         f'Use only connected family structures such as {evolution}. One object on flat neutral gray.'
@@ -75,6 +87,21 @@ def prompts(i):
     )
     return short, detail
 
+
+
+ORIGINAL_RENDER = v14.render
+
+def family_aware_render(i, prev, pe, ppe, base, img, seed):
+    """Give BLD-12 enough img2img freedom to produce real structural evolution."""
+    tier = int(i['tier'])
+    if int(i['family']) != 12 or prev is None or tier not in REALITY_STRENGTH:
+        return ORIGINAL_RENDER(i, prev, pe, ppe, base, img, seed)
+    old = v14.STRENGTH[tier]
+    v14.STRENGTH[tier] = REALITY_STRENGTH[tier]
+    try:
+        return ORIGINAL_RENDER(i, prev, pe, ppe, base, img, seed)
+    finally:
+        v14.STRENGTH[tier] = old
 
 def architectural_band_fill(final, lo, hi):
     """Mask fill inside the sprite bbox for a relative vertical band."""
@@ -112,11 +139,31 @@ def branch_score(recs):
         if offenders:
             details=','.join(f'{aid}(upper={upper:.2f},lower={lower:.2f})' for aid,upper,lower in offenders)
             return -999.0, why+f' platform-overhang={details}'
+    if family==12 and len(recs)>=7:
+        adj=[v1610.normalized_silhouette_iou(recs[n-1][1],recs[n][1]) for n in range(1,len(recs))]
+        anchor=[v1610.normalized_silhouette_iou(recs[0][1],recs[n][1]) for n in range(1,len(recs))]
+        print('KAGGLE_BLD12_EVOLUTION_SIGNATURE='+
+              ';'.join(f'T{n+1}:adj={adj[n]:.3f},anchor={anchor[n]:.3f}' for n in range(len(adj))),
+              flush=True)
+        failures=[]
+        if adj[0]>.955:
+            failures.append(f'T1-adj={adj[0]:.3f}>.955')
+        if anchor[2]>.920:
+            failures.append(f'T3-anchor={anchor[2]:.3f}>.920')
+        if anchor[4]>.860:
+            failures.append(f'T5-anchor={anchor[4]:.3f}>.860')
+        if anchor[5]>.840:
+            failures.append(f'T6-anchor={anchor[5]:.3f}>.840')
+        if sum(x<.920 for x in adj)<3:
+            failures.append('fewer-than-3-structural-transitions')
+        if failures:
+            return -999.0, why+' clone-ladder=' + ','.join(failures)
     return score,why
 
 
 v14.prompts = prompts
 v15.prompts = prompts
+v14.render = family_aware_render
 v15.branch_score = branch_score
 
 if __name__ == '__main__':
