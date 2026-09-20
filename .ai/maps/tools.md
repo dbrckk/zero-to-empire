@@ -2283,6 +2283,20 @@ REALITY_TIER = {
 ⋮----
 REALITY_STRENGTH = {1:.56, 2:.64, 3:.72, 4:.75, 5:.79, 6:.80}
 ⋮----
+REJECTION_LEDGER = HERE.parents[1] / 'art' / 'production' / 'generation-rejection-ledger.json'
+⋮----
+TRANSCENDENT_TIER = {
+⋮----
+def rejection_hints(i)
+⋮----
+hints=[]
+⋮----
+data=json.loads(REJECTION_LEDGER.read_text(encoding='utf-8'))
+aid=str(i['id']).upper()
+⋮----
+prefix=str(row.get('target_prefix','')).upper()
+hint=str(row.get('prompt_hint','')).strip()
+⋮----
 def prompts(i)
 ⋮----
 family = i['family']
@@ -2290,7 +2304,7 @@ tier = i['tier']
 fam = v1610.FAMILY[family]
 shape = v1610.SHAPE[family]
 evolution = EVOLUTION[family]
-instruction = REALITY_TIER[tier] if family == 12 else TIER[tier]
+instruction = REALITY_TIER[tier] if family == 12 else (TRANSCENDENT_TIER[tier] if family == 13 else TIER[tier])
 short = (
 detail = (
 ⋮----
@@ -2300,8 +2314,11 @@ def family_aware_render(i, prev, pe, ppe, base, img, seed)
 ⋮----
 """Give BLD-12 enough img2img freedom to produce real structural evolution."""
 tier = int(i['tier'])
+family=int(i['family'])
 ⋮----
-# Break the inherited wheel silhouette early while keeping family DNA.
+# High-risk radial families need periodic text-to-image resets. This keeps
+# family materials/camera while breaking the tendency to only enlarge a ring.
+reset_tiers={12:{1,3},13:{1,3,5}}
 ⋮----
 old = v14.STRENGTH[tier]
 ⋮----
@@ -2332,10 +2349,11 @@ details=','.join(f'{aid}(upper={upper:.2f},lower={lower:.2f})' for aid,upper,low
 adj=[v1610.normalized_silhouette_iou(recs[n-1][1],recs[n][1]) for n in range(1,len(recs))]
 anchor=[v1610.normalized_silhouette_iou(recs[0][1],recs[n][1]) for n in range(1,len(recs))]
 ⋮----
+# Generic guard against the common failure where apparent progression is
+# mostly canvas occupancy/scale while the normalized silhouette stays the same.
+generic_failures=[]
+⋮----
 failures=[]
-# T1 may retain a very similar outer shell if the family then proves
-# strong cumulative evolution. Avoid rejecting a good branch on tiny
-# mask noise around the old .955 boundary.
 ```
 
 ## File: sprites/kaggle_building_family_factory_v17.py
@@ -2369,6 +2387,20 @@ REALITY_TIER = {
 ⋮----
 REALITY_STRENGTH = {1:.56, 2:.64, 3:.72, 4:.75, 5:.79, 6:.80}
 ⋮----
+REJECTION_LEDGER = HERE.parents[1] / 'art' / 'production' / 'generation-rejection-ledger.json'
+⋮----
+TRANSCENDENT_TIER = {
+⋮----
+def rejection_hints(i)
+⋮----
+hints=[]
+⋮----
+data=json.loads(REJECTION_LEDGER.read_text(encoding='utf-8'))
+aid=str(i['id']).upper()
+⋮----
+prefix=str(row.get('target_prefix','')).upper()
+hint=str(row.get('prompt_hint','')).strip()
+⋮----
 def prompts(i)
 ⋮----
 family = i['family']
@@ -2376,7 +2408,7 @@ tier = i['tier']
 fam = v1610.FAMILY[family]
 shape = v1610.SHAPE[family]
 evolution = EVOLUTION[family]
-instruction = REALITY_TIER[tier] if family == 12 else TIER[tier]
+instruction = REALITY_TIER[tier] if family == 12 else (TRANSCENDENT_TIER[tier] if family == 13 else TIER[tier])
 short = (
 detail = (
 ⋮----
@@ -2386,8 +2418,11 @@ def family_aware_render(i, prev, pe, ppe, base, img, seed)
 ⋮----
 """Give BLD-12 enough img2img freedom to produce real structural evolution."""
 tier = int(i['tier'])
+family=int(i['family'])
 ⋮----
-# Break the inherited wheel silhouette early while keeping family DNA.
+# High-risk radial families need periodic text-to-image resets. This keeps
+# family materials/camera while breaking the tendency to only enlarge a ring.
+reset_tiers={12:{1,3},13:{1,3,5}}
 ⋮----
 old = v14.STRENGTH[tier]
 ⋮----
@@ -2418,10 +2453,11 @@ details=','.join(f'{aid}(upper={upper:.2f},lower={lower:.2f})' for aid,upper,low
 adj=[v1610.normalized_silhouette_iou(recs[n-1][1],recs[n][1]) for n in range(1,len(recs))]
 anchor=[v1610.normalized_silhouette_iou(recs[0][1],recs[n][1]) for n in range(1,len(recs))]
 ⋮----
+# Generic guard against the common failure where apparent progression is
+# mostly canvas occupancy/scale while the normalized silhouette stays the same.
+generic_failures=[]
+⋮----
 failures=[]
-# T1 may retain a very similar outer shell if the family then proves
-# strong cumulative evolution. Avoid rejecting a good branch on tiny
-# mask noise around the old .955 boundary.
 ```
 
 ## File: sprites/kaggle_building_family_factory.py

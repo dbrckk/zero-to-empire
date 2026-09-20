@@ -22,28 +22,29 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T16:45:29Z
+Generated: 2026-09-20T16:47:43Z
 
 ### Git
 - Branch: `main`
-- Head: `de9604610446`
-- Commit date: 2026-09-20T16:45:13Z
-- Commit: art(auto): advance 235-asset production queue
-- Tracked files: 1370
+- Head: `b26a03513372`
+- Commit date: 2026-09-20T18:47:27+02:00
+- Commit: art: generalize rejection memory and scale-ladder prevention
+- Tracked files: 1371
 
 ### Recently changed files
+- `art/production/controlled-building-regen-queue.json`
+- `art/production/generation-rejection-ledger.json`
+- `art/production/semantic-review-bld13-kaggle-run-35522041463.md`
+- `tools/sprites/kaggle_building_family_factory_v16.py`
+- `tools/sprites/kaggle_building_family_factory_v17.py`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
 - `art/production/master-asset-queue.json`
 - `.github/workflows/kaggle-mass-sprite-factory.yml`
 - `art/production/GENERATION_REJECTION_MEMORY.md`
-- `art/production/generation-rejection-ledger.json`
 - `kaggle/github_mass_factory.py`
 - `ops/autofactory-kick.txt`
 - `tools/sprites/kaggle_character_sheet_factory_v1.py`
-- `art/production/controlled-building-regen-queue.json`
-- `art/production/controlled-character-regen-queue.json`
-- `art/production/semantic-review-chr-op-kaggle-run-35521489049.md`
 
 ### Project signals
 - `build.gradle.kts`
