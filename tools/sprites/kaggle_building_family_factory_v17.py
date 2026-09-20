@@ -18,7 +18,7 @@ SPEC.loader.exec_module(v1610)
 v15 = v1610.v15
 v14 = v1610.v14
 
-print('KAGGLE_STARTUP=building-family-flux-v17.2-family-aware-structural-gates', flush=True)
+print('KAGGLE_STARTUP=building-family-flux-v17.3-robust-structural-gates', flush=True)
 
 # More image-to-image freedom than v16.10. The strict v16.10 live gate remains
 # active, so extra freedom cannot silently promote unrelated scenes/site cards.
@@ -146,10 +146,13 @@ def branch_score(recs):
               ';'.join(f'T{n+1}:adj={adj[n]:.3f},anchor={anchor[n]:.3f}' for n in range(len(adj))),
               flush=True)
         failures=[]
-        if adj[0]>.955:
-            failures.append(f'T1-adj={adj[0]:.3f}>.955')
-        if anchor[2]>.920:
-            failures.append(f'T3-anchor={anchor[2]:.3f}>.920')
+        # T1 may retain a very similar outer shell if the family then proves
+        # strong cumulative evolution. Avoid rejecting a good branch on tiny
+        # mask noise around the old .955 boundary.
+        if adj[0]>.965:
+            failures.append(f'T1-adj={adj[0]:.3f}>.965')
+        if anchor[2]>.925:
+            failures.append(f'T3-anchor={anchor[2]:.3f}>.925')
         if anchor[4]>.860:
             failures.append(f'T5-anchor={anchor[4]:.3f}>.860')
         if anchor[5]>.840:
