@@ -3,11 +3,14 @@
 Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains the canonical 236-item scope. Candidate art is never confused with DONE runtime assets.
 
 ## Official progress
-- DONE: **126 / 236**
-- ART VALIDATED: **128 / 236**
-- RUNTIME INTEGRATED: **128 / 236**
-- Generated candidates accepted as DONE: **126**
+- DONE: **133 / 236**
+- ART VALIDATED: **135 / 236**
+- RUNTIME INTEGRATED: **135 / 236**
+- Generated candidates accepted as DONE: **133**
 - Rule: only runtime-integrated, individually clean/transparent, manifest-matching assets with green Android CI increment DONE.
+
+## Reviewed Kaggle BLD-11 family — DONE
+`BLD-11-T0` through `BLD-11-T6` were semantically approved from Kaggle run `35473600052`, promoted as exact reviewed masters, processed into Android runtime WebP assets, and integrated by commit `2633da6851e6888387330650e2d75d7794c1df1f`. This bookkeeping update is intentionally delivered through a PR so Android CI validates the integrated runtime before merge.
 
 ## DONE baseline
 - `BLD-00-T0` through `BLD-02-T3`: **18 buildings**, individually validated, referenced, visible and Android CI green.
