@@ -19,7 +19,7 @@ SPEC.loader.exec_module(v1610)
 v15 = v1610.v15
 v14 = v1610.v14
 
-print('KAGGLE_STARTUP=building-family-flux-v17.7-rejection-memory-generic-scale-gate', flush=True)
+print('KAGGLE_STARTUP=building-family-flux-v17.8-late-tier-continuity', flush=True)
 
 # More image-to-image freedom than v16.10. The strict v16.10 live gate remains
 # active, so extra freedom cannot silently promote unrelated scenes/site cards.
@@ -75,8 +75,8 @@ TRANSCENDENT_TIER = {
     2: 'second redesign: elongated cross-axis nexus with offset attached systems and a clearly taller central energy spine; not a scaled ring',
     3: 'vertical evolution: tall central transcendent tower with four lower fused buttress blocks and one secondary enclosed energy stage',
     4: 'advanced redesign: multi-level nexus with a dominant vertical core, broad connected side masses and an elevated crown; break radial symmetry enough to create a stepped silhouette',
-    5: 'megastructure evolution: giant vertical transcendent core, paired lateral energy citadels, nested connected systems and dense prestige architecture',
-    6: 'mastery evolution: apex civilization nexus with maximum vertical core, monumental attached side structures and unmistakable prestige crown; iconic silhouette, never a scaled starburst',
+    5: 'continue the T4 vertical architecture: substantially taller central transcendent core, larger fused lateral energy citadels and denser multi-level crown; preserve the vertical stepped massing, never revert to a flat radial disc',
+    6: 'continue T5 into the final vertical apex: maximum-height transcendent core, monumental fused side citadels, multi-level prestige crown and integrated energy routing; remain recognizably descended from T4/T5, never revert to a circular disc',
 }
 
 def rejection_hints(i):
@@ -129,7 +129,7 @@ def family_aware_render(i, prev, pe, ppe, base, img, seed):
 
     # High-risk radial families need periodic text-to-image resets. This keeps
     # family materials/camera while breaking the tendency to only enlarge a ring.
-    reset_tiers={12:{1,3},13:{1,3,5}}
+    reset_tiers={12:{1,3},13:{1,3}}
     if tier in reset_tiers[family]:
         print(f"KAGGLE_BLD_ANCHOR_RESET={i['id']} family={family}", flush=True)
         return ORIGINAL_RENDER(i, None, pe, ppe, base, img, seed + 17000 + family*211 + tier*101)
@@ -219,6 +219,15 @@ def branch_score(recs):
                 failures.append(f'T2-anchor={anchor[1]:.3f}>.900')
             if sum(x<.880 for x in adj[:4])<2:
                 failures.append('insufficient-transcendent-early-redesign')
+            aspects=[]
+            for _,im,_ in recs:
+                bb=im.getchannel('A').getbbox()
+                aspects.append(((bb[3]-bb[1])/(bb[2]-bb[0])) if bb and bb[2]>bb[0] else 0.0)
+            print('KAGGLE_BLD13_ASPECT='+';'.join(f'T{n}:{x:.3f}' for n,x in enumerate(aspects)),flush=True)
+            if aspects[4]>=.95 and aspects[5]<.90:
+                failures.append(f'T5-vertical-collapse={aspects[4]:.3f}->{aspects[5]:.3f}')
+            if abs(aspects[5]-aspects[4])>.28:
+                failures.append(f'T4-T5-aspect-jump={aspects[4]:.3f}->{aspects[5]:.3f}')
             if failures:
                 return -999.0, why+' transcendent-ladder=' + ','.join(failures)
     return score,why

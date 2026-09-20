@@ -9,7 +9,7 @@ from __future__ import annotations
 import argparse,gc,json,re
 from collections import deque
 from pathlib import Path
-print('KAGGLE_STARTUP=character-sheet-flux-v1.4-compact-prompts-adaptive-retry',flush=True)
+print('KAGGLE_STARTUP=character-sheet-flux-v1.5-motion-aware-walk',flush=True)
 import torch
 from PIL import Image,ImageFilter
 from diffusers import FluxPipeline,FluxImg2ImgPipeline,FluxTransformer2DModel
@@ -40,7 +40,7 @@ ACTION={
 }
 POSE_HINT={
  'IDLE':['neutral stance','weight slightly left','neutral stance','weight slightly right','small head turn left','small head turn right'],
- 'WALK':['left contact','left down','passing left','right contact','right down','passing right','left contact recovery','neutral passing'],
+ 'WALK':['left foot far forward, right foot far back, arms counter-swing','left knee bent under body, right leg extended back','legs crossing in mid-stride, opposite arm forward','right foot far forward, left foot far back, arms counter-swing','right knee bent under body, left leg extended back','legs crossing in opposite mid-stride, opposite arm forward','left foot forward recovery stride, right heel raised','right foot forward recovery stride, left heel raised'],
  'WORK':['tool ready','reach forward','tool contact','working low','working center','working high','pull back','inspect','tool down','neutral'],
  'CARRY':['carry neutral','left step','passing','right step','carry neutral','left step','passing','right step'],
  'REPAIR':['kneel/reach','tool contact','small spark-free repair pose','inspect','tool contact','adjust','inspect','tool contact','rise slightly','neutral repair'],
@@ -99,25 +99,29 @@ def rejection_hints(i):
  return ' '.join(hints[-3:])
 
 def prompt_pair(i,pose,mode='default'):
- # CLIP has a short context window. Keep identity/framing/single-subject rules
- # in a compact front-loaded prompt and reserve detail/negatives for T5.
+ # Keep CLIP deliberately tiny: tokenizer expansion makes word-count estimates
+ # optimistic. T5 carries the descriptive detail and rejection-memory hints.
  role=i['role'];action=i['action']
- core=(f"stylized 2.5D game sprite, exactly one adult {ROLE[role]}, full body, "
-       f"34-degree orthographic three-quarter view, {ACTION[action][0]}, {pose}, isolated")
+ role_short={
+  'OP':'orange-hardhat foundry operator in dark coveralls',
+  'TECH':'cyan-accent industrial technician in graphite coveralls',
+  'LOG':'amber-accent logistics worker in work jacket',
+  'ENG':'cyan-accent industrial engineer in graphite field suit',
+ }[role]
+ core=(f"stylized 2.5D game sprite, one {role_short}, full body, "
+       f"three-quarter orthographic view, {pose}, isolated")
  if mode=='framing':
   core += ", smaller centered subject, generous empty border"
  elif mode=='single':
   core += ", one person only, single connected human silhouette"
  elif mode=='identity':
   core += ", preserve exact face headgear clothing colors proportions"
- if len(core.split())>55:
+ if len(core.split())>38:
   raise RuntimeError('CLIP core prompt too long: '+str(len(core.split())))
- detail=(f"AAA NON-PHOTOREALISTIC painterly 3D mobile strategy-game character. {ROLE[role]}. "
-         f"Action: {ACTION[action][0]}; pose: {pose}. Exactly ONE adult worker. "
-         "Preserve the same face shape, hair or helmet, clothing, palette and body proportions across every frame and animation. "
-         "Feet fully visible; centered with safe transparent padding after isolation; flat neutral gray studio background. "
-         "No second person, clone, companion, crowd, floor card, scenery, text, logo, duplicated limbs, detached props, vehicle or building. "
-         + rejection_hints(i))
+ detail=(f"AAA stylized painterly 2.5D mobile game character. {ROLE[role]}. "
+         f"{ACTION[action][0]}; {pose}. One adult only. Preserve face, hardhat or hair, clothing, palette and proportions. "
+         "Full body centered on flat neutral gray; feet visible; safe border. "
+         "No second body, clone, crowd, scenery, text, vehicle or building. " + rejection_hints(i))
  if mode=='framing':
   detail += " Keep the full figure clearly inside frame with at least ten percent empty margin on every side."
  elif mode=='single':
@@ -211,6 +215,30 @@ def sheet_qa(frames):
  if max(centers)-min(centers)>34:return False,'horizontal-drift'
  return True,f'min-iou={min(ious):.2f} pivot-drift={max(bottoms)-min(bottoms)}'
 
+def lower_body_motion(frames):
+ vals=[]
+ for n in range(1,len(frames)):
+  A=frames[n-1].getchannel('A')
+  B=frames[n].getchannel('A')
+  ba=A.getbbox();bb=B.getbbox()
+  if not ba or not bb:continue
+  top=max(0,min(ba[1]+int((ba[3]-ba[1])*.55),bb[1]+int((bb[3]-bb[1])*.55)))
+  a=A.crop((0,top,256,256)).resize((64,64),Image.Resampling.BILINEAR).point(lambda p:255 if p>=32 else 0)
+  b=B.crop((0,top,256,256)).resize((64,64),Image.Resampling.BILINEAR).point(lambda p:255 if p>=32 else 0)
+  pa,pb=a.load(),b.load();inter=union=0
+  for y in range(64):
+   for x in range(64):
+    aa=pa[x,y]>0;bbb=pb[x,y]>0;inter+=aa and bbb;union+=aa or bbb
+  vals.append(1-(inter/union if union else 1))
+ return sum(vals)/len(vals) if vals else 0.0
+
+def action_qa(frames,action):
+ if action=='WALK':
+  motion=lower_body_motion(frames)
+  if motion<.22:return False,f'walk-too-static lower-motion={motion:.3f}'
+  return True,f'walk-motion={motion:.3f}'
+ return True,'action-motion=na'
+
 def appearance_signature(cell):
  rgba=cell.convert('RGBA');a=rgba.getchannel('A');bb=a.getbbox()
  if not bb:return (0.0,)*6
@@ -273,14 +301,14 @@ def main():
        else:
         # Start every later animation for this role from the exact same person.
         # Moderate img2img freedom changes pose while preserving face/headgear/clothes.
-        strength=min(.44,.32+attempt*.03)
-        if mode=='identity':strength=max(.28,strength-.04)
+        strength=(min(.62,.54+attempt*.035) if i['action']=='WALK' else min(.44,.32+attempt*.03))
+        if mode=='identity' and i['action']!='WALK':strength=max(.28,strength-.04)
         raw=img(image=shared,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=6,guidance_scale=0,output_type='pil',generator=gen).images[0]
         anchor_raw=raw.convert('RGB')
         print('KAGGLE_CHR_SHARED_IDENTITY='+i['id']+' role='+i['role']+f' strength={strength:.2f}',flush=True)
       else:
-       strength=min(.48,.29+fi*.015+attempt*.025)
-       if mode in {'single','identity'}:strength=max(.24,strength-.035)
+       strength=(min(.64,.50+fi*.018+attempt*.025) if i['action']=='WALK' else min(.48,.29+fi*.015+attempt*.025))
+       if mode in {'single','identity'} and i['action']!='WALK':strength=max(.24,strength-.035)
        raw=img(image=anchor_raw,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=6,guidance_scale=0,output_type='pil',generator=gen).images[0]
      frame,cov=finish_frame(raw);frames.append(frame);ok=True;print(f"KAGGLE_CHR_FRAME={i['id']} frame={fi} attempt={attempt+1} mode={mode} cov={cov:.2f}",flush=True);break
     except Exception as e:
@@ -292,6 +320,11 @@ def main():
   ok,why=sheet_qa(frames)
   if not ok:
    print(f"KAGGLE_CHR_REJECTED={i['id']} reason={why}",flush=True);report.append({'id':i['id'],'status':'REJECT','reason':why,'frames':len(frames),'retry_reasons':retry_reasons});continue
+  action_ok,action_why=action_qa(frames,i['action'])
+  if not action_ok:
+   print(f"KAGGLE_CHR_REJECTED={i['id']} reason={action_why}",flush=True)
+   report.append({'id':i['id'],'status':'REJECT','reason':action_why,'frames':len(frames),'retry_reasons':retry_reasons});continue
+  why=why+' '+action_why
   identity_distance=0.0
   ref=role_reference_cell.get(i['role'])
   if ref is None:

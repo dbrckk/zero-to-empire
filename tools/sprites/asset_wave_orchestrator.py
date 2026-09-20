@@ -147,6 +147,7 @@ def prepare_building_group(queue: dict[str, Any], group: str) -> dict[str, Any]:
 
 def prepare_character_group(queue: dict[str, Any], group: str) -> dict[str, Any]:
     assets = by_id(queue)
+    action_order={"IDLE":0,"WALK":1,"WORK":2,"CARRY":3,"REPAIR":4,"CELEB":5}
     group_assets = sorted(
         [
             x for x in queue["assets"]
@@ -154,7 +155,7 @@ def prepare_character_group(queue: dict[str, Any], group: str) -> dict[str, Any]
             and x["strict_status"] != "DONE"
             and x["pipeline_status"] != "PAUSED"
         ],
-        key=lambda x: x["id"],
+        key=lambda x: action_order.get(x["id"].split("-")[-1],99),
     )
     targets = []
     for x in group_assets:
