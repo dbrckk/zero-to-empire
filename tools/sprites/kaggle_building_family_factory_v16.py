@@ -8,6 +8,7 @@ not acceptance criteria.
 """
 from __future__ import annotations
 import importlib.util
+import json
 from pathlib import Path
 import numpy as np
 
@@ -18,7 +19,7 @@ SPEC.loader.exec_module(v1610)
 v15 = v1610.v15
 v14 = v1610.v14
 
-print('KAGGLE_STARTUP=building-family-flux-v17.6-early-anchor-resets', flush=True)
+print('KAGGLE_STARTUP=building-family-flux-v17.7-rejection-memory-generic-scale-gate', flush=True)
 
 # More image-to-image freedom than v16.10. The strict v16.10 live gate remains
 # active, so extra freedom cannot silently promote unrelated scenes/site cards.
@@ -66,6 +67,34 @@ REALITY_TIER = {
 
 REALITY_STRENGTH = {1:.56, 2:.64, 3:.72, 4:.75, 5:.79, 6:.80}
 
+REJECTION_LEDGER = HERE.parents[1] / 'art' / 'production' / 'generation-rejection-ledger.json'
+
+TRANSCENDENT_TIER = {
+    0: 'compact transcendent core with four short integrated radial systems and a low prestige crown; small readable starter silhouette',
+    1: 'first redesign: add two large fused side pylons and a taller crown so width and height both change; avoid a pure circular starburst',
+    2: 'second redesign: elongated cross-axis nexus with offset attached systems and a clearly taller central energy spine; not a scaled ring',
+    3: 'vertical evolution: tall central transcendent tower with four lower fused buttress blocks and one secondary enclosed energy stage',
+    4: 'advanced redesign: multi-level nexus with a dominant vertical core, broad connected side masses and an elevated crown; break radial symmetry enough to create a stepped silhouette',
+    5: 'megastructure evolution: giant vertical transcendent core, paired lateral energy citadels, nested connected systems and dense prestige architecture',
+    6: 'mastery evolution: apex civilization nexus with maximum vertical core, monumental attached side structures and unmistakable prestige crown; iconic silhouette, never a scaled starburst',
+}
+
+def rejection_hints(i):
+    if not REJECTION_LEDGER.is_file():
+        return ''
+    hints=[]
+    try:
+        data=json.loads(REJECTION_LEDGER.read_text(encoding='utf-8'))
+        aid=str(i['id']).upper()
+        for row in data.get('entries',[]):
+            prefix=str(row.get('target_prefix','')).upper()
+            hint=str(row.get('prompt_hint','')).strip()
+            if prefix and aid.startswith(prefix) and hint and hint not in hints:
+                hints.append(hint)
+    except Exception as e:
+        print('KAGGLE_BLD_REJECTION_MEMORY_SKIP='+str(e), flush=True)
+    return ' '.join(hints[-3:])
+
 
 def prompts(i):
     family = i['family']
@@ -73,7 +102,7 @@ def prompts(i):
     fam = v1610.FAMILY[family]
     shape = v1610.SHAPE[family]
     evolution = EVOLUTION[family]
-    instruction = REALITY_TIER[tier] if family == 12 else TIER[tier]
+    instruction = REALITY_TIER[tier] if family == 12 else (TRANSCENDENT_TIER[tier] if family == 13 else TIER[tier])
     short = (
         f'Centered isolated {fam}. {shape}. Tier {tier}: {instruction}. '
         f'Use only connected family structures such as {evolution}. One object on flat neutral gray.'
@@ -83,7 +112,7 @@ def prompts(i):
         f'Tier instruction: {instruction}. Family-specific architectural vocabulary: {evolution}. '
         'Change actual connected architecture and outer massing; never simulate progression by only scaling the previous object. '
         'Keep camera, facade axis, material identity and dominant family core coherent across the family. '
-        f'{v1610.FOOTPRINT}'
+        f'{rejection_hints(i)} {v1610.FOOTPRINT}'
     )
     return short, detail
 
@@ -94,13 +123,16 @@ ORIGINAL_RENDER = v14.render
 def family_aware_render(i, prev, pe, ppe, base, img, seed):
     """Give BLD-12 enough img2img freedom to produce real structural evolution."""
     tier = int(i['tier'])
-    if int(i['family']) != 12:
+    family=int(i['family'])
+    if family not in {12,13}:
         return ORIGINAL_RENDER(i, prev, pe, ppe, base, img, seed)
 
-    # Break the inherited wheel silhouette early while keeping family DNA.
-    if tier in {1, 3}:
-        print('KAGGLE_BLD12_ANCHOR_RESET=' + i['id'], flush=True)
-        return ORIGINAL_RENDER(i, None, pe, ppe, base, img, seed + 17000 + tier * 101)
+    # High-risk radial families need periodic text-to-image resets. This keeps
+    # family materials/camera while breaking the tendency to only enlarge a ring.
+    reset_tiers={12:{1,3},13:{1,3,5}}
+    if tier in reset_tiers[family]:
+        print(f"KAGGLE_BLD_ANCHOR_RESET={i['id']} family={family}", flush=True)
+        return ORIGINAL_RENDER(i, None, pe, ppe, base, img, seed + 17000 + family*211 + tier*101)
 
     if prev is None or tier not in REALITY_STRENGTH:
         return ORIGINAL_RENDER(i, prev, pe, ppe, base, img, seed)
@@ -147,30 +179,48 @@ def branch_score(recs):
         if offenders:
             details=','.join(f'{aid}(upper={upper:.2f},lower={lower:.2f})' for aid,upper,lower in offenders)
             return -999.0, why+f' platform-overhang={details}'
-    if family==12 and len(recs)>=7:
+    if len(recs)>=7:
         adj=[v1610.normalized_silhouette_iou(recs[n-1][1],recs[n][1]) for n in range(1,len(recs))]
         anchor=[v1610.normalized_silhouette_iou(recs[0][1],recs[n][1]) for n in range(1,len(recs))]
-        print('KAGGLE_BLD12_EVOLUTION_SIGNATURE='+
+        print('KAGGLE_GENERIC_EVOLUTION_SIGNATURE='+
               ';'.join(f'T{n+1}:adj={adj[n]:.3f},anchor={anchor[n]:.3f}' for n in range(len(adj))),
               flush=True)
-        failures=[]
-        # T1 may retain a very similar outer shell if the family then proves
-        # strong cumulative evolution. Avoid rejecting a good branch on tiny
-        # mask noise around the old .955 boundary.
-        if adj[0]>.965:
-            failures.append(f'T1-adj={adj[0]:.3f}>.965')
-        if anchor[2]>.930:
-            failures.append(f'T3-anchor={anchor[2]:.3f}>.930')
-        if anchor[4]>.860:
-            failures.append(f'T5-anchor={anchor[4]:.3f}>.860')
-        if anchor[5]>.845:
-            failures.append(f'T6-anchor={anchor[5]:.3f}>.845')
-        if sum(x<.920 for x in adj)<4:
-            failures.append('fewer-than-4-structural-transitions')
-        if sum(x<.900 for x in adj[:3])<2:
-            failures.append('weak-early-tier-evolution')
-        if failures:
-            return -999.0, why+' clone-ladder=' + ','.join(failures)
+
+        # Generic guard against the common failure where apparent progression is
+        # mostly canvas occupancy/scale while the normalized silhouette stays the same.
+        generic_failures=[]
+        if anchor[1]>.930 and sum(x<.900 for x in adj[:4])<2:
+            generic_failures.append(f'early-scale-ladder:T2-anchor={anchor[1]:.3f}')
+        if adj[0]>.975 and adj[1]>.940:
+            generic_failures.append(f'near-clone-opening:T1={adj[0]:.3f},T2={adj[1]:.3f}')
+        if generic_failures:
+            return -999.0, why+' generic-scale-gate=' + ','.join(generic_failures)
+
+        if family==12:
+            failures=[]
+            if adj[0]>.965:
+                failures.append(f'T1-adj={adj[0]:.3f}>.965')
+            if anchor[2]>.930:
+                failures.append(f'T3-anchor={anchor[2]:.3f}>.930')
+            if anchor[4]>.860:
+                failures.append(f'T5-anchor={anchor[4]:.3f}>.860')
+            if anchor[5]>.845:
+                failures.append(f'T6-anchor={anchor[5]:.3f}>.845')
+            if sum(x<.920 for x in adj)<4:
+                failures.append('fewer-than-4-structural-transitions')
+            if sum(x<.900 for x in adj[:3])<2:
+                failures.append('weak-early-tier-evolution')
+            if failures:
+                return -999.0, why+' clone-ladder=' + ','.join(failures)
+
+        if family==13:
+            failures=[]
+            if anchor[1]>.900:
+                failures.append(f'T2-anchor={anchor[1]:.3f}>.900')
+            if sum(x<.880 for x in adj[:4])<2:
+                failures.append('insufficient-transcendent-early-redesign')
+            if failures:
+                return -999.0, why+' transcendent-ladder=' + ','.join(failures)
     return score,why
 
 
