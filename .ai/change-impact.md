@@ -1,15 +1,14 @@
 # Change impact
 
-Base: 3b482995cf16027fd58f8bb19b2c6c9846f04ba8
-Head: d1083dabbdf518b3e61d18c4e584487e31a4d1c4
+Base: c8019c0c8c4ffd43b44615f1df041943da08f4a8
+Head: f0f10c713715593e55ec22940f1631aa6ac863ef
 
 ## Changed files
-- M art/production/controlled-building-regen-queue.json
-- A art/production/semantic-review-bld12-kaggle-run-35503929393.md
-- M tools/sprites/kaggle_building_family_factory_v17.py
+- M .github/workflows/asset-autofactory-ci.yml
+- M tools/sprites/asset_queue_utils.py
 
 ## Affected areas
-- art
+- .github
 - tools
 
 ## Related test candidates

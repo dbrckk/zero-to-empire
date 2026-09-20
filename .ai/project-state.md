@@ -22,16 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T11:19:54Z
+Generated: 2026-09-20T11:30:54Z
 
 ### Git
 - Branch: `main`
-- Head: `d1083dabbdf5`
-- Commit date: 2026-09-20T13:19:40+02:00
-- Commit: art: reject BLD-12 clone ladder and strengthen v17.2
+- Head: `f0f10c713715`
+- Commit date: 2026-09-20T13:30:37+02:00
+- Commit: fix(art): persist 143 strict baseline across autofactory runs
 - Tracked files: 1359
 
 ### Recently changed files
+- `.github/workflows/asset-autofactory-ci.yml`
+- `tools/sprites/asset_queue_utils.py`
 - `art/production/controlled-building-regen-queue.json`
 - `art/production/semantic-review-bld12-kaggle-run-35503929393.md`
 - `tools/sprites/kaggle_building_family_factory_v17.py`
