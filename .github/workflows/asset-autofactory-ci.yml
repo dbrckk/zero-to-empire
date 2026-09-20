@@ -46,11 +46,11 @@ jobs:
           assert len(assets)==235
           assert len({x['id'] for x in assets})==235
           assert 'ONB-00' not in {x['id'] for x in assets}
-          assert sum(x['strict_status']=='DONE' for x in assets)==133
-          assert sum(x['strict_status']!='DONE' for x in assets)==102
+          assert sum(x['strict_status']=='DONE' for x in assets)==140
+          assert sum(x['strict_status']!='DONE' for x in assets)==95
           assert sum(x['lane']=='kaggle-building-family' and x['strict_status']!='DONE' for x in assets)==68
           assert sum(x['lane']=='kaggle-character-sheet' and x['strict_status']!='DONE' for x in assets)==24
-          assert sum(x['lane']=='fx-runtime-reconciliation' and x['strict_status']!='DONE' for x in assets)==10
+          assert sum(x['lane']=='fx-runtime-reconciliation' and x['strict_status']!='DONE' for x in assets)==3
           assert s['action'].startswith('WAIT_') or s['action'] in {
               'PRODUCTION_235_COMPLETE_REVIEW_BACKLOG',
               'NO_AUTOMATIC_WORK_AVAILABLE',
