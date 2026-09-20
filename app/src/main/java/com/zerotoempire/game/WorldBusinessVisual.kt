@@ -75,6 +75,11 @@ internal fun WorldBusinessVisual(
                 tier = tier,
                 modifier = Modifier.fillMaxSize()
             )
+            IndustrialBusinessFx(
+                businessId = businessId,
+                tier = tier,
+                modifier = Modifier.fillMaxSize()
+            )
 
             if (businessId in 0..3 && tier >= 1) {
                 FoundryWorkerTraffic(
@@ -96,6 +101,11 @@ internal fun WorldBusinessVisual(
             )
             BusinessArtIcon(businessId, level, size)
             BusinessTierVfxAfterPrimary(
+                businessId = businessId,
+                tier = tier,
+                modifier = Modifier.fillMaxSize()
+            )
+            IndustrialBusinessFx(
                 businessId = businessId,
                 tier = tier,
                 modifier = Modifier.fillMaxSize()
