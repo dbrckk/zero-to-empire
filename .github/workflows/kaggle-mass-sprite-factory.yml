@@ -182,6 +182,12 @@ jobs:
           set -euo pipefail
           rm -rf /tmp/zte-kaggle; mkdir -p /tmp/zte-kaggle
           cp kaggle/github_mass_factory.py /tmp/zte-kaggle/
+          mkdir -p /tmp/zte-kaggle/tools/sprites
+          cp tools/sprites/kaggle_building_family_factory_v16.py \
+             tools/sprites/kaggle_building_family_factory_v16_10.py \
+             tools/sprites/kaggle_building_family_factory_v15.py \
+             tools/sprites/kaggle_building_family_factory_v14.py \
+             /tmp/zte-kaggle/tools/sprites/
           sed "s/__KAGGLE_USERNAME__/${KAGGLE_USERNAME}/g" kaggle/kernel-metadata.template.json > /tmp/zte-kaggle/kernel-metadata.json
           EXPECTED_GENERATOR_SHA="$(sha256sum tools/sprites/kaggle_building_family_factory_v16.py | cut -d' ' -f1)"
           echo "EXPECTED_GENERATOR_SHA=$EXPECTED_GENERATOR_SHA"

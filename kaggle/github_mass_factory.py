@@ -105,6 +105,30 @@ else:
  REPO.mkdir(parents=True,exist_ok=True)
  with tarfile.open(source,'r:gz') as t:t.extractall(REPO)
 print(f'KAGGLE_REPO_SOURCE={source_kind}:{source}',flush=True)
+# The Kaggle dataset mount can lag behind the published dataset version. Ship the
+# critical building generator chain with the kernel itself and overlay it onto
+# the mounted repository before validating/running it.
+overlay_names=(
+ 'kaggle_building_family_factory_v16.py',
+ 'kaggle_building_family_factory_v16_10.py',
+ 'kaggle_building_family_factory_v15.py',
+ 'kaggle_building_family_factory_v14.py',
+)
+overlay_applied=False
+for overlay_root in (Path('/kaggle/src'),Path('/kaggle/working'),Path.cwd()):
+ candidate=overlay_root/'tools/sprites/kaggle_building_family_factory_v16.py'
+ if not candidate.is_file():continue
+ if EXPECTED_GENERATOR_SHA and digest(candidate)!=EXPECTED_GENERATOR_SHA:continue
+ dst_dir=REPO/'tools/sprites';dst_dir.mkdir(parents=True,exist_ok=True)
+ for name in overlay_names:
+  src=overlay_root/'tools/sprites'/name
+  if not src.is_file():raise SystemExit(f'KAGGLE_KERNEL_OVERLAY_MISSING:{name}')
+  shutil.copy2(src,dst_dir/name)
+ print(f'KAGGLE_KERNEL_GENERATOR_OVERLAY={overlay_root}',flush=True)
+ overlay_applied=True
+ break
+if EXPECTED_GENERATOR_SHA and not overlay_applied:
+ print('KAGGLE_KERNEL_GENERATOR_OVERLAY=not-found',flush=True)
 generator_path=REPO/'tools/sprites/kaggle_building_family_factory_v16.py'
 if EXPECTED_GENERATOR_SHA:
  if not generator_path.is_file():raise SystemExit('KAGGLE_STALE_BUNDLE: generator file missing from mounted bundle')
