@@ -9,7 +9,7 @@ from __future__ import annotations
 import argparse,gc,json,re
 from collections import deque
 from pathlib import Path
-print('KAGGLE_STARTUP=character-sheet-flux-v1.5-motion-aware-walk',flush=True)
+print('KAGGLE_STARTUP=character-sheet-flux-v1.6-action-motion-gates',flush=True)
 import torch
 from PIL import Image,ImageFilter
 from diffusers import FluxPipeline,FluxImg2ImgPipeline,FluxTransformer2DModel
@@ -41,10 +41,10 @@ ACTION={
 POSE_HINT={
  'IDLE':['neutral stance','weight slightly left','neutral stance','weight slightly right','small head turn left','small head turn right'],
  'WALK':['left foot far forward, right foot far back, arms counter-swing','left knee bent under body, right leg extended back','legs crossing in mid-stride, opposite arm forward','right foot far forward, left foot far back, arms counter-swing','right knee bent under body, left leg extended back','legs crossing in opposite mid-stride, opposite arm forward','left foot forward recovery stride, right heel raised','right foot forward recovery stride, left heel raised'],
- 'WORK':['tool ready','reach forward','tool contact','working low','working center','working high','pull back','inspect','tool down','neutral'],
- 'CARRY':['carry neutral','left step','passing','right step','carry neutral','left step','passing','right step'],
- 'REPAIR':['kneel/reach','tool contact','small spark-free repair pose','inspect','tool contact','adjust','inspect','tool contact','rise slightly','neutral repair'],
- 'CELEB':['neutral','arm starts up','arm half up','arm raised','small fist pump','arm half down','arm down','neutral'],
+ 'WORK':['tool held at chest, neutral stance','left arm reaches tool forward, torso leans slightly','tool contacting waist-height machine point','knees bent, tool working low near knee height','tool centered with both hands, torso forward','tool raised toward shoulder-height work point','upper body pulls tool back from contact','lean in and inspect repaired point','tool lowered beside thigh','return to neutral work stance'],
+ 'CARRY':['crate held with both hands at waist, feet apart','left foot forward carrying stride, crate stable','legs passing under body, crate stable at waist','right foot forward carrying stride, crate stable','short recovery stance with crate centered','left foot forward longer carrying stride','opposite passing step, elbows fixed around crate','right foot forward recovery, crate centered'],
+ 'REPAIR':['half-kneel and reach tool toward low repair point','tool pressed to low repair point, free hand bracing','tool moves horizontally across repair point, no sparks','lean closer and inspect repair point','tool contacts mid-height repair point','free hand adjusts component while tool stays ready','pull back and inspect with torso upright','second tool contact at mid height','rise from half-kneel while lowering tool','neutral repair-ready stance'],
+ 'CELEB':['neutral stance both arms down','right arm begins lifting, elbow bent','right fist reaches shoulder height, torso opens','right fist fully overhead, weight shifts to left leg','small overhead fist pump with opposite arm bent','arm lowers to shoulder height, weight recenters','arm lowers beside body','return to neutral stance'],
 }
 
 def rows():
@@ -235,11 +235,20 @@ def lower_body_motion(frames):
  return sum(vals)/len(vals) if vals else 0.0
 
 def action_qa(frames,action):
+ # Per-action motion floor prevents technically valid but visually frozen atlases
+ # from reaching manual semantic review.
+ ious=[alpha_iou(frames[n-1],frames[n]) for n in range(1,len(frames))]
+ mean_change=(sum(1-x for x in ious)/len(ious)) if ious else 0.0
  if action=='WALK':
   motion=lower_body_motion(frames)
   if motion<.22:return False,f'walk-too-static lower-motion={motion:.3f}'
-  return True,f'walk-motion={motion:.3f}'
- return True,'action-motion=na'
+  if mean_change<.12:return False,f'walk-too-static mean-change={mean_change:.3f}'
+  return True,f'walk-motion={motion:.3f} mean-change={mean_change:.3f}'
+ floors={'WORK':.075,'CARRY':.10,'REPAIR':.075,'CELEB':.09,'IDLE':.025}
+ floor=floors.get(action,.05)
+ if mean_change<floor:
+  return False,f'{action.lower()}-too-static mean-change={mean_change:.3f}<{floor:.3f}'
+ return True,f'{action.lower()}-motion={mean_change:.3f}'
 
 def appearance_signature(cell):
  rgba=cell.convert('RGBA');a=rgba.getchannel('A');bb=a.getbbox()
