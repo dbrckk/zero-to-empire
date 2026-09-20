@@ -22,19 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T18:00:32Z
+Generated: 2026-09-20T18:01:58Z
 
 ### Git
 - Branch: `main`
-- Head: `c68563e61c47`
-- Commit date: 2026-09-20T20:00:09+02:00
-- Commit: ci(android): skip builds for production-review metadata
+- Head: `8fd57bc28ccf`
+- Commit date: 2026-09-20T20:01:39+02:00
+- Commit: art: compact building prompts to eliminate model truncation
 - Tracked files: 1373
 
 ### Recently changed files
-- `.github/workflows/android.yml`
 - `tools/sprites/kaggle_building_family_factory_v16.py`
 - `tools/sprites/kaggle_building_family_factory_v17.py`
+- `.github/workflows/android.yml`
 - `tools/sprites/kaggle_character_sheet_factory_v1.py`
 - `art/production/controlled-character-regen-queue.json`
 - `art/production/generation-rejection-ledger.json`

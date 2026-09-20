@@ -2300,15 +2300,18 @@ hint=str(row.get('prompt_hint','')).strip()
 ⋮----
 merged=' '.join(hints[-2:])
 ⋮----
+CLIP_FAMILY = {
+⋮----
 def prompts(i)
 ⋮----
 family = i['family']
 tier = i['tier']
 fam = v1610.FAMILY[family]
-shape = v1610.SHAPE[family]
-evolution = EVOLUTION[family]
 instruction = REALITY_TIER[tier] if family == 12 else (TRANSCENDENT_TIER[tier] if family == 13 else TIER[tier])
+memory = rejection_hints(i)
+⋮----
 short = (
+⋮----
 detail = (
 ⋮----
 ORIGINAL_RENDER = v14.render
@@ -2410,15 +2413,18 @@ hint=str(row.get('prompt_hint','')).strip()
 ⋮----
 merged=' '.join(hints[-2:])
 ⋮----
+CLIP_FAMILY = {
+⋮----
 def prompts(i)
 ⋮----
 family = i['family']
 tier = i['tier']
 fam = v1610.FAMILY[family]
-shape = v1610.SHAPE[family]
-evolution = EVOLUTION[family]
 instruction = REALITY_TIER[tier] if family == 12 else (TRANSCENDENT_TIER[tier] if family == 13 else TIER[tier])
+memory = rejection_hints(i)
+⋮----
 short = (
+⋮----
 detail = (
 ⋮----
 ORIGINAL_RENDER = v14.render
