@@ -17,18 +17,13 @@ def ensure_gpu():
  try:cap=subprocess.check_output(['nvidia-smi','--query-gpu=compute_cap','--format=csv,noheader'],text=True).splitlines()[0].strip()
  except Exception as e:print('KAGGLE_GPU_CAPABILITY=unknown',e,flush=True);return
  print('KAGGLE_GPU_CAPABILITY='+cap,flush=True)
- # Kaggle may allocate a Tesla P100 (Pascal, sm_60) while its newest
- # preinstalled PyTorch wheel is built only for sm_70+. Pin a CUDA 12.4
- # PyTorch wheel that still contains Pascal kernels before torch is imported.
  if cap.startswith('6.'):
   probe=subprocess.run(['python','-c',"import torch; print(' '.join(torch.cuda.get_arch_list()))"],capture_output=True,text=True)
-  arches=(probe.stdout or '').strip()
-  print('KAGGLE_TORCH_ARCHES='+arches,flush=True)
+  arches=(probe.stdout or '').strip();print('KAGGLE_TORCH_ARCHES='+arches,flush=True)
   if 'sm_60' not in arches:
    print('KAGGLE_PASCAL_TORCH_COMPAT_INSTALL=1',flush=True)
    subprocess.run(['python','-m','pip','install','--quiet','--force-reinstall','--no-cache-dir','torch==2.6.0','torchvision==0.21.0','--index-url','https://download.pytorch.org/whl/cu124'],check=True)
-   verify=subprocess.check_output(['python','-c',"import torch; print(torch.__version__); print(' '.join(torch.cuda.get_arch_list()))"],text=True).strip()
-   print('KAGGLE_PASCAL_TORCH_VERIFY='+verify.replace('\\n',' | '),flush=True)
+   verify=subprocess.check_output(['python','-c',"import torch; print(torch.__version__); print(' '.join(torch.cuda.get_arch_list()))"],text=True).strip();print('KAGGLE_PASCAL_TORCH_VERIFY='+verify.replace('\\n',' | '),flush=True)
 def ensure_flux():
  print('KAGGLE_ENGINE=yield-router-v12-positive-source-locked',flush=True)
  required=['diffusers','transformers','accelerate','safetensors','torch','torchvision','PIL','bitsandbytes'];missing=[]
@@ -47,7 +42,6 @@ def controlled_queue_backlog(path):
  return sum(1 for x in q.get('targets',[]) if str(x.get('status','')).upper()=='PENDING_KAGGLE')
 def controlled_character_backlog(): return controlled_queue_backlog('art/production/controlled-character-regen-queue.json')
 def controlled_building_backlog(): return controlled_queue_backlog('art/production/controlled-building-regen-queue.json')
-
 def backlog():
  c={'BLD':0,'STATIC':0,'CHR':0,'FX':0,'SKIPPED_RUNTIME':0,'CONTROLLED_CHR':controlled_character_backlog(),'CONTROLLED_BLD':controlled_building_backlog()}
  for line in (REPO/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md').read_text(encoding='utf-8').splitlines():
@@ -64,26 +58,15 @@ def valid_tree(root):
  return (root/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md').is_file() and (root/'tools/sprites').is_dir()
 def resolve_source():
  roots=[Path('/kaggle/input'),Path('/kaggle/src'),Path('/kaggle/working'),Path.cwd()]
- # Kaggle datasets are normally mounted already unpacked. Prefer that native
- # representation and avoid requiring the original tarball to survive ingestion.
- for base in roots:
-  if not base.exists():continue
-  candidates=[base]
-  try:candidates.extend(p for p in base.iterdir() if p.is_dir())
-  except Exception:pass
-  # Kaggle may unpack a dataset directory (repo_bundle/) one level below the
-  # dataset mount. Search a shallow tree before falling back to archives.
-  try:
-   for p in base.glob('*/*'):
-    if p.is_dir(): candidates.append(p)
-  except Exception:pass
-  for candidate in candidates:
-   if valid_tree(candidate):
-    print(f'KAGGLE_BUNDLE_TREE={candidate}',flush=True);return 'tree',candidate
+ # The tarball is the immutable payload uploaded for this exact source fingerprint.
+ # Kaggle can also expose a stale unpacked repo_bundle/ tree from an older dataset
+ # version, so archives must win whenever both representations are mounted.
  direct=[]
  for root in roots:
   if root.exists():direct.extend(root.glob('**/repo_bundle.tar.gz'))
- if direct:return 'tar',direct[0]
+ if direct:
+  direct.sort(key=lambda p:p.stat().st_mtime,reverse=True)
+  print(f'KAGGLE_BUNDLE_ARCHIVE={direct[0]}',flush=True);return 'tar',direct[0]
  scratch=WORK/'bundle-unwrapped';shutil.rmtree(scratch,ignore_errors=True);scratch.mkdir(parents=True,exist_ok=True)
  archives=[]
  for root in roots:
@@ -97,6 +80,18 @@ def resolve_source():
     with f.open(hit) as src,dst.open('wb') as out:shutil.copyfileobj(src,out)
     print(f'KAGGLE_BUNDLE_UNWRAPPED={z}:{hit}',flush=True);return 'tar',dst
   except Exception as e:print(f'KAGGLE_ARCHIVE_SKIP={z}:{e}',flush=True)
+ # Native trees are a compatibility fallback only when Kaggle did not retain
+ # either the tarball or a zip containing it.
+ for base in roots:
+  if not base.exists():continue
+  candidates=[base]
+  try:candidates.extend(p for p in base.iterdir() if p.is_dir())
+  except Exception:pass
+  try:candidates.extend(p for p in base.glob('*/*') if p.is_dir())
+  except Exception:pass
+  for candidate in candidates:
+   if valid_tree(candidate):
+    print(f'KAGGLE_BUNDLE_TREE_FALLBACK={candidate}',flush=True);return 'tree',candidate
  for root in roots:
   if root.exists():
    for p in list(root.glob('**/*'))[:200]:
@@ -105,8 +100,7 @@ def resolve_source():
 WORK.mkdir(parents=True,exist_ok=True);shutil.rmtree(REPO,ignore_errors=True);shutil.rmtree(OUT,ignore_errors=True);OUT.mkdir(parents=True)
 source_kind,source=resolve_source()
 if source is None:raise SystemExit('sprite repository source missing from Kaggle inputs')
-if source_kind=='tree':
- shutil.copytree(source,REPO,dirs_exist_ok=True)
+if source_kind=='tree':shutil.copytree(source,REPO,dirs_exist_ok=True)
 else:
  REPO.mkdir(parents=True,exist_ok=True)
  with tarfile.open(source,'r:gz') as t:t.extractall(REPO)
@@ -128,25 +122,24 @@ elif q['FX']:
 else:raise SystemExit('No supported GPU backlog')
 print(f'KAGGLE_LANE={lane} KAGGLE_EFFECTIVE_COUNT={effective}',flush=True)
 cdir=OUT/'candidates';cdir.mkdir(parents=True,exist_ok=True)
-def current_fresh():
- return [p for p in sorted(incoming.glob('*_final.png')) if p.is_file() and (p.name not in before or before[p.name]!=digest(p))]
+def current_fresh():return [p for p in sorted(incoming.glob('*_final.png')) if p.is_file() and (p.name not in before or before[p.name]!=digest(p))]
 def checkpoint_fresh():
- fresh=current_fresh(); exported=0
+ fresh=current_fresh();exported=0
  for f in fresh:
   try:
    from PIL import Image
-   with Image.open(f) as im: im.verify()
+   with Image.open(f) as im:im.verify()
    dst=cdir/f.name
-   if not dst.exists() or digest(dst)!=digest(f): shutil.copy2(f,dst)
+   if not dst.exists() or digest(dst)!=digest(f):shutil.copy2(f,dst)
    exported+=1
-  except Exception as e: print(f'KAGGLE_CHECKPOINT_SKIP={f.name}:{e}',flush=True)
- if exported: print(f'KAGGLE_CHECKPOINT_COUNT={exported}',flush=True)
+  except Exception as e:print(f'KAGGLE_CHECKPOINT_SKIP={f.name}:{e}',flush=True)
+ if exported:print(f'KAGGLE_CHECKPOINT_COUNT={exported}',flush=True)
  return fresh
 proc=subprocess.Popen(cmd)
 while proc.poll() is None:
  checkpoint_fresh();time.sleep(20)
 checkpoint_fresh()
-if proc.returncode!=0: raise SystemExit(f'generator exited {proc.returncode}')
+if proc.returncode!=0:raise SystemExit(f'generator exited {proc.returncode}')
 fresh=current_fresh();print(f'KAGGLE_FRESH_CANDIDATES={len(fresh)}',flush=True)
 for srcname in ('branch-search-report.json',):
  src=incoming/srcname
