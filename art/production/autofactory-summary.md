@@ -1,11 +1,11 @@
 # Asset Autofactory — 235 target
 
-- Strict DONE: **150 / 235**
-- Production processed to DONE/review: **150 / 235**
-- Awaiting semantic review: **0**
-- Automation-blocked: **0**
-- Current action: **WAIT_KAGGLE_BUSY**
-- Current group: **controlled-building**
+- Strict DONE: **153 / 235**
+- Strict remaining: **82**
+- Remaining building assets: **58**
+- Remaining character assets: **24**
+- BLD-02 T4–T6: **existing runtime reviewed and DONE**
+- Kaggle #228: **technically valid, rejected as visual regression**
+- Current action: **RECONCILED_EXISTING_BLD02_RUNTIME**
 
-The autofactory may generate and technically validate candidates automatically,
-but it never promotes a visually unreviewed candidate to strict DONE.
+Automatic generation and technical QA remain enabled; semantic DONE remains explicitly reviewed.
