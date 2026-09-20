@@ -329,6 +329,7 @@ tools/
     kaggle_building_family_factory_v14.py
     kaggle_building_family_factory_v15.py
     kaggle_building_family_factory_v16_10.py
+    kaggle_building_family_factory_v16.py
     kaggle_building_family_factory_v17.py
     kaggle_building_family_factory.py
     kaggle_character_sheet_factory_v1.py
@@ -24901,6 +24902,90 @@ anchor_ceiling={1:.985,2:.955,3:.925,4:.895,5:.865,6:.835}[tier]
 halo=alpha_halo_ratio(new_final)
 ```
 
+## File: tools/sprites/kaggle_building_family_factory_v16.py
+```python
+#!/usr/bin/env python3
+"""Building factory v17: family-aware structural tier evolution.
+
+Fixes the clone-ladder failure seen on BLD-12 by making every tier prompt describe
+an architectural massing change, not a scale/detail pass. It deliberately reuses
+v16.10's strict technical/semantic gates; this module changes generation pressure,
+not acceptance criteria.
+"""
+⋮----
+HERE = Path(__file__).resolve().parent
+SPEC = importlib.util.spec_from_file_location('v1610', HERE / 'kaggle_building_family_factory_v16_10.py')
+v1610 = importlib.util.module_from_spec(SPEC)
+⋮----
+v15 = v1610.v15
+v14 = v1610.v14
+⋮----
+# More image-to-image freedom than v16.10. The strict v16.10 live gate remains
+# active, so extra freedom cannot silently promote unrelated scenes/site cards.
+⋮----
+TIER = {
+⋮----
+# Family-specific evolution nouns stop the generic Tech Company vocabulary from
+# leaking into Reality Engine, Moon Colony, Foundry, Gateway, etc.
+EVOLUTION = {
+⋮----
+REALITY_TIER = {
+⋮----
+REALITY_STRENGTH = {1:.56, 2:.64, 3:.72, 4:.75, 5:.79, 6:.80}
+⋮----
+def prompts(i)
+⋮----
+family = i['family']
+tier = i['tier']
+fam = v1610.FAMILY[family]
+shape = v1610.SHAPE[family]
+evolution = EVOLUTION[family]
+instruction = REALITY_TIER[tier] if family == 12 else TIER[tier]
+short = (
+detail = (
+⋮----
+ORIGINAL_RENDER = v14.render
+⋮----
+def family_aware_render(i, prev, pe, ppe, base, img, seed)
+⋮----
+"""Give BLD-12 enough img2img freedom to produce real structural evolution."""
+tier = int(i['tier'])
+⋮----
+old = v14.STRENGTH[tier]
+⋮----
+def architectural_band_fill(final, lo, hi)
+⋮----
+"""Mask fill inside the sprite bbox for a relative vertical band."""
+alpha=np.asarray(final.getchannel('A'),dtype=np.uint8)
+⋮----
+h=max(1,y1-y0)
+ya=y0+int(lo*h); yb=max(ya+1,y0+int(hi*h))
+band=alpha[ya:yb,x0:x1]>=32
+⋮----
+V15_BRANCH_SCORE=v15.branch_score
+⋮----
+def branch_score(recs)
+⋮----
+family=int(recs[0][0]['family'])
+⋮----
+signatures=[]
+⋮----
+upper=architectural_band_fill(final,.20,.50)
+lower=architectural_band_fill(final,.58,.88)
+⋮----
+offenders=[x for x in signatures if x[2]>.76 and x[1]<.58]
+⋮----
+details=','.join(f'{aid}(upper={upper:.2f},lower={lower:.2f})' for aid,upper,lower in offenders)
+⋮----
+adj=[v1610.normalized_silhouette_iou(recs[n-1][1],recs[n][1]) for n in range(1,len(recs))]
+anchor=[v1610.normalized_silhouette_iou(recs[0][1],recs[n][1]) for n in range(1,len(recs))]
+⋮----
+failures=[]
+# T1 may retain a very similar outer shell if the family then proves
+# strong cumulative evolution. Avoid rejecting a good branch on tiny
+# mask noise around the old .955 boundary.
+```
+
 ## File: tools/sprites/kaggle_building_family_factory_v17.py
 ```python
 #!/usr/bin/env python3
@@ -24930,7 +25015,7 @@ EVOLUTION = {
 ⋮----
 REALITY_TIER = {
 ⋮----
-REALITY_STRENGTH = {1:.48, 2:.56, 3:.64, 4:.71, 5:.77, 6:.80}
+REALITY_STRENGTH = {1:.56, 2:.64, 3:.72, 4:.75, 5:.79, 6:.80}
 ⋮----
 def prompts(i)
 ⋮----

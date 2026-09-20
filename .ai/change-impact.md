@@ -1,16 +1,16 @@
 # Change impact
 
-Base: 264ec45332bc37355eaf86ce734b5e4966622694
-Head: 2e71790bd75cc89756e86478159ddce22d600e6e
+Base: d0dbaee277fd19c855dbb7e70ba827fde5378692
+Head: 23098f601d9603a440d64746d61a700ff47c615a
 
 ## Changed files
-- M .github/workflows/asset-autofactory.yml
-- A art/production/semantic-review-bld12-v17.4-calibration-run-35508938195.md
-- A ops/autofactory-kick.txt
+- M art/production/controlled-building-regen-queue.json
+- A art/production/semantic-review-bld12-kaggle-run-35513954813.md
+- M ops/autofactory-kick.txt
+- T tools/sprites/kaggle_building_family_factory_v16.py
 - M tools/sprites/kaggle_building_family_factory_v17.py
 
 ## Affected areas
-- .github
 - art
 - ops
 - tools
