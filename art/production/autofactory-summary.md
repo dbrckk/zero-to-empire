@@ -1,11 +1,10 @@
 # Asset Autofactory — 235 target
 
-- Strict DONE: **143 / 235**
-- Production processed to DONE/review: **157 / 235**
-- Awaiting semantic review: **14**
-- Automation-blocked: **0**
-- Current action: **DISPATCH_KAGGLE_BUILDING**
-- Current group: **controlled-building**
+- Strict DONE: **150 / 235**
+- Strict remaining: **85**
+- Remaining building assets: **61**
+- Remaining character assets: **24**
+- BLD-12: **reviewed, runtime-promoted, DONE**
+- Current action: **RECONCILED_REVIEWED_BLD12**
 
-The autofactory may generate and technically validate candidates automatically,
-but it never promotes a visually unreviewed candidate to strict DONE.
+Automatic generation and technical QA remain enabled; semantic DONE and runtime promotion require explicit review.
