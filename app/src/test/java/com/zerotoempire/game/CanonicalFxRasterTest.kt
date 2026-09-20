@@ -8,6 +8,22 @@ import org.junit.Test
 
 class CanonicalFxRasterTest {
     @Test
+    fun `ambient world maps reviewed historical effects to visible eras`() {
+        assertEquals(
+            listOf(CanonicalFx.SMALL_FURNACE_FLAME, CanonicalFx.INDUSTRIAL_SMOKE_PUFF),
+            ambientProductionFx(0),
+        )
+        assertEquals(
+            listOf(CanonicalFx.LARGE_PLASMA_FLAME, CanonicalFx.INDUSTRIAL_SMOKE_PUFF),
+            ambientProductionFx(4),
+        )
+        assertEquals(
+            listOf(CanonicalFx.MASTERY_CROWN_SHIMMER),
+            ambientProductionFx(9),
+        )
+    }
+
+    @Test
     fun `all manifest authored effects resolve to their production sprite ids`() {
         val expected = mapOf(
             CanonicalFx.WELDING_SPARK_BURST to R.drawable.zte_fx_00_final,
