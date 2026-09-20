@@ -1,12 +1,14 @@
 # Change impact
 
-Base: 0eca1d6f15ea5388ebef30b161ace3810ea33117
-Head: 16bcdec9a78cf720f9040b890d70a2553b80b8cf
+Base: e818c46a6ef9bc5567a001a96be5a70a1ff619b9
+Head: 0d83ee81151693caeb6f0aa576a23a9248ba32a0
 
 ## Changed files
+- M art/production/controlled-building-regen-queue.json
 - M ops/sprite-wave-trigger.txt
 
 ## Affected areas
+- art
 - ops
 
 ## Related test candidates

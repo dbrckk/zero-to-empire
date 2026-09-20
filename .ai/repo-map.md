@@ -88,6 +88,7 @@ The content is organized as follows:
     promote-fx14-strict.yml
     promote-fx15-strict.yml
     promote-fx16-strict.yml
+    promote-reviewed-bld11.yml
     promote-reviewed-run68.yml
     promote-reviewed-run69-ter09.yml
     promote-run66-reviewed.yml
@@ -326,7 +327,8 @@ tools/
     kaggle_building_family_factory_v13.py
     kaggle_building_family_factory_v14.py
     kaggle_building_family_factory_v15.py
-    kaggle_building_family_factory_v16.py
+    kaggle_building_family_factory_v16_10.py
+    kaggle_building_family_factory_v17.py
     kaggle_building_family_factory.py
     kaggle_character_sheet_factory_v1.py
     kaggle_fx_sheet_factory_v1.py
@@ -4874,6 +4876,75 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md
           git commit -m 'art: promote FX-16 to strict DONE'
+          git pull --rebase origin main
+          git push
+```
+
+## File: .github/workflows/promote-reviewed-bld11.yml
+```yaml
+name: Promote reviewed BLD-11
+
+on:
+  push:
+    paths:
+      - '.github/workflows/promote-reviewed-bld11.yml'
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: promote-reviewed-bld11
+  cancel-in-progress: false
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: main
+          fetch-depth: 2
+      - name: Require semantic approval record
+        run: |
+          set -euo pipefail
+          grep -q 'APPROVE T0–T6 for runtime promotion' art/production/semantic-review-bld11-run35473600052.md
+      - name: Download reviewed Kaggle artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh run download 35473600052 -n kaggle-sprite-batch -D /tmp/bld11
+      - name: Promote reviewed BLD-11 masters
+        shell: bash
+        run: |
+          set -euo pipefail
+          src=/tmp/bld11/output/candidates
+          test -d "$src" || src=/tmp/bld11/candidates
+          mkdir -p art/incoming/final-sprites
+          for tier in 0 1 2 3 4 5 6; do
+            test -s "$src/zte_business_11_t${tier}_final.png"
+            cp "$src/zte_business_11_t${tier}_final.png" art/incoming/final-sprites/
+          done
+          python3 -m pip install --disable-pip-version-check Pillow==11.3.0
+          python3 tools/sprites/build_sprite_contact_sheet.py \
+            --files art/incoming/final-sprites/zte_business_11_t{0,1,2,3,4,5,6}_final.png \
+            --output art/production/bld11-reviewed-contact-sheet.png \
+            --report art/production/bld11-reviewed-qa.json
+          SPRITE_TARGETS=zte_business_11_t0_final,zte_business_11_t1_final,zte_business_11_t2_final,zte_business_11_t3_final,zte_business_11_t4_final,zte_business_11_t5_final,zte_business_11_t6_final \
+            python3 tools/sprites/process_final_sprites.py
+      - name: Commit reviewed masters and runtime batch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add art/incoming/final-sprites/zte_business_11_t{0,1,2,3,4,5,6}_final.png \
+                  app/src/main/res/drawable-nodpi/ \
+                  art/production/bld11-reviewed-qa.json
+          if git diff --cached --quiet; then
+            echo 'Reviewed BLD-11 already integrated; nothing to commit.'
+            exit 0
+          fi
+          git commit -m 'art: integrate reviewed BLD-11 T0-T6'
           git pull --rebase origin main
           git push
 ```
@@ -24503,7 +24574,7 @@ branches.sort(key=lambda x:x[0],reverse=True);famrec={'family':fam,'anchors_gene
 p=v14.INCOMING/f"{i['stem']}.png";final.save(p,'PNG',optimize=True);accepted.append(i['id']);print(f'KAGGLE_VALIDATED={p.relative_to(v14.ROOT)} coverage={cov:.1%} selected_branch={a+1} score={bscore:.3f}',flush=True)
 ```
 
-## File: tools/sprites/kaggle_building_family_factory_v16.py
+## File: tools/sprites/kaggle_building_family_factory_v16_10.py
 ```python
 #!/usr/bin/env python3
 """Building factory v16.4: footprint-locked two-phase family evolution.
@@ -24631,6 +24702,45 @@ anchor_ceiling={1:.985,2:.955,3:.925,4:.895,5:.865,6:.835}[tier]
 # every prestige/detail tier to redesign the footprint from scratch.
 ⋮----
 halo=alpha_halo_ratio(new_final)
+```
+
+## File: tools/sprites/kaggle_building_family_factory_v17.py
+```python
+#!/usr/bin/env python3
+"""Building factory v17: family-aware structural tier evolution.
+
+Fixes the clone-ladder failure seen on BLD-12 by making every tier prompt describe
+an architectural massing change, not a scale/detail pass. It deliberately reuses
+v16.10's strict technical/semantic gates; this module changes generation pressure,
+not acceptance criteria.
+"""
+⋮----
+HERE = Path(__file__).resolve().parent
+SPEC = importlib.util.spec_from_file_location('v1610', HERE / 'kaggle_building_family_factory_v16_10.py')
+v1610 = importlib.util.module_from_spec(SPEC)
+⋮----
+v15 = v1610.v15
+v14 = v1610.v14
+⋮----
+# More image-to-image freedom than v16.10. The strict v16.10 live gate remains
+# active, so extra freedom cannot silently promote unrelated scenes/site cards.
+⋮----
+TIER = {
+⋮----
+# Family-specific evolution nouns stop the generic Tech Company vocabulary from
+# leaking into Reality Engine, Moon Colony, Foundry, Gateway, etc.
+EVOLUTION = {
+⋮----
+def prompts(i)
+⋮----
+family = i['family']
+tier = i['tier']
+fam = v1610.FAMILY[family]
+shape = v1610.SHAPE[family]
+evolution = EVOLUTION[family]
+instruction = TIER[tier]
+short = (
+detail = (
 ```
 
 ## File: tools/sprites/kaggle_building_family_factory.py

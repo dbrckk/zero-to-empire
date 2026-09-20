@@ -22,22 +22,24 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T20:40:04Z
+Generated: 2026-09-20T03:00:59Z
 
 ### Git
 - Branch: `main`
-- Head: `16bcdec9a78c`
-- Commit date: 2026-09-19T22:39:44+02:00
-- Commit: ci(art): trigger current autofactory generator (#89)
-- Tracked files: 1344
+- Head: `0d83ee811516`
+- Commit date: 2026-09-20T05:00:45+02:00
+- Commit: art: republish stale BLD-12 Kaggle source bundle (#95)
+- Tracked files: 1349
 
 ### Recently changed files
+- `art/production/controlled-building-regen-queue.json`
 - `ops/sprite-wave-trigger.txt`
-- `.github/workflows/kaggle-mass-sprite-factory.yml`
-- `art/production/master-asset-queue.json`
-- `tools/sprites/kaggle_building_family_factory_v16.py`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
+- `art/production/master-asset-queue.json`
+- `tools/sprites/kaggle_building_family_factory_v16.py`
+- `tools/sprites/kaggle_building_family_factory_v16_10.py`
+- `tools/sprites/kaggle_building_family_factory_v17.py`
 
 ### Project signals
 - `build.gradle.kts`

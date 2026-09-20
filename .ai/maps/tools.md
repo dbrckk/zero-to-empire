@@ -66,7 +66,8 @@ sprites/
   kaggle_building_family_factory_v13.py
   kaggle_building_family_factory_v14.py
   kaggle_building_family_factory_v15.py
-  kaggle_building_family_factory_v16.py
+  kaggle_building_family_factory_v16_10.py
+  kaggle_building_family_factory_v17.py
   kaggle_building_family_factory.py
   kaggle_character_sheet_factory_v1.py
   kaggle_fx_sheet_factory_v1.py
@@ -2094,7 +2095,7 @@ branches.sort(key=lambda x:x[0],reverse=True);famrec={'family':fam,'anchors_gene
 p=v14.INCOMING/f"{i['stem']}.png";final.save(p,'PNG',optimize=True);accepted.append(i['id']);print(f'KAGGLE_VALIDATED={p.relative_to(v14.ROOT)} coverage={cov:.1%} selected_branch={a+1} score={bscore:.3f}',flush=True)
 ```
 
-## File: sprites/kaggle_building_family_factory_v16.py
+## File: sprites/kaggle_building_family_factory_v16_10.py
 ```python
 #!/usr/bin/env python3
 """Building factory v16.4: footprint-locked two-phase family evolution.
@@ -2222,6 +2223,45 @@ anchor_ceiling={1:.985,2:.955,3:.925,4:.895,5:.865,6:.835}[tier]
 # every prestige/detail tier to redesign the footprint from scratch.
 ⋮----
 halo=alpha_halo_ratio(new_final)
+```
+
+## File: sprites/kaggle_building_family_factory_v17.py
+```python
+#!/usr/bin/env python3
+"""Building factory v17: family-aware structural tier evolution.
+
+Fixes the clone-ladder failure seen on BLD-12 by making every tier prompt describe
+an architectural massing change, not a scale/detail pass. It deliberately reuses
+v16.10's strict technical/semantic gates; this module changes generation pressure,
+not acceptance criteria.
+"""
+⋮----
+HERE = Path(__file__).resolve().parent
+SPEC = importlib.util.spec_from_file_location('v1610', HERE / 'kaggle_building_family_factory_v16_10.py')
+v1610 = importlib.util.module_from_spec(SPEC)
+⋮----
+v15 = v1610.v15
+v14 = v1610.v14
+⋮----
+# More image-to-image freedom than v16.10. The strict v16.10 live gate remains
+# active, so extra freedom cannot silently promote unrelated scenes/site cards.
+⋮----
+TIER = {
+⋮----
+# Family-specific evolution nouns stop the generic Tech Company vocabulary from
+# leaking into Reality Engine, Moon Colony, Foundry, Gateway, etc.
+EVOLUTION = {
+⋮----
+def prompts(i)
+⋮----
+family = i['family']
+tier = i['tier']
+fam = v1610.FAMILY[family]
+shape = v1610.SHAPE[family]
+evolution = EVOLUTION[family]
+instruction = TIER[tier]
+short = (
+detail = (
 ```
 
 ## File: sprites/kaggle_building_family_factory.py
