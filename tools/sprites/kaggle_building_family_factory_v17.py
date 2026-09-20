@@ -9,6 +9,7 @@ not acceptance criteria.
 from __future__ import annotations
 import importlib.util
 from pathlib import Path
+import numpy as np
 
 HERE = Path(__file__).resolve().parent
 SPEC = importlib.util.spec_from_file_location('v1610', HERE / 'kaggle_building_family_factory_v16_10.py')
@@ -17,7 +18,7 @@ SPEC.loader.exec_module(v1610)
 v15 = v1610.v15
 v14 = v1610.v14
 
-print('KAGGLE_STARTUP=building-family-flux-v17-family-aware-structural-evolution', flush=True)
+print('KAGGLE_STARTUP=building-family-flux-v17.1-family-aware-platform-gate', flush=True)
 
 # More image-to-image freedom than v16.10. The strict v16.10 live gate remains
 # active, so extra freedom cannot silently promote unrelated scenes/site cards.
@@ -75,8 +76,48 @@ def prompts(i):
     return short, detail
 
 
+def architectural_band_fill(final, lo, hi):
+    """Mask fill inside the sprite bbox for a relative vertical band."""
+    alpha=np.asarray(final.getchannel('A'),dtype=np.uint8)
+    ys,xs=np.where(alpha>=32)
+    if len(xs)==0:
+        return 0.0
+    x0,x1=int(xs.min()),int(xs.max())+1
+    y0,y1=int(ys.min()),int(ys.max())+1
+    h=max(1,y1-y0)
+    ya=y0+int(lo*h); yb=max(ya+1,y0+int(hi*h))
+    band=alpha[ya:yb,x0:x1]>=32
+    if not band.size:
+        return 0.0
+    return float(band.mean())
+
+
+V15_BRANCH_SCORE=v15.branch_score
+
+def branch_score(recs):
+    score,why=V15_BRANCH_SCORE(recs)
+    if score < -100 or not recs:
+        return score,why
+    family=int(recs[0][0]['family'])
+    if family==7:
+        signatures=[]
+        for item,final,_cov in recs:
+            upper=architectural_band_fill(final,.20,.50)
+            lower=architectural_band_fill(final,.58,.88)
+            signatures.append((item['id'],upper,lower))
+        offenders=[x for x in signatures if x[2]>.76 and x[1]<.58]
+        print('KAGGLE_BLD07_PLATFORM_SIGNATURE='+
+              ';'.join(f'{aid}:upper={upper:.3f},lower={lower:.3f}' for aid,upper,lower in signatures),
+              flush=True)
+        if offenders:
+            details=','.join(f'{aid}(upper={upper:.2f},lower={lower:.2f})' for aid,upper,lower in offenders)
+            return -999.0, why+f' platform-overhang={details}'
+    return score,why
+
+
 v14.prompts = prompts
 v15.prompts = prompts
+v15.branch_score = branch_score
 
 if __name__ == '__main__':
     v15.main()
