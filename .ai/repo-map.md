@@ -24923,6 +24923,10 @@ TIER = {
 # leaking into Reality Engine, Moon Colony, Foundry, Gateway, etc.
 EVOLUTION = {
 ⋮----
+REALITY_TIER = {
+⋮----
+REALITY_STRENGTH = {1:.48, 2:.56, 3:.64, 4:.71, 5:.77, 6:.80}
+⋮----
 def prompts(i)
 ⋮----
 family = i['family']
@@ -24930,9 +24934,18 @@ tier = i['tier']
 fam = v1610.FAMILY[family]
 shape = v1610.SHAPE[family]
 evolution = EVOLUTION[family]
-instruction = TIER[tier]
+instruction = REALITY_TIER[tier] if family == 12 else TIER[tier]
 short = (
 detail = (
+⋮----
+ORIGINAL_RENDER = v14.render
+⋮----
+def family_aware_render(i, prev, pe, ppe, base, img, seed)
+⋮----
+"""Give BLD-12 enough img2img freedom to produce real structural evolution."""
+tier = int(i['tier'])
+⋮----
+old = v14.STRENGTH[tier]
 ⋮----
 def architectural_band_fill(final, lo, hi)
 ⋮----
@@ -24957,6 +24970,11 @@ lower=architectural_band_fill(final,.58,.88)
 offenders=[x for x in signatures if x[2]>.76 and x[1]<.58]
 ⋮----
 details=','.join(f'{aid}(upper={upper:.2f},lower={lower:.2f})' for aid,upper,lower in offenders)
+⋮----
+adj=[v1610.normalized_silhouette_iou(recs[n-1][1],recs[n][1]) for n in range(1,len(recs))]
+anchor=[v1610.normalized_silhouette_iou(recs[0][1],recs[n][1]) for n in range(1,len(recs))]
+⋮----
+failures=[]
 ```
 
 ## File: tools/sprites/kaggle_building_family_factory.py

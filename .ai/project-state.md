@@ -22,21 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T11:16:35Z
+Generated: 2026-09-20T11:19:54Z
 
 ### Git
 - Branch: `main`
-- Head: `3a14f0ddfe88`
-- Commit date: 2026-09-20T13:16:20+02:00
-- Commit: ci(art): reconcile 143 strict asset state
-- Tracked files: 1358
+- Head: `d1083dabbdf5`
+- Commit date: 2026-09-20T13:19:40+02:00
+- Commit: art: reject BLD-12 clone ladder and strengthen v17.2
+- Tracked files: 1359
 
 ### Recently changed files
+- `art/production/controlled-building-regen-queue.json`
+- `art/production/semantic-review-bld12-kaggle-run-35503929393.md`
+- `tools/sprites/kaggle_building_family_factory_v17.py`
 - `ops/runtime-reconcile-trigger.txt`
 - `art/production/semantic-review-bld07-kaggle-run-35499130912.md`
 - `PROJECT_CONTINUITY.md`
-- `tools/sprites/kaggle_building_family_factory_v17.py`
-- `art/production/master-asset-queue.json`
 
 ### Project signals
 - `build.gradle.kts`
