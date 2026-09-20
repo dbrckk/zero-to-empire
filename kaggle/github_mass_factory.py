@@ -6,7 +6,7 @@ are checkpointed continuously so an interrupted kernel does not discard GPU work
 """
 import hashlib,json,os,re,shutil,subprocess,time,tarfile,zipfile
 from pathlib import Path
-WORK=Path('/kaggle/working');REPO=Path('/tmp/zero-to-empire');OUT=WORK/'output';COUNT=int(os.getenv('SPRITE_COUNT','7'));SEED=int(os.getenv('SPRITE_SEED',str(int(time.time())%2_000_000_000)))
+WORK=Path('/kaggle/working');REPO=Path('/tmp/zero-to-empire');OUT=WORK/'output';COUNT=int(os.getenv('SPRITE_COUNT','7'));SEED=int(os.getenv('SPRITE_SEED',str(int(time.time())%2_000_000_000)));EXPECTED_GENERATOR_SHA=os.getenv('EXPECTED_GENERATOR_SHA','').strip()
 ROW=re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$")
 def digest(p):
  h=hashlib.sha256()
@@ -105,6 +105,14 @@ else:
  REPO.mkdir(parents=True,exist_ok=True)
  with tarfile.open(source,'r:gz') as t:t.extractall(REPO)
 print(f'KAGGLE_REPO_SOURCE={source_kind}:{source}',flush=True)
+generator_path=REPO/'tools/sprites/kaggle_building_family_factory_v16.py'
+if EXPECTED_GENERATOR_SHA:
+ if not generator_path.is_file():raise SystemExit('KAGGLE_STALE_BUNDLE: generator file missing from mounted bundle')
+ actual_generator_sha=digest(generator_path)
+ print(f'KAGGLE_EXPECTED_GENERATOR_SHA={EXPECTED_GENERATOR_SHA}',flush=True)
+ print(f'KAGGLE_MOUNTED_GENERATOR_SHA={actual_generator_sha}',flush=True)
+ if actual_generator_sha!=EXPECTED_GENERATOR_SHA:
+  raise SystemExit(f'KAGGLE_STALE_BUNDLE: mounted generator {actual_generator_sha} != expected {EXPECTED_GENERATOR_SHA}')
 os.chdir(REPO);ensure_gpu();ensure_flux()
 incoming=REPO/'art/incoming/final-sprites';incoming.mkdir(parents=True,exist_ok=True);before={p.name:digest(p) for p in incoming.glob('*_final.png') if p.is_file()};q=backlog();print('KAGGLE_BACKLOG='+json.dumps(q,separators=(',',':')),flush=True);print(f'KAGGLE_BATCH_SEED={SEED}',flush=True)
 if q.get('CONTROLLED_BLD',0)>0:
