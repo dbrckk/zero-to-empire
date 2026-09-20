@@ -125,6 +125,33 @@ check_alive() {
   adb shell pidof "$PKG" | tr -d '\r\n' | grep -Eq '^[0-9]+' || fail "process-not-alive"
 }
 
+dismiss_launcher_anr_if_present() {
+  local attempt probe coords x y
+  for attempt in 1 2 3; do
+    probe="$EVIDENCE/system-dialog-$attempt.xml"
+    if ! ui_dump_with_retry "$probe"; then
+      return 0
+    fi
+    if ! grep -Fq "Pixel Launcher isn't responding" "$probe"; then
+      return 0
+    fi
+    echo "SYSTEM_FLAKE_DETECTED=pixel-launcher-anr attempt=$attempt"
+    coords=$(python3 "$SCRIPT_DIR/ui_click_target.py" "$probe" "Wait" 2>/dev/null || true)
+    if [[ -n "$coords" ]]; then
+      read -r x y <<<"$coords"
+      if [[ "$x" =~ ^[0-9]+$ && "$y" =~ ^[0-9]+$ ]]; then
+        adb shell input tap "$x" "$y"
+        sleep 2
+        continue
+      fi
+    fi
+    # Android's standard ANR dialog uses KEYCODE_ENTER on the focused action
+    # only as a last resort. Never force-stop the app under test here.
+    adb shell input keyevent KEYCODE_BACK || true
+    sleep 2
+  done
+}
+
 check_no_fatal() {
   adb logcat -d > "$EVIDENCE/logcat.txt"
   if grep -E "FATAL EXCEPTION|AndroidRuntime.*FATAL|Process: $PKG.*has died" "$EVIDENCE/logcat.txt"; then
@@ -139,6 +166,7 @@ adb shell pm clear "$PKG" >/dev/null
 adb logcat -c
 adb shell am start -W -n "$ACT" > "$EVIDENCE/start.txt"
 sleep 5
+dismiss_launcher_anr_if_present
 check_alive
 dump_ui "initial"
 adb exec-out screencap -p > "$EVIDENCE/initial.png"
