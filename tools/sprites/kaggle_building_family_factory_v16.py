@@ -19,7 +19,7 @@ SPEC.loader.exec_module(v1610)
 v15 = v1610.v15
 v14 = v1610.v14
 
-print('KAGGLE_STARTUP=building-family-flux-v18.0-family-tier-grammars', flush=True)
+print('KAGGLE_STARTUP=building-family-flux-v18.1-no-site-frontload', flush=True)
 
 # More image-to-image freedom than v16.10. The strict v16.10 live gate remains
 # active, so extra freedom cannot silently promote unrelated scenes/site cards.
@@ -188,17 +188,16 @@ def prompts(i):
 
     short = (
         f"isolated stylized 2.5D {CLIP_FAMILY[family]}, tier {tier}. {instruction}. "
-        "one connected building, orthographic, centered on neutral gray, clear border, no ground plane"
+        "building only, one connected mass, no site, no trees, no paths, no outdoor props, orthographic, neutral gray"
     )
     if len(short.split()) > 58:
         raise RuntimeError(f'building CLIP prompt too long: {len(short.split())} words for {i["id"]}')
 
     detail = (
-        f"AAA mobile strategy building, stylized 2.5D orthographic catalog render. Family: {fam}. "
-        f"Tier architecture: {instruction}. Preserve family materials, camera, facade axis and core identity. "
-        f"{memory} One self-contained connected mass; all wings, pipes and modules fused to the building. "
-        "Flat uniform neutral gray background with generous empty border. "
-        "No pavement, yard, platform card, ground plane, cast shadow, text, logo, people, vehicles, loose props, effects or scenery."
+        f"AAA stylized 2.5D strategy building. Family: {fam}. Tier: {instruction}. "
+        f"{memory} Building only: one connected architectural mass on flat neutral gray. "
+        "No site, trees, paths, pavement, yard, platform, ground shadow, text, people, vehicles, props or scenery. "
+        "Preserve family materials, camera, facade axis and core identity."
     )
     return short, detail
 
