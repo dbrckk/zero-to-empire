@@ -4,8 +4,9 @@
 The GitHub orchestrator deliberately uses short P100 batches; completed candidates
 are checkpointed continuously so an interrupted kernel does not discard GPU work.
 """
-import hashlib,json,os,re,shutil,subprocess,time,tarfile,zipfile
+import base64,hashlib,io,json,os,re,shutil,subprocess,time,tarfile,zipfile
 from pathlib import Path
+GENERATOR_OVERLAY_B64=''
 WORK=Path('/kaggle/working');REPO=Path('/tmp/zero-to-empire');OUT=WORK/'output';COUNT=int(os.getenv('SPRITE_COUNT','7'));SEED=int(os.getenv('SPRITE_SEED',str(int(time.time())%2_000_000_000)));EXPECTED_GENERATOR_SHA=os.getenv('EXPECTED_GENERATOR_SHA','').strip()
 ROW=re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$")
 def digest(p):
@@ -115,7 +116,13 @@ overlay_names=(
  'kaggle_building_family_factory_v14.py',
 )
 overlay_applied=False
-for overlay_root in (Path('/kaggle/src'),Path('/kaggle/working'),Path.cwd()):
+if GENERATOR_OVERLAY_B64:
+ dst_dir=REPO/'tools/sprites';dst_dir.mkdir(parents=True,exist_ok=True)
+ raw=base64.b64decode(GENERATOR_OVERLAY_B64.encode('ascii'))
+ with zipfile.ZipFile(io.BytesIO(raw)) as z:z.extractall(dst_dir)
+ print('KAGGLE_KERNEL_GENERATOR_OVERLAY=inline-payload',flush=True)
+ overlay_applied=True
+for overlay_root in (() if overlay_applied else (Path('/kaggle/src'),Path('/kaggle/working'),Path.cwd())):
  candidate=overlay_root/'tools/sprites/kaggle_building_family_factory_v16.py'
  if not candidate.is_file():continue
  if EXPECTED_GENERATOR_SHA and digest(candidate)!=EXPECTED_GENERATOR_SHA:continue

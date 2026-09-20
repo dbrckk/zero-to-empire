@@ -196,6 +196,20 @@ jobs:
           from pathlib import Path
           p=Path('/tmp/zte-kaggle/github_mass_factory.py')
           s=p.read_text()
+          import base64,io,zipfile
+          names=[
+              'kaggle_building_family_factory_v16.py',
+              'kaggle_building_family_factory_v16_10.py',
+              'kaggle_building_family_factory_v15.py',
+              'kaggle_building_family_factory_v14.py',
+          ]
+          buf=io.BytesIO()
+          with zipfile.ZipFile(buf,'w',zipfile.ZIP_DEFLATED) as z:
+              for name in names:
+                  z.write(Path('tools/sprites')/name,arcname=name)
+          payload=base64.b64encode(buf.getvalue()).decode('ascii')
+          s,n=re.subn(r"GENERATOR_OVERLAY_B64=''",f"GENERATOR_OVERLAY_B64='{payload}'",s,count=1)
+          if n != 1: raise SystemExit('Failed to inject GENERATOR_OVERLAY_B64 into Kaggle kernel')
           s,n=re.subn(r"COUNT=int\(os\.getenv\('SPRITE_COUNT','\d+'\)\)",f"COUNT={int(sys.argv[1])}",s,count=1)
           if n != 1: raise SystemExit('Failed to inject SPRITE_COUNT into Kaggle kernel')
           s,n=re.subn(r"EXPECTED_GENERATOR_SHA=os\.getenv\('EXPECTED_GENERATOR_SHA',''\)\.strip\(\)",f"EXPECTED_GENERATOR_SHA='{sys.argv[2]}'",s,count=1)
