@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T16:47:43Z
+Generated: 2026-09-20T16:48:54Z
 
 ### Git
 - Branch: `main`
-- Head: `b26a03513372`
-- Commit date: 2026-09-20T18:47:27+02:00
-- Commit: art: generalize rejection memory and scale-ladder prevention
+- Head: `d6b528245622`
+- Commit date: 2026-09-20T18:48:38+02:00
+- Commit: ci(art): validate generators and rejection-memory schema
 - Tracked files: 1371
 
 ### Recently changed files
+- `.github/workflows/asset-pipeline-ci.yml`
 - `art/production/controlled-building-regen-queue.json`
 - `art/production/generation-rejection-ledger.json`
 - `art/production/semantic-review-bld13-kaggle-run-35522041463.md`

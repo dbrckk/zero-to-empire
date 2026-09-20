@@ -1,18 +1,13 @@
 # Change impact
 
-Base: 761162a05ed71203d167ec4de8ed1a66ccb8bf29
-Head: b26a035133726208d45a400f359102ea4b62ab77
+Base: 6e3ca838ea534b362ff4aa57ae5c870a500a30a7
+Head: d6b528245622bbb76ee7584b3be2ed87b690f388
 
 ## Changed files
-- M art/production/controlled-building-regen-queue.json
-- M art/production/generation-rejection-ledger.json
-- A art/production/semantic-review-bld13-kaggle-run-35522041463.md
-- M tools/sprites/kaggle_building_family_factory_v16.py
-- M tools/sprites/kaggle_building_family_factory_v17.py
+- M .github/workflows/asset-pipeline-ci.yml
 
 ## Affected areas
-- art
-- tools
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.
