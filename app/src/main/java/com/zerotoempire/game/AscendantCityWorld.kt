@@ -158,8 +158,8 @@ private fun AmbientProductionFxLayer(
     val secondaryProgress = if (reducedMotion) .58f else (((worldFrame + 9) % 24) / 24f)
 
     Box(modifier) {
-        when (eraIndex) {
-            in 0..2 -> {
+        when (ambientProductionFx(eraIndex).first()) {
+            CanonicalFx.SMALL_FURNACE_FLAME -> {
                 CanonicalFxSprite(
                     effect = CanonicalFx.SMALL_FURNACE_FLAME,
                     progress = baseProgress,
@@ -183,7 +183,7 @@ private fun AmbientProductionFxLayer(
                     endScale = 1.04f,
                 )
             }
-            in 3..6 -> {
+            CanonicalFx.LARGE_PLASMA_FLAME -> {
                 CanonicalFxSprite(
                     effect = CanonicalFx.LARGE_PLASMA_FLAME,
                     progress = baseProgress,
