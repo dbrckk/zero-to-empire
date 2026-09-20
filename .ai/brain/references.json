@@ -4,5 +4,441 @@
   "scope": "symbols defined in changed source files",
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
-  "symbols": {}
+  "symbols": {
+    "load_json": {
+      "definition": {
+        "file": "tools/sprites/asset_queue_utils.py",
+        "line": 37,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/asset_queue_utils.py",
+          "line": 37,
+          "preview": "def load_json(path: Path, default: Any = None) -> Any:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/asset_queue_utils.py",
+          "line": 115,
+          "preview": "existing = load_json(MASTER, {}) or {}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_queue_utils.py",
+          "line": 150,
+          "preview": "bq = load_json(BUILDING_QUEUE, {}) or {}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_queue_utils.py",
+          "line": 165,
+          "preview": "cq = load_json(CHARACTER_QUEUE, {}) or {}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 23,
+          "preview": "load_json,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 66,
+          "preview": "controlled = load_json(path, {}) or {}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 96,
+          "preview": "q = load_json(path, {}) or {}",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 7
+    },
+    "save_json": {
+      "definition": {
+        "file": "tools/sprites/asset_queue_utils.py",
+        "line": 43,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/asset_queue_utils.py",
+          "line": 43,
+          "preview": "def save_json(path: Path, value: Any) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/asset_queue_utils.py",
+          "line": 143,
+          "preview": "save_json(MASTER, queue)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_queue_utils.py",
+          "line": 180,
+          "preview": "save_json(MASTER, queue)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 24,
+          "preview": "save_json,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 75,
+          "preview": "save_json(path, controlled)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 138,
+          "preview": "save_json(BUILDING_QUEUE, {",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 168,
+          "preview": "save_json(CHARACTER_QUEUE, {",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 286,
+          "preview": "save_json(MASTER, queue)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 288,
+          "preview": "save_json(STATE, decision)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 9
+    },
+    "manifest_rows": {
+      "definition": {
+        "file": "tools/sprites/asset_queue_utils.py",
+        "line": 48,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/asset_queue_utils.py",
+          "line": 48,
+          "preview": "def manifest_rows() -> list[dict[str, str]]:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/asset_queue_utils.py",
+          "line": 75,
+          "preview": "ids.update(r[\"id\"] for r in manifest_rows() if r[\"id\"].startswith(\"CHR-\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_queue_utils.py",
+          "line": 119,
+          "preview": "for row in manifest_rows():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_sprite_factory.py",
+          "line": 65,
+          "preview": "def manifest_rows():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_sprite_factory.py",
+          "line": 146,
+          "preview": "ap=argparse.ArgumentParser();ap.add_argument('--kind',choices=['ALL','MCH','TER','PRP','VEH','CORE'],default='ALL');ap.add_argument('--count',type=int,default=30);ap.add_argument('",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_batch.py",
+          "line": 16,
+          "preview": "def manifest_rows():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_batch.py",
+          "line": 27,
+          "preview": "rows=manifest_rows()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 7
+    },
+    "unresolved_ids": {
+      "definition": {
+        "file": "tools/sprites/asset_queue_utils.py",
+        "line": 68,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/asset_queue_utils.py",
+          "line": 68,
+          "preview": "def unresolved_ids() -> set[str]:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/asset_queue_utils.py",
+          "line": 117,
+          "preview": "unresolved = unresolved_ids()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "default_asset": {
+      "definition": {
+        "file": "tools/sprites/asset_queue_utils.py",
+        "line": 81,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/asset_queue_utils.py",
+          "line": 81,
+          "preview": "def default_asset(row: dict[str, str], unresolved: set[str]) -> dict[str, Any]:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/asset_queue_utils.py",
+          "line": 120,
+          "preview": "base = default_asset(row, unresolved)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "ensure_master": {
+      "definition": {
+        "file": "tools/sprites/asset_queue_utils.py",
+        "line": 114,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/asset_queue_utils.py",
+          "line": 114,
+          "preview": "def ensure_master() -> dict[str, Any]:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 22,
+          "preview": "ensure_master,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 282,
+          "preview": "queue = ensure_master()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "sync_controlled_queues": {
+      "definition": {
+        "file": "tools/sprites/asset_queue_utils.py",
+        "line": 147,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/asset_queue_utils.py",
+          "line": 147,
+          "preview": "def sync_controlled_queues(queue: dict[str, Any]) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 26,
+          "preview": "sync_controlled_queues,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 54,
+          "preview": "# sync_controlled_queues() below will import that exact state.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 283,
+          "preview": "sync_controlled_queues(queue)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "stats": {
+      "definition": {
+        "file": "tools/sprites/asset_queue_utils.py",
+        "line": 183,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/asset_queue_utils.py",
+          "line": 183,
+          "preview": "def stats(queue: dict[str, Any]) -> dict[str, Any]:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/asset_queue_utils.py",
+          "line": 211,
+          "preview": "s = stats(queue)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 25,
+          "preview": "stats,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 207,
+          "preview": "s = stats(queue)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 209,
+          "preview": "return {\"action\": \"STOP_STRICT_TARGET_REACHED\", \"group\": None, \"stats\": s}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 216,
+          "preview": "return {\"action\": \"WAIT_KAGGLE_BUSY\", \"group\": \"controlled-building\", \"stats\": s}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 219,
+          "preview": "return {\"action\": \"DISPATCH_KAGGLE_BUILDING\", \"group\": \"controlled-building\", \"ids\": ids, \"count\": 7, \"stats\": s}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 224,
+          "preview": "return {\"action\": \"WAIT_KAGGLE_BUSY\", \"group\": group, \"stats\": s}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 226,
+          "preview": "return {\"action\": \"DISPATCH_KAGGLE_BUILDING\", **prepared, \"stats\": s}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 231,
+          "preview": "return {\"action\": \"WAIT_KAGGLE_BUSY\", \"group\": \"controlled-character\", \"stats\": s}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 234,
+          "preview": "return {\"action\": \"DISPATCH_KAGGLE_CHARACTER\", \"group\": \"controlled-character\", \"ids\": ids, \"count\": 2, \"stats\": s}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 239,
+          "preview": "return {\"action\": \"WAIT_KAGGLE_BUSY\", \"group\": group, \"stats\": s}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 242,
+          "preview": "return {\"action\": \"DISPATCH_KAGGLE_CHARACTER\", **prepared, \"stats\": s}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 253,
+          "preview": "return {\"action\": \"WAIT_FX_BUSY\", \"group\": \"FX-HISTORICAL\", \"stats\": s}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 263,
+          "preview": "\"stats\": s,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 266,
+          "preview": "refreshed = stats(queue)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 271,
+          "preview": "\"stats\": refreshed,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 277,
+          "preview": "\"stats\": refreshed,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 287,
+          "preview": "decision[\"stats_after\"] = stats(queue)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 19
+    },
+    "write_summary": {
+      "definition": {
+        "file": "tools/sprites/asset_queue_utils.py",
+        "line": 210,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/asset_queue_utils.py",
+          "line": 210,
+          "preview": "def write_summary(queue: dict[str, Any], decision: dict[str, Any]) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 27,
+          "preview": "write_summary,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 289,
+          "preview": "write_summary(queue, decision)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    }
+  }
 }

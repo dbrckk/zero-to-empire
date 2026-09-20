@@ -1,15 +1,12 @@
 # Change impact
 
-Base: b5734e0d753b048ae680058aa2a7b135a1ab15f6
-Head: b0155323323ad94f6a7b52d6eff0a90b765113ad
+Base: 240cff798eb6225a0666e191c0b92378f05117ad
+Head: b55660ebac081e95f4910deb049f93250c6e95d1
 
 ## Changed files
-- M art/production/generation-rejection-ledger.json
-- M art/production/master-asset-queue.json
 - M ops/autofactory-kick.txt
 
 ## Affected areas
-- art
 - ops
 
 ## Related test candidates
