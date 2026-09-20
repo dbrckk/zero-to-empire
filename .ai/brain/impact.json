@@ -1,13 +1,69 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "92d11c4a61810876f98b28c38f5c22156e37c4f2",
-  "head": "583cab453ed8604ee833b6a1b14647071ee66796",
+  "base": "583cab453ed8604ee833b6a1b14647071ee66796",
+  "head": "f6903a40013c406041ee0c4d1c0ff74effc3a3c1",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": ".github/workflows/promote-reviewed-bld12.yml",
-      "status": "A"
+      "path": ".github/workflows/asset-autofactory-ci.yml",
+      "status": "M"
+    },
+    {
+      "path": "app/src/main/res/drawable-nodpi/zte_business_12_t0_final.webp",
+      "status": "M"
+    },
+    {
+      "path": "app/src/main/res/drawable-nodpi/zte_business_12_t1_final.webp",
+      "status": "M"
+    },
+    {
+      "path": "app/src/main/res/drawable-nodpi/zte_business_12_t2_final.webp",
+      "status": "M"
+    },
+    {
+      "path": "app/src/main/res/drawable-nodpi/zte_business_12_t3_final.webp",
+      "status": "M"
+    },
+    {
+      "path": "app/src/main/res/drawable-nodpi/zte_business_12_t4_final.webp",
+      "status": "M"
+    },
+    {
+      "path": "app/src/main/res/drawable-nodpi/zte_business_12_t5_final.webp",
+      "status": "M"
+    },
+    {
+      "path": "app/src/main/res/drawable-nodpi/zte_business_12_t6_final.webp",
+      "status": "M"
+    },
+    {
+      "path": "art/incoming/final-sprites/zte_business_12_t0_final.png",
+      "status": "M"
+    },
+    {
+      "path": "art/incoming/final-sprites/zte_business_12_t1_final.png",
+      "status": "M"
+    },
+    {
+      "path": "art/incoming/final-sprites/zte_business_12_t2_final.png",
+      "status": "M"
+    },
+    {
+      "path": "art/incoming/final-sprites/zte_business_12_t3_final.png",
+      "status": "M"
+    },
+    {
+      "path": "art/incoming/final-sprites/zte_business_12_t4_final.png",
+      "status": "M"
+    },
+    {
+      "path": "art/incoming/final-sprites/zte_business_12_t5_final.png",
+      "status": "M"
+    },
+    {
+      "path": "art/incoming/final-sprites/zte_business_12_t6_final.png",
+      "status": "M"
     },
     {
       "path": "art/production/autofactory-state.json",
@@ -18,6 +74,10 @@
       "status": "M"
     },
     {
+      "path": "art/production/bld12-reviewed-qa.json",
+      "status": "A"
+    },
+    {
       "path": "art/production/controlled-building-regen-queue.json",
       "status": "M"
     },
@@ -26,12 +86,142 @@
       "status": "M"
     },
     {
-      "path": "art/production/semantic-review-bld12-run35518478246.md",
-      "status": "A"
+      "path": "ops/autofactory-kick.txt",
+      "status": "M"
+    },
+    {
+      "path": "tools/sprites/asset_queue_utils.py",
+      "status": "M"
     }
   ],
-  "changed_source_files": [],
-  "impacted_files": [],
-  "impacted_symbols": [],
+  "changed_source_files": [
+    "tools/sprites/asset_queue_utils.py"
+  ],
+  "impacted_files": [
+    "tools/sprites/asset_queue_utils.py",
+    "tools/sprites/asset_wave_orchestrator.py"
+  ],
+  "impacted_symbols": [
+    {
+      "name": "load_json",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 37
+    },
+    {
+      "name": "save_json",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 43
+    },
+    {
+      "name": "manifest_rows",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 48
+    },
+    {
+      "name": "unresolved_ids",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 68
+    },
+    {
+      "name": "default_asset",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 82
+    },
+    {
+      "name": "ensure_master",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 115
+    },
+    {
+      "name": "sync_controlled_queues",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 148
+    },
+    {
+      "name": "stats",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 184
+    },
+    {
+      "name": "write_summary",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 211
+    },
+    {
+      "name": "by_id",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 37
+    },
+    {
+      "name": "update_from_trigger",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 41
+    },
+    {
+      "name": "active_pending",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 95
+    },
+    {
+      "name": "mark_dispatch",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 103
+    },
+    {
+      "name": "building_family_ids",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 122
+    },
+    {
+      "name": "prepare_building_group",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 126
+    },
+    {
+      "name": "prepare_character_group",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 148
+    },
+    {
+      "name": "next_group",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 176
+    },
+    {
+      "name": "pending_ids_from_controlled",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 194
+    },
+    {
+      "name": "make_decision",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 205
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 280
+    }
+  ],
   "selected_tests": []
 }

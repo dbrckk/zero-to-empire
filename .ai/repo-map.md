@@ -842,10 +842,13 @@ jobs:
           assert 'ONB-00' not in {x['id'] for x in assets}
           strict_done=sum(x['strict_status']=='DONE' for x in assets)
           strict_remaining=sum(x['strict_status']!='DONE' for x in assets)
-          assert strict_done>=q['strict_done_baseline']>=143
+          assert strict_done>=q['strict_done_baseline']>=150
           assert strict_done+strict_remaining==q['target_total']
-          assert sum(x['lane']=='kaggle-building-family' and x['strict_status']!='DONE' for x in assets)==68
-          assert sum(x['lane']=='kaggle-character-sheet' and x['strict_status']!='DONE' for x in assets)==24
+          building_remaining=sum(x['lane']=='kaggle-building-family' and x['strict_status']!='DONE' for x in assets)
+          character_remaining=sum(x['lane']=='kaggle-character-sheet' and x['strict_status']!='DONE' for x in assets)
+          assert building_remaining+character_remaining==strict_remaining
+          assert building_remaining==61
+          assert character_remaining==24
           assert sum(x['lane']=='fx-runtime-reconciliation' and x['strict_status']!='DONE' for x in assets)==0
           assert s['action'].startswith('WAIT_') or s['action'] in {
               'PRODUCTION_235_COMPLETE_REVIEW_BACKLOG',
@@ -23499,9 +23502,7 @@ planned = list(items(args.kind))[: args.count]
 """Shared state helpers for the 235-asset autonomous production queue.
 
 The master queue deliberately does not trust per-row DONE values from the legacy
-manifest while historical semantic review is open. The strict baseline is defined by the reviewed ledger. BLD-11 and all
-historical FX have now been explicitly reconciled; unresolved work remains only in
-building families and 24 character sheets.
+manifest while historical semantic review is open. The strict baseline is defined by the reviewed ledger. BLD-11, BLD-12 and all historical FX have now been explicitly reconciled; unresolved work remains only in other building families and 24 character sheets.
 ONB-00 is outside the 235 production target.
 """
 ⋮----
@@ -23516,7 +23517,7 @@ SUMMARY = ROOT / "art/production/autofactory-summary.md"
 ROW = re.compile(
 ⋮----
 TARGET_TOTAL = 235
-STRICT_BASELINE = 143
+STRICT_BASELINE = 150
 MAX_ATTEMPTS = 8
 ⋮----
 BUILDING_PRIORITY = ["BLD-04", "BLD-07", "BLD-11", "BLD-12", "BLD-13",

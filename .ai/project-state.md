@@ -22,26 +22,36 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T15:53:12Z
+Generated: 2026-09-20T16:07:48Z
 
 ### Git
 - Branch: `main`
-- Head: `583cab453ed8`
-- Commit date: 2026-09-20T17:52:57+02:00
-- Commit: art: approve and promote reviewed BLD-12 v17.6
-- Tracked files: 1366
+- Head: `f6903a40013c`
+- Commit date: 2026-09-20T18:07:29+02:00
+- Commit: art: reconcile reviewed BLD-12 and advance strict baseline to 150
+- Tracked files: 1367
 
 ### Recently changed files
-- `.github/workflows/promote-reviewed-bld12.yml`
-- `art/production/semantic-review-bld12-run35518478246.md`
-- `art/production/controlled-building-regen-queue.json`
+- `.github/workflows/asset-autofactory-ci.yml`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
+- `art/production/controlled-building-regen-queue.json`
 - `art/production/master-asset-queue.json`
-- `art/production/semantic-review-bld12-kaggle-run-35515656009.md`
 - `ops/autofactory-kick.txt`
-- `tools/sprites/kaggle_building_family_factory_v16.py`
-- `tools/sprites/kaggle_building_family_factory_v17.py`
+- `tools/sprites/asset_queue_utils.py`
+- `app/src/main/res/drawable-nodpi/zte_business_12_t0_final.webp`
+- `app/src/main/res/drawable-nodpi/zte_business_12_t1_final.webp`
+- `app/src/main/res/drawable-nodpi/zte_business_12_t2_final.webp`
+- `app/src/main/res/drawable-nodpi/zte_business_12_t3_final.webp`
+- `app/src/main/res/drawable-nodpi/zte_business_12_t4_final.webp`
+- `app/src/main/res/drawable-nodpi/zte_business_12_t5_final.webp`
+- `app/src/main/res/drawable-nodpi/zte_business_12_t6_final.webp`
+- `art/incoming/final-sprites/zte_business_12_t0_final.png`
+- `art/incoming/final-sprites/zte_business_12_t1_final.png`
+- `art/incoming/final-sprites/zte_business_12_t2_final.png`
+- `art/incoming/final-sprites/zte_business_12_t3_final.png`
+- `art/incoming/final-sprites/zte_business_12_t4_final.png`
+- `art/incoming/final-sprites/zte_business_12_t5_final.png`
 
 ### Project signals
 - `build.gradle.kts`

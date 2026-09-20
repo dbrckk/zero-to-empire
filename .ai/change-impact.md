@@ -1,15 +1,22 @@
 # Change impact
 
-Base: 85c32375cac972817e6dd19883770004f3516327
-Head: 583cab453ed8604ee833b6a1b14647071ee66796
+Base: 6bc0ac7dcf55d1e14ab7200ddc2e6d4ea7c1c5c8
+Head: f6903a40013c406041ee0c4d1c0ff74effc3a3c1
 
 ## Changed files
-- A .github/workflows/promote-reviewed-bld12.yml
-- A art/production/semantic-review-bld12-run35518478246.md
+- M .github/workflows/asset-autofactory-ci.yml
+- M art/production/autofactory-state.json
+- M art/production/autofactory-summary.md
+- M art/production/controlled-building-regen-queue.json
+- M art/production/master-asset-queue.json
+- M ops/autofactory-kick.txt
+- M tools/sprites/asset_queue_utils.py
 
 ## Affected areas
 - .github
 - art
+- ops
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.
