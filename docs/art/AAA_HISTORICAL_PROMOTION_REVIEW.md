@@ -16,11 +16,9 @@ These families must preserve recognizable family identity while showing clear T0
 
 ## FX requiring evidence reconciliation
 
-- FX-01 through FX-03
+None. Historical FX-00 through FX-08 and FX-17 are resolved.
 
-Resolved in the 2026-09-20 historical FX review: FX-00, FX-04, FX-05, FX-06, FX-07, FX-08 and FX-17.
-
-Each must have correct 4×2 / 8-frame runtime structure where applicable, clean padding, semantic match to its manifest role, active runtime visibility and reduced-motion behavior.
+FX-01/02/03 were the last unresolved historical effects. They retained the semantic/technical evidence from run `35493610023` and now have explicit active runtime visibility through `IndustrialBusinessFx`, live reduced-motion behavior, green Android CI run `35499825411`, and green emulator smoke run `35499825403`.
 
 ## Resolved examples
 
