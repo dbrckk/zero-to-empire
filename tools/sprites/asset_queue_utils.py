@@ -27,7 +27,7 @@ ROW = re.compile(
 )
 
 TARGET_TOTAL = 235
-STRICT_BASELINE = 126
+STRICT_BASELINE = 133
 MAX_ATTEMPTS = 8
 
 BUILDING_PRIORITY = ["BLD-04", "BLD-07", "BLD-11", "BLD-12", "BLD-13",
@@ -72,6 +72,8 @@ def unresolved_ids() -> set[str]:
     ids.update(f"BLD-02-T{tier}" for tier in range(4, 7))
     ids.update(f"BLD-03-T{tier}" for tier in range(0, 2))
     for family in range(4, 14):
+        if family == 11:
+            continue
         ids.update(f"BLD-{family:02d}-T{tier}" for tier in range(7))
     ids.update(r["id"] for r in manifest_rows() if r["id"].startswith("CHR-"))
     ids.update(f"FX-{n:02d}" for n in range(9))
