@@ -27,7 +27,7 @@ ROW = re.compile(
 )
 
 TARGET_TOTAL = 235
-STRICT_BASELINE = 140
+STRICT_BASELINE = 143
 MAX_ATTEMPTS = 8
 
 BUILDING_PRIORITY = ["BLD-04", "BLD-07", "BLD-11", "BLD-12", "BLD-13",
@@ -76,9 +76,8 @@ def unresolved_ids() -> set[str]:
             continue
         ids.update(f"BLD-{family:02d}-T{tier}" for tier in range(7))
     ids.update(r["id"] for r in manifest_rows() if r["id"].startswith("CHR-"))
-    ids.update({"FX-01", "FX-02", "FX-03"})
-    if len(ids) != 95:
-        raise RuntimeError(f"Strict unresolved set drifted: expected 95, got {len(ids)}")
+    if len(ids) != 92:
+        raise RuntimeError(f"Strict unresolved set drifted: expected 92, got {len(ids)}")
     return ids
 
 

@@ -3,22 +3,20 @@
 Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains the canonical 236-item scope. Candidate art is never confused with DONE runtime assets.
 
 ## Official progress
-- DONE: **140 / 236**
-- ART VALIDATED: **140 / 236**
-- RUNTIME INTEGRATED: **140 / 236**
-- Generated candidates accepted as DONE: **140**
+- DONE: **143 / 236**
+- ART VALIDATED: **143 / 236**
+- RUNTIME INTEGRATED: **143 / 236**
+- Generated candidates accepted as DONE: **143**
 - Rule: only runtime-integrated, individually clean/transparent, manifest-matching assets with green Android CI increment DONE.
 
-## Reviewed historical FX — 7 DONE
-`FX-00`, `FX-04`, `FX-05`, `FX-06`, `FX-07`, `FX-08` and `FX-17` were re-reviewed from evidence run `35493610023`.
+## Reviewed historical FX — 10 DONE
+`FX-00` through `FX-08` and `FX-17` are now resolved. The original semantic/technical evidence comes from run `35493610023`; FX-01/02/03 gained explicit active runtime visibility in `IndustrialBusinessFx` and passed post-merge Android CI + emulator smoke.
 
 - semantic contact-sheet roles match the manifest;
 - exact runtime sheets are 512×256, 4×2 / 8-frame assets and pass the sheet-aware runtime contract;
 - active runtime usage is verified in Power Core, purchase/upgrade feedback and mastery rendering;
 - reduced-motion behavior is explicit (disabled burst or fixed/peak frame);
 - canonical raster mapping covers the exact production resources.
-
-`FX-01`, `FX-02` and `FX-03` remain unresolved because active gameplay visibility has not yet been demonstrated.
 
 ## Reviewed Kaggle BLD-11 family — DONE
 `BLD-11-T0` through `BLD-11-T6` were semantically approved from Kaggle run `35473600052`, promoted as exact reviewed masters, processed into Android runtime WebP assets, and integrated by commit `2633da6851e6888387330650e2d75d7794c1df1f`. Android CI is required on this reconciliation PR before merge.

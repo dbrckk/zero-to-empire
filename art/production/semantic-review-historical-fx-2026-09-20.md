@@ -24,5 +24,20 @@ Reduced-motion behavior is explicit in the runtime: Power Core bursts are suppre
 
 The canonical resolver maps these semantic effects to their exact final runtime resources.
 
-## Still unresolved
-FX-01, FX-02 and FX-03 are semantically plausible and technically valid sheets, but strict promotion is withheld until active gameplay visibility is explicitly demonstrated.
+## Final resolution — FX-01 / FX-02 / FX-03
+
+The final missing requirement is now satisfied: active gameplay visibility is explicit in `IndustrialBusinessFx.kt` merged at commit `74c2a8a47742cb6d63b7a05d94398c4f81e7b60b`.
+
+- FX-01 `zte_fx_01_final.webp` — Git blob `1886f681ded8b62af29581b23e2e505eb5988832`; visible on Workshop (business 2) from tier 2.
+- FX-02 `zte_fx_02_final.webp` — Git blob `2741b134d99ec03cafb7ff8c64d0a4581d9ea5c0`; visible on Factory (business 3) from tier 4.
+- FX-03 `zte_fx_03_final.webp` — Git blob `204916cf36abe663c0d1114af5cf3bcd0b9e8642`; visible on Factory (business 3) from tier 2.
+
+Runtime code blob: `7821ab7a81f83642b5841b29725f268cd0d22ff3`.
+
+Reduced-motion behavior is explicit: each effect selects a stable representative frame and does not enter the animation loop when reduced motion is active; low-power mode uses a slower cadence.
+
+Validation on the merged runtime:
+- Android CI `35499825411`: success.
+- Android Emulator Smoke `35499825403`: success.
+
+Verdict: **FX-01, FX-02 and FX-03 are strict DONE.**
