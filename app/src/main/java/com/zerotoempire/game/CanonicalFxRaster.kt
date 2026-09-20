@@ -55,3 +55,16 @@ internal fun powerCorePulseFx(eraIndex: Int): CanonicalFx? = when (eraIndex) {
     in 6..8 -> null
     else -> CanonicalFx.WARM_ENERGY_PULSE
 }
+
+
+internal fun ambientProductionFx(eraIndex: Int): List<CanonicalFx> = when (eraIndex) {
+    in 0..2 -> listOf(
+        CanonicalFx.SMALL_FURNACE_FLAME,
+        CanonicalFx.INDUSTRIAL_SMOKE_PUFF,
+    )
+    in 3..6 -> listOf(
+        CanonicalFx.LARGE_PLASMA_FLAME,
+        CanonicalFx.INDUSTRIAL_SMOKE_PUFF,
+    )
+    else -> listOf(CanonicalFx.MASTERY_CROWN_SHIMMER)
+}
