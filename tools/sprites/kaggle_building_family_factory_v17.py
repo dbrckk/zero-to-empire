@@ -18,7 +18,7 @@ SPEC.loader.exec_module(v1610)
 v15 = v1610.v15
 v14 = v1610.v14
 
-print('KAGGLE_STARTUP=building-family-flux-v17.5-strong-early-evolution', flush=True)
+print('KAGGLE_STARTUP=building-family-flux-v17.6-early-anchor-resets', flush=True)
 
 # More image-to-image freedom than v16.10. The strict v16.10 live gate remains
 # active, so extra freedom cannot silently promote unrelated scenes/site cards.
@@ -94,7 +94,15 @@ ORIGINAL_RENDER = v14.render
 def family_aware_render(i, prev, pe, ppe, base, img, seed):
     """Give BLD-12 enough img2img freedom to produce real structural evolution."""
     tier = int(i['tier'])
-    if int(i['family']) != 12 or prev is None or tier not in REALITY_STRENGTH:
+    if int(i['family']) != 12:
+        return ORIGINAL_RENDER(i, prev, pe, ppe, base, img, seed)
+
+    # Break the inherited wheel silhouette early while keeping family DNA.
+    if tier in {1, 3}:
+        print('KAGGLE_BLD12_ANCHOR_RESET=' + i['id'], flush=True)
+        return ORIGINAL_RENDER(i, None, pe, ppe, base, img, seed + 17000 + tier * 101)
+
+    if prev is None or tier not in REALITY_STRENGTH:
         return ORIGINAL_RENDER(i, prev, pe, ppe, base, img, seed)
     old = v14.STRENGTH[tier]
     v14.STRENGTH[tier] = REALITY_STRENGTH[tier]
@@ -159,7 +167,7 @@ def branch_score(recs):
             failures.append(f'T6-anchor={anchor[5]:.3f}>.845')
         if sum(x<.920 for x in adj)<4:
             failures.append('fewer-than-4-structural-transitions')
-        if sum(x<.935 for x in adj[:3])<2:
+        if sum(x<.900 for x in adj[:3])<2:
             failures.append('weak-early-tier-evolution')
         if failures:
             return -999.0, why+' clone-ladder=' + ','.join(failures)
