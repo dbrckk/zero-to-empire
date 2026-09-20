@@ -22,25 +22,26 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T15:05:20Z
+Generated: 2026-09-20T15:53:12Z
 
 ### Git
 - Branch: `main`
-- Head: `92d11c4a6181`
-- Commit date: 2026-09-20T17:05:03+02:00
-- Commit: art: force early BLD-12 architecture resets in v17.6
-- Tracked files: 1364
+- Head: `583cab453ed8`
+- Commit date: 2026-09-20T17:52:57+02:00
+- Commit: art: approve and promote reviewed BLD-12 v17.6
+- Tracked files: 1366
 
 ### Recently changed files
+- `.github/workflows/promote-reviewed-bld12.yml`
+- `art/production/semantic-review-bld12-run35518478246.md`
 - `art/production/controlled-building-regen-queue.json`
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
+- `art/production/master-asset-queue.json`
 - `art/production/semantic-review-bld12-kaggle-run-35515656009.md`
 - `ops/autofactory-kick.txt`
 - `tools/sprites/kaggle_building_family_factory_v16.py`
 - `tools/sprites/kaggle_building_family_factory_v17.py`
-- `art/production/autofactory-state.json`
-- `art/production/autofactory-summary.md`
-- `art/production/master-asset-queue.json`
-- `art/production/semantic-review-bld12-kaggle-run-35513954813.md`
 
 ### Project signals
 - `build.gradle.kts`

@@ -1,19 +1,15 @@
 # Change impact
 
-Base: 067c80765ae31d1fc761fb5f7e7e234df58e6a6e
-Head: 92d11c4a61810876f98b28c38f5c22156e37c4f2
+Base: 85c32375cac972817e6dd19883770004f3516327
+Head: 583cab453ed8604ee833b6a1b14647071ee66796
 
 ## Changed files
-- M art/production/controlled-building-regen-queue.json
-- A art/production/semantic-review-bld12-kaggle-run-35515656009.md
-- M ops/autofactory-kick.txt
-- M tools/sprites/kaggle_building_family_factory_v16.py
-- M tools/sprites/kaggle_building_family_factory_v17.py
+- A .github/workflows/promote-reviewed-bld12.yml
+- A art/production/semantic-review-bld12-run35518478246.md
 
 ## Affected areas
+- .github
 - art
-- ops
-- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

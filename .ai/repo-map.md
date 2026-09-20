@@ -89,6 +89,7 @@ The content is organized as follows:
     promote-fx15-strict.yml
     promote-fx16-strict.yml
     promote-reviewed-bld11.yml
+    promote-reviewed-bld12.yml
     promote-reviewed-run68.yml
     promote-reviewed-run69-ter09.yml
     promote-run66-reviewed.yml
@@ -4982,6 +4983,74 @@ jobs:
             exit 0
           fi
           git commit -m 'art: integrate reviewed BLD-11 T0-T6'
+          git pull --rebase origin main
+          git push
+```
+
+## File: .github/workflows/promote-reviewed-bld12.yml
+```yaml
+name: Promote reviewed BLD-12
+
+on:
+  push:
+    paths:
+      - '.github/workflows/promote-reviewed-bld12.yml'
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: promote-reviewed-bld12
+  cancel-in-progress: false
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: main
+          fetch-depth: 2
+      - name: Require semantic approval record
+        run: |
+          set -euo pipefail
+          grep -q 'APPROVE T0–T6 for runtime promotion' art/production/semantic-review-bld12-run35518478246.md
+      - name: Download reviewed Kaggle artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh run download 35518478246 -n kaggle-sprite-batch -D /tmp/bld12
+      - name: Promote reviewed BLD-12 masters
+        shell: bash
+        run: |
+          set -euo pipefail
+          src="$(find /tmp/bld12 -type d -path '*/output/candidates' -print -quit)"
+          if [ -z "$src" ]; then src="$(find /tmp/bld12 -type d -name candidates -print -quit)"; fi
+          test -n "$src"
+          test -d "$src"
+          mkdir -p art/incoming/final-sprites
+          for tier in 0 1 2 3 4 5 6; do
+            test -s "$src/zte_business_12_t${tier}_final.png"
+            cp "$src/zte_business_12_t${tier}_final.png" art/incoming/final-sprites/
+          done
+          python3 -m pip install --disable-pip-version-check Pillow==11.3.0
+          python3 tools/sprites/build_sprite_contact_sheet.py \
+            --files art/incoming/final-sprites/zte_business_12_t{0,1,2,3,4,5,6}_final.png \
+            --output art/production/bld12-reviewed-contact-sheet.png \
+            --report art/production/bld12-reviewed-qa.json
+          SPRITE_TARGETS=zte_business_12_t0_final,zte_business_12_t1_final,zte_business_12_t2_final,zte_business_12_t3_final,zte_business_12_t4_final,zte_business_12_t5_final,zte_business_12_t6_final \
+            python3 tools/sprites/process_final_sprites.py
+      - name: Commit reviewed masters and runtime batch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add art/incoming/final-sprites/zte_business_12_t{0,1,2,3,4,5,6}_final.png \
+                  app/src/main/res/drawable-nodpi/ \
+                  art/production/bld12-reviewed-qa.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'art: integrate reviewed BLD-12 T0-T6'
           git pull --rebase origin main
           git push
 ```
