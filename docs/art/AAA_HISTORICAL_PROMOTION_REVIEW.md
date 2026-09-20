@@ -39,3 +39,5 @@ A future `DONE` transition requires all of the following:
 7. review evidence is persisted under `art/production/` or an equivalent canonical review record.
 
 Automatic candidate-generation/finalization workflows may advance only to `RUNTIME`. They must never set `DONE`.
+
+- `BLD-11-T0..T6`: resolved by dedicated semantic review of Kaggle run `35473600052`; exact reviewed masters promoted to runtime by commit `2633da6851e6888387330650e2d75d7794c1df1f`. Strict bookkeeping moves to DONE only with green Android CI on the reconciliation PR.
