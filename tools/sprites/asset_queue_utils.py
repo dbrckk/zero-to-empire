@@ -78,8 +78,8 @@ def unresolved_ids() -> set[str]:
     ids.update(r["id"] for r in manifest_rows() if r["id"].startswith("CHR-"))
     ids.update(f"FX-{n:02d}" for n in range(9))
     ids.add("FX-17")
-    if len(ids) != 109:
-        raise RuntimeError(f"Strict unresolved set drifted: expected 109, got {len(ids)}")
+    if len(ids) != 102:
+        raise RuntimeError(f"Strict unresolved set drifted: expected 102, got {len(ids)}")
     return ids
 
 
