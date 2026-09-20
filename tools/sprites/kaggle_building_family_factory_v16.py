@@ -19,7 +19,7 @@ SPEC.loader.exec_module(v1610)
 v15 = v1610.v15
 v14 = v1610.v14
 
-print('KAGGLE_STARTUP=building-family-flux-v17.9-compact-dual-prompts', flush=True)
+print('KAGGLE_STARTUP=building-family-flux-v18.0-family-tier-grammars', flush=True)
 
 # More image-to-image freedom than v16.10. The strict v16.10 live gate remains
 # active, so extra freedom cannot silently promote unrelated scenes/site cards.
@@ -67,6 +67,80 @@ REALITY_TIER = {
 
 REALITY_STRENGTH = {1:.56, 2:.64, 3:.72, 4:.75, 5:.79, 6:.80}
 
+
+FAMILY_TIER = {
+    4: {
+        0:'compact single-storey R&D headquarters with one central data core and two short fused lab wings',
+        1:'add one visibly larger fused laboratory wing and reinforce the central data core; wider silhouette, same headquarters identity',
+        2:'add the opposite fused lab wing plus an enclosed utility/data annex; broaden footprint without creating a campus',
+        3:'raise a taller central automation/data-core block above the low lab wings; clear height change and stronger central landmark',
+        4:'add a second-storey research block bridging the fused lab wings; denser service modules remain attached to one building',
+        5:'evolve into a multi-level advanced R&D headquarters with a dominant central tower, larger symmetric lab wings and integrated energy-routing machinery',
+        6:'apex tech headquarters: prestige data-core crown, multi-level fused research wings and maximum integrated machinery, one iconic connected building',
+    },
+    5: {
+        0:'compact connected urban-production block with two low tower masses around one enclosed transit core',
+        1:'add one taller fused tower mass and a connected industrial podium section; retain one urban megablock',
+        2:'add a second unequal tower and an enclosed cross-block transit spine; clearly denser skyline silhouette',
+        3:'raise the central transit/production tower and fuse two lower civic-industrial masses into a stepped urban block',
+        4:'district-scale vertical expansion with three integrated tower heights, stacked production decks and one enclosed transit hub',
+        5:'late-game megacity block with dominant central skyscraper, multiple fused secondary towers and dense integrated logistics/energy layers',
+        6:'apex urban-production megastructure with monumental central tower crown, multi-level fused city-block masses and maximum vertical skyline complexity',
+    },
+    6: {
+        0:'small pressurized lunar outpost with one sealed habitat dome fused to one rectangular utility block',
+        1:'add a second connected habitat module and short sealed service tunnel; preserve low lunar-colony silhouette',
+        2:'add a larger utility/processing block and another sealed dome on the opposite side; wider connected colony footprint',
+        3:'raise a taller central life-support/command module above the connected domes and utility blocks',
+        4:'advanced lunar colony with multiple fused habitat domes, two-storey command core and dense enclosed service connections',
+        5:'large lunar industrial colony with dominant command/life-support tower, expanded fused habitat clusters and integrated processing wings',
+        6:'apex lunar colony with maximum vertical command core, multiple connected domes and monumental enclosed industrial infrastructure; one sealed connected complex',
+    },
+    7: {
+        0:'compact Martian palace-factory with low central command mass and two short fused production wings',
+        1:'extend one large enclosed red-alloy production wing and reinforce the central command mass',
+        2:'add the opposite fused production wing plus a taller enclosed industrial block; broader palace-factory silhouette',
+        3:'raise a distinct central command spire while keeping the paired production wings low and fused',
+        4:'monumental Martian complex with enlarged command keep, multi-level fused factory wings and integrated enclosed machinery',
+        5:'late-game red-alloy palace-factory with dominant command spire, massive fused industrial wings and dense prestige machinery',
+        6:'apex Mars Empire complex with monumental command crown, maximum connected palace-factory massing and iconic red-alloy silhouette',
+    },
+    8: {
+        0:'compact stellar-energy hub with one central power core and two short enclosed collector arms',
+        1:'add a larger fused collector arc and one connected routing hub; visibly wider energy structure',
+        2:'add the opposite enclosed collector arc to form a partial ring around the persistent central hub',
+        3:'raise a taller central power-transfer core through the partial ring and add lower fused routing masses',
+        4:'advanced Dyson network node with multiple enclosed ring segments, elevated central hub and dense connected transfer structures',
+        5:'large stellar-energy megastructure with dominant central power tower, broad fused collector-ring segments and multiple integrated routing hubs',
+        6:'apex Dyson network node with monumental central energy core, maximum connected collector architecture and iconic multi-level ring silhouette',
+    },
+    9: {
+        0:'compact galactic exchange station with one central trade core and two short fused logistics wings',
+        1:'extend one enclosed docking/logistics wing and reinforce the central exchange hall',
+        2:'add the opposite fused logistics wing plus a larger connected cargo-routing block; broader station footprint',
+        3:'raise a taller central exchange tower above the low logistics wings; clear vertical landmark',
+        4:'advanced exchange hub with multi-level central station, enlarged fused docking wings and dense enclosed cargo-routing structures',
+        5:'late-game interstellar trade hub with dominant exchange tower, massive connected logistics wings and premium integrated finance/transport systems',
+        6:'apex galactic exchange with monumental central crown, maximum fused docking/logistics architecture and iconic connected station silhouette',
+    },
+    10: {
+        0:'compact intergalactic gateway with one dominant enclosed portal frame fused to a low service block',
+        1:'thicken the same portal frame and add one large fused service wing; gateway remains the dominant feature',
+        2:'add the opposite fused service wing plus integrated energy-routing housings around the persistent portal frame',
+        3:'raise a taller portal crown and central energy spine while preserving the same gateway opening and connected service mass',
+        4:'advanced transit gateway with monumental portal frame, multi-level fused service complex and dense integrated routing machinery',
+        5:'late-game gateway megastructure with dominant enlarged portal architecture, massive connected service wings and premium energy-routing systems',
+        6:'apex intergalactic gateway with iconic monumental portal crown, maximum fused support architecture and unmistakable persistent gateway identity',
+    },
+}
+
+def tier_instruction(family,tier):
+    if family == 12:
+        return REALITY_TIER[tier]
+    if family == 13:
+        return TRANSCENDENT_TIER[tier]
+    return FAMILY_TIER.get(family, TIER)[tier]
+
 REJECTION_LEDGER = HERE.parents[1] / 'art' / 'production' / 'generation-rejection-ledger.json'
 
 TRANSCENDENT_TIER = {
@@ -109,7 +183,7 @@ def prompts(i):
     family = i['family']
     tier = i['tier']
     fam = v1610.FAMILY[family]
-    instruction = REALITY_TIER[tier] if family == 12 else (TRANSCENDENT_TIER[tier] if family == 13 else TIER[tier])
+    instruction = tier_instruction(family,tier)
     memory = rejection_hints(i)
 
     short = (
