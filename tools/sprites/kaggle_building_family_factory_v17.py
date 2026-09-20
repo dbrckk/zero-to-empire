@@ -19,7 +19,7 @@ SPEC.loader.exec_module(v1610)
 v15 = v1610.v15
 v14 = v1610.v14
 
-print('KAGGLE_STARTUP=building-family-flux-v17.8-late-tier-continuity', flush=True)
+print('KAGGLE_STARTUP=building-family-flux-v17.9-compact-dual-prompts', flush=True)
 
 # More image-to-image freedom than v16.10. The strict v16.10 live gate remains
 # active, so extra freedom cannot silently promote unrelated scenes/site cards.
@@ -94,26 +94,37 @@ def rejection_hints(i):
     except Exception as e:
         print('KAGGLE_BLD_REJECTION_MEMORY_SKIP='+str(e), flush=True)
     merged=' '.join(hints[-2:])
-    return ' '.join(merged.split()[:52])
+    return ' '.join(merged.split()[:30])
 
+
+CLIP_FAMILY = {
+    0:'street production kiosk',1:'corner production shop',2:'fabrication workshop',
+    3:'industrial factory',4:'tech headquarters',5:'urban production megablock',
+    6:'lunar industrial colony',7:'Martian palace-factory',8:'stellar energy complex',
+    9:'galactic exchange hub',10:'intergalactic gateway',11:'cosmic foundry',
+    12:'reality engine',13:'transcendent energy nexus',
+}
 
 def prompts(i):
     family = i['family']
     tier = i['tier']
     fam = v1610.FAMILY[family]
-    shape = v1610.SHAPE[family]
-    evolution = EVOLUTION[family]
     instruction = REALITY_TIER[tier] if family == 12 else (TRANSCENDENT_TIER[tier] if family == 13 else TIER[tier])
+    memory = rejection_hints(i)
+
     short = (
-        f'Centered isolated {fam}. {shape}. Tier {tier}: {instruction}. '
-        f'Use only connected family structures such as {evolution}. One object on flat neutral gray.'
+        f"isolated stylized 2.5D {CLIP_FAMILY[family]}, tier {tier}. {instruction}. "
+        "one connected building, orthographic, centered on neutral gray, clear border, no ground plane"
     )
+    if len(short.split()) > 58:
+        raise RuntimeError(f'building CLIP prompt too long: {len(short.split())} words for {i["id"]}')
+
     detail = (
-        f'{v1610.STYLE}. Family DNA: {fam}. Base family shape: {shape}. '
-        f'Tier instruction: {instruction}. Family-specific architectural vocabulary: {evolution}. '
-        'Change actual connected architecture and outer massing; never simulate progression by only scaling the previous object. '
-        'Keep camera, facade axis, material identity and dominant family core coherent across the family. '
-        f'{rejection_hints(i)} {v1610.FOOTPRINT}'
+        f"AAA mobile strategy building, stylized 2.5D orthographic catalog render. Family: {fam}. "
+        f"Tier architecture: {instruction}. Preserve family materials, camera, facade axis and core identity. "
+        f"{memory} One self-contained connected mass; all wings, pipes and modules fused to the building. "
+        "Flat uniform neutral gray background with generous empty border. "
+        "No pavement, yard, platform card, ground plane, cast shadow, text, logo, people, vehicles, loose props, effects or scenery."
     )
     return short, detail
 
