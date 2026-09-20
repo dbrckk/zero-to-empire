@@ -96,7 +96,9 @@ def rejection_hints(i):
      if hint and hint not in hints:hints.append(hint)
   except Exception as e:
    print('KAGGLE_CHR_REJECTION_MEMORY_SKIP='+str(e),flush=True)
- return ' '.join(hints[-3:])
+ merged=' '.join(hints[-2:])
+ words=merged.split()
+ return ' '.join(words[:48])
 
 def prompt_pair(i,pose,mode='default'):
  # Keep CLIP deliberately tiny: tokenizer expansion makes word-count estimates

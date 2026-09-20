@@ -93,7 +93,8 @@ def rejection_hints(i):
                 hints.append(hint)
     except Exception as e:
         print('KAGGLE_BLD_REJECTION_MEMORY_SKIP='+str(e), flush=True)
-    return ' '.join(hints[-3:])
+    merged=' '.join(hints[-2:])
+    return ' '.join(merged.split()[:52])
 
 
 def prompts(i):
