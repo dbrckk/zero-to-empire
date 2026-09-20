@@ -22,30 +22,29 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T16:48:54Z
+Generated: 2026-09-20T18:00:32Z
 
 ### Git
 - Branch: `main`
-- Head: `d6b528245622`
-- Commit date: 2026-09-20T18:48:38+02:00
-- Commit: ci(art): validate generators and rejection-memory schema
-- Tracked files: 1371
+- Head: `c68563e61c47`
+- Commit date: 2026-09-20T20:00:09+02:00
+- Commit: ci(android): skip builds for production-review metadata
+- Tracked files: 1373
 
 ### Recently changed files
-- `.github/workflows/asset-pipeline-ci.yml`
-- `art/production/controlled-building-regen-queue.json`
-- `art/production/generation-rejection-ledger.json`
-- `art/production/semantic-review-bld13-kaggle-run-35522041463.md`
+- `.github/workflows/android.yml`
 - `tools/sprites/kaggle_building_family_factory_v16.py`
 - `tools/sprites/kaggle_building_family_factory_v17.py`
+- `tools/sprites/kaggle_character_sheet_factory_v1.py`
+- `art/production/controlled-character-regen-queue.json`
+- `art/production/generation-rejection-ledger.json`
+- `art/production/master-asset-queue.json`
+- `art/production/semantic-review-bld13-kaggle-run-35524194030.md`
+- `art/production/semantic-review-chr-op-kaggle-run-35523676470.md`
+- `tools/sprites/asset_wave_orchestrator.py`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
-- `art/production/master-asset-queue.json`
-- `.github/workflows/kaggle-mass-sprite-factory.yml`
-- `art/production/GENERATION_REJECTION_MEMORY.md`
-- `kaggle/github_mass_factory.py`
-- `ops/autofactory-kick.txt`
-- `tools/sprites/kaggle_character_sheet_factory_v1.py`
+- `art/production/controlled-building-regen-queue.json`
 
 ### Project signals
 - `build.gradle.kts`

@@ -1,17 +1,310 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "b26a035133726208d45a400f359102ea4b62ab77",
-  "head": "d6b528245622bbb76ee7584b3be2ed87b690f388",
+  "base": "d6b528245622bbb76ee7584b3be2ed87b690f388",
+  "head": "c68563e61c47199caafe130d036bc8959184348a",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": ".github/workflows/asset-pipeline-ci.yml",
+      "path": ".github/workflows/android.yml",
+      "status": "M"
+    },
+    {
+      "path": "art/production/autofactory-state.json",
+      "status": "M"
+    },
+    {
+      "path": "art/production/autofactory-summary.md",
+      "status": "M"
+    },
+    {
+      "path": "art/production/controlled-building-regen-queue.json",
+      "status": "M"
+    },
+    {
+      "path": "art/production/controlled-character-regen-queue.json",
+      "status": "M"
+    },
+    {
+      "path": "art/production/generation-rejection-ledger.json",
+      "status": "M"
+    },
+    {
+      "path": "art/production/master-asset-queue.json",
+      "status": "M"
+    },
+    {
+      "path": "art/production/semantic-review-bld13-kaggle-run-35524194030.md",
+      "status": "A"
+    },
+    {
+      "path": "art/production/semantic-review-chr-op-kaggle-run-35523676470.md",
+      "status": "A"
+    },
+    {
+      "path": "tools/sprites/asset_wave_orchestrator.py",
+      "status": "M"
+    },
+    {
+      "path": "tools/sprites/kaggle_building_family_factory_v16.py",
+      "status": "M"
+    },
+    {
+      "path": "tools/sprites/kaggle_building_family_factory_v17.py",
+      "status": "M"
+    },
+    {
+      "path": "tools/sprites/kaggle_character_sheet_factory_v1.py",
       "status": "M"
     }
   ],
-  "changed_source_files": [],
-  "impacted_files": [],
-  "impacted_symbols": [],
+  "changed_source_files": [
+    "tools/sprites/asset_wave_orchestrator.py",
+    "tools/sprites/kaggle_building_family_factory_v16.py",
+    "tools/sprites/kaggle_building_family_factory_v17.py",
+    "tools/sprites/kaggle_character_sheet_factory_v1.py"
+  ],
+  "impacted_files": [
+    "tools/sprites/asset_wave_orchestrator.py",
+    "tools/sprites/kaggle_building_family_factory_v16.py",
+    "tools/sprites/kaggle_building_family_factory_v17.py",
+    "tools/sprites/kaggle_character_sheet_factory_v1.py"
+  ],
+  "impacted_symbols": [
+    {
+      "name": "by_id",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 37
+    },
+    {
+      "name": "update_from_trigger",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 41
+    },
+    {
+      "name": "active_pending",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 95
+    },
+    {
+      "name": "mark_dispatch",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 103
+    },
+    {
+      "name": "building_family_ids",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 122
+    },
+    {
+      "name": "prepare_building_group",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 126
+    },
+    {
+      "name": "prepare_character_group",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 148
+    },
+    {
+      "name": "next_group",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 177
+    },
+    {
+      "name": "pending_ids_from_controlled",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 195
+    },
+    {
+      "name": "make_decision",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 206
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 281
+    },
+    {
+      "name": "rejection_hints",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+      "line": 82
+    },
+    {
+      "name": "prompts",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+      "line": 100
+    },
+    {
+      "name": "family_aware_render",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+      "line": 124
+    },
+    {
+      "name": "architectural_band_fill",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+      "line": 147
+    },
+    {
+      "name": "branch_score",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+      "line": 165
+    },
+    {
+      "name": "rejection_hints",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_building_family_factory_v17.py",
+      "line": 82
+    },
+    {
+      "name": "prompts",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_building_family_factory_v17.py",
+      "line": 100
+    },
+    {
+      "name": "family_aware_render",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_building_family_factory_v17.py",
+      "line": 124
+    },
+    {
+      "name": "architectural_band_fill",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_building_family_factory_v17.py",
+      "line": 147
+    },
+    {
+      "name": "branch_score",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_building_family_factory_v17.py",
+      "line": 165
+    },
+    {
+      "name": "rows",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 50
+    },
+    {
+      "name": "rejection_hints",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 86
+    },
+    {
+      "name": "prompt_pair",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 103
+    },
+    {
+      "name": "retry_mode",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 135
+    },
+    {
+      "name": "load_encode",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 142
+    },
+    {
+      "name": "load_render",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 147
+    },
+    {
+      "name": "border_bg",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 154
+    },
+    {
+      "name": "isolate",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 163
+    },
+    {
+      "name": "dist",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 167
+    },
+    {
+      "name": "finish_frame",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 182
+    },
+    {
+      "name": "alpha_iou",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 198
+    },
+    {
+      "name": "sheet_qa",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 207
+    },
+    {
+      "name": "lower_body_motion",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 220
+    },
+    {
+      "name": "action_qa",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 237
+    },
+    {
+      "name": "appearance_signature",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 244
+    },
+    {
+      "name": "appearance_distance",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 258
+    },
+    {
+      "name": "make_sheet",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 261
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 269
+    }
+  ],
   "selected_tests": []
 }

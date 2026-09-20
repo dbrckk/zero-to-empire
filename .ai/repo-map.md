@@ -578,7 +578,6 @@ on:
     branches: [ main ]
     paths:
       - 'app/**'
-      - 'art/production/**'
       - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
       - 'tools/android/**'
       - 'marketing/privacy-policy.md'
@@ -595,7 +594,6 @@ on:
     branches: [ main ]
     paths:
       - 'app/**'
-      - 'art/production/**'
       - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
       - 'tools/android/**'
       - 'marketing/privacy-policy.md'
@@ -23692,6 +23690,7 @@ dispatched = mark_dispatch(queue, unresolved, "kaggle-building-family")
 ⋮----
 def prepare_character_group(queue: dict[str, Any], group: str) -> dict[str, Any]
 ⋮----
+action_order={"IDLE":0,"WALK":1,"WORK":2,"CARRY":3,"REPAIR":4,"CELEB":5}
 group_assets = sorted(
 ⋮----
 dispatched = mark_dispatch(queue, [x["id"] for x in targets[:2]], "kaggle-character-sheet")
@@ -25056,6 +25055,8 @@ aid=str(i['id']).upper()
 prefix=str(row.get('target_prefix','')).upper()
 hint=str(row.get('prompt_hint','')).strip()
 ⋮----
+merged=' '.join(hints[-2:])
+⋮----
 def prompts(i)
 ⋮----
 family = i['family']
@@ -25077,7 +25078,7 @@ family=int(i['family'])
 ⋮----
 # High-risk radial families need periodic text-to-image resets. This keeps
 # family materials/camera while breaking the tendency to only enlarge a ring.
-reset_tiers={12:{1,3},13:{1,3,5}}
+reset_tiers={12:{1,3},13:{1,3}}
 ⋮----
 old = v14.STRENGTH[tier]
 ⋮----
@@ -25113,6 +25114,10 @@ anchor=[v1610.normalized_silhouette_iou(recs[0][1],recs[n][1]) for n in range(1,
 generic_failures=[]
 ⋮----
 failures=[]
+⋮----
+aspects=[]
+⋮----
+bb=im.getchannel('A').getbbox()
 ```
 
 ## File: tools/sprites/kaggle_building_family_factory_v17.py
@@ -25160,6 +25165,8 @@ aid=str(i['id']).upper()
 prefix=str(row.get('target_prefix','')).upper()
 hint=str(row.get('prompt_hint','')).strip()
 ⋮----
+merged=' '.join(hints[-2:])
+⋮----
 def prompts(i)
 ⋮----
 family = i['family']
@@ -25181,7 +25188,7 @@ family=int(i['family'])
 ⋮----
 # High-risk radial families need periodic text-to-image resets. This keeps
 # family materials/camera while breaking the tendency to only enlarge a ring.
-reset_tiers={12:{1,3},13:{1,3,5}}
+reset_tiers={12:{1,3},13:{1,3}}
 ⋮----
 old = v14.STRENGTH[tier]
 ⋮----
@@ -25217,6 +25224,10 @@ anchor=[v1610.normalized_silhouette_iou(recs[0][1],recs[n][1]) for n in range(1,
 generic_failures=[]
 ⋮----
 failures=[]
+⋮----
+aspects=[]
+⋮----
+bb=im.getchannel('A').getbbox()
 ```
 
 ## File: tools/sprites/kaggle_building_family_factory.py
@@ -25433,14 +25444,18 @@ role=str(row.get('role','')).upper()
 ⋮----
 hint=str(row.get('prompt_hint','')).strip()
 ⋮----
+merged=' '.join(hints[-2:])
+words=merged.split()
+⋮----
 def prompt_pair(i,pose,mode='default')
 ⋮----
-# CLIP has a short context window. Keep identity/framing/single-subject rules
-# in a compact front-loaded prompt and reserve detail/negatives for T5.
+# Keep CLIP deliberately tiny: tokenizer expansion makes word-count estimates
+# optimistic. T5 carries the descriptive detail and rejection-memory hints.
 role=i['role'];action=i['action']
-core=(f"stylized 2.5D game sprite, exactly one adult {ROLE[role]}, full body, "
+role_short={
+core=(f"stylized 2.5D game sprite, one {role_short}, full body, "
 ⋮----
-detail=(f"AAA NON-PHOTOREALISTIC painterly 3D mobile strategy-game character. {ROLE[role]}. "
+detail=(f"AAA stylized painterly 2.5D mobile game character. {ROLE[role]}. "
 ⋮----
 def retry_mode(reason,attempt)
 ⋮----
@@ -25508,6 +25523,25 @@ bottoms=[];centers=[]
 ⋮----
 bb=f.getchannel('A').getbbox()
 ⋮----
+def lower_body_motion(frames)
+⋮----
+vals=[]
+⋮----
+A=frames[n-1].getchannel('A')
+B=frames[n].getchannel('A')
+ba=A.getbbox();bb=B.getbbox()
+⋮----
+top=max(0,min(ba[1]+int((ba[3]-ba[1])*.55),bb[1]+int((bb[3]-bb[1])*.55)))
+a=A.crop((0,top,256,256)).resize((64,64),Image.Resampling.BILINEAR).point(lambda p:255 if p>=32 else 0)
+b=B.crop((0,top,256,256)).resize((64,64),Image.Resampling.BILINEAR).point(lambda p:255 if p>=32 else 0)
+pa,pb=a.load(),b.load();inter=union=0
+⋮----
+aa=pa[x,y]>0;bbb=pb[x,y]>0;inter+=aa and bbb;union+=aa or bbb
+⋮----
+def action_qa(frames,action)
+⋮----
+motion=lower_body_motion(frames)
+⋮----
 def appearance_signature(cell)
 ⋮----
 rgba=cell.convert('RGBA');a=rgba.getchannel('A');bb=a.getbbox()
@@ -25557,18 +25591,19 @@ anchor_raw=raw.convert('RGB')
 ⋮----
 # Start every later animation for this role from the exact same person.
 # Moderate img2img freedom changes pose while preserving face/headgear/clothes.
-strength=min(.44,.32+attempt*.03)
-if mode=='identity':strength=max(.28,strength-.04)
+strength=(min(.62,.54+attempt*.035) if i['action']=='WALK' else min(.44,.32+attempt*.03))
+if mode=='identity' and i['action']!='WALK':strength=max(.28,strength-.04)
 raw=img(image=shared,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=6,guidance_scale=0,output_type='pil',generator=gen).images[0]
 ⋮----
-strength=min(.48,.29+fi*.015+attempt*.025)
-if mode in {'single','identity'}:strength=max(.24,strength-.035)
+strength=(min(.64,.50+fi*.018+attempt*.025) if i['action']=='WALK' else min(.48,.29+fi*.015+attempt*.025))
+if mode in {'single','identity'} and i['action']!='WALK':strength=max(.24,strength-.035)
 raw=img(image=anchor_raw,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=6,guidance_scale=0,output_type='pil',generator=gen).images[0]
 frame,cov=finish_frame(raw);frames.append(frame);ok=True;print(f"KAGGLE_CHR_FRAME={i['id']} frame={fi} attempt={attempt+1} mode={mode} cov={cov:.2f}",flush=True);break
 ⋮----
 last_reason=str(e);retry_reasons.append(last_reason);print(f"KAGGLE_CHR_RETRY={i['id']} frame={fi} attempt={attempt+1} mode={mode} reason={e}",flush=True)
 if not ok:fail=f'frame-{fi}-failed';break
 ⋮----
+why=why+' '+action_why
 identity_distance=0.0
 ref=role_reference_cell.get(i['role'])
 ⋮----
