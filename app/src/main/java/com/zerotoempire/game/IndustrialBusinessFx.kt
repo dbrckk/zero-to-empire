@@ -33,6 +33,8 @@ private fun IndustrialFxLoop(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
+    // Read snapshot-backed motion policy directly so Battery Saver / animation
+    // changes recompose this loop without requiring the world stage to restart.
     val reducedMotion = MotionQuality.reducedMotion(context)
     val lowPower = MotionQuality.lowPowerMode(context)
     val resource = when (kind) {
