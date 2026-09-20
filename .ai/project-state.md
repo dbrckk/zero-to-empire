@@ -22,29 +22,27 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T18:01:58Z
+Generated: 2026-09-20T18:03:31Z
 
 ### Git
 - Branch: `main`
-- Head: `8fd57bc28ccf`
-- Commit date: 2026-09-20T20:01:39+02:00
-- Commit: art: compact building prompts to eliminate model truncation
+- Head: `b0155323323a`
+- Commit date: 2026-09-20T20:03:13+02:00
+- Commit: art: reconcile rejected BLD-04 and BLD-07 backlog
 - Tracked files: 1373
 
 ### Recently changed files
+- `art/production/generation-rejection-ledger.json`
+- `art/production/master-asset-queue.json`
+- `ops/autofactory-kick.txt`
 - `tools/sprites/kaggle_building_family_factory_v16.py`
 - `tools/sprites/kaggle_building_family_factory_v17.py`
 - `.github/workflows/android.yml`
 - `tools/sprites/kaggle_character_sheet_factory_v1.py`
 - `art/production/controlled-character-regen-queue.json`
-- `art/production/generation-rejection-ledger.json`
-- `art/production/master-asset-queue.json`
 - `art/production/semantic-review-bld13-kaggle-run-35524194030.md`
 - `art/production/semantic-review-chr-op-kaggle-run-35523676470.md`
 - `tools/sprites/asset_wave_orchestrator.py`
-- `art/production/autofactory-state.json`
-- `art/production/autofactory-summary.md`
-- `art/production/controlled-building-regen-queue.json`
 
 ### Project signals
 - `build.gradle.kts`

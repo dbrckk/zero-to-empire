@@ -1,14 +1,16 @@
 # Change impact
 
-Base: fdae7f93e5b8a017172bea098b677b94434b22a3
-Head: 8fd57bc28ccf07e1bc248fdb4d19944a3356f818
+Base: b5734e0d753b048ae680058aa2a7b135a1ab15f6
+Head: b0155323323ad94f6a7b52d6eff0a90b765113ad
 
 ## Changed files
-- M tools/sprites/kaggle_building_family_factory_v16.py
-- M tools/sprites/kaggle_building_family_factory_v17.py
+- M art/production/generation-rejection-ledger.json
+- M art/production/master-asset-queue.json
+- M ops/autofactory-kick.txt
 
 ## Affected areas
-- tools
+- art
+- ops
 
 ## Related test candidates
 - No direct filename-based test match detected.
