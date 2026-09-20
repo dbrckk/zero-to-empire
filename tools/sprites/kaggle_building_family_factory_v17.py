@@ -18,7 +18,7 @@ SPEC.loader.exec_module(v1610)
 v15 = v1610.v15
 v14 = v1610.v14
 
-print('KAGGLE_STARTUP=building-family-flux-v17.4-evidence-calibrated-gates', flush=True)
+print('KAGGLE_STARTUP=building-family-flux-v17.5-strong-early-evolution', flush=True)
 
 # More image-to-image freedom than v16.10. The strict v16.10 live gate remains
 # active, so extra freedom cannot silently promote unrelated scenes/site cards.
@@ -56,15 +56,15 @@ EVOLUTION = {
 
 REALITY_TIER = {
     0: 'compact enclosed containment-ring engine with two short symmetric shielded process wings and a low central exotic-physics core',
-    1: 'add one large fused rectangular process wing on each side and a visibly taller central containment housing; silhouette must change, not scale',
-    2: 'add a second outer containment ring segment plus substantial rear shield blocks; broaden the connected mass asymmetrically enough to alter the silhouette',
-    3: 'raise a tall central reality-core tower through the ring and add lower fused machinery volumes; clear vertical step-change from T2',
+    1: 'major first redesign: extend two large fused rectangular process wings far beyond the starter ring and raise a clearly taller central containment housing; outer silhouette must visibly change in width and height, never merely scale the starter',
+    2: 'major second redesign: add a second offset containment ring stage plus substantial rear shield blocks and one forward process module; produce a distinctly stepped footprint, not another circular enlargement',
+    3: 'major vertical redesign: raise a tall central reality-core tower through the ring, add two low fused machinery blocks and break the pure circular silhouette; unmistakable height and footprint change from T2',
     4: 'add a second elevated containment stage and four connected shield/process blocks, creating a stepped multi-level silhouette',
     5: 'megastructure form: dominant elevated exotic-physics core, enlarged twin process wings, secondary ring architecture and dense fused energy-routing masses',
     6: 'apex reality engine: multi-level central core with distinct crown, nested containment architecture and large integrated side systems; unmistakably evolved from T5',
 }
 
-REALITY_STRENGTH = {1:.48, 2:.56, 3:.64, 4:.71, 5:.77, 6:.80}
+REALITY_STRENGTH = {1:.56, 2:.64, 3:.72, 4:.75, 5:.79, 6:.80}
 
 
 def prompts(i):
@@ -157,8 +157,10 @@ def branch_score(recs):
             failures.append(f'T5-anchor={anchor[4]:.3f}>.860')
         if anchor[5]>.845:
             failures.append(f'T6-anchor={anchor[5]:.3f}>.845')
-        if sum(x<.920 for x in adj)<3:
-            failures.append('fewer-than-3-structural-transitions')
+        if sum(x<.920 for x in adj)<4:
+            failures.append('fewer-than-4-structural-transitions')
+        if sum(x<.935 for x in adj[:3])<2:
+            failures.append('weak-early-tier-evolution')
         if failures:
             return -999.0, why+' clone-ladder=' + ','.join(failures)
     return score,why
