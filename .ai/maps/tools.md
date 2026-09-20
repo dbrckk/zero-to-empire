@@ -2284,6 +2284,10 @@ REALITY_TIER = {
 ⋮----
 REALITY_STRENGTH = {1:.56, 2:.64, 3:.72, 4:.75, 5:.79, 6:.80}
 ⋮----
+FAMILY_TIER = {
+⋮----
+def tier_instruction(family,tier)
+⋮----
 REJECTION_LEDGER = HERE.parents[1] / 'art' / 'production' / 'generation-rejection-ledger.json'
 ⋮----
 TRANSCENDENT_TIER = {
@@ -2307,7 +2311,7 @@ def prompts(i)
 family = i['family']
 tier = i['tier']
 fam = v1610.FAMILY[family]
-instruction = REALITY_TIER[tier] if family == 12 else (TRANSCENDENT_TIER[tier] if family == 13 else TIER[tier])
+instruction = tier_instruction(family,tier)
 memory = rejection_hints(i)
 ⋮----
 short = (
@@ -2397,6 +2401,10 @@ REALITY_TIER = {
 ⋮----
 REALITY_STRENGTH = {1:.56, 2:.64, 3:.72, 4:.75, 5:.79, 6:.80}
 ⋮----
+FAMILY_TIER = {
+⋮----
+def tier_instruction(family,tier)
+⋮----
 REJECTION_LEDGER = HERE.parents[1] / 'art' / 'production' / 'generation-rejection-ledger.json'
 ⋮----
 TRANSCENDENT_TIER = {
@@ -2420,7 +2428,7 @@ def prompts(i)
 family = i['family']
 tier = i['tier']
 fam = v1610.FAMILY[family]
-instruction = REALITY_TIER[tier] if family == 12 else (TRANSCENDENT_TIER[tier] if family == 13 else TIER[tier])
+instruction = tier_instruction(family,tier)
 memory = rejection_hints(i)
 ⋮----
 short = (
@@ -2789,7 +2797,15 @@ aa=pa[x,y]>0;bbb=pb[x,y]>0;inter+=aa and bbb;union+=aa or bbb
 ⋮----
 def action_qa(frames,action)
 ⋮----
+# Per-action motion floor prevents technically valid but visually frozen atlases
+# from reaching manual semantic review.
+⋮----
+mean_change=(sum(1-x for x in ious)/len(ious)) if ious else 0.0
+⋮----
 motion=lower_body_motion(frames)
+⋮----
+floors={'WORK':.075,'CARRY':.10,'REPAIR':.075,'CELEB':.09,'IDLE':.025}
+floor=floors.get(action,.05)
 ⋮----
 def appearance_signature(cell)
 ⋮----

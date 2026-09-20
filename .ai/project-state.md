@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T18:23:38Z
+Generated: 2026-09-20T18:41:47Z
 
 ### Git
 - Branch: `main`
-- Head: `1e34471fcef5`
-- Commit date: 2026-09-20T20:23:23+02:00
-- Commit: art: kick autofactory after BLD-03 strict reconciliation
+- Head: `d9f843b8339b`
+- Commit date: 2026-09-20T20:41:24+02:00
+- Commit: art: add action-specific motion gates for character sheets
 - Tracked files: 1375
 
 ### Recently changed files
-- `ops/autofactory-kick.txt`
-- `art/production/autofactory-summary.md`
-- `art/production/autofactory-state.json`
-- `art/production/semantic-review-bld03-existing-runtime.md`
+- `tools/sprites/kaggle_character_sheet_factory_v1.py`
 - `art/production/generation-rejection-ledger.json`
+- `art/production/master-asset-queue.json`
+- `tools/sprites/kaggle_building_family_factory_v17.py`
+- `tools/sprites/kaggle_building_family_factory_v16.py`
 
 ### Project signals
 - `build.gradle.kts`

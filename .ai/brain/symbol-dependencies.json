@@ -5,46 +5,89 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "load_json": {
+    "tier_instruction": {
       "source": {
-        "file": "tools/sprites/asset_queue_utils.py",
-        "start": 37,
-        "end": 40
+        "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+        "start": 137,
+        "end": 142
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "save_json": {
+    "rejection_hints": {
       "source": {
-        "file": "tools/sprites/asset_queue_utils.py",
-        "start": 43,
-        "end": 45
+        "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+        "start": 156,
+        "end": 171
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "manifest_rows": {
+    "prompts": {
       "source": {
-        "file": "tools/sprites/asset_queue_utils.py",
-        "start": 48,
-        "end": 65
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "unresolved_ids": {
-      "source": {
-        "file": "tools/sprites/asset_queue_utils.py",
-        "start": 68,
-        "end": 77
+        "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+        "start": 182,
+        "end": 203
       },
       "symbol_dependencies": [
         {
-          "symbol": "manifest_rows",
+          "symbol": "rejection_hints",
           "definitions": [
             {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 48,
+              "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+              "line": 156,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "tier_instruction",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+              "line": 137,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "family_aware_render": {
+      "source": {
+        "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+        "start": 209,
+        "end": 230
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "architectural_band_fill": {
+      "source": {
+        "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+        "start": 232,
+        "end": 245
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "branch_score": {
+      "source": {
+        "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+        "start": 250,
+        "end": 319
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "architectural_band_fill",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+              "line": 232,
               "kind": "function",
               "language": "python"
             }
@@ -54,76 +97,28 @@
       ],
       "dependency_count": 1
     },
-    "default_asset": {
+    "rows": {
       "source": {
-        "file": "tools/sprites/asset_queue_utils.py",
-        "start": 80,
-        "end": 110
+        "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "start": 50,
+        "end": 84
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "ensure_master": {
+    "prompt_pair": {
       "source": {
-        "file": "tools/sprites/asset_queue_utils.py",
-        "start": 113,
-        "end": 143
+        "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "start": 103,
+        "end": 133
       },
       "symbol_dependencies": [
         {
-          "symbol": "default_asset",
+          "symbol": "rejection_hints",
           "definitions": [
             {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 80,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "load_json",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 37,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "manifest_rows",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 48,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "save_json",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 43,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "unresolved_ids",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 68,
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 86,
               "kind": "function",
               "language": "python"
             }
@@ -131,21 +126,57 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 5
+      "dependency_count": 1
     },
-    "sync_controlled_queues": {
+    "retry_mode": {
       "source": {
-        "file": "tools/sprites/asset_queue_utils.py",
-        "start": 146,
-        "end": 179
+        "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "start": 135,
+        "end": 140
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "load_encode": {
+      "source": {
+        "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "start": 142,
+        "end": 145
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "load_render": {
+      "source": {
+        "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "start": 147,
+        "end": 152
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "border_bg": {
+      "source": {
+        "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "start": 154,
+        "end": 161
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "isolate": {
+      "source": {
+        "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "start": 163,
+        "end": 180
       },
       "symbol_dependencies": [
         {
-          "symbol": "load_json",
+          "symbol": "border_bg",
           "definitions": [
             {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 37,
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 154,
               "kind": "function",
               "language": "python"
             }
@@ -153,11 +184,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "save_json",
+          "symbol": "dist",
           "definitions": [
             {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 43,
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 167,
               "kind": "function",
               "language": "python"
             }
@@ -167,48 +198,425 @@
       ],
       "dependency_count": 2
     },
-    "stats": {
+    "dist": {
       "source": {
-        "file": "tools/sprites/asset_queue_utils.py",
-        "start": 182,
-        "end": 206
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "write_summary": {
-      "source": {
-        "file": "tools/sprites/asset_queue_utils.py",
-        "start": 209,
-        "end": 225
+        "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "start": 167,
+        "end": 287
       },
       "symbol_dependencies": [
         {
-          "symbol": "Asset",
+          "symbol": "action_qa",
           "definitions": [
             {
-              "file": "tools/sprites/plan_sprite_batches.py",
-              "line": 33,
-              "kind": "class",
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 237,
+              "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "class_like"
+          "relation": "same_file"
         },
         {
-          "symbol": "stats",
+          "symbol": "alpha_iou",
           "definitions": [
             {
-              "file": "tools/sprites/asset_queue_utils.py",
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 198,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "appearance_distance",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 267,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "appearance_signature",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 253,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "finish_frame",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
               "line": 182,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "same_file"
+        },
+        {
+          "symbol": "isolate",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 163,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "load_encode",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 142,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "lower_body_motion",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 220,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "main",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 278,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "make_sheet",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 270,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "rows",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 50,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "sheet_qa",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 207,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 12
+    },
+    "finish_frame": {
+      "source": {
+        "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "start": 182,
+        "end": 196
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "isolate",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 163,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "alpha_iou": {
+      "source": {
+        "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "start": 198,
+        "end": 205
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "sheet_qa": {
+      "source": {
+        "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "start": 207,
+        "end": 218
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "alpha_iou",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 198,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "lower_body_motion": {
+      "source": {
+        "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "start": 220,
+        "end": 235
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "action_qa": {
+      "source": {
+        "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "start": 237,
+        "end": 251
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "alpha_iou",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 198,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "lower_body_motion",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 220,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
         }
       ],
       "dependency_count": 2
+    },
+    "appearance_signature": {
+      "source": {
+        "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "start": 253,
+        "end": 265
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "appearance_distance": {
+      "source": {
+        "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "start": 267,
+        "end": 268
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "appearance_signature",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 253,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "make_sheet": {
+      "source": {
+        "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "start": 270,
+        "end": 276
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "main": {
+      "source": {
+        "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "start": 278,
+        "end": 398
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "action_qa",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 237,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "appearance_distance",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 267,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "finish_frame",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 182,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "load_encode",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 142,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "load_render",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 147,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "make_sheet",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 270,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "prompt_pair",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 103,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "retry_mode",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 135,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "rows",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 50,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "sheet_qa",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 207,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 10
     }
   }
 }
