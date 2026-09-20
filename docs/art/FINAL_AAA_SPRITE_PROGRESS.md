@@ -4,8 +4,8 @@ Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains t
 
 ## Official progress
 - DONE: **140 / 236**
-- ART VALIDATED: **135 / 236**
-- RUNTIME INTEGRATED: **135 / 236**
+- ART VALIDATED: **140 / 236**
+- RUNTIME INTEGRATED: **140 / 236**
 - Generated candidates accepted as DONE: **140**
 - Rule: only runtime-integrated, individually clean/transparent, manifest-matching assets with green Android CI increment DONE.
 
