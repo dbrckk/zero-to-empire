@@ -2606,6 +2606,7 @@ MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
 INCOMING=ROOT/'art/incoming/final-sprites'
 REPORT=Path('/kaggle/working/output/character-sheet-report.json')
 QUEUE=ROOT/'art/production/controlled-character-regen-queue.json'
+REJECTION_LEDGER=ROOT/'art/production/generation-rejection-ledger.json'
 FLUX='aniketppanchal/flux.1-schnell-nf4-pkg'
 ROW=re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$")
 CHR=re.compile(r'^CHR-(OP|TECH|LOG|ENG)-(IDLE|WALK|WORK|CARRY|REPAIR|CELEB)$')
@@ -2626,7 +2627,29 @@ controlled=[]
 ⋮----
 aid=str(item.get('id','')).upper()
 ⋮----
-def prompt(i,pose)
+def rejection_hints(i)
+⋮----
+hints=[]
+⋮----
+data=json.loads(REJECTION_LEDGER.read_text(encoding='utf-8'))
+⋮----
+prefix=str(row.get('target_prefix','')).upper()
+role=str(row.get('role','')).upper()
+⋮----
+hint=str(row.get('prompt_hint','')).strip()
+⋮----
+def prompt_pair(i,pose,mode='default')
+⋮----
+# CLIP has a short context window. Keep identity/framing/single-subject rules
+# in a compact front-loaded prompt and reserve detail/negatives for T5.
+role=i['role'];action=i['action']
+core=(f"stylized 2.5D game sprite, exactly one adult {ROLE[role]}, full body, "
+⋮----
+detail=(f"AAA NON-PHOTOREALISTIC painterly 3D mobile strategy-game character. {ROLE[role]}. "
+⋮----
+def retry_mode(reason,attempt)
+⋮----
+r=(reason or '').lower()
 ⋮----
 def load_encode()
 ⋮----
@@ -2690,6 +2713,20 @@ bottoms=[];centers=[]
 ⋮----
 bb=f.getchannel('A').getbbox()
 ⋮----
+def appearance_signature(cell)
+⋮----
+rgba=cell.convert('RGBA');a=rgba.getchannel('A');bb=a.getbbox()
+⋮----
+x0,y0,x1,y1=bb;h=max(1,y1-y0)
+bands=((y0,y0+int(.38*h)),(y0+int(.38*h),y0+int(.78*h)))
+out=[]
+⋮----
+crop=rgba.crop((x0,ya,x1,max(ya+1,yb)))
+ca=crop.getchannel('A');pix=list(crop.convert('RGB').getdata());mask=list(ca.getdata())
+vals=[p for p,m in zip(pix,mask) if m>=48]
+⋮----
+def appearance_distance(a,b)
+⋮----
 def make_sheet(frames)
 ⋮----
 # Canonical character deliverable: fixed 1024x1024 transparent atlas.
@@ -2706,13 +2743,15 @@ encs={};t,enc=load_encode()
 ⋮----
 hints=POSE_HINT[i['action']][:ACTION[i['action']][1]]
 ⋮----
-text=prompt(i,pose)
+variants={}
 ⋮----
-del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();report=[];role_anchor={}
+del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();report=[];role_anchor={};role_reference_cell={}
 ⋮----
-frames=[];anchor_raw=None;fail=None
+frames=[];anchor_raw=None;fail=None;retry_reasons=[]
 ⋮----
-ok=False
+ok=False;last_reason=''
+⋮----
+mode=retry_mode(last_reason,attempt)
 ⋮----
 gen=torch.Generator(device='cuda').manual_seed(args.seed+idx*10000+fi*211+attempt*7919)
 ⋮----
@@ -2723,14 +2762,24 @@ anchor_raw=raw.convert('RGB')
 ⋮----
 # Start every later animation for this role from the exact same person.
 # Moderate img2img freedom changes pose while preserving face/headgear/clothes.
-strength=min(.46,.34+attempt*.035)
+strength=min(.44,.32+attempt*.03)
+if mode=='identity':strength=max(.28,strength-.04)
 raw=img(image=shared,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=6,guidance_scale=0,output_type='pil',generator=gen).images[0]
 ⋮----
-strength=min(.50,.30+fi*.016+attempt*.03)
+strength=min(.48,.29+fi*.015+attempt*.025)
+if mode in {'single','identity'}:strength=max(.24,strength-.035)
 raw=img(image=anchor_raw,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=6,guidance_scale=0,output_type='pil',generator=gen).images[0]
-frame,cov=finish_frame(raw);frames.append(frame);ok=True;print(f"KAGGLE_CHR_FRAME={i['id']} frame={fi} attempt={attempt+1} cov={cov:.2f}",flush=True);break
+frame,cov=finish_frame(raw);frames.append(frame);ok=True;print(f"KAGGLE_CHR_FRAME={i['id']} frame={fi} attempt={attempt+1} mode={mode} cov={cov:.2f}",flush=True);break
 ⋮----
+last_reason=str(e);retry_reasons.append(last_reason);print(f"KAGGLE_CHR_RETRY={i['id']} frame={fi} attempt={attempt+1} mode={mode} reason={e}",flush=True)
 if not ok:fail=f'frame-{fi}-failed';break
+⋮----
+identity_distance=0.0
+ref=role_reference_cell.get(i['role'])
+⋮----
+identity_distance=appearance_distance(ref,frames[0])
+⋮----
+why=f'cross-animation-appearance-drift={identity_distance:.1f}'
 ⋮----
 sheet=make_sheet(frames)
 ⋮----

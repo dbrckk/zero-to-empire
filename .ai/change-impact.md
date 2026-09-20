@@ -1,16 +1,20 @@
 # Change impact
 
-Base: 0ca569e0320d45e84f60891b0f2233597a9328e5
-Head: a5cb4e9ca75b6a7e3eb64f938cebc0513738c57f
+Base: abf8e3c4f6ec4249e521ea971741828758b39eda
+Head: fecb627d86878fdc1f1b7e38f51f39826f96707f
 
 ## Changed files
-- M art/production/controlled-character-regen-queue.json
-- A art/production/semantic-review-chr-op-kaggle-run-35521489049.md
+- M .github/workflows/kaggle-mass-sprite-factory.yml
+- A art/production/GENERATION_REJECTION_MEMORY.md
+- A art/production/generation-rejection-ledger.json
+- M kaggle/github_mass_factory.py
 - M ops/autofactory-kick.txt
 - M tools/sprites/kaggle_character_sheet_factory_v1.py
 
 ## Affected areas
+- .github
 - art
+- kaggle
 - ops
 - tools
 

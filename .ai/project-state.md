@@ -22,26 +22,28 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T16:27:30Z
+Generated: 2026-09-20T16:45:29Z
 
 ### Git
 - Branch: `main`
-- Head: `a5cb4e9ca75b`
-- Commit date: 2026-09-20T18:27:15+02:00
-- Commit: art: lock CHR-OP identity across animations in v1.3
-- Tracked files: 1368
+- Head: `de9604610446`
+- Commit date: 2026-09-20T16:45:13Z
+- Commit: art(auto): advance 235-asset production queue
+- Tracked files: 1370
 
 ### Recently changed files
-- `art/production/controlled-character-regen-queue.json`
-- `art/production/semantic-review-chr-op-kaggle-run-35521489049.md`
-- `ops/autofactory-kick.txt`
-- `tools/sprites/kaggle_character_sheet_factory_v1.py`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
-- `art/production/controlled-building-regen-queue.json`
 - `art/production/master-asset-queue.json`
-- `.github/workflows/asset-autofactory-ci.yml`
-- `tools/sprites/asset_queue_utils.py`
+- `.github/workflows/kaggle-mass-sprite-factory.yml`
+- `art/production/GENERATION_REJECTION_MEMORY.md`
+- `art/production/generation-rejection-ledger.json`
+- `kaggle/github_mass_factory.py`
+- `ops/autofactory-kick.txt`
+- `tools/sprites/kaggle_character_sheet_factory_v1.py`
+- `art/production/controlled-building-regen-queue.json`
+- `art/production/controlled-character-regen-queue.json`
+- `art/production/semantic-review-chr-op-kaggle-run-35521489049.md`
 
 ### Project signals
 - `build.gradle.kts`

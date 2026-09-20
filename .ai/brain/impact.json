@@ -1,10 +1,18 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "f6903a40013c406041ee0c4d1c0ff74effc3a3c1",
-  "head": "a5cb4e9ca75b6a7e3eb64f938cebc0513738c57f",
+  "base": "a5cb4e9ca75b6a7e3eb64f938cebc0513738c57f",
+  "head": "de9604610446b5f093e0986d6a0c50b2b0faf533",
   "index_mode": "incremental",
   "changed_files": [
+    {
+      "path": ".github/workflows/kaggle-mass-sprite-factory.yml",
+      "status": "M"
+    },
+    {
+      "path": "art/production/GENERATION_REJECTION_MEMORY.md",
+      "status": "A"
+    },
     {
       "path": "art/production/autofactory-state.json",
       "status": "M"
@@ -18,16 +26,16 @@
       "status": "M"
     },
     {
-      "path": "art/production/controlled-character-regen-queue.json",
-      "status": "M"
+      "path": "art/production/generation-rejection-ledger.json",
+      "status": "A"
     },
     {
       "path": "art/production/master-asset-queue.json",
       "status": "M"
     },
     {
-      "path": "art/production/semantic-review-chr-op-kaggle-run-35521489049.md",
-      "status": "A"
+      "path": "kaggle/github_mass_factory.py",
+      "status": "M"
     },
     {
       "path": "ops/autofactory-kick.txt",
@@ -39,83 +47,181 @@
     }
   ],
   "changed_source_files": [
+    "kaggle/github_mass_factory.py",
     "tools/sprites/kaggle_character_sheet_factory_v1.py"
   ],
   "impacted_files": [
+    "kaggle/github_mass_factory.py",
     "tools/sprites/kaggle_character_sheet_factory_v1.py"
   ],
   "impacted_symbols": [
     {
+      "name": "digest",
+      "kind": "function",
+      "file": "kaggle/github_mass_factory.py",
+      "line": 12
+    },
+    {
+      "name": "ensure_gpu",
+      "kind": "function",
+      "file": "kaggle/github_mass_factory.py",
+      "line": 17
+    },
+    {
+      "name": "ensure_flux",
+      "kind": "function",
+      "file": "kaggle/github_mass_factory.py",
+      "line": 28
+    },
+    {
+      "name": "runtime_exists",
+      "kind": "function",
+      "file": "kaggle/github_mass_factory.py",
+      "line": 37
+    },
+    {
+      "name": "controlled_queue_backlog",
+      "kind": "function",
+      "file": "kaggle/github_mass_factory.py",
+      "line": 38
+    },
+    {
+      "name": "controlled_character_backlog",
+      "kind": "function",
+      "file": "kaggle/github_mass_factory.py",
+      "line": 44
+    },
+    {
+      "name": "controlled_building_backlog",
+      "kind": "function",
+      "file": "kaggle/github_mass_factory.py",
+      "line": 45
+    },
+    {
+      "name": "backlog",
+      "kind": "function",
+      "file": "kaggle/github_mass_factory.py",
+      "line": 46
+    },
+    {
+      "name": "valid_tree",
+      "kind": "function",
+      "file": "kaggle/github_mass_factory.py",
+      "line": 58
+    },
+    {
+      "name": "resolve_source",
+      "kind": "function",
+      "file": "kaggle/github_mass_factory.py",
+      "line": 60
+    },
+    {
+      "name": "current_fresh",
+      "kind": "function",
+      "file": "kaggle/github_mass_factory.py",
+      "line": 165
+    },
+    {
+      "name": "checkpoint_fresh",
+      "kind": "function",
+      "file": "kaggle/github_mass_factory.py",
+      "line": 166
+    },
+    {
       "name": "rows",
       "kind": "function",
       "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 49
+      "line": 50
     },
     {
-      "name": "prompt",
+      "name": "rejection_hints",
       "kind": "function",
       "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 85
+      "line": 86
+    },
+    {
+      "name": "prompt_pair",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 101
+    },
+    {
+      "name": "retry_mode",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 129
     },
     {
       "name": "load_encode",
       "kind": "function",
       "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 91
+      "line": 136
     },
     {
       "name": "load_render",
       "kind": "function",
       "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 96
+      "line": 141
     },
     {
       "name": "border_bg",
       "kind": "function",
       "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 103
+      "line": 148
     },
     {
       "name": "isolate",
       "kind": "function",
       "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 112
+      "line": 157
     },
     {
       "name": "dist",
       "kind": "function",
       "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 116
+      "line": 161
     },
     {
       "name": "finish_frame",
       "kind": "function",
       "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 131
+      "line": 176
     },
     {
       "name": "alpha_iou",
       "kind": "function",
       "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 147
+      "line": 192
     },
     {
       "name": "sheet_qa",
       "kind": "function",
       "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 156
+      "line": 201
+    },
+    {
+      "name": "appearance_signature",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 214
+    },
+    {
+      "name": "appearance_distance",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 228
     },
     {
       "name": "make_sheet",
       "kind": "function",
       "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 169
+      "line": 231
     },
     {
       "name": "main",
       "kind": "function",
       "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 177
+      "line": 239
     }
   ],
   "selected_tests": []
