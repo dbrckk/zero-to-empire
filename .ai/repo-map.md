@@ -25428,7 +25428,7 @@ hints=POSE_HINT[i['action']][:ACTION[i['action']][1]]
 ⋮----
 text=prompt(i,pose)
 ⋮----
-del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();report=[]
+del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();report=[];role_anchor={}
 ⋮----
 frames=[];anchor_raw=None;fail=None
 ⋮----
@@ -25436,11 +25436,18 @@ ok=False
 ⋮----
 gen=torch.Generator(device='cuda').manual_seed(args.seed+idx*10000+fi*211+attempt*7919)
 ⋮----
+shared=role_anchor.get(i['role'])
+⋮----
 raw=base(height=1024,width=1024,num_inference_steps=5,guidance_scale=0,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),output_type='pil',generator=gen).images[0]
 anchor_raw=raw.convert('RGB')
 ⋮----
-strength=min(.52,.32+fi*.018+attempt*.035)
-raw=img(image=anchor_raw,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=5,guidance_scale=0,output_type='pil',generator=gen).images[0]
+# Start every later animation for this role from the exact same person.
+# Moderate img2img freedom changes pose while preserving face/headgear/clothes.
+strength=min(.46,.34+attempt*.035)
+raw=img(image=shared,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=6,guidance_scale=0,output_type='pil',generator=gen).images[0]
+⋮----
+strength=min(.50,.30+fi*.016+attempt*.03)
+raw=img(image=anchor_raw,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=6,guidance_scale=0,output_type='pil',generator=gen).images[0]
 frame,cov=finish_frame(raw);frames.append(frame);ok=True;print(f"KAGGLE_CHR_FRAME={i['id']} frame={fi} attempt={attempt+1} cov={cov:.2f}",flush=True);break
 ⋮----
 if not ok:fail=f'frame-{fi}-failed';break

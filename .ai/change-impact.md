@@ -1,19 +1,15 @@
 # Change impact
 
-Base: 6bc0ac7dcf55d1e14ab7200ddc2e6d4ea7c1c5c8
-Head: f6903a40013c406041ee0c4d1c0ff74effc3a3c1
+Base: 0ca569e0320d45e84f60891b0f2233597a9328e5
+Head: a5cb4e9ca75b6a7e3eb64f938cebc0513738c57f
 
 ## Changed files
-- M .github/workflows/asset-autofactory-ci.yml
-- M art/production/autofactory-state.json
-- M art/production/autofactory-summary.md
-- M art/production/controlled-building-regen-queue.json
-- M art/production/master-asset-queue.json
+- M art/production/controlled-character-regen-queue.json
+- A art/production/semantic-review-chr-op-kaggle-run-35521489049.md
 - M ops/autofactory-kick.txt
-- M tools/sprites/asset_queue_utils.py
+- M tools/sprites/kaggle_character_sheet_factory_v1.py
 
 ## Affected areas
-- .github
 - art
 - ops
 - tools

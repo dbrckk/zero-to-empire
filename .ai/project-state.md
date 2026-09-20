@@ -22,36 +22,26 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T16:07:48Z
+Generated: 2026-09-20T16:27:30Z
 
 ### Git
 - Branch: `main`
-- Head: `f6903a40013c`
-- Commit date: 2026-09-20T18:07:29+02:00
-- Commit: art: reconcile reviewed BLD-12 and advance strict baseline to 150
-- Tracked files: 1367
+- Head: `a5cb4e9ca75b`
+- Commit date: 2026-09-20T18:27:15+02:00
+- Commit: art: lock CHR-OP identity across animations in v1.3
+- Tracked files: 1368
 
 ### Recently changed files
-- `.github/workflows/asset-autofactory-ci.yml`
+- `art/production/controlled-character-regen-queue.json`
+- `art/production/semantic-review-chr-op-kaggle-run-35521489049.md`
+- `ops/autofactory-kick.txt`
+- `tools/sprites/kaggle_character_sheet_factory_v1.py`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
 - `art/production/controlled-building-regen-queue.json`
 - `art/production/master-asset-queue.json`
-- `ops/autofactory-kick.txt`
+- `.github/workflows/asset-autofactory-ci.yml`
 - `tools/sprites/asset_queue_utils.py`
-- `app/src/main/res/drawable-nodpi/zte_business_12_t0_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_business_12_t1_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_business_12_t2_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_business_12_t3_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_business_12_t4_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_business_12_t5_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_business_12_t6_final.webp`
-- `art/incoming/final-sprites/zte_business_12_t0_final.png`
-- `art/incoming/final-sprites/zte_business_12_t1_final.png`
-- `art/incoming/final-sprites/zte_business_12_t2_final.png`
-- `art/incoming/final-sprites/zte_business_12_t3_final.png`
-- `art/incoming/final-sprites/zte_business_12_t4_final.png`
-- `art/incoming/final-sprites/zte_business_12_t5_final.png`
 
 ### Project signals
 - `build.gradle.kts`
