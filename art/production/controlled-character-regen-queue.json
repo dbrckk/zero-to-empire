@@ -1,20 +1,20 @@
 {
   "mode": "candidate-only",
-  "reason": "Kaggle wave 2: retry Operator IDLE/WALK with stylized non-photorealistic prompting and hard single-subject silhouette QA; candidates remain review-only",
+  "reason": "Semantic review rejected Kaggle run 35521489049: IDLE/WALK are technically clean and single-subject, but cross-animation identity/headgear changes. Retry with v1.3 shared role identity anchor.",
   "targets": [
     {
       "id": "CHR-OP-IDLE",
-      "status": "AWAITING_REVIEW",
-      "previous_verdict": "REJECT_PASS_3_STYLE",
-      "review_reason": "Kaggle pass 3 preserved identity but remained too photorealistic and too static for the canonical stylized 2.5D game-art direction. Retry with explicit non-photorealistic styling.",
-      "kaggle_run_id": 35521489049
+      "status": "PENDING_KAGGLE",
+      "previous_verdict": "REJECT_RUN_35521489049_CROSS_ANIMATION_IDENTITY",
+      "review_reason": "Technically clean and stylized, but IDLE/WALK do not preserve the same head/helmet identity. v1.3 shares one role identity anchor across animations.",
+      "semantic_rejection_run_id": 35521489049
     },
     {
       "id": "CHR-OP-WALK",
-      "status": "AWAITING_REVIEW",
-      "previous_verdict": "REJECT_PASS_3_MULTI_SUBJECT",
-      "review_reason": "Kaggle pass 3 rendered two workers in every walk frame. Retry only after the single-subject silhouette-width gate is active.",
-      "kaggle_run_id": 35521489049
+      "status": "PENDING_KAGGLE",
+      "previous_verdict": "REJECT_RUN_35521489049_CROSS_ANIMATION_IDENTITY",
+      "review_reason": "Technically clean and stylized, but IDLE/WALK do not preserve the same head/helmet identity. v1.3 shares one role identity anchor across animations.",
+      "semantic_rejection_run_id": 35521489049
     },
     {
       "id": "CHR-OP-WORK",
