@@ -176,7 +176,7 @@ def next_group(queue: dict[str, Any], lane: str, priority: list[str]) -> str | N
         and x["strict_status"] != "DONE"
         and x["pipeline_status"] in {
             "PENDING", "PENDING_KAGGLE", "PAUSED", "BLOCKED",
-            "REJECT", "REJECTED", "BLOCKED_AUTOMATION_LIMIT"
+            "REJECT", "REJECTED", "REJECTED_SEMANTIC", "BLOCKED_AUTOMATION_LIMIT"
         }
         and int(x.get("attempts") or 0) < MAX_ATTEMPTS
     }
