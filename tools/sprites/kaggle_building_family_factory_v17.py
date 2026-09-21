@@ -19,7 +19,7 @@ SPEC.loader.exec_module(v1610)
 v15 = v1610.v15
 v14 = v1610.v14
 
-print('KAGGLE_STARTUP=building-family-flux-v18.2-bld13-continuity', flush=True)
+print('KAGGLE_STARTUP=building-family-flux-v18.3-high-yield-gates', flush=True)
 
 # More image-to-image freedom than v16.10. The strict v16.10 live gate remains
 # active, so extra freedom cannot silently promote unrelated scenes/site cards.
@@ -198,7 +198,9 @@ def prompts(i):
     detail = (
         f"AAA stylized 2.5D strategy building. Family: {fam}. Tier: {instruction}. "
         f"{memory} Building only: one connected architectural mass on flat neutral gray. "
-        "No site, trees, paths, pavement, yard, platform, ground shadow, text, people, vehicles, props or scenery. "
+        "No site, trees, paths, pavement, yard, floor tile, base card, platform, plinth, ground plane, baked ground shadow, "
+        "text, letters, numerals, labels, logos, watermarks, signage, pseudo-brand marks, people, vehicles, detached props, debris or scenery. "
+        "The opaque silhouette must end at the architectural footprint; transparent immediately outside the building. "
         "Preserve family materials, camera, facade axis and core identity."
     )
     return short, detail
@@ -254,14 +256,16 @@ def branch_score(recs):
     if score < -100 or not recs:
         return score,why
     family=int(recs[0][0]['family'])
-    if family==7:
+    # Families repeatedly rejected for opaque site-card/platform contamination.
+    # Reject those candidates before semantic review instead of wasting a full batch.
+    if family in {4,5,7,9,13}:
         signatures=[]
         for item,final,_cov in recs:
             upper=architectural_band_fill(final,.20,.50)
             lower=architectural_band_fill(final,.58,.88)
             signatures.append((item['id'],upper,lower))
         offenders=[x for x in signatures if x[2]>.76 and x[1]<.58]
-        print('KAGGLE_BLD07_PLATFORM_SIGNATURE='+
+        print('KAGGLE_PLATFORM_SIGNATURE='+
               ';'.join(f'{aid}:upper={upper:.3f},lower={lower:.3f}' for aid,upper,lower in signatures),
               flush=True)
         if offenders:
