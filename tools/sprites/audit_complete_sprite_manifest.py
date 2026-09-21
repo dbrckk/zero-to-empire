@@ -44,6 +44,7 @@ def main():
     out.parent.mkdir(parents=True,exist_ok=True)
     out.write_text(json.dumps({'total':len(rows),'pending':pending,'failed':failed,'assets':report},indent=2),encoding='utf-8')
     if failed:
+        print('FINAL_SPRITE_AUDIT_FAILURE_DETAILS='+json.dumps(failed,sort_keys=True))
         raise SystemExit('Final sprite audit failures: '+','.join(r['id'] for r in failed))
     print(f'FINAL_SPRITE_AUDIT_PASS={len(rows)-len(pending)}/{len(rows)}')
 
