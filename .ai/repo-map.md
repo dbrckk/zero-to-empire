@@ -840,12 +840,12 @@ jobs:
           assert 'ONB-00' not in {x['id'] for x in assets}
           strict_done=sum(x['strict_status']=='DONE' for x in assets)
           strict_remaining=sum(x['strict_status']!='DONE' for x in assets)
-          assert strict_done>=q['strict_done_baseline']>=169
+          assert strict_done>=q['strict_done_baseline']>=176
           assert strict_done+strict_remaining==q['target_total']
           building_remaining=sum(x['lane']=='kaggle-building-family' and x['strict_status']!='DONE' for x in assets)
           character_remaining=sum(x['lane']=='kaggle-character-sheet' and x['strict_status']!='DONE' for x in assets)
           assert building_remaining+character_remaining==strict_remaining
-          assert building_remaining==42
+          assert building_remaining==35
           assert character_remaining==24
           assert sum(x['lane']=='fx-runtime-reconciliation' and x['strict_status']!='DONE' for x in assets)==0
           assert s['action'].startswith('WAIT_') or s['action'] in {
@@ -23563,7 +23563,7 @@ planned = list(items(args.kind))[: args.count]
 """Shared state helpers for the 235-asset autonomous production queue.
 
 The master queue deliberately does not trust per-row DONE values from the legacy
-manifest while historical semantic review is open. The strict baseline is defined by the reviewed ledger. BLD-02, BLD-03, BLD-11, BLD-12 and all historical FX have now been explicitly reconciled; BLD-13 has now been manually regenerated and semantically approved; BLD-09 has now also been manually regenerated and semantically approved; unresolved work remains in six building families and 24 character sheets.
+manifest while historical semantic review is open. The strict baseline is defined by the reviewed ledger. BLD-02, BLD-03, BLD-11, BLD-12 and all historical FX have now been explicitly reconciled; BLD-13 has now been manually regenerated and semantically approved; BLD-09 has now also been manually regenerated and semantically approved; unresolved work remains in five building families and 24 character sheets.
 ONB-00 is outside the 235 production target.
 """
 ⋮----
@@ -23578,13 +23578,13 @@ SUMMARY = ROOT / "art/production/autofactory-summary.md"
 ROW = re.compile(
 ⋮----
 TARGET_TOTAL = 235
-STRICT_BASELINE = 169
+STRICT_BASELINE = 176
 MAX_ATTEMPTS = 8
 ⋮----
 # Prioritize unresolved families with the highest expected semantic-pass yield.
 # Repeatedly failing site-card/platform families stay at the back until their
 # specialized generator guards have more evidence.
-BUILDING_PRIORITY = ["BLD-10", "BLD-06", "BLD-05", "BLD-08",
+BUILDING_PRIORITY = ["BLD-10", "BLD-05", "BLD-08",
 CHARACTER_PRIORITY = ["CHR-OP", "CHR-TECH", "CHR-LOG", "CHR-ENG"]
 ⋮----
 def load_json(path: Path, default: Any = None) -> Any

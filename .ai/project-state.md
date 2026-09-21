@@ -22,32 +22,25 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T13:59:51Z
+Generated: 2026-09-21T16:48:54Z
 
 ### Git
 - Branch: `main`
-- Head: `3179f123f183`
-- Commit date: 2026-09-21T15:59:21+02:00
-- Commit: ci: launch BLD-10 gateway wave
-- Tracked files: 1379
+- Head: `e9e467f86b84`
+- Commit date: 2026-09-21T18:48:38+02:00
+- Commit: art: approve BLD-06 family and advance strict baseline
+- Tracked files: 1381
 
 ### Recently changed files
-- `ops/sprite-wave-trigger.txt`
-- `.github/workflows/kaggle-mass-sprite-factory.yml`
 - `.github/workflows/asset-autofactory-ci.yml`
-- `app/src/main/res/drawable-nodpi/zte_business_09_t0_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_business_09_t1_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_business_09_t2_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_business_09_t3_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_business_09_t4_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_business_09_t5_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_business_09_t6_final.webp`
 - `art/production/controlled-building-regen-queue.json`
 - `art/production/master-asset-queue.json`
-- `art/production/semantic-review-bld09-chatgpt-manual-2026-09-21.md`
+- `art/production/parallel-asset-production-plan-2026-09-21.md`
+- `art/production/semantic-review-bld06-kaggle-2026-09-21.md`
 - `tools/sprites/asset_queue_utils.py`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
+- `ops/sprite-wave-trigger.txt`
 
 ### Project signals
 - `build.gradle.kts`
