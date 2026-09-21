@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T08:06:05Z
+Generated: 2026-09-21T08:12:23Z
 
 ### Git
 - Branch: `main`
-- Head: `3ff6a51dcc9e`
-- Commit date: 2026-09-21T10:05:40+02:00
-- Commit: art: reject BLD-13 run 35564401834 and harden prompt memory
+- Head: `ed3d2e32436b`
+- Commit date: 2026-09-21T10:12:07+02:00
+- Commit: art: preserve BLD-13 family DNA across tiers
 - Tracked files: 1377
 
 ### Recently changed files
+- `tools/sprites/kaggle_building_family_factory_v17.py`
 - `art/production/generation-rejection-ledger.json`
 - `art/production/semantic-review-bld13-kaggle-run-35564401834.md`
 - `art/production/controlled-building-regen-queue.json`

@@ -1,14 +1,13 @@
 # Change impact
 
-Base: e82433255919bcb479dd602b7ce7ac178d1a589e
-Head: 3ff6a51dcc9e255d557be51e463d76e795e6f95b
+Base: cae8e0942bdb6c15b329ea85401b4e98002f2f84
+Head: ed3d2e32436bbb0512dd60b6d0202e23f51dd8ed
 
 ## Changed files
-- M art/production/generation-rejection-ledger.json
-- A art/production/semantic-review-bld13-kaggle-run-35564401834.md
+- M tools/sprites/kaggle_building_family_factory_v17.py
 
 ## Affected areas
-- art
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.
