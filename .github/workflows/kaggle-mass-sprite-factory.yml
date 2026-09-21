@@ -307,6 +307,26 @@ jobs:
               print('CONTROLLED_BUILDING_STATE_SKIP=other-lane')
               raise SystemExit(0)
 
+          # The controlled queue may advance while a long Kaggle job is running.
+          # Compare the generated family with the latest queue on origin/main
+          # before mutating state. A stale-but-valid artifact remains reviewable
+          # without turning the workflow red or clobbering the newer family.
+          import subprocess
+          subprocess.run(['git','fetch','origin','main','--quiet'],check=True)
+          latest_raw=subprocess.check_output(
+              ['git','show','origin/main:art/production/controlled-building-regen-queue.json'],
+              text=True,
+          )
+          latest_q=json.loads(latest_raw)
+          generated_ids={str(x.get('id','')).upper() for x in g.get('targets',[]) if x.get('id')}
+          latest_ids={str(x.get('id','')).upper() for x in latest_q.get('targets',[])}
+          if generated_ids and latest_ids and generated_ids.isdisjoint(latest_ids):
+              print(
+                  'CONTROLLED_BUILDING_STATE_SKIP=queue-advanced '
+                  f'generated={sorted(generated_ids)} latest={sorted(latest_ids)}'
+              )
+              raise SystemExit(0)
+
           stems={Path(x['file']).stem for x in g.get('targets',[]) if x.get('file')}
           stem_to_id={}
           for line in manifest.read_text(encoding='utf-8').splitlines():
@@ -337,7 +357,11 @@ jobs:
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add art/production/controlled-building-regen-queue.json
           git commit -m 'art: mark Kaggle building candidates awaiting review'
-          git pull --rebase origin main
+          if ! git pull --rebase origin main; then
+            git rebase --abort || true
+            echo 'CONTROLLED_BUILDING_STATE_SKIP=concurrent-main-update'
+            exit 0
+          fi
           git push origin HEAD:main
 
       - name: Mark controlled character candidates awaiting semantic review
