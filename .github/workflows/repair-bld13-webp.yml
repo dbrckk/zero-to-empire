@@ -1,0 +1,49 @@
+name: Repair BLD-13 WebP encoding
+
+on:
+  push:
+    branches:
+      - fix/bld13-webp-decode
+    paths:
+      - 'ops/bld13-reencode-trigger.txt'
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Install deterministic WebP tools and validator
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y webp
+          python -m pip install --disable-pip-version-check Pillow==11.3.0
+      - name: Re-encode BLD-13 without visual changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/bld13-reencode
+          for tier in 0 1 2 3 4 5 6; do
+            src="app/src/main/res/drawable-nodpi/zte_business_13_t${tier}_final.webp"
+            png="/tmp/bld13-reencode/t${tier}.png"
+            dwebp "$src" -o "$png"
+            cwebp -quiet -q 96 -alpha_q 100 -m 6 "$png" -o "$src"
+            python tools/sprites/validate_runtime_asset.py --asset-id "BLD-13-T${tier}" --path "$src"
+          done
+      - name: Commit repaired runtime files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add app/src/main/res/drawable-nodpi/zte_business_13_t*_final.webp
+          if git diff --cached --quiet; then
+            echo 'BLD13_REENCODE_NO_CHANGES=1'
+            exit 0
+          fi
+          git commit -m 'art: standardize BLD-13 WebP encoding'
+          git push origin HEAD:fix/bld13-webp-decode
