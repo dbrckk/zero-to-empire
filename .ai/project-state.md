@@ -22,16 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T13:31:09Z
+Generated: 2026-09-21T13:59:51Z
 
 ### Git
 - Branch: `main`
-- Head: `0c29c0a20a75`
-- Commit date: 2026-09-21T15:30:52+02:00
-- Commit: art: promote ChatGPT BLD-09 family to strict DONE
+- Head: `3179f123f183`
+- Commit date: 2026-09-21T15:59:21+02:00
+- Commit: ci: launch BLD-10 gateway wave
 - Tracked files: 1379
 
 ### Recently changed files
+- `ops/sprite-wave-trigger.txt`
+- `.github/workflows/kaggle-mass-sprite-factory.yml`
 - `.github/workflows/asset-autofactory-ci.yml`
 - `app/src/main/res/drawable-nodpi/zte_business_09_t0_final.webp`
 - `app/src/main/res/drawable-nodpi/zte_business_09_t1_final.webp`
@@ -46,12 +48,6 @@ Generated: 2026-09-21T13:31:09Z
 - `tools/sprites/asset_queue_utils.py`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
-- `ops/sprite-wave-trigger.txt`
-- `app/src/main/res/drawable-nodpi/zte_business_13_t0_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_business_13_t1_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_business_13_t2_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_business_13_t3_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_business_13_t4_final.webp`
 
 ### Project signals
 - `build.gradle.kts`

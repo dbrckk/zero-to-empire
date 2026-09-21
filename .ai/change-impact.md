@@ -1,27 +1,13 @@
 # Change impact
 
-Base: 5292e59da4281ab5916372ac8638be4649aa295c
-Head: 0c29c0a20a757f89fdb7b83d42410bcb8be9297a
+Base: fef3871d0503ecaf2c8fd0f9d207dd6b0a1e6624
+Head: 3179f123f1832fa659dc278c92313fc5a0be1cf4
 
 ## Changed files
-- M .github/workflows/asset-autofactory-ci.yml
-- M app/src/main/res/drawable-nodpi/zte_business_09_t0_final.webp
-- M app/src/main/res/drawable-nodpi/zte_business_09_t1_final.webp
-- M app/src/main/res/drawable-nodpi/zte_business_09_t2_final.webp
-- M app/src/main/res/drawable-nodpi/zte_business_09_t3_final.webp
-- M app/src/main/res/drawable-nodpi/zte_business_09_t4_final.webp
-- M app/src/main/res/drawable-nodpi/zte_business_09_t5_final.webp
-- M app/src/main/res/drawable-nodpi/zte_business_09_t6_final.webp
-- M art/production/controlled-building-regen-queue.json
-- M art/production/master-asset-queue.json
-- A art/production/semantic-review-bld09-chatgpt-manual-2026-09-21.md
-- M tools/sprites/asset_queue_utils.py
+- M ops/sprite-wave-trigger.txt
 
 ## Affected areas
-- .github
-- app
-- art
-- tools
+- ops
 
 ## Related test candidates
 - No direct filename-based test match detected.
