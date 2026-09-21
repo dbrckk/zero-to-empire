@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T08:18:55Z
+Generated: 2026-09-21T08:23:10Z
 
 ### Git
 - Branch: `main`
-- Head: `d895b34a199d`
-- Commit date: 2026-09-21T10:18:23+02:00
-- Commit: art: queue BLD-13 v18.2 regeneration
+- Head: `7bccc04650c6`
+- Commit date: 2026-09-21T10:22:54+02:00
+- Commit: ci: launch BLD-13 v18.2 Kaggle wave
 - Tracked files: 1377
 
 ### Recently changed files
+- `ops/sprite-wave-trigger.txt`
 - `art/production/controlled-building-regen-queue.json`
 - `tools/sprites/kaggle_building_family_factory_v16.py`
 - `tools/sprites/kaggle_building_family_factory_v17.py`
