@@ -48,7 +48,7 @@ jobs:
           assert 'ONB-00' not in {x['id'] for x in assets}
           strict_done=sum(x['strict_status']=='DONE' for x in assets)
           strict_remaining=sum(x['strict_status']!='DONE' for x in assets)
-          assert strict_done>=q['strict_done_baseline']>=169
+          assert strict_done>=q['strict_done_baseline']>=176
           assert strict_done+strict_remaining==q['target_total']
           building_remaining=sum(x['lane']=='kaggle-building-family' and x['strict_status']!='DONE' for x in assets)
           character_remaining=sum(x['lane']=='kaggle-character-sheet' and x['strict_status']!='DONE' for x in assets)
