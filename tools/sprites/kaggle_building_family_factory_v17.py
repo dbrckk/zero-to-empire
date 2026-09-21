@@ -19,7 +19,7 @@ SPEC.loader.exec_module(v1610)
 v15 = v1610.v15
 v14 = v1610.v14
 
-print('KAGGLE_STARTUP=building-family-flux-v18.1-no-site-frontload', flush=True)
+print('KAGGLE_STARTUP=building-family-flux-v18.2-bld13-continuity', flush=True)
 
 # More image-to-image freedom than v16.10. The strict v16.10 live gate remains
 # active, so extra freedom cannot silently promote unrelated scenes/site cards.
@@ -144,9 +144,9 @@ def tier_instruction(family,tier):
 REJECTION_LEDGER = HERE.parents[1] / 'art' / 'production' / 'generation-rejection-ledger.json'
 
 TRANSCENDENT_TIER = {
-    0: 'compact transcendent core with four short integrated radial systems and a low prestige crown; small readable starter silhouette',
-    1: 'first redesign: add two large fused side pylons and a taller crown so width and height both change; avoid a pure circular starburst',
-    2: 'second redesign: elongated cross-axis nexus with offset attached systems and a clearly taller central energy spine; not a scaled ring',
+    0: 'compact vertical transcendent core with two short fused side pylons and a low prestige crown; one connected starter silhouette, no radial starburst',
+    1: 'first redesign of the same vertical nexus: enlarge the two fused side pylons and raise the central core and crown so width and height both change; preserve the T0 architectural DNA',
+    2: 'second redesign of the same vertical nexus: add offset attached energy systems around the persistent side pylons and raise the central spine; stepped connected massing, not a ring or starburst',
     3: 'vertical evolution: tall central transcendent tower with four lower fused buttress blocks and one secondary enclosed energy stage',
     4: 'advanced redesign: multi-level nexus with a dominant vertical core, broad connected side masses and an elevated crown; break radial symmetry enough to create a stepped silhouette',
     5: 'continue the T4 vertical architecture: substantially taller central transcendent core, larger fused lateral energy citadels and denser multi-level crown; preserve the vertical stepped massing, never revert to a flat radial disc',
@@ -167,8 +167,10 @@ def rejection_hints(i):
                 hints.append(hint)
     except Exception as e:
         print('KAGGLE_BLD_REJECTION_MEMORY_SKIP='+str(e), flush=True)
+    # Newer evidence is more specific. Keep enough room for contamination bans;
+    # the previous 30-word cap truncated the newest BLD-13 rejection memory.
     merged=' '.join(hints[-2:])
-    return ' '.join(merged.split()[:30])
+    return ' '.join(merged.split()[:64])
 
 
 CLIP_FAMILY = {
@@ -212,9 +214,10 @@ def family_aware_render(i, prev, pe, ppe, base, img, seed):
     if family not in {12,13}:
         return ORIGINAL_RENDER(i, prev, pe, ppe, base, img, seed)
 
-    # High-risk radial families need periodic text-to-image resets. This keeps
-    # family materials/camera while breaking the tendency to only enlarge a ring.
-    reset_tiers={12:{1,3},13:{1,3}}
+    # High-risk families may need an early text-to-image reset to break clone ladders.
+    # BLD-13 deliberately does NOT reset at T3: run 35564401834 proved that the
+    # mid-family reset can replace the architectural DNA between T2 and T3.
+    reset_tiers={12:{1,3},13:{1}}
     if tier in reset_tiers[family]:
         print(f"KAGGLE_BLD_ANCHOR_RESET={i['id']} family={family}", flush=True)
         return ORIGINAL_RENDER(i, None, pe, ppe, base, img, seed + 17000 + family*211 + tier*101)
