@@ -22,21 +22,31 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T09:15:02Z
+Generated: 2026-09-21T11:30:23Z
 
 ### Git
 - Branch: `main`
-- Head: `e5dcdc0b6790`
-- Commit date: 2026-09-21T11:14:43+02:00
-- Commit: art: prioritize high-yield families for DONE conversion
-- Tracked files: 1377
+- Head: `324c6474bd6e`
+- Commit date: 2026-09-21T13:29:55+02:00
+- Commit: ci: launch BLD-09 production wave
+- Tracked files: 1378
 
 ### Recently changed files
-- `tools/sprites/asset_queue_utils.py`
-- `tools/sprites/kaggle_building_family_factory_v16.py`
-- `tools/sprites/kaggle_building_family_factory_v17.py`
 - `ops/sprite-wave-trigger.txt`
+- `.github/workflows/asset-autofactory-ci.yml`
+- `app/src/main/res/drawable-nodpi/zte_business_13_t0_final.webp`
+- `app/src/main/res/drawable-nodpi/zte_business_13_t1_final.webp`
+- `app/src/main/res/drawable-nodpi/zte_business_13_t2_final.webp`
+- `app/src/main/res/drawable-nodpi/zte_business_13_t3_final.webp`
+- `app/src/main/res/drawable-nodpi/zte_business_13_t4_final.webp`
+- `app/src/main/res/drawable-nodpi/zte_business_13_t5_final.webp`
+- `app/src/main/res/drawable-nodpi/zte_business_13_t6_final.webp`
 - `art/production/controlled-building-regen-queue.json`
+- `art/production/master-asset-queue.json`
+- `art/production/semantic-review-bld13-chatgpt-manual-2026-09-21.md`
+- `tools/sprites/asset_queue_utils.py`
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
 
 ### Project signals
 - `build.gradle.kts`

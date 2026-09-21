@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 81f22c495d03a99372a77e007faaf851dcfbb7ff
-Head: e5dcdc0b6790d8cfc0cb60c86c67fe56525385b8
+Base: 16160493f22fe12b9ea6bf1a6d5d6eba781e5734
+Head: 324c6474bd6e9594faa33defeda150d4a105d415
 
 ## Changed files
-- M tools/sprites/asset_queue_utils.py
+- M ops/sprite-wave-trigger.txt
 
 ## Affected areas
-- tools
+- ops
 
 ## Related test candidates
 - No direct filename-based test match detected.

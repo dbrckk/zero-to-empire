@@ -782,7 +782,7 @@ planned = list(items(args.kind))[: args.count]
 """Shared state helpers for the 235-asset autonomous production queue.
 
 The master queue deliberately does not trust per-row DONE values from the legacy
-manifest while historical semantic review is open. The strict baseline is defined by the reviewed ledger. BLD-02, BLD-03, BLD-11, BLD-12 and all historical FX have now been explicitly reconciled; unresolved work remains only in other building families and 24 character sheets.
+manifest while historical semantic review is open. The strict baseline is defined by the reviewed ledger. BLD-02, BLD-03, BLD-11, BLD-12 and all historical FX have now been explicitly reconciled; BLD-13 has now been manually regenerated and semantically approved; unresolved work remains in seven building families and 24 character sheets.
 ONB-00 is outside the 235 production target.
 """
 ⋮----
@@ -797,7 +797,7 @@ SUMMARY = ROOT / "art/production/autofactory-summary.md"
 ROW = re.compile(
 ⋮----
 TARGET_TOTAL = 235
-STRICT_BASELINE = 155
+STRICT_BASELINE = 162
 MAX_ATTEMPTS = 8
 ⋮----
 # Prioritize unresolved families with the highest expected semantic-pass yield.
