@@ -1,13 +1,14 @@
 # Change impact
 
-Base: c39eac6feb1309e23d1576fb6f338f9db7a6a340
-Head: c287dd9a23b101a0d8109a6697425cea3573bd8e
+Base: e82433255919bcb479dd602b7ce7ac178d1a589e
+Head: 3ff6a51dcc9e255d557be51e463d76e795e6f95b
 
 ## Changed files
-- M ops/autofactory-kick.txt
+- M art/production/generation-rejection-ledger.json
+- A art/production/semantic-review-bld13-kaggle-run-35564401834.md
 
 ## Affected areas
-- ops
+- art
 
 ## Related test candidates
 - No direct filename-based test match detected.

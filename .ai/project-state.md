@@ -22,20 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T19:10:47Z
+Generated: 2026-09-21T08:06:05Z
 
 ### Git
 - Branch: `main`
-- Head: `c287dd9a23b1`
-- Commit date: 2026-09-20T21:10:29+02:00
-- Commit: art: kick v18.1 BLD-04 retry
-- Tracked files: 1376
+- Head: `3ff6a51dcc9e`
+- Commit date: 2026-09-21T10:05:40+02:00
+- Commit: art: reject BLD-13 run 35564401834 and harden prompt memory
+- Tracked files: 1377
 
 ### Recently changed files
-- `ops/autofactory-kick.txt`
-- `art/production/semantic-review-bld04-kaggle-run-35528759546.md`
 - `art/production/generation-rejection-ledger.json`
+- `art/production/semantic-review-bld13-kaggle-run-35564401834.md`
 - `art/production/controlled-building-regen-queue.json`
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
 - `art/production/master-asset-queue.json`
 
 ### Project signals
