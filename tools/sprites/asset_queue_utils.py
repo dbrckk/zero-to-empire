@@ -2,7 +2,7 @@
 """Shared state helpers for the 235-asset autonomous production queue.
 
 The master queue deliberately does not trust per-row DONE values from the legacy
-manifest while historical semantic review is open. The strict baseline is defined by the reviewed ledger. BLD-02, BLD-03, BLD-11, BLD-12 and all historical FX have now been explicitly reconciled; unresolved work remains only in other building families and 24 character sheets.
+manifest while historical semantic review is open. The strict baseline is defined by the reviewed ledger. BLD-02, BLD-03, BLD-11, BLD-12 and all historical FX have now been explicitly reconciled; BLD-13 has now been manually regenerated and semantically approved; unresolved work remains in seven building families and 24 character sheets.
 ONB-00 is outside the 235 production target.
 """
 from __future__ import annotations
@@ -25,14 +25,14 @@ ROW = re.compile(
 )
 
 TARGET_TOTAL = 235
-STRICT_BASELINE = 155
+STRICT_BASELINE = 162
 MAX_ATTEMPTS = 8
 
 # Prioritize unresolved families with the highest expected semantic-pass yield.
 # Repeatedly failing site-card/platform families stay at the back until their
 # specialized generator guards have more evidence.
 BUILDING_PRIORITY = ["BLD-09", "BLD-10", "BLD-06", "BLD-05", "BLD-08",
-                     "BLD-13", "BLD-07", "BLD-04", "BLD-11", "BLD-12",
+                     "BLD-07", "BLD-04", "BLD-11", "BLD-12",
                      "BLD-02", "BLD-03"]
 CHARACTER_PRIORITY = ["CHR-OP", "CHR-TECH", "CHR-LOG", "CHR-ENG"]
 
@@ -71,12 +71,12 @@ def manifest_rows() -> list[dict[str, str]]:
 def unresolved_ids() -> set[str]:
     ids: set[str] = set()
     for family in range(4, 14):
-        if family in {11, 12}:
+        if family in {11, 12, 13}:
             continue
         ids.update(f"BLD-{family:02d}-T{tier}" for tier in range(7))
     ids.update(r["id"] for r in manifest_rows() if r["id"].startswith("CHR-"))
-    if len(ids) != 80:
-        raise RuntimeError(f"Strict unresolved set drifted: expected 80, got {len(ids)}")
+    if len(ids) != 73:
+        raise RuntimeError(f"Strict unresolved set drifted: expected 73, got {len(ids)}")
     return ids
 
 
