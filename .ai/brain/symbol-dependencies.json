@@ -5,37 +5,77 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "tier_instruction": {
+    "load_json": {
       "source": {
-        "file": "tools/sprites/kaggle_building_family_factory_v16.py",
-        "start": 137,
-        "end": 142
+        "file": "tools/sprites/asset_queue_utils.py",
+        "start": 40,
+        "end": 43
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "rejection_hints": {
+    "save_json": {
       "source": {
-        "file": "tools/sprites/kaggle_building_family_factory_v16.py",
-        "start": 156,
-        "end": 173
+        "file": "tools/sprites/asset_queue_utils.py",
+        "start": 46,
+        "end": 48
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "prompts": {
+    "manifest_rows": {
       "source": {
-        "file": "tools/sprites/kaggle_building_family_factory_v16.py",
-        "start": 184,
-        "end": 206
+        "file": "tools/sprites/asset_queue_utils.py",
+        "start": 51,
+        "end": 68
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "unresolved_ids": {
+      "source": {
+        "file": "tools/sprites/asset_queue_utils.py",
+        "start": 71,
+        "end": 80
       },
       "symbol_dependencies": [
         {
-          "symbol": "rejection_hints",
+          "symbol": "manifest_rows",
           "definitions": [
             {
-              "file": "tools/sprites/kaggle_building_family_factory_v16.py",
-              "line": 156,
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 51,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "default_asset": {
+      "source": {
+        "file": "tools/sprites/asset_queue_utils.py",
+        "start": 83,
+        "end": 113
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "ensure_master": {
+      "source": {
+        "file": "tools/sprites/asset_queue_utils.py",
+        "start": 116,
+        "end": 146
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "default_asset",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 83,
               "kind": "function",
               "language": "python"
             }
@@ -43,11 +83,81 @@
           "relation": "same_file"
         },
         {
-          "symbol": "tier_instruction",
+          "symbol": "load_json",
           "definitions": [
             {
-              "file": "tools/sprites/kaggle_building_family_factory_v16.py",
-              "line": 137,
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 40,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "manifest_rows",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 51,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "save_json",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 46,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "unresolved_ids",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 71,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 5
+    },
+    "sync_controlled_queues": {
+      "source": {
+        "file": "tools/sprites/asset_queue_utils.py",
+        "start": 149,
+        "end": 182
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "load_json",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 40,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "save_json",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 46,
               "kind": "function",
               "language": "python"
             }
@@ -57,37 +167,40 @@
       ],
       "dependency_count": 2
     },
-    "family_aware_render": {
+    "stats": {
       "source": {
-        "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+        "file": "tools/sprites/asset_queue_utils.py",
+        "start": 185,
+        "end": 209
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "write_summary": {
+      "source": {
+        "file": "tools/sprites/asset_queue_utils.py",
         "start": 212,
-        "end": 234
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "architectural_band_fill": {
-      "source": {
-        "file": "tools/sprites/kaggle_building_family_factory_v16.py",
-        "start": 236,
-        "end": 249
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "branch_score": {
-      "source": {
-        "file": "tools/sprites/kaggle_building_family_factory_v16.py",
-        "start": 254,
-        "end": 325
+        "end": 228
       },
       "symbol_dependencies": [
         {
-          "symbol": "architectural_band_fill",
+          "symbol": "Asset",
           "definitions": [
             {
-              "file": "tools/sprites/kaggle_building_family_factory_v16.py",
-              "line": 236,
+              "file": "tools/sprites/plan_sprite_batches.py",
+              "line": 33,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "stats",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 185,
               "kind": "function",
               "language": "python"
             }
@@ -95,7 +208,7 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 1
+      "dependency_count": 2
     }
   }
 }

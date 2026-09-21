@@ -800,7 +800,10 @@ TARGET_TOTAL = 235
 STRICT_BASELINE = 155
 MAX_ATTEMPTS = 8
 ⋮----
-BUILDING_PRIORITY = ["BLD-04", "BLD-07", "BLD-11", "BLD-12", "BLD-13",
+# Prioritize unresolved families with the highest expected semantic-pass yield.
+# Repeatedly failing site-card/platform families stay at the back until their
+# specialized generator guards have more evidence.
+BUILDING_PRIORITY = ["BLD-09", "BLD-10", "BLD-06", "BLD-05", "BLD-08",
 CHARACTER_PRIORITY = ["CHR-OP", "CHR-TECH", "CHR-LOG", "CHR-ENG"]
 ⋮----
 def load_json(path: Path, default: Any = None) -> Any

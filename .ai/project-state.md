@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T09:13:49Z
+Generated: 2026-09-21T09:15:02Z
 
 ### Git
 - Branch: `main`
-- Head: `c7a23cde35b9`
-- Commit date: 2026-09-21T11:13:31+02:00
-- Commit: art: increase DONE yield with stricter contamination gates
+- Head: `e5dcdc0b6790`
+- Commit date: 2026-09-21T11:14:43+02:00
+- Commit: art: prioritize high-yield families for DONE conversion
 - Tracked files: 1377
 
 ### Recently changed files
+- `tools/sprites/asset_queue_utils.py`
 - `tools/sprites/kaggle_building_family_factory_v16.py`
 - `tools/sprites/kaggle_building_family_factory_v17.py`
 - `ops/sprite-wave-trigger.txt`

@@ -1,11 +1,10 @@
 # Change impact
 
-Base: a38d382446af459237c247d8036795886aa97456
-Head: c7a23cde35b9a7bfc39970a7427fde5291f0751a
+Base: 81f22c495d03a99372a77e007faaf851dcfbb7ff
+Head: e5dcdc0b6790d8cfc0cb60c86c67fe56525385b8
 
 ## Changed files
-- M tools/sprites/kaggle_building_family_factory_v16.py
-- M tools/sprites/kaggle_building_family_factory_v17.py
+- M tools/sprites/asset_queue_utils.py
 
 ## Affected areas
 - tools
