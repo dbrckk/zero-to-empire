@@ -2302,6 +2302,8 @@ aid=str(i['id']).upper()
 prefix=str(row.get('target_prefix','')).upper()
 hint=str(row.get('prompt_hint','')).strip()
 ⋮----
+# Newer evidence is more specific. Keep enough room for contamination bans;
+# the previous 30-word cap truncated the newest BLD-13 rejection memory.
 merged=' '.join(hints[-2:])
 ⋮----
 CLIP_FAMILY = {
@@ -2326,9 +2328,10 @@ def family_aware_render(i, prev, pe, ppe, base, img, seed)
 tier = int(i['tier'])
 family=int(i['family'])
 ⋮----
-# High-risk radial families need periodic text-to-image resets. This keeps
-# family materials/camera while breaking the tendency to only enlarge a ring.
-reset_tiers={12:{1,3},13:{1,3}}
+# High-risk families may need an early text-to-image reset to break clone ladders.
+# BLD-13 deliberately does NOT reset at T3: run 35564401834 proved that the
+# mid-family reset can replace the architectural DNA between T2 and T3.
+reset_tiers={12:{1,3},13:{1}}
 ⋮----
 old = v14.STRENGTH[tier]
 ⋮----

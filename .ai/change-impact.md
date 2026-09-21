@@ -1,13 +1,13 @@
 # Change impact
 
-Base: cae8e0942bdb6c15b329ea85401b4e98002f2f84
-Head: ed3d2e32436bbb0512dd60b6d0202e23f51dd8ed
+Base: 88e6dd3f2a511455fd9b5a780d863b6831960eab
+Head: d895b34a199d50272c100fc5af3c96550212a4c6
 
 ## Changed files
-- M tools/sprites/kaggle_building_family_factory_v17.py
+- M art/production/controlled-building-regen-queue.json
 
 ## Affected areas
-- tools
+- art
 
 ## Related test candidates
 - No direct filename-based test match detected.

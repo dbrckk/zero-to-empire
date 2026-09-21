@@ -22,23 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T08:12:23Z
+Generated: 2026-09-21T08:18:55Z
 
 ### Git
 - Branch: `main`
-- Head: `ed3d2e32436b`
-- Commit date: 2026-09-21T10:12:07+02:00
-- Commit: art: preserve BLD-13 family DNA across tiers
+- Head: `d895b34a199d`
+- Commit date: 2026-09-21T10:18:23+02:00
+- Commit: art: queue BLD-13 v18.2 regeneration
 - Tracked files: 1377
 
 ### Recently changed files
+- `art/production/controlled-building-regen-queue.json`
+- `tools/sprites/kaggle_building_family_factory_v16.py`
 - `tools/sprites/kaggle_building_family_factory_v17.py`
 - `art/production/generation-rejection-ledger.json`
 - `art/production/semantic-review-bld13-kaggle-run-35564401834.md`
-- `art/production/controlled-building-regen-queue.json`
-- `art/production/autofactory-state.json`
-- `art/production/autofactory-summary.md`
-- `art/production/master-asset-queue.json`
 
 ### Project signals
 - `build.gradle.kts`
