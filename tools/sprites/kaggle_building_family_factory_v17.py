@@ -19,7 +19,7 @@ SPEC.loader.exec_module(v1610)
 v15 = v1610.v15
 v14 = v1610.v14
 
-print('KAGGLE_STARTUP=building-family-flux-v18.3-high-yield-gates', flush=True)
+print('KAGGLE_STARTUP=building-family-flux-v18.4-bld10-portal-persistence', flush=True)
 
 # More image-to-image freedom than v16.10. The strict v16.10 live gate remains
 # active, so extra freedom cannot silently promote unrelated scenes/site cards.
@@ -124,13 +124,13 @@ FAMILY_TIER = {
         6:'apex galactic exchange with monumental central crown, maximum fused docking/logistics architecture and iconic connected station silhouette',
     },
     10: {
-        0:'compact intergalactic gateway with one dominant enclosed portal frame fused to a low service block',
-        1:'thicken the same portal frame and add one large fused service wing; gateway remains the dominant feature',
-        2:'add the opposite fused service wing plus integrated energy-routing housings around the persistent portal frame',
-        3:'raise a taller portal crown and central energy spine while preserving the same gateway opening and connected service mass',
-        4:'advanced transit gateway with monumental portal frame, multi-level fused service complex and dense integrated routing machinery',
-        5:'late-game gateway megastructure with dominant enlarged portal architecture, massive connected service wings and premium energy-routing systems',
-        6:'apex intergalactic gateway with iconic monumental portal crown, maximum fused support architecture and unmistakable persistent gateway identity',
+        0:'compact intergalactic gateway with one dominant tall enclosed portal frame and a clearly visible open central aperture, fused to one low service block; the portal aperture is the family landmark and must never disappear',
+        1:'thicken the exact same portal frame around the same visible central aperture and add one large fused service wing; gateway aperture remains the dominant feature',
+        2:'add the opposite fused service wing plus integrated energy-routing housings around the persistent portal frame; keep the same unobstructed central portal aperture fully readable',
+        3:'raise a taller portal crown and energy spine around the same unobstructed gateway opening; preserve the persistent aperture and connected service mass, never replace it with a tower or dome',
+        4:'advanced transit gateway with the same monumental open portal aperture, thicker architectural frame, multi-level fused service complex and dense integrated routing machinery; aperture stays visibly open',
+        5:'late-game gateway megastructure with dominant enlarged open portal architecture, massive connected service wings and premium energy-routing systems; preserve the same central aperture shape and facade axis',
+        6:'apex intergalactic gateway with iconic monumental crown around the same clearly visible central portal aperture, maximum fused support architecture and unmistakable persistent gateway identity; never close, fill or replace the portal opening',
     },
 }
 
@@ -195,9 +195,14 @@ def prompts(i):
     if len(short.split()) > 58:
         raise RuntimeError(f'building CLIP prompt too long: {len(short.split())} words for {i["id"]}')
 
+    gateway_guard = (
+        "For BLD-10 only: preserve one dominant open intergalactic portal aperture in the same facade position at every tier; "
+        "the opening must remain clearly visible, enclosed by the structural frame, and must never become a window, dome, tower face, banner or solid wall. "
+        if family == 10 else ""
+    )
     detail = (
         f"AAA stylized 2.5D strategy building. Family: {fam}. Tier: {instruction}. "
-        f"{memory} Building only: one connected architectural mass on flat neutral gray. "
+        f"{memory} {gateway_guard} Building only: one connected architectural mass on flat neutral gray. "
         "No site, trees, paths, pavement, yard, floor tile, base card, platform, plinth, ground plane, baked ground shadow, "
         "text, letters, numerals, labels, logos, watermarks, signage, pseudo-brand marks, people, vehicles, detached props, debris or scenery. "
         "The opaque silhouette must end at the architectural footprint; transparent immediately outside the building. "
