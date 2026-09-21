@@ -22,31 +22,36 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T11:30:23Z
+Generated: 2026-09-21T13:31:09Z
 
 ### Git
 - Branch: `main`
-- Head: `324c6474bd6e`
-- Commit date: 2026-09-21T13:29:55+02:00
-- Commit: ci: launch BLD-09 production wave
-- Tracked files: 1378
+- Head: `0c29c0a20a75`
+- Commit date: 2026-09-21T15:30:52+02:00
+- Commit: art: promote ChatGPT BLD-09 family to strict DONE
+- Tracked files: 1379
 
 ### Recently changed files
-- `ops/sprite-wave-trigger.txt`
 - `.github/workflows/asset-autofactory-ci.yml`
+- `app/src/main/res/drawable-nodpi/zte_business_09_t0_final.webp`
+- `app/src/main/res/drawable-nodpi/zte_business_09_t1_final.webp`
+- `app/src/main/res/drawable-nodpi/zte_business_09_t2_final.webp`
+- `app/src/main/res/drawable-nodpi/zte_business_09_t3_final.webp`
+- `app/src/main/res/drawable-nodpi/zte_business_09_t4_final.webp`
+- `app/src/main/res/drawable-nodpi/zte_business_09_t5_final.webp`
+- `app/src/main/res/drawable-nodpi/zte_business_09_t6_final.webp`
+- `art/production/controlled-building-regen-queue.json`
+- `art/production/master-asset-queue.json`
+- `art/production/semantic-review-bld09-chatgpt-manual-2026-09-21.md`
+- `tools/sprites/asset_queue_utils.py`
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
+- `ops/sprite-wave-trigger.txt`
 - `app/src/main/res/drawable-nodpi/zte_business_13_t0_final.webp`
 - `app/src/main/res/drawable-nodpi/zte_business_13_t1_final.webp`
 - `app/src/main/res/drawable-nodpi/zte_business_13_t2_final.webp`
 - `app/src/main/res/drawable-nodpi/zte_business_13_t3_final.webp`
 - `app/src/main/res/drawable-nodpi/zte_business_13_t4_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_business_13_t5_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_business_13_t6_final.webp`
-- `art/production/controlled-building-regen-queue.json`
-- `art/production/master-asset-queue.json`
-- `art/production/semantic-review-bld13-chatgpt-manual-2026-09-21.md`
-- `tools/sprites/asset_queue_utils.py`
-- `art/production/autofactory-state.json`
-- `art/production/autofactory-summary.md`
 
 ### Project signals
 - `build.gradle.kts`
