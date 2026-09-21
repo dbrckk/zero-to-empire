@@ -1,13 +1,14 @@
 # Change impact
 
-Base: b42992ed9c541f4834f625d7ebceffcfb4297093
-Head: 7bccc04650c6bffbc9a0aa9a8be8a5f2be2438c4
+Base: a38d382446af459237c247d8036795886aa97456
+Head: c7a23cde35b9a7bfc39970a7427fde5291f0751a
 
 ## Changed files
-- M ops/sprite-wave-trigger.txt
+- M tools/sprites/kaggle_building_family_factory_v16.py
+- M tools/sprites/kaggle_building_family_factory_v17.py
 
 ## Affected areas
-- ops
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

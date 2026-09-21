@@ -22,22 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T08:23:10Z
+Generated: 2026-09-21T09:13:49Z
 
 ### Git
 - Branch: `main`
-- Head: `7bccc04650c6`
-- Commit date: 2026-09-21T10:22:54+02:00
-- Commit: ci: launch BLD-13 v18.2 Kaggle wave
+- Head: `c7a23cde35b9`
+- Commit date: 2026-09-21T11:13:31+02:00
+- Commit: art: increase DONE yield with stricter contamination gates
 - Tracked files: 1377
 
 ### Recently changed files
-- `ops/sprite-wave-trigger.txt`
-- `art/production/controlled-building-regen-queue.json`
 - `tools/sprites/kaggle_building_family_factory_v16.py`
 - `tools/sprites/kaggle_building_family_factory_v17.py`
-- `art/production/generation-rejection-ledger.json`
-- `art/production/semantic-review-bld13-kaggle-run-35564401834.md`
+- `ops/sprite-wave-trigger.txt`
+- `art/production/controlled-building-regen-queue.json`
 
 ### Project signals
 - `build.gradle.kts`

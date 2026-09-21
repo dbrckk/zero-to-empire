@@ -2349,6 +2349,8 @@ V15_BRANCH_SCORE=v15.branch_score
 def branch_score(recs)
 ⋮----
 family=int(recs[0][0]['family'])
+# Families repeatedly rejected for opaque site-card/platform contamination.
+# Reject those candidates before semantic review instead of wasting a full batch.
 ⋮----
 signatures=[]
 ⋮----
@@ -2469,6 +2471,8 @@ V15_BRANCH_SCORE=v15.branch_score
 def branch_score(recs)
 ⋮----
 family=int(recs[0][0]['family'])
+# Families repeatedly rejected for opaque site-card/platform contamination.
+# Reject those candidates before semantic review instead of wasting a full batch.
 ⋮----
 signatures=[]
 ⋮----
