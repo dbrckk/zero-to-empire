@@ -22,21 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-22T20:20:48Z
+Generated: 2026-09-22T21:00:58Z
 
 ### Git
 - Branch: `main`
-- Head: `e6348569c13a`
-- Commit date: 2026-09-22T22:20:30+02:00
-- Commit: art: review remaining 35 building sprites (#136)
+- Head: `0d3e054b4ef7`
+- Commit date: 2026-09-22T23:00:43+02:00
+- Commit: ci: treat zero character candidates as clean QA outcome
 - Tracked files: 1382
 
 ### Recently changed files
+- `.github/workflows/pollinations-character-atlas.yml`
 - `art/production/semantic-review-remaining-buildings-2026-09-22.md`
 - `art/production/controlled-character-regen-queue.json`
 - `art/production/master-asset-queue.json`
-- `art/production/autofactory-state.json`
-- `art/production/autofactory-summary.md`
 
 ### Project signals
 - `build.gradle.kts`

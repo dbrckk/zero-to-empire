@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 495024f2f037fa45eddf8d87fb38e7baf905c1b3
-Head: e6348569c13af847b0125a482fd59ea78eddbe83
+Base: 42bf3ee6269f10748e1b487a233465a1667a29f0
+Head: 0d3e054b4ef70c0dc070ce2b2038f813de746471
 
 ## Changed files
-- A art/production/semantic-review-remaining-buildings-2026-09-22.md
+- M .github/workflows/pollinations-character-atlas.yml
 
 ## Affected areas
-- art
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.
