@@ -1,13 +1,13 @@
 # Change impact
 
-Base: fab3cd2fab6778b645e9e16728be6ab254b2de61
-Head: d2b3f1757ae82f1d7f69ce9e866218e988713a98
+Base: 495024f2f037fa45eddf8d87fb38e7baf905c1b3
+Head: e6348569c13af847b0125a482fd59ea78eddbe83
 
 ## Changed files
-- M tools/sprites/pollinations_character_sheet_factory.py
+- A art/production/semantic-review-remaining-buildings-2026-09-22.md
 
 ## Affected areas
-- tools
+- art
 
 ## Related test candidates
 - No direct filename-based test match detected.

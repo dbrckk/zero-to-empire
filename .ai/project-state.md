@@ -22,21 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-22T12:54:16Z
+Generated: 2026-09-22T20:20:48Z
 
 ### Git
 - Branch: `main`
-- Head: `d2b3f1757ae8`
-- Commit date: 2026-09-22T14:53:59+02:00
-- Commit: ci: strengthen character identity validation
-- Tracked files: 1381
+- Head: `e6348569c13a`
+- Commit date: 2026-09-22T22:20:30+02:00
+- Commit: art: review remaining 35 building sprites (#136)
+- Tracked files: 1382
 
 ### Recently changed files
-- `tools/sprites/pollinations_character_sheet_factory.py`
-- `.github/workflows/pollinations-character-atlas.yml`
-- `ops/circleci-recovery-trigger.txt`
+- `art/production/semantic-review-remaining-buildings-2026-09-22.md`
+- `art/production/controlled-character-regen-queue.json`
 - `art/production/master-asset-queue.json`
-- `.github/workflows/asset-autofactory-ci.yml`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
 
