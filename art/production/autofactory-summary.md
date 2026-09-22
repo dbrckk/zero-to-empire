@@ -3,7 +3,7 @@
 - Strict DONE: **176 / 235**
 - Production processed to DONE/review: **211 / 235**
 - Awaiting semantic review: **35**
-- Automation-blocked: **0**
+- Automation-blocked: **1**
 - Current action: **DISPATCH_KAGGLE_CHARACTER**
 - Current group: **controlled-character**
 
