@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 2a6f481644faa2a0cd78219a17fdd2ef76f500a1
-Head: b3b29207439bd5758ad8675e2600a8885ba88b3a
+Base: 57ecd010b8a9e7048d47ff48453ae7c949d022d4
+Head: 4a7b9c65499c4e35506febdf8785a7d75d512db1
 
 ## Changed files
-- M .github/workflows/pollinations-character-atlas.yml
+- M .github/workflows/asset-autofactory-ci.yml
 
 ## Affected areas
 - .github

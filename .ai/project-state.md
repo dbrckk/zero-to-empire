@@ -22,20 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-22T07:35:50Z
+Generated: 2026-09-22T11:13:40Z
 
 ### Git
 - Branch: `main`
-- Head: `b3b29207439b`
-- Commit date: 2026-09-22T09:35:33+02:00
-- Commit: ci: unblock PENDING_KAGGLE character candidate generation
+- Head: `4a7b9c65499c`
+- Commit date: 2026-09-22T13:13:22+02:00
+- Commit: ci: derive remaining asset counts dynamically
 - Tracked files: 1381
 
 ### Recently changed files
-- `.github/workflows/pollinations-character-atlas.yml`
+- `.github/workflows/asset-autofactory-ci.yml`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
 - `art/production/master-asset-queue.json`
+- `.github/workflows/pollinations-character-atlas.yml`
 - `art/production/controlled-character-regen-queue.json`
 
 ### Project signals
