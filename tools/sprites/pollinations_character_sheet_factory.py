@@ -47,7 +47,7 @@ def pending():
         q=json.loads(QUEUE.read_text(encoding='utf-8'))
         out=[]
         for item in q.get('targets',[]):
-            if str(item.get('status','')).upper()!='PENDING':
+            if str(item.get('status','')).upper() not in {'PENDING','PENDING_KAGGLE'}:
                 continue
             aid=str(item.get('id','')).upper()
             if aid not in manifest:
@@ -147,12 +147,32 @@ def iou(a,b):
             inter+=aa and bb; union+=aa or bb
     return inter/union if union else 0
 
+def appearance_hist(frame):
+    # Coarse foreground RGB histogram: catches role/wardrobe/identity drift that
+    # silhouette IoU alone cannot detect.
+    rgb=frame.convert('RGB'); alpha=frame.getchannel('A')
+    bins=[0]*512; total=0
+    for (r,g,b),a in zip(rgb.getdata(),alpha.getdata()):
+        if a < 64:
+            continue
+        bins[(r//32)*64+(g//32)*8+(b//32)] += 1
+        total += 1
+    return [v/total for v in bins] if total else bins
+
+def hist_similarity(a,b):
+    # Histogram intersection in [0,1].
+    return sum(min(x,y) for x,y in zip(a,b))
+
 def sheetqa(frames):
     vals=[iou(frames[n-1],frames[n]) for n in range(1,len(frames))]
     if min(vals)<.25:
         return False,f'iou={min(vals):.2f}'
     if max(vals)>.99:
         return False,'duplicate'
+    h0=appearance_hist(frames[0])
+    sims=[hist_similarity(h0,appearance_hist(f)) for f in frames[1:]]
+    if sims and min(sims)<.48:
+        return False,f'identity-palette={min(sims):.2f}'
     bottoms=[]; centers=[]
     for frame in frames:
         bb=frame.getchannel('A').getbbox()
