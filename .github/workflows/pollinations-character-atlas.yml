@@ -75,20 +75,24 @@ jobs:
       - name: Generate character atlas candidates
         if: steps.gate.outputs.should_generate == 'true'
         run: python -u tools/sprites/pollinations_character_sheet_factory.py
-      - name: Require at least one candidate
+      - name: Resolve candidate outcome
         if: steps.gate.outputs.should_generate == 'true'
+        id: outcome
         shell: bash
         run: |
-          python - <<'PY'
+          python - <<'PY' >> "$GITHUB_OUTPUT"
           import json
           from pathlib import Path
-          d=json.loads(Path('art/production/pollinations-character-summary.json').read_text())
+          p=Path('art/production/pollinations-character-summary.json')
+          d=json.loads(p.read_text()) if p.exists() else []
           good=[x for x in d if x.get('status')=='CANDIDATE']
-          if not good:
-              raise SystemExit('No character atlas candidate passed generation QA')
-          print('CHARACTER_CANDIDATES=' + ','.join(x['id'] for x in good))
+          print(f'has_candidate={str(bool(good)).lower()}')
+          if good:
+              print('candidate_ids=' + ','.join(x['id'] for x in good))
+          else:
+              print('::notice::No character atlas candidate passed generation QA; preserving QA evidence and queue state without failing infrastructure.')
           PY
-      - name: Commit candidates and QA evidence only
+      - name: Commit queue, candidates and QA evidence
         if: steps.gate.outputs.should_generate == 'true'
         shell: bash
         run: |
@@ -96,10 +100,12 @@ jobs:
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add art/production/controlled-character-regen-queue.json
-          git add art/incoming/final-sprites/
           git add art/production/pollinations-character-summary.json
+          if [ "${{ steps.outcome.outputs.has_candidate }}" = "true" ]; then
+            git add art/incoming/final-sprites/
+          fi
           git diff --cached --quiet && exit 0
-          git commit -m 'art: persist controlled character atlas candidates'
+          git commit -m 'art: persist controlled character atlas QA outcome'
           git pull --rebase origin main
           git push
       - name: Upload character QA evidence
