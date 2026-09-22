@@ -132,8 +132,8 @@ jobs:
           echo "CHARACTER_QUEUE_REMAINING=$remaining"
           if [ "$remaining" -eq 0 ]; then exit 0; fi
           if [ "$depth" -ge 8 ]; then
-            echo "::error::Controlled character chain safety limit reached."
-            exit 1
+            echo "::notice::Controlled character chain safety limit reached; current generation remains successful."
+            exit 0
           fi
           next=$((depth+1))
           sleep 20
