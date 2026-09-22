@@ -22,22 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-22T11:13:40Z
+Generated: 2026-09-22T12:35:59Z
 
 ### Git
 - Branch: `main`
-- Head: `4a7b9c65499c`
-- Commit date: 2026-09-22T13:13:22+02:00
-- Commit: ci: derive remaining asset counts dynamically
+- Head: `b81caf3027cb`
+- Commit date: 2026-09-22T14:35:17+02:00
+- Commit: ci: keep successful character generations green at chain limit
 - Tracked files: 1381
 
 ### Recently changed files
+- `.github/workflows/pollinations-character-atlas.yml`
+- `ops/circleci-recovery-trigger.txt`
+- `art/production/master-asset-queue.json`
 - `.github/workflows/asset-autofactory-ci.yml`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
-- `art/production/master-asset-queue.json`
-- `.github/workflows/pollinations-character-atlas.yml`
-- `art/production/controlled-character-regen-queue.json`
 
 ### Project signals
 - `build.gradle.kts`

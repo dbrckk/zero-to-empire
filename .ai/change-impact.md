@@ -1,13 +1,15 @@
 # Change impact
 
-Base: 57ecd010b8a9e7048d47ff48453ae7c949d022d4
-Head: 4a7b9c65499c4e35506febdf8785a7d75d512db1
+Base: 389f31efb5e5f12ce53ebdd9d51474c0847f59c9
+Head: b81caf3027cb89d9f767a68537421515ed1f04e2
 
 ## Changed files
-- M .github/workflows/asset-autofactory-ci.yml
+- M .github/workflows/pollinations-character-atlas.yml
+- M ops/circleci-recovery-trigger.txt
 
 ## Affected areas
 - .github
+- ops
 
 ## Related test candidates
 - No direct filename-based test match detected.
