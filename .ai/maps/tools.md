@@ -3761,9 +3761,23 @@ pa,pb=A.load(),B.load(); inter=union=0
 ⋮----
 aa=pa[x,y]>0; bb=pb[x,y]>0
 ⋮----
+def appearance_hist(frame)
+⋮----
+# Coarse foreground RGB histogram: catches role/wardrobe/identity drift that
+# silhouette IoU alone cannot detect.
+rgb=frame.convert('RGB'); alpha=frame.getchannel('A')
+bins=[0]*512; total=0
+⋮----
+def hist_similarity(a,b)
+⋮----
+# Histogram intersection in [0,1].
+⋮----
 def sheetqa(frames)
 ⋮----
 vals=[iou(frames[n-1],frames[n]) for n in range(1,len(frames))]
+⋮----
+h0=appearance_hist(frames[0])
+sims=[hist_similarity(h0,appearance_hist(f)) for f in frames[1:]]
 ⋮----
 bottoms=[]; centers=[]
 ⋮----

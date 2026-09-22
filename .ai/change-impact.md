@@ -1,15 +1,13 @@
 # Change impact
 
-Base: 389f31efb5e5f12ce53ebdd9d51474c0847f59c9
-Head: b81caf3027cb89d9f767a68537421515ed1f04e2
+Base: fab3cd2fab6778b645e9e16728be6ab254b2de61
+Head: d2b3f1757ae82f1d7f69ce9e866218e988713a98
 
 ## Changed files
-- M .github/workflows/pollinations-character-atlas.yml
-- M ops/circleci-recovery-trigger.txt
+- M tools/sprites/pollinations_character_sheet_factory.py
 
 ## Affected areas
-- .github
-- ops
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

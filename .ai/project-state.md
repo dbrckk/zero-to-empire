@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-22T12:35:59Z
+Generated: 2026-09-22T12:54:16Z
 
 ### Git
 - Branch: `main`
-- Head: `b81caf3027cb`
-- Commit date: 2026-09-22T14:35:17+02:00
-- Commit: ci: keep successful character generations green at chain limit
+- Head: `d2b3f1757ae8`
+- Commit date: 2026-09-22T14:53:59+02:00
+- Commit: ci: strengthen character identity validation
 - Tracked files: 1381
 
 ### Recently changed files
+- `tools/sprites/pollinations_character_sheet_factory.py`
 - `.github/workflows/pollinations-character-atlas.yml`
 - `ops/circleci-recovery-trigger.txt`
 - `art/production/master-asset-queue.json`
