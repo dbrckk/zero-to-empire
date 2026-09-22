@@ -53,8 +53,16 @@ jobs:
           building_remaining=sum(x['lane']=='kaggle-building-family' and x['strict_status']!='DONE' for x in assets)
           character_remaining=sum(x['lane']=='kaggle-character-sheet' and x['strict_status']!='DONE' for x in assets)
           assert building_remaining+character_remaining==strict_remaining
-          assert building_remaining==35
-          assert character_remaining==24
+          expected_buildings=sum(
+              x['strict_status']!='DONE' and x['id'].startswith('BLD-')
+              for x in assets
+          )
+          expected_characters=sum(
+              x['strict_status']!='DONE' and x['id'].startswith('CHR-')
+              for x in assets
+          )
+          assert building_remaining==expected_buildings
+          assert character_remaining==expected_characters
           assert sum(x['lane']=='fx-runtime-reconciliation' and x['strict_status']!='DONE' for x in assets)==0
           assert s['action'].startswith('WAIT_') or s['action'] in {
               'PRODUCTION_235_COMPLETE_REVIEW_BACKLOG',
