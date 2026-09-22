@@ -1,20 +1,13 @@
 # Change impact
 
-Base: 8036ad64468616c7a27c4f5d7b1307de421af9db
-Head: e9e467f86b84336a4a863b3898fead8178b0dc2a
+Base: 2a6f481644faa2a0cd78219a17fdd2ef76f500a1
+Head: b3b29207439bd5758ad8675e2600a8885ba88b3a
 
 ## Changed files
-- M .github/workflows/asset-autofactory-ci.yml
-- M art/production/controlled-building-regen-queue.json
-- M art/production/master-asset-queue.json
-- A art/production/parallel-asset-production-plan-2026-09-21.md
-- A art/production/semantic-review-bld06-kaggle-2026-09-21.md
-- M tools/sprites/asset_queue_utils.py
+- M .github/workflows/pollinations-character-atlas.yml
 
 ## Affected areas
 - .github
-- art
-- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

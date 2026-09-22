@@ -22,25 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T16:48:54Z
+Generated: 2026-09-22T07:35:50Z
 
 ### Git
 - Branch: `main`
-- Head: `e9e467f86b84`
-- Commit date: 2026-09-21T18:48:38+02:00
-- Commit: art: approve BLD-06 family and advance strict baseline
+- Head: `b3b29207439b`
+- Commit date: 2026-09-22T09:35:33+02:00
+- Commit: ci: unblock PENDING_KAGGLE character candidate generation
 - Tracked files: 1381
 
 ### Recently changed files
-- `.github/workflows/asset-autofactory-ci.yml`
-- `art/production/controlled-building-regen-queue.json`
-- `art/production/master-asset-queue.json`
-- `art/production/parallel-asset-production-plan-2026-09-21.md`
-- `art/production/semantic-review-bld06-kaggle-2026-09-21.md`
-- `tools/sprites/asset_queue_utils.py`
+- `.github/workflows/pollinations-character-atlas.yml`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
-- `ops/sprite-wave-trigger.txt`
+- `art/production/master-asset-queue.json`
+- `art/production/controlled-character-regen-queue.json`
 
 ### Project signals
 - `build.gradle.kts`
