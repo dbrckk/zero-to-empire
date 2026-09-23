@@ -9,7 +9,7 @@ from __future__ import annotations
 import argparse,gc,json,re
 from collections import deque
 from pathlib import Path
-print('KAGGLE_STARTUP=character-sheet-flux-v1.6-action-motion-gates',flush=True)
+print('KAGGLE_STARTUP=character-sheet-flux-v1.7-action-motion-retry',flush=True)
 import torch
 from PIL import Image,ImageFilter
 from diffusers import FluxPipeline,FluxImg2ImgPipeline,FluxTransformer2DModel
@@ -319,7 +319,12 @@ def main():
         anchor_raw=raw.convert('RGB')
         print('KAGGLE_CHR_SHARED_IDENTITY='+i['id']+' role='+i['role']+f' strength={strength:.2f}',flush=True)
       else:
-       strength=(min(.64,.50+fi*.018+attempt*.025) if i['action']=='WALK' else min(.48,.29+fi*.015+attempt*.025))
+       if i['action']=='WALK':
+        strength=min(.72,.58+fi*.016+attempt*.03)
+       elif i['action']=='REPAIR':
+        strength=min(.58,.38+fi*.018+attempt*.03)
+       else:
+        strength=min(.48,.29+fi*.015+attempt*.025)
        if mode in {'single','identity'} and i['action']!='WALK':strength=max(.24,strength-.035)
        raw=img(image=anchor_raw,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=6,guidance_scale=0,output_type='pil',generator=gen).images[0]
      frame,cov=finish_frame(raw);frames.append(frame);ok=True;print(f"KAGGLE_CHR_FRAME={i['id']} frame={fi} attempt={attempt+1} mode={mode} cov={cov:.2f}",flush=True);break
