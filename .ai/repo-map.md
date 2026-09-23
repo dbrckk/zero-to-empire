@@ -104,6 +104,7 @@ The content is organized as follows:
     reconcile-sprite-progress-ledger.yml
     refine-run66-stragglers.yml
     repair-bld13-main.yml
+    repair-bld13-runtime.yml
     repair-promote-bld03-run75.yml
     semantic-refresh.yml
     sprite-completion-gate.yml
@@ -6530,6 +6531,84 @@ jobs:
           fi
           git commit -m "fix: re-encode BLD-13 runtime WebP [bld13-repair]"
           git push origin HEAD:main
+```
+
+## File: .github/workflows/repair-bld13-runtime.yml
+```yaml
+name: Repair BLD-13 runtime WebP
+
+on:
+  push:
+    branches:
+      - fix/character-silhouette-tolerance
+    paths:
+      - ".github/workflows/repair-bld13-runtime.yml"
+      - "app/src/main/res/drawable-nodpi/zte_business_13_t*_final.webp"
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: ${{ !contains(github.event.head_commit.message, '[bld13-repair]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/character-silhouette-tolerance
+          fetch-depth: 0
+
+      - name: Install WebP tools and Pillow
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y webp
+          python -m pip install --quiet pillow
+
+      - name: Repair only undecodable BLD-13 sprites
+        shell: bash
+        run: |
+          set -euo pipefail
+          changed=0
+          for f in app/src/main/res/drawable-nodpi/zte_business_13_t{0..6}_final.webp; do
+            if python - "$f" <<'PY'
+import sys
+from PIL import Image
+p=sys.argv[1]
+with Image.open(p) as im:
+    im.load()
+print(p, im.size, im.mode)
+PY
+            then
+              echo "already-decodable: $f"
+              continue
+            fi
+            png="/tmp/$(basename "$f" .webp).png"
+            fixed="/tmp/$(basename "$f")"
+            dwebp "$f" -o "$png"
+            cwebp -quiet -lossless -exact "$png" -o "$fixed"
+            mv "$fixed" "$f"
+            changed=1
+          done
+          echo "changed=$changed" >> "$GITHUB_ENV"
+
+      - name: Validate repaired BLD-13 runtime files
+        run: |
+          set -euo pipefail
+          for t in {0..6}; do
+            python tools/sprites/validate_runtime_asset.py \
+              --asset-id "BLD-13-T$t" \
+              --path "app/src/main/res/drawable-nodpi/zte_business_13_t${t}_final.webp"
+          done
+          python tools/sprites/audit_complete_sprite_manifest.py --allow-pending
+
+      - name: Commit repaired binaries
+        if: env.changed == '1'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/src/main/res/drawable-nodpi/zte_business_13_t*_final.webp art/production/final-sprite-completion-audit.json
+          git commit -m "fix: re-encode BLD-13 runtime WebP [bld13-repair]"
+          git push origin HEAD:fix/character-silhouette-tolerance
 ```
 
 ## File: .github/workflows/repair-promote-bld03-run75.yml
@@ -25628,6 +25707,7 @@ w,h=m.size;pad=max(8,w//40)
 crop=m.crop(bb);cw,ch=crop.size
 ⋮----
 # Two side-by-side people produce an abnormally wide full-body silhouette.
+# Allow wide action poses/gear up to 1.08; downstream identity/coverage QA still rejects real duplicates.
 # Reject before resizing so technical QA cannot normalize a multi-person frame into a valid-looking cell.
 ⋮----
 scale=min(176/cw,218/ch); crop=crop.resize((max(1,round(cw*scale)),max(1,round(ch*scale))),Image.Resampling.LANCZOS)

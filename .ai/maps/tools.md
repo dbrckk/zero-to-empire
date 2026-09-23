@@ -2771,6 +2771,7 @@ w,h=m.size;pad=max(8,w//40)
 crop=m.crop(bb);cw,ch=crop.size
 ⋮----
 # Two side-by-side people produce an abnormally wide full-body silhouette.
+# Allow wide action poses/gear up to 1.08; downstream identity/coverage QA still rejects real duplicates.
 # Reject before resizing so technical QA cannot normalize a multi-person frame into a valid-looking cell.
 ⋮----
 scale=min(176/cw,218/ch); crop=crop.resize((max(1,round(cw*scale)),max(1,round(ch*scale))),Image.Resampling.LANCZOS)

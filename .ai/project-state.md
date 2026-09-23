@@ -22,16 +22,27 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-23T07:12:40Z
+Generated: 2026-09-23T08:17:02Z
 
 ### Git
 - Branch: `main`
-- Head: `7279459bb0fd`
-- Commit date: 2026-09-23T09:12:23+02:00
-- Commit: ci: run one-shot BLD-13 runtime repair
-- Tracked files: 1383
+- Head: `fe91274ca141`
+- Commit date: 2026-09-23T10:16:43+02:00
+- Commit: fix: reduce false multi-character sprite rejects (#137)
+- Tracked files: 1385
 
 ### Recently changed files
+- `.github/workflows/repair-bld13-runtime.yml`
+- `app/src/main/res/drawable-nodpi/zte_business_13_t0_final.webp`
+- `app/src/main/res/drawable-nodpi/zte_business_13_t1_final.webp`
+- `app/src/main/res/drawable-nodpi/zte_business_13_t2_final.webp`
+- `app/src/main/res/drawable-nodpi/zte_business_13_t3_final.webp`
+- `app/src/main/res/drawable-nodpi/zte_business_13_t4_final.webp`
+- `app/src/main/res/drawable-nodpi/zte_business_13_t5_final.webp`
+- `app/src/main/res/drawable-nodpi/zte_business_13_t6_final.webp`
+- `art/production/pr137-ci-retrigger.txt`
+- `tools/sprites/audit_complete_sprite_manifest.py`
+- `tools/sprites/kaggle_character_sheet_factory_v1.py`
 - `.github/workflows/repair-bld13-main.yml`
 - `art/production/controlled-character-regen-queue.json`
 - `art/production/pollinations-character-summary.json`
