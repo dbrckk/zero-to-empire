@@ -1,7 +1,7 @@
 # Change impact
 
-Base: 42bf3ee6269f10748e1b487a233465a1667a29f0
-Head: 0d3e054b4ef70c0dc070ce2b2038f813de746471
+Base: 80a095d07440de5b51512bb78aa1f9e9b81f52ca
+Head: a5a00c88d6eb3110cf4d80db0fd79b7113fcd3f5
 
 ## Changed files
 - M .github/workflows/pollinations-character-atlas.yml

@@ -3231,9 +3231,17 @@ jobs:
           print(f'has_candidate={str(bool(good)).lower()}')
           if good:
               print('candidate_ids=' + ','.join(x['id'] for x in good))
-          else:
-              print('::notice::No character atlas candidate passed generation QA; preserving QA evidence and queue state without failing infrastructure.')
           PY
+          if [ "$(python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('art/production/pollinations-character-summary.json')
+          d=json.loads(p.read_text()) if p.exists() else []
+          print('true' if any(x.get('status') == 'CANDIDATE' for x in d) else 'false')
+          PY
+          )" != "true" ]; then
+            echo "::notice::No character atlas candidate passed generation QA; preserving QA evidence and queue state without failing infrastructure."
+          fi
       - name: Commit queue, candidates and QA evidence
         if: steps.gate.outputs.should_generate == 'true'
         shell: bash
