@@ -1,0 +1,53 @@
+name: Import verified TECH candidate
+
+on:
+  push:
+    branches: [art/promote-approved-bld08-v2]
+    paths:
+      - '.github/workflows/import-tech-candidate-35855906724.yml'
+
+permissions:
+  contents: write
+
+env:
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: art/promote-approved-bld08-v2
+      - name: Download successful sprite-factory artifact
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/tech-artifact
+          gh run download 35855906724 --repo "$GITHUB_REPOSITORY" --name zte-sprite-factory-output --dir /tmp/tech-artifact
+          src="/tmp/tech-artifact/tmp/kaggle-output/output/candidates/zte_chr_tech_idle_final.png"
+          test -s "$src"
+          mkdir -p art/incoming/characters/technician
+          cp "$src" art/incoming/characters/technician/zte_chr_tech_idle_final.png
+          python3 - <<'PY'
+          from PIL import Image
+          p='art/incoming/characters/technician/zte_chr_tech_idle_final.png'
+          im=Image.open(p)
+          assert im.mode == 'RGBA', im.mode
+          assert im.size == (1024,1024), im.size
+          alpha=im.getchannel('A')
+          assert alpha.getextrema()[0] == 0, 'missing transparent background'
+          assert alpha.getbbox() is not None, 'empty alpha'
+          print('candidate mechanical preflight PASS', im.size, im.mode, alpha.getextrema())
+          PY
+      - name: Commit incoming candidate
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add art/incoming/characters/technician/zte_chr_tech_idle_final.png
+          if git diff --cached --quiet; then
+            echo 'Candidate already imported.'
+            exit 0
+          fi
+          git commit -m 'art: import TECH idle candidate for semantic review'
+          git push origin HEAD:art/promote-approved-bld08-v2
