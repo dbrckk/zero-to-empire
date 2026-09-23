@@ -1,7 +1,7 @@
 # Change impact
 
-Base: 53b4eef107d7589680606f773d5942fe380c5d62
-Head: 8214b23253317680fa52cbfa7b8f8099cb722590
+Base: 5f6675eb27ad1d4eb8d912dab943a6e055686723
+Head: 2c5e8da870270b5aaa9b56e15cbf64380e4e5ba8
 
 ## Changed files
 - M art/production/generation-rejection-ledger.json

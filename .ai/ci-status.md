@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 5 success / 2 failure / 1 active
+Summary: 3 success / 4 failure / 1 active
 
-- Asset Pipeline CI: in_progress / pending (8214b232)
-- .github/workflows/repair-bld13-runtime.yml: completed / failure (8214b232)
-- Asset Autofactory CI: completed / success (139321b9)
-- Asset Pipeline CI: completed / success (139321b9)
-- .github/workflows/repair-bld13-runtime.yml: completed / failure (139321b9)
-- Pollinations Character Atlas: completed / success (f91bb554)
-- Pollinations Character Atlas: completed / success (c9159ee3)
-- Pollinations Character Atlas: completed / success (f1a3f0e4)
+- Asset Pipeline CI: in_progress / pending (2c5e8da8)
+- .github/workflows/repair-bld13-runtime.yml: completed / failure (2c5e8da8)
+- Pollinations Building Candidate: completed / success (5f6675eb)
+- Asset Autofactory CI: completed / success (a1d2cbd0)
+- Asset Pipeline CI: completed / success (a1d2cbd0)
+- .github/workflows/repair-bld13-runtime.yml: completed / failure (a1d2cbd0)
+- .github/workflows/repair-bld13-runtime.yml: completed / failure (f94789e9)
+- .github/workflows/repair-bld13-runtime.yml: completed / failure (5f6675eb)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.
