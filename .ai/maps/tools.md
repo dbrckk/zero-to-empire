@@ -2874,7 +2874,11 @@ strength=(min(.62,.54+attempt*.035) if i['action']=='WALK' else min(.44,.32+atte
 if mode=='identity' and i['action']!='WALK':strength=max(.28,strength-.04)
 raw=img(image=shared,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=6,guidance_scale=0,output_type='pil',generator=gen).images[0]
 ⋮----
-strength=(min(.64,.50+fi*.018+attempt*.025) if i['action']=='WALK' else min(.48,.29+fi*.015+attempt*.025))
+strength=min(.72,.58+fi*.016+attempt*.03)
+⋮----
+strength=min(.58,.38+fi*.018+attempt*.03)
+⋮----
+strength=min(.48,.29+fi*.015+attempt*.025)
 if mode in {'single','identity'} and i['action']!='WALK':strength=max(.24,strength-.035)
 raw=img(image=anchor_raw,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=6,guidance_scale=0,output_type='pil',generator=gen).images[0]
 frame,cov=finish_frame(raw);frames.append(frame);ok=True;print(f"KAGGLE_CHR_FRAME={i['id']} frame={fi} attempt={attempt+1} mode={mode} cov={cov:.2f}",flush=True);break

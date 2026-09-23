@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-23T08:17:02Z
+Generated: 2026-09-23T09:16:47Z
 
 ### Git
 - Branch: `main`
-- Head: `fe91274ca141`
-- Commit date: 2026-09-23T10:16:43+02:00
-- Commit: fix: reduce false multi-character sprite rejects (#137)
+- Head: `200aac2ef47f`
+- Commit date: 2026-09-23T11:16:25+02:00
+- Commit: fix: increase walk and repair pose motion (#138)
 - Tracked files: 1385
 
 ### Recently changed files
+- `tools/sprites/kaggle_character_sheet_factory_v1.py`
 - `.github/workflows/repair-bld13-runtime.yml`
 - `app/src/main/res/drawable-nodpi/zte_business_13_t0_final.webp`
 - `app/src/main/res/drawable-nodpi/zte_business_13_t1_final.webp`
@@ -42,13 +43,9 @@ Generated: 2026-09-23T08:17:02Z
 - `app/src/main/res/drawable-nodpi/zte_business_13_t6_final.webp`
 - `art/production/pr137-ci-retrigger.txt`
 - `tools/sprites/audit_complete_sprite_manifest.py`
-- `tools/sprites/kaggle_character_sheet_factory_v1.py`
 - `.github/workflows/repair-bld13-main.yml`
 - `art/production/controlled-character-regen-queue.json`
 - `art/production/pollinations-character-summary.json`
-- `art/production/autofactory-state.json`
-- `art/production/autofactory-summary.md`
-- `art/production/master-asset-queue.json`
 
 ### Project signals
 - `build.gradle.kts`

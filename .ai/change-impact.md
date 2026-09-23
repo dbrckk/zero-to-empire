@@ -1,25 +1,12 @@
 # Change impact
 
-Base: 1f25c3e133e29d77eb080ae81c1ad9f2b5c4a3ef
-Head: fe91274ca141eff6ec87241be7dbb8aaf52e35bd
+Base: 8b545a82160cfad2b8212d9baaadd8ca1372041c
+Head: 200aac2ef47f88e763a737f30bd55f019ea67b4c
 
 ## Changed files
-- A .github/workflows/repair-bld13-runtime.yml
-- M app/src/main/res/drawable-nodpi/zte_business_13_t0_final.webp
-- M app/src/main/res/drawable-nodpi/zte_business_13_t1_final.webp
-- M app/src/main/res/drawable-nodpi/zte_business_13_t2_final.webp
-- M app/src/main/res/drawable-nodpi/zte_business_13_t3_final.webp
-- M app/src/main/res/drawable-nodpi/zte_business_13_t4_final.webp
-- M app/src/main/res/drawable-nodpi/zte_business_13_t5_final.webp
-- M app/src/main/res/drawable-nodpi/zte_business_13_t6_final.webp
-- A art/production/pr137-ci-retrigger.txt
-- M tools/sprites/audit_complete_sprite_manifest.py
 - M tools/sprites/kaggle_character_sheet_factory_v1.py
 
 ## Affected areas
-- .github
-- app
-- art
 - tools
 
 ## Related test candidates
