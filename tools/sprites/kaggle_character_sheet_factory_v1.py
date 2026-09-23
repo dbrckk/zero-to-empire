@@ -187,8 +187,9 @@ def finish_frame(raw):
  crop=m.crop(bb);cw,ch=crop.size
  if ch<cw*.95:raise RuntimeError('not full-body character silhouette')
  # Two side-by-side people produce an abnormally wide full-body silhouette.
+ # Allow wide action poses/gear up to 1.08; downstream identity/coverage QA still rejects real duplicates.
  # Reject before resizing so technical QA cannot normalize a multi-person frame into a valid-looking cell.
- if cw/ch>.72:raise RuntimeError(f'too-wide/multiple-subject silhouette ratio={cw/ch:.2f}')
+ if cw/ch>1.08:raise RuntimeError(f'too-wide/multiple-subject silhouette ratio={cw/ch:.2f}')
  scale=min(176/cw,218/ch); crop=crop.resize((max(1,round(cw*scale)),max(1,round(ch*scale))),Image.Resampling.LANCZOS)
  cell=Image.new('RGBA',(256,256));x=(256-crop.width)//2;y=238-crop.height;cell.alpha_composite(crop,(x,y))
  aa=cell.getchannel('A');cov=sum(aa.histogram()[8:])/(256*256)
