@@ -103,6 +103,7 @@ The content is organized as follows:
     reconcile-run75-bld03-status.yml
     reconcile-sprite-progress-ledger.yml
     refine-run66-stragglers.yml
+    repair-bld13-main.yml
     repair-promote-bld03-run75.yml
     semantic-refresh.yml
     sprite-completion-gate.yml
@@ -6476,6 +6477,59 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh workflow run kaggle-mass-sprite-factory.yml --ref main -f count=30
+```
+
+## File: .github/workflows/repair-bld13-main.yml
+```yaml
+name: Repair BLD-13 main runtime
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/repair-bld13-main.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install WebP tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y webp
+          python -m pip install --quiet pillow
+      - name: Decode re-encode and validate BLD-13
+        shell: bash
+        run: |
+          set -euo pipefail
+          for t in {0..6}; do
+            f="app/src/main/res/drawable-nodpi/zte_business_13_t${t}_final.webp"
+            png="/tmp/bld13_t${t}.png"
+            fixed="/tmp/bld13_t${t}.webp"
+            echo "REPAIR_TEST=$f"
+            dwebp "$f" -o "$png"
+            cwebp -quiet -lossless -exact "$png" -o "$fixed"
+            mv "$fixed" "$f"
+            python tools/sprites/validate_runtime_asset.py --asset-id "BLD-13-T$t" --path "$f"
+          done
+          python tools/sprites/audit_complete_sprite_manifest.py --allow-pending
+      - name: Commit repaired runtime
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/src/main/res/drawable-nodpi/zte_business_13_t*_final.webp art/production/final-sprite-completion-audit.json
+          if git diff --cached --quiet; then
+            echo "No repair changes"
+            exit 0
+          fi
+          git commit -m "fix: re-encode BLD-13 runtime WebP [bld13-repair]"
+          git push origin HEAD:main
 ```
 
 ## File: .github/workflows/repair-promote-bld03-run75.yml

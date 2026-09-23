@@ -1,19 +1,18 @@
 # CI status
 
-Summary: 6 success / 1 failure / 1 active
+Summary: 3 success / 4 failure / 1 active
 
-- Pollinations Character Atlas: in_progress / pending (e0cd5d15)
-- Pollinations Character Atlas: completed / success (94f68677)
-- Pollinations Character Atlas: completed / success (226b6fd0)
-- Manifest Static GPU Batch: completed / success (226b6fd0)
-- Kaggle Mass Sprite Factory: completed / failure (226b6fd0)
-- Asset Autofactory 235: completed / success (708b3728)
-- Pollinations Character Atlas: completed / success (a5a00c88)
-- Pollinations Building Candidate: completed / success (80a095d0)
+- Repair BLD-13 main runtime: in_progress / pending (7279459b)
+- Asset Pipeline CI: completed / failure (9df3664b)
+- .github/workflows/repair-bld13-runtime.yml: completed / failure (9df3664b)
+- Asset Pipeline CI: completed / failure (c361d48b)
+- Pollinations Character Atlas: completed / success (ffab3a5c)
+- Pollinations Character Atlas: completed / success (fa0d346d)
+- Asset Pipeline CI: completed / failure (fa2c2f3f)
+- Manifest Static GPU Batch: completed / success (fa0d346d)
 
 ## Latest failed run structure
-- Job: kaggle
-  - Failed step: Require fresh technically validated candidates
-  - Failed step: Require successful Kaggle kernel
+- Job: validate
+  - Failed step: Audit authoritative sprite manifest
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

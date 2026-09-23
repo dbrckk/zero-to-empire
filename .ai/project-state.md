@@ -22,19 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-23T02:00:29Z
+Generated: 2026-09-23T07:12:40Z
 
 ### Git
 - Branch: `main`
-- Head: `e0cd5d15dff1`
-- Commit date: 2026-09-23T04:00:10+02:00
-- Commit: art: reopen rejected character candidates for improved generation
-- Tracked files: 1382
+- Head: `7279459bb0fd`
+- Commit date: 2026-09-23T09:12:23+02:00
+- Commit: ci: run one-shot BLD-13 runtime repair
+- Tracked files: 1383
 
 ### Recently changed files
+- `.github/workflows/repair-bld13-main.yml`
 - `art/production/controlled-character-regen-queue.json`
 - `art/production/pollinations-character-summary.json`
-- `art/incoming/final-sprites/zte_chr_op_idle_final.png`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
 - `art/production/master-asset-queue.json`
