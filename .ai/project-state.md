@@ -22,21 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-22T23:59:30Z
+Generated: 2026-09-23T02:00:29Z
 
 ### Git
 - Branch: `main`
-- Head: `a5a00c88d6eb`
-- Commit date: 2026-09-23T01:59:15+02:00
-- Commit: ci: fix character atlas zero-candidate output handling
+- Head: `e0cd5d15dff1`
+- Commit date: 2026-09-23T04:00:10+02:00
+- Commit: art: reopen rejected character candidates for improved generation
 - Tracked files: 1382
 
 ### Recently changed files
-- `.github/workflows/pollinations-character-atlas.yml`
-- `art/production/master-asset-queue.json`
+- `art/production/controlled-character-regen-queue.json`
+- `art/production/pollinations-character-summary.json`
+- `art/incoming/final-sprites/zte_chr_op_idle_final.png`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
-- `art/production/semantic-review-remaining-buildings-2026-09-22.md`
+- `art/production/master-asset-queue.json`
 
 ### Project signals
 - `build.gradle.kts`
