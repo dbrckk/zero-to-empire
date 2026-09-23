@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 3 success / 3 failure / 1 active
+Summary: 5 success / 2 failure / 1 active
 
-- Asset Pipeline CI: in_progress / pending (200aac2e)
-- .github/workflows/repair-bld13-runtime.yml: completed / failure (200aac2e)
-- Asset Pipeline CI: completed / success (de59f651)
-- .github/workflows/repair-bld13-runtime.yml: completed / failure (de59f651)
-- .github/workflows/repair-bld13-runtime.yml: completed / failure (8b545a82)
-- Reconcile reviewed run 25: completed / skipped (8b545a82)
-- Android Emulator Smoke: completed / success (fe91274c)
-- Android CI: completed / success (fe91274c)
+- Asset Pipeline CI: in_progress / pending (8214b232)
+- .github/workflows/repair-bld13-runtime.yml: completed / failure (8214b232)
+- Asset Autofactory CI: completed / success (139321b9)
+- Asset Pipeline CI: completed / success (139321b9)
+- .github/workflows/repair-bld13-runtime.yml: completed / failure (139321b9)
+- Pollinations Character Atlas: completed / success (f91bb554)
+- Pollinations Character Atlas: completed / success (c9159ee3)
+- Pollinations Character Atlas: completed / success (f1a3f0e4)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

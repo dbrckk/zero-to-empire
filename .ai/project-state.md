@@ -22,28 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-23T09:16:47Z
+Generated: 2026-09-23T13:02:14Z
 
 ### Git
 - Branch: `main`
-- Head: `200aac2ef47f`
-- Commit date: 2026-09-23T11:16:25+02:00
-- Commit: fix: increase walk and repair pose motion (#138)
+- Head: `8214b2325331`
+- Commit date: 2026-09-23T15:01:57+02:00
+- Commit: art: promote approved BLD-04 BLD-07 BLD-10 to strict DONE (#139)
 - Tracked files: 1385
 
 ### Recently changed files
-- `tools/sprites/kaggle_character_sheet_factory_v1.py`
-- `.github/workflows/repair-bld13-runtime.yml`
-- `app/src/main/res/drawable-nodpi/zte_business_13_t0_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_business_13_t1_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_business_13_t2_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_business_13_t3_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_business_13_t4_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_business_13_t5_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_business_13_t6_final.webp`
-- `art/production/pr137-ci-retrigger.txt`
-- `tools/sprites/audit_complete_sprite_manifest.py`
-- `.github/workflows/repair-bld13-main.yml`
+- `art/production/generation-rejection-ledger.json`
+- `art/production/master-asset-queue.json`
 - `art/production/controlled-character-regen-queue.json`
 - `art/production/pollinations-character-summary.json`
 

@@ -1,13 +1,14 @@
 # Change impact
 
-Base: 8b545a82160cfad2b8212d9baaadd8ca1372041c
-Head: 200aac2ef47f88e763a737f30bd55f019ea67b4c
+Base: 53b4eef107d7589680606f773d5942fe380c5d62
+Head: 8214b23253317680fa52cbfa7b8f8099cb722590
 
 ## Changed files
-- M tools/sprites/kaggle_character_sheet_factory_v1.py
+- M art/production/generation-rejection-ledger.json
+- M art/production/master-asset-queue.json
 
 ## Affected areas
-- tools
+- art
 
 ## Related test candidates
 - No direct filename-based test match detected.
