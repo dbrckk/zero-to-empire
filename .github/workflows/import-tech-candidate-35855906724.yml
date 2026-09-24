@@ -23,8 +23,9 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p /tmp/tech-artifact
-          gh run download 35855906724 --repo "$GITHUB_REPOSITORY" --name zte-sprite-factory-output --dir /tmp/tech-artifact
-          src="/tmp/tech-artifact/tmp/kaggle-output/output/candidates/zte_chr_tech_idle_final.png"
+          gh run download 35855906724 --repo "$GITHUB_REPOSITORY" --name kaggle-sprite-batch --dir /tmp/tech-artifact
+          src="$(find /tmp/tech-artifact -type f -name 'zte_chr_tech_idle_final.png' -print -quit)"
+          test -n "$src"
           test -s "$src"
           mkdir -p art/incoming/characters/technician
           cp "$src" art/incoming/characters/technician/zte_chr_tech_idle_final.png
