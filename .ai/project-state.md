@@ -22,19 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-23T14:07:42Z
+Generated: 2026-09-25T16:21:32Z
 
 ### Git
 - Branch: `main`
-- Head: `2c5e8da87027`
-- Commit date: 2026-09-23T16:07:24+02:00
-- Commit: art: promote reviewed BLD-05 family to strict DONE (#140)
-- Tracked files: 1385
+- Head: `437c37d2fabd`
+- Commit date: 2026-09-25T18:21:01+02:00
+- Commit: art: trigger final TECH motion regeneration
+- Tracked files: 1387
 
 ### Recently changed files
-- `art/production/generation-rejection-ledger.json`
-- `art/production/master-asset-queue.json`
+- `ops/sprite-wave-trigger.txt`
+- `.github/workflows/final-character-motion-patch.yml`
+- `tools/sprites/kaggle_character_sheet_factory_v1.py`
+- `tools/sprites/patch_final_character_motion.py`
 - `art/production/controlled-character-regen-queue.json`
+- `art/production/master-asset-queue.json`
 - `art/production/pollinations-character-summary.json`
 
 ### Project signals

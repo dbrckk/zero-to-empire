@@ -2,13 +2,13 @@
 
 Summary: 3 success / 4 failure / 1 active
 
-- Asset Pipeline CI: in_progress / pending (2c5e8da8)
-- .github/workflows/repair-bld13-runtime.yml: completed / failure (2c5e8da8)
-- Pollinations Building Candidate: completed / success (5f6675eb)
-- Asset Autofactory CI: completed / success (a1d2cbd0)
-- Asset Pipeline CI: completed / success (a1d2cbd0)
-- .github/workflows/repair-bld13-runtime.yml: completed / failure (a1d2cbd0)
-- .github/workflows/repair-bld13-runtime.yml: completed / failure (f94789e9)
-- .github/workflows/repair-bld13-runtime.yml: completed / failure (5f6675eb)
+- Kaggle Mass Sprite Factory: in_progress / pending (437c37d2)
+- .github/workflows/repair-bld13-runtime.yml: completed / failure (437c37d2)
+- Asset Pipeline CI: completed / success (3eb94684)
+- .github/workflows/repair-bld13-runtime.yml: completed / failure (3eb94684)
+- Asset Pipeline CI: completed / success (ea35c93b)
+- Final Character Motion Patch: completed / success (62e20948)
+- .github/workflows/repair-bld13-runtime.yml: completed / failure (62e20948)
+- .github/workflows/final-character-motion-patch.yml: completed / failure (ce25a6be)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

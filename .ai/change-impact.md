@@ -1,14 +1,13 @@
 # Change impact
 
-Base: 5f6675eb27ad1d4eb8d912dab943a6e055686723
-Head: 2c5e8da870270b5aaa9b56e15cbf64380e4e5ba8
+Base: 3eb9468403492363550691bf847de9bf76e04431
+Head: 437c37d2fabdc14b1f060516151cc7d959019a15
 
 ## Changed files
-- M art/production/generation-rejection-ledger.json
-- M art/production/master-asset-queue.json
+- M ops/sprite-wave-trigger.txt
 
 ## Affected areas
-- art
+- ops
 
 ## Related test candidates
 - No direct filename-based test match detected.
