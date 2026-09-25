@@ -1,0 +1,46 @@
+name: Final Character Motion Patch
+on:
+  push:
+    branches: [fix/final-character-motion]
+permissions:
+  contents: write
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch final TECH motion
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('tools/sprites/kaggle_character_sheet_factory_v1.py')
+          s=p.read_text()
+          s=s.replace("character-sheet-flux-v1.7-action-motion-retry","character-sheet-flux-v1.8-final-motion-guard")
+          s=s.replace("'REPAIR':['half-kneel and reach tool toward low repair point','tool pressed to low repair point, free hand bracing','tool moves horizontally across repair point, no sparks','lean closer and inspect repair point','tool contacts mid-height repair point','free hand adjusts component while tool stays ready','pull back and inspect with torso upright','second tool contact at mid height','rise from half-kneel while lowering tool','neutral repair-ready stance']", "'REPAIR':['deep half-kneel, torso leaned far forward, right arm fully extended with tool toward low repair point','tool pressed low, free hand bracing wide, shoulders rotated toward repair','tool sweeps clearly left across low repair point, torso follows, no sparks','pull tool back to chest and lean close to inspect, elbow strongly bent','rise to wide crouch, tool reaches diagonally to mid-height repair point','free hand reaches high to adjust component while tool hand stays low','pull both arms back, torso upright and weight shifted onto rear leg','second strong tool contact at mid height with opposite shoulder forward','rise from crouch while lowering tool beside thigh, free arm extended for balance','standing repair-ready stance, both arms lowered and feet apart']")
+          s=s.replace("'CELEB':['neutral stance both arms down','right arm begins lifting, elbow bent','right fist reaches shoulder height, torso opens','right fist fully overhead, weight shifts to left leg','small overhead fist pump with opposite arm bent','arm lowers to shoulder height, weight recenters','arm lowers beside body','return to neutral stance']", "'CELEB':['neutral stance both arms down, feet apart','right arm lifts outward to forty-five degrees, elbow bent, left arm stays down','right fist at shoulder height, left arm swings outward, torso rotates right','right fist fully overhead, left arm bent across chest, weight shifts strongly to left leg','both arms clearly raised, right fist high and left fist at shoulder, torso leaning left','right arm drops to shoulder height while left arm extends outward, weight shifts right','right arm lowers diagonally while left arm returns down, torso recenters','return to neutral stance with both arms fully down and feet apart']")
+          old="""elif i['action']=='REPAIR':
+        strength=min(.58,.38+fi*.018+attempt*.03)
+       else:
+        strength=min(.48,.29+fi*.015+attempt*.025)"""
+          new="""elif i['action']=='REPAIR':
+        strength=min(.68,.48+fi*.018+attempt*.035)
+       elif i['action']=='CELEB':
+        strength=min(.62,.43+fi*.016+attempt*.035)
+       else:
+        strength=min(.48,.29+fi*.015+attempt*.025)"""
+          if old not in s: raise SystemExit('strength block not found')
+          s=s.replace(old,new)
+          p.write_text(s)
+      - name: Verify
+        run: |
+          python -m py_compile tools/sprites/kaggle_character_sheet_factory_v1.py
+          grep -q 'v1.8-final-motion-guard' tools/sprites/kaggle_character_sheet_factory_v1.py
+          grep -q "strength=min(.62,.43+fi\*.016+attempt\*.035)" tools/sprites/kaggle_character_sheet_factory_v1.py
+      - name: Commit patch
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add tools/sprites/kaggle_character_sheet_factory_v1.py
+          git commit -m 'fix(art): strengthen final TECH animation motion'
+          git push origin HEAD:fix/final-character-motion
