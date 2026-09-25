@@ -9,7 +9,7 @@ from __future__ import annotations
 import argparse,gc,json,re
 from collections import deque
 from pathlib import Path
-print('KAGGLE_STARTUP=character-sheet-flux-v1.7-action-motion-retry',flush=True)
+print('KAGGLE_STARTUP=character-sheet-flux-v1.8-final-motion-guard',flush=True)
 import torch
 from PIL import Image,ImageFilter
 from diffusers import FluxPipeline,FluxImg2ImgPipeline,FluxTransformer2DModel
@@ -43,8 +43,8 @@ POSE_HINT={
  'WALK':['left foot far forward, right foot far back, arms counter-swing','left knee bent under body, right leg extended back','legs crossing in mid-stride, opposite arm forward','right foot far forward, left foot far back, arms counter-swing','right knee bent under body, left leg extended back','legs crossing in opposite mid-stride, opposite arm forward','left foot forward recovery stride, right heel raised','right foot forward recovery stride, left heel raised'],
  'WORK':['tool held at chest, neutral stance','left arm reaches tool forward, torso leans slightly','tool contacting waist-height machine point','knees bent, tool working low near knee height','tool centered with both hands, torso forward','tool raised toward shoulder-height work point','upper body pulls tool back from contact','lean in and inspect repaired point','tool lowered beside thigh','return to neutral work stance'],
  'CARRY':['crate held with both hands at waist, feet apart','left foot forward carrying stride, crate stable','legs passing under body, crate stable at waist','right foot forward carrying stride, crate stable','short recovery stance with crate centered','left foot forward longer carrying stride','opposite passing step, elbows fixed around crate','right foot forward recovery, crate centered'],
- 'REPAIR':['half-kneel and reach tool toward low repair point','tool pressed to low repair point, free hand bracing','tool moves horizontally across repair point, no sparks','lean closer and inspect repair point','tool contacts mid-height repair point','free hand adjusts component while tool stays ready','pull back and inspect with torso upright','second tool contact at mid height','rise from half-kneel while lowering tool','neutral repair-ready stance'],
- 'CELEB':['neutral stance both arms down','right arm begins lifting, elbow bent','right fist reaches shoulder height, torso opens','right fist fully overhead, weight shifts to left leg','small overhead fist pump with opposite arm bent','arm lowers to shoulder height, weight recenters','arm lowers beside body','return to neutral stance'],
+ 'REPAIR':['deep half-kneel, torso leaned far forward, right arm fully extended with tool toward low repair point','tool pressed low, free hand bracing wide, shoulders rotated toward repair','tool sweeps clearly left across low repair point, torso follows, no sparks','pull tool back to chest and lean close to inspect, elbow strongly bent','rise to wide crouch, tool reaches diagonally to mid-height repair point','free hand reaches high to adjust component while tool hand stays low','pull both arms back, torso upright and weight shifted onto rear leg','second strong tool contact at mid height with opposite shoulder forward','rise from crouch while lowering tool beside thigh, free arm extended for balance','standing repair-ready stance, both arms lowered and feet apart'],
+ 'CELEB':['neutral stance both arms down, feet apart','right arm lifts outward to forty-five degrees, elbow bent, left arm stays down','right fist at shoulder height, left arm swings outward, torso rotates right','right fist fully overhead, left arm bent across chest, weight shifts strongly to left leg','both arms clearly raised, right fist high and left fist at shoulder, torso leaning left','right arm drops to shoulder height while left arm extends outward, weight shifts right','right arm lowers diagonally while left arm returns down, torso recenters','return to neutral stance with both arms fully down and feet apart'],
 }
 
 def rows():
@@ -322,7 +322,9 @@ def main():
        if i['action']=='WALK':
         strength=min(.72,.58+fi*.016+attempt*.03)
        elif i['action']=='REPAIR':
-        strength=min(.58,.38+fi*.018+attempt*.03)
+        strength=min(.68,.48+fi*.018+attempt*.035)
+       elif i['action']=='CELEB':
+        strength=min(.62,.43+fi*.016+attempt*.035)
        else:
         strength=min(.48,.29+fi*.015+attempt*.025)
        if mode in {'single','identity'} and i['action']!='WALK':strength=max(.24,strength-.035)
