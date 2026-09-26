@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 3 success / 4 failure / 1 active
+Summary: 5 success / 3 failure / 0 active
 
-- Kaggle Mass Sprite Factory: in_progress / pending (437c37d2)
-- .github/workflows/repair-bld13-runtime.yml: completed / failure (437c37d2)
-- Asset Pipeline CI: completed / success (3eb94684)
-- .github/workflows/repair-bld13-runtime.yml: completed / failure (3eb94684)
-- Asset Pipeline CI: completed / success (ea35c93b)
-- Final Character Motion Patch: completed / success (62e20948)
-- .github/workflows/repair-bld13-runtime.yml: completed / failure (62e20948)
-- .github/workflows/final-character-motion-patch.yml: completed / failure (ce25a6be)
+- .github/workflows/repair-bld13-runtime.yml: completed / failure (ab8cef99)
+- Pollinations Character Atlas: completed / success (2c73681b)
+- Kaggle Mass Sprite Factory: completed / failure (4671743b)
+- Asset Autofactory 235: completed / success (c56ddf6c)
+- Pollinations Character Atlas: completed / success (c56ddf6c)
+- Asset Autofactory 235: completed / success (be473b3e)
+- Pollinations Character Atlas: completed / success (be473b3e)
+- Kaggle Mass Sprite Factory: completed / failure (be473b3e)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

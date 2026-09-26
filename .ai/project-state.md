@@ -22,23 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-25T16:21:32Z
+Generated: 2026-09-26T05:39:58Z
 
 ### Git
 - Branch: `main`
-- Head: `437c37d2fabd`
-- Commit date: 2026-09-25T18:21:01+02:00
-- Commit: art: trigger final TECH motion regeneration
-- Tracked files: 1387
+- Head: `ab8cef999267`
+- Commit date: 2026-09-26T07:39:42+02:00
+- Commit: Add files via upload
+- Tracked files: 1388
 
 ### Recently changed files
-- `ops/sprite-wave-trigger.txt`
-- `.github/workflows/final-character-motion-patch.yml`
-- `tools/sprites/kaggle_character_sheet_factory_v1.py`
-- `tools/sprites/patch_final_character_motion.py`
+- `zero-to-empire-final-tech-sprites.zip`
 - `art/production/controlled-character-regen-queue.json`
-- `art/production/master-asset-queue.json`
 - `art/production/pollinations-character-summary.json`
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
+- `art/production/master-asset-queue.json`
 
 ### Project signals
 - `build.gradle.kts`

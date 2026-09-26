@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 3eb9468403492363550691bf847de9bf76e04431
-Head: 437c37d2fabdc14b1f060516151cc7d959019a15
+Base: ce33427b9d22b7304fba67e7e5952f2b64f2996e
+Head: ab8cef9992672e2b3f242bff1db5a432b19a3e0e
 
 ## Changed files
-- M ops/sprite-wave-trigger.txt
+- A zero-to-empire-final-tech-sprites.zip
 
 ## Affected areas
-- ops
+- (root)
 
 ## Related test candidates
 - No direct filename-based test match detected.
