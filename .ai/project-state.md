@@ -22,21 +22,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-26T09:27:34Z
+Generated: 2026-09-26T09:34:34Z
 
 ### Git
 - Branch: `main`
-- Head: `9ff9887f82c9`
-- Commit date: 2026-09-26T11:27:19+02:00
-- Commit: ci(art): import uploaded TECH runtime atlases
+- Head: `5c58588995c3`
+- Commit date: 2026-09-26T11:34:13+02:00
+- Commit: fix(ci): quote Actions trigger key for TECH atlas import
 - Tracked files: 1392
 
 ### Recently changed files
 - `.github/workflows/import-tech-runtime-atlases.yml`
+- `app/src/main/res/drawable-nodpi/zte_chr_tech_celeb_final.webp`
+- `app/src/main/res/drawable-nodpi/zte_chr_tech_repair_final.webp`
+- `art/incoming/final-sprites/zte_chr_tech_celeb_final.png`
+- `art/incoming/final-sprites/zte_chr_tech_repair_final.png`
 - `zte-tech-runtime-atlases.zip`
 - `zero-to-empire-final-tech-sprites.zip`
-- `art/production/controlled-character-regen-queue.json`
-- `art/production/pollinations-character-summary.json`
 
 ### Project signals
 - `build.gradle.kts`

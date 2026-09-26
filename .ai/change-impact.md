@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 59df6f7b4ed0a82dc30b26d70ec5c5379b4d850c
-Head: 9ff9887f82c9a15c7294f85c997a2aa2a7be31c6
+Base: 30734b245e40ca90a5dae88f22b3d74085fa722f
+Head: 5c58588995c375533215335ae43086c5c358e303
 
 ## Changed files
-- A .github/workflows/import-tech-runtime-atlases.yml
+- M .github/workflows/import-tech-runtime-atlases.yml
 
 ## Affected areas
 - .github

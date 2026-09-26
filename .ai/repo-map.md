@@ -1849,7 +1849,7 @@ jobs:
 ```yaml
 name: Import TECH runtime atlases
 
-on:
+'on':
   push:
     branches: [main]
     paths:
