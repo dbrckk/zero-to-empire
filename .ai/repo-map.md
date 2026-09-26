@@ -57,6 +57,7 @@ The content is organized as follows:
     free-hf-sprite-factory.yml
     fx-historical-review-evidence.yml
     hf-public-flux-building.yml
+    import-tech-runtime-atlases.yml
     instant-terrain-batch.yml
     kaggle-candidate-finalize.yml
     kaggle-gpu-orchestrator.yml
@@ -1842,6 +1843,64 @@ jobs:
             art/production/hf-public-flux-contact-sheet.png
           if-no-files-found: error
           retention-days: 14
+```
+
+## File: .github/workflows/import-tech-runtime-atlases.yml
+```yaml
+name: Import TECH runtime atlases
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/import-tech-runtime-atlases.yml'
+      - 'zte-tech-runtime-atlases.zip'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import-and-validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install image tooling
+        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
+      - name: Extract validated TECH atlases
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f zte-tech-runtime-atlases.zip
+          rm -rf .tmp-tech-atlases
+          mkdir -p .tmp-tech-atlases art/incoming/final-sprites
+          unzip -q zte-tech-runtime-atlases.zip -d .tmp-tech-atlases
+          install -m 0644 .tmp-tech-atlases/zte_chr_tech_repair_final.png art/incoming/final-sprites/zte_chr_tech_repair_final.png
+          install -m 0644 .tmp-tech-atlases/zte_chr_tech_celeb_final.png art/incoming/final-sprites/zte_chr_tech_celeb_final.png
+      - name: Validate and produce runtime WebP
+        env:
+          SPRITE_TARGETS: zte_chr_tech_repair_final,zte_chr_tech_celeb_final
+        run: python tools/sprites/process_final_sprites.py
+      - name: Commit validated source and runtime sprites
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add art/incoming/final-sprites/zte_chr_tech_repair_final.png \
+                  art/incoming/final-sprites/zte_chr_tech_celeb_final.png \
+                  app/src/main/res/drawable-nodpi/zte_chr_tech_repair_final.webp \
+                  app/src/main/res/drawable-nodpi/zte_chr_tech_celeb_final.webp
+          if git diff --cached --quiet; then
+            echo 'TECH atlases already integrated.'
+            exit 0
+          fi
+          git commit -m 'art: integrate validated TECH repair and celeb atlases'
+          git push origin HEAD:main
 ```
 
 ## File: .github/workflows/instant-terrain-batch.yml

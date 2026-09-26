@@ -1,13 +1,13 @@
 # Change impact
 
-Base: fc1836369268548dbaa44625b8e62f847c8ec610
-Head: fbb9947f8a06f719f35cd0168f1860cd4aa4f540
+Base: 59df6f7b4ed0a82dc30b26d70ec5c5379b4d850c
+Head: 9ff9887f82c9a15c7294f85c997a2aa2a7be31c6
 
 ## Changed files
-- A zte-tech-runtime-atlases.zip
+- A .github/workflows/import-tech-runtime-atlases.yml
 
 ## Affected areas
-- (root)
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

@@ -22,23 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-26T09:08:56Z
+Generated: 2026-09-26T09:27:34Z
 
 ### Git
 - Branch: `main`
-- Head: `fbb9947f8a06`
-- Commit date: 2026-09-26T11:08:38+02:00
-- Commit: Add files via upload
-- Tracked files: 1390
+- Head: `9ff9887f82c9`
+- Commit date: 2026-09-26T11:27:19+02:00
+- Commit: ci(art): import uploaded TECH runtime atlases
+- Tracked files: 1392
 
 ### Recently changed files
+- `.github/workflows/import-tech-runtime-atlases.yml`
 - `zte-tech-runtime-atlases.zip`
 - `zero-to-empire-final-tech-sprites.zip`
 - `art/production/controlled-character-regen-queue.json`
 - `art/production/pollinations-character-summary.json`
-- `art/production/autofactory-state.json`
-- `art/production/autofactory-summary.md`
-- `art/production/master-asset-queue.json`
 
 ### Project signals
 - `build.gradle.kts`
