@@ -22,23 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-26T21:01:34Z
+Generated: 2026-09-26T21:58:15Z
 
 ### Git
 - Branch: `main`
-- Head: `c98b0f3f6eaa`
-- Commit date: 2026-09-26T23:01:13+02:00
-- Commit: art: add canonical atlas creation backlog
+- Head: `5666164490ab`
+- Commit date: 2026-09-26T23:57:55+02:00
+- Commit: art: sync atlas creation backlog after Kaggle generation
 - Tracked files: 1402
 
 ### Recently changed files
 - `art/production/atlas-to-create.txt`
+- `art/production/controlled-character-regen-queue.json`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
-- `art/production/controlled-character-regen-queue.json`
 - `art/production/master-asset-queue.json`
-- `art/production/pollinations-character-summary.json`
-- `art/incoming/final-sprites/zte_chr_log_idle_final.png`
 
 ### Project signals
 - `build.gradle.kts`
