@@ -22,23 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-26T10:50:38Z
+Generated: 2026-09-26T12:29:11Z
 
 ### Git
 - Branch: `main`
-- Head: `d520319d1a01`
-- Commit date: 2026-09-26T12:50:23+02:00
-- Commit: ci(art): promote manually reviewed TECH sprites
-- Tracked files: 1393
+- Head: `9db4d5ba4204`
+- Commit date: 2026-09-26T14:28:51+02:00
+- Commit: Add files via upload
+- Tracked files: 1394
 
 ### Recently changed files
-- `.github/workflows/promote-reviewed-tech-sprites.yml`
-- `art/production/controlled-character-regen-queue.json`
-- `docs/art/FINAL_AAA_SPRITE_MANIFEST.md`
+- `zte-generated-character-validation-pack.zip`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
 - `art/production/master-asset-queue.json`
-- `.github/workflows/import-tech-runtime-atlases.yml`
+- `.github/workflows/promote-reviewed-tech-sprites.yml`
+- `art/production/controlled-character-regen-queue.json`
 
 ### Project signals
 - `build.gradle.kts`
