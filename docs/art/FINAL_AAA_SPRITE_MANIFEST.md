@@ -317,3 +317,8 @@ If a new runtime sprite is later required, it must be added here first and the d
 | ID | Asset | Description | Runtime target | Status |
 |---|---|---|---|---|
 | ONB-00 | Onboarding step 0 primary illustration | Authored replacement for the current step-0 radial Power Core/ignition visual in `OnboardingStepArt`; isolated scene art with no baked UI text. | `app/src/main/res/drawable-nodpi/zte_onboarding_00_final.webp` | DONE |
+
+## Runtime validation note — TECH atlases
+- 2026-09-26: `zte_chr_tech_repair_final.webp` integrated from a validated 1024x1024 / 10-frame atlas.
+- 2026-09-26: `zte_chr_tech_celeb_final.webp` integrated from a validated 1024x1024 / 8-frame atlas.
+- Both sources passed the repository character-atlas structural validator before runtime WebP promotion; Android CI is the remaining runtime build gate.
