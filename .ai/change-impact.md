@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 1a482bf12ed5a2a25a7f9336c722b3c724082f19
-Head: 47cd890fbeba63222c56307d1d11312bea54c637
+Base: 7ca685a1d4166cf93e9a6e38dea5556499ebec4f
+Head: d8fd3df4f096b12c2650f36ea5d358a3451cd774
 
 ## Changed files
-- A zte-log-character-validation-pack.zip
+- A zte-log-v2-validation-pack.zip
 
 ## Affected areas
 - (root)
