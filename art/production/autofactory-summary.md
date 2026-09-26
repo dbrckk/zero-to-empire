@@ -3,8 +3,8 @@
 - Strict DONE: **176 / 235**
 - Production processed to DONE/review: **215 / 235**
 - Awaiting semantic review: **11**
-- Automation-blocked: **7**
-- Current action: **WAIT_KAGGLE_BUSY**
+- Automation-blocked: **9**
+- Current action: **DISPATCH_KAGGLE_CHARACTER**
 - Current group: **controlled-character**
 
 The autofactory may generate and technically validate candidates automatically,
