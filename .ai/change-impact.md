@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 7ca685a1d4166cf93e9a6e38dea5556499ebec4f
-Head: d8fd3df4f096b12c2650f36ea5d358a3451cd774
+Base: 03ef3e9d83805a09f36f412276b08245144e9d08
+Head: 385ae7710480a8f9b1de05237efd6d00d226a7c2
 
 ## Changed files
-- A zte-log-v2-validation-pack.zip
+- A zte-chr-log-work-v3-validation-pack.zip
 
 ## Affected areas
 - (root)
