@@ -22,22 +22,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-26T16:56:03Z
+Generated: 2026-09-26T21:01:34Z
 
 ### Git
 - Branch: `main`
-- Head: `385ae7710480`
-- Commit date: 2026-09-26T18:55:46+02:00
-- Commit: Add files via upload
-- Tracked files: 1400
+- Head: `c98b0f3f6eaa`
+- Commit date: 2026-09-26T23:01:13+02:00
+- Commit: art: add canonical atlas creation backlog
+- Tracked files: 1402
 
 ### Recently changed files
-- `zte-chr-log-work-v3-validation-pack.zip`
+- `art/production/atlas-to-create.txt`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
 - `art/production/controlled-character-regen-queue.json`
 - `art/production/master-asset-queue.json`
 - `art/production/pollinations-character-summary.json`
+- `art/incoming/final-sprites/zte_chr_log_idle_final.png`
 
 ### Project signals
 - `build.gradle.kts`
