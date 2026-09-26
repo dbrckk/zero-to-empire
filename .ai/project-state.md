@@ -22,22 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-26T12:29:11Z
+Generated: 2026-09-26T13:17:51Z
 
 ### Git
 - Branch: `main`
-- Head: `9db4d5ba4204`
-- Commit date: 2026-09-26T14:28:51+02:00
+- Head: `47cd890fbeba`
+- Commit date: 2026-09-26T15:17:34+02:00
 - Commit: Add files via upload
-- Tracked files: 1394
+- Tracked files: 1396
 
 ### Recently changed files
+- `zte-log-character-validation-pack.zip`
 - `zte-generated-character-validation-pack.zip`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
 - `art/production/master-asset-queue.json`
 - `.github/workflows/promote-reviewed-tech-sprites.yml`
-- `art/production/controlled-character-regen-queue.json`
 
 ### Project signals
 - `build.gradle.kts`
