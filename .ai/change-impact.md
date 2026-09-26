@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 30734b245e40ca90a5dae88f22b3d74085fa722f
-Head: 5c58588995c375533215335ae43086c5c358e303
+Base: ba9be60a25c81cfad34cc416596463d72d13cd76
+Head: b75ce04183f4af6c2ec21aa53d07334e85f46378
 
 ## Changed files
-- M .github/workflows/import-tech-runtime-atlases.yml
+- M docs/art/FINAL_AAA_SPRITE_MANIFEST.md
 
 ## Affected areas
-- .github
+- docs
 
 ## Related test candidates
 - No direct filename-based test match detected.

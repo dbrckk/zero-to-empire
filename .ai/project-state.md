@@ -22,23 +22,26 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-26T09:34:34Z
+Generated: 2026-09-26T09:56:57Z
 
 ### Git
 - Branch: `main`
-- Head: `5c58588995c3`
-- Commit date: 2026-09-26T11:34:13+02:00
-- Commit: fix(ci): quote Actions trigger key for TECH atlas import
+- Head: `b75ce04183f4`
+- Commit date: 2026-09-26T11:56:41+02:00
+- Commit: docs(art): record validated TECH runtime atlas integration
 - Tracked files: 1392
 
 ### Recently changed files
+- `docs/art/FINAL_AAA_SPRITE_MANIFEST.md`
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
+- `art/production/controlled-character-regen-queue.json`
+- `art/production/master-asset-queue.json`
 - `.github/workflows/import-tech-runtime-atlases.yml`
 - `app/src/main/res/drawable-nodpi/zte_chr_tech_celeb_final.webp`
 - `app/src/main/res/drawable-nodpi/zte_chr_tech_repair_final.webp`
 - `art/incoming/final-sprites/zte_chr_tech_celeb_final.png`
 - `art/incoming/final-sprites/zte_chr_tech_repair_final.png`
-- `zte-tech-runtime-atlases.zip`
-- `zero-to-empire-final-tech-sprites.zip`
 
 ### Project signals
 - `build.gradle.kts`
