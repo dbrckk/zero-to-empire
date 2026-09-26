@@ -22,26 +22,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-26T09:56:57Z
+Generated: 2026-09-26T10:50:38Z
 
 ### Git
 - Branch: `main`
-- Head: `b75ce04183f4`
-- Commit date: 2026-09-26T11:56:41+02:00
-- Commit: docs(art): record validated TECH runtime atlas integration
-- Tracked files: 1392
+- Head: `d520319d1a01`
+- Commit date: 2026-09-26T12:50:23+02:00
+- Commit: ci(art): promote manually reviewed TECH sprites
+- Tracked files: 1393
 
 ### Recently changed files
+- `.github/workflows/promote-reviewed-tech-sprites.yml`
+- `art/production/controlled-character-regen-queue.json`
 - `docs/art/FINAL_AAA_SPRITE_MANIFEST.md`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
-- `art/production/controlled-character-regen-queue.json`
 - `art/production/master-asset-queue.json`
 - `.github/workflows/import-tech-runtime-atlases.yml`
-- `app/src/main/res/drawable-nodpi/zte_chr_tech_celeb_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_chr_tech_repair_final.webp`
-- `art/incoming/final-sprites/zte_chr_tech_celeb_final.png`
-- `art/incoming/final-sprites/zte_chr_tech_repair_final.png`
 
 ### Project signals
 - `build.gradle.kts`

@@ -1,13 +1,13 @@
 # Change impact
 
-Base: ba9be60a25c81cfad34cc416596463d72d13cd76
-Head: b75ce04183f4af6c2ec21aa53d07334e85f46378
+Base: da1071d8263cd7c61fdf4068573589c5e97ac4bd
+Head: d520319d1a016b5a01f2817a332ad1b7db7df7fc
 
 ## Changed files
-- M docs/art/FINAL_AAA_SPRITE_MANIFEST.md
+- A .github/workflows/promote-reviewed-tech-sprites.yml
 
 ## Affected areas
-- docs
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

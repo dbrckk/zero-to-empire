@@ -94,6 +94,7 @@ The content is organized as follows:
     promote-reviewed-bld12.yml
     promote-reviewed-run68.yml
     promote-reviewed-run69-ter09.yml
+    promote-reviewed-tech-sprites.yml
     promote-run66-reviewed.yml
     promote-run75-bld03.yml
     promote-ter07-v3.yml
@@ -5612,6 +5613,80 @@ jobs:
           PY
           git add docs/art/FINAL_AAA_SPRITE_MANIFEST.md docs/art/FINAL_AAA_SPRITE_PROGRESS.md
           git commit -m "art: mark run69 TER-09 strict DONE"
+          git push origin HEAD:main
+```
+
+## File: .github/workflows/promote-reviewed-tech-sprites.yml
+```yaml
+name: Promote reviewed TECH sprites
+
+'on':
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/promote-reviewed-tech-sprites.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Promote manually reviewed TECH assets
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('art/production/master-asset-queue.json')
+          data = json.loads(path.read_text())
+          ids = {'CHR-TECH-REPAIR', 'CHR-TECH-CELEB'}
+          found = set()
+          for asset in data['assets']:
+              if asset['id'] not in ids:
+                  continue
+              found.add(asset['id'])
+              runtime = Path(asset['runtime'])
+              if not runtime.is_file():
+                  raise SystemExit(f'missing runtime: {runtime}')
+              asset['strict_status'] = 'DONE'
+              asset['pipeline_status'] = 'DONE'
+              asset['lane'] = 'strict-done'
+              asset['generation_required'] = False
+              asset['last_generator'] = 'manual-review+runtime-ci'
+              asset['last_error'] = None
+              asset['review_reason'] = ('Manually reviewed and approved in asset QA; final runtime atlas integrated; '
+                                        'Android CI passed build, unit tests, lint, release AAB and bundle verification.')
+          if found != ids:
+              raise SystemExit(f'missing queue ids: {sorted(ids-found)}')
+          path.write_text(json.dumps(data, indent=2) + '\n')
+          PY
+      - name: Verify promoted assets
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data=json.loads(Path('art/production/master-asset-queue.json').read_text())
+          for asset_id in ('CHR-TECH-REPAIR','CHR-TECH-CELEB'):
+              a=next(x for x in data['assets'] if x['id']==asset_id)
+              assert a['strict_status']=='DONE'
+              assert a['pipeline_status']=='DONE'
+              assert Path(a['runtime']).is_file()
+          print('TECH review promotion verified')
+          PY
+      - name: Commit review promotion
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add art/production/master-asset-queue.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'art(review): approve TECH repair and celeb runtimes'
           git push origin HEAD:main
 ```
 
