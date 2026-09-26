@@ -887,21 +887,15 @@ TRIGGER_RUN_ID = os.getenv("AUTOF_TRIGGER_RUN_ID", "")
 KAGGLE_BUSY = os.getenv("AUTOF_KAGGLE_BUSY", "0") == "1"
 FX_BUSY = os.getenv("AUTOF_FX_BUSY", "0") == "1"
 ⋮----
+# A character in one of these states already has a produced candidate/evidence.
+# It must not be regenerated merely because strict semantic approval is pending.
+CHARACTER_PRODUCED_STATUSES = {
+⋮----
 def by_id(queue: dict[str, Any]) -> dict[str, dict[str, Any]]
 ⋮----
 def update_from_trigger(queue: dict[str, Any]) -> None
 ⋮----
-# Producer failures must never strand assets in DISPATCHED forever. The
-# workflow_run event is authoritative: put the active Kaggle lane back into
-# the controlled queue so the next autofactory cycle can retry it, subject
-# to the per-asset attempt budget.
-⋮----
 active = [
-⋮----
-# The producer writes AWAITING_REVIEW into the controlled queue.
-# sync_controlled_queues() below will import that exact state.
-⋮----
-# Keep the specialized controlled queues aligned with master state.
 ⋮----
 controlled = load_json(path, {}) or {}
 changed = False
@@ -931,20 +925,21 @@ def prepare_building_group(queue: dict[str, Any], group: str) -> dict[str, Any]
 ⋮----
 unresolved = [aid for aid in building_family_ids(group) if aid in assets and assets[aid]["strict_status"] != "DONE"]
 ⋮----
-targets = []
+targets = [{"id": aid, "status": "PENDING_KAGGLE", "autofactory_context_only": aid not in unresolved} for aid in building_family_ids(group)]
 ⋮----
 dispatched = mark_dispatch(queue, unresolved, "kaggle-building-family")
 ⋮----
 def prepare_character_group(queue: dict[str, Any], group: str) -> dict[str, Any]
 ⋮----
-action_order={"IDLE":0,"WALK":1,"WORK":2,"CARRY":3,"REPAIR":4,"CELEB":5}
+action_order = {"IDLE": 0, "WALK": 1, "WORK": 2, "CARRY": 3, "REPAIR": 4, "CELEB": 5}
 group_assets = sorted(
+targets = []
 ⋮----
 dispatched = mark_dispatch(queue, [x["id"] for x in targets[:2]], "kaggle-character-sheet")
 ⋮----
 def next_group(queue: dict[str, Any], lane: str, priority: list[str]) -> str | None
 ⋮----
-groups = {
+groups = {x["group"] for x in queue["assets"] if x["lane"] == lane and x["strict_status"] != "DONE" and x["pipeline_status"] in {"PENDING", "PENDING_KAGGLE", "BLOCKED", "REJECT", "REJECTED", "REJECTED_SEMANTIC", "BLOCKED_AUTOMATION_LIMIT"} and int(x.get("attempts") or 0) < MAX_ATTEMPTS}
 ⋮----
 def pending_ids_from_controlled(path: Path, queue: dict[str, Any]) -> list[str]
 ⋮----
@@ -955,8 +950,6 @@ def make_decision(queue: dict[str, Any]) -> dict[str, Any]
 ⋮----
 s = stats(queue)
 ⋮----
-# Existing controlled building work always has priority because the Kaggle
-# router itself prioritizes CONTROLLED_BLD over CONTROLLED_CHR.
 building_pending = pending_ids_from_controlled(BUILDING_QUEUE, queue)
 ⋮----
 ids = mark_dispatch(queue, building_pending, "kaggle-building-family")
@@ -973,7 +966,7 @@ group = next_group(queue, "kaggle-character-sheet", CHARACTER_PRIORITY)
 ⋮----
 prepared = prepare_character_group(queue, group)
 ⋮----
-fx = [
+fx = [x for x in queue["assets"] if x["lane"] == "fx-runtime-reconciliation" and x["strict_status"] != "DONE" and x["pipeline_status"] == "PENDING_EVIDENCE" and int(x.get("attempts") or 0) < MAX_ATTEMPTS]
 ⋮----
 refreshed = stats(queue)
 ⋮----

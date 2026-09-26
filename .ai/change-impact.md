@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 2f84575cf45f9ce0ee95e4554c46ba9910178882
-Head: 5666164490ab5e8c424b6c3054a213137c0aebf2
+Base: 89ce0e311cb88ae4e86cc64e776fe16953513293
+Head: afa6e3da0964d012acf7d8b79c2342ce98ac9698
 
 ## Changed files
-- M art/production/atlas-to-create.txt
+- M ops/autofactory-kick.txt
 
 ## Affected areas
-- art
+- ops
 
 ## Related test candidates
 - No direct filename-based test match detected.

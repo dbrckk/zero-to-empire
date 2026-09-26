@@ -22,21 +22,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-26T21:58:15Z
+Generated: 2026-09-26T23:00:52Z
 
 ### Git
 - Branch: `main`
-- Head: `5666164490ab`
-- Commit date: 2026-09-26T23:57:55+02:00
-- Commit: art: sync atlas creation backlog after Kaggle generation
+- Head: `ae68b4f871aa`
+- Commit date: 2026-09-26T23:00:30Z
+- Commit: art(auto): advance 235-asset production queue
 - Tracked files: 1402
 
 ### Recently changed files
-- `art/production/atlas-to-create.txt`
-- `art/production/controlled-character-regen-queue.json`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
 - `art/production/master-asset-queue.json`
+- `ops/autofactory-kick.txt`
+- `tools/sprites/asset_wave_orchestrator.py`
+- `art/production/atlas-to-create.txt`
+- `art/production/controlled-character-regen-queue.json`
 
 ### Project signals
 - `build.gradle.kts`
