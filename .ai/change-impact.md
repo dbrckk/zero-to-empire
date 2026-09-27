@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 5bb9b03cbf3cf2bf2e1781c9e793f02f6b4651f6
-Head: 2438762b69566462773bb46e99418059440c9d13
+Base: 2ef6e039386493184ff8674df600b006216c6f78
+Head: 68a625032e8993f513c37375032f954e8e932e17
 
 ## Changed files
-- M art/production/atlas-to-create.txt
+- M art/incoming/final-sprites/zte_chr_log_carry_final.png
 
 ## Affected areas
 - art

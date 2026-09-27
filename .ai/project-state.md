@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-27T14:20:19Z
+Generated: 2026-09-27T16:21:34Z
 
 ### Git
 - Branch: `main`
-- Head: `2438762b6956`
-- Commit date: 2026-09-27T16:20:01+02:00
-- Commit: production: mark CHR-LOG-CARRY generated candidate
+- Head: `68a625032e89`
+- Commit date: 2026-09-27T18:21:13+02:00
+- Commit: art: add validated CHR-LOG-CARRY runtime atlas
 - Tracked files: 1402
 
 ### Recently changed files
+- `art/incoming/final-sprites/zte_chr_log_carry_final.png`
 - `art/production/atlas-to-create.txt`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
