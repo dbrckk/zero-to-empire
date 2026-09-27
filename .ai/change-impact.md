@@ -1,14 +1,13 @@
 # Change impact
 
-Base: 803b68996cfb9b7fecac2e3aa16f1f53bdc348cb
-Head: 7d0eb74d22d6fc4626e364df19dd7da9e70affdb
+Base: 734f0a9dc178d19d7e780978b97bc7b55438f3bd
+Head: 5d830348deb94b2a355d4a2313fb2a4e46b9bd8e
 
 ## Changed files
-- M art/incoming/final-sprites/zte_chr_log_celeb_final.png
-- M art/incoming/final-sprites/zte_chr_log_repair_final.png
+- A bld08_t0_t6_validation_pack.zip
 
 ## Affected areas
-- art
+- (root)
 
 ## Related test candidates
 - No direct filename-based test match detected.
