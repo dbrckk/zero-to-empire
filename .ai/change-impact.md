@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 89ce0e311cb88ae4e86cc64e776fe16953513293
-Head: afa6e3da0964d012acf7d8b79c2342ce98ac9698
+Base: a657d9a21db0675af02671c7b106cc60e999622e
+Head: 3943a8fda698285fb621b160917fb9e89ec44545
 
 ## Changed files
-- M ops/autofactory-kick.txt
+- M art/production/generation-rejection-ledger.json
 
 ## Affected areas
-- ops
+- art
 
 ## Related test candidates
 - No direct filename-based test match detected.

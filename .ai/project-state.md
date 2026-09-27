@@ -22,23 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-26T23:00:52Z
+Generated: 2026-09-27T09:20:14Z
 
 ### Git
 - Branch: `main`
-- Head: `ae68b4f871aa`
-- Commit date: 2026-09-26T23:00:30Z
-- Commit: art(auto): advance 235-asset production queue
+- Head: `3943a8fda698`
+- Commit date: 2026-09-27T11:19:50+02:00
+- Commit: art: reinforce LOG full-body generation memory
 - Tracked files: 1402
 
 ### Recently changed files
+- `art/production/generation-rejection-ledger.json`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
-- `art/production/master-asset-queue.json`
-- `ops/autofactory-kick.txt`
-- `tools/sprites/asset_wave_orchestrator.py`
-- `art/production/atlas-to-create.txt`
 - `art/production/controlled-character-regen-queue.json`
+- `art/production/master-asset-queue.json`
+- `art/production/pollinations-character-summary.json`
 
 ### Project signals
 - `build.gradle.kts`
