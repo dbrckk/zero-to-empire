@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-27T09:20:14Z
+Generated: 2026-09-27T14:20:19Z
 
 ### Git
 - Branch: `main`
-- Head: `3943a8fda698`
-- Commit date: 2026-09-27T11:19:50+02:00
-- Commit: art: reinforce LOG full-body generation memory
+- Head: `2438762b6956`
+- Commit date: 2026-09-27T16:20:01+02:00
+- Commit: production: mark CHR-LOG-CARRY generated candidate
 - Tracked files: 1402
 
 ### Recently changed files
-- `art/production/generation-rejection-ledger.json`
+- `art/production/atlas-to-create.txt`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
-- `art/production/controlled-character-regen-queue.json`
 - `art/production/master-asset-queue.json`
+- `art/production/controlled-character-regen-queue.json`
 - `art/production/pollinations-character-summary.json`
 
 ### Project signals
