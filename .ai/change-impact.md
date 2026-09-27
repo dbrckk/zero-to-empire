@@ -1,10 +1,11 @@
 # Change impact
 
-Base: 2ef6e039386493184ff8674df600b006216c6f78
-Head: 68a625032e8993f513c37375032f954e8e932e17
+Base: 803b68996cfb9b7fecac2e3aa16f1f53bdc348cb
+Head: 7d0eb74d22d6fc4626e364df19dd7da9e70affdb
 
 ## Changed files
-- M art/incoming/final-sprites/zte_chr_log_carry_final.png
+- M art/incoming/final-sprites/zte_chr_log_celeb_final.png
+- M art/incoming/final-sprites/zte_chr_log_repair_final.png
 
 ## Affected areas
 - art

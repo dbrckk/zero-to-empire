@@ -22,23 +22,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-27T16:21:34Z
+Generated: 2026-09-27T17:49:08Z
 
 ### Git
 - Branch: `main`
-- Head: `68a625032e89`
-- Commit date: 2026-09-27T18:21:13+02:00
-- Commit: art: add validated CHR-LOG-CARRY runtime atlas
+- Head: `7d0eb74d22d6`
+- Commit date: 2026-09-27T19:48:44+02:00
+- Commit: Add files via upload
 - Tracked files: 1402
 
 ### Recently changed files
-- `art/incoming/final-sprites/zte_chr_log_carry_final.png`
-- `art/production/atlas-to-create.txt`
+- `art/incoming/final-sprites/zte_chr_log_celeb_final.png`
+- `art/incoming/final-sprites/zte_chr_log_repair_final.png`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
 - `art/production/master-asset-queue.json`
-- `art/production/controlled-character-regen-queue.json`
-- `art/production/pollinations-character-summary.json`
+- `art/incoming/final-sprites/zte_chr_log_carry_final.png`
+- `art/production/atlas-to-create.txt`
 
 ### Project signals
 - `build.gradle.kts`
