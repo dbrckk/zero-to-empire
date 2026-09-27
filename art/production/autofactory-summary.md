@@ -5,7 +5,7 @@
 - Awaiting semantic review: **13**
 - Automation-blocked: **7**
 - Current action: **DISPATCH_KAGGLE_CHARACTER**
-- Current group: **controlled-character**
+- Current group: **CHR-LOG**
 
 The autofactory may generate and technically validate candidates automatically,
 but it never promotes a visually unreviewed candidate to strict DONE.
