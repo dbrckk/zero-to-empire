@@ -1,8 +1,8 @@
 # Asset Autofactory — 235 target
 
 - Strict DONE: **176 / 235**
-- Production processed to DONE/review: **220 / 235**
-- Awaiting semantic review: **14**
+- Production processed to DONE/review: **221 / 235**
+- Awaiting semantic review: **15**
 - Automation-blocked: **8**
 - Current action: **DISPATCH_KAGGLE_CHARACTER**
 - Current group: **controlled-character**
