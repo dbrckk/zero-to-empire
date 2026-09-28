@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 734f0a9dc178d19d7e780978b97bc7b55438f3bd
-Head: 5d830348deb94b2a355d4a2313fb2a4e46b9bd8e
+Base: 5d7c089d0bc738993afacb4415114057f717a654
+Head: 8f95dd8be77719ac1c13ded0c658d8fc21a43d62
 
 ## Changed files
-- A bld08_t0_t6_validation_pack.zip
+- A bld08_t0_t6_final_pack.zip
 
 ## Affected areas
 - (root)

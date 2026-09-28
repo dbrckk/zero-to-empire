@@ -22,24 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-27T19:07:59Z
+Generated: 2026-09-28T07:22:37Z
 
 ### Git
 - Branch: `main`
-- Head: `5d830348deb9`
-- Commit date: 2026-09-27T21:07:41+02:00
+- Head: `8f95dd8be777`
+- Commit date: 2026-09-28T09:22:17+02:00
 - Commit: Add files via upload
-- Tracked files: 1403
+- Tracked files: 1405
 
 ### Recently changed files
-- `bld08_t0_t6_validation_pack.zip`
+- `bld08_t0_t6_final_pack.zip`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
-- `art/production/controlled-character-regen-queue.json`
 - `art/production/master-asset-queue.json`
-- `art/production/pollinations-character-summary.json`
-- `art/incoming/final-sprites/zte_chr_log_celeb_final.png`
-- `art/incoming/final-sprites/zte_chr_log_repair_final.png`
+- `art/production/controlled-character-regen-queue.json`
 
 ### Project signals
 - `build.gradle.kts`
