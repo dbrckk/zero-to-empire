@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 5d7c089d0bc738993afacb4415114057f717a654
-Head: 8f95dd8be77719ac1c13ded0c658d8fc21a43d62
+Base: aea3c721cbdb3bc400897c9cee4ee8d1aa46ecd3
+Head: 00f4c07fd21b3bfc64654f9899da121b2c6884f8
 
 ## Changed files
-- A bld08_t0_t6_final_pack.zip
+- A .github/workflows/integrate-bld08-final.yml
 
 ## Affected areas
-- (root)
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

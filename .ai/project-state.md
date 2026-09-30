@@ -22,21 +22,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-28T07:22:37Z
+Generated: 2026-09-30T19:55:47Z
 
 ### Git
 - Branch: `main`
-- Head: `8f95dd8be777`
-- Commit date: 2026-09-28T09:22:17+02:00
-- Commit: Add files via upload
-- Tracked files: 1405
+- Head: `00f4c07fd21b`
+- Commit date: 2026-09-30T21:55:28+02:00
+- Commit: ci: install BLD-08 final integration workflow
+- Tracked files: 1407
 
 ### Recently changed files
-- `bld08_t0_t6_final_pack.zip`
+- `.github/workflows/integrate-bld08-final.yml`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
 - `art/production/master-asset-queue.json`
+- `art/incoming/final-sprites/zte_chr_eng_celeb_final.png`
 - `art/production/controlled-character-regen-queue.json`
+- `art/production/pollinations-character-summary.json`
 
 ### Project signals
 - `build.gradle.kts`

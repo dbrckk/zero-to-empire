@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 4 success / 4 failure / 0 active
+Summary: 6 success / 2 failure / 0 active
 
-- .github/workflows/repair-bld13-runtime.yml: completed / failure (8f95dd8b)
-- Manifest Static GPU Batch: completed / success (5d7c089d)
-- Pollinations Building Candidate: completed / success (5d7c089d)
-- Kaggle Mass Sprite Factory: completed / failure (5d7c089d)
-- Asset Autofactory 235: completed / success (84ecdd32)
-- Kaggle Mass Sprite Factory: completed / failure (84ecdd32)
-- Kaggle Mass Sprite Factory: completed / failure (84ecdd32)
-- Asset Autofactory 235: completed / success (fb00e872)
+- .github/workflows/repair-bld13-runtime.yml: completed / failure (00f4c07f)
+- Manifest Static GPU Batch: completed / success (aea3c721)
+- Pollinations Building Candidate: completed / success (aea3c721)
+- Asset Autofactory 235: completed / success (f8966ffc)
+- Pollinations Character Atlas: completed / success (12c79605)
+- Manifest Static GPU Batch: completed / success (12c79605)
+- Pollinations Building Candidate: completed / success (12c79605)
+- .github/workflows/repair-bld13-runtime.yml: completed / failure (3c01783e)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.
