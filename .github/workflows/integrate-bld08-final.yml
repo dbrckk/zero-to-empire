@@ -1,0 +1,81 @@
+name: Integrate BLD-08 Final
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Extract and verify BLD-08
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f bld08_t0_t6_final_pack.zip
+          rm -rf /tmp/bld08
+          mkdir -p /tmp/bld08
+          unzip -q bld08_t0_t6_final_pack.zip -d /tmp/bld08
+          python3 - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+          root = Path('/tmp/bld08')
+          manifest = json.loads((root / 'validation-manifest.json').read_text())
+          assert manifest['family'] == 'BLD-08'
+          assert len(manifest['assets']) == 7
+          expected = {f'BLD-08-T{i}' for i in range(7)}
+          actual = {asset['id'] for asset in manifest['assets']}
+          assert actual == expected, (actual, expected)
+          for asset in manifest['assets']:
+              path = root / asset['file']
+              assert path.is_file(), path
+              digest = hashlib.sha256(path.read_bytes()).hexdigest()
+              assert digest == asset['sha256'], path
+          print('BLD-08 manifest + SHA-256 verification: PASS')
+          PY
+
+      - name: Install runtime assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p app/src/main/res/drawable-nodpi
+          mkdir -p art/production/bld08-final
+          for t in 0 1 2 3 4 5 6; do
+            src="/tmp/bld08/zte_bld_08_t${t}_final.png"
+            dst="app/src/main/res/drawable-nodpi/zte_business_08_t${t}_final.png"
+            test -f "$src"
+            cp "$src" "$dst"
+          done
+          cp /tmp/bld08/validation-manifest.json art/production/bld08-final/validation-manifest.json
+
+      - name: Verify installation
+        shell: bash
+        run: |
+          set -euo pipefail
+          for t in 0 1 2 3 4 5 6; do
+            test -s "app/src/main/res/drawable-nodpi/zte_business_08_t${t}_final.png"
+          done
+          test -s art/production/bld08-final/validation-manifest.json
+          echo 'BLD-08 T0-T6 runtime installation: PASS'
+
+      - name: Commit BLD-08
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add app/src/main/res/drawable-nodpi/zte_business_08_t*_final.png art/production/bld08-final/validation-manifest.json
+          if git diff --cached --quiet; then
+            echo 'BLD-08 already integrated.'
+            exit 0
+          fi
+          git commit -m 'art: integrate final BLD-08 T0-T6 assets'
+          git push origin HEAD:main
