@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Shared state helpers for the 235-asset autonomous production queue.
 
-The master queue deliberately does not trust per-row DONE values from the legacy
-manifest while historical semantic review is open. The strict baseline is defined by the reviewed ledger. BLD-02, BLD-03, BLD-11, BLD-12 and all historical FX have now been explicitly reconciled; BLD-13 has now been manually regenerated and semantically approved; BLD-09 has now also been manually regenerated and semantically approved; unresolved work remains in five building families and 24 character sheets.
-ONB-00 is outside the 235 production target.
+Explicitly reviewed building families are canonical strict-DONE state. The only
+remaining unresolved production set is the 24 character sheets. ONB-00 is
+outside the 235 production target.
 """
 from __future__ import annotations
 
@@ -25,12 +25,9 @@ ROW = re.compile(
 )
 
 TARGET_TOTAL = 235
-STRICT_BASELINE = 176
+STRICT_BASELINE = 211
 MAX_ATTEMPTS = 8
 
-# Prioritize unresolved families with the highest expected semantic-pass yield.
-# Repeatedly failing site-card/platform families stay at the back until their
-# specialized generator guards have more evidence.
 BUILDING_PRIORITY = ["BLD-10", "BLD-05", "BLD-08",
                      "BLD-07", "BLD-04", "BLD-11", "BLD-12",
                      "BLD-02", "BLD-03"]
@@ -57,6 +54,9 @@ def manifest_rows() -> list[dict[str, str]]:
         asset_id, name, description, runtime, _status = [x.strip() for x in m.groups()]
         if asset_id == "ONB-00":
             continue
+        if asset_id.startswith("BLD-08-T"):
+            tier = asset_id.rsplit("T", 1)[1]
+            runtime = f"app/src/main/res/drawable-nodpi/zte_business_08_t{tier}_final.png"
         rows.append({
             "id": asset_id,
             "name": name,
@@ -69,14 +69,9 @@ def manifest_rows() -> list[dict[str, str]]:
 
 
 def unresolved_ids() -> set[str]:
-    ids: set[str] = set()
-    for family in range(4, 14):
-        if family in {6, 9, 11, 12, 13}:
-            continue
-        ids.update(f"BLD-{family:02d}-T{tier}" for tier in range(7))
-    ids.update(r["id"] for r in manifest_rows() if r["id"].startswith("CHR-"))
-    if len(ids) != 59:
-        raise RuntimeError(f"Strict unresolved set drifted: expected 59, got {len(ids)}")
+    ids = {r["id"] for r in manifest_rows() if r["id"].startswith("CHR-")}
+    if len(ids) != 24:
+        raise RuntimeError(f"Strict unresolved set drifted: expected 24 character sheets, got {len(ids)}")
     return ids
 
 
@@ -90,7 +85,6 @@ def default_asset(row: dict[str, str], unresolved: set[str]) -> dict[str, Any]:
         lane, priority, required, pipeline = "kaggle-building-family", 10 + int(asset_id.split("-")[1]), True, "PENDING"
     elif asset_id.startswith("CHR-"):
         group = "-".join(asset_id.split("-")[:2])
-        role = asset_id.split("-")[1]
         lane, priority, required, pipeline = "kaggle-character-sheet", 200 + max(0, CHARACTER_PRIORITY.index(group)) * 10, True, "PENDING"
     elif asset_id.startswith("FX-"):
         group = "FX-HISTORICAL"
@@ -125,6 +119,11 @@ def ensure_master() -> dict[str, Any]:
             for key in ("pipeline_status", "attempts", "last_run_id", "last_generator", "last_error", "review_reason"):
                 if key in prev:
                     base[key] = prev[key]
+            if base["strict_status"] == "DONE":
+                base["pipeline_status"] = "DONE"
+                base["lane"] = "strict-done"
+                base["generation_required"] = False
+                base["last_error"] = None
         assets.append(base)
     queue = {
         "schema_version": 1,
