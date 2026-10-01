@@ -1,7 +1,7 @@
 # Change impact
 
-Base: 6cbe8a1f37afec97c36f097c1ff3b5a7768031ab
-Head: 34883d7c195e7d188bc406ae8dc373c6806dccf5
+Base: 2d91cf755957dde6653523b3464ba0adaa0b8414
+Head: 52fd60443802fcf1535e13bf19633a2c6323784f
 
 ## Changed files
 - M ops/autofactory-kick.txt
