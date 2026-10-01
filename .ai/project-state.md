@@ -22,22 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-01T20:20:40Z
+Generated: 2026-10-01T20:24:58Z
 
 ### Git
 - Branch: `main`
-- Head: `e80498c6b5b9`
-- Commit date: 2026-10-01T20:20:13Z
-- Commit: art(auto): advance 235-asset production queue
+- Head: `1d9ef990b537`
+- Commit date: 2026-10-01T22:24:12+02:00
+- Commit: art: refresh resumed CHR-OP review state
 - Tracked files: 1417
 
 ### Recently changed files
 - `art/production/master-asset-queue.json`
-- `ops/autofactory-kick.txt`
 - `tools/sprites/asset_wave_orchestrator.py`
-- `tools/sprites/asset_queue_utils.py`
-- `art/production/autofactory-state.json`
-- `art/production/autofactory-summary.md`
+- `ops/autofactory-kick.txt`
 
 ### Project signals
 - `build.gradle.kts`
