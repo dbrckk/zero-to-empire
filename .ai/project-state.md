@@ -22,23 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-01T20:44:18Z
+Generated: 2026-10-01T21:05:26Z
 
 ### Git
 - Branch: `main`
-- Head: `ff38e1c9cd82`
-- Commit date: 2026-10-01T22:43:54+02:00
-- Commit: fix(art): report actual controlled dispatch counts
+- Head: `04ff620a6677`
+- Commit date: 2026-10-01T23:05:09+02:00
+- Commit: ci(art): recover failed CHR-OP carry run
 - Tracked files: 1417
 
 ### Recently changed files
+- `ops/autofactory-kick.txt`
 - `tools/sprites/asset_wave_orchestrator.py`
 - `.github/workflows/repair-bld13-runtime.yml`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
 - `art/production/master-asset-queue.json`
-- `ops/autofactory-kick.txt`
-- `art/production/controlled-character-regen-queue.json`
 
 ### Project signals
 - `build.gradle.kts`
