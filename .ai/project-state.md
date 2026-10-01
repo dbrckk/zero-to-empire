@@ -22,20 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-01T20:38:30Z
+Generated: 2026-10-01T20:42:39Z
 
 ### Git
 - Branch: `main`
-- Head: `bcc671cc0899`
-- Commit date: 2026-10-01T22:38:01+02:00
-- Commit: ci(art): kick v1.8 character retry epoch
+- Head: `fb6f24de4935`
+- Commit date: 2026-10-01T22:42:13+02:00
+- Commit: ci(art): continue CHR-OP after partial Kaggle result
 - Tracked files: 1417
 
 ### Recently changed files
 - `ops/autofactory-kick.txt`
-- `tools/sprites/asset_wave_orchestrator.py`
-- `tools/sprites/asset_queue_utils.py`
+- `art/production/controlled-character-regen-queue.json`
 - `art/production/master-asset-queue.json`
+- `tools/sprites/asset_wave_orchestrator.py`
 
 ### Project signals
 - `build.gradle.kts`
