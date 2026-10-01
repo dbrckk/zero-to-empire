@@ -22,19 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-01T20:24:58Z
+Generated: 2026-10-01T20:38:30Z
 
 ### Git
 - Branch: `main`
-- Head: `1d9ef990b537`
-- Commit date: 2026-10-01T22:24:12+02:00
-- Commit: art: refresh resumed CHR-OP review state
+- Head: `bcc671cc0899`
+- Commit date: 2026-10-01T22:38:01+02:00
+- Commit: ci(art): kick v1.8 character retry epoch
 - Tracked files: 1417
 
 ### Recently changed files
-- `art/production/master-asset-queue.json`
-- `tools/sprites/asset_wave_orchestrator.py`
 - `ops/autofactory-kick.txt`
+- `tools/sprites/asset_wave_orchestrator.py`
+- `tools/sprites/asset_queue_utils.py`
+- `art/production/master-asset-queue.json`
 
 ### Project signals
 - `build.gradle.kts`

@@ -1,12 +1,16 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "e80498c6b5b9d0f5ec5d1fdbb08555b760ac4a13",
-  "head": "1d9ef990b53777c8dcc761d8229ae106b4bbb179",
+  "base": "1d9ef990b53777c8dcc761d8229ae106b4bbb179",
+  "head": "bcc671cc08998b4bdc93113d611b3c66d007e660",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": "art/production/master-asset-queue.json",
+      "path": "ops/autofactory-kick.txt",
+      "status": "M"
+    },
+    {
+      "path": "tools/sprites/asset_queue_utils.py",
       "status": "M"
     },
     {
@@ -15,77 +19,139 @@
     }
   ],
   "changed_source_files": [
+    "tools/sprites/asset_queue_utils.py",
     "tools/sprites/asset_wave_orchestrator.py"
   ],
   "impacted_files": [
+    "tools/sprites/asset_queue_utils.py",
     "tools/sprites/asset_wave_orchestrator.py"
   ],
   "impacted_symbols": [
     {
+      "name": "load_json",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 37
+    },
+    {
+      "name": "save_json",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 43
+    },
+    {
+      "name": "manifest_rows",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 48
+    },
+    {
+      "name": "unresolved_ids",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 71
+    },
+    {
+      "name": "default_asset",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 78
+    },
+    {
+      "name": "ensure_master",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 110
+    },
+    {
+      "name": "sync_controlled_queues",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 150
+    },
+    {
+      "name": "stats",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 192
+    },
+    {
+      "name": "write_summary",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 219
+    },
+    {
       "name": "by_id",
       "kind": "function",
       "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 48
+      "line": 50
     },
     {
       "name": "update_from_trigger",
       "kind": "function",
       "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 52
+      "line": 54
     },
     {
       "name": "active_pending",
       "kind": "function",
       "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 98
+      "line": 100
+    },
+    {
+      "name": "character_retry_available",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 105
     },
     {
       "name": "mark_dispatch",
       "kind": "function",
       "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 103
+      "line": 119
     },
     {
       "name": "building_family_ids",
       "kind": "function",
       "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 124
+      "line": 149
     },
     {
       "name": "prepare_building_group",
       "kind": "function",
       "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 128
+      "line": 153
     },
     {
       "name": "prepare_character_group",
       "kind": "function",
       "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 139
+      "line": 164
     },
     {
       "name": "next_group",
       "kind": "function",
       "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 167
+      "line": 192
     },
     {
       "name": "pending_ids_from_controlled",
       "kind": "function",
       "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 175
+      "line": 211
     },
     {
       "name": "make_decision",
       "kind": "function",
       "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 181
+      "line": 228
     },
     {
       "name": "main",
       "kind": "function",
       "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 231
+      "line": 278
     }
   ],
   "selected_tests": []

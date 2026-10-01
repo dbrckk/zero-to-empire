@@ -24174,6 +24174,8 @@ TRIGGER_CONCLUSION = os.getenv("AUTOF_TRIGGER_CONCLUSION", "")
 TRIGGER_RUN_ID = os.getenv("AUTOF_TRIGGER_RUN_ID", "")
 KAGGLE_BUSY = os.getenv("AUTOF_KAGGLE_BUSY", "0") == "1"
 FX_BUSY = os.getenv("AUTOF_FX_BUSY", "0") == "1"
+CHARACTER_GENERATION_EPOCH = "identity-lock-v1.8"
+CHARACTER_EPOCH_ATTEMPT_LIMIT = 2
 ⋮----
 # A character in one of these states already has a produced candidate/evidence.
 # It must not be regenerated merely because strict semantic approval is pending.
@@ -24197,6 +24199,12 @@ target = [
 def active_pending(path: Path) -> list[dict[str, Any]]
 ⋮----
 q = load_json(path, {}) or {}
+⋮----
+def character_retry_available(asset: dict[str, Any]) -> bool
+⋮----
+total_attempts = int(asset.get("attempts") or 0)
+⋮----
+legacy_failure = "Legacy APK character sheet rejected" in str(asset.get("last_error") or "")
 ⋮----
 def mark_dispatch(queue: dict[str, Any], ids: list[str], generator: str) -> list[str]
 ⋮----
@@ -24227,7 +24235,7 @@ dispatched = mark_dispatch(queue, [x["id"] for x in targets[:2]], "kaggle-charac
 ⋮----
 def next_group(queue: dict[str, Any], lane: str, priority: list[str]) -> str | None
 ⋮----
-groups = {x["group"] for x in queue["assets"] if x["lane"] == lane and x["strict_status"] != "DONE" and x["pipeline_status"] in {"PENDING", "PENDING_KAGGLE", "PAUSED", "BLOCKED", "REJECT", "REJECTED", "REJECTED_SEMANTIC", "BLOCKED_AUTOMATION_LIMIT"} and int(x.get("attempts") or 0) < MAX_ATTEMPTS}
+groups = {
 ⋮----
 def pending_ids_from_controlled(path: Path, queue: dict[str, Any]) -> list[str]
 ⋮----
