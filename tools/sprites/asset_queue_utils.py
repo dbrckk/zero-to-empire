@@ -155,7 +155,10 @@ def sync_controlled_queues(queue: dict[str, Any]) -> None:
         if not asset or asset["strict_status"] == "DONE":
             continue
         status = str(item.get("status", "")).upper()
-        if status:
+        if status and not (
+            asset.get("pipeline_status") == "DISPATCHED"
+            and status == "PENDING_KAGGLE"
+        ):
             asset["pipeline_status"] = status
         if item.get("kaggle_run_id"):
             asset["last_run_id"] = int(item["kaggle_run_id"])
@@ -170,7 +173,10 @@ def sync_controlled_queues(queue: dict[str, Any]) -> None:
         if not asset or asset["strict_status"] == "DONE":
             continue
         status = str(item.get("status", "")).upper()
-        if status:
+        if status and not (
+            asset.get("pipeline_status") == "DISPATCHED"
+            and status == "PENDING_KAGGLE"
+        ):
             asset["pipeline_status"] = status
         if item.get("kaggle_run_id"):
             asset["last_run_id"] = int(item["kaggle_run_id"])
