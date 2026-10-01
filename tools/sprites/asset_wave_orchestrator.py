@@ -115,6 +115,8 @@ def mark_dispatch(queue: dict[str, Any], ids: list[str], generator: str) -> list
         x["attempts"] = attempts + 1
         x["pipeline_status"] = "DISPATCHED"
         x["last_generator"] = generator
+        if str(x.get("review_reason") or "").startswith("Character production paused until"):
+            x["review_reason"] = "Identity-locked character generation is available; automatic candidate production resumed."
         eligible.append(aid)
     return eligible
 
