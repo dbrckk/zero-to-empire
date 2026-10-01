@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 2660ef0a580c326df38a51411cbc69ac48a0546c
-Head: 159bb0467859ba38ea6b8dbd7a7094e8ffff7545
+Base: 7314c6a9f88329d295c2eb01d49acfe13c811e30
+Head: 30dbd1402194b79b64bea6367468ee63c15fddd0
 
 ## Changed files
-- A .github/workflows/reconcile-bld08-master-queue.yml
+- M tools/sprites/asset_queue_utils.py
 
 ## Affected areas
-- .github
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

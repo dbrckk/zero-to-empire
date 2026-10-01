@@ -22,32 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-01T08:44:49Z
+Generated: 2026-10-01T15:16:10Z
 
 ### Git
 - Branch: `main`
-- Head: `159bb0467859`
-- Commit date: 2026-10-01T10:43:56+02:00
-- Commit: ci: add BLD-08 master queue reconciliation
-- Tracked files: 1416
+- Head: `30dbd1402194`
+- Commit date: 2026-10-01T17:15:37+02:00
+- Commit: fix(art): make reviewed building approvals canonical
+- Tracked files: 1417
 
 ### Recently changed files
-- `.github/workflows/reconcile-bld08-master-queue.yml`
-- `app/src/main/res/drawable-nodpi/zte_business_08_t0_final.png`
-- `app/src/main/res/drawable-nodpi/zte_business_08_t1_final.png`
-- `app/src/main/res/drawable-nodpi/zte_business_08_t2_final.png`
-- `app/src/main/res/drawable-nodpi/zte_business_08_t3_final.png`
-- `app/src/main/res/drawable-nodpi/zte_business_08_t4_final.png`
-- `app/src/main/res/drawable-nodpi/zte_business_08_t5_final.png`
-- `app/src/main/res/drawable-nodpi/zte_business_08_t6_final.png`
-- `art/production/bld08-final/validation-manifest.json`
-- `.github/workflows/integrate-bld08-final.yml`
-- `art/production/autofactory-state.json`
-- `art/production/autofactory-summary.md`
+- `tools/sprites/asset_queue_utils.py`
+- `tools/sprites/reconcile_strict_approvals.py`
 - `art/production/master-asset-queue.json`
-- `art/incoming/final-sprites/zte_chr_eng_celeb_final.png`
-- `art/production/controlled-character-regen-queue.json`
-- `art/production/pollinations-character-summary.json`
+- `.github/workflows/reconcile-bld08-master-queue.yml`
 
 ### Project signals
 - `build.gradle.kts`

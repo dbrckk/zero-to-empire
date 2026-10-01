@@ -1,49 +1,165 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "00f4c07fd21b3bfc64654f9899da121b2c6884f8",
-  "head": "159bb0467859ba38ea6b8dbd7a7094e8ffff7545",
+  "base": "159bb0467859ba38ea6b8dbd7a7094e8ffff7545",
+  "head": "30dbd1402194b79b64bea6367468ee63c15fddd0",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": ".github/workflows/reconcile-bld08-master-queue.yml",
-      "status": "A"
+      "path": "art/production/master-asset-queue.json",
+      "status": "M"
     },
     {
-      "path": "app/src/main/res/drawable-nodpi/zte_business_08_t0_final.png",
-      "status": "A"
+      "path": "tools/sprites/asset_queue_utils.py",
+      "status": "M"
     },
     {
-      "path": "app/src/main/res/drawable-nodpi/zte_business_08_t1_final.png",
-      "status": "A"
-    },
-    {
-      "path": "app/src/main/res/drawable-nodpi/zte_business_08_t2_final.png",
-      "status": "A"
-    },
-    {
-      "path": "app/src/main/res/drawable-nodpi/zte_business_08_t3_final.png",
-      "status": "A"
-    },
-    {
-      "path": "app/src/main/res/drawable-nodpi/zte_business_08_t4_final.png",
-      "status": "A"
-    },
-    {
-      "path": "app/src/main/res/drawable-nodpi/zte_business_08_t5_final.png",
-      "status": "A"
-    },
-    {
-      "path": "app/src/main/res/drawable-nodpi/zte_business_08_t6_final.png",
-      "status": "A"
-    },
-    {
-      "path": "art/production/bld08-final/validation-manifest.json",
+      "path": "tools/sprites/reconcile_strict_approvals.py",
       "status": "A"
     }
   ],
-  "changed_source_files": [],
-  "impacted_files": [],
-  "impacted_symbols": [],
+  "changed_source_files": [
+    "tools/sprites/asset_queue_utils.py",
+    "tools/sprites/reconcile_strict_approvals.py"
+  ],
+  "impacted_files": [
+    "tools/sprites/asset_queue_utils.py",
+    "tools/sprites/asset_wave_orchestrator.py",
+    "tools/sprites/reconcile_strict_approvals.py"
+  ],
+  "impacted_symbols": [
+    {
+      "name": "load_json",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 37
+    },
+    {
+      "name": "save_json",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 43
+    },
+    {
+      "name": "manifest_rows",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 48
+    },
+    {
+      "name": "unresolved_ids",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 71
+    },
+    {
+      "name": "default_asset",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 78
+    },
+    {
+      "name": "ensure_master",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 110
+    },
+    {
+      "name": "sync_controlled_queues",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 148
+    },
+    {
+      "name": "stats",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 184
+    },
+    {
+      "name": "write_summary",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 211
+    },
+    {
+      "name": "by_id",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 48
+    },
+    {
+      "name": "update_from_trigger",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 52
+    },
+    {
+      "name": "active_pending",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 98
+    },
+    {
+      "name": "mark_dispatch",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 103
+    },
+    {
+      "name": "building_family_ids",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 122
+    },
+    {
+      "name": "prepare_building_group",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 126
+    },
+    {
+      "name": "prepare_character_group",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 137
+    },
+    {
+      "name": "next_group",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 166
+    },
+    {
+      "name": "pending_ids_from_controlled",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 174
+    },
+    {
+      "name": "make_decision",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 180
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 226
+    },
+    {
+      "name": "runtime_for",
+      "kind": "function",
+      "file": "tools/sprites/reconcile_strict_approvals.py",
+      "line": 29
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "tools/sprites/reconcile_strict_approvals.py",
+      "line": 41
+    }
+  ],
   "selected_tests": []
 }

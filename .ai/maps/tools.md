@@ -88,6 +88,7 @@ sprites/
   procedural_terrain_factory.py
   process_final_sprites.py
   promote_ter07_v3.py
+  reconcile_strict_approvals.py
   ter07_energy_conduit_candidate.py
   validate_animation_sheet.py
   validate_runtime_asset.py
@@ -782,9 +783,9 @@ planned = list(items(args.kind))[: args.count]
 #!/usr/bin/env python3
 """Shared state helpers for the 235-asset autonomous production queue.
 
-The master queue deliberately does not trust per-row DONE values from the legacy
-manifest while historical semantic review is open. The strict baseline is defined by the reviewed ledger. BLD-02, BLD-03, BLD-11, BLD-12 and all historical FX have now been explicitly reconciled; BLD-13 has now been manually regenerated and semantically approved; BLD-09 has now also been manually regenerated and semantically approved; unresolved work remains in five building families and 24 character sheets.
-ONB-00 is outside the 235 production target.
+Explicitly reviewed building families are canonical strict-DONE state. The only
+remaining unresolved production set is the 24 character sheets. ONB-00 is
+outside the 235 production target.
 """
 ⋮----
 ROOT = Path(__file__).resolve().parents[2]
@@ -798,12 +799,9 @@ SUMMARY = ROOT / "art/production/autofactory-summary.md"
 ROW = re.compile(
 ⋮----
 TARGET_TOTAL = 235
-STRICT_BASELINE = 176
+STRICT_BASELINE = 211
 MAX_ATTEMPTS = 8
 ⋮----
-# Prioritize unresolved families with the highest expected semantic-pass yield.
-# Repeatedly failing site-card/platform families stay at the back until their
-# specialized generator guards have more evidence.
 BUILDING_PRIORITY = ["BLD-10", "BLD-05", "BLD-08",
 CHARACTER_PRIORITY = ["CHR-OP", "CHR-TECH", "CHR-LOG", "CHR-ENG"]
 ⋮----
@@ -817,9 +815,12 @@ rows: list[dict[str, str]] = []
 ⋮----
 m = ROW.match(line)
 ⋮----
+tier = asset_id.rsplit("T", 1)[1]
+runtime = f"app/src/main/res/drawable-nodpi/zte_business_08_t{tier}_final.png"
+⋮----
 def unresolved_ids() -> set[str]
 ⋮----
-ids: set[str] = set()
+ids = {r["id"] for r in manifest_rows() if r["id"].startswith("CHR-")}
 ⋮----
 def default_asset(row: dict[str, str], unresolved: set[str]) -> dict[str, Any]
 ⋮----
@@ -827,8 +828,6 @@ asset_id = row["id"]
 needs = asset_id in unresolved
 ⋮----
 group = "-".join(asset_id.split("-")[:2])
-⋮----
-role = asset_id.split("-")[1]
 ⋮----
 group = "FX-HISTORICAL"
 ⋮----
@@ -4264,6 +4263,44 @@ runtime_metrics=validate(runtime)
 ⋮----
 evidence={
 out=ROOT/'art/production/ter07/runtime-promotion-v3.json'
+```
+
+## File: sprites/reconcile_strict_approvals.py
+```python
+#!/usr/bin/env python3
+"""Restore explicit historical strict-DONE approvals after queue reconstruction.
+
+The autofactory rebuilds the master queue from a conservative unresolved set. This
+module reapplies only approvals backed by explicit review/promotion history and a
+runtime file that still exists. It does not approve new generated candidates.
+"""
+⋮----
+ROOT = Path(__file__).resolve().parents[2]
+MASTER = ROOT / "art/production/master-asset-queue.json"
+⋮----
+APPROVED_BUILDING_COMMITS = {
+⋮----
+def runtime_for(asset: dict) -> Path | None
+⋮----
+aid = asset["id"]
+⋮----
+preferred = ROOT / f"app/src/main/res/drawable-nodpi/zte_business_08_t{tier}_final.png"
+⋮----
+configured = ROOT / asset["runtime"]
+⋮----
+def main() -> int
+⋮----
+queue = json.loads(MASTER.read_text(encoding="utf-8"))
+by_id = {a["id"]: a for a in queue["assets"]}
+restored: list[str] = []
+⋮----
+expected = [f"{family}-T{i}" for i in range(7)]
+missing = [aid for aid in expected if aid not in by_id]
+⋮----
+asset = by_id[aid]
+runtime = runtime_for(asset)
+⋮----
+strict_done = sum(a.get("strict_status") == "DONE" for a in queue["assets"])
 ```
 
 ## File: sprites/ter07_energy_conduit_candidate.py
