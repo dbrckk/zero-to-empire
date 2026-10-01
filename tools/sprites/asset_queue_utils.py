@@ -116,7 +116,7 @@ def ensure_master() -> dict[str, Any]:
         base = default_asset(row, unresolved)
         prev = old.get(row["id"])
         if prev:
-            for key in ("pipeline_status", "attempts", "last_run_id", "last_generator", "last_error", "review_reason"):
+            for key in ("pipeline_status", "attempts", "last_run_id", "last_generator", "last_error", "review_reason", "generation_epoch", "epoch_attempts"):
                 if key in prev:
                     base[key] = prev[key]
             if base["strict_status"] == "DONE":
@@ -138,6 +138,8 @@ def ensure_master() -> dict[str, Any]:
             "automatic_runtime_promotion": False,
             "preserve_manual_review_gate": True,
             "max_attempts_per_asset": MAX_ATTEMPTS,
+            "character_generation_epoch": "identity-lock-v1.8",
+            "max_attempts_per_character_epoch": 2,
         },
         "assets": assets,
     }
