@@ -22,20 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-01T15:16:10Z
+Generated: 2026-10-01T19:41:22Z
 
 ### Git
 - Branch: `main`
-- Head: `30dbd1402194`
-- Commit date: 2026-10-01T17:15:37+02:00
-- Commit: fix(art): make reviewed building approvals canonical
+- Head: `17a306be1827`
+- Commit date: 2026-10-01T19:40:53Z
+- Commit: art(auto): advance 235-asset production queue
 - Tracked files: 1417
 
 ### Recently changed files
-- `tools/sprites/asset_queue_utils.py`
-- `tools/sprites/reconcile_strict_approvals.py`
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
 - `art/production/master-asset-queue.json`
-- `.github/workflows/reconcile-bld08-master-queue.yml`
+- `ops/autofactory-kick.txt`
+- `tools/sprites/asset_queue_utils.py`
+- `tools/sprites/asset_wave_orchestrator.py`
 
 ### Project signals
 - `build.gradle.kts`

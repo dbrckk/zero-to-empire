@@ -24227,7 +24227,7 @@ dispatched = mark_dispatch(queue, [x["id"] for x in targets[:2]], "kaggle-charac
 ⋮----
 def next_group(queue: dict[str, Any], lane: str, priority: list[str]) -> str | None
 ⋮----
-groups = {x["group"] for x in queue["assets"] if x["lane"] == lane and x["strict_status"] != "DONE" and x["pipeline_status"] in {"PENDING", "PENDING_KAGGLE", "BLOCKED", "REJECT", "REJECTED", "REJECTED_SEMANTIC", "BLOCKED_AUTOMATION_LIMIT"} and int(x.get("attempts") or 0) < MAX_ATTEMPTS}
+groups = {x["group"] for x in queue["assets"] if x["lane"] == lane and x["strict_status"] != "DONE" and x["pipeline_status"] in {"PENDING", "PENDING_KAGGLE", "PAUSED", "BLOCKED", "REJECT", "REJECTED", "REJECTED_SEMANTIC", "BLOCKED_AUTOMATION_LIMIT"} and int(x.get("attempts") or 0) < MAX_ATTEMPTS}
 ⋮----
 def pending_ids_from_controlled(path: Path, queue: dict[str, Any]) -> list[str]
 ⋮----

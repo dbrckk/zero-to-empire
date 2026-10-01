@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 7314c6a9f88329d295c2eb01d49acfe13c811e30
-Head: 30dbd1402194b79b64bea6367468ee63c15fddd0
+Base: 6acf0089162468de69603e30cf012f2b628b809b
+Head: ffc5e4fb00c206fee757a21cb7f4bdb8ad146adc
 
 ## Changed files
-- M tools/sprites/asset_queue_utils.py
+- M ops/autofactory-kick.txt
 
 ## Affected areas
-- tools
+- ops
 
 ## Related test candidates
 - No direct filename-based test match detected.
