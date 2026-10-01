@@ -99,6 +99,7 @@ The content is organized as follows:
     promote-run66-reviewed.yml
     promote-run75-bld03.yml
     promote-ter07-v3.yml
+    reconcile-bld08-master-queue.yml
     reconcile-core-status.yml
     reconcile-existing-runtime-todos.yml
     reconcile-final-sprite-manifest.yml
@@ -6052,6 +6053,93 @@ jobs:
             app/src/main/res/drawable-nodpi/zte_terrain_07_final.webp
           if-no-files-found: error
           retention-days: 30
+```
+
+## File: .github/workflows/reconcile-bld08-master-queue.yml
+```yaml
+name: Reconcile BLD-08 Master Queue
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Reconcile BLD-08 and validate queue
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          queue_path = Path('art/production/master-asset-queue.json')
+          data = json.loads(queue_path.read_text())
+          assets = data['assets']
+
+          ids = [a['id'] for a in assets]
+          if len(ids) != len(set(ids)):
+              raise SystemExit('duplicate asset IDs in master queue')
+
+          bld08 = {f'BLD-08-T{i}' for i in range(7)}
+          found = {a['id'] for a in assets if a['id'] in bld08}
+          if found != bld08:
+              raise SystemExit(f'BLD-08 queue mismatch: found={sorted(found)}')
+
+          for asset in assets:
+              if asset['id'] not in bld08:
+                  continue
+              tier = int(asset['id'].rsplit('T', 1)[1])
+              runtime = Path(f'app/src/main/res/drawable-nodpi/zte_business_08_t{tier}_final.png')
+              if not runtime.is_file() or runtime.stat().st_size == 0:
+                  raise SystemExit(f'missing runtime: {runtime}')
+              asset['runtime'] = str(runtime)
+              asset['strict_status'] = 'DONE'
+              asset['pipeline_status'] = 'DONE'
+              asset['lane'] = 'strict-done'
+              asset['generation_required'] = False
+              asset['last_error'] = None
+              asset['review_reason'] = 'Final BLD-08 T0-T6 pack validated by manifest/SHA-256 and integrated into runtime by workflow run 36773179709.'
+
+          strict_done = sum(1 for a in assets if a.get('strict_status') == 'DONE' and a.get('id') not in set(data.get('excluded_from_target', [])))
+          data['strict_done_baseline'] = strict_done
+
+          target = data.get('target_total')
+          if target != 235:
+              raise SystemExit(f'unexpected target_total={target}')
+          if len(assets) < target:
+              raise SystemExit(f'queue contains only {len(assets)} assets, target is {target}')
+          if strict_done > target:
+              raise SystemExit(f'strict DONE count {strict_done} exceeds target {target}')
+
+          queue_path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + '\n')
+          print(f'strict DONE: {strict_done}/{target}')
+          pending = [a['id'] for a in assets if a.get('strict_status') != 'DONE' and a.get('id') not in set(data.get('excluded_from_target', []))]
+          print(f'non-DONE: {len(pending)}')
+          print('next:', ', '.join(pending[:20]))
+          PY
+
+      - name: Commit reconciliation
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add art/production/master-asset-queue.json
+          if git diff --cached --quiet; then
+            echo 'Master queue already reconciled.'
+            exit 0
+          fi
+          git commit -m 'art: reconcile BLD-08 in master asset queue'
+          git push origin HEAD:main
 ```
 
 ## File: .github/workflows/reconcile-core-status.yml

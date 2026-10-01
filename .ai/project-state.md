@@ -22,16 +22,25 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-30T19:55:47Z
+Generated: 2026-10-01T08:44:49Z
 
 ### Git
 - Branch: `main`
-- Head: `00f4c07fd21b`
-- Commit date: 2026-09-30T21:55:28+02:00
-- Commit: ci: install BLD-08 final integration workflow
-- Tracked files: 1407
+- Head: `159bb0467859`
+- Commit date: 2026-10-01T10:43:56+02:00
+- Commit: ci: add BLD-08 master queue reconciliation
+- Tracked files: 1416
 
 ### Recently changed files
+- `.github/workflows/reconcile-bld08-master-queue.yml`
+- `app/src/main/res/drawable-nodpi/zte_business_08_t0_final.png`
+- `app/src/main/res/drawable-nodpi/zte_business_08_t1_final.png`
+- `app/src/main/res/drawable-nodpi/zte_business_08_t2_final.png`
+- `app/src/main/res/drawable-nodpi/zte_business_08_t3_final.png`
+- `app/src/main/res/drawable-nodpi/zte_business_08_t4_final.png`
+- `app/src/main/res/drawable-nodpi/zte_business_08_t5_final.png`
+- `app/src/main/res/drawable-nodpi/zte_business_08_t6_final.png`
+- `art/production/bld08-final/validation-manifest.json`
 - `.github/workflows/integrate-bld08-final.yml`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
