@@ -189,7 +189,7 @@ def stats(queue: dict[str, Any]) -> dict[str, Any]:
     evidence = sum(x["pipeline_status"] in {"EVIDENCE_DISPATCHED", "AWAITING_REVIEW"} and x["lane"] == "fx-runtime-reconciliation" for x in assets)
     production_processed = sum(
         x["strict_status"] == "DONE"
-        or x["pipeline_status"] in {"AWAITING_REVIEW", "RUNTIME_READY", "DONE"}
+        or x["pipeline_status"] in {"AWAITING_REVIEW", "CANDIDATE", "TECHNICAL_PASS", "VALIDATED", "APPROVED", "RUNTIME_READY", "DONE"}
         for x in assets
     )
     return {
