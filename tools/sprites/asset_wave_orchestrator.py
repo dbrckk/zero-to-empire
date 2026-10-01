@@ -32,6 +32,8 @@ TRIGGER_CONCLUSION = os.getenv("AUTOF_TRIGGER_CONCLUSION", "")
 TRIGGER_RUN_ID = os.getenv("AUTOF_TRIGGER_RUN_ID", "")
 KAGGLE_BUSY = os.getenv("AUTOF_KAGGLE_BUSY", "0") == "1"
 FX_BUSY = os.getenv("AUTOF_FX_BUSY", "0") == "1"
+CHARACTER_GENERATION_EPOCH = "identity-lock-v1.8"
+CHARACTER_EPOCH_ATTEMPT_LIMIT = 2
 
 # A character in one of these states already has a produced candidate/evidence.
 # It must not be regenerated merely because strict semantic approval is pending.
@@ -100,6 +102,20 @@ def active_pending(path: Path) -> list[dict[str, Any]]:
     return [x for x in q.get("targets", []) if str(x.get("status", "")).upper() == "PENDING_KAGGLE"]
 
 
+def character_retry_available(asset: dict[str, Any]) -> bool:
+    if str(asset.get("pipeline_status", "")).upper() in CHARACTER_PRODUCED_STATUSES:
+        return False
+    total_attempts = int(asset.get("attempts") or 0)
+    if total_attempts < MAX_ATTEMPTS:
+        return True
+    legacy_failure = "Legacy APK character sheet rejected" in str(asset.get("last_error") or "")
+    if not legacy_failure:
+        return False
+    if asset.get("generation_epoch") != CHARACTER_GENERATION_EPOCH:
+        return True
+    return int(asset.get("epoch_attempts") or 0) < CHARACTER_EPOCH_ATTEMPT_LIMIT
+
+
 def mark_dispatch(queue: dict[str, Any], ids: list[str], generator: str) -> list[str]:
     assets = by_id(queue)
     eligible: list[str] = []
@@ -108,7 +124,16 @@ def mark_dispatch(queue: dict[str, Any], ids: list[str], generator: str) -> list
         if not x or x["strict_status"] == "DONE":
             continue
         attempts = int(x.get("attempts") or 0)
-        if attempts >= MAX_ATTEMPTS:
+        if generator == "kaggle-character-sheet":
+            if not character_retry_available(x):
+                x["pipeline_status"] = "BLOCKED_AUTOMATION_LIMIT"
+                x["last_error"] = x.get("last_error") or f"Reached {MAX_ATTEMPTS} automatic attempts"
+                continue
+            if x.get("generation_epoch") != CHARACTER_GENERATION_EPOCH:
+                x["generation_epoch"] = CHARACTER_GENERATION_EPOCH
+                x["epoch_attempts"] = 0
+            x["epoch_attempts"] = int(x.get("epoch_attempts") or 0) + 1
+        elif attempts >= MAX_ATTEMPTS:
             x["pipeline_status"] = "BLOCKED_AUTOMATION_LIMIT"
             x["last_error"] = f"Reached {MAX_ATTEMPTS} automatic attempts"
             continue
@@ -149,7 +174,7 @@ def prepare_character_group(queue: dict[str, Any], group: str) -> dict[str, Any]
     )
     targets = []
     for x in group_assets:
-        if int(x.get("attempts") or 0) >= MAX_ATTEMPTS:
+        if not character_retry_available(x):
             x["pipeline_status"] = "BLOCKED_AUTOMATION_LIMIT"
             continue
         targets.append({"id": x["id"], "status": "PENDING_KAGGLE"})
@@ -165,7 +190,18 @@ def prepare_character_group(queue: dict[str, Any], group: str) -> dict[str, Any]
 
 
 def next_group(queue: dict[str, Any], lane: str, priority: list[str]) -> str | None:
-    groups = {x["group"] for x in queue["assets"] if x["lane"] == lane and x["strict_status"] != "DONE" and x["pipeline_status"] in {"PENDING", "PENDING_KAGGLE", "PAUSED", "BLOCKED", "REJECT", "REJECTED", "REJECTED_SEMANTIC", "BLOCKED_AUTOMATION_LIMIT"} and int(x.get("attempts") or 0) < MAX_ATTEMPTS}
+    groups = {
+        x["group"]
+        for x in queue["assets"]
+        if x["lane"] == lane
+        and x["strict_status"] != "DONE"
+        and x["pipeline_status"] in {"PENDING", "PENDING_KAGGLE", "PAUSED", "BLOCKED", "REJECT", "REJECTED", "REJECTED_SEMANTIC", "BLOCKED_AUTOMATION_LIMIT"}
+        and (
+            character_retry_available(x)
+            if lane == "kaggle-character-sheet"
+            else int(x.get("attempts") or 0) < MAX_ATTEMPTS
+        )
+    }
     for g in priority:
         if g in groups:
             return g
@@ -175,7 +211,18 @@ def next_group(queue: dict[str, Any], lane: str, priority: list[str]) -> str | N
 def pending_ids_from_controlled(path: Path, queue: dict[str, Any]) -> list[str]:
     ids = [str(x.get("id", "")).upper() for x in active_pending(path)]
     master = by_id(queue)
-    return [aid for aid in ids if aid in master and master[aid]["strict_status"] != "DONE" and str(master[aid].get("pipeline_status", "")).upper() not in CHARACTER_PRODUCED_STATUSES and int(master[aid].get("attempts") or 0) < MAX_ATTEMPTS]
+    return [
+        aid
+        for aid in ids
+        if aid in master
+        and master[aid]["strict_status"] != "DONE"
+        and str(master[aid].get("pipeline_status", "")).upper() not in CHARACTER_PRODUCED_STATUSES
+        and (
+            character_retry_available(master[aid])
+            if path == CHARACTER_QUEUE
+            else int(master[aid].get("attempts") or 0) < MAX_ATTEMPTS
+        )
+    ]
 
 
 def make_decision(queue: dict[str, Any]) -> dict[str, Any]:
