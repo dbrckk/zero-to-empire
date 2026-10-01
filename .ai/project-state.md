@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-01T19:41:22Z
+Generated: 2026-10-01T20:17:41Z
 
 ### Git
 - Branch: `main`
-- Head: `17a306be1827`
-- Commit date: 2026-10-01T19:40:53Z
+- Head: `31a3805081c0`
+- Commit date: 2026-10-01T20:17:15Z
 - Commit: art(auto): advance 235-asset production queue
 - Tracked files: 1417
 
 ### Recently changed files
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
+- `art/production/controlled-character-regen-queue.json`
 - `art/production/master-asset-queue.json`
 - `ops/autofactory-kick.txt`
-- `tools/sprites/asset_queue_utils.py`
 - `tools/sprites/asset_wave_orchestrator.py`
 
 ### Project signals
