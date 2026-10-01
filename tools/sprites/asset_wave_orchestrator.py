@@ -142,7 +142,6 @@ def prepare_character_group(queue: dict[str, Any], group: str) -> dict[str, Any]
             if x["group"] == group
             and x["strict_status"] != "DONE"
             and str(x.get("pipeline_status", "")).upper() not in CHARACTER_PRODUCED_STATUSES
-            and x["pipeline_status"] != "PAUSED"
         ],
         key=lambda x: action_order.get(x["id"].split("-")[-1], 99),
     )
