@@ -22,20 +22,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-01T20:42:39Z
+Generated: 2026-10-01T20:44:18Z
 
 ### Git
 - Branch: `main`
-- Head: `fb6f24de4935`
-- Commit date: 2026-10-01T22:42:13+02:00
-- Commit: ci(art): continue CHR-OP after partial Kaggle result
+- Head: `ff38e1c9cd82`
+- Commit date: 2026-10-01T22:43:54+02:00
+- Commit: fix(art): report actual controlled dispatch counts
 - Tracked files: 1417
 
 ### Recently changed files
+- `tools/sprites/asset_wave_orchestrator.py`
+- `.github/workflows/repair-bld13-runtime.yml`
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
+- `art/production/master-asset-queue.json`
 - `ops/autofactory-kick.txt`
 - `art/production/controlled-character-regen-queue.json`
-- `art/production/master-asset-queue.json`
-- `tools/sprites/asset_wave_orchestrator.py`
 
 ### Project signals
 - `build.gradle.kts`

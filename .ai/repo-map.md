@@ -6926,13 +6926,13 @@ jobs:
           changed=0
           for f in app/src/main/res/drawable-nodpi/zte_business_13_t{0..6}_final.webp; do
             if python - "$f" <<'PY'
-import sys
-from PIL import Image
-p=sys.argv[1]
-with Image.open(p) as im:
-    im.load()
-print(p, im.size, im.mode)
-PY
+          import sys
+          from PIL import Image
+          p=sys.argv[1]
+          with Image.open(p) as im:
+              im.load()
+          print(p, im.size, im.mode)
+          PY
             then
               echo "already-decodable: $f"
               continue

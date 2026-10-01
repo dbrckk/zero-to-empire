@@ -1,13 +1,13 @@
 # Change impact
 
-Base: ecd371a764764d0ade6ca8a15e5b67dee1654dce
-Head: fb6f24de4935881d1365e4675a2c89db155e653d
+Base: 13e447f18cee493a1d9935ef74f73e601553a07e
+Head: ff38e1c9cd824c5285fd69edd3ef205172f8fc74
 
 ## Changed files
-- M ops/autofactory-kick.txt
+- M tools/sprites/asset_wave_orchestrator.py
 
 ## Affected areas
-- ops
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.
