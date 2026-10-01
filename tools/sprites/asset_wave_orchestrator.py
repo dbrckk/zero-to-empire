@@ -237,7 +237,7 @@ def make_decision(queue: dict[str, Any]) -> dict[str, Any]:
             return {"action": "WAIT_KAGGLE_BUSY", "group": "controlled-building", "stats": s}
         ids = mark_dispatch(queue, building_pending, "kaggle-building-family")
         if ids:
-            return {"action": "DISPATCH_KAGGLE_BUILDING", "group": "controlled-building", "ids": ids, "count": 7, "stats": s}
+            return {"action": "DISPATCH_KAGGLE_BUILDING", "group": "controlled-building", "ids": ids, "count": len(ids), "stats": s}
     group = next_group(queue, "kaggle-building-family", BUILDING_PRIORITY)
     if group:
         if KAGGLE_BUSY:
@@ -252,7 +252,7 @@ def make_decision(queue: dict[str, Any]) -> dict[str, Any]:
             return {"action": "WAIT_KAGGLE_BUSY", "group": "controlled-character", "stats": s}
         ids = mark_dispatch(queue, character_pending[:2], "kaggle-character-sheet")
         if ids:
-            return {"action": "DISPATCH_KAGGLE_CHARACTER", "group": "controlled-character", "ids": ids, "count": 2, "stats": s}
+            return {"action": "DISPATCH_KAGGLE_CHARACTER", "group": "controlled-character", "ids": ids, "count": len(ids), "stats": s}
     group = next_group(queue, "kaggle-character-sheet", CHARACTER_PRIORITY)
     if group:
         if KAGGLE_BUSY:
