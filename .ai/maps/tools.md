@@ -3765,7 +3765,7 @@ p=Path('/tmp')/f'chr-sheet-{s}.png'
 ⋮----
 last=e
 ⋮----
-def cutout(raw)
+def cutout(raw, action=None)
 ⋮----
 im=remove(raw,alpha_matting=False).convert('RGBA')
 a=im.getchannel('A').point(lambda v:0 if v<24 else 255 if v>224 else v)
@@ -3782,6 +3782,9 @@ src=im.load(); dst=clean.load()
 bb=clean.getchannel('A').getbbox()
 ⋮----
 crop=clean.crop(bb); cw,ch=crop.size
+# REPAIR poses can be crouched/leaning and legitimately wider because of
+# arms/tools. Preserve full-body protection using source-cell margins
+# instead of a standing-character aspect-ratio assumption.
 ⋮----
 s=min(176/cw,218/ch)
 crop=crop.resize((max(1,round(cw*s)),max(1,round(ch*s))),Image.Resampling.LANCZOS)
@@ -3827,7 +3830,7 @@ action=item['action']; fc=ACTIONS[action][1]
 poses=', '.join(POSES[action][:fc])
 framing = (
 ⋮----
-def extract_frames(raw,frame_count)
+def extract_frames(raw,frame_count,action=None)
 ⋮----
 raw=raw.resize((1024,1024),Image.Resampling.LANCZOS)
 frames=[]
@@ -3850,7 +3853,7 @@ done=False; last=''
 seed=(base+ix*100000+att*10007) % 2147483647
 ⋮----
 raw=fetch(sheet_prompt(it),seed)
-frames=extract_frames(raw,fc)
+frames=extract_frames(raw,fc,it['action'])
 ⋮----
 sheet=Image.new('RGBA',(1024,1024),(0,0,0,0))
 ⋮----

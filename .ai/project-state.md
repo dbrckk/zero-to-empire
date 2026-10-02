@@ -22,22 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-02T16:09:43Z
+Generated: 2026-10-02T17:05:24Z
 
 ### Git
 - Branch: `main`
-- Head: `c6d0637110aa`
-- Commit date: 2026-10-02T16:08:54Z
-- Commit: art(auto): advance 235-asset production queue
+- Head: `fea3299882e0`
+- Commit date: 2026-10-02T19:04:41+02:00
+- Commit: art: retry repair sprites with crouched full-body QA
 - Tracked files: 1417
 
 ### Recently changed files
+- `art/production/controlled-character-regen-queue.json`
+- `tools/sprites/pollinations_character_sheet_factory.py`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
 - `art/production/master-asset-queue.json`
-- `art/production/controlled-character-regen-queue.json`
-- `tools/sprites/pollinations_character_sheet_factory.py`
-- `tools/sprites/asset_queue_utils.py`
+- `art/production/pollinations-character-summary.json`
 
 ### Project signals
 - `build.gradle.kts`
