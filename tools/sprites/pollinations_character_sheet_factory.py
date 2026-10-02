@@ -265,8 +265,21 @@ def main():
                 print(f"POLLINATIONS_CHR_RETRY={it['id']} attempt={att+1} reason={e}",flush=True)
 
         if not done:
-            mark_queue(it['id'],'BLOCKED')
-            rep.append({'id':it['id'],'status':'REJECT','reason':last,'generation':'single-sheet'})
+            provider_error = (
+                'pollinations request exhausted retries:' in last
+                or 'HTTP Error 402:' in last
+                or 'HTTP Error 429:' in last
+                or 'HTTP Error 500:' in last
+                or 'HTTP Error 502:' in last
+                or 'HTTP Error 503:' in last
+            )
+            mark_queue(it['id'],'PROVIDER_ERROR' if provider_error else 'BLOCKED')
+            rep.append({
+                'id':it['id'],
+                'status':'PROVIDER_ERROR' if provider_error else 'REJECT',
+                'reason':last,
+                'generation':'single-sheet'
+            })
 
     (OUT/'pollinations-character-summary.json').write_text(json.dumps(rep,indent=2),encoding='utf-8')
     print('POLLINATIONS_CHR_CANDIDATES='+str(sum(x['status']=='CANDIDATE' for x in rep)),flush=True)
