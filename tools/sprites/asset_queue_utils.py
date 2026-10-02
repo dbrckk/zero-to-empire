@@ -140,6 +140,7 @@ def ensure_master() -> dict[str, Any]:
             "max_attempts_per_asset": MAX_ATTEMPTS,
             "character_generation_epoch": "identity-lock-v1.8",
             "max_attempts_per_character_epoch": 2,
+            "max_infra_failures_per_asset": 3,
         },
         "assets": assets,
     }
