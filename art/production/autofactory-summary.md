@@ -1,6 +1,6 @@
 # Asset Autofactory — 235 target
 
-- Strict DONE: **211 / 235**
+- Strict DONE: **213 / 235**
 - Production processed to DONE/review: **227 / 235**
 - Awaiting semantic review: **11**
 - Automation-blocked: **6**
