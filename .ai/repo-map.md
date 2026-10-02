@@ -27087,7 +27087,7 @@ p=Path('/tmp')/f'chr-sheet-{s}.png'
 ⋮----
 last=e
 ⋮----
-def cutout(raw, action=None)
+def cutout(raw, action=None, standalone=False)
 ⋮----
 im=remove(raw,alpha_matting=False).convert('RGBA')
 a=im.getchannel('A').point(lambda v:0 if v<24 else 255 if v>224 else v)

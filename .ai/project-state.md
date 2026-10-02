@@ -22,22 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-02T18:47:23Z
+Generated: 2026-10-02T19:30:37Z
 
 ### Git
 - Branch: `main`
-- Head: `fdc3b3200292`
-- Commit date: 2026-10-02T20:46:30+02:00
-- Commit: art: validate frame-by-frame LOG repair
+- Head: `4e8fdf33215a`
+- Commit date: 2026-10-02T21:29:57+02:00
+- Commit: art: retry normalized frame-by-frame LOG repair
 - Tracked files: 1417
 
 ### Recently changed files
 - `art/production/controlled-character-regen-queue.json`
 - `tools/sprites/pollinations_character_sheet_factory.py`
+- `art/production/pollinations-character-summary.json`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
 - `art/production/master-asset-queue.json`
-- `art/production/pollinations-character-summary.json`
 
 ### Project signals
 - `build.gradle.kts`
