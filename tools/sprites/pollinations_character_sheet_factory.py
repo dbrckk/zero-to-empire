@@ -30,6 +30,7 @@ POSES={
 'CELEB':['neutral','arm starts up','arm half up','arm raised','small fist pump','arm half down','arm down','neutral recovery']}
 
 def pending():
+    requested={x.strip().upper() for x in os.getenv('POLLINATIONS_CHR_TARGET_IDS','').split(',') if x.strip()}
     manifest={}
     for line in MANIFEST.read_text(encoding='utf-8').splitlines():
         if not line.startswith('|') or 'CHR-' not in line or 'app/src/main/res/' not in line:
@@ -50,13 +51,15 @@ def pending():
             if str(item.get('status','')).upper() not in {'PENDING','PENDING_KAGGLE'}:
                 continue
             aid=str(item.get('id','')).upper()
+            if requested and aid not in requested:
+                continue
             if aid not in manifest:
                 raise RuntimeError('queued character missing from manifest: '+aid)
             out.append(manifest[aid])
         if out:
             return out
 
-    return [x for x in manifest.values() if x['status']=='TODO']
+    return [x for x in manifest.values() if x['status']=='TODO' and (not requested or x['id'] in requested)]
 
 def mark_queue(aid,status,seed=None):
     if not QUEUE.is_file():
