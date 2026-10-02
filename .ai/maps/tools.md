@@ -948,10 +948,16 @@ def next_group(queue: dict[str, Any], lane: str, priority: list[str]) -> str | N
 ⋮----
 groups = {
 ⋮----
+def close_exhausted_character_dispatches(queue: dict[str, Any]) -> None
+⋮----
+master = by_id(queue)
+controlled = load_json(CHARACTER_QUEUE, {}) or {}
+⋮----
+asset = master.get(aid)
+⋮----
 def pending_ids_from_controlled(path: Path, queue: dict[str, Any]) -> list[str]
 ⋮----
 ids = [str(x.get("id", "")).upper() for x in active_pending(path)]
-master = by_id(queue)
 ⋮----
 def make_decision(queue: dict[str, Any]) -> dict[str, Any]
 ⋮----

@@ -1,13 +1,12 @@
 # CI status
 
-Summary: 3 success / 2 failure / 1 active
+Summary: 3 success / 1 failure / 1 active
 
-- Asset Autofactory 235: in_progress / pending (4ca781b8)
+- Kaggle Mass Sprite Factory: in_progress / pending (7ed5c794)
+- Asset Autofactory 235: completed / success (4ca781b8)
 - Manifest Static GPU Batch: completed / success (648315ca)
 - Kaggle Mass Sprite Factory: completed / failure (648315ca)
 - Asset Autofactory 235: completed / success (77adeb14)
-- Kaggle Mass Sprite Factory: completed / failure (4b802ca6)
-- Asset Autofactory 235: completed / success (dd445192)
 
 ## Latest failed run structure
 - Job: kaggle

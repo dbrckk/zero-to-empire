@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-02T05:54:19Z
+Generated: 2026-10-02T05:55:42Z
 
 ### Git
 - Branch: `main`
-- Head: `4ca781b8213b`
-- Commit date: 2026-10-02T07:54:01+02:00
-- Commit: ci(art): continue after exhausted LOG retries
+- Head: `e2ba5fcf891e`
+- Commit date: 2026-10-02T07:55:21+02:00
+- Commit: art: close exhausted LOG carry repair retries
 - Tracked files: 1417
 
 ### Recently changed files
-- `ops/autofactory-kick.txt`
-- `art/production/autofactory-state.json`
-- `art/production/autofactory-summary.md`
 - `art/production/master-asset-queue.json`
-- `tools/sprites/asset_queue_utils.py`
+- `tools/sprites/asset_wave_orchestrator.py`
+- `art/production/autofactory-state.json`
+- `ops/autofactory-kick.txt`
+- `art/production/autofactory-summary.md`
 
 ### Project signals
 - `build.gradle.kts`
