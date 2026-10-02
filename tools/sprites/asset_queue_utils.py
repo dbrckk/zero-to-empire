@@ -116,7 +116,7 @@ def ensure_master() -> dict[str, Any]:
         base = default_asset(row, unresolved)
         prev = old.get(row["id"])
         if prev:
-            for key in ("strict_status", "pipeline_status", "attempts", "last_run_id", "last_generator", "last_error", "review_reason", "generation_epoch", "epoch_attempts"):
+            for key in ("strict_status", "pipeline_status", "attempts", "last_run_id", "last_generator", "last_error", "review_reason", "generation_epoch", "epoch_attempts", "infra_failures"):
                 if key in prev:
                     base[key] = prev[key]
             if base["strict_status"] == "DONE":
