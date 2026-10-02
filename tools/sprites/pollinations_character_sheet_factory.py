@@ -200,9 +200,10 @@ def sheet_prompt(item):
     action=item['action']; fc=ACTIONS[action][1]
     poses=', '.join(POSES[action][:fc])
     framing = (
-        ' CRITICAL REPAIR FRAMING: every occupied cell must show the complete character from helmet/head to both boot soles, '
-        'with visible neutral-gray margin above the head, below the boots, and on both sides; never crop head, arms, tool, knees, legs, or feet; '
-        'keep the diagnostic tool compact and beside the body so it never obscures the legs. '
+        ' CRITICAL REPAIR FRAMING: every occupied 256x256 cell must show the complete character from helmet/head to both boot soles. '
+        'Keep at least 20 pixels of plain neutral-gray empty margin above the head and at least 20 pixels below the lowest boot sole in EVERY occupied cell, plus clear side margins. '
+        'Scale the worker smaller inside each cell if necessary. Never let any body part or tool touch a cell edge; never crop head, arms, tool, knees, legs, boots, or feet. '
+        'Keep the diagnostic tool compact and beside the torso so it never obscures the legs or extends toward the bottom edge. '
         if action == 'REPAIR' else ''
     )
     return (
