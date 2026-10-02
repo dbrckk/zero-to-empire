@@ -4,7 +4,7 @@
 - Production processed to DONE/review: **229 / 235**
 - Awaiting semantic review: **13**
 - Automation-blocked: **3**
-- Current action: **WAIT_KAGGLE_BUSY**
+- Current action: **DISPATCH_KAGGLE_CHARACTER**
 - Current group: **controlled-character**
 
 The autofactory may generate and technically validate candidates automatically,
