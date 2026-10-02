@@ -22,23 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-02T05:37:15Z
+Generated: 2026-10-02T05:39:31Z
 
 ### Git
 - Branch: `main`
-- Head: `dd4451927f14`
-- Commit date: 2026-10-02T07:36:52+02:00
-- Commit: ci(art): reconcile TECH candidates and continue backlog
+- Head: `ffd6f50885bd`
+- Commit date: 2026-10-02T07:39:10+02:00
+- Commit: art: normalize fresh TECH candidate state
 - Tracked files: 1417
 
 ### Recently changed files
-- `ops/autofactory-kick.txt`
-- `.github/workflows/asset-autofactory.yml`
-- `.github/workflows/kaggle-mass-sprite-factory.yml`
-- `art/production/controlled-character-regen-queue.json`
+- `art/production/master-asset-queue.json`
+- `tools/sprites/asset_queue_utils.py`
+- `tools/sprites/asset_wave_orchestrator.py`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
-- `art/production/master-asset-queue.json`
 
 ### Project signals
 - `build.gradle.kts`

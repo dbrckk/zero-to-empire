@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 3ec4b16ef351f526c99867d504dadc86056651c9
-Head: dd4451927f14ecd33df79156a9f0c7313bfadacf
+Base: 562d94cfd0e6ca02240f4782c6491f7f77f82d21
+Head: ffd6f50885bdc0a6e8d9a91c30f1e5d4eb96b806
 
 ## Changed files
-- M ops/autofactory-kick.txt
+- M art/production/master-asset-queue.json
 
 ## Affected areas
-- ops
+- art
 
 ## Related test candidates
 - No direct filename-based test match detected.
