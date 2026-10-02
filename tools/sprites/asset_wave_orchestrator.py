@@ -34,6 +34,7 @@ KAGGLE_BUSY = os.getenv("AUTOF_KAGGLE_BUSY", "0") == "1"
 FX_BUSY = os.getenv("AUTOF_FX_BUSY", "0") == "1"
 CHARACTER_GENERATION_EPOCH = "identity-lock-v1.8"
 CHARACTER_EPOCH_ATTEMPT_LIMIT = 2
+INFRA_FAILURE_LIMIT = 3
 
 # A character in one of these states already has a produced candidate/evidence.
 # It must not be regenerated merely because strict semantic approval is pending.
@@ -66,14 +67,32 @@ def update_from_trigger(queue: dict[str, Any]) -> None:
             for x in active:
                 x["pipeline_status"] = "PENDING_KAGGLE"
                 x["last_run_id"] = int(TRIGGER_RUN_ID) if TRIGGER_RUN_ID else x.get("last_run_id")
-                x["last_error"] = f"Kaggle producer: {TRIGGER_CONCLUSION}; autonomous retry scheduled"
+                x["infra_failures"] = int(x.get("infra_failures") or 0) + 1
+                if x.get("last_generator") == "kaggle-character-sheet":
+                    x["attempts"] = max(0, int(x.get("attempts") or 0) - 1)
+                    if x.get("generation_epoch") == CHARACTER_GENERATION_EPOCH:
+                        x["epoch_attempts"] = max(0, int(x.get("epoch_attempts") or 0) - 1)
+                if int(x.get("infra_failures") or 0) >= INFRA_FAILURE_LIMIT:
+                    x["pipeline_status"] = "BLOCKED_INFRA_LIMIT"
+                    x["last_error"] = (
+                        f"Kaggle producer failed {x['infra_failures']} times; infrastructure recovery required."
+                    )
+                else:
+                    x["last_error"] = (
+                        f"Kaggle producer: {TRIGGER_CONCLUSION}; infrastructure retry "
+                        f"{x['infra_failures']}/{INFRA_FAILURE_LIMIT} scheduled"
+                    )
             for path in (BUILDING_QUEUE, CHARACTER_QUEUE):
                 controlled = load_json(path, {}) or {}
                 changed = False
                 for item in controlled.get("targets", []):
                     aid = str(item.get("id", "")).upper()
                     if any(x["id"] == aid for x in active):
-                        item["status"] = "PENDING_KAGGLE"
+                        asset = next((x for x in active if x["id"] == aid), None)
+                        if asset and str(asset.get("pipeline_status", "")).upper() == "BLOCKED_INFRA_LIMIT":
+                            item["status"] = "BLOCKED_INFRA_LIMIT"
+                        else:
+                            item["status"] = "PENDING_KAGGLE"
                         item["autofactory_retry_after_run"] = int(TRIGGER_RUN_ID) if TRIGGER_RUN_ID else None
                         changed = True
                 if changed:
@@ -108,8 +127,11 @@ def character_retry_available(asset: dict[str, Any]) -> bool:
     total_attempts = int(asset.get("attempts") or 0)
     if total_attempts < MAX_ATTEMPTS:
         return True
+    if int(asset.get("infra_failures") or 0) >= INFRA_FAILURE_LIMIT:
+        return False
     legacy_failure = "Legacy APK character sheet rejected" in str(asset.get("last_error") or "")
-    if not legacy_failure:
+    infra_retry = str(asset.get("last_error") or "").startswith("Kaggle producer:")
+    if not legacy_failure and not infra_retry:
         return False
     if asset.get("generation_epoch") != CHARACTER_GENERATION_EPOCH:
         return True
