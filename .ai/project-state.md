@@ -22,22 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-02T09:06:56Z
+Generated: 2026-10-02T11:02:25Z
 
 ### Git
 - Branch: `main`
-- Head: `5f95a993760c`
-- Commit date: 2026-10-02T11:06:17+02:00
-- Commit: ci(art): route ENG repair fallback through Pollinations
+- Head: `47c29a0e7af3`
+- Commit date: 2026-10-02T11:01:54Z
+- Commit: art(auto): advance 235-asset production queue
 - Tracked files: 1417
 
 ### Recently changed files
-- `ops/pollinations-character-trigger.txt`
-- `art/production/master-asset-queue.json`
-- `tools/sprites/asset_wave_orchestrator.py`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
 - `art/production/controlled-character-regen-queue.json`
+- `art/production/master-asset-queue.json`
+- `tools/sprites/asset_wave_orchestrator.py`
+- `ops/autofactory-kick.txt`
 
 ### Project signals
 - `build.gradle.kts`
