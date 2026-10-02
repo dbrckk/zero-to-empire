@@ -232,8 +232,6 @@ def make_decision(queue: dict[str, Any]) -> dict[str, Any]:
     building_pending = pending_ids_from_controlled(BUILDING_QUEUE, queue)
     if building_pending:
         if KAGGLE_BUSY:
-            for aid in building_pending:
-                by_id(queue)[aid]["pipeline_status"] = "DISPATCHED"
             return {"action": "WAIT_KAGGLE_BUSY", "group": "controlled-building", "stats": s}
         ids = mark_dispatch(queue, building_pending, "kaggle-building-family")
         if ids:
@@ -247,8 +245,6 @@ def make_decision(queue: dict[str, Any]) -> dict[str, Any]:
     character_pending = pending_ids_from_controlled(CHARACTER_QUEUE, queue)
     if character_pending:
         if KAGGLE_BUSY:
-            for aid in character_pending:
-                by_id(queue)[aid]["pipeline_status"] = "DISPATCHED"
             return {"action": "WAIT_KAGGLE_BUSY", "group": "controlled-character", "stats": s}
         ids = mark_dispatch(queue, character_pending[:2], "kaggle-character-sheet")
         if ids:
