@@ -1,13 +1,15 @@
 # CI status
 
-Summary: 2 success / 3 failure / 1 active
+Summary: 7 success / 1 failure / 0 active
 
-- Asset Autofactory 235: in_progress / pending (04ff620a)
-- Kaggle Mass Sprite Factory: completed / failure (3e2c924c)
-- Asset Autofactory 235: completed / success (fb6f24de)
-- .github/workflows/repair-bld13-runtime.yml: completed / failure (fb6f24de)
-- Asset Autofactory 235: completed / success (bcc671cc)
-- .github/workflows/repair-bld13-runtime.yml: completed / failure (bcc671cc)
+- Kaggle Mass Sprite Factory: completed / failure (4224fdf5)
+- Asset Autofactory 235: completed / success (5da04218)
+- Manifest Static GPU Batch: completed / success (5da04218)
+- Pollinations Building Candidate: completed / success (5da04218)
+- Pollinations Character Atlas: completed / success (4588cb9a)
+- Pollinations Character Atlas: completed / success (b6d19681)
+- Kaggle Mass Sprite Factory: completed / success (f81417bb)
+- Asset Autofactory 235: completed / success (d7bafff6)
 
 ## Latest failed run structure
 - Job: kaggle

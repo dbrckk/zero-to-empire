@@ -22,22 +22,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-01T21:05:26Z
+Generated: 2026-10-02T01:03:50Z
 
 ### Git
 - Branch: `main`
-- Head: `04ff620a6677`
-- Commit date: 2026-10-01T23:05:09+02:00
-- Commit: ci(art): recover failed CHR-OP carry run
+- Head: `2e59bc4feb9c`
+- Commit date: 2026-10-02T03:03:33+02:00
+- Commit: fix(art): preserve manually approved strict asset status
 - Tracked files: 1417
 
 ### Recently changed files
-- `ops/autofactory-kick.txt`
-- `tools/sprites/asset_wave_orchestrator.py`
-- `.github/workflows/repair-bld13-runtime.yml`
+- `tools/sprites/asset_queue_utils.py`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
+- `art/production/controlled-character-regen-queue.json`
 - `art/production/master-asset-queue.json`
+- `art/production/pollinations-character-summary.json`
+- `art/incoming/final-sprites/zte_chr_tech_idle_final.png`
 
 ### Project signals
 - `build.gradle.kts`
