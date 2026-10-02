@@ -159,8 +159,8 @@ def sync_controlled_queues(queue: dict[str, Any]) -> None:
             continue
         status = str(item.get("status", "")).upper()
         if status and not (
-            asset.get("pipeline_status") == "DISPATCHED"
-            and status == "PENDING_KAGGLE"
+            (asset.get("pipeline_status") == "DISPATCHED" and status == "PENDING_KAGGLE")
+            or (str(asset.get("pipeline_status", "")).upper() == "BLOCKED_INFRA_LIMIT" and status in {"PENDING_KAGGLE", "BLOCKED"})
         ):
             asset["pipeline_status"] = status
         if item.get("kaggle_run_id"):
