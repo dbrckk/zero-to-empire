@@ -183,6 +183,10 @@ def sync_controlled_queues(queue: dict[str, Any]) -> None:
         if item.get("kaggle_run_id"):
             asset["last_run_id"] = int(item["kaggle_run_id"])
             asset["last_generator"] = "kaggle-character-sheet"
+            if status in {"AWAITING_REVIEW", "CANDIDATE", "TECHNICAL_PASS", "VALIDATED", "APPROVED", "DONE"}:
+                asset["last_error"] = None
+                if str(asset.get("review_reason") or "").startswith("Regenerate with identity-locked"):
+                    asset["review_reason"] = "Fresh identity-locked candidate produced; semantic review is still required."
         if item.get("review_reason"):
             asset["review_reason"] = item["review_reason"]
 
