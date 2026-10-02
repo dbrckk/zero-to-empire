@@ -217,6 +217,26 @@ def sheet_prompt(item):
         'No cell labels, no text, no numbers, no borders, no logos, no extra people, no duplicated limbs, no changing accessories, no changing carried object, no scenery, no floor, no building, no vehicle, no gradient, no vignette.'
     )
 
+def repair_frame_prompt(item, pose):
+    return (
+        f'AAA premium mobile 2.5D game character animation frame. SAME EXACT SINGLE ADULT CHARACTER identity: {ROLES[item["role"]]}. '
+        f'Action frame: repairing with one compact diagnostic tool, pose: {pose}. '
+        'One character only, complete full body from helmet/head through both boot soles, centered and slightly small in frame. '
+        'At least 12 percent empty neutral-gray margin above head and below boots and clear side margins. '
+        '34-degree three-quarter orthographic camera, consistent body proportions, face, hair, helmet, clothing, colors and tool. '
+        'Perfectly flat uniform neutral gray background. No floor, no shadow, no scenery, no text, no border, no extra people, '
+        'no duplicated limbs, no crop, no body part or tool touching any image edge.'
+    )
+
+def generate_repair_frames(item, seed):
+    frames=[]
+    for n,pose in enumerate(POSES['REPAIR'][:ACTIONS['REPAIR'][1]]):
+        raw=fetch(repair_frame_prompt(item,pose),(seed+n*104729) % 2147483647)
+        frame,cov=cutout(raw,'REPAIR')
+        frames.append(frame)
+        print(f'POLLINATIONS_CHR_REPAIR_FRAME n={n} pose={pose} cov={cov:.3f}',flush=True)
+    return frames
+
 def extract_frames(raw,frame_count,action=None):
     if raw.size!=(1024,1024):
         raw=raw.resize((1024,1024),Image.Resampling.LANCZOS)
@@ -245,8 +265,11 @@ def main():
         for att in range(attempts):
             seed=(base+ix*100000+att*10007) % 2147483647
             try:
-                raw=fetch(sheet_prompt(it),seed)
-                frames=extract_frames(raw,fc,it['action'])
+                if it['action'] == 'REPAIR':
+                    frames=generate_repair_frames(it,seed)
+                else:
+                    raw=fetch(sheet_prompt(it),seed)
+                    frames=extract_frames(raw,fc,it['action'])
                 ok,why=sheetqa(frames)
                 if not ok:
                     raise RuntimeError(why)
@@ -256,7 +279,7 @@ def main():
                 p=INCOMING/f"{it['stem']}.png"
                 sheet.save(p,'PNG',optimize=True)
                 mark_queue(it['id'],'CANDIDATE',seed)
-                rep.append({'id':it['id'],'status':'CANDIDATE','file':p.name,'frames':fc,'qa':why,'generation':'single-sheet'})
+                rep.append({'id':it['id'],'status':'CANDIDATE','file':p.name,'frames':fc,'qa':why,'generation':'frame-by-frame' if it['action']=='REPAIR' else 'single-sheet'})
                 print(f"POLLINATIONS_CHR_VALIDATED={it['id']} {why}",flush=True)
                 done=True
                 break
