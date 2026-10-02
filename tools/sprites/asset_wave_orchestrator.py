@@ -259,7 +259,7 @@ def pending_ids_from_controlled(path: Path, queue: dict[str, Any]) -> list[str]:
         for aid in ids
         if aid in master
         and master[aid]["strict_status"] != "DONE"
-        and str(master[aid].get("pipeline_status", "")).upper() not in CHARACTER_PRODUCED_STATUSES
+        and str(master[aid].get("pipeline_status", "")).upper() not in (CHARACTER_PRODUCED_STATUSES | {"DISPATCHED"})
         and (
             character_retry_available(master[aid])
             if path == CHARACTER_QUEUE
