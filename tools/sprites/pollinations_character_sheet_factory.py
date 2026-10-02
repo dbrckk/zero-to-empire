@@ -95,7 +95,7 @@ def fetch(prompt,seed):
             print(f'POLLINATIONS_CHR_HTTP_RETRY seed={s} try={n+1} reason={e}',flush=True)
     raise RuntimeError(f'pollinations request exhausted retries: {last}')
 
-def cutout(raw):
+def cutout(raw, action=None):
     from rembg import remove
     im=remove(raw,alpha_matting=False).convert('RGBA')
     a=im.getchannel('A').point(lambda v:0 if v<24 else 255 if v>224 else v)
@@ -125,7 +125,16 @@ def cutout(raw):
     if not bb:
         raise RuntimeError('empty')
     crop=clean.crop(bb); cw,ch=crop.size
-    if ch<cw*.92:
+    # REPAIR poses can be crouched/leaning and legitimately wider because of
+    # arms/tools. Preserve full-body protection using source-cell margins
+    # instead of a standing-character aspect-ratio assumption.
+    if action == 'REPAIR':
+        left,top,right,bottom=bb
+        if top <= 2 or bottom >= h-2:
+            raise RuntimeError('not full body')
+        if ch < h*.42:
+            raise RuntimeError('not full body')
+    elif ch<cw*.92:
         raise RuntimeError('not full body')
     s=min(176/cw,218/ch)
     crop=crop.resize((max(1,round(cw*s)),max(1,round(ch*s))),Image.Resampling.LANCZOS)
@@ -206,14 +215,14 @@ def sheet_prompt(item):
         'No cell labels, no text, no numbers, no borders, no logos, no extra people, no duplicated limbs, no changing accessories, no changing carried object, no scenery, no floor, no building, no vehicle, no gradient, no vignette.'
     )
 
-def extract_frames(raw,frame_count):
+def extract_frames(raw,frame_count,action=None):
     if raw.size!=(1024,1024):
         raw=raw.resize((1024,1024),Image.Resampling.LANCZOS)
     frames=[]
     for n in range(frame_count):
         x=(n%4)*256; y=(n//4)*256
         cell_raw=raw.crop((x,y,x+256,y+256))
-        frame,cov=cutout(cell_raw)
+        frame,cov=cutout(cell_raw, action)
         frames.append(frame)
         print(f'POLLINATIONS_CHR_CELL n={n} cov={cov:.3f}',flush=True)
     return frames
@@ -235,7 +244,7 @@ def main():
             seed=(base+ix*100000+att*10007) % 2147483647
             try:
                 raw=fetch(sheet_prompt(it),seed)
-                frames=extract_frames(raw,fc)
+                frames=extract_frames(raw,fc,it['action'])
                 ok,why=sheetqa(frames)
                 if not ok:
                     raise RuntimeError(why)
