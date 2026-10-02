@@ -22,13 +22,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-02T17:05:24Z
+Generated: 2026-10-02T18:47:23Z
 
 ### Git
 - Branch: `main`
-- Head: `fea3299882e0`
-- Commit date: 2026-10-02T19:04:41+02:00
-- Commit: art: retry repair sprites with crouched full-body QA
+- Head: `fdc3b3200292`
+- Commit date: 2026-10-02T20:46:30+02:00
+- Commit: art: validate frame-by-frame LOG repair
 - Tracked files: 1417
 
 ### Recently changed files

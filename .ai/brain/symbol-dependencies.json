@@ -5,6 +5,211 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
+    "load_json": {
+      "source": {
+        "file": "tools/sprites/asset_queue_utils.py",
+        "start": 37,
+        "end": 40
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "save_json": {
+      "source": {
+        "file": "tools/sprites/asset_queue_utils.py",
+        "start": 43,
+        "end": 45
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "manifest_rows": {
+      "source": {
+        "file": "tools/sprites/asset_queue_utils.py",
+        "start": 48,
+        "end": 68
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "unresolved_ids": {
+      "source": {
+        "file": "tools/sprites/asset_queue_utils.py",
+        "start": 71,
+        "end": 75
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "manifest_rows",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 48,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "default_asset": {
+      "source": {
+        "file": "tools/sprites/asset_queue_utils.py",
+        "start": 78,
+        "end": 107
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "ensure_master": {
+      "source": {
+        "file": "tools/sprites/asset_queue_utils.py",
+        "start": 110,
+        "end": 148
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "default_asset",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 78,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "load_json",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 37,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "manifest_rows",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 48,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "save_json",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 43,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "unresolved_ids",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 71,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 5
+    },
+    "sync_controlled_queues": {
+      "source": {
+        "file": "tools/sprites/asset_queue_utils.py",
+        "start": 151,
+        "end": 194
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "load_json",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 37,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "save_json",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 43,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "stats": {
+      "source": {
+        "file": "tools/sprites/asset_queue_utils.py",
+        "start": 197,
+        "end": 221
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "write_summary": {
+      "source": {
+        "file": "tools/sprites/asset_queue_utils.py",
+        "start": 224,
+        "end": 240
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "Asset",
+          "definitions": [
+            {
+              "file": "tools/sprites/plan_sprite_batches.py",
+              "line": 33,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "stats",
+          "definitions": [
+            {
+              "file": "tools/sprites/asset_queue_utils.py",
+              "line": 197,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
     "pending": {
       "source": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
@@ -36,7 +241,7 @@
       "source": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
         "start": 98,
-        "end": 150
+        "end": 151
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -44,8 +249,8 @@
     "iou": {
       "source": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 152,
-        "end": 160
+        "start": 153,
+        "end": 161
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -53,8 +258,8 @@
     "appearance_hist": {
       "source": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 162,
-        "end": 172
+        "start": 163,
+        "end": 173
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -62,8 +267,8 @@
     "hist_similarity": {
       "source": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 174,
-        "end": 176
+        "start": 175,
+        "end": 177
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -71,8 +276,8 @@
     "sheetqa": {
       "source": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 178,
-        "end": 196
+        "start": 179,
+        "end": 197
       },
       "symbol_dependencies": [
         {
@@ -80,7 +285,7 @@
           "definitions": [
             {
               "file": "tools/sprites/pollinations_character_sheet_factory.py",
-              "line": 162,
+              "line": 163,
               "kind": "function",
               "language": "python"
             }
@@ -92,7 +297,7 @@
           "definitions": [
             {
               "file": "tools/sprites/pollinations_character_sheet_factory.py",
-              "line": 174,
+              "line": 175,
               "kind": "function",
               "language": "python"
             }
@@ -104,7 +309,7 @@
           "definitions": [
             {
               "file": "tools/sprites/pollinations_character_sheet_factory.py",
-              "line": 152,
+              "line": 153,
               "kind": "function",
               "language": "python"
             }
@@ -117,17 +322,72 @@
     "sheet_prompt": {
       "source": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 198,
-        "end": 216
+        "start": 199,
+        "end": 218
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
+    "repair_frame_prompt": {
+      "source": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 220,
+        "end": 229
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "generate_repair_frames": {
+      "source": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 231,
+        "end": 238
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "cutout",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 98,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "fetch",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 76,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "repair_frame_prompt",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 220,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 3
+    },
     "extract_frames": {
       "source": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 218,
-        "end": 228
+        "start": 240,
+        "end": 250
       },
       "symbol_dependencies": [
         {
@@ -148,8 +408,8 @@
     "main": {
       "source": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 230,
-        "end": 270
+        "start": 252,
+        "end": 308
       },
       "symbol_dependencies": [
         {
@@ -157,7 +417,7 @@
           "definitions": [
             {
               "file": "tools/sprites/pollinations_character_sheet_factory.py",
-              "line": 218,
+              "line": 240,
               "kind": "function",
               "language": "python"
             }
@@ -170,6 +430,18 @@
             {
               "file": "tools/sprites/pollinations_character_sheet_factory.py",
               "line": 76,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "generate_repair_frames",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 231,
               "kind": "function",
               "language": "python"
             }
@@ -205,7 +477,7 @@
           "definitions": [
             {
               "file": "tools/sprites/pollinations_character_sheet_factory.py",
-              "line": 198,
+              "line": 199,
               "kind": "function",
               "language": "python"
             }
@@ -217,7 +489,7 @@
           "definitions": [
             {
               "file": "tools/sprites/pollinations_character_sheet_factory.py",
-              "line": 178,
+              "line": 179,
               "kind": "function",
               "language": "python"
             }
@@ -225,7 +497,7 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 6
+      "dependency_count": 7
     }
   }
 }

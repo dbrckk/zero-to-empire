@@ -2,13 +2,13 @@
 
 Summary: 5 success / 0 failure / 3 active
 
-- Pollinations Character Atlas: pending / pending (fea32998)
-- Pollinations Character Smoke: in_progress / pending (be183168)
-- Pollinations Character Atlas: in_progress / pending (be183168)
-- Asset Autofactory 235: completed / success (b510286b)
-- Asset Autofactory 235: completed / success (d35a1d81)
-- Asset Autofactory 235: completed / success (c6d06371)
-- Pollinations Character Atlas: completed / success (c6d06371)
-- Asset Autofactory 235: completed / success (f9a7a652)
+- Pollinations Character Atlas: pending / pending (fdc3b320)
+- Pollinations Character Smoke: in_progress / pending (e99bb5e4)
+- Pollinations Character Atlas: in_progress / pending (e99bb5e4)
+- Manifest Static GPU Batch: completed / success (f25bfeda)
+- Asset Autofactory 235: completed / success (288523e9)
+- Asset Autofactory 235: completed / success (d4096ae6)
+- Asset Autofactory 235: completed / success (d4096ae6)
+- Pollinations Character Atlas: completed / success (d4096ae6)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

@@ -27152,10 +27152,17 @@ action=item['action']; fc=ACTIONS[action][1]
 poses=', '.join(POSES[action][:fc])
 framing = (
 ⋮----
+def repair_frame_prompt(item, pose)
+⋮----
+def generate_repair_frames(item, seed)
+⋮----
+frames=[]
+⋮----
+raw=fetch(repair_frame_prompt(item,pose),(seed+n*104729) % 2147483647)
+⋮----
 def extract_frames(raw,frame_count,action=None)
 ⋮----
 raw=raw.resize((1024,1024),Image.Resampling.LANCZOS)
-frames=[]
 ⋮----
 x=(n%4)*256; y=(n//4)*256
 cell_raw=raw.crop((x,y,x+256,y+256))
@@ -27174,6 +27181,8 @@ done=False; last=''
 ⋮----
 seed=(base+ix*100000+att*10007) % 2147483647
 ⋮----
+frames=generate_repair_frames(it,seed)
+⋮----
 raw=fetch(sheet_prompt(it),seed)
 frames=extract_frames(raw,fc,it['action'])
 ⋮----
@@ -27184,6 +27193,8 @@ p=INCOMING/f"{it['stem']}.png"
 done=True
 ⋮----
 last=str(e)
+⋮----
+provider_error = (
 ```
 
 ## File: tools/sprites/procedural_fx_factory.py
