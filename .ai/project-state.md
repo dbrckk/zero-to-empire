@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-02T05:39:31Z
+Generated: 2026-10-02T05:54:19Z
 
 ### Git
 - Branch: `main`
-- Head: `ffd6f50885bd`
-- Commit date: 2026-10-02T07:39:10+02:00
-- Commit: art: normalize fresh TECH candidate state
+- Head: `4ca781b8213b`
+- Commit date: 2026-10-02T07:54:01+02:00
+- Commit: ci(art): continue after exhausted LOG retries
 - Tracked files: 1417
 
 ### Recently changed files
-- `art/production/master-asset-queue.json`
-- `tools/sprites/asset_queue_utils.py`
-- `tools/sprites/asset_wave_orchestrator.py`
+- `ops/autofactory-kick.txt`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
+- `art/production/master-asset-queue.json`
+- `tools/sprites/asset_queue_utils.py`
 
 ### Project signals
 - `build.gradle.kts`
