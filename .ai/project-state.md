@@ -22,20 +22,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-02T06:10:04Z
+Generated: 2026-10-02T09:02:59Z
 
 ### Git
 - Branch: `main`
-- Head: `f736663ec9ea`
-- Commit date: 2026-10-02T08:09:40+02:00
-- Commit: ci(art): route LOG fallback through Pollinations
+- Head: `d0751c2c8c61`
+- Commit date: 2026-10-02T11:02:42+02:00
+- Commit: fix(art): honor active v1.8 retry budgets
 - Tracked files: 1417
 
 ### Recently changed files
-- `ops/pollinations-character-trigger.txt`
-- `art/production/master-asset-queue.json`
 - `tools/sprites/asset_wave_orchestrator.py`
-- `tools/sprites/asset_queue_utils.py`
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
+- `art/production/controlled-character-regen-queue.json`
+- `art/production/master-asset-queue.json`
+- `art/incoming/final-sprites/zte_chr_eng_carry_final.png`
+- `art/production/pollinations-character-summary.json`
 
 ### Project signals
 - `build.gradle.kts`

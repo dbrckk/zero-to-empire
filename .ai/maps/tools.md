@@ -919,7 +919,8 @@ def character_retry_available(asset: dict[str, Any]) -> bool
 total_attempts = int(asset.get("attempts") or 0)
 ⋮----
 legacy_failure = "Legacy APK character sheet rejected" in str(asset.get("last_error") or "")
-infra_retry = str(asset.get("last_error") or "").startswith("Kaggle producer:")
+infra_retry = str(asset.get("last_error") or "").startswith("Kaggle producer")
+stride_retry = "WALK lacks clear alternating stride" in str(asset.get("review_reason") or "")
 ⋮----
 def mark_dispatch(queue: dict[str, Any], ids: list[str], generator: str) -> list[str]
 ⋮----
