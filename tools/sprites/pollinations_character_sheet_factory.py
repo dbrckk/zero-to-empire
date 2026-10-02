@@ -95,7 +95,7 @@ def fetch(prompt,seed):
             print(f'POLLINATIONS_CHR_HTTP_RETRY seed={s} try={n+1} reason={e}',flush=True)
     raise RuntimeError(f'pollinations request exhausted retries: {last}')
 
-def cutout(raw, action=None):
+def cutout(raw, action=None, standalone=False):
     from rembg import remove
     im=remove(raw,alpha_matting=False).convert('RGBA')
     a=im.getchannel('A').point(lambda v:0 if v<24 else 255 if v>224 else v)
@@ -130,10 +130,12 @@ def cutout(raw, action=None):
     # instead of a standing-character aspect-ratio assumption.
     if action == 'REPAIR':
         left,top,right,bottom=bb
-        print(f'POLLINATIONS_CHR_REPAIR_BBOX left={left} top={top} right={right} bottom={bottom} w={cw} h={ch} cell={w}x{h}',flush=True)
-        if top <= 2 or bottom >= h-2:
+        print(f'POLLINATIONS_CHR_REPAIR_BBOX left={left} top={top} right={right} bottom={bottom} w={cw} h={ch} cell={w}x{h} standalone={int(standalone)}',flush=True)
+        if not standalone and (top <= 2 or bottom >= h-2):
             raise RuntimeError(f'not full body: edge top={top} bottom={bottom} cell_h={h}')
-        if ch < h*.42:
+        if standalone and ch < h*.65:
+            raise RuntimeError(f'not full body: standalone short h={ch} cell_h={h}')
+        if not standalone and ch < h*.42:
             raise RuntimeError(f'not full body: short h={ch} cell_h={h}')
     elif ch<cw*.92:
         raise RuntimeError('not full body')
@@ -232,7 +234,7 @@ def generate_repair_frames(item, seed):
     frames=[]
     for n,pose in enumerate(POSES['REPAIR'][:ACTIONS['REPAIR'][1]]):
         raw=fetch(repair_frame_prompt(item,pose),(seed+n*104729) % 2147483647)
-        frame,cov=cutout(raw,'REPAIR')
+        frame,cov=cutout(raw,'REPAIR',standalone=True)
         frames.append(frame)
         print(f'POLLINATIONS_CHR_REPAIR_FRAME n={n} pose={pose} cov={cov:.3f}',flush=True)
     return frames
@@ -301,7 +303,7 @@ def main():
                 'id':it['id'],
                 'status':'PROVIDER_ERROR' if provider_error else 'REJECT',
                 'reason':last,
-                'generation':'single-sheet'
+                'generation':'frame-by-frame' if it['action']=='REPAIR' else 'single-sheet'
             })
 
     (OUT/'pollinations-character-summary.json').write_text(json.dumps(rep,indent=2),encoding='utf-8')
