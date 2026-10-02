@@ -22,23 +22,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-02T01:57:34Z
+Generated: 2026-10-02T05:04:34Z
 
 ### Git
 - Branch: `main`
-- Head: `b9142f54880b`
-- Commit date: 2026-10-02T03:57:16+02:00
-- Commit: fix(art): restore verified TECH strict approvals
+- Head: `142bd3a65e4f`
+- Commit date: 2026-10-02T07:04:13+02:00
+- Commit: ci(art): reconcile current character production state
 - Tracked files: 1417
 
 ### Recently changed files
+- `ops/autofactory-kick.txt`
+- `art/production/controlled-character-regen-queue.json`
+- `art/production/pollinations-character-summary.json`
 - `art/production/master-asset-queue.json`
 - `tools/sprites/asset_queue_utils.py`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
-- `art/production/controlled-character-regen-queue.json`
-- `art/production/pollinations-character-summary.json`
-- `art/incoming/final-sprites/zte_chr_tech_idle_final.png`
 
 ### Project signals
 - `build.gradle.kts`
