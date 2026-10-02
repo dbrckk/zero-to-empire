@@ -124,11 +124,11 @@ def active_pending(path: Path) -> list[dict[str, Any]]:
 def character_retry_available(asset: dict[str, Any]) -> bool:
     if str(asset.get("pipeline_status", "")).upper() in CHARACTER_PRODUCED_STATUSES:
         return False
+    if int(asset.get("infra_failures") or 0) >= INFRA_FAILURE_LIMIT:
+        return False
     total_attempts = int(asset.get("attempts") or 0)
     if total_attempts < MAX_ATTEMPTS:
         return True
-    if int(asset.get("infra_failures") or 0) >= INFRA_FAILURE_LIMIT:
-        return False
     if asset.get("generation_epoch") == CHARACTER_GENERATION_EPOCH:
         return int(asset.get("epoch_attempts") or 0) < CHARACTER_EPOCH_ATTEMPT_LIMIT
     legacy_failure = "Legacy APK character sheet rejected" in str(asset.get("last_error") or "")
