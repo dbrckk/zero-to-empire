@@ -232,7 +232,7 @@ def repair_frame_prompt(item, pose):
 
 def generate_repair_frames(item, seed):
     frames=[]
-    cache_dir=OUT/'pollinations-frame-cache'/item['id']/str(seed)
+    cache_dir=OUT/'pollinations-frame-cache'/item['id']
     cache_dir.mkdir(parents=True,exist_ok=True)
     for n,pose in enumerate(POSES['REPAIR'][:ACTIONS['REPAIR'][1]]):
         cache_file=cache_dir/f'{n:02d}.png'
@@ -241,7 +241,8 @@ def generate_repair_frames(item, seed):
             cov=sum(frame.getchannel('A').histogram()[8:])/(256*256)
             print(f'POLLINATIONS_CHR_REPAIR_CACHE_HIT n={n} pose={pose} cov={cov:.3f}',flush=True)
         else:
-            raw=fetch(repair_frame_prompt(item,pose),(seed+n*104729) % 2147483647)
+            frame_seed=(19417 + sum((i+1)*ord(ch) for i,ch in enumerate(item['id']))*1009 + n*104729) % 2147483647
+            raw=fetch(repair_frame_prompt(item,pose),frame_seed)
             frame,cov=cutout(raw,'REPAIR',standalone=True)
             frame.save(cache_file,'PNG',optimize=True)
             print(f'POLLINATIONS_CHR_REPAIR_CACHE_SAVE n={n} pose={pose}',flush=True)
