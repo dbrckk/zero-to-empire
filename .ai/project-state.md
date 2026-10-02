@@ -22,21 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-02T05:55:42Z
+Generated: 2026-10-02T06:10:04Z
 
 ### Git
 - Branch: `main`
-- Head: `e2ba5fcf891e`
-- Commit date: 2026-10-02T07:55:21+02:00
-- Commit: art: close exhausted LOG carry repair retries
+- Head: `f736663ec9ea`
+- Commit date: 2026-10-02T08:09:40+02:00
+- Commit: ci(art): route LOG fallback through Pollinations
 - Tracked files: 1417
 
 ### Recently changed files
+- `ops/pollinations-character-trigger.txt`
 - `art/production/master-asset-queue.json`
 - `tools/sprites/asset_wave_orchestrator.py`
-- `art/production/autofactory-state.json`
-- `ops/autofactory-kick.txt`
-- `art/production/autofactory-summary.md`
+- `tools/sprites/asset_queue_utils.py`
 
 ### Project signals
 - `build.gradle.kts`

@@ -887,6 +887,7 @@ KAGGLE_BUSY = os.getenv("AUTOF_KAGGLE_BUSY", "0") == "1"
 FX_BUSY = os.getenv("AUTOF_FX_BUSY", "0") == "1"
 CHARACTER_GENERATION_EPOCH = "identity-lock-v1.8"
 CHARACTER_EPOCH_ATTEMPT_LIMIT = 2
+INFRA_FAILURE_LIMIT = 3
 ⋮----
 # A character in one of these states already has a produced candidate/evidence.
 # It must not be regenerated merely because strict semantic approval is pending.
@@ -903,6 +904,8 @@ changed = False
 ⋮----
 aid = str(item.get("id", "")).upper()
 ⋮----
+asset = next((x for x in active if x["id"] == aid), None)
+⋮----
 changed = True
 ⋮----
 target = [
@@ -916,6 +919,7 @@ def character_retry_available(asset: dict[str, Any]) -> bool
 total_attempts = int(asset.get("attempts") or 0)
 ⋮----
 legacy_failure = "Legacy APK character sheet rejected" in str(asset.get("last_error") or "")
+infra_retry = str(asset.get("last_error") or "").startswith("Kaggle producer:")
 ⋮----
 def mark_dispatch(queue: dict[str, Any], ids: list[str], generator: str) -> list[str]
 ⋮----

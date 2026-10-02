@@ -1,13 +1,13 @@
 # Change impact
 
-Base: b55ce744fe9f244caa7fd4e3b35582d17223824d
-Head: e2ba5fcf891ef93aa11f6bff6a8dd91b67890789
+Base: e1251c5005c1bec81de0ba98a22e0120bf6df992
+Head: f736663ec9ea4e44b9bb2e443c300e946ef4bb24
 
 ## Changed files
-- M art/production/master-asset-queue.json
+- M ops/pollinations-character-trigger.txt
 
 ## Affected areas
-- art
+- ops
 
 ## Related test candidates
 - No direct filename-based test match detected.
