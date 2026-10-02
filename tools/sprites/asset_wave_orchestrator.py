@@ -208,6 +208,27 @@ def next_group(queue: dict[str, Any], lane: str, priority: list[str]) -> str | N
     return sorted(groups)[0] if groups else None
 
 
+def close_exhausted_character_dispatches(queue: dict[str, Any]) -> None:
+    if KAGGLE_BUSY:
+        return
+    master = by_id(queue)
+    controlled = load_json(CHARACTER_QUEUE, {}) or {}
+    for item in controlled.get("targets", []):
+        aid = str(item.get("id", "")).upper()
+        asset = master.get(aid)
+        if not asset or asset["strict_status"] == "DONE":
+            continue
+        if str(asset.get("pipeline_status", "")).upper() != "DISPATCHED":
+            continue
+        if not character_retry_available(asset):
+            asset["pipeline_status"] = "BLOCKED_AUTOMATION_LIMIT"
+            if asset.get("generation_epoch") == CHARACTER_GENERATION_EPOCH:
+                asset["last_error"] = (
+                    f"Exhausted {CHARACTER_EPOCH_ATTEMPT_LIMIT} attempts in "
+                    f"{CHARACTER_GENERATION_EPOCH}; semantic review or a new generation epoch is required."
+                )
+
+
 def pending_ids_from_controlled(path: Path, queue: dict[str, Any]) -> list[str]:
     ids = [str(x.get("id", "")).upper() for x in active_pending(path)]
     master = by_id(queue)
@@ -226,6 +247,7 @@ def pending_ids_from_controlled(path: Path, queue: dict[str, Any]) -> list[str]:
 
 
 def make_decision(queue: dict[str, Any]) -> dict[str, Any]:
+    close_exhausted_character_dispatches(queue)
     s = stats(queue)
     if s["strict_done"] >= queue["stop_when_strict_done"]:
         return {"action": "STOP_STRICT_TARGET_REACHED", "group": None, "stats": s}
