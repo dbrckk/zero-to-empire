@@ -1,13 +1,13 @@
 # Change impact
 
-Base: bf998fe02c618a03128061644d073aad234b0790
-Head: d0751c2c8c61a19e91b4efab349494f9ea2eab2f
+Base: 3bf801fe055908ba65ccc8a5da4c9bf6d306f562
+Head: 5f95a993760c9a9d30804a456d3b07dcd4427837
 
 ## Changed files
-- M tools/sprites/asset_wave_orchestrator.py
+- M ops/pollinations-character-trigger.txt
 
 ## Affected areas
-- tools
+- ops
 
 ## Related test candidates
 - No direct filename-based test match detected.
