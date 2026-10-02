@@ -129,13 +129,12 @@ def character_retry_available(asset: dict[str, Any]) -> bool:
         return True
     if int(asset.get("infra_failures") or 0) >= INFRA_FAILURE_LIMIT:
         return False
+    if asset.get("generation_epoch") == CHARACTER_GENERATION_EPOCH:
+        return int(asset.get("epoch_attempts") or 0) < CHARACTER_EPOCH_ATTEMPT_LIMIT
     legacy_failure = "Legacy APK character sheet rejected" in str(asset.get("last_error") or "")
-    infra_retry = str(asset.get("last_error") or "").startswith("Kaggle producer:")
-    if not legacy_failure and not infra_retry:
-        return False
-    if asset.get("generation_epoch") != CHARACTER_GENERATION_EPOCH:
-        return True
-    return int(asset.get("epoch_attempts") or 0) < CHARACTER_EPOCH_ATTEMPT_LIMIT
+    infra_retry = str(asset.get("last_error") or "").startswith("Kaggle producer")
+    stride_retry = "WALK lacks clear alternating stride" in str(asset.get("review_reason") or "")
+    return legacy_failure or infra_retry or stride_retry
 
 
 def mark_dispatch(queue: dict[str, Any], ids: list[str], generator: str) -> list[str]:
