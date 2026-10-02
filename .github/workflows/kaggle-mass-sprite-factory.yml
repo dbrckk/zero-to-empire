@@ -430,6 +430,20 @@ jobs:
         if: always() && steps.wait-kaggle.outcome == 'success'
         shell: bash
         run: test "${KAGGLE_FINAL_STATUS:-UNKNOWN}" = 'COMPLETE'
+      - name: Reconcile producer outcome explicitly
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          conclusion="failure"
+          if [ "${{ job.status }}" = "success" ]; then conclusion="success"; fi
+          gh workflow run 'Asset Autofactory 235' --ref main \
+            -f producer_workflow='Kaggle Mass Sprite Factory' \
+            -f producer_conclusion="$conclusion" \
+            -f producer_run_id='${{ github.run_id }}'
+
       - name: Upload exhaustive QA evidence
         if: always()
         uses: actions/upload-artifact@v4
