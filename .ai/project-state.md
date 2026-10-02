@@ -22,23 +22,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-02T05:04:34Z
+Generated: 2026-10-02T05:37:15Z
 
 ### Git
 - Branch: `main`
-- Head: `142bd3a65e4f`
-- Commit date: 2026-10-02T07:04:13+02:00
-- Commit: ci(art): reconcile current character production state
+- Head: `dd4451927f14`
+- Commit date: 2026-10-02T07:36:52+02:00
+- Commit: ci(art): reconcile TECH candidates and continue backlog
 - Tracked files: 1417
 
 ### Recently changed files
 - `ops/autofactory-kick.txt`
+- `.github/workflows/asset-autofactory.yml`
+- `.github/workflows/kaggle-mass-sprite-factory.yml`
 - `art/production/controlled-character-regen-queue.json`
-- `art/production/pollinations-character-summary.json`
-- `art/production/master-asset-queue.json`
-- `tools/sprites/asset_queue_utils.py`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
+- `art/production/master-asset-queue.json`
 
 ### Project signals
 - `build.gradle.kts`

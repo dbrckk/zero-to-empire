@@ -888,6 +888,8 @@ on:
   workflow_run:
     workflows:
       - 'Kaggle Mass Sprite Factory'
+      - 'Pollinations Character Atlas'
+      - 'Pollinations Building Candidate'
       - 'FX Historical Review Evidence'
     types: [completed]
 
@@ -2345,8 +2347,6 @@ on:
       - 'ops/sprite-wave-trigger.txt'
       - 'kaggle/github_mass_factory.py'
       - 'kaggle/kernel-metadata.template.json'
-  schedule:
-    - cron: '17 */6 * * *'
 
 permissions:
   contents: write
