@@ -186,8 +186,11 @@ def sheetqa(frames):
         return False,'duplicate'
     h0=appearance_hist(frames[0])
     sims=[hist_similarity(h0,appearance_hist(f)) for f in frames[1:]]
+    if sims:
+        print('POLLINATIONS_CHR_IDENTITY_SIMS='+','.join(f'{n+1}:{v:.3f}' for n,v in enumerate(sims)),flush=True)
     if sims and min(sims)<.48:
-        return False,f'identity-palette={min(sims):.2f}'
+        worst=1+sims.index(min(sims))
+        return False,f'identity-palette={min(sims):.2f} frame={worst}'
     bottoms=[]; centers=[]
     for frame in frames:
         bb=frame.getchannel('A').getbbox()
@@ -298,6 +301,15 @@ def main():
                 break
             except Exception as e:
                 last=str(e)
+                if it['action']=='REPAIR' and last.startswith('identity-palette=') and ' frame=' in last:
+                    try:
+                        bad=int(last.rsplit(' frame=',1)[1])
+                        cache_file=OUT/'pollinations-frame-cache'/it['id']/f'{bad:02d}.png'
+                        if cache_file.is_file():
+                            cache_file.unlink()
+                            print(f'POLLINATIONS_CHR_REPAIR_CACHE_INVALIDATE n={bad} reason=identity-palette',flush=True)
+                    except (ValueError,OSError):
+                        pass
                 print(f"POLLINATIONS_CHR_RETRY={it['id']} attempt={att+1} reason={e}",flush=True)
 
         if not done:
