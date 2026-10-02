@@ -22,22 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-02T12:46:41Z
+Generated: 2026-10-02T13:47:11Z
 
 ### Git
 - Branch: `main`
-- Head: `6e6f58b3b1f9`
-- Commit date: 2026-10-02T14:45:44+02:00
-- Commit: ci(art): retry final ENG repair fallback
+- Head: `5743e4d9bd40`
+- Commit date: 2026-10-02T13:46:43Z
+- Commit: art(auto): advance 235-asset production queue
 - Tracked files: 1417
 
 ### Recently changed files
-- `ops/pollinations-character-trigger.txt`
-- `art/production/master-asset-queue.json`
-- `.github/workflows/kaggle-mass-sprite-factory.yml`
-- `.github/workflows/asset-autofactory.yml`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
+- `art/production/master-asset-queue.json`
+- `.github/workflows/pollinations-character-atlas.yml`
+- `art/production/controlled-character-regen-queue.json`
+- `tools/sprites/pollinations_character_sheet_factory.py`
 
 ### Project signals
 - `build.gradle.kts`

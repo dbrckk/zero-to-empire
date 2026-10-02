@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 363781f3d3a867b5ddf83a6120cd11281f00dc95
-Head: 6e6f58b3b1f9f386ac3268a0d33b67acce735923
+Base: d10b3963c03c3eee142adb813041739f2e77876d
+Head: 9c9e58d036fffded6ee895359b1728160f2888bb
 
 ## Changed files
-- M ops/pollinations-character-trigger.txt
+- M .github/workflows/pollinations-character-atlas.yml
 
 ## Affected areas
-- ops
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

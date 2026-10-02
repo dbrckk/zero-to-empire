@@ -3734,6 +3734,7 @@ POSES={
 ⋮----
 def pending()
 ⋮----
+requested={x.strip().upper() for x in os.getenv('POLLINATIONS_CHR_TARGET_IDS','').split(',') if x.strip()}
 manifest={}
 ⋮----
 p=[x.strip() for x in line.split('|')[1:-1]]

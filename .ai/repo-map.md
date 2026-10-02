@@ -2363,6 +2363,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: kaggle-mass-sprite-factory
@@ -3378,6 +3379,10 @@ on:
         description: Internal auto-chain depth
         required: false
         default: '0'
+      target_ids:
+        description: Optional comma-separated character asset IDs
+        required: false
+        default: ''
   push:
     branches: [main]
     paths:
@@ -3392,7 +3397,7 @@ permissions:
 
 concurrency:
   group: pollinations-character-atlas
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   generate:
@@ -3403,6 +3408,7 @@ jobs:
       POLLINATIONS_CHR_ATTEMPTS: '2'
       POLLINATIONS_CHR_SEED: ${{ github.run_id }}
       POLLINATIONS_CHAIN_DEPTH: ${{ inputs.chain_depth || '0' }}
+      POLLINATIONS_CHR_TARGET_IDS: ${{ inputs.target_ids || '' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -27050,6 +27056,7 @@ POSES={
 ⋮----
 def pending()
 ⋮----
+requested={x.strip().upper() for x in os.getenv('POLLINATIONS_CHR_TARGET_IDS','').split(',') if x.strip()}
 manifest={}
 ⋮----
 p=[x.strip() for x in line.split('|')[1:-1]]
