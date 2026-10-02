@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 4224fdf53d4b6bae485285ca2eb48c3420411907
-Head: 2e59bc4feb9cf166944577e9af3953c2aaa9c413
+Base: d8f4d653bde74e78a3dd18b01bdc3f5a3c7fe63a
+Head: b9142f54880baa6d9e2d4d8f87cb13916a2d7f37
 
 ## Changed files
-- M tools/sprites/asset_queue_utils.py
+- M art/production/master-asset-queue.json
 
 ## Affected areas
-- tools
+- art
 
 ## Related test candidates
 - No direct filename-based test match detected.
