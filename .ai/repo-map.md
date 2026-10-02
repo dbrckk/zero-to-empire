@@ -27142,6 +27142,8 @@ vals=[iou(frames[n-1],frames[n]) for n in range(1,len(frames))]
 h0=appearance_hist(frames[0])
 sims=[hist_similarity(h0,appearance_hist(f)) for f in frames[1:]]
 ⋮----
+worst=1+sims.index(min(sims))
+⋮----
 bottoms=[]; centers=[]
 ⋮----
 bb=frame.getchannel('A').getbbox()
@@ -27157,8 +27159,20 @@ def repair_frame_prompt(item, pose)
 def generate_repair_frames(item, seed)
 ⋮----
 frames=[]
+cache_dir=OUT/'pollinations-frame-cache'/item['id']
 ⋮----
-raw=fetch(repair_frame_prompt(item,pose),(seed+n*104729) % 2147483647)
+cache_file=cache_dir/f'{n:02d}.png'
+⋮----
+frame=Image.open(cache_file).convert('RGBA')
+cov=sum(frame.getchannel('A').histogram()[8:])/(256*256)
+⋮----
+rev_file=cache_dir/f'{n:02d}.rev'
+⋮----
+revision=int(rev_file.read_text(encoding='utf-8').strip()) if rev_file.is_file() else 0
+⋮----
+revision=0
+frame_seed=(19417 + sum((i+1)*ord(ch) for i,ch in enumerate(item['id']))*1009 + n*104729 + revision*1000003) % 2147483647
+raw=fetch(repair_frame_prompt(item,pose),frame_seed)
 ⋮----
 def extract_frames(raw,frame_count,action=None)
 ⋮----
@@ -27193,6 +27207,15 @@ p=INCOMING/f"{it['stem']}.png"
 done=True
 ⋮----
 last=str(e)
+⋮----
+bad=int(last.rsplit(' frame=',1)[1])
+cache_file=OUT/'pollinations-frame-cache'/it['id']/f'{bad:02d}.png'
+⋮----
+rev_file=cache_file.with_suffix('.rev')
+⋮----
+revision=int(rev_file.read_text(encoding='utf-8').strip())+1 if rev_file.is_file() else 1
+⋮----
+revision=1
 ⋮----
 provider_error = (
 ```

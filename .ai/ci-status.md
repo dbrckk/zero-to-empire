@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 7 success / 0 failure / 1 active
+Summary: 3 success / 0 failure / 3 active
 
-- Pollinations Character Atlas: queued / pending (ee83122d)
-- Asset Autofactory 235: completed / success (45290d37)
-- Asset Autofactory 235: completed / success (45290d37)
-- Pollinations Building Candidate: completed / success (346f6a07)
-- Asset Autofactory 235: completed / success (346f6a07)
-- Pollinations Character Atlas: completed / success (346f6a07)
-- Asset Autofactory 235: completed / success (c3d8a6b8)
-- Asset Autofactory 235: completed / success (c3d8a6b8)
+- Asset Autofactory 235: completed / success (6267da94)
+- Pollinations Character Atlas: pending / pending (6267da94)
+- Pollinations Character Atlas: completed / cancelled (022f1ff5)
+- Pollinations Character Smoke: in_progress / pending (022f1ff5)
+- Pollinations Character Atlas: in_progress / pending (3fe06e40)
+- Pollinations Character Smoke: completed / cancelled (3fe06e40)
+- Asset Autofactory 235: completed / success (26cab271)
+- Asset Autofactory 235: completed / success (26cab271)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.
