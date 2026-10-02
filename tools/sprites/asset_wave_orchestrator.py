@@ -198,6 +198,7 @@ def prepare_character_group(queue: dict[str, Any], group: str) -> dict[str, Any]
         if not character_retry_available(x):
             x["pipeline_status"] = "BLOCKED_AUTOMATION_LIMIT"
             continue
+        x["pipeline_status"] = "PENDING_KAGGLE"
         targets.append({"id": x["id"], "status": "PENDING_KAGGLE"})
     if not targets:
         return {"group": group, "ids": [], "count": 0}
