@@ -880,6 +880,19 @@ name: Asset Autofactory 235
 
 on:
   workflow_dispatch:
+    inputs:
+      producer_workflow:
+        description: Producer workflow callback name
+        required: false
+        default: ''
+      producer_conclusion:
+        description: Producer workflow callback conclusion
+        required: false
+        default: ''
+      producer_run_id:
+        description: Producer workflow callback run id
+        required: false
+        default: ''
   push:
     paths:
       - 'ops/autofactory-kick.txt'
@@ -907,9 +920,9 @@ jobs:
     timeout-minutes: 12
     env:
       GH_TOKEN: ${{ github.token }}
-      AUTOF_TRIGGER_WORKFLOW: ${{ github.event.workflow_run.name || '' }}
-      AUTOF_TRIGGER_CONCLUSION: ${{ github.event.workflow_run.conclusion || '' }}
-      AUTOF_TRIGGER_RUN_ID: ${{ github.event.workflow_run.id || '' }}
+      AUTOF_TRIGGER_WORKFLOW: ${{ github.event.workflow_run.name || inputs.producer_workflow || '' }}
+      AUTOF_TRIGGER_CONCLUSION: ${{ github.event.workflow_run.conclusion || inputs.producer_conclusion || '' }}
+      AUTOF_TRIGGER_RUN_ID: ${{ github.event.workflow_run.id || inputs.producer_run_id || '' }}
     steps:
       - name: Checkout canonical main
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
@@ -2763,6 +2776,20 @@ jobs:
         if: always() && steps.wait-kaggle.outcome == 'success'
         shell: bash
         run: test "${KAGGLE_FINAL_STATUS:-UNKNOWN}" = 'COMPLETE'
+      - name: Reconcile producer outcome explicitly
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          conclusion="failure"
+          if [ "${{ job.status }}" = "success" ]; then conclusion="success"; fi
+          gh workflow run 'Asset Autofactory 235' --ref main \
+            -f producer_workflow='Kaggle Mass Sprite Factory' \
+            -f producer_conclusion="$conclusion" \
+            -f producer_run_id='${{ github.run_id }}'
+
       - name: Upload exhaustive QA evidence
         if: always()
         uses: actions/upload-artifact@v4

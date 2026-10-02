@@ -1,14 +1,13 @@
 # CI status
 
-Summary: 5 success / 1 failure / 1 active
+Summary: 3 success / 2 failure / 1 active
 
-- Kaggle Mass Sprite Factory: in_progress / pending (47c29a0e)
+- Pollinations Character Atlas: in_progress / pending (6e6f58b3)
+- Kaggle Mass Sprite Factory: completed / failure (2ce71772)
+- Asset Autofactory 235: completed / success (d893e78f)
+- Kaggle Mass Sprite Factory: completed / failure (47c29a0e)
 - Asset Autofactory 235: completed / success (33387442)
 - Kaggle Mass Sprite Factory: completed / success (8429f899)
-- Asset Autofactory 235: completed / success (02d79271)
-- Pollinations Character Atlas: completed / success (5f95a993)
-- Asset Autofactory 235: completed / success (d2742f6a)
-- Kaggle Mass Sprite Factory: completed / failure (d2742f6a)
 
 ## Latest failed run structure
 - Job: kaggle
