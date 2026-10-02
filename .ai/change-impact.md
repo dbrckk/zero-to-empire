@@ -1,13 +1,13 @@
 # Change impact
 
-Base: d10b3963c03c3eee142adb813041739f2e77876d
-Head: 9c9e58d036fffded6ee895359b1728160f2888bb
+Base: d6c556634a10c9adb6962379262d4b957f181e58
+Head: 8dd7cda7d875097a44620ba0170df0e128f25265
 
 ## Changed files
-- M .github/workflows/pollinations-character-atlas.yml
+- M art/production/master-asset-queue.json
 
 ## Affected areas
-- .github
+- art
 
 ## Related test candidates
 - No direct filename-based test match detected.
