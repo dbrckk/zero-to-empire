@@ -3,7 +3,7 @@
 - Strict DONE: **213 / 235**
 - Production processed to DONE/review: **233 / 235**
 - Awaiting semantic review: **14**
-- Automation-blocked: **2**
+- Automation-blocked: **1**
 - Current action: **NO_AUTOMATIC_WORK_AVAILABLE**
 - Current group: **none**
 
