@@ -189,9 +189,16 @@ def sheetqa(frames):
 def sheet_prompt(item):
     action=item['action']; fc=ACTIONS[action][1]
     poses=', '.join(POSES[action][:fc])
+    framing = (
+        ' CRITICAL REPAIR FRAMING: every occupied cell must show the complete character from helmet/head to both boot soles, '
+        'with visible neutral-gray margin above the head, below the boots, and on both sides; never crop head, arms, tool, knees, legs, or feet; '
+        'keep the diagnostic tool compact and beside the body so it never obscures the legs. '
+        if action == 'REPAIR' else ''
+    )
     return (
         f'AAA premium mobile 2.5D sprite-sheet production image. SAME EXACT SINGLE ADULT CHARACTER in every frame: {ROLES[item["role"]]}. '
         f'Animation: {ACTIONS[action][0]}. Required chronological poses: {poses}. '
+        f'{framing}'
         'Create one exact 4 columns by 4 rows animation atlas on a perfectly flat uniform neutral gray background. '
         'Each cell contains exactly one full-body view of the same worker, same face, same gender presentation, same hair, same helmet, same clothes, same colors, same body proportions, same tool or carried object. '
         '34-degree three-quarter orthographic camera, feet visible, centered in every cell, identical scale and foot pivot. '
