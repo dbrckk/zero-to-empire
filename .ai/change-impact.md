@@ -1,10 +1,10 @@
 # Change impact
 
-Base: d6c556634a10c9adb6962379262d4b957f181e58
-Head: 8dd7cda7d875097a44620ba0170df0e128f25265
+Base: b8a8b13943bc8547309ba0b8ccb86f48833b81cc
+Head: f9a7a652365819f0d12107a6a4eaf06139a5f895
 
 ## Changed files
-- M art/production/master-asset-queue.json
+- M art/production/controlled-character-regen-queue.json
 
 ## Affected areas
 - art

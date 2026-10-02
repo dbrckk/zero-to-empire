@@ -3825,6 +3825,7 @@ def sheet_prompt(item)
 ⋮----
 action=item['action']; fc=ACTIONS[action][1]
 poses=', '.join(POSES[action][:fc])
+framing = (
 ⋮----
 def extract_frames(raw,frame_count)
 ⋮----

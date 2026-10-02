@@ -22,19 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-02T14:54:34Z
+Generated: 2026-10-02T16:09:43Z
 
 ### Git
 - Branch: `main`
-- Head: `8dd7cda7d875`
-- Commit date: 2026-10-02T16:53:33+02:00
-- Commit: art: stop ENG repair Kaggle infrastructure loop
+- Head: `c6d0637110aa`
+- Commit date: 2026-10-02T16:08:54Z
+- Commit: art(auto): advance 235-asset production queue
 - Tracked files: 1417
 
 ### Recently changed files
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
 - `art/production/master-asset-queue.json`
-- `tools/sprites/asset_wave_orchestrator.py`
 - `art/production/controlled-character-regen-queue.json`
+- `tools/sprites/pollinations_character_sheet_factory.py`
+- `tools/sprites/asset_queue_utils.py`
 
 ### Project signals
 - `build.gradle.kts`
