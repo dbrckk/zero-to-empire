@@ -244,11 +244,16 @@ def generate_repair_frames(item, seed):
             cov=sum(frame.getchannel('A').histogram()[8:])/(256*256)
             print(f'POLLINATIONS_CHR_REPAIR_CACHE_HIT n={n} pose={pose} cov={cov:.3f}',flush=True)
         else:
-            frame_seed=(19417 + sum((i+1)*ord(ch) for i,ch in enumerate(item['id']))*1009 + n*104729) % 2147483647
+            rev_file=cache_dir/f'{n:02d}.rev'
+            try:
+                revision=int(rev_file.read_text(encoding='utf-8').strip()) if rev_file.is_file() else 0
+            except ValueError:
+                revision=0
+            frame_seed=(19417 + sum((i+1)*ord(ch) for i,ch in enumerate(item['id']))*1009 + n*104729 + revision*1000003) % 2147483647
             raw=fetch(repair_frame_prompt(item,pose),frame_seed)
             frame,cov=cutout(raw,'REPAIR',standalone=True)
             frame.save(cache_file,'PNG',optimize=True)
-            print(f'POLLINATIONS_CHR_REPAIR_CACHE_SAVE n={n} pose={pose}',flush=True)
+            print(f'POLLINATIONS_CHR_REPAIR_CACHE_SAVE n={n} pose={pose} revision={revision}',flush=True)
         frames.append(frame)
         print(f'POLLINATIONS_CHR_REPAIR_FRAME n={n} pose={pose} cov={cov:.3f}',flush=True)
     return frames
@@ -307,7 +312,13 @@ def main():
                         cache_file=OUT/'pollinations-frame-cache'/it['id']/f'{bad:02d}.png'
                         if cache_file.is_file():
                             cache_file.unlink()
-                            print(f'POLLINATIONS_CHR_REPAIR_CACHE_INVALIDATE n={bad} reason=identity-palette',flush=True)
+                        rev_file=cache_file.with_suffix('.rev')
+                        try:
+                            revision=int(rev_file.read_text(encoding='utf-8').strip())+1 if rev_file.is_file() else 1
+                        except ValueError:
+                            revision=1
+                        rev_file.write_text(str(revision),encoding='utf-8')
+                        print(f'POLLINATIONS_CHR_REPAIR_CACHE_INVALIDATE n={bad} revision={revision} reason=identity-palette',flush=True)
                     except (ValueError,OSError):
                         pass
                 print(f"POLLINATIONS_CHR_RETRY={it['id']} attempt={att+1} reason={e}",flush=True)
