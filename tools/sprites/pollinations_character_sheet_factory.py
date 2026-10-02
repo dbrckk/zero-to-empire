@@ -130,10 +130,11 @@ def cutout(raw, action=None):
     # instead of a standing-character aspect-ratio assumption.
     if action == 'REPAIR':
         left,top,right,bottom=bb
+        print(f'POLLINATIONS_CHR_REPAIR_BBOX left={left} top={top} right={right} bottom={bottom} w={cw} h={ch} cell={w}x{h}',flush=True)
         if top <= 2 or bottom >= h-2:
-            raise RuntimeError('not full body')
+            raise RuntimeError(f'not full body: edge top={top} bottom={bottom} cell_h={h}')
         if ch < h*.42:
-            raise RuntimeError('not full body')
+            raise RuntimeError(f'not full body: short h={ch} cell_h={h}')
     elif ch<cw*.92:
         raise RuntimeError('not full body')
     s=min(176/cw,218/ch)
