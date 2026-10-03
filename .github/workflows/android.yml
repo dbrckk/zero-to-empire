@@ -94,6 +94,9 @@ jobs:
       - name: Validate release privacy and Data Safety
         run: python3 tools/android/validate_release_privacy.py
 
+      - name: Audit canonical character runtime coverage
+        run: python3 tools/android/audit_character_runtime.py
+
       - name: Build debug APK
         run: gradle assembleDebug --stacktrace
 
