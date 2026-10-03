@@ -190,13 +190,23 @@ def isolate(im):
  mask=mask.filter(ImageFilter.GaussianBlur(.65));out=rgb.convert('RGBA');out.putalpha(mask)
  return out
 
-def finish_frame(raw):
+def validate_source_full_body(bb,w,h,action):
+ left,top,right,bottom=bb;cw=max(0,right-left);ch=max(0,bottom-top)
+ if cw<=0 or ch<=0:raise RuntimeError('empty alpha')
+ edge=max(8,round(h*.018))
+ if top<=edge or bottom>=h-edge:raise RuntimeError(f'source edge contact top={top} bottom={bottom} h={h}')
+ min_ratio=.42 if action=='REPAIR' else .55
+ if ch<h*min_ratio:raise RuntimeError(f'source subject too short h={ch}/{h} min={min_ratio:.2f}')
+ if action!='REPAIR' and ch<cw*.95:raise RuntimeError('not full-body character silhouette')
+ return True
+
+def finish_frame(raw,action):
  m=isolate(raw);a=m.getchannel('A');bb=a.getbbox()
  if not bb:raise RuntimeError('empty alpha')
  w,h=m.size;pad=max(8,w//40)
  if any(e.getbbox() for e in (a.crop((0,0,w,pad)),a.crop((0,h-pad,w,h)),a.crop((0,0,pad,h)),a.crop((w-pad,0,w,h)))):raise RuntimeError('edge contact')
+ validate_source_full_body(bb,w,h,action)
  crop=m.crop(bb);cw,ch=crop.size
- if ch<cw*.95:raise RuntimeError('not full-body character silhouette')
  # Two side-by-side people produce an abnormally wide full-body silhouette.
  # Allow wide action poses/gear up to 1.08; downstream identity/coverage QA still rejects real duplicates.
  # Reject before resizing so technical QA cannot normalize a multi-person frame into a valid-looking cell.
@@ -352,7 +362,7 @@ def main():
         strength=min(.38,.24+fi*.012+attempt*.02)
        if mode in {'single','identity'} and i['action']!='WALK':strength=max(.24,strength-.035)
        raw=img(image=anchor_raw,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=6,guidance_scale=0,output_type='pil',generator=gen).images[0]
-     frame,cov=finish_frame(raw);frames.append(frame);ok=True;print(f"KAGGLE_CHR_FRAME={i['id']} frame={fi} attempt={attempt+1} mode={mode} cov={cov:.2f}",flush=True);break
+     frame,cov=finish_frame(raw,i['action']);frames.append(frame);ok=True;print(f"KAGGLE_CHR_FRAME={i['id']} frame={fi} attempt={attempt+1} mode={mode} cov={cov:.2f}",flush=True);break
     except Exception as e:
      last_reason=str(e);retry_reasons.append(last_reason);print(f"KAGGLE_CHR_RETRY={i['id']} frame={fi} attempt={attempt+1} mode={mode} reason={e}",flush=True)
    if not ok:fail=f'frame-{fi}-failed';break

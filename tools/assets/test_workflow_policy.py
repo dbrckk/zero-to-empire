@@ -60,6 +60,13 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("item['status']='REJECTED'", text)
         self.assertIn("CONTROLLED_CHARACTER_REJECTED=", text)
 
+    def test_kaggle_character_generator_rejects_source_fragments_before_resize(self):
+        text = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
+        self.assertIn("def validate_source_full_body", text)
+        self.assertIn("source subject too short", text)
+        self.assertIn("source edge contact", text)
+        self.assertIn("finish_frame(raw,i['action'])", text)
+
 
 if __name__ == "__main__":
     unittest.main()
