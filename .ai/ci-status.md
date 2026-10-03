@@ -1,10 +1,12 @@
 # CI status
 
-Summary: 2 success / 0 failure / 1 active
+Summary: 4 success / 0 failure / 2 active
 
-- Asset Pipeline CI: in_progress / pending (e9041ae1)
-- Asset Pipeline CI: completed / cancelled (b49b9b44)
-- Asset Pipeline CI: completed / success (8856e507)
-- Asset Pipeline CI: completed / success (dd2edf52)
+- Android CI: pending / pending (ea62dbc3)
+- Android CI: in_progress / pending (3751d160)
+- Asset Autofactory 235: completed / success (924926a7)
+- Asset Autofactory 235: completed / success (924926a7)
+- Pollinations Character Atlas: completed / success (924926a7)
+- Asset Pipeline CI: completed / success (e8757ff1)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

@@ -39,6 +39,7 @@ The content is organized as follows:
 # Directory Structure
 ```
 android/
+  audit_character_runtime.py
   emulator_functional_smoke.sh
   test_ui_click_target.py
   test_ui_dump_retry.py
@@ -98,6 +99,33 @@ validate_isolated_sprite.py
 ```
 
 # Files
+
+## File: android/audit_character_runtime.py
+```python
+#!/usr/bin/env python3
+"""Audit canonical character atlas registration and runtime exercise coverage."""
+⋮----
+ROOT = Path(__file__).resolve().parents[2]
+RASTER = ROOT / "app/src/main/java/com/zerotoempire/game/CanonicalCharacterRaster.kt"
+LAYER = ROOT / "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt"
+DRAWABLES = ROOT / "app/src/main/res/drawable-nodpi"
+⋮----
+ROLES = {
+ACTIONS = {
+⋮----
+raster = RASTER.read_text(encoding="utf-8")
+layer = LAYER.read_text(encoding="utf-8")
+expected = {
+registered = set(re.findall(r"R\.drawable\.(zte_chr_[a-z0-9_]+_final)", raster))
+missing_registry = sorted(expected - registered)
+extra_registry = sorted(registered - expected)
+missing_files = sorted(name for name in expected if not (DRAWABLES / f"{name}.webp").is_file() and not (DRAWABLES / f"{name}.png").is_file())
+⋮----
+placement_re = re.compile(
+exercised_pairs = set(placement_re.findall(layer))
+exercised = {
+unexercised = sorted(expected - exercised)
+```
 
 ## File: android/emulator_functional_smoke.sh
 ```bash
@@ -3776,7 +3804,7 @@ out=[]
 ⋮----
 aid=str(item.get('id','')).upper()
 ⋮----
-def mark_queue(aid,status,seed=None)
+def mark_queue(aid,status,seed=None,producer=None,producer_run_id=None)
 ⋮----
 def fetch(prompt,seed)
 ⋮----
@@ -3909,6 +3937,8 @@ frames=extract_frames(raw,fc,it['action'])
 sheet=Image.new('RGBA',(1024,1024),(0,0,0,0))
 ⋮----
 p=INCOMING/f"{it['stem']}.png"
+⋮----
+producer_run_id=os.getenv('GITHUB_RUN_ID') or None
 ⋮----
 done=True
 ⋮----

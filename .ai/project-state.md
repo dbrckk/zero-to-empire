@@ -22,21 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T16:26:08Z
+Generated: 2026-10-03T16:57:38Z
 
 ### Git
 - Branch: `main`
-- Head: `e9041ae117f2`
-- Commit date: 2026-10-03T18:25:28+02:00
-- Commit: ci(art): validate autofactory orchestrator
-- Tracked files: 1434
+- Head: `ea62dbc36636`
+- Commit date: 2026-10-03T18:57:00+02:00
+- Commit: ci(android): enforce character runtime registry audit
+- Tracked files: 1435
 
 ### Recently changed files
-- `.github/workflows/asset-pipeline-ci.yml`
-- `tools/assets/test_queue_state_policy.py`
-- `.github/workflows/kaggle-mass-sprite-factory.yml`
-- `.github/workflows/asset-autofactory.yml`
-- `tools/sprites/asset_wave_orchestrator.py`
+- `.github/workflows/android.yml`
+- `tools/android/audit_character_runtime.py`
+- `art/production/master-asset-queue.json`
+- `art/production/controlled-character-regen-queue.json`
 
 ### Project signals
 - `build.gradle.kts`
