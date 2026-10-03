@@ -9,7 +9,7 @@ Generated from `art/production/master-asset-queue.json` after production complet
 
 | Asset | Role | Action | Technical status | Review note |
 |---|---|---|---|---|
-| CHR-OP-IDLE | OP | IDLE | AWAITING_REVIEW | Identity/headgear consistency passed, but WALK lacks clear alternating stride. v1.5 requires explicit leg poses and automatic lower-body motion. |
+| CHR-OP-IDLE | OP | IDLE | AWAITING_REVIEW | Identity/headgear consistency passed; IDLE candidate still requires strict semantic review before runtime promotion. |
 | CHR-OP-WALK | OP | WALK | AWAITING_REVIEW | Identity/headgear consistency passed, but WALK lacks clear alternating stride. v1.5 requires explicit leg poses and automatic lower-body motion. |
 | CHR-OP-WORK | OP | WORK | AWAITING_REVIEW | Fresh generated candidate is available; strict semantic review is still required before runtime promotion. |
 | CHR-OP-CARRY | OP | CARRY | AWAITING_REVIEW | Fresh generated candidate is available; strict semantic review is still required before runtime promotion. |
