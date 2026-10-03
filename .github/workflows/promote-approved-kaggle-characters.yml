@@ -1,6 +1,10 @@
 name: Promote Approved Kaggle Characters
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'ops/promote-kaggle-trigger.txt'
   workflow_dispatch:
     inputs:
       source_run_id:
@@ -31,10 +35,25 @@ jobs:
         run: git pull --ff-only origin main
       - name: Install image tooling
         run: python -m pip install --disable-pip-version-check Pillow==11.3.0
+      - name: Resolve promotion request
+        env:
+          INPUT_SOURCE_RUN_ID: ${{ inputs.source_run_id || '' }}
+          INPUT_APPROVED_IDS: ${{ inputs.approved_ids || '' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          source_run="$INPUT_SOURCE_RUN_ID"
+          approved="$INPUT_APPROVED_IDS"
+          if [ -z "$source_run" ] || [ -z "$approved" ]; then
+            IFS='|' read -r source_run approved < ops/promote-kaggle-trigger.txt
+          fi
+          test -n "$source_run"
+          test -n "$approved"
+          echo "SOURCE_RUN_ID=$source_run" >> "$GITHUB_ENV"
+          echo "APPROVED_IDS=$approved" >> "$GITHUB_ENV"
       - name: Download source artifact
         env:
           GH_TOKEN: ${{ github.token }}
-          SOURCE_RUN_ID: ${{ inputs.source_run_id }}
         run: |
           rm -rf /tmp/kaggle-approved
           mkdir -p /tmp/kaggle-approved
@@ -42,7 +61,7 @@ jobs:
           find /tmp/kaggle-approved -type f -print
       - name: Import only explicitly approved candidates
         env:
-          APPROVED_IDS: ${{ inputs.approved_ids }}
+          APPROVED_IDS: ${{ env.APPROVED_IDS }}
         shell: bash
         run: |
           set -euo pipefail
@@ -69,7 +88,7 @@ jobs:
         run: python tools/sprites/process_final_sprites.py
       - name: Write runtime QA evidence
         env:
-          APPROVED_IDS: ${{ inputs.approved_ids }}
+          APPROVED_IDS: ${{ env.APPROVED_IDS }}
         run: |
           python - <<'PY'
           import json, os
