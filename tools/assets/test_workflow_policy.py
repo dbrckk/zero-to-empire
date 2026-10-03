@@ -53,6 +53,13 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("AUTOF_TRIGGER_DISPATCH_TOKEN: ${{ inputs.producer_dispatch_token || '' }}", text)
         self.assertIn("-f dispatch_token='${{ github.run_id }}'", text)
 
+    def test_kaggle_character_reconciliation_handles_partial_rejects(self):
+        path = Path(".github/workflows/kaggle-mass-sprite-factory.yml")
+        text = path.read_text(encoding="utf-8")
+        self.assertIn("character-sheet-report.json", text)
+        self.assertIn("item['status']='REJECTED'", text)
+        self.assertIn("CONTROLLED_CHARACTER_REJECTED=", text)
+
 
 if __name__ == "__main__":
     unittest.main()

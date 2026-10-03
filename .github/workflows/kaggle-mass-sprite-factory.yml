@@ -401,16 +401,34 @@ jobs:
               stem_to_id[Path(cols[3].replace(chr(96),'')).stem]=cols[0]
 
           produced={stem_to_id[s] for s in stems if s in stem_to_id}
+          report_path=Path('/tmp/kaggle-output/output/character-sheet-report.json')
+          report=json.loads(report_path.read_text(encoding='utf-8')) if report_path.is_file() else []
+          rejected={
+              str(row.get('id','')).upper(): str(row.get('reason') or 'generator semantic/technical rejection')
+              for row in report
+              if str(row.get('status','')).upper()=='REJECT' and row.get('id')
+          }
+
           q=json.loads(queue.read_text(encoding='utf-8'))
-          changed=0
+          awaiting=0
+          rejected_count=0
+          run_id=int(os.environ['KAGGLE_RUN_ID'])
           for item in q.get('targets',[]):
               aid=str(item.get('id','')).upper()
-              if aid in produced and str(item.get('status','')).upper()=='PENDING_KAGGLE':
+              status=str(item.get('status','')).upper()
+              if aid in produced and status=='PENDING_KAGGLE':
                   item['status']='AWAITING_REVIEW'
-                  item['kaggle_run_id']=int(os.environ['KAGGLE_RUN_ID'])
-                  changed+=1
+                  item['kaggle_run_id']=run_id
+                  item.pop('review_reason',None)
+                  awaiting+=1
+              elif aid in rejected and status=='PENDING_KAGGLE':
+                  item['status']='REJECTED'
+                  item['kaggle_run_id']=run_id
+                  item['review_reason']='Kaggle generator rejected candidate: '+rejected[aid]
+                  rejected_count+=1
           queue.write_text(json.dumps(q,indent=2)+'\n',encoding='utf-8')
-          print(f'CONTROLLED_CHARACTER_AWAITING_REVIEW={changed}')
+          print(f'CONTROLLED_CHARACTER_AWAITING_REVIEW={awaiting}')
+          print(f'CONTROLLED_CHARACTER_REJECTED={rejected_count}')
           PY
 
           if git diff --quiet -- art/production/controlled-character-regen-queue.json; then
