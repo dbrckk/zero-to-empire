@@ -71,6 +71,16 @@ jobs:
         run: |
           set -euo pipefail
           kaggle_busy="$(gh run list --workflow 'Kaggle Mass Sprite Factory' --limit 20 --json status --jq '[.[] | select(.status == "queued" or .status == "in_progress" or .status == "pending" or .status == "waiting")] | length')"
+          if [ -f art/production/kaggle-async-state.json ]; then
+            async_busy="$(python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('art/production/kaggle-async-state.json').read_text())
+          print(1 if str(d.get('status','')).upper()=='ACTIVE' else 0)
+          PY
+            )"
+            kaggle_busy=$((kaggle_busy + async_busy))
+          fi
           fx_busy="$(gh run list --workflow 'FX Historical Review Evidence' --limit 20 --json status --jq '[.[] | select(.status == "queued" or .status == "in_progress" or .status == "pending" or .status == "waiting")] | length')"
           if [ "$kaggle_busy" -gt 0 ]; then echo 'AUTOF_KAGGLE_BUSY=1' >> "$GITHUB_ENV"; else echo 'AUTOF_KAGGLE_BUSY=0' >> "$GITHUB_ENV"; fi
           if [ "$fx_busy" -gt 0 ]; then echo 'AUTOF_FX_BUSY=1' >> "$GITHUB_ENV"; else echo 'AUTOF_FX_BUSY=0' >> "$GITHUB_ENV"; fi
@@ -127,7 +137,7 @@ jobs:
               ;;
             DISPATCH_KAGGLE_CHARACTER)
               test "$count" -gt 0
-              gh workflow run 'Kaggle Mass Sprite Factory' --ref main -f count="$count" -f dispatch_token='${{ github.run_id }}'
+              gh workflow run 'Kaggle Mass Sprite Factory' --ref main -f count="$count" -f dispatch_token='${{ github.run_id }}' -f async_submit=true
               ;;
             DISPATCH_FX_EVIDENCE)
               gh workflow run 'FX Historical Review Evidence' --ref main

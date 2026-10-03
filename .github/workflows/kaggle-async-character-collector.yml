@@ -1,0 +1,194 @@
+name: Kaggle Async Character Collector
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: kaggle-async-character-collector
+  cancel-in-progress: true
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+      KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+      - name: Sync canonical main
+        run: git pull --ff-only origin main
+      - name: Check active async wave
+        id: gate
+        shell: bash
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+          p=Path('art/production/kaggle-async-state.json')
+          d=json.loads(p.read_text()) if p.exists() else {}
+          active=str(d.get('status','')).upper()=='ACTIVE'
+          print('active='+str(active).lower())
+          print('dispatch_token='+str(d.get('dispatch_token','')))
+          print('submit_run_id='+str(d.get('submit_run_id','')))
+          PY
+      - name: Install Kaggle CLI
+        if: steps.gate.outputs.active == 'true'
+        run: python -m pip install --disable-pip-version-check --upgrade kaggle 'Pillow<12'
+      - name: Check Kaggle kernel state
+        if: steps.gate.outputs.active == 'true'
+        id: kernel
+        shell: bash
+        run: |
+          set -euo pipefail
+          status="$(kaggle kernels status "${KAGGLE_USERNAME}/zero-to-empire-sprite-factory" 2>&1 || true)"
+          echo "$status"
+          if echo "$status" | grep -qi 'complete'; then
+            echo 'ready=true' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if echo "$status" | grep -Eqi 'error|cancel|failed'; then
+            echo 'failed=true' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo 'ready=false' >> "$GITHUB_OUTPUT"
+      - name: Download completed output
+        if: steps.kernel.outputs.ready == 'true'
+        run: |
+          rm -rf /tmp/kaggle-output
+          mkdir -p /tmp/kaggle-output
+          kaggle kernels output "${KAGGLE_USERNAME}/zero-to-empire-sprite-factory" -p /tmp/kaggle-output --force
+          find /tmp/kaggle-output/output -maxdepth 3 -type f -print
+      - name: Verify expected async targets
+        if: steps.kernel.outputs.ready == 'true'
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          state=json.loads(Path('art/production/kaggle-async-state.json').read_text())
+          generated=Path('/tmp/kaggle-output/output/generated-targets.json')
+          if not generated.exists(): raise SystemExit('generated-targets.json missing')
+          g=json.loads(generated.read_text())
+          if g.get('lane')!='CONTROLLED_CHARACTER_SHEETS': raise SystemExit('unexpected Kaggle lane')
+          expected=set(state.get('target_ids',[]))
+          actual={str(x.get('id','')).upper() for x in g.get('targets',[]) if x.get('id')}
+          if expected and not (expected & actual):
+              raise SystemExit(f'stale Kaggle output expected={sorted(expected)} actual={sorted(actual)}')
+          print('KAGGLE_ASYNC_MATCH='+','.join(sorted(expected & actual)))
+          PY
+      - name: Technical QA
+        if: steps.kernel.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          files=(/tmp/kaggle-output/output/candidates/*_final.png)
+          if (( ${#files[@]} > 0 )); then
+            python tools/sprites/build_sprite_contact_sheet.py               --output /tmp/kaggle-output/output/github-contact-sheet.png               --report /tmp/kaggle-output/output/github-qa-report.json               --files "${files[@]}"
+            python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('/tmp/kaggle-output/output/github-qa-report.json').read_text())
+          rows=d if isinstance(d,list) else d.get('assets',d.get('sprites',d.get('results',[])))
+          failed=[r for r in rows if not r.get('pass')]
+          if failed: raise SystemExit('technical QA rejected: '+','.join(str(r.get('file')) for r in failed))
+          print('KAGGLE_ASYNC_QA_PASS='+str(len(rows)))
+          PY
+          else
+            python - <<'PY'
+          import json
+          from pathlib import Path
+          rows=json.loads(Path('/tmp/kaggle-output/output/character-sheet-report.json').read_text())
+          attempted=[r for r in rows if r.get('id')]
+          rejected=[r for r in attempted if str(r.get('status','')).upper()=='REJECT']
+          if not attempted or len(rejected)!=len(attempted):
+              raise SystemExit('no candidates and incomplete rejection report')
+          print('KAGGLE_ASYNC_CLEAN_REJECT_BATCH='+str(len(rejected)))
+          PY
+          fi
+      - name: Reconcile controlled character queue
+        if: steps.kernel.outputs.ready == 'true'
+        env:
+          SUBMIT_RUN_ID: ${{ steps.gate.outputs.submit_run_id }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          generated=json.loads(Path('/tmp/kaggle-output/output/generated-targets.json').read_text())
+          report_path=Path('/tmp/kaggle-output/output/character-sheet-report.json')
+          report=json.loads(report_path.read_text()) if report_path.exists() else []
+          manifest=Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
+          stem_to_id={}
+          for line in manifest.read_text(encoding='utf-8').splitlines():
+              if not line.startswith('|') or 'CHR-' not in line or 'app/src/main/res/' not in line: continue
+              cols=[x.strip() for x in line.split('|')[1:-1]]
+              if len(cols)==5: stem_to_id[Path(cols[3].replace(chr(96),'')).stem]=cols[0]
+          produced={stem_to_id.get(Path(x['file']).stem) for x in generated.get('targets',[]) if x.get('file')}
+          produced.discard(None)
+          rejected={str(r.get('id','')).upper():str(r.get('reason') or 'generator rejection') for r in report if str(r.get('status','')).upper()=='REJECT'}
+          p=Path('art/production/controlled-character-regen-queue.json')
+          q=json.loads(p.read_text())
+          run_id=int(os.environ.get('SUBMIT_RUN_ID') or 0)
+          for item in q.get('targets',[]):
+              aid=str(item.get('id','')).upper()
+              if str(item.get('status','')).upper()!='PENDING_KAGGLE': continue
+              if aid in produced:
+                  item['status']='AWAITING_REVIEW'; item['kaggle_run_id']=run_id; item.pop('review_reason',None)
+              elif aid in rejected:
+                  item['status']='REJECTED'; item['kaggle_run_id']=run_id
+                  item['review_reason']='Kaggle generator rejected candidate: '+rejected[aid]
+          p.write_text(json.dumps(q,indent=2)+'\n')
+          state=Path('art/production/kaggle-async-state.json')
+          d=json.loads(state.read_text()); d['status']='COLLECTED'; d['collector_run_id']=int(os.environ['GITHUB_RUN_ID'])
+          state.write_text(json.dumps(d,indent=2)+'\n')
+          PY
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add art/production/controlled-character-regen-queue.json art/production/kaggle-async-state.json
+          git commit -m 'art(auto): collect async Kaggle character wave'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Callback autofactory success
+        if: steps.kernel.outputs.ready == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run 'Asset Autofactory 235' --ref main             -f producer_workflow='Kaggle Mass Sprite Factory'             -f producer_conclusion='success'             -f producer_run_id='${{ steps.gate.outputs.submit_run_id }}'             -f producer_dispatch_token='${{ steps.gate.outputs.dispatch_token }}'
+      - name: Callback autofactory failure
+        if: steps.kernel.outputs.failed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('art/production/kaggle-async-state.json')
+          d=json.loads(p.read_text()); d['status']='FAILED'
+          p.write_text(json.dumps(d,indent=2)+'\n')
+          PY
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add art/production/kaggle-async-state.json
+          git commit -m 'art(auto): mark async Kaggle wave failed'
+          git pull --rebase origin main
+          git push origin HEAD:main
+          gh workflow run 'Asset Autofactory 235' --ref main             -f producer_workflow='Kaggle Mass Sprite Factory'             -f producer_conclusion='failure'             -f producer_run_id='${{ steps.gate.outputs.submit_run_id }}'             -f producer_dispatch_token='${{ steps.gate.outputs.dispatch_token }}'
+      - name: Upload collected evidence
+        if: steps.kernel.outputs.ready == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: kaggle-async-character-batch
+          path: /tmp/kaggle-output/**
+          if-no-files-found: warn
+          retention-days: 90

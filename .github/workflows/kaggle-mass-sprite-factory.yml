@@ -11,6 +11,10 @@ on:
         description: Autofactory run token that owns this producer wave
         required: false
         default: ''
+      async_submit:
+        description: Submit character GPU work and let the scheduled collector reconcile it
+        required: false
+        default: 'false'
   push:
     branches:
       - main
@@ -240,8 +244,40 @@ jobs:
             exit 78
           fi
           exit "$rc"
+      - name: Persist async character submission
+        if: ${{ inputs.async_submit == 'true' && steps.kernel-state.outputs.reuse != 'true' }}
+        shell: bash
+        env:
+          DISPATCH_TOKEN: ${{ inputs.dispatch_token || '' }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          from datetime import datetime, timezone
+          from pathlib import Path
+          q=json.loads(Path('art/production/controlled-character-regen-queue.json').read_text(encoding='utf-8'))
+          ids=[str(x.get('id','')).upper() for x in q.get('targets',[]) if str(x.get('status','')).upper()=='PENDING_KAGGLE']
+          state={
+              'status':'ACTIVE',
+              'lane':'CONTROLLED_CHARACTER_SHEETS',
+              'dispatch_token':os.environ.get('DISPATCH_TOKEN',''),
+              'submit_run_id':int(os.environ['GITHUB_RUN_ID']),
+              'target_ids':ids[:int(os.environ.get('SPRITE_COUNT','12'))],
+              'submitted_at':datetime.now(timezone.utc).isoformat(),
+          }
+          Path('art/production/kaggle-async-state.json').write_text(json.dumps(state,indent=2)+'\n',encoding='utf-8')
+          print('KAGGLE_ASYNC_TARGETS='+','.join(state['target_ids']))
+          PY
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add art/production/kaggle-async-state.json
+          git commit -m 'art(auto): record async Kaggle character wave'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
       - name: Wait for Kaggle
         id: wait-kaggle
+        if: ${{ inputs.async_submit != 'true' }}
         shell: bash
         run: |
           set -u
@@ -259,7 +295,7 @@ jobs:
           fi
           echo "final_status=$final_status" >> "$GITHUB_OUTPUT"; echo "KAGGLE_FINAL_STATUS=$final_status" >> "$GITHUB_ENV"
       - name: Download Kaggle outputs and kernel log
-        if: always() && steps.wait-kaggle.outcome == 'success'
+        if: ${{ inputs.async_submit != 'true' && always() && steps.wait-kaggle.outcome == 'success' }}
         shell: bash
         run: |
           rm -rf /tmp/kaggle-output; mkdir -p /tmp/kaggle-output
@@ -267,6 +303,7 @@ jobs:
           find /tmp/kaggle-output/output -maxdepth 3 -type f -print 2>/dev/null || true
           find /tmp/kaggle-output -maxdepth 2 -type f -name '*.log' -print || true
       - name: Require fresh technically validated candidates
+        if: ${{ inputs.async_submit != 'true' }}
         shell: bash
         run: |
           shopt -s nullglob; files=(/tmp/kaggle-output/output/candidates/*_final.png)
@@ -305,7 +342,7 @@ jobs:
           print(f"KAGGLE_STRICT_QA_PASS={len(rows)}")
           PY
       - name: Mark controlled building candidates awaiting semantic review
-        if: success()
+        if: ${{ inputs.async_submit != 'true' && success() }}
         shell: bash
         env:
           KAGGLE_RUN_ID: ${{ github.run_id }}
@@ -385,7 +422,7 @@ jobs:
           git push origin HEAD:main
 
       - name: Mark controlled character candidates awaiting semantic review
-        if: success()
+        if: ${{ inputs.async_submit != 'true' && success() }}
         shell: bash
         env:
           KAGGLE_RUN_ID: ${{ github.run_id }}
@@ -459,7 +496,7 @@ jobs:
           git push origin HEAD:main
 
       - name: Fail fast on stale reused Kaggle kernel
-        if: always() && env.KAGGLE_STALE_ACTIVE_KERNEL == '1'
+        if: ${{ inputs.async_submit != 'true' && always() && env.KAGGLE_STALE_ACTIVE_KERNEL == '1' }}
         shell: bash
         run: |
           echo 'STALE_KAGGLE_KERNEL: existing RUNNING/QUEUED session produced no completed output within 20 minutes.'
@@ -467,11 +504,11 @@ jobs:
           exit 78
 
       - name: Require successful Kaggle kernel
-        if: always() && steps.wait-kaggle.outcome == 'success'
+        if: ${{ inputs.async_submit != 'true' && always() && steps.wait-kaggle.outcome == 'success' }}
         shell: bash
         run: test "${KAGGLE_FINAL_STATUS:-UNKNOWN}" = 'COMPLETE'
       - name: Reconcile producer outcome explicitly
-        if: always()
+        if: ${{ inputs.async_submit != 'true' && always() }}
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
@@ -486,7 +523,7 @@ jobs:
             -f producer_dispatch_token='${{ inputs.dispatch_token || '' }}'
 
       - name: Upload exhaustive QA evidence
-        if: always()
+        if: ${{ inputs.async_submit != 'true' && always() }}
         uses: actions/upload-artifact@v4
         with:
           name: kaggle-sprite-batch

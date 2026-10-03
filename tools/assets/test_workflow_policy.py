@@ -53,6 +53,18 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("AUTOF_TRIGGER_DISPATCH_TOKEN: ${{ inputs.producer_dispatch_token || '' }}", text)
         self.assertIn("-f dispatch_token='${{ github.run_id }}'", text)
 
+    def test_async_kaggle_character_mode_releases_runner_and_uses_collector(self):
+        mass = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
+        autof = Path(".github/workflows/asset-autofactory.yml").read_text(encoding="utf-8")
+        collector = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
+        self.assertIn("async_submit:", mass)
+        self.assertIn("inputs.async_submit != 'true'", mass)
+        self.assertIn("kaggle-async-state.json", mass)
+        self.assertIn("-f async_submit=true", autof)
+        self.assertIn("kaggle-async-state.json", autof)
+        self.assertIn("cron: '*/10 * * * *'", collector)
+        self.assertIn("Callback autofactory success", collector)
+
     def test_kaggle_character_all_reject_batch_is_not_infrastructure_failure(self):
         text = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
         self.assertIn("KAGGLE_CHARACTER_CLEAN_REJECT_BATCH", text)
