@@ -1,13 +1,13 @@
 # Change impact
 
-Base: e5d74595d165d399b7b11ef8a8808137fc4ba053
-Head: 1ccfc1fd824346cc387707283e0cda1dc32a209e
+Base: fe80eea91d56e8273bb3e4f3fef29a55e40c31aa
+Head: f81c02319feaf3dc1dfa260c04b946fc8fda7eb6
 
 ## Changed files
-- A tools/sprites/generate_strict_review_backlog.py
+- M .github/workflows/ai-repo-map.yml
 
 ## Affected areas
-- tools
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

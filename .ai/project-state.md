@@ -22,20 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T15:28:32Z
+Generated: 2026-10-03T15:47:51Z
 
 ### Git
 - Branch: `main`
-- Head: `1ccfc1fd8243`
-- Commit date: 2026-10-03T17:28:00+02:00
-- Commit: feat(art): generate strict review backlog from master
+- Head: `f81c02319fea`
+- Commit date: 2026-10-03T17:47:16+02:00
+- Commit: ci(art): enforce strict review backlog consistency
 - Tracked files: 1433
 
 ### Recently changed files
+- `.github/workflows/ai-repo-map.yml`
+- `art/production/character-strict-review-backlog.md`
 - `tools/sprites/generate_strict_review_backlog.py`
 - `art/production/master-asset-queue.json`
-- `art/production/character-strict-review-backlog.md`
-- `tools/sprites/asset_queue_utils.py`
 
 ### Project signals
 - `build.gradle.kts`

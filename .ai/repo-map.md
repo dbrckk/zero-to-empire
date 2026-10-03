@@ -478,6 +478,18 @@ concurrency:
 jobs:
   repository-standards:
     uses: dbrckk/repo-standards/.github/workflows/reusable-unified.yml@main
+
+  strict-review-backlog:
+    name: Strict review backlog consistency
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify generated strict-review backlog
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/sprites/generate_strict_review_backlog.py
+          git diff --exit-code -- art/production/character-strict-review-backlog.md
 ```
 
 ## File: .github/workflows/android-emulator-smoke.yml
