@@ -1,131 +1,154 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "6a40cd7d129379a6b80b50d8e214147a63797989",
-  "head": "457fabdcf6a9bafdeaa21d29f72157c358100b04",
+  "base": "457fabdcf6a9bafdeaa21d29f72157c358100b04",
+  "head": "2047e155002b26ef81f58c182ab37db17c6e41bc",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": ".github/workflows/pollinations-character-atlas.yml",
-      "status": "M"
-    },
-    {
-      "path": "art/incoming/final-sprites/zte_chr_eng_repair_final.png",
-      "status": "M"
-    },
-    {
-      "path": "art/production/autofactory-state.json",
-      "status": "M"
-    },
-    {
-      "path": "art/production/autofactory-summary.md",
-      "status": "M"
-    },
-    {
-      "path": "art/production/controlled-character-regen-queue.json",
-      "status": "M"
-    },
-    {
-      "path": "art/production/master-asset-queue.json",
-      "status": "M"
-    },
-    {
-      "path": "art/production/pollinations-character-summary.json",
-      "status": "M"
-    },
-    {
-      "path": "art/production/pollinations-frame-cache/CHR-ENG-REPAIR/09.png",
-      "status": "A"
-    },
-    {
-      "path": "tools/sprites/pollinations_character_sheet_factory.py",
+      "path": "tools/sprites/asset_queue_utils.py",
       "status": "M"
     }
   ],
   "changed_source_files": [
-    "tools/sprites/pollinations_character_sheet_factory.py"
+    "tools/sprites/asset_queue_utils.py"
   ],
   "impacted_files": [
-    "tools/sprites/pollinations_character_sheet_factory.py"
+    "tools/sprites/asset_queue_utils.py",
+    "tools/sprites/asset_wave_orchestrator.py"
   ],
   "impacted_symbols": [
     {
-      "name": "pending",
+      "name": "load_json",
       "kind": "function",
-      "file": "tools/sprites/pollinations_character_sheet_factory.py",
-      "line": 32
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 37
     },
     {
-      "name": "mark_queue",
+      "name": "save_json",
       "kind": "function",
-      "file": "tools/sprites/pollinations_character_sheet_factory.py",
-      "line": 64
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 43
     },
     {
-      "name": "fetch",
+      "name": "manifest_rows",
       "kind": "function",
-      "file": "tools/sprites/pollinations_character_sheet_factory.py",
-      "line": 76
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 48
     },
     {
-      "name": "cutout",
+      "name": "unresolved_ids",
       "kind": "function",
-      "file": "tools/sprites/pollinations_character_sheet_factory.py",
-      "line": 98
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 71
     },
     {
-      "name": "iou",
+      "name": "default_asset",
       "kind": "function",
-      "file": "tools/sprites/pollinations_character_sheet_factory.py",
-      "line": 155
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 78
     },
     {
-      "name": "appearance_hist",
+      "name": "ensure_master",
       "kind": "function",
-      "file": "tools/sprites/pollinations_character_sheet_factory.py",
-      "line": 165
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 110
     },
     {
-      "name": "hist_similarity",
+      "name": "sync_controlled_queues",
       "kind": "function",
-      "file": "tools/sprites/pollinations_character_sheet_factory.py",
-      "line": 177
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 151
     },
     {
-      "name": "sheetqa",
+      "name": "stats",
       "kind": "function",
-      "file": "tools/sprites/pollinations_character_sheet_factory.py",
-      "line": 181
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 198
     },
     {
-      "name": "sheet_prompt",
+      "name": "write_summary",
       "kind": "function",
-      "file": "tools/sprites/pollinations_character_sheet_factory.py",
-      "line": 204
-    },
-    {
-      "name": "repair_frame_prompt",
-      "kind": "function",
-      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "file": "tools/sprites/asset_queue_utils.py",
       "line": 225
     },
     {
-      "name": "generate_repair_frames",
+      "name": "by_id",
       "kind": "function",
-      "file": "tools/sprites/pollinations_character_sheet_factory.py",
-      "line": 236
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 51
     },
     {
-      "name": "extract_frames",
+      "name": "update_from_trigger",
       "kind": "function",
-      "file": "tools/sprites/pollinations_character_sheet_factory.py",
-      "line": 261
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 55
+    },
+    {
+      "name": "active_pending",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 119
+    },
+    {
+      "name": "character_retry_available",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 124
+    },
+    {
+      "name": "mark_dispatch",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 140
+    },
+    {
+      "name": "building_family_ids",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 170
+    },
+    {
+      "name": "prepare_building_group",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 174
+    },
+    {
+      "name": "prepare_character_group",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 185
+    },
+    {
+      "name": "next_group",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 214
+    },
+    {
+      "name": "close_exhausted_character_dispatches",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 233
+    },
+    {
+      "name": "pending_ids_from_controlled",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 254
+    },
+    {
+      "name": "make_decision",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 271
     },
     {
       "name": "main",
       "kind": "function",
-      "file": "tools/sprites/pollinations_character_sheet_factory.py",
-      "line": 273
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 318
     }
   ],
   "selected_tests": []

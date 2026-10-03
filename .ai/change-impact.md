@@ -1,13 +1,13 @@
 # Change impact
 
-Base: dc5f1973e4ab1c09b9504bf61ead114af2b4913b
-Head: 457fabdcf6a9bafdeaa21d29f72157c358100b04
+Base: 29ba80f85b29f10d6390c56db7af0c1b769eeab5
+Head: 2047e155002b26ef81f58c182ab37db17c6e41bc
 
 ## Changed files
-- M .github/workflows/pollinations-character-atlas.yml
+- M tools/sprites/asset_queue_utils.py
 
 ## Affected areas
-- .github
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

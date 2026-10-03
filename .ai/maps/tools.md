@@ -856,6 +856,8 @@ status = str(item.get("status", "")).upper()
 ⋮----
 cq = load_json(CHARACTER_QUEUE, {}) or {}
 ⋮----
+pollinations_only = status in {"PENDING_POLLINATIONS", "PROVIDER_ERROR"}
+⋮----
 def stats(queue: dict[str, Any]) -> dict[str, Any]
 ⋮----
 assets = queue["assets"]

@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T11:36:36Z
+Generated: 2026-10-03T12:59:21Z
 
 ### Git
 - Branch: `main`
-- Head: `457fabdcf6a9`
-- Commit date: 2026-10-03T13:35:56+02:00
-- Commit: refactor(ci): separate Pollinations from Kaggle queue
+- Head: `2047e155002b`
+- Commit date: 2026-10-03T14:59:03+02:00
+- Commit: fix(art): isolate Pollinations statuses from master queue
 - Tracked files: 1431
 
 ### Recently changed files
+- `tools/sprites/asset_queue_utils.py`
 - `.github/workflows/pollinations-character-atlas.yml`
 - `tools/sprites/pollinations_character_sheet_factory.py`
 - `art/production/autofactory-state.json`
