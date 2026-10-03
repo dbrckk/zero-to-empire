@@ -55,6 +55,31 @@ def by_id(queue: dict[str, Any]) -> dict[str, dict[str, Any]]:
     return {x["id"]: x for x in queue["assets"]}
 
 
+def mirror_character_outcomes_from_controlled(queue: dict[str, Any], active: list[dict[str, Any]]) -> None:
+    controlled = load_json(CHARACTER_QUEUE, {}) or {}
+    outcomes = {
+        str(item.get("id", "")).upper(): str(item.get("status", "")).upper()
+        for item in controlled.get("targets", [])
+    }
+    reasons = {
+        str(item.get("id", "")).upper(): str(item.get("review_reason") or "")
+        for item in controlled.get("targets", [])
+    }
+    for asset in active:
+        if asset.get("last_generator") != "kaggle-character-sheet":
+            continue
+        status = outcomes.get(asset["id"])
+        if status == "AWAITING_REVIEW":
+            asset["pipeline_status"] = "AWAITING_REVIEW"
+            asset["review_reason"] = "Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion."
+        elif status in {"REJECTED", "REJECTED_SEMANTIC"}:
+            asset["pipeline_status"] = "REJECTED_SEMANTIC"
+            asset["review_reason"] = reasons.get(asset["id"]) or "Kaggle generator rejected the candidate before semantic review."
+            asset["last_error"] = asset["review_reason"]
+        elif status == "BLOCKED_INFRA_LIMIT":
+            asset["pipeline_status"] = "BLOCKED_INFRA_LIMIT"
+
+
 def update_from_trigger(queue: dict[str, Any]) -> None:
     if TRIGGER_WORKFLOW == "Kaggle Mass Sprite Factory" and TRIGGER_CONCLUSION:
         active = [
@@ -67,9 +92,11 @@ def update_from_trigger(queue: dict[str, Any]) -> None:
             )
         ]
         if TRIGGER_CONCLUSION == "success":
+            mirror_character_outcomes_from_controlled(queue, active)
             for x in active:
                 x["last_run_id"] = int(TRIGGER_RUN_ID) if TRIGGER_RUN_ID else x.get("last_run_id")
-                x["last_error"] = None
+                if x["pipeline_status"] != "REJECTED_SEMANTIC":
+                    x["last_error"] = None
         else:
             for x in active:
                 x["pipeline_status"] = "PENDING_KAGGLE"

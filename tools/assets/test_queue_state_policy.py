@@ -102,6 +102,28 @@ class DispatchCorrelationTests(unittest.TestCase):
         orchestrator = self._load_orchestrator("")
         self.assertEqual(orchestrator.CHARACTER_BATCH_SIZE, 6)
 
+    def test_successful_character_outcomes_mirror_into_master(self) -> None:
+        orchestrator = self._load_orchestrator("")
+        queue = {"assets": [
+            {"id": "CHR-OP-IDLE", "pipeline_status": "DISPATCHED", "last_generator": "kaggle-character-sheet"},
+            {"id": "CHR-OP-WALK", "pipeline_status": "DISPATCHED", "last_generator": "kaggle-character-sheet"},
+        ]}
+        active = queue["assets"]
+        original = orchestrator.load_json
+        try:
+            orchestrator.load_json = lambda path, default=None: {
+                "targets": [
+                    {"id": "CHR-OP-IDLE", "status": "AWAITING_REVIEW"},
+                    {"id": "CHR-OP-WALK", "status": "REJECTED", "review_reason": "walk-too-static"},
+                ]
+            }
+            orchestrator.mirror_character_outcomes_from_controlled(queue, active)
+        finally:
+            orchestrator.load_json = original
+        self.assertEqual(queue["assets"][0]["pipeline_status"], "AWAITING_REVIEW")
+        self.assertEqual(queue["assets"][1]["pipeline_status"], "REJECTED_SEMANTIC")
+        self.assertIn("walk-too-static", queue["assets"][1]["review_reason"])
+
 
 if __name__ == "__main__":
     unittest.main()
