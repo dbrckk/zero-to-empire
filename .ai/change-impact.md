@@ -1,13 +1,13 @@
 # Change impact
 
-Base: cd081b0277bf7f7d9334585b0c7304021113eac5
-Head: 1cc303b682e5e1237e48eaf31b355809f5e2c2db
+Base: cadf0618b7841bd60c558f429b496a5ed4753456
+Head: e3519fba61f89bc6fea04c03756fb57db108d71b
 
 ## Changed files
-- M tools/android/audit_character_runtime.py
+- M app/src/debug/AndroidManifest.xml
 
 ## Affected areas
-- tools
+- app
 
 ## Related test candidates
 - No direct filename-based test match detected.

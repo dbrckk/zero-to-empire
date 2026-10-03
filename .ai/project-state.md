@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T17:31:05Z
+Generated: 2026-10-03T17:45:55Z
 
 ### Git
 - Branch: `main`
-- Head: `1cc303b682e5`
-- Commit date: 2026-10-03T19:30:46+02:00
-- Commit: ci(android): reject duplicate drawable resource names
-- Tracked files: 1428
+- Head: `e3519fba61f8`
+- Commit date: 2026-10-03T19:45:02+02:00
+- Commit: feat(android): expose debug character review activity
+- Tracked files: 1429
 
 ### Recently changed files
+- `app/src/debug/AndroidManifest.xml`
+- `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
+- `app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt`
 - `tools/android/audit_character_runtime.py`
 - `app/src/main/res/drawable-nodpi/zte_business_08_t6_final.png`
-- `app/src/main/res/drawable-nodpi/zte_business_08_t5_final.png`
-- `app/src/main/res/drawable-nodpi/zte_business_08_t4_final.png`
-- `app/src/main/res/drawable-nodpi/zte_business_08_t3_final.png`
 
 ### Project signals
 - `build.gradle.kts`
