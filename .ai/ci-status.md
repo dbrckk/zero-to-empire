@@ -1,12 +1,14 @@
 # CI status
 
-Summary: 4 success / 0 failure / 2 active
+Summary: 0 success / 0 failure / 2 active
 
-- Android CI: pending / pending (ea62dbc3)
-- Android CI: in_progress / pending (3751d160)
-- Asset Autofactory 235: completed / success (924926a7)
-- Asset Autofactory 235: completed / success (924926a7)
-- Pollinations Character Atlas: completed / success (924926a7)
-- Asset Pipeline CI: completed / success (e8757ff1)
+- Reconcile reviewed run 25: completed / skipped (fb261b9e)
+- Reconcile reviewed run 25: completed / skipped (fb261b9e)
+- Reconcile reviewed run 25: completed / skipped (fb261b9e)
+- Android CI: in_progress / pending (fb261b9e)
+- Android Emulator Smoke: in_progress / pending (fb261b9e)
+- Reconcile reviewed run 25: completed / skipped (9cf80917)
+- Android CI: completed / cancelled (9cf80917)
+- Android Emulator Smoke: completed / cancelled (9cf80917)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

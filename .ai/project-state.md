@@ -22,20 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T16:57:38Z
+Generated: 2026-10-03T17:03:06Z
 
 ### Git
 - Branch: `main`
-- Head: `ea62dbc36636`
-- Commit date: 2026-10-03T18:57:00+02:00
-- Commit: ci(android): enforce character runtime registry audit
-- Tracked files: 1435
+- Head: `fb261b9e9817`
+- Commit date: 2026-10-03T19:02:49+02:00
+- Commit: fix(android): remove duplicate BLD-08 PNG resources
+- Tracked files: 1428
 
 ### Recently changed files
-- `.github/workflows/android.yml`
-- `tools/android/audit_character_runtime.py`
-- `art/production/master-asset-queue.json`
-- `art/production/controlled-character-regen-queue.json`
+- `app/src/main/res/drawable-nodpi/zte_business_08_t6_final.png`
+- `app/src/main/res/drawable-nodpi/zte_business_08_t5_final.png`
+- `app/src/main/res/drawable-nodpi/zte_business_08_t4_final.png`
+- `app/src/main/res/drawable-nodpi/zte_business_08_t3_final.png`
+- `app/src/main/res/drawable-nodpi/zte_business_08_t2_final.png`
 
 ### Project signals
 - `build.gradle.kts`

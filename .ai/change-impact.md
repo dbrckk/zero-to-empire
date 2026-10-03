@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 3751d1607de7e0e82e02f421dae30a1b5d8f4138
-Head: ea62dbc36636af45237c60edf63e1cadb0e765e0
+Base: 9cf80917e798f4d83ce947af66cac71b6460a4d3
+Head: fb261b9e9817c45014f431f6da0ea2b7fb6a8976
 
 ## Changed files
-- M .github/workflows/android.yml
+- D app/src/main/res/drawable-nodpi/zte_business_08_t6_final.png
 
 ## Affected areas
-- .github
+- app
 
 ## Related test candidates
 - No direct filename-based test match detected.
