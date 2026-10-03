@@ -22,20 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-02T22:42:26Z
+Generated: 2026-10-03T09:30:23Z
 
 ### Git
 - Branch: `main`
-- Head: `6267da947e04`
-- Commit date: 2026-10-03T00:41:49+02:00
-- Commit: art: retry final ENG repair with targeted identity repair
+- Head: `bff90562aa60`
+- Commit date: 2026-10-03T11:29:52+02:00
+- Commit: art: rebuild persistent ENG repair frame cache
 - Tracked files: 1417
 
 ### Recently changed files
 - `art/production/controlled-character-regen-queue.json`
-- `tools/sprites/pollinations_character_sheet_factory.py`
-- `art/production/pollinations-character-summary.json`
+- `.github/workflows/pollinations-character-atlas.yml`
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
 - `art/production/master-asset-queue.json`
+- `art/production/pollinations-character-summary.json`
 
 ### Project signals
 - `build.gradle.kts`
