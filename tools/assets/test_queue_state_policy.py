@@ -110,6 +110,18 @@ class DispatchCorrelationTests(unittest.TestCase):
         orchestrator = self._load_orchestrator("")
         self.assertEqual(orchestrator.CHARACTER_GENERATION_EPOCH, "identity-lock-v1.10")
 
+    def test_new_epoch_reopens_semantic_reject_even_with_high_legacy_attempts(self) -> None:
+        orchestrator = self._load_orchestrator("")
+        asset = {
+            "pipeline_status": "REJECTED_SEMANTIC",
+            "generation_epoch": "identity-lock-v1.9",
+            "epoch_attempts": 3,
+            "attempts": 99,
+            "infra_failures": 0,
+            "last_error": "Semantic rejection: action unreadable.",
+        }
+        self.assertTrue(orchestrator.character_retry_available(asset))
+
     def test_current_epoch_semantic_retry_ignores_legacy_infra_failures(self) -> None:
         orchestrator = self._load_orchestrator("")
         asset = {
