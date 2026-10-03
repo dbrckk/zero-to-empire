@@ -92,7 +92,7 @@ internal fun ReviewedCharacterLayer(
 }
 
 @Composable
-private fun CharacterAtlasFrame(
+internal fun CharacterAtlasFrame(
     atlas: ImageBitmap,
     frame: Int,
     modifier: Modifier,
