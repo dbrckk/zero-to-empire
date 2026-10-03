@@ -58,6 +58,12 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("env.ASYNC_SUBMIT != 'true' || steps.kernel-state.outputs.reuse == 'true'", text)
         self.assertIn("env.ASYNC_SUBMIT == 'true' && steps.kernel-state.outputs.reuse != 'true'", text)
 
+    def test_async_preflight_failure_returns_dispatch_to_autofactory(self):
+        text = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
+        self.assertIn("Recover async preflight failure", text)
+        self.assertIn("failure() && env.ASYNC_SUBMIT == 'true'", text)
+        self.assertIn("producer_conclusion='failure'", text)
+        self.assertIn('producer_dispatch_token="${DISPATCH_TOKEN:-}"', text)
     def test_push_triggered_kaggle_wave_is_async_and_preserves_dispatch_owner(self):
         text = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
         self.assertIn("Resolve push-triggered async wave", text)

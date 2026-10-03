@@ -80,6 +80,14 @@ jobs:
 
       - name: Compile sprite generators
         run: python -m py_compile tools/sprites/kaggle_building_family_factory_v16.py tools/sprites/kaggle_character_sheet_factory_v1.py kaggle/github_mass_factory.py
+      - name: Recover async preflight failure
+        if: ${{ failure() && env.ASYNC_SUBMIT == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh workflow run 'Asset Autofactory 235' --ref main             -f producer_workflow='Kaggle Mass Sprite Factory'             -f producer_conclusion='failure'             -f producer_run_id='${{ github.run_id }}'             -f producer_dispatch_token="${DISPATCH_TOKEN:-}"
       - name: Check credentials
         shell: bash
         run: |
