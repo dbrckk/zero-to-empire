@@ -2,19 +2,19 @@
 
 Generated from `art/production/master-asset-queue.json` after production completion.
 
-- Production processed: **235/235**
+- Production processed: **229/235**
 - Strict DONE: **213/235**
 - Semantic review remaining: **22**
 - This report does **not** grant strict approval or runtime promotion.
 
 | Asset | Role | Action | Technical status | Review note |
 |---|---|---|---|---|
-| CHR-OP-IDLE | OP | IDLE | AWAITING_REVIEW | Identity/headgear consistency passed; IDLE candidate still requires strict semantic review before runtime promotion. |
-| CHR-OP-WALK | OP | WALK | AWAITING_REVIEW | Identity/headgear consistency passed, but WALK lacks clear alternating stride. v1.5 requires explicit leg poses and automatic lower-body motion. |
-| CHR-OP-WORK | OP | WORK | AWAITING_REVIEW | Fresh generated candidate is available; strict semantic review is still required before runtime promotion. |
-| CHR-OP-CARRY | OP | CARRY | AWAITING_REVIEW | Fresh generated candidate is available; strict semantic review is still required before runtime promotion. |
-| CHR-OP-REPAIR | OP | REPAIR | AWAITING_REVIEW | Semantic review required; no specific automated defect recorded. |
-| CHR-OP-CELEB | OP | CELEB | AWAITING_REVIEW | Semantic review required; no specific automated defect recorded. |
+| CHR-OP-IDLE | OP | IDLE | PENDING_KAGGLE | Identity/headgear consistency passed; IDLE candidate still requires strict semantic review before runtime promotion. |
+| CHR-OP-WALK | OP | WALK | DISPATCHED | Identity/headgear consistency passed, but WALK lacks clear alternating stride. v1.5 requires explicit leg poses and automatic lower-body motion. |
+| CHR-OP-WORK | OP | WORK | DISPATCHED | Fresh generated candidate is available; strict semantic review is still required before runtime promotion. |
+| CHR-OP-CARRY | OP | CARRY | PENDING_KAGGLE | Fresh generated candidate is available; strict semantic review is still required before runtime promotion. |
+| CHR-OP-REPAIR | OP | REPAIR | PENDING_KAGGLE | Semantic review required; no specific automated defect recorded. |
+| CHR-OP-CELEB | OP | CELEB | PENDING_KAGGLE | Semantic review required; no specific automated defect recorded. |
 | CHR-TECH-IDLE | TECH | IDLE | CANDIDATE | Fresh identity-locked candidate produced; semantic review is still required. |
 | CHR-TECH-WALK | TECH | WALK | AWAITING_REVIEW | Fresh identity-locked candidate produced; semantic review is still required. |
 | CHR-TECH-WORK | TECH | WORK | AWAITING_REVIEW | Fresh identity-locked candidate produced; semantic review is still required. |
