@@ -48,7 +48,7 @@ def pending():
         q=json.loads(QUEUE.read_text(encoding='utf-8'))
         out=[]
         for item in q.get('targets',[]):
-            if str(item.get('status','')).upper() not in {'PENDING','PENDING_KAGGLE'}:
+            if str(item.get('status','')).upper() not in {'PENDING','PENDING_POLLINATIONS'}:
                 continue
             aid=str(item.get('id','')).upper()
             if requested and aid not in requested:
