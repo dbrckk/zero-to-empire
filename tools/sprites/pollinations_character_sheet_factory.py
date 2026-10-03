@@ -61,7 +61,7 @@ def pending():
 
     return [x for x in manifest.values() if x['status']=='TODO' and (not requested or x['id'] in requested)]
 
-def mark_queue(aid,status,seed=None):
+def mark_queue(aid,status,seed=None,producer=None,producer_run_id=None):
     if not QUEUE.is_file():
         return
     q=json.loads(QUEUE.read_text(encoding='utf-8'))
@@ -70,6 +70,10 @@ def mark_queue(aid,status,seed=None):
             item['status']=status
             if seed is not None:
                 item['seed']=seed
+            if producer:
+                item['producer']=producer
+            if producer_run_id:
+                item['producer_run_id']=int(producer_run_id)
             break
     QUEUE.write_text(json.dumps(q,indent=2)+'\n',encoding='utf-8')
 
@@ -299,8 +303,9 @@ def main():
                     sheet.alpha_composite(frame,((n%4)*256,(n//4)*256))
                 p=INCOMING/f"{it['stem']}.png"
                 sheet.save(p,'PNG',optimize=True)
-                mark_queue(it['id'],'CANDIDATE',seed)
-                rep.append({'id':it['id'],'status':'CANDIDATE','file':p.name,'frames':fc,'qa':why,'generation':'frame-by-frame' if it['action']=='REPAIR' else 'single-sheet'})
+                producer_run_id=os.getenv('GITHUB_RUN_ID') or None
+                mark_queue(it['id'],'CANDIDATE',seed,'pollinations-character-atlas',producer_run_id)
+                rep.append({'id':it['id'],'status':'CANDIDATE','file':p.name,'frames':fc,'qa':why,'generation':'frame-by-frame' if it['action']=='REPAIR' else 'single-sheet','producer':'pollinations-character-atlas','producer_run_id':int(producer_run_id) if producer_run_id else None})
                 print(f"POLLINATIONS_CHR_VALIDATED={it['id']} {why}",flush=True)
                 done=True
                 break
