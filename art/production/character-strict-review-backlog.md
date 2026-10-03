@@ -19,7 +19,6 @@ Generated from `art/production/master-asset-queue.json` after the 2026-10-03 sem
 | CHR-TECH-WALK | TECH | WALK | REJECTED_SEMANTIC | Semantic review 2026-10-03: rejected; poses read as standing/turntable frames rather than a coherent alternating walk cycle, with visible head/identity drift. |
 | CHR-TECH-WORK | TECH | WORK | REJECTED_SEMANTIC | Semantic review 2026-10-03: rejected; technically valid atlas is too static and the work/tool action is not readable at gameplay size. |
 | CHR-TECH-CARRY | TECH | CARRY | REJECTED_SEMANTIC | Semantic review 2026-10-03: rejected; no crate/component is consistently visible between both hands and the sequence reads as static standing rather than carrying. |
-| CHR-LOG-IDLE | LOG | IDLE | AWAITING_REVIEW | Fresh generated candidate is available; strict semantic review is still required before runtime promotion. |
 | CHR-LOG-WALK | LOG | WALK | REJECTED_SEMANTIC | Semantic review 2026-10-03: rejected; large identity/clothing drift across frames and no coherent alternating walk cycle. |
 | CHR-LOG-WORK | LOG | WORK | REJECTED_SEMANTIC | Semantic review 2026-10-03: rejected; action is too static and lacks a clearly readable work/tool interaction. |
 | CHR-LOG-CARRY | LOG | CARRY | CANDIDATE | Fresh generated candidate is available; strict semantic review is still required before runtime promotion. |

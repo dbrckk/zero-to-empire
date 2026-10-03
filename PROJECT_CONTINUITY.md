@@ -6,7 +6,7 @@
 Reach **235 / 235 canonical final sprites strict DONE**. Strict DONE requires semantic + technical validation, final runtime reference/visibility, manifest/progress reconciliation and green Android CI.
 
 ## Trusted state — 2026-10-03
-- Strict DONE: **213 / 235**.
+- Strict DONE: 214 / 235**.
 - Production processed to DONE/review after semantic audit: **222 / 235**.
 - Seven technical-pass sheets were returned to `REJECTED_SEMANTIC`: TECH WALK/WORK/CARRY, LOG WALK/WORK, ENG WALK/WORK.
 - LOG-IDLE remains awaiting review; no automatic semantic promotion was granted.
@@ -25,3 +25,5 @@ Reach **235 / 235 canonical final sprites strict DONE**. Strict DONE requires se
 3. Regenerate the seven explicit semantic rejects under v1.9.
 4. Review remaining character candidates individually.
 5. Preserve runtime visibility and green Android CI for every strict promotion.
+
+- 2026-10-03: CHR-LOG-IDLE semantic review passed (stable identity/camera/palette, readable subtle idle); runtime QA passed and prior integrated Android CI is green. Strict DONE advanced to 214/235.
