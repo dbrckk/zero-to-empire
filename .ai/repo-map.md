@@ -316,6 +316,7 @@ tools/
     test_metadata.py
     test_pipeline.py
     test_qa_report.py
+    test_queue_state_policy.py
     test_static_processing.py
     test_workflow_policy.py
   sprites/
@@ -1045,6 +1046,7 @@ on:
     paths:
       - 'tools/assets/**'
       - 'tools/sprites/audit_complete_sprite_manifest.py'
+      - 'tools/sprites/asset_queue_utils.py'
       - 'tools/sprites/kaggle_*factory*.py'
       - 'kaggle/github_mass_factory.py'
       - 'art/production/generation-rejection-ledger.json'
@@ -1056,6 +1058,7 @@ on:
     paths:
       - 'tools/assets/**'
       - 'tools/sprites/audit_complete_sprite_manifest.py'
+      - 'tools/sprites/asset_queue_utils.py'
       - 'tools/sprites/kaggle_*factory*.py'
       - 'kaggle/github_mass_factory.py'
       - 'art/production/generation-rejection-ledger.json'
@@ -1091,6 +1094,7 @@ jobs:
         run: |
           python -m py_compile \
             kaggle/github_mass_factory.py \
+            tools/sprites/asset_queue_utils.py \
             tools/sprites/kaggle_character_sheet_factory_v1.py \
             tools/sprites/kaggle_building_family_factory_v14.py \
             tools/sprites/kaggle_building_family_factory_v15.py \
@@ -24025,6 +24029,27 @@ metadata_path = candidate_dir / "metadata.json"
 metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
 ```
 
+## File: tools/assets/test_queue_state_policy.py
+```python
+#!/usr/bin/env python3
+"""Regression checks for canonical autofactory queue state preservation."""
+⋮----
+ROOT = Path(__file__).resolve().parents[2]
+MODULE_PATH = ROOT / "tools/sprites/asset_queue_utils.py"
+spec = importlib.util.spec_from_file_location("asset_queue_utils", MODULE_PATH)
+queue_utils = importlib.util.module_from_spec(spec)
+⋮----
+class QueueStatePolicyTests(unittest.TestCase)
+⋮----
+def test_critical_review_and_retry_state_is_persisted(self) -> None
+⋮----
+required = {
+⋮----
+def test_persisted_fields_are_unique(self) -> None
+⋮----
+fields = queue_utils.PERSISTED_ASSET_STATE_FIELDS
+```
+
 ## File: tools/assets/test_static_processing.py
 ```python
 class StaticProcessingCharacterizationTest(unittest.TestCase)
@@ -24140,6 +24165,8 @@ ROW = re.compile(
 TARGET_TOTAL = 235
 STRICT_BASELINE = 211
 MAX_ATTEMPTS = 8
+⋮----
+PERSISTED_ASSET_STATE_FIELDS = (
 ⋮----
 BUILDING_PRIORITY = ["BLD-10", "BLD-05", "BLD-08",
 CHARACTER_PRIORITY = ["CHR-OP", "CHR-TECH", "CHR-LOG", "CHR-ENG"]

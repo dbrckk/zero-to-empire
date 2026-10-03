@@ -1,10 +1,10 @@
 # Change impact
 
-Base: fe80eea91d56e8273bb3e4f3fef29a55e40c31aa
-Head: f81c02319feaf3dc1dfa260c04b946fc8fda7eb6
+Base: f96ee27d6610a7f228702b200c8975c2d842dd64
+Head: dd2edf525f043b4b1abd722c36fbb2edf5263a49
 
 ## Changed files
-- M .github/workflows/ai-repo-map.yml
+- M .github/workflows/asset-pipeline-ci.yml
 
 ## Affected areas
 - .github

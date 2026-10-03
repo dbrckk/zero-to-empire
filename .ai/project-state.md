@@ -22,20 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T15:47:51Z
+Generated: 2026-10-03T15:56:32Z
 
 ### Git
 - Branch: `main`
-- Head: `f81c02319fea`
-- Commit date: 2026-10-03T17:47:16+02:00
-- Commit: ci(art): enforce strict review backlog consistency
-- Tracked files: 1433
+- Head: `dd2edf525f04`
+- Commit date: 2026-10-03T17:56:00+02:00
+- Commit: ci(art): test canonical queue state preservation
+- Tracked files: 1434
 
 ### Recently changed files
+- `.github/workflows/asset-pipeline-ci.yml`
+- `tools/assets/test_queue_state_policy.py`
+- `tools/sprites/asset_queue_utils.py`
 - `.github/workflows/ai-repo-map.yml`
 - `art/production/character-strict-review-backlog.md`
-- `tools/sprites/generate_strict_review_backlog.py`
-- `art/production/master-asset-queue.json`
 
 ### Project signals
 - `build.gradle.kts`
