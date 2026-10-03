@@ -150,7 +150,7 @@ incoming=REPO/'art/incoming/final-sprites';incoming.mkdir(parents=True,exist_ok=
 if q.get('CONTROLLED_BLD',0)>0:
  lane='CONTROLLED_BUILDING_FAMILY';effective=max(7,min(q['CONTROLLED_BLD'],max(COUNT,7)));cmd=['python','-u','tools/sprites/kaggle_building_family_factory_v16.py','--count',str(effective),'--seed',str(SEED)]
 elif q.get('CONTROLLED_CHR',0)>0:
- lane='CONTROLLED_CHARACTER_SHEETS';effective=max(1,min(q['CONTROLLED_CHR'],min(COUNT,2)));cmd=['python','-u','tools/sprites/kaggle_character_sheet_factory_v1.py','--count',str(effective),'--seed',str(SEED)]
+ lane='CONTROLLED_CHARACTER_SHEETS';effective=max(1,min(q['CONTROLLED_CHR'],max(COUNT,6)));cmd=['python','-u','tools/sprites/kaggle_character_sheet_factory_v1.py','--count',str(effective),'--seed',str(SEED)]
 elif q['BLD']>=5:
  lane='BUILDING_FAMILIES';effective=max(7,min(COUNT,56));cmd=['python','-u','tools/sprites/kaggle_building_family_factory_v16.py','--count',str(effective),'--seed',str(SEED)]
 elif q['STATIC']:
