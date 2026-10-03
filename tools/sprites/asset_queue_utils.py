@@ -28,6 +28,12 @@ TARGET_TOTAL = 235
 STRICT_BASELINE = 211
 MAX_ATTEMPTS = 8
 
+PERSISTED_ASSET_STATE_FIELDS = (
+    "strict_status", "pipeline_status", "attempts", "last_run_id",
+    "last_generator", "last_error", "review_reason", "generation_epoch",
+    "epoch_attempts", "infra_failures",
+)
+
 BUILDING_PRIORITY = ["BLD-10", "BLD-05", "BLD-08",
                      "BLD-07", "BLD-04", "BLD-11", "BLD-12",
                      "BLD-02", "BLD-03"]
@@ -116,7 +122,7 @@ def ensure_master() -> dict[str, Any]:
         base = default_asset(row, unresolved)
         prev = old.get(row["id"])
         if prev:
-            for key in ("strict_status", "pipeline_status", "attempts", "last_run_id", "last_generator", "last_error", "review_reason", "generation_epoch", "epoch_attempts", "infra_failures"):
+            for key in PERSISTED_ASSET_STATE_FIELDS:
                 if key in prev:
                     base[key] = prev[key]
             if base["strict_status"] == "DONE":
