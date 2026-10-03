@@ -45,6 +45,7 @@ jobs:
       AUTOF_TRIGGER_WORKFLOW: ${{ github.event.workflow_run.name || inputs.producer_workflow || '' }}
       AUTOF_TRIGGER_CONCLUSION: ${{ github.event.workflow_run.conclusion || inputs.producer_conclusion || '' }}
       AUTOF_TRIGGER_RUN_ID: ${{ github.event.workflow_run.id || inputs.producer_run_id || '' }}
+      AUTOF_TRIGGER_DISPATCH_TOKEN: ${{ inputs.producer_dispatch_token || '' }}
     steps:
       - name: Checkout canonical main
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
@@ -118,10 +119,10 @@ jobs:
 
           case "$action" in
             DISPATCH_KAGGLE_BUILDING)
-              gh workflow run 'Kaggle Mass Sprite Factory' --ref main -f count=7
+              gh workflow run 'Kaggle Mass Sprite Factory' --ref main -f count=7 -f dispatch_token='${{ github.run_id }}'
               ;;
             DISPATCH_KAGGLE_CHARACTER)
-              gh workflow run 'Kaggle Mass Sprite Factory' --ref main -f count=2
+              gh workflow run 'Kaggle Mass Sprite Factory' --ref main -f count=2 -f dispatch_token='${{ github.run_id }}'
               ;;
             DISPATCH_FX_EVIDENCE)
               gh workflow run 'FX Historical Review Evidence' --ref main
