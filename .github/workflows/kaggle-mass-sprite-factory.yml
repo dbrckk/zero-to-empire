@@ -7,6 +7,10 @@ on:
         description: Sprite attempts in this Kaggle batch
         required: false
         default: '7'
+      dispatch_token:
+        description: Autofactory run token that owns this producer wave
+        required: false
+        default: ''
   push:
     branches:
       - main
@@ -443,7 +447,8 @@ jobs:
           gh workflow run 'Asset Autofactory 235' --ref main \
             -f producer_workflow='Kaggle Mass Sprite Factory' \
             -f producer_conclusion="$conclusion" \
-            -f producer_run_id='${{ github.run_id }}'
+            -f producer_run_id='${{ github.run_id }}' \
+            -f producer_dispatch_token='${{ inputs.dispatch_token || '' }}'
 
       - name: Upload exhaustive QA evidence
         if: always()
