@@ -121,9 +121,10 @@ def prompt_pair(i,pose,mode='default'):
  if len(core.split())>38:
   raise RuntimeError('CLIP core prompt too long: '+str(len(core.split())))
  detail=(f"AAA stylized painterly 2.5D mobile game character. {ROLE[role]}. "
-         f"{ACTION[action][0]}; {pose}. One adult only. Preserve face, hardhat or hair, clothing, palette and proportions. "
-         "Full body centered on flat neutral gray; feet visible; safe border. "
-         "No second body, clone, crowd, scenery, text, vehicle or building. " + rejection_hints(i))
+         f"{ACTION[action][0]}; {pose}. Same exact adult identity. Preserve face, headgear, clothing, palette and body proportions. "
+         + ("Exaggerate alternating leg stride and arm counter-swing. " if action=='WALK' else "")
+         + "Full body centered, feet visible, flat neutral gray, safe border. One person only. "
+         + rejection_hints(i))
  if mode=='framing':
   detail += " Keep the full figure clearly inside frame with at least ten percent empty margin on every side."
  elif mode=='single':
@@ -205,11 +206,11 @@ def alpha_iou(a,b):
    aa=pa[x,y]>0;bb=pb[x,y]>0;inter+=aa and bb;union+=aa or bb
  return inter/union if union else 0
 
-def sheet_qa(frames):
+def sheet_qa(frames,action=None):
  if len(frames)<4:return False,'too-few-frames'
  ious=[alpha_iou(frames[n-1],frames[n]) for n in range(1,len(frames))]
  if min(ious)<.28:return False,f'identity/silhouette jump={min(ious):.2f}'
- if max(ious)>.985:return False,'duplicate-adjacent-frame'
+ if action!='IDLE' and max(ious)>.985:return False,'duplicate-adjacent-frame'
  bottoms=[];centers=[]
  for f in frames:
   bb=f.getchannel('A').getbbox()
@@ -313,14 +314,14 @@ def main():
        else:
         # Start every later animation for this role from the exact same person.
         # Moderate img2img freedom changes pose while preserving face/headgear/clothes.
-        strength=(min(.62,.54+attempt*.035) if i['action']=='WALK' else min(.44,.32+attempt*.03))
+        strength=(min(.68,.60+attempt*.035) if i['action']=='WALK' else min(.44,.32+attempt*.03))
         if mode=='identity' and i['action']!='WALK':strength=max(.28,strength-.04)
         raw=img(image=shared,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=6,guidance_scale=0,output_type='pil',generator=gen).images[0]
         anchor_raw=raw.convert('RGB')
         print('KAGGLE_CHR_SHARED_IDENTITY='+i['id']+' role='+i['role']+f' strength={strength:.2f}',flush=True)
       else:
        if i['action']=='WALK':
-        strength=min(.72,.58+fi*.016+attempt*.03)
+        strength=min(.78,.66+fi*.014+attempt*.03)
        elif i['action']=='REPAIR':
         strength=min(.68,.48+fi*.018+attempt*.035)
        elif i['action']=='CELEB':
@@ -336,7 +337,7 @@ def main():
    gc.collect();torch.cuda.empty_cache()
   if fail:
    report.append({'id':i['id'],'status':'REJECT','reason':fail,'frames':len(frames),'retry_reasons':retry_reasons});continue
-  ok,why=sheet_qa(frames)
+  ok,why=sheet_qa(frames,i['action'])
   if not ok:
    print(f"KAGGLE_CHR_REJECTED={i['id']} reason={why}",flush=True);report.append({'id':i['id'],'status':'REJECT','reason':why,'frames':len(frames),'retry_reasons':retry_reasons});continue
   action_ok,action_why=action_qa(frames,i['action'])
