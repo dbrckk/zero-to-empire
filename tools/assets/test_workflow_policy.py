@@ -53,6 +53,14 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("AUTOF_TRIGGER_DISPATCH_TOKEN: ${{ inputs.producer_dispatch_token || '' }}", text)
         self.assertIn("-f dispatch_token='${{ github.run_id }}'", text)
 
+    def test_push_triggered_kaggle_wave_is_async_and_preserves_dispatch_owner(self):
+        text = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
+        self.assertIn("Resolve push-triggered async wave", text)
+        self.assertIn("ASYNC_SUBMIT:", text)
+        self.assertIn("DISPATCH_TOKEN:", text)
+        self.assertIn("tokens={str(by[i].get('dispatch_token') or '')", text)
+        self.assertIn("SPRITE_COUNT='+str(min(12,len(ids)))", text)
+
     def test_async_kaggle_character_mode_releases_runner_and_uses_collector(self):
         mass = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
         autof = Path(".github/workflows/asset-autofactory.yml").read_text(encoding="utf-8")
