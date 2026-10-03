@@ -53,6 +53,11 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("AUTOF_TRIGGER_DISPATCH_TOKEN: ${{ inputs.producer_dispatch_token || '' }}", text)
         self.assertIn("-f dispatch_token='${{ github.run_id }}'", text)
 
+    def test_kaggle_character_all_reject_batch_is_not_infrastructure_failure(self):
+        text = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
+        self.assertIn("KAGGLE_CHARACTER_CLEAN_REJECT_BATCH", text)
+        self.assertIn("complete character rejection report", text)
+
     def test_kaggle_character_reconciliation_handles_partial_rejects(self):
         path = Path(".github/workflows/kaggle-mass-sprite-factory.yml")
         text = path.read_text(encoding="utf-8")

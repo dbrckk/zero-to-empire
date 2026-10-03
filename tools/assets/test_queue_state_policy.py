@@ -98,9 +98,9 @@ class DispatchCorrelationTests(unittest.TestCase):
         }
         self.assertTrue(orchestrator.character_retry_available(asset))
 
-    def test_character_batch_size_preserves_full_role_wave(self) -> None:
+    def test_character_batch_size_supports_two_role_burst(self) -> None:
         orchestrator = self._load_orchestrator("")
-        self.assertEqual(orchestrator.CHARACTER_BATCH_SIZE, 6)
+        self.assertEqual(orchestrator.CHARACTER_BATCH_SIZE, 12)
 
     def test_character_sync_normalizes_rejected_to_semantic_rejection(self) -> None:
         text = (ROOT / "tools/sprites/asset_queue_utils.py").read_text(encoding="utf-8")
@@ -112,6 +112,11 @@ class DispatchCorrelationTests(unittest.TestCase):
         trigger = text.index("    update_from_trigger(queue)")
         sync = text.index("    sync_controlled_queues(queue)", trigger)
         self.assertLess(trigger, sync)
+
+    def test_character_burst_builder_exists_and_caps_at_batch_size(self) -> None:
+        orchestrator = self._load_orchestrator("")
+        self.assertTrue(hasattr(orchestrator, "prepare_character_burst"))
+        self.assertEqual(orchestrator.CHARACTER_BATCH_SIZE, 12)
 
     def test_successful_character_outcomes_mirror_into_master(self) -> None:
         orchestrator = self._load_orchestrator("")

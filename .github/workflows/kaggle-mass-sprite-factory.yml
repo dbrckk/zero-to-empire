@@ -270,7 +270,24 @@ jobs:
         shell: bash
         run: |
           shopt -s nullglob; files=(/tmp/kaggle-output/output/candidates/*_final.png)
-          if [ ${#files[@]} -eq 0 ]; then echo 'No fresh Kaggle candidates'; exit 1; fi
+          if [ ${#files[@]} -eq 0 ]; then
+            python - <<'PY'
+          import json
+          from pathlib import Path
+          generated=Path('/tmp/kaggle-output/output/generated-targets.json')
+          report=Path('/tmp/kaggle-output/output/character-sheet-report.json')
+          if generated.is_file() and report.is_file():
+              g=json.loads(generated.read_text(encoding='utf-8'))
+              rows=json.loads(report.read_text(encoding='utf-8'))
+              attempted=[r for r in rows if r.get('id')]
+              rejected=[r for r in attempted if str(r.get('status','')).upper()=='REJECT']
+              if g.get('lane')=='CONTROLLED_CHARACTER_SHEETS' and attempted and len(rejected)==len(attempted):
+                  print(f"KAGGLE_CHARACTER_CLEAN_REJECT_BATCH={len(rejected)}")
+                  raise SystemExit(0)
+          raise SystemExit('No fresh Kaggle candidates and no complete character rejection report')
+          PY
+            exit $?
+          fi
           echo "KAGGLE_QA_PENDING=${#files[@]}"
           python tools/sprites/build_sprite_contact_sheet.py --output /tmp/kaggle-output/output/github-contact-sheet.png --report /tmp/kaggle-output/output/github-qa-report.json --files "${files[@]}"
           python - <<'PY'

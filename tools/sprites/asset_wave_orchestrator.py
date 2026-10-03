@@ -36,7 +36,7 @@ KAGGLE_BUSY = os.getenv("AUTOF_KAGGLE_BUSY", "0") == "1"
 FX_BUSY = os.getenv("AUTOF_FX_BUSY", "0") == "1"
 CHARACTER_GENERATION_EPOCH = "identity-lock-v1.9"
 CHARACTER_EPOCH_ATTEMPT_LIMIT = 2
-CHARACTER_BATCH_SIZE = 6
+CHARACTER_BATCH_SIZE = 12
 INFRA_FAILURE_LIMIT = 3
 
 # A character in one of these states already has a produced candidate/evidence.
@@ -228,34 +228,49 @@ def prepare_building_group(queue: dict[str, Any], group: str) -> dict[str, Any]:
     return {"group": group, "ids": dispatched, "count": 7}
 
 
-def prepare_character_group(queue: dict[str, Any], group: str) -> dict[str, Any]:
+def prepare_character_burst(queue: dict[str, Any], groups: list[str]) -> dict[str, Any]:
     action_order = {"IDLE": 0, "WALK": 1, "WORK": 2, "CARRY": 3, "REPAIR": 4, "CELEB": 5}
-    group_assets = sorted(
-        [
-            x for x in queue["assets"]
-            if x["group"] == group
-            and x["strict_status"] != "DONE"
-            and str(x.get("pipeline_status", "")).upper() not in CHARACTER_PRODUCED_STATUSES
-        ],
-        key=lambda x: action_order.get(x["id"].split("-")[-1], 99),
-    )
     targets = []
-    for x in group_assets:
-        if not character_retry_available(x):
-            x["pipeline_status"] = "BLOCKED_AUTOMATION_LIMIT"
-            continue
-        x["pipeline_status"] = "PENDING_KAGGLE"
-        targets.append({"id": x["id"], "status": "PENDING_KAGGLE"})
+    selected_groups = []
+    for group in groups:
+        group_assets = sorted(
+            [
+                x for x in queue["assets"]
+                if x["group"] == group
+                and x["strict_status"] != "DONE"
+                and str(x.get("pipeline_status", "")).upper() not in CHARACTER_PRODUCED_STATUSES
+            ],
+            key=lambda x: action_order.get(x["id"].split("-")[-1], 99),
+        )
+        group_targets = []
+        for x in group_assets:
+            if len(targets) >= CHARACTER_BATCH_SIZE:
+                break
+            if not character_retry_available(x):
+                x["pipeline_status"] = "BLOCKED_AUTOMATION_LIMIT"
+                continue
+            x["pipeline_status"] = "PENDING_KAGGLE"
+            row = {"id": x["id"], "status": "PENDING_KAGGLE"}
+            targets.append(row)
+            group_targets.append(row)
+        if group_targets:
+            selected_groups.append(group)
+        if len(targets) >= CHARACTER_BATCH_SIZE:
+            break
     if not targets:
-        return {"group": group, "ids": [], "count": 0}
+        return {"group": "+".join(groups), "ids": [], "count": 0}
     save_json(CHARACTER_QUEUE, {
-        "mode": "kaggle-candidate-only",
-        "reason": f"Autofactory 235: identity-locked candidate production for {group}; no automatic semantic promotion.",
+        "mode": "kaggle-character-burst-v1.9",
+        "reason": (
+            "Autofactory 235: high-throughput identity-locked character production; "
+            "each role keeps its own identity anchor and semantic promotion remains manual."
+        ),
+        "groups": selected_groups,
         "targets": targets,
     })
-    dispatched = mark_dispatch(queue, [x["id"] for x in targets[:CHARACTER_BATCH_SIZE]], "kaggle-character-sheet")
+    dispatched = mark_dispatch(queue, [x["id"] for x in targets], "kaggle-character-sheet")
     prioritize_controlled_character_targets(dispatched)
-    return {"group": group, "ids": dispatched, "count": len(dispatched)}
+    return {"group": "+".join(selected_groups), "ids": dispatched, "count": len(dispatched)}
 
 
 def next_group(queue: dict[str, Any], lane: str, priority: list[str]) -> str | None:
@@ -341,11 +356,27 @@ def make_decision(queue: dict[str, Any]) -> dict[str, Any]:
         if ids:
             prioritize_controlled_character_targets(ids)
             return {"action": "DISPATCH_KAGGLE_CHARACTER", "group": "controlled-character", "ids": ids, "count": len(ids), "stats": s}
-    group = next_group(queue, "kaggle-character-sheet", CHARACTER_PRIORITY)
-    if group:
+    first_group = next_group(queue, "kaggle-character-sheet", CHARACTER_PRIORITY)
+    if first_group:
+        candidate_groups = [
+            g for g in CHARACTER_PRIORITY
+            if g == first_group or any(
+                x["group"] == g
+                and x["lane"] == "kaggle-character-sheet"
+                and x["strict_status"] != "DONE"
+                and str(x.get("pipeline_status", "")).upper() in {
+                    "PENDING", "PENDING_KAGGLE", "PAUSED", "BLOCKED",
+                    "REJECT", "REJECTED", "REJECTED_SEMANTIC", "BLOCKED_AUTOMATION_LIMIT"
+                }
+                and character_retry_available(x)
+                for x in queue["assets"]
+            )
+        ]
+        ordered = [first_group] + [g for g in candidate_groups if g != first_group]
+        burst_groups = ordered[:2]
         if KAGGLE_BUSY:
-            return {"action": "WAIT_KAGGLE_BUSY", "group": group, "stats": s}
-        prepared = prepare_character_group(queue, group)
+            return {"action": "WAIT_KAGGLE_BUSY", "group": "+".join(burst_groups), "stats": s}
+        prepared = prepare_character_burst(queue, burst_groups)
         if prepared["ids"]:
             return {"action": "DISPATCH_KAGGLE_CHARACTER", **prepared, "stats": s}
     fx = [x for x in queue["assets"] if x["lane"] == "fx-runtime-reconciliation" and x["strict_status"] != "DONE" and x["pipeline_status"] == "PENDING_EVIDENCE" and int(x.get("attempts") or 0) < MAX_ATTEMPTS]
