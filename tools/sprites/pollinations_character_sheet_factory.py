@@ -244,7 +244,11 @@ def sheet_prompt(item):
         'Keep at least 20 pixels of plain neutral-gray empty margin above the head and at least 20 pixels below the lowest boot sole in EVERY occupied cell, plus clear side margins. '
         'Scale the worker smaller inside each cell if necessary. Never let any body part or tool touch a cell edge; never crop head, arms, tool, knees, legs, boots, or feet. '
         'Keep the diagnostic tool compact and beside the torso so it never obscures the legs or extends toward the bottom edge. '
-        if action == 'REPAIR' else ''
+        if action == 'REPAIR' else
+        ' CRITICAL WALK FRAMING: every occupied 256x256 cell must show the complete walking character from helmet/head through both boot soles. '
+        'Keep at least 18 pixels of plain neutral-gray empty margin above the head and below the lowest boot in EVERY occupied cell, with clear side margins for the forward/back stride. '
+        'Scale the worker smaller if needed. Never crop the head, arms, hands, knees, legs, heels, toes, or boots; no limb may touch a cell edge. '
+        if action == 'WALK' else ''
     )
     return (
         f'AAA premium mobile 2.5D sprite-sheet production image. SAME EXACT SINGLE ADULT CHARACTER in every frame: {ROLES[item["role"]]}. '
