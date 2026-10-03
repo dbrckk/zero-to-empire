@@ -92,6 +92,13 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("source edge contact", text)
         self.assertIn("finish_frame(raw,i['action'])", text)
 
+    def test_kaggle_character_generator_uses_neutral_role_anchor(self):
+        text = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
+        self.assertIn("def anchor_prompt_pair(role):", text)
+        self.assertIn("KAGGLE_CHR_CANONICAL_ROLE_ANCHOR=", text)
+        self.assertIn("shared=role_anchor[i['role']]", text)
+        self.assertNotIn("KAGGLE_CHR_IDENTITY_ANCHOR=", text)
+
     def test_kaggle_rejection_memory_prefers_exact_asset_over_role_fallback(self):
         text = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
         self.assertIn("exact=str(row.get('id','')).upper()", text)

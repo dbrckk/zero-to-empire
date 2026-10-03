@@ -116,6 +116,22 @@ def rejection_hints(i):
  words=merged.split()
  return ' '.join(words[:48])
 
+def anchor_prompt_pair(role):
+ role_short={
+  'OP':'orange-hardhat foundry worker',
+  'TECH':'cyan technician in graphite coveralls',
+  'LOG':'amber logistics worker',
+  'ENG':'cyan engineer in graphite field suit',
+ }[role]
+ core=f"2.5D game sprite, one {role_short}, full body, three-quarter view, neutral relaxed stance, isolated"
+ detail=(
+  f"AAA stylized painterly 2.5D mobile game character. {ROLE[role]}. "
+  "Canonical identity reference only. Neutral relaxed standing pose, both arms down, feet apart. "
+  "No tool, no crate, no machine, no action pose. Same exact face, headgear, clothing, palette and proportions. "
+  "Full body centered with both feet visible, neutral gray background, safe border, one person only."
+ )
+ return core,detail
+
 def prompt_pair(i,pose,mode='default'):
  # Keep CLIP deliberately tiny: tokenizer expansion makes word-count estimates
  # optimistic. T5 carries the descriptive detail and rejection-memory hints.
@@ -310,7 +326,14 @@ def main():
  items=rows()[:max(1,args.count)];print('KAGGLE_CHARACTER_PLAN='+','.join(i['id'] for i in items),flush=True)
  if not items:return
  INCOMING.mkdir(parents=True,exist_ok=True);REPORT.parent.mkdir(parents=True,exist_ok=True)
- encs={};t,enc=load_encode()
+ encs={};anchor_encs={};t,enc=load_encode()
+ roles=[]
+ for i in items:
+  if i['role'] not in roles:roles.append(i['role'])
+ for role in roles:
+  clip_text,t5_text=anchor_prompt_pair(role)
+  with torch.no_grad():pe,ppe,_=enc.encode_prompt(prompt=clip_text,prompt_2=t5_text,max_sequence_length=256)
+  anchor_encs[role]=(pe.cpu(),ppe.cpu())
  for i in items:
   hints=POSE_HINT[i['action']][:ACTION[i['action']][1]]
   encs[i['id']]=[]
@@ -322,6 +345,13 @@ def main():
     variants[mode]=(pe.cpu(),ppe.cpu())
    encs[i['id']].append(variants)
  del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();report=[];role_anchor={};role_reference_cell={}
+ for ri,role in enumerate(roles):
+  pe,ppe=anchor_encs[role]
+  gen_anchor=torch.Generator(device='cuda').manual_seed(args.seed+700000+ri*50000)
+  with torch.inference_mode():
+   raw=base(height=1024,width=1024,num_inference_steps=6,guidance_scale=0,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),output_type='pil',generator=gen_anchor).images[0]
+  role_anchor[role]=raw.convert('RGB')
+  print('KAGGLE_CHR_CANONICAL_ROLE_ANCHOR='+role,flush=True)
  for idx,i in enumerate(items):
   frames=[];anchor_raw=None;fail=None;retry_reasons=[]
   for fi,variants in enumerate(encs[i['id']]):
@@ -402,4 +432,19 @@ def main():
   print(f"KAGGLE_CHR_VALIDATED={p.relative_to(ROOT)} {why} atlas=1024x1024",flush=True);report.append({'id':i['id'],'status':'CANDIDATE','reason':why,'frames':len(frames),'atlas':'1024x1024','cell':'256x256','file':p.name,'cross_animation_appearance_distance':round(identity_distance,2),'retry_reasons':retry_reasons})
  REPORT.write_text(json.dumps(report,indent=2),encoding='utf-8')
  print(f"KAGGLE_CHARACTER_CANDIDATES={sum(r['status']=='CANDIDATE' for r in report)} ATTEMPTED={len(items)}",flush=True)
-if __name__=='__main__':main()
+if __name__=='__main__':main(       if fi==0:
+        shared=role_anchor[i['role']]
+        first_strength={
+         'IDLE':(.28,.03,.36),
+         'WALK':(.50,.025,.58),
+         'WORK':(.58,.03,.68),
+         'CARRY':(.66,.025,.74),
+         'REPAIR':(.62,.03,.72),
+         'CELEB':(.60,.03,.72),
+        }[i['action']]
+        strength=min(first_strength[2],first_strength[0]+attempt*first_strength[1])
+        if mode=='identity' and i['action']!='WALK':strength=max(.26,strength-.035)
+        raw=img(image=shared,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=6,guidance_scale=0,output_type='pil',generator=gen).images[0]
+        anchor_raw=raw.convert('RGB')
+        print('KAGGLE_CHR_SHARED_IDENTITY='+i['id']+' role='+i['role']+f' strength={strength:.2f}',flush=True)
+)
