@@ -102,6 +102,10 @@ class DispatchCorrelationTests(unittest.TestCase):
         orchestrator = self._load_orchestrator("")
         self.assertEqual(orchestrator.CHARACTER_BATCH_SIZE, 12)
 
+    def test_character_epoch_allows_three_informed_attempts(self) -> None:
+        orchestrator = self._load_orchestrator("")
+        self.assertEqual(orchestrator.CHARACTER_EPOCH_ATTEMPT_LIMIT, 3)
+
     def test_character_sync_normalizes_rejected_to_semantic_rejection(self) -> None:
         text = (ROOT / "tools/sprites/asset_queue_utils.py").read_text(encoding="utf-8")
         self.assertIn('normalized_status = "REJECTED_SEMANTIC"', text)
