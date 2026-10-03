@@ -1,10 +1,10 @@
 # Change impact
 
-Base: cadf0618b7841bd60c558f429b496a5ed4753456
-Head: e3519fba61f89bc6fea04c03756fb57db108d71b
+Base: f207b481ef902d86ad62e8b52250bc0989fe0cba
+Head: 49ec95b66b57ef7e8ac1633656fe4cc3ce39e2c3
 
 ## Changed files
-- M app/src/debug/AndroidManifest.xml
+- M app/src/test/java/com/zerotoempire/game/CanonicalCharacterRasterTest.kt
 
 ## Affected areas
 - app

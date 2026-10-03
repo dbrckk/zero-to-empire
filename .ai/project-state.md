@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T17:45:55Z
+Generated: 2026-10-03T18:37:32Z
 
 ### Git
 - Branch: `main`
-- Head: `e3519fba61f8`
-- Commit date: 2026-10-03T19:45:02+02:00
-- Commit: feat(android): expose debug character review activity
-- Tracked files: 1429
+- Head: `49ec95b66b57`
+- Commit date: 2026-10-03T20:37:00+02:00
+- Commit: test(android): enforce complete character review catalog
+- Tracked files: 1430
 
 ### Recently changed files
+- `app/src/test/java/com/zerotoempire/game/CanonicalCharacterRasterTest.kt`
+- `app/src/main/java/com/zerotoempire/game/CharacterReviewGallery.kt`
+- `app/src/main/java/com/zerotoempire/game/CanonicalCharacterRaster.kt`
 - `app/src/debug/AndroidManifest.xml`
 - `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
-- `app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt`
-- `tools/android/audit_character_runtime.py`
-- `app/src/main/res/drawable-nodpi/zte_business_08_t6_final.png`
 
 ### Project signals
 - `build.gradle.kts`
