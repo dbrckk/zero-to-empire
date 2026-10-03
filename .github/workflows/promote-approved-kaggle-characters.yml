@@ -1,0 +1,95 @@
+name: Promote Approved Kaggle Characters
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_run_id:
+        description: Kaggle Mass Sprite Factory run containing the approved artifact
+        required: true
+      approved_ids:
+        description: Comma-separated approved CHR asset IDs
+        required: true
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: promote-approved-kaggle-characters
+  cancel-in-progress: false
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+      - name: Sync canonical main
+        run: git pull --ff-only origin main
+      - name: Install image tooling
+        run: python -m pip install --disable-pip-version-check Pillow==11.3.0
+      - name: Download source artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_RUN_ID: ${{ inputs.source_run_id }}
+        run: |
+          rm -rf /tmp/kaggle-approved
+          mkdir -p /tmp/kaggle-approved
+          gh run download "$SOURCE_RUN_ID" -n kaggle-sprite-batch -D /tmp/kaggle-approved
+          find /tmp/kaggle-approved -type f -print
+      - name: Import only explicitly approved candidates
+        env:
+          APPROVED_IDS: ${{ inputs.approved_ids }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os, shutil
+          from pathlib import Path
+          ids=[x.strip().upper() for x in os.environ['APPROVED_IDS'].split(',') if x.strip()]
+          if not ids: raise SystemExit('No approved IDs')
+          out=Path('art/incoming/final-sprites'); out.mkdir(parents=True,exist_ok=True)
+          stems=[]
+          for aid in ids:
+              parts=aid.lower().split('-')
+              if len(parts)!=3 or parts[0]!='chr': raise SystemExit('Only CHR IDs are supported: '+aid)
+              stem=f'zte_chr_{parts[1]}_{parts[2]}_final'
+              matches=list(Path('/tmp/kaggle-approved').rglob(stem+'.png'))
+              if len(matches)!=1: raise SystemExit(f'{aid}: expected one candidate, found {len(matches)}')
+              shutil.copy2(matches[0],out/(stem+'.png'))
+              stems.append(stem)
+          Path('/tmp/approved-stems.txt').write_text(','.join(stems))
+          print('APPROVED_STEMS='+','.join(stems))
+          PY
+          echo "SPRITE_TARGETS=$(cat /tmp/approved-stems.txt)" >> "$GITHUB_ENV"
+      - name: Run canonical runtime conversion and QA
+        run: python tools/sprites/process_final_sprites.py
+      - name: Write runtime QA evidence
+        env:
+          APPROVED_IDS: ${{ inputs.approved_ids }}
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from PIL import Image
+          for aid in [x.strip().upper() for x in os.environ['APPROVED_IDS'].split(',') if x.strip()]:
+              _,role,action=aid.split('-')
+              stem=f'zte_chr_{role.lower()}_{action.lower()}_final'
+              p=Path('app/src/main/res/drawable-nodpi')/(stem+'.webp')
+              with Image.open(p) as im: size=list(im.size)
+              out=Path('art/production')/(stem+'-runtime-qa.json')
+              out.write_text(json.dumps({'id':aid,'file':str(p),'size':size,'bytes':p.stat().st_size,'pass':size==[1024,1024],'issues':[] if size==[1024,1024] else ['bad-size']},indent=2)+'\n')
+          PY
+      - name: Commit approved runtime assets
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add art/incoming/final-sprites app/src/main/res/drawable-nodpi art/production/*-runtime-qa.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'art: promote semantically approved Kaggle characters'
+          git pull --rebase origin main
+          git push origin HEAD:main
