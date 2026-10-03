@@ -166,6 +166,37 @@ def iou(a,b):
             inter+=aa and bb; union+=aa or bb
     return inter/union if union else 0
 
+def lower_body_motion(frames):
+    vals=[]
+    for n in range(1,len(frames)):
+        A=frames[n-1].getchannel('A')
+        B=frames[n].getchannel('A')
+        ba=A.getbbox(); bb=B.getbbox()
+        if not ba or not bb:
+            continue
+        top=max(0,min(ba[1]+int((ba[3]-ba[1])*.55),bb[1]+int((bb[3]-bb[1])*.55)))
+        a=A.crop((0,top,256,256)).resize((64,64),Image.Resampling.BILINEAR).point(lambda p:255 if p>=32 else 0)
+        b=B.crop((0,top,256,256)).resize((64,64),Image.Resampling.BILINEAR).point(lambda p:255 if p>=32 else 0)
+        pa,pb=a.load(),b.load(); inter=union=0
+        for y in range(64):
+            for x in range(64):
+                aa=pa[x,y]>0; bbb=pb[x,y]>0
+                inter+=aa and bbb; union+=aa or bbb
+        vals.append(1-(inter/union if union else 1))
+    return sum(vals)/len(vals) if vals else 0.0
+
+def actionqa(frames,action):
+    vals=[iou(frames[n-1],frames[n]) for n in range(1,len(frames))]
+    mean_change=(sum(1-x for x in vals)/len(vals)) if vals else 0.0
+    if action=='WALK':
+        motion=lower_body_motion(frames)
+        if motion<.22:
+            return False,f'walk-too-static lower-motion={motion:.3f}'
+        if mean_change<.12:
+            return False,f'walk-too-static mean-change={mean_change:.3f}'
+        return True,f'walk-motion={motion:.3f} mean-change={mean_change:.3f}'
+    return True,f'{action.lower()}-motion={mean_change:.3f}'
+
 def appearance_hist(frame):
     # Coarse foreground RGB histogram: catches role/wardrobe/identity drift that
     # silhouette IoU alone cannot detect.
@@ -298,6 +329,10 @@ def main():
                 ok,why=sheetqa(frames)
                 if not ok:
                     raise RuntimeError(why)
+                action_ok,action_why=actionqa(frames,it['action'])
+                if not action_ok:
+                    raise RuntimeError(action_why)
+                why=f'{why} {action_why}'
                 sheet=Image.new('RGBA',(1024,1024),(0,0,0,0))
                 for n,frame in enumerate(frames):
                     sheet.alpha_composite(frame,((n%4)*256,(n//4)*256))
