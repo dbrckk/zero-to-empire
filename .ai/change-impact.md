@@ -1,10 +1,10 @@
 # Change impact
 
-Base: f96ee27d6610a7f228702b200c8975c2d842dd64
-Head: dd2edf525f043b4b1abd722c36fbb2edf5263a49
+Base: b5a6253230da55dc2e2bc666751f2dd5748bbdd3
+Head: a61c3bf9f0761fc5e76940c66ee1b1a1133c3544
 
 ## Changed files
-- M .github/workflows/asset-pipeline-ci.yml
+- M .github/workflows/kaggle-mass-sprite-factory.yml
 
 ## Affected areas
 - .github

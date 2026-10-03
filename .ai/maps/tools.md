@@ -888,6 +888,8 @@ approval or strict DONE automatically.
 TRIGGER_WORKFLOW = os.getenv("AUTOF_TRIGGER_WORKFLOW", "")
 TRIGGER_CONCLUSION = os.getenv("AUTOF_TRIGGER_CONCLUSION", "")
 TRIGGER_RUN_ID = os.getenv("AUTOF_TRIGGER_RUN_ID", "")
+TRIGGER_DISPATCH_TOKEN = os.getenv("AUTOF_TRIGGER_DISPATCH_TOKEN", "")
+CURRENT_DISPATCH_TOKEN = os.getenv("GITHUB_RUN_ID", "")
 KAGGLE_BUSY = os.getenv("AUTOF_KAGGLE_BUSY", "0") == "1"
 FX_BUSY = os.getenv("AUTOF_FX_BUSY", "0") == "1"
 CHARACTER_GENERATION_EPOCH = "identity-lock-v1.8"

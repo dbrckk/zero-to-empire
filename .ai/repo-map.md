@@ -937,6 +937,7 @@ jobs:
       AUTOF_TRIGGER_WORKFLOW: ${{ github.event.workflow_run.name || inputs.producer_workflow || '' }}
       AUTOF_TRIGGER_CONCLUSION: ${{ github.event.workflow_run.conclusion || inputs.producer_conclusion || '' }}
       AUTOF_TRIGGER_RUN_ID: ${{ github.event.workflow_run.id || inputs.producer_run_id || '' }}
+      AUTOF_TRIGGER_DISPATCH_TOKEN: ${{ inputs.producer_dispatch_token || '' }}
     steps:
       - name: Checkout canonical main
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
@@ -1010,10 +1011,10 @@ jobs:
 
           case "$action" in
             DISPATCH_KAGGLE_BUILDING)
-              gh workflow run 'Kaggle Mass Sprite Factory' --ref main -f count=7
+              gh workflow run 'Kaggle Mass Sprite Factory' --ref main -f count=7 -f dispatch_token='${{ github.run_id }}'
               ;;
             DISPATCH_KAGGLE_CHARACTER)
-              gh workflow run 'Kaggle Mass Sprite Factory' --ref main -f count=2
+              gh workflow run 'Kaggle Mass Sprite Factory' --ref main -f count=2 -f dispatch_token='${{ github.run_id }}'
               ;;
             DISPATCH_FX_EVIDENCE)
               gh workflow run 'FX Historical Review Evidence' --ref main
@@ -2370,6 +2371,10 @@ on:
         description: Sprite attempts in this Kaggle batch
         required: false
         default: '7'
+      dispatch_token:
+        description: Autofactory run token that owns this producer wave
+        required: false
+        default: ''
   push:
     branches:
       - main
@@ -2806,7 +2811,8 @@ jobs:
           gh workflow run 'Asset Autofactory 235' --ref main \
             -f producer_workflow='Kaggle Mass Sprite Factory' \
             -f producer_conclusion="$conclusion" \
-            -f producer_run_id='${{ github.run_id }}'
+            -f producer_run_id='${{ github.run_id }}' \
+            -f producer_dispatch_token='${{ inputs.dispatch_token || '' }}'
 
       - name: Upload exhaustive QA evidence
         if: always()
@@ -24251,6 +24257,8 @@ approval or strict DONE automatically.
 TRIGGER_WORKFLOW = os.getenv("AUTOF_TRIGGER_WORKFLOW", "")
 TRIGGER_CONCLUSION = os.getenv("AUTOF_TRIGGER_CONCLUSION", "")
 TRIGGER_RUN_ID = os.getenv("AUTOF_TRIGGER_RUN_ID", "")
+TRIGGER_DISPATCH_TOKEN = os.getenv("AUTOF_TRIGGER_DISPATCH_TOKEN", "")
+CURRENT_DISPATCH_TOKEN = os.getenv("GITHUB_RUN_ID", "")
 KAGGLE_BUSY = os.getenv("AUTOF_KAGGLE_BUSY", "0") == "1"
 FX_BUSY = os.getenv("AUTOF_FX_BUSY", "0") == "1"
 CHARACTER_GENERATION_EPOCH = "identity-lock-v1.8"

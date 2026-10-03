@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T15:56:32Z
+Generated: 2026-10-03T16:05:45Z
 
 ### Git
 - Branch: `main`
-- Head: `dd2edf525f04`
-- Commit date: 2026-10-03T17:56:00+02:00
-- Commit: ci(art): test canonical queue state preservation
+- Head: `a61c3bf9f076`
+- Commit date: 2026-10-03T18:05:17+02:00
+- Commit: ci(art): return dispatch token with Kaggle callback
 - Tracked files: 1434
 
 ### Recently changed files
-- `.github/workflows/asset-pipeline-ci.yml`
-- `tools/assets/test_queue_state_policy.py`
+- `.github/workflows/kaggle-mass-sprite-factory.yml`
+- `.github/workflows/asset-autofactory.yml`
+- `tools/sprites/asset_wave_orchestrator.py`
 - `tools/sprites/asset_queue_utils.py`
-- `.github/workflows/ai-repo-map.yml`
-- `art/production/character-strict-review-backlog.md`
+- `.github/workflows/asset-pipeline-ci.yml`
 
 ### Project signals
 - `build.gradle.kts`
