@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 4f4ee953379a4b19deba84d9c4fad8e8837b4f8b
-Head: a4898f229cfa71a12303c5035f7c3a1a17f39a56
+Base: 20c64db8ed21b11f54b720056317c21e1a469704
+Head: 533f282b6afe42bd55b2779bfc455c7977b4aed2
 
 ## Changed files
-- M tools/sprites/pollinations_character_sheet_factory.py
+- M art/production/controlled-character-regen-queue.json
 
 ## Affected areas
-- tools
+- art
 
 ## Related test candidates
 - No direct filename-based test match detected.

@@ -22,20 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T18:45:47Z
+Generated: 2026-10-03T18:51:04Z
 
 ### Git
 - Branch: `main`
-- Head: `a4898f229cfa`
-- Commit date: 2026-10-03T20:45:21+02:00
-- Commit: fix(art): enforce WALK lower-body motion in Pollinations
+- Head: `533f282b6afe`
+- Commit date: 2026-10-03T20:50:25+02:00
+- Commit: art: retry OP-WALK with full-body gate
 - Tracked files: 1429
 
 ### Recently changed files
-- `tools/sprites/pollinations_character_sheet_factory.py`
 - `art/production/controlled-character-regen-queue.json`
-- `app/src/main/java/com/zerotoempire/game/CharacterReviewGallery.kt`
-- `app/src/test/java/com/zerotoempire/game/CanonicalCharacterRasterTest.kt`
+- `tools/sprites/pollinations_character_sheet_factory.py`
+- `art/production/pollinations-character-summary.json`
 
 ### Project signals
 - `build.gradle.kts`
