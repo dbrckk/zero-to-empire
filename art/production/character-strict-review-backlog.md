@@ -2,7 +2,7 @@
 
 Generated from `art/production/master-asset-queue.json` after production completion.
 
-- Production processed: **222/235**
+- Production processed: **221/235**
 - Strict DONE: **214/235**
 - Semantic review remaining: **21**
 - This report does **not** grant strict approval or runtime promotion.
@@ -28,7 +28,7 @@ Generated from `art/production/master-asset-queue.json` after production complet
 | CHR-ENG-WALK | ENG | WALK | REJECTED_SEMANTIC | Semantic review 2026-10-03: rejected; sequence behaves like a front/back turntable with identity/clothing drift rather than a stable three-quarter walk cycle. |
 | CHR-ENG-WORK | ENG | WORK | REJECTED_SEMANTIC | Semantic review 2026-10-03: rejected; action remains mostly static with weak or absent readable work motion. |
 | CHR-ENG-CARRY | ENG | CARRY | CANDIDATE | Fresh generated candidate is available; strict semantic review is still required before runtime promotion. |
-| CHR-ENG-REPAIR | ENG | REPAIR | CANDIDATE | Fresh generated candidate is available; strict semantic review is still required before runtime promotion. |
+| CHR-ENG-REPAIR | ENG | REPAIR | REJECTED_SEMANTIC | Semantic review 2026-10-03: rejected; first frame is severely cropped, face/helmet/body proportions drift strongly across frames, and the sequence lacks a readable repair/tool interaction. |
 | CHR-ENG-CELEB | ENG | CELEB | CANDIDATE | Fresh generated candidate is available; strict semantic review is still required before runtime promotion. |
 
 ## Review rule
