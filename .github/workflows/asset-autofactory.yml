@@ -15,6 +15,10 @@ on:
         description: Producer workflow callback run id
         required: false
         default: ''
+      producer_dispatch_token:
+        description: Producer dispatch ownership token
+        required: false
+        default: ''
   push:
     paths:
       - 'ops/autofactory-kick.txt'
@@ -122,7 +126,8 @@ jobs:
               gh workflow run 'Kaggle Mass Sprite Factory' --ref main -f count=7 -f dispatch_token='${{ github.run_id }}'
               ;;
             DISPATCH_KAGGLE_CHARACTER)
-              gh workflow run 'Kaggle Mass Sprite Factory' --ref main -f count=2 -f dispatch_token='${{ github.run_id }}'
+              test "$count" -gt 0
+              gh workflow run 'Kaggle Mass Sprite Factory' --ref main -f count="$count" -f dispatch_token='${{ github.run_id }}'
               ;;
             DISPATCH_FX_EVIDENCE)
               gh workflow run 'FX Historical Review Evidence' --ref main
