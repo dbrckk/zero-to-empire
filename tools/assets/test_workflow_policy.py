@@ -53,6 +53,11 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("AUTOF_TRIGGER_DISPATCH_TOKEN: ${{ inputs.producer_dispatch_token || '' }}", text)
         self.assertIn("-f dispatch_token='${{ github.run_id }}'", text)
 
+    def test_async_mode_falls_back_to_sync_when_kernel_is_already_active(self):
+        text = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
+        self.assertIn("env.ASYNC_SUBMIT != 'true' || steps.kernel-state.outputs.reuse == 'true'", text)
+        self.assertIn("env.ASYNC_SUBMIT == 'true' && steps.kernel-state.outputs.reuse != 'true'", text)
+
     def test_push_triggered_kaggle_wave_is_async_and_preserves_dispatch_owner(self):
         text = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
         self.assertIn("Resolve push-triggered async wave", text)
@@ -70,7 +75,7 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("kaggle-async-state.json", mass)
         self.assertIn("-f async_submit=true", autof)
         self.assertIn("kaggle-async-state.json", autof)
-        self.assertIn("cron: '*/10 * * * *'", collector)
+        self.assertIn("cron: '*/5 * * * *'", collector)
         self.assertIn("Callback autofactory success", collector)
 
     def test_kaggle_character_all_reject_batch_is_not_infrastructure_failure(self):

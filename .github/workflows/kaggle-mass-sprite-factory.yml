@@ -297,7 +297,7 @@ jobs:
 
       - name: Wait for Kaggle
         id: wait-kaggle
-        if: ${{ env.ASYNC_SUBMIT != 'true' }}
+        if: ${{ env.ASYNC_SUBMIT != 'true' || steps.kernel-state.outputs.reuse == 'true' }}
         shell: bash
         run: |
           set -u
@@ -315,7 +315,7 @@ jobs:
           fi
           echo "final_status=$final_status" >> "$GITHUB_OUTPUT"; echo "KAGGLE_FINAL_STATUS=$final_status" >> "$GITHUB_ENV"
       - name: Download Kaggle outputs and kernel log
-        if: ${{ env.ASYNC_SUBMIT != 'true' && always() && steps.wait-kaggle.outcome == 'success' }}
+        if: ${{ env.ASYNC_SUBMIT != 'true' || steps.kernel-state.outputs.reuse == 'true' && always() && steps.wait-kaggle.outcome == 'success' }}
         shell: bash
         run: |
           rm -rf /tmp/kaggle-output; mkdir -p /tmp/kaggle-output
@@ -323,7 +323,7 @@ jobs:
           find /tmp/kaggle-output/output -maxdepth 3 -type f -print 2>/dev/null || true
           find /tmp/kaggle-output -maxdepth 2 -type f -name '*.log' -print || true
       - name: Require fresh technically validated candidates
-        if: ${{ env.ASYNC_SUBMIT != 'true' }}
+        if: ${{ env.ASYNC_SUBMIT != 'true' || steps.kernel-state.outputs.reuse == 'true' }}
         shell: bash
         run: |
           shopt -s nullglob; files=(/tmp/kaggle-output/output/candidates/*_final.png)
@@ -362,7 +362,7 @@ jobs:
           print(f"KAGGLE_STRICT_QA_PASS={len(rows)}")
           PY
       - name: Mark controlled building candidates awaiting semantic review
-        if: ${{ env.ASYNC_SUBMIT != 'true' && success() }}
+        if: ${{ env.ASYNC_SUBMIT != 'true' || steps.kernel-state.outputs.reuse == 'true' && success() }}
         shell: bash
         env:
           KAGGLE_RUN_ID: ${{ github.run_id }}
@@ -442,7 +442,7 @@ jobs:
           git push origin HEAD:main
 
       - name: Mark controlled character candidates awaiting semantic review
-        if: ${{ env.ASYNC_SUBMIT != 'true' && success() }}
+        if: ${{ env.ASYNC_SUBMIT != 'true' || steps.kernel-state.outputs.reuse == 'true' && success() }}
         shell: bash
         env:
           KAGGLE_RUN_ID: ${{ github.run_id }}
@@ -516,7 +516,7 @@ jobs:
           git push origin HEAD:main
 
       - name: Fail fast on stale reused Kaggle kernel
-        if: ${{ env.ASYNC_SUBMIT != 'true' && always() && env.KAGGLE_STALE_ACTIVE_KERNEL == '1' }}
+        if: ${{ env.ASYNC_SUBMIT != 'true' || steps.kernel-state.outputs.reuse == 'true' && always() && env.KAGGLE_STALE_ACTIVE_KERNEL == '1' }}
         shell: bash
         run: |
           echo 'STALE_KAGGLE_KERNEL: existing RUNNING/QUEUED session produced no completed output within 20 minutes.'
@@ -524,11 +524,11 @@ jobs:
           exit 78
 
       - name: Require successful Kaggle kernel
-        if: ${{ env.ASYNC_SUBMIT != 'true' && always() && steps.wait-kaggle.outcome == 'success' }}
+        if: ${{ env.ASYNC_SUBMIT != 'true' || steps.kernel-state.outputs.reuse == 'true' && always() && steps.wait-kaggle.outcome == 'success' }}
         shell: bash
         run: test "${KAGGLE_FINAL_STATUS:-UNKNOWN}" = 'COMPLETE'
       - name: Reconcile producer outcome explicitly
-        if: ${{ env.ASYNC_SUBMIT != 'true' && always() }}
+        if: ${{ env.ASYNC_SUBMIT != 'true' || steps.kernel-state.outputs.reuse == 'true' && always() }}
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
@@ -543,7 +543,7 @@ jobs:
             -f producer_dispatch_token='${{ inputs.dispatch_token || '' }}'
 
       - name: Upload exhaustive QA evidence
-        if: ${{ env.ASYNC_SUBMIT != 'true' && always() }}
+        if: ${{ env.ASYNC_SUBMIT != 'true' || steps.kernel-state.outputs.reuse == 'true' && always() }}
         uses: actions/upload-artifact@v4
         with:
           name: kaggle-sprite-batch
