@@ -1048,6 +1048,7 @@ on:
       - 'tools/assets/**'
       - 'tools/sprites/audit_complete_sprite_manifest.py'
       - 'tools/sprites/asset_queue_utils.py'
+      - 'tools/sprites/asset_wave_orchestrator.py'
       - 'tools/sprites/kaggle_*factory*.py'
       - 'kaggle/github_mass_factory.py'
       - 'art/production/generation-rejection-ledger.json'
@@ -1060,6 +1061,7 @@ on:
       - 'tools/assets/**'
       - 'tools/sprites/audit_complete_sprite_manifest.py'
       - 'tools/sprites/asset_queue_utils.py'
+      - 'tools/sprites/asset_wave_orchestrator.py'
       - 'tools/sprites/kaggle_*factory*.py'
       - 'kaggle/github_mass_factory.py'
       - 'art/production/generation-rejection-ledger.json'
@@ -1096,6 +1098,7 @@ jobs:
           python -m py_compile \
             kaggle/github_mass_factory.py \
             tools/sprites/asset_queue_utils.py \
+            tools/sprites/asset_wave_orchestrator.py \
             tools/sprites/kaggle_character_sheet_factory_v1.py \
             tools/sprites/kaggle_building_family_factory_v14.py \
             tools/sprites/kaggle_building_family_factory_v15.py \
@@ -24054,6 +24057,20 @@ required = {
 def test_persisted_fields_are_unique(self) -> None
 ⋮----
 fields = queue_utils.PERSISTED_ASSET_STATE_FIELDS
+⋮----
+class DispatchCorrelationTests(unittest.TestCase)
+⋮----
+def _load_orchestrator(self, token: str)
+⋮----
+spec = importlib.util.spec_from_file_location("asset_wave_orchestrator_test", ROOT / "tools/sprites/asset_wave_orchestrator.py")
+module = importlib.util.module_from_spec(spec)
+⋮----
+def test_stale_callback_cannot_mutate_newer_dispatch(self) -> None
+⋮----
+orchestrator = self._load_orchestrator("wave-A")
+queue = {"assets": [
+⋮----
+asset = queue["assets"][0]
 ```
 
 ## File: tools/assets/test_static_processing.py

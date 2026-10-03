@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T16:05:45Z
+Generated: 2026-10-03T16:26:08Z
 
 ### Git
 - Branch: `main`
-- Head: `a61c3bf9f076`
-- Commit date: 2026-10-03T18:05:17+02:00
-- Commit: ci(art): return dispatch token with Kaggle callback
+- Head: `e9041ae117f2`
+- Commit date: 2026-10-03T18:25:28+02:00
+- Commit: ci(art): validate autofactory orchestrator
 - Tracked files: 1434
 
 ### Recently changed files
+- `.github/workflows/asset-pipeline-ci.yml`
+- `tools/assets/test_queue_state_policy.py`
 - `.github/workflows/kaggle-mass-sprite-factory.yml`
 - `.github/workflows/asset-autofactory.yml`
 - `tools/sprites/asset_wave_orchestrator.py`
-- `tools/sprites/asset_queue_utils.py`
-- `.github/workflows/asset-pipeline-ci.yml`
 
 ### Project signals
 - `build.gradle.kts`
