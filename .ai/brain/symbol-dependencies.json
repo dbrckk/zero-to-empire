@@ -175,11 +175,66 @@
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "generate_repair_frames": {
+    "walk_frame_prompt": {
       "source": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
         "start": 275,
-        "end": 298
+        "end": 285
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "generate_walk_frames": {
+      "source": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 287,
+        "end": 310
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "cutout",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 102,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "fetch",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 80,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "walk_frame_prompt",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 275,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "generate_repair_frames": {
+      "source": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 312,
+        "end": 335
       },
       "symbol_dependencies": [
         {
@@ -224,8 +279,8 @@
     "extract_frames": {
       "source": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 300,
-        "end": 310
+        "start": 337,
+        "end": 347
       },
       "symbol_dependencies": [
         {
@@ -246,8 +301,8 @@
     "main": {
       "source": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 312,
-        "end": 389
+        "start": 349,
+        "end": 428
       },
       "symbol_dependencies": [
         {
@@ -267,7 +322,7 @@
           "definitions": [
             {
               "file": "tools/sprites/pollinations_character_sheet_factory.py",
-              "line": 300,
+              "line": 337,
               "kind": "function",
               "language": "python"
             }
@@ -291,7 +346,19 @@
           "definitions": [
             {
               "file": "tools/sprites/pollinations_character_sheet_factory.py",
-              "line": 275,
+              "line": 312,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "generate_walk_frames",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 287,
               "kind": "function",
               "language": "python"
             }
@@ -347,7 +414,7 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 8
+      "dependency_count": 9
     }
   }
 }

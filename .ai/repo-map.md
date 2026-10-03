@@ -27429,7 +27429,9 @@ framing = (
 ⋮----
 def repair_frame_prompt(item, pose)
 ⋮----
-def generate_repair_frames(item, seed)
+def walk_frame_prompt(item, pose)
+⋮----
+def generate_walk_frames(item, seed)
 ⋮----
 frames=[]
 cache_dir=OUT/'pollinations-frame-cache'/item['id']
@@ -27444,6 +27446,11 @@ rev_file=cache_dir/f'{n:02d}.rev'
 revision=int(rev_file.read_text(encoding='utf-8').strip()) if rev_file.is_file() else 0
 ⋮----
 revision=0
+frame_seed=(27191 + sum((i+1)*ord(ch) for i,ch in enumerate(item['id']))*1013 + n*104729 + revision*1000003) % 2147483647
+raw=fetch(walk_frame_prompt(item,pose),frame_seed)
+⋮----
+def generate_repair_frames(item, seed)
+⋮----
 frame_seed=(19417 + sum((i+1)*ord(ch) for i,ch in enumerate(item['id']))*1009 + n*104729 + revision*1000003) % 2147483647
 raw=fetch(repair_frame_prompt(item,pose),frame_seed)
 ⋮----
@@ -27469,6 +27476,8 @@ done=False; last=''
 seed=(base+ix*100000+att*10007) % 2147483647
 ⋮----
 frames=generate_repair_frames(it,seed)
+⋮----
+frames=generate_walk_frames(it,seed)
 ⋮----
 raw=fetch(sheet_prompt(it),seed)
 frames=extract_frames(raw,fc,it['action'])

@@ -201,7 +201,7 @@
         },
         {
           "file": "tools/sprites/pollinations_character_sheet_factory.py",
-          "line": 313,
+          "line": 350,
           "preview": "items=pending()[:max(1,min(int(os.getenv('POLLINATIONS_CHR_BATCH','1')),2))]",
           "definition_candidate": false
         }
@@ -254,13 +254,13 @@
         },
         {
           "file": "tools/sprites/pollinations_character_sheet_factory.py",
-          "line": 346,
+          "line": 385,
           "preview": "mark_queue(it['id'],'CANDIDATE',seed,'pollinations-character-atlas',producer_run_id)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/pollinations_character_sheet_factory.py",
-          "line": 380,
+          "line": 419,
           "preview": "mark_queue(it['id'],'PROVIDER_ERROR' if provider_error else 'BLOCKED')",
           "definition_candidate": false
         }
@@ -295,18 +295,24 @@
         },
         {
           "file": "tools/sprites/pollinations_character_sheet_factory.py",
-          "line": 292,
+          "line": 304,
+          "preview": "raw=fetch(walk_frame_prompt(item,pose),frame_seed)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 329,
           "preview": "raw=fetch(repair_frame_prompt(item,pose),frame_seed)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/pollinations_character_sheet_factory.py",
-          "line": 331,
+          "line": 370,
           "preview": "raw=fetch(sheet_prompt(it),seed)",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 5
+      "occurrence_count": 6
     },
     "cutout": {
       "definition": {
@@ -336,18 +342,24 @@
         },
         {
           "file": "tools/sprites/pollinations_character_sheet_factory.py",
-          "line": 293,
+          "line": 305,
+          "preview": "frame,cov=cutout(raw,'WALK',standalone=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 330,
           "preview": "frame,cov=cutout(raw,'REPAIR',standalone=True)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/pollinations_character_sheet_factory.py",
-          "line": 307,
+          "line": 344,
           "preview": "frame,cov=cutout(cell_raw, action)",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 5
+      "occurrence_count": 6
     },
     "iou": {
       "definition": {
@@ -609,7 +621,7 @@
         },
         {
           "file": "tools/sprites/pollinations_character_sheet_factory.py",
-          "line": 336,
+          "line": 375,
           "preview": "action_ok,action_why=actionqa(frames,it['action'])",
           "definition_candidate": false
         }
@@ -684,7 +696,7 @@
         },
         {
           "file": "tools/sprites/pollinations_character_sheet_factory.py",
-          "line": 333,
+          "line": 372,
           "preview": "ok,why=sheetqa(frames)",
           "definition_candidate": false
         }
@@ -707,7 +719,7 @@
         },
         {
           "file": "tools/sprites/pollinations_character_sheet_factory.py",
-          "line": 331,
+          "line": 370,
           "preview": "raw=fetch(sheet_prompt(it),seed)",
           "definition_candidate": false
         }
@@ -730,14 +742,14 @@
         },
         {
           "file": "tools/sprites/pollinations_character_sheet_factory.py",
-          "line": 292,
+          "line": 329,
           "preview": "raw=fetch(repair_frame_prompt(item,pose),frame_seed)",
           "definition_candidate": false
         }
       ],
       "occurrence_count": 2
     },
-    "generate_repair_frames": {
+    "walk_frame_prompt": {
       "definition": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
         "line": 275,
@@ -748,12 +760,58 @@
         {
           "file": "tools/sprites/pollinations_character_sheet_factory.py",
           "line": 275,
+          "preview": "def walk_frame_prompt(item, pose):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 304,
+          "preview": "raw=fetch(walk_frame_prompt(item,pose),frame_seed)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "generate_walk_frames": {
+      "definition": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "line": 287,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 287,
+          "preview": "def generate_walk_frames(item, seed):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 368,
+          "preview": "frames=generate_walk_frames(it,seed)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "generate_repair_frames": {
+      "definition": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "line": 312,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 312,
           "preview": "def generate_repair_frames(item, seed):",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/pollinations_character_sheet_factory.py",
-          "line": 329,
+          "line": 366,
           "preview": "frames=generate_repair_frames(it,seed)",
           "definition_candidate": false
         }
@@ -763,20 +821,20 @@
     "extract_frames": {
       "definition": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "line": 300,
+        "line": 337,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/pollinations_character_sheet_factory.py",
-          "line": 300,
+          "line": 337,
           "preview": "def extract_frames(raw,frame_count,action=None):",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/pollinations_character_sheet_factory.py",
-          "line": 332,
+          "line": 371,
           "preview": "frames=extract_frames(raw,fc,it['action'])",
           "definition_candidate": false
         }
@@ -786,7 +844,7 @@
     "main": {
       "definition": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "line": 312,
+        "line": 349,
         "kind": "function",
         "language": "python"
       },
@@ -1501,13 +1559,13 @@
         },
         {
           "file": "tools/sprites/pollinations_character_sheet_factory.py",
-          "line": 312,
+          "line": 349,
           "preview": "def main():",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/pollinations_character_sheet_factory.py",
-          "line": 392,
+          "line": 431,
           "preview": "main()",
           "definition_candidate": false
         }
