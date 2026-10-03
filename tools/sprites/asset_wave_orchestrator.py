@@ -382,7 +382,7 @@ def make_decision(queue: dict[str, Any]) -> dict[str, Any]:
             )
         ]
         ordered = [first_group] + [g for g in candidate_groups if g != first_group]
-        burst_groups = ordered[:2]
+        burst_groups = ordered[:3]
         if KAGGLE_BUSY:
             return {"action": "WAIT_KAGGLE_BUSY", "group": "+".join(burst_groups), "stats": s}
         prepared = prepare_character_burst(queue, burst_groups)

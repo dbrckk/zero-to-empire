@@ -98,7 +98,7 @@ class DispatchCorrelationTests(unittest.TestCase):
         }
         self.assertTrue(orchestrator.character_retry_available(asset))
 
-    def test_character_batch_size_supports_two_role_burst(self) -> None:
+    def test_character_batch_size_supports_multi_role_burst(self) -> None:
         orchestrator = self._load_orchestrator("")
         self.assertEqual(orchestrator.CHARACTER_BATCH_SIZE, 12)
 
@@ -156,6 +156,10 @@ class DispatchCorrelationTests(unittest.TestCase):
         trigger = text.index("    update_from_trigger(queue)")
         sync = text.index("    sync_controlled_queues(queue)", trigger)
         self.assertLess(trigger, sync)
+
+    def test_character_decision_allows_three_roles_in_one_burst(self) -> None:
+        text = (ROOT / "tools/sprites/asset_wave_orchestrator.py").read_text(encoding="utf-8")
+        self.assertIn("burst_groups = ordered[:3]", text)
 
     def test_character_burst_builder_exists_and_caps_at_batch_size(self) -> None:
         orchestrator = self._load_orchestrator("")
