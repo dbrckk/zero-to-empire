@@ -35,6 +35,16 @@ class CanonicalCharacterRasterTest {
     }
 
     @Test
+    fun `canonical review catalog covers every role action pair exactly once`() {
+        val expected = ReviewedCharacterRole.entries.flatMap { role ->
+            ReviewedCharacterAction.entries.map { action -> ReviewedCharacterAtlas(role, action) }
+        }
+        assertEquals(24, reviewedCharacterCatalog.size)
+        assertEquals(expected.toSet(), reviewedCharacterCatalog.toSet())
+        assertEquals(reviewedCharacterCatalog.size, reviewedCharacterCatalog.toSet().size)
+    }
+
+    @Test
     fun `documented authored character actions keep their production frame counts`() {
         val expected = mapOf(
             ReviewedCharacterAction.IDLE to 6,
