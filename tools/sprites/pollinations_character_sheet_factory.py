@@ -272,6 +272,43 @@ def repair_frame_prompt(item, pose):
         'no duplicated limbs, no crop, no body part or tool touching any image edge.'
     )
 
+def walk_frame_prompt(item, pose):
+    return (
+        f'AAA premium mobile 2.5D game character animation frame. SAME EXACT SINGLE ADULT CHARACTER identity: {ROLES[item["role"]]}. '
+        f'Action frame: convincing walk cycle, pose: {pose}. '
+        'One character only, complete full body from helmet/head through both boot soles, centered and slightly small in frame. '
+        'At least 12 percent empty neutral-gray margin above head and below boots and clear side margins for stride. '
+        '34-degree three-quarter orthographic camera, same face, helmet, clothing, colors and body proportions in every frame. '
+        'Strong readable alternating leg stride and arm counter-swing appropriate to the requested pose. '
+        'Perfectly flat uniform neutral gray background. No floor, no shadow, no scenery, no text, no border, no extra people, '
+        'no duplicated limbs, no crop, no body part touching any image edge.'
+    )
+
+def generate_walk_frames(item, seed):
+    frames=[]
+    cache_dir=OUT/'pollinations-frame-cache'/item['id']
+    cache_dir.mkdir(parents=True,exist_ok=True)
+    for n,pose in enumerate(POSES['WALK'][:ACTIONS['WALK'][1]]):
+        cache_file=cache_dir/f'{n:02d}.png'
+        if cache_file.is_file():
+            frame=Image.open(cache_file).convert('RGBA')
+            cov=sum(frame.getchannel('A').histogram()[8:])/(256*256)
+            print(f'POLLINATIONS_CHR_WALK_CACHE_HIT n={n} pose={pose} cov={cov:.3f}',flush=True)
+        else:
+            rev_file=cache_dir/f'{n:02d}.rev'
+            try:
+                revision=int(rev_file.read_text(encoding='utf-8').strip()) if rev_file.is_file() else 0
+            except ValueError:
+                revision=0
+            frame_seed=(27191 + sum((i+1)*ord(ch) for i,ch in enumerate(item['id']))*1013 + n*104729 + revision*1000003) % 2147483647
+            raw=fetch(walk_frame_prompt(item,pose),frame_seed)
+            frame,cov=cutout(raw,'WALK',standalone=True)
+            frame.save(cache_file,'PNG',optimize=True)
+            print(f'POLLINATIONS_CHR_WALK_CACHE_SAVE n={n} pose={pose} revision={revision}',flush=True)
+        frames.append(frame)
+        print(f'POLLINATIONS_CHR_WALK_FRAME n={n} pose={pose} cov={cov:.3f}',flush=True)
+    return frames
+
 def generate_repair_frames(item, seed):
     frames=[]
     cache_dir=OUT/'pollinations-frame-cache'/item['id']
@@ -327,6 +364,8 @@ def main():
             try:
                 if it['action'] == 'REPAIR':
                     frames=generate_repair_frames(it,seed)
+                elif it['action'] == 'WALK':
+                    frames=generate_walk_frames(it,seed)
                 else:
                     raw=fetch(sheet_prompt(it),seed)
                     frames=extract_frames(raw,fc,it['action'])
@@ -344,7 +383,7 @@ def main():
                 sheet.save(p,'PNG',optimize=True)
                 producer_run_id=os.getenv('GITHUB_RUN_ID') or None
                 mark_queue(it['id'],'CANDIDATE',seed,'pollinations-character-atlas',producer_run_id)
-                rep.append({'id':it['id'],'status':'CANDIDATE','file':p.name,'frames':fc,'qa':why,'generation':'frame-by-frame' if it['action']=='REPAIR' else 'single-sheet','producer':'pollinations-character-atlas','producer_run_id':int(producer_run_id) if producer_run_id else None})
+                rep.append({'id':it['id'],'status':'CANDIDATE','file':p.name,'frames':fc,'qa':why,'generation':'frame-by-frame' if it['action'] in {'REPAIR','WALK'} else 'single-sheet','producer':'pollinations-character-atlas','producer_run_id':int(producer_run_id) if producer_run_id else None})
                 print(f"POLLINATIONS_CHR_VALIDATED={it['id']} {why}",flush=True)
                 done=True
                 break
@@ -382,7 +421,7 @@ def main():
                 'id':it['id'],
                 'status':'PROVIDER_ERROR' if provider_error else 'REJECT',
                 'reason':last,
-                'generation':'frame-by-frame' if it['action']=='REPAIR' else 'single-sheet'
+                'generation':'frame-by-frame' if it['action'] in {'REPAIR','WALK'} else 'single-sheet'
             })
 
     (OUT/'pollinations-character-summary.json').write_text(json.dumps(rep,indent=2),encoding='utf-8')
