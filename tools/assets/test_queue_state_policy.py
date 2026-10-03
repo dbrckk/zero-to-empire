@@ -102,6 +102,11 @@ class DispatchCorrelationTests(unittest.TestCase):
         orchestrator = self._load_orchestrator("")
         self.assertEqual(orchestrator.CHARACTER_BATCH_SIZE, 6)
 
+    def test_character_sync_normalizes_rejected_to_semantic_rejection(self) -> None:
+        text = (ROOT / "tools/sprites/asset_queue_utils.py").read_text(encoding="utf-8")
+        self.assertIn('normalized_status = "REJECTED_SEMANTIC"', text)
+        self.assertIn('status in {"REJECTED", "REJECTED_SEMANTIC"}', text)
+
     def test_main_applies_trigger_before_controlled_queue_sync(self) -> None:
         text = (ROOT / "tools/sprites/asset_wave_orchestrator.py").read_text(encoding="utf-8")
         trigger = text.index("    update_from_trigger(queue)")

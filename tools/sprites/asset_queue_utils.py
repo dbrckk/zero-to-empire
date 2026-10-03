@@ -183,11 +183,12 @@ def sync_controlled_queues(queue: dict[str, Any]) -> None:
             continue
         status = str(item.get("status", "")).upper()
         pollinations_only = status in {"PENDING_POLLINATIONS", "PROVIDER_ERROR"}
-        if status and not pollinations_only and not (
+        normalized_status = "REJECTED_SEMANTIC" if status in {"REJECTED", "REJECTED_SEMANTIC"} else status
+        if normalized_status and not pollinations_only and not (
             asset.get("pipeline_status") == "DISPATCHED"
-            and status == "PENDING_KAGGLE"
+            and normalized_status == "PENDING_KAGGLE"
         ):
-            asset["pipeline_status"] = status
+            asset["pipeline_status"] = normalized_status
         if item.get("producer") and item.get("producer_run_id"):
             asset["last_generator"] = str(item["producer"])
             asset["last_run_id"] = int(item["producer_run_id"])
