@@ -6,6 +6,7 @@ on:
     paths:
       - 'tools/assets/**'
       - 'tools/sprites/audit_complete_sprite_manifest.py'
+      - 'tools/sprites/asset_queue_utils.py'
       - 'tools/sprites/kaggle_*factory*.py'
       - 'kaggle/github_mass_factory.py'
       - 'art/production/generation-rejection-ledger.json'
@@ -17,6 +18,7 @@ on:
     paths:
       - 'tools/assets/**'
       - 'tools/sprites/audit_complete_sprite_manifest.py'
+      - 'tools/sprites/asset_queue_utils.py'
       - 'tools/sprites/kaggle_*factory*.py'
       - 'kaggle/github_mass_factory.py'
       - 'art/production/generation-rejection-ledger.json'
@@ -52,6 +54,7 @@ jobs:
         run: |
           python -m py_compile \
             kaggle/github_mass_factory.py \
+            tools/sprites/asset_queue_utils.py \
             tools/sprites/kaggle_character_sheet_factory_v1.py \
             tools/sprites/kaggle_building_family_factory_v14.py \
             tools/sprites/kaggle_building_family_factory_v15.py \
