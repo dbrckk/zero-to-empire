@@ -22,22 +22,31 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T09:30:23Z
+Generated: 2026-10-03T11:00:19Z
 
 ### Git
 - Branch: `main`
-- Head: `bff90562aa60`
-- Commit date: 2026-10-03T11:29:52+02:00
-- Commit: art: rebuild persistent ENG repair frame cache
-- Tracked files: 1417
+- Head: `9ccb37c54544`
+- Commit date: 2026-10-03T12:59:41+02:00
+- Commit: art: retry ENG repair with batch identity correction
+- Tracked files: 1427
 
 ### Recently changed files
 - `art/production/controlled-character-regen-queue.json`
-- `.github/workflows/pollinations-character-atlas.yml`
+- `tools/sprites/pollinations_character_sheet_factory.py`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
 - `art/production/master-asset-queue.json`
-- `art/production/pollinations-character-summary.json`
+- `art/production/pollinations-frame-cache/CHR-ENG-REPAIR/00.png`
+- `art/production/pollinations-frame-cache/CHR-ENG-REPAIR/01.rev`
+- `art/production/pollinations-frame-cache/CHR-ENG-REPAIR/02.png`
+- `art/production/pollinations-frame-cache/CHR-ENG-REPAIR/03.png`
+- `art/production/pollinations-frame-cache/CHR-ENG-REPAIR/04.png`
+- `art/production/pollinations-frame-cache/CHR-ENG-REPAIR/05.png`
+- `art/production/pollinations-frame-cache/CHR-ENG-REPAIR/06.png`
+- `art/production/pollinations-frame-cache/CHR-ENG-REPAIR/07.png`
+- `art/production/pollinations-frame-cache/CHR-ENG-REPAIR/08.png`
+- `art/production/pollinations-frame-cache/CHR-ENG-REPAIR/09.png`
 
 ### Project signals
 - `build.gradle.kts`

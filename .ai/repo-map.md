@@ -27146,7 +27146,7 @@ vals=[iou(frames[n-1],frames[n]) for n in range(1,len(frames))]
 h0=appearance_hist(frames[0])
 sims=[hist_similarity(h0,appearance_hist(f)) for f in frames[1:]]
 ⋮----
-worst=1+sims.index(min(sims))
+bad=[n+1 for n,v in enumerate(sims) if v<.48]
 ⋮----
 bottoms=[]; centers=[]
 ⋮----
@@ -27212,7 +27212,8 @@ done=True
 ⋮----
 last=str(e)
 ⋮----
-bad=int(last.rsplit(' frame=',1)[1])
+bad_frames=[int(x) for x in last.rsplit(' frames=',1)[1].split(',') if x.strip()]
+⋮----
 cache_file=OUT/'pollinations-frame-cache'/it['id']/f'{bad:02d}.png'
 ⋮----
 rev_file=cache_file.with_suffix('.rev')
