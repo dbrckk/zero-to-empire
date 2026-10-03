@@ -189,8 +189,8 @@ def sheetqa(frames):
     if sims:
         print('POLLINATIONS_CHR_IDENTITY_SIMS='+','.join(f'{n+1}:{v:.3f}' for n,v in enumerate(sims)),flush=True)
     if sims and min(sims)<.48:
-        worst=1+sims.index(min(sims))
-        return False,f'identity-palette={min(sims):.2f} frame={worst}'
+        bad=[n+1 for n,v in enumerate(sims) if v<.48]
+        return False,f'identity-palette={min(sims):.2f} frames={",".join(map(str,bad))}'
     bottoms=[]; centers=[]
     for frame in frames:
         bb=frame.getchannel('A').getbbox()
@@ -306,19 +306,20 @@ def main():
                 break
             except Exception as e:
                 last=str(e)
-                if it['action']=='REPAIR' and last.startswith('identity-palette=') and ' frame=' in last:
+                if it['action']=='REPAIR' and last.startswith('identity-palette=') and ' frames=' in last:
                     try:
-                        bad=int(last.rsplit(' frame=',1)[1])
-                        cache_file=OUT/'pollinations-frame-cache'/it['id']/f'{bad:02d}.png'
-                        if cache_file.is_file():
-                            cache_file.unlink()
-                        rev_file=cache_file.with_suffix('.rev')
-                        try:
-                            revision=int(rev_file.read_text(encoding='utf-8').strip())+1 if rev_file.is_file() else 1
-                        except ValueError:
-                            revision=1
-                        rev_file.write_text(str(revision),encoding='utf-8')
-                        print(f'POLLINATIONS_CHR_REPAIR_CACHE_INVALIDATE n={bad} revision={revision} reason=identity-palette',flush=True)
+                        bad_frames=[int(x) for x in last.rsplit(' frames=',1)[1].split(',') if x.strip()]
+                        for bad in bad_frames:
+                            cache_file=OUT/'pollinations-frame-cache'/it['id']/f'{bad:02d}.png'
+                            if cache_file.is_file():
+                                cache_file.unlink()
+                            rev_file=cache_file.with_suffix('.rev')
+                            try:
+                                revision=int(rev_file.read_text(encoding='utf-8').strip())+1 if rev_file.is_file() else 1
+                            except ValueError:
+                                revision=1
+                            rev_file.write_text(str(revision),encoding='utf-8')
+                            print(f'POLLINATIONS_CHR_REPAIR_CACHE_INVALIDATE n={bad} revision={revision} reason=identity-palette',flush=True)
                     except (ValueError,OSError):
                         pass
                 print(f"POLLINATIONS_CHR_RETRY={it['id']} attempt={att+1} reason={e}",flush=True)
