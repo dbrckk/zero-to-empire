@@ -3862,6 +3862,28 @@ pa,pb=A.load(),B.load(); inter=union=0
 ⋮----
 aa=pa[x,y]>0; bb=pb[x,y]>0
 ⋮----
+def lower_body_motion(frames)
+⋮----
+vals=[]
+⋮----
+A=frames[n-1].getchannel('A')
+B=frames[n].getchannel('A')
+ba=A.getbbox(); bb=B.getbbox()
+⋮----
+top=max(0,min(ba[1]+int((ba[3]-ba[1])*.55),bb[1]+int((bb[3]-bb[1])*.55)))
+a=A.crop((0,top,256,256)).resize((64,64),Image.Resampling.BILINEAR).point(lambda p:255 if p>=32 else 0)
+b=B.crop((0,top,256,256)).resize((64,64),Image.Resampling.BILINEAR).point(lambda p:255 if p>=32 else 0)
+pa,pb=a.load(),b.load(); inter=union=0
+⋮----
+aa=pa[x,y]>0; bbb=pb[x,y]>0
+⋮----
+def actionqa(frames,action)
+⋮----
+vals=[iou(frames[n-1],frames[n]) for n in range(1,len(frames))]
+mean_change=(sum(1-x for x in vals)/len(vals)) if vals else 0.0
+⋮----
+motion=lower_body_motion(frames)
+⋮----
 def appearance_hist(frame)
 ⋮----
 # Coarse foreground RGB histogram: catches role/wardrobe/identity drift that
@@ -3874,8 +3896,6 @@ def hist_similarity(a,b)
 # Histogram intersection in [0,1].
 ⋮----
 def sheetqa(frames)
-⋮----
-vals=[iou(frames[n-1],frames[n]) for n in range(1,len(frames))]
 ⋮----
 h0=appearance_hist(frames[0])
 sims=[hist_similarity(h0,appearance_hist(f)) for f in frames[1:]]
@@ -3938,6 +3958,7 @@ frames=generate_repair_frames(it,seed)
 raw=fetch(sheet_prompt(it),seed)
 frames=extract_frames(raw,fc,it['action'])
 ⋮----
+why=f'{why} {action_why}'
 sheet=Image.new('RGBA',(1024,1024),(0,0,0,0))
 ⋮----
 p=INCOMING/f"{it['stem']}.png"

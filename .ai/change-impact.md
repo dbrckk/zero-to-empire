@@ -1,13 +1,13 @@
 # Change impact
 
-Base: aee1e8410faa8b03bef8d3ce72903779bff9f810
-Head: f55e5f584813214a9d325f1644bf6524a39246c5
+Base: 4f4ee953379a4b19deba84d9c4fad8e8837b4f8b
+Head: a4898f229cfa71a12303c5035f7c3a1a17f39a56
 
 ## Changed files
-- D app/src/main/java/com/zerotoempire/game/CharacterReviewGallery.kt
+- M tools/sprites/pollinations_character_sheet_factory.py
 
 ## Affected areas
-- app
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.
