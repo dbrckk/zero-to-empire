@@ -102,6 +102,12 @@ class DispatchCorrelationTests(unittest.TestCase):
         orchestrator = self._load_orchestrator("")
         self.assertEqual(orchestrator.CHARACTER_BATCH_SIZE, 6)
 
+    def test_main_applies_trigger_before_controlled_queue_sync(self) -> None:
+        text = (ROOT / "tools/sprites/asset_wave_orchestrator.py").read_text(encoding="utf-8")
+        trigger = text.index("    update_from_trigger(queue)")
+        sync = text.index("    sync_controlled_queues(queue)", trigger)
+        self.assertLess(trigger, sync)
+
     def test_successful_character_outcomes_mirror_into_master(self) -> None:
         orchestrator = self._load_orchestrator("")
         queue = {"assets": [

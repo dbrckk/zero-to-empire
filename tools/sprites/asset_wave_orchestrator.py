@@ -365,8 +365,11 @@ def make_decision(queue: dict[str, Any]) -> dict[str, Any]:
 
 def main() -> int:
     queue = ensure_master()
-    sync_controlled_queues(queue)
+    # Apply the producer callback while dispatched assets and their ownership
+    # token are still intact. Controlled-queue sync can otherwise change the
+    # master status first and make the correlated callback miss its assets.
     update_from_trigger(queue)
+    sync_controlled_queues(queue)
     decision = make_decision(queue)
     save_json(MASTER, queue)
     decision["stats_after"] = stats(queue)
