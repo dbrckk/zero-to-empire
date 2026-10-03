@@ -45,7 +45,7 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
     def test_character_dispatch_uses_computed_count(self):
         text = self.workflow_text()
         self.assertIn("producer_dispatch_token:", text)
-        self.assertIn("-f count=\\"$count\\"", text)
+        self.assertIn('-f count="$count"', text)
         self.assertNotIn("DISPATCH_KAGGLE_CHARACTER)\\n              gh workflow run 'Kaggle Mass Sprite Factory' --ref main -f count=2", text)
 
     def test_dispatch_token_is_declared_and_forwarded(self):
