@@ -389,7 +389,7 @@ def main():
                 break
             except Exception as e:
                 last=str(e)
-                if it['action']=='REPAIR' and last.startswith('identity-palette=') and ' frames=' in last:
+                if it['action'] in {'REPAIR','WALK'} and last.startswith('identity-palette=') and ' frames=' in last:
                     try:
                         bad_frames=[int(x) for x in last.rsplit(' frames=',1)[1].split(',') if x.strip()]
                         for bad in bad_frames:
@@ -402,7 +402,7 @@ def main():
                             except ValueError:
                                 revision=1
                             rev_file.write_text(str(revision),encoding='utf-8')
-                            print(f'POLLINATIONS_CHR_REPAIR_CACHE_INVALIDATE n={bad} revision={revision} reason=identity-palette',flush=True)
+                            print(f'POLLINATIONS_CHR_{it["action"]}_CACHE_INVALIDATE n={bad} revision={revision} reason=identity-palette',flush=True)
                     except (ValueError,OSError):
                         pass
                 print(f"POLLINATIONS_CHR_RETRY={it['id']} attempt={att+1} reason={e}",flush=True)
