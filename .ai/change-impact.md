@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 8ba1bdea29cbebb174ae9924c40328036977ee1b
-Head: cde3c5bf53972514c899ac32ca97a86973934a56
+Base: 5546b6c4f08360a29379ba51171734044de0acde
+Head: e27af5f82447d060c86c0b83ddf8560a16945955
 
 ## Changed files
-- M art/production/controlled-character-regen-queue.json
+- M .github/workflows/pollinations-character-smoke.yml
 
 ## Affected areas
-- art
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

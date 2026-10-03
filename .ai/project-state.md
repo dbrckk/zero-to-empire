@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T19:00:02Z
+Generated: 2026-10-03T19:03:55Z
 
 ### Git
 - Branch: `main`
-- Head: `cde3c5bf5397`
-- Commit date: 2026-10-03T20:59:28+02:00
-- Commit: art: retry OP-WALK frame-by-frame
+- Head: `e27af5f82447`
+- Commit date: 2026-10-03T21:03:36+02:00
+- Commit: fix(ci): align Pollinations smoke with summary contract
 - Tracked files: 1429
 
 ### Recently changed files
+- `.github/workflows/pollinations-character-smoke.yml`
 - `art/production/controlled-character-regen-queue.json`
 - `tools/sprites/pollinations_character_sheet_factory.py`
 

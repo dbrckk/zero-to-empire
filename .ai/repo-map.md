@@ -3615,9 +3615,16 @@ jobs:
           python - <<'PY' >> "$GITHUB_OUTPUT"
           import json
           from pathlib import Path
-          d=json.loads(Path('art/production/pollinations-character-report.json').read_text())
-          p=Path(d['candidate'])
-          print(f"asset_id={d['target']}")
+          report=Path('art/production/pollinations-character-summary.json')
+          rows=json.loads(report.read_text()) if report.exists() else []
+          candidates=[x for x in rows if x.get('status') == 'CANDIDATE']
+          if not candidates:
+              raise SystemExit('Pollinations smoke produced no candidate: '+json.dumps(rows))
+          d=candidates[0]
+          p=Path('art/incoming/final-sprites') / d['file']
+          if not p.is_file():
+              raise SystemExit(f'missing generated candidate: {p}')
+          print(f"asset_id={d['id']}")
           print(f"file={p}")
           print(f"stem={p.stem}")
           PY
