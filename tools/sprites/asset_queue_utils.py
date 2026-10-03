@@ -188,7 +188,12 @@ def sync_controlled_queues(queue: dict[str, Any]) -> None:
             and status == "PENDING_KAGGLE"
         ):
             asset["pipeline_status"] = status
-        if item.get("kaggle_run_id"):
+        if item.get("producer") and item.get("producer_run_id"):
+            asset["last_generator"] = str(item["producer"])
+            asset["last_run_id"] = int(item["producer_run_id"])
+            if status in {"AWAITING_REVIEW", "CANDIDATE", "TECHNICAL_PASS", "VALIDATED", "APPROVED", "DONE"}:
+                asset["last_error"] = None
+        elif item.get("kaggle_run_id"):
             asset["last_run_id"] = int(item["kaggle_run_id"])
             asset["last_generator"] = "kaggle-character-sheet"
             if status in {"AWAITING_REVIEW", "CANDIDATE", "TECHNICAL_PASS", "VALIDATED", "APPROVED", "DONE"}:
