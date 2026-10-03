@@ -99,6 +99,23 @@ def fetch(prompt,seed):
             print(f'POLLINATIONS_CHR_HTTP_RETRY seed={s} try={n+1} reason={e}',flush=True)
     raise RuntimeError(f'pollinations request exhausted retries: {last}')
 
+def validate_source_full_body(bb,w,h,action=None,standalone=False):
+    left,top,right,bottom=bb
+    cw=max(0,right-left); ch=max(0,bottom-top)
+    if cw<=0 or ch<=0:
+        raise RuntimeError('empty')
+    # Cropped head/torso fragments were historically normalized into plausible
+    # 256px cells. Reject source crops before resizing can hide the defect.
+    edge=max(4,round(h*.018))
+    if top <= edge or bottom >= h-edge:
+        raise RuntimeError(f'not full body: source edge top={top} bottom={bottom} cell_h={h}')
+    min_height=.65 if standalone else (.42 if action=='REPAIR' else .55)
+    if ch < h*min_height:
+        raise RuntimeError(f'not full body: source short h={ch} cell_h={h} min={min_height:.2f}')
+    if action!='REPAIR' and ch<cw*.92:
+        raise RuntimeError('not full body: silhouette too wide')
+    return True
+
 def cutout(raw, action=None, standalone=False):
     from rembg import remove
     im=remove(raw,alpha_matting=False).convert('RGBA')
@@ -129,20 +146,7 @@ def cutout(raw, action=None, standalone=False):
     if not bb:
         raise RuntimeError('empty')
     crop=clean.crop(bb); cw,ch=crop.size
-    # REPAIR poses can be crouched/leaning and legitimately wider because of
-    # arms/tools. Preserve full-body protection using source-cell margins
-    # instead of a standing-character aspect-ratio assumption.
-    if action == 'REPAIR':
-        left,top,right,bottom=bb
-        print(f'POLLINATIONS_CHR_REPAIR_BBOX left={left} top={top} right={right} bottom={bottom} w={cw} h={ch} cell={w}x{h} standalone={int(standalone)}',flush=True)
-        if not standalone and (top <= 2 or bottom >= h-2):
-            raise RuntimeError(f'not full body: edge top={top} bottom={bottom} cell_h={h}')
-        if standalone and ch < h*.65:
-            raise RuntimeError(f'not full body: standalone short h={ch} cell_h={h}')
-        if not standalone and ch < h*.42:
-            raise RuntimeError(f'not full body: short h={ch} cell_h={h}')
-    elif ch<cw*.92:
-        raise RuntimeError('not full body')
+    validate_source_full_body(bb,w,h,action,standalone)
     s=min(176/cw,218/ch)
     crop=crop.resize((max(1,round(cw*s)),max(1,round(ch*s))),Image.Resampling.LANCZOS)
     cell=Image.new('RGBA',(256,256),(0,0,0,0))
@@ -195,6 +199,10 @@ def actionqa(frames,action):
         if mean_change<.12:
             return False,f'walk-too-static mean-change={mean_change:.3f}'
         return True,f'walk-motion={motion:.3f} mean-change={mean_change:.3f}'
+    floors={'WORK':.10,'CARRY':.12,'REPAIR':.09,'CELEB':.10,'IDLE':.025}
+    floor=floors.get(action,.05)
+    if mean_change<floor:
+        return False,f'{action.lower()}-too-static mean-change={mean_change:.3f}<{floor:.3f}'
     return True,f'{action.lower()}-motion={mean_change:.3f}'
 
 def appearance_hist(frame):
@@ -223,8 +231,8 @@ def sheetqa(frames):
     sims=[hist_similarity(h0,appearance_hist(f)) for f in frames[1:]]
     if sims:
         print('POLLINATIONS_CHR_IDENTITY_SIMS='+','.join(f'{n+1}:{v:.3f}' for n,v in enumerate(sims)),flush=True)
-    if sims and min(sims)<.48:
-        bad=[n+1 for n,v in enumerate(sims) if v<.48]
+    if sims and min(sims)<.58:
+        bad=[n+1 for n,v in enumerate(sims) if v<.58]
         return False,f'identity-palette={min(sims):.2f} frames={",".join(map(str,bad))}'
     bottoms=[]; centers=[]
     for frame in frames:
