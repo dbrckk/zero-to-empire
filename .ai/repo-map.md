@@ -23124,6 +23124,10 @@ ACTIONS = {
 ⋮----
 raster = RASTER.read_text(encoding="utf-8")
 layer = LAYER.read_text(encoding="utf-8")
+resource_variants = defaultdict(list)
+⋮----
+duplicate_resource_names = {
+⋮----
 expected = {
 registered = set(re.findall(r"R\.drawable\.(zte_chr_[a-z0-9_]+_final)", raster))
 missing_registry = sorted(expected - registered)

@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T17:03:06Z
+Generated: 2026-10-03T17:31:05Z
 
 ### Git
 - Branch: `main`
-- Head: `fb261b9e9817`
-- Commit date: 2026-10-03T19:02:49+02:00
-- Commit: fix(android): remove duplicate BLD-08 PNG resources
+- Head: `1cc303b682e5`
+- Commit date: 2026-10-03T19:30:46+02:00
+- Commit: ci(android): reject duplicate drawable resource names
 - Tracked files: 1428
 
 ### Recently changed files
+- `tools/android/audit_character_runtime.py`
 - `app/src/main/res/drawable-nodpi/zte_business_08_t6_final.png`
 - `app/src/main/res/drawable-nodpi/zte_business_08_t5_final.png`
 - `app/src/main/res/drawable-nodpi/zte_business_08_t4_final.png`
 - `app/src/main/res/drawable-nodpi/zte_business_08_t3_final.png`
-- `app/src/main/res/drawable-nodpi/zte_business_08_t2_final.png`
 
 ### Project signals
 - `build.gradle.kts`

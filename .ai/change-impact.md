@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 9cf80917e798f4d83ce947af66cac71b6460a4d3
-Head: fb261b9e9817c45014f431f6da0ea2b7fb6a8976
+Base: cd081b0277bf7f7d9334585b0c7304021113eac5
+Head: 1cc303b682e5e1237e48eaf31b355809f5e2c2db
 
 ## Changed files
-- D app/src/main/res/drawable-nodpi/zte_business_08_t6_final.png
+- M tools/android/audit_character_runtime.py
 
 ## Affected areas
-- app
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.
