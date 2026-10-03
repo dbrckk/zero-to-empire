@@ -31,7 +31,7 @@ MAX_ATTEMPTS = 8
 PERSISTED_ASSET_STATE_FIELDS = (
     "strict_status", "pipeline_status", "attempts", "last_run_id",
     "last_generator", "last_error", "review_reason", "generation_epoch",
-    "epoch_attempts", "infra_failures",
+    "epoch_attempts", "infra_failures", "dispatch_token",
 )
 
 BUILDING_PRIORITY = ["BLD-10", "BLD-05", "BLD-08",
