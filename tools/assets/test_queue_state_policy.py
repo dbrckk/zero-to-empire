@@ -61,7 +61,7 @@ class DispatchCorrelationTests(unittest.TestCase):
                 "dispatch_token": "wave-B",
                 "infra_failures": 0,
                 "attempts": 1,
-                "generation_epoch": "identity-lock-v1.9",
+                "generation_epoch": "identity-lock-v1.10",
                 "epoch_attempts": 1,
             }
         ]}
@@ -105,6 +105,10 @@ class DispatchCorrelationTests(unittest.TestCase):
     def test_character_epoch_allows_three_informed_attempts(self) -> None:
         orchestrator = self._load_orchestrator("")
         self.assertEqual(orchestrator.CHARACTER_EPOCH_ATTEMPT_LIMIT, 3)
+
+    def test_character_epoch_is_v110_action_tuned(self) -> None:
+        orchestrator = self._load_orchestrator("")
+        self.assertEqual(orchestrator.CHARACTER_GENERATION_EPOCH, "identity-lock-v1.10")
 
     def test_current_epoch_semantic_retry_ignores_legacy_infra_failures(self) -> None:
         orchestrator = self._load_orchestrator("")

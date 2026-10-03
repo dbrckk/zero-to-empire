@@ -9,7 +9,7 @@ from __future__ import annotations
 import argparse,gc,json,re
 from collections import deque
 from pathlib import Path
-print('KAGGLE_STARTUP=character-sheet-flux-v1.9-semantic-action-guard',flush=True)
+print('KAGGLE_STARTUP=character-sheet-flux-v1.10-action-strength-tuning',flush=True)
 import torch
 from PIL import Image,ImageFilter
 from diffusers import FluxPipeline,FluxImg2ImgPipeline,FluxTransformer2DModel
@@ -344,11 +344,11 @@ def main():
         # Action-specific freedom prevents technically valid but semantically static sheets.
         first_strength={
          'IDLE':(.28,.03,.36),
-         'WALK':(.60,.035,.70),
-         'WORK':(.50,.03,.60),
-         'CARRY':(.52,.03,.62),
-         'REPAIR':(.50,.035,.64),
-         'CELEB':(.48,.035,.62),
+         'WALK':(.50,.025,.58),
+         'WORK':(.58,.03,.68),
+         'CARRY':(.66,.025,.74),
+         'REPAIR':(.62,.03,.72),
+         'CELEB':(.60,.03,.72),
         }[i['action']]
         strength=min(first_strength[2],first_strength[0]+attempt*first_strength[1])
         if mode=='identity' and i['action']!='WALK':strength=max(.26,strength-.035)
@@ -357,15 +357,15 @@ def main():
         print('KAGGLE_CHR_SHARED_IDENTITY='+i['id']+' role='+i['role']+f' strength={strength:.2f}',flush=True)
       else:
        if i['action']=='WALK':
-        strength=min(.78,.66+fi*.014+attempt*.03)
+        strength=min(.64,.50+fi*.012+attempt*.02)
        elif i['action']=='WORK':
-        strength=min(.66,.48+fi*.018+attempt*.03)
+        strength=min(.72,.54+fi*.018+attempt*.025)
        elif i['action']=='CARRY':
-        strength=min(.68,.50+fi*.018+attempt*.03)
+        strength=min(.78,.62+fi*.018+attempt*.025)
        elif i['action']=='REPAIR':
-        strength=min(.68,.48+fi*.018+attempt*.035)
+        strength=min(.76,.58+fi*.018+attempt*.03)
        elif i['action']=='CELEB':
-        strength=min(.64,.46+fi*.016+attempt*.035)
+        strength=min(.76,.56+fi*.018+attempt*.03)
        else:
         strength=min(.38,.24+fi*.012+attempt*.02)
        if mode in {'single','identity'} and i['action']!='WALK':strength=max(.24,strength-.035)
