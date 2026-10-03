@@ -22,22 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T19:34:29Z
+Generated: 2026-10-03T19:39:04Z
 
 ### Git
 - Branch: `main`
-- Head: `bf1b75f09d26`
-- Commit date: 2026-10-03T21:34:05+02:00
-- Commit: ops: retry full OP Kaggle identity wave
+- Head: `38ffd719dc9c`
+- Commit date: 2026-10-03T21:38:52+02:00
+- Commit: docs(art): sync strict review backlog
 - Tracked files: 1438
 
 ### Recently changed files
+- `art/production/character-strict-review-backlog.md`
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
 - `ops/sprite-wave-trigger.txt`
 - `tools/sprites/kaggle_character_sheet_factory_v1.py`
 - `kaggle/github_mass_factory.py`
-- `art/production/autofactory-state.json`
-- `art/production/autofactory-summary.md`
-- `art/production/master-asset-queue.json`
 
 ### Project signals
 - `build.gradle.kts`
