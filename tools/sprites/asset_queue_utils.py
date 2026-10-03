@@ -176,7 +176,8 @@ def sync_controlled_queues(queue: dict[str, Any]) -> None:
         if not asset or asset["strict_status"] == "DONE":
             continue
         status = str(item.get("status", "")).upper()
-        if status and not (
+        pollinations_only = status in {"PENDING_POLLINATIONS", "PROVIDER_ERROR"}
+        if status and not pollinations_only and not (
             asset.get("pipeline_status") == "DISPATCHED"
             and status == "PENDING_KAGGLE"
         ):
