@@ -106,6 +106,30 @@ class DispatchCorrelationTests(unittest.TestCase):
         orchestrator = self._load_orchestrator("")
         self.assertEqual(orchestrator.CHARACTER_EPOCH_ATTEMPT_LIMIT, 3)
 
+    def test_current_epoch_semantic_retry_ignores_legacy_infra_failures(self) -> None:
+        orchestrator = self._load_orchestrator("")
+        asset = {
+            "pipeline_status": "REJECTED_SEMANTIC",
+            "generation_epoch": orchestrator.CHARACTER_GENERATION_EPOCH,
+            "epoch_attempts": 0,
+            "attempts": 8,
+            "infra_failures": 3,
+            "last_error": "Semantic rejection: unreadable repair action.",
+        }
+        self.assertTrue(orchestrator.character_retry_available(asset))
+
+    def test_current_infra_failure_limit_still_blocks_real_infra_error(self) -> None:
+        orchestrator = self._load_orchestrator("")
+        asset = {
+            "pipeline_status": "PENDING_KAGGLE",
+            "generation_epoch": orchestrator.CHARACTER_GENERATION_EPOCH,
+            "epoch_attempts": 0,
+            "attempts": 8,
+            "infra_failures": 3,
+            "last_error": "Kaggle producer: failure; infrastructure retry 3/3 scheduled",
+        }
+        self.assertFalse(orchestrator.character_retry_available(asset))
+
     def test_character_sync_normalizes_rejected_to_semantic_rejection(self) -> None:
         text = (ROOT / "tools/sprites/asset_queue_utils.py").read_text(encoding="utf-8")
         self.assertIn('normalized_status = "REJECTED_SEMANTIC"', text)

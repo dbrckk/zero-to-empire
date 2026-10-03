@@ -22,7 +22,7 @@ Generated from `art/production/master-asset-queue.json` after production complet
 | CHR-LOG-WALK | LOG | WALK | DISPATCHED | Semantic review 2026-10-03: rejected; large identity/clothing drift across frames and no coherent alternating walk cycle. |
 | CHR-LOG-WORK | LOG | WORK | DISPATCHED | Semantic review 2026-10-03: rejected; action is too static and lacks a clearly readable work/tool interaction. |
 | CHR-LOG-CARRY | LOG | CARRY | DISPATCHED | Semantic review 2026-10-03: rejected; frames are torso/leg fragments with turntable orientation changes and no visible crate carried between both hands. |
-| CHR-LOG-REPAIR | LOG | REPAIR | BLOCKED_AUTOMATION_LIMIT | Semantic review 2026-10-03: rejected; identity/clothing/headgear drift strongly across frames and there is no consistent visible repair tool contacting a repair point. |
+| CHR-LOG-REPAIR | LOG | REPAIR | REJECTED_SEMANTIC | Semantic review 2026-10-03: rejected; identity/clothing/headgear drift strongly across frames and there is no consistent visible repair tool contacting a repair point. |
 | CHR-LOG-CELEB | LOG | CELEB | DISPATCHED | Semantic review 2026-10-03: rejected; atlas is severely cropped to head/torso fragments and does not contain a readable arm-raise celebration sequence. |
 | CHR-ENG-IDLE | ENG | IDLE | REJECTED_SEMANTIC | Semantic review 2026-10-03: rejected; atlas is almost entirely cropped head/torso fragments, not a full-body idle loop. |
 | CHR-ENG-WALK | ENG | WALK | REJECTED_SEMANTIC | Semantic review 2026-10-03: rejected; sequence behaves like a front/back turntable with identity/clothing drift rather than a stable three-quarter walk cycle. |

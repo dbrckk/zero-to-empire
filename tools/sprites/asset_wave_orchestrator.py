@@ -158,10 +158,12 @@ def active_pending(path: Path) -> list[dict[str, Any]]:
 def character_retry_available(asset: dict[str, Any]) -> bool:
     if str(asset.get("pipeline_status", "")).upper() in CHARACTER_PRODUCED_STATUSES:
         return False
-    if int(asset.get("infra_failures") or 0) >= INFRA_FAILURE_LIMIT:
+    current_epoch = asset.get("generation_epoch") == CHARACTER_GENERATION_EPOCH
+    current_error = str(asset.get("last_error") or "")
+    if int(asset.get("infra_failures") or 0) >= INFRA_FAILURE_LIMIT and current_error.startswith("Kaggle producer"):
         return False
     total_attempts = int(asset.get("attempts") or 0)
-    if asset.get("generation_epoch") == CHARACTER_GENERATION_EPOCH:
+    if current_epoch:
         return int(asset.get("epoch_attempts") or 0) < CHARACTER_EPOCH_ATTEMPT_LIMIT
     if total_attempts < MAX_ATTEMPTS:
         return True
@@ -187,6 +189,8 @@ def mark_dispatch(queue: dict[str, Any], ids: list[str], generator: str) -> list
             if x.get("generation_epoch") != CHARACTER_GENERATION_EPOCH:
                 x["generation_epoch"] = CHARACTER_GENERATION_EPOCH
                 x["epoch_attempts"] = 0
+            if not str(x.get("last_error") or "").startswith("Kaggle producer"):
+                x["infra_failures"] = 0
             x["epoch_attempts"] = int(x.get("epoch_attempts") or 0) + 1
         elif attempts >= MAX_ATTEMPTS:
             x["pipeline_status"] = "BLOCKED_AUTOMATION_LIMIT"
