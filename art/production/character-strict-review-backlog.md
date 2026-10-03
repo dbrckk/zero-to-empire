@@ -2,7 +2,7 @@
 
 Generated from `art/production/master-asset-queue.json` after production completion.
 
-- Production processed: **221/235**
+- Production processed: **214/235**
 - Strict DONE: **214/235**
 - Semantic review remaining: **21**
 - This report does **not** grant strict approval or runtime promotion.
@@ -15,21 +15,21 @@ Generated from `art/production/master-asset-queue.json` after production complet
 | CHR-OP-CARRY | OP | CARRY | DISPATCHED | Fresh generated candidate is available; strict semantic review is still required before runtime promotion. |
 | CHR-OP-REPAIR | OP | REPAIR | DISPATCHED | Semantic review required; no specific automated defect recorded. |
 | CHR-OP-CELEB | OP | CELEB | DISPATCHED | Semantic review required; no specific automated defect recorded. |
-| CHR-TECH-IDLE | TECH | IDLE | CANDIDATE | Fresh identity-locked candidate produced; semantic review is still required. |
+| CHR-TECH-IDLE | TECH | IDLE | REJECTED_SEMANTIC | Semantic review 2026-10-03: rejected; atlas is heavily cropped to head/torso fragments, lacks full-body framing, and shows no usable idle animation. |
 | CHR-TECH-WALK | TECH | WALK | REJECTED_SEMANTIC | Semantic review 2026-10-03: rejected; poses read as standing/turntable frames rather than a coherent alternating walk cycle, with visible head/identity drift. |
 | CHR-TECH-WORK | TECH | WORK | REJECTED_SEMANTIC | Semantic review 2026-10-03: rejected; technically valid atlas is too static and the work/tool action is not readable at gameplay size. |
 | CHR-TECH-CARRY | TECH | CARRY | REJECTED_SEMANTIC | Semantic review 2026-10-03: rejected; no crate/component is consistently visible between both hands and the sequence reads as static standing rather than carrying. |
 | CHR-LOG-WALK | LOG | WALK | REJECTED_SEMANTIC | Semantic review 2026-10-03: rejected; large identity/clothing drift across frames and no coherent alternating walk cycle. |
 | CHR-LOG-WORK | LOG | WORK | REJECTED_SEMANTIC | Semantic review 2026-10-03: rejected; action is too static and lacks a clearly readable work/tool interaction. |
-| CHR-LOG-CARRY | LOG | CARRY | CANDIDATE | Fresh generated candidate is available; strict semantic review is still required before runtime promotion. |
-| CHR-LOG-REPAIR | LOG | REPAIR | CANDIDATE | Fresh generated candidate is available; strict semantic review is still required before runtime promotion. |
-| CHR-LOG-CELEB | LOG | CELEB | CANDIDATE | Fresh generated candidate is available; strict semantic review is still required before runtime promotion. |
-| CHR-ENG-IDLE | ENG | IDLE | CANDIDATE | Fresh generated candidate is available; strict semantic review is still required before runtime promotion. |
+| CHR-LOG-CARRY | LOG | CARRY | REJECTED_SEMANTIC | Semantic review 2026-10-03: rejected; frames are torso/leg fragments with turntable orientation changes and no visible crate carried between both hands. |
+| CHR-LOG-REPAIR | LOG | REPAIR | REJECTED_SEMANTIC | Semantic review 2026-10-03: rejected; identity/clothing/headgear drift strongly across frames and there is no consistent visible repair tool contacting a repair point. |
+| CHR-LOG-CELEB | LOG | CELEB | REJECTED_SEMANTIC | Semantic review 2026-10-03: rejected; atlas is severely cropped to head/torso fragments and does not contain a readable arm-raise celebration sequence. |
+| CHR-ENG-IDLE | ENG | IDLE | REJECTED_SEMANTIC | Semantic review 2026-10-03: rejected; atlas is almost entirely cropped head/torso fragments, not a full-body idle loop. |
 | CHR-ENG-WALK | ENG | WALK | REJECTED_SEMANTIC | Semantic review 2026-10-03: rejected; sequence behaves like a front/back turntable with identity/clothing drift rather than a stable three-quarter walk cycle. |
 | CHR-ENG-WORK | ENG | WORK | REJECTED_SEMANTIC | Semantic review 2026-10-03: rejected; action remains mostly static with weak or absent readable work motion. |
-| CHR-ENG-CARRY | ENG | CARRY | CANDIDATE | Fresh generated candidate is available; strict semantic review is still required before runtime promotion. |
+| CHR-ENG-CARRY | ENG | CARRY | REJECTED_SEMANTIC | Semantic review 2026-10-03: rejected; frames are cropped head/torso fragments with no crate and no carrying stride. |
 | CHR-ENG-REPAIR | ENG | REPAIR | REJECTED_SEMANTIC | Semantic review 2026-10-03: rejected; first frame is severely cropped, face/helmet/body proportions drift strongly across frames, and the sequence lacks a readable repair/tool interaction. |
-| CHR-ENG-CELEB | ENG | CELEB | CANDIDATE | Fresh generated candidate is available; strict semantic review is still required before runtime promotion. |
+| CHR-ENG-CELEB | ENG | CELEB | REJECTED_SEMANTIC | Semantic review 2026-10-03: rejected; severe crop and major identity/body drift, with no readable celebration arm-raise cycle. |
 
 ## Review rule
 

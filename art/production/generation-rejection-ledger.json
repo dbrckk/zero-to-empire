@@ -198,6 +198,62 @@
       "source_run_id": 37119519956,
       "reason": "Semantic review: first frame severely cropped; strong cross-frame face/helmet/proportion drift; repair/tool action not readable.",
       "prompt_hint": "Keep the same engineer identity and helmet in every frame; full body with both feet visible and safe border; show one consistent diagnostic/welding tool visibly contacting the same repair point across the sequence."
+    },
+    {
+      "id": "CHR-TECH-IDLE",
+      "role": "TECH",
+      "action": "IDLE",
+      "source_run_id": 35922995104,
+      "reason": "atlas is heavily cropped to head/torso fragments, lacks full-body framing, and shows no usable idle animation.",
+      "prompt_hint": "Render one full-body technician in every frame with both feet visible, stable 3/4 camera, same face/headgear/clothing, and only subtle breathing/head motion."
+    },
+    {
+      "id": "CHR-LOG-CARRY",
+      "role": "LOG",
+      "action": "CARRY",
+      "source_run_id": null,
+      "reason": "frames are torso/leg fragments with turntable orientation changes and no visible crate carried between both hands.",
+      "prompt_hint": "Full-body logistics worker with both feet visible; stable 3/4 camera; one opaque rectangular crate held between both hands at waist in every frame; alternating carrying stride."
+    },
+    {
+      "id": "CHR-LOG-REPAIR",
+      "role": "LOG",
+      "action": "REPAIR",
+      "source_run_id": 37009007895,
+      "reason": "identity/clothing/headgear drift strongly across frames and there is no consistent visible repair tool contacting a repair point.",
+      "prompt_hint": "Same logistics worker identity and helmet in every frame; stable full-body 3/4 camera; one consistent diagnostic/welding tool visibly contacting the same repair point."
+    },
+    {
+      "id": "CHR-LOG-CELEB",
+      "role": "LOG",
+      "action": "CELEB",
+      "source_run_id": 37000739008,
+      "reason": "atlas is severely cropped to head/torso fragments and does not contain a readable arm-raise celebration sequence.",
+      "prompt_hint": "Full-body logistics worker with both feet visible and stable identity; clear celebration cycle from arms down to one/both arms raised overhead and back."
+    },
+    {
+      "id": "CHR-ENG-IDLE",
+      "role": "ENG",
+      "action": "IDLE",
+      "source_run_id": null,
+      "reason": "atlas is almost entirely cropped head/torso fragments, not a full-body idle loop.",
+      "prompt_hint": "Render one full-body engineer in every frame with both feet visible, stable 3/4 camera, same face/headgear/clothing, and subtle idle motion only."
+    },
+    {
+      "id": "CHR-ENG-CARRY",
+      "role": "ENG",
+      "action": "CARRY",
+      "source_run_id": null,
+      "reason": "frames are cropped head/torso fragments with no crate and no carrying stride.",
+      "prompt_hint": "Full-body engineer with both feet visible; stable 3/4 camera; same identity; opaque rectangular crate held between both hands at waist in every frame; alternating carrying stride."
+    },
+    {
+      "id": "CHR-ENG-CELEB",
+      "role": "ENG",
+      "action": "CELEB",
+      "source_run_id": null,
+      "reason": "severe crop and major identity/body drift, with no readable celebration arm-raise cycle.",
+      "prompt_hint": "Same full-body engineer identity and clothing in every frame; stable 3/4 camera; clear arm raise overhead and return to neutral."
     }
   ],
   "last_validation_request": "Identity-lock v1.9 OP full-role regeneration after prompt-budget crash and semantic false-positive review"
