@@ -67,6 +67,14 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("source edge contact", text)
         self.assertIn("finish_frame(raw,i['action'])", text)
 
+    def test_kaggle_rejection_memory_prefers_exact_asset_over_role_fallback(self):
+        text = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
+        self.assertIn("exact=str(row.get('id','')).upper()", text)
+        self.assertIn("if exact:", text)
+        self.assertIn("matched=exact==i['id']", text)
+        self.assertIn("elif prefix:", text)
+        self.assertIn("(not action or action==i['action'])", text)
+
 
 if __name__ == "__main__":
     unittest.main()

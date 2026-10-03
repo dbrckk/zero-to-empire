@@ -97,9 +97,17 @@ def rejection_hints(i):
   try:
    data=json.loads(REJECTION_LEDGER.read_text(encoding='utf-8'))
    for row in data.get('entries',[]):
+    exact=str(row.get('id','')).upper()
     prefix=str(row.get('target_prefix','')).upper()
     role=str(row.get('role','')).upper()
-    if (prefix and i['id'].startswith(prefix)) or (role and role==i['role']):
+    action=str(row.get('action','')).upper()
+    if exact:
+     matched=exact==i['id']
+    elif prefix:
+     matched=i['id'].startswith(prefix)
+    else:
+     matched=bool(role and role==i['role'] and (not action or action==i['action']))
+    if matched:
      hint=str(row.get('prompt_hint','')).strip()
      if hint and hint not in hints:hints.append(hint)
   except Exception as e:
