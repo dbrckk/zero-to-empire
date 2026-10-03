@@ -26380,7 +26380,7 @@ pa,pb=A.load(),B.load();inter=union=0
 ⋮----
 aa=pa[x,y]>0;bb=pb[x,y]>0;inter+=aa and bb;union+=aa or bb
 ⋮----
-def sheet_qa(frames)
+def sheet_qa(frames,action=None)
 ⋮----
 ious=[alpha_iou(frames[n-1],frames[n]) for n in range(1,len(frames))]
 ⋮----
@@ -26464,11 +26464,11 @@ anchor_raw=raw.convert('RGB')
 ⋮----
 # Start every later animation for this role from the exact same person.
 # Moderate img2img freedom changes pose while preserving face/headgear/clothes.
-strength=(min(.62,.54+attempt*.035) if i['action']=='WALK' else min(.44,.32+attempt*.03))
+strength=(min(.68,.60+attempt*.035) if i['action']=='WALK' else min(.44,.32+attempt*.03))
 if mode=='identity' and i['action']!='WALK':strength=max(.28,strength-.04)
 raw=img(image=shared,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=6,guidance_scale=0,output_type='pil',generator=gen).images[0]
 ⋮----
-strength=min(.72,.58+fi*.016+attempt*.03)
+strength=min(.78,.66+fi*.014+attempt*.03)
 ⋮----
 strength=min(.68,.48+fi*.018+attempt*.035)
 ⋮----

@@ -22,28 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T19:10:01Z
+Generated: 2026-10-03T19:34:29Z
 
 ### Git
 - Branch: `main`
-- Head: `33a7116558dd`
-- Commit date: 2026-10-03T21:09:33+02:00
-- Commit: art: retry OP-WALK frame 7 only
-- Tracked files: 1437
+- Head: `bf1b75f09d26`
+- Commit date: 2026-10-03T21:34:05+02:00
+- Commit: ops: retry full OP Kaggle identity wave
+- Tracked files: 1438
 
 ### Recently changed files
-- `art/production/controlled-character-regen-queue.json`
-- `art/production/pollinations-frame-cache/CHR-OP-WALK/07.rev`
-- `art/production/pollinations-frame-cache/CHR-OP-WALK/07.png`
-- `tools/sprites/pollinations_character_sheet_factory.py`
-- `art/production/pollinations-character-summary.json`
-- `art/production/pollinations-frame-cache/CHR-OP-WALK/00.png`
-- `art/production/pollinations-frame-cache/CHR-OP-WALK/01.png`
-- `art/production/pollinations-frame-cache/CHR-OP-WALK/02.png`
-- `art/production/pollinations-frame-cache/CHR-OP-WALK/03.png`
-- `art/production/pollinations-frame-cache/CHR-OP-WALK/04.png`
-- `art/production/pollinations-frame-cache/CHR-OP-WALK/05.png`
-- `art/production/pollinations-frame-cache/CHR-OP-WALK/06.png`
+- `ops/sprite-wave-trigger.txt`
+- `tools/sprites/kaggle_character_sheet_factory_v1.py`
+- `kaggle/github_mass_factory.py`
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
+- `art/production/master-asset-queue.json`
 
 ### Project signals
 - `build.gradle.kts`

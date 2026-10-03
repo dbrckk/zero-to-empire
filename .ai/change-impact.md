@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 09dd23c4c250800cddf80f2b91dfd2060b59b830
-Head: 33a7116558dd417bdb29542da20c3bbe2c7e0f3f
+Base: 5802e562b7ab7d1bba753d59db6fd181a15314f6
+Head: bf1b75f09d26a677e0aa7f719036b4de7641bfd1
 
 ## Changed files
-- M art/production/controlled-character-regen-queue.json
+- M ops/sprite-wave-trigger.txt
 
 ## Affected areas
-- art
+- ops
 
 ## Related test candidates
 - No direct filename-based test match detected.
