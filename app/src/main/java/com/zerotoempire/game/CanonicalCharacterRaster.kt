@@ -28,6 +28,16 @@ internal const val REVIEWED_CHARACTER_CELL_SIDE = 256
 internal const val REVIEWED_CHARACTER_COLUMNS = 4
 internal const val REVIEWED_CHARACTER_ROWS = 4
 
+internal data class ReviewedCharacterAtlas(
+    val role: ReviewedCharacterRole,
+    val action: ReviewedCharacterAction,
+)
+
+internal val reviewedCharacterCatalog: List<ReviewedCharacterAtlas> =
+    ReviewedCharacterRole.entries.flatMap { role ->
+        ReviewedCharacterAction.entries.map { action -> ReviewedCharacterAtlas(role, action) }
+    }
+
 internal fun reviewedCharacterFrameCount(action: ReviewedCharacterAction): Int = when (action) {
     ReviewedCharacterAction.IDLE -> 6
     ReviewedCharacterAction.WALK -> 8
