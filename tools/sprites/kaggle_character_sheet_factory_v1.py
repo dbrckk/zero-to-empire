@@ -363,28 +363,34 @@ def main():
     try:
      with torch.inference_mode():
       if fi==0:
-       shared=role_anchor.get(i['role'])
-       if shared is None:
-        raw=base(height=1024,width=1024,num_inference_steps=5,guidance_scale=0,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),output_type='pil',generator=gen).images[0]
-        anchor_raw=raw.convert('RGB')
-        role_anchor[i['role']]=anchor_raw.copy()
-        print('KAGGLE_CHR_IDENTITY_ANCHOR='+i['role']+' source='+i['id'],flush=True)
-       else:
-        # Start every later animation for this role from the exact same person.
-        # Action-specific freedom prevents technically valid but semantically static sheets.
-        first_strength={
-         'IDLE':(.28,.03,.36),
-         'WALK':(.50,.025,.58),
-         'WORK':(.58,.03,.68),
-         'CARRY':(.66,.025,.74),
-         'REPAIR':(.62,.03,.72),
-         'CELEB':(.60,.03,.72),
-        }[i['action']]
-        strength=min(first_strength[2],first_strength[0]+attempt*first_strength[1])
-        if mode=='identity' and i['action']!='WALK':strength=max(.26,strength-.035)
-        raw=img(image=shared,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=6,guidance_scale=0,output_type='pil',generator=gen).images[0]
-        anchor_raw=raw.convert('RGB')
-        print('KAGGLE_CHR_SHARED_IDENTITY='+i['id']+' role='+i['role']+f' strength={strength:.2f}',flush=True)
+
+       shared=role_anchor[i['role']]
+
+       first_strength={
+
+        'IDLE':(.28,.03,.36),
+
+        'WALK':(.50,.025,.58),
+
+        'WORK':(.58,.03,.68),
+
+        'CARRY':(.66,.025,.74),
+
+        'REPAIR':(.62,.03,.72),
+
+        'CELEB':(.60,.03,.72),
+
+       }[i['action']]
+
+       strength=min(first_strength[2],first_strength[0]+attempt*first_strength[1])
+
+       if mode=='identity' and i['action']!='WALK':strength=max(.26,strength-.035)
+
+       raw=img(image=shared,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=6,guidance_scale=0,output_type='pil',generator=gen).images[0]
+
+       anchor_raw=raw.convert('RGB')
+
+       print('KAGGLE_CHR_SHARED_IDENTITY='+i['id']+' role='+i['role']+f' strength={strength:.2f}',flush=True)
       else:
        if i['action']=='WALK':
         strength=min(.64,.50+fi*.012+attempt*.02)
@@ -432,19 +438,4 @@ def main():
   print(f"KAGGLE_CHR_VALIDATED={p.relative_to(ROOT)} {why} atlas=1024x1024",flush=True);report.append({'id':i['id'],'status':'CANDIDATE','reason':why,'frames':len(frames),'atlas':'1024x1024','cell':'256x256','file':p.name,'cross_animation_appearance_distance':round(identity_distance,2),'retry_reasons':retry_reasons})
  REPORT.write_text(json.dumps(report,indent=2),encoding='utf-8')
  print(f"KAGGLE_CHARACTER_CANDIDATES={sum(r['status']=='CANDIDATE' for r in report)} ATTEMPTED={len(items)}",flush=True)
-if __name__=='__main__':main(       if fi==0:
-        shared=role_anchor[i['role']]
-        first_strength={
-         'IDLE':(.28,.03,.36),
-         'WALK':(.50,.025,.58),
-         'WORK':(.58,.03,.68),
-         'CARRY':(.66,.025,.74),
-         'REPAIR':(.62,.03,.72),
-         'CELEB':(.60,.03,.72),
-        }[i['action']]
-        strength=min(first_strength[2],first_strength[0]+attempt*first_strength[1])
-        if mode=='identity' and i['action']!='WALK':strength=max(.26,strength-.035)
-        raw=img(image=shared,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=6,guidance_scale=0,output_type='pil',generator=gen).images[0]
-        anchor_raw=raw.convert('RGB')
-        print('KAGGLE_CHR_SHARED_IDENTITY='+i['id']+' role='+i['role']+f' strength={strength:.2f}',flush=True)
-)
+if __name__=='__main__':main()

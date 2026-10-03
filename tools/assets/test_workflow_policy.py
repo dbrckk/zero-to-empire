@@ -97,6 +97,11 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("source edge contact", text)
         self.assertIn("finish_frame(raw,i['action'])", text)
 
+    def test_kaggle_character_generator_has_clean_main_tail(self):
+        text = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
+        self.assertTrue(text.rstrip().endswith("if __name__=='__main__':main()"))
+        self.assertNotIn("main(       if fi==0", text)
+
     def test_kaggle_character_generator_uses_neutral_role_anchor(self):
         text = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
         self.assertIn("def anchor_prompt_pair(role):", text)
