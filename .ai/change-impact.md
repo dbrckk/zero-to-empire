@@ -1,10 +1,10 @@
 # Change impact
 
-Base: f207b481ef902d86ad62e8b52250bc0989fe0cba
-Head: 49ec95b66b57ef7e8ac1633656fe4cc3ce39e2c3
+Base: aee1e8410faa8b03bef8d3ce72903779bff9f810
+Head: f55e5f584813214a9d325f1644bf6524a39246c5
 
 ## Changed files
-- M app/src/test/java/com/zerotoempire/game/CanonicalCharacterRasterTest.kt
+- D app/src/main/java/com/zerotoempire/game/CharacterReviewGallery.kt
 
 ## Affected areas
 - app

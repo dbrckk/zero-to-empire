@@ -22,21 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T18:37:32Z
+Generated: 2026-10-03T18:43:30Z
 
 ### Git
 - Branch: `main`
-- Head: `49ec95b66b57`
-- Commit date: 2026-10-03T20:37:00+02:00
-- Commit: test(android): enforce complete character review catalog
-- Tracked files: 1430
+- Head: `f55e5f584813`
+- Commit date: 2026-10-03T20:43:14+02:00
+- Commit: refactor(android): keep character review UI debug-only
+- Tracked files: 1429
 
 ### Recently changed files
-- `app/src/test/java/com/zerotoempire/game/CanonicalCharacterRasterTest.kt`
 - `app/src/main/java/com/zerotoempire/game/CharacterReviewGallery.kt`
+- `app/src/test/java/com/zerotoempire/game/CanonicalCharacterRasterTest.kt`
 - `app/src/main/java/com/zerotoempire/game/CanonicalCharacterRaster.kt`
 - `app/src/debug/AndroidManifest.xml`
-- `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
 
 ### Project signals
 - `build.gradle.kts`
