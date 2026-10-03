@@ -1,20 +1,20 @@
 # Character strict-review backlog
 
-Generated from `art/production/master-asset-queue.json` after the 2026-10-03 semantic audit and v1.9 recovery reset.
+Generated from `art/production/master-asset-queue.json` after production completion.
 
 - Production processed: **222/235**
-- Strict DONE: **213/235**
-- Semantic review remaining: **22**
+- Strict DONE: **214/235**
+- Semantic review remaining: **21**
 - This report does **not** grant strict approval or runtime promotion.
 
 | Asset | Role | Action | Technical status | Review note |
 |---|---|---|---|---|
-| CHR-OP-IDLE | OP | IDLE | PENDING_KAGGLE | Identity/headgear consistency passed; IDLE candidate still requires strict semantic review before runtime promotion. |
-| CHR-OP-WALK | OP | WALK | PENDING_KAGGLE | Identity/headgear consistency passed, but WALK lacks clear alternating stride. v1.5 requires explicit leg poses and automatic lower-body motion. |
-| CHR-OP-WORK | OP | WORK | PENDING_KAGGLE | Fresh generated candidate is available; strict semantic review is still required before runtime promotion. |
-| CHR-OP-CARRY | OP | CARRY | PENDING_KAGGLE | Fresh generated candidate is available; strict semantic review is still required before runtime promotion. |
-| CHR-OP-REPAIR | OP | REPAIR | PENDING_KAGGLE | Semantic review required; no specific automated defect recorded. |
-| CHR-OP-CELEB | OP | CELEB | PENDING_KAGGLE | Semantic review required; no specific automated defect recorded. |
+| CHR-OP-IDLE | OP | IDLE | DISPATCHED | Identity/headgear consistency passed; IDLE candidate still requires strict semantic review before runtime promotion. |
+| CHR-OP-WALK | OP | WALK | DISPATCHED | Identity/headgear consistency passed, but WALK lacks clear alternating stride. v1.5 requires explicit leg poses and automatic lower-body motion. |
+| CHR-OP-WORK | OP | WORK | DISPATCHED | Fresh generated candidate is available; strict semantic review is still required before runtime promotion. |
+| CHR-OP-CARRY | OP | CARRY | DISPATCHED | Fresh generated candidate is available; strict semantic review is still required before runtime promotion. |
+| CHR-OP-REPAIR | OP | REPAIR | DISPATCHED | Semantic review required; no specific automated defect recorded. |
+| CHR-OP-CELEB | OP | CELEB | DISPATCHED | Semantic review required; no specific automated defect recorded. |
 | CHR-TECH-IDLE | TECH | IDLE | CANDIDATE | Fresh identity-locked candidate produced; semantic review is still required. |
 | CHR-TECH-WALK | TECH | WALK | REJECTED_SEMANTIC | Semantic review 2026-10-03: rejected; poses read as standing/turntable frames rather than a coherent alternating walk cycle, with visible head/identity drift. |
 | CHR-TECH-WORK | TECH | WORK | REJECTED_SEMANTIC | Semantic review 2026-10-03: rejected; technically valid atlas is too static and the work/tool action is not readable at gameplay size. |
