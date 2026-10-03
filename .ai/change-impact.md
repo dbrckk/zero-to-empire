@@ -1,13 +1,13 @@
 # Change impact
 
-Base: ab5c65276fa015622093cad4f25f2c3dd3b87edc
-Head: 0dc9b846528fb904211ef245550a7bc897c0f109
+Base: e5d74595d165d399b7b11ef8a8808137fc4ba053
+Head: 1ccfc1fd824346cc387707283e0cda1dc32a209e
 
 ## Changed files
-- A art/production/character-strict-review-backlog.md
+- A tools/sprites/generate_strict_review_backlog.py
 
 ## Affected areas
-- art
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

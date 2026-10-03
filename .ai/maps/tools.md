@@ -55,6 +55,7 @@ sprites/
   audit_complete_sprite_manifest.py
   build_sprite_contact_sheet.py
   colab_mass_factory.py
+  generate_strict_review_backlog.py
   hf_public_flux_factory.py
   hf_sprite_factory.py
   hf_static_manifest_factory.py
@@ -1195,6 +1196,27 @@ targets = []
 dst = cdir / f.name
 ⋮----
 archive = shutil.make_archive(str(WORK / 'zero-to-empire-colab-sprites'), 'zip', OUT)
+```
+
+## File: sprites/generate_strict_review_backlog.py
+```python
+#!/usr/bin/env python3
+"""Generate the strict character review backlog from the canonical master queue."""
+⋮----
+ROOT = Path(__file__).resolve().parents[2]
+MASTER = ROOT / "art/production/master-asset-queue.json"
+OUT = ROOT / "art/production/character-strict-review-backlog.md"
+⋮----
+def main() -> int
+⋮----
+queue = json.loads(MASTER.read_text(encoding="utf-8"))
+remaining = [a for a in queue["assets"] if a.get("strict_status") != "DONE" and a["id"].startswith("CHR-")]
+strict_done = sum(a.get("strict_status") == "DONE" for a in queue["assets"])
+production = sum(
+lines = [
+⋮----
+parts = asset["id"].split("-")
+reason = asset.get("review_reason") or "Semantic review required; no specific automated defect recorded."
 ```
 
 ## File: sprites/hf_public_flux_factory.py

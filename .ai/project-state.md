@@ -22,21 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T15:00:24Z
+Generated: 2026-10-03T15:28:32Z
 
 ### Git
 - Branch: `main`
-- Head: `0dc9b846528f`
-- Commit date: 2026-10-03T16:59:54+02:00
-- Commit: docs(art): publish strict character review backlog
-- Tracked files: 1432
+- Head: `1ccfc1fd8243`
+- Commit date: 2026-10-03T17:28:00+02:00
+- Commit: feat(art): generate strict review backlog from master
+- Tracked files: 1433
 
 ### Recently changed files
-- `art/production/character-strict-review-backlog.md`
+- `tools/sprites/generate_strict_review_backlog.py`
 - `art/production/master-asset-queue.json`
+- `art/production/character-strict-review-backlog.md`
 - `tools/sprites/asset_queue_utils.py`
-- `.github/workflows/pollinations-character-atlas.yml`
-- `tools/sprites/pollinations_character_sheet_factory.py`
 
 ### Project signals
 - `build.gradle.kts`
