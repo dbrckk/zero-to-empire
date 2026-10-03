@@ -22,31 +22,29 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T11:00:19Z
+Generated: 2026-10-03T11:24:09Z
 
 ### Git
 - Branch: `main`
-- Head: `9ccb37c54544`
-- Commit date: 2026-10-03T12:59:41+02:00
-- Commit: art: retry ENG repair with batch identity correction
-- Tracked files: 1427
+- Head: `6a40cd7d1293`
+- Commit date: 2026-10-03T13:23:52+02:00
+- Commit: art: regenerate final drifting ENG repair frame
+- Tracked files: 1430
 
 ### Recently changed files
 - `art/production/controlled-character-regen-queue.json`
-- `tools/sprites/pollinations_character_sheet_factory.py`
+- `art/production/pollinations-character-summary.json`
+- `art/production/pollinations-frame-cache/CHR-ENG-REPAIR/01.png`
+- `art/production/pollinations-frame-cache/CHR-ENG-REPAIR/03.png`
+- `art/production/pollinations-frame-cache/CHR-ENG-REPAIR/03.rev`
+- `art/production/pollinations-frame-cache/CHR-ENG-REPAIR/08.png`
+- `art/production/pollinations-frame-cache/CHR-ENG-REPAIR/08.rev`
+- `art/production/pollinations-frame-cache/CHR-ENG-REPAIR/09.png`
+- `art/production/pollinations-frame-cache/CHR-ENG-REPAIR/09.rev`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
 - `art/production/master-asset-queue.json`
-- `art/production/pollinations-frame-cache/CHR-ENG-REPAIR/00.png`
-- `art/production/pollinations-frame-cache/CHR-ENG-REPAIR/01.rev`
-- `art/production/pollinations-frame-cache/CHR-ENG-REPAIR/02.png`
-- `art/production/pollinations-frame-cache/CHR-ENG-REPAIR/03.png`
-- `art/production/pollinations-frame-cache/CHR-ENG-REPAIR/04.png`
-- `art/production/pollinations-frame-cache/CHR-ENG-REPAIR/05.png`
-- `art/production/pollinations-frame-cache/CHR-ENG-REPAIR/06.png`
-- `art/production/pollinations-frame-cache/CHR-ENG-REPAIR/07.png`
-- `art/production/pollinations-frame-cache/CHR-ENG-REPAIR/08.png`
-- `art/production/pollinations-frame-cache/CHR-ENG-REPAIR/09.png`
+- `tools/sprites/pollinations_character_sheet_factory.py`
 
 ### Project signals
 - `build.gradle.kts`

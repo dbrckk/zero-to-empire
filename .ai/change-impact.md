@@ -1,7 +1,7 @@
 # Change impact
 
-Base: a4a3dfb3abe569abeba52dd10a0aca420c209199
-Head: 9ccb37c54544e261a95c6de9b4e3c3e9dd34e001
+Base: 1c466b498c7ba83d955c98711d7d8ea9b09cc676
+Head: 6a40cd7d129379a6b80b50d8e214147a63797989
 
 ## Changed files
 - M art/production/controlled-character-regen-queue.json
