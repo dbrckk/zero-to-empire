@@ -22,26 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T12:59:21Z
+Generated: 2026-10-03T15:00:24Z
 
 ### Git
 - Branch: `main`
-- Head: `2047e155002b`
-- Commit date: 2026-10-03T14:59:03+02:00
-- Commit: fix(art): isolate Pollinations statuses from master queue
-- Tracked files: 1431
+- Head: `0dc9b846528f`
+- Commit date: 2026-10-03T16:59:54+02:00
+- Commit: docs(art): publish strict character review backlog
+- Tracked files: 1432
 
 ### Recently changed files
+- `art/production/character-strict-review-backlog.md`
+- `art/production/master-asset-queue.json`
 - `tools/sprites/asset_queue_utils.py`
 - `.github/workflows/pollinations-character-atlas.yml`
 - `tools/sprites/pollinations_character_sheet_factory.py`
-- `art/production/autofactory-state.json`
-- `art/production/autofactory-summary.md`
-- `art/production/master-asset-queue.json`
-- `art/incoming/final-sprites/zte_chr_eng_repair_final.png`
-- `art/production/controlled-character-regen-queue.json`
-- `art/production/pollinations-character-summary.json`
-- `art/production/pollinations-frame-cache/CHR-ENG-REPAIR/09.png`
 
 ### Project signals
 - `build.gradle.kts`

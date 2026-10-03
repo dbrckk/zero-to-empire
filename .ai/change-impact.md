@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 29ba80f85b29f10d6390c56db7af0c1b769eeab5
-Head: 2047e155002b26ef81f58c182ab37db17c6e41bc
+Base: ab5c65276fa015622093cad4f25f2c3dd3b87edc
+Head: 0dc9b846528fb904211ef245550a7bc897c0f109
 
 ## Changed files
-- M tools/sprites/asset_queue_utils.py
+- A art/production/character-strict-review-backlog.md
 
 ## Affected areas
-- tools
+- art
 
 ## Related test candidates
 - No direct filename-based test match detected.
