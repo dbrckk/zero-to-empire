@@ -30,6 +30,8 @@ from asset_queue_utils import (
 TRIGGER_WORKFLOW = os.getenv("AUTOF_TRIGGER_WORKFLOW", "")
 TRIGGER_CONCLUSION = os.getenv("AUTOF_TRIGGER_CONCLUSION", "")
 TRIGGER_RUN_ID = os.getenv("AUTOF_TRIGGER_RUN_ID", "")
+TRIGGER_DISPATCH_TOKEN = os.getenv("AUTOF_TRIGGER_DISPATCH_TOKEN", "")
+CURRENT_DISPATCH_TOKEN = os.getenv("GITHUB_RUN_ID", "")
 KAGGLE_BUSY = os.getenv("AUTOF_KAGGLE_BUSY", "0") == "1"
 FX_BUSY = os.getenv("AUTOF_FX_BUSY", "0") == "1"
 CHARACTER_GENERATION_EPOCH = "identity-lock-v1.8"
@@ -58,6 +60,10 @@ def update_from_trigger(queue: dict[str, Any]) -> None:
             x for x in queue["assets"]
             if x["pipeline_status"] == "DISPATCHED"
             and x.get("last_generator") in {"kaggle-building-family", "kaggle-character-sheet"}
+            and (
+                (TRIGGER_DISPATCH_TOKEN and str(x.get("dispatch_token") or "") == TRIGGER_DISPATCH_TOKEN)
+                or (not TRIGGER_DISPATCH_TOKEN and not x.get("dispatch_token"))
+            )
         ]
         if TRIGGER_CONCLUSION == "success":
             for x in active:
@@ -161,6 +167,7 @@ def mark_dispatch(queue: dict[str, Any], ids: list[str], generator: str) -> list
         x["attempts"] = attempts + 1
         x["pipeline_status"] = "DISPATCHED"
         x["last_generator"] = generator
+        x["dispatch_token"] = CURRENT_DISPATCH_TOKEN or None
         if str(x.get("review_reason") or "").startswith("Character production paused until"):
             x["review_reason"] = "Identity-locked character generation is available; automatic candidate production resumed."
         eligible.append(aid)
