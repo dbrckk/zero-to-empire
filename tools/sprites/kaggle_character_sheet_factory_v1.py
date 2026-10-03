@@ -9,7 +9,7 @@ from __future__ import annotations
 import argparse,gc,json,re
 from collections import deque
 from pathlib import Path
-print('KAGGLE_STARTUP=character-sheet-flux-v1.8-final-motion-guard',flush=True)
+print('KAGGLE_STARTUP=character-sheet-flux-v1.9-semantic-action-guard',flush=True)
 import torch
 from PIL import Image,ImageFilter
 from diffusers import FluxPipeline,FluxImg2ImgPipeline,FluxTransformer2DModel
@@ -37,6 +37,14 @@ ACTION={
  'CARRY':('carrying one compact industrial crate with both hands',8),
  'REPAIR':('repairing with a compact diagnostic or welding tool',10),
  'CELEB':('short restrained milestone celebration, raised arm, no props',8),
+}
+ACTION_SEMANTIC={
+ 'IDLE':'subtle breathing and head motion only; keep the same three-quarter facing direction',
+ 'WALK':'same three-quarter camera in every frame; alternate left and right stride; never turn the back to camera',
+ 'WORK':'one visible compact hand tool held at the work point in every frame; arms and torso visibly operate it',
+ 'CARRY':'one opaque rectangular industrial crate visibly held between both hands at waist height in every frame; same crate throughout',
+ 'REPAIR':'one visible diagnostic or welding tool repeatedly contacts a clear repair point; keep one worker only',
+ 'CELEB':'clear arm-raising celebration with the same person and camera orientation throughout',
 }
 POSE_HINT={
  'IDLE':['neutral stance','weight slightly left','neutral stance','weight slightly right','small head turn left','small head turn right'],
@@ -105,25 +113,27 @@ def prompt_pair(i,pose,mode='default'):
  # optimistic. T5 carries the descriptive detail and rejection-memory hints.
  role=i['role'];action=i['action']
  role_short={
-  'OP':'orange-hardhat foundry operator in dark coveralls',
-  'TECH':'cyan-accent industrial technician in graphite coveralls',
-  'LOG':'amber-accent logistics worker in work jacket',
-  'ENG':'cyan-accent industrial engineer in graphite field suit',
+  'OP':'orange-hardhat foundry worker',
+  'TECH':'cyan technician in graphite coveralls',
+  'LOG':'amber logistics worker',
+  'ENG':'cyan engineer in graphite field suit',
  }[role]
- core=(f"stylized 2.5D game sprite, one {role_short}, full body, "
-       f"three-quarter orthographic view, {pose}, isolated")
+ core=(f"2.5D game sprite, one {role_short}, full body, "
+       f"three-quarter view, {pose}, isolated")
  if mode=='framing':
-  core += ", smaller centered subject, generous empty border"
+  core += ", centered with empty border"
  elif mode=='single':
-  core += ", one person only, single connected human silhouette"
+  core += ", one person only"
  elif mode=='identity':
-  core += ", preserve exact face headgear clothing colors proportions"
- if len(core.split())>38:
-  raise RuntimeError('CLIP core prompt too long: '+str(len(core.split())))
+  core += ", same face headgear clothing"
+ core_words=core.split()
+ if len(core_words)>42:
+  print(f"KAGGLE_CHR_CLIP_CORE_TRIM={i['id']} words={len(core_words)}",flush=True)
+  core=' '.join(core_words[:42])
  detail=(f"AAA stylized painterly 2.5D mobile game character. {ROLE[role]}. "
-         f"{ACTION[action][0]}; {pose}. Same exact adult identity. Preserve face, headgear, clothing, palette and body proportions. "
-         + ("Exaggerate alternating leg stride and arm counter-swing. " if action=='WALK' else "")
-         + "Full body centered, feet visible, flat neutral gray, safe border. One person only. "
+         f"{ACTION[action][0]}. {ACTION_SEMANTIC[action]}. {pose}. "
+         "Same exact adult identity, face, headgear, clothing, palette and proportions. "
+         "Full body centered with both feet visible, neutral gray background, safe border, one person only. "
          + rejection_hints(i))
  if mode=='framing':
   detail += " Keep the full figure clearly inside frame with at least ten percent empty margin on every side."
@@ -246,7 +256,7 @@ def action_qa(frames,action):
   if motion<.22:return False,f'walk-too-static lower-motion={motion:.3f}'
   if mean_change<.12:return False,f'walk-too-static mean-change={mean_change:.3f}'
   return True,f'walk-motion={motion:.3f} mean-change={mean_change:.3f}'
- floors={'WORK':.075,'CARRY':.10,'REPAIR':.075,'CELEB':.09,'IDLE':.025}
+ floors={'WORK':.10,'CARRY':.12,'REPAIR':.09,'CELEB':.10,'IDLE':.025}
  floor=floors.get(action,.05)
  if mean_change<floor:
   return False,f'{action.lower()}-too-static mean-change={mean_change:.3f}<{floor:.3f}'
@@ -290,7 +300,7 @@ def main():
    variants={}
    for mode in ('default','framing','single','identity'):
     clip_text,t5_text=prompt_pair(i,pose,mode)
-    with torch.no_grad():pe,ppe,_=enc.encode_prompt(prompt=clip_text,prompt_2=t5_text,max_sequence_length=192)
+    with torch.no_grad():pe,ppe,_=enc.encode_prompt(prompt=clip_text,prompt_2=t5_text,max_sequence_length=256)
     variants[mode]=(pe.cpu(),ppe.cpu())
    encs[i['id']].append(variants)
  del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();report=[];role_anchor={};role_reference_cell={}
@@ -313,21 +323,33 @@ def main():
         print('KAGGLE_CHR_IDENTITY_ANCHOR='+i['role']+' source='+i['id'],flush=True)
        else:
         # Start every later animation for this role from the exact same person.
-        # Moderate img2img freedom changes pose while preserving face/headgear/clothes.
-        strength=(min(.68,.60+attempt*.035) if i['action']=='WALK' else min(.44,.32+attempt*.03))
-        if mode=='identity' and i['action']!='WALK':strength=max(.28,strength-.04)
+        # Action-specific freedom prevents technically valid but semantically static sheets.
+        first_strength={
+         'IDLE':(.28,.03,.36),
+         'WALK':(.60,.035,.70),
+         'WORK':(.50,.03,.60),
+         'CARRY':(.52,.03,.62),
+         'REPAIR':(.50,.035,.64),
+         'CELEB':(.48,.035,.62),
+        }[i['action']]
+        strength=min(first_strength[2],first_strength[0]+attempt*first_strength[1])
+        if mode=='identity' and i['action']!='WALK':strength=max(.26,strength-.035)
         raw=img(image=shared,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=6,guidance_scale=0,output_type='pil',generator=gen).images[0]
         anchor_raw=raw.convert('RGB')
         print('KAGGLE_CHR_SHARED_IDENTITY='+i['id']+' role='+i['role']+f' strength={strength:.2f}',flush=True)
       else:
        if i['action']=='WALK':
         strength=min(.78,.66+fi*.014+attempt*.03)
+       elif i['action']=='WORK':
+        strength=min(.66,.48+fi*.018+attempt*.03)
+       elif i['action']=='CARRY':
+        strength=min(.68,.50+fi*.018+attempt*.03)
        elif i['action']=='REPAIR':
         strength=min(.68,.48+fi*.018+attempt*.035)
        elif i['action']=='CELEB':
-        strength=min(.62,.43+fi*.016+attempt*.035)
+        strength=min(.64,.46+fi*.016+attempt*.035)
        else:
-        strength=min(.48,.29+fi*.015+attempt*.025)
+        strength=min(.38,.24+fi*.012+attempt*.02)
        if mode in {'single','identity'} and i['action']!='WALK':strength=max(.24,strength-.035)
        raw=img(image=anchor_raw,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=6,guidance_scale=0,output_type='pil',generator=gen).images[0]
      frame,cov=finish_frame(raw);frames.append(frame);ok=True;print(f"KAGGLE_CHR_FRAME={i['id']} frame={fi} attempt={attempt+1} mode={mode} cov={cov:.2f}",flush=True);break

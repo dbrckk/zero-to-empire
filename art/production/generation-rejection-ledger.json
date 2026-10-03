@@ -2,26 +2,195 @@
   "schema_version": 1,
   "purpose": "Evidence-backed prompt memory for recurrent asset-generation rejection patterns. Entries guide candidate generation only; they never auto-promote assets.",
   "entries": [
-    {"target_prefix":"CHR-OP","role":"OP","source_run_id":35521489049,"reason":"cross-animation identity/headgear drift","prompt_hint":"Keep one identical rust-orange safety hard hat, face, dark jacket and rust-orange accents across all OP animations."},
-    {"target_prefix":"CHR-OP-WALK","role":"","source_run_id":35400000000,"reason":"historical multi-subject walk frames","prompt_hint":"Exactly one worker only; never show a companion, duplicate, reflection or second body."},
-    {"target_prefix":"CHR-OP","role":"OP","source_run_id":35400000001,"reason":"historical photorealistic style drift","prompt_hint":"Use stylized painterly 2.5D mobile game art, not a photograph or cinematic portrait."},
-    {"target_prefix":"BLD-12","role":"","source_run_id":35515656009,"reason":"clone/scale ladder","prompt_hint":"Force structural silhouette changes early; never represent tier progression by scaling the same circular mass."},
-    {"target_prefix":"BLD-13","role":"","source_run_id":35522041463,"reason":"radial starburst scale ladder across tiers","prompt_hint":"Do not preserve a pure circular starburst across tiers. Introduce large connected side pylons, vertical core stages and stepped massing so normalized silhouette changes early."},
-    {"target_prefix":"CHR-OP-WALK","role":"OP","source_run_id":35523676470,"reason":"walk cycle preserves identity but lacks visible alternating stride","prompt_hint":"For WALK, exaggerate alternating left/right leg stride and arm counter-swing; the lower-body silhouette must visibly change frame to frame."},
-    {"target_prefix":"BLD-13","role":"","source_run_id":35524194030,"reason":"late-tier family discontinuity: T5 reverts from vertical nexus to flat radial disc","prompt_hint":"T5 and T6 must continue the vertical stepped T4 architecture; preserve a tall central core and fused side citadels, never revert to a flat radial disc."},
-    {"target_prefix":"BLD-04","role":"","source_run_id":35500285853,"reason":"tier ladder reads as scale/height clone with insufficient architectural evolution","prompt_hint":"Each BLD-04 tier must add obvious connected architecture: utility wings, automation core, second-storey blocks and late-game tower massing; never only scale or heighten the previous shell."},
-    {"target_prefix":"BLD-07","role":"","source_run_id":35494615214,"reason":"site/platform shadows, detached specks and pseudo-text contamination","prompt_hint":"Render one connected Mars complex only, with blank facades and no labels, people, vehicles, detached specks, platform deck, ground shadow or surrounding site."},
-    {"target_prefix":"BLD-05","role":"","source_run_id":0,"reason":"legacy runtime family inconsistent; T6 includes platform/text contamination","prompt_hint":"Keep one coherent tech-company megastructure family. Preserve camera/material DNA; no platform card, pseudo-text, detached scene elements or abrupt family redesign."},
-    {"target_prefix":"BLD-06","role":"","source_run_id":0,"reason":"legacy runtime family has large architecture drift across tiers","prompt_hint":"Preserve one lunar-colony family: connected domes/habitat blocks and utility masses, stable materials/camera, with gradual structural growth."},
-    {"target_prefix":"BLD-08","role":"","source_run_id":0,"reason":"legacy Dyson family discontinuity with tiny T5 collapse","prompt_hint":"Keep a persistent stellar-energy hub and connected collector/ring systems at every tier; never collapse a late tier into a tiny isolated object."},
-    {"target_prefix":"BLD-09","role":"","source_run_id":0,"reason":"legacy exchange family inconsistent with ground/platform contamination","prompt_hint":"Preserve one galactic exchange hub identity with connected logistics wings; no ground slab, cast shadow, detached scene, or unrelated tower redesign."},
-    {"target_prefix":"BLD-10","role":"","source_run_id":0,"reason":"legacy gateway family loses dominant portal identity across tiers","prompt_hint":"Every tier must preserve one dominant gateway frame fused into connected service architecture; evolve massing without replacing the family identity."},
-    {"target_prefix":"CHR-TECH","role":"","source_run_id":0,"reason":"legacy sheets show identity drift, crop fragments and inconsistent action silhouettes","prompt_hint":"Use one persistent TECH identity across all animations; full-body single subject in every frame; preserve cyan accents, graphite coveralls, head/hair and body proportions; reject torso-only or cropped frames."},
-    {"target_prefix":"CHR-LOG","role":"","source_run_id":0,"reason":"legacy sheets show multi-subject frames, identity drift and inconsistent carried-object composition","prompt_hint":"Use one persistent LOG identity across all animations; exactly one worker; stable amber/black workwear; carried objects must stay attached to the same worker and never introduce a second person."},
-    {"target_prefix":"CHR-ENG","role":"","source_run_id":0,"reason":"legacy sheets show identity drift, crop artifacts and weak action differentiation","prompt_hint":"Use one persistent ENG identity across all animations; full-body single subject; stable cyan engineering suit/head identity; enforce visibly different action poses without cropping or duplicate bodies."},
-    {"target_prefix":"BLD-04","role":"","source_run_id":35528759546,"reason":"site/platform/landscaping fused around office clone","prompt_hint":"Render only the headquarters building itself. No site slab, plaza, paths, trees, shrubs, benches, exterior lamps, cars, signs or freestanding outdoor objects. Change real connected architecture between tiers, not only scale."},
-    {"target_prefix":"BLD-13","role":"","source_run_id":35564401834,"reason":"family discontinuity T2→T3 plus generated text/logo contamination","prompt_hint":"Keep one persistent BLD-13 architectural DNA from T0 through T6: central vertical nexus with connected side pylons visible from early tiers. Never replace the radial early family at an anchor reset. No readable text, logos, watermarks, signage, pseudo-brand marks, detached debris, site slabs or baked ground shadows."},
-    {"target_prefix":"CHR-LOG","role":"LOG","source_run_id":0,"reason":"repeated controlled LOG candidates rejected because the worker is not fully visible","prompt_hint":"Show the worker head-to-toe in every frame: entire head, torso, both hands, both legs and both feet visible, with generous empty margin above the head and below the boots; never crop at any edge."}
+    {
+      "target_prefix": "CHR-OP",
+      "role": "OP",
+      "source_run_id": 35521489049,
+      "reason": "cross-animation identity/headgear drift",
+      "prompt_hint": "Keep one identical rust-orange safety hard hat, face, dark jacket and rust-orange accents across all OP animations."
+    },
+    {
+      "target_prefix": "CHR-OP-WALK",
+      "role": "",
+      "source_run_id": 35400000000,
+      "reason": "historical multi-subject walk frames",
+      "prompt_hint": "Exactly one worker only; never show a companion, duplicate, reflection or second body."
+    },
+    {
+      "target_prefix": "CHR-OP",
+      "role": "OP",
+      "source_run_id": 35400000001,
+      "reason": "historical photorealistic style drift",
+      "prompt_hint": "Use stylized painterly 2.5D mobile game art, not a photograph or cinematic portrait."
+    },
+    {
+      "target_prefix": "BLD-12",
+      "role": "",
+      "source_run_id": 35515656009,
+      "reason": "clone/scale ladder",
+      "prompt_hint": "Force structural silhouette changes early; never represent tier progression by scaling the same circular mass."
+    },
+    {
+      "target_prefix": "BLD-13",
+      "role": "",
+      "source_run_id": 35522041463,
+      "reason": "radial starburst scale ladder across tiers",
+      "prompt_hint": "Do not preserve a pure circular starburst across tiers. Introduce large connected side pylons, vertical core stages and stepped massing so normalized silhouette changes early."
+    },
+    {
+      "target_prefix": "CHR-OP-WALK",
+      "role": "OP",
+      "source_run_id": 35523676470,
+      "reason": "walk cycle preserves identity but lacks visible alternating stride",
+      "prompt_hint": "For WALK, exaggerate alternating left/right leg stride and arm counter-swing; the lower-body silhouette must visibly change frame to frame."
+    },
+    {
+      "target_prefix": "BLD-13",
+      "role": "",
+      "source_run_id": 35524194030,
+      "reason": "late-tier family discontinuity: T5 reverts from vertical nexus to flat radial disc",
+      "prompt_hint": "T5 and T6 must continue the vertical stepped T4 architecture; preserve a tall central core and fused side citadels, never revert to a flat radial disc."
+    },
+    {
+      "target_prefix": "BLD-04",
+      "role": "",
+      "source_run_id": 35500285853,
+      "reason": "tier ladder reads as scale/height clone with insufficient architectural evolution",
+      "prompt_hint": "Each BLD-04 tier must add obvious connected architecture: utility wings, automation core, second-storey blocks and late-game tower massing; never only scale or heighten the previous shell."
+    },
+    {
+      "target_prefix": "BLD-07",
+      "role": "",
+      "source_run_id": 35494615214,
+      "reason": "site/platform shadows, detached specks and pseudo-text contamination",
+      "prompt_hint": "Render one connected Mars complex only, with blank facades and no labels, people, vehicles, detached specks, platform deck, ground shadow or surrounding site."
+    },
+    {
+      "target_prefix": "BLD-05",
+      "role": "",
+      "source_run_id": 0,
+      "reason": "legacy runtime family inconsistent; T6 includes platform/text contamination",
+      "prompt_hint": "Keep one coherent tech-company megastructure family. Preserve camera/material DNA; no platform card, pseudo-text, detached scene elements or abrupt family redesign."
+    },
+    {
+      "target_prefix": "BLD-06",
+      "role": "",
+      "source_run_id": 0,
+      "reason": "legacy runtime family has large architecture drift across tiers",
+      "prompt_hint": "Preserve one lunar-colony family: connected domes/habitat blocks and utility masses, stable materials/camera, with gradual structural growth."
+    },
+    {
+      "target_prefix": "BLD-08",
+      "role": "",
+      "source_run_id": 0,
+      "reason": "legacy Dyson family discontinuity with tiny T5 collapse",
+      "prompt_hint": "Keep a persistent stellar-energy hub and connected collector/ring systems at every tier; never collapse a late tier into a tiny isolated object."
+    },
+    {
+      "target_prefix": "BLD-09",
+      "role": "",
+      "source_run_id": 0,
+      "reason": "legacy exchange family inconsistent with ground/platform contamination",
+      "prompt_hint": "Preserve one galactic exchange hub identity with connected logistics wings; no ground slab, cast shadow, detached scene, or unrelated tower redesign."
+    },
+    {
+      "target_prefix": "BLD-10",
+      "role": "",
+      "source_run_id": 0,
+      "reason": "legacy gateway family loses dominant portal identity across tiers",
+      "prompt_hint": "Every tier must preserve one dominant gateway frame fused into connected service architecture; evolve massing without replacing the family identity."
+    },
+    {
+      "target_prefix": "CHR-TECH",
+      "role": "",
+      "source_run_id": 0,
+      "reason": "legacy sheets show identity drift, crop fragments and inconsistent action silhouettes",
+      "prompt_hint": "Use one persistent TECH identity across all animations; full-body single subject in every frame; preserve cyan accents, graphite coveralls, head/hair and body proportions; reject torso-only or cropped frames."
+    },
+    {
+      "target_prefix": "CHR-LOG",
+      "role": "",
+      "source_run_id": 0,
+      "reason": "legacy sheets show multi-subject frames, identity drift and inconsistent carried-object composition",
+      "prompt_hint": "Use one persistent LOG identity across all animations; exactly one worker; stable amber/black workwear; carried objects must stay attached to the same worker and never introduce a second person."
+    },
+    {
+      "target_prefix": "CHR-ENG",
+      "role": "",
+      "source_run_id": 0,
+      "reason": "legacy sheets show identity drift, crop artifacts and weak action differentiation",
+      "prompt_hint": "Use one persistent ENG identity across all animations; full-body single subject; stable cyan engineering suit/head identity; enforce visibly different action poses without cropping or duplicate bodies."
+    },
+    {
+      "target_prefix": "BLD-04",
+      "role": "",
+      "source_run_id": 35528759546,
+      "reason": "site/platform/landscaping fused around office clone",
+      "prompt_hint": "Render only the headquarters building itself. No site slab, plaza, paths, trees, shrubs, benches, exterior lamps, cars, signs or freestanding outdoor objects. Change real connected architecture between tiers, not only scale."
+    },
+    {
+      "target_prefix": "BLD-13",
+      "role": "",
+      "source_run_id": 35564401834,
+      "reason": "family discontinuity T2→T3 plus generated text/logo contamination",
+      "prompt_hint": "Keep one persistent BLD-13 architectural DNA from T0 through T6: central vertical nexus with connected side pylons visible from early tiers. Never replace the radial early family at an anchor reset. No readable text, logos, watermarks, signage, pseudo-brand marks, detached debris, site slabs or baked ground shadows."
+    },
+    {
+      "target_prefix": "CHR-LOG",
+      "role": "LOG",
+      "source_run_id": 0,
+      "reason": "repeated controlled LOG candidates rejected because the worker is not fully visible",
+      "prompt_hint": "Show the worker head-to-toe in every frame: entire head, torso, both hands, both legs and both feet visible, with generous empty margin above the head and below the boots; never crop at any edge."
+    },
+    {
+      "target_prefix": "CHR-TECH-WALK",
+      "role": "",
+      "source_run_id": 36936709337,
+      "reason": "technically valid mask motion but semantic walk failure and head identity drift",
+      "prompt_hint": "Keep the same TECH face, hair/head shape and three-quarter camera. Show unmistakable alternating left/right leg stride and arm counter-swing; never use turntable standing poses."
+    },
+    {
+      "target_prefix": "CHR-TECH-WORK",
+      "role": "",
+      "source_run_id": 36967320402,
+      "reason": "technically valid but visually static work sheet",
+      "prompt_hint": "A visible compact industrial hand tool must be held and actively contact a work point in every WORK frame; vary arms and torso enough that work reads at gameplay size."
+    },
+    {
+      "target_prefix": "CHR-TECH-CARRY",
+      "role": "",
+      "source_run_id": 36967320402,
+      "reason": "carry sheet contains no consistently readable carried crate",
+      "prompt_hint": "Show one opaque rectangular crate spanning between both hands at waist height in every CARRY frame; preserve the same crate while the legs perform a carrying stride."
+    },
+    {
+      "target_prefix": "CHR-LOG-WALK",
+      "role": "",
+      "source_run_id": 36271866827,
+      "reason": "cross-frame identity and clothing drift with no coherent walk cycle",
+      "prompt_hint": "Lock one LOG identity, amber/black workwear and three-quarter camera across all frames; enforce alternating stride without front/back turntable poses."
+    },
+    {
+      "target_prefix": "CHR-LOG-WORK",
+      "role": "",
+      "source_run_id": 36272106197,
+      "reason": "work sheet passes technical QA but action remains visually static",
+      "prompt_hint": "Make the LOG worker visibly operate one compact tool or package station; arms and torso must change around the same work point while identity stays fixed."
+    },
+    {
+      "target_prefix": "CHR-ENG-WALK",
+      "role": "",
+      "source_run_id": 36431477540,
+      "reason": "front/back turntable poses and identity drift accepted by mask-only QA",
+      "prompt_hint": "Keep one ENG identity and one three-quarter facing direction; never rotate to back view; use strong alternating leg stride and counter-swing."
+    },
+    {
+      "target_prefix": "CHR-ENG-WORK",
+      "role": "",
+      "source_run_id": 36432826415,
+      "reason": "technically valid atlas with weak unreadable work action",
+      "prompt_hint": "Keep the ENG identity fixed and show one visible engineering tool contacting a work point; each frame must read as work rather than neutral standing."
+    }
   ],
-  "last_validation_request": "CHR-LOG controlled regeneration after repeated full-body framing rejection"
+  "last_validation_request": "Identity-lock v1.9 OP full-role regeneration after prompt-budget crash and semantic false-positive review"
 }

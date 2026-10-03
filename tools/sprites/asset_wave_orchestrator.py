@@ -34,8 +34,9 @@ TRIGGER_DISPATCH_TOKEN = os.getenv("AUTOF_TRIGGER_DISPATCH_TOKEN", "")
 CURRENT_DISPATCH_TOKEN = os.getenv("GITHUB_RUN_ID", "")
 KAGGLE_BUSY = os.getenv("AUTOF_KAGGLE_BUSY", "0") == "1"
 FX_BUSY = os.getenv("AUTOF_FX_BUSY", "0") == "1"
-CHARACTER_GENERATION_EPOCH = "identity-lock-v1.8"
+CHARACTER_GENERATION_EPOCH = "identity-lock-v1.9"
 CHARACTER_EPOCH_ATTEMPT_LIMIT = 2
+CHARACTER_BATCH_SIZE = 6
 INFRA_FAILURE_LIMIT = 3
 
 # A character in one of these states already has a produced candidate/evidence.
@@ -133,10 +134,10 @@ def character_retry_available(asset: dict[str, Any]) -> bool:
     if int(asset.get("infra_failures") or 0) >= INFRA_FAILURE_LIMIT:
         return False
     total_attempts = int(asset.get("attempts") or 0)
-    if total_attempts < MAX_ATTEMPTS:
-        return True
     if asset.get("generation_epoch") == CHARACTER_GENERATION_EPOCH:
         return int(asset.get("epoch_attempts") or 0) < CHARACTER_EPOCH_ATTEMPT_LIMIT
+    if total_attempts < MAX_ATTEMPTS:
+        return True
     legacy_failure = "Legacy APK character sheet rejected" in str(asset.get("last_error") or "")
     infra_retry = str(asset.get("last_error") or "").startswith("Kaggle producer")
     stride_retry = "WALK lacks clear alternating stride" in str(asset.get("review_reason") or "")
@@ -172,6 +173,17 @@ def mark_dispatch(queue: dict[str, Any], ids: list[str], generator: str) -> list
             x["review_reason"] = "Identity-locked character generation is available; automatic candidate production resumed."
         eligible.append(aid)
     return eligible
+
+
+def prioritize_controlled_character_targets(ids: list[str]) -> None:
+    """Keep exact dispatched assets first so Kaggle --count matches dispatch state."""
+    selected = set(ids)
+    if not selected:
+        return
+    controlled = load_json(CHARACTER_QUEUE, {}) or {}
+    targets = controlled.get("targets", [])
+    targets.sort(key=lambda item: 0 if str(item.get("id", "")).upper() in selected else 1)
+    save_json(CHARACTER_QUEUE, controlled)
 
 
 def building_family_ids(group: str) -> list[str]:
@@ -214,8 +226,9 @@ def prepare_character_group(queue: dict[str, Any], group: str) -> dict[str, Any]
         "reason": f"Autofactory 235: identity-locked candidate production for {group}; no automatic semantic promotion.",
         "targets": targets,
     })
-    dispatched = mark_dispatch(queue, [x["id"] for x in targets[:2]], "kaggle-character-sheet")
-    return {"group": group, "ids": dispatched, "count": min(2, len(targets))}
+    dispatched = mark_dispatch(queue, [x["id"] for x in targets[:CHARACTER_BATCH_SIZE]], "kaggle-character-sheet")
+    prioritize_controlled_character_targets(dispatched)
+    return {"group": group, "ids": dispatched, "count": len(dispatched)}
 
 
 def next_group(queue: dict[str, Any], lane: str, priority: list[str]) -> str | None:
@@ -297,8 +310,9 @@ def make_decision(queue: dict[str, Any]) -> dict[str, Any]:
     if character_pending:
         if KAGGLE_BUSY:
             return {"action": "WAIT_KAGGLE_BUSY", "group": "controlled-character", "stats": s}
-        ids = mark_dispatch(queue, character_pending[:2], "kaggle-character-sheet")
+        ids = mark_dispatch(queue, character_pending[:CHARACTER_BATCH_SIZE], "kaggle-character-sheet")
         if ids:
+            prioritize_controlled_character_targets(ids)
             return {"action": "DISPATCH_KAGGLE_CHARACTER", "group": "controlled-character", "ids": ids, "count": len(ids), "stats": s}
     group = next_group(queue, "kaggle-character-sheet", CHARACTER_PRIORITY)
     if group:
