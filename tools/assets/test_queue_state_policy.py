@@ -61,7 +61,7 @@ class DispatchCorrelationTests(unittest.TestCase):
                 "dispatch_token": "wave-B",
                 "infra_failures": 0,
                 "attempts": 1,
-                "generation_epoch": "identity-lock-v1.8",
+                "generation_epoch": "identity-lock-v1.9",
                 "epoch_attempts": 1,
             }
         ]}
@@ -71,6 +71,36 @@ class DispatchCorrelationTests(unittest.TestCase):
         self.assertEqual(asset["infra_failures"], 0)
         self.assertEqual(asset["attempts"], 1)
         self.assertIsNone(asset.get("last_run_id"))
+
+    def test_current_epoch_attempt_limit_takes_precedence_over_legacy_total_attempts(self) -> None:
+        orchestrator = self._load_orchestrator("")
+        asset = {
+            "id": "CHR-OP-WALK",
+            "pipeline_status": "PENDING_KAGGLE",
+            "last_generator": "kaggle-character-sheet",
+            "infra_failures": 0,
+            "attempts": 1,
+            "generation_epoch": orchestrator.CHARACTER_GENERATION_EPOCH,
+            "epoch_attempts": orchestrator.CHARACTER_EPOCH_ATTEMPT_LIMIT,
+        }
+        self.assertFalse(orchestrator.character_retry_available(asset))
+
+    def test_current_epoch_still_allows_retry_below_epoch_limit(self) -> None:
+        orchestrator = self._load_orchestrator("")
+        asset = {
+            "id": "CHR-OP-WALK",
+            "pipeline_status": "PENDING_KAGGLE",
+            "last_generator": "kaggle-character-sheet",
+            "infra_failures": 0,
+            "attempts": 99,
+            "generation_epoch": orchestrator.CHARACTER_GENERATION_EPOCH,
+            "epoch_attempts": orchestrator.CHARACTER_EPOCH_ATTEMPT_LIMIT - 1,
+        }
+        self.assertTrue(orchestrator.character_retry_available(asset))
+
+    def test_character_batch_size_preserves_full_role_wave(self) -> None:
+        orchestrator = self._load_orchestrator("")
+        self.assertEqual(orchestrator.CHARACTER_BATCH_SIZE, 6)
 
 
 if __name__ == "__main__":
