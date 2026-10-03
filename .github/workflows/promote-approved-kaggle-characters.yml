@@ -25,7 +25,7 @@ concurrency:
 jobs:
   promote:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
         with:
@@ -102,13 +102,79 @@ jobs:
               out=Path('art/production')/(stem+'-runtime-qa.json')
               out.write_text(json.dumps({'id':aid,'file':str(p),'size':size,'bytes':p.stat().st_size,'pass':size==[1024,1024],'issues':[] if size==[1024,1024] else ['bad-size']},indent=2)+'\n')
           PY
+      - name: Set up JDK 17
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Set up Gradle 8.13
+        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb
+        with:
+          gradle-version: '8.13'
+      - name: Validate promoted Android runtime
+        run: |
+          set -euo pipefail
+          python3 tools/android/validate_manifest_policy.py
+          python3 tools/android/validate_release_privacy.py
+          python3 tools/android/audit_character_runtime.py
+          gradle assembleDebug --stacktrace
+      - name: Mark approved characters strict DONE
+        env:
+          APPROVED_IDS: ${{ env.APPROVED_IDS }}
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          ids={x.strip().upper() for x in os.environ['APPROVED_IDS'].split(',') if x.strip()}
+          p=Path('art/production/master-asset-queue.json')
+          q=json.loads(p.read_text(encoding='utf-8'))
+          found=set()
+          for a in q.get('assets',[]):
+              if a.get('id') in ids:
+                  a['strict_status']='DONE'
+                  a['pipeline_status']='DONE'
+                  a['generation_required']=False
+                  a['last_error']=None
+                  a['review_reason']='Semantic review, runtime QA, canonical Android runtime audit and debug build passed.'
+                  found.add(a['id'])
+          missing=ids-found
+          if missing: raise SystemExit('Approved IDs missing from master queue: '+','.join(sorted(missing)))
+          p.write_text(json.dumps(q,indent=2)+'\n',encoding='utf-8')
+
+          strict=sum(1 for a in q['assets'] if a.get('strict_status')=='DONE')
+          processed=sum(1 for a in q['assets'] if a.get('strict_status')=='DONE' or str(a.get('pipeline_status','')).upper() in {'AWAITING_REVIEW','CANDIDATE','TECHNICAL_PASS','VALIDATED','APPROVED','RUNTIME_READY','DONE'})
+          remain=[a for a in q['assets'] if str(a.get('id','')).startswith('CHR-') and a.get('strict_status')!='DONE']
+          lines=[
+              '# Character strict-review backlog','',
+              'Generated from art/production/master-asset-queue.json after production completion.','',
+              f'- Production processed: **{processed}/{q["target_total"]}**',
+              f'- Strict DONE: **{strict}/{q["target_total"]}**',
+              f'- Semantic review remaining: **{len(remain)}**',
+              '- This report does **not** grant strict approval or runtime promotion.','',
+              '| Asset | Role | Action | Technical status | Review note |',
+              '|---|---|---|---|---|',
+          ]
+          for a in remain:
+              parts=a['id'].split('-')
+              note=str(a.get('review_reason') or 'Semantic review required.').replace('|','/')
+              lines.append(f'| {a["id"]} | {parts[1]} | {"-".join(parts[2:])} | {a.get("pipeline_status","")} | {note} |')
+          lines += ['', '## Review rule', '', 'A reviewer must inspect identity continuity, full-body framing, role/clothing consistency, action readability, animation motion, and runtime suitability. Only explicit reviewed approvals may change strict_status to DONE.']
+          Path('art/production/character-strict-review-backlog.md').write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          print(f'PROMOTION_STRICT_DONE={strict}/{q["target_total"]}')
+          PY
       - name: Commit approved runtime assets
         run: |
           set -euo pipefail
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add art/incoming/final-sprites app/src/main/res/drawable-nodpi art/production/*-runtime-qa.json
+          git add art/incoming/final-sprites app/src/main/res/drawable-nodpi art/production/*-runtime-qa.json art/production/master-asset-queue.json art/production/character-strict-review-backlog.md
           git diff --cached --quiet && exit 0
           git commit -m 'art: promote semantically approved Kaggle characters'
           git pull --rebase origin main
           git push origin HEAD:main
+
+      - name: Continue autofactory after promotion
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run 'Asset Autofactory 235' --ref main

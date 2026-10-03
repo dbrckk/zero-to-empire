@@ -66,6 +66,13 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("tokens={str(by[i].get('dispatch_token') or '')", text)
         self.assertIn("SPRITE_COUNT='+str(min(12,len(ids)))", text)
 
+    def test_character_promotion_requires_android_runtime_validation_before_done(self):
+        text = Path(".github/workflows/promote-approved-kaggle-characters.yml").read_text(encoding="utf-8")
+        self.assertIn("Validate promoted Android runtime", text)
+        self.assertIn("gradle assembleDebug --stacktrace", text)
+        self.assertIn("Mark approved characters strict DONE", text)
+        self.assertLess(text.index("Validate promoted Android runtime"), text.index("Mark approved characters strict DONE"))
+        self.assertIn("Continue autofactory after promotion", text)
     def test_async_kaggle_character_mode_releases_runner_and_uses_collector(self):
         mass = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
         autof = Path(".github/workflows/asset-autofactory.yml").read_text(encoding="utf-8")
