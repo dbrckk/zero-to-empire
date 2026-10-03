@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from collections import defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -27,6 +28,16 @@ ACTIONS = {
 
 raster = RASTER.read_text(encoding="utf-8")
 layer = LAYER.read_text(encoding="utf-8")
+resource_variants = defaultdict(list)
+for path in DRAWABLES.iterdir():
+    if path.is_file() and path.suffix.lower() in {".png", ".webp", ".jpg", ".jpeg", ".gif", ".xml"}:
+        resource_variants[path.stem].append(path.name)
+duplicate_resource_names = {
+    name: sorted(files) for name, files in resource_variants.items() if len(files) > 1
+}
+if duplicate_resource_names:
+    raise SystemExit(f"ANDROID_DRAWABLE_DUPLICATE_NAMES={duplicate_resource_names}")
+
 expected = {
     f"zte_chr_{role_slug}_{action_slug}_final"
     for role_slug in ROLES.values()
