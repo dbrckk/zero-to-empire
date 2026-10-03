@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 1c466b498c7ba83d955c98711d7d8ea9b09cc676
-Head: 6a40cd7d129379a6b80b50d8e214147a63797989
+Base: dc5f1973e4ab1c09b9504bf61ead114af2b4913b
+Head: 457fabdcf6a9bafdeaa21d29f72157c358100b04
 
 ## Changed files
-- M art/production/controlled-character-regen-queue.json
+- M .github/workflows/pollinations-character-atlas.yml
 
 ## Affected areas
-- art
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.
