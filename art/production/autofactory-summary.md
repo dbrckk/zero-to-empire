@@ -2,7 +2,7 @@
 
 - Strict DONE: **213 / 235**
 - Production processed to DONE/review: **235 / 235**
-- Awaiting semantic review: **14**
+- Awaiting semantic review: **13**
 - Automation-blocked: **0**
 - Current action: **PRODUCTION_235_COMPLETE_REVIEW_BACKLOG**
 - Current group: **none**
