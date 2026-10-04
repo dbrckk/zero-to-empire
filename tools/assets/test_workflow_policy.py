@@ -98,6 +98,9 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("KAGGLE_KERNEL_QUEUE_OVERLAY=inline-payload", factory)
         self.assertIn("Failed to inject QUEUE_OVERLAY_B64", mass)
         self.assertIn("KAGGLE_DATASET_ASYNC_REUSE=1", mass)
+    def test_kaggle_kernel_title_resolves_to_requested_slug(self):
+        text = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
+        self.assertIn("d['title']=os.environ['KAGGLE_KERNEL_SLUG'].replace('-',' ')", text)
     def test_async_kaggle_uses_unique_kernel_slug_and_stale_timeout(self):
         mass = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
         collector = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")

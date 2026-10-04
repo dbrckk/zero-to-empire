@@ -253,7 +253,7 @@ jobs:
           p=Path('/tmp/zte-kaggle/kernel-metadata.json')
           d=json.loads(p.read_text())
           d['id']=os.environ['KAGGLE_KERNEL_FULL']
-          d['title']='Zero to Empire Sprite Factory '+os.environ['KAGGLE_KERNEL_SLUG'][-16:]
+          d['title']=os.environ['KAGGLE_KERNEL_SLUG'].replace('-',' ')
           p.write_text(json.dumps(d,indent=2)+'\n')
           print('KAGGLE_KERNEL_ID='+d['id'])
           PY
