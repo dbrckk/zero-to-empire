@@ -61,7 +61,7 @@ class DispatchCorrelationTests(unittest.TestCase):
                 "dispatch_token": "wave-B",
                 "infra_failures": 0,
                 "attempts": 1,
-                "generation_epoch": "identity-lock-v1.11",
+                "generation_epoch": "identity-lock-v1.12",
                 "epoch_attempts": 1,
             }
         ]}
@@ -106,9 +106,9 @@ class DispatchCorrelationTests(unittest.TestCase):
         orchestrator = self._load_orchestrator("")
         self.assertEqual(orchestrator.CHARACTER_EPOCH_ATTEMPT_LIMIT, 3)
 
-    def test_character_epoch_is_v111_semantic_scaffold(self) -> None:
+    def test_character_epoch_is_v112_persistent_semantic_scaffold(self) -> None:
         orchestrator = self._load_orchestrator("")
-        self.assertEqual(orchestrator.CHARACTER_GENERATION_EPOCH, "identity-lock-v1.11")
+        self.assertEqual(orchestrator.CHARACTER_GENERATION_EPOCH, "identity-lock-v1.12")
 
     def test_new_epoch_reopens_semantic_reject_even_with_high_legacy_attempts(self) -> None:
         orchestrator = self._load_orchestrator("")
