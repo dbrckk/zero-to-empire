@@ -1,15 +1,13 @@
 # Change impact
 
-Base: 26d2dc524e222cee4951dd3b97f33446b02e8eef
-Head: 1b73b3ea5e87e2063afdef3e0e9c2be5976f0937
+Base: 165859bba01e2351739764ad609db51ff4ca63ce
+Head: 46b396d35aab45f8668f19d389595386ee5e9b65
 
 ## Changed files
-- M art/production/character-strict-review-backlog.md
-- M art/production/generation-rejection-ledger.json
-- M art/production/master-asset-queue.json
+- M .github/workflows/pollinations-character-atlas.yml
 
 ## Affected areas
-- art
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

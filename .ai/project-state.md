@@ -22,23 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-04T20:05:31Z
+Generated: 2026-10-04T22:45:29Z
 
 ### Git
 - Branch: `main`
-- Head: `1b73b3ea5e87`
-- Commit date: 2026-10-04T22:05:13+02:00
-- Commit: art: reject v1.12 repair candidates after semantic review
+- Head: `46b396d35aab`
+- Commit date: 2026-10-05T00:45:17+02:00
+- Commit: fix(art): let Pollinations consume canonical character queue
 - Tracked files: 1445
 
 ### Recently changed files
-- `art/production/character-strict-review-backlog.md`
-- `art/production/generation-rejection-ledger.json`
-- `art/production/master-asset-queue.json`
+- `.github/workflows/pollinations-character-atlas.yml`
 - `art/production/kaggle-async-state.json`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
 - `art/production/controlled-character-regen-queue.json`
+- `art/production/master-asset-queue.json`
 
 ### Project signals
 - `build.gradle.kts`

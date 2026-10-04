@@ -3871,7 +3871,7 @@ jobs:
           pending=0
           if p.exists():
               q=json.loads(p.read_text(encoding='utf-8'))
-              pending=sum(1 for x in q.get('targets',[]) if str(x.get('status','')).upper() in {'PENDING','PENDING_POLLINATIONS'})
+              pending=sum(1 for x in q.get('targets',[]) if str(x.get('status','')).upper() in {'PENDING','PENDING_POLLINATIONS','PENDING_KAGGLE'})
           print(f'pending={pending}')
           print(f'should_generate={str(pending > 0).lower()}')
           PY
@@ -3955,7 +3955,7 @@ jobs:
           from pathlib import Path
           p=Path('art/production/controlled-character-regen-queue.json')
           q=json.loads(p.read_text(encoding='utf-8')) if p.exists() else {}
-          print(sum(1 for x in q.get('targets',[]) if str(x.get('status','')).upper() in {'PENDING','PENDING_POLLINATIONS'}))
+          print(sum(1 for x in q.get('targets',[]) if str(x.get('status','')).upper() in {'PENDING','PENDING_POLLINATIONS','PENDING_KAGGLE'}))
           PY
           )
           depth="${POLLINATIONS_CHAIN_DEPTH:-0}"
