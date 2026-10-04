@@ -22,28 +22,28 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-04T06:04:22Z
+Generated: 2026-10-04T06:07:18Z
 
 ### Git
 - Branch: `main`
-- Head: `b40560bd4b86`
-- Commit date: 2026-10-04T08:03:56+02:00
-- Commit: art: review v1.10 TECH LOG batch and promote technician idle
+- Head: `b54dd9f7227d`
+- Commit date: 2026-10-04T08:07:01+02:00
+- Commit: fix(art): keep strict backlog canonical after promotion
 - Tracked files: 1445
 
 ### Recently changed files
 - `.github/workflows/promote-approved-kaggle-characters.yml`
 - `art/production/character-strict-review-backlog.md`
-- `art/production/generation-rejection-ledger.json`
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
 - `art/production/master-asset-queue.json`
+- `app/src/main/res/drawable-nodpi/zte_chr_tech_idle_final.webp`
+- `art/incoming/final-sprites/zte_chr_tech_idle_final.png`
+- `art/production/zte_chr_tech_idle_final-runtime-qa.json`
+- `art/production/generation-rejection-ledger.json`
 - `ops/promote-kaggle-trigger.txt`
 - `tools/assets/test_workflow_policy.py`
 - `art/production/kaggle-async-state.json`
-- `art/production/autofactory-state.json`
-- `art/production/autofactory-summary.md`
-- `art/production/controlled-character-regen-queue.json`
-- `.github/workflows/kaggle-async-character-collector.yml`
-- `ops/kaggle-collector-trigger.txt`
 
 ### Project signals
 - `build.gradle.kts`
