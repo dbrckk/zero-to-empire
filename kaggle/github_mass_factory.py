@@ -7,6 +7,7 @@ are checkpointed continuously so an interrupted kernel does not discard GPU work
 import base64,hashlib,io,json,os,re,shutil,subprocess,time,tarfile,zipfile
 from pathlib import Path
 GENERATOR_OVERLAY_B64=''
+QUEUE_OVERLAY_B64=''
 WORK=Path('/kaggle/working');REPO=Path('/tmp/zero-to-empire');OUT=WORK/'output';COUNT=int(os.getenv('SPRITE_COUNT','7'));SEED=int(os.getenv('SPRITE_SEED',str(int(time.time())%2_000_000_000)));EXPECTED_GENERATOR_SHA=os.getenv('EXPECTED_GENERATOR_SHA','').strip()
 ROW=re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$")
 def digest(p):
@@ -106,6 +107,10 @@ else:
  REPO.mkdir(parents=True,exist_ok=True)
  with tarfile.open(source,'r:gz') as t:t.extractall(REPO)
 print(f'KAGGLE_REPO_SOURCE={source_kind}:{source}',flush=True)
+if QUEUE_OVERLAY_B64:
+ raw=base64.b64decode(QUEUE_OVERLAY_B64.encode('ascii'))
+ with zipfile.ZipFile(io.BytesIO(raw)) as z:z.extractall(REPO)
+ print('KAGGLE_KERNEL_QUEUE_OVERLAY=inline-payload',flush=True)
 # The Kaggle dataset mount can lag behind the published dataset version. Ship the
 # critical building generator chain with the kernel itself and overlay it onto
 # the mounted repository before validating/running it.
