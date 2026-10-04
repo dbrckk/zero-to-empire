@@ -194,6 +194,28 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh workflow run 'Asset Autofactory 235' --ref main             -f producer_workflow='Kaggle Mass Sprite Factory'             -f producer_conclusion='success'             -f producer_run_id='${{ steps.gate.outputs.submit_run_id }}'             -f producer_dispatch_token='${{ steps.gate.outputs.dispatch_token }}'
+      - name: Download failed kernel evidence
+        if: steps.kernel.outputs.failed == 'true'
+        shell: bash
+        run: |
+          set +e
+          rm -rf /tmp/kaggle-failure
+          mkdir -p /tmp/kaggle-failure
+          slug="${KAGGLE_USERNAME}/${{ steps.gate.outputs.kernel_slug }}"
+          kaggle kernels output "$slug" -p /tmp/kaggle-failure --force > /tmp/kaggle-failure/download.log 2>&1
+          rc=$?
+          printf 'KAGGLE_FAILURE_OUTPUT_RC=%s\n' "$rc" | tee -a /tmp/kaggle-failure/download.log
+          kaggle kernels status "$slug" > /tmp/kaggle-failure/status.log 2>&1 || true
+          find /tmp/kaggle-failure -maxdepth 5 -type f -print
+          exit 0
+      - name: Upload failed kernel evidence
+        if: steps.kernel.outputs.failed == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: kaggle-async-failure-evidence-${{ steps.gate.outputs.submit_run_id }}
+          path: /tmp/kaggle-failure/**
+          if-no-files-found: warn
+          retention-days: 30
       - name: Callback autofactory failure
         if: steps.kernel.outputs.failed == 'true'
         env:
