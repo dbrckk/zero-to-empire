@@ -1,10 +1,38 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "bf1b75f09d26a677e0aa7f719036b4de7641bfd1",
-  "head": "38ffd719dc9cd934fdef1b242d7dcee21acb39fd",
+  "base": "38ffd719dc9cd934fdef1b242d7dcee21acb39fd",
+  "head": "b40560bd4b864b1d029b31b0af48852596ca16f5",
   "index_mode": "incremental",
   "changed_files": [
+    {
+      "path": ".github/workflows/asset-autofactory.yml",
+      "status": "M"
+    },
+    {
+      "path": ".github/workflows/kaggle-async-character-collector.yml",
+      "status": "A"
+    },
+    {
+      "path": ".github/workflows/kaggle-mass-sprite-factory.yml",
+      "status": "M"
+    },
+    {
+      "path": ".github/workflows/promote-approved-kaggle-characters.yml",
+      "status": "A"
+    },
+    {
+      "path": "PROJECT_CONTINUITY.md",
+      "status": "M"
+    },
+    {
+      "path": "app/src/main/res/drawable-nodpi/zte_chr_op_idle_final.webp",
+      "status": "M"
+    },
+    {
+      "path": "art/incoming/final-sprites/zte_chr_op_idle_final.png",
+      "status": "M"
+    },
     {
       "path": "art/production/autofactory-state.json",
       "status": "M"
@@ -16,10 +44,457 @@
     {
       "path": "art/production/character-strict-review-backlog.md",
       "status": "M"
+    },
+    {
+      "path": "art/production/controlled-character-regen-queue.json",
+      "status": "M"
+    },
+    {
+      "path": "art/production/generation-rejection-ledger.json",
+      "status": "M"
+    },
+    {
+      "path": "art/production/kaggle-async-state.json",
+      "status": "A"
+    },
+    {
+      "path": "art/production/master-asset-queue.json",
+      "status": "M"
+    },
+    {
+      "path": "art/production/zte_chr_op_idle_final-runtime-qa.json",
+      "status": "M"
+    },
+    {
+      "path": "ops/autofactory-kick.txt",
+      "status": "M"
+    },
+    {
+      "path": "ops/kaggle-collector-trigger.txt",
+      "status": "A"
+    },
+    {
+      "path": "ops/promote-kaggle-trigger.txt",
+      "status": "A"
+    },
+    {
+      "path": "ops/sprite-wave-trigger.txt",
+      "status": "M"
+    },
+    {
+      "path": "tools/assets/test_pollinations_character_qa.py",
+      "status": "A"
+    },
+    {
+      "path": "tools/assets/test_queue_state_policy.py",
+      "status": "M"
+    },
+    {
+      "path": "tools/assets/test_workflow_policy.py",
+      "status": "M"
+    },
+    {
+      "path": "tools/sprites/asset_queue_utils.py",
+      "status": "M"
+    },
+    {
+      "path": "tools/sprites/asset_wave_orchestrator.py",
+      "status": "M"
+    },
+    {
+      "path": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "status": "M"
+    },
+    {
+      "path": "tools/sprites/pollinations_character_sheet_factory.py",
+      "status": "M"
     }
   ],
-  "changed_source_files": [],
-  "impacted_files": [],
-  "impacted_symbols": [],
+  "changed_source_files": [
+    "tools/sprites/asset_queue_utils.py",
+    "tools/sprites/asset_wave_orchestrator.py",
+    "tools/sprites/kaggle_character_sheet_factory_v1.py",
+    "tools/sprites/pollinations_character_sheet_factory.py"
+  ],
+  "impacted_files": [
+    "tools/sprites/asset_queue_utils.py",
+    "tools/sprites/asset_wave_orchestrator.py",
+    "tools/sprites/kaggle_character_sheet_factory_v1.py",
+    "tools/sprites/pollinations_character_sheet_factory.py"
+  ],
+  "impacted_symbols": [
+    {
+      "name": "load_json",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 43
+    },
+    {
+      "name": "save_json",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 49
+    },
+    {
+      "name": "manifest_rows",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 54
+    },
+    {
+      "name": "unresolved_ids",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 77
+    },
+    {
+      "name": "default_asset",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 84
+    },
+    {
+      "name": "ensure_master",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 116
+    },
+    {
+      "name": "sync_controlled_queues",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 157
+    },
+    {
+      "name": "stats",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 210
+    },
+    {
+      "name": "write_summary",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 237
+    },
+    {
+      "name": "by_id",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 54
+    },
+    {
+      "name": "mirror_character_outcomes_from_controlled",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 58
+    },
+    {
+      "name": "update_from_trigger",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 83
+    },
+    {
+      "name": "active_pending",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 153
+    },
+    {
+      "name": "character_retry_available",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 158
+    },
+    {
+      "name": "mark_dispatch",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 181
+    },
+    {
+      "name": "prioritize_controlled_character_targets",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 214
+    },
+    {
+      "name": "building_family_ids",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 225
+    },
+    {
+      "name": "prepare_building_group",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 229
+    },
+    {
+      "name": "prepare_character_burst",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 240
+    },
+    {
+      "name": "next_group",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 285
+    },
+    {
+      "name": "close_exhausted_character_dispatches",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 304
+    },
+    {
+      "name": "pending_ids_from_controlled",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 325
+    },
+    {
+      "name": "make_decision",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 342
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 406
+    },
+    {
+      "name": "rows",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 58
+    },
+    {
+      "name": "rejection_hints",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 94
+    },
+    {
+      "name": "anchor_prompt_pair",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 119
+    },
+    {
+      "name": "prompt_pair",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 135
+    },
+    {
+      "name": "retry_mode",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 170
+    },
+    {
+      "name": "load_encode",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 177
+    },
+    {
+      "name": "load_render",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 182
+    },
+    {
+      "name": "border_bg",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 189
+    },
+    {
+      "name": "isolate",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 198
+    },
+    {
+      "name": "dist",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 202
+    },
+    {
+      "name": "validate_source_full_body",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 217
+    },
+    {
+      "name": "finish_frame",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 227
+    },
+    {
+      "name": "alpha_iou",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 244
+    },
+    {
+      "name": "sheet_qa",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 253
+    },
+    {
+      "name": "lower_body_motion",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 266
+    },
+    {
+      "name": "action_qa",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 283
+    },
+    {
+      "name": "appearance_signature",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 299
+    },
+    {
+      "name": "appearance_distance",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 313
+    },
+    {
+      "name": "make_sheet",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 316
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 324
+    },
+    {
+      "name": "pending",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 32
+    },
+    {
+      "name": "mark_queue",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 64
+    },
+    {
+      "name": "fetch",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 80
+    },
+    {
+      "name": "validate_source_full_body",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 102
+    },
+    {
+      "name": "cutout",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 119
+    },
+    {
+      "name": "iou",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 163
+    },
+    {
+      "name": "lower_body_motion",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 173
+    },
+    {
+      "name": "actionqa",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 192
+    },
+    {
+      "name": "appearance_hist",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 208
+    },
+    {
+      "name": "hist_similarity",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 220
+    },
+    {
+      "name": "sheetqa",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 224
+    },
+    {
+      "name": "sheet_prompt",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 247
+    },
+    {
+      "name": "repair_frame_prompt",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 272
+    },
+    {
+      "name": "walk_frame_prompt",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 283
+    },
+    {
+      "name": "generate_walk_frames",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 295
+    },
+    {
+      "name": "generate_repair_frames",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 320
+    },
+    {
+      "name": "extract_frames",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 345
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 357
+    }
+  ],
   "selected_tests": []
 }

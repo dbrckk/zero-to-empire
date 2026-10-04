@@ -1,13 +1,21 @@
 # Change impact
 
-Base: 9d90d3ccdf7ae1dff02d1e82f3826d83f6a2e117
-Head: 38ffd719dc9cd934fdef1b242d7dcee21acb39fd
+Base: 7452f26edcd4cf008a93d17de531a59ffe7801ee
+Head: b40560bd4b864b1d029b31b0af48852596ca16f5
 
 ## Changed files
+- M .github/workflows/promote-approved-kaggle-characters.yml
 - M art/production/character-strict-review-backlog.md
+- M art/production/generation-rejection-ledger.json
+- M art/production/master-asset-queue.json
+- M ops/promote-kaggle-trigger.txt
+- M tools/assets/test_workflow_policy.py
 
 ## Affected areas
+- .github
 - art
+- ops
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

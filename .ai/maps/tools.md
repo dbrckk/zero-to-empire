@@ -892,6 +892,7 @@ status = str(item.get("status", "")).upper()
 cq = load_json(CHARACTER_QUEUE, {}) or {}
 ⋮----
 pollinations_only = status in {"PENDING_POLLINATIONS", "PROVIDER_ERROR"}
+normalized_status = "REJECTED_SEMANTIC" if status in {"REJECTED", "REJECTED_SEMANTIC"} else status
 ⋮----
 def stats(queue: dict[str, Any]) -> dict[str, Any]
 ⋮----
@@ -924,8 +925,9 @@ TRIGGER_DISPATCH_TOKEN = os.getenv("AUTOF_TRIGGER_DISPATCH_TOKEN", "")
 CURRENT_DISPATCH_TOKEN = os.getenv("GITHUB_RUN_ID", "")
 KAGGLE_BUSY = os.getenv("AUTOF_KAGGLE_BUSY", "0") == "1"
 FX_BUSY = os.getenv("AUTOF_FX_BUSY", "0") == "1"
-CHARACTER_GENERATION_EPOCH = "identity-lock-v1.8"
-CHARACTER_EPOCH_ATTEMPT_LIMIT = 2
+CHARACTER_GENERATION_EPOCH = "identity-lock-v1.10"
+CHARACTER_EPOCH_ATTEMPT_LIMIT = 3
+CHARACTER_BATCH_SIZE = 12
 INFRA_FAILURE_LIMIT = 3
 ⋮----
 # A character in one of these states already has a produced candidate/evidence.
@@ -933,6 +935,14 @@ INFRA_FAILURE_LIMIT = 3
 CHARACTER_PRODUCED_STATUSES = {
 ⋮----
 def by_id(queue: dict[str, Any]) -> dict[str, dict[str, Any]]
+⋮----
+def mirror_character_outcomes_from_controlled(queue: dict[str, Any], active: list[dict[str, Any]]) -> None
+⋮----
+controlled = load_json(CHARACTER_QUEUE, {}) or {}
+outcomes = {
+reasons = {
+⋮----
+status = outcomes.get(asset["id"])
 ⋮----
 def update_from_trigger(queue: dict[str, Any]) -> None
 ⋮----
@@ -955,6 +965,14 @@ q = load_json(path, {}) or {}
 ⋮----
 def character_retry_available(asset: dict[str, Any]) -> bool
 ⋮----
+status = str(asset.get("pipeline_status", "")).upper()
+⋮----
+current_epoch = asset.get("generation_epoch") == CHARACTER_GENERATION_EPOCH
+current_error = str(asset.get("last_error") or "")
+⋮----
+# A new generation epoch is an explicit algorithm/prompt change. Historical
+# semantic attempts must not consume the new epoch's retry budget.
+⋮----
 total_attempts = int(asset.get("attempts") or 0)
 ⋮----
 legacy_failure = "Legacy APK character sheet rejected" in str(asset.get("last_error") or "")
@@ -970,6 +988,13 @@ x = assets.get(aid)
 ⋮----
 attempts = int(x.get("attempts") or 0)
 ⋮----
+def prioritize_controlled_character_targets(ids: list[str]) -> None
+⋮----
+"""Keep exact dispatched assets first so Kaggle --count matches dispatch state."""
+selected = set(ids)
+⋮----
+targets = controlled.get("targets", [])
+⋮----
 def building_family_ids(group: str) -> list[str]
 ⋮----
 def prepare_building_group(queue: dict[str, Any], group: str) -> dict[str, Any]
@@ -980,13 +1005,18 @@ targets = [{"id": aid, "status": "PENDING_KAGGLE", "autofactory_context_only": a
 ⋮----
 dispatched = mark_dispatch(queue, unresolved, "kaggle-building-family")
 ⋮----
-def prepare_character_group(queue: dict[str, Any], group: str) -> dict[str, Any]
+def prepare_character_burst(queue: dict[str, Any], groups: list[str]) -> dict[str, Any]
 ⋮----
 action_order = {"IDLE": 0, "WALK": 1, "WORK": 2, "CARRY": 3, "REPAIR": 4, "CELEB": 5}
-group_assets = sorted(
 targets = []
+selected_groups = []
 ⋮----
-dispatched = mark_dispatch(queue, [x["id"] for x in targets[:2]], "kaggle-character-sheet")
+group_assets = sorted(
+group_targets = []
+⋮----
+row = {"id": x["id"], "status": "PENDING_KAGGLE"}
+⋮----
+dispatched = mark_dispatch(queue, [x["id"] for x in targets], "kaggle-character-sheet")
 ⋮----
 def next_group(queue: dict[str, Any], lane: str, priority: list[str]) -> str | None
 ⋮----
@@ -995,7 +1025,6 @@ groups = {
 def close_exhausted_character_dispatches(queue: dict[str, Any]) -> None
 ⋮----
 master = by_id(queue)
-controlled = load_json(CHARACTER_QUEUE, {}) or {}
 ⋮----
 asset = master.get(aid)
 ⋮----
@@ -1017,11 +1046,15 @@ prepared = prepare_building_group(queue, group)
 ⋮----
 character_pending = pending_ids_from_controlled(CHARACTER_QUEUE, queue)
 ⋮----
-ids = mark_dispatch(queue, character_pending[:2], "kaggle-character-sheet")
+ids = mark_dispatch(queue, character_pending[:CHARACTER_BATCH_SIZE], "kaggle-character-sheet")
 ⋮----
-group = next_group(queue, "kaggle-character-sheet", CHARACTER_PRIORITY)
+first_group = next_group(queue, "kaggle-character-sheet", CHARACTER_PRIORITY)
 ⋮----
-prepared = prepare_character_group(queue, group)
+candidate_groups = [
+ordered = [first_group] + [g for g in candidate_groups if g != first_group]
+burst_groups = ordered[:3]
+⋮----
+prepared = prepare_character_burst(queue, burst_groups)
 ⋮----
 fx = [x for x in queue["assets"] if x["lane"] == "fx-runtime-reconciliation" and x["strict_status"] != "DONE" and x["pipeline_status"] == "PENDING_EVIDENCE" and int(x.get("attempts") or 0) < MAX_ATTEMPTS]
 ⋮----
@@ -1030,6 +1063,9 @@ refreshed = stats(queue)
 def main() -> int
 ⋮----
 queue = ensure_master()
+# Apply the producer callback while dispatched assets and their ownership
+# token are still intact. Controlled-queue sync can otherwise change the
+# master status first and make the correlated callback miss its assets.
 ⋮----
 decision = make_decision(queue)
 ```
@@ -2760,6 +2796,7 @@ ROW=re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`
 CHR=re.compile(r'^CHR-(OP|TECH|LOG|ENG)-(IDLE|WALK|WORK|CARRY|REPAIR|CELEB)$')
 ROLE={
 ACTION={
+ACTION_SEMANTIC={
 POSE_HINT={
 ⋮----
 def rows()
@@ -2781,22 +2818,39 @@ hints=[]
 ⋮----
 data=json.loads(REJECTION_LEDGER.read_text(encoding='utf-8'))
 ⋮----
+exact=str(row.get('id','')).upper()
 prefix=str(row.get('target_prefix','')).upper()
 role=str(row.get('role','')).upper()
+action=str(row.get('action','')).upper()
+⋮----
+matched=exact==i['id']
+⋮----
+matched=i['id'].startswith(prefix)
+⋮----
+matched=bool(role and role==i['role'] and (not action or action==i['action']))
 ⋮----
 hint=str(row.get('prompt_hint','')).strip()
 ⋮----
 merged=' '.join(hints[-2:])
 words=merged.split()
 ⋮----
+def anchor_prompt_pair(role)
+⋮----
+role_short={
+core=f"2.5D game sprite, one {role_short}, full body, three-quarter view, neutral relaxed stance, isolated"
+detail=(
+⋮----
 def prompt_pair(i,pose,mode='default')
 ⋮----
 # Keep CLIP deliberately tiny: tokenizer expansion makes word-count estimates
 # optimistic. T5 carries the descriptive detail and rejection-memory hints.
 role=i['role'];action=i['action']
-role_short={
-core=(f"stylized 2.5D game sprite, one {role_short}, full body, "
 ⋮----
+core=(f"2.5D game sprite, one {role_short}, full body, "
+⋮----
+core_words=core.split()
+⋮----
+core=' '.join(core_words[:42])
 detail=(f"AAA stylized painterly 2.5D mobile game character. {ROLE[role]}. "
 ⋮----
 def retry_mode(reason,attempt)
@@ -2834,14 +2888,21 @@ mask=Image.new('L',(w,h),255);mp=mask.load()
 ⋮----
 mask=mask.filter(ImageFilter.GaussianBlur(.65));out=rgb.convert('RGBA');out.putalpha(mask)
 ⋮----
-def finish_frame(raw)
+def validate_source_full_body(bb,w,h,action)
+⋮----
+left,top,right,bottom=bb;cw=max(0,right-left);ch=max(0,bottom-top)
+⋮----
+edge=max(8,round(h*.018))
+⋮----
+min_ratio=.42 if action=='REPAIR' else .55
+⋮----
+def finish_frame(raw,action)
 ⋮----
 m=isolate(raw);a=m.getchannel('A');bb=a.getbbox()
 ⋮----
 w,h=m.size;pad=max(8,w//40)
 ⋮----
 crop=m.crop(bb);cw,ch=crop.size
-⋮----
 # Two side-by-side people produce an abnormally wide full-body silhouette.
 # Allow wide action poses/gear up to 1.08; downstream identity/coverage QA still rejects real duplicates.
 # Reject before resizing so technical QA cannot normalize a multi-person frame into a valid-looking cell.
@@ -2890,7 +2951,7 @@ mean_change=(sum(1-x for x in ious)/len(ious)) if ious else 0.0
 ⋮----
 motion=lower_body_motion(frames)
 ⋮----
-floors={'WORK':.075,'CARRY':.10,'REPAIR':.075,'CELEB':.09,'IDLE':.025}
+floors={'WORK':.10,'CARRY':.12,'REPAIR':.09,'CELEB':.10,'IDLE':.025}
 floor=floors.get(action,.05)
 ⋮----
 def appearance_signature(cell)
@@ -2919,13 +2980,18 @@ def main()
 ap=argparse.ArgumentParser();ap.add_argument('--count',type=int,default=8);ap.add_argument('--seed',type=int,default=19417);args=ap.parse_args()
 items=rows()[:max(1,args.count)];print('KAGGLE_CHARACTER_PLAN='+','.join(i['id'] for i in items),flush=True)
 ⋮----
-encs={};t,enc=load_encode()
+encs={};anchor_encs={};t,enc=load_encode()
+roles=[]
 ⋮----
 hints=POSE_HINT[i['action']][:ACTION[i['action']][1]]
 ⋮----
 variants={}
 ⋮----
 del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();report=[];role_anchor={};role_reference_cell={}
+⋮----
+gen_anchor=torch.Generator(device='cuda').manual_seed(args.seed+700000+ri*50000)
+⋮----
+raw=base(height=1024,width=1024,num_inference_steps=6,guidance_scale=0,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),output_type='pil',generator=gen_anchor).images[0]
 ⋮----
 frames=[];anchor_raw=None;fail=None;retry_reasons=[]
 ⋮----
@@ -2935,27 +3001,32 @@ mode=retry_mode(last_reason,attempt)
 ⋮----
 gen=torch.Generator(device='cuda').manual_seed(args.seed+idx*10000+fi*211+attempt*7919)
 ⋮----
-shared=role_anchor.get(i['role'])
+shared=role_anchor[i['role']]
 ⋮----
-raw=base(height=1024,width=1024,num_inference_steps=5,guidance_scale=0,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),output_type='pil',generator=gen).images[0]
-anchor_raw=raw.convert('RGB')
+first_strength={
 ⋮----
-# Start every later animation for this role from the exact same person.
-# Moderate img2img freedom changes pose while preserving face/headgear/clothes.
-strength=(min(.68,.60+attempt*.035) if i['action']=='WALK' else min(.44,.32+attempt*.03))
-if mode=='identity' and i['action']!='WALK':strength=max(.28,strength-.04)
+strength=min(first_strength[2],first_strength[0]+attempt*first_strength[1])
+⋮----
+if mode=='identity' and i['action']!='WALK':strength=max(.26,strength-.035)
+⋮----
 raw=img(image=shared,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=6,guidance_scale=0,output_type='pil',generator=gen).images[0]
 ⋮----
-strength=min(.78,.66+fi*.014+attempt*.03)
+anchor_raw=raw.convert('RGB')
 ⋮----
-strength=min(.68,.48+fi*.018+attempt*.035)
+strength=min(.64,.50+fi*.012+attempt*.02)
 ⋮----
-strength=min(.62,.43+fi*.016+attempt*.035)
+strength=min(.72,.54+fi*.018+attempt*.025)
 ⋮----
-strength=min(.48,.29+fi*.015+attempt*.025)
+strength=min(.78,.62+fi*.018+attempt*.025)
+⋮----
+strength=min(.76,.58+fi*.018+attempt*.03)
+⋮----
+strength=min(.76,.56+fi*.018+attempt*.03)
+⋮----
+strength=min(.38,.24+fi*.012+attempt*.02)
 if mode in {'single','identity'} and i['action']!='WALK':strength=max(.24,strength-.035)
 raw=img(image=anchor_raw,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=6,guidance_scale=0,output_type='pil',generator=gen).images[0]
-frame,cov=finish_frame(raw);frames.append(frame);ok=True;print(f"KAGGLE_CHR_FRAME={i['id']} frame={fi} attempt={attempt+1} mode={mode} cov={cov:.2f}",flush=True);break
+frame,cov=finish_frame(raw,i['action']);frames.append(frame);ok=True;print(f"KAGGLE_CHR_FRAME={i['id']} frame={fi} attempt={attempt+1} mode={mode} cov={cov:.2f}",flush=True);break
 ⋮----
 last_reason=str(e);retry_reasons.append(last_reason);print(f"KAGGLE_CHR_RETRY={i['id']} frame={fi} attempt={attempt+1} mode={mode} reason={e}",flush=True)
 if not ok:fail=f'frame-{fi}-failed';break
@@ -3825,6 +3896,16 @@ p=Path('/tmp')/f'chr-sheet-{s}.png'
 ⋮----
 last=e
 ⋮----
+def validate_source_full_body(bb,w,h,action=None,standalone=False)
+⋮----
+cw=max(0,right-left); ch=max(0,bottom-top)
+⋮----
+# Cropped head/torso fragments were historically normalized into plausible
+# 256px cells. Reject source crops before resizing can hide the defect.
+edge=max(4,round(h*.018))
+⋮----
+min_height=.65 if standalone else (.42 if action=='REPAIR' else .55)
+⋮----
 def cutout(raw, action=None, standalone=False)
 ⋮----
 im=remove(raw,alpha_matting=False).convert('RGBA')
@@ -3842,9 +3923,6 @@ src=im.load(); dst=clean.load()
 bb=clean.getchannel('A').getbbox()
 ⋮----
 crop=clean.crop(bb); cw,ch=crop.size
-# REPAIR poses can be crouched/leaning and legitimately wider because of
-# arms/tools. Preserve full-body protection using source-cell margins
-# instead of a standing-character aspect-ratio assumption.
 ⋮----
 s=min(176/cw,218/ch)
 crop=crop.resize((max(1,round(cw*s)),max(1,round(ch*s))),Image.Resampling.LANCZOS)
@@ -3884,6 +3962,9 @@ mean_change=(sum(1-x for x in vals)/len(vals)) if vals else 0.0
 ⋮----
 motion=lower_body_motion(frames)
 ⋮----
+floors={'WORK':.10,'CARRY':.12,'REPAIR':.09,'CELEB':.10,'IDLE':.025}
+floor=floors.get(action,.05)
+⋮----
 def appearance_hist(frame)
 ⋮----
 # Coarse foreground RGB histogram: catches role/wardrobe/identity drift that
@@ -3900,7 +3981,7 @@ def sheetqa(frames)
 h0=appearance_hist(frames[0])
 sims=[hist_similarity(h0,appearance_hist(f)) for f in frames[1:]]
 ⋮----
-bad=[n+1 for n,v in enumerate(sims) if v<.48]
+bad=[n+1 for n,v in enumerate(sims) if v<.58]
 ⋮----
 bottoms=[]; centers=[]
 ⋮----

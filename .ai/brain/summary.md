@@ -2,10 +2,10 @@
 
 - Index mode: incremental
 - Files indexed: 212
-- Files reparsed this run: 0
-- Symbols: 1016
+- Files reparsed this run: 4
+- Symbols: 1021
 - Internal import edges: 4
-- Impacted files: 0
+- Impacted files: 4
 - Selected tests: 0
 
 ## Languages
@@ -16,20 +16,20 @@
 - app/src/main/java/com/zerotoempire/game/GameViewModel.kt: 40 symbols
 - app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt: 25 symbols
 - app/src/main/java/com/zerotoempire/game/Monetization.kt: 23 symbols
+- tools/sprites/kaggle_character_sheet_factory_v1.py: 20 symbols
 - tools/sprites/hf_sprite_factory.py: 18 symbols
 - tools/sprites/kaggle_building_family_factory_v13.py: 18 symbols
-- tools/sprites/kaggle_character_sheet_factory_v1.py: 18 symbols
+- tools/sprites/pollinations_character_sheet_factory.py: 18 symbols
 - app/src/main/java/com/zerotoempire/game/AdaptiveMusic.kt: 17 symbols
 - tools/sprites/kaggle_building_family_factory.py: 17 symbols
 - tools/sprites/kaggle_building_family_factory_v11.py: 17 symbols
 - tools/sprites/kaggle_building_family_factory_v14.py: 17 symbols
-- tools/sprites/pollinations_character_sheet_factory.py: 17 symbols
 - app/src/main/java/com/zerotoempire/game/BillingDiagnostics.kt: 16 symbols
 - app/src/main/java/com/zerotoempire/game/IdentitySystems.kt: 15 symbols
+- tools/sprites/asset_wave_orchestrator.py: 15 symbols
 - app/src/main/java/com/zerotoempire/game/GameFeel.kt: 14 symbols
 - app/src/main/java/com/zerotoempire/game/GrowthTelemetry.kt: 14 symbols
 - app/src/main/java/com/zerotoempire/game/PremiumSfx.kt: 13 symbols
-- tools/sprites/asset_wave_orchestrator.py: 13 symbols
 - app/src/main/java/com/zerotoempire/game/Analytics.kt: 12 symbols
 - app/src/test/java/com/zerotoempire/game/PurchaseRecoveryTest.kt: 12 symbols
 - kaggle/github_mass_factory.py: 12 symbols
@@ -43,10 +43,10 @@
 ## ast-grep enrichment
 - ast-grep outline: available
 - AST index mode: incremental
-- AST files reparsed this run: 0
-- outline files retained: 218
-- top-level items retained: 3066
-- direct members retained: 680
+- AST files reparsed this run: 4
+- outline files retained: 217
+- top-level items retained: 3069
+- direct members retained: 676
 - symbol shards: 26
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard
 

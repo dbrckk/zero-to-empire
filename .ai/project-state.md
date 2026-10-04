@@ -22,22 +22,28 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T19:39:04Z
+Generated: 2026-10-04T06:04:22Z
 
 ### Git
 - Branch: `main`
-- Head: `38ffd719dc9c`
-- Commit date: 2026-10-03T21:38:52+02:00
-- Commit: docs(art): sync strict review backlog
-- Tracked files: 1438
+- Head: `b40560bd4b86`
+- Commit date: 2026-10-04T08:03:56+02:00
+- Commit: art: review v1.10 TECH LOG batch and promote technician idle
+- Tracked files: 1445
 
 ### Recently changed files
+- `.github/workflows/promote-approved-kaggle-characters.yml`
 - `art/production/character-strict-review-backlog.md`
+- `art/production/generation-rejection-ledger.json`
+- `art/production/master-asset-queue.json`
+- `ops/promote-kaggle-trigger.txt`
+- `tools/assets/test_workflow_policy.py`
+- `art/production/kaggle-async-state.json`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
-- `ops/sprite-wave-trigger.txt`
-- `tools/sprites/kaggle_character_sheet_factory_v1.py`
-- `kaggle/github_mass_factory.py`
+- `art/production/controlled-character-regen-queue.json`
+- `.github/workflows/kaggle-async-character-collector.yml`
+- `ops/kaggle-collector-trigger.txt`
 
 ### Project signals
 - `build.gradle.kts`
