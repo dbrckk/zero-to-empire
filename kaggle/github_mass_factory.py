@@ -87,11 +87,18 @@ def resolve_source():
  for base in roots:
   if not base.exists():continue
   candidates=[base]
-  try:candidates.extend(p for p in base.iterdir() if p.is_dir())
-  except Exception:pass
-  try:candidates.extend(p for p in base.glob('*/*') if p.is_dir())
-  except Exception:pass
+  try:candidates.extend(p for p in base.glob('**/repo_bundle') if p.is_dir())
+  except Exception as e:print(f'KAGGLE_TREE_SCAN_SKIP={base}:{e}',flush=True)
+  try:
+   for manifest in base.glob('**/docs/art/FINAL_AAA_SPRITE_MANIFEST.md'):
+    candidate=manifest.parents[2]
+    if candidate.is_dir():candidates.append(candidate)
+  except Exception as e:print(f'KAGGLE_MANIFEST_SCAN_SKIP={base}:{e}',flush=True)
+  seen=set()
   for candidate in candidates:
+   key=str(candidate)
+   if key in seen:continue
+   seen.add(key)
    if valid_tree(candidate):
     print(f'KAGGLE_BUNDLE_TREE_FALLBACK={candidate}',flush=True);return 'tree',candidate
  for root in roots:

@@ -91,6 +91,11 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("candidate_dir.glob('*_final.png')", text)
         self.assertIn("ops/kaggle-collector-trigger.txt", text)
 
+    def test_kaggle_bundle_tree_fallback_finds_nested_repo_bundle(self):
+        text = Path("kaggle/github_mass_factory.py").read_text(encoding="utf-8")
+        self.assertIn("base.glob('**/repo_bundle')", text)
+        self.assertIn("base.glob('**/docs/art/FINAL_AAA_SPRITE_MANIFEST.md')", text)
+        self.assertIn("KAGGLE_BUNDLE_TREE_FALLBACK=", text)
     def test_async_character_wave_reuses_dataset_with_inline_queue_overlay(self):
         mass = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
         factory = Path("kaggle/github_mass_factory.py").read_text(encoding="utf-8")
