@@ -22,16 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-04T10:12:20Z
+Generated: 2026-10-04T11:00:43Z
 
 ### Git
 - Branch: `main`
-- Head: `677ded6c69cb`
-- Commit date: 2026-10-04T12:12:03+02:00
-- Commit: fix(art): restore v1.11 retries after pre-generation infra failures
+- Head: `48e208172408`
+- Commit date: 2026-10-04T13:00:22+02:00
+- Commit: perf(art): persist semantic scaffolds across character frames
 - Tracked files: 1445
 
 ### Recently changed files
+- `tools/assets/test_queue_state_policy.py`
+- `tools/assets/test_workflow_policy.py`
+- `tools/sprites/asset_queue_utils.py`
+- `tools/sprites/asset_wave_orchestrator.py`
+- `tools/sprites/kaggle_character_sheet_factory_v1.py`
 - `art/production/character-strict-review-backlog.md`
 - `art/production/master-asset-queue.json`
 - `art/production/kaggle-async-state.json`
@@ -39,8 +44,6 @@ Generated: 2026-10-04T10:12:20Z
 - `art/production/autofactory-summary.md`
 - `.github/workflows/kaggle-mass-sprite-factory.yml`
 - `ops/sprite-wave-trigger.txt`
-- `tools/assets/test_workflow_policy.py`
-- `kaggle/github_mass_factory.py`
 
 ### Project signals
 - `build.gradle.kts`

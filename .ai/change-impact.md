@@ -1,14 +1,17 @@
 # Change impact
 
-Base: 5fc2303c77e7c18e329c365f8e71342fe9cb0f80
-Head: 677ded6c69cb427bd9d3d2ba4d9e4fd106bb5dd8
+Base: 28e1d20f56a5a9aadb64010a4cc8bd2ee93889ac
+Head: 48e208172408da9752600d5acbb1679173bd5256
 
 ## Changed files
-- M art/production/character-strict-review-backlog.md
-- M art/production/master-asset-queue.json
+- M tools/assets/test_queue_state_policy.py
+- M tools/assets/test_workflow_policy.py
+- M tools/sprites/asset_queue_utils.py
+- M tools/sprites/asset_wave_orchestrator.py
+- M tools/sprites/kaggle_character_sheet_factory_v1.py
 
 ## Affected areas
-- art
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

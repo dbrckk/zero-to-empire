@@ -24875,7 +24875,7 @@ def test_character_batch_size_supports_multi_role_burst(self) -> None
 ⋮----
 def test_character_epoch_allows_three_informed_attempts(self) -> None
 ⋮----
-def test_character_epoch_is_v111_semantic_scaffold(self) -> None
+def test_character_epoch_is_v112_persistent_semantic_scaffold(self) -> None
 ⋮----
 def test_new_epoch_reopens_semantic_reject_even_with_high_legacy_attempts(self) -> None
 ⋮----
@@ -24995,6 +24995,7 @@ text = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(enco
 ⋮----
 def test_kaggle_character_generator_has_clean_main_tail(self)
 ⋮----
+def test_kaggle_character_generator_reapplies_scaffold_each_frame(self)
 def test_kaggle_character_generator_adds_semantic_scaffolds_for_hard_actions(self)
 ⋮----
 def test_kaggle_character_generator_uses_neutral_role_anchor(self)
@@ -25172,7 +25173,7 @@ TRIGGER_DISPATCH_TOKEN = os.getenv("AUTOF_TRIGGER_DISPATCH_TOKEN", "")
 CURRENT_DISPATCH_TOKEN = os.getenv("GITHUB_RUN_ID", "")
 KAGGLE_BUSY = os.getenv("AUTOF_KAGGLE_BUSY", "0") == "1"
 FX_BUSY = os.getenv("AUTOF_FX_BUSY", "0") == "1"
-CHARACTER_GENERATION_EPOCH = "identity-lock-v1.11"
+CHARACTER_GENERATION_EPOCH = "identity-lock-v1.12"
 CHARACTER_EPOCH_ATTEMPT_LIMIT = 3
 CHARACTER_BATCH_SIZE = 12
 INFRA_FAILURE_LIMIT = 3
@@ -27279,7 +27280,8 @@ strength=min(.76,.56+fi*.018+attempt*.03)
 ⋮----
 strength=min(.38,.24+fi*.012+attempt*.02)
 if mode in {'single','identity'} and i['action']!='WALK':strength=max(.24,strength-.035)
-raw=img(image=anchor_raw,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=6,guidance_scale=0,output_type='pil',generator=gen).images[0]
+source=semantic_scaffold(anchor_raw,i['action'])
+⋮----
 frame,cov=finish_frame(raw,i['action']);frames.append(frame);ok=True;print(f"KAGGLE_CHR_FRAME={i['id']} frame={fi} attempt={attempt+1} mode={mode} cov={cov:.2f}",flush=True);break
 ⋮----
 last_reason=str(e);retry_reasons.append(last_reason);print(f"KAGGLE_CHR_RETRY={i['id']} frame={fi} attempt={attempt+1} mode={mode} reason={e}",flush=True)
