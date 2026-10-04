@@ -22,26 +22,25 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-04T10:05:08Z
+Generated: 2026-10-04T10:12:20Z
 
 ### Git
 - Branch: `main`
-- Head: `a2f1baaf9977`
-- Commit date: 2026-10-04T12:04:52+02:00
-- Commit: fix(art): discover nested Kaggle repo bundle trees
+- Head: `677ded6c69cb`
+- Commit date: 2026-10-04T12:12:03+02:00
+- Commit: fix(art): restore v1.11 retries after pre-generation infra failures
 - Tracked files: 1445
 
 ### Recently changed files
-- `kaggle/github_mass_factory.py`
-- `ops/sprite-wave-trigger.txt`
-- `tools/assets/test_workflow_policy.py`
+- `art/production/character-strict-review-backlog.md`
+- `art/production/master-asset-queue.json`
 - `art/production/kaggle-async-state.json`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
-- `art/production/controlled-character-regen-queue.json`
-- `art/production/master-asset-queue.json`
-- `.github/workflows/kaggle-async-character-collector.yml`
-- `ops/kaggle-collector-trigger.txt`
+- `.github/workflows/kaggle-mass-sprite-factory.yml`
+- `ops/sprite-wave-trigger.txt`
+- `tools/assets/test_workflow_policy.py`
+- `kaggle/github_mass_factory.py`
 
 ### Project signals
 - `build.gradle.kts`

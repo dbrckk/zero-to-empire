@@ -2708,11 +2708,15 @@ jobs:
         run: |
           set -euo pipefail
           python - <<'PY' >> "$GITHUB_ENV"
-          import os,re
+          import hashlib,os,re
+          from pathlib import Path
           async_mode=os.environ.get('ASYNC_SUBMIT','false').lower()=='true'
           token=os.environ.get('DISPATCH_TOKEN','').strip() or os.environ.get('GITHUB_RUN_ID','wave')
-          token=re.sub(r'[^a-z0-9-]+','-',token.lower()).strip('-')[:32] or 'wave'
-          slug=f'zero-to-empire-sprite-factory-{token}' if async_mode else 'zero-to-empire-sprite-factory'
+          token=re.sub(r'[^a-z0-9-]+','-',token.lower()).strip('-')[:24] or 'wave'
+          generator=Path('tools/sprites/kaggle_character_sheet_factory_v1.py')
+          generator_tag=hashlib.sha256(generator.read_bytes()).hexdigest()[:8]
+          slug=f'zero-to-empire-sprite-factory-{token}-{generator_tag}' if async_mode else 'zero-to-empire-sprite-factory'
+          print('KAGGLE_KERNEL_GENERATOR_TAG='+generator_tag)
           print('KAGGLE_KERNEL_SLUG='+slug)
           print('KAGGLE_KERNEL_FULL='+os.environ['KAGGLE_USERNAME']+'/'+slug)
           PY
@@ -24967,6 +24971,7 @@ def test_async_character_wave_reuses_dataset_with_inline_queue_overlay(self)
 mass = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
 factory = Path("kaggle/github_mass_factory.py").read_text(encoding="utf-8")
 ⋮----
+def test_async_kernel_slug_changes_when_character_generator_changes(self)
 def test_kaggle_kernel_title_resolves_to_requested_slug(self)
 def test_async_collector_captures_failed_kernel_evidence(self)
 def test_async_kaggle_uses_unique_kernel_slug_and_stale_timeout(self)
