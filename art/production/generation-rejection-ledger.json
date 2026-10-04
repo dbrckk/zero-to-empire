@@ -350,6 +350,22 @@
       "source_run_id": 37181577039,
       "reason": "Semantic review 2026-10-04 of late v1.10 async output from run 37181577039: rejected; frames remain mostly static neutral standing with no clear overhead arm-raise celebration and visible identity/headgear variation.",
       "prompt_hint": "Lock one exact LOG identity and camera. Force a clear celebration arc from both arms down to one fist overhead, then a brief high-arm peak and return; preserve the same face, cap/hardhat and clothing every frame."
+    },
+    {
+      "id": "CHR-OP-REPAIR",
+      "role": "OP",
+      "action": "REPAIR",
+      "source_run_id": 37225678575,
+      "reason": "Semantic review 2026-10-04 of v1.12 Kaggle run 37225678575: rejected; face/headgear/body identity drifts across frames, repair objects change from panel to multiple unrelated machines, and no single stable repair point/tool contact is maintained.",
+      "prompt_hint": "Lock one exact OP identity and hardhat. Keep one fixed repair panel in the same screen location and one tool contacting that panel through the entire sequence. Reapply the repair scaffold every frame; prohibit machine redesign and face/headgear changes."
+    },
+    {
+      "id": "CHR-LOG-REPAIR",
+      "role": "LOG",
+      "action": "REPAIR",
+      "source_run_id": 37225678575,
+      "reason": "Semantic review 2026-10-04 of v1.12 Kaggle run 37225678575: rejected; cells behave like front/back turntable pairs with large face/headgear/clothing changes, multiple people per cell appearance, and no coherent repair motion on one stable target.",
+      "prompt_hint": "Lock one exact LOG worker identity, one three-quarter camera and one body orientation. One person only per frame. Keep a fixed repair panel and tool contact across all frames; prohibit front/back turntable compositions and headgear swaps."
     }
   ],
   "last_validation_request": "Identity-lock v1.9 OP full-role regeneration after prompt-budget crash and semantic false-positive review"
