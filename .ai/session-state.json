@@ -1,40 +1,53 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-03",
-  "task": "Recover character sprite production and advance strict DONE safely",
+  "updated_at": "2026-10-04T12:48:00+02:00",
+  "task": "Advance character sprite production to strict 235/235 with semantic review, runtime QA and Android validation",
   "branch": "main",
+  "current_head": "7f95639d045496afad7cf99cd791fd6bef952dc4",
   "state": {
-    "strict_done": 213,
+    "strict_done": 216,
     "target_total": 235,
-    "production_processed": 222,
-    "generation_epoch": "identity-lock-v1.9",
-    "semantic_rejected": [
+    "strict_remaining": 19,
+    "production_processed": 216,
+    "awaiting_review": 0,
+    "generation_epoch": "identity-lock-v1.11",
+    "active_kaggle": {
+      "status": "ACTIVE",
+      "submit_run_id": 37194324774,
+      "dispatch_token": "37194071301",
+      "kernel_slug": "zero-to-empire-sprite-factory-37194071301-6769b119",
+      "last_observed_status": "KernelWorkerStatus.RUNNING",
+      "target_ids": [
+        "CHR-OP-REPAIR",
+        "CHR-LOG-REPAIR",
+        "CHR-LOG-CELEB",
+        "CHR-ENG-IDLE",
+        "CHR-ENG-WALK",
+        "CHR-ENG-WORK",
+        "CHR-ENG-CARRY",
+        "CHR-ENG-REPAIR",
+        "CHR-ENG-CELEB"
+      ]
+    },
+    "next_retry_batch": [
+      "CHR-OP-WALK",
+      "CHR-OP-WORK",
+      "CHR-OP-CARRY",
+      "CHR-OP-CELEB",
       "CHR-TECH-WALK",
       "CHR-TECH-WORK",
       "CHR-TECH-CARRY",
       "CHR-LOG-WALK",
       "CHR-LOG-WORK",
-      "CHR-ENG-WALK",
-      "CHR-ENG-WORK"
-    ]
+      "CHR-LOG-CARRY"
+    ],
+    "blocked_assets": []
   },
-  "next": [
-    "dispatch OP six-action v1.9 wave",
-    "visually review OP output",
-    "regenerate TECH/LOG/ENG semantic rejects",
-    "promote only with semantic/runtime/CI evidence"
-  ],
-  "strict_done": 214,
-  "strict_remaining": 21,
-  "production_processed": 215,
-  "awaiting_review": 1,
-  "last_completed": "Reviewed Kaggle OP v1.9 run 37149965973: OP-IDLE approved for runtime promotion; WALK/WORK/CARRY/REPAIR/CELEB rejected with action-specific evidence.",
+  "last_completed": "Fixed Kaggle async production root causes: nested repo_bundle discovery, unique/versioned kernel slugs, failure evidence capture, and restored retries after pre-generation infrastructure failures. OP-IDLE and TECH-IDLE are strict DONE with runtime/Android evidence.",
   "next_actions": [
-    "Dispatch Promote Approved Kaggle Characters for CHR-OP-IDLE from run 37149965973.",
-    "Inspect TECH+LOG Kaggle burst run 37153361964 when complete.",
-    "After OP-IDLE runtime commit and green Android CI, mark CHR-OP-IDLE strict DONE."
-  ],
-  "current_head": "283f9653d53068a3125c21e2cdaec29eba44d73f",
-  "active_kaggle_run": 37149965973,
-  "active_kaggle_status": "in_progress / Wait for Kaggle / no artifacts yet"
+    "Collect v1.11 kernel 37194324774 when it reaches COMPLETE.",
+    "Visually review every generated atlas action-by-action before any strict promotion.",
+    "Integrate passing candidates into runtime and require Android CI before strict DONE.",
+    "Dispatch all ten remaining retryable character assets as the next v1.11 batch after the active wave completes."
+  ]
 }
