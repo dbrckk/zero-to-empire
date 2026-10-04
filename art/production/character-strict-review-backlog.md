@@ -1,6 +1,6 @@
 # Character strict-review backlog
 
-Generated from art/production/master-asset-queue.json after production completion.
+Generated from `art/production/master-asset-queue.json` after production completion.
 
 - Production processed: **216/235**
 - Strict DONE: **216/235**
@@ -31,4 +31,4 @@ Generated from art/production/master-asset-queue.json after production completio
 
 ## Review rule
 
-A reviewer must inspect identity continuity, full-body framing, role/clothing consistency, action readability, animation motion, and runtime suitability. Only explicit reviewed approvals may change strict_status to DONE.
+A reviewer must inspect identity continuity, full-body framing, role/clothing consistency, action readability, animation motion, and runtime suitability. Only explicit reviewed approvals may change `strict_status` to `DONE`.

@@ -148,7 +148,7 @@ jobs:
           remain=[a for a in q['assets'] if str(a.get('id','')).startswith('CHR-') and a.get('strict_status')!='DONE']
           lines=[
               '# Character strict-review backlog','',
-              'Generated from art/production/master-asset-queue.json after production completion.','',
+              'Generated from `art/production/master-asset-queue.json` after production completion.','',
               f'- Production processed: **{processed}/{q["target_total"]}**',
               f'- Strict DONE: **{strict}/{q["target_total"]}**',
               f'- Semantic review remaining: **{len(remain)}**',
@@ -160,7 +160,7 @@ jobs:
               parts=a['id'].split('-')
               note=str(a.get('review_reason') or 'Semantic review required.').replace('|','/')
               lines.append(f'| {a["id"]} | {parts[1]} | {"-".join(parts[2:])} | {a.get("pipeline_status","")} | {note} |')
-          lines += ['', '## Review rule', '', 'A reviewer must inspect identity continuity, full-body framing, role/clothing consistency, action readability, animation motion, and runtime suitability. Only explicit reviewed approvals may change strict_status to DONE.']
+          lines += ['', '## Review rule', '', 'A reviewer must inspect identity continuity, full-body framing, role/clothing consistency, action readability, animation motion, and runtime suitability. Only explicit reviewed approvals may change `strict_status` to `DONE`.']
           Path('art/production/character-strict-review-backlog.md').write_text('\n'.join(lines)+'\n',encoding='utf-8')
           print(f'PROMOTION_STRICT_DONE={strict}/{q["target_total"]}')
           PY
