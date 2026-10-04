@@ -2165,10 +2165,21 @@ jobs:
           from pathlib import Path
           p=Path('art/production/kaggle-async-state.json')
           d=json.loads(p.read_text()) if p.exists() else {}
+          from datetime import datetime, timezone
           active=str(d.get('status','')).upper()=='ACTIVE'
+          submitted=str(d.get('submitted_at',''))
+          stale=False
+          if active and submitted:
+              try:
+                  ts=datetime.fromisoformat(submitted.replace('Z','+00:00'))
+                  stale=(datetime.now(timezone.utc)-ts).total_seconds() > 150*60
+              except Exception:
+                  stale=False
           print('active='+str(active).lower())
           print('dispatch_token='+str(d.get('dispatch_token','')))
           print('submit_run_id='+str(d.get('submit_run_id','')))
+          print('kernel_slug='+str(d.get('kernel_slug') or 'zero-to-empire-sprite-factory'))
+          print('stale='+str(stale).lower())
           PY
       - name: Install Kaggle CLI
         if: steps.gate.outputs.active == 'true'
@@ -2179,7 +2190,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          status="$(kaggle kernels status "${KAGGLE_USERNAME}/zero-to-empire-sprite-factory" 2>&1 || true)"
+          slug="${KAGGLE_USERNAME}/${{ steps.gate.outputs.kernel_slug }}"
+          status="$(kaggle kernels status "$slug" 2>&1 || true)"
           echo "$status"
           if echo "$status" | grep -qi 'complete'; then
             echo 'ready=true' >> "$GITHUB_OUTPUT"
@@ -2189,13 +2201,19 @@ jobs:
             echo 'failed=true' >> "$GITHUB_OUTPUT"
             exit 0
           fi
+          if [ "${{ steps.gate.outputs.stale }}" = true ] && echo "$status" | grep -Eqi 'RUNNING|QUEUED'; then
+            echo 'failed=true' >> "$GITHUB_OUTPUT"
+            echo 'stale=true' >> "$GITHUB_OUTPUT"
+            echo 'KAGGLE_ASYNC_STALE=1'
+            exit 0
+          fi
           echo 'ready=false' >> "$GITHUB_OUTPUT"
       - name: Download completed output
         if: steps.kernel.outputs.ready == 'true'
         run: |
           rm -rf /tmp/kaggle-output
           mkdir -p /tmp/kaggle-output
-          kaggle kernels output "${KAGGLE_USERNAME}/zero-to-empire-sprite-factory" -p /tmp/kaggle-output --force
+          kaggle kernels output "${KAGGLE_USERNAME}/${{ steps.gate.outputs.kernel_slug }}" -p /tmp/kaggle-output --force
           find /tmp/kaggle-output/output -maxdepth 3 -type f -print
       - name: Verify expected async targets
         if: steps.kernel.outputs.ready == 'true'
@@ -2310,7 +2328,7 @@ jobs:
           import json
           from pathlib import Path
           p=Path('art/production/kaggle-async-state.json')
-          d=json.loads(p.read_text()); d['status']='FAILED'
+          d=json.loads(p.read_text()); d['status']='FAILED_STALE' if '${{ steps.kernel.outputs.stale }}' == 'true' else 'FAILED'
           p.write_text(json.dumps(d,indent=2)+'\n')
           PY
           git config user.name github-actions[bot]
@@ -2663,6 +2681,19 @@ jobs:
           print('DISPATCH_TOKEN='+next(iter(tokens)))
           print('ASYNC_SUBMIT=true')
           PY
+      - name: Resolve Kaggle kernel slug
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY' >> "$GITHUB_ENV"
+          import os,re
+          async_mode=os.environ.get('ASYNC_SUBMIT','false').lower()=='true'
+          token=os.environ.get('DISPATCH_TOKEN','').strip() or os.environ.get('GITHUB_RUN_ID','wave')
+          token=re.sub(r'[^a-z0-9-]+','-',token.lower()).strip('-')[:32] or 'wave'
+          slug=f'zero-to-empire-sprite-factory-{token}' if async_mode else 'zero-to-empire-sprite-factory'
+          print('KAGGLE_KERNEL_SLUG='+slug)
+          print('KAGGLE_KERNEL_FULL='+os.environ['KAGGLE_USERNAME']+'/'+slug)
+          PY
       - name: Reject stale generator snapshot
         shell: bash
         run: |
@@ -2801,7 +2832,7 @@ jobs:
         shell: bash
         run: |
           set -u
-          slug="${KAGGLE_USERNAME}/zero-to-empire-sprite-factory"
+          slug="${KAGGLE_KERNEL_FULL}"
           status="$(kaggle kernels status "$slug" 2>&1 || true)"
           echo "$status"
           if echo "$status" | grep -Eqi 'KernelWorkerStatus\.(RUNNING|QUEUED)|status "(RUNNING|QUEUED)"'; then
@@ -2829,6 +2860,16 @@ jobs:
              tools/sprites/kaggle_character_sheet_factory_v1.py \
              /tmp/zte-kaggle/tools/sprites/
           sed "s/__KAGGLE_USERNAME__/${KAGGLE_USERNAME}/g" kaggle/kernel-metadata.template.json > /tmp/zte-kaggle/kernel-metadata.json
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          p=Path('/tmp/zte-kaggle/kernel-metadata.json')
+          d=json.loads(p.read_text())
+          d['id']=os.environ['KAGGLE_KERNEL_FULL']
+          d['title']='Zero to Empire Sprite Factory '+os.environ['KAGGLE_KERNEL_SLUG'][-16:]
+          p.write_text(json.dumps(d,indent=2)+'\n')
+          print('KAGGLE_KERNEL_ID='+d['id'])
+          PY
           EXPECTED_GENERATOR_SHA="$(sha256sum tools/sprites/kaggle_building_family_factory_v16.py | cut -d' ' -f1)"
           echo "EXPECTED_GENERATOR_SHA=$EXPECTED_GENERATOR_SHA"
           python - "$SPRITE_COUNT" "$EXPECTED_GENERATOR_SHA" <<'PY'
@@ -2891,6 +2932,7 @@ jobs:
               'submit_run_id':int(os.environ['GITHUB_RUN_ID']),
               'target_ids':ids[:int(os.environ.get('SPRITE_COUNT','12'))],
               'submitted_at':datetime.now(timezone.utc).isoformat(),
+              'kernel_slug':os.environ.get('KAGGLE_KERNEL_SLUG','zero-to-empire-sprite-factory'),
           }
           Path('art/production/kaggle-async-state.json').write_text(json.dumps(state,indent=2)+'\n',encoding='utf-8')
           print('KAGGLE_ASYNC_TARGETS='+','.join(state['target_ids']))
@@ -2908,7 +2950,7 @@ jobs:
         shell: bash
         run: |
           set -u
-          slug="${KAGGLE_USERNAME}/zero-to-empire-sprite-factory"; final_status='UNKNOWN'
+          slug="${KAGGLE_KERNEL_FULL}"; final_status='UNKNOWN'
           if [ "${KAGGLE_REUSE_ACTIVE_KERNEL:-0}" = 1 ]; then max_checks=20; else max_checks=135; fi
           echo "KAGGLE_WAIT_CHECKS=$max_checks reuse=${KAGGLE_REUSE_ACTIVE_KERNEL:-0}"
           for i in $(seq 1 "$max_checks"); do
@@ -2926,7 +2968,7 @@ jobs:
         shell: bash
         run: |
           rm -rf /tmp/kaggle-output; mkdir -p /tmp/kaggle-output
-          kaggle kernels output "${KAGGLE_USERNAME}/zero-to-empire-sprite-factory" -p /tmp/kaggle-output --force || true
+          kaggle kernels output "${KAGGLE_KERNEL_FULL}" -p /tmp/kaggle-output --force || true
           find /tmp/kaggle-output/output -maxdepth 3 -type f -print 2>/dev/null || true
           find /tmp/kaggle-output -maxdepth 2 -type f -name '*.log' -print || true
       - name: Require fresh technically validated candidates
@@ -24879,11 +24921,14 @@ def test_async_collector_recovers_candidates_when_generated_targets_is_empty(sel
 ⋮----
 text = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
 ⋮----
-def test_async_kaggle_character_mode_releases_runner_and_uses_collector(self)
+def test_async_kaggle_uses_unique_kernel_slug_and_stale_timeout(self)
 ⋮----
 mass = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
-autof = Path(".github/workflows/asset-autofactory.yml").read_text(encoding="utf-8")
 collector = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
+⋮----
+def test_async_kaggle_character_mode_releases_runner_and_uses_collector(self)
+⋮----
+autof = Path(".github/workflows/asset-autofactory.yml").read_text(encoding="utf-8")
 ⋮----
 def test_kaggle_character_all_reject_batch_is_not_infrastructure_failure(self)
 ⋮----

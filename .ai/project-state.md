@@ -22,31 +22,28 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-04T06:10:44Z
+Generated: 2026-10-04T09:45:02Z
 
 ### Git
 - Branch: `main`
-- Head: `fa88d817f383`
-- Commit date: 2026-10-04T08:10:30+02:00
-- Commit: perf(art): add v1.11 semantic action scaffolds
+- Head: `665461c1928a`
+- Commit date: 2026-10-04T11:44:47+02:00
+- Commit: fix(art): isolate async Kaggle waves and expire stale kernels
 - Tracked files: 1445
 
 ### Recently changed files
-- `tools/assets/test_queue_state_policy.py`
+- `.github/workflows/kaggle-async-character-collector.yml`
+- `.github/workflows/kaggle-mass-sprite-factory.yml`
 - `tools/assets/test_workflow_policy.py`
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
+- `art/production/controlled-character-regen-queue.json`
+- `art/production/master-asset-queue.json`
+- `art/production/kaggle-async-state.json`
+- `tools/assets/test_queue_state_policy.py`
 - `tools/sprites/asset_queue_utils.py`
 - `tools/sprites/asset_wave_orchestrator.py`
 - `tools/sprites/kaggle_character_sheet_factory_v1.py`
-- `.github/workflows/promote-approved-kaggle-characters.yml`
-- `art/production/character-strict-review-backlog.md`
-- `art/production/autofactory-state.json`
-- `art/production/autofactory-summary.md`
-- `art/production/master-asset-queue.json`
-- `app/src/main/res/drawable-nodpi/zte_chr_tech_idle_final.webp`
-- `art/incoming/final-sprites/zte_chr_tech_idle_final.png`
-- `art/production/zte_chr_tech_idle_final-runtime-qa.json`
-- `art/production/generation-rejection-ledger.json`
-- `ops/promote-kaggle-trigger.txt`
 
 ### Project signals
 - `build.gradle.kts`
