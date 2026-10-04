@@ -3,8 +3,8 @@
 Generated from art/production/master-asset-queue.json after production completion.
 
 - Production processed: **216/235**
-- Strict DONE: **215/235**
-- Semantic review remaining: **20**
+- Strict DONE: **216/235**
+- Semantic review remaining: **19**
 - This report does **not** grant strict approval or runtime promotion.
 
 | Asset | Role | Action | Technical status | Review note |
@@ -14,7 +14,6 @@ Generated from art/production/master-asset-queue.json after production completio
 | CHR-OP-CARRY | OP | CARRY | DISPATCHED | Semantic review 2026-10-03 of Kaggle v1.9 run 37149965973: rejected; no rectangular crate is carried between both hands and the animation reads as standing with changing accessories. |
 | CHR-OP-REPAIR | OP | REPAIR | DISPATCHED | Semantic review 2026-10-03 of Kaggle v1.9 run 37149965973: rejected; identity/body details drift and there is no consistent repair tool visibly contacting one repair point. |
 | CHR-OP-CELEB | OP | CELEB | DISPATCHED | Semantic review 2026-10-03 of Kaggle v1.9 run 37149965973: rejected; no clear arm-raise celebration occurs and the frames remain mostly neutral standing poses. |
-| CHR-TECH-IDLE | TECH | IDLE | AWAITING_REVIEW | Semantic review passed for v1.10 run 37159562177: stable technician identity, full-body framing, consistent cyan/graphite uniform and headgear, with subtle readable idle motion across six frames. Approved for runtime promotion; strict DONE waits for runtime QA and Android validation. |
 | CHR-TECH-WALK | TECH | WALK | DISPATCHED | Kaggle generator rejected candidate: walk-too-static lower-motion=0.141 |
 | CHR-TECH-WORK | TECH | WORK | REJECTED_SEMANTIC | Semantic review 2026-10-04 of Kaggle v1.10 run 37159562177: rejected; identity/headgear and accessories drift between frames and the sequence lacks one consistent visible tool contacting a stable work point. |
 | CHR-TECH-CARRY | TECH | CARRY | REJECTED_SEMANTIC | Semantic review 2026-10-04 of Kaggle v1.10 run 37159562177: rejected; identity and headgear drift, the crate appears only in some frames or changes form, and there is no coherent two-hand carrying stride. |
