@@ -2,27 +2,27 @@
 
 Generated from art/production/master-asset-queue.json after production completion.
 
-- Production processed: **215/235**
+- Production processed: **216/235**
 - Strict DONE: **215/235**
 - Semantic review remaining: **20**
 - This report does **not** grant strict approval or runtime promotion.
 
 | Asset | Role | Action | Technical status | Review note |
 |---|---|---|---|---|
-| CHR-OP-WALK | OP | WALK | REJECTED_SEMANTIC | Semantic review 2026-10-03 of Kaggle v1.9 run 37149965973: rejected; visible face/clothing/headgear drift across frames and the sequence still reads as pose changes rather than one coherent alternating walk cycle. |
-| CHR-OP-WORK | OP | WORK | REJECTED_SEMANTIC | Semantic review 2026-10-03 of Kaggle v1.9 run 37149965973: rejected; identity drifts between frames and the tool/work interaction is inconsistent, with several frames reading as neutral standing. |
-| CHR-OP-CARRY | OP | CARRY | REJECTED_SEMANTIC | Semantic review 2026-10-03 of Kaggle v1.9 run 37149965973: rejected; no rectangular crate is carried between both hands and the animation reads as standing with changing accessories. |
-| CHR-OP-REPAIR | OP | REPAIR | REJECTED_SEMANTIC | Semantic review 2026-10-03 of Kaggle v1.9 run 37149965973: rejected; identity/body details drift and there is no consistent repair tool visibly contacting one repair point. |
-| CHR-OP-CELEB | OP | CELEB | REJECTED_SEMANTIC | Semantic review 2026-10-03 of Kaggle v1.9 run 37149965973: rejected; no clear arm-raise celebration occurs and the frames remain mostly neutral standing poses. |
-| CHR-TECH-IDLE | TECH | IDLE | DISPATCHED | Semantic review 2026-10-03: rejected; atlas is heavily cropped to head/torso fragments, lacks full-body framing, and shows no usable idle animation. |
-| CHR-TECH-WALK | TECH | WALK | DISPATCHED | Semantic review 2026-10-03: rejected; poses read as standing/turntable frames rather than a coherent alternating walk cycle, with visible head/identity drift. |
-| CHR-TECH-WORK | TECH | WORK | DISPATCHED | Semantic review 2026-10-03: rejected; technically valid atlas is too static and the work/tool action is not readable at gameplay size. |
-| CHR-TECH-CARRY | TECH | CARRY | DISPATCHED | Semantic review 2026-10-03: rejected; no crate/component is consistently visible between both hands and the sequence reads as static standing rather than carrying. |
-| CHR-LOG-WALK | LOG | WALK | DISPATCHED | Semantic review 2026-10-03: rejected; large identity/clothing drift across frames and no coherent alternating walk cycle. |
-| CHR-LOG-WORK | LOG | WORK | DISPATCHED | Semantic review 2026-10-03: rejected; action is too static and lacks a clearly readable work/tool interaction. |
-| CHR-LOG-CARRY | LOG | CARRY | DISPATCHED | Semantic review 2026-10-03: rejected; frames are torso/leg fragments with turntable orientation changes and no visible crate carried between both hands. |
-| CHR-LOG-REPAIR | LOG | REPAIR | REJECTED_SEMANTIC | Semantic review 2026-10-03: rejected; identity/clothing/headgear drift strongly across frames and there is no consistent visible repair tool contacting a repair point. |
-| CHR-LOG-CELEB | LOG | CELEB | DISPATCHED | Semantic review 2026-10-03: rejected; atlas is severely cropped to head/torso fragments and does not contain a readable arm-raise celebration sequence. |
+| CHR-OP-WALK | OP | WALK | DISPATCHED | Semantic review 2026-10-03 of Kaggle v1.9 run 37149965973: rejected; visible face/clothing/headgear drift across frames and the sequence still reads as pose changes rather than one coherent alternating walk cycle. |
+| CHR-OP-WORK | OP | WORK | DISPATCHED | Semantic review 2026-10-03 of Kaggle v1.9 run 37149965973: rejected; identity drifts between frames and the tool/work interaction is inconsistent, with several frames reading as neutral standing. |
+| CHR-OP-CARRY | OP | CARRY | DISPATCHED | Semantic review 2026-10-03 of Kaggle v1.9 run 37149965973: rejected; no rectangular crate is carried between both hands and the animation reads as standing with changing accessories. |
+| CHR-OP-REPAIR | OP | REPAIR | DISPATCHED | Semantic review 2026-10-03 of Kaggle v1.9 run 37149965973: rejected; identity/body details drift and there is no consistent repair tool visibly contacting one repair point. |
+| CHR-OP-CELEB | OP | CELEB | DISPATCHED | Semantic review 2026-10-03 of Kaggle v1.9 run 37149965973: rejected; no clear arm-raise celebration occurs and the frames remain mostly neutral standing poses. |
+| CHR-TECH-IDLE | TECH | IDLE | AWAITING_REVIEW | Semantic review passed for v1.10 run 37159562177: stable technician identity, full-body framing, consistent cyan/graphite uniform and headgear, with subtle readable idle motion across six frames. Approved for runtime promotion; strict DONE waits for runtime QA and Android validation. |
+| CHR-TECH-WALK | TECH | WALK | DISPATCHED | Kaggle generator rejected candidate: walk-too-static lower-motion=0.141 |
+| CHR-TECH-WORK | TECH | WORK | REJECTED_SEMANTIC | Semantic review 2026-10-04 of Kaggle v1.10 run 37159562177: rejected; identity/headgear and accessories drift between frames and the sequence lacks one consistent visible tool contacting a stable work point. |
+| CHR-TECH-CARRY | TECH | CARRY | REJECTED_SEMANTIC | Semantic review 2026-10-04 of Kaggle v1.10 run 37159562177: rejected; identity and headgear drift, the crate appears only in some frames or changes form, and there is no coherent two-hand carrying stride. |
+| CHR-LOG-WALK | LOG | WALK | DISPATCHED | Kaggle generator rejected candidate: walk-too-static lower-motion=0.205 |
+| CHR-LOG-WORK | LOG | WORK | REJECTED_SEMANTIC | Semantic review 2026-10-04 of Kaggle v1.10 run 37159562177: rejected; face/headgear/body details vary significantly and the frames remain mostly neutral standing without one readable repeated work interaction. |
+| CHR-LOG-CARRY | LOG | CARRY | REJECTED_SEMANTIC | Semantic review 2026-10-04 of Kaggle v1.10 run 37159562177: rejected; severe identity/headgear drift, front/back turntable changes, and the crate is inconsistent or absent instead of being held with both hands through a carrying stride. |
+| CHR-LOG-REPAIR | LOG | REPAIR | DISPATCHED | Semantic review 2026-10-03: rejected; identity/clothing/headgear drift strongly across frames and there is no consistent visible repair tool contacting a repair point. |
+| CHR-LOG-CELEB | LOG | CELEB | DISPATCHED | Kaggle generator rejected candidate: celeb-too-static mean-change=0.094<0.100 |
 | CHR-ENG-IDLE | ENG | IDLE | REJECTED_SEMANTIC | Semantic review 2026-10-03: rejected; atlas is almost entirely cropped head/torso fragments, not a full-body idle loop. |
 | CHR-ENG-WALK | ENG | WALK | REJECTED_SEMANTIC | Semantic review 2026-10-03: rejected; sequence behaves like a front/back turntable with identity/clothing drift rather than a stable three-quarter walk cycle. |
 | CHR-ENG-WORK | ENG | WORK | REJECTED_SEMANTIC | Semantic review 2026-10-03: rejected; action remains mostly static with weak or absent readable work motion. |

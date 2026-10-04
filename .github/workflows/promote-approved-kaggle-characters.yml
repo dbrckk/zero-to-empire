@@ -16,7 +16,7 @@ on:
 
 permissions:
   contents: write
-  actions: read
+  actions: write
 
 concurrency:
   group: promote-approved-kaggle-characters
@@ -57,7 +57,9 @@ jobs:
         run: |
           rm -rf /tmp/kaggle-approved
           mkdir -p /tmp/kaggle-approved
-          gh run download "$SOURCE_RUN_ID" -n kaggle-sprite-batch -D /tmp/kaggle-approved
+          if ! gh run download "$SOURCE_RUN_ID" -n kaggle-sprite-batch -D /tmp/kaggle-approved; then
+            gh run download "$SOURCE_RUN_ID" -n kaggle-async-character-batch -D /tmp/kaggle-approved
+          fi
           find /tmp/kaggle-approved -type f -print
       - name: Import only explicitly approved candidates
         env:

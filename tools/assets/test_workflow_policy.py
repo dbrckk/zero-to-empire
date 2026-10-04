@@ -72,6 +72,11 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("tokens={str(by[i].get('dispatch_token') or '')", text)
         self.assertIn("SPRITE_COUNT='+str(min(12,len(ids)))", text)
 
+    def test_character_promotion_accepts_async_collector_artifact_and_can_continue_factory(self):
+        text = Path(".github/workflows/promote-approved-kaggle-characters.yml").read_text(encoding="utf-8")
+        self.assertIn("actions: write", text)
+        self.assertIn("kaggle-async-character-batch", text)
+
     def test_character_promotion_requires_android_runtime_validation_before_done(self):
         text = Path(".github/workflows/promote-approved-kaggle-characters.yml").read_text(encoding="utf-8")
         self.assertIn("Validate promoted Android runtime", text)
