@@ -22,28 +22,26 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-04T09:45:02Z
+Generated: 2026-10-04T09:47:46Z
 
 ### Git
 - Branch: `main`
-- Head: `665461c1928a`
-- Commit date: 2026-10-04T11:44:47+02:00
-- Commit: fix(art): isolate async Kaggle waves and expire stale kernels
+- Head: `256e93eb4c8b`
+- Commit date: 2026-10-04T11:47:30+02:00
+- Commit: art: reject late v1.10 repair and celebration candidates
 - Tracked files: 1445
 
 ### Recently changed files
+- `art/production/character-strict-review-backlog.md`
+- `art/production/generation-rejection-ledger.json`
+- `art/production/master-asset-queue.json`
 - `.github/workflows/kaggle-async-character-collector.yml`
 - `.github/workflows/kaggle-mass-sprite-factory.yml`
 - `tools/assets/test_workflow_policy.py`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
 - `art/production/controlled-character-regen-queue.json`
-- `art/production/master-asset-queue.json`
 - `art/production/kaggle-async-state.json`
-- `tools/assets/test_queue_state_policy.py`
-- `tools/sprites/asset_queue_utils.py`
-- `tools/sprites/asset_wave_orchestrator.py`
-- `tools/sprites/kaggle_character_sheet_factory_v1.py`
 
 ### Project signals
 - `build.gradle.kts`

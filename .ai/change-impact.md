@@ -1,16 +1,15 @@
 # Change impact
 
-Base: 7c3a5080ee49bd46e2bdbb5e7be1903b6119ad9f
-Head: 665461c1928a77e96e05173e7b7650080c926060
+Base: 9b3b143e1689dcd5db1b1b32e0e680738481f302
+Head: 256e93eb4c8b123e00cc0584f4e4de555c05027d
 
 ## Changed files
-- M .github/workflows/kaggle-async-character-collector.yml
-- M .github/workflows/kaggle-mass-sprite-factory.yml
-- M tools/assets/test_workflow_policy.py
+- M art/production/character-strict-review-backlog.md
+- M art/production/generation-rejection-ledger.json
+- M art/production/master-asset-queue.json
 
 ## Affected areas
-- .github
-- tools
+- art
 
 ## Related test candidates
 - No direct filename-based test match detected.
