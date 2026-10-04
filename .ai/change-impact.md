@@ -1,13 +1,17 @@
 # Change impact
 
-Base: 3047892480c6cbac36e5b84447bc3e8d8ae5a4be
-Head: 346143bbed13ee90bf7c014690dec5f0d13fc927
+Base: 78b7f492fb18a667f32315e236570bf478a6f099
+Head: a2f1baaf99776d129ba6d8c604a5d0f46cee9df9
 
 ## Changed files
-- M ops/kaggle-collector-trigger.txt
+- M kaggle/github_mass_factory.py
+- M ops/sprite-wave-trigger.txt
+- M tools/assets/test_workflow_policy.py
 
 ## Affected areas
+- kaggle
 - ops
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

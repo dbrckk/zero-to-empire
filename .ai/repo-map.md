@@ -2319,6 +2319,28 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh workflow run 'Asset Autofactory 235' --ref main             -f producer_workflow='Kaggle Mass Sprite Factory'             -f producer_conclusion='success'             -f producer_run_id='${{ steps.gate.outputs.submit_run_id }}'             -f producer_dispatch_token='${{ steps.gate.outputs.dispatch_token }}'
+      - name: Download failed kernel evidence
+        if: steps.kernel.outputs.failed == 'true'
+        shell: bash
+        run: |
+          set +e
+          rm -rf /tmp/kaggle-failure
+          mkdir -p /tmp/kaggle-failure
+          slug="${KAGGLE_USERNAME}/${{ steps.gate.outputs.kernel_slug }}"
+          kaggle kernels output "$slug" -p /tmp/kaggle-failure --force > /tmp/kaggle-failure/download.log 2>&1
+          rc=$?
+          printf 'KAGGLE_FAILURE_OUTPUT_RC=%s\n' "$rc" | tee -a /tmp/kaggle-failure/download.log
+          kaggle kernels status "$slug" > /tmp/kaggle-failure/status.log 2>&1 || true
+          find /tmp/kaggle-failure -maxdepth 5 -type f -print
+          exit 0
+      - name: Upload failed kernel evidence
+        if: steps.kernel.outputs.failed == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: kaggle-async-failure-evidence-${{ steps.gate.outputs.submit_run_id }}
+          path: /tmp/kaggle-failure/**
+          if-no-files-found: warn
+          retention-days: 30
       - name: Callback autofactory failure
         if: steps.kernel.outputs.failed == 'true'
         env:
@@ -2870,7 +2892,7 @@ jobs:
           p=Path('/tmp/zte-kaggle/kernel-metadata.json')
           d=json.loads(p.read_text())
           d['id']=os.environ['KAGGLE_KERNEL_FULL']
-          d['title']='Zero to Empire Sprite Factory '+os.environ['KAGGLE_KERNEL_SLUG'][-16:]
+          d['title']=os.environ['KAGGLE_KERNEL_SLUG'].replace('-',' ')
           p.write_text(json.dumps(d,indent=2)+'\n')
           print('KAGGLE_KERNEL_ID='+d['id'])
           PY
@@ -24936,11 +24958,17 @@ def test_async_collector_recovers_candidates_when_generated_targets_is_empty(sel
 ⋮----
 text = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
 ⋮----
+def test_kaggle_bundle_tree_fallback_finds_nested_repo_bundle(self)
+⋮----
+text = Path("kaggle/github_mass_factory.py").read_text(encoding="utf-8")
+⋮----
 def test_async_character_wave_reuses_dataset_with_inline_queue_overlay(self)
 ⋮----
 mass = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
 factory = Path("kaggle/github_mass_factory.py").read_text(encoding="utf-8")
 ⋮----
+def test_kaggle_kernel_title_resolves_to_requested_slug(self)
+def test_async_collector_captures_failed_kernel_evidence(self)
 def test_async_kaggle_uses_unique_kernel_slug_and_stale_timeout(self)
 ⋮----
 collector = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")

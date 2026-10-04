@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 6 success / 0 failure / 1 active
+Summary: 6 success / 0 failure / 2 active
 
-- Kaggle Async Character Collector: in_progress / pending (346143bb)
-- Asset Autofactory 235: completed / success (07202abc)
-- Asset Pipeline CI: completed / success (f0ca371d)
-- Kaggle Mass Sprite Factory: completed / success (f0ca371d)
-- Asset Pipeline CI: completed / success (256e93eb)
-- Asset Pipeline CI: completed / success (665461c1)
-- Kaggle Mass Sprite Factory: completed / cancelled (7c3a5080)
-- Asset Autofactory 235: completed / success (5d0ed225)
+- Asset Pipeline CI: in_progress / pending (a2f1baaf)
+- Kaggle Mass Sprite Factory: in_progress / pending (a2f1baaf)
+- Kaggle Mass Sprite Factory: completed / success (6d5bdd34)
+- Asset Autofactory 235: completed / success (df8e72d8)
+- Asset Pipeline CI: completed / success (121232f6)
+- Kaggle Async Character Collector: completed / success (121232f6)
+- Kaggle Mass Sprite Factory: completed / success (606d4855)
+- Asset Autofactory 235: completed / success (8225f9f8)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.
