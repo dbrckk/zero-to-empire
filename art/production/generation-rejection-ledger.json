@@ -326,6 +326,30 @@
       "source_run_id": 37159562177,
       "reason": "Semantic review 2026-10-04 of Kaggle v1.10 run 37159562177: rejected; severe identity/headgear drift, front/back turntable changes, and the crate is inconsistent or absent instead of being held with both hands through a carrying stride.",
       "prompt_hint": "Lock one exact LOG identity and three-quarter camera. Keep one rectangular crate centered between both hands in every frame; prohibit back-facing turns, shoulder loads, one-hand cases and changing container shapes."
+    },
+    {
+      "id": "CHR-OP-REPAIR",
+      "role": "OP",
+      "action": "REPAIR",
+      "source_run_id": 37181577039,
+      "reason": "Semantic review 2026-10-04 of late v1.10 async output from run 37181577039: rejected; severe face/body/headgear drift across frames and the sequence is mostly standing/tool-holding rather than one readable repair interaction.",
+      "prompt_hint": "Use the v1.11 repair scaffold. Lock one exact OP identity and hardhat. Keep one repair panel in a fixed location and one tool visibly contacting it through crouch, press, inspect and return poses; prohibit identity redesign."
+    },
+    {
+      "id": "CHR-LOG-REPAIR",
+      "role": "LOG",
+      "action": "REPAIR",
+      "source_run_id": 37181577039,
+      "reason": "Semantic review 2026-10-04 of late v1.10 async output from run 37181577039: rejected; logistics identity/headgear changes materially across frames and no stable repair point/tool contact is maintained.",
+      "prompt_hint": "Use the v1.11 repair scaffold. Lock one exact LOG worker identity and amber logistics clothing. Keep one fixed repair panel and one tool in contact through the full sequence; no headgear swaps or neutral standing frames."
+    },
+    {
+      "id": "CHR-LOG-CELEB",
+      "role": "LOG",
+      "action": "CELEB",
+      "source_run_id": 37181577039,
+      "reason": "Semantic review 2026-10-04 of late v1.10 async output from run 37181577039: rejected; frames remain mostly static neutral standing with no clear overhead arm-raise celebration and visible identity/headgear variation.",
+      "prompt_hint": "Lock one exact LOG identity and camera. Force a clear celebration arc from both arms down to one fist overhead, then a brief high-arm peak and return; preserve the same face, cap/hardhat and clothing every frame."
     }
   ],
   "last_validation_request": "Identity-lock v1.9 OP full-role regeneration after prompt-budget crash and semantic false-positive review"
