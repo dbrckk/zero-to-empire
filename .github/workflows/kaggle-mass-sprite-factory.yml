@@ -69,11 +69,15 @@ jobs:
         run: |
           set -euo pipefail
           python - <<'PY' >> "$GITHUB_ENV"
-          import os,re
+          import hashlib,os,re
+          from pathlib import Path
           async_mode=os.environ.get('ASYNC_SUBMIT','false').lower()=='true'
           token=os.environ.get('DISPATCH_TOKEN','').strip() or os.environ.get('GITHUB_RUN_ID','wave')
-          token=re.sub(r'[^a-z0-9-]+','-',token.lower()).strip('-')[:32] or 'wave'
-          slug=f'zero-to-empire-sprite-factory-{token}' if async_mode else 'zero-to-empire-sprite-factory'
+          token=re.sub(r'[^a-z0-9-]+','-',token.lower()).strip('-')[:24] or 'wave'
+          generator=Path('tools/sprites/kaggle_character_sheet_factory_v1.py')
+          generator_tag=hashlib.sha256(generator.read_bytes()).hexdigest()[:8]
+          slug=f'zero-to-empire-sprite-factory-{token}-{generator_tag}' if async_mode else 'zero-to-empire-sprite-factory'
+          print('KAGGLE_KERNEL_GENERATOR_TAG='+generator_tag)
           print('KAGGLE_KERNEL_SLUG='+slug)
           print('KAGGLE_KERNEL_FULL='+os.environ['KAGGLE_USERNAME']+'/'+slug)
           PY
