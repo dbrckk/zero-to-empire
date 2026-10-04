@@ -3,9 +3,9 @@
 - Strict DONE: **216 / 235**
 - Production processed to DONE/review: **216 / 235**
 - Awaiting semantic review: **0**
-- Automation-blocked: **10**
-- Current action: **NO_AUTOMATIC_WORK_AVAILABLE**
-- Current group: **none**
+- Automation-blocked: **0**
+- Current action: **WAIT_KAGGLE_BUSY**
+- Current group: **CHR-OP+CHR-TECH+CHR-LOG**
 
 The autofactory may generate and technically validate candidates automatically,
 but it never promotes a visually unreviewed candidate to strict DONE.
