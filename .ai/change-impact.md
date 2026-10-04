@@ -1,15 +1,17 @@
 # Change impact
 
-Base: f1d408a98e5cba0bf3cc22ce00242d25aeb2e97b
-Head: b54dd9f7227d67a336bbaa8d14b88b616499cc20
+Base: ff31beab4c38e193f36a0234a1fda4228ba7b1b7
+Head: fa88d817f3830f39e1043edcd176264e7d8ac4f9
 
 ## Changed files
-- M .github/workflows/promote-approved-kaggle-characters.yml
-- M art/production/character-strict-review-backlog.md
+- M tools/assets/test_queue_state_policy.py
+- M tools/assets/test_workflow_policy.py
+- M tools/sprites/asset_queue_utils.py
+- M tools/sprites/asset_wave_orchestrator.py
+- M tools/sprites/kaggle_character_sheet_factory_v1.py
 
 ## Affected areas
-- .github
-- art
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

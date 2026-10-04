@@ -22,16 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-04T06:07:18Z
+Generated: 2026-10-04T06:10:44Z
 
 ### Git
 - Branch: `main`
-- Head: `b54dd9f7227d`
-- Commit date: 2026-10-04T08:07:01+02:00
-- Commit: fix(art): keep strict backlog canonical after promotion
+- Head: `fa88d817f383`
+- Commit date: 2026-10-04T08:10:30+02:00
+- Commit: perf(art): add v1.11 semantic action scaffolds
 - Tracked files: 1445
 
 ### Recently changed files
+- `tools/assets/test_queue_state_policy.py`
+- `tools/assets/test_workflow_policy.py`
+- `tools/sprites/asset_queue_utils.py`
+- `tools/sprites/asset_wave_orchestrator.py`
+- `tools/sprites/kaggle_character_sheet_factory_v1.py`
 - `.github/workflows/promote-approved-kaggle-characters.yml`
 - `art/production/character-strict-review-backlog.md`
 - `art/production/autofactory-state.json`
@@ -42,8 +47,6 @@ Generated: 2026-10-04T06:07:18Z
 - `art/production/zte_chr_tech_idle_final-runtime-qa.json`
 - `art/production/generation-rejection-ledger.json`
 - `ops/promote-kaggle-trigger.txt`
-- `tools/assets/test_workflow_policy.py`
-- `art/production/kaggle-async-state.json`
 
 ### Project signals
 - `build.gradle.kts`

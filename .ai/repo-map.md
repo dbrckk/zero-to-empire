@@ -24792,7 +24792,7 @@ def test_character_batch_size_supports_multi_role_burst(self) -> None
 ⋮----
 def test_character_epoch_allows_three_informed_attempts(self) -> None
 ⋮----
-def test_character_epoch_is_v110_action_tuned(self) -> None
+def test_character_epoch_is_v111_semantic_scaffold(self) -> None
 ⋮----
 def test_new_epoch_reopens_semantic_reject_even_with_high_legacy_attempts(self) -> None
 ⋮----
@@ -24897,6 +24897,8 @@ def test_kaggle_character_generator_rejects_source_fragments_before_resize(self)
 text = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
 ⋮----
 def test_kaggle_character_generator_has_clean_main_tail(self)
+⋮----
+def test_kaggle_character_generator_adds_semantic_scaffolds_for_hard_actions(self)
 ⋮----
 def test_kaggle_character_generator_uses_neutral_role_anchor(self)
 ⋮----
@@ -25073,7 +25075,7 @@ TRIGGER_DISPATCH_TOKEN = os.getenv("AUTOF_TRIGGER_DISPATCH_TOKEN", "")
 CURRENT_DISPATCH_TOKEN = os.getenv("GITHUB_RUN_ID", "")
 KAGGLE_BUSY = os.getenv("AUTOF_KAGGLE_BUSY", "0") == "1"
 FX_BUSY = os.getenv("AUTOF_FX_BUSY", "0") == "1"
-CHARACTER_GENERATION_EPOCH = "identity-lock-v1.10"
+CHARACTER_GENERATION_EPOCH = "identity-lock-v1.11"
 CHARACTER_EPOCH_ATTEMPT_LIMIT = 3
 CHARACTER_BATCH_SIZE = 12
 INFRA_FAILURE_LIMIT = 3
@@ -26988,6 +26990,11 @@ role_short={
 core=f"2.5D game sprite, one {role_short}, full body, three-quarter view, neutral relaxed stance, isolated"
 detail=(
 ⋮----
+def semantic_scaffold(source,action)
+⋮----
+out=source.copy()
+draw=ImageDraw.Draw(out,'RGBA')
+⋮----
 def prompt_pair(i,pose,mode='default')
 ⋮----
 # Keep CLIP deliberately tiny: tokenizer expansion makes word-count estimates
@@ -27151,13 +27158,15 @@ gen=torch.Generator(device='cuda').manual_seed(args.seed+idx*10000+fi*211+attemp
 ⋮----
 shared=role_anchor[i['role']]
 ⋮----
+source=semantic_scaffold(shared,i['action'])
+⋮----
 first_strength={
 ⋮----
 strength=min(first_strength[2],first_strength[0]+attempt*first_strength[1])
 ⋮----
 if mode=='identity' and i['action']!='WALK':strength=max(.26,strength-.035)
 ⋮----
-raw=img(image=shared,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=6,guidance_scale=0,output_type='pil',generator=gen).images[0]
+raw=img(image=source,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=6,guidance_scale=0,output_type='pil',generator=gen).images[0]
 ⋮----
 anchor_raw=raw.convert('RGB')
 ⋮----
