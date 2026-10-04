@@ -40,10 +40,21 @@ jobs:
           from pathlib import Path
           p=Path('art/production/kaggle-async-state.json')
           d=json.loads(p.read_text()) if p.exists() else {}
+          from datetime import datetime, timezone
           active=str(d.get('status','')).upper()=='ACTIVE'
+          submitted=str(d.get('submitted_at',''))
+          stale=False
+          if active and submitted:
+              try:
+                  ts=datetime.fromisoformat(submitted.replace('Z','+00:00'))
+                  stale=(datetime.now(timezone.utc)-ts).total_seconds() > 150*60
+              except Exception:
+                  stale=False
           print('active='+str(active).lower())
           print('dispatch_token='+str(d.get('dispatch_token','')))
           print('submit_run_id='+str(d.get('submit_run_id','')))
+          print('kernel_slug='+str(d.get('kernel_slug') or 'zero-to-empire-sprite-factory'))
+          print('stale='+str(stale).lower())
           PY
       - name: Install Kaggle CLI
         if: steps.gate.outputs.active == 'true'
@@ -54,7 +65,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          status="$(kaggle kernels status "${KAGGLE_USERNAME}/zero-to-empire-sprite-factory" 2>&1 || true)"
+          slug="${KAGGLE_USERNAME}/${{ steps.gate.outputs.kernel_slug }}"
+          status="$(kaggle kernels status "$slug" 2>&1 || true)"
           echo "$status"
           if echo "$status" | grep -qi 'complete'; then
             echo 'ready=true' >> "$GITHUB_OUTPUT"
@@ -64,13 +76,19 @@ jobs:
             echo 'failed=true' >> "$GITHUB_OUTPUT"
             exit 0
           fi
+          if [ "${{ steps.gate.outputs.stale }}" = true ] && echo "$status" | grep -Eqi 'RUNNING|QUEUED'; then
+            echo 'failed=true' >> "$GITHUB_OUTPUT"
+            echo 'stale=true' >> "$GITHUB_OUTPUT"
+            echo 'KAGGLE_ASYNC_STALE=1'
+            exit 0
+          fi
           echo 'ready=false' >> "$GITHUB_OUTPUT"
       - name: Download completed output
         if: steps.kernel.outputs.ready == 'true'
         run: |
           rm -rf /tmp/kaggle-output
           mkdir -p /tmp/kaggle-output
-          kaggle kernels output "${KAGGLE_USERNAME}/zero-to-empire-sprite-factory" -p /tmp/kaggle-output --force
+          kaggle kernels output "${KAGGLE_USERNAME}/${{ steps.gate.outputs.kernel_slug }}" -p /tmp/kaggle-output --force
           find /tmp/kaggle-output/output -maxdepth 3 -type f -print
       - name: Verify expected async targets
         if: steps.kernel.outputs.ready == 'true'
@@ -185,7 +203,7 @@ jobs:
           import json
           from pathlib import Path
           p=Path('art/production/kaggle-async-state.json')
-          d=json.loads(p.read_text()); d['status']='FAILED'
+          d=json.loads(p.read_text()); d['status']='FAILED_STALE' if '${{ steps.kernel.outputs.stale }}' == 'true' else 'FAILED'
           p.write_text(json.dumps(d,indent=2)+'\n')
           PY
           git config user.name github-actions[bot]

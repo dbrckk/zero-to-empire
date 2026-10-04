@@ -91,6 +91,15 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("candidate_dir.glob('*_final.png')", text)
         self.assertIn("ops/kaggle-collector-trigger.txt", text)
 
+    def test_async_kaggle_uses_unique_kernel_slug_and_stale_timeout(self):
+        mass = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
+        collector = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
+        self.assertIn("Resolve Kaggle kernel slug", mass)
+        self.assertIn("KAGGLE_KERNEL_FULL", mass)
+        self.assertIn("'kernel_slug':os.environ.get('KAGGLE_KERNEL_SLUG'", mass)
+        self.assertIn("150*60", collector)
+        self.assertIn("KAGGLE_ASYNC_STALE=1", collector)
+        self.assertIn("FAILED_STALE", collector)
     def test_async_kaggle_character_mode_releases_runner_and_uses_collector(self):
         mass = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
         autof = Path(".github/workflows/asset-autofactory.yml").read_text(encoding="utf-8")
