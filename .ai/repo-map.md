@@ -2768,15 +2768,19 @@ jobs:
           BUNDLE_FINGERPRINT="$(printf '%s' "$CURRENT_BUNDLE_SHA" | sha256sum | cut -d' ' -f1)"
           echo "BUNDLE_FINGERPRINT=$BUNDLE_FINGERPRINT"
           if [ "$STATE" = ready ] && [ "${VERSION:-0}" -ge 4 ]; then
-            # Encode the source fingerprint in a tiny marker filename. Listing
-            # metadata is enough to verify freshness; no 114 MB bundle download.
-            FILES="$(kaggle datasets files "$DATASET" --page-size 200 2>/dev/null || true)"
-            MARKER="bundle-source-${BUNDLE_FINGERPRINT}.txt"
-            if printf '%s\n' "$FILES" | grep -Fq "$MARKER"; then
+            if [ "${ASYNC_SUBMIT:-false}" = true ]; then
               READY=1
-              echo 'KAGGLE_DATASET_REUSE=1'
+              echo 'KAGGLE_DATASET_ASYNC_REUSE=1'
             else
-              echo 'KAGGLE_DATASET_STALE=1'
+              # Non-character lanes still require exact bundle freshness.
+              FILES="$(kaggle datasets files "$DATASET" --page-size 200 2>/dev/null || true)"
+              MARKER="bundle-source-${BUNDLE_FINGERPRINT}.txt"
+              if printf '%s\n' "$FILES" | grep -Fq "$MARKER"; then
+                READY=1
+                echo 'KAGGLE_DATASET_REUSE=1'
+              else
+                echo 'KAGGLE_DATASET_STALE=1'
+              fi
             fi
           fi
 
@@ -2892,6 +2896,17 @@ jobs:
           payload=base64.b64encode(buf.getvalue()).decode('ascii')
           s,n=re.subn(r"GENERATOR_OVERLAY_B64=''",f"GENERATOR_OVERLAY_B64='{payload}'",s,count=1)
           if n != 1: raise SystemExit('Failed to inject GENERATOR_OVERLAY_B64 into Kaggle kernel')
+          qbuf=io.BytesIO()
+          with zipfile.ZipFile(qbuf,'w',zipfile.ZIP_DEFLATED) as z:
+              for rel in (
+                  'art/production/controlled-character-regen-queue.json',
+                  'art/production/controlled-building-regen-queue.json',
+                  'art/production/generation-rejection-ledger.json',
+              ):
+                  z.write(Path(rel),arcname=rel)
+          qpayload=base64.b64encode(qbuf.getvalue()).decode('ascii')
+          s,n=re.subn(r"QUEUE_OVERLAY_B64=''",f"QUEUE_OVERLAY_B64='{qpayload}'",s,count=1)
+          if n != 1: raise SystemExit('Failed to inject QUEUE_OVERLAY_B64 into Kaggle kernel')
           s,n=re.subn(r"COUNT=int\(os\.getenv\('SPRITE_COUNT','\d+'\)\)",f"COUNT={int(sys.argv[1])}",s,count=1)
           if n != 1: raise SystemExit('Failed to inject SPRITE_COUNT into Kaggle kernel')
           s,n=re.subn(r"EXPECTED_GENERATOR_SHA=os\.getenv\('EXPECTED_GENERATOR_SHA',''\)\.strip\(\)",f"EXPECTED_GENERATOR_SHA='{sys.argv[2]}'",s,count=1)
@@ -24921,9 +24936,13 @@ def test_async_collector_recovers_candidates_when_generated_targets_is_empty(sel
 ⋮----
 text = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
 ⋮----
-def test_async_kaggle_uses_unique_kernel_slug_and_stale_timeout(self)
+def test_async_character_wave_reuses_dataset_with_inline_queue_overlay(self)
 ⋮----
 mass = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
+factory = Path("kaggle/github_mass_factory.py").read_text(encoding="utf-8")
+⋮----
+def test_async_kaggle_uses_unique_kernel_slug_and_stale_timeout(self)
+⋮----
 collector = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
 ⋮----
 def test_async_kaggle_character_mode_releases_runner_and_uses_collector(self)

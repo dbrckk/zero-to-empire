@@ -22,22 +22,24 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-04T09:47:46Z
+Generated: 2026-10-04T09:51:31Z
 
 ### Git
 - Branch: `main`
-- Head: `256e93eb4c8b`
-- Commit date: 2026-10-04T11:47:30+02:00
-- Commit: art: reject late v1.10 repair and celebration candidates
+- Head: `f0ca371da1f9`
+- Commit date: 2026-10-04T11:51:13+02:00
+- Commit: perf(art): inline queue state and reuse async Kaggle dataset
 - Tracked files: 1445
 
 ### Recently changed files
+- `.github/workflows/kaggle-mass-sprite-factory.yml`
+- `kaggle/github_mass_factory.py`
+- `ops/sprite-wave-trigger.txt`
+- `tools/assets/test_workflow_policy.py`
 - `art/production/character-strict-review-backlog.md`
 - `art/production/generation-rejection-ledger.json`
 - `art/production/master-asset-queue.json`
 - `.github/workflows/kaggle-async-character-collector.yml`
-- `.github/workflows/kaggle-mass-sprite-factory.yml`
-- `tools/assets/test_workflow_policy.py`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
 - `art/production/controlled-character-regen-queue.json`

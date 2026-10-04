@@ -1,15 +1,19 @@
 # Change impact
 
-Base: 9b3b143e1689dcd5db1b1b32e0e680738481f302
-Head: 256e93eb4c8b123e00cc0584f4e4de555c05027d
+Base: bb3f5a90d61eb9e09f9d674b8ca58cf6ba5e79dc
+Head: f0ca371da1f92e743de39703a477aa07fc471f74
 
 ## Changed files
-- M art/production/character-strict-review-backlog.md
-- M art/production/generation-rejection-ledger.json
-- M art/production/master-asset-queue.json
+- M .github/workflows/kaggle-mass-sprite-factory.yml
+- M kaggle/github_mass_factory.py
+- M ops/sprite-wave-trigger.txt
+- M tools/assets/test_workflow_policy.py
 
 ## Affected areas
-- art
+- .github
+- kaggle
+- ops
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.
