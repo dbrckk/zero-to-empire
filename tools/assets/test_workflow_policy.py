@@ -127,6 +127,13 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertTrue(text.rstrip().endswith("if __name__=='__main__':main()"))
         self.assertNotIn("main(       if fi==0", text)
 
+    def test_kaggle_character_generator_adds_semantic_scaffolds_for_hard_actions(self):
+        text = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
+        self.assertIn("def semantic_scaffold(source,action):", text)
+        self.assertIn("action not in {'CARRY','WORK','REPAIR'}", text)
+        self.assertIn("source=semantic_scaffold(shared,i['action'])", text)
+        self.assertIn("ImageDraw", text)
+
     def test_kaggle_character_generator_uses_neutral_role_anchor(self):
         text = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
         self.assertIn("def anchor_prompt_pair(role):", text)

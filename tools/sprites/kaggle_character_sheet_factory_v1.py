@@ -9,9 +9,9 @@ from __future__ import annotations
 import argparse,gc,json,re
 from collections import deque
 from pathlib import Path
-print('KAGGLE_STARTUP=character-sheet-flux-v1.10-action-strength-tuning',flush=True)
+print('KAGGLE_STARTUP=character-sheet-flux-v1.11-semantic-scaffold',flush=True)
 import torch
-from PIL import Image,ImageFilter
+from PIL import Image,ImageDraw,ImageFilter
 from diffusers import FluxPipeline,FluxImg2ImgPipeline,FluxTransformer2DModel
 from transformers import T5EncoderModel
 
@@ -131,6 +131,23 @@ def anchor_prompt_pair(role):
   "Full body centered with both feet visible, neutral gray background, safe border, one person only."
  )
  return core,detail
+
+def semantic_scaffold(source,action):
+ if action not in {'CARRY','WORK','REPAIR'}: return source
+ out=source.copy()
+ draw=ImageDraw.Draw(out,'RGBA')
+ if action=='CARRY':
+  draw.rounded_rectangle((345,455,680,620),radius=22,fill=(82,91,96,235),outline=(198,154,78,255),width=12)
+  draw.rectangle((430,430,595,470),fill=(74,82,87,230),outline=(198,154,78,255),width=8)
+ elif action=='WORK':
+  draw.rounded_rectangle((640,435,800,650),radius=18,fill=(70,78,84,210),outline=(62,194,205,245),width=9)
+  draw.line((505,520,675,530),fill=(55,63,68,255),width=24)
+  draw.ellipse((490,505,535,550),fill=(62,194,205,240))
+ elif action=='REPAIR':
+  draw.rounded_rectangle((650,410,815,665),radius=20,fill=(68,77,83,220),outline=(210,149,70,245),width=10)
+  draw.line((500,545,690,520),fill=(52,60,66,255),width=22)
+  draw.ellipse((485,530,525,570),fill=(62,194,205,240))
+ return out
 
 def prompt_pair(i,pose,mode='default'):
  # Keep CLIP deliberately tiny: tokenizer expansion makes word-count estimates
@@ -366,6 +383,8 @@ def main():
 
        shared=role_anchor[i['role']]
 
+       source=semantic_scaffold(shared,i['action'])
+
        first_strength={
 
         'IDLE':(.28,.03,.36),
@@ -386,7 +405,7 @@ def main():
 
        if mode=='identity' and i['action']!='WALK':strength=max(.26,strength-.035)
 
-       raw=img(image=shared,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=6,guidance_scale=0,output_type='pil',generator=gen).images[0]
+       raw=img(image=source,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=6,guidance_scale=0,output_type='pil',generator=gen).images[0]
 
        anchor_raw=raw.convert('RGB')
 
