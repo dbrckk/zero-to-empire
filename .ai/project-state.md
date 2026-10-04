@@ -22,16 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-04T09:51:31Z
+Generated: 2026-10-04T09:53:30Z
 
 ### Git
 - Branch: `main`
-- Head: `f0ca371da1f9`
-- Commit date: 2026-10-04T11:51:13+02:00
-- Commit: perf(art): inline queue state and reuse async Kaggle dataset
+- Head: `346143bbed13`
+- Commit date: 2026-10-04T11:53:15+02:00
+- Commit: art(auto): check v1.11 async kernel
 - Tracked files: 1445
 
 ### Recently changed files
+- `ops/kaggle-collector-trigger.txt`
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
+- `art/production/kaggle-async-state.json`
 - `.github/workflows/kaggle-mass-sprite-factory.yml`
 - `kaggle/github_mass_factory.py`
 - `ops/sprite-wave-trigger.txt`
@@ -39,11 +43,6 @@ Generated: 2026-10-04T09:51:31Z
 - `art/production/character-strict-review-backlog.md`
 - `art/production/generation-rejection-ledger.json`
 - `art/production/master-asset-queue.json`
-- `.github/workflows/kaggle-async-character-collector.yml`
-- `art/production/autofactory-state.json`
-- `art/production/autofactory-summary.md`
-- `art/production/controlled-character-regen-queue.json`
-- `art/production/kaggle-async-state.json`
 
 ### Project signals
 - `build.gradle.kts`
