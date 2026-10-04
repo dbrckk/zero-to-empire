@@ -4,8 +4,8 @@
 - Production processed to DONE/review: **216 / 235**
 - Awaiting semantic review: **0**
 - Automation-blocked: **10**
-- Current action: **DISPATCH_KAGGLE_CHARACTER**
-- Current group: **CHR-OP+CHR-LOG+CHR-ENG**
+- Current action: **NO_AUTOMATIC_WORK_AVAILABLE**
+- Current group: **none**
 
 The autofactory may generate and technically validate candidates automatically,
 but it never promotes a visually unreviewed candidate to strict DONE.
