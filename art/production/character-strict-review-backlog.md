@@ -1,15 +1,14 @@
 # Character strict-review backlog
 
-Generated from `art/production/master-asset-queue.json` after production completion.
+Generated from art/production/master-asset-queue.json after production completion.
 
 - Production processed: **215/235**
-- Strict DONE: **214/235**
-- Semantic review remaining: **21**
+- Strict DONE: **215/235**
+- Semantic review remaining: **20**
 - This report does **not** grant strict approval or runtime promotion.
 
 | Asset | Role | Action | Technical status | Review note |
 |---|---|---|---|---|
-| CHR-OP-IDLE | OP | IDLE | AWAITING_REVIEW | Semantic review passed on Kaggle v1.9 run 37149965973: stable OP identity, hardhat/glasses/clothing/palette, full-body framing and subtle readable idle variation. Approved for runtime promotion; strict DONE waits for runtime QA and Android CI. |
 | CHR-OP-WALK | OP | WALK | REJECTED_SEMANTIC | Semantic review 2026-10-03 of Kaggle v1.9 run 37149965973: rejected; visible face/clothing/headgear drift across frames and the sequence still reads as pose changes rather than one coherent alternating walk cycle. |
 | CHR-OP-WORK | OP | WORK | REJECTED_SEMANTIC | Semantic review 2026-10-03 of Kaggle v1.9 run 37149965973: rejected; identity drifts between frames and the tool/work interaction is inconsistent, with several frames reading as neutral standing. |
 | CHR-OP-CARRY | OP | CARRY | REJECTED_SEMANTIC | Semantic review 2026-10-03 of Kaggle v1.9 run 37149965973: rejected; no rectangular crate is carried between both hands and the animation reads as standing with changing accessories. |
@@ -33,4 +32,4 @@ Generated from `art/production/master-asset-queue.json` after production complet
 
 ## Review rule
 
-A reviewer must inspect identity continuity, full-body framing, role/clothing consistency, action readability, animation motion, and runtime suitability. Only explicit reviewed approvals may change `strict_status` to `DONE`.
+A reviewer must inspect identity continuity, full-body framing, role/clothing consistency, action readability, animation motion, and runtime suitability. Only explicit reviewed approvals may change strict_status to DONE.
