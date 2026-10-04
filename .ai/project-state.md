@@ -22,28 +22,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-04T11:00:43Z
+Generated: 2026-10-04T20:05:31Z
 
 ### Git
 - Branch: `main`
-- Head: `48e208172408`
-- Commit date: 2026-10-04T13:00:22+02:00
-- Commit: perf(art): persist semantic scaffolds across character frames
+- Head: `1b73b3ea5e87`
+- Commit date: 2026-10-04T22:05:13+02:00
+- Commit: art: reject v1.12 repair candidates after semantic review
 - Tracked files: 1445
 
 ### Recently changed files
-- `tools/assets/test_queue_state_policy.py`
-- `tools/assets/test_workflow_policy.py`
-- `tools/sprites/asset_queue_utils.py`
-- `tools/sprites/asset_wave_orchestrator.py`
-- `tools/sprites/kaggle_character_sheet_factory_v1.py`
 - `art/production/character-strict-review-backlog.md`
+- `art/production/generation-rejection-ledger.json`
 - `art/production/master-asset-queue.json`
 - `art/production/kaggle-async-state.json`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
-- `.github/workflows/kaggle-mass-sprite-factory.yml`
-- `ops/sprite-wave-trigger.txt`
+- `art/production/controlled-character-regen-queue.json`
 
 ### Project signals
 - `build.gradle.kts`
