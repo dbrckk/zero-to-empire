@@ -79,12 +79,19 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("Mark approved characters strict DONE", text)
         self.assertLess(text.index("Validate promoted Android runtime"), text.index("Mark approved characters strict DONE"))
         self.assertIn("Continue autofactory after promotion", text)
+    def test_async_collector_recovers_candidates_when_generated_targets_is_empty(self):
+        text = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
+        self.assertIn("character-sheet-report.json", text)
+        self.assertIn("candidate_dir=Path('/tmp/kaggle-output/output/candidates')", text)
+        self.assertIn("candidate_dir.glob('*_final.png')", text)
+        self.assertIn("ops/kaggle-collector-trigger.txt", text)
+
     def test_async_kaggle_character_mode_releases_runner_and_uses_collector(self):
         mass = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
         autof = Path(".github/workflows/asset-autofactory.yml").read_text(encoding="utf-8")
         collector = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
         self.assertIn("async_submit:", mass)
-        self.assertIn("inputs.async_submit != 'true'", mass)
+        self.assertIn("env.ASYNC_SUBMIT != 'true'", mass)
         self.assertIn("kaggle-async-state.json", mass)
         self.assertIn("-f async_submit=true", autof)
         self.assertIn("kaggle-async-state.json", autof)

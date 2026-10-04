@@ -4,6 +4,10 @@ on:
   schedule:
     - cron: '*/5 * * * *'
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'ops/kaggle-collector-trigger.txt'
 
 permissions:
   contents: write
@@ -82,6 +86,10 @@ jobs:
           if g.get('lane')!='CONTROLLED_CHARACTER_SHEETS': raise SystemExit('unexpected Kaggle lane')
           expected=set(state.get('target_ids',[]))
           actual={str(x.get('id','')).upper() for x in g.get('targets',[]) if x.get('id')}
+          report_path=Path('/tmp/kaggle-output/output/character-sheet-report.json')
+          if report_path.exists():
+              report=json.loads(report_path.read_text())
+              actual.update(str(r.get('id','')).upper() for r in report if r.get('id'))
           if expected and not (expected & actual):
               raise SystemExit(f'stale Kaggle output expected={sorted(expected)} actual={sorted(actual)}')
           print('KAGGLE_ASYNC_MATCH='+','.join(sorted(expected & actual)))
@@ -135,6 +143,9 @@ jobs:
               cols=[x.strip() for x in line.split('|')[1:-1]]
               if len(cols)==5: stem_to_id[Path(cols[3].replace(chr(96),'')).stem]=cols[0]
           produced={stem_to_id.get(Path(x['file']).stem) for x in generated.get('targets',[]) if x.get('file')}
+          candidate_dir=Path('/tmp/kaggle-output/output/candidates')
+          if candidate_dir.is_dir():
+              produced.update(stem_to_id.get(p.stem) for p in candidate_dir.glob('*_final.png'))
           produced.discard(None)
           rejected={str(r.get('id','')).upper():str(r.get('reason') or 'generator rejection') for r in report if str(r.get('status','')).upper()=='REJECT'}
           p=Path('art/production/controlled-character-regen-queue.json')
