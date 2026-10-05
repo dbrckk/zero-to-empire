@@ -22,22 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-04T22:45:29Z
+Generated: 2026-10-05T12:37:05Z
 
 ### Git
 - Branch: `main`
-- Head: `46b396d35aab`
-- Commit date: 2026-10-05T00:45:17+02:00
-- Commit: fix(art): let Pollinations consume canonical character queue
+- Head: `f004b8a1ff88`
+- Commit date: 2026-10-05T14:36:23+02:00
+- Commit: art: queue three targeted character retries
 - Tracked files: 1445
 
 ### Recently changed files
-- `.github/workflows/pollinations-character-atlas.yml`
-- `art/production/kaggle-async-state.json`
+- `art/production/controlled-character-regen-queue.json`
+- `tools/sprites/asset_wave_orchestrator.py`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
-- `art/production/controlled-character-regen-queue.json`
 - `art/production/master-asset-queue.json`
+- `art/production/kaggle-async-state.json`
 
 ### Project signals
 - `build.gradle.kts`
