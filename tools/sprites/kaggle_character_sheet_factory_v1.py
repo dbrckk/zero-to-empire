@@ -311,12 +311,29 @@ def lower_body_motion(frames):
   vals.append(1-(inter/union if union else 1))
  return sum(vals)/len(vals) if vals else 0.0
 
+def walk_consistency_qa(frames):
+ # Guard against semantic false positives where motion is large only because the
+ # model flips viewpoint or redesigns the character between cells.
+ ref=frames[0]
+ ref_sig=appearance_signature(ref)
+ distances=[appearance_distance(ref,f) for f in frames[1:]]
+ if distances and max(distances)>42:
+  return False,f'walk-appearance-drift={max(distances):.1f}'
+ # Adjacent silhouettes must remain recognisably the same person even while the
+ # legs alternate. A very low IoU indicates a viewpoint/identity jump.
+ adj=[alpha_iou(frames[n-1],frames[n]) for n in range(1,len(frames))]
+ if adj and min(adj)<.34:
+  return False,f'walk-orientation/silhouette-jump={min(adj):.2f}'
+ return True,f'walk-consistency appearance={max(distances) if distances else 0:.1f} min-iou={min(adj) if adj else 1:.2f}'
+
 def action_qa(frames,action):
  # Per-action motion floor prevents technically valid but visually frozen atlases
  # from reaching manual semantic review.
  ious=[alpha_iou(frames[n-1],frames[n]) for n in range(1,len(frames))]
  mean_change=(sum(1-x for x in ious)/len(ious)) if ious else 0.0
  if action=='WALK':
+  consistent,why=walk_consistency_qa(frames)
+  if not consistent:return False,why
   motion=lower_body_motion(frames)
   if motion<.22:return False,f'walk-too-static lower-motion={motion:.3f}'
   if mean_change<.12:return False,f'walk-too-static mean-change={mean_change:.3f}'
