@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-06T08:21:20Z
+Generated: 2026-10-06T10:16:45Z
 
 ### Git
 - Branch: `main`
-- Head: `33133d483441`
-- Commit date: 2026-10-06T10:21:03+02:00
-- Commit: fix(art): treat clean character rejection as completed batch
+- Head: `34255d7d6b42`
+- Commit date: 2026-10-06T12:16:31+02:00
+- Commit: art: repair TECH walk clean-reject state
 - Tracked files: 1445
 
 ### Recently changed files
+- `art/production/master-asset-queue.json`
 - `kaggle/github_mass_factory.py`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
 - `art/production/controlled-character-regen-queue.json`
-- `art/production/master-asset-queue.json`
 - `art/production/kaggle-async-state.json`
 - `ops/kaggle-collector-trigger.txt`
 

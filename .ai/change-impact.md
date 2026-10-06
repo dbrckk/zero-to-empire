@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 60e544e0553b03a7ad6ad64cf3c490d4ad5cbc78
-Head: 33133d48344173ddf41e87c8c6748d6663f4b422
+Base: 197b6f1a36213af9ff1e6821ed2648f2b3f9e4a8
+Head: 34255d7d6b42d4b14297ec3de69a580bdd1db7fb
 
 ## Changed files
-- M kaggle/github_mass_factory.py
+- M art/production/master-asset-queue.json
 
 ## Affected areas
-- kaggle
+- art
 
 ## Related test candidates
 - No direct filename-based test match detected.
