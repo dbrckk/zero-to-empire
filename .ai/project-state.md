@@ -22,22 +22,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-05T12:37:05Z
+Generated: 2026-10-06T08:21:20Z
 
 ### Git
 - Branch: `main`
-- Head: `f004b8a1ff88`
-- Commit date: 2026-10-05T14:36:23+02:00
-- Commit: art: queue three targeted character retries
+- Head: `33133d483441`
+- Commit date: 2026-10-06T10:21:03+02:00
+- Commit: fix(art): treat clean character rejection as completed batch
 - Tracked files: 1445
 
 ### Recently changed files
-- `art/production/controlled-character-regen-queue.json`
-- `tools/sprites/asset_wave_orchestrator.py`
+- `kaggle/github_mass_factory.py`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
+- `art/production/controlled-character-regen-queue.json`
 - `art/production/master-asset-queue.json`
 - `art/production/kaggle-async-state.json`
+- `ops/kaggle-collector-trigger.txt`
 
 ### Project signals
 - `build.gradle.kts`
