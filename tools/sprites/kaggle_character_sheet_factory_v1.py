@@ -132,7 +132,21 @@ def anchor_prompt_pair(role):
  )
  return core,detail
 
-def semantic_scaffold(source,action):
+def semantic_scaffold(source,action,frame_index=0):
+ if action=='WALK':
+  # v1.14 stride: give img2img an explicit alternating lower-body silhouette cue.
+  # The cue is intentionally confined to the leg region; identity/head/torso remain
+  # anchored by the source image and normal semantic/identity QA still applies.
+  out=source.copy()
+  draw=ImageDraw.Draw(out,'RGBA')
+  phase=1 if frame_index%2==0 else -1
+  hip=(512,610)
+  front_knee=(512+phase*105,735); front_foot=(512+phase*185,900)
+  rear_knee=(512-phase*75,745); rear_foot=(512-phase*145,895)
+  cue=(92,102,108,150)
+  draw.line((hip,front_knee,front_foot),fill=cue,width=54,joint='curve')
+  draw.line((hip,rear_knee,rear_foot),fill=cue,width=50,joint='curve')
+  return out
  if action not in {'CARRY','WORK','REPAIR'}: return source
  out=source.copy()
  draw=ImageDraw.Draw(out,'RGBA')
@@ -383,7 +397,7 @@ def main():
 
        shared=role_anchor[i['role']]
 
-       source=semantic_scaffold(shared,i['action'])
+       source=semantic_scaffold(shared,i['action'],fi)
 
        first_strength={
 
@@ -412,7 +426,7 @@ def main():
        print('KAGGLE_CHR_SHARED_IDENTITY='+i['id']+' role='+i['role']+f' strength={strength:.2f}',flush=True)
       else:
        if i['action']=='WALK':
-        strength=min(.64,.50+fi*.012+attempt*.02)
+        strength=min(.72,.58+fi*.014+attempt*.025)
        elif i['action']=='WORK':
         strength=min(.72,.54+fi*.018+attempt*.025)
        elif i['action']=='CARRY':
@@ -424,7 +438,7 @@ def main():
        else:
         strength=min(.38,.24+fi*.012+attempt*.02)
        if mode in {'single','identity'} and i['action']!='WALK':strength=max(.24,strength-.035)
-       source=semantic_scaffold(anchor_raw,i['action'])
+       source=semantic_scaffold(anchor_raw,i['action'],fi)
        raw=img(image=source,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=6,guidance_scale=0,output_type='pil',generator=gen).images[0]
      frame,cov=finish_frame(raw,i['action']);frames.append(frame);ok=True;print(f"KAGGLE_CHR_FRAME={i['id']} frame={fi} attempt={attempt+1} mode={mode} cov={cov:.2f}",flush=True);break
     except Exception as e:
