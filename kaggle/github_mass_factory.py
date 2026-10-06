@@ -196,7 +196,19 @@ fresh=current_fresh();print(f'KAGGLE_FRESH_CANDIDATES={len(fresh)}',flush=True)
 for srcname in ('branch-search-report.json',):
  src=incoming/srcname
  if src.is_file():shutil.copy2(src,OUT/srcname)
-if not fresh:raise SystemExit('No fresh candidate sprites produced by this run')
+if not fresh:
+ chr_report=OUT/'character-sheet-report.json'
+ clean_reject=False
+ if lane in {'CONTROLLED_CHARACTER_SHEETS','CHARACTER_SHEETS'} and chr_report.is_file():
+  try:
+   rows=json.loads(chr_report.read_text(encoding='utf-8'));attempted=[r for r in rows if r.get('id')]
+   clean_reject=bool(attempted) and all(str(r.get('status','')).upper()=='REJECT' for r in attempted)
+  except Exception as e:print(f'KAGGLE_REJECT_REPORT_PARSE_ERROR={e}',flush=True)
+ if clean_reject:
+  (OUT/'generated-targets.json').write_text(json.dumps({'count':0,'engine':'yield-router-v12-positive-source-locked','lane':lane,'seed':SEED,'backlog':q,'targets':[]},indent=2),encoding='utf-8')
+  print(f'KAGGLE_CLEAN_REJECTION_BATCH={len(attempted)}',flush=True)
+  raise SystemExit(0)
+ raise SystemExit('No fresh candidate sprites produced by this run')
 qa=OUT/'batch-contact-sheet.png';report=OUT/'batch-qa-report.json';subprocess.run(['python','tools/sprites/build_sprite_contact_sheet.py','--output',str(qa),'--report',str(report),'--files',*[str(x) for x in fresh]],check=True)
 cdir=OUT/'candidates';cdir.mkdir(parents=True,exist_ok=True);targets=[]
 for f in fresh:
