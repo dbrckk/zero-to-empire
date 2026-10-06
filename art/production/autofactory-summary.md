@@ -1,10 +1,10 @@
 # Asset Autofactory — 235 target
 
 - Strict DONE: **216 / 235**
-- Production processed to DONE/review: **234 / 235**
-- Awaiting semantic review: **18**
+- Production processed to DONE/review: **235 / 235**
+- Awaiting semantic review: **19**
 - Automation-blocked: **0**
-- Current action: **NO_AUTOMATIC_WORK_AVAILABLE**
+- Current action: **PRODUCTION_235_COMPLETE_REVIEW_BACKLOG**
 - Current group: **none**
 
 The autofactory may generate and technically validate candidates automatically,
