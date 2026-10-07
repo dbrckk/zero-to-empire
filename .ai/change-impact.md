@@ -1,7 +1,7 @@
 # Change impact
 
-Base: 15ad91fd3ded676031244c1a4e894d1ae21d1393
-Head: bb162213b732d0525a72a9be197dd06e672e9dbc
+Base: 6711e37d3987dff5d694bac824047265f1a201b9
+Head: abf672162c581d6af70ea8163f419becee4826cf
 
 ## Changed files
 - M ops/kaggle-collector-trigger.txt

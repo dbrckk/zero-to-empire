@@ -25173,7 +25173,7 @@ TRIGGER_DISPATCH_TOKEN = os.getenv("AUTOF_TRIGGER_DISPATCH_TOKEN", "")
 CURRENT_DISPATCH_TOKEN = os.getenv("GITHUB_RUN_ID", "")
 KAGGLE_BUSY = os.getenv("AUTOF_KAGGLE_BUSY", "0") == "1"
 FX_BUSY = os.getenv("AUTOF_FX_BUSY", "0") == "1"
-CHARACTER_GENERATION_EPOCH = "identity-lock-v1.14-stride"
+CHARACTER_GENERATION_EPOCH = "identity-lock-v1.15-clean-stride"
 CHARACTER_EPOCH_ATTEMPT_LIMIT = 3
 CHARACTER_BATCH_SIZE = 12
 INFRA_FAILURE_LIMIT = 3
@@ -27170,7 +27170,17 @@ crop=m.crop(bb);cw,ch=crop.size
 ⋮----
 scale=min(176/cw,218/ch); crop=crop.resize((max(1,round(cw*scale)),max(1,round(ch*scale))),Image.Resampling.LANCZOS)
 cell=Image.new('RGBA',(256,256));x=(256-crop.width)//2;y=238-crop.height;cell.alpha_composite(crop,(x,y))
-aa=cell.getchannel('A');cov=sum(aa.histogram()[8:])/(256*256)
+# Reject detached generated props/background fragments. After isolation a valid
+# character should form one dominant connected silhouette; small antialiased
+# islands are tolerated, but a second substantial component is semantic noise.
+aa=cell.getchannel('A')
+binary=aa.point(lambda p:255 if p>=32 else 0)
+seen=set();components=[]
+pix=binary.load()
+⋮----
+stack=[(sx,sy)];seen.add((sx,sy));n=0
+⋮----
+cov=sum(aa.histogram()[8:])/(256*256)
 ⋮----
 def alpha_iou(a,b)
 ⋮----
