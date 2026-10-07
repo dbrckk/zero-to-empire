@@ -268,7 +268,27 @@ def finish_frame(raw,action):
  if cw/ch>1.08:raise RuntimeError(f'too-wide/multiple-subject silhouette ratio={cw/ch:.2f}')
  scale=min(176/cw,218/ch); crop=crop.resize((max(1,round(cw*scale)),max(1,round(ch*scale))),Image.Resampling.LANCZOS)
  cell=Image.new('RGBA',(256,256));x=(256-crop.width)//2;y=238-crop.height;cell.alpha_composite(crop,(x,y))
- aa=cell.getchannel('A');cov=sum(aa.histogram()[8:])/(256*256)
+ # Reject detached generated props/background fragments. After isolation a valid
+ # character should form one dominant connected silhouette; small antialiased
+ # islands are tolerated, but a second substantial component is semantic noise.
+ aa=cell.getchannel('A')
+ binary=aa.point(lambda p:255 if p>=32 else 0)
+ seen=set();components=[]
+ pix=binary.load()
+ for sy in range(256):
+  for sx in range(256):
+   if pix[sx,sy]==0 or (sx,sy) in seen:continue
+   stack=[(sx,sy)];seen.add((sx,sy));n=0
+   while stack:
+    xx,yy=stack.pop();n+=1
+    for nx,ny in ((xx-1,yy),(xx+1,yy),(xx,yy-1),(xx,yy+1)):
+     if 0<=nx<256 and 0<=ny<256 and pix[nx,ny]>0 and (nx,ny) not in seen:
+      seen.add((nx,ny));stack.append((nx,ny))
+   components.append(n)
+ components.sort(reverse=True)
+ if len(components)>1 and components[1]>max(120,int(components[0]*.035)):
+  raise RuntimeError(f'detached-artifact component={components[1]}/{components[0]}')
+ cov=sum(aa.histogram()[8:])/(256*256)
  if not .10<=cov<=.48:raise RuntimeError(f'coverage={cov:.2f}')
  return cell,cov
 
