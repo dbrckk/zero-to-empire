@@ -134,18 +134,19 @@ def anchor_prompt_pair(role):
 
 def semantic_scaffold(source,action,frame_index=0):
  if action=='WALK':
-  # v1.14 stride: give img2img an explicit alternating lower-body silhouette cue.
-  # The cue is intentionally confined to the leg region; identity/head/torso remain
-  # anchored by the source image and normal semantic/identity QA still applies.
+  # v1.16 articulated-stride: deform the canonical source itself instead of
+  # painting foreign leg geometry that Flux can reinterpret as background props.
+  # Upper body stays pixel-identical; only the lower-body bands are displaced.
   out=source.copy()
-  draw=ImageDraw.Draw(out,'RGBA')
-  phase=1 if frame_index%2==0 else -1
-  hip=(512,610)
-  front_knee=(512+phase*105,735); front_foot=(512+phase*185,900)
-  rear_knee=(512-phase*75,745); rear_foot=(512-phase*145,895)
-  cue=(92,102,108,150)
-  draw.line((hip,front_knee,front_foot),fill=cue,width=54,joint='curve')
-  draw.line((hip,rear_knee,rear_foot),fill=cue,width=50,joint='curve')
+  w,h=out.size
+  phase=(0,1,2,1,0,-1,-2,-1)[frame_index%8]
+  hip_y=int(h*.56); knee_y=int(h*.73)
+  lower=out.crop((0,hip_y,w,h))
+  # Progressive shear creates alternating foot travel while preserving texture,
+  # palette and identity from the same canonical character.
+  shear=phase*.075
+  lower=lower.transform(lower.size,Image.Transform.AFFINE,(1,shear,-shear*(knee_y-hip_y),0,1,0),resample=Image.Resampling.BICUBIC)
+  out.paste(lower,(0,hip_y))
   return out
  if action not in {'CARRY','WORK','REPAIR'}: return source
  out=source.copy()
@@ -463,7 +464,7 @@ def main():
        print('KAGGLE_CHR_SHARED_IDENTITY='+i['id']+' role='+i['role']+f' strength={strength:.2f}',flush=True)
       else:
        if i['action']=='WALK':
-        strength=min(.72,.58+fi*.014+attempt*.025)
+        strength=min(.46,.34+fi*.008+attempt*.018)
        elif i['action']=='WORK':
         strength=min(.72,.54+fi*.018+attempt*.025)
        elif i['action']=='CARRY':
