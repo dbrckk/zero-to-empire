@@ -22,13 +22,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-07T09:33:14Z
+Generated: 2026-10-07T13:23:30Z
 
 ### Git
 - Branch: `main`
-- Head: `abf672162c58`
-- Commit date: 2026-10-07T11:32:59+02:00
-- Commit: ops: collect v1.15 clean-stride TECH walk
+- Head: `bbc78613ccd2`
+- Commit date: 2026-10-07T15:23:15+02:00
+- Commit: ops: collect final v1.15 TECH walk attempt
 - Tracked files: 1445
 
 ### Recently changed files
@@ -39,7 +39,6 @@ Generated: 2026-10-07T09:33:14Z
 - `art/production/controlled-character-regen-queue.json`
 - `art/production/master-asset-queue.json`
 - `ops/autofactory-kick.txt`
-- `tools/sprites/kaggle_character_sheet_factory_v1.py`
 
 ### Project signals
 - `build.gradle.kts`
