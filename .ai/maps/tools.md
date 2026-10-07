@@ -925,7 +925,7 @@ TRIGGER_DISPATCH_TOKEN = os.getenv("AUTOF_TRIGGER_DISPATCH_TOKEN", "")
 CURRENT_DISPATCH_TOKEN = os.getenv("GITHUB_RUN_ID", "")
 KAGGLE_BUSY = os.getenv("AUTOF_KAGGLE_BUSY", "0") == "1"
 FX_BUSY = os.getenv("AUTOF_FX_BUSY", "0") == "1"
-CHARACTER_GENERATION_EPOCH = "identity-lock-v1.13-motion"
+CHARACTER_GENERATION_EPOCH = "identity-lock-v1.14-stride"
 CHARACTER_EPOCH_ATTEMPT_LIMIT = 3
 CHARACTER_BATCH_SIZE = 12
 INFRA_FAILURE_LIMIT = 3
@@ -2840,10 +2840,18 @@ role_short={
 core=f"2.5D game sprite, one {role_short}, full body, three-quarter view, neutral relaxed stance, isolated"
 detail=(
 ⋮----
-def semantic_scaffold(source,action)
+def semantic_scaffold(source,action,frame_index=0)
 ⋮----
+# v1.14 stride: give img2img an explicit alternating lower-body silhouette cue.
+# The cue is intentionally confined to the leg region; identity/head/torso remain
+# anchored by the source image and normal semantic/identity QA still applies.
 out=source.copy()
 draw=ImageDraw.Draw(out,'RGBA')
+phase=1 if frame_index%2==0 else -1
+hip=(512,610)
+front_knee=(512+phase*105,735); front_foot=(512+phase*185,900)
+rear_knee=(512-phase*75,745); rear_foot=(512-phase*145,895)
+cue=(92,102,108,150)
 ⋮----
 def prompt_pair(i,pose,mode='default')
 ⋮----
@@ -2947,6 +2955,18 @@ pa,pb=a.load(),b.load();inter=union=0
 ⋮----
 aa=pa[x,y]>0;bbb=pb[x,y]>0;inter+=aa and bbb;union+=aa or bbb
 ⋮----
+def walk_consistency_qa(frames)
+⋮----
+# Guard against semantic false positives where motion is large only because the
+# model flips viewpoint or redesigns the character between cells.
+ref=frames[0]
+ref_sig=appearance_signature(ref)
+distances=[appearance_distance(ref,f) for f in frames[1:]]
+⋮----
+# Adjacent silhouettes must remain recognisably the same person even while the
+# legs alternate. A very low IoU indicates a viewpoint/identity jump.
+adj=[alpha_iou(frames[n-1],frames[n]) for n in range(1,len(frames))]
+⋮----
 def action_qa(frames,action)
 ⋮----
 # Per-action motion floor prevents technically valid but visually frozen atlases
@@ -3008,7 +3028,7 @@ gen=torch.Generator(device='cuda').manual_seed(args.seed+idx*10000+fi*211+attemp
 ⋮----
 shared=role_anchor[i['role']]
 ⋮----
-source=semantic_scaffold(shared,i['action'])
+source=semantic_scaffold(shared,i['action'],fi)
 ⋮----
 first_strength={
 ⋮----
@@ -3020,7 +3040,7 @@ raw=img(image=source,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),str
 ⋮----
 anchor_raw=raw.convert('RGB')
 ⋮----
-strength=min(.64,.50+fi*.012+attempt*.02)
+strength=min(.72,.58+fi*.014+attempt*.025)
 ⋮----
 strength=min(.72,.54+fi*.018+attempt*.025)
 ⋮----
@@ -3032,7 +3052,7 @@ strength=min(.76,.56+fi*.018+attempt*.03)
 ⋮----
 strength=min(.38,.24+fi*.012+attempt*.02)
 if mode in {'single','identity'} and i['action']!='WALK':strength=max(.24,strength-.035)
-source=semantic_scaffold(anchor_raw,i['action'])
+source=semantic_scaffold(anchor_raw,i['action'],fi)
 ⋮----
 frame,cov=finish_frame(raw,i['action']);frames.append(frame);ok=True;print(f"KAGGLE_CHR_FRAME={i['id']} frame={fi} attempt={attempt+1} mode={mode} cov={cov:.2f}",flush=True);break
 ⋮----

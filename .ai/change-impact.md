@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 197b6f1a36213af9ff1e6821ed2648f2b3f9e4a8
-Head: 34255d7d6b42d4b14297ec3de69a580bdd1db7fb
+Base: 15ad91fd3ded676031244c1a4e894d1ae21d1393
+Head: bb162213b732d0525a72a9be197dd06e672e9dbc
 
 ## Changed files
-- M art/production/master-asset-queue.json
+- M ops/kaggle-collector-trigger.txt
 
 ## Affected areas
-- art
+- ops
 
 ## Related test candidates
 - No direct filename-based test match detected.

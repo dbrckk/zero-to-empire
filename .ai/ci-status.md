@@ -1,18 +1,14 @@
 # CI status
 
-Summary: 6 success / 2 failure / 0 active
+Summary: 8 success / 0 failure / 0 active
 
-- Kaggle Async Character Collector: completed / success (197b6f1a)
-- Asset Autofactory 235: completed / success (33133d48)
-- Asset Autofactory 235: completed / success (33133d48)
-- Kaggle Mass Sprite Factory: completed / failure (33133d48)
-- Asset Pipeline CI: completed / failure (33133d48)
-- Asset Autofactory 235: completed / success (60e544e0)
-- Pollinations Building Candidate: completed / success (60e544e0)
-- Asset Autofactory 235: completed / success (f027d778)
-
-## Latest failed run structure
-- Job: kaggle
-  - Failed step: Resolve push-triggered async wave
+- Kaggle Async Character Collector: completed / success (bb162213)
+- Kaggle Mass Sprite Factory: completed / success (ecac54d5)
+- Asset Autofactory 235: completed / success (79c6b0f5)
+- Asset Autofactory 235: completed / success (79c6b0f5)
+- Pollinations Character Atlas: completed / success (0555dc57)
+- Kaggle Async Character Collector: completed / success (d66875c3)
+- Asset Autofactory 235: completed / success (d66875c3)
+- Pollinations Building Candidate: completed / success (d66875c3)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

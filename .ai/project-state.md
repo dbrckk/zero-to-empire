@@ -22,23 +22,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-06T10:16:45Z
+Generated: 2026-10-07T06:15:36Z
 
 ### Git
 - Branch: `main`
-- Head: `34255d7d6b42`
-- Commit date: 2026-10-06T12:16:31+02:00
-- Commit: art: repair TECH walk clean-reject state
+- Head: `bb162213b732`
+- Commit date: 2026-10-07T08:14:50+02:00
+- Commit: ops: collect final v1.14 TECH walk attempt
 - Tracked files: 1445
 
 ### Recently changed files
-- `art/production/master-asset-queue.json`
-- `kaggle/github_mass_factory.py`
+- `ops/kaggle-collector-trigger.txt`
+- `art/production/kaggle-async-state.json`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
 - `art/production/controlled-character-regen-queue.json`
-- `art/production/kaggle-async-state.json`
-- `ops/kaggle-collector-trigger.txt`
+- `art/production/master-asset-queue.json`
+- `ops/autofactory-kick.txt`
 
 ### Project signals
 - `build.gradle.kts`
