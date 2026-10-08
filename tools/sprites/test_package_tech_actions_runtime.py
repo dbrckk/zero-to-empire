@@ -110,6 +110,28 @@ class RuntimePackTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'Missing review marker'):
                 verify(root)
 
+    def test_refuse_desynchronized_visual_events(self):
+        for action,event_kind,expected in (
+            ('WORK','data-update','WORK pulse event/visual phase mismatch'),
+            ('REPAIR','weld-sparks','REPAIR spark event/visual phase mismatch')):
+            with self.subTest(action=action),tempfile.TemporaryDirectory() as temp:
+                root=Path(temp)
+                (root/'production-index.json').write_bytes(
+                    (FIXTURE/'production-index.json').read_bytes())
+                for other in ACTIONS:
+                    if other != action:
+                        (root/other).symlink_to(FIXTURE/other,target_is_directory=True)
+                (root/action).mkdir()
+                for name in ('qa-manifest.json','frame-poses.json','REVIEW_REQUIRED.txt'):
+                    (root/action/name).symlink_to(FIXTURE/action/name)
+                (root/action/'frames').symlink_to(FIXTURE/action/'frames',target_is_directory=True)
+                events=json.loads((FIXTURE/action/'footstep-events.json').read_text())
+                changed=next(i for i,e in enumerate(events) if e.get('vfx_event')==event_kind)
+                events[changed]['vfx_event']=None
+                (root/action/'footstep-events.json').write_text(json.dumps(events))
+                with self.assertRaisesRegex(ValueError,expected):
+                    verify(root)
+
     def test_reject_mismatched_work_and_repair_contacts(self):
         for action in ('WORK','REPAIR'):
             with self.subTest(action=action),tempfile.TemporaryDirectory() as tmp:
