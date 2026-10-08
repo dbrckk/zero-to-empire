@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Any
 from PIL import Image, ImageDraw, ImageFilter
 import numpy as np
+from soft_skin_deform import soft_limb, signed_joint_bend
 
 CANVAS, GROUND, ROOT_X, HIP_Y = 512, 449, 252, 270
 STRIDE, CLEARANCE, STANCE = 92.0, 36.0, 0.62
@@ -214,7 +215,7 @@ def render_boot(layer,img,foot,angle) -> dict[str,float]:
             'sole_error_px':abs(py+bbox[3]-foot[1]), 'toe_x':px+bbox[2]}
 
 
-def draw_frame(t:float,kit:dict,pose_override=None,prop_underlay=None,prop_overlay=None,joint_fabric=False):
+def draw_frame(t:float,kit:dict,pose_override=None,prop_underlay=None,prop_overlay=None,joint_fabric=False,soft_deform=False):
     p=pose(t) if pose_override is None else pose_override
     x,y=p['root']
     canvas=Image.new('RGBA',(CANVAS,CANVAS))
@@ -237,28 +238,40 @@ def draw_frame(t:float,kit:dict,pose_override=None,prop_underlay=None,prop_overl
     shoulderL,shoulderR=spine(-24,-86),spine(23,-85)
     elbowL=ik(shoulderL,p['handL'],59,59,-1)
     elbowR=ik(shoulderR,p['handR'],59,59,-1)
-    rotated_limb(canvas,kit['thigh_far'],lhip,kneeL,.87,.88)
-    rotated_limb(canvas,kit['shin_boot_far_calf'],kneeL,p['left'],.91,.83)
+    # Warp the SAME cached atlas pieces along mildly curved limb strips.
+    # The optional path never modifies the rig and can be disabled for exact
+    # compatibility with the historical production renderer.
+    def segment(texture,a,b,occupancy,width_mul,bend):
+        if soft_deform:
+            soft_limb(canvas,texture,a,b,occupancy,width_mul,bend)
+        else:
+            rotated_limb(canvas,texture,a,b,occupancy,width_mul)
+    bend_l=signed_joint_bend(lhip,kneeL,p['left'])
+    bend_r=signed_joint_bend(rhip,kneeR,p['right'])
+    bend_arm_l=signed_joint_bend(shoulderL,elbowL,p['handL'],3.4)
+    bend_arm_r=signed_joint_bend(shoulderR,elbowR,p['handR'],3.4)
+    segment(kit['thigh_far'],lhip,kneeL,.87,.88,bend_l*.65)
+    segment(kit['shin_boot_far_calf'],kneeL,p['left'],.91,.83,bend_l)
     if joint_fabric: fabric_hinge(canvas,lhip,kneeL,p['left'],12,False)
     joint_cap(canvas,kneeL,10,'far')
     if joint_fabric: ankle_gaiter(canvas,kneeL,p['left'],False)
     bootL=render_boot(canvas,kit['shin_boot_far_boot'],p['left'],p['rollL'])
-    rotated_limb(canvas,kit['upper_arm_far'],shoulderL,elbowL,.88,.88)
-    rotated_limb(canvas,kit['forearm_far'],elbowL,p['handL'],.87,.88)
+    segment(kit['upper_arm_far'],shoulderL,elbowL,.88,.88,bend_arm_l*.6)
+    segment(kit['forearm_far'],elbowL,p['handL'],.87,.88,bend_arm_l)
     if joint_fabric: fabric_hinge(canvas,shoulderL,elbowL,p['handL'],9,False)
     joint_cap(canvas,elbowL,8,'far')
     torso_piece(kit['backpack'],(72,94),(-41,-82))
     torso_piece(kit['torso'],(104,117),(10,-75.5))
     paste(canvas,kit['pelvis'].resize((78,68),Image.Resampling.LANCZOS),x-38,y-43)
     if prop_underlay is not None: prop_underlay(canvas,p,t)
-    rotated_limb(canvas,kit['thigh_near'],rhip,kneeR,.87,.95)
-    rotated_limb(canvas,kit['shin_boot_near_calf'],kneeR,p['right'],.91,.9)
+    segment(kit['thigh_near'],rhip,kneeR,.87,.95,bend_r*.65)
+    segment(kit['shin_boot_near_calf'],kneeR,p['right'],.91,.9,bend_r)
     if joint_fabric: fabric_hinge(canvas,rhip,kneeR,p['right'],14,True)
     joint_cap(canvas,kneeR,12,'near')
     if joint_fabric: ankle_gaiter(canvas,kneeR,p['right'],True)
     bootR=render_boot(canvas,kit['shin_boot_near_boot'],p['right'],p['rollR'])
-    rotated_limb(canvas,kit['upper_arm_near'],shoulderR,elbowR,.88,.95)
-    rotated_limb(canvas,kit['forearm_near'],elbowR,p['handR'],.87,.94)
+    segment(kit['upper_arm_near'],shoulderR,elbowR,.88,.95,bend_arm_r*.6)
+    segment(kit['forearm_near'],elbowR,p['handR'],.87,.94,bend_arm_r)
     if joint_fabric: fabric_hinge(canvas,shoulderR,elbowR,p['handR'],10,True)
     joint_cap(canvas,elbowR,9,'near')
     # Counter-rotated head avoids unnatural nodding when the chest leans.
