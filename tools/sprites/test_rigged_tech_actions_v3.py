@@ -9,7 +9,7 @@ import unittest
 from pathlib import Path
 from PIL import Image
 from rigged_tech_actions_v3 import (
-    ACTIONS, GROUND, build_action, draw_frame, pose_for,
+    ACTIONS, GROUND, build_action, draw_frame, pose_for, spine_lean,
 )
 import rigged_tech_walk_v2 as core
 
@@ -27,6 +27,36 @@ class MultiActionGeometryTests(unittest.TestCase):
                         self.assertAlmostEqual(av, bv, places=7)
                 for key in ("lockL", "lockR"):
                     self.assertEqual(a[key], b[key])
+
+    def test_action_spine_cycle_and_contact_are_stable(self):
+        for action in ACTIONS:
+            for i in range(96):
+                t=i/96
+                before=pose_for(t,action)
+                after=pose_for(t+1,action)
+                lean=spine_lean(t,action)
+                self.assertTrue(math.isfinite(lean))
+                self.assertAlmostEqual(before['torso_lean_rad'],lean,places=9)
+                self.assertAlmostEqual(before['torso_lean_rad'],after['torso_lean_rad'],places=9)
+                self.assertLessEqual(abs(lean),.085)
+                self.assertEqual(before['left'],after['left'])
+                self.assertEqual(before['right'],after['right'])
+                x,y=before['root']
+                co,si=math.cos(lean),math.sin(lean)
+                for hand,dx,dy in [('handL',-24,-86),('handR',23,-85)]:
+                    anchor=(x+dx*co-dy*si,y+dx*si+dy*co)
+                    self.assertLessEqual(math.dist(anchor,before[hand]),118)
+
+    def test_spine_offset_does_not_move_foot_targets(self):
+        for action in ('WALK','CARRY'):
+            for i in range(24):
+                t=i/24
+                p=pose_for(t,action)
+                base=core.pose(t)
+                self.assertEqual(p['left'],base['left'])
+                self.assertEqual(p['right'],base['right'])
+                self.assertEqual(p['lockL'],base['lockL'])
+                self.assertEqual(p['lockR'],base['lockR'])
 
     def test_stationary_actions_keep_feet_grounded_and_hands_reachable(self):
         for action in ("IDLE", "WORK", "REPAIR", "CELEB"):
@@ -87,6 +117,8 @@ class MultiActionRendererTests(unittest.TestCase):
                     self.assertTrue(qa["technical_pass"], qa)
                     self.assertTrue(qa["action_kinematic_pass"], qa)
                     self.assertTrue(qa["game_scale_motion_pass"], qa)
+                    self.assertTrue(qa["spine_lean_in_range"], qa)
+                    self.assertLessEqual(qa["spine_lean_max_degrees"],5)
                     self.assertEqual(manifest["asset_id"], f"CHR-TECH-{action}")
                     self.assertEqual(manifest["strict_status"], "NEEDS_REVIEW")
                     self.assertTrue(manifest["human_visual_review_required"])
