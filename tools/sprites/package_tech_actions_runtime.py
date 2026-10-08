@@ -10,6 +10,7 @@ import json
 import math
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFilter
+from action_contact import work_event_indices, repair_spark_intensity
 
 ACTIONS=('WALK','CARRY','IDLE','WORK','REPAIR','CELEB')
 SIDE=512
@@ -87,6 +88,19 @@ def verify(root:Path):
         poses=json.loads((folder/'frame-poses.json').read_text(encoding='utf-8'))
         events=json.loads((folder/'footstep-events.json').read_text(encoding='utf-8'))
         ensure(len(poses)==count and len(events)==count,'Pose/event count mismatch: '+action)
+        if action == 'WORK':
+            expected=list(work_event_indices(count,expected_origin))
+            actual=[i for i,event in enumerate(events)
+                    if event.get('vfx_event')=='data-update']
+            ensure(actual==expected and m.get('work_pulse_event_frames')==expected,
+                   'WORK pulse event/visual phase mismatch')
+        if action == 'REPAIR':
+            expected=[i for i in range(count)
+                      if repair_spark_intensity(((i+expected_origin)%count)/count)>0]
+            actual=[i for i,event in enumerate(events)
+                    if event.get('vfx_event')=='weld-sparks']
+            ensure(actual==expected,'REPAIR spark event/visual phase mismatch')
+
         frames=sorted((folder/'frames').glob('*.png'))
         ensure(len(frames)==count and all(f.name==f'{asset}-{i:02d}.png' for i,f in enumerate(frames)),
                'Missing/extra/misordered frames: '+action)
