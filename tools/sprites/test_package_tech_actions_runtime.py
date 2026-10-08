@@ -60,7 +60,13 @@ class RuntimePackTests(unittest.TestCase):
                         self.assertEqual(layer.size,(size*6,size*4))
                         self.assertEqual(layer.mode,'RGBA')
                         self.assertIsNotNone(layer.getchannel('A').getbbox())
-            self.assertIn('requestAnimationFrame',(out/'review-player.html').read_text())
+            player=(out/'review-player.html').read_text()
+            self.assertIn('requestAnimationFrame',player)
+            self.assertIn('value="96"',player)
+            self.assertIn('id="showShadows"',player)
+            self.assertNotIn('id="showShadows" type="checkbox" checked',player)
+            self.assertIn('id="pause"',player)
+            self.assertIn('showShadows&&c.shadowReady',player)
 
     def test_game_scale_check_rejects_clipped_or_empty_frames(self):
         from PIL import ImageDraw
