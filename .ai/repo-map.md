@@ -328,6 +328,7 @@ tools/
     test_static_processing.py
     test_workflow_policy.py
   sprites/
+    action_contact.py
     animation_batch_planner.py
     asset_queue_utils.py
     asset_wave_orchestrator.py
@@ -375,6 +376,7 @@ tools/
     rigged_tech_walk_v2.py
     soft_skin_deform.py
     ter07_energy_conduit_candidate.py
+    test_action_contact.py
     test_autonomous_walk.py
     test_package_tech_actions_runtime.py
     test_rigged_tech_actions_v3.py
@@ -3672,6 +3674,8 @@ on:
       - 'tools/sprites/rigged_tech_walk_v2.py'
       - 'tools/sprites/soft_skin_deform.py'
       - 'tools/sprites/weight_transfer.py'
+      - 'tools/sprites/action_contact.py'
+      - 'tools/sprites/test_action_contact.py'
       - 'tools/sprites/test_weight_transfer.py'
       - 'tools/sprites/test_soft_skin_deform.py'
       - 'tools/sprites/rigged_tech_actions_v3.py'
@@ -3700,6 +3704,7 @@ jobs:
           python -m unittest discover -s tools/sprites -p 'test_rigged_tech_walk_v2.py' -v
           python -m unittest discover -s tools/sprites -p 'test_soft_skin_deform.py' -v
           python -m unittest discover -s tools/sprites -p 'test_weight_transfer.py' -v
+          python -m unittest discover -s tools/sprites -p 'test_action_contact.py' -v
           python -m unittest discover -s tools/sprites -p 'test_rigged_tech_actions_v3.py' -v
       - name: Build 144 transparent frames from one character skin
         run: |
@@ -25176,6 +25181,44 @@ def test_kaggle_character_generator_uses_neutral_role_anchor(self)
 def test_kaggle_rejection_memory_prefers_exact_asset_over_role_fallback(self)
 ```
 
+## File: tools/sprites/action_contact.py
+```python
+"""Deterministic 512px rig-space interaction targets for TECH WORK and REPAIR.
+
+No prompt-by-frame regeneration, remote model calls, or automatic art approval.
+"""
+⋮----
+WORK_SCREEN_LOCAL = (34.0, -75.0, 107.0, -41.0)
+REPAIR_TIP_LOCAL = (94.0, -72.0)
+⋮----
+def work_hands(t: float, root: tuple[float, float])
+⋮----
+"""Independent cyclic touch trajectories constrained to one screen."""
+⋮----
+phase = 2 * math.pi * (t % 1.0)
+⋮----
+def screen_bounds(root)
+⋮----
+def work_contact(p: dict) -> dict
+⋮----
+bounds = screen_bounds(p['root'])
+def within(hand)
+⋮----
+def work_pulse(t: float) -> float
+⋮----
+"""Phase-locked emissive touch feedback, never random pixels."""
+⋮----
+def repair_tip(root)
+⋮----
+def repair_contact(p: dict) -> dict
+⋮----
+distance = math.dist(p['handR'], repair_tip(p['root']))
+⋮----
+def repair_spark_intensity(t: float) -> float
+⋮----
+strength = max(0., math.sin(2 * math.pi * (t % 1.0)))
+```
+
 ## File: tools/sprites/animation_batch_planner.py
 ```python
 #!/usr/bin/env python3
@@ -28212,6 +28255,8 @@ expected_origin=round(count*5/24) if action=='WORK' else 0
 transfer=m.get('weight_transfer',{})
 expected_transfer=action in ('WALK','CARRY')
 ⋮----
+tool=qa.get('repair_torch_length_range_px')
+⋮----
 poses=json.loads((folder/'frame-poses.json').read_text(encoding='utf-8'))
 events=json.loads((folder/'footstep-events.json').read_text(encoding='utf-8'))
 ⋮----
@@ -29327,15 +29372,29 @@ def draw_console(layer: Image.Image, p: dict, t: float) -> None
 ⋮----
 h = 8 + round(7 * (.5 + .5 * math.sin(2 * math.pi * t + n)))
 ⋮----
+def draw_work_touch(layer: Image.Image, p: dict, t: float) -> None
+⋮----
+"""Readable front-layer contacts always anchored to both gloves."""
+⋮----
+pulse = work_pulse(t)
+⋮----
+alpha=round((125 if index==0 else 160)*pulse)
+⋮----
 def draw_repair(layer: Image.Image, p: dict, t: float) -> None
 ⋮----
 xx = x + 12 + n * 10
 ⋮----
-tip = (x + 32, y + 33)
+tip = tuple(round(v) for v in repair_tip(p["root"]))
 # Keep the welding torch physically attached to the animated wrist.
 hand = (round(p["handR"][0]), round(p["handR"][1]))
 ⋮----
-intensity = max(0.0, math.sin(2 * math.pi * t)) ** 3
+def draw_repair_sparks(layer: Image.Image, p: dict, t: float) -> None
+⋮----
+"""Emit front-layer sparks at one stable physical weld seam."""
+⋮----
+tip=(x,y)
+d=ImageDraw.Draw(layer, "RGBA")
+intensity = repair_spark_intensity(t)
 ⋮----
 a = 2 * math.pi * n / 7 + .1 * math.sin(2 * math.pi * t)
 radius = (7 + 13 * intensity) * (1 + ((n * 7) % 5) / 12)
@@ -29357,7 +29416,7 @@ def draw_frame(action: str, t: float, kit: dict)
 ⋮----
 p = pose_for(t, action)
 under = {
-overlay = draw_celebration if action == "CELEB" else None
+overlay = {"CELEB":draw_celebration,"WORK":draw_work_touch,
 ⋮----
 def action_qa(action: str, poses: list, base_qa: dict) -> dict
 ⋮----
@@ -29371,6 +29430,10 @@ shoulders = {"handL": rotated_shoulder(-24, -86),
 distance = math.dist(shoulder, p[hand])
 ⋮----
 motion = {
+work_bad = [i for i,p in enumerate(poses)
+repair_lengths = [repair_contact(p)["torch_length_px"] for p in poses
+tool_bad = [i for i,p in enumerate(poses) if action=="REPAIR"
+interaction_ok = not work_bad and not tool_bad
 stationary = action in ("IDLE", "WORK", "REPAIR", "CELEB")
 grounded = all(q["lockL"] and q["lockR"] for q in poses) if stationary else True
 grip_ok = (all(
@@ -29378,7 +29441,7 @@ legible_motion = (action not in ("WORK", "REPAIR", "CELEB")
 supports = [p.get("support_bias") for p in poses]
 amplitude = max(abs(p.get("weight_transfer_px",0)) for p in poses)
 transfer_ok = (all(v is not None and math.isfinite(v) and abs(v)<=1.00001
-kinetic = (not violations and grounded and grip_ok and legible_motion and transfer_ok)
+kinetic = (not violations and grounded and grip_ok and legible_motion and transfer_ok and interaction_ok)
 ⋮----
 def build_action(skin: Path, out: Path, action: str, frames: int = 24, fps: int = 12)
 ⋮----
@@ -29830,6 +29893,35 @@ png=OUT/'zte_terrain_07_candidate_v3.png'
 report={
 ```
 
+## File: tools/sprites/test_action_contact.py
+```python
+"""Regression tests for contact-driven WORK/REPAIR effects and safety gate."""
+⋮----
+class ContactTests(unittest.TestCase)
+⋮----
+def test_work_hands_remain_inside_one_visible_screen(self)
+⋮----
+t=i/512
+root=(252,270+1.8*math.sin(2*math.pi*t))
+⋮----
+touch=work_contact({'root':root,'handL':left,'handR':right})
+⋮----
+def test_repair_tool_physically_connects_to_wrist(self)
+⋮----
+phase=2*math.pi*t
+root=(252,270+1.8*math.sin(phase))
+hand=(root[0]+58+12*math.sin(phase),root[1]-54+11*math.cos(phase))
+contact=repair_contact({'root':root,'handR':hand})
+⋮----
+def test_contact_rejects_disconnected_hands(self)
+⋮----
+base={'root':(252,270),'handL':(0,0),'handR':(0,0)}
+⋮----
+def test_weld_sparks_are_periodic_and_phase_gated(self)
+⋮----
+t=i/256
+```
+
 ## File: tools/sprites/test_autonomous_walk.py
 ```python
 """Unattended walk generator regression tests. Run: python -m unittest ..."""
@@ -29927,13 +30019,15 @@ source=json.loads((FIXTURE/'production-index.json').read_text())
 ⋮----
 def test_reject_missing_review_marker(self)
 ⋮----
-def test_reject_mismatched_phase_and_transfer_provenance(self)
+def test_reject_mismatched_work_and_repair_contacts(self)
+⋮----
+root=Path(tmp)
 ⋮----
 manifest=json.loads((FIXTURE/action/'qa-manifest.json').read_text())
 ⋮----
-def test_reject_missing_fabric_renderer_provenance(self)
+def test_reject_mismatched_phase_and_transfer_provenance(self)
 ⋮----
-root=Path(tmp)
+def test_reject_missing_fabric_renderer_provenance(self)
 ⋮----
 manifest=json.loads((FIXTURE/'WORK'/'qa-manifest.json').read_text())
 ⋮----
@@ -29986,6 +30080,13 @@ def test_action_motion_is_not_identical_across_frames(self)
 ⋮----
 hand = [pose_for(i / 24, action)["handR"] for i in range(24)]
 ⋮----
+def test_action_contacts_and_overlaid_feedback_are_phase_correct(self)
+⋮----
+work=pose_for(t,"WORK")
+contact=work_contact(work)
+⋮----
+repair=pose_for(t,"REPAIR")
+⋮----
 def test_invalid_action_and_impossible_settings_rejected(self)
 ⋮----
 root = Path(tmp)
@@ -30014,6 +30115,10 @@ out = Path(tmp) / action
 qa = manifest["qa"]
 ⋮----
 events = json.loads((out / "animation-events.json").read_text())
+⋮----
+phase_origin=manifest["phase_origin_frame"]
+⋮----
+enabled=repair_spark_intensity(
 ```
 
 ## File: tools/sprites/test_rigged_tech_walk_v2.py

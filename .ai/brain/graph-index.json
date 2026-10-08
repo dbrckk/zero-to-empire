@@ -725,6 +725,22 @@
     },
     {
       "dependencies": [
+        "app/src/main/java/com/zerotoempire/game/GameRepository.kt",
+        "tools/sprites/action_contact.py",
+        "tools/sprites/rigged_tech_walk_v2.py",
+        "tools/sprites/weight_transfer.py"
+      ],
+      "dependents": [
+        "tools/sprites/test_rigged_tech_actions_v3.py",
+        "tools/sprites/test_soft_skin_deform.py",
+        "tools/sprites/test_weight_transfer.py"
+      ],
+      "in_degree": 3,
+      "out_degree": 4,
+      "path": "tools/sprites/rigged_tech_actions_v3.py"
+    },
+    {
+      "dependencies": [
         "app/src/main/java/com/zerotoempire/game/BillingDiagnostics.kt",
         "app/src/main/java/com/zerotoempire/game/BillingFailurePolicy.kt",
         "app/src/main/java/com/zerotoempire/game/Monetization.kt",
@@ -768,21 +784,6 @@
       "in_degree": 4,
       "out_degree": 2,
       "path": "app/src/main/java/com/zerotoempire/game/LateGame.kt"
-    },
-    {
-      "dependencies": [
-        "app/src/main/java/com/zerotoempire/game/GameRepository.kt",
-        "tools/sprites/rigged_tech_walk_v2.py",
-        "tools/sprites/weight_transfer.py"
-      ],
-      "dependents": [
-        "tools/sprites/test_rigged_tech_actions_v3.py",
-        "tools/sprites/test_soft_skin_deform.py",
-        "tools/sprites/test_weight_transfer.py"
-      ],
-      "in_degree": 3,
-      "out_degree": 3,
-      "path": "tools/sprites/rigged_tech_actions_v3.py"
     },
     {
       "dependencies": [
@@ -1184,6 +1185,17 @@
       "path": "app/src/main/java/com/zerotoempire/game/CanonicalCharacterRaster.kt"
     },
     {
+      "dependencies": [],
+      "dependents": [
+        "tools/sprites/rigged_tech_actions_v3.py",
+        "tools/sprites/test_action_contact.py",
+        "tools/sprites/test_rigged_tech_actions_v3.py"
+      ],
+      "in_degree": 3,
+      "out_degree": 0,
+      "path": "tools/sprites/action_contact.py"
+    },
+    {
       "dependencies": [
         "app/src/main/java/com/zerotoempire/game/Monetization.kt"
       ],
@@ -1206,22 +1218,10 @@
       "in_degree": 2,
       "out_degree": 1,
       "path": "app/src/main/java/com/zerotoempire/game/EndgameProgression.kt"
-    },
-    {
-      "dependencies": [
-        "app/src/main/java/com/zerotoempire/game/GameEngine.kt"
-      ],
-      "dependents": [
-        "app/src/main/java/com/zerotoempire/game/GameEngine.kt",
-        "app/src/main/java/com/zerotoempire/game/OfflineProgress.kt"
-      ],
-      "in_degree": 2,
-      "out_degree": 1,
-      "path": "app/src/main/java/com/zerotoempire/game/LiveOps.kt"
     }
   ],
-  "edge_count": 459,
+  "edge_count": 462,
   "generated_by": "dbrckk/repo-brain-v7-graph",
-  "node_count": 195,
+  "node_count": 197,
   "schema_version": 1
 }
