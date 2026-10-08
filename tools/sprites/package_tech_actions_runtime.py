@@ -72,6 +72,17 @@ def verify(root:Path):
                'Missing weight-transfer provenance: '+action)
         ensure(qa.get('weight_transfer_pass') is True,
                'Failed weight-transfer geometry QA: '+action)
+        ensure(qa.get('interaction_contact_pass') is True,
+               'Interaction contact QA failed: '+action)
+        ensure(qa.get('work_screen_violation_frames') == [] and
+               qa.get('repair_tool_violation_frames') == [],
+               'Hand/prop contact violation: '+action)
+        if action == 'REPAIR':
+            tool=qa.get('repair_torch_length_range_px')
+            ensure(isinstance(tool,list) and len(tool)==2 and
+                   18<=tool[0]<=tool[1]<=70,
+                   'Welding torch contact range missing: '+action)
+
         ensure((folder/'REVIEW_REQUIRED.txt').is_file(),'Missing review marker: '+action)
         poses=json.loads((folder/'frame-poses.json').read_text(encoding='utf-8'))
         events=json.loads((folder/'footstep-events.json').read_text(encoding='utf-8'))
