@@ -4882,6 +4882,13 @@ CANVAS = core.CANVAS
 ROOT_X = core.ROOT_X
 HIP_Y = core.HIP_Y
 ⋮----
+def spine_lean(t: float, action: str) -> float
+⋮----
+"""Cyclic, phase-coupled spine bend in radians. Foot/hip world anchors
+    are not modified, so contact geometry stays deterministic and reversible.
+    """
+phase = 2 * math.pi * (t % 1.0)
+⋮----
 def pose_for(t: float, action: str) -> dict
 ⋮----
 phase = 2 * math.pi * t
@@ -4936,7 +4943,10 @@ def action_qa(action: str, poses: list, base_qa: dict) -> dict
 ⋮----
 violations = []
 ⋮----
-shoulders = {"handL": (x - 24, y - 86), "handR": (x + 23, y - 85)}
+a = float(p.get("torso_lean_rad", 0.0))
+⋮----
+def rotated_shoulder(dx, dy)
+shoulders = {"handL": rotated_shoulder(-24, -86),
 ⋮----
 distance = math.dist(shoulder, p[hand])
 ⋮----
@@ -5092,6 +5102,16 @@ canvas=Image.new('RGBA',(CANVAS,CANVAS))
 ⋮----
 kneeL=ik(lhip,p['left'],94,99,1)
 kneeR=ik(rhip,p['right'],94,99,1)
+# Small, deterministic spine flexion rotates all upper-body parts around
+# one hip pivot while planted feet stay fixed in world space.
+lean=float(p.get('torso_lean_rad',0.0))
+⋮----
+def spine(dx,dy):return (x+dx*cos_a-dy*sin_a,y+dx*sin_a+dy*cos_a)
+def torso_piece(sprite,size,local_center,rotate=True)
+⋮----
+img=sprite.resize(size,Image.Resampling.LANCZOS)
+⋮----
+img=img.rotate(-math.degrees(lean),expand=True,resample=Image.Resampling.BICUBIC)
 ⋮----
 elbowL=ik(shoulderL,p['handL'],59,59,-1)
 elbowR=ik(shoulderR,p['handR'],59,59,-1)
@@ -5099,6 +5119,8 @@ elbowR=ik(shoulderR,p['handR'],59,59,-1)
 bootL=render_boot(canvas,kit['shin_boot_far_boot'],p['left'],p['rollL'])
 ⋮----
 bootR=render_boot(canvas,kit['shin_boot_near_boot'],p['right'],p['rollR'])
+⋮----
+# Counter-rotated head avoids unnatural nodding when the chest leans.
 ⋮----
 def check(frames:list[Image.Image],poses:list[dict],boots:list[dict])
 ⋮----
