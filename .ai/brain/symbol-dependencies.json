@@ -5,19 +5,329 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "pose_for": {
+    "sha": {
       "source": {
-        "file": "tools/sprites/rigged_tech_actions_v3.py",
-        "start": 26,
-        "end": 54
+        "file": "tools/sprites/package_tech_actions_runtime.py",
+        "start": 19,
+        "end": 20
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "ensure": {
+      "source": {
+        "file": "tools/sprites/package_tech_actions_runtime.py",
+        "start": 23,
+        "end": 24
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "verify": {
+      "source": {
+        "file": "tools/sprites/package_tech_actions_runtime.py",
+        "start": 27,
+        "end": 65
       },
       "symbol_dependencies": [
         {
-          "symbol": "pose",
+          "symbol": "ensure",
           "definitions": [
             {
-              "file": "tools/sprites/rigged_tech_walk_v2.py",
-              "line": 50,
+              "file": "tools/sprites/package_tech_actions_runtime.py",
+              "line": 23,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "review_html": {
+      "source": {
+        "file": "tools/sprites/package_tech_actions_runtime.py",
+        "start": 68,
+        "end": 102
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "render_contact_shadow": {
+      "source": {
+        "file": "tools/sprites/package_tech_actions_runtime.py",
+        "start": 105,
+        "end": 118
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "game_scale_metrics": {
+      "source": {
+        "file": "tools/sprites/package_tech_actions_runtime.py",
+        "start": 122,
+        "end": 137
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "package": {
+      "source": {
+        "file": "tools/sprites/package_tech_actions_runtime.py",
+        "start": 140,
+        "end": 221
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "ensure",
+          "definitions": [
+            {
+              "file": "tools/sprites/package_tech_actions_runtime.py",
+              "line": 23,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "game_scale_metrics",
+          "definitions": [
+            {
+              "file": "tools/sprites/package_tech_actions_runtime.py",
+              "line": 122,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "render_contact_shadow",
+          "definitions": [
+            {
+              "file": "tools/sprites/package_tech_actions_runtime.py",
+              "line": 105,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "review_html",
+          "definitions": [
+            {
+              "file": "tools/sprites/package_tech_actions_runtime.py",
+              "line": 68,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "sha",
+          "definitions": [
+            {
+              "file": "tools/sprites/package_tech_actions_runtime.py",
+              "line": 19,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "verify",
+          "definitions": [
+            {
+              "file": "tools/sprites/package_tech_actions_runtime.py",
+              "line": 27,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 6
+    },
+    "main": {
+      "source": {
+        "file": "tools/sprites/package_tech_actions_runtime.py",
+        "start": 224,
+        "end": 344
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "package",
+          "definitions": [
+            {
+              "file": "tools/sprites/package_tech_actions_runtime.py",
+              "line": 140,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "RuntimePackTests": {
+      "source": {
+        "file": "tools/sprites/test_package_tech_actions_runtime.py",
+        "start": 16,
+        "end": 118
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "game_scale_metrics",
+          "definitions": [
+            {
+              "file": "tools/sprites/package_tech_actions_runtime.py",
+              "line": 122,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "package",
+          "definitions": [
+            {
+              "file": "tools/sprites/package_tech_actions_runtime.py",
+              "line": 140,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "setUp",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_package_tech_actions_runtime.py",
+              "line": 17,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_game_scale_check_rejects_clipped_or_empty_frames",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_package_tech_actions_runtime.py",
+              "line": 65,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_reject_approved_or_corrupted_index",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_package_tech_actions_runtime.py",
+              "line": 82,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_reject_falsely_approved_visual_qa",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_package_tech_actions_runtime.py",
+              "line": 105,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_reject_missing_review_marker",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_package_tech_actions_runtime.py",
+              "line": 91,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_six_atlases_keep_the_review_gate",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_package_tech_actions_runtime.py",
+              "line": 20,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_source_contract_has_shared_skin_and_event_timeline",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_package_tech_actions_runtime.py",
+              "line": 75,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "verify",
+          "definitions": [
+            {
+              "file": "tools/sprites/package_tech_actions_runtime.py",
+              "line": 27,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 10
+    },
+    "setUp": {
+      "source": {
+        "file": "tools/sprites/test_package_tech_actions_runtime.py",
+        "start": 17,
+        "end": 18
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "test_six_atlases_keep_the_review_gate": {
+      "source": {
+        "file": "tools/sprites/test_package_tech_actions_runtime.py",
+        "start": 20,
+        "end": 63
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "package",
+          "definitions": [
+            {
+              "file": "tools/sprites/package_tech_actions_runtime.py",
+              "line": 140,
               "kind": "function",
               "language": "python"
             }
@@ -27,215 +337,19 @@
       ],
       "dependency_count": 1
     },
-    "draw_cargo": {
+    "test_game_scale_check_rejects_clipped_or_empty_frames": {
       "source": {
-        "file": "tools/sprites/rigged_tech_actions_v3.py",
-        "start": 57,
-        "end": 76
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "draw_console": {
-      "source": {
-        "file": "tools/sprites/rigged_tech_actions_v3.py",
-        "start": 79,
-        "end": 92
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "draw_repair": {
-      "source": {
-        "file": "tools/sprites/rigged_tech_actions_v3.py",
-        "start": 95,
-        "end": 123
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "draw_celebration": {
-      "source": {
-        "file": "tools/sprites/rigged_tech_actions_v3.py",
-        "start": 126,
-        "end": 136
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "draw_idle_readout": {
-      "source": {
-        "file": "tools/sprites/rigged_tech_actions_v3.py",
-        "start": 139,
-        "end": 147
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "draw_frame": {
-      "source": {
-        "file": "tools/sprites/rigged_tech_actions_v3.py",
-        "start": 150,
-        "end": 159
+        "file": "tools/sprites/test_package_tech_actions_runtime.py",
+        "start": 65,
+        "end": 73
       },
       "symbol_dependencies": [
         {
-          "symbol": "draw_cargo",
+          "symbol": "game_scale_metrics",
           "definitions": [
             {
-              "file": "tools/sprites/rigged_tech_actions_v3.py",
-              "line": 57,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "draw_celebration",
-          "definitions": [
-            {
-              "file": "tools/sprites/rigged_tech_actions_v3.py",
-              "line": 126,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "draw_console",
-          "definitions": [
-            {
-              "file": "tools/sprites/rigged_tech_actions_v3.py",
-              "line": 79,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "draw_idle_readout",
-          "definitions": [
-            {
-              "file": "tools/sprites/rigged_tech_actions_v3.py",
-              "line": 139,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "draw_repair",
-          "definitions": [
-            {
-              "file": "tools/sprites/rigged_tech_actions_v3.py",
-              "line": 95,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "pose_for",
-          "definitions": [
-            {
-              "file": "tools/sprites/rigged_tech_actions_v3.py",
-              "line": 26,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 6
-    },
-    "action_qa": {
-      "source": {
-        "file": "tools/sprites/rigged_tech_actions_v3.py",
-        "start": 162,
-        "end": 192
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "build_action": {
-      "source": {
-        "file": "tools/sprites/rigged_tech_actions_v3.py",
-        "start": 195,
-        "end": 275
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "action_qa",
-          "definitions": [
-            {
-              "file": "tools/sprites/rigged_tech_actions_v3.py",
-              "line": 162,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "build",
-          "definitions": [
-            {
-              "file": "tools/sprites/rigged_tech_walk_v2.py",
-              "line": 209,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "check",
-          "definitions": [
-            {
-              "file": "tools/sprites/rigged_tech_walk_v2.py",
-              "line": 187,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "draw_frame",
-          "definitions": [
-            {
-              "file": "tools/sprites/rigged_tech_actions_v3.py",
-              "line": 150,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "load_kit",
-          "definitions": [
-            {
-              "file": "tools/sprites/rigged_tech_walk_v2.py",
-              "line": 72,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "paste",
-          "definitions": [
-            {
-              "file": "tools/sprites/rigged_tech_walk_v2.py",
-              "line": 91,
+              "file": "tools/sprites/package_tech_actions_runtime.py",
+              "line": 122,
               "kind": "function",
               "language": "python"
             }
@@ -243,41 +357,95 @@
           "relation": "imported_module"
         }
       ],
-      "dependency_count": 6
+      "dependency_count": 1
     },
-    "main": {
+    "test_source_contract_has_shared_skin_and_event_timeline": {
       "source": {
-        "file": "tools/sprites/rigged_tech_actions_v3.py",
-        "start": 278,
-        "end": 398
+        "file": "tools/sprites/test_package_tech_actions_runtime.py",
+        "start": 75,
+        "end": 80
       },
       "symbol_dependencies": [
         {
-          "symbol": "build",
+          "symbol": "verify",
           "definitions": [
             {
-              "file": "tools/sprites/rigged_tech_walk_v2.py",
-              "line": 209,
+              "file": "tools/sprites/package_tech_actions_runtime.py",
+              "line": 27,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "imported_module"
-        },
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_reject_approved_or_corrupted_index": {
+      "source": {
+        "file": "tools/sprites/test_package_tech_actions_runtime.py",
+        "start": 82,
+        "end": 89
+      },
+      "symbol_dependencies": [
         {
-          "symbol": "build_action",
+          "symbol": "verify",
           "definitions": [
             {
-              "file": "tools/sprites/rigged_tech_actions_v3.py",
-              "line": 195,
+              "file": "tools/sprites/package_tech_actions_runtime.py",
+              "line": 27,
               "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "same_file"
+          "relation": "imported_module"
         }
       ],
-      "dependency_count": 2
+      "dependency_count": 1
+    },
+    "test_reject_missing_review_marker": {
+      "source": {
+        "file": "tools/sprites/test_package_tech_actions_runtime.py",
+        "start": 91,
+        "end": 103
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "verify",
+          "definitions": [
+            {
+              "file": "tools/sprites/package_tech_actions_runtime.py",
+              "line": 27,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_reject_falsely_approved_visual_qa": {
+      "source": {
+        "file": "tools/sprites/test_package_tech_actions_runtime.py",
+        "start": 105,
+        "end": 118
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "verify",
+          "definitions": [
+            {
+              "file": "tools/sprites/package_tech_actions_runtime.py",
+              "line": 27,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
     }
   }
 }

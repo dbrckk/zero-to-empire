@@ -3815,18 +3815,33 @@ mask=Image.new('RGBA',(SIDE,SIDE))
 ⋮----
 layer=Image.alpha_composite(layer,mask.filter(ImageFilter.GaussianBlur(4)))
 ⋮----
+def game_scale_metrics(frame:Image.Image, side:int=96)->dict
+⋮----
+"""Objective 96px silhouette sanity check, NOT an artistic approval."""
+tiny=frame.resize((side,side),Image.Resampling.LANCZOS)
+alpha=tiny.getchannel('A')
+opaque=sum(alpha.histogram()[128:])
+binary=alpha.point(lambda v: 255 if v>=128 else 0)
+bbox=binary.getbbox()
+⋮----
+margin=min(x0,y0,side-x1,side-y1)
+⋮----
 def package(source:Path,output:Path)->dict
 ⋮----
 exported={'format':'zte-tech-actions-runtime-v1','strict_status':'NEEDS_REVIEW',
 overview=Image.new('RGB',(900,672),(23,29,40))
 draw=ImageDraw.Draw(overview)
+contact96=Image.new('RGB',(120+96*8,40+108*6),(25,33,45))
+contact_draw=ImageDraw.Draw(contact96)
 ⋮----
 rec=records[action]; count=rec['count'];cols=6;rows=math.ceil(count/cols)
-pics=[];bounds=[]
+pics=[];bounds=[];game_scale=[]
 ⋮----
 frame=image.copy()
 alpha=frame.getchannel('A')
 b=alpha.point(lambda px:255 if px>=128 else 0).getbbox()
+⋮----
+img=pics[(j*count)//8].resize((96,96),Image.Resampling.LANCZOS)
 ⋮----
 variants={};shadow_variants={}
 shadow_frames=[render_contact_shadow(p) for p in rec['poses']]
@@ -5331,6 +5346,14 @@ manifest=package(FIXTURE,out)
 var=item['variants'][str(size)]
 ⋮----
 shadow=item['optional_shadow_layer']['variants'][str(size)]
+⋮----
+def test_game_scale_check_rejects_clipped_or_empty_frames(self)
+⋮----
+empty=Image.new('RGBA',(512,512))
+⋮----
+clipped=Image.new('RGBA',(512,512))
+⋮----
+def test_source_contract_has_shared_skin_and_event_timeline(self)
 ⋮----
 def test_reject_approved_or_corrupted_index(self)
 ⋮----

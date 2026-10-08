@@ -22,20 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T21:44:12Z
+Generated: 2026-10-08T21:47:59Z
 
 ### Git
 - Branch: `main`
-- Head: `081b485bc0ac`
-- Commit date: 2026-10-08T23:43:56+02:00
-- Commit: fix(art): align six-clip generator index and event files with runtime packer
+- Head: `c0cfb93cde03`
+- Commit date: 2026-10-08T23:47:20+02:00
+- Commit: test(art): require true-scale six-action review contact sheet
 - Tracked files: 1463
 
 ### Recently changed files
-- `tools/sprites/rigged_tech_actions_v3.py`
-- `tools/sprites/MODULAR_RUNTIME_PACK_README.md`
 - `tools/sprites/test_package_tech_actions_runtime.py`
 - `tools/sprites/package_tech_actions_runtime.py`
+- `tools/sprites/rigged_tech_actions_v3.py`
 
 ### Project signals
 - `build.gradle.kts`
