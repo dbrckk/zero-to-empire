@@ -108,6 +108,21 @@ class RuntimePackTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'Missing review marker'):
                 verify(root)
 
+    def test_reject_missing_fabric_renderer_provenance(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            (root/'production-index.json').write_bytes(
+                (FIXTURE/'production-index.json').read_bytes())
+            for action in ACTIONS:
+                if action != 'WORK':
+                    (root/action).symlink_to(FIXTURE/action,target_is_directory=True)
+            (root/'WORK').mkdir()
+            manifest=json.loads((FIXTURE/'WORK'/'qa-manifest.json').read_text())
+            manifest.pop('renderer_features',None)
+            (root/'WORK'/'qa-manifest.json').write_text(json.dumps(manifest))
+            with self.assertRaisesRegex(ValueError,'Renderer feature provenance missing'):
+                verify(root)
+
     def test_reject_falsely_approved_visual_qa(self):
         with tempfile.TemporaryDirectory() as temp:
             root=Path(temp)
