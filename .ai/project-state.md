@@ -22,20 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T23:06:00Z
+Generated: 2026-10-08T23:08:40Z
 
 ### Git
 - Branch: `main`
-- Head: `e67ea480e713`
-- Commit date: 2026-10-09T01:05:34+02:00
-- Commit: ci(art): test cyclic support loading before six-action review builds
+- Head: `272cf0148252`
+- Commit date: 2026-10-09T01:07:57+02:00
+- Commit: test(art): reject malformed load-transfer and cycle-seam metadata
 - Tracked files: 1468
 
 ### Recently changed files
+- `tools/sprites/test_package_tech_actions_runtime.py`
+- `tools/sprites/package_tech_actions_runtime.py`
+- `tools/sprites/test_rigged_tech_actions_v3.py`
 - `.github/workflows/modular-tech-actions.yml`
 - `tools/sprites/test_weight_transfer.py`
-- `tools/sprites/rigged_tech_actions_v3.py`
-- `tools/sprites/weight_transfer.py`
 
 ### Project signals
 - `build.gradle.kts`

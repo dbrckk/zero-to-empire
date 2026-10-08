@@ -28207,6 +28207,11 @@ qa=m['qa']
 ⋮----
 count=int(m['frames']); fps=int(m['fps'])
 ⋮----
+expected_origin=round(count*5/24) if action=='WORK' else 0
+⋮----
+transfer=m.get('weight_transfer',{})
+expected_transfer=action in ('WALK','CARRY')
+⋮----
 poses=json.loads((folder/'frame-poses.json').read_text(encoding='utf-8'))
 events=json.loads((folder/'footstep-events.json').read_text(encoding='utf-8'))
 ⋮----
@@ -29921,6 +29926,10 @@ root=Path(temp)
 source=json.loads((FIXTURE/'production-index.json').read_text())
 ⋮----
 def test_reject_missing_review_marker(self)
+⋮----
+def test_reject_mismatched_phase_and_transfer_provenance(self)
+⋮----
+manifest=json.loads((FIXTURE/action/'qa-manifest.json').read_text())
 ⋮----
 def test_reject_missing_fabric_renderer_provenance(self)
 ⋮----
