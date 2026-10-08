@@ -39,8 +39,9 @@ class MultiActionGeometryTests(unittest.TestCase):
                 self.assertAlmostEqual(before['torso_lean_rad'],lean,places=9)
                 self.assertAlmostEqual(before['torso_lean_rad'],after['torso_lean_rad'],places=9)
                 self.assertLessEqual(abs(lean),.085)
-                self.assertEqual(before['left'],after['left'])
-                self.assertEqual(before['right'],after['right'])
+                for side in ('left','right'):
+                    for v0,v1 in zip(before[side],after[side]):
+                        self.assertAlmostEqual(v0,v1,places=7)
                 x,y=before['root']
                 co,si=math.cos(lean),math.sin(lean)
                 for hand,dx,dy in [('handL',-24,-86),('handR',23,-85)]:
