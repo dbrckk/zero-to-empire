@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T22:17:52Z
+Generated: 2026-10-08T22:19:33Z
 
 ### Git
 - Branch: `main`
-- Head: `65830a382b1d`
-- Commit date: 2026-10-09T00:17:34+02:00
-- Commit: test(art): verify reversible and deterministic fabric joints without changing legacy WALK
+- Head: `95035ce0443c`
+- Commit date: 2026-10-09T00:19:18+02:00
+- Commit: test(art): assert six actions use deterministic optional IK fabric seams
 - Tracked files: 1463
 
 ### Recently changed files
+- `tools/sprites/test_rigged_tech_actions_v3.py`
 - `tools/sprites/test_rigged_tech_walk_v2.py`
 - `tools/sprites/rigged_tech_actions_v3.py`
 - `tools/sprites/rigged_tech_walk_v2.py`
 - `tools/sprites/MODULAR_ACTIONS_README.md`
-- `tools/sprites/test_rigged_tech_actions_v3.py`
 
 ### Project signals
 - `build.gradle.kts`

@@ -1,10 +1,10 @@
 # Change impact
 
-Base: b165cc66fecd6649f2e73e15988056854185b765
-Head: 65830a382b1d192d9668995a60a7e88dce438fa7
+Base: 5e5e658b15bb4e1b8b6d9c8a779a2f7f0676a7c0
+Head: 95035ce0443c85576db452b816340a5f8e794e75
 
 ## Changed files
-- M tools/sprites/test_rigged_tech_walk_v2.py
+- M tools/sprites/test_rigged_tech_actions_v3.py
 
 ## Affected areas
 - tools

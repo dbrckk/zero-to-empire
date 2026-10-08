@@ -5484,6 +5484,16 @@ class MultiActionRendererTests(unittest.TestCase)
 ⋮----
 def test_deterministic_unique_per_action(self)
 ⋮----
+def test_six_actions_use_reversible_joint_fabric(self)
+⋮----
+# Compare output against the SAME action/props rendered with the
+# old joint treatment; no pose, timing or event changes are permitted.
+⋮----
+# One-identity, repeatable output with fabric enabled.
+⋮----
+# WALK has no action props, making a strict binary before/after valid.
+sample=.125
+⋮----
 def test_each_export_remains_a_review_candidate(self)
 ⋮----
 out = Path(tmp) / action
