@@ -108,6 +108,24 @@ class RuntimePackTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'Missing review marker'):
                 verify(root)
 
+    def test_reject_mismatched_phase_and_transfer_provenance(self):
+        for action,field,expected in (
+            ('WORK','phase_origin_frame','Unexpected loop phase origin'),
+            ('WALK','weight_transfer','Missing weight-transfer provenance')):
+            with self.subTest(action=action),tempfile.TemporaryDirectory() as temp:
+                root=Path(temp)
+                (root/'production-index.json').write_bytes(
+                    (FIXTURE/'production-index.json').read_bytes())
+                for other in ACTIONS:
+                    if other!=action:
+                        (root/other).symlink_to(FIXTURE/other,target_is_directory=True)
+                (root/action).mkdir()
+                manifest=json.loads((FIXTURE/action/'qa-manifest.json').read_text())
+                manifest.pop(field,None)
+                (root/action/'qa-manifest.json').write_text(json.dumps(manifest))
+                with self.assertRaisesRegex(ValueError,expected):
+                    verify(root)
+
     def test_reject_missing_fabric_renderer_provenance(self):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp)
