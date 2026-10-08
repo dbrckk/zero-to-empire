@@ -262,6 +262,8 @@ def build_action(skin: Path, out: Path, action: str, frames: int = 24, fps: int 
     (out / "qa-manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     (out / "frame-poses.json").write_text(json.dumps(poses, indent=2), encoding="utf-8")
     (out / "animation-events.json").write_text(json.dumps(events, indent=2), encoding="utf-8")
+    # Shared runtime-pack contract; preserve legacy filename for existing consumers.
+    (out / "footstep-events.json").write_text(json.dumps(events, indent=2), encoding="utf-8")
     (out / "REVIEW_REQUIRED.txt").write_text(
         "Technical review candidate only. Never mark strict DONE without visual/semantic approval.\n",
         encoding="utf-8")
@@ -291,11 +293,14 @@ def main():
             "asset_id": manifest["asset_id"], "action": action,
             "technical_pass": manifest["qa"]["technical_pass"],
             "seam_ratio": manifest["qa"]["seam_to_median_ratio"],
-            "bundle": bundle.name, "strict_status": "NEEDS_REVIEW",
+            "bundle": bundle.name, "source_skin_sha256": manifest["source_skin_sha256"],
+            "strict_status": "NEEDS_REVIEW",
         })
     index = {
-        "format": "zte-six-tech-actions-v3", "review_required": True,
-        "strict_status": "NEEDS_REVIEW", "actions": summaries,
+        "format": "zte-modular-actions-v3", "review_required": True,
+        "strict_status": "NEEDS_REVIEW",
+        "source_skin_sha256": summaries[0]["source_skin_sha256"],
+        "actions": summaries,
     }
     args.output.mkdir(parents=True, exist_ok=True)
     (args.output / "production-index.json").write_text(json.dumps(index, indent=2), encoding="utf-8")
