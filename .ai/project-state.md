@@ -22,20 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T20:35:30Z
+Generated: 2026-10-08T20:44:13Z
 
 ### Git
 - Branch: `main`
-- Head: `a7971e2f9ab6`
-- Commit date: 2026-10-08T22:34:31+02:00
-- Commit: test(art): verify heel/toe continuity, events and stable procedural skin
+- Head: `9f5d67d96a04`
+- Commit date: 2026-10-08T22:43:58+02:00
+- Commit: docs(art): document textured skin, heel/toe curves and footstep events
 - Tracked files: 1451
 
 ### Recently changed files
+- `tools/sprites/AUTONOMOUS_WALK_README.md`
 - `tools/sprites/test_autonomous_walk.py`
 - `tools/sprites/pose_studio.html`
 - `tools/sprites/autonomous_walk.py`
-- `.github/workflows/pose-studio-autonomous.yml`
 
 ### Project signals
 - `build.gradle.kts`

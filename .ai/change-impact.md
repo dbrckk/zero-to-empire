@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 27777b44df50561b86f39b349c5d939ca2593d24
-Head: a7971e2f9ab6133bec3795697dd8693bf5371428
+Base: b5c4ce485327fd22d3ff733b404e5299d93d8ca5
+Head: 9f5d67d96a049fdacc2391ef8f8fe6dbfd51ea60
 
 ## Changed files
-- M tools/sprites/test_autonomous_walk.py
+- M tools/sprites/AUTONOMOUS_WALK_README.md
 
 ## Affected areas
 - tools
