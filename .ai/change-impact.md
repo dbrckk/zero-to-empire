@@ -1,13 +1,13 @@
 # Change impact
 
-Base: fccd677f3cdec398189766598cd276ce75502f6b
-Head: 63bc0da48784ca997ad9a9380b83bd088ffe7d51
+Base: bec77f0362a078d8047aa2f8f83eb8fc5adb3da5
+Head: e67ea480e713c35e08e7efa08207c326c088d807
 
 ## Changed files
-- M tools/sprites/rigged_tech_actions_v3.py
+- M .github/workflows/modular-tech-actions.yml
 
 ## Affected areas
-- tools
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

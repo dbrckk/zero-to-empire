@@ -102,6 +102,7 @@ sprites/
   test_rigged_tech_actions_v3.py
   test_rigged_tech_walk_v2.py
   test_soft_skin_deform.py
+  test_weight_transfer.py
   validate_animation_sheet.py
   validate_runtime_asset.py
   weight_transfer.py
@@ -4970,6 +4971,11 @@ def build_action(skin: Path, out: Path, action: str, frames: int = 24, fps: int 
 kit = core.load_kit(skin)
 ⋮----
 asset_id = f"CHR-TECH-{action}"
+# Rotate WORK's loop start to a low-motion seam, without interpolating,
+# dropping or duplicating frames. All action overlays use the same phase.
+phase_origin_frame = round(frames * (5/24)) if action == "WORK" else 0
+⋮----
+phase = ((i + phase_origin_frame) % frames) / frames
 ⋮----
 cols = 6
 rows = math.ceil(frames / cols)
@@ -5686,6 +5692,44 @@ box=a.getchannel("A").getbbox()
 ⋮----
 # The WALK candidate must be soft deformed, unlike the explicit old path.
 source=pose_for(.125,"WALK")
+```
+
+## File: sprites/test_weight_transfer.py
+```python
+"""Pure tests for cyclic IK-supported gait loading (no sprite approvals)."""
+⋮----
+class WeightTransferTests(unittest.TestCase)
+⋮----
+def test_load_is_smooth_periodic_and_bounded(self)
+⋮----
+t=i/2000
+⋮----
+def test_foot_targets_and_grips_unchanged(self)
+⋮----
+t=i/384
+old=core.pose(t)
+new=pose_for(t,action)
+⋮----
+hip=(new['root'][0]+offset,new['root'][1])
+⋮----
+def test_wrist_reach_and_cyclic_shift(self)
+⋮----
+max_jump=0
+poses=[pose_for(i/192,action) for i in range(192)]
+⋮----
+lean=p['torso_lean_rad']
+⋮----
+shoulder=(x+dx*math.cos(lean)-dy*math.sin(lean),
+⋮----
+nxt=poses[(i+1)%len(poses)]
+jump=abs(p['weight_transfer_px']-nxt['weight_transfer_px'])
+max_jump=max(max_jump,jump)
+⋮----
+def test_deterministic_and_no_source_mutation(self)
+⋮----
+p=core.pose(.1875)
+original=p.copy()
+result=transfer_pose(p,.1875,'WALK')
 ```
 
 ## File: sprites/validate_animation_sheet.py

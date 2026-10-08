@@ -143,9 +143,27 @@
           "line": 70,
           "preview": "source=pose_for(.125,\"WALK\")",
           "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_weight_transfer.py",
+          "line": 7,
+          "preview": "from rigged_tech_actions_v3 import pose_for",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_weight_transfer.py",
+          "line": 25,
+          "preview": "new=pose_for(t,action)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_weight_transfer.py",
+          "line": 44,
+          "preview": "poses=[pose_for(i/192,action) for i in range(192)]",
+          "definition_candidate": false
         }
       ],
-      "occurrence_count": 15
+      "occurrence_count": 18
     },
     "draw_cargo": {
       "definition": {
@@ -284,8 +302,8 @@
         },
         {
           "file": "tools/sprites/rigged_tech_actions_v3.py",
-          "line": 251,
-          "preview": "im, p, b = draw_frame(action, i / frames, kit)",
+          "line": 255,
+          "preview": "im, p, b = draw_frame(action, phase, kit)",
           "definition_candidate": false
         },
         {
@@ -493,7 +511,7 @@
         },
         {
           "file": "tools/sprites/rigged_tech_actions_v3.py",
-          "line": 277,
+          "line": 281,
           "preview": "qa = action_qa(action, poses, core.check(images, poses, boots))",
           "definition_candidate": false
         }
@@ -545,7 +563,7 @@
         },
         {
           "file": "tools/sprites/rigged_tech_actions_v3.py",
-          "line": 340,
+          "line": 346,
           "preview": "manifest, bundle = build_action(args.skin, out, action, args.frames, args.fps)",
           "definition_candidate": false
         },
@@ -579,7 +597,7 @@
     "main": {
       "definition": {
         "file": "tools/sprites/rigged_tech_actions_v3.py",
-        "line": 327,
+        "line": 333,
         "kind": "function",
         "language": "python"
       },
@@ -1307,104 +1325,90 @@
       ],
       "occurrence_count": 120
     },
-    "stance_load": {
+    "WeightTransferTests": {
       "definition": {
-        "file": "tools/sprites/weight_transfer.py",
-        "line": 15,
-        "kind": "function",
+        "file": "tools/sprites/test_weight_transfer.py",
+        "line": 10,
+        "kind": "class",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/weight_transfer.py",
-          "line": 15,
-          "preview": "def stance_load(t: float, offset: float = 0.0, stance: float = STANCE_FRACTION) -> float:",
+          "file": "tools/sprites/test_weight_transfer.py",
+          "line": 10,
+          "preview": "class WeightTransferTests(unittest.TestCase):",
           "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/weight_transfer.py",
-          "line": 27,
-          "preview": "right = stance_load(t)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/weight_transfer.py",
-          "line": 28,
-          "preview": "left = stance_load(t, 0.5)",
-          "definition_candidate": false
         }
       ],
-      "occurrence_count": 3
+      "occurrence_count": 1
     },
-    "support_bias": {
+    "test_load_is_smooth_periodic_and_bounded": {
       "definition": {
-        "file": "tools/sprites/weight_transfer.py",
-        "line": 25,
+        "file": "tools/sprites/test_weight_transfer.py",
+        "line": 11,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/rigged_tech_actions_v3.py",
-          "line": 18,
-          "preview": "from weight_transfer import transfer_pose, support_bias, AMPLITUDES_PX",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/rigged_tech_actions_v3.py",
-          "line": 217,
-          "preview": "supports = [p.get(\"support_bias\") for p in poses]",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/weight_transfer.py",
-          "line": 25,
-          "preview": "def support_bias(t: float) -> float:",
+          "file": "tools/sprites/test_weight_transfer.py",
+          "line": 11,
+          "preview": "def test_load_is_smooth_periodic_and_bounded(self):",
           "definition_candidate": true
-        },
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_foot_targets_and_grips_unchanged": {
+      "definition": {
+        "file": "tools/sprites/test_weight_transfer.py",
+        "line": 20,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
         {
-          "file": "tools/sprites/weight_transfer.py",
+          "file": "tools/sprites/test_weight_transfer.py",
+          "line": 20,
+          "preview": "def test_foot_targets_and_grips_unchanged(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_wrist_reach_and_cyclic_shift": {
+      "definition": {
+        "file": "tools/sprites/test_weight_transfer.py",
+        "line": 41,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_weight_transfer.py",
           "line": 41,
-          "preview": "bias = support_bias(t)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/weight_transfer.py",
-          "line": 50,
-          "preview": "p['support_bias'] = bias",
-          "definition_candidate": false
+          "preview": "def test_wrist_reach_and_cyclic_shift(self):",
+          "definition_candidate": true
         }
       ],
-      "occurrence_count": 5
+      "occurrence_count": 1
     },
-    "transfer_pose": {
+    "test_deterministic_and_no_source_mutation": {
       "definition": {
-        "file": "tools/sprites/weight_transfer.py",
-        "line": 33,
+        "file": "tools/sprites/test_weight_transfer.py",
+        "line": 57,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/rigged_tech_actions_v3.py",
-          "line": 18,
-          "preview": "from weight_transfer import transfer_pose, support_bias, AMPLITUDES_PX",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/rigged_tech_actions_v3.py",
-          "line": 53,
-          "preview": "p = transfer_pose(core.pose(t),t,action)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/weight_transfer.py",
-          "line": 33,
-          "preview": "def transfer_pose(source: dict[str, Any], t: float, action: str) -> dict[str, Any]:",
+          "file": "tools/sprites/test_weight_transfer.py",
+          "line": 57,
+          "preview": "def test_deterministic_and_no_source_mutation(self):",
           "definition_candidate": true
         }
       ],
-      "occurrence_count": 3
+      "occurrence_count": 1
     }
   }
 }

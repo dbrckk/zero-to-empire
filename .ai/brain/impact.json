@@ -1,28 +1,32 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "abefc8c43fc5a4bb75885df11b8bd77d4d10d8b9",
-  "head": "63bc0da48784ca997ad9a9380b83bd088ffe7d51",
+  "base": "63bc0da48784ca997ad9a9380b83bd088ffe7d51",
+  "head": "e67ea480e713c35e08e7efa08207c326c088d807",
   "index_mode": "incremental",
   "changed_files": [
+    {
+      "path": ".github/workflows/modular-tech-actions.yml",
+      "status": "M"
+    },
     {
       "path": "tools/sprites/rigged_tech_actions_v3.py",
       "status": "M"
     },
     {
-      "path": "tools/sprites/weight_transfer.py",
+      "path": "tools/sprites/test_weight_transfer.py",
       "status": "A"
     }
   ],
   "changed_source_files": [
     "tools/sprites/rigged_tech_actions_v3.py",
-    "tools/sprites/weight_transfer.py"
+    "tools/sprites/test_weight_transfer.py"
   ],
   "impacted_files": [
     "tools/sprites/rigged_tech_actions_v3.py",
     "tools/sprites/test_rigged_tech_actions_v3.py",
     "tools/sprites/test_soft_skin_deform.py",
-    "tools/sprites/weight_transfer.py"
+    "tools/sprites/test_weight_transfer.py"
   ],
   "impacted_symbols": [
     {
@@ -95,7 +99,7 @@
       "name": "main",
       "kind": "function",
       "file": "tools/sprites/rigged_tech_actions_v3.py",
-      "line": 327
+      "line": 333
     },
     {
       "name": "MultiActionGeometryTests",
@@ -218,26 +222,39 @@
       "line": 56
     },
     {
-      "name": "stance_load",
-      "kind": "function",
-      "file": "tools/sprites/weight_transfer.py",
-      "line": 15
+      "name": "WeightTransferTests",
+      "kind": "class",
+      "file": "tools/sprites/test_weight_transfer.py",
+      "line": 10
     },
     {
-      "name": "support_bias",
+      "name": "test_load_is_smooth_periodic_and_bounded",
       "kind": "function",
-      "file": "tools/sprites/weight_transfer.py",
-      "line": 25
+      "file": "tools/sprites/test_weight_transfer.py",
+      "line": 11
     },
     {
-      "name": "transfer_pose",
+      "name": "test_foot_targets_and_grips_unchanged",
       "kind": "function",
-      "file": "tools/sprites/weight_transfer.py",
-      "line": 33
+      "file": "tools/sprites/test_weight_transfer.py",
+      "line": 20
+    },
+    {
+      "name": "test_wrist_reach_and_cyclic_shift",
+      "kind": "function",
+      "file": "tools/sprites/test_weight_transfer.py",
+      "line": 41
+    },
+    {
+      "name": "test_deterministic_and_no_source_mutation",
+      "kind": "function",
+      "file": "tools/sprites/test_weight_transfer.py",
+      "line": 57
     }
   ],
   "selected_tests": [
     "tools/sprites/test_rigged_tech_actions_v3.py",
-    "tools/sprites/test_soft_skin_deform.py"
+    "tools/sprites/test_soft_skin_deform.py",
+    "tools/sprites/test_weight_transfer.py"
   ]
 }

@@ -356,7 +356,7 @@
       "source": {
         "file": "tools/sprites/rigged_tech_actions_v3.py",
         "start": 240,
-        "end": 324
+        "end": 330
       },
       "symbol_dependencies": [
         {
@@ -449,8 +449,8 @@
     "main": {
       "source": {
         "file": "tools/sprites/rigged_tech_actions_v3.py",
-        "start": 327,
-        "end": 447
+        "start": 333,
+        "end": 453
       },
       "symbol_dependencies": [
         {
@@ -480,20 +480,129 @@
       ],
       "dependency_count": 2
     },
-    "stance_load": {
+    "WeightTransferTests": {
       "source": {
-        "file": "tools/sprites/weight_transfer.py",
-        "start": 15,
-        "end": 22
+        "file": "tools/sprites/test_weight_transfer.py",
+        "start": 10,
+        "end": 65
       },
-      "symbol_dependencies": [],
-      "dependency_count": 0
+      "symbol_dependencies": [
+        {
+          "symbol": "pose",
+          "definitions": [
+            {
+              "file": "tools/sprites/rigged_tech_walk_v2.py",
+              "line": 51,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "pose_for",
+          "definitions": [
+            {
+              "file": "tools/sprites/rigged_tech_actions_v3.py",
+              "line": 47,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "stance_load",
+          "definitions": [
+            {
+              "file": "tools/sprites/weight_transfer.py",
+              "line": 15,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "support_bias",
+          "definitions": [
+            {
+              "file": "tools/sprites/weight_transfer.py",
+              "line": 25,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "test_deterministic_and_no_source_mutation",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_weight_transfer.py",
+              "line": 57,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_foot_targets_and_grips_unchanged",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_weight_transfer.py",
+              "line": 20,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_load_is_smooth_periodic_and_bounded",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_weight_transfer.py",
+              "line": 11,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_wrist_reach_and_cyclic_shift",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_weight_transfer.py",
+              "line": 41,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "transfer_pose",
+          "definitions": [
+            {
+              "file": "tools/sprites/weight_transfer.py",
+              "line": 33,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 9
     },
-    "support_bias": {
+    "test_load_is_smooth_periodic_and_bounded": {
       "source": {
-        "file": "tools/sprites/weight_transfer.py",
-        "start": 25,
-        "end": 30
+        "file": "tools/sprites/test_weight_transfer.py",
+        "start": 11,
+        "end": 18
       },
       "symbol_dependencies": [
         {
@@ -506,18 +615,8 @@
               "language": "python"
             }
           ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "transfer_pose": {
-      "source": {
-        "file": "tools/sprites/weight_transfer.py",
-        "start": 33,
-        "end": 51
-      },
-      "symbol_dependencies": [
+          "relation": "imported_module"
+        },
         {
           "symbol": "support_bias",
           "definitions": [
@@ -528,10 +627,100 @@
               "language": "python"
             }
           ],
-          "relation": "same_file"
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_foot_targets_and_grips_unchanged": {
+      "source": {
+        "file": "tools/sprites/test_weight_transfer.py",
+        "start": 20,
+        "end": 39
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "pose",
+          "definitions": [
+            {
+              "file": "tools/sprites/rigged_tech_walk_v2.py",
+              "line": 51,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "pose_for",
+          "definitions": [
+            {
+              "file": "tools/sprites/rigged_tech_actions_v3.py",
+              "line": 47,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_wrist_reach_and_cyclic_shift": {
+      "source": {
+        "file": "tools/sprites/test_weight_transfer.py",
+        "start": 41,
+        "end": 55
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "pose_for",
+          "definitions": [
+            {
+              "file": "tools/sprites/rigged_tech_actions_v3.py",
+              "line": 47,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
         }
       ],
       "dependency_count": 1
+    },
+    "test_deterministic_and_no_source_mutation": {
+      "source": {
+        "file": "tools/sprites/test_weight_transfer.py",
+        "start": 57,
+        "end": 65
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "pose",
+          "definitions": [
+            {
+              "file": "tools/sprites/rigged_tech_walk_v2.py",
+              "line": 51,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "transfer_pose",
+          "definitions": [
+            {
+              "file": "tools/sprites/weight_transfer.py",
+              "line": 33,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
     }
   }
 }

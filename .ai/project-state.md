@@ -22,21 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T23:03:36Z
+Generated: 2026-10-08T23:06:00Z
 
 ### Git
 - Branch: `main`
-- Head: `63bc0da48784`
-- Commit date: 2026-10-09T01:03:21+02:00
-- Commit: feat(art): shift TECH pelvis over loaded feet without moving planted targets
-- Tracked files: 1467
+- Head: `e67ea480e713`
+- Commit date: 2026-10-09T01:05:34+02:00
+- Commit: ci(art): test cyclic support loading before six-action review builds
+- Tracked files: 1468
 
 ### Recently changed files
+- `.github/workflows/modular-tech-actions.yml`
+- `tools/sprites/test_weight_transfer.py`
 - `tools/sprites/rigged_tech_actions_v3.py`
 - `tools/sprites/weight_transfer.py`
-- `tools/sprites/SOFT_MESH_V6_README.md`
-- `tools/sprites/test_package_tech_actions_runtime.py`
-- `tools/sprites/test_rigged_tech_actions_v3.py`
 
 ### Project signals
 - `build.gradle.kts`
