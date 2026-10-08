@@ -49,7 +49,7 @@ class MultiActionGeometryTests(unittest.TestCase):
     def test_action_motion_is_not_identical_across_frames(self):
         for action in ("WORK", "REPAIR", "CELEB"):
             hand = [pose_for(i / 24, action)["handR"] for i in range(24)]
-            self.assertGreater(max(math.dist(hand[0], q) for q in hand), 5)
+            self.assertGreaterEqual(max(math.dist(hand[0], q) for q in hand), 18)
 
     def test_invalid_action_and_impossible_settings_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -86,6 +86,7 @@ class MultiActionRendererTests(unittest.TestCase):
                     qa = manifest["qa"]
                     self.assertTrue(qa["technical_pass"], qa)
                     self.assertTrue(qa["action_kinematic_pass"], qa)
+                    self.assertTrue(qa["game_scale_motion_pass"], qa)
                     self.assertEqual(manifest["asset_id"], f"CHR-TECH-{action}")
                     self.assertEqual(manifest["strict_status"], "NEEDS_REVIEW")
                     self.assertTrue(manifest["human_visual_review_required"])
