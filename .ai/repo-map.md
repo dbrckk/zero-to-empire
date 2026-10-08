@@ -29465,6 +29465,45 @@ stage=Image.new('RGBA',(side,side))
 angle=90-math.degrees(math.atan2(b[1]-a[1],b[0]-a[0]))
 stage=stage.rotate(angle,resample=Image.Resampling.BICUBIC)
 ⋮----
+def fabric_hinge(layer, start, hinge, end, radius=12, near=True)
+⋮----
+"""Flexible cloth gusset behind the rigid knee/elbow cap.
+
+    Each fold follows the exact IK bone vectors; no free-floating redraw.
+    Kept optional to preserve the proven legacy WALK pixels.
+    """
+⋮----
+d=math.hypot(tx,ty)
+⋮----
+cross=ux*vy-uy*vx
+bend=math.acos(max(-1.,min(1.,ux*vx+uy*vy)))
+scale=2;r=float(radius)
+side=round((r*2.8+12)*scale)*2
+local=Image.new('RGBA',(side,side))
+draw=ImageDraw.Draw(local,'RGBA')
+cx=cy=side//2
+def xy(x,y):return (round(cx+x*scale),round(cy+y*scale))
+cloth=(35,45,55,245) if near else (23,31,40,225)
+⋮----
+yy=(-.70+i*.53)*r;slope=cross*.30*r
+⋮----
+theta=math.degrees(math.atan2(ty,tx))-90
+rotated=local.rotate(-theta,resample=Image.Resampling.BICUBIC)
+rotated=rotated.resize((side//scale,side//scale),Image.Resampling.LANCZOS)
+⋮----
+def ankle_gaiter(layer,knee,ankle,near=True)
+⋮----
+"""Short boot/cloth overlap beneath the sole-aligned rigid shoe."""
+⋮----
+norm=math.hypot(dx,dy)
+⋮----
+x=ankle[0]-dx*19;y=ankle[1]-dy*19;r=9 if near else 8
+pts=[(x+dy*r,y-dx*r),(x-dy*r,y+dx*r),
+draw=ImageDraw.Draw(layer,'RGBA')
+⋮----
+a=(x-dx*12+dy*r*.75,y-dy*12-dx*r*.75)
+b=(x-dx*12-dy*r*.75,y-dy*12+dx*r*.75)
+⋮----
 def joint_cap(layer,p,r=14,depth='near')
 ⋮----
 """Soft metallic overlap at hinge hides segment gaps without redrawing identity."""
@@ -29497,7 +29536,7 @@ bbox=turn.getchannel('A').getbbox()
 px=round(foot[0]-center)
 py=round(foot[1]-bbox[3])
 ⋮----
-def draw_frame(t:float,kit:dict,pose_override=None,prop_underlay=None,prop_overlay=None)
+def draw_frame(t:float,kit:dict,pose_override=None,prop_underlay=None,prop_overlay=None,joint_fabric=False)
 ⋮----
 p=pose(t) if pose_override is None else pose_override
 ⋮----
@@ -29906,6 +29945,12 @@ neutral=pose(t);neutral['torso_lean_rad']=0.0
 tilted=pose(t);tilted['torso_lean_rad']=.05
 ⋮----
 bad=pose(.125);bad['torso_lean_rad']=invalid
+⋮----
+def test_optional_joint_fabric_is_deterministic_and_review_only(self)
+⋮----
+# Keep existing production textures unchanged by default.
+⋮----
+bbox=textile.getchannel('A').getbbox()
 ⋮----
 def test_build_export_review_gate(self)
 ⋮----
