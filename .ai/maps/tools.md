@@ -92,9 +92,11 @@ sprites/
   process_final_sprites.py
   promote_ter07_v3.py
   reconcile_strict_approvals.py
+  rigged_tech_actions_v3.py
   rigged_tech_walk_v2.py
   ter07_energy_conduit_candidate.py
   test_autonomous_walk.py
+  test_rigged_tech_actions_v3.py
   test_rigged_tech_walk_v2.py
   validate_animation_sheet.py
   validate_runtime_asset.py
@@ -4748,6 +4750,121 @@ runtime = runtime_for(asset)
 strict_done = sum(a.get("strict_status") == "DONE" for a in queue["assets"])
 ```
 
+## File: sprites/rigged_tech_actions_v3.py
+```python
+#!/usr/bin/env python3
+"""Automated multi-action TECH sprite production with a single textured IK rig.
+
+All outputs remain technical review candidates. This script cannot mark DONE.
+No Kaggle, generative frame redraw, interaction, or remote model is required.
+"""
+⋮----
+ACTIONS = ("WALK", "CARRY", "IDLE", "WORK", "REPAIR", "CELEB")
+GROUND = core.GROUND
+CANVAS = core.CANVAS
+ROOT_X = core.ROOT_X
+HIP_Y = core.HIP_Y
+⋮----
+def pose_for(t: float, action: str) -> dict
+⋮----
+phase = 2 * math.pi * t
+⋮----
+p = core.pose(t)
+⋮----
+hands = {
+⋮----
+def draw_cargo(layer: Image.Image, p: dict, t: float) -> None
+⋮----
+d = ImageDraw.Draw(layer, "RGBA")
+⋮----
+xx = x + 17 + 10 * i
+⋮----
+def draw_console(layer: Image.Image, p: dict, t: float) -> None
+⋮----
+h = 8 + round(7 * (.5 + .5 * math.sin(2 * math.pi * t + n)))
+⋮----
+def draw_repair(layer: Image.Image, p: dict, t: float) -> None
+⋮----
+xx = x + 12 + n * 10
+⋮----
+tip = (x + 32, y + 33)
+⋮----
+intensity = max(0.0, math.sin(2 * math.pi * t)) ** 3
+⋮----
+a = 2 * math.pi * n / 7 + .1 * math.sin(2 * math.pi * t)
+radius = (7 + 13 * intensity) * (1 + ((n * 7) % 5) / 12)
+dest = (round(tip[0] + math.cos(a) * radius),
+⋮----
+def draw_celebration(layer: Image.Image, p: dict, t: float) -> None
+⋮----
+a = 2 * math.pi * (n / 12 + t)
+xx = round(x + (-34 if n % 2 == 0 else 47) + 26 * math.cos(a))
+yy = round(y - 144 + 31 * math.sin(a))
+alpha = round(125 + 90 * (.5 + .5 * math.sin(a * 2)))
+color = (74, 219, 245, alpha) if n % 3 else (252, 188, 101, alpha)
+⋮----
+def draw_idle_readout(layer: Image.Image, p: dict, t: float) -> None
+⋮----
+energy = .5 + .5 * math.sin(2 * math.pi * t)
+⋮----
+def draw_frame(action: str, t: float, kit: dict)
+⋮----
+p = pose_for(t, action)
+under = {
+overlay = draw_celebration if action == "CELEB" else None
+⋮----
+def action_qa(action: str, poses: list, base_qa: dict) -> dict
+⋮----
+violations = []
+⋮----
+shoulders = {"handL": (x - 24, y - 86), "handR": (x + 23, y - 85)}
+⋮----
+distance = math.dist(shoulder, p[hand])
+⋮----
+motion = {
+stationary = action in ("IDLE", "WORK", "REPAIR", "CELEB")
+grounded = all(q["lockL"] and q["lockR"] for q in poses) if stationary else True
+grip_ok = (all(
+kinetic = (not violations and grounded and grip_ok and
+⋮----
+def build_action(skin: Path, out: Path, action: str, frames: int = 24, fps: int = 12)
+⋮----
+kit = core.load_kit(skin)
+⋮----
+asset_id = f"CHR-TECH-{action}"
+⋮----
+cols = 6
+rows = math.ceil(frames / cols)
+atlas = Image.new("RGBA", (CANVAS * cols, CANVAS * rows))
+sheet = Image.new("RGB", (192 * cols, 192 * rows), (27, 34, 45))
+game_sheet = Image.new("RGB", (96 * cols, 96 * rows), (27, 34, 45))
+thumbs = []
+⋮----
+bg = Image.new("RGBA", (CANVAS, CANVAS), (26, 34, 45, 255))
+⋮----
+preview = bg.convert("RGB")
+thumb = preview.resize((192, 192), Image.Resampling.LANCZOS)
+⋮----
+qa = action_qa(action, poses, core.check(images, poses, boots))
+footfalls = action in ("WALK", "CARRY")
+events = [{
+manifest = {
+⋮----
+bundle = out.parent / f"{asset_id}-modular-v3-review.zip"
+⋮----
+def main()
+⋮----
+parser = argparse.ArgumentParser(description=__doc__)
+⋮----
+args = parser.parse_args()
+actions = ACTIONS if args.all else (args.action,)
+summaries = []
+⋮----
+out = args.output / action if args.all else args.output
+⋮----
+index = {
+```
+
 ## File: sprites/rigged_tech_walk_v2.py
 ```python
 #!/usr/bin/env python3
@@ -5087,6 +5204,51 @@ events=json.loads((root/'frame-events.json').read_text())
 frame_poses=json.loads((root/'frame-poses.json').read_text())
 ⋮----
 project=json.loads((root/'project.json').read_text())
+```
+
+## File: sprites/test_rigged_tech_actions_v3.py
+```python
+"""Regression checks for unattended six-animation TECH rig and non-bypassable review."""
+⋮----
+KIT = Path(__file__).with_name("skin-tech-v1.webp")
+⋮----
+class MultiActionGeometryTests(unittest.TestCase)
+⋮----
+def test_each_action_is_strictly_periodic(self)
+⋮----
+a = pose_for(phase, action)
+b = pose_for(phase + 1, action)
+⋮----
+def test_stationary_actions_keep_feet_grounded_and_hands_reachable(self)
+⋮----
+p = pose_for(i / 48, action)
+⋮----
+def test_carry_grip_is_fixed_relative_to_crate(self)
+⋮----
+p = pose_for(i / 48, "CARRY")
+⋮----
+def test_action_motion_is_not_identical_across_frames(self)
+⋮----
+hand = [pose_for(i / 24, action)["handR"] for i in range(24)]
+⋮----
+def test_invalid_action_and_impossible_settings_rejected(self)
+⋮----
+root = Path(tmp)
+⋮----
+class MultiActionRendererTests(unittest.TestCase)
+⋮----
+@classmethod
+    def setUpClass(cls)
+⋮----
+def test_deterministic_unique_per_action(self)
+⋮----
+def test_each_export_remains_a_review_candidate(self)
+⋮----
+out = Path(tmp) / action
+⋮----
+qa = manifest["qa"]
+⋮----
+events = json.loads((out / "animation-events.json").read_text())
 ```
 
 ## File: sprites/test_rigged_tech_walk_v2.py

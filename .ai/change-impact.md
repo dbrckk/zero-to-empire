@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 01afa202888ccd8f8bc2219413ad7561542edaad
-Head: 65d73c53df591435781fa7d142b6581341ec28b2
+Base: 59c13ac0434899238092f2419da9240e0ad975c0
+Head: 29042c1a3031117f725e0b7915634f1b4c6c9414
 
 ## Changed files
-- M tools/sprites/rigged_tech_walk_v2.py
+- A tools/sprites/MODULAR_ACTIONS_README.md
 
 ## Affected areas
 - tools

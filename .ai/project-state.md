@@ -22,24 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T21:15:12Z
+Generated: 2026-10-08T21:17:43Z
 
 ### Git
 - Branch: `main`
-- Head: `65d73c53df59`
-- Commit date: 2026-10-08T23:14:55+02:00
-- Commit: refactor(art): support rigged pose and prop overlays without changing proven WALK renderer
-- Tracked files: 1456
+- Head: `29042c1a3031`
+- Commit date: 2026-10-08T23:17:24+02:00
+- Commit: docs(art): document six TECH clips, unattended build and manual review gate
+- Tracked files: 1460
 
 ### Recently changed files
+- `tools/sprites/MODULAR_ACTIONS_README.md`
+- `.github/workflows/modular-tech-actions.yml`
+- `tools/sprites/test_rigged_tech_actions_v3.py`
+- `tools/sprites/rigged_tech_actions_v3.py`
 - `tools/sprites/rigged_tech_walk_v2.py`
-- `art/production/character-strict-review-backlog.md`
-- `.github/workflows/modular-tech-character.yml`
-- `tools/sprites/MODULAR_WALK_README.md`
-- `tools/sprites/skin-tech-v1.webp`
-- `tools/sprites/test_rigged_tech_walk_v2.py`
-- `tools/sprites/AUTONOMOUS_WALK_README.md`
-- `tools/sprites/test_autonomous_walk.py`
 
 ### Project signals
 - `build.gradle.kts`
