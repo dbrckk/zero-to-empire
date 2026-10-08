@@ -118,6 +118,25 @@ def render_contact_shadow(p:dict)->Image.Image:
     return layer
 
 
+
+def game_scale_metrics(frame:Image.Image, side:int=96)->dict:
+    """Objective 96px silhouette sanity check, NOT an artistic approval."""
+    tiny=frame.resize((side,side),Image.Resampling.LANCZOS)
+    alpha=tiny.getchannel('A')
+    opaque=sum(alpha.histogram()[128:])
+    binary=alpha.point(lambda v: 255 if v>=128 else 0)
+    bbox=binary.getbbox()
+    if bbox is None:
+        return {'opaque_pixels':0,'bounds':None,'min_edge_margin':0,
+                'silhouette_width':0,'silhouette_height':0,'pass':False}
+    x0,y0,x1,y1=bbox
+    margin=min(x0,y0,side-x1,side-y1)
+    return {'opaque_pixels':opaque,'bounds':[x0,y0,x1,y1],
+            'min_edge_margin':margin,'silhouette_width':x1-x0,
+            'silhouette_height':y1-y0,
+            'pass':bool(opaque>=500 and x1-x0>=20 and y1-y0>=56 and margin>=3)}
+
+
 def package(source:Path,output:Path)->dict:
     index,records=verify(source)
     output.mkdir(parents=True,exist_ok=True)
@@ -130,7 +149,7 @@ def package(source:Path,output:Path)->dict:
     draw=ImageDraw.Draw(overview)
     for idx,action in enumerate(ACTIONS):
         rec=records[action]; count=rec['count'];cols=6;rows=math.ceil(count/cols)
-        pics=[];bounds=[]
+        pics=[];bounds=[];game_scale=[]
         for path in rec['frames']:
             with Image.open(path) as image:
                 ensure(image.size==(SIDE,SIDE) and image.mode=='RGBA','Source not 512px RGBA: '+str(path))
@@ -141,6 +160,9 @@ def package(source:Path,output:Path)->dict:
                    'Frame empty/clipped: '+str(path))
             ensure(alpha.getpixel((0,0))==0,'Missing transparent corner: '+str(path))
             pics.append(frame);bounds.append(b)
+            game_scale.append(game_scale_metrics(frame))
+        ensure(all(metric['pass'] for metric in game_scale),
+               '96px game-scale silhouette collapsed/clipped: '+action)
         variants={};shadow_variants={}
         shadow_frames=[render_contact_shadow(p) for p in rec['poses']]
         for size in SIZES:
@@ -176,6 +198,8 @@ def package(source:Path,output:Path)->dict:
             'fps':rec['fps'],'loop':True,'columns':cols,'rows':rows,
             'frame_rect_order':'row-major','reference_pivot_px':[252,449],
             'visual_union_bounds_px':union,'per_frame_visual_bounds_px':[list(b) for b in bounds],
+            'game_scale_96px_technical_pass':all(metric['pass'] for metric in game_scale),
+            'game_scale_96px_metrics':game_scale,
             'collision_boxes_status':'NOT_DEFINED_REQUIRES_GAMEPLAY_REVIEW',
             'events_file':events_file.relative_to(output).as_posix(),
             'optional_shadow_layer':{'default_enabled':False,'variants':shadow_variants},
