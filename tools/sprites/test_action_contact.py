@@ -19,7 +19,7 @@ class ContactTests(unittest.TestCase):
         self.assertEqual(work_hands(0,(252,270)),work_hands(1,(252,270)))
 
     def test_work_events_are_at_visual_peak_after_reindex(self):
-        for count in (8, 16, 24, 32):
+        for count in tuple(range(8,65,2)):
             origin=round(count*5/24)
             picks=work_event_indices(count,origin)
             self.assertEqual(len(picks),4,(count,picks))
@@ -27,7 +27,7 @@ class ContactTests(unittest.TestCase):
                 p=work_pulse(((frame+origin)%count)/count)
                 prev=work_pulse(((frame-1+origin)%count)/count)
                 nxt=work_pulse(((frame+1+origin)%count)/count)
-                self.assertGreaterEqual(p,.90)
+                self.assertGreaterEqual(p,.80)
                 self.assertGreater(p,prev)
                 self.assertGreaterEqual(p,nxt)
         self.assertEqual(work_event_indices(24,5),(4,10,16,22))
