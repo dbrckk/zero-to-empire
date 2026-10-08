@@ -106,7 +106,7 @@ function polishTechSkin(ctx,p,col,glow){
 function drawTech(ctx,p,controls=true){const col=state.skin==='amber'?'#f1b05e':state.skin==='lime'?'#a8e45f':'#48dfff';const glow=state.skin==='amber'?'#b96d27':state.skin==='lime'?'#5f9b34':'#198dbc';const root=p.root;let lhip=pt(root.x-13,root.y),rhip=pt(root.x+13,root.y),L=ik(lhip,p.left,94,99,1),R=ik(rhip,p.right,94,99,1);
  const shoulderL=pt(root.x-24,root.y-86),shoulderR=pt(root.x+23,root.y-85);const elbowL=ik(shoulderL,p.handL,59,59,-1),elbowR=ik(shoulderR,p.handR,59,59,-1);
  // far limb depth
- bone(ctx,lhip,L,34,'leg',col);joint(ctx,L,14,col);bone(ctx,L,p.left,26,'leg',col);boot(ctx,p.left,pt(p.left.x+12,p.left.y),col);
+ bone(ctx,lhip,L,34,'leg',col);joint(ctx,L,14,col);bone(ctx,L,p.left,26,'leg',col);boot(ctx,p.left,pt(p.left.x+12*Math.cos(p.rollL||0),p.left.y+12*Math.sin(p.rollL||0)),col);
  bone(ctx,shoulderL,elbowL,27,'arm',col);bone(ctx,elbowL,p.handL,20,'arm',col);joint(ctx,elbowL,9,col);ell(ctx,p.handL.x,p.handL.y,11,10,'#151e28','#101722',2);
  // coat and backpack, one stable identity and facial anchor
  ctx.save();ctx.translate(root.x,root.y);ctx.rotate(-.04);
@@ -123,7 +123,7 @@ function drawTech(ctx,p,controls=true){const col=state.skin==='amber'?'#f1b05e':
  poly(ctx,[[-43,-29],[-36,-23],[-35,5],[-48,0]],'#202b37','#121a27',2);
  ctx.restore();
  // legs in foreground
- bone(ctx,rhip,R,36,'leg',col);joint(ctx,R,15,col);bone(ctx,R,p.right,29,'leg',col);boot(ctx,p.right,pt(p.right.x+12,p.right.y),col);
+ bone(ctx,rhip,R,36,'leg',col);joint(ctx,R,15,col);bone(ctx,R,p.right,29,'leg',col);boot(ctx,p.right,pt(p.right.x+12*Math.cos(p.rollR||0),p.right.y+12*Math.sin(p.rollR||0)),col);
  // shoulder / near arm
  joint(ctx,shoulderR,20,col);bone(ctx,shoulderR,elbowR,29,'arm',col);joint(ctx,elbowR,12,col);bone(ctx,elbowR,p.handR,23,'arm',col);ell(ctx,p.handR.x,p.handR.y,12,11,'#222e39','#0d151e',2);ell(ctx,p.handR.x-2,p.handR.y-2,4,4,col);
  // hood + neck/head/hair: stable across every keyframe
