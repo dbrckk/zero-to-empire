@@ -1,0 +1,44 @@
+name: Autonomous Pose Studio (review candidates)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tools/sprites/autonomous_walk.py'
+      - 'tools/sprites/test_autonomous_walk.py'
+      - 'tools/sprites/pose_studio.html'
+      - '.github/workflows/pose-studio-autonomous.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build-review-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install offline-render tooling
+        run: |
+          python -m pip install --disable-pip-version-check pillow numpy playwright
+          python -m playwright install --with-deps chromium
+      - name: Verify motion, rendering and review gate
+        run: python -m unittest discover -s tools/sprites -p test_autonomous_walk.py -v
+      - name: Build 24-frame TECH WALK candidate
+        run: |
+          python tools/sprites/autonomous_walk.py \
+            --studio tools/sprites/pose_studio.html \
+            --output build/auto-pose-tech-walk --frames 24 --fps 12
+      - name: Publish review-only artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chr-tech-walk-autonomous-review
+          path: |
+            build/auto-pose-tech-walk/
+            build/CHR-TECH-WALK-autonomous-pose-v2.zip
+          if-no-files-found: warn
+          retention-days: 30
