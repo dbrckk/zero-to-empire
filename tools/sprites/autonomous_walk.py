@@ -81,6 +81,24 @@ def foot_local(phase: float, settings: WalkSettings) -> tuple[float, float, bool
     return x, y, False
 
 
+def foot_roll(phase: float, settings: WalkSettings) -> float:
+    """Toe tilt in radians, continuous across toe-off and heel-strike.
+    Negative = toe lifted before landing; positive = toe pointed down on push.
+    Exact ankle/ground positions remain governed by foot_local().
+    """
+    phase %= 1.0
+    d = settings.stance_fraction
+    if phase < d:
+        u = phase / d
+        if u < .17:
+            return -.18 * (1 - u / .17)
+        if u > .8:
+            return .22 * ((u - .8) / .2)
+        return 0.0
+    u = (phase - d) / (1 - d)
+    return .22 * (1-u) - .18 * u
+
+
 def pose(t: float, settings: WalkSettings) -> dict[str, Any]:
     t %= 1.0
     rx, ry = ROOT_X, HIP_Y + settings.pelvis_bob*math.cos(4*math.pi*t)
@@ -95,6 +113,7 @@ def pose(t: float, settings: WalkSettings) -> dict[str, Any]:
         'handL': {'x': rx-19+opposite, 'y': ry-18-5*math.sin(2*math.pi*t)},
         'handR': {'x': rx+43-opposite, 'y': ry-21+5*math.sin(2*math.pi*t)},
         'lockL': lock_l, 'lockR': lock_r,
+        'rollL': foot_roll(t+.5, settings), 'rollR': foot_roll(t, settings),
     }
 
 
@@ -236,6 +255,17 @@ def export(output:Path, settings:WalkSettings, html:Path, bundle: bool=True) -> 
         'poses':[pose(i/8,settings) for i in range(8)],
     }
     (output/'project.json').write_text(json.dumps(editable,indent=2,ensure_ascii=False),encoding='utf-8')
+    events = []
+    for i, p in enumerate(frames_list):
+        contact = ('both' if p['lockL'] and p['lockR'] else
+                   'left' if p['lockL'] else 'right' if p['lockR'] else 'air')
+        events.append({'frame': i, 'time_seconds': i/settings.fps,
+            'contact': contact, 'left_foot_roll_degrees': round(math.degrees(p['rollL']),3),
+            'right_foot_roll_degrees': round(math.degrees(p['rollR']),3),
+            'footstep_event': ('right' if i == 0 else 'left' if i == settings.frames//2 else None)})
+    (output/'frame-events.json').write_text(json.dumps({
+        'asset_id':settings.asset_id, 'format':'zte-footstep-events-v1',
+        'strict_status':'NEEDS_REVIEW','frames':events},indent=2),encoding='utf-8')
     (output/'frame-poses.json').write_text(json.dumps({'format':'zte-pose-frames-v2',
         'asset_id':settings.asset_id,'poses':frames_list,'fps':settings.fps,
         'strict_status':'NEEDS_REVIEW'},indent=2),encoding='utf-8')
@@ -252,6 +282,7 @@ def export(output:Path, settings:WalkSettings, html:Path, bundle: bool=True) -> 
         'limitations':['Vector demo skin, not AAA photorealistic texture',
                        'Numerical motion QA does not certify anatomy or visual quality',
                        'Pelvis and foot contact must be reviewed in real game playback',
+                       'Foot-roll angles are stylistic and not certified by physics simulation',
                        'project.json stores eight editable keys; frame-poses.json is the exact full animation'],
     }
     (output/'qa-manifest.json').write_text(json.dumps(manifest,indent=2,ensure_ascii=False),encoding='utf-8')
