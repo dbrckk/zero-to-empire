@@ -41,6 +41,8 @@ class RuntimePackTests(unittest.TestCase):
                                  'NOT_DEFINED_REQUIRES_GAMEPLAY_REVIEW')
                 self.assertEqual(len(item['per_frame_visual_bounds_px']),24)
                 self.assertTrue(item['game_scale_96px_technical_pass'])
+                self.assertTrue(item['review_required'])
+                self.assertEqual(item['strict_status'],'NEEDS_REVIEW')
                 self.assertEqual(len(item['game_scale_96px_metrics']),24)
                 for m in item['game_scale_96px_metrics']:
                     self.assertTrue(m['pass'],m)
@@ -107,6 +109,22 @@ class RuntimePackTests(unittest.TestCase):
                 (root/'WALK'/name).symlink_to(FIXTURE/'WALK'/name)
             with self.assertRaisesRegex(ValueError,'Missing review marker'):
                 verify(root)
+
+    def test_reject_mismatched_work_and_repair_contacts(self):
+        for action in ('WORK','REPAIR'):
+            with self.subTest(action=action),tempfile.TemporaryDirectory() as tmp:
+                root=Path(tmp)
+                (root/'production-index.json').write_bytes(
+                    (FIXTURE/'production-index.json').read_bytes())
+                for other in ACTIONS:
+                    if other!=action:
+                        (root/other).symlink_to(FIXTURE/other,target_is_directory=True)
+                (root/action).mkdir()
+                manifest=json.loads((FIXTURE/action/'qa-manifest.json').read_text())
+                manifest['qa']['interaction_contact_pass']=False
+                (root/action/'qa-manifest.json').write_text(json.dumps(manifest))
+                with self.assertRaisesRegex(ValueError,'Interaction contact QA failed'):
+                    verify(root)
 
     def test_reject_mismatched_phase_and_transfer_provenance(self):
         for action,field,expected in (
