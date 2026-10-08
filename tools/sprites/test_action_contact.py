@@ -2,7 +2,7 @@
 from __future__ import annotations
 import math
 import unittest
-from action_contact import (work_hands, work_contact, work_pulse, screen_bounds,
+from action_contact import (work_hands, work_contact, work_pulse, work_event_indices, screen_bounds,
                             repair_tip, repair_contact, repair_spark_intensity)
 
 
@@ -17,6 +17,22 @@ class ContactTests(unittest.TestCase):
             self.assertTrue(touch['handR_on_screen'],(t,touch))
             self.assertTrue(.30<=work_pulse(t)<=1.0)
         self.assertEqual(work_hands(0,(252,270)),work_hands(1,(252,270)))
+
+    def test_work_events_are_at_visual_peak_after_reindex(self):
+        for count in (8, 16, 24, 32):
+            origin=round(count*5/24)
+            picks=work_event_indices(count,origin)
+            self.assertEqual(len(picks),4,(count,picks))
+            for frame in picks:
+                p=work_pulse(((frame+origin)%count)/count)
+                prev=work_pulse(((frame-1+origin)%count)/count)
+                nxt=work_pulse(((frame+1+origin)%count)/count)
+                self.assertGreaterEqual(p,.90)
+                self.assertGreater(p,prev)
+                self.assertGreaterEqual(p,nxt)
+        self.assertEqual(work_event_indices(24,5),(4,10,16,22))
+        with self.assertRaises(ValueError):work_event_indices(7,1)
+        with self.assertRaises(ValueError):work_event_indices(24,-1)
 
     def test_repair_tool_physically_connects_to_wrist(self):
         for i in range(512):
