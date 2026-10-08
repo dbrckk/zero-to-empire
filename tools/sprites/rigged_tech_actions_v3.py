@@ -15,6 +15,8 @@ import zipfile
 from pathlib import Path
 from PIL import Image, ImageDraw
 import rigged_tech_walk_v2 as core
+from action_contact import (work_hands, work_contact, work_pulse,
+                            repair_tip, repair_contact, repair_spark_intensity)
 from weight_transfer import transfer_pose, support_bias, AMPLITUDES_PX
 
 ACTIONS = ("WALK", "CARRY", "IDLE", "WORK", "REPAIR", "CELEB")
@@ -61,8 +63,7 @@ def pose_for(t: float, action: str) -> dict:
     hands = {
         "IDLE": ((x - 33 - 3 * math.sin(phase), y - 17 + 1.4 * math.cos(phase)),
                  (x + 45 + 3 * math.sin(phase), y - 21 + 1.4 * math.cos(phase))),
-        "WORK": ((x + 29 + 12 * math.sin(phase), y - 50 + 6 * math.cos(phase)),
-                 (x + 93 + 17 * math.sin(2 * phase), y - 56 + 14 * math.cos(2 * phase))),
+        "WORK": work_hands(t, (x, y)),
         "REPAIR": ((x + 36 + 8 * math.sin(phase), y - 42 + 7 * math.cos(phase)),
                    (x + 58 + 12 * math.sin(phase), y - 54 + 11 * math.cos(phase))),
         "CELEB": ((x - 26 - 19 * math.sin(phase), y - 144 + 12 * math.cos(phase)),
@@ -115,6 +116,23 @@ def draw_console(layer: Image.Image, p: dict, t: float) -> None:
     d.ellipse((x + 71, y + 12, x + 77, y + 18), fill=(108, 232, 244, 240))
 
 
+
+def draw_work_touch(layer: Image.Image, p: dict, t: float) -> None:
+    """Readable front-layer contacts always anchored to both gloves."""
+    if not all(work_contact(p)[k] for k in ("handL_on_screen","handR_on_screen")):
+        raise ValueError("WORK hand outside touchscreen")
+    d = ImageDraw.Draw(layer, "RGBA")
+    pulse = work_pulse(t)
+    for index, key in enumerate(("handL","handR")):
+        x,y=(round(v) for v in p[key])
+        alpha=round((125 if index==0 else 160)*pulse)
+        d.ellipse((x-14,y-14,x+14,y+14),
+                  outline=(46,209,245,alpha),width=3)
+        d.ellipse((x-5,y-5,x+5,y+5),
+                  fill=(43,185,225,round(145*pulse)))
+        d.line((x-7,y,x+7,y),fill=(180,239,255,round(135*pulse)),width=1)
+
+
 def draw_repair(layer: Image.Image, p: dict, t: float) -> None:
     x, y = p["root"]
     x, y = round(x + 62), round(y - 105)
@@ -130,14 +148,20 @@ def draw_repair(layer: Image.Image, p: dict, t: float) -> None:
               fill=(22, 43, 53, 250), outline=(128, 160, 168, 245), width=3)
     d.ellipse((x + 26, y + 31, x + 37, y + 43),
               fill=(10, 92, 111, 245), outline=(48, 207, 220, 245), width=2)
-    tip = (x + 32, y + 33)
+    tip = tuple(round(v) for v in repair_tip(p["root"]))
     # Keep the welding torch physically attached to the animated wrist.
     hand = (round(p["handR"][0]), round(p["handR"][1]))
     d.line((hand[0], hand[1], tip[0], tip[1]), fill=(39, 55, 65, 250), width=7)
     d.line((hand[0], hand[1]-2, tip[0]-2, tip[1]-1),
            fill=(128, 157, 164, 240), width=2)
-    intensity = max(0.0, math.sin(2 * math.pi * t)) ** 3
-    if intensity > .01:
+
+def draw_repair_sparks(layer: Image.Image, p: dict, t: float) -> None:
+    """Emit front-layer sparks at one stable physical weld seam."""
+    x,y=(round(v) for v in repair_tip(p["root"]))
+    tip=(x,y)
+    d=ImageDraw.Draw(layer, "RGBA")
+    intensity = repair_spark_intensity(t)
+    if intensity > 0:
         for n in range(7):
             a = 2 * math.pi * n / 7 + .1 * math.sin(2 * math.pi * t)
             radius = (7 + 13 * intensity) * (1 + ((n * 7) % 5) / 12)
@@ -180,7 +204,8 @@ def draw_frame(action: str, t: float, kit: dict):
         "REPAIR": draw_repair,
         "IDLE": draw_idle_readout,
     }.get(action)
-    overlay = draw_celebration if action == "CELEB" else None
+    overlay = {"CELEB":draw_celebration,"WORK":draw_work_touch,
+               "REPAIR":draw_repair_sparks}.get(action)
     return core.draw_frame(t, kit, p, under, overlay, joint_fabric=True, soft_deform=True)
 
 
@@ -206,6 +231,14 @@ def action_qa(action: str, poses: list, base_qa: dict) -> dict:
         hand: round(max(math.dist(poses[0][hand], q[hand]) for q in poses), 3)
         for hand in ("handL", "handR")
     }
+    work_bad = [i for i,p in enumerate(poses)
+                if action=="WORK" and not all(work_contact(p)[k] for k in
+                                                ("handL_on_screen","handR_on_screen"))]
+    repair_lengths = [repair_contact(p)["torch_length_px"] for p in poses
+                      ] if action=="REPAIR" else []
+    tool_bad = [i for i,p in enumerate(poses) if action=="REPAIR"
+                and not repair_contact(p)["torch_reachable"]]
+    interaction_ok = not work_bad and not tool_bad
     stationary = action in ("IDLE", "WORK", "REPAIR", "CELEB")
     grounded = all(q["lockL"] and q["lockR"] for q in poses) if stationary else True
     grip_ok = (all(
@@ -220,12 +253,18 @@ def action_qa(action: str, poses: list, base_qa: dict) -> dict:
                        for v in supports) and amplitude<=AMPLITUDES_PX[action]+.001
                    if action in AMPLITUDES_PX
                    else all(v is None for v in supports))
-    kinetic = (not violations and grounded and grip_ok and legible_motion and transfer_ok)
+    kinetic = (not violations and grounded and grip_ok and legible_motion and transfer_ok and interaction_ok)
     base_qa.update({
         "action_kinematic_pass": kinetic, "hand_reach_violations": violations,
         "action_motion_range_px": motion, "stationary_ground_contact_pass": grounded,
         "fixed_cargo_grip_pass": grip_ok,
         "game_scale_motion_pass": legible_motion,
+        "interaction_contact_pass": interaction_ok,
+        "work_screen_violation_frames": work_bad,
+        "repair_tool_violation_frames": tool_bad,
+        "repair_torch_length_range_px": ([round(min(repair_lengths),2),
+                                         round(max(repair_lengths),2)]
+                                        if repair_lengths else None),
         "weight_transfer_pass": transfer_ok,
         "max_weight_transfer_px": round(amplitude,4),
         "spine_lean_max_degrees": round(max(abs(math.degrees(p.get("torso_lean_rad",0.0))) for p in poses),3),
@@ -287,7 +326,8 @@ def build_action(skin: Path, out: Path, action: str, frames: int = 24, fps: int 
         "left_ground_contact": p["lockL"],
         "right_ground_contact": p["lockR"],
         "vfx_event": (
-            "weld-sparks" if action == "REPAIR" and math.sin(2 * math.pi * i / frames) > .5
+            "weld-sparks" if action == "REPAIR" and
+            repair_spark_intensity(((i+phase_origin_frame)%frames)/frames)>0
             else "celebration-particles" if action == "CELEB"
             else "data-update" if action == "WORK" and i % max(1, frames // 4) == 0
             else None),
