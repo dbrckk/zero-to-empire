@@ -147,6 +147,15 @@ def semantic_scaffold(source,action,frame_index=0):
   shear=phase*.075
   lower=lower.transform(lower.size,Image.Transform.AFFINE,(1,shear,-shear*(knee_y-hip_y),0,1,0),resample=Image.Resampling.BICUBIC)
   out.paste(lower,(0,hip_y))
+  # The affine transform introduces dark fill along the lower border. Rebuild
+  # a uniform neutral margin so border-based segmentation remains reliable.
+  margin=max(24,int(min(w,h)*.055))
+  bg=source.convert('RGB').getpixel((0,0))
+  draw=ImageDraw.Draw(out)
+  draw.rectangle((0,0,w-1,margin),fill=bg)
+  draw.rectangle((0,h-margin,w-1,h-1),fill=bg)
+  draw.rectangle((0,0,margin,h-1),fill=bg)
+  draw.rectangle((w-margin,0,w-1,h-1),fill=bg)
   return out
  if action not in {'CARRY','WORK','REPAIR'}: return source
  out=source.copy()
