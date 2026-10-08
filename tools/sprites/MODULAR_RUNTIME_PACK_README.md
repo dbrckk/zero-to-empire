@@ -34,3 +34,35 @@ Pivots derive from (252,449) in the 512×512 source canvas. The variants contain
 The package refuses missing assets, conflicting skin hashes, missing review markers, unapproved QA, unexpectedly sized frames, missing frame indices, clipped silhouettes or a malformed source index. Four regression tests cover success, the shadow layer and intentional attempts to bypass the review gate. The review player can composite optional shadows behind the character; neither the candidate sprites nor the source identity atlas are modified.
 
 The pipeline NEVER edits `art/production/master-asset-queue.json`, NEVER marks assets `strict DONE` and NEVER copies candidates over release resources. Original visual quality limits (stiff articulated seams, boot motion, hand-object overlap and small-screen readability) remain open for genuine independent visual/semantic review.
+
+
+## Contrat de données et revue à l'échelle réelle (octobre 2026)
+
+Le générateur `rigged_tech_actions_v3.py` émet `production-index.json` au format
+`zte-modular-actions-v3`, avec `source_skin_sha256` commun aux six clips.
+Chaque action fournit `footstep-events.json` (et l'alias de compatibilité
+`animation-events.json`) ; le module `package_tech_actions_runtime.py`
+vérifie explicitement ce contrat avant l'export. Aucun raccourci de validation
+visuelle n'est autorisé.
+
+Le packer effectue un contrôle à **96×96 pixels** pour chaque image : silhouette
+non vide (au moins 500 pixels alpha ≥128), largeur ≥20 pixels, hauteur ≥56
+pixels, marge extérieure ≥3 pixels. Les mesures individuelles figurent dans
+`runtime-manifest.json` sous `game_scale_96px_metrics`. Elles repèrent les
+sprites coupés ou illisibles, mais ne certifient **ni le réalisme ni la qualité AAA**.
+
+La planche `review-all-actions-96.png` montre huit poses de chacune des six
+animations sans agrandissement. Le lecteur `review-player.html` affiche
+96 pixels réels par défaut, permet pause, vitesse, zoom, et conserve les
+**ombres désactivées par défaut**. Les ombres sont des calques facultatifs,
+pas des pixels du personnage.
+
+Les gestes WORK, REPAIR et CELEB ont été élargis pour être davantage visibles
+à petite échelle ; le chalumeau REPAIR suit désormais la main. Une amplitude
+d'au moins 18 pixels du poignet droit à l'échelle source 512px est requise pour
+ces trois actions. Le modèle reste un assemblage texturé 2D rigide, à inspecter
+dans une véritable séquence de jeu avant tout passage en production.
+
+Le workflow `.github/workflows/modular-tech-actions.yml` doit être contrôlé
+après chaque changement. Un passage de tests local ne signifie pas que la
+dernière exécution GitHub Actions est confirmée.
