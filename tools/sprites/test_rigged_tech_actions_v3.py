@@ -145,6 +145,7 @@ class MultiActionRendererTests(unittest.TestCase):
                     self.assertTrue(manifest["renderer_features"]["joint_fabric"])
                     self.assertTrue(manifest["renderer_features"]["spine_flex"])
                     self.assertTrue(manifest["renderer_features"]["foot_roll"])
+                    self.assertTrue(manifest["renderer_features"]["soft_deform"])
                     self.assertTrue(manifest["human_visual_review_required"])
                     self.assertFalse(qa["visual_review_pass"])
                     self.assertFalse(qa["semantic_review_pass"])
