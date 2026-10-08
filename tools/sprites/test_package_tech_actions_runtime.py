@@ -29,10 +29,11 @@ class RuntimePackTests(unittest.TestCase):
             self.assertFalse(manifest['approved_for_release'])
             self.assertEqual(manifest['strict_status'],'NEEDS_REVIEW')
             self.assertTrue((out/'REVIEW_REQUIRED.txt').exists())
-            self.assertEqual(len(list((out/'atlases').glob('*.png'))),12)
+            self.assertEqual(len(list((out/'atlases').glob('*.png'))),24)
             for action,item in manifest['animations'].items():
                 self.assertEqual(item['strict_status'],'NEEDS_REVIEW')
                 self.assertEqual(item['reference_pivot_px'],[252,449])
+                self.assertFalse(item['optional_shadow_layer']['default_enabled'])
                 self.assertEqual(item['collision_boxes_status'],
                                  'NOT_DEFINED_REQUIRES_GAMEPLAY_REVIEW')
                 self.assertEqual(len(item['per_frame_visual_bounds_px']),24)
@@ -45,6 +46,11 @@ class RuntimePackTests(unittest.TestCase):
                         self.assertEqual(image.size,(size*6,size*4))
                         self.assertEqual(image.mode,'RGBA')
                         self.assertEqual(image.getpixel((0,0))[3],0)
+                    shadow=item['optional_shadow_layer']['variants'][str(size)]
+                    with Image.open(out/shadow['path']) as layer:
+                        self.assertEqual(layer.size,(size*6,size*4))
+                        self.assertEqual(layer.mode,'RGBA')
+                        self.assertIsNotNone(layer.getchannel('A').getbbox())
             self.assertIn('requestAnimationFrame',(out/'review-player.html').read_text())
 
     def test_reject_approved_or_corrupted_index(self):
