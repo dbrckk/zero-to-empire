@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T23:08:40Z
+Generated: 2026-10-08T23:09:36Z
 
 ### Git
 - Branch: `main`
-- Head: `272cf0148252`
-- Commit date: 2026-10-09T01:07:57+02:00
-- Commit: test(art): reject malformed load-transfer and cycle-seam metadata
+- Head: `0c19e871f2b5`
+- Commit date: 2026-10-09T01:09:18+02:00
+- Commit: docs(art): document stance-driven hip transfer and safe WORK loop cut
 - Tracked files: 1468
 
 ### Recently changed files
+- `tools/sprites/MODULAR_ACTIONS_README.md`
 - `tools/sprites/test_package_tech_actions_runtime.py`
 - `tools/sprites/package_tech_actions_runtime.py`
 - `tools/sprites/test_rigged_tech_actions_v3.py`
 - `.github/workflows/modular-tech-actions.yml`
-- `tools/sprites/test_weight_transfer.py`
 
 ### Project signals
 - `build.gradle.kts`
