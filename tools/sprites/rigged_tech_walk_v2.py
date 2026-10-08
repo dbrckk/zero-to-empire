@@ -158,7 +158,20 @@ def draw_frame(t:float,kit:dict,pose_override=None,prop_underlay=None,prop_overl
     lhip,rhip=(x-13,y),(x+13,y)
     kneeL=ik(lhip,p['left'],94,99,1)
     kneeR=ik(rhip,p['right'],94,99,1)
-    shoulderL,shoulderR=(x-24,y-86),(x+23,y-85)
+    # Small, deterministic spine flexion rotates all upper-body parts around
+    # one hip pivot while planted feet stay fixed in world space.
+    lean=float(p.get('torso_lean_rad',0.0))
+    if not math.isfinite(lean) or abs(lean)>.085:
+        raise ValueError('torso lean exceeds approved range')
+    cos_a,sin_a=math.cos(lean),math.sin(lean)
+    def spine(dx,dy):return (x+dx*cos_a-dy*sin_a,y+dx*sin_a+dy*cos_a)
+    def torso_piece(sprite,size,local_center,rotate=True):
+        img=sprite.resize(size,Image.Resampling.LANCZOS)
+        if rotate and abs(lean)>1e-6:
+            img=img.rotate(-math.degrees(lean),expand=True,resample=Image.Resampling.BICUBIC)
+        cx,cy=spine(*local_center)
+        paste(canvas,img,cx-img.width/2,cy-img.height/2)
+    shoulderL,shoulderR=spine(-24,-86),spine(23,-85)
     elbowL=ik(shoulderL,p['handL'],59,59,-1)
     elbowR=ik(shoulderR,p['handR'],59,59,-1)
     rotated_limb(canvas,kit['thigh_far'],lhip,kneeL,.87,.88)
@@ -168,8 +181,8 @@ def draw_frame(t:float,kit:dict,pose_override=None,prop_underlay=None,prop_overl
     rotated_limb(canvas,kit['upper_arm_far'],shoulderL,elbowL,.88,.88)
     rotated_limb(canvas,kit['forearm_far'],elbowL,p['handL'],.87,.88)
     joint_cap(canvas,elbowL,8,'far')
-    paste(canvas,kit['backpack'].resize((72,94),Image.Resampling.LANCZOS),x-77,y-129)
-    paste(canvas,kit['torso'].resize((104,117),Image.Resampling.LANCZOS),x-42,y-134)
+    torso_piece(kit['backpack'],(72,94),(-41,-82))
+    torso_piece(kit['torso'],(104,117),(10,-75.5))
     paste(canvas,kit['pelvis'].resize((78,68),Image.Resampling.LANCZOS),x-38,y-43)
     if prop_underlay is not None: prop_underlay(canvas,p,t)
     rotated_limb(canvas,kit['thigh_near'],rhip,kneeR,.87,.95)
@@ -179,7 +192,8 @@ def draw_frame(t:float,kit:dict,pose_override=None,prop_underlay=None,prop_overl
     rotated_limb(canvas,kit['upper_arm_near'],shoulderR,elbowR,.88,.95)
     rotated_limb(canvas,kit['forearm_near'],elbowR,p['handR'],.87,.94)
     joint_cap(canvas,elbowR,9,'near')
-    paste(canvas,kit['head'].resize((85,111),Image.Resampling.LANCZOS),x-22,y-219)
+    # Counter-rotated head avoids unnatural nodding when the chest leans.
+    torso_piece(kit['head'],(85,111),(20.5,-163.5),rotate=False)
     if prop_overlay is not None: prop_overlay(canvas,p,t)
     return canvas,p,{'left':bootL,'right':bootR}
 
