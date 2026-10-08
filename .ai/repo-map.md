@@ -25452,6 +25452,17 @@ slope_u = -(s/d)*(1-d)
 x = ease_hermite(-s/2, s/2, u, slope_u)
 y = GROUND - settings.clearance*(math.sin(math.pi*u)**1.3)
 ⋮----
+def foot_roll(phase: float, settings: WalkSettings) -> float
+⋮----
+"""Toe tilt in radians, continuous across toe-off and heel-strike.
+    Negative = toe lifted before landing; positive = toe pointed down on push.
+    Exact ankle/ground positions remain governed by foot_local().
+    """
+⋮----
+u = phase / d
+⋮----
+u = (phase - d) / (1 - d)
+⋮----
 def pose(t: float, settings: WalkSettings) -> dict[str, Any]
 ⋮----
 # Arms counter-swing to legs, with sub-pixel smooth motion.
@@ -25532,6 +25543,10 @@ rgb=Image.new('RGB',(CANVAS,CANVAS),(28,36,47))
 review=Image.new('RGB',(256*8,256*math.ceil(settings.frames/8)),(24,32,44))
 ⋮----
 editable={
+⋮----
+events = []
+⋮----
+contact = ('both' if p['lockL'] and p['lockR'] else
 ⋮----
 manifest={
 ⋮----
@@ -29186,6 +29201,13 @@ def test_pose_physical_envelope(self)
 ⋮----
 qa=verify_motion(WalkSettings())
 ⋮----
+def test_heel_toe_continuity_and_symmetry(self)
+⋮----
+eps=1e-7
+⋮----
+t=i/200
+p=pose(t,cfg)
+⋮----
 def test_reject_unphysical_config(self)
 ⋮----
 class BuildTests(unittest.TestCase)
@@ -29198,6 +29220,8 @@ if not studio.exists():studio=Path(__file__).parent/'index.html'
 cfg=WalkSettings(frames=8)
 root=Path(work)/'build'
 manifest=export(root,cfg,studio)
+⋮----
+events=json.loads((root/'frame-events.json').read_text())
 ⋮----
 frame_poses=json.loads((root/'frame-poses.json').read_text())
 ⋮----

@@ -1,10 +1,10 @@
 # Change impact
 
-Base: d70821d0afd5046a45f79ced9e492436bba48294
-Head: ce23cc4258e552bbb248c116fad2a16ceb056db3
+Base: 27777b44df50561b86f39b349c5d939ca2593d24
+Head: a7971e2f9ab6133bec3795697dd8693bf5371428
 
 ## Changed files
-- M tools/sprites/pose_studio.html
+- M tools/sprites/test_autonomous_walk.py
 
 ## Affected areas
 - tools

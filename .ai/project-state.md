@@ -22,21 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T20:31:36Z
+Generated: 2026-10-08T20:35:30Z
 
 ### Git
 - Branch: `main`
-- Head: `ce23cc4258e5`
-- Commit date: 2026-10-08T22:31:21+02:00
-- Commit: feat(art): add stable procedural materials to rigged technician animation
+- Head: `a7971e2f9ab6`
+- Commit date: 2026-10-08T22:34:31+02:00
+- Commit: test(art): verify heel/toe continuity, events and stable procedural skin
 - Tracked files: 1451
 
 ### Recently changed files
-- `tools/sprites/pose_studio.html`
-- `.github/workflows/pose-studio-autonomous.yml`
-- `tools/sprites/AUTONOMOUS_WALK_README.md`
 - `tools/sprites/test_autonomous_walk.py`
+- `tools/sprites/pose_studio.html`
 - `tools/sprites/autonomous_walk.py`
+- `.github/workflows/pose-studio-autonomous.yml`
 
 ### Project signals
 - `build.gradle.kts`

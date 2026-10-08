@@ -2,11 +2,11 @@
 
 - Index mode: incremental
 - Files indexed: 214
-- Files reparsed this run: 0
-- Symbols: 1043
+- Files reparsed this run: 2
+- Symbols: 1045
 - Internal import edges: 5
-- Impacted files: 0
-- Selected tests: 0
+- Impacted files: 2
+- Selected tests: 1
 
 ## Languages
 - kotlin: 159 files
@@ -29,8 +29,8 @@
 - tools/sprites/asset_wave_orchestrator.py: 15 symbols
 - app/src/main/java/com/zerotoempire/game/GameFeel.kt: 14 symbols
 - app/src/main/java/com/zerotoempire/game/GrowthTelemetry.kt: 14 symbols
+- tools/sprites/autonomous_walk.py: 14 symbols
 - app/src/main/java/com/zerotoempire/game/PremiumSfx.kt: 13 symbols
-- tools/sprites/autonomous_walk.py: 13 symbols
 - app/src/main/java/com/zerotoempire/game/Analytics.kt: 12 symbols
 - app/src/test/java/com/zerotoempire/game/PurchaseRecoveryTest.kt: 12 symbols
 
@@ -43,10 +43,10 @@
 ## ast-grep enrichment
 - ast-grep outline: available
 - AST index mode: incremental
-- AST files reparsed this run: 0
+- AST files reparsed this run: 2
 - outline files retained: 219
-- top-level items retained: 3116
-- direct members retained: 691
+- top-level items retained: 3117
+- direct members retained: 692
 - symbol shards: 26
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard
 
