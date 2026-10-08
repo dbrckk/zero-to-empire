@@ -49,3 +49,11 @@ Un candidat passe les contrôles techniques si les jambes restent dans leur port
 1. Remplacer le skin vectoriel par un modèle 3D unique riggé ou des calques artistiques segmentés à pivots, réutilisant les poses calculées.
 2. Ajouter les animations WORK, CARRY, REPAIR, IDLE, CELEB avec contraintes propres.
 3. Tester le rendu avec la caméra et l'échelle réelles du jeu, puis mener la revue visuelle.
+
+## Matériaux et articulation du pied (mise à jour)
+
+Le renderer `pose_studio.html` ajoute désormais un habillage procédural cohérent avec le squelette : textures de tissu, détails de harnais, genouillères, sacs et noyaux lumineux. Ces effets restent liés aux pivots d'une **identité unique**. Ils sont stylistiques, et ne constituent pas des textures PBR photoréalistes.
+
+Le calculateur `autonomous_walk.py` génère les valeurs `rollL` / `rollR` (bascule talon/pointe) et exporte `frame-events.json` qui associe chaque frame à ses contacts au sol et à ses deux angles de pied. Les événements `footstep_event` indiquent les moments de pose du pied droit et gauche pour les sons et VFX.
+
+Les tests vérifient les raccords de ces angles et la présence des métadonnées. La revue sémantique reste nécessaire : aucun résultat technique, même avec les métriques validées, ne peut promouvoir un asset au statut `strict DONE`.
