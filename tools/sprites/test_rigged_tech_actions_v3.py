@@ -12,6 +12,7 @@ from rigged_tech_actions_v3 import (
     ACTIONS, GROUND, build_action, draw_frame, pose_for, spine_lean,
 )
 import rigged_tech_walk_v2 as core
+from action_contact import work_contact, repair_contact, repair_spark_intensity
 
 KIT = Path(__file__).with_name("skin-tech-v1.webp")
 
@@ -82,6 +83,17 @@ class MultiActionGeometryTests(unittest.TestCase):
             hand = [pose_for(i / 24, action)["handR"] for i in range(24)]
             self.assertGreaterEqual(max(math.dist(hand[0], q) for q in hand), 18)
 
+    def test_action_contacts_and_overlaid_feedback_are_phase_correct(self):
+        for i in range(96):
+            t=i/96
+            work=pose_for(t,"WORK")
+            contact=work_contact(work)
+            self.assertTrue(contact["handL_on_screen"],contact)
+            self.assertTrue(contact["handR_on_screen"],contact)
+            repair=pose_for(t,"REPAIR")
+            self.assertTrue(repair_contact(repair)["torch_reachable"])
+            self.assertLessEqual(repair_contact(repair)["torch_length_px"],70)
+
     def test_invalid_action_and_impossible_settings_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -143,6 +155,12 @@ class MultiActionRendererTests(unittest.TestCase):
                     self.assertEqual(manifest["asset_id"], f"CHR-TECH-{action}")
                     self.assertEqual(manifest["strict_status"], "NEEDS_REVIEW")
                     self.assertTrue(qa["weight_transfer_pass"],qa)
+                    self.assertTrue(qa["interaction_contact_pass"],qa)
+                    self.assertFalse(qa["work_screen_violation_frames"])
+                    self.assertFalse(qa["repair_tool_violation_frames"])
+                    if action=="REPAIR":
+                        self.assertGreater(qa["repair_torch_length_range_px"][0],18)
+                        self.assertLess(qa["repair_torch_length_range_px"][1],70)
                     self.assertEqual(manifest["weight_transfer"]["enabled"],
                                      action in ("WALK","CARRY"))
                     self.assertEqual(manifest["phase_origin_frame"],
@@ -165,6 +183,12 @@ class MultiActionRendererTests(unittest.TestCase):
                     self.assertEqual(len(events), 8)
                     if action not in ("WALK", "CARRY"):
                         self.assertTrue(all(e["footstep"] is None for e in events))
+                    if action=="REPAIR":
+                        phase_origin=manifest["phase_origin_frame"]
+                        for i,e in enumerate(events):
+                            enabled=repair_spark_intensity(
+                                ((i+phase_origin)%8)/8)>0
+                            self.assertEqual(e["vfx_event"]=="weld-sparks",enabled)
                     else:
                         self.assertEqual(events[0]["footstep"], "right")
                         self.assertEqual(events[4]["footstep"], "left")
