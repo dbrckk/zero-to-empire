@@ -145,3 +145,30 @@ deux atlas transparents et deux GIF, avec contrôles géométriques conformes.
 Cela ne constitue ni un test de gameplay dans le moteur ni une approbation
 visuelle ; les 19 éléments du backlog restent soumis à leur validation
 sémantique individuelle. Pas de mise à jour automatique du compteur strict.
+
+
+## v8.1 — événements synchronisés et régressions bloquantes
+
+Pour l'action WORK, les impulsions lumineuses de contact se produisent à
+quatre maxima temporels par boucle. Le générateur utilise désormais
+`work_event_indices(frames, phase_origin_frame)` plutôt que des événements
+tous les quarts de boucle (qui tombaient sur les minima de lumière).
+Le calcul tient compte de l'origine du cycle WORK et fonctionne pour
+chaque nombre pair de frames autorisé (8 à 64), y compris 12 frames.
+En 24 frames, origine=5, les événements WORK sont sur les frames
+**4, 10, 16, 22**. Les étincelles REPAIR ont leur propre règle de phase
+et restent alignées sur le rendu.
+
+Le packeur refuse maintenant les timelines WORK/REPAIR désynchronisées
+des effets visibles, même si le reste des tests géométriques passe.
+Les tests ne doivent jamais exiger des événements de pas pour
+IDLE, WORK, REPAIR ou CELEB : seuls WALK et CARRY émettent des
+pas. Cette erreur de test a été corrigée.
+
+Contrôles : `test_action_contact.py`,
+`test_rigged_tech_actions_v3.py`,
+`test_package_tech_actions_runtime.py`. Le workflow
+`.github/workflows/modular-tech-actions.yml` exécute les tests
+avant la production des 144 frames puis le packeur QA.
+Ces contrôles sont **techniques** et ne valident aucune qualité artistique.
+Tous les candidats restent `NEEDS_REVIEW` jusqu'à revue visuelle réelle.
