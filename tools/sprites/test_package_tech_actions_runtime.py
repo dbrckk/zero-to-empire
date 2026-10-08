@@ -30,6 +30,9 @@ class RuntimePackTests(unittest.TestCase):
             self.assertEqual(manifest['strict_status'],'NEEDS_REVIEW')
             self.assertTrue((out/'REVIEW_REQUIRED.txt').exists())
             self.assertEqual(len(list((out/'atlases').glob('*.png'))),24)
+            with Image.open(out/'review-all-actions-96.png') as contact:
+                self.assertEqual(contact.size,(888,688))
+                self.assertEqual(contact.mode,'RGB')
             for action,item in manifest['animations'].items():
                 self.assertEqual(item['strict_status'],'NEEDS_REVIEW')
                 self.assertEqual(item['reference_pivot_px'],[252,449])
