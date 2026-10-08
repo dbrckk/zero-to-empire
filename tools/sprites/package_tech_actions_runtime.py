@@ -43,6 +43,10 @@ def verify(root:Path):
                'Source candidate QA/skin mismatch: '+action)
         folder=root/action
         m=json.loads((folder/'qa-manifest.json').read_text(encoding='utf-8'))
+        features=m.get('renderer_features',{})
+        ensure(features.get('joint_fabric') is True and
+               features.get('spine_flex') is True and features.get('foot_roll') is True,
+               'Renderer feature provenance missing: '+action)
         qa=m['qa']
         ensure(m.get('asset_id')==asset and m.get('source_skin_sha256')==shared,
                'Manifest identity mismatch: '+action)
