@@ -22,21 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T21:59:59Z
+Generated: 2026-10-08T22:02:31Z
 
 ### Git
 - Branch: `main`
-- Head: `424e7c01061a`
-- Commit date: 2026-10-08T23:59:38+02:00
-- Commit: feat(art): drive six TECH clips with continuous action-specific spine motion
+- Head: `6c98a039d177`
+- Commit date: 2026-10-09T00:01:50+02:00
+- Commit: test(art): verify six cyclic spine curves, shoulder reach and planted feet
 - Tracked files: 1463
 
 ### Recently changed files
+- `tools/sprites/test_rigged_tech_actions_v3.py`
+- `tools/sprites/test_rigged_tech_walk_v2.py`
 - `tools/sprites/rigged_tech_actions_v3.py`
 - `tools/sprites/rigged_tech_walk_v2.py`
-- `tools/sprites/MODULAR_RUNTIME_PACK_README.md`
-- `tools/sprites/test_package_tech_actions_runtime.py`
-- `tools/sprites/package_tech_actions_runtime.py`
 
 ### Project signals
 - `build.gradle.kts`

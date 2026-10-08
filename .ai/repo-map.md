@@ -29810,6 +29810,21 @@ def test_each_action_is_strictly_periodic(self)
 a = pose_for(phase, action)
 b = pose_for(phase + 1, action)
 ⋮----
+def test_action_spine_cycle_and_contact_are_stable(self)
+⋮----
+t=i/96
+before=pose_for(t,action)
+after=pose_for(t+1,action)
+lean=spine_lean(t,action)
+⋮----
+anchor=(x+dx*co-dy*si,y+dx*si+dy*co)
+⋮----
+def test_spine_offset_does_not_move_foot_targets(self)
+⋮----
+t=i/24
+p=pose_for(t,action)
+base=core.pose(t)
+⋮----
 def test_stationary_actions_keep_feet_grounded_and_hands_reachable(self)
 ⋮----
 p = pose_for(i / 48, action)
@@ -29880,6 +29895,17 @@ class RenderTests(unittest.TestCase)
 def test_all_twelve_pieces_present(self)
 ⋮----
 def test_stable_identity_alpha_and_dimensions(self)
+⋮----
+def test_optional_spine_flex_is_safe_and_backward_compatible(self)
+⋮----
+# The old WALK output must remain pixel-for-pixel unchanged when no spine
+# control is supplied; existing runtime art must not silently regress.
+⋮----
+neutral=pose(t);neutral['torso_lean_rad']=0.0
+⋮----
+tilted=pose(t);tilted['torso_lean_rad']=.05
+⋮----
+bad=pose(.125);bad['torso_lean_rad']=invalid
 ⋮----
 def test_build_export_review_gate(self)
 ⋮----
