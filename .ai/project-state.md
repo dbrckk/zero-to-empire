@@ -22,20 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T21:49:54Z
+Generated: 2026-10-08T21:52:17Z
 
 ### Git
 - Branch: `main`
-- Head: `60d044e1e4ad`
-- Commit date: 2026-10-08T23:49:24+02:00
-- Commit: test(art): require visible 96px-scale gesture amplitude for active TECH clips
+- Head: `3f5b178ee2be`
+- Commit date: 2026-10-08T23:52:00+02:00
+- Commit: docs(art): record 96px QA, generator/export contract and stronger TECH gestures
 - Tracked files: 1463
 
 ### Recently changed files
-- `tools/sprites/test_rigged_tech_actions_v3.py`
-- `tools/sprites/rigged_tech_actions_v3.py`
+- `tools/sprites/MODULAR_RUNTIME_PACK_README.md`
 - `tools/sprites/test_package_tech_actions_runtime.py`
 - `tools/sprites/package_tech_actions_runtime.py`
+- `tools/sprites/test_rigged_tech_actions_v3.py`
+- `tools/sprites/rigged_tech_actions_v3.py`
 
 ### Project signals
 - `build.gradle.kts`

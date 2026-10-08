@@ -5350,6 +5350,8 @@ var=item['variants'][str(size)]
 ⋮----
 shadow=item['optional_shadow_layer']['variants'][str(size)]
 ⋮----
+player=(out/'review-player.html').read_text()
+⋮----
 def test_game_scale_check_rejects_clipped_or_empty_frames(self)
 ⋮----
 empty=Image.new('RGBA',(512,512))
