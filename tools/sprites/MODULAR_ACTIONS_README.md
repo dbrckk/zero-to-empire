@@ -36,3 +36,26 @@ All six candidates explicitly retain `strict_status: NEEDS_REVIEW`, `visual_revi
 1. Refine silhouette and shoe roll at 96px, and separate optional VFX layers.
 2. Create a unified on-device visual review sheet for six loops.
 3. Review each generated action in game context before integrating into runtime assets.
+
+
+## Spine flex v4 — mouvement secondaire déterministe
+
+Le rendu des six animations prend maintenant en charge `torso_lean_rad`, une
+flexion du buste autour du pivot du bassin. La tête reste redressée, tandis que
+les épaules, les bras, le sac et les protections du torse suivent un même pivot.
+Les pieds ne sont pas déplacés par cette transformation. Les courbes sont
+périodiques et adaptées à l'action : marche plus dynamique, transport plus
+stable, repos discret, gestes de travail/réparation modérés et célébration plus
+ample. REPAIR utilise une amplitude réduite pour protéger la transition 24→1.
+
+Compatibilité : si `torso_lean_rad` est absent ou égal à zéro, le renderer
+génère les mêmes pixels que sa version antérieure (test de non-régression).
+Les valeurs non finies ou dépassant 0,085 radian sont rejetées. Les tests
+vérifient la périodicité, la portée réelle des épaules après rotation, les
+contacts au sol, l'identité et le verrou de revue.
+
+Une planche `review-all-actions-96.png` à l'échelle du jeu est également
+générée et le module d'export vérifie chaque silhouette. Ces diagnostics ne
+constituent pas une validation visuelle professionnelle : anatomie, poids,
+matériaux et raccords doivent encore être inspectés, surtout en lecture dans le
+jeu. Aucun asset unreviewed ne doit devenir strict DONE.
