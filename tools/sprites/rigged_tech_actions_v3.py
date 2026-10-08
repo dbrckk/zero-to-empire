@@ -180,7 +180,7 @@ def draw_frame(action: str, t: float, kit: dict):
         "IDLE": draw_idle_readout,
     }.get(action)
     overlay = draw_celebration if action == "CELEB" else None
-    return core.draw_frame(t, kit, p, under, overlay)
+    return core.draw_frame(t, kit, p, under, overlay, joint_fabric=True)
 
 
 def action_qa(action: str, poses: list, base_qa: dict) -> dict:
