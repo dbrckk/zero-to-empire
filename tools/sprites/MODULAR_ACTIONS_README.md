@@ -81,3 +81,33 @@ simulateur physique de tissu ni d'une déformation 3D. Les détails
 peuvent rester peu visibles à 96 pixels. Le jeu ne doit pas utiliser
 ces clips comme assets validés sans vérification visuelle et sémantique.
 Les anciens assets strict DONE ne sont ni réécrits ni réévalués.
+
+
+## v7 — transfert d'appui et raccord WORK optimisé
+
+Le module `tools/sprites/weight_transfer.py` calcule la charge relative de chaque
+pied avec une enveloppe `sin²` qui s'annule continûment au lever/poser. Pour
+WALK et CARRY, le bassin et les deux poignets suivent un léger déplacement
+avant/arrière de respectivement 4,0 et 2,2 px (référentiel 512×512) ;
+**les coordonnées des pieds et leurs événements restent identiques**.
+Le solveur IK recalcule automatiquement les genoux et compense le transfert
+de poids, sans déplacement des cibles d'appui au sol. Les poses sont
+déterministes et ne nécessitent ni Kaggle ni interface utilisateur.
+
+Le clip WORK utilise une rotation cyclique de son origine temporelle :
+`phase_origin_frame=round(frames*5/24)` (soit 5 pour 24 images et 2 pour 8).
+Ce changement reindexe simplement les frames, sans interpolation, et
+rapproche la transition de fin de boucle de la variation médiane.
+Lors du contrôle local sur le prototype texturé à 24 images, le ratio de
+raccord WORK est passé d'environ 1,81 à 1,02. Cela ne garantit pas une
+animation naturelle, seulement un meilleur point de raccord.
+
+`test_weight_transfer.py` vérifie la continuité cyclique, la portée des
+jambes et des bras, la conservation des pieds plantés et le mouvement
+borné du bassin. Les tests des six animations couvrent aussi les
+métadonnées de provenance et la nouvelle origine WORK. Le packeur
+`package_tech_actions_runtime.py` rejette les candidats sans ces
+informations ou sans `weight_transfer_pass`. Les sorties gardent
+`NEEDS_REVIEW`, `visual_review_pass=false` et
+`semantic_review_pass=false`. La validation visuelle en lecture réelle
+reste indispensable, particulièrement pour l'armature 2D et les textiles.
