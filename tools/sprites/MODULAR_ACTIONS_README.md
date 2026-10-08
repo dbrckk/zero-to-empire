@@ -59,3 +59,25 @@ générée et le module d'export vérifie chaque silhouette. Ces diagnostics ne
 constituent pas une validation visuelle professionnelle : anatomie, poids,
 matériaux et raccords doivent encore être inspectés, surtout en lecture dans le
 jeu. Aucun asset unreviewed ne doit devenir strict DONE.
+
+
+## Joint fabric v5 — souplesse des raccords sans redessin de l'identité
+
+Le module \`rigged_tech_walk_v2.py\` dispose désormais d'une option
+\`joint_fabric=True\`, activée pour les six animations candidates via
+\`rigged_tech_actions_v3.py\`. Les protections existantes restent, mais
+des raccords en tissu foncé, avec plis orientés selon les vecteurs de
+cinématique inverse, sont placés **derrière** les genoux/coudes ; un
+manchon court relie la jambe à la botte. Ces raccords suivent les
+articulations à chaque pose, sans IA et sans régénérer les textures.
+
+Le rendu historique de WALK utilise \`joint_fabric=False\` par défaut ;
+il conserve ses pixels, ses pivots et ses sorties. Les tests vérifient
+que la version modifiée est reproductible, distincte de l'ancienne,
+non coupée dans son canevas et toujours soumise à une revue stricte.
+
+**Limites :** il s'agit de panneaux 2D flexibles superposés, pas d'un
+simulateur physique de tissu ni d'une déformation 3D. Les détails
+peuvent rester peu visibles à 96 pixels. Le jeu ne doit pas utiliser
+ces clips comme assets validés sans vérification visuelle et sémantique.
+Les anciens assets strict DONE ne sont ni réécrits ni réévalués.
