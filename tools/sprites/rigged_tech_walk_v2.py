@@ -108,6 +108,69 @@ def rotated_limb(layer,img,a,b,occupancy=.87,width_mul=1):
     paste(layer,stage,a[0]-center,a[1]-center)
 
 
+def fabric_hinge(layer, start, hinge, end, radius=12, near=True):
+    """Flexible cloth gusset behind the rigid knee/elbow cap.
+
+    Each fold follows the exact IK bone vectors; no free-floating redraw.
+    Kept optional to preserve the proven legacy WALK pixels.
+    """
+    ux,uy=hinge[0]-start[0],hinge[1]-start[1]
+    vx,vy=end[0]-hinge[0],end[1]-hinge[1]
+    lu,lv=math.hypot(ux,uy),math.hypot(vx,vy)
+    if lu<1e-6 or lv<1e-6:return
+    ux,uy,vx,vy=ux/lu,uy/lu,vx/lv,vy/lv
+    tx,ty=ux+vx,uy+vy
+    d=math.hypot(tx,ty)
+    if d<.08:tx,ty=ux,uy
+    else:tx,ty=tx/d,ty/d
+    cross=ux*vy-uy*vx
+    bend=math.acos(max(-1.,min(1.,ux*vx+uy*vy)))
+    scale=2;r=float(radius)
+    side=round((r*2.8+12)*scale)*2
+    local=Image.new('RGBA',(side,side))
+    draw=ImageDraw.Draw(local,'RGBA')
+    cx=cy=side//2
+    def xy(x,y):return (round(cx+x*scale),round(cy+y*scale))
+    cloth=(35,45,55,245) if near else (23,31,40,225)
+    draw.polygon([xy(-r*.82,-r*1.43),xy(r*.73,-r*1.43),
+                  xy(r*.92,r*1.48),xy(-r*.7,r*1.47)],
+                 fill=(15,23,33,245) if near else (12,19,27,215))
+    draw.rounded_rectangle((cx-round(.67*r*scale),cy-round(1.4*r*scale),
+                            cx+round(.67*r*scale),cy+round(1.4*r*scale)),
+                           radius=round(.5*r*scale),fill=cloth)
+    for i in range(2 if bend<.27 else 3):
+        yy=(-.70+i*.53)*r;slope=cross*.30*r
+        draw.line([xy(-r*.49,yy-slope),xy(r*.47,yy+slope)],
+                  fill=(7,13,21,125+min(70,int(bend*48))),width=round(1.6*scale))
+        draw.line([xy(-r*.36,yy-slope-2.4),xy(r*.33,yy+slope-2.4)],
+                  fill=(116,132,143,55),width=round(scale))
+    draw.line([xy(-r*.56,-r*1.15),xy(-r*.55,r*1.17)],
+              fill=(100,115,129,105),width=round(1.1*scale))
+    draw.line([xy(r*.55,-r*1.15),xy(r*.54,r*1.16)],
+              fill=(5,12,19,175),width=round(1.3*scale))
+    theta=math.degrees(math.atan2(ty,tx))-90
+    rotated=local.rotate(-theta,resample=Image.Resampling.BICUBIC)
+    rotated=rotated.resize((side//scale,side//scale),Image.Resampling.LANCZOS)
+    paste(layer,rotated,hinge[0]-rotated.width/2,hinge[1]-rotated.height/2)
+
+
+def ankle_gaiter(layer,knee,ankle,near=True):
+    """Short boot/cloth overlap beneath the sole-aligned rigid shoe."""
+    dx,dy=ankle[0]-knee[0],ankle[1]-knee[1]
+    norm=math.hypot(dx,dy)
+    if norm<.001:return
+    dx,dy=dx/norm,dy/norm
+    x=ankle[0]-dx*19;y=ankle[1]-dy*19;r=9 if near else 8
+    pts=[(x+dy*r,y-dx*r),(x-dy*r,y+dx*r),
+         (x-dx*14-dy*r*.82,y-dy*14+dx*r*.82),
+         (x-dx*14+dy*r*.82,y-dy*14-dx*r*.82)]
+    draw=ImageDraw.Draw(layer,'RGBA')
+    draw.polygon(pts,fill=(16,23,32,195) if near else (13,20,28,175))
+    a=(x-dx*12+dy*r*.75,y-dy*12-dx*r*.75)
+    b=(x-dx*12-dy*r*.75,y-dy*12+dx*r*.75)
+    draw.line([a,b],fill=(123,135,143,150),width=2)
+
+
 def joint_cap(layer,p,r=14,depth='near'):
     """Soft metallic overlap at hinge hides segment gaps without redrawing identity."""
     size=2*round(r+7)
@@ -151,7 +214,7 @@ def render_boot(layer,img,foot,angle) -> dict[str,float]:
             'sole_error_px':abs(py+bbox[3]-foot[1]), 'toe_x':px+bbox[2]}
 
 
-def draw_frame(t:float,kit:dict,pose_override=None,prop_underlay=None,prop_overlay=None):
+def draw_frame(t:float,kit:dict,pose_override=None,prop_underlay=None,prop_overlay=None,joint_fabric=False):
     p=pose(t) if pose_override is None else pose_override
     x,y=p['root']
     canvas=Image.new('RGBA',(CANVAS,CANVAS))
@@ -176,10 +239,13 @@ def draw_frame(t:float,kit:dict,pose_override=None,prop_underlay=None,prop_overl
     elbowR=ik(shoulderR,p['handR'],59,59,-1)
     rotated_limb(canvas,kit['thigh_far'],lhip,kneeL,.87,.88)
     rotated_limb(canvas,kit['shin_boot_far_calf'],kneeL,p['left'],.91,.83)
+    if joint_fabric: fabric_hinge(canvas,lhip,kneeL,p['left'],12,False)
     joint_cap(canvas,kneeL,10,'far')
+    if joint_fabric: ankle_gaiter(canvas,kneeL,p['left'],False)
     bootL=render_boot(canvas,kit['shin_boot_far_boot'],p['left'],p['rollL'])
     rotated_limb(canvas,kit['upper_arm_far'],shoulderL,elbowL,.88,.88)
     rotated_limb(canvas,kit['forearm_far'],elbowL,p['handL'],.87,.88)
+    if joint_fabric: fabric_hinge(canvas,shoulderL,elbowL,p['handL'],9,False)
     joint_cap(canvas,elbowL,8,'far')
     torso_piece(kit['backpack'],(72,94),(-41,-82))
     torso_piece(kit['torso'],(104,117),(10,-75.5))
@@ -187,10 +253,13 @@ def draw_frame(t:float,kit:dict,pose_override=None,prop_underlay=None,prop_overl
     if prop_underlay is not None: prop_underlay(canvas,p,t)
     rotated_limb(canvas,kit['thigh_near'],rhip,kneeR,.87,.95)
     rotated_limb(canvas,kit['shin_boot_near_calf'],kneeR,p['right'],.91,.9)
+    if joint_fabric: fabric_hinge(canvas,rhip,kneeR,p['right'],14,True)
     joint_cap(canvas,kneeR,12,'near')
+    if joint_fabric: ankle_gaiter(canvas,kneeR,p['right'],True)
     bootR=render_boot(canvas,kit['shin_boot_near_boot'],p['right'],p['rollR'])
     rotated_limb(canvas,kit['upper_arm_near'],shoulderR,elbowR,.88,.95)
     rotated_limb(canvas,kit['forearm_near'],elbowR,p['handR'],.87,.94)
+    if joint_fabric: fabric_hinge(canvas,shoulderR,elbowR,p['handR'],10,True)
     joint_cap(canvas,elbowR,9,'near')
     # Counter-rotated head avoids unnatural nodding when the chest leans.
     torso_piece(kit['head'],(85,111),(20.5,-163.5),rotate=False)
