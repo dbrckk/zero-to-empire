@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 33560f895922991284a781637b41ec0f8aec5a8a
-Head: 308ac963db56914afaedd35261911bf378b028f5
+Base: a4f9b31a3d8983d88dd25557a36727a45c8762f1
+Head: abefc8c43fc5a4bb75885df11b8bd77d4d10d8b9
 
 ## Changed files
-- M .github/workflows/modular-tech-actions.yml
+- A tools/sprites/SOFT_MESH_V6_README.md
 
 ## Affected areas
-- .github
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

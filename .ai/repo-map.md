@@ -29915,6 +29915,10 @@ root=Path(tmp)
 ⋮----
 manifest=json.loads((FIXTURE/'WORK'/'qa-manifest.json').read_text())
 ⋮----
+def test_reject_soft_deformation_disabled_in_manifest(self)
+⋮----
+manifest=json.loads((FIXTURE/'WALK'/'qa-manifest.json').read_text())
+⋮----
 def test_reject_falsely_approved_visual_qa(self)
 ⋮----
 qa=json.loads((FIXTURE/'WALK'/'qa-manifest.json').read_text())
