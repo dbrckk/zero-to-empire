@@ -22,19 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T21:47:59Z
+Generated: 2026-10-08T21:49:54Z
 
 ### Git
 - Branch: `main`
-- Head: `c0cfb93cde03`
-- Commit date: 2026-10-08T23:47:20+02:00
-- Commit: test(art): require true-scale six-action review contact sheet
+- Head: `60d044e1e4ad`
+- Commit date: 2026-10-08T23:49:24+02:00
+- Commit: test(art): require visible 96px-scale gesture amplitude for active TECH clips
 - Tracked files: 1463
 
 ### Recently changed files
+- `tools/sprites/test_rigged_tech_actions_v3.py`
+- `tools/sprites/rigged_tech_actions_v3.py`
 - `tools/sprites/test_package_tech_actions_runtime.py`
 - `tools/sprites/package_tech_actions_runtime.py`
-- `tools/sprites/rigged_tech_actions_v3.py`
 
 ### Project signals
 - `build.gradle.kts`

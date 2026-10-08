@@ -29308,6 +29308,8 @@ def draw_repair(layer: Image.Image, p: dict, t: float) -> None
 xx = x + 12 + n * 10
 ⋮----
 tip = (x + 32, y + 33)
+# Keep the welding torch physically attached to the animated wrist.
+hand = (round(p["handR"][0]), round(p["handR"][1]))
 ⋮----
 intensity = max(0.0, math.sin(2 * math.pi * t)) ** 3
 ⋮----
@@ -29345,7 +29347,8 @@ motion = {
 stationary = action in ("IDLE", "WORK", "REPAIR", "CELEB")
 grounded = all(q["lockL"] and q["lockR"] for q in poses) if stationary else True
 grip_ok = (all(
-kinetic = (not violations and grounded and grip_ok and
+legible_motion = (action not in ("WORK", "REPAIR", "CELEB")
+kinetic = (not violations and grounded and grip_ok and legible_motion)
 ⋮----
 def build_action(skin: Path, out: Path, action: str, frames: int = 24, fps: int = 12)
 ⋮----
