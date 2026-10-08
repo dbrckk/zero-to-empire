@@ -4952,6 +4952,8 @@ footfalls = action in ("WALK", "CARRY")
 events = [{
 manifest = {
 ⋮----
+# Shared runtime-pack contract; preserve legacy filename for existing consumers.
+⋮----
 bundle = out.parent / f"{asset_id}-modular-v3-review.zip"
 ⋮----
 def main()

@@ -22,20 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T21:30:35Z
+Generated: 2026-10-08T21:44:12Z
 
 ### Git
 - Branch: `main`
-- Head: `bc352fe35c43`
-- Commit date: 2026-10-08T23:29:46+02:00
-- Commit: docs(art): explain reversible grounded contact-shadow VFX and game-scale review
+- Head: `081b485bc0ac`
+- Commit date: 2026-10-08T23:43:56+02:00
+- Commit: fix(art): align six-clip generator index and event files with runtime packer
 - Tracked files: 1463
 
 ### Recently changed files
+- `tools/sprites/rigged_tech_actions_v3.py`
 - `tools/sprites/MODULAR_RUNTIME_PACK_README.md`
 - `tools/sprites/test_package_tech_actions_runtime.py`
 - `tools/sprites/package_tech_actions_runtime.py`
-- `.github/workflows/modular-tech-actions.yml`
 
 ### Project signals
 - `build.gradle.kts`

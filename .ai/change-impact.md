@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 65f3f45b9f37a2d1243239fb2f80a9c9f84f227b
-Head: bc352fe35c436d00d29d66f20e552ab6e92a66a9
+Base: 5675adeee16752506f9336247a76f0777c693692
+Head: 081b485bc0ac818e44956b041c09fea4e1d811bd
 
 ## Changed files
-- M tools/sprites/MODULAR_RUNTIME_PACK_README.md
+- M tools/sprites/rigged_tech_actions_v3.py
 
 ## Affected areas
 - tools
