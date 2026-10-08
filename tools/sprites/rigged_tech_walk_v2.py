@@ -151,8 +151,8 @@ def render_boot(layer,img,foot,angle) -> dict[str,float]:
             'sole_error_px':abs(py+bbox[3]-foot[1]), 'toe_x':px+bbox[2]}
 
 
-def draw_frame(t:float,kit:dict):
-    p=pose(t)
+def draw_frame(t:float,kit:dict,pose_override=None,prop_underlay=None,prop_overlay=None):
+    p=pose(t) if pose_override is None else pose_override
     x,y=p['root']
     canvas=Image.new('RGBA',(CANVAS,CANVAS))
     lhip,rhip=(x-13,y),(x+13,y)
@@ -171,6 +171,7 @@ def draw_frame(t:float,kit:dict):
     paste(canvas,kit['backpack'].resize((72,94),Image.Resampling.LANCZOS),x-77,y-129)
     paste(canvas,kit['torso'].resize((104,117),Image.Resampling.LANCZOS),x-42,y-134)
     paste(canvas,kit['pelvis'].resize((78,68),Image.Resampling.LANCZOS),x-38,y-43)
+    if prop_underlay is not None: prop_underlay(canvas,p,t)
     rotated_limb(canvas,kit['thigh_near'],rhip,kneeR,.87,.95)
     rotated_limb(canvas,kit['shin_boot_near_calf'],kneeR,p['right'],.91,.9)
     joint_cap(canvas,kneeR,12,'near')
@@ -179,6 +180,7 @@ def draw_frame(t:float,kit:dict):
     rotated_limb(canvas,kit['forearm_near'],elbowR,p['handR'],.87,.94)
     joint_cap(canvas,elbowR,9,'near')
     paste(canvas,kit['head'].resize((85,111),Image.Resampling.LANCZOS),x-22,y-219)
+    if prop_overlay is not None: prop_overlay(canvas,p,t)
     return canvas,p,{'left':bootL,'right':bootR}
 
 
