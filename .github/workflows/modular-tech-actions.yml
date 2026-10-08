@@ -1,0 +1,43 @@
+name: Six modular TECH animations (review only)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tools/sprites/rigged_tech_walk_v2.py'
+      - 'tools/sprites/rigged_tech_actions_v3.py'
+      - 'tools/sprites/test_rigged_tech_actions_v3.py'
+      - 'tools/sprites/skin-tech-v1.webp'
+      - '.github/workflows/modular-tech-actions.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  render-six-review-clips:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install deterministic offline renderer
+        run: python -m pip install --disable-pip-version-check pillow numpy
+      - name: Test action grammar, IK reach, fixed grips and review gate
+        run: |
+          python -m unittest discover -s tools/sprites -p 'test_rigged_tech_walk_v2.py' -v
+          python -m unittest discover -s tools/sprites -p 'test_rigged_tech_actions_v3.py' -v
+      - name: Build 144 transparent frames from one character skin
+        run: |
+          python tools/sprites/rigged_tech_actions_v3.py \
+            --skin tools/sprites/skin-tech-v1.webp \
+            --output build/tech-actions-v3 --frames 24 --fps 12 --all
+      - name: Publish six review candidates and QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: six-tech-actions-v3-REVIEW_REQUIRED
+          path: build/tech-actions-v3/
+          if-no-files-found: warn
+          retention-days: 30
