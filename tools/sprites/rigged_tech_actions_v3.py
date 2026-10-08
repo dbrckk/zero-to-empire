@@ -247,8 +247,12 @@ def build_action(skin: Path, out: Path, action: str, frames: int = 24, fps: int 
     (out / "frames").mkdir(exist_ok=True)
     images, poses, boots = [], [], []
     asset_id = f"CHR-TECH-{action}"
+    # Rotate WORK's loop start to a low-motion seam, without interpolating,
+    # dropping or duplicating frames. All action overlays use the same phase.
+    phase_origin_frame = round(frames * (5/24)) if action == "WORK" else 0
     for i in range(frames):
-        im, p, b = draw_frame(action, i / frames, kit)
+        phase = ((i + phase_origin_frame) % frames) / frames
+        im, p, b = draw_frame(action, phase, kit)
         im.save(out / "frames" / f"{asset_id}-{i:02d}.png", optimize=True)
         images.append(im)
         poses.append(p)
@@ -290,6 +294,8 @@ def build_action(skin: Path, out: Path, action: str, frames: int = 24, fps: int 
     } for i, p in enumerate(poses)]
     manifest = {
         "asset_id": asset_id, "action": action, "build": "modular-tech-actions-v3",
+        "phase_origin_frame": phase_origin_frame,
+        "loop_seam_method": "cyclic-reindex-without-frame-interpolation",
         "rig": "one-textured-character-with-two-bone-IK",
         "weight_transfer": {"enabled": action in AMPLITUDES_PX,
                             "model": "stance-load-sine-squared-v1",
