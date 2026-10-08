@@ -6,7 +6,7 @@ import unittest
 from pathlib import Path
 from PIL import Image
 
-from autonomous_walk import WalkSettings, foot_local, pose, verify_motion, export, GROUND
+from autonomous_walk import WalkSettings, foot_local, foot_roll, pose, verify_motion, export, GROUND
 
 
 class WalkGeometryTests(unittest.TestCase):
@@ -46,6 +46,19 @@ class WalkGeometryTests(unittest.TestCase):
         self.assertGreater(qa['max_swing_clearance_px'],30)
         self.assertTrue(all(label!='air' for label in qa['frame_contact_labels']))
 
+    def test_heel_toe_continuity_and_symmetry(self):
+        cfg=WalkSettings()
+        eps=1e-7
+        for threshold in (0.0,cfg.stance_fraction,1.0):
+            self.assertLess(abs(foot_roll(threshold-eps,cfg)-foot_roll(threshold+eps,cfg)),1e-4)
+        for i in range(200):
+            t=i/200
+            p=pose(t,cfg)
+            self.assertAlmostEqual(p['rollL'],foot_roll(t+.5,cfg),places=9)
+            self.assertAlmostEqual(p['rollR'],foot_roll(t,cfg),places=9)
+            self.assertLessEqual(abs(p['rollL']),.23)
+            self.assertLessEqual(abs(p['rollR']),.23)
+
     def test_reject_unphysical_config(self):
         for kwargs in ({'stride':200},{'clearance':130},{'stance_fraction':.4},{'fps':45},{'frames':7}):
             with self.subTest(kwargs=kwargs):
@@ -68,6 +81,14 @@ class BuildTests(unittest.TestCase):
             with Image.open(root/'atlas.png') as atlas:
                 self.assertEqual(atlas.size,(2048,1024))
                 self.assertEqual(atlas.mode,'RGBA')
+            events=json.loads((root/'frame-events.json').read_text())
+            self.assertEqual(len(events['frames']),8)
+            self.assertEqual(events['strict_status'],'NEEDS_REVIEW')
+            self.assertEqual(events['frames'][0]['footstep_event'],'right')
+            self.assertEqual(events['frames'][4]['footstep_event'],'left')
+            self.assertTrue(all(abs(f['left_foot_roll_degrees'])<=14 for f in events['frames']))
+            self.assertTrue(all(abs(f['right_foot_roll_degrees'])<=14 for f in events['frames']))
+            self.assertIn('function polishTechSkin(',studio.read_text(encoding='utf-8'))
             frame_poses=json.loads((root/'frame-poses.json').read_text())
             self.assertEqual(len(frame_poses['poses']),8)
             project=json.loads((root/'project.json').read_text())
