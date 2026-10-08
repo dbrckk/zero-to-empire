@@ -82,7 +82,11 @@ select{background:#172538;color:inherit;padding:5px}footer{color:#97abc1;margin-
 <p class="warn">Candidats non validés — revue visuelle obligatoire, aucun strict DONE.</p>
 <label>Vitesse <select id="speed"><option value=".5">0,5×</option><option selected value="1">1×</option>
 <option value="1.5">1,5×</option><option value="2">2×</option></select></label>
-<div class="grid" id="grid"></div><footer>Prévisualisation seulement. Aucune modification du jeu ou de la file de production.</footer>
+<label>Taille <select id="zoom"><option selected value="96">96 px — jeu</option>
+<option value="128">128 px</option><option value="192">192 px</option><option value="256">256 px</option></select></label>
+<label><input id="showShadows" type="checkbox"> Ombres facultatives</label>
+<button id="pause">Pause</button>
+<div class="grid" id="grid"></div><footer>Lecture à 96 px par défaut ; ombres désactivées par défaut. Contrôle de revue uniquement : aucune validation ni modification du jeu.</footer>
 <script>const animations=__SOURCES__,nodes=[],grid=document.querySelector('#grid');
 for(const [name,c] of Object.entries(animations)){
 const card=document.createElement('article'),h=document.createElement('header');
@@ -92,13 +96,25 @@ const canvas=document.createElement('canvas');canvas.width=256;canvas.height=256
 const img=new Image();img.onload=()=>c.ready=true;img.src=c.src;
 const shadow=new Image();shadow.onload=()=>c.shadowReady=true;shadow.src=c.shadow_src;
 card.append(h,canvas);grid.append(card);nodes.push({c,img,shadow,ctx:canvas.getContext('2d')});}
-const begin=performance.now();
-function draw(t){const speed=Number(document.querySelector('#speed').value);
-for(const {c,img,shadow,ctx} of nodes){ctx.clearRect(0,0,256,256);if(!c.ready)continue;
-const frame=Math.floor((t-begin)*c.fps*speed/1000)%c.frames;
-if(c.shadowReady)ctx.drawImage(shadow,(frame%c.cols)*128,Math.floor(frame/c.cols)*128,128,128,0,0,256,256);
-ctx.drawImage(img,(frame%c.cols)*128,Math.floor(frame/c.cols)*128,128,128,0,0,256,256);}
-requestAnimationFrame(draw)}requestAnimationFrame(draw);</script></body></html>'''
+let paused=false,elapsed=0,previous=null;
+document.querySelector('#pause').onclick=()=>{
+  paused=!paused;document.querySelector('#pause').textContent=paused?'Lire':'Pause';
+};
+function draw(t){
+ const dt=previous===null?0:Math.max(0,Math.min(100,t-previous));previous=t;
+ if(!paused)elapsed+=dt*Number(document.querySelector('#speed').value);
+ const zoom=Number(document.querySelector('#zoom').value),offset=(256-zoom)/2;
+ const showShadows=document.querySelector('#showShadows').checked;
+ for(const {c,img,shadow,ctx} of nodes){
+  ctx.clearRect(0,0,256,256);if(!c.ready)continue;
+  const frame=Math.floor(elapsed*c.fps/1000)%c.frames;
+  if(showShadows&&c.shadowReady)
+   ctx.drawImage(shadow,(frame%c.cols)*128,Math.floor(frame/c.cols)*128,128,128,offset,offset,zoom,zoom);
+  ctx.drawImage(img,(frame%c.cols)*128,Math.floor(frame/c.cols)*128,128,128,offset,offset,zoom,zoom);
+ }
+ requestAnimationFrame(draw);
+}
+requestAnimationFrame(draw);</script></body></html>'''
     return template.replace('__SOURCES__',sources)
 
 
