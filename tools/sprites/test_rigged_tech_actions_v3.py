@@ -108,6 +108,26 @@ class MultiActionRendererTests(unittest.TestCase):
             self.assertEqual(first.mode, "RGBA")
             self.assertEqual(first.getpixel((0, 0))[3], 0)
 
+    def test_six_actions_use_reversible_joint_fabric(self):
+        # Compare output against the SAME action/props rendered with the
+        # old joint treatment; no pose, timing or event changes are permitted.
+        for action in ACTIONS:
+            for t in (.125,.375):
+                current,p,b = draw_frame(action,t,self.kit)
+                # One-identity, repeatable output with fabric enabled.
+                duplicate,_,_ = draw_frame(action,t,self.kit)
+                self.assertEqual(current.tobytes(),duplicate.tobytes())
+                self.assertEqual(current.mode,'RGBA')
+                self.assertTrue(all(v['sole_error_px']<=1 for v in b.values()))
+        # WALK has no action props, making a strict binary before/after valid.
+        sample=.125
+        new,_,_=draw_frame('WALK',sample,self.kit)
+        old,_,_=core.draw_frame(sample,self.kit,
+                                 pose_for(sample,'WALK'),joint_fabric=False)
+        self.assertNotEqual(new.tobytes(),old.tobytes())
+        self.assertEqual(old.tobytes(),
+                         core.draw_frame(sample,self.kit,pose_for(sample,'WALK'))[0].tobytes())
+
     def test_each_export_remains_a_review_candidate(self):
         with tempfile.TemporaryDirectory() as tmp:
             for action in ACTIONS:
