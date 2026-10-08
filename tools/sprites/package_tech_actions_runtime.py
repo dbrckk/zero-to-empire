@@ -147,6 +147,9 @@ def package(source:Path,output:Path)->dict:
               'animations':{}}
     overview=Image.new('RGB',(900,672),(23,29,40))
     draw=ImageDraw.Draw(overview)
+    contact96=Image.new('RGB',(120+96*8,40+108*6),(25,33,45))
+    contact_draw=ImageDraw.Draw(contact96)
+    contact_draw.text((120,12),'1       4       7      10      13      16      19      22  / 24',fill=(190,208,224))
     for idx,action in enumerate(ACTIONS):
         rec=records[action]; count=rec['count'];cols=6;rows=math.ceil(count/cols)
         pics=[];bounds=[];game_scale=[]
@@ -163,6 +166,10 @@ def package(source:Path,output:Path)->dict:
             game_scale.append(game_scale_metrics(frame))
         ensure(all(metric['pass'] for metric in game_scale),
                '96px game-scale silhouette collapsed/clipped: '+action)
+        contact_draw.text((10,36+idx*108+42),action,fill=(218,234,245))
+        for j in range(8):
+            img=pics[(j*count)//8].resize((96,96),Image.Resampling.LANCZOS)
+            contact96.paste(img,(120+j*96,36+idx*108),img.getchannel('A'))
         variants={};shadow_variants={}
         shadow_frames=[render_contact_shadow(p) for p in rec['poses']]
         for size in SIZES:
@@ -205,6 +212,7 @@ def package(source:Path,output:Path)->dict:
             'optional_shadow_layer':{'default_enabled':False,'variants':shadow_variants},
             'variants':variants,'strict_status':'NEEDS_REVIEW','review_required':True}
     overview.save(output/'game-scale-overview.jpg',quality=93)
+    contact96.save(output/'review-all-actions-96.png',optimize=True)
     (output/'runtime-manifest.json').write_text(json.dumps(exported,indent=2),encoding='utf-8')
     (output/'REVIEW_REQUIRED.txt').write_text(
         'Review-only animated candidates; no strict DONE and no final game assets.\n',
