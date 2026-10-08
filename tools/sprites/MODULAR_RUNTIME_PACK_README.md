@@ -22,6 +22,7 @@ The GitHub workflow `.github/workflows/modular-tech-actions.yml` runs these stag
 - `atlases/{walk,carry,idle,work,repair,celeb}-{128,256}.png`: 24-frame RGBA atlases in 6 columns × 4 rows.
 - `runtime-manifest.json`: timing, row-major UV ordering, per-frame visual bounds, fixed pivots, identity hashes and strict review flags.
 - `events/{action}.json`: original footstep, screen update, repair and celebration events.
+- `atlases/{action}-shadow-{128,256}.png`: optional per-frame contact shadow, computed from the same foot trajectories; shipped as a **separate VFX layer** and disabled by default in the runtime manifest.
 - `review-player.html`: six animations side by side, independent of external UI libraries, with speed adjustment and responsive layout.
 - `game-scale-overview.jpg`: a quick 6-action comparison.
 - `REVIEW_REQUIRED.txt`: explicit release gate.
@@ -30,6 +31,6 @@ Pivots derive from (252,449) in the 512×512 source canvas. The variants contain
 
 ## Strict release safeguard
 
-The package refuses missing assets, conflicting skin hashes, missing review markers, unapproved QA, unexpectedly sized frames, missing frame indices, clipped silhouettes or a malformed source index. Four regression tests cover success and intentional attempts to bypass the review gate.
+The package refuses missing assets, conflicting skin hashes, missing review markers, unapproved QA, unexpectedly sized frames, missing frame indices, clipped silhouettes or a malformed source index. Four regression tests cover success, the shadow layer and intentional attempts to bypass the review gate. The review player can composite optional shadows behind the character; neither the candidate sprites nor the source identity atlas are modified.
 
 The pipeline NEVER edits `art/production/master-asset-queue.json`, NEVER marks assets `strict DONE` and NEVER copies candidates over release resources. Original visual quality limits (stiff articulated seams, boot motion, hand-object overlap and small-screen readability) remain open for genuine independent visual/semantic review.
