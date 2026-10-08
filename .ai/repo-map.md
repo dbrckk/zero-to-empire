@@ -28202,8 +28202,21 @@ frames=sorted((folder/'frames').glob('*.png'))
 ⋮----
 def review_html(data:dict)->str
 ⋮----
-sources=json.dumps({name:{'src':a['variants']['128']['path'],'frames':a['frames'],
+sources=json.dumps({name:{'src':a['variants']['128']['path'],
 template='''<!doctype html><html lang="fr"><head><meta charset="utf-8">
+⋮----
+def render_contact_shadow(p:dict)->Image.Image
+⋮----
+"""Optional frame-aligned ground-shadow atlas, isolated from character pixels."""
+layer=Image.new('RGBA',(SIDE,SIDE))
+⋮----
+locked=p.get(contact,False)
+height=max(0,449-y)
+strength=100 if locked else max(18,round(62-height*.65))
+radius=34 if locked else max(20,round(30-height*.13))
+mask=Image.new('RGBA',(SIDE,SIDE))
+⋮----
+layer=Image.alpha_composite(layer,mask.filter(ImageFilter.GaussianBlur(4)))
 ⋮----
 def package(source:Path,output:Path)->dict
 ⋮----
@@ -28218,7 +28231,8 @@ frame=image.copy()
 alpha=frame.getchannel('A')
 b=alpha.point(lambda px:255 if px>=128 else 0).getbbox()
 ⋮----
-variants={}
+variants={};shadow_variants={}
+shadow_frames=[render_contact_shadow(p) for p in rec['poses']]
 ⋮----
 folder=output/'atlases';folder.mkdir(exist_ok=True)
 atlas=Image.new('RGBA',(size*cols,size*rows))
@@ -28226,6 +28240,10 @@ atlas=Image.new('RGBA',(size*cols,size*rows))
 scaled=im.resize((size,size),Image.Resampling.LANCZOS)
 ⋮----
 path=folder/f'{action.lower()}-{size}.png'
+⋮----
+shadow_atlas=Image.new('RGBA',(size*cols,size*rows))
+⋮----
+shadow_path=folder/f'{action.lower()}-shadow-{size}.png'
 ⋮----
 xx=450*(idx%2);yy=224*(idx//2)
 icon=pics[0].resize((190,190),Image.Resampling.LANCZOS)
@@ -29712,6 +29730,8 @@ out=Path(temp)/'runtime'
 manifest=package(FIXTURE,out)
 ⋮----
 var=item['variants'][str(size)]
+⋮----
+shadow=item['optional_shadow_layer']['variants'][str(size)]
 ⋮----
 def test_reject_approved_or_corrupted_index(self)
 ⋮----

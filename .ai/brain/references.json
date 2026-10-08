@@ -21,12 +21,18 @@
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 134,
+          "line": 161,
+          "preview": "'sha256':sha(shadow_path),'atlas_size':[size*cols,size*rows]}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 162,
           "preview": "variants[str(size)]={'path':path.relative_to(output).as_posix(),'sha256':sha(path),",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 2
+      "occurrence_count": 3
     },
     "ensure": {
       "definition": {
@@ -122,19 +128,19 @@
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 117,
+          "line": 136,
           "preview": "ensure(image.size==(SIDE,SIDE) and image.mode=='RGBA','Source not 512px RGBA: '+str(path))",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 121,
+          "line": 140,
           "preview": "ensure(b is not None and b[0]>=6 and b[1]>=6 and b[2]<=SIDE-6 and b[3]<=SIDE-6,",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 123,
+          "line": 142,
           "preview": "ensure(alpha.getpixel((0,0))==0,'Missing transparent corner: '+str(path))",
           "definition_candidate": false
         }
@@ -175,7 +181,7 @@
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 103,
+          "line": 122,
           "preview": "index,records=verify(source)",
           "definition_candidate": false
         },
@@ -187,19 +193,19 @@
         },
         {
           "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 57,
+          "line": 63,
           "preview": "verify(root)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 71,
+          "line": 77,
           "preview": "verify(root)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 86,
+          "line": 92,
           "preview": "verify(root)",
           "definition_candidate": false
         }
@@ -222,8 +228,31 @@
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 159,
+          "line": 188,
           "preview": "(output/'review-player.html').write_text(review_html(exported),encoding='utf-8')",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "render_contact_shadow": {
+      "definition": {
+        "file": "tools/sprites/package_tech_actions_runtime.py",
+        "line": 105,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 105,
+          "preview": "def render_contact_shadow(p:dict)->Image.Image:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 145,
+          "preview": "shadow_frames=[render_contact_shadow(p) for p in rec['poses']]",
           "definition_candidate": false
         }
       ],
@@ -232,7 +261,7 @@
     "package": {
       "definition": {
         "file": "tools/sprites/package_tech_actions_runtime.py",
-        "line": 102,
+        "line": 121,
         "kind": "function",
         "language": "python"
       },
@@ -963,7 +992,7 @@
     "main": {
       "definition": {
         "file": "tools/sprites/package_tech_actions_runtime.py",
-        "line": 163,
+        "line": 192,
         "kind": "function",
         "language": "python"
       },
@@ -1654,13 +1683,13 @@
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 163,
+          "line": 192,
           "preview": "def main():",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 174,
+          "line": 203,
           "preview": "if __name__=='__main__':main()",
           "definition_candidate": false
         },
@@ -1745,14 +1774,14 @@
     "test_reject_approved_or_corrupted_index": {
       "definition": {
         "file": "tools/sprites/test_package_tech_actions_runtime.py",
-        "line": 50,
+        "line": 56,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 50,
+          "line": 56,
           "preview": "def test_reject_approved_or_corrupted_index(self):",
           "definition_candidate": true
         }
@@ -1762,14 +1791,14 @@
     "test_reject_missing_review_marker": {
       "definition": {
         "file": "tools/sprites/test_package_tech_actions_runtime.py",
-        "line": 59,
+        "line": 65,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 59,
+          "line": 65,
           "preview": "def test_reject_missing_review_marker(self):",
           "definition_candidate": true
         }
@@ -1779,14 +1808,14 @@
     "test_reject_falsely_approved_visual_qa": {
       "definition": {
         "file": "tools/sprites/test_package_tech_actions_runtime.py",
-        "line": 73,
+        "line": 79,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 73,
+          "line": 79,
           "preview": "def test_reject_falsely_approved_visual_qa(self):",
           "definition_candidate": true
         }

@@ -22,21 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T21:27:14Z
+Generated: 2026-10-08T21:30:35Z
 
 ### Git
 - Branch: `main`
-- Head: `574e665a472b`
-- Commit date: 2026-10-08T23:26:47+02:00
-- Commit: docs(art): document unattended compact atlas pipeline and review-only release gate
+- Head: `bc352fe35c43`
+- Commit date: 2026-10-08T23:29:46+02:00
+- Commit: docs(art): explain reversible grounded contact-shadow VFX and game-scale review
 - Tracked files: 1463
 
 ### Recently changed files
 - `tools/sprites/MODULAR_RUNTIME_PACK_README.md`
-- `.github/workflows/modular-tech-actions.yml`
 - `tools/sprites/test_package_tech_actions_runtime.py`
 - `tools/sprites/package_tech_actions_runtime.py`
-- `tools/sprites/MODULAR_ACTIONS_README.md`
+- `.github/workflows/modular-tech-actions.yml`
 
 ### Project signals
 - `build.gradle.kts`

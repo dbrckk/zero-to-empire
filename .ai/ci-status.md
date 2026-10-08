@@ -1,9 +1,13 @@
 # CI status
 
-Summary: 2 success / 0 failure / 1 active
+Summary: 0 success / 3 failure / 0 active
 
-- Six modular TECH animations (review only): in_progress / pending (1a011265)
-- Six modular TECH animations (review only): completed / success (59c13ac0)
-- Modular TECH walk (review only): completed / success (65d73c53)
+- Six modular TECH animations (review only): completed / failure (65f3f45b)
+- Six modular TECH animations (review only): completed / failure (48966933)
+- Six modular TECH animations (review only): completed / failure (1a011265)
+
+## Latest failed run structure
+- Job: render-six-review-clips
+  - Failed step: Package game-scale RGBA atlases and playback manifest
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.
