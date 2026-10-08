@@ -23,6 +23,26 @@ ROOT_X = core.ROOT_X
 HIP_Y = core.HIP_Y
 
 
+def spine_lean(t: float, action: str) -> float:
+    """Cyclic, phase-coupled spine bend in radians. Foot/hip world anchors
+    are not modified, so contact geometry stays deterministic and reversible.
+    """
+    phase = 2 * math.pi * (t % 1.0)
+    if action == "WALK":
+        return .045 * math.sin(2 * phase + .3) + .012 * math.sin(phase)
+    if action == "CARRY":
+        return .028 * math.sin(2 * phase + .3) + .010 * math.sin(phase)
+    if action == "IDLE":
+        return .012 * math.sin(phase + .2)
+    if action == "WORK":
+        return .025 * math.sin(phase + .4) + .012 * math.sin(2 * phase)
+    if action == "REPAIR":
+        return .028 * math.sin(phase + .3) + .015 * math.sin(2 * phase)
+    if action == "CELEB":
+        return .050 * math.sin(phase + .2) + .015 * math.sin(2 * phase)
+    raise ValueError(f"Unsupported action: {action}")
+
+
 def pose_for(t: float, action: str) -> dict:
     if action not in ACTIONS:
         raise ValueError(f"Unsupported action: {action}")
@@ -30,6 +50,7 @@ def pose_for(t: float, action: str) -> dict:
     phase = 2 * math.pi * t
     if action in ("WALK", "CARRY"):
         p = core.pose(t)
+        p["torso_lean_rad"] = spine_lean(t, action)
         if action == "CARRY":
             x, y = p["root"]
             p["handL"] = (x + 29, y - 55)
@@ -51,6 +72,7 @@ def pose_for(t: float, action: str) -> dict:
         "root": (x, y), "left": (x - 29, GROUND), "right": (x + 32, GROUND),
         "handL": hand_l, "handR": hand_r, "lockL": True, "lockR": True,
         "rollL": 0.0, "rollR": 0.0,
+        "torso_lean_rad": spine_lean(t, action),
     }
 
 
@@ -165,7 +187,15 @@ def action_qa(action: str, poses: list, base_qa: dict) -> dict:
     violations = []
     for index, p in enumerate(poses):
         x, y = p["root"]
-        shoulders = {"handL": (x - 24, y - 86), "handR": (x + 23, y - 85)}
+        a = float(p.get("torso_lean_rad", 0.0))
+        if not math.isfinite(a) or abs(a) > .085:
+            violations.append({"frame": index, "spine_lean_rad": a})
+            continue
+        cs, sn = math.cos(a), math.sin(a)
+        def rotated_shoulder(dx, dy):
+            return (x + dx * cs - dy * sn, y + dx * sn + dy * cs)
+        shoulders = {"handL": rotated_shoulder(-24, -86),
+                     "handR": rotated_shoulder(23, -85)}
         for hand, shoulder in shoulders.items():
             distance = math.dist(shoulder, p[hand])
             if distance > 118:
@@ -189,6 +219,8 @@ def action_qa(action: str, poses: list, base_qa: dict) -> dict:
         "action_motion_range_px": motion, "stationary_ground_contact_pass": grounded,
         "fixed_cargo_grip_pass": grip_ok,
         "game_scale_motion_pass": legible_motion,
+        "spine_lean_max_degrees": round(max(abs(math.degrees(p.get("torso_lean_rad",0.0))) for p in poses),3),
+        "spine_lean_in_range": not any("spine_lean_rad" in v for v in violations),
         "technical_pass": bool(base_qa["technical_pass"] and kinetic),
         "visual_review_pass": False, "semantic_review_pass": False,
         "strict_status": "NEEDS_REVIEW",
