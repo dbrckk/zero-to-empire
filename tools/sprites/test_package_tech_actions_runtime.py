@@ -123,6 +123,21 @@ class RuntimePackTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'Renderer feature provenance missing'):
                 verify(root)
 
+    def test_reject_soft_deformation_disabled_in_manifest(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            (root/'production-index.json').write_bytes(
+                (FIXTURE/'production-index.json').read_bytes())
+            for action in ACTIONS:
+                if action != 'WALK':
+                    (root/action).symlink_to(FIXTURE/action,target_is_directory=True)
+            (root/'WALK').mkdir()
+            manifest=json.loads((FIXTURE/'WALK'/'qa-manifest.json').read_text())
+            manifest['renderer_features']['soft_deform']=False
+            (root/'WALK'/'qa-manifest.json').write_text(json.dumps(manifest))
+            with self.assertRaisesRegex(ValueError,'Renderer feature provenance missing'):
+                verify(root)
+
     def test_reject_falsely_approved_visual_qa(self):
         with tempfile.TemporaryDirectory() as temp:
             root=Path(temp)
