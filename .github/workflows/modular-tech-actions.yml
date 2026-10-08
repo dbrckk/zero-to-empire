@@ -7,6 +7,8 @@ on:
       - 'tools/sprites/rigged_tech_walk_v2.py'
       - 'tools/sprites/rigged_tech_actions_v3.py'
       - 'tools/sprites/test_rigged_tech_actions_v3.py'
+      - 'tools/sprites/package_tech_actions_runtime.py'
+      - 'tools/sprites/test_package_tech_actions_runtime.py'
       - 'tools/sprites/skin-tech-v1.webp'
       - '.github/workflows/modular-tech-actions.yml'
 
@@ -33,11 +35,20 @@ jobs:
           python tools/sprites/rigged_tech_actions_v3.py \
             --skin tools/sprites/skin-tech-v1.webp \
             --output build/tech-actions-v3 --frames 24 --fps 12 --all
+      - name: Package game-scale RGBA atlases and playback manifest
+        run: |
+          python tools/sprites/package_tech_actions_runtime.py \
+            --source build/tech-actions-v3 \
+            --output build/tech-actions-runtime-review
+      - name: Test release safeguards and atlas dimensions
+        run: python -m unittest discover -s tools/sprites -p 'test_package_tech_actions_runtime.py' -v
       - name: Publish six review candidates and QA evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: six-tech-actions-v3-REVIEW_REQUIRED
-          path: build/tech-actions-v3/
+          path: |
+            build/tech-actions-v3/
+            build/tech-actions-runtime-review/
           if-no-files-found: warn
           retention-days: 30
