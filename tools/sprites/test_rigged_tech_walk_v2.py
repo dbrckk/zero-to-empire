@@ -72,6 +72,24 @@ class RenderTests(unittest.TestCase):
   for side in ('left','right'):
    self.assertLess(ba[side]['sole_error_px'],1)
 
+ def test_optional_spine_flex_is_safe_and_backward_compatible(self):
+  # The old WALK output must remain pixel-for-pixel unchanged when no spine
+  # control is supplied; existing runtime art must not silently regress.
+  for t in (0,.125,.375,.625):
+   original,_,_=draw_frame(t,self.kit)
+   neutral=pose(t);neutral['torso_lean_rad']=0.0
+   unchanged,_,_=draw_frame(t,self.kit,neutral)
+   self.assertEqual(original.tobytes(),unchanged.tobytes())
+   tilted=pose(t);tilted['torso_lean_rad']=.05
+   img,_,boot=draw_frame(t,self.kit,tilted)
+   self.assertEqual(img.size,(CANVAS,CANVAS))
+   self.assertIsNotNone(img.getchannel('A').getbbox())
+   self.assertTrue(all(b['sole_error_px']<=1 for b in boot.values()))
+  for invalid in (.09,-.09,float('nan'),float('inf')):
+   bad=pose(.125);bad['torso_lean_rad']=invalid
+   with self.subTest(invalid=invalid),self.assertRaises(ValueError):
+    draw_frame(.125,self.kit,bad)
+
  def test_build_export_review_gate(self):
   with tempfile.TemporaryDirectory() as tmp:
    out=Path(tmp)/'render'
