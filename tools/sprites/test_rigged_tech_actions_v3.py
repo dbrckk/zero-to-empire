@@ -12,7 +12,7 @@ from rigged_tech_actions_v3 import (
     ACTIONS, GROUND, build_action, draw_frame, pose_for, spine_lean,
 )
 import rigged_tech_walk_v2 as core
-from action_contact import work_contact, repair_contact, repair_spark_intensity
+from action_contact import work_contact, repair_contact, repair_spark_intensity, work_event_indices
 
 KIT = Path(__file__).with_name("skin-tech-v1.webp")
 
@@ -189,7 +189,13 @@ class MultiActionRendererTests(unittest.TestCase):
                             enabled=repair_spark_intensity(
                                 ((i+phase_origin)%8)/8)>0
                             self.assertEqual(e["vfx_event"]=="weld-sparks",enabled)
-                    else:
+                    if action=="WORK":
+                        expected=list(work_event_indices(8,manifest["phase_origin_frame"]))
+                        actual=[i for i,e in enumerate(events)
+                                if e["vfx_event"]=="data-update"]
+                        self.assertEqual(actual,expected)
+                        self.assertEqual(manifest["work_pulse_event_frames"],expected)
+                    if action in ("WALK","CARRY"):
                         self.assertEqual(events[0]["footstep"], "right")
                         self.assertEqual(events[4]["footstep"], "left")
                     with Image.open(out / "atlas.png") as atlas:
