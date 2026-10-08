@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T20:58:31Z
+Generated: 2026-10-08T21:00:55Z
 
 ### Git
 - Branch: `main`
-- Head: `6621fa7ef5cd`
-- Commit date: 2026-10-08T22:58:13+02:00
-- Commit: feat(art): integrate modular TECH texture kit, autonomous IK renderer, and CI review workflow
+- Head: `d3f19edb76aa`
+- Commit date: 2026-10-08T23:00:40+02:00
+- Commit: docs(art): sync strict-review backlog with canonical queue without granting approval
 - Tracked files: 1456
 
 ### Recently changed files
+- `art/production/character-strict-review-backlog.md`
 - `.github/workflows/modular-tech-character.yml`
 - `tools/sprites/MODULAR_WALK_README.md`
 - `tools/sprites/rigged_tech_walk_v2.py`
@@ -40,7 +41,6 @@ Generated: 2026-10-08T20:58:31Z
 - `tools/sprites/AUTONOMOUS_WALK_README.md`
 - `tools/sprites/test_autonomous_walk.py`
 - `tools/sprites/pose_studio.html`
-- `tools/sprites/autonomous_walk.py`
 
 ### Project signals
 - `build.gradle.kts`
