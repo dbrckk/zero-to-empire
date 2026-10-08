@@ -90,6 +90,23 @@ class RenderTests(unittest.TestCase):
    with self.subTest(invalid=invalid),self.assertRaises(ValueError):
     draw_frame(.125,self.kit,bad)
 
+ def test_optional_joint_fabric_is_deterministic_and_review_only(self):
+  # Keep existing production textures unchanged by default.
+  for t in (0,.125,.375,.625):
+   legacy,_,_=draw_frame(t,self.kit)
+   explicit_off,_,_=draw_frame(t,self.kit,joint_fabric=False)
+   textile,pose_a,boots=draw_frame(t,self.kit,joint_fabric=True)
+   textile_again,pose_b,_=draw_frame(t,self.kit,joint_fabric=True)
+   self.assertEqual(legacy.tobytes(),explicit_off.tobytes())
+   self.assertEqual(textile.tobytes(),textile_again.tobytes())
+   self.assertNotEqual(legacy.tobytes(),textile.tobytes())
+   self.assertEqual(textile.mode,'RGBA')
+   self.assertEqual(textile.size,(CANVAS,CANVAS))
+   bbox=textile.getchannel('A').getbbox()
+   self.assertTrue(bbox and min(bbox[0],bbox[1],CANVAS-bbox[2],CANVAS-bbox[3])>=6)
+   self.assertTrue(all(b['sole_error_px']<=1 for b in boots.values()))
+   self.assertEqual(pose_a,pose_b)
+
  def test_build_export_review_gate(self):
   with tempfile.TemporaryDirectory() as tmp:
    out=Path(tmp)/'render'
