@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T22:19:33Z
+Generated: 2026-10-08T22:20:41Z
 
 ### Git
 - Branch: `main`
-- Head: `95035ce0443c`
-- Commit date: 2026-10-09T00:19:18+02:00
-- Commit: test(art): assert six actions use deterministic optional IK fabric seams
+- Head: `26ebbe5a3e7e`
+- Commit date: 2026-10-09T00:20:27+02:00
+- Commit: docs(art): describe reversible IK fabric gussets and legacy-safe review flow
 - Tracked files: 1463
 
 ### Recently changed files
+- `tools/sprites/MODULAR_ACTIONS_README.md`
 - `tools/sprites/test_rigged_tech_actions_v3.py`
 - `tools/sprites/test_rigged_tech_walk_v2.py`
 - `tools/sprites/rigged_tech_actions_v3.py`
 - `tools/sprites/rigged_tech_walk_v2.py`
-- `tools/sprites/MODULAR_ACTIONS_README.md`
 
 ### Project signals
 - `build.gradle.kts`
