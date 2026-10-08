@@ -2196,14 +2196,15 @@
     "tools/sprites/rigged_tech_actions_v3.py": {
       "dependencies": [
         "app/src/main/java/com/zerotoempire/game/GameRepository.kt",
-        "tools/sprites/rigged_tech_walk_v2.py"
+        "tools/sprites/rigged_tech_walk_v2.py",
+        "tools/sprites/weight_transfer.py"
       ],
       "dependents": [
         "tools/sprites/test_rigged_tech_actions_v3.py",
         "tools/sprites/test_soft_skin_deform.py"
       ],
       "in_degree": 2,
-      "out_degree": 2
+      "out_degree": 3
     },
     "tools/sprites/rigged_tech_walk_v2.py": {
       "dependencies": [
@@ -2289,6 +2290,14 @@
       ],
       "in_degree": 1,
       "out_degree": 1
+    },
+    "tools/sprites/weight_transfer.py": {
+      "dependencies": [],
+      "dependents": [
+        "tools/sprites/rigged_tech_actions_v3.py"
+      ],
+      "in_degree": 1,
+      "out_degree": 0
     },
     "tools/validate_isolated_sprite.py": {
       "dependencies": [

@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T22:54:42Z
+Generated: 2026-10-08T23:03:36Z
 
 ### Git
 - Branch: `main`
-- Head: `abefc8c43fc5`
-- Commit date: 2026-10-09T00:54:24+02:00
-- Commit: docs(art): specify deterministic soft-mesh rig, offline tests and review boundaries
-- Tracked files: 1466
+- Head: `63bc0da48784`
+- Commit date: 2026-10-09T01:03:21+02:00
+- Commit: feat(art): shift TECH pelvis over loaded feet without moving planted targets
+- Tracked files: 1467
 
 ### Recently changed files
+- `tools/sprites/rigged_tech_actions_v3.py`
+- `tools/sprites/weight_transfer.py`
 - `tools/sprites/SOFT_MESH_V6_README.md`
 - `tools/sprites/test_package_tech_actions_runtime.py`
 - `tools/sprites/test_rigged_tech_actions_v3.py`
-- `.github/workflows/modular-tech-actions.yml`
-- `tools/sprites/package_tech_actions_runtime.py`
 
 ### Project signals
 - `build.gradle.kts`

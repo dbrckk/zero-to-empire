@@ -1,91 +1,101 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "308ac963db56914afaedd35261911bf378b028f5",
-  "head": "abefc8c43fc5a4bb75885df11b8bd77d4d10d8b9",
+  "base": "abefc8c43fc5a4bb75885df11b8bd77d4d10d8b9",
+  "head": "63bc0da48784ca997ad9a9380b83bd088ffe7d51",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": "tools/sprites/SOFT_MESH_V6_README.md",
+      "path": "tools/sprites/rigged_tech_actions_v3.py",
+      "status": "M"
+    },
+    {
+      "path": "tools/sprites/weight_transfer.py",
       "status": "A"
-    },
-    {
-      "path": "tools/sprites/test_package_tech_actions_runtime.py",
-      "status": "M"
-    },
-    {
-      "path": "tools/sprites/test_rigged_tech_actions_v3.py",
-      "status": "M"
     }
   ],
   "changed_source_files": [
-    "tools/sprites/test_package_tech_actions_runtime.py",
-    "tools/sprites/test_rigged_tech_actions_v3.py"
+    "tools/sprites/rigged_tech_actions_v3.py",
+    "tools/sprites/weight_transfer.py"
   ],
   "impacted_files": [
-    "tools/sprites/test_package_tech_actions_runtime.py",
-    "tools/sprites/test_rigged_tech_actions_v3.py"
+    "tools/sprites/rigged_tech_actions_v3.py",
+    "tools/sprites/test_rigged_tech_actions_v3.py",
+    "tools/sprites/test_soft_skin_deform.py",
+    "tools/sprites/weight_transfer.py"
   ],
   "impacted_symbols": [
     {
-      "name": "RuntimePackTests",
-      "kind": "class",
-      "file": "tools/sprites/test_package_tech_actions_runtime.py",
-      "line": 16
+      "name": "spine_lean",
+      "kind": "function",
+      "file": "tools/sprites/rigged_tech_actions_v3.py",
+      "line": 27
     },
     {
-      "name": "setUp",
+      "name": "pose_for",
       "kind": "function",
-      "file": "tools/sprites/test_package_tech_actions_runtime.py",
-      "line": 17
+      "file": "tools/sprites/rigged_tech_actions_v3.py",
+      "line": 47
     },
     {
-      "name": "test_six_atlases_keep_the_review_gate",
+      "name": "draw_cargo",
       "kind": "function",
-      "file": "tools/sprites/test_package_tech_actions_runtime.py",
-      "line": 20
+      "file": "tools/sprites/rigged_tech_actions_v3.py",
+      "line": 80
     },
     {
-      "name": "test_game_scale_check_rejects_clipped_or_empty_frames",
+      "name": "draw_console",
       "kind": "function",
-      "file": "tools/sprites/test_package_tech_actions_runtime.py",
-      "line": 71
+      "file": "tools/sprites/rigged_tech_actions_v3.py",
+      "line": 102
     },
     {
-      "name": "test_source_contract_has_shared_skin_and_event_timeline",
+      "name": "draw_repair",
       "kind": "function",
-      "file": "tools/sprites/test_package_tech_actions_runtime.py",
-      "line": 81
+      "file": "tools/sprites/rigged_tech_actions_v3.py",
+      "line": 118
     },
     {
-      "name": "test_reject_approved_or_corrupted_index",
+      "name": "draw_celebration",
       "kind": "function",
-      "file": "tools/sprites/test_package_tech_actions_runtime.py",
-      "line": 88
+      "file": "tools/sprites/rigged_tech_actions_v3.py",
+      "line": 151
     },
     {
-      "name": "test_reject_missing_review_marker",
+      "name": "draw_idle_readout",
       "kind": "function",
-      "file": "tools/sprites/test_package_tech_actions_runtime.py",
-      "line": 97
+      "file": "tools/sprites/rigged_tech_actions_v3.py",
+      "line": 164
     },
     {
-      "name": "test_reject_missing_fabric_renderer_provenance",
+      "name": "draw_frame",
       "kind": "function",
-      "file": "tools/sprites/test_package_tech_actions_runtime.py",
-      "line": 111
+      "file": "tools/sprites/rigged_tech_actions_v3.py",
+      "line": 175
     },
     {
-      "name": "test_reject_soft_deformation_disabled_in_manifest",
+      "name": "action_qa",
       "kind": "function",
-      "file": "tools/sprites/test_package_tech_actions_runtime.py",
-      "line": 126
+      "file": "tools/sprites/rigged_tech_actions_v3.py",
+      "line": 187
     },
     {
-      "name": "test_reject_falsely_approved_visual_qa",
+      "name": "rotated_shoulder",
       "kind": "function",
-      "file": "tools/sprites/test_package_tech_actions_runtime.py",
-      "line": 141
+      "file": "tools/sprites/rigged_tech_actions_v3.py",
+      "line": 196
+    },
+    {
+      "name": "build_action",
+      "kind": "function",
+      "file": "tools/sprites/rigged_tech_actions_v3.py",
+      "line": 240
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "tools/sprites/rigged_tech_actions_v3.py",
+      "line": 327
     },
     {
       "name": "MultiActionGeometryTests",
@@ -164,10 +174,70 @@
       "kind": "function",
       "file": "tools/sprites/test_rigged_tech_actions_v3.py",
       "line": 131
+    },
+    {
+      "name": "DeformedSkinTests",
+      "kind": "class",
+      "file": "tools/sprites/test_soft_skin_deform.py",
+      "line": 14
+    },
+    {
+      "name": "setUpClass",
+      "kind": "function",
+      "file": "tools/sprites/test_soft_skin_deform.py",
+      "line": 16
+    },
+    {
+      "name": "test_bend_orientation_and_continuity",
+      "kind": "function",
+      "file": "tools/sprites/test_soft_skin_deform.py",
+      "line": 19
+    },
+    {
+      "name": "test_reject_invalid_curves_and_textures",
+      "kind": "function",
+      "file": "tools/sprites/test_soft_skin_deform.py",
+      "line": 25
+    },
+    {
+      "name": "test_opt_in_preserves_exact_legacy_pixels",
+      "kind": "function",
+      "file": "tools/sprites/test_soft_skin_deform.py",
+      "line": 34
+    },
+    {
+      "name": "test_24_frame_walk_geometry_and_review_lock",
+      "kind": "function",
+      "file": "tools/sprites/test_soft_skin_deform.py",
+      "line": 45
+    },
+    {
+      "name": "test_six_action_renderer_is_deterministic_not_clipped",
+      "kind": "function",
+      "file": "tools/sprites/test_soft_skin_deform.py",
+      "line": 56
+    },
+    {
+      "name": "stance_load",
+      "kind": "function",
+      "file": "tools/sprites/weight_transfer.py",
+      "line": 15
+    },
+    {
+      "name": "support_bias",
+      "kind": "function",
+      "file": "tools/sprites/weight_transfer.py",
+      "line": 25
+    },
+    {
+      "name": "transfer_pose",
+      "kind": "function",
+      "file": "tools/sprites/weight_transfer.py",
+      "line": 33
     }
   ],
   "selected_tests": [
-    "tools/sprites/test_package_tech_actions_runtime.py",
-    "tools/sprites/test_rigged_tech_actions_v3.py"
+    "tools/sprites/test_rigged_tech_actions_v3.py",
+    "tools/sprites/test_soft_skin_deform.py"
   ]
 }

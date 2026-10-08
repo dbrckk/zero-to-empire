@@ -104,6 +104,7 @@ sprites/
   test_soft_skin_deform.py
   validate_animation_sheet.py
   validate_runtime_asset.py
+  weight_transfer.py
 process_final_assets.py
 validate_isolated_sprite.py
 ```
@@ -4897,7 +4898,7 @@ def pose_for(t: float, action: str) -> dict
 ⋮----
 phase = 2 * math.pi * t
 ⋮----
-p = core.pose(t)
+p = transfer_pose(core.pose(t),t,action)
 ⋮----
 hands = {
 ⋮----
@@ -4959,7 +4960,10 @@ stationary = action in ("IDLE", "WORK", "REPAIR", "CELEB")
 grounded = all(q["lockL"] and q["lockR"] for q in poses) if stationary else True
 grip_ok = (all(
 legible_motion = (action not in ("WORK", "REPAIR", "CELEB")
-kinetic = (not violations and grounded and grip_ok and legible_motion)
+supports = [p.get("support_bias") for p in poses]
+amplitude = max(abs(p.get("weight_transfer_px",0)) for p in poses)
+transfer_ok = (all(v is not None and math.isfinite(v) and abs(v)<=1.00001
+kinetic = (not violations and grounded and grip_ok and legible_motion and transfer_ok)
 ⋮----
 def build_action(skin: Path, out: Path, action: str, frames: int = 24, fps: int = 12)
 ⋮----
@@ -5780,6 +5784,45 @@ ap=argparse.ArgumentParser()
 ⋮----
 a=ap.parse_args()
 result=validate(a.asset_id,a.path)
+```
+
+## File: sprites/weight_transfer.py
+```python
+"""Deterministic, foot-locked character weight transfer for modular TECH sprites.
+
+No image generation, no manual pose editing, no production queue mutation.
+The support-weight envelope is continuous at contact transitions. Applying
+pelvis sway never changes a foot target or the original footstep timeline.
+"""
+⋮----
+STANCE_FRACTION = 0.62
+AMPLITUDES_PX = {'WALK': 4.0, 'CARRY': 2.2}
+⋮----
+def stance_load(t: float, offset: float = 0.0, stance: float = STANCE_FRACTION) -> float
+⋮----
+"""Smooth loading/unloading of a planted foot, zero throughout its swing."""
+⋮----
+u = (t + offset) % 1.0
+⋮----
+def support_bias(t: float) -> float
+⋮----
+"""Signed loading right (+1) versus left (-1); periodic over one cycle."""
+right = stance_load(t)
+left = stance_load(t, 0.5)
+denom = left + right
+⋮----
+def transfer_pose(source: dict[str, Any], t: float, action: str) -> dict[str, Any]
+⋮----
+"""Translate only hips/torso and both wrists, while feet remain world-locked.
+
+    The renderer's two-bone knee IK compensates for the body's motion.
+    Returns a fresh dictionary; does not mutate the input pose or skin.
+    """
+⋮----
+bias = support_bias(t)
+dx = AMPLITUDES_PX[action] * bias
+⋮----
+p = dict(source)
 ```
 
 ## File: process_final_assets.py

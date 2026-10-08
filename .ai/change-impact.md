@@ -1,10 +1,10 @@
 # Change impact
 
-Base: a4f9b31a3d8983d88dd25557a36727a45c8762f1
-Head: abefc8c43fc5a4bb75885df11b8bd77d4d10d8b9
+Base: fccd677f3cdec398189766598cd276ce75502f6b
+Head: 63bc0da48784ca997ad9a9380b83bd088ffe7d51
 
 ## Changed files
-- A tools/sprites/SOFT_MESH_V6_README.md
+- M tools/sprites/rigged_tech_actions_v3.py
 
 ## Affected areas
 - tools
