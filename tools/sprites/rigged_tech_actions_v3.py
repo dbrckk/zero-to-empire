@@ -15,6 +15,7 @@ import zipfile
 from pathlib import Path
 from PIL import Image, ImageDraw
 import rigged_tech_walk_v2 as core
+from weight_transfer import transfer_pose, support_bias, AMPLITUDES_PX
 
 ACTIONS = ("WALK", "CARRY", "IDLE", "WORK", "REPAIR", "CELEB")
 GROUND = core.GROUND
@@ -49,7 +50,7 @@ def pose_for(t: float, action: str) -> dict:
     t %= 1.0
     phase = 2 * math.pi * t
     if action in ("WALK", "CARRY"):
-        p = core.pose(t)
+        p = transfer_pose(core.pose(t),t,action)
         p["torso_lean_rad"] = spine_lean(t, action)
         if action == "CARRY":
             x, y = p["root"]
@@ -213,12 +214,20 @@ def action_qa(action: str, poses: list, base_qa: dict) -> dict:
         for p in poses) if action == "CARRY" else True)
     legible_motion = (action not in ("WORK", "REPAIR", "CELEB")
                       or motion["handR"] >= 18)
-    kinetic = (not violations and grounded and grip_ok and legible_motion)
+    supports = [p.get("support_bias") for p in poses]
+    amplitude = max(abs(p.get("weight_transfer_px",0)) for p in poses)
+    transfer_ok = (all(v is not None and math.isfinite(v) and abs(v)<=1.00001
+                       for v in supports) and amplitude<=AMPLITUDES_PX[action]+.001
+                   if action in AMPLITUDES_PX
+                   else all(v is None for v in supports))
+    kinetic = (not violations and grounded and grip_ok and legible_motion and transfer_ok)
     base_qa.update({
         "action_kinematic_pass": kinetic, "hand_reach_violations": violations,
         "action_motion_range_px": motion, "stationary_ground_contact_pass": grounded,
         "fixed_cargo_grip_pass": grip_ok,
         "game_scale_motion_pass": legible_motion,
+        "weight_transfer_pass": transfer_ok,
+        "max_weight_transfer_px": round(amplitude,4),
         "spine_lean_max_degrees": round(max(abs(math.degrees(p.get("torso_lean_rad",0.0))) for p in poses),3),
         "spine_lean_in_range": not any("spine_lean_rad" in v for v in violations),
         "technical_pass": bool(base_qa["technical_pass"] and kinetic),
@@ -282,6 +291,9 @@ def build_action(skin: Path, out: Path, action: str, frames: int = 24, fps: int 
     manifest = {
         "asset_id": asset_id, "action": action, "build": "modular-tech-actions-v3",
         "rig": "one-textured-character-with-two-bone-IK",
+        "weight_transfer": {"enabled": action in AMPLITUDES_PX,
+                            "model": "stance-load-sine-squared-v1",
+                            "amplitude_px": AMPLITUDES_PX.get(action,0.0)},
         "renderer_features": {"joint_fabric": True, "spine_flex": True, "foot_roll": True, "soft_deform": True},
         "source_skin_sha256": hashlib.sha256(skin.read_bytes()).hexdigest(),
         "frames": frames, "fps": fps, "frame_size": [CANVAS, CANVAS],
