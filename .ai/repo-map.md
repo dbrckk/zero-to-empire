@@ -25208,6 +25208,21 @@ def work_pulse(t: float) -> float
 ⋮----
 """Phase-locked emissive touch feedback, never random pixels."""
 ⋮----
+def work_event_indices(frames: int, phase_origin_frame: int = 0) -> tuple[int, ...]
+⋮----
+"""Map WORK data-update events to visible glow maxima *after* cycle reindex.
+
+    The asset builder and runtime sound/VFX timeline must share the same
+    frame-phase mapping. Never fire an event during a visible pulse minimum.
+    """
+⋮----
+result = []
+⋮----
+phase = lambda j: ((j + phase_origin_frame) % frames) / frames
+now = work_pulse(phase(i))
+before = work_pulse(phase(i-1))
+after = work_pulse(phase(i+1))
+⋮----
 def repair_tip(root)
 ⋮----
 def repair_contact(p: dict) -> dict
@@ -28260,6 +28275,11 @@ tool=qa.get('repair_torch_length_range_px')
 poses=json.loads((folder/'frame-poses.json').read_text(encoding='utf-8'))
 events=json.loads((folder/'footstep-events.json').read_text(encoding='utf-8'))
 ⋮----
+expected=list(work_event_indices(count,expected_origin))
+actual=[i for i,event in enumerate(events)
+⋮----
+expected=[i for i in range(count)
+⋮----
 frames=sorted((folder/'frames').glob('*.png'))
 ⋮----
 def review_html(data:dict)->str
@@ -29468,6 +29488,7 @@ thumb = preview.resize((192, 192), Image.Resampling.LANCZOS)
 ⋮----
 qa = action_qa(action, poses, core.check(images, poses, boots))
 footfalls = action in ("WALK", "CARRY")
+work_indices = work_event_indices(frames, phase_origin_frame) if action == 'WORK' else ()
 events = [{
 manifest = {
 ⋮----
@@ -29906,6 +29927,15 @@ root=(252,270+1.8*math.sin(2*math.pi*t))
 ⋮----
 touch=work_contact({'root':root,'handL':left,'handR':right})
 ⋮----
+def test_work_events_are_at_visual_peak_after_reindex(self)
+⋮----
+origin=round(count*5/24)
+picks=work_event_indices(count,origin)
+⋮----
+p=work_pulse(((frame+origin)%count)/count)
+prev=work_pulse(((frame-1+origin)%count)/count)
+nxt=work_pulse(((frame+1+origin)%count)/count)
+⋮----
 def test_repair_tool_physically_connects_to_wrist(self)
 ⋮----
 phase=2*math.pi*t
@@ -30019,6 +30049,11 @@ source=json.loads((FIXTURE/'production-index.json').read_text())
 ⋮----
 def test_reject_missing_review_marker(self)
 ⋮----
+def test_refuse_desynchronized_visual_events(self)
+⋮----
+events=json.loads((FIXTURE/action/'footstep-events.json').read_text())
+changed=next(i for i,e in enumerate(events) if e.get('vfx_event')==event_kind)
+⋮----
 def test_reject_mismatched_work_and_repair_contacts(self)
 ⋮----
 root=Path(tmp)
@@ -30119,6 +30154,9 @@ events = json.loads((out / "animation-events.json").read_text())
 phase_origin=manifest["phase_origin_frame"]
 ⋮----
 enabled=repair_spark_intensity(
+⋮----
+expected=list(work_event_indices(8,manifest["phase_origin_frame"]))
+actual=[i for i,e in enumerate(events)
 ```
 
 ## File: tools/sprites/test_rigged_tech_walk_v2.py

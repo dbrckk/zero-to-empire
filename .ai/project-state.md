@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T23:22:57Z
+Generated: 2026-10-08T23:31:32Z
 
 ### Git
 - Branch: `main`
-- Head: `cb3f0a5333ef`
-- Commit date: 2026-10-09T01:22:41+02:00
-- Commit: docs(art): document physically linked TECH interactions and non-bypassable visual QA
+- Head: `b18951edf5f0`
+- Commit date: 2026-10-09T01:31:13+02:00
+- Commit: test(art): reject corrupted WORK/REPAIR event tracks during atlas export
 - Tracked files: 1470
 
 ### Recently changed files
-- `tools/sprites/MODULAR_ACTIONS_README.md`
 - `tools/sprites/test_package_tech_actions_runtime.py`
-- `tools/sprites/package_tech_actions_runtime.py`
 - `tools/sprites/test_rigged_tech_actions_v3.py`
-- `.github/workflows/modular-tech-actions.yml`
+- `tools/sprites/package_tech_actions_runtime.py`
+- `tools/sprites/test_action_contact.py`
+- `tools/sprites/action_contact.py`
 
 ### Project signals
 - `build.gradle.kts`

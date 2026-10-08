@@ -1,12 +1,13 @@
 # CI status
 
-Summary: 0 success / 5 failure / 0 active
+Summary: 0 success / 5 failure / 1 active
 
-- Six modular TECH animations (review only): completed / failure (d85fc3ce)
-- Six modular TECH animations (review only): completed / failure (b2854867)
-- Six modular TECH animations (review only): completed / failure (f6cc4605)
-- Six modular TECH animations (review only): completed / failure (72de9c2a)
-- Six modular TECH animations (review only): completed / failure (e971f4b1)
+- Six modular TECH animations (review only): in_progress / pending (b18951ed)
+- Six modular TECH animations (review only): completed / failure (9cf3e0b8)
+- Six modular TECH animations (review only): completed / failure (7c2619eb)
+- Six modular TECH animations (review only): completed / failure (e2bddd02)
+- Six modular TECH animations (review only): completed / failure (caafd96b)
+- Six modular TECH animations (review only): completed / failure (19af4609)
 
 ## Latest failed run structure
 - Job: render-six-review-clips
