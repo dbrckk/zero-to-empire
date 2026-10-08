@@ -180,7 +180,7 @@ def draw_frame(action: str, t: float, kit: dict):
         "IDLE": draw_idle_readout,
     }.get(action)
     overlay = draw_celebration if action == "CELEB" else None
-    return core.draw_frame(t, kit, p, under, overlay, joint_fabric=True)
+    return core.draw_frame(t, kit, p, under, overlay, joint_fabric=True, soft_deform=True)
 
 
 def action_qa(action: str, poses: list, base_qa: dict) -> dict:
@@ -282,7 +282,7 @@ def build_action(skin: Path, out: Path, action: str, frames: int = 24, fps: int 
     manifest = {
         "asset_id": asset_id, "action": action, "build": "modular-tech-actions-v3",
         "rig": "one-textured-character-with-two-bone-IK",
-        "renderer_features": {"joint_fabric": True, "spine_flex": True, "foot_roll": True},
+        "renderer_features": {"joint_fabric": True, "spine_flex": True, "foot_roll": True, "soft_deform": True},
         "source_skin_sha256": hashlib.sha256(skin.read_bytes()).hexdigest(),
         "frames": frames, "fps": fps, "frame_size": [CANVAS, CANVAS],
         "atlas_columns": cols, "atlas_rows": rows,
