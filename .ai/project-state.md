@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T22:22:14Z
+Generated: 2026-10-08T22:50:43Z
 
 ### Git
 - Branch: `main`
-- Head: `735a783cf4f3`
-- Commit date: 2026-10-09T00:21:52+02:00
-- Commit: test(art): reject review packs without fabric-renderer provenance
-- Tracked files: 1463
+- Head: `308ac963db56`
+- Commit date: 2026-10-09T00:50:01+02:00
+- Commit: ci(art): test soft textured IK limbs before exporting six TECH review clips
+- Tracked files: 1465
 
 ### Recently changed files
-- `tools/sprites/test_package_tech_actions_runtime.py`
-- `tools/sprites/test_rigged_tech_actions_v3.py`
+- `.github/workflows/modular-tech-actions.yml`
 - `tools/sprites/package_tech_actions_runtime.py`
+- `tools/sprites/test_soft_skin_deform.py`
 - `tools/sprites/rigged_tech_actions_v3.py`
-- `tools/sprites/MODULAR_ACTIONS_README.md`
+- `tools/sprites/rigged_tech_walk_v2.py`
 
 ### Project signals
 - `build.gradle.kts`

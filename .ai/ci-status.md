@@ -1,13 +1,12 @@
 # CI status
 
-Summary: 1 success / 4 failure / 1 active
+Summary: 1 success / 4 failure / 0 active
 
-- Six modular TECH animations (review only): in_progress / pending (735a783c)
-- Six modular TECH animations (review only): completed / failure (9a9a413e)
-- Six modular TECH animations (review only): completed / failure (4a9a4dcb)
-- Six modular TECH animations (review only): completed / failure (3f3f7768)
-- Six modular TECH animations (review only): completed / failure (95035ce0)
-- Kaggle Async Character Collector: completed / success (65830a38)
+- Six modular TECH animations (review only): completed / failure (308ac963)
+- Six modular TECH animations (review only): completed / failure (33560f89)
+- Six modular TECH animations (review only): completed / failure (4fff288b)
+- Modular TECH walk (review only): completed / success (6f322d51)
+- Six modular TECH animations (review only): completed / failure (6f322d51)
 
 ## Latest failed run structure
 - Job: render-six-review-clips

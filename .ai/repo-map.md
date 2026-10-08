@@ -373,11 +373,13 @@ tools/
     reconcile_strict_approvals.py
     rigged_tech_actions_v3.py
     rigged_tech_walk_v2.py
+    soft_skin_deform.py
     ter07_energy_conduit_candidate.py
     test_autonomous_walk.py
     test_package_tech_actions_runtime.py
     test_rigged_tech_actions_v3.py
     test_rigged_tech_walk_v2.py
+    test_soft_skin_deform.py
     validate_animation_sheet.py
     validate_runtime_asset.py
   process_final_assets.py
@@ -3666,6 +3668,8 @@ on:
   push:
     paths:
       - 'tools/sprites/rigged_tech_walk_v2.py'
+      - 'tools/sprites/soft_skin_deform.py'
+      - 'tools/sprites/test_soft_skin_deform.py'
       - 'tools/sprites/rigged_tech_actions_v3.py'
       - 'tools/sprites/test_rigged_tech_actions_v3.py'
       - 'tools/sprites/package_tech_actions_runtime.py'
@@ -3690,6 +3694,7 @@ jobs:
       - name: Test action grammar, IK reach, fixed grips and review gate
         run: |
           python -m unittest discover -s tools/sprites -p 'test_rigged_tech_walk_v2.py' -v
+          python -m unittest discover -s tools/sprites -p 'test_soft_skin_deform.py' -v
           python -m unittest discover -s tools/sprites -p 'test_rigged_tech_actions_v3.py' -v
       - name: Build 144 transparent frames from one character skin
         run: |
@@ -29538,7 +29543,7 @@ bbox=turn.getchannel('A').getbbox()
 px=round(foot[0]-center)
 py=round(foot[1]-bbox[3])
 ⋮----
-def draw_frame(t:float,kit:dict,pose_override=None,prop_underlay=None,prop_overlay=None,joint_fabric=False)
+def draw_frame(t:float,kit:dict,pose_override=None,prop_underlay=None,prop_overlay=None,joint_fabric=False,soft_deform=False)
 ⋮----
 p=pose(t) if pose_override is None else pose_override
 ⋮----
@@ -29559,6 +29564,14 @@ img=img.rotate(-math.degrees(lean),expand=True,resample=Image.Resampling.BICUBIC
 ⋮----
 elbowL=ik(shoulderL,p['handL'],59,59,-1)
 elbowR=ik(shoulderR,p['handR'],59,59,-1)
+# Warp the SAME cached atlas pieces along mildly curved limb strips.
+# The optional path never modifies the rig and can be disabled for exact
+# compatibility with the historical production renderer.
+def segment(texture,a,b,occupancy,width_mul,bend)
+bend_l=signed_joint_bend(lhip,kneeL,p['left'])
+bend_r=signed_joint_bend(rhip,kneeR,p['right'])
+bend_arm_l=signed_joint_bend(shoulderL,elbowL,p['handL'],3.4)
+bend_arm_r=signed_joint_bend(shoulderR,elbowR,p['handR'],3.4)
 ⋮----
 bootL=render_boot(canvas,kit['shin_boot_far_boot'],p['left'],p['rollL'])
 ⋮----
@@ -29607,6 +29620,69 @@ def main()
 parser=argparse.ArgumentParser(description=__doc__)
 ⋮----
 args=parser.parse_args()
+```
+
+## File: tools/sprites/soft_skin_deform.py
+```python
+"""Deterministic bend-aware texture deformation for 2D IK character limbs.
+
+Inverse mapping of an atlas piece onto a mildly curved strip. No generative calls,
+no identity drift and no changes to the rig's hard anatomical joint positions.
+Requires Pillow and NumPy only.
+"""
+⋮----
+def signed_joint_bend(start, hinge, end, maximum=5.0)
+⋮----
+"""Signed lateral offset in pixels, bounded by hinge deflection."""
+⋮----
+cross = (ux*vy - uy*vx) / (lu*lv)
+⋮----
+"""Draw atlas texture along a gently curved IK bone with bilinear sampling.
+
+    The lateral bend is zero at both skeletal endpoints and largest mid-bone.
+    Unlike a straight rigid sprite this curves *the original texture pixels*.
+    No source image is changed and the path is deterministic.
+    """
+⋮----
+dist=math.hypot(dx,dy)
+⋮----
+height=max(2,round(dist/occupancy))
+width=max(2,round(height*texture.width/texture.height*width_mul))
+scaled=np.asarray(texture.resize((width,height),Image.Resampling.LANCZOS),dtype=np.float32)/255.0
+# Original rigid layout places top of the image 7% above joint A.
+head=-.07*height
+tail=.93*height
+p0=(start[0]+ux*head,start[1]+uy*head)
+p1=(start[0]+ux*tail,start[1]+uy*tail)
+pad=width/2+abs(bend_px)+3
+x0=max(0,math.floor(min(p0[0],p1[0])-pad));x1=min(layer.width,math.ceil(max(p0[0],p1[0])+pad))
+y0=max(0,math.floor(min(p0[1],p1[1])-pad));y1=min(layer.height,math.ceil(max(p0[1],p1[1])+pad))
+⋮----
+along=xx*ux+yy*uy
+side=xx*nx+yy*ny
+t=along/dist
+along_clipped=np.clip(t,0,1)
+bulge=bend_px*np.sin(np.pi*along_clipped)
+width_factor=1-taper*(2*along_clipped-1)**2
+src_x=(side-bulge)/width_factor+(width-1)/2
+src_y=along-head
+valid=(src_x>=0)&(src_x<=width-1)&(src_y>=0)&(src_y<=height-1)
+xi=np.clip(np.floor(src_x).astype(np.int32),0,width-1)
+yi=np.clip(np.floor(src_y).astype(np.int32),0,height-1)
+xj=np.minimum(xi+1,width-1)
+yj=np.minimum(yi+1,height-1)
+wx=np.clip(src_x-xi,0,1)[...,None]
+wy=np.clip(src_y-yi,0,1)[...,None]
+# Premultiplied-alpha bilinear filtering avoids dark seams/haloes.
+rgba=scaled.copy()
+⋮----
+sampled=((1-wx)*(1-wy)*rgba[yi,xi]+wx*(1-wy)*rgba[yi,xj]
+alpha=sampled[...,3:4]
+rgb=np.divide(sampled[...,:3],np.maximum(alpha,1e-6))
+sampled=np.concatenate((rgb,alpha),axis=-1)
+⋮----
+pixels=np.uint8(np.clip(np.round(sampled*255),0,255))
+patch=Image.fromarray(pixels,'RGBA')
 ```
 
 ## File: tools/sprites/ter07_energy_conduit_candidate.py
@@ -29977,6 +30053,37 @@ out=Path(tmp)/'render'
 qa=manifest['qa']
 ⋮----
 def test_reject_invalid_config(self)
+```
+
+## File: tools/sprites/test_soft_skin_deform.py
+```python
+"""Tests for deterministic, opt-in bending of TECH modular atlas textures."""
+⋮----
+KIT = Path(__file__).with_name("skin-tech-v1.webp")
+⋮----
+class DeformedSkinTests(unittest.TestCase)
+⋮----
+@classmethod
+    def setUpClass(cls)
+⋮----
+def test_bend_orientation_and_continuity(self)
+⋮----
+def test_reject_invalid_curves_and_textures(self)
+⋮----
+def test_opt_in_preserves_exact_legacy_pixels(self)
+⋮----
+def test_24_frame_walk_geometry_and_review_lock(self)
+⋮----
+frames=[];positions=[];boots=[]
+⋮----
+qa=core.check(frames,positions,boots)
+⋮----
+def test_six_action_renderer_is_deterministic_not_clipped(self)
+⋮----
+box=a.getchannel("A").getbbox()
+⋮----
+# The WALK candidate must be soft deformed, unlike the explicit old path.
+source=pose_for(.125,"WALK")
 ```
 
 ## File: tools/sprites/validate_animation_sheet.py
