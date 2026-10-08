@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T19:06:29Z
+Generated: 2026-10-08T20:31:36Z
 
 ### Git
 - Branch: `main`
-- Head: `ff237d511f2f`
-- Commit date: 2026-10-08T21:06:00+02:00
-- Commit: ci(art): build and QA autonomous pose sprites without Kaggle
+- Head: `ce23cc4258e5`
+- Commit date: 2026-10-08T22:31:21+02:00
+- Commit: feat(art): add stable procedural materials to rigged technician animation
 - Tracked files: 1451
 
 ### Recently changed files
+- `tools/sprites/pose_studio.html`
 - `.github/workflows/pose-studio-autonomous.yml`
 - `tools/sprites/AUTONOMOUS_WALK_README.md`
 - `tools/sprites/test_autonomous_walk.py`
 - `tools/sprites/autonomous_walk.py`
-- `tools/sprites/POSE_STUDIO_README.md`
 
 ### Project signals
 - `build.gradle.kts`

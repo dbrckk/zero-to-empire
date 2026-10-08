@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 63f922787cc3debd1d79088a26a528a6d4e3b2dd
-Head: ff237d511f2febb1a6546e561aabb0b62568de48
+Base: d70821d0afd5046a45f79ced9e492436bba48294
+Head: ce23cc4258e552bbb248c116fad2a16ceb056db3
 
 ## Changed files
-- A .github/workflows/pose-studio-autonomous.yml
+- M tools/sprites/pose_studio.html
 
 ## Affected areas
-- .github
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.
