@@ -1,10 +1,10 @@
 # Change impact
 
-Base: b285486751ccefbb0e9997d731a130708354fbbc
-Head: d85fc3ceb2558ec53b63000ca0c2373387b5bbda
+Base: 599f1ae7a484cda3e5bb6ad863f3bc4593e7fa05
+Head: cb3f0a5333ef0ff4d0564e9a4bd607e884100d6b
 
 ## Changed files
-- M tools/sprites/test_package_tech_actions_runtime.py
+- M tools/sprites/MODULAR_ACTIONS_README.md
 
 ## Affected areas
 - tools

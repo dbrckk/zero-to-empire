@@ -1,8 +1,8 @@
 # CI status
 
-Summary: 0 success / 4 failure / 1 active
+Summary: 0 success / 5 failure / 0 active
 
-- Six modular TECH animations (review only): in_progress / pending (d85fc3ce)
+- Six modular TECH animations (review only): completed / failure (d85fc3ce)
 - Six modular TECH animations (review only): completed / failure (b2854867)
 - Six modular TECH animations (review only): completed / failure (f6cc4605)
 - Six modular TECH animations (review only): completed / failure (72de9c2a)

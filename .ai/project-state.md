@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T23:20:30Z
+Generated: 2026-10-08T23:22:57Z
 
 ### Git
 - Branch: `main`
-- Head: `d85fc3ceb255`
-- Commit date: 2026-10-09T01:20:07+02:00
-- Commit: test(art): prevent export of TECH clips with disconnected action props
+- Head: `cb3f0a5333ef`
+- Commit date: 2026-10-09T01:22:41+02:00
+- Commit: docs(art): document physically linked TECH interactions and non-bypassable visual QA
 - Tracked files: 1470
 
 ### Recently changed files
+- `tools/sprites/MODULAR_ACTIONS_README.md`
 - `tools/sprites/test_package_tech_actions_runtime.py`
 - `tools/sprites/package_tech_actions_runtime.py`
 - `tools/sprites/test_rigged_tech_actions_v3.py`
 - `.github/workflows/modular-tech-actions.yml`
-- `tools/sprites/test_action_contact.py`
 
 ### Project signals
 - `build.gradle.kts`
