@@ -1,140 +1,158 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "cd8c2382d2210a07e53e162ecab82594ac28544f",
-  "head": "026fcde014676ebae7dc0049b553f372dce00b82",
+  "base": "026fcde014676ebae7dc0049b553f372dce00b82",
+  "head": "ff237d511f2febb1a6546e561aabb0b62568de48",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": "art/production/controlled-character-regen-queue.json",
-      "status": "M"
-    },
-    {
-      "path": "art/production/kaggle-async-state.json",
-      "status": "M"
-    },
-    {
-      "path": "art/production/master-asset-queue.json",
-      "status": "M"
-    },
-    {
-      "path": "ops/autofactory-kick.txt",
-      "status": "M"
-    },
-    {
-      "path": "ops/kaggle-collector-trigger.txt",
-      "status": "M"
-    },
-    {
-      "path": "tools/sprites/POSE_STUDIO_README.md",
+      "path": ".github/workflows/pose-studio-autonomous.yml",
       "status": "A"
     },
     {
-      "path": "tools/sprites/asset_wave_orchestrator.py",
-      "status": "M"
+      "path": "tools/sprites/AUTONOMOUS_WALK_README.md",
+      "status": "A"
     },
     {
-      "path": "tools/sprites/pose_studio.html",
+      "path": "tools/sprites/autonomous_walk.py",
+      "status": "A"
+    },
+    {
+      "path": "tools/sprites/test_autonomous_walk.py",
       "status": "A"
     }
   ],
   "changed_source_files": [
-    "tools/sprites/asset_wave_orchestrator.py"
+    "tools/sprites/autonomous_walk.py",
+    "tools/sprites/test_autonomous_walk.py"
   ],
   "impacted_files": [
-    "tools/sprites/asset_wave_orchestrator.py"
+    "tools/sprites/autonomous_walk.py",
+    "tools/sprites/test_autonomous_walk.py"
   ],
   "impacted_symbols": [
     {
-      "name": "by_id",
-      "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 54
+      "name": "WalkSettings",
+      "kind": "class",
+      "file": "tools/sprites/autonomous_walk.py",
+      "line": 33
     },
     {
-      "name": "mirror_character_outcomes_from_controlled",
+      "name": "validate",
       "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 58
+      "file": "tools/sprites/autonomous_walk.py",
+      "line": 44
     },
     {
-      "name": "update_from_trigger",
+      "name": "ease_hermite",
       "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 83
+      "file": "tools/sprites/autonomous_walk.py",
+      "line": 59
     },
     {
-      "name": "active_pending",
+      "name": "foot_local",
       "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 153
+      "file": "tools/sprites/autonomous_walk.py",
+      "line": 68
     },
     {
-      "name": "character_retry_available",
+      "name": "pose",
       "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 158
+      "file": "tools/sprites/autonomous_walk.py",
+      "line": 84
     },
     {
-      "name": "mark_dispatch",
+      "name": "length",
       "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 181
+      "file": "tools/sprites/autonomous_walk.py",
+      "line": 101
     },
     {
-      "name": "prioritize_controlled_character_targets",
+      "name": "pose_distance",
       "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 214
+      "file": "tools/sprites/autonomous_walk.py",
+      "line": 105
     },
     {
-      "name": "building_family_ids",
+      "name": "verify_motion",
       "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 225
+      "file": "tools/sprites/autonomous_walk.py",
+      "line": 109
     },
     {
-      "name": "prepare_building_group",
+      "name": "render",
       "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 229
+      "file": "tools/sprites/autonomous_walk.py",
+      "line": 156
     },
     {
-      "name": "prepare_character_burst",
+      "name": "check_alpha",
       "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 240
+      "file": "tools/sprites/autonomous_walk.py",
+      "line": 180
     },
     {
-      "name": "next_group",
+      "name": "export",
       "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 285
+      "file": "tools/sprites/autonomous_walk.py",
+      "line": 192
     },
     {
-      "name": "close_exhausted_character_dispatches",
+      "name": "silhouette_diff",
       "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 304
-    },
-    {
-      "name": "pending_ids_from_controlled",
-      "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 325
-    },
-    {
-      "name": "make_decision",
-      "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 342
+      "file": "tools/sprites/autonomous_walk.py",
+      "line": 202
     },
     {
       "name": "main",
       "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 406
+      "file": "tools/sprites/autonomous_walk.py",
+      "line": 266
+    },
+    {
+      "name": "WalkGeometryTests",
+      "kind": "class",
+      "file": "tools/sprites/test_autonomous_walk.py",
+      "line": 12
+    },
+    {
+      "name": "test_cyclic_pose_and_left_right_symmetry",
+      "kind": "function",
+      "file": "tools/sprites/test_autonomous_walk.py",
+      "line": 13
+    },
+    {
+      "name": "test_planted_feet_exact_world_lock",
+      "kind": "function",
+      "file": "tools/sprites/test_autonomous_walk.py",
+      "line": 26
+    },
+    {
+      "name": "test_pose_physical_envelope",
+      "kind": "function",
+      "file": "tools/sprites/test_autonomous_walk.py",
+      "line": 40
+    },
+    {
+      "name": "test_reject_unphysical_config",
+      "kind": "function",
+      "file": "tools/sprites/test_autonomous_walk.py",
+      "line": 49
+    },
+    {
+      "name": "BuildTests",
+      "kind": "class",
+      "file": "tools/sprites/test_autonomous_walk.py",
+      "line": 55
+    },
+    {
+      "name": "test_real_export_and_safety_gate",
+      "kind": "function",
+      "file": "tools/sprites/test_autonomous_walk.py",
+      "line": 56
     }
   ],
-  "selected_tests": []
+  "selected_tests": [
+    "tools/sprites/test_autonomous_walk.py"
+  ]
 }

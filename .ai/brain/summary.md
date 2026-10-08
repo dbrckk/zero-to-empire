@@ -1,16 +1,16 @@
 # Repo Brain
 
 - Index mode: incremental
-- Files indexed: 212
-- Files reparsed this run: 1
-- Symbols: 1023
-- Internal import edges: 4
-- Impacted files: 1
-- Selected tests: 0
+- Files indexed: 214
+- Files reparsed this run: 2
+- Symbols: 1043
+- Internal import edges: 5
+- Impacted files: 2
+- Selected tests: 1
 
 ## Languages
 - kotlin: 159 files
-- python: 53 files
+- python: 55 files
 
 ## Highest-density symbol files
 - app/src/main/java/com/zerotoempire/game/GameViewModel.kt: 40 symbols
@@ -30,9 +30,9 @@
 - app/src/main/java/com/zerotoempire/game/GameFeel.kt: 14 symbols
 - app/src/main/java/com/zerotoempire/game/GrowthTelemetry.kt: 14 symbols
 - app/src/main/java/com/zerotoempire/game/PremiumSfx.kt: 13 symbols
+- tools/sprites/autonomous_walk.py: 13 symbols
 - app/src/main/java/com/zerotoempire/game/Analytics.kt: 12 symbols
 - app/src/test/java/com/zerotoempire/game/PurchaseRecoveryTest.kt: 12 symbols
-- kaggle/github_mass_factory.py: 12 symbols
 
 ## Agent routing
 - Read impact.json first after project/change context.
@@ -43,10 +43,10 @@
 ## ast-grep enrichment
 - ast-grep outline: available
 - AST index mode: incremental
-- AST files reparsed this run: 1
-- outline files retained: 217
-- top-level items retained: 3078
-- direct members retained: 676
+- AST files reparsed this run: 2
+- outline files retained: 219
+- top-level items retained: 3116
+- direct members retained: 691
 - symbol shards: 26
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard
 

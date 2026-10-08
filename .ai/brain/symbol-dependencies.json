@@ -5,139 +5,71 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "by_id": {
+    "WalkSettings": {
       "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 54,
-        "end": 55
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "mirror_character_outcomes_from_controlled": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 58,
-        "end": 80
+        "file": "tools/sprites/autonomous_walk.py",
+        "start": 33,
+        "end": 56
       },
       "symbol_dependencies": [
         {
-          "symbol": "load_json",
+          "symbol": "validate",
           "definitions": [
             {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 43,
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 44,
               "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "imported_module"
+          "relation": "same_file"
         }
       ],
       "dependency_count": 1
     },
-    "update_from_trigger": {
+    "validate": {
       "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 83,
-        "end": 150
+        "file": "tools/sprites/autonomous_walk.py",
+        "start": 44,
+        "end": 56
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "ease_hermite": {
+      "source": {
+        "file": "tools/sprites/autonomous_walk.py",
+        "start": 59,
+        "end": 65
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "foot_local": {
+      "source": {
+        "file": "tools/sprites/autonomous_walk.py",
+        "start": 68,
+        "end": 81
       },
       "symbol_dependencies": [
         {
-          "symbol": "load_json",
+          "symbol": "WalkSettings",
           "definitions": [
             {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 43,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "mirror_character_outcomes_from_controlled",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 58,
-              "kind": "function",
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 33,
+              "kind": "class",
               "language": "python"
             }
           ],
           "relation": "same_file"
         },
         {
-          "symbol": "save_json",
+          "symbol": "ease_hermite",
           "definitions": [
             {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 49,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "active_pending": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 153,
-        "end": 155
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "load_json",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 43,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "character_retry_available": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 158,
-        "end": 178
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "mark_dispatch": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 181,
-        "end": 211
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "by_id",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 54,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "character_retry_available",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 158,
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 59,
               "kind": "function",
               "language": "python"
             }
@@ -147,178 +79,62 @@
       ],
       "dependency_count": 2
     },
-    "prioritize_controlled_character_targets": {
+    "pose": {
       "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 214,
-        "end": 222
+        "file": "tools/sprites/autonomous_walk.py",
+        "start": 84,
+        "end": 98
       },
       "symbol_dependencies": [
         {
-          "symbol": "load_json",
+          "symbol": "WalkSettings",
           "definitions": [
             {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 43,
-              "kind": "function",
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 33,
+              "kind": "class",
               "language": "python"
             }
           ],
-          "relation": "imported_module"
+          "relation": "same_file"
         },
         {
-          "symbol": "save_json",
+          "symbol": "foot_local",
           "definitions": [
             {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 49,
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 68,
               "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "imported_module"
+          "relation": "same_file"
         }
       ],
       "dependency_count": 2
     },
-    "building_family_ids": {
+    "length": {
       "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 225,
-        "end": 226
+        "file": "tools/sprites/autonomous_walk.py",
+        "start": 101,
+        "end": 102
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "prepare_building_group": {
+    "pose_distance": {
       "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 229,
-        "end": 237
+        "file": "tools/sprites/autonomous_walk.py",
+        "start": 105,
+        "end": 106
       },
       "symbol_dependencies": [
         {
-          "symbol": "building_family_ids",
+          "symbol": "length",
           "definitions": [
             {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 225,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "by_id",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 54,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "mark_dispatch",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 181,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "save_json",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 49,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 4
-    },
-    "prepare_character_burst": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 240,
-        "end": 282
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "character_retry_available",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 158,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "mark_dispatch",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 181,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "prioritize_controlled_character_targets",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 214,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "save_json",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 49,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 4
-    },
-    "next_group": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 285,
-        "end": 301
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "character_retry_available",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 158,
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 101,
               "kind": "function",
               "language": "python"
             }
@@ -328,19 +144,201 @@
       ],
       "dependency_count": 1
     },
-    "close_exhausted_character_dispatches": {
+    "verify_motion": {
       "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 304,
+        "file": "tools/sprites/autonomous_walk.py",
+        "start": 109,
+        "end": 153
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "WalkSettings",
+          "definitions": [
+            {
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 33,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "length",
+          "definitions": [
+            {
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 101,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "pose",
+          "definitions": [
+            {
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 84,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "pose_distance",
+          "definitions": [
+            {
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 105,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 4
+    },
+    "render": {
+      "source": {
+        "file": "tools/sprites/autonomous_walk.py",
+        "start": 156,
+        "end": 177
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "check_alpha": {
+      "source": {
+        "file": "tools/sprites/autonomous_walk.py",
+        "start": 180,
+        "end": 189
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "export": {
+      "source": {
+        "file": "tools/sprites/autonomous_walk.py",
+        "start": 192,
+        "end": 263
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "WalkSettings",
+          "definitions": [
+            {
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 33,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "check_alpha",
+          "definitions": [
+            {
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 180,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "pose",
+          "definitions": [
+            {
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 84,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "render",
+          "definitions": [
+            {
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 156,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "silhouette_diff",
+          "definitions": [
+            {
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 202,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "validate",
+          "definitions": [
+            {
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 44,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "verify_motion",
+          "definitions": [
+            {
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 109,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 7
+    },
+    "silhouette_diff": {
+      "source": {
+        "file": "tools/sprites/autonomous_walk.py",
+        "start": 202,
         "end": 322
       },
       "symbol_dependencies": [
         {
-          "symbol": "by_id",
+          "symbol": "WalkSettings",
           "definitions": [
             {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 54,
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 33,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "export",
+          "definitions": [
+            {
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 192,
               "kind": "function",
               "language": "python"
             }
@@ -348,11 +346,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "character_retry_available",
+          "symbol": "main",
           "definitions": [
             {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 158,
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 266,
               "kind": "function",
               "language": "python"
             }
@@ -360,33 +358,103 @@
           "relation": "same_file"
         },
         {
-          "symbol": "load_json",
+          "symbol": "pose",
           "definitions": [
             {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 43,
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 84,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 4
+    },
+    "main": {
+      "source": {
+        "file": "tools/sprites/autonomous_walk.py",
+        "start": 266,
+        "end": 386
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "WalkSettings",
+          "definitions": [
+            {
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 33,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "export",
+          "definitions": [
+            {
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 192,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "WalkGeometryTests": {
+      "source": {
+        "file": "tools/sprites/test_autonomous_walk.py",
+        "start": 12,
+        "end": 52
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "WalkSettings",
+          "definitions": [
+            {
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 33,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "foot_local",
+          "definitions": [
+            {
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 68,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "pending_ids_from_controlled": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 325,
-        "end": 339
-      },
-      "symbol_dependencies": [
+        },
         {
-          "symbol": "active_pending",
+          "symbol": "pose",
           "definitions": [
             {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 153,
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 84,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "test_cyclic_pose_and_left_right_symmetry",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_autonomous_walk.py",
+              "line": 13,
               "kind": "function",
               "language": "python"
             }
@@ -394,11 +462,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "by_id",
+          "symbol": "test_planted_feet_exact_world_lock",
           "definitions": [
             {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 54,
+              "file": "tools/sprites/test_autonomous_walk.py",
+              "line": 26,
               "kind": "function",
               "language": "python"
             }
@@ -406,33 +474,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "character_retry_available",
+          "symbol": "test_pose_physical_envelope",
           "definitions": [
             {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 158,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "make_decision": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 342,
-        "end": 403
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "character_retry_available",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 158,
+              "file": "tools/sprites/test_autonomous_walk.py",
+              "line": 40,
               "kind": "function",
               "language": "python"
             }
@@ -440,11 +486,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "close_exhausted_character_dispatches",
+          "symbol": "test_reject_unphysical_config",
           "definitions": [
             {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 304,
+              "file": "tools/sprites/test_autonomous_walk.py",
+              "line": 49,
               "kind": "function",
               "language": "python"
             }
@@ -452,83 +498,23 @@
           "relation": "same_file"
         },
         {
-          "symbol": "mark_dispatch",
+          "symbol": "validate",
           "definitions": [
             {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 181,
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 44,
               "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "same_file"
+          "relation": "imported_module"
         },
         {
-          "symbol": "next_group",
+          "symbol": "verify_motion",
           "definitions": [
             {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 285,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "pending_ids_from_controlled",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 325,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "prepare_building_group",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 229,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "prepare_character_burst",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 240,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "prioritize_controlled_character_targets",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 214,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "stats",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 210,
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 109,
               "kind": "function",
               "language": "python"
             }
@@ -538,19 +524,31 @@
       ],
       "dependency_count": 9
     },
-    "main": {
+    "test_cyclic_pose_and_left_right_symmetry": {
       "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 406,
-        "end": 419
+        "file": "tools/sprites/test_autonomous_walk.py",
+        "start": 13,
+        "end": 24
       },
       "symbol_dependencies": [
         {
-          "symbol": "ensure_master",
+          "symbol": "WalkSettings",
           "definitions": [
             {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 116,
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 33,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "foot_local",
+          "definitions": [
+            {
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 68,
               "kind": "function",
               "language": "python"
             }
@@ -558,71 +556,11 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "make_decision",
+          "symbol": "pose",
           "definitions": [
             {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 342,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "save_json",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 49,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "stats",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 210,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sync_controlled_queues",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 157,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "update_from_trigger",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 83,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "write_summary",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 237,
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 84,
               "kind": "function",
               "language": "python"
             }
@@ -630,7 +568,213 @@
           "relation": "imported_module"
         }
       ],
-      "dependency_count": 7
+      "dependency_count": 3
+    },
+    "test_planted_feet_exact_world_lock": {
+      "source": {
+        "file": "tools/sprites/test_autonomous_walk.py",
+        "start": 26,
+        "end": 38
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "WalkSettings",
+          "definitions": [
+            {
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 33,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "pose",
+          "definitions": [
+            {
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 84,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_pose_physical_envelope": {
+      "source": {
+        "file": "tools/sprites/test_autonomous_walk.py",
+        "start": 40,
+        "end": 47
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "WalkSettings",
+          "definitions": [
+            {
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 33,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "verify_motion",
+          "definitions": [
+            {
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 109,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_reject_unphysical_config": {
+      "source": {
+        "file": "tools/sprites/test_autonomous_walk.py",
+        "start": 49,
+        "end": 52
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "WalkSettings",
+          "definitions": [
+            {
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 33,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "validate",
+          "definitions": [
+            {
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 44,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "BuildTests": {
+      "source": {
+        "file": "tools/sprites/test_autonomous_walk.py",
+        "start": 55,
+        "end": 76
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "WalkSettings",
+          "definitions": [
+            {
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 33,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "export",
+          "definitions": [
+            {
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 192,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "pose",
+          "definitions": [
+            {
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 84,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "test_real_export_and_safety_gate",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_autonomous_walk.py",
+              "line": 56,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 4
+    },
+    "test_real_export_and_safety_gate": {
+      "source": {
+        "file": "tools/sprites/test_autonomous_walk.py",
+        "start": 56,
+        "end": 76
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "WalkSettings",
+          "definitions": [
+            {
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 33,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "export",
+          "definitions": [
+            {
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 192,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "pose",
+          "definitions": [
+            {
+              "file": "tools/sprites/autonomous_walk.py",
+              "line": 84,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 3
     }
   }
 }

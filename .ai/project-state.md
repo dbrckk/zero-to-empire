@@ -22,23 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T18:37:09Z
+Generated: 2026-10-08T19:06:29Z
 
 ### Git
 - Branch: `main`
-- Head: `026fcde01467`
-- Commit date: 2026-10-08T20:33:26+02:00
-- Commit: docs(art): document offline pose-studio workflow and review gate
-- Tracked files: 1447
+- Head: `ff237d511f2f`
+- Commit date: 2026-10-08T21:06:00+02:00
+- Commit: ci(art): build and QA autonomous pose sprites without Kaggle
+- Tracked files: 1451
 
 ### Recently changed files
+- `.github/workflows/pose-studio-autonomous.yml`
+- `tools/sprites/AUTONOMOUS_WALK_README.md`
+- `tools/sprites/test_autonomous_walk.py`
+- `tools/sprites/autonomous_walk.py`
 - `tools/sprites/POSE_STUDIO_README.md`
-- `tools/sprites/pose_studio.html`
-- `art/production/autofactory-state.json`
-- `art/production/autofactory-summary.md`
-- `art/production/master-asset-queue.json`
-- `art/production/controlled-character-regen-queue.json`
-- `art/production/kaggle-async-state.json`
 
 ### Project signals
 - `build.gradle.kts`

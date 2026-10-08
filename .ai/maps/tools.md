@@ -54,6 +54,7 @@ sprites/
   asset_queue_utils.py
   asset_wave_orchestrator.py
   audit_complete_sprite_manifest.py
+  autonomous_walk.py
   build_sprite_contact_sheet.py
   colab_mass_factory.py
   generate_strict_review_backlog.py
@@ -92,6 +93,7 @@ sprites/
   promote_ter07_v3.py
   reconcile_strict_approvals.py
   ter07_energy_conduit_candidate.py
+  test_autonomous_walk.py
   validate_animation_sheet.py
   validate_runtime_asset.py
 process_final_assets.py
@@ -1098,6 +1100,152 @@ p=Path(runtime.replace(chr(96),''))
 r=validate(aid,p)
 ⋮----
 out=ROOT/'art/production/final-sprite-completion-audit.json'
+```
+
+## File: sprites/autonomous_walk.py
+```python
+#!/usr/bin/env python3
+"""Deterministic, unattended walk-sprite generator for Zero to Empire.
+
+Uses one identity-locked vector renderer from pose_studio.html and a cyclic,
+world-space planted-foot trajectory. No Kaggle, prompts or UI operations.
+Outputs are review candidates, NEVER strict DONE.
+"""
+⋮----
+CANVAS = 512
+GROUND = 446
+ROOT_X = 252
+HIP_Y = 270
+KINEMATIC_REACH = 94 + 99 - 1
+⋮----
+@dataclass(frozen=True)
+class WalkSettings
+⋮----
+asset_id: str = 'CHR-TECH-WALK'
+frames: int = 24
+fps: int = 12
+stride: float = 92.0
+clearance: float = 36.0
+stance_fraction: float = 0.62
+pelvis_bob: float = 3.5
+arm_swing: float = 30.0
+palette: str = 'cyan'
+⋮----
+def validate(self) -> None
+⋮----
+def ease_hermite(start: float, end: float, u: float, slope_u: float) -> float
+⋮----
+"""Cubic position and velocity matching at lift-off/touch-down."""
+h00 = 2 * u**3 - 3 * u**2 + 1
+h10 = u**3 - 2 * u**2 + u
+h01 = -2 * u**3 + 3 * u**2
+h11 = u**3 - u**2
+⋮----
+def foot_local(phase: float, settings: WalkSettings) -> tuple[float, float, bool]
+⋮----
+"""Foot trajectory relative to torso. During stance the planted foot does
+    not move in world coordinates as the body advances at constant speed.
+    """
+⋮----
+d = settings.stance_fraction
+s = settings.stride
+⋮----
+u = (phase-d)/(1-d)
+slope_u = -(s/d)*(1-d)
+x = ease_hermite(-s/2, s/2, u, slope_u)
+y = GROUND - settings.clearance*(math.sin(math.pi*u)**1.3)
+⋮----
+def pose(t: float, settings: WalkSettings) -> dict[str, Any]
+⋮----
+# Arms counter-swing to legs, with sub-pixel smooth motion.
+opposite = settings.arm_swing*math.cos(2*math.pi*t)
+⋮----
+def length(a: dict, b: dict) -> float
+⋮----
+def pose_distance(a: dict, b: dict) -> float
+⋮----
+def verify_motion(settings: WalkSettings) -> dict[str, Any]
+⋮----
+"""Numerical QA is independent of the renderer and cannot approve art."""
+samples = max(192, settings.frames*8)
+points = [pose(i/samples,settings) for i in range(samples)]
+⋮----
+velocity = settings.stride / settings.stance_fraction
+step = 1.0 / samples
+⋮----
+foot = p[side]
+hip = {'x':p['root']['x']+hip_shift, 'y':p['root']['y']}
+reach = length(hip,foot)
+⋮----
+# Stay inside one contiguous stance; avoid wrapping phase-snap.
+nxt=points[(i+1)%samples][side]
+# Absolute positions are relative to a torso moving at velocity 'velocity'.
+dx=nxt['x']-foot['x'] + velocity*step
+dy=nxt['y']-foot['y']
+⋮----
+poses=[pose(i/settings.frames, settings) for i in range(settings.frames)]
+edges=[pose_distance(poses[i],poses[(i+1)%settings.frames]) for i in range(settings.frames)]
+median=statistics.median(edges)
+seam_ratio=edges[-1]/median if median else math.inf
+q={
+⋮----
+def render(poses: list[dict[str,Any]], source_html: Path, palette: str) -> list[Image.Image]
+⋮----
+frames=[]
+⋮----
+browser=playwright.chromium.launch(headless=True,executable_path=shutil.which('chromium') or shutil.which('google-chrome'),args=['--no-sandbox'])
+⋮----
+page=browser.new_page(viewport={'width':600,'height':600})
+failures=[]
+⋮----
+png_url=page.evaluate('''p => {const c=document.createElement('canvas');c.width=512;c.height=512;
+⋮----
+def check_alpha(frames: list[Image.Image]) -> dict[str,Any]
+⋮----
+touched=[]; empty=[]; bounds=[]
+⋮----
+box=im.getchannel('A').getbbox()
+⋮----
+def export(output:Path, settings:WalkSettings, html:Path, bundle: bool=True) -> dict
+⋮----
+frames_list=[pose(i/settings.frames,settings) for i in range(settings.frames)]
+q=verify_motion(settings)
+frames=render(frames_list,html,settings.palette)
+qa_alpha=check_alpha(frames)
+⋮----
+# Silhouette seam is measured on the actual alpha pixels, not just IK joints.
+⋮----
+def silhouette_diff(a:Image.Image,b:Image.Image)->float
+⋮----
+x=np.asarray(a.getchannel('A'))>127
+y=np.asarray(b.getchannel('A'))>127
+union=np.count_nonzero(x|y)
+⋮----
+transitions=[silhouette_diff(frames[i],frames[(i+1)%len(frames)]) for i in range(len(frames))]
+median_visual=statistics.median(transitions)
+⋮----
+atlas=Image.new('RGBA',(CANVAS*4,CANVAS*math.ceil(settings.frames/4)))
+⋮----
+out=output/'frames'/f'{settings.asset_id}-{i:02d}.png'
+⋮----
+thumbs=[]
+⋮----
+rgb=Image.new('RGB',(CANVAS,CANVAS),(28,36,47))
+⋮----
+review=Image.new('RGB',(256*8,256*math.ceil(settings.frames/8)),(24,32,44))
+⋮----
+editable={
+⋮----
+manifest={
+⋮----
+def main()
+⋮----
+parser=argparse.ArgumentParser(description=__doc__)
+⋮----
+args=parser.parse_args()
+settings=WalkSettings(asset_id=args.asset_id,frames=args.frames,fps=args.fps,stride=args.stride,clearance=args.clearance,stance_fraction=args.stance,palette=args.palette)
+manifest=export(args.output, settings, args.studio)
+qa=manifest['qa']
 ```
 
 ## File: sprites/build_sprite_contact_sheet.py
@@ -4708,6 +4856,55 @@ metrics=validate(im)
 png=OUT/'zte_terrain_07_candidate_v3.png'
 ⋮----
 report={
+```
+
+## File: sprites/test_autonomous_walk.py
+```python
+"""Unattended walk generator regression tests. Run: python -m unittest ..."""
+⋮----
+class WalkGeometryTests(unittest.TestCase)
+⋮----
+def test_cyclic_pose_and_left_right_symmetry(self)
+⋮----
+cfg = WalkSettings()
+⋮----
+a=pose(phase,cfg)
+b=pose(phase+1,cfg)
+⋮----
+l=foot_local(phase+.5,cfg)
+r=foot_local(phase,cfg)
+⋮----
+def test_planted_feet_exact_world_lock(self)
+⋮----
+cfg=WalkSettings()
+speed=cfg.stride/cfg.stance_fraction
+⋮----
+t=i/1000
+u=(t+phase_offset)%1
+⋮----
+first=pose(t,cfg)[side]
+second=pose(t+.0005,cfg)[side]
+⋮----
+def test_pose_physical_envelope(self)
+⋮----
+qa=verify_motion(WalkSettings())
+⋮----
+def test_reject_unphysical_config(self)
+⋮----
+class BuildTests(unittest.TestCase)
+⋮----
+def test_real_export_and_safety_gate(self)
+⋮----
+studio=Path(__file__).parent/'pose_studio.html'
+if not studio.exists():studio=Path(__file__).parent/'index.html'
+⋮----
+cfg=WalkSettings(frames=8)
+root=Path(work)/'build'
+manifest=export(root,cfg,studio)
+⋮----
+frame_poses=json.loads((root/'frame-poses.json').read_text())
+⋮----
+project=json.loads((root/'project.json').read_text())
 ```
 
 ## File: sprites/validate_animation_sheet.py
