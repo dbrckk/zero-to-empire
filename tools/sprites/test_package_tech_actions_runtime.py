@@ -8,7 +8,7 @@ import tempfile
 import unittest
 from pathlib import Path
 from PIL import Image
-from package_tech_actions_runtime import ACTIONS, package, verify
+from package_tech_actions_runtime import ACTIONS, package, verify, game_scale_metrics
 
 FIXTURE=Path('build/tech-actions-v3').resolve()
 
@@ -37,6 +37,12 @@ class RuntimePackTests(unittest.TestCase):
                 self.assertEqual(item['collision_boxes_status'],
                                  'NOT_DEFINED_REQUIRES_GAMEPLAY_REVIEW')
                 self.assertEqual(len(item['per_frame_visual_bounds_px']),24)
+                self.assertTrue(item['game_scale_96px_technical_pass'])
+                self.assertEqual(len(item['game_scale_96px_metrics']),24)
+                for m in item['game_scale_96px_metrics']:
+                    self.assertTrue(m['pass'],m)
+                    self.assertGreaterEqual(m['opaque_pixels'],500)
+                    self.assertGreaterEqual(m['min_edge_margin'],3)
                 self.assertEqual(len(json.loads((out/item['events_file']).read_text())),24)
                 for size in (128,256):
                     var=item['variants'][str(size)]
@@ -52,6 +58,23 @@ class RuntimePackTests(unittest.TestCase):
                         self.assertEqual(layer.mode,'RGBA')
                         self.assertIsNotNone(layer.getchannel('A').getbbox())
             self.assertIn('requestAnimationFrame',(out/'review-player.html').read_text())
+
+    def test_game_scale_check_rejects_clipped_or_empty_frames(self):
+        from PIL import ImageDraw
+        empty=Image.new('RGBA',(512,512))
+        self.assertFalse(game_scale_metrics(empty)['pass'])
+        clipped=Image.new('RGBA',(512,512))
+        ImageDraw.Draw(clipped).rectangle((0,0,290,500),fill=(255,255,255,255))
+        self.assertFalse(game_scale_metrics(clipped)['pass'])
+        with Image.open(FIXTURE/'WALK'/'frames'/'CHR-TECH-WALK-00.png') as image:
+            self.assertTrue(game_scale_metrics(image.convert('RGBA'))['pass'])
+
+    def test_source_contract_has_shared_skin_and_event_timeline(self):
+        index,records=verify(FIXTURE)
+        self.assertEqual(index['format'],'zte-modular-actions-v3')
+        self.assertEqual(len({r['count'] for r in records.values()}),1)
+        for action in ACTIONS:
+            self.assertEqual(len(records[action]['events']),24)
 
     def test_reject_approved_or_corrupted_index(self):
         with tempfile.TemporaryDirectory() as temp:
