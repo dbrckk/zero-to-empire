@@ -40,6 +40,27 @@ def work_pulse(t: float) -> float:
     return .30 + .70 * (math.sin(4 * math.pi * (t % 1.0)) ** 2)
 
 
+def work_event_indices(frames: int, phase_origin_frame: int = 0) -> tuple[int, ...]:
+    """Map WORK data-update events to visible glow maxima *after* cycle reindex.
+
+    The asset builder and runtime sound/VFX timeline must share the same
+    frame-phase mapping. Never fire an event during a visible pulse minimum.
+    """
+    if not isinstance(frames, int) or not 8 <= frames <= 64 or frames % 2:
+        raise ValueError('Invalid frame count')
+    if not isinstance(phase_origin_frame, int) or not 0 <= phase_origin_frame < frames:
+        raise ValueError('Invalid phase origin')
+    result = []
+    for i in range(frames):
+        phase = lambda j: ((j + phase_origin_frame) % frames) / frames
+        now = work_pulse(phase(i))
+        before = work_pulse(phase(i-1))
+        after = work_pulse(phase(i+1))
+        if now > before + 1e-7 and now >= after - 1e-7 and now >= .90:
+            result.append(i)
+    return tuple(result)
+
+
 def repair_tip(root):
     return root[0]+REPAIR_TIP_LOCAL[0], root[1]+REPAIR_TIP_LOCAL[1]
 
