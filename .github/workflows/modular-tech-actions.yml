@@ -7,6 +7,8 @@ on:
       - 'tools/sprites/rigged_tech_walk_v2.py'
       - 'tools/sprites/soft_skin_deform.py'
       - 'tools/sprites/weight_transfer.py'
+      - 'tools/sprites/action_contact.py'
+      - 'tools/sprites/test_action_contact.py'
       - 'tools/sprites/test_weight_transfer.py'
       - 'tools/sprites/test_soft_skin_deform.py'
       - 'tools/sprites/rigged_tech_actions_v3.py'
@@ -35,6 +37,7 @@ jobs:
           python -m unittest discover -s tools/sprites -p 'test_rigged_tech_walk_v2.py' -v
           python -m unittest discover -s tools/sprites -p 'test_soft_skin_deform.py' -v
           python -m unittest discover -s tools/sprites -p 'test_weight_transfer.py' -v
+          python -m unittest discover -s tools/sprites -p 'test_action_contact.py' -v
           python -m unittest discover -s tools/sprites -p 'test_rigged_tech_actions_v3.py' -v
       - name: Build 144 transparent frames from one character skin
         run: |
