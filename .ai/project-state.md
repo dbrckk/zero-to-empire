@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T21:17:43Z
+Generated: 2026-10-08T21:27:14Z
 
 ### Git
 - Branch: `main`
-- Head: `29042c1a3031`
-- Commit date: 2026-10-08T23:17:24+02:00
-- Commit: docs(art): document six TECH clips, unattended build and manual review gate
-- Tracked files: 1460
+- Head: `574e665a472b`
+- Commit date: 2026-10-08T23:26:47+02:00
+- Commit: docs(art): document unattended compact atlas pipeline and review-only release gate
+- Tracked files: 1463
 
 ### Recently changed files
-- `tools/sprites/MODULAR_ACTIONS_README.md`
+- `tools/sprites/MODULAR_RUNTIME_PACK_README.md`
 - `.github/workflows/modular-tech-actions.yml`
-- `tools/sprites/test_rigged_tech_actions_v3.py`
-- `tools/sprites/rigged_tech_actions_v3.py`
-- `tools/sprites/rigged_tech_walk_v2.py`
+- `tools/sprites/test_package_tech_actions_runtime.py`
+- `tools/sprites/package_tech_actions_runtime.py`
+- `tools/sprites/MODULAR_ACTIONS_README.md`
 
 ### Project signals
 - `build.gradle.kts`

@@ -360,6 +360,7 @@ tools/
     lightning_studio_factory.py
     manifest_batch_planner.py
     multi_provider_static_manifest_factory.py
+    package_tech_actions_runtime.py
     patch_final_character_motion.py
     plan_sprite_batches.py
     pollinations_building_batch.py
@@ -374,6 +375,7 @@ tools/
     rigged_tech_walk_v2.py
     ter07_energy_conduit_candidate.py
     test_autonomous_walk.py
+    test_package_tech_actions_runtime.py
     test_rigged_tech_actions_v3.py
     test_rigged_tech_walk_v2.py
     validate_animation_sheet.py
@@ -3666,6 +3668,8 @@ on:
       - 'tools/sprites/rigged_tech_walk_v2.py'
       - 'tools/sprites/rigged_tech_actions_v3.py'
       - 'tools/sprites/test_rigged_tech_actions_v3.py'
+      - 'tools/sprites/package_tech_actions_runtime.py'
+      - 'tools/sprites/test_package_tech_actions_runtime.py'
       - 'tools/sprites/skin-tech-v1.webp'
       - '.github/workflows/modular-tech-actions.yml'
 
@@ -3692,12 +3696,21 @@ jobs:
           python tools/sprites/rigged_tech_actions_v3.py \
             --skin tools/sprites/skin-tech-v1.webp \
             --output build/tech-actions-v3 --frames 24 --fps 12 --all
+      - name: Package game-scale RGBA atlases and playback manifest
+        run: |
+          python tools/sprites/package_tech_actions_runtime.py \
+            --source build/tech-actions-v3 \
+            --output build/tech-actions-runtime-review
+      - name: Test release safeguards and atlas dimensions
+        run: python -m unittest discover -s tools/sprites -p 'test_package_tech_actions_runtime.py' -v
       - name: Publish six review candidates and QA evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: six-tech-actions-v3-REVIEW_REQUIRED
-          path: build/tech-actions-v3/
+          path: |
+            build/tech-actions-v3/
+            build/tech-actions-runtime-review/
           if-no-files-found: warn
           retention-days: 30
 ```
@@ -28147,6 +28160,88 @@ final = factory.normalize(factory.isolate(raw), factory.TARGET_SIDE[kind])
 out = factory.INCOMING / (Path(runtime).stem + ".png")
 ```
 
+## File: tools/sprites/package_tech_actions_runtime.py
+```python
+#!/usr/bin/env python3
+"""Package six TECH animation candidates as pivot-stable preview atlases.
+
+This is a staging/export step. It NEVER alters canonical queues or approves art.
+"""
+⋮----
+ACTIONS=('WALK','CARRY','IDLE','WORK','REPAIR','CELEB')
+SIDE=512
+SIZES=(128,256)
+⋮----
+def sha(path:Path)->str
+⋮----
+def ensure(ok:bool,message:str)->None
+⋮----
+def verify(root:Path)
+⋮----
+index=json.loads((root/'production-index.json').read_text(encoding='utf-8'))
+⋮----
+items=index.get('actions',[])
+⋮----
+by_action={x['action']:x for x in items}
+shared=index['source_skin_sha256']
+validated={}
+⋮----
+asset='CHR-TECH-'+action
+record=by_action[action]
+⋮----
+folder=root/action
+m=json.loads((folder/'qa-manifest.json').read_text(encoding='utf-8'))
+qa=m['qa']
+⋮----
+count=int(m['frames']); fps=int(m['fps'])
+⋮----
+poses=json.loads((folder/'frame-poses.json').read_text(encoding='utf-8'))
+events=json.loads((folder/'footstep-events.json').read_text(encoding='utf-8'))
+⋮----
+frames=sorted((folder/'frames').glob('*.png'))
+⋮----
+def review_html(data:dict)->str
+⋮----
+sources=json.dumps({name:{'src':a['variants']['128']['path'],'frames':a['frames'],
+template='''<!doctype html><html lang="fr"><head><meta charset="utf-8">
+⋮----
+def package(source:Path,output:Path)->dict
+⋮----
+exported={'format':'zte-tech-actions-runtime-v1','strict_status':'NEEDS_REVIEW',
+overview=Image.new('RGB',(900,672),(23,29,40))
+draw=ImageDraw.Draw(overview)
+⋮----
+rec=records[action]; count=rec['count'];cols=6;rows=math.ceil(count/cols)
+pics=[];bounds=[]
+⋮----
+frame=image.copy()
+alpha=frame.getchannel('A')
+b=alpha.point(lambda px:255 if px>=128 else 0).getbbox()
+⋮----
+variants={}
+⋮----
+folder=output/'atlases';folder.mkdir(exist_ok=True)
+atlas=Image.new('RGBA',(size*cols,size*rows))
+⋮----
+scaled=im.resize((size,size),Image.Resampling.LANCZOS)
+⋮----
+path=folder/f'{action.lower()}-{size}.png'
+⋮----
+xx=450*(idx%2);yy=224*(idx//2)
+icon=pics[0].resize((190,190),Image.Resampling.LANCZOS)
+⋮----
+union=[min(b[0] for b in bounds),min(b[1] for b in bounds),
+events_dir=output/'events';events_dir.mkdir(exist_ok=True)
+events_file=events_dir/f'{action.lower()}.json'
+⋮----
+def main()
+⋮----
+parser=argparse.ArgumentParser(description=__doc__)
+⋮----
+args=parser.parse_args()
+result=package(args.source,args.output)
+```
+
 ## File: tools/sprites/patch_final_character_motion.py
 ```python
 #!/usr/bin/env python3
@@ -29596,6 +29691,38 @@ events=json.loads((root/'frame-events.json').read_text())
 frame_poses=json.loads((root/'frame-poses.json').read_text())
 ⋮----
 project=json.loads((root/'project.json').read_text())
+```
+
+## File: tools/sprites/test_package_tech_actions_runtime.py
+```python
+"""Regression tests for six TECH runtime review atlases.
+
+Run AFTER the six-clip generator in CI. Never silently skip missing input.
+"""
+⋮----
+FIXTURE=Path('build/tech-actions-v3').resolve()
+⋮----
+class RuntimePackTests(unittest.TestCase)
+⋮----
+def setUp(self)
+⋮----
+def test_six_atlases_keep_the_review_gate(self)
+⋮----
+out=Path(temp)/'runtime'
+manifest=package(FIXTURE,out)
+⋮----
+var=item['variants'][str(size)]
+⋮----
+def test_reject_approved_or_corrupted_index(self)
+⋮----
+root=Path(temp)
+source=json.loads((FIXTURE/'production-index.json').read_text())
+⋮----
+def test_reject_missing_review_marker(self)
+⋮----
+def test_reject_falsely_approved_visual_qa(self)
+⋮----
+qa=json.loads((FIXTURE/'WALK'/'qa-manifest.json').read_text())
 ```
 
 ## File: tools/sprites/test_rigged_tech_actions_v3.py
