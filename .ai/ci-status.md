@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 7 success / 0 failure / 1 active
+Summary: 8 success / 0 failure / 0 active
 
-- Asset Pipeline CI: in_progress / pending (cd8c2382)
-- Asset Autofactory 235: completed / success (f3057942)
-- Kaggle Async Character Collector: completed / success (b3befe1c)
-- Manifest Static GPU Batch: completed / success (b3befe1c)
-- Asset Autofactory 235: completed / success (b3befe1c)
-- Pollinations Building Candidate: completed / success (b3befe1c)
-- Asset Autofactory 235: completed / success (b3befe1c)
-- Pollinations Character Atlas: completed / success (b3befe1c)
+- Asset Autofactory 235: completed / success (17b219f5)
+- Kaggle Async Character Collector: completed / success (37b8a344)
+- Manifest Static GPU Batch: completed / success (37b8a344)
+- Kaggle Mass Sprite Factory: completed / success (ee7b8108)
+- Asset Autofactory 235: completed / success (d2d02651)
+- Kaggle Async Character Collector: completed / success (0d29228b)
+- Asset Autofactory 235: completed / success (7ff4fdbb)
+- Pollinations Building Candidate: completed / success (7ff4fdbb)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

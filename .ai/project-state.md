@@ -22,22 +22,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T03:47:21Z
+Generated: 2026-10-08T18:37:09Z
 
 ### Git
 - Branch: `main`
-- Head: `cd8c2382d221`
-- Commit date: 2026-10-08T05:47:06+02:00
-- Commit: fix(art): restore uniform border after articulated WALK deformation
-- Tracked files: 1445
+- Head: `026fcde01467`
+- Commit date: 2026-10-08T20:33:26+02:00
+- Commit: docs(art): document offline pose-studio workflow and review gate
+- Tracked files: 1447
 
 ### Recently changed files
-- `tools/sprites/kaggle_character_sheet_factory_v1.py`
+- `tools/sprites/POSE_STUDIO_README.md`
+- `tools/sprites/pose_studio.html`
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
 - `art/production/master-asset-queue.json`
 - `art/production/controlled-character-regen-queue.json`
 - `art/production/kaggle-async-state.json`
-- `art/production/autofactory-state.json`
-- `art/production/autofactory-summary.md`
 
 ### Project signals
 - `build.gradle.kts`
