@@ -111,3 +111,37 @@ informations ou sans `weight_transfer_pass`. Les sorties gardent
 `NEEDS_REVIEW`, `visual_review_pass=false` et
 `semantic_review_pass=false`. La validation visuelle en lecture réelle
 reste indispensable, particulièrement pour l'armature 2D et les textiles.
+
+
+## v8 — interaction physique des outils, effets liés aux mains
+
+`action_contact.py` centralise les coordonnées des deux points de contact
+sur la console WORK, le point fixe de soudure REPAIR, la longueur admissible du
+chalumeau et les courbes d'intensité lumineuse. Les trajectoires des mains sont
+périodiques, calculées depuis **un seul rig** et bornées à l'intérieur de l'écran
+pour les 24 frames : elles ne sont plus de simples gestes aléatoires devant
+un accessoire statique.
+
+- **WORK** : les deux poignets touchent effectivement les limites de l'écran ;
+  deux indicateurs lumineux suivent chaque gant dans un calque de premier plan
+  sans passer derrière les bras. La console conserve son identité et son
+  affichage technique.
+- **REPAIR** : le manche du chalumeau relie le poignet au même point de
+  soudure sur la pièce ; les étincelles sont produites en premier plan et leur
+  déclenchement suit exactement `repair_spark_intensity(t)` ainsi que les
+  événements `weld-sparks` exportés.
+- **QA** : les violations de contact, la plage de longueur du chalumeau et
+  `interaction_contact_pass` figurent dans `qa-manifest.json`.
+  L'export `package_tech_actions_runtime.py` refuse les candidats présentant
+  des mains hors écran, une connexion d'outil invraisemblable ou des métadonnées
+  de contact absentes.
+- **Tests** : `test_action_contact.py` vérifie les trajectoires échantillonnées
+  et leur périodicité ; les suites `test_rigged_tech_actions_v3.py` et
+  `test_package_tech_actions_runtime.py` assurent le raccord au rendu et
+  le verrou d'export.
+
+Le prototype local de revue a généré **48 sprites** (WORK et REPAIR),
+deux atlas transparents et deux GIF, avec contrôles géométriques conformes.
+Cela ne constitue ni un test de gameplay dans le moteur ni une approbation
+visuelle ; les 19 éléments du backlog restent soumis à leur validation
+sémantique individuelle. Pas de mise à jour automatique du compteur strict.
