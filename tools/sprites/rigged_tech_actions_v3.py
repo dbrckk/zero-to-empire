@@ -39,12 +39,12 @@ def pose_for(t: float, action: str) -> dict:
     hands = {
         "IDLE": ((x - 33 - 3 * math.sin(phase), y - 17 + 1.4 * math.cos(phase)),
                  (x + 45 + 3 * math.sin(phase), y - 21 + 1.4 * math.cos(phase))),
-        "WORK": ((x + 31, y - 50 + 2 * math.sin(phase)),
-                 (x + 95 + 5 * math.sin(phase), y - 57 + 7 * math.sin(phase))),
-        "REPAIR": ((x + 38, y - 42 + 4 * math.sin(phase)),
-                   (x + 91 + 5 * math.sin(phase), y - 79 + 6 * math.cos(phase))),
-        "CELEB": ((x - 26 - 12 * math.sin(phase), y - 144 + 5 * math.cos(phase)),
-                  (x + 45 + 12 * math.sin(phase), y - 146 - 5 * math.cos(phase))),
+        "WORK": ((x + 29 + 12 * math.sin(phase), y - 50 + 6 * math.cos(phase)),
+                 (x + 93 + 17 * math.sin(2 * phase), y - 56 + 14 * math.cos(2 * phase))),
+        "REPAIR": ((x + 36 + 8 * math.sin(phase), y - 42 + 7 * math.cos(phase)),
+                   (x + 58 + 12 * math.sin(phase), y - 54 + 11 * math.cos(phase))),
+        "CELEB": ((x - 26 - 19 * math.sin(phase), y - 144 + 12 * math.cos(phase)),
+                  (x + 45 + 19 * math.sin(phase), y - 146 - 12 * math.cos(phase))),
     }
     hand_l, hand_r = hands[action]
     return {
@@ -108,8 +108,10 @@ def draw_repair(layer: Image.Image, p: dict, t: float) -> None:
     d.ellipse((x + 26, y + 31, x + 37, y + 43),
               fill=(10, 92, 111, 245), outline=(48, 207, 220, 245), width=2)
     tip = (x + 32, y + 33)
-    d.line((x - 15, y + 48, tip[0], tip[1]), fill=(39, 55, 65, 250), width=7)
-    d.line((x - 15, y + 45, tip[0] - 2, tip[1] - 1),
+    # Keep the welding torch physically attached to the animated wrist.
+    hand = (round(p["handR"][0]), round(p["handR"][1]))
+    d.line((hand[0], hand[1], tip[0], tip[1]), fill=(39, 55, 65, 250), width=7)
+    d.line((hand[0], hand[1]-2, tip[0]-2, tip[1]-1),
            fill=(128, 157, 164, 240), width=2)
     intensity = max(0.0, math.sin(2 * math.pi * t)) ** 3
     if intensity > .01:
@@ -179,12 +181,14 @@ def action_qa(action: str, poses: list, base_qa: dict) -> dict:
         math.dist(p["handL"], (p["root"][0] + 29, p["root"][1] - 55)) < .001
         and math.dist(p["handR"], (p["root"][0] + 103, p["root"][1] - 55)) < .001
         for p in poses) if action == "CARRY" else True)
-    kinetic = (not violations and grounded and grip_ok and
-               (action not in ("WORK", "REPAIR", "CELEB") or motion["handR"] >= 5))
+    legible_motion = (action not in ("WORK", "REPAIR", "CELEB")
+                      or motion["handR"] >= 18)
+    kinetic = (not violations and grounded and grip_ok and legible_motion)
     base_qa.update({
         "action_kinematic_pass": kinetic, "hand_reach_violations": violations,
         "action_motion_range_px": motion, "stationary_ground_contact_pass": grounded,
         "fixed_cargo_grip_pass": grip_ok,
+        "game_scale_motion_pass": legible_motion,
         "technical_pass": bool(base_qa["technical_pass"] and kinetic),
         "visual_review_pass": False, "semantic_review_pass": False,
         "strict_status": "NEEDS_REVIEW",
