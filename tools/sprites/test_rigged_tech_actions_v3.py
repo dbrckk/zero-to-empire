@@ -142,6 +142,13 @@ class MultiActionRendererTests(unittest.TestCase):
                     self.assertLessEqual(qa["spine_lean_max_degrees"],5)
                     self.assertEqual(manifest["asset_id"], f"CHR-TECH-{action}")
                     self.assertEqual(manifest["strict_status"], "NEEDS_REVIEW")
+                    self.assertTrue(qa["weight_transfer_pass"],qa)
+                    self.assertEqual(manifest["weight_transfer"]["enabled"],
+                                     action in ("WALK","CARRY"))
+                    self.assertEqual(manifest["phase_origin_frame"],
+                                     round(8*5/24) if action=="WORK" else 0)
+                    if action=="WORK":
+                        self.assertLess(qa["seam_to_median_ratio"],1.65)
                     self.assertTrue(manifest["renderer_features"]["joint_fabric"])
                     self.assertTrue(manifest["renderer_features"]["spine_flex"])
                     self.assertTrue(manifest["renderer_features"]["foot_roll"])
