@@ -56,7 +56,7 @@ def work_event_indices(frames: int, phase_origin_frame: int = 0) -> tuple[int, .
         now = work_pulse(phase(i))
         before = work_pulse(phase(i-1))
         after = work_pulse(phase(i+1))
-        if now > before + 1e-7 and now >= after - 1e-7 and now >= .90:
+        if now > before + 1e-7 and now >= after - 1e-7 and now >= .80:
             result.append(i)
     return tuple(result)
 
