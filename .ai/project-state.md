@@ -22,16 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T20:44:13Z
+Generated: 2026-10-08T20:58:31Z
 
 ### Git
 - Branch: `main`
-- Head: `9f5d67d96a04`
-- Commit date: 2026-10-08T22:43:58+02:00
-- Commit: docs(art): document textured skin, heel/toe curves and footstep events
-- Tracked files: 1451
+- Head: `6621fa7ef5cd`
+- Commit date: 2026-10-08T22:58:13+02:00
+- Commit: feat(art): integrate modular TECH texture kit, autonomous IK renderer, and CI review workflow
+- Tracked files: 1456
 
 ### Recently changed files
+- `.github/workflows/modular-tech-character.yml`
+- `tools/sprites/MODULAR_WALK_README.md`
+- `tools/sprites/rigged_tech_walk_v2.py`
+- `tools/sprites/skin-tech-v1.webp`
+- `tools/sprites/test_rigged_tech_walk_v2.py`
 - `tools/sprites/AUTONOMOUS_WALK_README.md`
 - `tools/sprites/test_autonomous_walk.py`
 - `tools/sprites/pose_studio.html`

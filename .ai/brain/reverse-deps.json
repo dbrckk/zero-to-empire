@@ -652,9 +652,10 @@
         "tools/sprites/procedural_terrain_factory.py",
         "tools/sprites/process_final_sprites.py",
         "tools/sprites/promote_ter07_v3.py",
+        "tools/sprites/rigged_tech_walk_v2.py",
         "tools/sprites/ter07_energy_conduit_candidate.py"
       ],
-      "in_degree": 30,
+      "in_degree": 31,
       "out_degree": 7
     },
     "app/src/main/java/com/zerotoempire/game/GameTheme.kt": {
@@ -2178,6 +2179,16 @@
       "in_degree": 0,
       "out_degree": 1
     },
+    "tools/sprites/rigged_tech_walk_v2.py": {
+      "dependencies": [
+        "app/src/main/java/com/zerotoempire/game/GameRepository.kt"
+      ],
+      "dependents": [
+        "tools/sprites/test_rigged_tech_walk_v2.py"
+      ],
+      "in_degree": 1,
+      "out_degree": 1
+    },
     "tools/sprites/ter07_energy_conduit_candidate.py": {
       "dependencies": [
         "app/src/main/java/com/zerotoempire/game/GameRepository.kt",
@@ -2190,6 +2201,14 @@
     "tools/sprites/test_autonomous_walk.py": {
       "dependencies": [
         "tools/sprites/autonomous_walk.py"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 1
+    },
+    "tools/sprites/test_rigged_tech_walk_v2.py": {
+      "dependencies": [
+        "tools/sprites/rigged_tech_walk_v2.py"
       ],
       "dependents": [],
       "in_degree": 0,

@@ -92,8 +92,10 @@ sprites/
   process_final_sprites.py
   promote_ter07_v3.py
   reconcile_strict_approvals.py
+  rigged_tech_walk_v2.py
   ter07_energy_conduit_candidate.py
   test_autonomous_walk.py
+  test_rigged_tech_walk_v2.py
   validate_animation_sheet.py
   validate_runtime_asset.py
 process_final_assets.py
@@ -4746,6 +4748,162 @@ runtime = runtime_for(asset)
 strict_done = sum(a.get("strict_status") == "DONE" for a in queue["assets"])
 ```
 
+## File: sprites/rigged_tech_walk_v2.py
+```python
+#!/usr/bin/env python3
+"""Produce a single-identity, modular-textured animated TECH walk, with joint caps.
+
+Self-contained apart from a packed RGBA skin atlas and Pillow/numpy. Never writes
+master queues or strict DONE. Uses deterministic foot trajectories and two-bone IK.
+"""
+⋮----
+PART_NAMES = ('head', 'torso', 'pelvis', 'backpack', 'upper_arm_far',
+⋮----
+def foot_local(t: float)
+⋮----
+u = (t-STANCE)/(1-STANCE)
+slope = -STRIDE/STANCE*(1-STANCE)
+# Hermite recovers stance velocity at both ends of swing.
+⋮----
+def foot_roll(t: float) -> float
+⋮----
+u=t/STANCE
+⋮----
+u=(t-STANCE)/(1-STANCE)
+⋮----
+def pose(t: float) -> dict[str,Any]
+⋮----
+root=(ROOT_X,HIP_Y+3.5*math.cos(4*math.pi*t))
+⋮----
+swing=30*math.cos(2*math.pi*t)
+⋮----
+def ik(a,b,l1,l2,sign=1)
+⋮----
+length=math.hypot(dx,dy) or 1.e-5
+d=max(abs(l1-l2)+.001,min(l1+l2-.001,length))
+⋮----
+along=(l1*l1-l2*l2+d*d)/(2*d)
+h=math.sqrt(max(0,l1*l1-along*along))
+⋮----
+def load_kit(atlas:Path) -> dict[str,Image.Image]
+⋮----
+rgba=image.convert('RGBA')
+kit={}
+⋮----
+tile=rgba.crop(((i%4)*256,(i//4)*256,(i%4+1)*256,(i//4+1)*256))
+bbox=tile.getchannel('A').getbbox()
+⋮----
+image=kit[name]
+cut=round(image.height*.72)
+⋮----
+def paste(layer,img,x,y)
+⋮----
+def rotated_limb(layer,img,a,b,occupancy=.87,width_mul=1)
+⋮----
+"""Warp proximal-to-distal textured rigid piece around an exact IK bone."""
+dist=math.dist(a,b)
+height=max(1,round(dist/occupancy))
+width=max(1,round(height*img.width/img.height*width_mul))
+sprite=img.resize((width,height),Image.Resampling.LANCZOS)
+# generous rotation canvas prevents cut-offs for all joint orientations
+side=max(184,round(height*3.5))
+center=side//2
+stage=Image.new('RGBA',(side,side))
+⋮----
+angle=90-math.degrees(math.atan2(b[1]-a[1],b[0]-a[0]))
+stage=stage.rotate(angle,resample=Image.Resampling.BICUBIC)
+⋮----
+def joint_cap(layer,p,r=14,depth='near')
+⋮----
+"""Soft metallic overlap at hinge hides segment gaps without redrawing identity."""
+size=2*round(r+7)
+⋮----
+cx=cy=(size-1)/2
+d=((xx-cx)/r)**2+((yy-cy)/(r*.79))**2
+feather=np.clip((1-d)*12,0,1)
+light=np.clip((cy-yy)/size+.3,0,1)
+main=np.zeros((size,size,4),dtype='uint8')
+tint=1.0 if depth=='near' else .8
+⋮----
+cap=Image.fromarray(main,'RGBA')
+draw=ImageDraw.Draw(cap,'RGBA')
+⋮----
+def render_boot(layer,img,foot,angle) -> dict[str,float]
+⋮----
+"""Place sole at demanded contact Y, instead of guessing boot ankle offset."""
+width=69
+height=round(width*img.height/img.width)
+shoe=img.resize((width,height),Image.Resampling.LANCZOS)
+pivot=(round(width*.26),round(height*.30))
+side=max(160,round(max(width,height)*2.5))
+base=Image.new('RGBA',(side,side))
+⋮----
+turn=base.rotate(-math.degrees(angle),resample=Image.Resampling.BICUBIC)
+bbox=turn.getchannel('A').getbbox()
+⋮----
+# Anchor visually consistent ankle X while sole follows the foot path.
+px=round(foot[0]-center)
+py=round(foot[1]-bbox[3])
+⋮----
+def draw_frame(t:float,kit:dict)
+⋮----
+p=pose(t)
+⋮----
+canvas=Image.new('RGBA',(CANVAS,CANVAS))
+⋮----
+kneeL=ik(lhip,p['left'],94,99,1)
+kneeR=ik(rhip,p['right'],94,99,1)
+⋮----
+elbowL=ik(shoulderL,p['handL'],59,59,-1)
+elbowR=ik(shoulderR,p['handR'],59,59,-1)
+⋮----
+bootL=render_boot(canvas,kit['shin_boot_far_boot'],p['left'],p['rollL'])
+⋮----
+bootR=render_boot(canvas,kit['shin_boot_near_boot'],p['right'],p['rollR'])
+⋮----
+def check(frames:list[Image.Image],poses:list[dict],boots:list[dict])
+⋮----
+arr=[np.array(f.getchannel('A'))>=128 for f in frames]
+diff=[]
+⋮----
+b=arr[(i+1)%len(arr)]
+union=np.count_nonzero(a|b)
+⋮----
+median=statistics.median(diff)
+bounds=[f.getchannel('A').getbbox() for f in frames]
+clip=[i for i,b in enumerate(bounds) if b is None or b[0]<6 or b[1]<6 or b[2]>CANVAS-6 or b[3]>CANVAS-6]
+soles=[b[s]['sole_error_px'] for b in boots for s in ('left','right')]
+penetration=[i for i,p in enumerate(poses) if p['left'][1]>GROUND+1e-5 or p['right'][1]>GROUND+1e-5]
+ratio=diff[-1]/median if median else 999
+pass_geometry=not clip and not penetration and max(soles)<=1.0 and .40<ratio<1.9
+⋮----
+def build(atlas:Path,out:Path,frames=24,fps=12)
+⋮----
+kit=load_kit(atlas)
+⋮----
+images=[]; poses=[]; boots=[]
+⋮----
+cols=6; rows=math.ceil(frames/cols)
+atlas_img=Image.new('RGBA',(CANVAS*cols,CANVAS*rows))
+thumbs=[]
+⋮----
+bg=Image.new('RGBA',(CANVAS,CANVAS),(26,34,45,255))
+⋮----
+contact=Image.new('RGB',(192*cols,192*rows),(27,34,45))
+⋮----
+qa=check(images,poses,boots)
+events=[{'frame':i,'footstep':('right' if i==0 else 'left' if i==frames//2 else None),
+manifest={'asset_id':'CHR-TECH-WALK','build':'modular-skin-v2-IK-joint-guards',
+⋮----
+bundle=out.parent/'CHR-TECH-WALK-modular-v2-review.zip'
+⋮----
+def main()
+⋮----
+parser=argparse.ArgumentParser(description=__doc__)
+⋮----
+args=parser.parse_args()
+```
+
 ## File: sprites/ter07_energy_conduit_candidate.py
 ```python
 #!/usr/bin/env python3
@@ -4929,6 +5087,54 @@ events=json.loads((root/'frame-events.json').read_text())
 frame_poses=json.loads((root/'frame-poses.json').read_text())
 ⋮----
 project=json.loads((root/'project.json').read_text())
+```
+
+## File: sprites/test_rigged_tech_walk_v2.py
+```python
+"""Offline, deterministic modular textured walk regression suite."""
+⋮----
+KIT=Path(__file__).with_name('skin-tech-v1.webp')
+⋮----
+KIT=Path('/mnt/data/tech-modular-v1.webp')
+⋮----
+class RigMathTests(unittest.TestCase)
+⋮----
+def test_closed_loop_and_foot_contact(self)
+⋮----
+p=a
+⋮----
+def test_world_space_stance_lock(self)
+⋮----
+speed=92/.62
+⋮----
+t=j/1000
+phase=(t+offset)%1
+⋮----
+p=foot_local(t+offset)
+q=foot_local(t+offset+.0001)
+⋮----
+def test_inverse_kinematics_lengths(self)
+⋮----
+p=pose(t)
+⋮----
+joint=ik(hip,foot,94,99,sgn)
+⋮----
+class RenderTests(unittest.TestCase)
+⋮----
+@classmethod
+ def setUpClass(cls): cls.kit=load_kit(KIT)
+⋮----
+def test_all_twelve_pieces_present(self)
+⋮----
+def test_stable_identity_alpha_and_dimensions(self)
+⋮----
+def test_build_export_review_gate(self)
+⋮----
+out=Path(tmp)/'render'
+⋮----
+qa=manifest['qa']
+⋮----
+def test_reject_invalid_config(self)
 ```
 
 ## File: sprites/validate_animation_sheet.py

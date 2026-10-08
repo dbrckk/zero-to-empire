@@ -1,12 +1,17 @@
 # Change impact
 
-Base: b5c4ce485327fd22d3ff733b404e5299d93d8ca5
-Head: 9f5d67d96a049fdacc2391ef8f8fe6dbfd51ea60
+Base: 4a78fc434b272edea1afe7d8f7a113bdc5f61a16
+Head: 6621fa7ef5cd2fcff008387291d7efe7f082ab7c
 
 ## Changed files
-- M tools/sprites/AUTONOMOUS_WALK_README.md
+- A .github/workflows/modular-tech-character.yml
+- A tools/sprites/MODULAR_WALK_README.md
+- A tools/sprites/rigged_tech_walk_v2.py
+- A tools/sprites/skin-tech-v1.webp
+- A tools/sprites/test_rigged_tech_walk_v2.py
 
 ## Affected areas
+- .github
 - tools
 
 ## Related test candidates
