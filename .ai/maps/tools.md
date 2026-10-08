@@ -4845,9 +4845,9 @@ bbox=turn.getchannel('A').getbbox()
 px=round(foot[0]-center)
 py=round(foot[1]-bbox[3])
 ⋮----
-def draw_frame(t:float,kit:dict)
+def draw_frame(t:float,kit:dict,pose_override=None,prop_underlay=None,prop_overlay=None)
 ⋮----
-p=pose(t)
+p=pose(t) if pose_override is None else pose_override
 ⋮----
 canvas=Image.new('RGBA',(CANVAS,CANVAS))
 ⋮----

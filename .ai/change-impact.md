@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 6b577cd72819f2a890c44a4fc6450fe4b7488cd7
-Head: d3f19edb76aabbe4d36f47022249acf59c0e844d
+Base: 01afa202888ccd8f8bc2219413ad7561542edaad
+Head: 65d73c53df591435781fa7d142b6581341ec28b2
 
 ## Changed files
-- M art/production/character-strict-review-backlog.md
+- M tools/sprites/rigged_tech_walk_v2.py
 
 ## Affected areas
-- art
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

@@ -22,25 +22,24 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T21:00:55Z
+Generated: 2026-10-08T21:15:12Z
 
 ### Git
 - Branch: `main`
-- Head: `d3f19edb76aa`
-- Commit date: 2026-10-08T23:00:40+02:00
-- Commit: docs(art): sync strict-review backlog with canonical queue without granting approval
+- Head: `65d73c53df59`
+- Commit date: 2026-10-08T23:14:55+02:00
+- Commit: refactor(art): support rigged pose and prop overlays without changing proven WALK renderer
 - Tracked files: 1456
 
 ### Recently changed files
+- `tools/sprites/rigged_tech_walk_v2.py`
 - `art/production/character-strict-review-backlog.md`
 - `.github/workflows/modular-tech-character.yml`
 - `tools/sprites/MODULAR_WALK_README.md`
-- `tools/sprites/rigged_tech_walk_v2.py`
 - `tools/sprites/skin-tech-v1.webp`
 - `tools/sprites/test_rigged_tech_walk_v2.py`
 - `tools/sprites/AUTONOMOUS_WALK_README.md`
 - `tools/sprites/test_autonomous_walk.py`
-- `tools/sprites/pose_studio.html`
 
 ### Project signals
 - `build.gradle.kts`
