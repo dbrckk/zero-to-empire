@@ -282,6 +282,7 @@ def build_action(skin: Path, out: Path, action: str, frames: int = 24, fps: int 
     manifest = {
         "asset_id": asset_id, "action": action, "build": "modular-tech-actions-v3",
         "rig": "one-textured-character-with-two-bone-IK",
+        "renderer_features": {"joint_fabric": True, "spine_flex": True, "foot_roll": True},
         "source_skin_sha256": hashlib.sha256(skin.read_bytes()).hexdigest(),
         "frames": frames, "fps": fps, "frame_size": [CANVAS, CANVAS],
         "atlas_columns": cols, "atlas_rows": rows,
