@@ -15,7 +15,7 @@ import zipfile
 from pathlib import Path
 from PIL import Image, ImageDraw
 import rigged_tech_walk_v2 as core
-from action_contact import (work_hands, work_contact, work_pulse,
+from action_contact import (work_hands, work_contact, work_pulse, work_event_indices,
                             repair_tip, repair_contact, repair_spark_intensity)
 from weight_transfer import transfer_pose, support_bias, AMPLITUDES_PX
 
@@ -319,6 +319,7 @@ def build_action(skin: Path, out: Path, action: str, frames: int = 24, fps: int 
                    duration=round(1000 / fps), loop=0, optimize=False)
     qa = action_qa(action, poses, core.check(images, poses, boots))
     footfalls = action in ("WALK", "CARRY")
+    work_indices = work_event_indices(frames, phase_origin_frame) if action == 'WORK' else ()
     events = [{
         "frame": i,
         "footstep": ("right" if i == 0 else "left" if i == frames // 2 else None)
@@ -329,12 +330,14 @@ def build_action(skin: Path, out: Path, action: str, frames: int = 24, fps: int 
             "weld-sparks" if action == "REPAIR" and
             repair_spark_intensity(((i+phase_origin_frame)%frames)/frames)>0
             else "celebration-particles" if action == "CELEB"
-            else "data-update" if action == "WORK" and i % max(1, frames // 4) == 0
+            else "data-update" if action == "WORK" and i in work_indices
             else None),
     } for i, p in enumerate(poses)]
     manifest = {
         "asset_id": asset_id, "action": action, "build": "modular-tech-actions-v3",
         "phase_origin_frame": phase_origin_frame,
+        "work_pulse_event_frames": list(work_indices),
+        "event_timing_method": "phase-locked-visual-pulse-peak-v1",
         "loop_seam_method": "cyclic-reindex-without-frame-interpolation",
         "rig": "one-textured-character-with-two-bone-IK",
         "weight_transfer": {"enabled": action in AMPLITUDES_PX,
