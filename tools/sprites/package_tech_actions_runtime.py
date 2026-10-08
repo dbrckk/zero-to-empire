@@ -9,7 +9,7 @@ import hashlib
 import json
 import math
 from pathlib import Path
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFilter
 
 ACTIONS=('WALK','CARRY','IDLE','WORK','REPAIR','CELEB')
 SIDE=512
@@ -61,12 +61,13 @@ def verify(root:Path):
         frames=sorted((folder/'frames').glob('*.png'))
         ensure(len(frames)==count and all(f.name==f'{asset}-{i:02d}.png' for i,f in enumerate(frames)),
                'Missing/extra/misordered frames: '+action)
-        validated[action]={'frames':frames,'fps':fps,'count':count,'events':events}
+        validated[action]={'frames':frames,'fps':fps,'count':count,'events':events,'poses':poses}
     return index,validated
 
 
 def review_html(data:dict)->str:
-    sources=json.dumps({name:{'src':a['variants']['128']['path'],'frames':a['frames'],
+    sources=json.dumps({name:{'src':a['variants']['128']['path'],
+                'shadow_src':a['optional_shadow_layer']['variants']['128']['path'],'frames':a['frames'],
                 'cols':a['columns'],'fps':a['fps']} for name,a in data['animations'].items()})
     template='''<!doctype html><html lang="fr"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -89,14 +90,32 @@ const title=document.createElement('strong');title.textContent=name;
 const count=document.createElement('span');count.textContent=c.frames+' frames';h.append(title,count);
 const canvas=document.createElement('canvas');canvas.width=256;canvas.height=256;
 const img=new Image();img.onload=()=>c.ready=true;img.src=c.src;
-card.append(h,canvas);grid.append(card);nodes.push({c,img,ctx:canvas.getContext('2d')});}
+const shadow=new Image();shadow.onload=()=>c.shadowReady=true;shadow.src=c.shadow_src;
+card.append(h,canvas);grid.append(card);nodes.push({c,img,shadow,ctx:canvas.getContext('2d')});}
 const begin=performance.now();
 function draw(t){const speed=Number(document.querySelector('#speed').value);
-for(const {c,img,ctx} of nodes){ctx.clearRect(0,0,256,256);if(!c.ready)continue;
+for(const {c,img,shadow,ctx} of nodes){ctx.clearRect(0,0,256,256);if(!c.ready)continue;
 const frame=Math.floor((t-begin)*c.fps*speed/1000)%c.frames;
+if(c.shadowReady)ctx.drawImage(shadow,(frame%c.cols)*128,Math.floor(frame/c.cols)*128,128,128,0,0,256,256);
 ctx.drawImage(img,(frame%c.cols)*128,Math.floor(frame/c.cols)*128,128,128,0,0,256,256);}
 requestAnimationFrame(draw)}requestAnimationFrame(draw);</script></body></html>'''
     return template.replace('__SOURCES__',sources)
+
+
+def render_contact_shadow(p:dict)->Image.Image:
+    """Optional frame-aligned ground-shadow atlas, isolated from character pixels."""
+    layer=Image.new('RGBA',(SIDE,SIDE))
+    for side,contact in [('left','lockL'),('right','lockR')]:
+        x,y=p[side]
+        locked=p.get(contact,False)
+        height=max(0,449-y)
+        strength=100 if locked else max(18,round(62-height*.65))
+        radius=34 if locked else max(20,round(30-height*.13))
+        mask=Image.new('RGBA',(SIDE,SIDE))
+        ImageDraw.Draw(mask,'RGBA').ellipse(
+            (round(x-radius),448,round(x+radius),469),fill=(7,16,26,strength))
+        layer=Image.alpha_composite(layer,mask.filter(ImageFilter.GaussianBlur(4)))
+    return layer
 
 
 def package(source:Path,output:Path)->dict:
@@ -122,7 +141,8 @@ def package(source:Path,output:Path)->dict:
                    'Frame empty/clipped: '+str(path))
             ensure(alpha.getpixel((0,0))==0,'Missing transparent corner: '+str(path))
             pics.append(frame);bounds.append(b)
-        variants={}
+        variants={};shadow_variants={}
+        shadow_frames=[render_contact_shadow(p) for p in rec['poses']]
         for size in SIZES:
             folder=output/'atlases';folder.mkdir(exist_ok=True)
             atlas=Image.new('RGBA',(size*cols,size*rows))
@@ -131,6 +151,14 @@ def package(source:Path,output:Path)->dict:
                 atlas.alpha_composite(scaled,((i%cols)*size,(i//cols)*size))
             path=folder/f'{action.lower()}-{size}.png'
             atlas.save(path,optimize=True)
+            shadow_atlas=Image.new('RGBA',(size*cols,size*rows))
+            for i,shadow in enumerate(shadow_frames):
+                shadow_atlas.alpha_composite(shadow.resize((size,size),Image.Resampling.LANCZOS),
+                                             ((i%cols)*size,(i//cols)*size))
+            shadow_path=folder/f'{action.lower()}-shadow-{size}.png'
+            shadow_atlas.save(shadow_path,optimize=True)
+            shadow_variants[str(size)]={'path':shadow_path.relative_to(output).as_posix(),
+                'sha256':sha(shadow_path),'atlas_size':[size*cols,size*rows]}
             variants[str(size)]={'path':path.relative_to(output).as_posix(),'sha256':sha(path),
                 'sprite_size':[size,size],'atlas_size':[size*cols,size*rows],
                 'pivot_px':[round(252*size/SIDE,3),round(449*size/SIDE,3)]}
@@ -150,6 +178,7 @@ def package(source:Path,output:Path)->dict:
             'visual_union_bounds_px':union,'per_frame_visual_bounds_px':[list(b) for b in bounds],
             'collision_boxes_status':'NOT_DEFINED_REQUIRES_GAMEPLAY_REVIEW',
             'events_file':events_file.relative_to(output).as_posix(),
+            'optional_shadow_layer':{'default_enabled':False,'variants':shadow_variants},
             'variants':variants,'strict_status':'NEEDS_REVIEW','review_required':True}
     overview.save(output/'game-scale-overview.jpg',quality=93)
     (output/'runtime-manifest.json').write_text(json.dumps(exported,indent=2),encoding='utf-8')
