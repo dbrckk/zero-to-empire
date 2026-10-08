@@ -22,20 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T22:02:31Z
+Generated: 2026-10-08T22:05:30Z
 
 ### Git
 - Branch: `main`
-- Head: `6c98a039d177`
-- Commit date: 2026-10-09T00:01:50+02:00
-- Commit: test(art): verify six cyclic spine curves, shoulder reach and planted feet
+- Head: `ce8bed3af9ca`
+- Commit date: 2026-10-09T00:05:11+02:00
+- Commit: docs(art): record deterministic spine motion and backward-compatible review safeguards
 - Tracked files: 1463
 
 ### Recently changed files
+- `tools/sprites/MODULAR_ACTIONS_README.md`
 - `tools/sprites/test_rigged_tech_actions_v3.py`
 - `tools/sprites/test_rigged_tech_walk_v2.py`
 - `tools/sprites/rigged_tech_actions_v3.py`
-- `tools/sprites/rigged_tech_walk_v2.py`
 
 ### Project signals
 - `build.gradle.kts`
