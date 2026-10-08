@@ -60,6 +60,18 @@ def verify(root:Path):
                'Unexpected frame coordinate system: '+action)
         count=int(m['frames']); fps=int(m['fps'])
         ensure(8<=count<=64 and count%2==0 and 3<=fps<=24,'Invalid timing: '+action)
+        expected_origin=round(count*5/24) if action=='WORK' else 0
+        ensure(m.get('phase_origin_frame')==expected_origin,
+               'Unexpected loop phase origin: '+action)
+        transfer=m.get('weight_transfer',{})
+        expected_transfer=action in ('WALK','CARRY')
+        ensure(transfer.get('enabled') is expected_transfer and
+               transfer.get('model')=='stance-load-sine-squared-v1' and
+               float(transfer.get('amplitude_px',-1))==
+                   (4.0 if action=='WALK' else 2.2 if action=='CARRY' else 0.0),
+               'Missing weight-transfer provenance: '+action)
+        ensure(qa.get('weight_transfer_pass') is True,
+               'Failed weight-transfer geometry QA: '+action)
         ensure((folder/'REVIEW_REQUIRED.txt').is_file(),'Missing review marker: '+action)
         poses=json.loads((folder/'frame-poses.json').read_text(encoding='utf-8'))
         events=json.loads((folder/'footstep-events.json').read_text(encoding='utf-8'))
@@ -230,6 +242,8 @@ def package(source:Path,output:Path)->dict:
             'game_scale_96px_technical_pass':all(metric['pass'] for metric in game_scale),
             'game_scale_96px_metrics':game_scale,
             'collision_boxes_status':'NOT_DEFINED_REQUIRES_GAMEPLAY_REVIEW',
+            'phase_origin_frame':round(count*5/24) if action=='WORK' else 0,
+            'weight_transfer':{'enabled':action in ('WALK','CARRY')},
             'events_file':events_file.relative_to(output).as_posix(),
             'optional_shadow_layer':{'default_enabled':False,'variants':shadow_variants},
             'variants':variants,'strict_status':'NEEDS_REVIEW','review_required':True}
