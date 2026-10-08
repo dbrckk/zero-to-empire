@@ -25173,7 +25173,7 @@ TRIGGER_DISPATCH_TOKEN = os.getenv("AUTOF_TRIGGER_DISPATCH_TOKEN", "")
 CURRENT_DISPATCH_TOKEN = os.getenv("GITHUB_RUN_ID", "")
 KAGGLE_BUSY = os.getenv("AUTOF_KAGGLE_BUSY", "0") == "1"
 FX_BUSY = os.getenv("AUTOF_FX_BUSY", "0") == "1"
-CHARACTER_GENERATION_EPOCH = "identity-lock-v1.15-clean-stride"
+CHARACTER_GENERATION_EPOCH = "identity-lock-v1.16-articulated-stride"
 CHARACTER_EPOCH_ATTEMPT_LIMIT = 3
 CHARACTER_BATCH_SIZE = 12
 INFRA_FAILURE_LIMIT = 3
@@ -27090,16 +27090,26 @@ detail=(
 ⋮----
 def semantic_scaffold(source,action,frame_index=0)
 ⋮----
-# v1.14 stride: give img2img an explicit alternating lower-body silhouette cue.
-# The cue is intentionally confined to the leg region; identity/head/torso remain
-# anchored by the source image and normal semantic/identity QA still applies.
+# v1.16 articulated-stride: deform the canonical source itself instead of
+# painting foreign leg geometry that Flux can reinterpret as background props.
+# Upper body stays pixel-identical; only the lower-body bands are displaced.
 out=source.copy()
+⋮----
+phase=(0,1,2,1,0,-1,-2,-1)[frame_index%8]
+hip_y=int(h*.56); knee_y=int(h*.73)
+lower=out.crop((0,hip_y,w,h))
+# Progressive shear creates alternating foot travel while preserving texture,
+# palette and identity from the same canonical character.
+shear=phase*.075
+lower=lower.transform(lower.size,Image.Transform.AFFINE,(1,shear,-shear*(knee_y-hip_y),0,1,0),resample=Image.Resampling.BICUBIC)
+⋮----
+# The affine transform introduces dark fill along the lower border. Rebuild
+# a uniform neutral margin so border-based segmentation remains reliable.
+margin=max(24,int(min(w,h)*.055))
+bg=source.convert('RGB').getpixel((0,0))
+draw=ImageDraw.Draw(out)
+⋮----
 draw=ImageDraw.Draw(out,'RGBA')
-phase=1 if frame_index%2==0 else -1
-hip=(512,610)
-front_knee=(512+phase*105,735); front_foot=(512+phase*185,900)
-rear_knee=(512-phase*75,745); rear_foot=(512-phase*145,895)
-cue=(92,102,108,150)
 ⋮----
 def prompt_pair(i,pose,mode='default')
 ⋮----
@@ -27298,7 +27308,7 @@ raw=img(image=source,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),str
 ⋮----
 anchor_raw=raw.convert('RGB')
 ⋮----
-strength=min(.72,.58+fi*.014+attempt*.025)
+strength=min(.46,.34+fi*.008+attempt*.018)
 ⋮----
 strength=min(.72,.54+fi*.018+attempt*.025)
 ⋮----

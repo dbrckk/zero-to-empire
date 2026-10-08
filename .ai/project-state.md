@@ -22,23 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-07T13:23:30Z
+Generated: 2026-10-08T03:47:21Z
 
 ### Git
 - Branch: `main`
-- Head: `bbc78613ccd2`
-- Commit date: 2026-10-07T15:23:15+02:00
-- Commit: ops: collect final v1.15 TECH walk attempt
+- Head: `cd8c2382d221`
+- Commit date: 2026-10-08T05:47:06+02:00
+- Commit: fix(art): restore uniform border after articulated WALK deformation
 - Tracked files: 1445
 
 ### Recently changed files
-- `ops/kaggle-collector-trigger.txt`
+- `tools/sprites/kaggle_character_sheet_factory_v1.py`
+- `art/production/master-asset-queue.json`
+- `art/production/controlled-character-regen-queue.json`
 - `art/production/kaggle-async-state.json`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
-- `art/production/controlled-character-regen-queue.json`
-- `art/production/master-asset-queue.json`
-- `ops/autofactory-kick.txt`
 
 ### Project signals
 - `build.gradle.kts`

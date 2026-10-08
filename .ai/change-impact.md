@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 552113b9f6c4115ed6a1d54a80e31ca813af12be
-Head: bbc78613ccd224aea8e0725aed36246805665413
+Base: ba60831e123873c6450f3d6e9375688bb5a5a6a7
+Head: cd8c2382d2210a07e53e162ecab82594ac28544f
 
 ## Changed files
-- M ops/kaggle-collector-trigger.txt
+- M tools/sprites/kaggle_character_sheet_factory_v1.py
 
 ## Affected areas
-- ops
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.
