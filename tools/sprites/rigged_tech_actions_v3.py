@@ -37,7 +37,7 @@ def spine_lean(t: float, action: str) -> float:
     if action == "WORK":
         return .025 * math.sin(phase + .4) + .012 * math.sin(2 * phase)
     if action == "REPAIR":
-        return .028 * math.sin(phase + .3) + .015 * math.sin(2 * phase)
+        return .018 * math.sin(phase + .3) + .007 * math.sin(2 * phase)
     if action == "CELEB":
         return .050 * math.sin(phase + .2) + .015 * math.sin(2 * phase)
     raise ValueError(f"Unsupported action: {action}")
