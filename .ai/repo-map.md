@@ -28191,6 +28191,8 @@ record=by_action[action]
 ⋮----
 folder=root/action
 m=json.loads((folder/'qa-manifest.json').read_text(encoding='utf-8'))
+features=m.get('renderer_features',{})
+⋮----
 qa=m['qa']
 ⋮----
 count=int(m['frames']); fps=int(m['fps'])
@@ -29830,6 +29832,12 @@ root=Path(temp)
 source=json.loads((FIXTURE/'production-index.json').read_text())
 ⋮----
 def test_reject_missing_review_marker(self)
+⋮----
+def test_reject_missing_fabric_renderer_provenance(self)
+⋮----
+root=Path(tmp)
+⋮----
+manifest=json.loads((FIXTURE/'WORK'/'qa-manifest.json').read_text())
 ⋮----
 def test_reject_falsely_approved_visual_qa(self)
 ⋮----

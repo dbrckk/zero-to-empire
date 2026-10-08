@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T22:20:41Z
+Generated: 2026-10-08T22:22:14Z
 
 ### Git
 - Branch: `main`
-- Head: `26ebbe5a3e7e`
-- Commit date: 2026-10-09T00:20:27+02:00
-- Commit: docs(art): describe reversible IK fabric gussets and legacy-safe review flow
+- Head: `735a783cf4f3`
+- Commit date: 2026-10-09T00:21:52+02:00
+- Commit: test(art): reject review packs without fabric-renderer provenance
 - Tracked files: 1463
 
 ### Recently changed files
-- `tools/sprites/MODULAR_ACTIONS_README.md`
+- `tools/sprites/test_package_tech_actions_runtime.py`
 - `tools/sprites/test_rigged_tech_actions_v3.py`
-- `tools/sprites/test_rigged_tech_walk_v2.py`
+- `tools/sprites/package_tech_actions_runtime.py`
 - `tools/sprites/rigged_tech_actions_v3.py`
-- `tools/sprites/rigged_tech_walk_v2.py`
+- `tools/sprites/MODULAR_ACTIONS_README.md`
 
 ### Project signals
 - `build.gradle.kts`
