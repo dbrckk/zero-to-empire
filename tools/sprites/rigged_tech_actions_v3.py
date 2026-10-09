@@ -66,8 +66,8 @@ def pose_for(t: float, action: str) -> dict:
         "WORK": work_hands(t, (x, y)),
         "REPAIR": ((x + 36 + 8 * math.sin(phase), y - 42 + 7 * math.cos(phase)),
                    (x + 58 + 12 * math.sin(phase), y - 54 + 11 * math.cos(phase))),
-        "CELEB": ((x - 30 - 16 * math.sin(phase), y - 171 + 11 * math.cos(phase)),
-                  (x + 45 + 15 * math.sin(phase), y - 178 - 11 * math.cos(phase))),
+        "CELEB": ((x - 82 - 10 * math.sin(phase), y - 164 + 9 * math.cos(phase)),
+                  (x + 78 + 10 * math.sin(phase), y - 164 - 9 * math.cos(phase))),
     }
     hand_l, hand_r = hands[action]
     return {
@@ -273,6 +273,8 @@ def action_qa(action: str, poses: list, base_qa: dict) -> dict:
                 (shoulders[i][1]-p[key][1]) for i,key in
                 enumerate(("handL","handR")))
     raised_arm_pass=(min(raised_arm_heights)>=65 if raised_arm_heights else True)
+    arm_spans=[p["handR"][0]-p["handL"][0] for p in poses] if action=="CELEB" else []
+    wide_arms_pass=(min(arm_spans)>=135 if arm_spans else True)
     legible_motion = (action not in ("WORK", "REPAIR", "CELEB")
                       or motion["handR"] >= 18)
     supports = [p.get("support_bias") for p in poses]
@@ -282,13 +284,16 @@ def action_qa(action: str, poses: list, base_qa: dict) -> dict:
                    if action in AMPLITUDES_PX
                    else all(v is None for v in supports))
     kinetic = (not violations and grounded and grip_ok and legible_motion and
-               transfer_ok and interaction_ok and raised_arm_pass)
+               transfer_ok and interaction_ok and raised_arm_pass and wide_arms_pass)
     base_qa.update({
         "action_kinematic_pass": kinetic, "hand_reach_violations": violations,
         "action_motion_range_px": motion, "stationary_ground_contact_pass": grounded,
         "fixed_cargo_grip_pass": grip_ok,
         "game_scale_motion_pass": legible_motion,
         "celebration_raised_arm_pass": raised_arm_pass,
+        "celebration_wide_arm_pass": wide_arms_pass,
+        "celebration_min_wrist_span_px": (round(min(arm_spans),2)
+                                           if arm_spans else None),
         "celebration_min_arm_raise_px": (round(min(raised_arm_heights),2)
                                          if raised_arm_heights else None),
         "interaction_contact_pass": interaction_ok,
