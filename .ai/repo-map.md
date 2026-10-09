@@ -49,6 +49,7 @@ The content is organized as follows:
     asset-autofactory.yml
     asset-pipeline-ci.yml
     build-test-apk.yml
+    character-review-matrix.yml
     final-aaa-assets.yml
     final-character-motion-patch.yml
     final-sprite-pipeline.yml
@@ -335,6 +336,7 @@ tools/
     audit_complete_sprite_manifest.py
     autonomous_walk.py
     build_sprite_contact_sheet.py
+    character_review_matrix.py
     colab_mass_factory.py
     focused_sprite_atlas.py
     generate_strict_review_backlog.py
@@ -381,6 +383,7 @@ tools/
     ter07_energy_conduit_candidate.py
     test_action_contact.py
     test_autonomous_walk.py
+    test_character_review_matrix.py
     test_focused_sprite_atlas.py
     test_package_tech_actions_runtime.py
     test_rigged_tech_actions_v3.py
@@ -1249,6 +1252,56 @@ jobs:
             --target "$GITHUB_SHA" \
             --title "Zero → Empire Android Test #${GITHUB_RUN_NUMBER}" \
             --notes "Installable Android test APK generated from commit ${GITHUB_SHA}. This is a debug test build for direct device testing, not a Play Store production release."
+```
+
+## File: .github/workflows/character-review-matrix.yml
+```yaml
+name: Character strict review matrix
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'art/production/master-asset-queue.json'
+      - 'tools/sprites/character_review_matrix.py'
+      - 'tools/sprites/test_character_review_matrix.py'
+      - '.github/workflows/character-review-matrix.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: character-review-matrix-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify-review-matrix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run no-promotion and prioritization regression tests
+        run: python -m unittest discover -s tools/sprites -p 'test_character_review_matrix.py' -v
+      - name: Generate evidence-only character review matrix
+        run: |
+          python tools/sprites/character_review_matrix.py --out-json /tmp/character-review-matrix.json --out-md /tmp/character-review-matrix.md
+          python - <<'PY'
+          import json
+          report=json.load(open('/tmp/character-review-matrix.json'))
+          assert report['target_total']==235 and report['strict_done']==216
+          assert report['pending_count']==19
+          assert report['auto_promotion_permitted'] is False
+          assert all(not x['semantic_review_pass'] for x in report['items'])
+          print('REVIEW_ONLY: 19 canonical assets, 216 strict DONE unchanged')
+          PY
+      - name: Upload review-only evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: character-review-matrix-NEEDS_REVIEW
+          path: |
+            /tmp/character-review-matrix.json
+            /tmp/character-review-matrix.md
+          retention-days: 30
 ```
 
 ## File: .github/workflows/final-aaa-assets.yml
@@ -25855,6 +25908,61 @@ results = [inspect(p) for p in paths]
 report = {
 ```
 
+## File: tools/sprites/character_review_matrix.py
+```python
+#!/usr/bin/env python3
+"""Reproducible review plan for the 19 remaining CHR assets.
+
+Never treats a generated candidate as approved; detects canonical-vs-preview
+conflicts (notably CHR-TECH-WALK) and prioritizes real human/artistic review.
+Pure stdlib, works on GitHub Actions and offline without Kaggle.
+"""
+⋮----
+ACTIONS=("IDLE","WALK","WORK","CARRY","REPAIR","CELEB")
+ROLES=("OP","TECH","LOG","ENG")
+REVIEW={
+# A review is more urgent when the asset is a walking foundation, or when a
+# known semantic failure would otherwise be hidden by a different renderer.
+ACTION_WEIGHT={"WALK":0,"CARRY":1,"WORK":2,"REPAIR":3,"IDLE":4,"CELEB":5}
+ROLE_WEIGHT={"OP":0,"LOG":1,"ENG":2,"TECH":3}
+⋮----
+def build(queue:dict)->dict
+⋮----
+assets=queue.get("assets")
+⋮----
+ids=[a.get("id") for a in assets]
+⋮----
+done=sum(a.get("strict_status")=="DONE" for a in assets)
+pending=[a for a in assets if a.get("strict_status")!="DONE"]
+⋮----
+rows=[]
+⋮----
+parts=a["id"].split("-")
+⋮----
+status=a.get("pipeline_status")
+rejected=status in ("REJECTED_SEMANTIC","REJECTED")
+reason=a.get("review_reason") or "No recorded specific defect"
+# A standalone TECH review render is not the canonical Kaggle asset.
+# Explicitly forbid silently equating the two.
+alternate=(role=="TECH" and action in ("WALK","WORK","CARRY"))
+priority=(0 if rejected else 1,ACTION_WEIGHT[action],ROLE_WEIGHT[role],a["id"])
+⋮----
+by_role=dict(Counter(r["role"] for r in rows))
+⋮----
+def markdown(report:dict)->str
+⋮----
+lines=[
+⋮----
+action=row["next_step"].replace("|","/")
+⋮----
+def main()->int
+⋮----
+p=argparse.ArgumentParser()
+⋮----
+args=p.parse_args()
+report=build(json.loads(args.queue.read_text(encoding="utf-8")))
+```
+
 ## File: tools/sprites/colab_mass_factory.py
 ```python
 #!/usr/bin/env python3
@@ -30306,6 +30414,33 @@ events=json.loads((root/'frame-events.json').read_text())
 frame_poses=json.loads((root/'frame-poses.json').read_text())
 ⋮----
 project=json.loads((root/'project.json').read_text())
+```
+
+## File: tools/sprites/test_character_review_matrix.py
+```python
+def fake_queue()
+⋮----
+actions=['WALK','WORK','CARRY','REPAIR','CELEB']
+ids=['CHR-OP-'+a for a in actions]
+⋮----
+assets=[{'id':'DONE-'+str(i),'strict_status':'DONE'} for i in range(216)]
+⋮----
+class MatrixTests(unittest.TestCase)
+⋮----
+def test_exact_pending_roles_and_no_auto_promotion(self)
+⋮----
+report=build(fake_queue())
+⋮----
+def test_semantic_rejection_before_technical_success(self)
+⋮----
+def test_cannot_inflate_canonical_queue(self)
+⋮----
+q=fake_queue()
+⋮----
+def test_deterministic_order_and_source_immutability(self)
+⋮----
+first=build(q)
+second=build(q)
 ```
 
 ## File: tools/sprites/test_focused_sprite_atlas.py

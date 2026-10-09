@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T11:22:41Z
+Generated: 2026-10-09T12:02:07Z
 
 ### Git
 - Branch: `main`
-- Head: `ed22db894a1f`
-- Commit date: 2026-10-09T13:20:36+02:00
-- Commit: docs(agents): adopt pinned 88-rule development standard
-- Tracked files: 1476
+- Head: `de174a0aa5c6`
+- Commit date: 2026-10-09T14:01:49+02:00
+- Commit: ci(art): independently audit all 19 unapproved character assets without Kaggle
+- Tracked files: 1479
 
 ### Recently changed files
+- `.github/workflows/character-review-matrix.yml`
+- `tools/sprites/test_character_review_matrix.py`
+- `tools/sprites/character_review_matrix.py`
 - `AGENTS.md`
 - `tools/sprites/test_rigged_tech_actions_v3.py`
-- `tools/sprites/MODULAR_ACTIONS_README.md`
-- `.github/workflows/modular-tech-actions.yml`
-- `tools/sprites/test_package_tech_actions_runtime.py`
 
 ### Project signals
 - `build.gradle.kts`

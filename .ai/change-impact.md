@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 2370b522c26172dc7932255ae2e8443487b5907d
-Head: ed22db894a1fed32d50c0e93a261a35d1c775a0e
+Base: c18e04141d03f74510d2b6acffab4d07f5ebfa10
+Head: de174a0aa5c662e8c801ce52156ccf3e9f039467
 
 ## Changed files
-- M AGENTS.md
+- A .github/workflows/character-review-matrix.yml
 
 ## Affected areas
-- (root)
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.
