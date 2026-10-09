@@ -7740,87 +7740,90 @@ jobs:
         shell: bash
         run: |
           python - <<'PY'
+          import json
           import re
           from collections import Counter
+          from datetime import datetime, timezone
           from pathlib import Path
 
-          manifest = Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
-          progress = Path('docs/art/FINAL_AAA_SPRITE_PROGRESS.md')
-          continuity = Path('PROJECT_CONTINUITY.md')
-          review = Path('docs/art/AAA_HISTORICAL_PROMOTION_REVIEW.md')
+          manifest=Path("docs/art/FINAL_AAA_SPRITE_MANIFEST.md")
+          progress=Path("docs/art/FINAL_AAA_SPRITE_PROGRESS.md")
+          review=Path("docs/art/AAA_HISTORICAL_PROMOTION_REVIEW.md")
+          queue_path=Path("art/production/master-asset-queue.json")
 
-          text = manifest.read_text(encoding='utf-8')
-          row = re.compile(r'^\|\s*([^|]+?)\s*\|.*\|\s*(TODO|ART|CLEAN|RUNTIME|BLOCKED|DONE)\s*\|\s*$', re.M)
-          rows = [(m.group(1).strip(), m.group(2)) for m in row.finditer(text)]
-          if len(rows) != 236 or len({a for a, _ in rows}) != 236:
-              raise SystemExit(f'Canonical manifest invalid: rows={len(rows)} unique={len({a for a, _ in rows})}')
+          text=manifest.read_text(encoding="utf-8")
+          queue=json.loads(queue_path.read_text(encoding="utf-8"))
+          assets=queue.get("assets", [])
+          ids=[a.get("id") for a in assets]
+          if queue.get("target_total")!=235 or len(assets)!=235 or len(set(ids))!=235:
+              raise SystemExit("Invalid canonical 235-asset queue")
 
-          def family(asset):
-              if asset.startswith('BLD-'): return 'Buildings'
-              if asset.startswith('CORE-'): return 'Power Core'
-              if asset.startswith('CHR-'): return 'Characters'
-              if asset.startswith('VEH-'): return 'Vehicles'
-              if asset.startswith('MCH-'): return 'Machines'
-              if asset.startswith('PRP-'): return 'Props'
-              if asset.startswith(('TER-', 'INF-')): return 'Terrain/infrastructure'
-              if asset.startswith('FX-'): return 'FX'
-              if asset.startswith('ONB-'): return 'Onboarding'
-              raise SystemExit(f'Unknown canonical asset family: {asset}')
+          pattern=re.compile(r"^\|\s*([A-Z]+-[A-Z0-9-]+)\s*\|.*\|\s*(TODO|ART|CLEAN|RUNTIME|BLOCKED|DONE)\s*\|\s*$",re.M)
+          rows=pattern.findall(text)
+          by_id=dict(rows)
+          if len(rows)!=236 or len(by_id)!=236 or set(by_id)!=set(ids)|{"ONB-00"}:
+              raise SystemExit("Expected 236 unique manifest rows matching the 235 queue plus ONB-00")
+          if by_id["ONB-00"]!="DONE":
+              raise SystemExit("Excluded onboarding asset is not complete")
 
-          planned = Counter(family(a) for a, _ in rows)
-          manifest_done = Counter(family(a) for a, s in rows if s == 'DONE')
-          manifest_total_done = sum(manifest_done.values())
-          expected = {'Buildings':98,'Power Core':7,'Characters':24,'Vehicles':18,'Machines':28,'Props':28,'Terrain/infrastructure':14,'FX':18,'Onboarding':1}
-          if dict(planned) != expected:
-              raise SystemExit(f'Canonical family totals changed unexpectedly: {dict(planned)}')
+          misaligned=[aid for aid in ids if
+                      (by_id[aid]=="DONE") !=
+                      (next(a for a in assets if a["id"]==aid).get("strict_status")=="DONE")]
+          if misaligned:
+              raise SystemExit("Manifest claims conflict with canonical strict approvals: "+", ".join(misaligned))
 
-          progress_text = progress.read_text(encoding='utf-8')
-          trusted = re.search(r'(?m)^- DONE: \*\*(\d+) / 236\*\*$', progress_text)
-          if not trusted:
-              raise SystemExit('Trusted strict progress anchor missing')
-          trusted_done = int(trusted.group(1))
+          strict_done=sum(a.get("strict_status")=="DONE" for a in assets)
+          by_family=Counter(a["id"].split("-")[0] for a in assets if a.get("strict_status")=="DONE")
+          states=Counter(by_id.values())
+          review_text=review.read_text(encoding="utf-8")
+          review_open="**Status: OPEN**" in review_text
+          review_closed="**Status: CLOSED**" in review_text
+          if review_open==review_closed:
+              raise SystemExit("Ambiguous historical review status")
+          review_state="OPEN" if review_open else "CLOSED"
+          day=datetime.now(timezone.utc).date().isoformat()
 
-          review_text = review.read_text(encoding='utf-8')
-          review_open = '**Status: OPEN**' in review_text
-          if review_open:
-              print(f'STRICT_RECONCILIATION_FROZEN=1 TRUSTED_DONE={trusted_done} MANIFEST_DONE={manifest_total_done}')
-              print('Historical semantic review is OPEN; manifest DONE flags are not allowed to overwrite the trusted strict ledger.')
-              raise SystemExit(0)
-
-          if manifest_total_done < trusted_done:
-              raise SystemExit(f'Manifest DONE regressed below trusted strict count: manifest={manifest_total_done} trusted={trusted_done}')
-
-          ledger = '## Progress ledger\n' + '\n'.join([
-              f'- **DONE: {manifest_total_done} / 236**',
-              f'- Buildings: **{manifest_done["Buildings"]} / 98**',
-              f'- Power Core: **{manifest_done["Power Core"]} / 7**',
-              f'- Characters: **{manifest_done["Characters"]} / 24**',
-              f'- Vehicles: **{manifest_done["Vehicles"]} / 18**',
-              f'- Machines: **{manifest_done["Machines"]} / 28**',
-              f'- Props: **{manifest_done["Props"]} / 28**',
-              f'- Terrain/infrastructure: **{manifest_done["Terrain/infrastructure"]} / 14**',
-              f'- FX: **{manifest_done["FX"]} / 18**',
-              f'- Onboarding: **{manifest_done["Onboarding"]} / 1**',
+          manifest_ledger="\n".join([
+              "## Progress ledger — reconciled from canonical queue "+day,
+              "",
+              f"- Canonical strict DONE: **{strict_done} / 235**.",
+              f"- Manifest DONE: **{states['DONE']} / 236** (including ONB-00 outside the strict target).",
+              f"- Manifest RUNTIME awaiting semantic approval: **{states['RUNTIME']} / 236**.",
+              f"- Manifest BLOCKED: **{states['BLOCKED']} / 236**.",
+              "- Strict DONE by family: "+", ".join(
+                  f"{name} {by_family[prefix]}/{total}"
+                  for prefix,name,total in [
+                      ("BLD","Buildings",98),("CORE","Power Core",7),
+                      ("CHR","Characters",24),("VEH","Vehicles",18),
+                      ("MCH","Machines",28),("PRP","Props",28),
+                      ("TER","Terrain",14),("FX","FX",18)
+                  ])+".",
+              f"- Historical semantic review: **{review_state}**. Reconciliation never grants artistic approval.",
+              "",
           ])
-          ledger_pattern = re.compile(r'## Progress ledger\n.*?(?=\n### Next production target)', re.S)
-          if not ledger_pattern.search(text):
-              raise SystemExit('Progress ledger block not found')
-          manifest.write_text(ledger_pattern.sub(ledger + '\n', text, count=1), encoding='utf-8')
+          start=text.index("## Progress ledger")
+          stop=text.index("## I. Onboarding authored illustrations",start)
+          manifest.write_text(text[:start]+manifest_ledger+"\n"+text[stop:],encoding="utf-8")
 
-          c = continuity.read_text(encoding='utf-8')
-          c, n1 = re.subn(r'Reach \*\*\d+ / 236 canonical final sprites strict DONE\*\* toward \*\*236 / 236\*\*\.',
-                          f'Reach **{manifest_total_done} / 236 canonical final sprites strict DONE** toward **236 / 236**.', c, count=1)
-          if n1 != 1:
-              raise SystemExit(f'Continuity primary count anchor missing: {n1}')
-          continuity.write_text(c, encoding='utf-8')
+          p=progress.read_text(encoding="utf-8")
+          header="\n".join([
+              "## Official progress — canonical reconciliation ("+day+")",
+              "",
+              f"- Canonical strict DONE: **{strict_done} / 235** (source: master-asset-queue.json).",
+              f"- Manifest DONE: **{states['DONE']} / 236**, including ONB-00 outside the 235-target scope.",
+              f"- Manifest RUNTIME awaiting semantic approval: **{states['RUNTIME']} / 236**.",
+              f"- Manifest BLOCKED: **{states['BLOCKED']} / 236**.",
+              f"- Strict characters: **{by_family['CHR']} / 24** approved; **{24-by_family['CHR']} / 24** await review.",
+              f"- Historical art promotion review: **{review_state}**.",
+              "- Only visual/semantic approval, runtime evidence and green Android CI justify new strict DONE records.",
+              "- Prior historical production details below are not current aggregate totals.",
+              "",
+          ])
+          start=p.index("## Official progress")
+          stop=p.index("## Reviewed historical FX",start)
+          progress.write_text(p[:start]+header+"\n"+p[stop:],encoding="utf-8")
+          print(f"CANONICAL_STRICT_DONE={strict_done}/235 MANIFEST_DONE={states['DONE']}/236 REVIEW={review_state} RUNTIME_REVIEW={states['RUNTIME']} BLOCKED={states['BLOCKED']}")
 
-          p = progress_text
-          p, n3 = re.subn(r'(?m)^- DONE: \*\*\d+ / 236\*\*$', f'- DONE: **{manifest_total_done} / 236**', p, count=1)
-          p, n4 = re.subn(r'(?m)^- Generated candidates accepted as DONE: \*\*\d+\*\*$', f'- Generated candidates accepted as DONE: **{manifest_total_done}**', p, count=1)
-          if n3 != 1 or n4 != 1:
-              raise SystemExit(f'Progress anchors missing: done={n3} accepted={n4}')
-          progress.write_text(p, encoding='utf-8')
-          print(f'CANONICAL_ROWS={len(rows)} STRICT_DONE={manifest_total_done} DONE_BY_FAMILY={dict(manifest_done)}')
           PY
       - name: Commit reconciled aggregate state if stale
         shell: bash
@@ -7836,7 +7839,7 @@ jobs:
           git pull --rebase origin main
           git push
 
-# This workflow never changes per-asset status. It derives aggregate state from the canonical 236 rows.
+# This workflow never changes per-asset status. It reconciles 236 manifest rows to the strict 235-item queue, excluding ONB-00.
 ```
 
 ## File: .github/workflows/refine-run66-stragglers.yml
@@ -29541,11 +29544,27 @@ def independent_frame_prompt(item,pose)
 action=item['action']
 props={
 ⋮----
+def require_standalone_body(frame)
+⋮----
+"""Do not cache obvious portrait/torso fragments as valid whole-body poses.
+
+    Risk screening only: cannot detect missing props or grant semantic approval.
+    """
+geometry=frame_geometry(frame)
+bad=set(geometry.get('risk_flags',[])) & {
+⋮----
 def generate_independent_frames(item,seed)
 ⋮----
 """Produce each pose separately; never split one tall image into limbs."""
 ⋮----
 cache_dir=OUT/'pollinations-frame-cache'/item['id']/STANDALONE_CACHE_EPOCH
+⋮----
+# Old v3 caches can still contain cropped torsos. Never
+# trust them on restart or retry the exact same bad seed.
+⋮----
+current=int(rev_file.read_text(encoding='utf-8')) if rev_file.is_file() else 0
+⋮----
+current=0
 ⋮----
 frame_seed=(seed+sum((i+1)*ord(ch) for i,ch in enumerate(item['id']))*1009+
 raw=fetch(independent_frame_prompt(item,pose),frame_seed)

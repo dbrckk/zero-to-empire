@@ -4883,11 +4883,27 @@ def independent_frame_prompt(item,pose)
 action=item['action']
 props={
 ⋮----
+def require_standalone_body(frame)
+⋮----
+"""Do not cache obvious portrait/torso fragments as valid whole-body poses.
+
+    Risk screening only: cannot detect missing props or grant semantic approval.
+    """
+geometry=frame_geometry(frame)
+bad=set(geometry.get('risk_flags',[])) & {
+⋮----
 def generate_independent_frames(item,seed)
 ⋮----
 """Produce each pose separately; never split one tall image into limbs."""
 ⋮----
 cache_dir=OUT/'pollinations-frame-cache'/item['id']/STANDALONE_CACHE_EPOCH
+⋮----
+# Old v3 caches can still contain cropped torsos. Never
+# trust them on restart or retry the exact same bad seed.
+⋮----
+current=int(rev_file.read_text(encoding='utf-8')) if rev_file.is_file() else 0
+⋮----
+current=0
 ⋮----
 frame_seed=(seed+sum((i+1)*ord(ch) for i,ch in enumerate(item['id']))*1009+
 raw=fetch(independent_frame_prompt(item,pose),frame_seed)

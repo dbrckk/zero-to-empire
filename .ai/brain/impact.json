@@ -1,29 +1,13 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "87fa0837751da8d9c3992066edd6c82d6abdcdee",
-  "head": "09b05abdb9c2e2bbcd915d58959a4633ae5e95ad",
+  "base": "09b05abdb9c2e2bbcd915d58959a4633ae5e95ad",
+  "head": "837421e266e39b15c13003b5b98c889c9b2b2787",
   "index_mode": "incremental",
   "changed_files": [
     {
       "path": ".github/workflows/reconcile-sprite-progress-ledger.yml",
       "status": "M"
-    },
-    {
-      "path": "art/production/controlled-character-regen-queue.json",
-      "status": "M"
-    },
-    {
-      "path": "art/production/pollinations-frame-cache/CHR-LOG-CARRY/full-body-per-frame-v3/00.png",
-      "status": "A"
-    },
-    {
-      "path": "art/production/pollinations-frame-cache/CHR-LOG-CARRY/full-body-per-frame-v3/01.png",
-      "status": "A"
-    },
-    {
-      "path": "art/production/pollinations-frame-cache/CHR-LOG-CARRY/full-body-per-frame-v3/02.png",
-      "status": "A"
     },
     {
       "path": "docs/art/FINAL_AAA_SPRITE_MANIFEST.md",
@@ -34,47 +18,218 @@
       "status": "M"
     },
     {
-      "path": "tools/sprites/plan_sprite_batches.py",
+      "path": "tools/sprites/pollinations_character_sheet_factory.py",
       "status": "M"
     }
   ],
   "changed_source_files": [
-    "tools/sprites/plan_sprite_batches.py"
+    "tools/sprites/pollinations_character_sheet_factory.py"
   ],
   "impacted_files": [
-    "tools/sprites/plan_sprite_batches.py"
+    "tools/sprites/pollinations_character_sheet_factory.py",
+    "tools/sprites/test_pollinations_character_sheet_factory.py"
   ],
   "impacted_symbols": [
     {
-      "name": "Asset",
-      "kind": "class",
-      "file": "tools/sprites/plan_sprite_batches.py",
-      "line": 34
+      "name": "pending",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 43
     },
     {
-      "name": "is_materialized",
+      "name": "candidate_destination",
       "kind": "function",
-      "file": "tools/sprites/plan_sprite_batches.py",
-      "line": 44
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 77
     },
     {
-      "name": "classify",
+      "name": "mark_queue",
       "kind": "function",
-      "file": "tools/sprites/plan_sprite_batches.py",
-      "line": 51
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 89
     },
     {
-      "name": "chunks",
+      "name": "fetch",
       "kind": "function",
-      "file": "tools/sprites/plan_sprite_batches.py",
-      "line": 72
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 105
+    },
+    {
+      "name": "validate_source_full_body",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 127
+    },
+    {
+      "name": "safe_source_margin",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 144
+    },
+    {
+      "name": "cutout",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 170
+    },
+    {
+      "name": "iou",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 217
+    },
+    {
+      "name": "lower_body_motion",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 227
+    },
+    {
+      "name": "actionqa",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 246
+    },
+    {
+      "name": "appearance_hist",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 262
+    },
+    {
+      "name": "hist_similarity",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 274
+    },
+    {
+      "name": "sheetqa",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 278
+    },
+    {
+      "name": "sheet_prompt",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 301
+    },
+    {
+      "name": "repair_frame_prompt",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 326
+    },
+    {
+      "name": "walk_frame_prompt",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 337
+    },
+    {
+      "name": "generate_walk_frames",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 349
+    },
+    {
+      "name": "generate_repair_frames",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 374
+    },
+    {
+      "name": "independent_frame_prompt",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 409
+    },
+    {
+      "name": "require_standalone_body",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 441
+    },
+    {
+      "name": "generate_independent_frames",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 459
+    },
+    {
+      "name": "extract_frames",
+      "kind": "function",
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 506
     },
     {
       "name": "main",
       "kind": "function",
-      "file": "tools/sprites/plan_sprite_batches.py",
-      "line": 76
+      "file": "tools/sprites/pollinations_character_sheet_factory.py",
+      "line": 518
+    },
+    {
+      "name": "full_body",
+      "kind": "function",
+      "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+      "line": 12
+    },
+    {
+      "name": "IndependentFrameTests",
+      "kind": "class",
+      "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+      "line": 22
+    },
+    {
+      "name": "test_prompt_never_requests_multi_pose_atlas",
+      "kind": "function",
+      "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+      "line": 23
+    },
+    {
+      "name": "test_each_pose_is_its_own_image_not_an_atlas_slice",
+      "kind": "function",
+      "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+      "line": 34
+    },
+    {
+      "name": "fetch",
+      "kind": "function",
+      "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+      "line": 37
+    },
+    {
+      "name": "extract",
+      "kind": "function",
+      "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+      "line": 40
+    },
+    {
+      "name": "test_margin_padding_does_not_erase_missing_body_parts",
+      "kind": "function",
+      "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+      "line": 65
+    },
+    {
+      "name": "test_reserved_repair_stages_candidate_without_overwriting_canonical",
+      "kind": "function",
+      "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+      "line": 83
+    },
+    {
+      "name": "test_blocked_controlled_queue_cannot_fall_back_to_manifest_todos",
+      "kind": "function",
+      "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+      "line": 108
+    },
+    {
+      "name": "test_unexpected_action_cannot_use_generic_fallback",
+      "kind": "function",
+      "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+      "line": 130
     }
   ],
-  "selected_tests": []
+  "selected_tests": [
+    "tools/sprites/test_pollinations_character_sheet_factory.py"
+  ]
 }

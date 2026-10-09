@@ -22,24 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T19:26:39Z
+Generated: 2026-10-09T19:29:20Z
 
 ### Git
 - Branch: `main`
-- Head: `09b05abdb9c2`
-- Commit date: 2026-10-09T21:26:22+02:00
-- Commit: fix(art): scope production planner to 235 targets and explicit semantic review lane
+- Head: `837421e266e3`
+- Commit date: 2026-10-09T21:29:06+02:00
+- Commit: fix(art): reject cropped standalone poses before cache and retry with new seed
 - Tracked files: 1493
 
 ### Recently changed files
-- `tools/sprites/plan_sprite_batches.py`
+- `tools/sprites/pollinations_character_sheet_factory.py`
+- `docs/art/FINAL_AAA_SPRITE_MANIFEST.md`
 - `docs/art/FINAL_AAA_SPRITE_PROGRESS.md`
 - `.github/workflows/reconcile-sprite-progress-ledger.yml`
-- `art/production/controlled-character-regen-queue.json`
-- `art/production/pollinations-frame-cache/CHR-LOG-CARRY/full-body-per-frame-v3/00.png`
-- `art/production/pollinations-frame-cache/CHR-LOG-CARRY/full-body-per-frame-v3/01.png`
-- `art/production/pollinations-frame-cache/CHR-LOG-CARRY/full-body-per-frame-v3/02.png`
-- `docs/art/FINAL_AAA_SPRITE_MANIFEST.md`
+- `tools/sprites/plan_sprite_batches.py`
 
 ### Project signals
 - `build.gradle.kts`
