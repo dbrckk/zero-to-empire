@@ -29,7 +29,8 @@ class ContactTests(unittest.TestCase):
                 nxt=work_pulse(((frame+1+origin)%count)/count)
                 self.assertGreaterEqual(p,.80)
                 self.assertGreater(p,prev)
-                self.assertGreaterEqual(p,nxt)
+                # Match the renderer's tie tolerance for equal-height peaks.
+                self.assertGreaterEqual(p+1e-7,nxt)
         self.assertEqual(work_event_indices(24,5),(4,10,16,22))
         with self.assertRaises(ValueError):work_event_indices(7,1)
         with self.assertRaises(ValueError):work_event_indices(24,-1)
