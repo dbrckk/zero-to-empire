@@ -87,7 +87,10 @@ class TemporalAuditTests(unittest.TestCase):
 
     def test_temporal_spike_and_bad_seam_are_rejected(self):
         self.save_frame('WALK',13,jump=True)
-        with self.assertRaisesRegex(ValueError,'Temporal QA failed'):
+        # A full pose jump may eliminate opaque overlap before silhouette
+        # metrics are reached; both detections are correct hard failures.
+        with self.assertRaisesRegex(
+            ValueError,'Temporal QA failed|Too little stable character overlap'):
             inspect_clip(self.root,'WALK',24)
 
     def test_single_frame_color_flash_is_detected_even_with_same_alpha(self):
