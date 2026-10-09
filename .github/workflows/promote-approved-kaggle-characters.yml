@@ -151,7 +151,7 @@ jobs:
           for i,row in enumerate(rows):
               if not row.startswith('|') or 'app/src/main/res/' not in row:
                   continue
-              parts=row.rstrip('\\n').split('|')
+              parts=row.rstrip('\n').split('|')
               if len(parts)!=7:
                   continue
               aid=parts[1].strip()
