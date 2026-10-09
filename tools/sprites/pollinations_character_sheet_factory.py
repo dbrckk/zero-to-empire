@@ -375,13 +375,23 @@ def generate_repair_frames(item, seed):
         print(f'POLLINATIONS_CHR_REPAIR_FRAME n={n} pose={pose} cov={cov:.3f}',flush=True)
     return frames
 
+# Explicit immutable appearance descriptors for independent remote requests.
+# Opaque face protection deliberately reduces identity drift between poses.
+ROLE_IDENTITY_ANCHORS={
+    'OP':'One orange hard hat, black face mask, charcoal work shirt and rust-orange bib overalls, black gloves and black work boots.',
+    'TECH':'One matte graphite helmet with cyan visor, dark graphite mechanic coveralls, cyan trim on both cuffs, black gloves and black boots.',
+    'LOG':'One matte charcoal helmet with dark visor, amber-orange sleeveless safety vest with two white reflective stripes, charcoal jacket, charcoal trousers, black cargo gloves, brown safety boots.',
+    'ENG':'One teal helmet with opaque teal safety visor, clean deep-blue technical coat, one silver chest badge, dark-teal trousers, black gloves and dark boots.',
+}
+
+
 def independent_frame_prompt(item,pose):
     """Explicitly request ONE complete subject, never a sheet or sprite atlas."""
     action=item['action']
     props={
         'IDLE':'hands relaxed and no tool or crate',
         'WORK':'one small industrial tool gripped by the same visible hand while interacting with a compact work point',
-        'CARRY':'one intact metal cargo crate centered at waist height with BOTH hands visibly gripping its handles',
+        'CARRY':'CARRYING a large unmistakable rectangular orange cargo crate centered over the waist; BOTH gloved hands grasp the LEFT and RIGHT external handles, arms bent around the same crate, the box occludes part of the stomach; never empty handed',
         'CELEB':'one open, expressive arm-raised cheer with no tool or carried object',
     }
     if action not in props:
@@ -390,7 +400,9 @@ def independent_frame_prompt(item,pose):
         f'ONE single standalone game character animation frame, NOT a sprite sheet, '
         f'NOT a collage and NOT a character reference board. '
         f'Professional painterly 2.5D premium mobile game character: '
-        f'{ROLES[item["role"]]}. Action: {ACTIONS[action][0]}, pose: {pose}. '
+        f'{ROLES[item["role"]]}. '
+        f'IMMUTABLE CHARACTER LOOK: {ROLE_IDENTITY_ANCHORS[item["role"]]} '
+        f'Action: {ACTIONS[action][0]}, pose: {pose}. '
         f'{props[action]}. '
         'Exactly ONE human, fully visible head to toe including BOTH boots, '
         'one consistent adult identity, same face, one helmet, same clothes and '
