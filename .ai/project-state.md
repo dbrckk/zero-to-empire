@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T23:32:35Z
+Generated: 2026-10-09T07:54:32Z
 
 ### Git
 - Branch: `main`
-- Head: `faeb312470f5`
-- Commit date: 2026-10-09T01:32:20+02:00
-- Commit: docs(art): record phase-locked interaction events and repaired CI test logic
-- Tracked files: 1470
+- Head: `79386415b0c5`
+- Commit date: 2026-10-09T09:54:14+02:00
+- Commit: ci(art): run temporal QA on rendered TECH frames and retain evidence
+- Tracked files: 1472
 
 ### Recently changed files
+- `.github/workflows/modular-tech-actions.yml`
+- `tools/sprites/test_temporal_sprite_audit.py`
+- `tools/sprites/temporal_sprite_audit.py`
 - `tools/sprites/MODULAR_ACTIONS_README.md`
 - `tools/sprites/test_package_tech_actions_runtime.py`
-- `tools/sprites/test_rigged_tech_actions_v3.py`
-- `tools/sprites/package_tech_actions_runtime.py`
-- `tools/sprites/test_action_contact.py`
 
 ### Project signals
 - `build.gradle.kts`

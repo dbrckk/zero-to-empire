@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 503d80123c6f142244e1bcfd33dbf130d3766706
-Head: faeb312470f509813f4be8bf090e03a4e4d4b6ff
+Base: 1156fe64af202195d713df1470e6688975cbf54d
+Head: 79386415b0c58c0c1a8c5b2edc84b0f75fb23ce4
 
 ## Changed files
-- M tools/sprites/MODULAR_ACTIONS_README.md
+- M .github/workflows/modular-tech-actions.yml
 
 ## Affected areas
-- tools
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

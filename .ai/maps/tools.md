@@ -97,6 +97,7 @@ sprites/
   rigged_tech_actions_v3.py
   rigged_tech_walk_v2.py
   soft_skin_deform.py
+  temporal_sprite_audit.py
   ter07_energy_conduit_candidate.py
   test_action_contact.py
   test_autonomous_walk.py
@@ -104,6 +105,7 @@ sprites/
   test_rigged_tech_actions_v3.py
   test_rigged_tech_walk_v2.py
   test_soft_skin_deform.py
+  test_temporal_sprite_audit.py
   test_weight_transfer.py
   validate_animation_sheet.py
   validate_runtime_asset.py
@@ -5375,6 +5377,89 @@ pixels=np.uint8(np.clip(np.round(sampled*255),0,255))
 patch=Image.fromarray(pixels,'RGBA')
 ```
 
+## File: sprites/temporal_sprite_audit.py
+```python
+#!/usr/bin/env python3
+"""Audit real rendered TECH animation frames at gameplay scale.
+
+Objective regression signals only, NEVER artistic or semantic approval.
+No canonical queue mutations; strict DONE is expressly forbidden.
+"""
+⋮----
+ACTIONS=('WALK','CARRY','IDLE','WORK','REPAIR','CELEB')
+SIDE=96
+⋮----
+def inspect_clip(root:Path,action:str,frames_expected:int=24) -> dict
+⋮----
+directory=root/action
+manifest=json.loads((directory/'qa-manifest.json').read_text(encoding='utf-8'))
+⋮----
+qa=manifest.get('qa',{})
+⋮----
+frames=[directory/'frames'/f'CHR-TECH-{action}-{i:02d}.png' for i in range(frames_expected)]
+extra=list((directory/'frames').glob('*.png'))
+⋮----
+masks=[];areas=[];bbox=[];digests=[]
+⋮----
+img=source.resize((SIDE,SIDE),Image.Resampling.LANCZOS)
+alpha=np.asarray(img.getchannel('A'))
+original_bounds=source.getchannel('A').getbbox()
+⋮----
+mask=alpha>=128
+⋮----
+b=(int(xx.min()),int(yy.min()),int(xx.max()+1),int(yy.max()+1))
+⋮----
+differences=[];area_jump=[]
+⋮----
+j=(i+1)%frames_expected
+b=masks[j]
+union=int(np.count_nonzero(a|b))
+diff=float(np.count_nonzero(a^b)/union) if union else 1.0
+⋮----
+median=statistics.median(differences)
+⋮----
+seam_ratio=differences[-1]/median
+max_ratio=max(differences)/median
+problems=[]
+⋮----
+def audit(root:Path,output:Path)->dict
+⋮----
+index=json.loads((root/'production-index.json').read_text(encoding='utf-8'))
+⋮----
+items=index.get('actions',[])
+⋮----
+frames={}
+⋮----
+m=json.loads((root/a/'qa-manifest.json').read_text())
+⋮----
+results={a:inspect_clip(root,a,frames[a]) for a in ACTIONS}
+source_hashes={r['source_skin_sha256'] for r in results.values()}
+⋮----
+report={'format':'zte-temporal-qa-v1','strict_status':'NEEDS_REVIEW',
+⋮----
+writer=csv.writer(f)
+⋮----
+vals=results[a]['per_transition_disagreement']
+⋮----
+image=Image.new('RGB',(1160,80+len(ACTIONS)*102),(23,31,43))
+d=ImageDraw.Draw(image)
+⋮----
+y=67+index*102
+info=results[a]
+vals=info['per_transition_disagreement']
+maximum=max(.16,max(vals)*1.12)
+⋮----
+x=130+i*41
+h=max(2,round((v/maximum)*67))
+⋮----
+def main()
+⋮----
+parser=argparse.ArgumentParser(description=__doc__)
+⋮----
+args=parser.parse_args()
+report=audit(args.source,args.output)
+```
+
 ## File: sprites/ter07_energy_conduit_candidate.py
 ```python
 #!/usr/bin/env python3
@@ -5841,6 +5926,53 @@ box=a.getchannel("A").getbbox()
 ⋮----
 # The WALK candidate must be soft deformed, unlike the explicit old path.
 source=pose_for(.125,"WALK")
+```
+
+## File: sprites/test_temporal_sprite_audit.py
+```python
+"""Synthetic regression tests for 96px frame-to-frame TECH audit."""
+⋮----
+class TemporalAuditTests(unittest.TestCase)
+⋮----
+def setUp(self)
+⋮----
+directory=self.root/a
+⋮----
+record={'asset_id':'CHR-TECH-'+a,'frames':self.frames,
+⋮----
+index={'strict_status':'NEEDS_REVIEW','review_required':True,
+⋮----
+def tearDown(self)
+⋮----
+def save_frame(self,a,i,blank=False,jump=False)
+⋮----
+image=Image.new('RGBA',(512,512))
+⋮----
+d=ImageDraw.Draw(image)
+displacement=round(13*math.sin(2*math.pi*i/self.frames))
+⋮----
+x=252+displacement
+⋮----
+# Track deterministic frame identity without changing the binary alpha.
+⋮----
+def test_six_valid_clips_export_review_only_evidence(self)
+⋮----
+report=audit(self.root,Path(self.work.name)/'report')
+⋮----
+def test_empty_and_clipped_frames_are_rejected(self)
+⋮----
+image=Image.open(self.root/'WORK/frames/CHR-TECH-WORK-06.png')
+⋮----
+def test_duplicate_content_is_rejected(self)
+⋮----
+original=(self.root/'IDLE/frames/CHR-TECH-IDLE-00.png').read_bytes()
+⋮----
+def test_temporal_spike_and_bad_seam_are_rejected(self)
+⋮----
+def test_review_and_identity_guards_are_enforced(self)
+⋮----
+file=self.root/'REPAIR/qa-manifest.json'
+record=json.loads(file.read_text())
 ```
 
 ## File: sprites/test_weight_transfer.py
