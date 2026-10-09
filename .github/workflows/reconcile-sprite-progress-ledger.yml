@@ -38,7 +38,7 @@ jobs:
           review = Path('docs/art/AAA_HISTORICAL_PROMOTION_REVIEW.md')
 
           text = manifest.read_text(encoding='utf-8')
-          row = re.compile(r'^\|\s*([^|]+?)\s*\|.*\|\s*(TODO|RUNTIME|DONE)\s*\|\s*$', re.M)
+          row = re.compile(r'^\|\s*([^|]+?)\s*\|.*\|\s*(TODO|ART|CLEAN|RUNTIME|BLOCKED|DONE)\s*\|\s*$', re.M)
           rows = [(m.group(1).strip(), m.group(2)) for m in row.finditer(text)]
           if len(rows) != 236 or len({a for a, _ in rows}) != 236:
               raise SystemExit(f'Canonical manifest invalid: rows={len(rows)} unique={len({a for a, _ in rows})}')
