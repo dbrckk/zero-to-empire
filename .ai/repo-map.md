@@ -7750,7 +7750,7 @@ jobs:
           review = Path('docs/art/AAA_HISTORICAL_PROMOTION_REVIEW.md')
 
           text = manifest.read_text(encoding='utf-8')
-          row = re.compile(r'^\|\s*([^|]+?)\s*\|.*\|\s*(TODO|RUNTIME|DONE)\s*\|\s*$', re.M)
+          row = re.compile(r'^\|\s*([^|]+?)\s*\|.*\|\s*(TODO|ART|CLEAN|RUNTIME|BLOCKED|DONE)\s*\|\s*$', re.M)
           rows = [(m.group(1).strip(), m.group(2)) for m in row.finditer(text)]
           if len(rows) != 236 or len({a for a, _ in rows}) != 236:
               raise SystemExit(f'Canonical manifest invalid: rows={len(rows)} unique={len({a for a, _ in rows})}')
@@ -29061,6 +29061,9 @@ candidate = INCOMING / f"{stem}.png"
 ⋮----
 def classify(asset_id: str, description: str, status: str, runtime: str, materialized: bool) -> str
 ⋮----
+# An installed but semantically rejected/review-pending character must not
+# be counted as an ordinary integration-only task.
+⋮----
 aid = asset_id.upper()
 text = f"{description} {runtime}".lower()
 ⋮----
@@ -29074,6 +29077,11 @@ m = ROW.match(raw.strip())
 ⋮----
 d = m.groupdict()
 materialized = is_materialized(d["runtime"])
+⋮----
+onboarding = [a for a in rows if a.id == "ONB-00"]
+⋮----
+# ONB-00 is intentionally outside the canonical strict 235-asset objective.
+rows = [a for a in rows if a.id != "ONB-00"]
 ⋮----
 remaining = [a for a in rows if a.status != "DONE"]
 lanes: dict[str, list[Asset]] = {name: [] for name in BATCH_SIZE}

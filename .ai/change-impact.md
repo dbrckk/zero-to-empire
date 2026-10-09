@@ -1,13 +1,13 @@
 # Change impact
 
-Base: cc496e3a9f62e4903402e8d65e8416026812cf0b
-Head: 87fa0837751da8d9c3992066edd6c82d6abdcdee
+Base: d65c64bf11df3b82c9f20260d6978d6526a3d86d
+Head: 09b05abdb9c2e2bbcd915d58959a4633ae5e95ad
 
 ## Changed files
-- M PROJECT_CONTINUITY.md
+- M tools/sprites/plan_sprite_batches.py
 
 ## Affected areas
-- (root)
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

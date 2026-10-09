@@ -4403,6 +4403,9 @@ candidate = INCOMING / f"{stem}.png"
 ⋮----
 def classify(asset_id: str, description: str, status: str, runtime: str, materialized: bool) -> str
 ⋮----
+# An installed but semantically rejected/review-pending character must not
+# be counted as an ordinary integration-only task.
+⋮----
 aid = asset_id.upper()
 text = f"{description} {runtime}".lower()
 ⋮----
@@ -4416,6 +4419,11 @@ m = ROW.match(raw.strip())
 ⋮----
 d = m.groupdict()
 materialized = is_materialized(d["runtime"])
+⋮----
+onboarding = [a for a in rows if a.id == "ONB-00"]
+⋮----
+# ONB-00 is intentionally outside the canonical strict 235-asset objective.
+rows = [a for a in rows if a.id != "ONB-00"]
 ⋮----
 remaining = [a for a in rows if a.status != "DONE"]
 lanes: dict[str, list[Asset]] = {name: [] for name in BATCH_SIZE}

@@ -22,21 +22,24 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T19:22:38Z
+Generated: 2026-10-09T19:26:39Z
 
 ### Git
 - Branch: `main`
-- Head: `87fa0837751d`
-- Commit date: 2026-10-09T21:22:22+02:00
-- Commit: docs(art): persist canonical 216/235 state and verified character blockers
-- Tracked files: 1490
+- Head: `09b05abdb9c2`
+- Commit date: 2026-10-09T21:26:22+02:00
+- Commit: fix(art): scope production planner to 235 targets and explicit semantic review lane
+- Tracked files: 1493
 
 ### Recently changed files
-- `PROJECT_CONTINUITY.md`
-- `tools/sprites/audit_complete_sprite_manifest.py`
+- `tools/sprites/plan_sprite_batches.py`
+- `docs/art/FINAL_AAA_SPRITE_PROGRESS.md`
+- `.github/workflows/reconcile-sprite-progress-ledger.yml`
 - `art/production/controlled-character-regen-queue.json`
-- `.github/workflows/pollinations-character-atlas.yml`
-- `.github/workflows/sprite-completion-gate.yml`
+- `art/production/pollinations-frame-cache/CHR-LOG-CARRY/full-body-per-frame-v3/00.png`
+- `art/production/pollinations-frame-cache/CHR-LOG-CARRY/full-body-per-frame-v3/01.png`
+- `art/production/pollinations-frame-cache/CHR-LOG-CARRY/full-body-per-frame-v3/02.png`
+- `docs/art/FINAL_AAA_SPRITE_MANIFEST.md`
 
 ### Project signals
 - `build.gradle.kts`

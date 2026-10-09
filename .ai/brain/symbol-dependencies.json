@@ -4,5 +4,113 @@
   "scope": "symbols defined in changed source files",
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
-  "symbols": {}
+  "symbols": {
+    "Asset": {
+      "source": {
+        "file": "tools/sprites/plan_sprite_batches.py",
+        "start": 34,
+        "end": 41
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "is_materialized": {
+      "source": {
+        "file": "tools/sprites/plan_sprite_batches.py",
+        "start": 44,
+        "end": 48
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "classify": {
+      "source": {
+        "file": "tools/sprites/plan_sprite_batches.py",
+        "start": 51,
+        "end": 69
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "chunks": {
+      "source": {
+        "file": "tools/sprites/plan_sprite_batches.py",
+        "start": 72,
+        "end": 73
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "Asset",
+          "definitions": [
+            {
+              "file": "tools/sprites/plan_sprite_batches.py",
+              "line": 34,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "main": {
+      "source": {
+        "file": "tools/sprites/plan_sprite_batches.py",
+        "start": 76,
+        "end": 159
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "Asset",
+          "definitions": [
+            {
+              "file": "tools/sprites/plan_sprite_batches.py",
+              "line": 34,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "chunks",
+          "definitions": [
+            {
+              "file": "tools/sprites/plan_sprite_batches.py",
+              "line": 72,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "classify",
+          "definitions": [
+            {
+              "file": "tools/sprites/plan_sprite_batches.py",
+              "line": 51,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "is_materialized",
+          "definitions": [
+            {
+              "file": "tools/sprites/plan_sprite_batches.py",
+              "line": 44,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 4
+    }
+  }
 }
