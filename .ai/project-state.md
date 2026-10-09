@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T20:16:22Z
+Generated: 2026-10-09T20:18:12Z
 
 ### Git
 - Branch: `main`
-- Head: `c680fd7469dd`
-- Commit date: 2026-10-09T22:16:03+02:00
-- Commit: test(android): smoke-test debug animation QA gallery controls and capture emulator screenshots
-- Tracked files: 1510
+- Head: `ab1e47a49d7b`
+- Commit date: 2026-10-09T22:17:45+02:00
+- Commit: ci(android): run real TECH candidate debug gallery on emulator and preserve screenshots
+- Tracked files: 1511
 
 ### Recently changed files
+- `.github/workflows/tech-candidate-android-preview.yml`
+- `tools/android/character_preview_emulator_smoke.sh`
 - `tools/android/emulator_functional_smoke.sh`
 - `app/src/debug/AndroidManifest.xml`
 - `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
-- `app/src/test/java/com/zerotoempire/game/AmbientCharacterMotionTest.kt`
-- `app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt`
 
 ### Project signals
 - `build.gradle.kts`

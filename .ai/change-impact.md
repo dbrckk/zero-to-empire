@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 413006eb5d5db96ac90005dbfa981db8bb5372e1
-Head: c680fd7469dd1d3e6adc8bddb9b1d8cecfa9838c
+Base: d8e8543904faf417750d6b5a5eaf9742d7a1a670
+Head: ab1e47a49d7bbc481fb637abf16eb2ba53fe66d6
 
 ## Changed files
-- M tools/android/emulator_functional_smoke.sh
+- M .github/workflows/tech-candidate-android-preview.yml
 
 ## Affected areas
-- tools
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.
