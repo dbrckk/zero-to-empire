@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import os
+from datetime import datetime,timezone
 from pathlib import Path
 from typing import Any
 
@@ -322,6 +323,31 @@ def close_exhausted_character_dispatches(queue: dict[str, Any]) -> None:
                 )
 
 
+def active_pollinations_repair() -> list[str]:
+    """Honor a time-bounded independent repair lane; never replace its queue.
+
+    The provider is allowed to fail/retry without Autofactory dispatching the
+    same character to Kaggle or wiping its preserved source evidence.
+    """
+    controlled=load_json(CHARACTER_QUEUE,{}) or {}
+    if controlled.get('mode')!='pollinations-controlled-repair':
+        return []
+    end=controlled.get('reservation_expires_utc')
+    if not isinstance(end,str):
+        return []
+    try:
+        expires=datetime.fromisoformat(end.replace('Z','+00:00'))
+        if expires.tzinfo is None or expires<=datetime.now(timezone.utc):
+            return []
+    except ValueError:
+        return []
+    blocked={'PENDING','PENDING_POLLINATIONS','BLOCKED','PROVIDER_ERROR',
+             'CANDIDATE','AWAITING_REVIEW'}
+    return [str(x.get('id','')).upper() for x in controlled.get('targets',[])
+            if str(x.get('status','')).upper() in blocked
+            and str(x.get('id','')).upper().startswith('CHR-')]
+
+
 def pending_ids_from_controlled(path: Path, queue: dict[str, Any]) -> list[str]:
     ids = [str(x.get("id", "")).upper() for x in active_pending(path)]
     master = by_id(queue)
@@ -357,6 +383,12 @@ def make_decision(queue: dict[str, Any]) -> dict[str, Any]:
             return {"action": "WAIT_KAGGLE_BUSY", "group": group, "stats": s}
         prepared = prepare_building_group(queue, group)
         return {"action": "DISPATCH_KAGGLE_BUILDING", **prepared, "stats": s}
+    # Defer competing Kaggle character dispatches while the explicitly
+    # reserved Pollinations repair lane is active (other lanes remain free).
+    repair_ids=active_pollinations_repair()
+    if repair_ids:
+        return {"action":"WAIT_EXTERNAL_CHARACTER_REPAIR",
+                "group":"+".join(repair_ids),"ids":repair_ids,"stats":s}
     character_pending = pending_ids_from_controlled(CHARACTER_QUEUE, queue)
     if character_pending:
         if KAGGLE_BUSY:
