@@ -111,11 +111,11 @@ class IndependentFrameTests(unittest.TestCase):
             root=Path(tmp)
             manifest=root/'manifest.md'
             manifest.write_text(
-                '| CHR-OP-WALK | OP | WALK | \`app/src/main/res/drawable/zte_chr_op_walk_final.png\` | TODO |\\n'
-                '| CHR-LOG-CARRY | LOG | CARRY | \`app/src/main/res/drawable/zte_chr_log_carry_final.png\` | TODO |\\n',
+                '| CHR-OP-WALK | OP | WALK | `app/src/main/res/drawable/zte_chr_op_walk_final.png` | TODO |\n'
+                '| CHR-LOG-CARRY | LOG | CARRY | `app/src/main/res/drawable/zte_chr_log_carry_final.png` | TODO |\n',
                 encoding='utf-8')
             queue=root/'controlled.json'
-            with patch.object(factory,'MANIFEST',manifest), \\
+            with patch.object(factory,'MANIFEST',manifest), \
                  patch.object(factory,'QUEUE',queue):
                 queue.write_text(json.dumps({'mode':'pollinations-controlled-repair',
                     'targets':[{'id':'CHR-LOG-CARRY','status':'BLOCKED'}]}))
