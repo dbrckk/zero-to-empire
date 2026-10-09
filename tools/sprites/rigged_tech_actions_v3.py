@@ -66,8 +66,8 @@ def pose_for(t: float, action: str) -> dict:
         "WORK": work_hands(t, (x, y)),
         "REPAIR": ((x + 36 + 8 * math.sin(phase), y - 42 + 7 * math.cos(phase)),
                    (x + 58 + 12 * math.sin(phase), y - 54 + 11 * math.cos(phase))),
-        "CELEB": ((x - 26 - 19 * math.sin(phase), y - 144 + 12 * math.cos(phase)),
-                  (x + 45 + 19 * math.sin(phase), y - 146 - 12 * math.cos(phase))),
+        "CELEB": ((x - 30 - 16 * math.sin(phase), y - 171 + 11 * math.cos(phase)),
+                  (x + 45 + 15 * math.sin(phase), y - 178 - 11 * math.cos(phase))),
     }
     hand_l, hand_r = hands[action]
     return {
@@ -173,16 +173,32 @@ def draw_repair_sparks(layer: Image.Image, p: dict, t: float) -> None:
 
 
 def draw_celebration(layer: Image.Image, p: dict, t: float) -> None:
-    d = ImageDraw.Draw(layer, "RGBA")
-    x, y = p["root"]
-    for n in range(12):
-        a = 2 * math.pi * (n / 12 + t)
-        xx = round(x + (-34 if n % 2 == 0 else 47) + 26 * math.cos(a))
-        yy = round(y - 144 + 31 * math.sin(a))
-        alpha = round(125 + 90 * (.5 + .5 * math.sin(a * 2)))
-        color = (74, 219, 245, alpha) if n % 3 else (252, 188, 101, alpha)
-        d.line((xx - 2, yy - 4, xx + 2, yy + 4), fill=color, width=3)
-        d.ellipse((xx - 2, yy - 2, xx + 2, yy + 2), fill=color)
+    """Both raised wrists emit restrained identity-locked tech celebration VFX.
+
+    Every mote is derived from a hand anchor and cyclic phase (never random),
+    so particles cannot drift off the rig or create frame 24→1 discontinuity.
+    """
+    d=ImageDraw.Draw(layer,"RGBA")
+    phase=2*math.pi*(t % 1.0)
+    for side,hand in enumerate(("handL","handR")):
+        x,y=p[hand]
+        # A bright readable wrist ring, suitable for 96px game previews.
+        ring=9+2*math.sin(phase+side*math.pi)
+        d.ellipse((round(x-ring),round(y-ring),
+                   round(x+ring),round(y+ring)),
+                  outline=(74,220,247,210) if side==0 else (253,196,101,205),
+                  width=4)
+        for n in range(9):
+            a=2*math.pi*(n/9 + (t % 1.0)*(.35 if side==0 else -.3))
+            radius=23+8*math.sin(phase+n*.7+side)
+            px=round(x+math.cos(a)*radius)
+            py=round(y+math.sin(a)*radius-3)
+            alpha=round(150+65*(.5+.5*math.sin(2*a+phase)))
+            color=(78,219,249,alpha) if (n+side)%3 else (252,198,110,alpha)
+            d.ellipse((px-4,py-4,px+4,py+4),fill=color)
+            d.line((px-5,py+4,px+4,py-5),
+                   fill=(200,239,255,max(80,alpha-50)),width=2)
+
 
 
 def draw_idle_readout(layer: Image.Image, p: dict, t: float) -> None:
@@ -245,6 +261,18 @@ def action_qa(action: str, poses: list, base_qa: dict) -> dict:
         math.dist(p["handL"], (p["root"][0] + 29, p["root"][1] - 55)) < .001
         and math.dist(p["handR"], (p["root"][0] + 103, p["root"][1] - 55)) < .001
         for p in poses) if action == "CARRY" else True)
+    raised_arm_heights=[]
+    if action=="CELEB":
+        for p in poses:
+            x,y=p["root"]
+            a=p.get("torso_lean_rad",0.)
+            ca,sa=math.cos(a),math.sin(a)
+            shoulders=((x-24*ca+86*sa,y-24*sa-86*ca),
+                       (x+23*ca+85*sa,y+23*sa-85*ca))
+            raised_arm_heights.extend(
+                (shoulders[i][1]-p[key][1]) for i,key in
+                enumerate(("handL","handR")))
+    raised_arm_pass=(min(raised_arm_heights)>=65 if raised_arm_heights else True)
     legible_motion = (action not in ("WORK", "REPAIR", "CELEB")
                       or motion["handR"] >= 18)
     supports = [p.get("support_bias") for p in poses]
@@ -253,12 +281,16 @@ def action_qa(action: str, poses: list, base_qa: dict) -> dict:
                        for v in supports) and amplitude<=AMPLITUDES_PX[action]+.001
                    if action in AMPLITUDES_PX
                    else all(v is None for v in supports))
-    kinetic = (not violations and grounded and grip_ok and legible_motion and transfer_ok and interaction_ok)
+    kinetic = (not violations and grounded and grip_ok and legible_motion and
+               transfer_ok and interaction_ok and raised_arm_pass)
     base_qa.update({
         "action_kinematic_pass": kinetic, "hand_reach_violations": violations,
         "action_motion_range_px": motion, "stationary_ground_contact_pass": grounded,
         "fixed_cargo_grip_pass": grip_ok,
         "game_scale_motion_pass": legible_motion,
+        "celebration_raised_arm_pass": raised_arm_pass,
+        "celebration_min_arm_raise_px": (round(min(raised_arm_heights),2)
+                                         if raised_arm_heights else None),
         "interaction_contact_pass": interaction_ok,
         "work_screen_violation_frames": work_bad,
         "repair_tool_violation_frames": tool_bad,
