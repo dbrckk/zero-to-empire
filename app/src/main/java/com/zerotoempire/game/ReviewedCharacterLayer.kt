@@ -1,7 +1,7 @@
 package com.zerotoempire.game
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
@@ -12,6 +12,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.unit.Dp
@@ -22,18 +23,68 @@ import androidx.compose.ui.unit.dp
 private data class CharacterPlacement(
     val role: ReviewedCharacterRole,
     val action: ReviewedCharacterAction,
-    val x: Dp,
-    val y: Dp,
+    /** Relative top-left inside the city's stage, not the device screen. */
+    val xFraction: Float,
+    val yFraction: Float,
     val size: Dp,
     val phaseFrames: Int,
+    /** Total horizontal journey in stage-width units. */
+    val travelFraction: Float = 0f,
+)
+
+internal data class AmbientCharacterMotion(
+    val xOffsetFraction: Float,
+    val spriteFrame: Int,
+    val facingLeft: Boolean,
 )
 
 /**
- * Authored ambient population for the Ascendant city.
+ * One shared clock for all characters, with a genuine pedestrian journey.
  *
- * The source assets are 4x4 atlases. This renderer crops one 256x256 cell per
- * actor and advances all actors from one shared 10 fps clock, keeping visual
- * density high without starting one independent infinite animation per sprite.
+ * 80 frames in one direction, a 4-frame turn, 80 on the way back and a
+ * 4-frame turn: feet animate only when movement occurs. Source WALK frames
+ * always face right, so the return journey must flip the sprite.
+ * The function is pure: unit tests can prove no teleport/foot-slide caused
+ * by animation while the actor is standing still.
+ */
+internal fun ambientCharacterMotion(
+    action: ReviewedCharacterAction,
+    worldFrame: Int,
+    phaseFrames: Int,
+    travelFraction: Float,
+    reducedMotion: Boolean,
+): AmbientCharacterMotion {
+    val frames = reviewedCharacterFrameCount(action)
+    if (reducedMotion) {
+        return AmbientCharacterMotion(0f, Math.floorMod(phaseFrames, frames), false)
+    }
+    if (action != ReviewedCharacterAction.WALK || travelFraction <= 0f) {
+        return AmbientCharacterMotion(
+            0f, Math.floorMod(worldFrame + phaseFrames, frames), false,
+        )
+    }
+    val movingFrames = 80
+    val turnFrames = 4
+    val halfCycle = movingFrames + turnFrames
+    val phase = Math.floorMod(worldFrame + phaseFrames, 2 * halfCycle)
+    val returning = phase >= halfCycle
+    val local = if (returning) phase - halfCycle else phase
+    val inTurn = local >= movingFrames
+    val progress = if (inTurn) 1f else local.toFloat() / movingFrames
+    val x = travelFraction * (
+        if (returning) .5f - progress else progress - .5f
+    )
+    return AmbientCharacterMotion(
+        xOffsetFraction = x,
+        spriteFrame = if (inTurn) 0 else local % frames,
+        facingLeft = returning,
+    )
+}
+
+/**
+ * Characters are anchored to the *stage*, not an assumed 360dp-wide phone.
+ * Only reviewed atlas frames are rendered; all speculative candidates remain
+ * outside canonical runtime until the art approval and Android build gates.
  */
 @Composable
 internal fun ReviewedCharacterLayer(
@@ -47,14 +98,14 @@ internal fun ReviewedCharacterLayer(
 
     val placements = remember {
         listOf(
-            CharacterPlacement(ReviewedCharacterRole.OPERATOR, ReviewedCharacterAction.WORK, 34.dp, 306.dp, 45.dp, 0),
-            CharacterPlacement(ReviewedCharacterRole.TECHNICIAN, ReviewedCharacterAction.WALK, 112.dp, 374.dp, 42.dp, 3),
-            CharacterPlacement(ReviewedCharacterRole.LOGISTICS, ReviewedCharacterAction.WALK, 203.dp, 455.dp, 43.dp, 5),
-            CharacterPlacement(ReviewedCharacterRole.ENGINEER, ReviewedCharacterAction.WORK, 286.dp, 332.dp, 46.dp, 7),
-            CharacterPlacement(ReviewedCharacterRole.LOGISTICS, ReviewedCharacterAction.IDLE, 72.dp, 498.dp, 36.dp, 2),
-            CharacterPlacement(ReviewedCharacterRole.OPERATOR, ReviewedCharacterAction.WALK, 245.dp, 520.dp, 37.dp, 6),
-            CharacterPlacement(ReviewedCharacterRole.TECHNICIAN, ReviewedCharacterAction.WORK, 318.dp, 432.dp, 39.dp, 4),
-            CharacterPlacement(ReviewedCharacterRole.ENGINEER, ReviewedCharacterAction.IDLE, 156.dp, 535.dp, 35.dp, 1),
+            CharacterPlacement(ReviewedCharacterRole.OPERATOR, ReviewedCharacterAction.WORK, .094f, .494f, 45.dp, 0),
+            CharacterPlacement(ReviewedCharacterRole.TECHNICIAN, ReviewedCharacterAction.WALK, .311f, .603f, 42.dp, 3, .18f),
+            CharacterPlacement(ReviewedCharacterRole.LOGISTICS, ReviewedCharacterAction.WALK, .564f, .734f, 43.dp, 5, .16f),
+            CharacterPlacement(ReviewedCharacterRole.ENGINEER, ReviewedCharacterAction.WORK, .794f, .535f, 46.dp, 7),
+            CharacterPlacement(ReviewedCharacterRole.LOGISTICS, ReviewedCharacterAction.IDLE, .200f, .803f, 36.dp, 2),
+            CharacterPlacement(ReviewedCharacterRole.OPERATOR, ReviewedCharacterAction.WALK, .681f, .839f, 37.dp, 6, .18f),
+            CharacterPlacement(ReviewedCharacterRole.TECHNICIAN, ReviewedCharacterAction.WORK, .883f, .697f, 39.dp, 4),
+            CharacterPlacement(ReviewedCharacterRole.ENGINEER, ReviewedCharacterAction.IDLE, .433f, .863f, 35.dp, 1),
         )
     }
 
@@ -70,22 +121,30 @@ internal fun ReviewedCharacterLayer(
             }
     }
 
-    Box(modifier.fillMaxSize()) {
+    BoxWithConstraints(modifier.fillMaxSize()) {
+        val scale = minOf(maxWidth.value / 360f, maxHeight.value / 620f)
+            .coerceIn(.75f, 1.20f) * lateEraScale
         placements.forEach { placement ->
-            val frameCount = reviewedCharacterFrameCount(placement.action)
-            val frame = if (reducedMotion) {
-                placement.phaseFrames % frameCount
-            } else {
-                (worldFrame + placement.phaseFrames) % frameCount
-            }
-            val atlas = atlases.getValue(placement.role to placement.action)
-
+            val sample = ambientCharacterMotion(
+                action = placement.action,
+                worldFrame = worldFrame,
+                phaseFrames = placement.phaseFrames,
+                travelFraction = placement.travelFraction,
+                reducedMotion = reducedMotion,
+            )
+            val dimension = placement.size * scale
+            // Prevent clipped sprites at the right/bottom of narrow stages.
+            val x = (maxWidth * (placement.xFraction + sample.xOffsetFraction))
+                .coerceIn(0.dp, (maxWidth - dimension).coerceAtLeast(0.dp))
+            val y = (maxHeight * placement.yFraction)
+                .coerceIn(0.dp, (maxHeight - dimension).coerceAtLeast(0.dp))
             CharacterAtlasFrame(
-                atlas = atlas,
-                frame = frame,
+                atlas = atlases.getValue(placement.role to placement.action),
+                frame = sample.spriteFrame,
                 modifier = Modifier
-                    .offset(placement.x, placement.y)
-                    .size(placement.size * lateEraScale),
+                    .offset(x = x, y = y)
+                    .size(dimension)
+                    .graphicsLayer { scaleX = if (sample.facingLeft) -1f else 1f },
             )
         }
     }
