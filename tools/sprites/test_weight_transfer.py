@@ -29,8 +29,18 @@ class WeightTransferTests(unittest.TestCase):
                 self.assertEqual(new['lockR'],old['lockR'])
                 self.assertLessEqual(abs(new['weight_transfer_px']),AMPLITUDES_PX[action]+1e-6)
                 self.assertAlmostEqual(new['root'][0]-old['root'][0],
-                                       new['handL'][0]-old['handL'][0],places=8)
-                if action=='CARRY':
+                                       new['weight_transfer_px'],places=8)
+                if action=='WALK':
+                    # Walking wrists preserve their original relative gait
+                    # swing as the root receives its stance-driven offset.
+                    for hand in ('handL','handR'):
+                        self.assertAlmostEqual(
+                            new[hand][0]-old[hand][0],
+                            new['weight_transfer_px'],places=8)
+                        self.assertAlmostEqual(new[hand][1],old[hand][1],places=8)
+                else:
+                    # CARRY intentionally overrides the walking arm swing:
+                    # compare grips to the transported load, NOT old WALK arms.
                     x,y=new['root']
                     self.assertEqual(new['handL'],(x+29,y-55))
                     self.assertEqual(new['handR'],(x+103,y-55))
