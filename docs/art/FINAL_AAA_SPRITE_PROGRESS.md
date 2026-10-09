@@ -2,12 +2,16 @@
 
 Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains the canonical 236-item scope. Candidate art is never confused with DONE runtime assets.
 
-## Official progress
-- DONE: **140 / 236**
-- ART VALIDATED: **140 / 236**
-- RUNTIME INTEGRATED: **140 / 236**
-- Generated candidates accepted as DONE: **140**
-- Rule: only runtime-integrated, individually clean/transparent, manifest-matching assets with green Android CI increment DONE.
+## Official progress — canonical reconciliation (2026-10-09)
+
+- Canonical strict DONE: **216 / 235** (source: `art/production/master-asset-queue.json`).
+- Manifest DONE: **217 / 236**, including `ONB-00` which is outside the strict 235 target.
+- Manifest RUNTIME but not strict approved: **17 / 236** (character atlases awaiting new visual/semantic approval).
+- Manifest BLOCKED: **2 / 236** (`CHR-TECH-WALK`, `CHR-LOG-CARRY`).
+- Strict characters: **5 / 24** approved; **19 / 24** require reconstruction and individual review.
+- Historical art promotion review: **OPEN**. Technical/runtime status must not bypass it.
+- Existing old production history below describes past promotions and historical targets; **its intermediate figures are not the current project total**.
+- Only individually semantically approved, technically valid, visibly used Android assets with green CI may advance the canonical strict counter.
 
 ## Reviewed historical FX — 7 DONE
 `FX-00`, `FX-04`, `FX-05`, `FX-06`, `FX-07`, `FX-08` and `FX-17` were re-reviewed from evidence run `35493610023`.
