@@ -94,6 +94,7 @@ class MultiActionGeometryTests(unittest.TestCase):
                 shoulder=(x+dx*co-dy*si,y+dx*si+dy*co)
                 self.assertGreaterEqual(shoulder[1]-p[hand][1],65)
                 self.assertLessEqual(math.dist(shoulder,p[hand]),118)
+            self.assertGreaterEqual(p["handR"][0]-p["handL"][0],135)
             q=pose_for(t+1,"CELEB")
             for key in ("handL","handR"):
                 for a,b in zip(p[key],q[key]):
@@ -173,8 +174,10 @@ class MultiActionRendererTests(unittest.TestCase):
                     self.assertTrue(qa["weight_transfer_pass"],qa)
                     self.assertTrue(qa["interaction_contact_pass"],qa)
                     self.assertTrue(qa["celebration_raised_arm_pass"], qa)
+                    self.assertTrue(qa["celebration_wide_arm_pass"], qa)
                     if action=="CELEB":
                         self.assertGreaterEqual(qa["celebration_min_arm_raise_px"],65)
+                        self.assertGreaterEqual(qa["celebration_min_wrist_span_px"],135)
                     else:
                         self.assertIsNone(qa["celebration_min_arm_raise_px"])
                     self.assertFalse(qa["work_screen_violation_frames"])
