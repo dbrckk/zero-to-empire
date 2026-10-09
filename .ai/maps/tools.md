@@ -58,6 +58,7 @@ sprites/
   autonomous_walk.py
   build_sprite_contact_sheet.py
   colab_mass_factory.py
+  focused_sprite_atlas.py
   generate_strict_review_backlog.py
   hf_public_flux_factory.py
   hf_sprite_factory.py
@@ -101,6 +102,7 @@ sprites/
   ter07_energy_conduit_candidate.py
   test_action_contact.py
   test_autonomous_walk.py
+  test_focused_sprite_atlas.py
   test_package_tech_actions_runtime.py
   test_rigged_tech_actions_v3.py
   test_rigged_tech_walk_v2.py
@@ -1498,6 +1500,48 @@ targets = []
 dst = cdir / f.name
 ⋮----
 archive = shutil.make_archive(str(WORK / 'zero-to-empire-colab-sprites'), 'zip', OUT)
+```
+
+## File: sprites/focused_sprite_atlas.py
+```python
+"""Shared pivot-preserving framing for small-screen TECH preview sprites.
+
+A *single* crop applies to every frame and every action. This prevents fake
+camera motion and gives all animations the same world-space foot pivot. The
+original 512px frames and canonical 128/256px variants are never modified.
+
+All outputs are review-only; framing is NOT an artistic quality approval.
+"""
+⋮----
+CANVAS = 512
+PIVOT = (252, 449)
+⋮----
+"""Return a square alpha-safe view shared by *all* actions and poses.
+
+    Bounds must cover nonzero alpha, not only opaque pixels; sparse transparent
+    tool/VFX edges should not be cut to make a visually larger character.
+    """
+⋮----
+x0=min(b[0] for b in bounds); y0=min(b[1] for b in bounds)
+x1=max(b[2] for b in bounds); y1=max(b[3] for b in bounds)
+⋮----
+side=math.ceil((max(x1-x0,y1-y0)+2*margin)/16)*16
+side=min(canvas,max(64,side))
+left=max(0,min(canvas-side,round(pivot[0]-side/2)))
+top=max(0,min(canvas-side,round((y0+y1-side)/2)))
+crop=(left,top,left+side,top+side)
+⋮----
+side=crop[2]-crop[0]
+⋮----
+def framed_sprite(frame:Image.Image,crop:tuple[int,int,int,int],size:int)->Image.Image
+⋮----
+a=frame.getchannel('A').getbbox()
+⋮----
+def collect_frame_bounds(source:dict[str,dict],actions:tuple[str,...])->list
+⋮----
+bounds=[]
+⋮----
+bbox=im.getchannel('A').getbbox()
 ```
 
 ## File: sprites/generate_strict_review_backlog.py
@@ -3918,6 +3962,7 @@ chain=hashlib.sha256()
 ⋮----
 def package(source:Path,output:Path,temporal_report:Path|None=None)->dict
 ⋮----
+shared_view=shared_crop(collect_frame_bounds(records,ACTIONS))
 evidence=(verify_temporal_evidence(index,records,temporal_report)
 ⋮----
 exported={'format':'zte-tech-actions-runtime-v1','strict_status':'NEEDS_REVIEW',
@@ -3925,6 +3970,8 @@ overview=Image.new('RGB',(900,672),(23,29,40))
 draw=ImageDraw.Draw(overview)
 contact96=Image.new('RGB',(120+96*8,40+108*6),(25,33,45))
 contact_draw=ImageDraw.Draw(contact96)
+contact_focus=Image.new('RGB',contact96.size,(25,33,45))
+focus_draw=ImageDraw.Draw(contact_focus)
 ⋮----
 rec=records[action]; count=rec['count'];cols=6;rows=math.ceil(count/cols)
 pics=[];bounds=[];game_scale=[]
@@ -3934,6 +3981,8 @@ alpha=frame.getchannel('A')
 b=alpha.point(lambda px:255 if px>=128 else 0).getbbox()
 ⋮----
 img=pics[(j*count)//8].resize((96,96),Image.Resampling.LANCZOS)
+⋮----
+zoomed=framed_sprite(pics[(j*count)//8],shared_view,96)
 ⋮----
 variants={};shadow_variants={}
 shadow_frames=[render_contact_shadow(p) for p in rec['poses']]
@@ -3948,6 +3997,22 @@ path=folder/f'{action.lower()}-{size}.png'
 shadow_atlas=Image.new('RGBA',(size*cols,size*rows))
 ⋮----
 shadow_path=folder/f'{action.lower()}-shadow-{size}.png'
+⋮----
+focused_variants={};focused_shadow_variants={}
+⋮----
+folder=output/'focused-atlases';folder.mkdir(exist_ok=True)
+focus_atlas=Image.new('RGBA',(size*cols,size*rows))
+focus_shadow_atlas=Image.new('RGBA',(size*cols,size*rows))
+⋮----
+focused=framed_sprite(frame,shared_view,size)
+⋮----
+# Shadows are soft blur fields, not part of the strict
+# character silhouette. They use the identical camera.
+shadow=shadow_frames[i].crop(shared_view).resize(
+⋮----
+focus_path=folder/f'{action.lower()}-focused-{size}.png'
+⋮----
+shadow_path=folder/f'{action.lower()}-focused-shadow-{size}.png'
 ⋮----
 xx=450*(idx%2);yy=224*(idx//2)
 icon=pics[0].resize((190,190),Image.Resampling.LANCZOS)
@@ -5761,6 +5826,46 @@ frame_poses=json.loads((root/'frame-poses.json').read_text())
 project=json.loads((root/'project.json').read_text())
 ```
 
+## File: sprites/test_focused_sprite_atlas.py
+```python
+"""Offline framing tests: no build artifacts or user review necessary."""
+⋮----
+class FramingTests(unittest.TestCase)
+⋮----
+def test_shared_camera_for_six_animation_unions(self)
+⋮----
+union=[(163,47,357,467),(171,47,368,467),(167,49,341,459),
+crop=shared_crop(union)
+⋮----
+def test_metadata_preserves_exact_world_pivot(self)
+⋮----
+crop=(28,33,476,481)
+⋮----
+pt=view_pivot(crop,size)
+⋮----
+def test_framed_sprite_does_not_clip_visual_effects(self)
+⋮----
+image=Image.new('RGBA',(CANVAS,CANVAS))
+d=ImageDraw.Draw(image)
+⋮----
+crop=shared_crop([image.getchannel('A').getbbox()])
+⋮----
+got=framed_sprite(image,crop,size)
+⋮----
+def test_invalid_camera_bounds_and_pivots_are_rejected(self)
+⋮----
+# Out-of-range pivot must be rejected rather than silently
+# selecting an unrelated camera; clipping is also a valid rejection.
+⋮----
+def test_full_extent_uses_legacy_safe_fallback(self)
+⋮----
+crop=shared_crop([(0,0,512,512)])
+⋮----
+image=Image.new('RGBA',(512,512))
+⋮----
+result=framed_sprite(image,crop,96)
+```
+
 ## File: sprites/test_package_tech_actions_runtime.py
 ```python
 """Regression tests for six TECH runtime review atlases.
@@ -5785,6 +5890,14 @@ manifest=package(FIXTURE,out,temporal_report=report_file)
 bad=json.loads(report_file.read_text())
 ⋮----
 bad_file=Path(temp)/'stale-temporal.json'
+⋮----
+focus=manifest['focused_camera']
+⋮----
+variant=item['focused_variants'][str(size)]
+shadow=item['optional_shadow_layer']['focused_variants'][str(size)]
+⋮----
+crop=variant['shared_crop_bounds_px']
+expected_pivot=[round((252-crop[0])*size/(crop[2]-crop[0]),3),
 ⋮----
 var=item['variants'][str(size)]
 ⋮----
