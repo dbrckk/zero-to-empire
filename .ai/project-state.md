@@ -22,21 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T21:36:23Z
+Generated: 2026-10-09T21:54:51Z
 
 ### Git
 - Branch: `main`
-- Head: `f1937b2a742c`
-- Commit date: 2026-10-09T23:36:08+02:00
-- Commit: ci: validate TECH preview when Android UI dump helper changes
+- Head: `74c8ed97cb16`
+- Commit date: 2026-10-09T23:54:36+02:00
+- Commit: fix(android): bound stalled UI hierarchy adb commands with timeouts
 - Tracked files: 1512
 
 ### Recently changed files
-- `.github/workflows/tech-candidate-android-preview.yml`
 - `tools/android/ui_dump_retry.sh`
+- `.github/workflows/tech-candidate-android-preview.yml`
 - `tools/android/character_preview_emulator_smoke.sh`
 - `.github/workflows/asset-pipeline-ci.yml`
-- `tools/sprites/test_animation_batch_planner.py`
 
 ### Project signals
 - `build.gradle.kts`
