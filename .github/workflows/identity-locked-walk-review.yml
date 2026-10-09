@@ -1,0 +1,59 @@
+name: Identity-locked WALK alternatives (review only)
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/sprites/identity_locked_walk_candidate.py'
+      - 'tools/sprites/test_identity_locked_walk_candidate.py'
+      - '.github/workflows/identity-locked-walk-review.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: identity-locked-walk-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  generate-four-review-candidates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install CPU-only deterministic geometry tooling
+        run: python -m pip install --disable-pip-version-check Pillow==11.3.0 numpy==2.3.3
+      - name: Test identity locks, reproducibility and output isolation
+        run: python -m unittest discover -s tools/sprites -p 'test_identity_locked_walk_candidate.py' -v
+      - name: Render the four canonical identities as review-only candidate sheets
+        run: |
+          for role in OP LOG ENG TECH; do
+            python tools/sprites/identity_locked_walk_candidate.py \
+              --role "$role" --out build/identity-locked-walk-review
+          done
+      - name: Enforce no visual approval and no canonical mutation
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('build/identity-locked-walk-review')
+          results=[json.loads(p.read_text()) for p in root.glob('*-review.json')]
+          assert len(results)==4
+          assert {x['asset_id'] for x in results}=={
+              'CHR-OP-WALK','CHR-LOG-WALK','CHR-ENG-WALK','CHR-TECH-WALK'}
+          for x in results:
+              assert x['strict_status']=='NEEDS_REVIEW'
+              assert x['semantic_review_pass'] is False
+              assert x['visual_review_pass'] is False
+              assert x['integrated_into_game'] is False
+              assert x['canonical_source_overwritten'] is False
+              assert x['visual_risk_screen']['risk_level']!='BLOCKING'
+          print('FOUR_REVIEW_CANDIDATES; NO_CANONICAL_PROMOTION')
+          PY
+          git diff --exit-code -- art/incoming/final-sprites/ app/src/main/res/
+      - name: Upload identity-locked alternatives for honest visual inspection
+        uses: actions/upload-artifact@v4
+        with:
+          name: identity-locked-walk-four-roles-NEEDS_REVIEW
+          path: build/identity-locked-walk-review/
+          retention-days: 30
