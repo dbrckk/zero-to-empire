@@ -58,7 +58,11 @@ def warp(anchor:Image.Image,t:float,amplitude:float=12)->Image.Image:
     upper=np.clip((yy-58)/60,0,1)*np.clip((155-yy)/43,0,1)
     outward=np.clip((np.abs(xx-128)-21)/16,0,1)
     arms=-4*math.sin(phase)*side*upper*outward
-    rgba=sample_premultiplied(array,xx-lateral-arms,yy+foot_lift)
+    # Second quadrature channel prevents duplicate poses at mirrored
+    # sine phases, without moving the planted boots or changing costume.
+    torso_breath=.85*math.cos(phase)*np.clip((182-yy)/88,0,1)
+    rgba=sample_premultiplied(array,xx-lateral-arms,
+                             yy+foot_lift+torso_breath)
     return Image.fromarray(rgba,'RGBA')
 
 
