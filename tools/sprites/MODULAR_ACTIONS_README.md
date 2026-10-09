@@ -206,3 +206,37 @@ candidats de revue. Cinq tests synthétiques vérifient aussi que des
 frames absentes/vides, coupées, dupliquées, une rupture de cycle et
 un faux statut visuellement approuvé sont rejetés. Tous les résultats
 restent `NEEDS_REVIEW` et ne modifient jamais la file stricte de 235 assets.
+
+
+## Audit temporel v2 — anti-scintillement et preuves liées aux pixels
+
+L'audit `temporal_sprite_audit.py` contrôle désormais la stabilité des couleurs
+en plus des silhouettes : pour chaque paire de frames adjacentes (y compris
+la transition dernière→première), il calcule une différence RGB médiane
+sur les pixels fortement opaques communs, après réduction à 96×96.
+Cette méthode reste insensible à l'essentiel des particules et halos transparents,
+tout en détectant une modification brutale du costume ou de la peau qui
+ne déplacerait aucun contour. Seuil conservateur : maximum de 42 unités
+RGB ou six fois la variation médiane plus 15. Ce seuil n'est **pas** une
+note de qualité artistique.
+
+L'outil peut aussi vérifier le SHA-256 du **fichier WebP réel** passé par
+`--skin tools/sprites/skin-tech-v1.webp`, au lieu de simplement comparer
+les déclarations des manifests. Chaque séquence est identifiée par
+`ordered_frame_digest_sha256`, calculé sur les pixels RGBA des frames
+dans l'ordre exact de lecture.
+
+Le packeur accepte `--temporal-report build/tech-temporal-review/temporal-qa.json`.
+Ce mode est **obligatoire dans GitHub Actions** : le packeur recalcule
+les signatures des sprites sources et rejette toute preuve temporelle
+ancienne, falsifiée ou associée à un autre jeu de frames. Le manifeste
+du pack final indique `temporal_evidence_verified=true` uniquement
+après cette vérification. L'appel sans rapport reste permis pour
+l'inspection locale, mais porte explicitement
+`temporal_evidence_verified=false`.
+
+Les tests de régression incluent une frame recolorée sans changement
+d'alpha et un atlas de skin modifié. Ces contrôles ne certifient ni la
+continuité du mouvement en situation réelle ni la validation humaine.
+`strict_status` reste `NEEDS_REVIEW`, avec
+`visual_review_pass=false` et `semantic_review_pass=false`.
