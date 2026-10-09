@@ -22,20 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T07:55:45Z
+Generated: 2026-10-09T09:01:37Z
 
 ### Git
 - Branch: `main`
-- Head: `4f157c466115`
-- Commit date: 2026-10-09T09:55:22+02:00
-- Commit: docs(art): explain automatic 96px temporal QA and strict human visual gate
+- Head: `a7ec927d3bde`
+- Commit date: 2026-10-09T11:00:51+02:00
+- Commit: ci(art): verify actual modular TECH skin SHA during motion audit
 - Tracked files: 1472
 
 ### Recently changed files
-- `tools/sprites/MODULAR_ACTIONS_README.md`
 - `.github/workflows/modular-tech-actions.yml`
 - `tools/sprites/test_temporal_sprite_audit.py`
 - `tools/sprites/temporal_sprite_audit.py`
+- `tools/sprites/MODULAR_ACTIONS_README.md`
 
 ### Project signals
 - `build.gradle.kts`

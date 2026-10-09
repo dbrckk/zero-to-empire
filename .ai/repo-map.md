@@ -3720,7 +3720,8 @@ jobs:
         run: |
           python tools/sprites/temporal_sprite_audit.py \
             --source build/tech-actions-v3 \
-            --output build/tech-temporal-review
+            --output build/tech-temporal-review \
+            --skin tools/sprites/skin-tech-v1.webp
       - name: Package game-scale RGBA atlases and playback manifest
         run: |
           python tools/sprites/package_tech_actions_runtime.py \
@@ -29820,30 +29821,45 @@ qa=manifest.get('qa',{})
 frames=[directory/'frames'/f'CHR-TECH-{action}-{i:02d}.png' for i in range(frames_expected)]
 extra=list((directory/'frames').glob('*.png'))
 ⋮----
-masks=[];areas=[];bbox=[];digests=[]
+masks=[];areas=[];bbox=[];digests=[];rgba_frames=[]
 ⋮----
 img=source.resize((SIDE,SIDE),Image.Resampling.LANCZOS)
-alpha=np.asarray(img.getchannel('A'))
+rgba=np.asarray(img.convert('RGBA'),dtype=np.uint8)
+alpha=rgba[:,:,3]
 original_bounds=source.getchannel('A').getbbox()
 ⋮----
 mask=alpha>=128
 ⋮----
 b=(int(xx.min()),int(yy.min()),int(xx.max()+1),int(yy.max()+1))
 ⋮----
-differences=[];area_jump=[]
+differences=[];area_jump=[];color_jumps=[]
 ⋮----
 j=(i+1)%frames_expected
 b=masks[j]
 union=int(np.count_nonzero(a|b))
 diff=float(np.count_nonzero(a^b)/union) if union else 1.0
 ⋮----
+# Robust chromatic continuity across the overlapping opaque interior.
+# This distinguishes a texture/color flash from legitimate pose motion,
+# and ignores detached transparent VFX/background pixels.
+stable=(rgba_frames[i][:,:,3]>=220)&(rgba_frames[j][:,:,3]>=220)
+⋮----
+rgb_a=rgba_frames[i][:,:,:3].astype(np.int16)
+rgb_b=rgba_frames[j][:,:,:3].astype(np.int16)
+changed=np.mean(np.abs(rgb_a-rgb_b),axis=2)[stable]
+⋮----
 median=statistics.median(differences)
 ⋮----
 seam_ratio=differences[-1]/median
 max_ratio=max(differences)/median
+color_baseline=statistics.median(color_jumps)
+max_color_jump=max(color_jumps)
+# Empirically calibrated on the six source clips at 96px; genuine
+# intentional tiny glow changes affect a minority of stable pixels.
+rgb_limit=max(42.,color_baseline*6.+15.)
 problems=[]
 ⋮----
-def audit(root:Path,output:Path)->dict
+def audit(root:Path,output:Path,skin:Path|None=None)->dict
 ⋮----
 index=json.loads((root/'production-index.json').read_text(encoding='utf-8'))
 ⋮----
@@ -29855,6 +29871,8 @@ m=json.loads((root/a/'qa-manifest.json').read_text())
 ⋮----
 results={a:inspect_clip(root,a,frames[a]) for a in ACTIONS}
 source_hashes={r['source_skin_sha256'] for r in results.values()}
+⋮----
+actual=hashlib.sha256(skin.read_bytes()).hexdigest()
 ⋮----
 report={'format':'zte-temporal-qa-v1','strict_status':'NEEDS_REVIEW',
 ⋮----
@@ -29878,7 +29896,7 @@ def main()
 parser=argparse.ArgumentParser(description=__doc__)
 ⋮----
 args=parser.parse_args()
-report=audit(args.source,args.output)
+report=audit(args.source,args.output,args.skin)
 ```
 
 ## File: tools/sprites/ter07_energy_conduit_candidate.py
@@ -30389,6 +30407,29 @@ def test_duplicate_content_is_rejected(self)
 original=(self.root/'IDLE/frames/CHR-TECH-IDLE-00.png').read_bytes()
 ⋮----
 def test_temporal_spike_and_bad_seam_are_rejected(self)
+⋮----
+def test_single_frame_color_flash_is_detected_even_with_same_alpha(self)
+⋮----
+path=self.root/'WORK/frames/CHR-TECH-WORK-09.png'
+⋮----
+rgba=image.convert('RGBA')
+⋮----
+# Deliberately invert garment and skin RGB without moving even
+# one silhouette/alpha pixel; geometry-only QA must not pass it.
+corrupted=Image.merge('RGBA',tuple(
+⋮----
+def test_optional_real_skin_digest_matches_output_provenance(self)
+⋮----
+source=Path(self.work.name)/'skin.webp'
+⋮----
+digest=hashlib.sha256(source.read_bytes()).hexdigest()
+index_path=self.root/'production-index.json'
+index=json.loads(index_path.read_text())
+⋮----
+path=self.root/action/'qa-manifest.json'
+data=json.loads(path.read_text())
+⋮----
+accepted=audit(self.root,Path(self.work.name)/'good',skin=source)
 ⋮----
 def test_review_and_identity_guards_are_enforced(self)
 ⋮----

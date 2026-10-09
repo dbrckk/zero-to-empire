@@ -4,5 +4,443 @@
   "scope": "symbols defined in changed source files",
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
-  "symbols": {}
+  "symbols": {
+    "inspect_clip": {
+      "source": {
+        "file": "tools/sprites/temporal_sprite_audit.py",
+        "start": 22,
+        "end": 116
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "audit": {
+      "source": {
+        "file": "tools/sprites/temporal_sprite_audit.py",
+        "start": 119,
+        "end": 175
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "inspect_clip",
+          "definitions": [
+            {
+              "file": "tools/sprites/temporal_sprite_audit.py",
+              "line": 22,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "main": {
+      "source": {
+        "file": "tools/sprites/temporal_sprite_audit.py",
+        "start": 178,
+        "end": 298
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "audit",
+          "definitions": [
+            {
+              "file": "tools/sprites/temporal_sprite_audit.py",
+              "line": 119,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "TemporalAuditTests": {
+      "source": {
+        "file": "tools/sprites/test_temporal_sprite_audit.py",
+        "start": 12,
+        "end": 128
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "audit",
+          "definitions": [
+            {
+              "file": "tools/sprites/temporal_sprite_audit.py",
+              "line": 119,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "inspect_clip",
+          "definitions": [
+            {
+              "file": "tools/sprites/temporal_sprite_audit.py",
+              "line": 22,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "save_frame",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_temporal_sprite_audit.py",
+              "line": 36,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "setUp",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_temporal_sprite_audit.py",
+              "line": 13,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "tearDown",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_temporal_sprite_audit.py",
+              "line": 33,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_duplicate_content_is_rejected",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_temporal_sprite_audit.py",
+              "line": 72,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_empty_and_clipped_frames_are_rejected",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_temporal_sprite_audit.py",
+              "line": 60,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_optional_real_skin_digest_matches_output_provenance",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_temporal_sprite_audit.py",
+              "line": 97,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_review_and_identity_guards_are_enforced",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_temporal_sprite_audit.py",
+              "line": 117,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_single_frame_color_flash_is_detected_even_with_same_alpha",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_temporal_sprite_audit.py",
+              "line": 84,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_six_valid_clips_export_review_only_evidence",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_temporal_sprite_audit.py",
+              "line": 50,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_temporal_spike_and_bad_seam_are_rejected",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_temporal_sprite_audit.py",
+              "line": 79,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 12
+    },
+    "setUp": {
+      "source": {
+        "file": "tools/sprites/test_temporal_sprite_audit.py",
+        "start": 13,
+        "end": 31
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "save_frame",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_temporal_sprite_audit.py",
+              "line": 36,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "tearDown": {
+      "source": {
+        "file": "tools/sprites/test_temporal_sprite_audit.py",
+        "start": 33,
+        "end": 34
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "save_frame": {
+      "source": {
+        "file": "tools/sprites/test_temporal_sprite_audit.py",
+        "start": 36,
+        "end": 48
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "test_six_valid_clips_export_review_only_evidence": {
+      "source": {
+        "file": "tools/sprites/test_temporal_sprite_audit.py",
+        "start": 50,
+        "end": 58
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "audit",
+          "definitions": [
+            {
+              "file": "tools/sprites/temporal_sprite_audit.py",
+              "line": 119,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_empty_and_clipped_frames_are_rejected": {
+      "source": {
+        "file": "tools/sprites/test_temporal_sprite_audit.py",
+        "start": 60,
+        "end": 70
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "inspect_clip",
+          "definitions": [
+            {
+              "file": "tools/sprites/temporal_sprite_audit.py",
+              "line": 22,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "save_frame",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_temporal_sprite_audit.py",
+              "line": 36,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_duplicate_content_is_rejected": {
+      "source": {
+        "file": "tools/sprites/test_temporal_sprite_audit.py",
+        "start": 72,
+        "end": 77
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "inspect_clip",
+          "definitions": [
+            {
+              "file": "tools/sprites/temporal_sprite_audit.py",
+              "line": 22,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_temporal_spike_and_bad_seam_are_rejected": {
+      "source": {
+        "file": "tools/sprites/test_temporal_sprite_audit.py",
+        "start": 79,
+        "end": 82
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "inspect_clip",
+          "definitions": [
+            {
+              "file": "tools/sprites/temporal_sprite_audit.py",
+              "line": 22,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "save_frame",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_temporal_sprite_audit.py",
+              "line": 36,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_single_frame_color_flash_is_detected_even_with_same_alpha": {
+      "source": {
+        "file": "tools/sprites/test_temporal_sprite_audit.py",
+        "start": 84,
+        "end": 95
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "inspect_clip",
+          "definitions": [
+            {
+              "file": "tools/sprites/temporal_sprite_audit.py",
+              "line": 22,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_optional_real_skin_digest_matches_output_provenance": {
+      "source": {
+        "file": "tools/sprites/test_temporal_sprite_audit.py",
+        "start": 97,
+        "end": 115
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "audit",
+          "definitions": [
+            {
+              "file": "tools/sprites/temporal_sprite_audit.py",
+              "line": 119,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_review_and_identity_guards_are_enforced": {
+      "source": {
+        "file": "tools/sprites/test_temporal_sprite_audit.py",
+        "start": 117,
+        "end": 128
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "audit",
+          "definitions": [
+            {
+              "file": "tools/sprites/temporal_sprite_audit.py",
+              "line": 119,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "inspect_clip",
+          "definitions": [
+            {
+              "file": "tools/sprites/temporal_sprite_audit.py",
+              "line": 22,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    }
+  }
 }
