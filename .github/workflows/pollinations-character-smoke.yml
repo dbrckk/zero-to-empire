@@ -49,22 +49,22 @@ jobs:
           python -m pip install Pillow==11.3.0
           python -m unittest discover -s tools/sprites -p 'test_pollinations_character_sheet_factory.py' -v
       - name: Cache rembg U2Net model
-        if: steps.gate.outputs.pending == 'true'
+        if: github.event_name == 'workflow_dispatch' && steps.gate.outputs.pending == 'true'
         uses: actions/cache@v4
         with:
           path: ~/.u2net
           key: rembg-u2net-v0.0.0
 
       - name: Install image tooling
-        if: steps.gate.outputs.pending == 'true'
+        if: github.event_name == 'workflow_dispatch' && steps.gate.outputs.pending == 'true'
         run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0' 'rembg[cpu]>=2.0.68,<3'
 
       - name: Generate one controlled full-body candidate
-        if: steps.gate.outputs.pending == 'true'
+        if: github.event_name == 'workflow_dispatch' && steps.gate.outputs.pending == 'true'
         run: python -u tools/sprites/pollinations_character_sheet_factory.py
 
       - name: Resolve candidate
-        if: steps.gate.outputs.pending == 'true'
+        if: github.event_name == 'workflow_dispatch' && steps.gate.outputs.pending == 'true'
         id: target
         shell: bash
         run: |
@@ -77,16 +77,18 @@ jobs:
           if not candidates:
               raise SystemExit('Pollinations smoke produced no candidate: '+json.dumps(rows))
           d=candidates[0]
-          p=Path('art/incoming/final-sprites') / d['file']
+          p=Path(d.get('candidate_path') or
+                 (Path('art/incoming/final-sprites') / d['file']))
           if not p.is_file():
               raise SystemExit(f'missing generated candidate: {p}')
           print(f"asset_id={d['id']}")
           print(f"file={p}")
           print(f"stem={p.stem}")
+          print(f"staged={str(d.get('staged_for_manual_review',False)).lower()}")
           PY
 
       - name: Strict atlas QA
-        if: steps.gate.outputs.pending == 'true'
+        if: github.event_name == 'workflow_dispatch' && steps.gate.outputs.pending == 'true'
         run: |
           python tools/sprites/build_sprite_contact_sheet.py             --files '${{ steps.target.outputs.file }}'             --output art/production/pollinations-character-smoke-contact.png             --report art/production/pollinations-character-smoke-qa.json
           python - <<'PY'
@@ -98,7 +100,8 @@ jobs:
           PY
 
       - name: Finalize and revalidate runtime
-        if: steps.gate.outputs.pending == 'true'
+        # Reserved repairs are only staged candidates, never runtime-ready assets.
+        if: github.event_name == 'workflow_dispatch' && steps.gate.outputs.pending == 'true' && steps.target.outputs.staged != 'true'
         shell: bash
         run: |
           SPRITE_TARGETS='${{ steps.target.outputs.stem }}' python tools/sprites/process_final_sprites.py
@@ -114,5 +117,6 @@ jobs:
             app/src/main/res/drawable-nodpi/zte_chr_*_final.webp
             art/production/pollinations-character-*.json
             art/production/pollinations-character-*.png
+            art/production/character-repair-candidates/zte_chr_*_final.png
           if-no-files-found: warn
           retention-days: 7
