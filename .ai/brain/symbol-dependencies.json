@@ -5,115 +5,19 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "opaque_palette_signature": {
+    "WeightTransferTests": {
       "source": {
-        "file": "tools/sprites/temporal_sprite_audit.py",
-        "start": 23,
-        "end": 35
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "opaque_palette_distance": {
-      "source": {
-        "file": "tools/sprites/temporal_sprite_audit.py",
-        "start": 38,
-        "end": 40
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "inspect_clip": {
-      "source": {
-        "file": "tools/sprites/temporal_sprite_audit.py",
-        "start": 43,
-        "end": 148
+        "file": "tools/sprites/test_weight_transfer.py",
+        "start": 10,
+        "end": 75
       },
       "symbol_dependencies": [
         {
-          "symbol": "opaque_palette_distance",
+          "symbol": "pose",
           "definitions": [
             {
-              "file": "tools/sprites/temporal_sprite_audit.py",
-              "line": 38,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "opaque_palette_signature",
-          "definitions": [
-            {
-              "file": "tools/sprites/temporal_sprite_audit.py",
-              "line": 23,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "audit": {
-      "source": {
-        "file": "tools/sprites/temporal_sprite_audit.py",
-        "start": 151,
-        "end": 207
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "inspect_clip",
-          "definitions": [
-            {
-              "file": "tools/sprites/temporal_sprite_audit.py",
-              "line": 43,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "main": {
-      "source": {
-        "file": "tools/sprites/temporal_sprite_audit.py",
-        "start": 210,
-        "end": 330
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "audit",
-          "definitions": [
-            {
-              "file": "tools/sprites/temporal_sprite_audit.py",
-              "line": 151,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "TemporalAuditTests": {
-      "source": {
-        "file": "tools/sprites/test_temporal_sprite_audit.py",
-        "start": 12,
-        "end": 152
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "audit",
-          "definitions": [
-            {
-              "file": "tools/sprites/temporal_sprite_audit.py",
-              "line": 151,
+              "file": "tools/sprites/rigged_tech_walk_v2.py",
+              "line": 51,
               "kind": "function",
               "language": "python"
             }
@@ -121,11 +25,11 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "inspect_clip",
+          "symbol": "pose_for",
           "definitions": [
             {
-              "file": "tools/sprites/temporal_sprite_audit.py",
-              "line": 43,
+              "file": "tools/sprites/rigged_tech_actions_v3.py",
+              "line": 49,
               "kind": "function",
               "language": "python"
             }
@@ -133,11 +37,35 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "save_frame",
+          "symbol": "stance_load",
           "definitions": [
             {
-              "file": "tools/sprites/test_temporal_sprite_audit.py",
-              "line": 36,
+              "file": "tools/sprites/weight_transfer.py",
+              "line": 15,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "support_bias",
+          "definitions": [
+            {
+              "file": "tools/sprites/weight_transfer.py",
+              "line": 25,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "test_deterministic_and_no_source_mutation",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_weight_transfer.py",
+              "line": 67,
               "kind": "function",
               "language": "python"
             }
@@ -145,11 +73,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "setUp",
+          "symbol": "test_foot_targets_and_grips_unchanged",
           "definitions": [
             {
-              "file": "tools/sprites/test_temporal_sprite_audit.py",
-              "line": 13,
+              "file": "tools/sprites/test_weight_transfer.py",
+              "line": 20,
               "kind": "function",
               "language": "python"
             }
@@ -157,191 +85,57 @@
           "relation": "same_file"
         },
         {
-          "symbol": "tearDown",
+          "symbol": "test_load_is_smooth_periodic_and_bounded",
           "definitions": [
             {
-              "file": "tools/sprites/test_temporal_sprite_audit.py",
+              "file": "tools/sprites/test_weight_transfer.py",
+              "line": 11,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_wrist_reach_and_cyclic_shift",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_weight_transfer.py",
+              "line": 51,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "transfer_pose",
+          "definitions": [
+            {
+              "file": "tools/sprites/weight_transfer.py",
               "line": 33,
               "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_duplicate_content_is_rejected",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_temporal_sprite_audit.py",
-              "line": 81,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_empty_and_clipped_frames_are_rejected",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_temporal_sprite_audit.py",
-              "line": 69,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_optional_real_skin_digest_matches_output_provenance",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_temporal_sprite_audit.py",
-              "line": 121,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_partial_costume_recolor_is_caught_even_when_rgb_median_is_zero",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_temporal_sprite_audit.py",
-              "line": 106,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_review_and_identity_guards_are_enforced",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_temporal_sprite_audit.py",
-              "line": 141,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_single_frame_color_flash_is_detected_even_with_same_alpha",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_temporal_sprite_audit.py",
-              "line": 93,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_six_valid_clips_export_review_only_evidence",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_temporal_sprite_audit.py",
-              "line": 50,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_temporal_spike_and_bad_seam_are_rejected",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_temporal_sprite_audit.py",
-              "line": 88,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 13
-    },
-    "setUp": {
-      "source": {
-        "file": "tools/sprites/test_temporal_sprite_audit.py",
-        "start": 13,
-        "end": 31
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "save_frame",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_temporal_sprite_audit.py",
-              "line": 36,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "tearDown": {
-      "source": {
-        "file": "tools/sprites/test_temporal_sprite_audit.py",
-        "start": 33,
-        "end": 34
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "save_frame": {
-      "source": {
-        "file": "tools/sprites/test_temporal_sprite_audit.py",
-        "start": 36,
-        "end": 48
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "test_six_valid_clips_export_review_only_evidence": {
-      "source": {
-        "file": "tools/sprites/test_temporal_sprite_audit.py",
-        "start": 50,
-        "end": 67
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "audit",
-          "definitions": [
-            {
-              "file": "tools/sprites/temporal_sprite_audit.py",
-              "line": 151,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
           "relation": "imported_module"
         }
       ],
-      "dependency_count": 1
+      "dependency_count": 9
     },
-    "test_empty_and_clipped_frames_are_rejected": {
+    "test_load_is_smooth_periodic_and_bounded": {
       "source": {
-        "file": "tools/sprites/test_temporal_sprite_audit.py",
-        "start": 69,
-        "end": 79
+        "file": "tools/sprites/test_weight_transfer.py",
+        "start": 11,
+        "end": 18
       },
       "symbol_dependencies": [
         {
-          "symbol": "inspect_clip",
+          "symbol": "stance_load",
           "definitions": [
             {
-              "file": "tools/sprites/temporal_sprite_audit.py",
-              "line": 43,
+              "file": "tools/sprites/weight_transfer.py",
+              "line": 15,
               "kind": "function",
               "language": "python"
             }
@@ -349,55 +143,33 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "save_frame",
+          "symbol": "support_bias",
           "definitions": [
             {
-              "file": "tools/sprites/test_temporal_sprite_audit.py",
-              "line": 36,
+              "file": "tools/sprites/weight_transfer.py",
+              "line": 25,
               "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "same_file"
+          "relation": "imported_module"
         }
       ],
       "dependency_count": 2
     },
-    "test_duplicate_content_is_rejected": {
+    "test_foot_targets_and_grips_unchanged": {
       "source": {
-        "file": "tools/sprites/test_temporal_sprite_audit.py",
-        "start": 81,
-        "end": 86
+        "file": "tools/sprites/test_weight_transfer.py",
+        "start": 20,
+        "end": 49
       },
       "symbol_dependencies": [
         {
-          "symbol": "inspect_clip",
+          "symbol": "pose",
           "definitions": [
             {
-              "file": "tools/sprites/temporal_sprite_audit.py",
-              "line": 43,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "test_temporal_spike_and_bad_seam_are_rejected": {
-      "source": {
-        "file": "tools/sprites/test_temporal_sprite_audit.py",
-        "start": 88,
-        "end": 91
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "inspect_clip",
-          "definitions": [
-            {
-              "file": "tools/sprites/temporal_sprite_audit.py",
-              "line": 43,
+              "file": "tools/sprites/rigged_tech_walk_v2.py",
+              "line": 51,
               "kind": "function",
               "language": "python"
             }
@@ -405,33 +177,33 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "save_frame",
+          "symbol": "pose_for",
           "definitions": [
             {
-              "file": "tools/sprites/test_temporal_sprite_audit.py",
-              "line": 36,
+              "file": "tools/sprites/rigged_tech_actions_v3.py",
+              "line": 49,
               "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "same_file"
+          "relation": "imported_module"
         }
       ],
       "dependency_count": 2
     },
-    "test_single_frame_color_flash_is_detected_even_with_same_alpha": {
+    "test_wrist_reach_and_cyclic_shift": {
       "source": {
-        "file": "tools/sprites/test_temporal_sprite_audit.py",
-        "start": 93,
-        "end": 104
+        "file": "tools/sprites/test_weight_transfer.py",
+        "start": 51,
+        "end": 65
       },
       "symbol_dependencies": [
         {
-          "symbol": "inspect_clip",
+          "symbol": "pose_for",
           "definitions": [
             {
-              "file": "tools/sprites/temporal_sprite_audit.py",
-              "line": 43,
+              "file": "tools/sprites/rigged_tech_actions_v3.py",
+              "line": 49,
               "kind": "function",
               "language": "python"
             }
@@ -441,63 +213,19 @@
       ],
       "dependency_count": 1
     },
-    "test_partial_costume_recolor_is_caught_even_when_rgb_median_is_zero": {
+    "test_deterministic_and_no_source_mutation": {
       "source": {
-        "file": "tools/sprites/test_temporal_sprite_audit.py",
-        "start": 106,
-        "end": 119
+        "file": "tools/sprites/test_weight_transfer.py",
+        "start": 67,
+        "end": 75
       },
       "symbol_dependencies": [
         {
-          "symbol": "inspect_clip",
+          "symbol": "pose",
           "definitions": [
             {
-              "file": "tools/sprites/temporal_sprite_audit.py",
-              "line": 43,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "test_optional_real_skin_digest_matches_output_provenance": {
-      "source": {
-        "file": "tools/sprites/test_temporal_sprite_audit.py",
-        "start": 121,
-        "end": 139
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "audit",
-          "definitions": [
-            {
-              "file": "tools/sprites/temporal_sprite_audit.py",
-              "line": 151,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "test_review_and_identity_guards_are_enforced": {
-      "source": {
-        "file": "tools/sprites/test_temporal_sprite_audit.py",
-        "start": 141,
-        "end": 152
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "audit",
-          "definitions": [
-            {
-              "file": "tools/sprites/temporal_sprite_audit.py",
-              "line": 151,
+              "file": "tools/sprites/rigged_tech_walk_v2.py",
+              "line": 51,
               "kind": "function",
               "language": "python"
             }
@@ -505,11 +233,11 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "inspect_clip",
+          "symbol": "transfer_pose",
           "definitions": [
             {
-              "file": "tools/sprites/temporal_sprite_audit.py",
-              "line": 43,
+              "file": "tools/sprites/weight_transfer.py",
+              "line": 33,
               "kind": "function",
               "language": "python"
             }

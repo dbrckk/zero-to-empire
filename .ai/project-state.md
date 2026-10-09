@@ -22,20 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T09:23:34Z
+Generated: 2026-10-09T09:24:44Z
 
 ### Git
 - Branch: `main`
-- Head: `fa260735833f`
-- Commit date: 2026-10-09T11:23:02+02:00
-- Commit: test(art): detect recolored garment sections invisible to median RGB QA
+- Head: `66c81b37a855`
+- Commit date: 2026-10-09T11:24:28+02:00
+- Commit: fix(test): compare CARRY hands to cargo grips instead of WALK arm swing
 - Tracked files: 1472
 
 ### Recently changed files
+- `tools/sprites/test_weight_transfer.py`
 - `tools/sprites/test_temporal_sprite_audit.py`
 - `tools/sprites/temporal_sprite_audit.py`
 - `tools/sprites/MODULAR_ACTIONS_README.md`
-- `tools/sprites/test_package_tech_actions_runtime.py`
 
 ### Project signals
 - `build.gradle.kts`

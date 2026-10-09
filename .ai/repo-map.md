@@ -30505,6 +30505,12 @@ t=i/384
 old=core.pose(t)
 new=pose_for(t,action)
 ⋮----
+# Walking wrists preserve their original relative gait
+# swing as the root receives its stance-driven offset.
+⋮----
+# CARRY intentionally overrides the walking arm swing:
+# compare grips to the transported load, NOT old WALK arms.
+⋮----
 hip=(new['root'][0]+offset,new['root'][1])
 ⋮----
 def test_wrist_reach_and_cyclic_shift(self)
