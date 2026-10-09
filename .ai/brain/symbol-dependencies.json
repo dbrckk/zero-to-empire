@@ -5,55 +5,43 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "sha": {
+    "TemporalAuditTests": {
       "source": {
-        "file": "tools/sprites/package_tech_actions_runtime.py",
-        "start": 20,
-        "end": 21
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "ensure": {
-      "source": {
-        "file": "tools/sprites/package_tech_actions_runtime.py",
-        "start": 24,
-        "end": 25
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "verify": {
-      "source": {
-        "file": "tools/sprites/package_tech_actions_runtime.py",
-        "start": 28,
-        "end": 108
+        "file": "tools/sprites/test_temporal_sprite_audit.py",
+        "start": 12,
+        "end": 134
       },
       "symbol_dependencies": [
         {
-          "symbol": "Failed",
+          "symbol": "audit",
           "definitions": [
             {
-              "file": "app/src/main/java/com/zerotoempire/game/Monetization.kt",
-              "line": 54,
-              "kind": "class",
-              "language": "kotlin"
-            },
-            {
-              "file": "app/src/main/java/com/zerotoempire/game/Monetization.kt",
-              "line": 65,
-              "kind": "class",
-              "language": "kotlin"
+              "file": "tools/sprites/temporal_sprite_audit.py",
+              "line": 121,
+              "kind": "function",
+              "language": "python"
             }
           ],
-          "relation": "class_like"
+          "relation": "imported_module"
         },
         {
-          "symbol": "ensure",
+          "symbol": "inspect_clip",
           "definitions": [
             {
-              "file": "tools/sprites/package_tech_actions_runtime.py",
-              "line": 24,
+              "file": "tools/sprites/temporal_sprite_audit.py",
+              "line": 22,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "save_frame",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_temporal_sprite_audit.py",
+              "line": 36,
               "kind": "function",
               "language": "python"
             }
@@ -61,72 +49,129 @@
           "relation": "same_file"
         },
         {
-          "symbol": "repair_spark_intensity",
+          "symbol": "setUp",
           "definitions": [
             {
-              "file": "tools/sprites/action_contact.py",
-              "line": 73,
+              "file": "tools/sprites/test_temporal_sprite_audit.py",
+              "line": 13,
               "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "imported_module"
+          "relation": "same_file"
         },
         {
-          "symbol": "work_event_indices",
+          "symbol": "tearDown",
           "definitions": [
             {
-              "file": "tools/sprites/action_contact.py",
-              "line": 43,
+              "file": "tools/sprites/test_temporal_sprite_audit.py",
+              "line": 33,
               "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "imported_module"
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_duplicate_content_is_rejected",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_temporal_sprite_audit.py",
+              "line": 78,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_empty_and_clipped_frames_are_rejected",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_temporal_sprite_audit.py",
+              "line": 66,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_optional_real_skin_digest_matches_output_provenance",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_temporal_sprite_audit.py",
+              "line": 103,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_review_and_identity_guards_are_enforced",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_temporal_sprite_audit.py",
+              "line": 123,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_single_frame_color_flash_is_detected_even_with_same_alpha",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_temporal_sprite_audit.py",
+              "line": 90,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_six_valid_clips_export_review_only_evidence",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_temporal_sprite_audit.py",
+              "line": 50,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_temporal_spike_and_bad_seam_are_rejected",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_temporal_sprite_audit.py",
+              "line": 85,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
         }
       ],
-      "dependency_count": 4
+      "dependency_count": 12
     },
-    "review_html": {
+    "setUp": {
       "source": {
-        "file": "tools/sprites/package_tech_actions_runtime.py",
-        "start": 111,
-        "end": 161
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "render_contact_shadow": {
-      "source": {
-        "file": "tools/sprites/package_tech_actions_runtime.py",
-        "start": 164,
-        "end": 177
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "game_scale_metrics": {
-      "source": {
-        "file": "tools/sprites/package_tech_actions_runtime.py",
-        "start": 181,
-        "end": 196
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "verify_temporal_evidence": {
-      "source": {
-        "file": "tools/sprites/package_tech_actions_runtime.py",
-        "start": 199,
-        "end": 231
+        "file": "tools/sprites/test_temporal_sprite_audit.py",
+        "start": 13,
+        "end": 31
       },
       "symbol_dependencies": [
         {
-          "symbol": "ensure",
+          "symbol": "save_frame",
           "definitions": [
             {
-              "file": "tools/sprites/package_tech_actions_runtime.py",
-              "line": 24,
+              "file": "tools/sprites/test_temporal_sprite_audit.py",
+              "line": 36,
               "kind": "function",
               "language": "python"
             }
@@ -136,136 +181,51 @@
       ],
       "dependency_count": 1
     },
-    "package": {
+    "tearDown": {
       "source": {
-        "file": "tools/sprites/package_tech_actions_runtime.py",
-        "start": 234,
-        "end": 321
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "ensure",
-          "definitions": [
-            {
-              "file": "tools/sprites/package_tech_actions_runtime.py",
-              "line": 24,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "game_scale_metrics",
-          "definitions": [
-            {
-              "file": "tools/sprites/package_tech_actions_runtime.py",
-              "line": 181,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "render_contact_shadow",
-          "definitions": [
-            {
-              "file": "tools/sprites/package_tech_actions_runtime.py",
-              "line": 164,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "review_html",
-          "definitions": [
-            {
-              "file": "tools/sprites/package_tech_actions_runtime.py",
-              "line": 111,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "sha",
-          "definitions": [
-            {
-              "file": "tools/sprites/package_tech_actions_runtime.py",
-              "line": 20,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "verify",
-          "definitions": [
-            {
-              "file": "tools/sprites/package_tech_actions_runtime.py",
-              "line": 28,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "verify_temporal_evidence",
-          "definitions": [
-            {
-              "file": "tools/sprites/package_tech_actions_runtime.py",
-              "line": 199,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 7
-    },
-    "main": {
-      "source": {
-        "file": "tools/sprites/package_tech_actions_runtime.py",
-        "start": 324,
-        "end": 444
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "package",
-          "definitions": [
-            {
-              "file": "tools/sprites/package_tech_actions_runtime.py",
-              "line": 234,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "inspect_clip": {
-      "source": {
-        "file": "tools/sprites/temporal_sprite_audit.py",
-        "start": 22,
-        "end": 118
+        "file": "tools/sprites/test_temporal_sprite_audit.py",
+        "start": 33,
+        "end": 34
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "audit": {
+    "save_frame": {
       "source": {
-        "file": "tools/sprites/temporal_sprite_audit.py",
-        "start": 121,
-        "end": 177
+        "file": "tools/sprites/test_temporal_sprite_audit.py",
+        "start": 36,
+        "end": 48
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "test_six_valid_clips_export_review_only_evidence": {
+      "source": {
+        "file": "tools/sprites/test_temporal_sprite_audit.py",
+        "start": 50,
+        "end": 64
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "audit",
+          "definitions": [
+            {
+              "file": "tools/sprites/temporal_sprite_audit.py",
+              "line": 121,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_empty_and_clipped_frames_are_rejected": {
+      "source": {
+        "file": "tools/sprites/test_temporal_sprite_audit.py",
+        "start": 66,
+        "end": 76
       },
       "symbol_dependencies": [
         {
@@ -278,204 +238,58 @@
               "language": "python"
             }
           ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "save_frame",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_temporal_sprite_audit.py",
+              "line": 36,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
           "relation": "same_file"
         }
       ],
-      "dependency_count": 1
+      "dependency_count": 2
     },
-    "RuntimePackTests": {
+    "test_duplicate_content_is_rejected": {
       "source": {
-        "file": "tools/sprites/test_package_tech_actions_runtime.py",
-        "start": 18,
-        "end": 226
+        "file": "tools/sprites/test_temporal_sprite_audit.py",
+        "start": 78,
+        "end": 83
       },
       "symbol_dependencies": [
         {
-          "symbol": "audit",
+          "symbol": "inspect_clip",
           "definitions": [
             {
               "file": "tools/sprites/temporal_sprite_audit.py",
-              "line": 121,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "game_scale_metrics",
-          "definitions": [
-            {
-              "file": "tools/sprites/package_tech_actions_runtime.py",
-              "line": 181,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "package",
-          "definitions": [
-            {
-              "file": "tools/sprites/package_tech_actions_runtime.py",
-              "line": 234,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "setUp",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_package_tech_actions_runtime.py",
-              "line": 19,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_game_scale_check_rejects_clipped_or_empty_frames",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_package_tech_actions_runtime.py",
-              "line": 87,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_refuse_desynchronized_visual_events",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_package_tech_actions_runtime.py",
-              "line": 127,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_reject_approved_or_corrupted_index",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_package_tech_actions_runtime.py",
-              "line": 104,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_reject_falsely_approved_visual_qa",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_package_tech_actions_runtime.py",
-              "line": 213,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_reject_mismatched_phase_and_transfer_provenance",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_package_tech_actions_runtime.py",
-              "line": 165,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_reject_mismatched_work_and_repair_contacts",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_package_tech_actions_runtime.py",
-              "line": 149,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_reject_missing_fabric_renderer_provenance",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_package_tech_actions_runtime.py",
-              "line": 183,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_reject_missing_review_marker",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_package_tech_actions_runtime.py",
-              "line": 113,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_reject_soft_deformation_disabled_in_manifest",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_package_tech_actions_runtime.py",
-              "line": 198,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_six_atlases_keep_the_review_gate",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_package_tech_actions_runtime.py",
               "line": 22,
               "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "same_file"
-        },
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_temporal_spike_and_bad_seam_are_rejected": {
+      "source": {
+        "file": "tools/sprites/test_temporal_sprite_audit.py",
+        "start": 85,
+        "end": 88
+      },
+      "symbol_dependencies": [
         {
-          "symbol": "test_source_contract_has_shared_skin_and_event_timeline",
+          "symbol": "inspect_clip",
           "definitions": [
             {
-              "file": "tools/sprites/test_package_tech_actions_runtime.py",
-              "line": 97,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "verify",
-          "definitions": [
-            {
-              "file": "tools/sprites/package_tech_actions_runtime.py",
-              "line": 28,
+              "file": "tools/sprites/temporal_sprite_audit.py",
+              "line": 22,
               "kind": "function",
               "language": "python"
             }
@@ -483,11 +297,33 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "verify_temporal_evidence",
+          "symbol": "save_frame",
           "definitions": [
             {
-              "file": "tools/sprites/package_tech_actions_runtime.py",
-              "line": 199,
+              "file": "tools/sprites/test_temporal_sprite_audit.py",
+              "line": 36,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_single_frame_color_flash_is_detected_even_with_same_alpha": {
+      "source": {
+        "file": "tools/sprites/test_temporal_sprite_audit.py",
+        "start": 90,
+        "end": 101
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "inspect_clip",
+          "definitions": [
+            {
+              "file": "tools/sprites/temporal_sprite_audit.py",
+              "line": 22,
               "kind": "function",
               "language": "python"
             }
@@ -495,22 +331,35 @@
           "relation": "imported_module"
         }
       ],
-      "dependency_count": 17
+      "dependency_count": 1
     },
-    "setUp": {
+    "test_optional_real_skin_digest_matches_output_provenance": {
       "source": {
-        "file": "tools/sprites/test_package_tech_actions_runtime.py",
-        "start": 19,
-        "end": 20
+        "file": "tools/sprites/test_temporal_sprite_audit.py",
+        "start": 103,
+        "end": 121
       },
-      "symbol_dependencies": [],
-      "dependency_count": 0
+      "symbol_dependencies": [
+        {
+          "symbol": "audit",
+          "definitions": [
+            {
+              "file": "tools/sprites/temporal_sprite_audit.py",
+              "line": 121,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
     },
-    "test_six_atlases_keep_the_review_gate": {
+    "test_review_and_identity_guards_are_enforced": {
       "source": {
-        "file": "tools/sprites/test_package_tech_actions_runtime.py",
-        "start": 22,
-        "end": 85
+        "file": "tools/sprites/test_temporal_sprite_audit.py",
+        "start": 123,
+        "end": 134
       },
       "symbol_dependencies": [
         {
@@ -526,35 +375,11 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "package",
+          "symbol": "inspect_clip",
           "definitions": [
             {
-              "file": "tools/sprites/package_tech_actions_runtime.py",
-              "line": 234,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "verify",
-          "definitions": [
-            {
-              "file": "tools/sprites/package_tech_actions_runtime.py",
-              "line": 28,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "verify_temporal_evidence",
-          "definitions": [
-            {
-              "file": "tools/sprites/package_tech_actions_runtime.py",
-              "line": 199,
+              "file": "tools/sprites/temporal_sprite_audit.py",
+              "line": 22,
               "kind": "function",
               "language": "python"
             }
@@ -562,227 +387,7 @@
           "relation": "imported_module"
         }
       ],
-      "dependency_count": 4
-    },
-    "test_game_scale_check_rejects_clipped_or_empty_frames": {
-      "source": {
-        "file": "tools/sprites/test_package_tech_actions_runtime.py",
-        "start": 87,
-        "end": 95
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "game_scale_metrics",
-          "definitions": [
-            {
-              "file": "tools/sprites/package_tech_actions_runtime.py",
-              "line": 181,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "test_source_contract_has_shared_skin_and_event_timeline": {
-      "source": {
-        "file": "tools/sprites/test_package_tech_actions_runtime.py",
-        "start": 97,
-        "end": 102
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "verify",
-          "definitions": [
-            {
-              "file": "tools/sprites/package_tech_actions_runtime.py",
-              "line": 28,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "test_reject_approved_or_corrupted_index": {
-      "source": {
-        "file": "tools/sprites/test_package_tech_actions_runtime.py",
-        "start": 104,
-        "end": 111
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "verify",
-          "definitions": [
-            {
-              "file": "tools/sprites/package_tech_actions_runtime.py",
-              "line": 28,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "test_reject_missing_review_marker": {
-      "source": {
-        "file": "tools/sprites/test_package_tech_actions_runtime.py",
-        "start": 113,
-        "end": 125
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "verify",
-          "definitions": [
-            {
-              "file": "tools/sprites/package_tech_actions_runtime.py",
-              "line": 28,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "test_refuse_desynchronized_visual_events": {
-      "source": {
-        "file": "tools/sprites/test_package_tech_actions_runtime.py",
-        "start": 127,
-        "end": 147
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "verify",
-          "definitions": [
-            {
-              "file": "tools/sprites/package_tech_actions_runtime.py",
-              "line": 28,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "test_reject_mismatched_work_and_repair_contacts": {
-      "source": {
-        "file": "tools/sprites/test_package_tech_actions_runtime.py",
-        "start": 149,
-        "end": 163
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "verify",
-          "definitions": [
-            {
-              "file": "tools/sprites/package_tech_actions_runtime.py",
-              "line": 28,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "test_reject_mismatched_phase_and_transfer_provenance": {
-      "source": {
-        "file": "tools/sprites/test_package_tech_actions_runtime.py",
-        "start": 165,
-        "end": 181
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "verify",
-          "definitions": [
-            {
-              "file": "tools/sprites/package_tech_actions_runtime.py",
-              "line": 28,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "test_reject_missing_fabric_renderer_provenance": {
-      "source": {
-        "file": "tools/sprites/test_package_tech_actions_runtime.py",
-        "start": 183,
-        "end": 196
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "verify",
-          "definitions": [
-            {
-              "file": "tools/sprites/package_tech_actions_runtime.py",
-              "line": 28,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "test_reject_soft_deformation_disabled_in_manifest": {
-      "source": {
-        "file": "tools/sprites/test_package_tech_actions_runtime.py",
-        "start": 198,
-        "end": 211
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "verify",
-          "definitions": [
-            {
-              "file": "tools/sprites/package_tech_actions_runtime.py",
-              "line": 28,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "test_reject_falsely_approved_visual_qa": {
-      "source": {
-        "file": "tools/sprites/test_package_tech_actions_runtime.py",
-        "start": 213,
-        "end": 226
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "verify",
-          "definitions": [
-            {
-              "file": "tools/sprites/package_tech_actions_runtime.py",
-              "line": 28,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
+      "dependency_count": 2
     }
   }
 }

@@ -22,20 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T09:05:10Z
+Generated: 2026-10-09T09:07:13Z
 
 ### Git
 - Branch: `main`
-- Head: `8bb89ab9a164`
-- Commit date: 2026-10-09T11:04:52+02:00
-- Commit: test(art): reject stale temporal reports before six TECH atlas publication
+- Head: `5497d5105682`
+- Commit date: 2026-10-09T11:06:59+02:00
+- Commit: docs(art): document RGB flicker QA and frame-bound evidence requirements
 - Tracked files: 1472
 
 ### Recently changed files
+- `tools/sprites/MODULAR_ACTIONS_README.md`
+- `tools/sprites/test_temporal_sprite_audit.py`
 - `tools/sprites/test_package_tech_actions_runtime.py`
 - `.github/workflows/modular-tech-actions.yml`
 - `tools/sprites/package_tech_actions_runtime.py`
-- `tools/sprites/temporal_sprite_audit.py`
 
 ### Project signals
 - `build.gradle.kts`
