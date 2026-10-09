@@ -9,6 +9,9 @@ MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
 INCOMING=ROOT/'art/incoming/final-sprites'
 OUT=ROOT/'art/production'
 QUEUE=OUT/'controlled-character-regen-queue.json'
+# Each generation strategy owns its own cache: never reuse pre-v3 body
+# fragments/identity-drifts as successful images of a different strategy.
+STANDALONE_CACHE_EPOCH='full-body-per-frame-v3'
 
 ROLES={
 'OP':'foundry operator, dark graphite workwear, rust-orange utility accents, gloves, compact hard-hat',
@@ -117,6 +120,32 @@ def validate_source_full_body(bb,w,h,action=None,standalone=False):
         raise RuntimeError('not full body: silhouette too wide')
     return True
 
+def safe_source_margin(image):
+    """Pad an *already complete* source, never hallucinate missing body parts.
+
+    A fully isolated sprite may have only 8px of empty source margin,
+    though both feet are visibly present. Reframe its existing pixels on
+    transparent space before imposing conservative full-body constraints.
+    If ANY actual alpha touches an edge, fail instead of hiding truncation.
+    """
+    if image.mode!='RGBA':
+        raise ValueError('Expected RGBA source')
+    w,h=image.size
+    bb=image.getchannel('A').getbbox()
+    if not bb:
+        raise RuntimeError('empty')
+    l,t,r,b=bb
+    if min(l,t,w-r,h-b)<4:
+        raise RuntimeError('cropped full-body source touches edge')
+    soft=max(4,round(h*.018))
+    if min(t,h-b)>=soft:
+        return image
+    pad=round(min(w,h)*.075)
+    padded=Image.new('RGBA',(w+2*pad,h+2*pad))
+    padded.alpha_composite(image,(pad,pad))
+    return padded
+
+
 def cutout(raw, action=None, standalone=False):
     from rembg import remove
     im=remove(raw,alpha_matting=False).convert('RGBA')
@@ -143,6 +172,9 @@ def cutout(raw, action=None, standalone=False):
     src=im.load(); dst=clean.load()
     for x,y in keep:
         dst[x,y]=src[x,y]
+    if standalone:
+        clean=safe_source_margin(clean)
+        w,h=clean.size
     bb=clean.getchannel('A').getbbox()
     if not bb:
         raise RuntimeError('empty')
@@ -379,7 +411,7 @@ def generate_independent_frames(item,seed):
     if action not in {'IDLE','WORK','CARRY','CELEB'}:
         raise ValueError('Unsupported generic per-frame action')
     frames=[]
-    cache_dir=OUT/'pollinations-frame-cache'/item['id']
+    cache_dir=OUT/'pollinations-frame-cache'/item['id']/STANDALONE_CACHE_EPOCH
     cache_dir.mkdir(parents=True,exist_ok=True)
     for n,pose in enumerate(POSES[action][:ACTIONS[action][1]]):
         cache_file=cache_dir/f'{n:02d}.png'
@@ -432,6 +464,7 @@ def main():
         done=False; last=''
         for att in range(attempts):
             seed=(base+ix*100000+att*10007) % 2147483647
+            screen=None
             try:
                 if it['action'] == 'REPAIR':
                     frames=generate_repair_frames(it,seed)
@@ -468,11 +501,31 @@ def main():
                 break
             except Exception as e:
                 last=str(e)
+                # Never retry the same known-bad cached pixels. A producer
+                # outage mid-sequence is different: retain the valid prefix.
+                bad_frames=[]
                 if last.startswith('identity-palette=') and ' frames=' in last:
                     try:
                         bad_frames=[int(x) for x in last.rsplit(' frames=',1)[1].split(',') if x.strip()]
-                        for bad in bad_frames:
-                            cache_file=OUT/'pollinations-frame-cache'/it['id']/f'{bad:02d}.png'
+                    except ValueError:
+                        pass
+                elif last.startswith('semantic-risk:') and screen is not None:
+                    bad_frames=[i for i,entry in enumerate(screen.get('frames',[]))
+                                if entry.get('risk_flags')]
+                    if not bad_frames:
+                        bad_frames=list(range(1,fc))
+                elif last.startswith(('iou=','pivot','drift','duplicate',
+                                      'walk-too-static','carry-too-static',
+                                      'work-too-static','repair-too-static',
+                                      'celeb-too-static','idle-too-static')):
+                    bad_frames=list(range(1,fc))
+                if bad_frames:
+                    try:
+                        for bad in sorted(set(bad_frames)):
+                            cache_dir=OUT/'pollinations-frame-cache'/it['id']
+                            if it['action'] in {'IDLE','WORK','CARRY','CELEB'}:
+                                cache_dir=cache_dir/STANDALONE_CACHE_EPOCH
+                            cache_file=cache_dir/f'{bad:02d}.png'
                             if cache_file.is_file():
                                 cache_file.unlink()
                             rev_file=cache_file.with_suffix('.rev')
