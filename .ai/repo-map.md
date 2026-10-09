@@ -30508,6 +30508,16 @@ class MultiActionRendererTests(unittest.TestCase)
 ⋮----
 def test_deterministic_unique_per_action(self)
 ⋮----
+def test_work_repair_brackets_really_show_at_96px(self)
+⋮----
+# Geometry-only tests could pass if the bracket were fully hidden
+# behind the torso. Compare the rendered output with a reversible
+# support-free control at the actual 96px gameplay resolution.
+⋮----
+before=np.asarray(
+after=np.asarray(
+changed=int(np.count_nonzero(
+⋮----
 def test_six_actions_use_reversible_joint_fabric(self)
 ⋮----
 # Compare output against the SAME action/props rendered with the

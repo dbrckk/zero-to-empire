@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T10:18:15Z
+Generated: 2026-10-09T10:24:13Z
 
 ### Git
 - Branch: `main`
-- Head: `f5f901d1c638`
-- Commit date: 2026-10-09T12:18:01+02:00
-- Commit: docs(art): record rig-attached TECH workstations and review-only bracket QA
+- Head: `7cec784e6131`
+- Commit date: 2026-10-09T12:23:59+02:00
+- Commit: test(art): prove WORK and REPAIR brackets are visibly present at actual 96px play size
 - Tracked files: 1476
 
 ### Recently changed files
+- `tools/sprites/test_rigged_tech_actions_v3.py`
 - `tools/sprites/MODULAR_ACTIONS_README.md`
 - `.github/workflows/modular-tech-actions.yml`
 - `tools/sprites/test_package_tech_actions_runtime.py`
 - `tools/sprites/package_tech_actions_runtime.py`
-- `tools/sprites/test_tech_prop_mount.py`
 
 ### Project signals
 - `build.gradle.kts`
