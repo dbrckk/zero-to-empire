@@ -5031,6 +5031,32 @@ jobs:
           if missing: raise SystemExit('Approved IDs missing from master queue: '+','.join(sorted(missing)))
           p.write_text(json.dumps(q,indent=2)+'\n',encoding='utf-8')
 
+          # Canonical strict promotions must update the 236-row Android
+          # manifest in the SAME commit. ONB-00 is never promoted by this path.
+          manifest=Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
+          rows=manifest.read_text(encoding='utf-8').splitlines(keepends=True)
+          changed=set()
+          for i,row in enumerate(rows):
+              if not row.startswith('|') or 'app/src/main/res/' not in row:
+                  continue
+              parts=row.rstrip('\n').split('|')
+              if len(parts)!=7:
+                  continue
+              aid=parts[1].strip()
+              if aid not in ids:
+                  continue
+              if aid in changed:
+                  raise SystemExit('Duplicate approved manifest ID: '+aid)
+              status=parts[5].strip()
+              if status not in {'RUNTIME','BLOCKED','DONE'}:
+                  raise SystemExit(f'Unexpected promotion status for {aid}: {status}')
+              parts[5]=' DONE '
+              rows[i]='|'.join(parts)+'\n'
+              changed.add(aid)
+          if changed!=ids:
+              raise SystemExit('Approved manifest IDs not found: '+','.join(sorted(ids-changed)))
+          manifest.write_text(''.join(rows),encoding='utf-8')
+
           strict=sum(1 for a in q['assets'] if a.get('strict_status')=='DONE')
           processed=sum(1 for a in q['assets'] if a.get('strict_status')=='DONE' or str(a.get('pipeline_status','')).upper() in {'AWAITING_REVIEW','CANDIDATE','TECHNICAL_PASS','VALIDATED','APPROVED','RUNTIME_READY','DONE'})
           remain=[a for a in q['assets'] if str(a.get('id','')).startswith('CHR-') and a.get('strict_status')!='DONE']
@@ -5057,7 +5083,7 @@ jobs:
           set -euo pipefail
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add art/incoming/final-sprites app/src/main/res/drawable-nodpi art/production/*-runtime-qa.json art/production/master-asset-queue.json art/production/character-strict-review-backlog.md
+          git add art/incoming/final-sprites app/src/main/res/drawable-nodpi art/production/*-runtime-qa.json art/production/master-asset-queue.json art/production/character-strict-review-backlog.md docs/art/FINAL_AAA_SPRITE_MANIFEST.md
           git diff --cached --quiet && exit 0
           git commit -m 'art: promote semantically approved Kaggle characters'
           git pull --rebase origin main
@@ -32056,14 +32082,14 @@ plugins {
 - **Canonical strict DONE: 216/235**, production processed: **233/235**. The source of truth is `art/production/master-asset-queue.json`. Do not raise the number for production, technical QA, or mere manifest presence.
 - **Remaining 19 (all CHR)**: OP WALK/WORK/CARRY/REPAIR/CELEB (5); TECH WALK/WORK/CARRY (3); LOG WALK/WORK/CARRY/REPAIR/CELEB (5); ENG IDLE/WALK/WORK/CARRY/REPAIR/CELEB (6). Technical states: 17 AWAITING_REVIEW, 1 REJECTED_SEMANTIC (TECH-WALK), 1 BLOCKED (LOG-CARRY).
 - Full-sheet direct visual inspection on 2026-10-09 confirmed canonical `CHR-LOG-CARRY` has separate torso and leg rows with **no valid carrying action**; `CHR-ENG-IDLE` has only cropped portraits; `CHR-OP-WALK` and `CHR-TECH-WALK` visibly change identity/camera/clothes; `CHR-LOG-WORK` changes characters and tools. Existing `art/production/character-visual-review-findings-2026-10-09.md` records the wider 19-item visual audit. **No further strict promotions are justified without valid new source frames.**
-- **Known contradictory records**: `docs/art/FINAL_AAA_SPRITE_MANIFEST.md` currently marks **236/236** rows DONE, including the separately excluded `ONB-00`, whereas the canonical 235 registry approves only 216. `docs/art/FINAL_AAA_SPRITE_PROGRESS.md` is stale. Historical promotion review remains **OPEN**. Do **not** confuse a manifest DONE label with canonical strict approval.
-- `CHR-LOG-CARRY` repair is reserved to the Pollinations full-body-per-frame v3 lane until `2026-10-10T18:00:00Z`: `art/production/controlled-character-regen-queue.json` was requeued `PENDING_POLLINATIONS` on commit `d3b96eb`. Its candidate must be staged separately, preserving historical canonical PNG. The 2026-10-09 observed GitHub Action run `37979410539` was **in progress**; check current status and resulting QA on resume.
-- Fixes landed on `main`: `6fe179a` character CI counts are dynamic; `ad0bf48` completion gate requires true 235 strict approvals, 236 matching manifest rows and historical review CLOSED; `2f51782` Pollinations cannot consume Kaggle-owned tasks; `d3b96eb` requeues reserved LOG-CARRY; `50108f4` full audit reconciles manifest with strict canonical queue. GitHub Actions **Character strict review matrix** run `37978989707` SUCCESS and **Asset Pipeline CI** run `37979322055` SUCCESS (including audit `--allow-pending`); **Sprite Completion Gate** run `37979322152` SUCCESS means guard execution passed, **not** that the final 236-sprite audit ran or completion was approved.
+- **Ledger corrected on 2026-10-09**: the 236-row manifest now has **217 DONE** (216 canonical strict + separately excluded ONB-00), **17 RUNTIME awaiting review**, **2 BLOCKED**, matching the authoritative 235 queue. The progress header is also reconciled. Historical promotion review remains **OPEN**. Do **not** confuse an installed runtime resource with strict approval.
+- `CHR-LOG-CARRY` repair is reserved to the Pollinations full-body-per-frame v3 lane until `2026-10-10T18:00:00Z`: `art/production/controlled-character-regen-queue.json` was requeued `PENDING_POLLINATIONS` on commit `d3b96eb`. Its candidate must be staged separately, preserving historical canonical PNG. GitHub Action run `37979410539` completed **workflow SUCCESS but art REJECTED** (no approved candidate): source portraits were cropped, image endpoint intermittently returned **HTTP 402 Payment Required**, three early per-frame cache PNGs were retained, and the controlled queue reverted to **BLOCKED**. Do not requeue blind while the provider is charge-restricted; inspect QA/partial frames and choose a reliable free identity-preserving alternative.
+- Fixes landed on `main`: `6fe179a` dynamic review CI; `ad0bf48` completion gate; `2f51782` provider ownership; `d3b96eb` controlled repair attempt; `50108f4` canonical full-audit reconciliation; `5000a2b` 19 manifest statuses corrected; `09b05ab` production planning excludes ONB-00 and routes character candidates to semantic review; `5990ea7` robust progress reconciliation; `837421e` rejects portrait fragments before caching. `87fa083`, `08e2db8` and `d65c64b` persist project state. GitHub Actions **Character strict review matrix** run `37978989707` SUCCESS and **Asset Pipeline CI** run `37979322055` SUCCESS (including audit `--allow-pending`); **Sprite Completion Gate** run `37979322152` SUCCESS means guard execution passed, **not** that the final 236-sprite audit ran or completion was approved.
 - Prior .ai/session-state.json, README and old progress figures are historical and MUST NOT overwrite the above canonical counts.
 
 ### Next action sequence
 
-1. Collect Pollinations LOG-CARRY run and inspect every staged frame for complete full-body, one LOG identity and a crate gripped by **both hands** throughout the loop. Reject or regenerate if incomplete. Do not mark strict DONE from heuristic QA alone.
+1. LOG-CARRY provider attempt ended without a successful candidate. Keep canonical and runtime unchanged. The provider returned HTTP 402 and cropped frame fragments; do not use the three retained cached frames as production art. Resolve provider access or favor an existing free deterministic identity-preserving rig before another cost-bearing batch. Inspect every candidate frame for complete full-body, one LOG identity and a crate gripped by **both hands**. Do not mark strict DONE from heuristic QA alone.
 2. Regenerate the other 18 flawed action atlases using a **single identity reference per role**, per-frame full-body control, non-collage animation, stable camera, tools and foot pivot. For WALK inspect foot contacts/stride; for WORK/REPAIR inspect prop contact; for CARRY inspect bilateral grip; for IDLE/CELEB verify action.
 3. For each approved new asset: preserve source provenance and semantic visual review, run technical/temporal QA, process exact WebP runtime, demonstrate live gameplay reference/visibility, get green Android CI on the exact commit; only then update canonical `strict_status=DONE`.
 4. Reconcile manifest/progress/historical-review documents with canonical approvals. Audit all 236 runtime rows, ensuring 235/235 canonical strict DONE and `ONB-00` excluded from the target. Do not close review prematurely.

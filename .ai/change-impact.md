@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 8c72502489b37893316205564487b0bcfa2fb3f2
-Head: 837421e266e39b15c13003b5b98c889c9b2b2787
+Base: be1ca53e4edc2c348b1e6aedbfe51b42e185db52
+Head: 28be9aafb2ac68d6bc92c3fb5e0ce3454c4c954d
 
 ## Changed files
-- M tools/sprites/pollinations_character_sheet_factory.py
+- M .github/workflows/promote-approved-kaggle-characters.yml
 
 ## Affected areas
-- tools
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

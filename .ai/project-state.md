@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T19:29:20Z
+Generated: 2026-10-09T19:32:29Z
 
 ### Git
 - Branch: `main`
-- Head: `837421e266e3`
-- Commit date: 2026-10-09T21:29:06+02:00
-- Commit: fix(art): reject cropped standalone poses before cache and retry with new seed
+- Head: `28be9aafb2ac`
+- Commit date: 2026-10-09T21:31:35+02:00
+- Commit: fix(ci): strip real newline when updating approved manifest rows
 - Tracked files: 1493
 
 ### Recently changed files
+- `.github/workflows/promote-approved-kaggle-characters.yml`
+- `PROJECT_CONTINUITY.md`
 - `tools/sprites/pollinations_character_sheet_factory.py`
 - `docs/art/FINAL_AAA_SPRITE_MANIFEST.md`
 - `docs/art/FINAL_AAA_SPRITE_PROGRESS.md`
-- `.github/workflows/reconcile-sprite-progress-ledger.yml`
-- `tools/sprites/plan_sprite_batches.py`
 
 ### Project signals
 - `build.gradle.kts`
