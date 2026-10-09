@@ -57,6 +57,7 @@ def frame_geometry(frame:Image.Image)->dict:
             'aspect_ratio':round(ratio,4),
             'bbox_height_fraction':round(height/frame.height,4),
             'alpha_fill_ratio':round(fill,4),
+            'visible_alpha_area':opaque_area,
             'bottom_segment_count':runs,'risk_flags':flags}
 
 
@@ -111,10 +112,15 @@ def clip_risk(frames:list[Image.Image])->dict:
     sizes=[f['bbox_height_fraction'] for f in dims]
     if max(sizes)/max(min(sizes),.01)>2:
         flags.append('CHARACTER_SCALE_DISCONTINUITY_RISK')
+    areas=[f['visible_alpha_area'] for f in dims]
+    mass_ratio=max(areas)/max(min(areas),1)
+    if mass_ratio>1.80:
+        flags.append('SILHOUETTE_MASS_DISCONTINUITY_RISK')
     blockers={'MULTIPLE_NON_FULL_BODY_FRAMES',
               'MEDIAN_SILHOUETTE_NOT_FULL_BODY',
               'PALETTE_IDENTITY_DISCONTINUITY_RISK',
-              'CHARACTER_SCALE_DISCONTINUITY_RISK'}
+              'CHARACTER_SCALE_DISCONTINUITY_RISK',
+              'SILHOUETTE_MASS_DISCONTINUITY_RISK'}
     blocking=bool(blockers.intersection(flags))
     return {'risk_level':'BLOCKING' if blocking else
             ('REVIEW' if flags else 'NOT_DETECTED'),
@@ -123,6 +129,7 @@ def clip_risk(frames:list[Image.Image])->dict:
             'median_palette_adjacent_distance':round(statistics.median(adjacent),4),
             'median_aspect_ratio':round(median_aspect,4),
             'median_height_fraction':round(median_height,4),
+            'max_silhouette_mass_ratio':round(mass_ratio,3),
             'non_full_body_frames':flat,
             'foot_profile_ambiguous_frames':no_feet,
             'image_only_semantic_approval':False,'frames':dims}
