@@ -22,23 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T20:04:18Z
+Generated: 2026-10-09T20:16:22Z
 
 ### Git
 - Branch: `main`
-- Head: `eabd8c51be04`
-- Commit date: 2026-10-09T22:04:01+02:00
-- Commit: docs(art): record passing real Android TECH preview build without strict promotion
-- Tracked files: 1509
+- Head: `c680fd7469dd`
+- Commit date: 2026-10-09T22:16:03+02:00
+- Commit: test(android): smoke-test debug animation QA gallery controls and capture emulator screenshots
+- Tracked files: 1510
 
 ### Recently changed files
-- `docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md`
-- `.github/workflows/tech-candidate-android-preview.yml`
-- `art/production/character-rig-review-candidates/review-report.json`
-- `art/production/character-rig-review-candidates/zte_chr_tech_carry_final-contact.png`
-- `art/production/character-rig-review-candidates/zte_chr_tech_carry_final-preview.gif`
-- `art/production/character-rig-review-candidates/zte_chr_tech_carry_final.png`
-- `tools/sprites/test_rigged_tech_actions_v3.py`
+- `tools/android/emulator_functional_smoke.sh`
+- `app/src/debug/AndroidManifest.xml`
+- `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
+- `app/src/test/java/com/zerotoempire/game/AmbientCharacterMotionTest.kt`
+- `app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt`
 
 ### Project signals
 - `build.gradle.kts`

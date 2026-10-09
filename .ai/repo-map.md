@@ -259,6 +259,7 @@ app/
         com/
           zerotoempire/
             game/
+              AmbientCharacterMotionTest.kt
               AmbientTrafficMotionTest.kt
               BillingDiagnosticsTest.kt
               BillingFailurePolicyTest.kt
@@ -8892,22 +8893,27 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.platform.LocalContext
@@ -8916,10 +8922,8 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 
 /**
- * Debug-only semantic review surface for all authored character atlases.
- *
- * This activity is declared only by src/debug/AndroidManifest.xml and therefore
- * cannot ship in release builds.
+ * The debug build exposes this surface as a separate launcher icon. It is
+ * entirely absent from the release source set and does not approve assets.
  */
 class CharacterReviewActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -8931,26 +8935,62 @@ class CharacterReviewActivity : ComponentActivity() {
 @Composable
 private fun CharacterReviewGallery() {
     var worldFrame by remember { mutableIntStateOf(0) }
-    LaunchedEffect(Unit) {
-        while (true) {
-            delay(100)
-            worldFrame = (worldFrame + 1) % 240
+    var playing by remember { mutableStateOf(true) }
+    LaunchedEffect(playing) {
+        while (playing) {
+            delay(100L)
+            worldFrame = (worldFrame + 1) % 1680
         }
     }
 
     MaterialTheme {
         Surface(Modifier.fillMaxSize()) {
             LazyColumn(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 14.dp),
                 verticalArrangement = Arrangement.spacedBy(14.dp),
             ) {
+                item {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text("ZERO → EMPIRE · Animation QA",
+                            style = MaterialTheme.typography.titleLarge)
+                        Text(
+                            "Visualisation uniquement : une animation correcte dans cette galerie " +
+                                "ne signifie pas que le sprite est approuvé pour la production.",
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                        Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+                            Button(onClick = { playing = !playing }) {
+                                Text(if (playing) "Pause" else "Lecture")
+                            }
+                            OutlinedButton(onClick = {
+                                playing = false
+                                worldFrame = Math.floorMod(worldFrame - 1, 1680)
+                            }) { Text("−1") }
+                            OutlinedButton(onClick = {
+                                playing = false
+                                worldFrame = (worldFrame + 1) % 1680
+                            }) { Text("+1") }
+                        }
+                        Text(
+                            "Image : $worldFrame · 10 FPS · testez aussi le jeu réel",
+                            style = MaterialTheme.typography.labelMedium,
+                        )
+                    }
+                }
                 items(ReviewedCharacterRole.entries) { role ->
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text(role.name, style = MaterialTheme.typography.titleLarge)
-                        ReviewedCharacterAction.entries.chunked(3).forEach { actions ->
-                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                actions.forEach { action ->
-                                    ReviewCell(role, action, worldFrame)
+                        Text(role.name, style = MaterialTheme.typography.titleMedium)
+                        // A 320dp phone cannot fit three 96dp thumbnails
+                        // plus labels, spacers and horizontal padding.
+                        BoxWithConstraints(Modifier.fillMaxWidth()) {
+                            val columns = if (maxWidth < 400.dp) 2 else 3
+                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                ReviewedCharacterAction.entries.chunked(columns).forEach { actions ->
+                                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                        actions.forEach { action ->
+                                            ReviewCell(role, action, worldFrame)
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -8983,7 +9023,7 @@ private fun ReviewCell(
             modifier = Modifier.size(96.dp),
         )
         Text(action.name, style = MaterialTheme.typography.labelSmall)
-        Text("$frameCount frames", style = MaterialTheme.typography.labelSmall)
+        Text("${worldFrame % frameCount + 1}/$frameCount", style = MaterialTheme.typography.labelSmall)
     }
 }
 ```
@@ -20121,7 +20161,7 @@ object OnboardingCopy {
 package com.zerotoempire.game
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
@@ -20132,6 +20172,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.unit.Dp
@@ -20142,18 +20183,68 @@ import androidx.compose.ui.unit.dp
 private data class CharacterPlacement(
     val role: ReviewedCharacterRole,
     val action: ReviewedCharacterAction,
-    val x: Dp,
-    val y: Dp,
+    /** Relative top-left inside the city's stage, not the device screen. */
+    val xFraction: Float,
+    val yFraction: Float,
     val size: Dp,
     val phaseFrames: Int,
+    /** Total horizontal journey in stage-width units. */
+    val travelFraction: Float = 0f,
+)
+
+internal data class AmbientCharacterMotion(
+    val xOffsetFraction: Float,
+    val spriteFrame: Int,
+    val facingLeft: Boolean,
 )
 
 /**
- * Authored ambient population for the Ascendant city.
+ * One shared clock for all characters, with a genuine pedestrian journey.
  *
- * The source assets are 4x4 atlases. This renderer crops one 256x256 cell per
- * actor and advances all actors from one shared 10 fps clock, keeping visual
- * density high without starting one independent infinite animation per sprite.
+ * 80 frames in one direction, a 4-frame turn, 80 on the way back and a
+ * 4-frame turn: feet animate only when movement occurs. Source WALK frames
+ * always face right, so the return journey must flip the sprite.
+ * The function is pure: unit tests can prove no teleport/foot-slide caused
+ * by animation while the actor is standing still.
+ */
+internal fun ambientCharacterMotion(
+    action: ReviewedCharacterAction,
+    worldFrame: Int,
+    phaseFrames: Int,
+    travelFraction: Float,
+    reducedMotion: Boolean,
+): AmbientCharacterMotion {
+    val frames = reviewedCharacterFrameCount(action)
+    if (reducedMotion) {
+        return AmbientCharacterMotion(0f, Math.floorMod(phaseFrames, frames), false)
+    }
+    if (action != ReviewedCharacterAction.WALK || travelFraction <= 0f) {
+        return AmbientCharacterMotion(
+            0f, Math.floorMod(worldFrame + phaseFrames, frames), false,
+        )
+    }
+    val movingFrames = 80
+    val turnFrames = 4
+    val halfCycle = movingFrames + turnFrames
+    val phase = Math.floorMod(worldFrame + phaseFrames, 2 * halfCycle)
+    val returning = phase >= halfCycle
+    val local = if (returning) phase - halfCycle else phase
+    val inTurn = local >= movingFrames
+    val progress = if (inTurn) 1f else local.toFloat() / movingFrames
+    val x = travelFraction * (
+        if (returning) .5f - progress else progress - .5f
+    )
+    return AmbientCharacterMotion(
+        xOffsetFraction = x,
+        spriteFrame = if (inTurn) 0 else local % frames,
+        facingLeft = returning,
+    )
+}
+
+/**
+ * Characters are anchored to the *stage*, not an assumed 360dp-wide phone.
+ * Only reviewed atlas frames are rendered; all speculative candidates remain
+ * outside canonical runtime until the art approval and Android build gates.
  */
 @Composable
 internal fun ReviewedCharacterLayer(
@@ -20167,14 +20258,14 @@ internal fun ReviewedCharacterLayer(
 
     val placements = remember {
         listOf(
-            CharacterPlacement(ReviewedCharacterRole.OPERATOR, ReviewedCharacterAction.WORK, 34.dp, 306.dp, 45.dp, 0),
-            CharacterPlacement(ReviewedCharacterRole.TECHNICIAN, ReviewedCharacterAction.WALK, 112.dp, 374.dp, 42.dp, 3),
-            CharacterPlacement(ReviewedCharacterRole.LOGISTICS, ReviewedCharacterAction.WALK, 203.dp, 455.dp, 43.dp, 5),
-            CharacterPlacement(ReviewedCharacterRole.ENGINEER, ReviewedCharacterAction.WORK, 286.dp, 332.dp, 46.dp, 7),
-            CharacterPlacement(ReviewedCharacterRole.LOGISTICS, ReviewedCharacterAction.IDLE, 72.dp, 498.dp, 36.dp, 2),
-            CharacterPlacement(ReviewedCharacterRole.OPERATOR, ReviewedCharacterAction.WALK, 245.dp, 520.dp, 37.dp, 6),
-            CharacterPlacement(ReviewedCharacterRole.TECHNICIAN, ReviewedCharacterAction.WORK, 318.dp, 432.dp, 39.dp, 4),
-            CharacterPlacement(ReviewedCharacterRole.ENGINEER, ReviewedCharacterAction.IDLE, 156.dp, 535.dp, 35.dp, 1),
+            CharacterPlacement(ReviewedCharacterRole.OPERATOR, ReviewedCharacterAction.WORK, .094f, .494f, 45.dp, 0),
+            CharacterPlacement(ReviewedCharacterRole.TECHNICIAN, ReviewedCharacterAction.WALK, .311f, .603f, 42.dp, 3, .18f),
+            CharacterPlacement(ReviewedCharacterRole.LOGISTICS, ReviewedCharacterAction.WALK, .564f, .734f, 43.dp, 5, .16f),
+            CharacterPlacement(ReviewedCharacterRole.ENGINEER, ReviewedCharacterAction.WORK, .794f, .535f, 46.dp, 7),
+            CharacterPlacement(ReviewedCharacterRole.LOGISTICS, ReviewedCharacterAction.IDLE, .200f, .803f, 36.dp, 2),
+            CharacterPlacement(ReviewedCharacterRole.OPERATOR, ReviewedCharacterAction.WALK, .681f, .839f, 37.dp, 6, .18f),
+            CharacterPlacement(ReviewedCharacterRole.TECHNICIAN, ReviewedCharacterAction.WORK, .883f, .697f, 39.dp, 4),
+            CharacterPlacement(ReviewedCharacterRole.ENGINEER, ReviewedCharacterAction.IDLE, .433f, .863f, 35.dp, 1),
         )
     }
 
@@ -20190,22 +20281,30 @@ internal fun ReviewedCharacterLayer(
             }
     }
 
-    Box(modifier.fillMaxSize()) {
+    BoxWithConstraints(modifier.fillMaxSize()) {
+        val scale = minOf(maxWidth.value / 360f, maxHeight.value / 620f)
+            .coerceIn(.75f, 1.20f) * lateEraScale
         placements.forEach { placement ->
-            val frameCount = reviewedCharacterFrameCount(placement.action)
-            val frame = if (reducedMotion) {
-                placement.phaseFrames % frameCount
-            } else {
-                (worldFrame + placement.phaseFrames) % frameCount
-            }
-            val atlas = atlases.getValue(placement.role to placement.action)
-
+            val sample = ambientCharacterMotion(
+                action = placement.action,
+                worldFrame = worldFrame,
+                phaseFrames = placement.phaseFrames,
+                travelFraction = placement.travelFraction,
+                reducedMotion = reducedMotion,
+            )
+            val dimension = placement.size * scale
+            // Prevent clipped sprites at the right/bottom of narrow stages.
+            val x = (maxWidth * (placement.xFraction + sample.xOffsetFraction))
+                .coerceIn(0.dp, (maxWidth - dimension).coerceAtLeast(0.dp))
+            val y = (maxHeight * placement.yFraction)
+                .coerceIn(0.dp, (maxHeight - dimension).coerceAtLeast(0.dp))
             CharacterAtlasFrame(
-                atlas = atlas,
-                frame = frame,
+                atlas = atlases.getValue(placement.role to placement.action),
+                frame = sample.spriteFrame,
                 modifier = Modifier
-                    .offset(placement.x, placement.y)
-                    .size(placement.size * lateEraScale),
+                    .offset(x = x, y = y)
+                    .size(dimension)
+                    .graphicsLayer { scaleX = if (sample.facingLeft) -1f else 1f },
             )
         }
     }
@@ -21620,6 +21719,93 @@ private fun DrawScope.drawSprite(
         dstSize=IntSize(targetWidth,targetHeight),
         alpha=alpha,
     )
+}
+```
+
+## File: app/src/test/java/com/zerotoempire/game/AmbientCharacterMotionTest.kt
+```kotlin
+package com.zerotoempire.game
+
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
+import org.junit.Test
+
+class AmbientCharacterMotionTest {
+    private val walk = ReviewedCharacterAction.WALK
+    private val work = ReviewedCharacterAction.WORK
+
+    @Test
+    fun `walk moves through its lane rather than marching in place`() {
+        val first = ambientCharacterMotion(walk, 0, 0, .18f, false)
+        val middle = ambientCharacterMotion(walk, 40, 0, .18f, false)
+        val end = ambientCharacterMotion(walk, 80, 0, .18f, false)
+        assertEquals(-.09f, first.xOffsetFraction, 0.0001f)
+        assertEquals(0f, middle.xOffsetFraction, 0.0001f)
+        assertEquals(.09f, end.xOffsetFraction, 0.0001f)
+        assertFalse(first.facingLeft)
+        assertTrue(ambientCharacterMotion(walk, 84, 0, .18f, false).facingLeft)
+    }
+
+    @Test
+    fun `all adjacent world frames have continuous bounded displacement and phase`() {
+        val snapshots = (0..336).map { frame ->
+            ambientCharacterMotion(walk, frame, 7, .18f, false)
+        }
+        snapshots.zipWithNext().forEach { (a,b) ->
+            assertTrue(kotlin.math.abs(a.xOffsetFraction - b.xOffsetFraction) <= .00226f)
+            assertTrue(a.spriteFrame in 0..7)
+            assertTrue(b.spriteFrame in 0..7)
+            assertTrue(a.xOffsetFraction in -.0901f.. .0901f)
+        }
+        assertEquals(snapshots[0], snapshots[168])
+        assertEquals(snapshots[0], snapshots[336])
+    }
+
+    @Test
+    fun `turnaround freezes the sprite until facing direction changes`() {
+        for (frame in 80..83) {
+            val moment = ambientCharacterMotion(walk, frame, 0, .12f, false)
+            assertEquals(0, moment.spriteFrame)
+            assertFalse(moment.facingLeft)
+            assertEquals(.06f, moment.xOffsetFraction, .00001f)
+        }
+        for (frame in 164..167) {
+            val moment = ambientCharacterMotion(walk, frame, 0, .12f, false)
+            assertEquals(0, moment.spriteFrame)
+            assertTrue(moment.facingLeft)
+            assertEquals(-.06f, moment.xOffsetFraction, .00001f)
+        }
+    }
+
+    @Test
+    fun `reduced motion freezes travel and source atlas pose`() {
+        val first = ambientCharacterMotion(walk, 0, 5, .2f, true)
+        for (frame in listOf(1, 15, 80, 167, 300_000)) {
+            assertEquals(first, ambientCharacterMotion(walk, frame, 5, .2f, true))
+        }
+        assertEquals(0f, first.xOffsetFraction, 0f)
+        assertFalse(first.facingLeft)
+    }
+
+    @Test
+    fun `stationary actions animate without drifting through buildings`() {
+        for (frame in -10..150) {
+            val moment = ambientCharacterMotion(work, frame, 4, .2f, false)
+            assertEquals(0f, moment.xOffsetFraction, 0f)
+            assertEquals(Math.floorMod(frame + 4, 10), moment.spriteFrame)
+            assertFalse(moment.facingLeft)
+        }
+    }
+
+    @Test
+    fun `nonpositive travel amplitude cannot create fake walking movement`() {
+        for (amplitude in listOf(0f, -.1f)) {
+            val moment = ambientCharacterMotion(walk, 73, 2, amplitude, false)
+            assertEquals(0f, moment.xOffsetFraction, 0f)
+            assertEquals(Math.floorMod(75, 8), moment.spriteFrame)
+        }
+    }
 }
 ```
 
@@ -24955,6 +25141,25 @@ click_node "MANAGERS" "autosave-restart-manager-tab"
 assert_ui_contains "HIRED" "autosave-restart-manager"
 click_node "EMPIRE" "autosave-restart-return-empire"
 dump_ui "post-autosave-restart"
+
+# The separate Character Review launcher entry exists in DEBUG builds only.
+# Exercise it on a real emulator to ensure a phone-only user can inspect
+# animation frames, pause and step, with screenshot evidence for review.
+adb shell am start -W -n "$PKG/.CharacterReviewActivity" > "$EVIDENCE/character-review-launch.txt"
+sleep 3
+check_alive
+assert_ui_contains "Animation QA" "character-qa-open"
+assert_ui_contains "Pause" "character-qa-playing"
+adb exec-out screencap -p > "$EVIDENCE/character-qa-playing.png"
+click_node "Pause" "character-qa-before-pause"
+assert_ui_contains "Lecture" "character-qa-paused"
+click_node "+1" "character-qa-before-step"
+assert_ui_contains "Lecture" "character-qa-stepped"
+adb exec-out screencap -p > "$EVIDENCE/character-qa-stepped.png"
+echo "CHARACTER_QA_EMULATOR_PASS=1"
+adb shell am start -W -n "$ACT" > "$EVIDENCE/character-qa-return-to-game.txt"
+sleep 2
+check_alive
 
 adb shell dumpsys meminfo "$PKG" > "$EVIDENCE/meminfo.txt"
 adb exec-out screencap -p > "$EVIDENCE/final.png"

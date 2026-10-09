@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 8e4aa144974ec1b19f3e48d9e427da56234fdeb3
-Head: eabd8c51be049f633db7b82c604238352a68f657
+Base: 413006eb5d5db96ac90005dbfa981db8bb5372e1
+Head: c680fd7469dd1d3e6adc8bddb9b1d8cecfa9838c
 
 ## Changed files
-- M docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md
+- M tools/android/emulator_functional_smoke.sh
 
 ## Affected areas
-- docs
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

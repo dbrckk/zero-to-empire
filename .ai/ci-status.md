@@ -1,11 +1,14 @@
 # CI status
 
-Summary: 4 success / 0 failure / 0 active
+Summary: 0 success / 0 failure / 3 active
 
-- TECH candidate Android preview (no promotion): completed / success (dac52211)
-- Six modular TECH animations (review only): completed / success (30827929)
-- Six modular TECH animations (review only): completed / cancelled (cd401ab0)
-- TECH canonical review staging: completed / success (cd401ab0)
-- TECH canonical review staging: completed / success (64268460)
+- Reconcile reviewed run 25: completed / skipped (c680fd74)
+- Android CI: pending / pending (c680fd74)
+- Android Emulator Smoke: pending / pending (c680fd74)
+- Android CI: completed / cancelled (413006eb)
+- Android Emulator Smoke: completed / cancelled (413006eb)
+- Reconcile reviewed run 25: completed / skipped (048a6395)
+- Reconcile reviewed run 25: completed / skipped (048a6395)
+- Android CI: in_progress / pending (048a6395)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.
