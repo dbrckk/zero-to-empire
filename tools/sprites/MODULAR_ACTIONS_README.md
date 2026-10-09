@@ -240,3 +240,30 @@ d'alpha et un atlas de skin modifié. Ces contrôles ne certifient ni la
 continuité du mouvement en situation réelle ni la validation humaine.
 `strict_status` reste `NEEDS_REVIEW`, avec
 `visual_review_pass=false` et `semantic_review_pass=false`.
+
+
+## Raccord physique des appareils de travail — v9
+
+Les panneaux de WORK et REPAIR disposent désormais de supports pliants
+déterministes, rattachés au bassin et se terminant **à l'intérieur** de
+leur panneau respectif. Les articulations sont dessinées sur la couche
+d'arrière-plan : le torse peut masquer une partie de l'attache, plutôt
+que de donner l'impression d'un objet flottant devant le personnage.
+Les câbles et charnières reprennent le langage de matériaux anthracite
+et cyan du costume.
+
+Le module `tech_prop_mount.py` est autonome et ne dépend pas d'un
+générateur d'images. Les poses et les accessoires utilisent le même
+repère 512×512 et les pièces suivent exactement le déplacement du
+bassin, sans délai, hasard ou altération du cycle de locomotion.
+`test_tech_prop_mount.py` contrôle les points de raccordement sur
+512 phases, les limites des segments, la continuité de boucle, la
+transparence et la reproductibilité du dessin.
+
+L'exporteur vérifie `prop_support_connected_pass` ainsi que
+`prop_support_model=folding-belt-bracket-v1` pour WORK et REPAIR ;
+une fixation qui sortirait de l'appareil interrompt la production.
+Ce changement améliore seulement la cohérence 2D de la mise en scène.
+Il n'établit **ni** une animation physiquement réaliste **ni** un asset
+approuvé. Les nouveaux rendus restent en revue artistique et les
+autres statuts stricts demeurent inchangés.
