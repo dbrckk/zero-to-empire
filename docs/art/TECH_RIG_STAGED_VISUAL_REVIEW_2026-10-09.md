@@ -28,3 +28,11 @@ Ces observations sont des constats artistiques sur les planches exportées, **pa
 5. Garder ces trois candidats dans `art/production/character-rig-review-candidates/` tant que ces critères ne sont pas démontrés. Ne pas modifier `art/incoming/final-sprites` ou `master-asset-queue.json` sur la seule base d'un test géométrique.
 
 Le workflow `TECH candidate Android preview (no promotion)` produit un APK de **test** à partir des candidats sans les committer en ressources de production. Sa validation et la revue en jeu restent des étapes distinctes.
+
+## APK Android de prévisualisation (CI vérifiée)
+
+- GitHub Actions : `TECH candidate Android preview (no promotion)` run `37983740983`, conclusion **SUCCESS**.
+- L'export exact de chacun des trois candidats vers WebP Android a satisfait `process_final_sprites.py`, `validate_runtime_asset.py` et `audit_character_runtime.py` dans un espace de travail éphémère.
+- `gradle assembleDebug`, `testDebugUnitTest` et `lintDebug` : **SUCCESS**. Le fichier APK de test contient ces WebP temporaires ; aucune modification des masters et statuts canoniques n'a été committée.
+- SHA-256 APK debug : `c8c878e662b9950256f1a29a414120f3c50224c9bb7314f25b67e6ea11667eca` (vérifiée par rapport au rapport de provenance CI).
+- **Reste à vérifier :** lancement effectif sur Android, affichage des sprites dans la partie et qualité des interactions / animations dans le jeu. Une compilation verte n'accorde pas une revue artistique ni un strict DONE.
