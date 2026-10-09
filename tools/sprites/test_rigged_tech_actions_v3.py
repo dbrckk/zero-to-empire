@@ -83,6 +83,22 @@ class MultiActionGeometryTests(unittest.TestCase):
             hand = [pose_for(i / 24, action)["handR"] for i in range(24)]
             self.assertGreaterEqual(max(math.dist(hand[0], q) for q in hand), 18)
 
+    def test_celebration_is_overhead_and_periodic(self):
+        for i in range(192):
+            t=i/192
+            p=pose_for(t,"CELEB")
+            x,y=p["root"]
+            angle=p["torso_lean_rad"]
+            co,si=math.cos(angle),math.sin(angle)
+            for hand,dx,dy in (("handL",-24,-86),("handR",23,-85)):
+                shoulder=(x+dx*co-dy*si,y+dx*si+dy*co)
+                self.assertGreaterEqual(shoulder[1]-p[hand][1],65)
+                self.assertLessEqual(math.dist(shoulder,p[hand]),118)
+            q=pose_for(t+1,"CELEB")
+            for key in ("handL","handR"):
+                for a,b in zip(p[key],q[key]):
+                    self.assertAlmostEqual(a,b,places=7)
+
     def test_action_contacts_and_overlaid_feedback_are_phase_correct(self):
         for i in range(96):
             t=i/96
@@ -156,6 +172,11 @@ class MultiActionRendererTests(unittest.TestCase):
                     self.assertEqual(manifest["strict_status"], "NEEDS_REVIEW")
                     self.assertTrue(qa["weight_transfer_pass"],qa)
                     self.assertTrue(qa["interaction_contact_pass"],qa)
+                    self.assertTrue(qa["celebration_raised_arm_pass"], qa)
+                    if action=="CELEB":
+                        self.assertGreaterEqual(qa["celebration_min_arm_raise_px"],65)
+                    else:
+                        self.assertIsNone(qa["celebration_min_arm_raise_px"])
                     self.assertFalse(qa["work_screen_violation_frames"])
                     self.assertFalse(qa["repair_tool_violation_frames"])
                     if action=="REPAIR":
