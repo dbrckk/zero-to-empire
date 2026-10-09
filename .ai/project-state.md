@@ -22,21 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T19:32:29Z
+Generated: 2026-10-09T19:51:22Z
 
 ### Git
 - Branch: `main`
-- Head: `28be9aafb2ac`
-- Commit date: 2026-10-09T21:31:35+02:00
-- Commit: fix(ci): strip real newline when updating approved manifest rows
-- Tracked files: 1493
+- Head: `8a629e302cfe`
+- Commit date: 2026-10-09T21:51:05+02:00
+- Commit: ci(art): build and stage canonical TECH review animations without runtime promotion
+- Tracked files: 1496
 
 ### Recently changed files
+- `.github/workflows/tech-canonical-review-stage.yml`
+- `tools/sprites/test_export_tech_canonical_review.py`
+- `tools/sprites/export_tech_canonical_review.py`
 - `.github/workflows/promote-approved-kaggle-characters.yml`
-- `PROJECT_CONTINUITY.md`
-- `tools/sprites/pollinations_character_sheet_factory.py`
-- `docs/art/FINAL_AAA_SPRITE_MANIFEST.md`
-- `docs/art/FINAL_AAA_SPRITE_PROGRESS.md`
 
 ### Project signals
 - `build.gradle.kts`

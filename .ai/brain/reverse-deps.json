@@ -635,6 +635,7 @@
         "tools/sprites/audit_character_candidates.py",
         "tools/sprites/autonomous_walk.py",
         "tools/sprites/build_sprite_contact_sheet.py",
+        "tools/sprites/export_tech_canonical_review.py",
         "tools/sprites/hf_public_flux_factory.py",
         "tools/sprites/hf_sprite_factory.py",
         "tools/sprites/hf_static_manifest_factory.py",
@@ -659,10 +660,11 @@
         "tools/sprites/rigged_tech_walk_v2.py",
         "tools/sprites/temporal_sprite_audit.py",
         "tools/sprites/ter07_energy_conduit_candidate.py",
+        "tools/sprites/test_export_tech_canonical_review.py",
         "tools/sprites/test_pollinations_character_sheet_factory.py",
         "tools/sprites/test_temporal_sprite_audit.py"
       ],
-      "in_degree": 38,
+      "in_degree": 40,
       "out_degree": 7
     },
     "app/src/main/java/com/zerotoempire/game/GameTheme.kt": {
@@ -1928,8 +1930,10 @@
         "tools/sprites/character_semantic_gate.py",
         "tools/sprites/plan_sprite_batches.py"
       ],
-      "dependents": [],
-      "in_degree": 0,
+      "dependents": [
+        "tools/sprites/export_tech_canonical_review.py"
+      ],
+      "in_degree": 1,
       "out_degree": 5
     },
     "tools/sprites/audit_complete_sprite_manifest.py": {
@@ -1984,6 +1988,18 @@
       ],
       "in_degree": 5,
       "out_degree": 0
+    },
+    "tools/sprites/export_tech_canonical_review.py": {
+      "dependencies": [
+        "app/src/main/java/com/zerotoempire/game/GameRepository.kt",
+        "tools/sprites/audit_character_candidates.py",
+        "tools/sprites/package_tech_actions_runtime.py"
+      ],
+      "dependents": [
+        "tools/sprites/test_export_tech_canonical_review.py"
+      ],
+      "in_degree": 1,
+      "out_degree": 3
     },
     "tools/sprites/focused_sprite_atlas.py": {
       "dependencies": [],
@@ -2168,9 +2184,10 @@
         "tools/sprites/plan_sprite_batches.py"
       ],
       "dependents": [
+        "tools/sprites/export_tech_canonical_review.py",
         "tools/sprites/test_package_tech_actions_runtime.py"
       ],
-      "in_degree": 1,
+      "in_degree": 2,
       "out_degree": 4
     },
     "tools/sprites/plan_sprite_batches.py": {
@@ -2396,6 +2413,15 @@
       "dependents": [],
       "in_degree": 0,
       "out_degree": 1
+    },
+    "tools/sprites/test_export_tech_canonical_review.py": {
+      "dependencies": [
+        "app/src/main/java/com/zerotoempire/game/GameRepository.kt",
+        "tools/sprites/export_tech_canonical_review.py"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 2
     },
     "tools/sprites/test_focused_sprite_atlas.py": {
       "dependencies": [

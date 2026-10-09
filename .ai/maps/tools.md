@@ -61,6 +61,7 @@ sprites/
   character_review_matrix.py
   character_semantic_gate.py
   colab_mass_factory.py
+  export_tech_canonical_review.py
   focused_sprite_atlas.py
   generate_strict_review_backlog.py
   hf_public_flux_factory.py
@@ -110,6 +111,7 @@ sprites/
   test_character_provider_reservation.py
   test_character_review_matrix.py
   test_character_semantic_gate.py
+  test_export_tech_canonical_review.py
   test_focused_sprite_atlas.py
   test_identity_locked_walk_candidate.py
   test_package_tech_actions_runtime.py
@@ -1738,6 +1740,77 @@ targets = []
 dst = cdir / f.name
 ⋮----
 archive = shutil.make_archive(str(WORK / 'zero-to-empire-colab-sprites'), 'zip', OUT)
+```
+
+## File: sprites/export_tech_canonical_review.py
+```python
+#!/usr/bin/env python3
+"""Stage three canonical-format TECH animations from one deterministic textured rig.
+
+These are visual-review CANDIDATES, never replacements for canonical PNG/WebP
+or automatic strict-DONE promotions. The 24-frame articulated source is
+downsampled to the existing Android 4x4 / action-frame-count contract.
+"""
+⋮----
+ACTIONS = {"WALK": 8, "WORK": 10, "CARRY": 8}
+SOURCE_FRAMES = 24
+CELL = 256
+⋮----
+def digest(path: Path) -> str
+⋮----
+def selected_indices(count: int, source_count: int = SOURCE_FRAMES) -> list[int]
+⋮----
+result = [i * source_count // count for i in range(count)]
+⋮----
+def validate_index(source: Path, skin: Path) -> dict
+⋮----
+index = json.loads((source / "production-index.json").read_text(encoding="utf-8"))
+⋮----
+actions = {row.get("action"): row for row in index.get("actions", [])}
+⋮----
+row = actions[action]
+⋮----
+def stage_action(source: Path, output: Path, action: str, skin_sha: str) -> dict
+⋮----
+folder = source / action
+manifest = json.loads((folder / "qa-manifest.json").read_text(encoding="utf-8"))
+⋮----
+qa = manifest.get("qa", {})
+⋮----
+chosen = selected_indices(ACTIONS[action])
+atlas = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
+frame_hashes = []
+preview = []
+⋮----
+path = folder / "frames" / f"CHR-TECH-{action}-{index:02d}.png"
+⋮----
+frame = src.copy()
+⋮----
+scaled = frame.resize((CELL, CELL), Image.Resampling.LANCZOS)
+⋮----
+tile = Image.new("RGBA", (96, 96), (29, 37, 49, 255))
+⋮----
+stem = f"zte_chr_tech_{action.lower()}_final"
+⋮----
+png = output / (stem + ".png")
+⋮----
+technical = inspect(png, f"CHR-TECH-{action}")
+⋮----
+contact = Image.new("RGB", (96 * len(preview), 128), (29, 37, 49))
+d = ImageDraw.Draw(contact)
+⋮----
+def stage(source: Path, skin: Path, output: Path) -> dict
+⋮----
+index = validate_index(source, skin)
+items = [stage_action(source, output, action, index["source_skin_sha256"])
+result = {
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser(description=__doc__)
+⋮----
+args = parser.parse_args()
+result = stage(args.source, args.skin, args.output)
 ```
 
 ## File: sprites/focused_sprite_atlas.py
@@ -6369,6 +6442,49 @@ frames=[person() for _ in range(7)]+[Image.new('RGBA',(256,256))]
 def test_same_palette_is_identical(self)
 ⋮----
 signature=color_signature(person())
+```
+
+## File: sprites/test_export_tech_canonical_review.py
+```python
+"""Offline tests for canonical TECH candidate staging: no network/auto-promotion."""
+⋮----
+class TechCanonicalReviewTests(unittest.TestCase)
+⋮----
+def test_phase_indices_are_stable_distinct_and_bounded(self)
+⋮----
+def fixture(self, root: Path, action: str = "CARRY") -> tuple[Path, Path]
+⋮----
+source = root / "source"
+skin = root / "skin.webp"
+⋮----
+skin_hash = hashlib.sha256(skin.read_bytes()).hexdigest()
+actions = ("WALK", "CARRY", "IDLE", "WORK", "REPAIR", "CELEB")
+index = {
+⋮----
+folder = source / action
+⋮----
+manifest = {
+⋮----
+# 24 actual full-body 512px RGBA frames. The silhouette is game-size legible.
+⋮----
+im = Image.new("RGBA", (512, 512))
+d = ImageDraw.Draw(im)
+⋮----
+def test_real_staged_pixels_preserve_review_and_padding(self)
+⋮----
+root = Path(tmp)
+⋮----
+output = root / "review"
+result = stage_action(source, output, "CARRY", digest(skin))
+⋮----
+def test_refuse_unreviewable_metadata_and_missing_pixels(self)
+⋮----
+bad = root / "bad-skin"
+⋮----
+qa = source / "CARRY" / "qa-manifest.json"
+data = json.loads(qa.read_text())
+⋮----
+def test_unsupported_action_is_rejected(self)
 ```
 
 ## File: sprites/test_focused_sprite_atlas.py

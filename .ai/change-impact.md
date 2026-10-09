@@ -1,10 +1,10 @@
 # Change impact
 
-Base: be1ca53e4edc2c348b1e6aedbfe51b42e185db52
-Head: 28be9aafb2ac68d6bc92c3fb5e0ce3454c4c954d
+Base: 4a66a6be20eb1d714fdd76cb148f914094e80aad
+Head: 8a629e302cfe7e5239d7cd09ffea8440875e2d0e
 
 ## Changed files
-- M .github/workflows/promote-approved-kaggle-characters.yml
+- A .github/workflows/tech-canonical-review-stage.yml
 
 ## Affected areas
 - .github

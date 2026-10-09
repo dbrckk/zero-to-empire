@@ -122,6 +122,7 @@ The content is organized as follows:
     sprite-completion-gate.yml
     sprite-production-plan.yml
     sprite-runtime-ci-bridge.yml
+    tech-canonical-review-stage.yml
     ter07-energy-conduit-candidate.yml
     unified-asset-pipeline.yml
 .serena/
@@ -341,6 +342,7 @@ tools/
     character_review_matrix.py
     character_semantic_gate.py
     colab_mass_factory.py
+    export_tech_canonical_review.py
     focused_sprite_atlas.py
     generate_strict_review_backlog.py
     hf_public_flux_factory.py
@@ -390,6 +392,7 @@ tools/
     test_character_provider_reservation.py
     test_character_review_matrix.py
     test_character_semantic_gate.py
+    test_export_tech_canonical_review.py
     test_focused_sprite_atlas.py
     test_identity_locked_walk_candidate.py
     test_package_tech_actions_runtime.py
@@ -8354,6 +8357,124 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: gh workflow run android.yml --ref main
+```
+
+## File: .github/workflows/tech-canonical-review-stage.yml
+```yaml
+name: TECH canonical review staging
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/sprites/export_tech_canonical_review.py'
+      - 'tools/sprites/test_export_tech_canonical_review.py'
+      - 'tools/sprites/rigged_tech_actions_v3.py'
+      - '.github/workflows/tech-canonical-review-stage.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tech-canonical-review-stage
+  cancel-in-progress: false
+
+jobs:
+  render-and-stage-review-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Sync main
+        run: git pull --ff-only origin main
+      - name: Install deterministic CPU renderer
+        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0' 'numpy==2.3.3'
+      - name: Unit test canonical candidate exporter
+        run: python -m unittest discover -s tools/sprites -p 'test_export_tech_canonical_review.py' -v
+      - name: Unit test source rig
+        run: |
+          python -m unittest discover -s tools/sprites -p 'test_rigged_tech_actions_v3.py' -v
+          python -m unittest discover -s tools/sprites -p 'test_action_contact.py' -v
+      - name: Render all 6 source cycles with a single character skin
+        run: |
+          python tools/sprites/rigged_tech_actions_v3.py \
+            --skin tools/sprites/skin-tech-v1.webp \
+            --output build/tech-actions-v3 \
+            --frames 24 --fps 12 --all
+      - name: Inspect complete source loops at gameplay scale
+        run: |
+          python tools/sprites/temporal_sprite_audit.py \
+            --source build/tech-actions-v3 \
+            --output build/tech-temporal-review \
+            --skin tools/sprites/skin-tech-v1.webp
+      - name: Stage actual Android-format TECH WALK WORK CARRY candidates
+        run: |
+          python tools/sprites/export_tech_canonical_review.py \
+            --source build/tech-actions-v3 \
+            --skin tools/sprites/skin-tech-v1.webp \
+            --output art/production/character-rig-review-candidates
+      - name: Protect canonical strict status and production assets
+        run: |
+          set -euo pipefail
+          git diff --exit-code -- \
+            art/production/master-asset-queue.json \
+            art/incoming/final-sprites/ \
+            app/src/main/res/ \
+            docs/art/FINAL_AAA_SPRITE_MANIFEST.md
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report=json.loads(Path('art/production/character-rig-review-candidates/review-report.json').read_text())
+          master=json.loads(Path('art/production/master-asset-queue.json').read_text())
+          assert report['candidate_count']==3
+          assert report['target_ids']==['CHR-TECH-WALK','CHR-TECH-WORK','CHR-TECH-CARRY']
+          assert report['semantic_approved_count']==0
+          assert report['automatic_promotion_permitted'] is False
+          assert report['canonical_queue_mutated'] is False
+          assert report['android_runtime_mutated'] is False
+          for item in report['items']:
+              assert item['canonical_geometry_pass'] is True
+              assert item['strict_status']=='NEEDS_REVIEW'
+              assert item['runtime_integrated'] is False
+              assert item['visual_review_pass'] is False
+              assert item['semantic_approved'] is False
+          for item in master['assets']:
+              if item['id'] in report['target_ids']:
+                  assert item['strict_status']!='DONE'
+          print('CANONICAL_REVIEW_STAGE_PASS=3 STRICT_DONE_UNCHANGED=1')
+          PY
+      - name: Upload review files and source temporal evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tech-three-canonical-review-not-approved
+          path: |
+            art/production/character-rig-review-candidates/
+            build/tech-temporal-review/temporal-qa.json
+            build/tech-temporal-review/motion-timeline.png
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Persist visual candidates, never production masters
+        if: success() && github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add art/production/character-rig-review-candidates/
+          git diff --cached --quiet && exit 0
+          git commit -m 'art(review): stage identity-locked TECH action candidates (not approved)'
+          git pull --rebase origin main
+          git push origin HEAD:main
 ```
 
 ## File: .github/workflows/ter07-energy-conduit-candidate.yml
@@ -26427,6 +26548,77 @@ dst = cdir / f.name
 archive = shutil.make_archive(str(WORK / 'zero-to-empire-colab-sprites'), 'zip', OUT)
 ```
 
+## File: tools/sprites/export_tech_canonical_review.py
+```python
+#!/usr/bin/env python3
+"""Stage three canonical-format TECH animations from one deterministic textured rig.
+
+These are visual-review CANDIDATES, never replacements for canonical PNG/WebP
+or automatic strict-DONE promotions. The 24-frame articulated source is
+downsampled to the existing Android 4x4 / action-frame-count contract.
+"""
+⋮----
+ACTIONS = {"WALK": 8, "WORK": 10, "CARRY": 8}
+SOURCE_FRAMES = 24
+CELL = 256
+⋮----
+def digest(path: Path) -> str
+⋮----
+def selected_indices(count: int, source_count: int = SOURCE_FRAMES) -> list[int]
+⋮----
+result = [i * source_count // count for i in range(count)]
+⋮----
+def validate_index(source: Path, skin: Path) -> dict
+⋮----
+index = json.loads((source / "production-index.json").read_text(encoding="utf-8"))
+⋮----
+actions = {row.get("action"): row for row in index.get("actions", [])}
+⋮----
+row = actions[action]
+⋮----
+def stage_action(source: Path, output: Path, action: str, skin_sha: str) -> dict
+⋮----
+folder = source / action
+manifest = json.loads((folder / "qa-manifest.json").read_text(encoding="utf-8"))
+⋮----
+qa = manifest.get("qa", {})
+⋮----
+chosen = selected_indices(ACTIONS[action])
+atlas = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
+frame_hashes = []
+preview = []
+⋮----
+path = folder / "frames" / f"CHR-TECH-{action}-{index:02d}.png"
+⋮----
+frame = src.copy()
+⋮----
+scaled = frame.resize((CELL, CELL), Image.Resampling.LANCZOS)
+⋮----
+tile = Image.new("RGBA", (96, 96), (29, 37, 49, 255))
+⋮----
+stem = f"zte_chr_tech_{action.lower()}_final"
+⋮----
+png = output / (stem + ".png")
+⋮----
+technical = inspect(png, f"CHR-TECH-{action}")
+⋮----
+contact = Image.new("RGB", (96 * len(preview), 128), (29, 37, 49))
+d = ImageDraw.Draw(contact)
+⋮----
+def stage(source: Path, skin: Path, output: Path) -> dict
+⋮----
+index = validate_index(source, skin)
+items = [stage_action(source, output, action, index["source_skin_sha256"])
+result = {
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser(description=__doc__)
+⋮----
+args = parser.parse_args()
+result = stage(args.source, args.skin, args.output)
+```
+
 ## File: tools/sprites/focused_sprite_atlas.py
 ```python
 """Shared pivot-preserving framing for small-screen TECH preview sprites.
@@ -31056,6 +31248,49 @@ frames=[person() for _ in range(7)]+[Image.new('RGBA',(256,256))]
 def test_same_palette_is_identical(self)
 ⋮----
 signature=color_signature(person())
+```
+
+## File: tools/sprites/test_export_tech_canonical_review.py
+```python
+"""Offline tests for canonical TECH candidate staging: no network/auto-promotion."""
+⋮----
+class TechCanonicalReviewTests(unittest.TestCase)
+⋮----
+def test_phase_indices_are_stable_distinct_and_bounded(self)
+⋮----
+def fixture(self, root: Path, action: str = "CARRY") -> tuple[Path, Path]
+⋮----
+source = root / "source"
+skin = root / "skin.webp"
+⋮----
+skin_hash = hashlib.sha256(skin.read_bytes()).hexdigest()
+actions = ("WALK", "CARRY", "IDLE", "WORK", "REPAIR", "CELEB")
+index = {
+⋮----
+folder = source / action
+⋮----
+manifest = {
+⋮----
+# 24 actual full-body 512px RGBA frames. The silhouette is game-size legible.
+⋮----
+im = Image.new("RGBA", (512, 512))
+d = ImageDraw.Draw(im)
+⋮----
+def test_real_staged_pixels_preserve_review_and_padding(self)
+⋮----
+root = Path(tmp)
+⋮----
+output = root / "review"
+result = stage_action(source, output, "CARRY", digest(skin))
+⋮----
+def test_refuse_unreviewable_metadata_and_missing_pixels(self)
+⋮----
+bad = root / "bad-skin"
+⋮----
+qa = source / "CARRY" / "qa-manifest.json"
+data = json.loads(qa.read_text())
+⋮----
+def test_unsupported_action_is_rejected(self)
 ```
 
 ## File: tools/sprites/test_focused_sprite_atlas.py
