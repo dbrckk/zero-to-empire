@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 1ac90595ebf7687872af1df70b1c3255ccbdfe50
-Head: 7cec784e613135857c3012b9d4f66bbc983b9196
+Base: 2370b522c26172dc7932255ae2e8443487b5907d
+Head: ed22db894a1fed32d50c0e93a261a35d1c775a0e
 
 ## Changed files
-- M tools/sprites/test_rigged_tech_actions_v3.py
+- M AGENTS.md
 
 ## Affected areas
-- tools
+- (root)
 
 ## Related test candidates
 - No direct filename-based test match detected.
