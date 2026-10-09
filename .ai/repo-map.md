@@ -28285,6 +28285,8 @@ expected_transfer=action in ('WALK','CARRY')
 ⋮----
 arm_height=qa.get('celebration_min_arm_raise_px')
 ⋮----
+wrist_span=qa.get('celebration_min_wrist_span_px')
+⋮----
 tool=qa.get('repair_torch_length_range_px')
 ⋮----
 poses=json.loads((folder/'frame-poses.json').read_text(encoding='utf-8'))
@@ -29504,6 +29506,8 @@ a=p.get("torso_lean_rad",0.)
 shoulders=((x-24*ca+86*sa,y-24*sa-86*ca),
 ⋮----
 raised_arm_pass=(min(raised_arm_heights)>=65 if raised_arm_heights else True)
+arm_spans=[p["handR"][0]-p["handL"][0] for p in poses] if action=="CELEB" else []
+wide_arms_pass=(min(arm_spans)>=135 if arm_spans else True)
 legible_motion = (action not in ("WORK", "REPAIR", "CELEB")
 supports = [p.get("support_bias") for p in poses]
 amplitude = max(abs(p.get("weight_transfer_px",0)) for p in poses)
@@ -30231,9 +30235,11 @@ def test_refuse_desynchronized_visual_events(self)
 events=json.loads((FIXTURE/action/'footstep-events.json').read_text())
 changed=next(i for i,e in enumerate(events) if e.get('vfx_event')==event_kind)
 ⋮----
-def test_reject_celebration_below_overhead_qa_threshold(self)
+def test_reject_narrow_celebration_pose(self)
 ⋮----
 manifest=json.loads((FIXTURE/'CELEB'/'qa-manifest.json').read_text())
+⋮----
+def test_reject_celebration_below_overhead_qa_threshold(self)
 ⋮----
 def test_reject_mismatched_work_and_repair_contacts(self)
 ⋮----

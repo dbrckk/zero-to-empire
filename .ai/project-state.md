@@ -22,13 +22,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T09:31:42Z
+Generated: 2026-10-09T09:36:36Z
 
 ### Git
 - Branch: `main`
-- Head: `84fcdadc2a14`
-- Commit date: 2026-10-09T11:31:11+02:00
-- Commit: test(art): reject low-arm CELEB animation even when general QA is green
+- Head: `85648e09aeee`
+- Commit date: 2026-10-09T11:35:59+02:00
+- Commit: test(art): refuse narrow CELEB silhouette even with raised hands
 - Tracked files: 1472
 
 ### Recently changed files
@@ -36,7 +36,6 @@ Generated: 2026-10-09T09:31:42Z
 - `tools/sprites/package_tech_actions_runtime.py`
 - `tools/sprites/test_rigged_tech_actions_v3.py`
 - `tools/sprites/rigged_tech_actions_v3.py`
-- `tools/sprites/test_temporal_sprite_audit.py`
 
 ### Project signals
 - `build.gradle.kts`
