@@ -3,7 +3,15 @@
     <application>
         <activity
             android:name=".CharacterReviewActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:label="Animation QA"
+            android:theme="@style/Theme.ZeroToEmpire">
+            <!-- Debug build only: open without adb or a PC on an Android phone. -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <receiver
             android:name=".SmokeSeedReceiver"
             android:exported="true">
