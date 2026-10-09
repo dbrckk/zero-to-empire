@@ -51,7 +51,8 @@ jobs:
         run: |
           python tools/sprites/temporal_sprite_audit.py \
             --source build/tech-actions-v3 \
-            --output build/tech-temporal-review
+            --output build/tech-temporal-review \
+            --skin tools/sprites/skin-tech-v1.webp
       - name: Package game-scale RGBA atlases and playback manifest
         run: |
           python tools/sprites/package_tech_actions_runtime.py \
