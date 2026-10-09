@@ -2,7 +2,13 @@
 from pathlib import Path
 import json, os, time, urllib.parse, urllib.request
 from PIL import Image
-from character_semantic_gate import clip_risk
+# Support both execution as a script and importlib-based tooling from tools/assets.
+try:
+    from character_semantic_gate import clip_risk
+except ModuleNotFoundError as exc:
+    if exc.name != 'character_semantic_gate':
+        raise
+    from tools.sprites.character_semantic_gate import clip_risk
 
 ROOT=Path(__file__).resolve().parents[2]
 MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
