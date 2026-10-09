@@ -5,85 +5,29 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "build": {
+    "inspect": {
       "source": {
-        "file": "tools/sprites/character_review_matrix.py",
-        "start": 30,
-        "end": 85
+        "file": "tools/sprites/audit_character_candidates.py",
+        "start": 23,
+        "end": 87
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "markdown": {
+    "contact": {
       "source": {
-        "file": "tools/sprites/character_review_matrix.py",
-        "start": 88,
-        "end": 114
+        "file": "tools/sprites/audit_character_candidates.py",
+        "start": 90,
+        "end": 115
       },
-      "symbol_dependencies": [
-        {
-          "symbol": "Asset",
-          "definitions": [
-            {
-              "file": "tools/sprites/plan_sprite_batches.py",
-              "line": 33,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "class_like"
-        }
-      ],
-      "dependency_count": 1
+      "symbol_dependencies": [],
+      "dependency_count": 0
     },
     "main": {
       "source": {
-        "file": "tools/sprites/character_review_matrix.py",
-        "start": 117,
-        "end": 237
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "build",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_review_matrix.py",
-              "line": 30,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "markdown",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_review_matrix.py",
-              "line": 88,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "fake_queue": {
-      "source": {
-        "file": "tools/sprites/test_character_review_matrix.py",
-        "start": 5,
-        "end": 17
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "MatrixTests": {
-      "source": {
-        "file": "tools/sprites/test_character_review_matrix.py",
-        "start": 20,
-        "end": 56
+        "file": "tools/sprites/audit_character_candidates.py",
+        "start": 118,
+        "end": 238
       },
       "symbol_dependencies": [
         {
@@ -99,11 +43,11 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "fake_queue",
+          "symbol": "contact",
           "definitions": [
             {
-              "file": "tools/sprites/test_character_review_matrix.py",
-              "line": 5,
+              "file": "tools/sprites/audit_character_candidates.py",
+              "line": 90,
               "kind": "function",
               "language": "python"
             }
@@ -111,224 +55,16 @@
           "relation": "same_file"
         },
         {
-          "symbol": "markdown",
+          "symbol": "inspect",
           "definitions": [
             {
-              "file": "tools/sprites/character_review_matrix.py",
-              "line": 88,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "test_cannot_inflate_canonical_queue",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_character_review_matrix.py",
-              "line": 38,
+              "file": "tools/sprites/audit_character_candidates.py",
+              "line": 23,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "same_file"
-        },
-        {
-          "symbol": "test_deterministic_order_and_source_immutability",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_character_review_matrix.py",
-              "line": 49,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_exact_pending_roles_and_no_auto_promotion",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_character_review_matrix.py",
-              "line": 21,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_semantic_rejection_before_technical_success",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_character_review_matrix.py",
-              "line": 30,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 7
-    },
-    "test_exact_pending_roles_and_no_auto_promotion": {
-      "source": {
-        "file": "tools/sprites/test_character_review_matrix.py",
-        "start": 21,
-        "end": 28
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "build",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_review_matrix.py",
-              "line": 30,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "fake_queue",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_character_review_matrix.py",
-              "line": 5,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_semantic_rejection_before_technical_success": {
-      "source": {
-        "file": "tools/sprites/test_character_review_matrix.py",
-        "start": 30,
-        "end": 36
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "build",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_review_matrix.py",
-              "line": 30,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "fake_queue",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_character_review_matrix.py",
-              "line": 5,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "markdown",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_review_matrix.py",
-              "line": 88,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "test_cannot_inflate_canonical_queue": {
-      "source": {
-        "file": "tools/sprites/test_character_review_matrix.py",
-        "start": 38,
-        "end": 47
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "build",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_review_matrix.py",
-              "line": 30,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "fake_queue",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_character_review_matrix.py",
-              "line": 5,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_deterministic_order_and_source_immutability": {
-      "source": {
-        "file": "tools/sprites/test_character_review_matrix.py",
-        "start": 49,
-        "end": 56
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "build",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_review_matrix.py",
-              "line": 30,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "fake_queue",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_character_review_matrix.py",
-              "line": 5,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "markdown",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_review_matrix.py",
-              "line": 88,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
         }
       ],
       "dependency_count": 3

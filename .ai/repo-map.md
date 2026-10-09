@@ -333,6 +333,7 @@ tools/
     animation_batch_planner.py
     asset_queue_utils.py
     asset_wave_orchestrator.py
+    audit_character_candidates.py
     audit_complete_sprite_manifest.py
     autonomous_walk.py
     build_sprite_contact_sheet.py
@@ -1264,6 +1265,8 @@ on:
       - 'art/production/master-asset-queue.json'
       - 'tools/sprites/character_review_matrix.py'
       - 'tools/sprites/test_character_review_matrix.py'
+      - 'tools/sprites/audit_character_candidates.py'
+      - 'art/incoming/final-sprites/zte_chr_*_final.png'
       - '.github/workflows/character-review-matrix.yml'
   workflow_dispatch:
 permissions:
@@ -1280,6 +1283,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Install image inspection dependencies
+        run: python -m pip install Pillow==11.3.0
       - name: Run no-promotion and prioritization regression tests
         run: python -m unittest discover -s tools/sprites -p 'test_character_review_matrix.py' -v
       - name: Generate evidence-only character review matrix
@@ -1294,6 +1299,8 @@ jobs:
           assert all(not x['semantic_review_pass'] for x in report['items'])
           print('REVIEW_ONLY: 19 canonical assets, 216 strict DONE unchanged')
           PY
+      - name: Audit actual canonical character sprite sheets
+        run: python tools/sprites/audit_character_candidates.py --out /tmp/character-visual-audit
       - name: Upload review-only evidence
         uses: actions/upload-artifact@v4
         with:
@@ -1301,6 +1308,8 @@ jobs:
           path: |
             /tmp/character-review-matrix.json
             /tmp/character-review-matrix.md
+            /tmp/character-visual-audit/canonical-character-audit.json
+            /tmp/character-visual-audit/canonical-character-contact.png
           retention-days: 30
 ```
 
@@ -25629,6 +25638,81 @@ queue = ensure_master()
 # master status first and make the correlated callback miss its assets.
 ⋮----
 decision = make_decision(queue)
+```
+
+## File: tools/sprites/audit_character_candidates.py
+```python
+#!/usr/bin/env python3
+"""Audit actual canonical character sprite sheets and render contact evidence.
+
+Never grants artistic approval. Uses original PNG candidates in art/incoming;
+a TECH preview from a separate generator cannot overwrite canonical evidence.
+"""
+⋮----
+ROOT=Path(__file__).resolve().parents[2]
+# Canonical incoming PNGs use the Kaggle producer's actual frame contract.
+# The newer animation_batch_planner targets are aspirational and differ.
+ACTION_FRAMES={"IDLE":6,"WALK":8,"WORK":10,"CARRY":8,"REPAIR":10,"CELEB":8}
+TARGET_FRAMES={"IDLE":8,"WALK":8,"WORK":12,"CARRY":8,"REPAIR":12,"CELEB":10}
+⋮----
+def inspect(path:Path,asset_id:str)->dict
+⋮----
+expected=ACTION_FRAMES[action]
+result={"asset_id":asset_id,"source_path":str(path),"exists":path.is_file(),
+⋮----
+cell=w//4
+⋮----
+rows=h//cell
+capacity=4*rows
+⋮----
+rgba=img.convert("RGBA")
+# Blank atlas cells are intentional padding, not extra animation
+# frames; reject any nonblank frame after the producer's count.
+⋮----
+px=(n%4)*cell;py=(n//4)*cell
+⋮----
+alpha=rgba.getchannel("A")
+⋮----
+metrics=[]
+⋮----
+x=(i%4)*cell;y=(i//4)*cell
+frame=rgba.crop((x,y,x+cell,y+cell))
+mask=frame.getchannel("A")
+box=mask.getbbox()
+⋮----
+margin=min(l,t,cell-r,cell-b)
+⋮----
+def contact(rows:list[dict],output:Path)->None
+⋮----
+thumb=112
+canvas=Image.new("RGB",(800,len(rows)*148+50),(19,27,39))
+d=ImageDraw.Draw(canvas)
+⋮----
+y=50+i*148
+⋮----
+img=original.convert("RGBA")
+cell=img.width//4
+⋮----
+x=n%4*cell;y0=n//4*cell
+tile=img.crop((x,y0,x+cell,y0+cell))
+⋮----
+ox=195+n*120+(thumb-tile.width)//2
+oy=y+15+(thumb-tile.height)//2
+⋮----
+def main()->int
+⋮----
+parser=argparse.ArgumentParser()
+⋮----
+args=parser.parse_args()
+report=build(json.loads(args.queue.read_text(encoding="utf-8")))
+rows=[]
+⋮----
+asset_id=row["asset_id"]
+stem="zte_chr_"+asset_id[4:].lower().replace("-","_")+"_final.png"
+source=ROOT/"art/incoming/final-sprites"/stem
+audit=inspect(source,asset_id)
+⋮----
+result={"format":"zte-canonical-character-visual-audit-v1",
 ```
 
 ## File: tools/sprites/audit_complete_sprite_manifest.py

@@ -22,21 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T12:02:07Z
+Generated: 2026-10-09T12:15:52Z
 
 ### Git
 - Branch: `main`
-- Head: `de174a0aa5c6`
-- Commit date: 2026-10-09T14:01:49+02:00
-- Commit: ci(art): independently audit all 19 unapproved character assets without Kaggle
-- Tracked files: 1479
+- Head: `3d0aee7640f3`
+- Commit date: 2026-10-09T14:15:36+02:00
+- Commit: fix(art): distinguish Kaggle 6/8/10-frame contract from planned 8/10/12 and accept blank atlas padding
+- Tracked files: 1480
 
 ### Recently changed files
+- `tools/sprites/audit_character_candidates.py`
 - `.github/workflows/character-review-matrix.yml`
-- `tools/sprites/test_character_review_matrix.py`
-- `tools/sprites/character_review_matrix.py`
-- `AGENTS.md`
-- `tools/sprites/test_rigged_tech_actions_v3.py`
 
 ### Project signals
 - `build.gradle.kts`
