@@ -11,6 +11,8 @@ import math
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFilter
 from action_contact import work_event_indices, repair_spark_intensity
+from focused_sprite_atlas import (collect_frame_bounds,shared_crop,
+                                 framed_sprite,view_pivot)
 
 ACTIONS=('WALK','CARRY','IDLE','WORK','REPAIR','CELEB')
 SIDE=512
@@ -121,8 +123,11 @@ def verify(root:Path):
 
 def review_html(data:dict)->str:
     sources=json.dumps({name:{'src':a['variants']['128']['path'],
-                'shadow_src':a['optional_shadow_layer']['variants']['128']['path'],'frames':a['frames'],
-                'cols':a['columns'],'fps':a['fps']} for name,a in data['animations'].items()})
+                'shadow_src':a['optional_shadow_layer']['variants']['128']['path'],
+                'focus_src':a['focused_variants']['96']['path'],
+                'focus_shadow_src':a['optional_shadow_layer']['focused_variants']['96']['path'],
+                'frames':a['frames'],'cols':a['columns'],'fps':a['fps']}
+                for name,a in data['animations'].items()})
     template='''<!doctype html><html lang="fr"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>TECH · Six actions — REVIEW ONLY</title><style>
@@ -138,6 +143,8 @@ select{background:#172538;color:inherit;padding:5px}footer{color:#97abc1;margin-
 <option value="1.5">1,5×</option><option value="2">2×</option></select></label>
 <label>Taille <select id="zoom"><option selected value="96">96 px — jeu</option>
 <option value="128">128 px</option><option value="192">192 px</option><option value="256">256 px</option></select></label>
+<label>Cadrage <select id="framing"><option value="original">Original</option>
+<option value="focused" selected>Optimisé · caméra commune</option></select></label>
 <label><input id="showShadows" type="checkbox"> Ombres facultatives</label>
 <button id="pause">Pause</button>
 <div class="grid" id="grid"></div><footer>Lecture à 96 px par défaut ; ombres désactivées par défaut. Contrôle de revue uniquement : aucune validation ni modification du jeu.</footer>
@@ -149,7 +156,10 @@ const count=document.createElement('span');count.textContent=c.frames+' frames';
 const canvas=document.createElement('canvas');canvas.width=256;canvas.height=256;
 const img=new Image();img.onload=()=>c.ready=true;img.src=c.src;
 const shadow=new Image();shadow.onload=()=>c.shadowReady=true;shadow.src=c.shadow_src;
-card.append(h,canvas);grid.append(card);nodes.push({c,img,shadow,ctx:canvas.getContext('2d')});}
+const focused=new Image();focused.onload=()=>c.focusReady=true;focused.src=c.focus_src;
+const focusShadow=new Image();focusShadow.onload=()=>c.focusShadowReady=true;focusShadow.src=c.focus_shadow_src;
+card.append(h,canvas);grid.append(card);
+nodes.push({c,img,shadow,focused,focusShadow,ctx:canvas.getContext('2d')});}
 let paused=false,elapsed=0,previous=null;
 document.querySelector('#pause').onclick=()=>{
   paused=!paused;document.querySelector('#pause').textContent=paused?'Lire':'Pause';
@@ -159,12 +169,21 @@ function draw(t){
  if(!paused)elapsed+=dt*Number(document.querySelector('#speed').value);
  const zoom=Number(document.querySelector('#zoom').value),offset=(256-zoom)/2;
  const showShadows=document.querySelector('#showShadows').checked;
- for(const {c,img,shadow,ctx} of nodes){
+ const chooseFocus=document.querySelector('#framing').value==='focused';
+ for(const {c,img,shadow,focused,focusShadow,ctx} of nodes){
   ctx.clearRect(0,0,256,256);if(!c.ready)continue;
   const frame=Math.floor(elapsed*c.fps/1000)%c.frames;
-  if(showShadows&&c.shadowReady)
-   ctx.drawImage(shadow,(frame%c.cols)*128,Math.floor(frame/c.cols)*128,128,128,offset,offset,zoom,zoom);
-  ctx.drawImage(img,(frame%c.cols)*128,Math.floor(frame/c.cols)*128,128,128,offset,offset,zoom,zoom);
+  const useFocus=chooseFocus&&c.focusReady;
+  const actual=useFocus?focused:img;
+  const cell=useFocus?96:128;
+  if(showShadows){
+   const s=useFocus?focusShadow:shadow;
+   if(useFocus?c.focusShadowReady:c.shadowReady)
+    ctx.drawImage(s,(frame%c.cols)*cell,Math.floor(frame/c.cols)*cell,cell,cell,
+                  offset,offset,zoom,zoom);
+  }
+  ctx.drawImage(actual,(frame%c.cols)*cell,Math.floor(frame/c.cols)*cell,cell,cell,
+                offset,offset,zoom,zoom);
  }
  requestAnimationFrame(draw);
 }
@@ -244,6 +263,7 @@ def verify_temporal_evidence(index:dict,records:dict,report_path:Path)->dict:
 
 def package(source:Path,output:Path,temporal_report:Path|None=None)->dict:
     index,records=verify(source)
+    shared_view=shared_crop(collect_frame_bounds(records,ACTIONS))
     evidence=(verify_temporal_evidence(index,records,temporal_report)
               if temporal_report is not None else None)
     output.mkdir(parents=True,exist_ok=True)
@@ -253,11 +273,20 @@ def package(source:Path,output:Path,temporal_report:Path|None=None)->dict:
               'reference_canvas_px':SIDE,'source_skin_sha256':index['source_skin_sha256'],
               'temporal_evidence_verified':evidence is not None,
               'temporal_evidence_format':evidence['format'] if evidence else None,
+              'focused_camera':{'shared_crop_bounds_px':list(shared_view),
+                                'shared_source_canvas_px':[SIDE,SIDE],
+                                'zoom_factor':round(SIDE/(shared_view[2]-shared_view[0]),5),
+                                'world_pivot_px':[252,449],
+                                'optional_review_variant_only':True},
               'animations':{}}
     overview=Image.new('RGB',(900,672),(23,29,40))
     draw=ImageDraw.Draw(overview)
     contact96=Image.new('RGB',(120+96*8,40+108*6),(25,33,45))
     contact_draw=ImageDraw.Draw(contact96)
+    contact_focus=Image.new('RGB',contact96.size,(25,33,45))
+    focus_draw=ImageDraw.Draw(contact_focus)
+    focus_draw.text((120,12),'COMMON CAMERA / FOCUSED 96 PX — REVIEW ONLY',
+                    fill=(190,208,224))
     contact_draw.text((120,12),'1       4       7      10      13      16      19      22  / 24',fill=(190,208,224))
     for idx,action in enumerate(ACTIONS):
         rec=records[action]; count=rec['count'];cols=6;rows=math.ceil(count/cols)
@@ -276,9 +305,12 @@ def package(source:Path,output:Path,temporal_report:Path|None=None)->dict:
         ensure(all(metric['pass'] for metric in game_scale),
                '96px game-scale silhouette collapsed/clipped: '+action)
         contact_draw.text((10,36+idx*108+42),action,fill=(218,234,245))
+        focus_draw.text((10,36+idx*108+42),action,fill=(218,234,245))
         for j in range(8):
             img=pics[(j*count)//8].resize((96,96),Image.Resampling.LANCZOS)
             contact96.paste(img,(120+j*96,36+idx*108),img.getchannel('A'))
+            zoomed=framed_sprite(pics[(j*count)//8],shared_view,96)
+            contact_focus.paste(zoomed,(120+j*96,36+idx*108),zoomed.getchannel('A'))
         variants={};shadow_variants={}
         shadow_frames=[render_contact_shadow(p) for p in rec['poses']]
         for size in SIZES:
@@ -300,6 +332,32 @@ def package(source:Path,output:Path,temporal_report:Path|None=None)->dict:
             variants[str(size)]={'path':path.relative_to(output).as_posix(),'sha256':sha(path),
                 'sprite_size':[size,size],'atlas_size':[size*cols,size*rows],
                 'pivot_px':[round(252*size/SIDE,3),round(449*size/SIDE,3)]}
+        focused_variants={};focused_shadow_variants={}
+        for size in (96,128):
+            folder=output/'focused-atlases';folder.mkdir(exist_ok=True)
+            focus_atlas=Image.new('RGBA',(size*cols,size*rows))
+            focus_shadow_atlas=Image.new('RGBA',(size*cols,size*rows))
+            for i,frame in enumerate(pics):
+                focused=framed_sprite(frame,shared_view,size)
+                focus_atlas.alpha_composite(focused,((i%cols)*size,(i//cols)*size))
+                # Shadows are soft blur fields, not part of the strict
+                # character silhouette. They use the identical camera.
+                shadow=shadow_frames[i].crop(shared_view).resize(
+                    (size,size),Image.Resampling.LANCZOS)
+                focus_shadow_atlas.alpha_composite(
+                    shadow,((i%cols)*size,(i//cols)*size))
+            focus_path=folder/f'{action.lower()}-focused-{size}.png'
+            focus_atlas.save(focus_path,optimize=True)
+            shadow_path=folder/f'{action.lower()}-focused-shadow-{size}.png'
+            focus_shadow_atlas.save(shadow_path,optimize=True)
+            focused_variants[str(size)]={'path':focus_path.relative_to(output).as_posix(),
+                'sha256':sha(focus_path),'sprite_size':[size,size],
+                'atlas_size':[size*cols,size*rows],
+                'pivot_px':view_pivot(shared_view,size),
+                'shared_crop_bounds_px':list(shared_view)}
+            focused_shadow_variants[str(size)]={
+                'path':shadow_path.relative_to(output).as_posix(),
+                'sha256':sha(shadow_path),'atlas_size':[size*cols,size*rows]}
         xx=450*(idx%2);yy=224*(idx//2)
         icon=pics[0].resize((190,190),Image.Resampling.LANCZOS)
         overview.paste(icon,(xx+112,yy+30),icon.getchannel('A'))
@@ -320,10 +378,13 @@ def package(source:Path,output:Path,temporal_report:Path|None=None)->dict:
             'phase_origin_frame':round(count*5/24) if action=='WORK' else 0,
             'weight_transfer':{'enabled':action in ('WALK','CARRY')},
             'events_file':events_file.relative_to(output).as_posix(),
-            'optional_shadow_layer':{'default_enabled':False,'variants':shadow_variants},
-            'variants':variants,'strict_status':'NEEDS_REVIEW','review_required':True}
+            'optional_shadow_layer':{'default_enabled':False,'variants':shadow_variants,
+                                     'focused_variants':focused_shadow_variants},
+            'variants':variants,'focused_variants':focused_variants,
+            'strict_status':'NEEDS_REVIEW','review_required':True}
     overview.save(output/'game-scale-overview.jpg',quality=93)
     contact96.save(output/'review-all-actions-96.png',optimize=True)
+    contact_focus.save(output/'review-focused-all-actions-96.png',optimize=True)
     (output/'runtime-manifest.json').write_text(json.dumps(exported,indent=2),encoding='utf-8')
     (output/'REVIEW_REQUIRED.txt').write_text(
         'Review-only animated candidates; no strict DONE and no final game assets.\n',
