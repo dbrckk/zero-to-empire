@@ -66,3 +66,36 @@ dans une véritable séquence de jeu avant tout passage en production.
 Le workflow `.github/workflows/modular-tech-actions.yml` doit être contrôlé
 après chaque changement. Un passage de tests local ne signifie pas que la
 dernière exécution GitHub Actions est confirmée.
+
+
+## Cadrage mobile commun aux six animations — revue uniquement
+
+Pour améliorer la lisibilité sur smartphone, le packeur produit des **atlas
+optionnels cadrés** dans `focused-atlases/`, à 96×96 et 128×128. Le cadrage
+est calculé une seule fois à partir de tous les pixels alpha non nuls des
+**144 images des six actions réunies** : aucune animation n'utilise une
+caméra différente et aucun cadre ne change pendant la boucle. En cas de
+dépassement, le calcul refuse le recadrage ; en cas de grande silhouette,
+il conserve toute l'image originale. Les textures, VFX et accessoires
+sont donc préservés.
+
+Le fichier `runtime-manifest.json` stocke
+`focused_camera.shared_crop_bounds_px`, son facteur de zoom, le pivot
+monde inchangé `[252,449]` et, pour chaque variante,
+`focused_variants[size].pivot_px` recalculé précisément dans le nouveau
+cadre. Les ombres facultatives disposent de la même caméra et de leurs
+propres atlas. Les **atlas historiques ne sont pas modifiés**.
+
+Le lecteur `review-player.html` offre un sélecteur
+`Original / Optimisé · caméra commune` : il démarre en vue optimisée
+à 96px, et garde les ombres désactivées. Deux planches sont produites :
+`review-all-actions-96.png` et
+`review-focused-all-actions-96.png`. Comparer les deux permet d'évaluer
+l'amélioration de lisibilité avant toute intégration dans le jeu.
+
+**Attention :** ce cadrage est un zoom visuel, pas une déformation du
+personnage, ni une validation artistique. Il ne corrige pas les éventuels
+contacts imparfaits, déformations de membres ou variations de rendu.
+Toutes les sorties restent `NEEDS_REVIEW` et
+`integrated_into_game=false`. Un import éventuel doit utiliser
+les pivots de variante plutôt que ceux du canevas original.
