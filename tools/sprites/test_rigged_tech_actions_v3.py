@@ -9,7 +9,7 @@ import unittest
 from pathlib import Path
 from PIL import Image
 from rigged_tech_actions_v3 import (
-    ACTIONS, GROUND, build_action, draw_frame, pose_for, spine_lean,
+    ACTIONS, GROUND, build_action, draw_cargo, draw_frame, pose_for, spine_lean,
 )
 import rigged_tech_walk_v2 as core
 from action_contact import work_contact, repair_contact, repair_spark_intensity, work_event_indices
@@ -77,6 +77,33 @@ class MultiActionGeometryTests(unittest.TestCase):
             x, y = p["root"]
             self.assertEqual(p["handL"], (x + 29, y - 55))
             self.assertEqual(p["handR"], (x + 103, y - 55))
+
+    def test_carry_is_a_visible_amber_crate_with_both_handle_anchors(self):
+        # Pixel test: a tiny cyan console must never masquerade as cargo.
+        for t in (0.0, .25, .5, .75):
+            pose = pose_for(t, "CARRY")
+            layer = Image.new("RGBA", (512, 512))
+            draw_cargo(layer, pose, t)
+            x, y = pose["root"]
+            l, top = round(x + 20), round(y - 82)
+            cargo = layer.crop((l, top, l + 96, top + 65))
+            amber = sum(
+                a >= 220 and r > g * 1.20 and g > b * 1.15
+                for r, g, b, a in cargo.getdata()
+            )
+            blue = sum(
+                a >= 220 and b > r * 1.8 and g > r * 1.8
+                for r, g, b, a in cargo.getdata()
+            )
+            self.assertGreater(amber, 650, "Cargo must read as a crate")
+            self.assertLess(blue, 80, "Cargo must not look like a screen")
+            for handle in ("handL", "handR"):
+                hx, hy = (round(c) for c in pose[handle])
+                self.assertEqual(layer.getpixel((hx, hy))[3], 255)
+                self.assertTrue(
+                    l <= hx < l + 96 and top <= hy < top + 65,
+                    "Grip must remain attached to the crate",
+                )
 
     def test_action_motion_is_not_identical_across_frames(self):
         for action in ("WORK", "REPAIR", "CELEB"):
