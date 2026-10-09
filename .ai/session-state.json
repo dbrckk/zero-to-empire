@@ -3,7 +3,7 @@
   "updated_at": "2026-10-09",
   "task": "Finish canonical 235/235 strict DONE with genuine semantic character animation, runtime integration and green Android CI",
   "branch": "main",
-  "last_observed_head": "788ae5a3c15af4e610586a8c86953ca4280acb10",
+  "last_observed_head": "750cebd02ac3e9bfa93fea48a363ec05b549c121",
   "state": {
     "strict_done": 216,
     "target_total": 235,
@@ -44,17 +44,38 @@
     },
     "manifest_discrepancy": {
       "manifest_rows": 236,
-      "manifest_rows_marked_done": 236,
+      "manifest_rows_marked_done": 217,
+      "manifest_runtime_review": 17,
+      "manifest_blocked": 2,
       "canonical_strict_done": 216,
       "excluded_item": "ONB-00",
-      "historical_semantic_review": "OPEN"
+      "historical_semantic_review": "OPEN",
+      "alignment": "RECONCILED",
+      "discrepancy": false
+    },
+    "tech_rig_review": {
+      "candidates": [
+        "CHR-TECH-WALK",
+        "CHR-TECH-WORK",
+        "CHR-TECH-CARRY"
+      ],
+      "source": "tools/sprites/skin-tech-v1.webp",
+      "staged_dir": "art/production/character-rig-review-candidates",
+      "strict_approved": 0,
+      "strict_status": "NEEDS_REVIEW",
+      "staging_workflow_run_id": 37983528623,
+      "staging_conclusion": "success",
+      "android_debug_preview_run_id": 37983740983,
+      "android_preview_status": "in_progress at last verification",
+      "visual_review": "Single TECH identity stable; CARRY amber box improved with anchored dual grips; WALK leg separation and WORK hand contact still need in-game visual review.",
+      "evidence_document": "docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md"
     }
   },
-  "last_completed": "Canonical 216/235 unchanged. Reconciled 236-row manifest (217 DONE including ONB, 17 RUNTIME, 2 BLOCKED), corrected planner and progress reconciler, fixed image-fragment cache poisoning; Android CI, Sprite Production Plan, character review matrix, Pollinations Character Smoke, Asset Pipeline CI and progress reconciliation passed on relevant commits. Pollinations LOG-CARRY produced NO acceptable candidate.",
+  "last_completed": "Built and verified an offline textured TECH canonical 3-action review pipeline (WALK 8, WORK 10, CARRY 8) with identity and provenance checks, 96px visual QA and no automatic promotion. Replaced floating CARRY dashboard with an anchored dual-handle amber industrial crate. TECH canonical review staging 37983528623 was green and stored actual preview PNG/GIF; Android preview 37983740983 still running at this checkpoint. Strict 216/235 unchanged.",
   "next_actions": [
-    "Do not requeue charge-restricted Pollinations LOG-CARRY blindly; inspect three rejected fragments and choose an actually available free identity-locked asset generator.",
-    "Repair all 19 character animations with fixed identity, full bodies, consistent camera, readable motion and props; no auto semantic approval.",
-    "For each visually approved replacement, verify technical/temporal QA, runtime references, playable Android build and green CI before strict DONE increment.",
-    "Reconcile 236-row manifest and progress docs with 235 canonical strict approvals; close historical review only with evidence."
+    "Check TECH Android preview run 37983740983; if green, obtain and inspect APK on Android with gameplay-visible three characters before any strict promotion.",
+    "Review TECH WALK foot sliding / projection and TECH WORK bilateral device contact at game scale, TECH CARRY bilateral crate grip, and preserve per-frame evidence.",
+    "Once each candidate passes image/gameplay review, promote only that asset's exact PNG/WebP with matching sha, CI and manifest status; do not promote all 3 automatically.",
+    "Continue rebuilding OP/LOG/ENG 16 remaining characters with single-identity animation and QA; master strict counter remains 216/235 until defensibly validated."
   ]
 }
