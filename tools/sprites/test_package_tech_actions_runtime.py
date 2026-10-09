@@ -1,6 +1,6 @@
 """Regression tests for six TECH runtime review atlases.
 
-Run AFTER the six-clip generator in CI. Never silently skip missing input.
+Run AFTER the six-clip generator in CI; independently audit its real pixels.
 """
 from __future__ import annotations
 import json
@@ -8,7 +8,9 @@ import tempfile
 import unittest
 from pathlib import Path
 from PIL import Image
-from package_tech_actions_runtime import ACTIONS, package, verify, game_scale_metrics
+from package_tech_actions_runtime import (ACTIONS, package, verify, game_scale_metrics,
+                                         verify_temporal_evidence)
+from temporal_sprite_audit import audit
 
 FIXTURE=Path('build/tech-actions-v3').resolve()
 
@@ -20,7 +22,19 @@ class RuntimePackTests(unittest.TestCase):
     def test_six_atlases_keep_the_review_gate(self):
         with tempfile.TemporaryDirectory() as temp:
             out=Path(temp)/'runtime'
-            manifest=package(FIXTURE,out)
+            temporal_dir=Path(temp)/'temporal'
+            audit(FIXTURE,temporal_dir)
+            report_file=temporal_dir/'temporal-qa.json'
+            manifest=package(FIXTURE,out,temporal_report=report_file)
+            self.assertTrue(manifest['temporal_evidence_verified'])
+            self.assertEqual(manifest['temporal_evidence_format'],'zte-temporal-qa-v1')
+            bad=json.loads(report_file.read_text())
+            bad['actions']['WORK']['ordered_frame_digest_sha256']='0'*64
+            bad_file=Path(temp)/'stale-temporal.json'
+            bad_file.write_text(json.dumps(bad))
+            index,records=verify(FIXTURE)
+            with self.assertRaisesRegex(ValueError,'Stale or mismatched temporal evidence'):
+                verify_temporal_evidence(index,records,bad_file)
             self.assertEqual(tuple(manifest['animations']),ACTIONS)
             self.assertEqual(sum(v['frames'] for v in manifest['animations'].values()),144)
             self.assertFalse(manifest['visual_review_pass'])
