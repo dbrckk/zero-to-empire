@@ -119,6 +119,9 @@ jobs:
           fi
           if [ "${{ steps.outcome.outputs.has_candidate }}" = "true" ]; then
             git add art/incoming/final-sprites/
+            if [ -d art/production/character-repair-candidates ]; then
+              git add art/production/character-repair-candidates/
+            fi
           fi
           git diff --cached --quiet && exit 0
           git commit -m 'art: persist controlled character atlas QA outcome'
@@ -134,6 +137,7 @@ jobs:
             art/production/controlled-character-regen-queue.json
             art/production/pollinations-frame-cache/
             art/incoming/final-sprites/zte_chr_*_final.png
+            art/production/character-repair-candidates/zte_chr_*_final.png
           if-no-files-found: warn
           retention-days: 14
       - name: Auto-chain controlled queue
