@@ -115,7 +115,13 @@ def main()->int:
         asset_id=row["asset_id"]
         stem="zte_chr_"+asset_id[4:].lower().replace("-","_")+"_final.png"
         source=ROOT/"art/incoming/final-sprites"/stem
-        rows.append(inspect(source,asset_id))
+        audit=inspect(source,asset_id)
+        rows.append(audit)
+        print("CHARACTER_AUDIT",asset_id,
+              "dims="+str(audit.get("dimensions")),
+              "mode="+str(audit.get("mode")),
+              "capacity="+str(audit.get("capacity")),
+              "findings="+",".join(audit["findings"]))
     args.out.mkdir(parents=True,exist_ok=True)
     contact(rows,args.out/"canonical-character-contact.png")
     result={"format":"zte-canonical-character-visual-audit-v1",
