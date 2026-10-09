@@ -22,21 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T07:54:32Z
+Generated: 2026-10-09T07:55:45Z
 
 ### Git
 - Branch: `main`
-- Head: `79386415b0c5`
-- Commit date: 2026-10-09T09:54:14+02:00
-- Commit: ci(art): run temporal QA on rendered TECH frames and retain evidence
+- Head: `4f157c466115`
+- Commit date: 2026-10-09T09:55:22+02:00
+- Commit: docs(art): explain automatic 96px temporal QA and strict human visual gate
 - Tracked files: 1472
 
 ### Recently changed files
+- `tools/sprites/MODULAR_ACTIONS_README.md`
 - `.github/workflows/modular-tech-actions.yml`
 - `tools/sprites/test_temporal_sprite_audit.py`
 - `tools/sprites/temporal_sprite_audit.py`
-- `tools/sprites/MODULAR_ACTIONS_README.md`
-- `tools/sprites/test_package_tech_actions_runtime.py`
 
 ### Project signals
 - `build.gradle.kts`
