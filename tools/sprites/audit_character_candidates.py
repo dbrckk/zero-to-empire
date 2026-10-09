@@ -14,14 +14,19 @@ from PIL import Image, ImageDraw
 from character_review_matrix import build
 
 ROOT=Path(__file__).resolve().parents[2]
-ACTION_FRAMES={"IDLE":8,"WALK":8,"WORK":12,"CARRY":8,"REPAIR":12,"CELEB":10}
+# Canonical incoming PNGs use the Kaggle producer's actual frame contract.
+# The newer animation_batch_planner targets are aspirational and differ.
+ACTION_FRAMES={"IDLE":6,"WALK":8,"WORK":10,"CARRY":8,"REPAIR":10,"CELEB":8}
+TARGET_FRAMES={"IDLE":8,"WALK":8,"WORK":12,"CARRY":8,"REPAIR":12,"CELEB":10}
 
 
 def inspect(path:Path,asset_id:str)->dict:
     role,action=asset_id.split("-")[1:]
     expected=ACTION_FRAMES[action]
     result={"asset_id":asset_id,"source_path":str(path),"exists":path.is_file(),
-            "expected_frames":expected,"strict_status":"NEEDS_REVIEW",
+            "expected_frames":expected,"target_frames":TARGET_FRAMES[action],
+            "frame_budget_shortfall":max(0,TARGET_FRAMES[action]-expected),
+            "strict_status":"NEEDS_REVIEW",
             "semantic_approved":False,"visual_approved":False,
             "technical_pass":False,"findings":[]}
     if not path.is_file():
@@ -48,9 +53,15 @@ def inspect(path:Path,asset_id:str)->dict:
             capacity=4*rows
             result["cell_size"]=cell
             result["capacity"]=capacity
-            if capacity<expected or capacity>=expected+4:
+            if capacity<expected:
                 result["findings"].append("FRAME_CAPACITY_MISMATCH")
             rgba=img.convert("RGBA")
+            # Blank atlas cells are intentional padding, not extra animation
+            # frames; reject any nonblank frame after the producer's count.
+            for n in range(expected,capacity):
+                px=(n%4)*cell;py=(n//4)*cell
+                if rgba.crop((px,py,px+cell,py+cell)).getchannel("A").getbbox():
+                    result["findings"].append(f"NONEMPTY_PADDING_{n}")
             alpha=rgba.getchannel("A")
             result["alpha_extrema"]=list(alpha.getextrema())
             metrics=[]
@@ -127,6 +138,7 @@ def main()->int:
     result={"format":"zte-canonical-character-visual-audit-v1",
             "strict_done":report["strict_done"],"pending":len(rows),
             "all_semantic_approved":False,
+            "legacy_frame_budget_differs_from_target":True,
             "all_technical_pass":all(x["technical_pass"] for x in rows),
             "items":rows}
     (args.out/"canonical-character-audit.json").write_text(
