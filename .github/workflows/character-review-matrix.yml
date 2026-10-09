@@ -1,0 +1,46 @@
+name: Character strict review matrix
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'art/production/master-asset-queue.json'
+      - 'tools/sprites/character_review_matrix.py'
+      - 'tools/sprites/test_character_review_matrix.py'
+      - '.github/workflows/character-review-matrix.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: character-review-matrix-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify-review-matrix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run no-promotion and prioritization regression tests
+        run: python -m unittest discover -s tools/sprites -p 'test_character_review_matrix.py' -v
+      - name: Generate evidence-only character review matrix
+        run: |
+          python tools/sprites/character_review_matrix.py --out-json /tmp/character-review-matrix.json --out-md /tmp/character-review-matrix.md
+          python - <<'PY'
+          import json
+          report=json.load(open('/tmp/character-review-matrix.json'))
+          assert report['target_total']==235 and report['strict_done']==216
+          assert report['pending_count']==19
+          assert report['auto_promotion_permitted'] is False
+          assert all(not x['semantic_review_pass'] for x in report['items'])
+          print('REVIEW_ONLY: 19 canonical assets, 216 strict DONE unchanged')
+          PY
+      - name: Upload review-only evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: character-review-matrix-NEEDS_REVIEW
+          path: |
+            /tmp/character-review-matrix.json
+            /tmp/character-review-matrix.md
+          retention-days: 30
