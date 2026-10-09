@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T16:02:57Z
+Generated: 2026-10-09T16:04:22Z
 
 ### Git
 - Branch: `main`
-- Head: `8da8fa8a6a28`
-- Commit date: 2026-10-09T18:02:34+02:00
-- Commit: art(repair): queue LOG-CARRY for full-body per-frame regeneration without promoting old fragments
-- Tracked files: 1483
+- Head: `fcf86f90260d`
+- Commit date: 2026-10-09T18:04:08+02:00
+- Commit: review(art): document visible character failures and per-asset correction contracts
+- Tracked files: 1484
 
 ### Recently changed files
+- `art/production/character-visual-review-findings-2026-10-09.md`
 - `art/production/controlled-character-regen-queue.json`
 - `.github/workflows/character-review-matrix.yml`
 - `tools/sprites/test_pollinations_character_sheet_factory.py`

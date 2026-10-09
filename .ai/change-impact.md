@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 1fcab367f9866fbcddd948322317329709cc2388
-Head: 8da8fa8a6a285b663c03e9881a5c42eb68e28548
+Base: 13c8dd236b050c8fbf5ff09f0e4e311162d83463
+Head: fcf86f90260df048d3eeee722e04f341c90e1b13
 
 ## Changed files
-- M art/production/controlled-character-regen-queue.json
+- A art/production/character-visual-review-findings-2026-10-09.md
 
 ## Affected areas
 - art
