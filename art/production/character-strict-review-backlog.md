@@ -2,7 +2,7 @@
 
 Generated from `art/production/master-asset-queue.json` after production completion.
 
-- Production processed: **234/235**
+- Production processed: **233/235**
 - Strict DONE: **216/235**
 - Semantic review remaining: **19**
 - This report does **not** grant strict approval or runtime promotion.
@@ -19,7 +19,7 @@ Generated from `art/production/master-asset-queue.json` after production complet
 | CHR-TECH-CARRY | TECH | CARRY | AWAITING_REVIEW | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
 | CHR-LOG-WALK | LOG | WALK | AWAITING_REVIEW | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
 | CHR-LOG-WORK | LOG | WORK | AWAITING_REVIEW | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
-| CHR-LOG-CARRY | LOG | CARRY | AWAITING_REVIEW | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
+| CHR-LOG-CARRY | LOG | CARRY | BLOCKED | Restore full-body CARRY with one fixed helmet+amber vest identity, genuine 2-hand crate grip and consistent animation. Historical collage is visually invalid; strict semantic approval still required. |
 | CHR-LOG-REPAIR | LOG | REPAIR | AWAITING_REVIEW | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
 | CHR-LOG-CELEB | LOG | CELEB | AWAITING_REVIEW | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
 | CHR-ENG-IDLE | ENG | IDLE | AWAITING_REVIEW | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
