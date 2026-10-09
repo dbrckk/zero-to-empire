@@ -24890,10 +24890,28 @@ assert_text Lecture after-step
 adb exec-out screencap -p > "$OUT/gallery-step.png"
 
 # Scroll lazily rendered roles into view; inspect actual TECH textures.
-adb shell input swipe 560 1700 560 700 550
-sleep 2
-dump tech-scroll
-assert_text TECHNICIAN tech-scroll
+screen=$(adb shell wm size | tr -d '\r' | tail -n 1)
+resolution=${screen##* }
+width=${resolution%x*}
+height=${resolution#*x}
+[[ "$width" =~ ^[0-9]+$ && "$height" =~ ^[0-9]+$ ]] || {
+  echo "CHARACTER_PREVIEW_FAIL=screen-dimensions:$screen" >&2; exit 1;
+}
+found=false
+for attempt in 0 1 2 3 4 5; do
+  dump "tech-scroll-$attempt"
+  if grep -Fqi "TECHNICIAN" "$OUT/tech-scroll-$attempt.xml"; then
+    found=true
+    break
+  fi
+  adb shell input swipe "$((width/2))" "$((height*80/100))" "$((width/2))" "$((height*28/100))" 450
+  sleep 1
+done
+if [[ "$found" != true ]]; then
+  echo "CHARACTER_PREVIEW_FAIL=technician-not-visible-after-scroll" >&2
+  exit 1
+fi
+assert_text TECHNICIAN "tech-scroll-$attempt"
 adb exec-out screencap -p > "$OUT/tech-candidate-grid.png"
 adb logcat -d > "$OUT/logcat.txt"
 if grep -E "FATAL EXCEPTION|AndroidRuntime.*FATAL" "$OUT/logcat.txt"; then

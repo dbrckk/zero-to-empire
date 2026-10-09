@@ -1,13 +1,13 @@
 # Change impact
 
-Base: bb89aa40cd3e8da895c19424359333960e6d8cab
-Head: d6fc1f99b45effb26a456e0e771b8db12fc7e94f
+Base: ef2df22c9c246bda4476c5467fd7f2fa97a8ef9a
+Head: 6999e94967a28ba4f534dcc59e0668deed11edcc
 
 ## Changed files
-- M .github/workflows/asset-pipeline-ci.yml
+- M tools/android/character_preview_emulator_smoke.sh
 
 ## Affected areas
-- .github
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

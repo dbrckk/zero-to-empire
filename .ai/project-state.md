@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T20:23:29Z
+Generated: 2026-10-09T20:45:42Z
 
 ### Git
 - Branch: `main`
-- Head: `d6fc1f99b45e`
-- Commit date: 2026-10-09T22:22:56+02:00
-- Commit: ci(art): validate pending character generator plan and no-auto-promotion invariant
+- Head: `6999e94967a2`
+- Commit date: 2026-10-09T22:45:26+02:00
+- Commit: fix(android): adaptive bounded emulator scroll for TECH animation review
 - Tracked files: 1512
 
 ### Recently changed files
+- `tools/android/character_preview_emulator_smoke.sh`
 - `.github/workflows/asset-pipeline-ci.yml`
 - `tools/sprites/test_animation_batch_planner.py`
 - `tools/sprites/animation_batch_planner.py`
 - `.github/workflows/tech-candidate-android-preview.yml`
-- `tools/android/character_preview_emulator_smoke.sh`
 
 ### Project signals
 - `build.gradle.kts`
