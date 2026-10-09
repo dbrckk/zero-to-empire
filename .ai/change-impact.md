@@ -1,10 +1,10 @@
 # Change impact
 
-Base: ef2df22c9c246bda4476c5467fd7f2fa97a8ef9a
-Head: 6999e94967a28ba4f534dcc59e0668deed11edcc
+Base: 814a884716cfd14d35cd840d25f33cc694ae490c
+Head: 1fb1a49731dfaafc0bc41dae972731a1b2580cff
 
 ## Changed files
-- M tools/android/character_preview_emulator_smoke.sh
+- M tools/android/ui_dump_retry.sh
 
 ## Affected areas
 - tools

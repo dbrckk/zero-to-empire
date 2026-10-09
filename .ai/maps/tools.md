@@ -795,11 +795,17 @@ ui_dump_with_retry() {
     rm -f "$output"
     adb shell rm -f "$remote" >/dev/null 2>&1 || true
 
-    if adb shell uiautomator dump "$remote" >"$log" 2>&1 && \
-       adb pull "$remote" "$output" >/dev/null 2>&1 && \
-       [[ -s "$output" ]]; then
-      rm -f "$log"
-      return 0
+    if adb shell uiautomator dump "$remote" >"$log" 2>&1; then
+      # adb pull intermittently fails on slow API-35 CI emulators even after
+      # uiautomator has successfully written the remote hierarchy.
+      adb exec-out cat "$remote" > "$output" 2>/dev/null || true
+      if ! grep -q '</hierarchy>' "$output" 2>/dev/null; then
+        adb pull "$remote" "$output" >/dev/null 2>&1 || true
+      fi
+      if grep -q '</hierarchy>' "$output" 2>/dev/null; then
+        rm -f "$log"
+        return 0
+      fi
     fi
 
     rm -f "$output"

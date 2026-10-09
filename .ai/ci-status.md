@@ -1,13 +1,15 @@
 # CI status
 
-Summary: 1 success / 1 failure / 2 active
+Summary: 3 success / 1 failure / 2 active
 
-- TECH candidate Android preview (no promotion): in_progress / pending (6999e949)
-- Android CI: in_progress / pending (6999e949)
+- Android Emulator Smoke: in_progress / pending (1fb1a497)
+- Android CI: in_progress / pending (1fb1a497)
+- Kaggle Async Character Collector: completed / success (814a8847)
+- Manifest Static GPU Batch: completed / success (814a8847)
+- Reconcile reviewed run 25: completed / skipped (814a8847)
+- TECH candidate Android preview (no promotion): completed / failure (6999e949)
+- Android CI: completed / success (6999e949)
 - Reconcile reviewed run 25: completed / skipped (d6fc1f99)
-- Asset Pipeline CI: completed / success (d6fc1f99)
-- TECH candidate Android preview (no promotion): completed / failure (ab1e47a4)
-- Reconcile reviewed run 25: completed / skipped (d8e85439)
 
 ## Latest failed run structure
 - Job: debug-candidate-preview

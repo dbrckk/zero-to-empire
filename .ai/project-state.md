@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T20:45:42Z
+Generated: 2026-10-09T21:17:51Z
 
 ### Git
 - Branch: `main`
-- Head: `6999e94967a2`
-- Commit date: 2026-10-09T22:45:26+02:00
-- Commit: fix(android): adaptive bounded emulator scroll for TECH animation review
+- Head: `1fb1a49731df`
+- Commit date: 2026-10-09T23:17:37+02:00
+- Commit: fix(ci): recover UI hierarchy using adb exec-out when pull fails on emulator
 - Tracked files: 1512
 
 ### Recently changed files
+- `tools/android/ui_dump_retry.sh`
 - `tools/android/character_preview_emulator_smoke.sh`
 - `.github/workflows/asset-pipeline-ci.yml`
 - `tools/sprites/test_animation_batch_planner.py`
 - `tools/sprites/animation_batch_planner.py`
-- `.github/workflows/tech-candidate-android-preview.yml`
 
 ### Project signals
 - `build.gradle.kts`
