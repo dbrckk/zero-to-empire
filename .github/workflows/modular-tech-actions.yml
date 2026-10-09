@@ -9,6 +9,8 @@ on:
       - 'tools/sprites/weight_transfer.py'
       - 'tools/sprites/action_contact.py'
       - 'tools/sprites/test_action_contact.py'
+      - 'tools/sprites/temporal_sprite_audit.py'
+      - 'tools/sprites/test_temporal_sprite_audit.py'
       - 'tools/sprites/test_weight_transfer.py'
       - 'tools/sprites/test_soft_skin_deform.py'
       - 'tools/sprites/rigged_tech_actions_v3.py'
@@ -38,12 +40,18 @@ jobs:
           python -m unittest discover -s tools/sprites -p 'test_soft_skin_deform.py' -v
           python -m unittest discover -s tools/sprites -p 'test_weight_transfer.py' -v
           python -m unittest discover -s tools/sprites -p 'test_action_contact.py' -v
+          python -m unittest discover -s tools/sprites -p 'test_temporal_sprite_audit.py' -v
           python -m unittest discover -s tools/sprites -p 'test_rigged_tech_actions_v3.py' -v
       - name: Build 144 transparent frames from one character skin
         run: |
           python tools/sprites/rigged_tech_actions_v3.py \
             --skin tools/sprites/skin-tech-v1.webp \
             --output build/tech-actions-v3 --frames 24 --fps 12 --all
+      - name: Audit actual exported frames at 96px, including cyclic motion
+        run: |
+          python tools/sprites/temporal_sprite_audit.py \
+            --source build/tech-actions-v3 \
+            --output build/tech-temporal-review
       - name: Package game-scale RGBA atlases and playback manifest
         run: |
           python tools/sprites/package_tech_actions_runtime.py \
@@ -59,5 +67,6 @@ jobs:
           path: |
             build/tech-actions-v3/
             build/tech-actions-runtime-review/
+            build/tech-temporal-review/
           if-no-files-found: warn
           retention-days: 30
