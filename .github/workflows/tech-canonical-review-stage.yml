@@ -1,0 +1,114 @@
+name: TECH canonical review staging
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/sprites/export_tech_canonical_review.py'
+      - 'tools/sprites/test_export_tech_canonical_review.py'
+      - 'tools/sprites/rigged_tech_actions_v3.py'
+      - '.github/workflows/tech-canonical-review-stage.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tech-canonical-review-stage
+  cancel-in-progress: false
+
+jobs:
+  render-and-stage-review-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Sync main
+        run: git pull --ff-only origin main
+      - name: Install deterministic CPU renderer
+        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0' 'numpy==2.3.3'
+      - name: Unit test canonical candidate exporter
+        run: python -m unittest discover -s tools/sprites -p 'test_export_tech_canonical_review.py' -v
+      - name: Unit test source rig
+        run: |
+          python -m unittest discover -s tools/sprites -p 'test_rigged_tech_actions_v3.py' -v
+          python -m unittest discover -s tools/sprites -p 'test_action_contact.py' -v
+      - name: Render all 6 source cycles with a single character skin
+        run: |
+          python tools/sprites/rigged_tech_actions_v3.py \
+            --skin tools/sprites/skin-tech-v1.webp \
+            --output build/tech-actions-v3 \
+            --frames 24 --fps 12 --all
+      - name: Inspect complete source loops at gameplay scale
+        run: |
+          python tools/sprites/temporal_sprite_audit.py \
+            --source build/tech-actions-v3 \
+            --output build/tech-temporal-review \
+            --skin tools/sprites/skin-tech-v1.webp
+      - name: Stage actual Android-format TECH WALK WORK CARRY candidates
+        run: |
+          python tools/sprites/export_tech_canonical_review.py \
+            --source build/tech-actions-v3 \
+            --skin tools/sprites/skin-tech-v1.webp \
+            --output art/production/character-rig-review-candidates
+      - name: Protect canonical strict status and production assets
+        run: |
+          set -euo pipefail
+          git diff --exit-code -- \
+            art/production/master-asset-queue.json \
+            art/incoming/final-sprites/ \
+            app/src/main/res/ \
+            docs/art/FINAL_AAA_SPRITE_MANIFEST.md
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report=json.loads(Path('art/production/character-rig-review-candidates/review-report.json').read_text())
+          master=json.loads(Path('art/production/master-asset-queue.json').read_text())
+          assert report['candidate_count']==3
+          assert report['target_ids']==['CHR-TECH-WALK','CHR-TECH-WORK','CHR-TECH-CARRY']
+          assert report['semantic_approved_count']==0
+          assert report['automatic_promotion_permitted'] is False
+          assert report['canonical_queue_mutated'] is False
+          assert report['android_runtime_mutated'] is False
+          for item in report['items']:
+              assert item['canonical_geometry_pass'] is True
+              assert item['strict_status']=='NEEDS_REVIEW'
+              assert item['runtime_integrated'] is False
+              assert item['visual_review_pass'] is False
+              assert item['semantic_approved'] is False
+          for item in master['assets']:
+              if item['id'] in report['target_ids']:
+                  assert item['strict_status']!='DONE'
+          print('CANONICAL_REVIEW_STAGE_PASS=3 STRICT_DONE_UNCHANGED=1')
+          PY
+      - name: Upload review files and source temporal evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tech-three-canonical-review-not-approved
+          path: |
+            art/production/character-rig-review-candidates/
+            build/tech-temporal-review/temporal-qa.json
+            build/tech-temporal-review/motion-timeline.png
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Persist visual candidates, never production masters
+        if: success() && github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add art/production/character-rig-review-candidates/
+          git diff --cached --quiet && exit 0
+          git commit -m 'art(review): stage identity-locked TECH action candidates (not approved)'
+          git pull --rebase origin main
+          git push origin HEAD:main
