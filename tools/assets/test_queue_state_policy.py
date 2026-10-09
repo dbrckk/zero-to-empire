@@ -106,9 +106,10 @@ class DispatchCorrelationTests(unittest.TestCase):
         orchestrator = self._load_orchestrator("")
         self.assertEqual(orchestrator.CHARACTER_EPOCH_ATTEMPT_LIMIT, 3)
 
-    def test_character_epoch_is_v112_persistent_semantic_scaffold(self) -> None:
+    def test_character_epoch_is_v117_articulated_border_fix(self) -> None:
         orchestrator = self._load_orchestrator("")
-        self.assertEqual(orchestrator.CHARACTER_GENERATION_EPOCH, "identity-lock-v1.12")
+        self.assertEqual(orchestrator.CHARACTER_GENERATION_EPOCH,
+                         "identity-lock-v1.17-articulated-border-fix")
 
     def test_new_epoch_reopens_semantic_reject_even_with_high_legacy_attempts(self) -> None:
         orchestrator = self._load_orchestrator("")
