@@ -298,14 +298,14 @@ If a new runtime sprite is later required, it must be added here first and the d
 | FX-16 | singularity lens pulse | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_16_final.webp` |DONE |
 | FX-17 | mastery crown shimmer | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_17_final.webp` | DONE |
 
-## Progress ledger — reconciled against canonical queue 2026-10-09
+## Progress ledger — reconciled from canonical queue 2026-10-09
 
-- **235 canonical targets:** **216 strict DONE**, **19 awaiting replacement/review** (5 of 24 character actions accepted).
-- **236 manifest rows:** **217 DONE** including the separate `ONB-00` illustration, **17 RUNTIME awaiting semantic review**, **2 BLOCKED** (TECH-WALK, LOG-CARRY).
-- A manifest row may become `DONE` only after successful per-frame visual semantics, technical QA, actual runtime visibility and green Android CI for the exact committed asset.
-- The canonical approval status is recorded in `art/production/master-asset-queue.json`; do not infer strict approval from the presence of an older Android WebP.
-- **Breakdown (strict DONE / canonical target):** buildings 98/98; Power Core 7/7; characters 5/24; vehicles 18/18; machines 28/28; props 28/28; terrain/infrastructure 14/14; FX 18/18. The onboarding illustration is separately 1/1 and is excluded from the 235 target.
-- See `art/production/character-strict-review-backlog.md` and `art/production/character-visual-review-findings-2026-10-09.md` for the 19 remaining assets and specific rejection criteria.
+- Canonical strict DONE: **216 / 235**.
+- Manifest DONE: **217 / 236** (including ONB-00 outside the strict target).
+- Manifest RUNTIME awaiting semantic approval: **17 / 236**.
+- Manifest BLOCKED: **2 / 236**.
+- Strict DONE by family: Buildings 98/98, Power Core 7/7, Characters 5/24, Vehicles 18/18, Machines 28/28, Props 28/28, Terrain 14/14, FX 18/18.
+- Historical semantic review: **OPEN**. Reconciliation never grants artistic approval.
 
 ## I. Onboarding authored illustrations
 
