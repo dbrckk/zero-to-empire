@@ -1,21 +1,94 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "c680fd7469dd1d3e6adc8bddb9b1d8cecfa9838c",
-  "head": "ab1e47a49d7bbc481fb637abf16eb2ba53fe66d6",
+  "base": "ab1e47a49d7bbc481fb637abf16eb2ba53fe66d6",
+  "head": "d6fc1f99b45effb26a456e0e771b8db12fc7e94f",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": ".github/workflows/tech-candidate-android-preview.yml",
+      "path": ".github/workflows/asset-pipeline-ci.yml",
       "status": "M"
     },
     {
-      "path": "tools/android/character_preview_emulator_smoke.sh",
+      "path": "tools/sprites/animation_batch_planner.py",
+      "status": "M"
+    },
+    {
+      "path": "tools/sprites/test_animation_batch_planner.py",
       "status": "A"
     }
   ],
-  "changed_source_files": [],
-  "impacted_files": [],
-  "impacted_symbols": [],
-  "selected_tests": []
+  "changed_source_files": [
+    "tools/sprites/animation_batch_planner.py",
+    "tools/sprites/test_animation_batch_planner.py"
+  ],
+  "impacted_files": [
+    "tools/sprites/animation_batch_planner.py",
+    "tools/sprites/test_animation_batch_planner.py"
+  ],
+  "impacted_symbols": [
+    {
+      "name": "frame_contract",
+      "kind": "function",
+      "file": "tools/sprites/animation_batch_planner.py",
+      "line": 32
+    },
+    {
+      "name": "task_for",
+      "kind": "function",
+      "file": "tools/sprites/animation_batch_planner.py",
+      "line": 43
+    },
+    {
+      "name": "items",
+      "kind": "function",
+      "file": "tools/sprites/animation_batch_planner.py",
+      "line": 54
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "tools/sprites/animation_batch_planner.py",
+      "line": 122
+    },
+    {
+      "name": "AnimationBatchPlannerTests",
+      "kind": "class",
+      "file": "tools/sprites/test_animation_batch_planner.py",
+      "line": 14
+    },
+    {
+      "name": "test_frame_contract_matches_existing_android_runtime",
+      "kind": "function",
+      "file": "tools/sprites/test_animation_batch_planner.py",
+      "line": 15
+    },
+    {
+      "name": "test_promotion_is_never_inferred_from_existing_webp",
+      "kind": "function",
+      "file": "tools/sprites/test_animation_batch_planner.py",
+      "line": 22
+    },
+    {
+      "name": "test_exactly_pending_master_character_ids_are_planned",
+      "kind": "function",
+      "file": "tools/sprites/test_animation_batch_planner.py",
+      "line": 30
+    },
+    {
+      "name": "test_invalid_candidates_are_repaired_before_review",
+      "kind": "function",
+      "file": "tools/sprites/test_animation_batch_planner.py",
+      "line": 42
+    },
+    {
+      "name": "test_plan_is_read_only",
+      "kind": "function",
+      "file": "tools/sprites/test_animation_batch_planner.py",
+      "line": 51
+    }
+  ],
+  "selected_tests": [
+    "tools/sprites/test_animation_batch_planner.py"
+  ]
 }

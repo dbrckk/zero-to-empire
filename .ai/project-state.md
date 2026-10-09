@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T20:18:12Z
+Generated: 2026-10-09T20:23:29Z
 
 ### Git
 - Branch: `main`
-- Head: `ab1e47a49d7b`
-- Commit date: 2026-10-09T22:17:45+02:00
-- Commit: ci(android): run real TECH candidate debug gallery on emulator and preserve screenshots
-- Tracked files: 1511
+- Head: `d6fc1f99b45e`
+- Commit date: 2026-10-09T22:22:56+02:00
+- Commit: ci(art): validate pending character generator plan and no-auto-promotion invariant
+- Tracked files: 1512
 
 ### Recently changed files
+- `.github/workflows/asset-pipeline-ci.yml`
+- `tools/sprites/test_animation_batch_planner.py`
+- `tools/sprites/animation_batch_planner.py`
 - `.github/workflows/tech-candidate-android-preview.yml`
 - `tools/android/character_preview_emulator_smoke.sh`
-- `tools/android/emulator_functional_smoke.sh`
-- `app/src/debug/AndroidManifest.xml`
-- `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
 
 ### Project signals
 - `build.gradle.kts`

@@ -108,6 +108,7 @@ sprites/
   temporal_sprite_audit.py
   ter07_energy_conduit_candidate.py
   test_action_contact.py
+  test_animation_batch_planner.py
   test_autonomous_walk.py
   test_character_provider_reservation.py
   test_character_review_matrix.py
@@ -941,21 +942,22 @@ strength = max(0., math.sin(2 * math.pi * (t % 1.0)))
 ## File: sprites/animation_batch_planner.py
 ```python
 #!/usr/bin/env python3
-"""Plan animation-heavy CHR/MCH deliverables from the canonical sprite manifest.
+"""Plan unresolved animation assets from the authoritative 235-target queue.
 
-This does not generate art. It turns vague manifest frame budgets into a stable
-production contract so future GPU workers and validators agree on frame count,
-cell size, sheet geometry, pivot rules and loop behavior before consuming quota.
+This planner is READ-ONLY. It explicitly separates art generation from human
+semantic review; an installed runtime sheet is not proof of strict DONE.
+Frame sizes/counts match the actual Android runtime contracts, not aspirational
+older production notes.
 """
 ⋮----
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = ROOT / "docs/art/FINAL_AAA_SPRITE_MANIFEST.md"
+MASTER = ROOT / "art/production/master-asset-queue.json"
 INCOMING = ROOT / "art/incoming/final-sprites"
 ROW = re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$")
 MAX_BATCH = 16
 ⋮----
-# Fixed targets chosen inside the manifest budgets. Keeping a deterministic count
-# makes sheet validation and runtime animation timing reproducible.
+# Canonical sources: process_final_sprites.py, CanonicalCharacterRaster.kt.
 CHR_FRAMES = {
 MCH_FRAMES = 8
 ⋮----
@@ -963,35 +965,44 @@ def frame_contract(asset_id: str) -> tuple[int, int, int, int, str]
 ⋮----
 action = asset_id.rsplit("-", 1)[-1]
 frames = CHR_FRAMES[action]
-cell = 256
-columns = 4
-pivot = "feet-center"
 ⋮----
 frames = MCH_FRAMES
-cell = 512
 ⋮----
-pivot = "machine-base-center"
-rows = math.ceil(frames / columns)
+def task_for(pipeline_status: str) -> str
 ⋮----
-def items(kind: str)
+def items(kind: str, root: Path = ROOT) -> list[dict]
 ⋮----
-order = 0
+master = json.loads((root / MASTER.relative_to(ROOT)).read_text(encoding="utf-8"))
+assets = master.get("assets", [])
 ⋮----
-m = ROW.match(line)
+by_id = {a["id"]: a for a in assets}
+⋮----
+planned: list[dict] = []
+manifest_ids: set[str] = set()
+⋮----
+match = ROW.match(line)
 ⋮----
 family = "CHR" if asset_id.startswith("CHR-") else "MCH" if asset_id.startswith("MCH-") else None
 ⋮----
+record = by_id.get(asset_id)
+⋮----
 stem = Path(runtime).stem
-candidate = INCOMING / f"{stem}.png"
-runtime_path = ROOT / runtime
+candidate = root / INCOMING.relative_to(ROOT) / (stem + ".png")
+runtime_path = root / runtime
+pipeline_status = str(record.get("pipeline_status") or "")
+⋮----
+# Exactly the two historically rejected candidates should lead the repair
+# queue; AWAITING_REVIEW items need human review, not another blind GPU run.
+priority = {"regenerate": 0, "semantic-review": 1, "generate": 2}
 ⋮----
 def main() -> int
 ⋮----
-p = argparse.ArgumentParser()
+parser = argparse.ArgumentParser()
 ⋮----
-args = p.parse_args()
+args = parser.parse_args()
 ⋮----
-planned = list(items(args.kind))[: args.count]
+all_items = items(args.kind)
+selected = all_items[:args.count]
 ```
 
 ## File: sprites/asset_queue_utils.py
@@ -6413,6 +6424,34 @@ base={'root':(252,270),'handL':(0,0),'handR':(0,0)}
 def test_weld_sparks_are_periodic_and_phase_gated(self)
 ⋮----
 t=i/256
+```
+
+## File: sprites/test_animation_batch_planner.py
+```python
+"""Contract tests for pending animation planning without GPU or queue mutation."""
+⋮----
+class AnimationBatchPlannerTests(unittest.TestCase)
+⋮----
+def test_frame_contract_matches_existing_android_runtime(self)
+⋮----
+def test_promotion_is_never_inferred_from_existing_webp(self)
+⋮----
+def test_exactly_pending_master_character_ids_are_planned(self)
+⋮----
+queue=json.loads(MASTER.read_text(encoding="utf-8"))
+expected={
+plans=items("ALL")
+⋮----
+def test_invalid_candidates_are_repaired_before_review(self)
+⋮----
+ranks={"regenerate":0,"semantic-review":1,"generate":2}
+⋮----
+def test_plan_is_read_only(self)
+⋮----
+files=[MASTER,MANIFEST]
+before=[hashlib.sha256(p.read_bytes()).hexdigest() for p in files]
+⋮----
+after=[hashlib.sha256(p.read_bytes()).hexdigest() for p in files]
 ```
 
 ## File: sprites/test_autonomous_walk.py

@@ -4,5 +4,320 @@
   "scope": "symbols defined in changed source files",
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
-  "symbols": {}
+  "symbols": {
+    "frame_contract": {
+      "source": {
+        "file": "tools/sprites/animation_batch_planner.py",
+        "start": 32,
+        "end": 40
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "task_for": {
+      "source": {
+        "file": "tools/sprites/animation_batch_planner.py",
+        "start": 43,
+        "end": 51
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "items": {
+      "source": {
+        "file": "tools/sprites/animation_batch_planner.py",
+        "start": 54,
+        "end": 119
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "frame_contract",
+          "definitions": [
+            {
+              "file": "tools/sprites/animation_batch_planner.py",
+              "line": 32,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "task_for",
+          "definitions": [
+            {
+              "file": "tools/sprites/animation_batch_planner.py",
+              "line": 43,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "main": {
+      "source": {
+        "file": "tools/sprites/animation_batch_planner.py",
+        "start": 122,
+        "end": 139
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "items",
+          "definitions": [
+            {
+              "file": "tools/sprites/animation_batch_planner.py",
+              "line": 54,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "AnimationBatchPlannerTests": {
+      "source": {
+        "file": "tools/sprites/test_animation_batch_planner.py",
+        "start": 14,
+        "end": 56
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "frame_contract",
+          "definitions": [
+            {
+              "file": "tools/sprites/animation_batch_planner.py",
+              "line": 32,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "items",
+          "definitions": [
+            {
+              "file": "tools/sprites/animation_batch_planner.py",
+              "line": 54,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "task_for",
+          "definitions": [
+            {
+              "file": "tools/sprites/animation_batch_planner.py",
+              "line": 43,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "test_exactly_pending_master_character_ids_are_planned",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_animation_batch_planner.py",
+              "line": 30,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_frame_contract_matches_existing_android_runtime",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_animation_batch_planner.py",
+              "line": 15,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_invalid_candidates_are_repaired_before_review",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_animation_batch_planner.py",
+              "line": 42,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_plan_is_read_only",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_animation_batch_planner.py",
+              "line": 51,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_promotion_is_never_inferred_from_existing_webp",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_animation_batch_planner.py",
+              "line": 22,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 8
+    },
+    "test_frame_contract_matches_existing_android_runtime": {
+      "source": {
+        "file": "tools/sprites/test_animation_batch_planner.py",
+        "start": 15,
+        "end": 20
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "frame_contract",
+          "definitions": [
+            {
+              "file": "tools/sprites/animation_batch_planner.py",
+              "line": 32,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "items",
+          "definitions": [
+            {
+              "file": "tools/sprites/animation_batch_planner.py",
+              "line": 54,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_promotion_is_never_inferred_from_existing_webp": {
+      "source": {
+        "file": "tools/sprites/test_animation_batch_planner.py",
+        "start": 22,
+        "end": 28
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "items",
+          "definitions": [
+            {
+              "file": "tools/sprites/animation_batch_planner.py",
+              "line": 54,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_exactly_pending_master_character_ids_are_planned": {
+      "source": {
+        "file": "tools/sprites/test_animation_batch_planner.py",
+        "start": 30,
+        "end": 40
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "items",
+          "definitions": [
+            {
+              "file": "tools/sprites/animation_batch_planner.py",
+              "line": 54,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_invalid_candidates_are_repaired_before_review": {
+      "source": {
+        "file": "tools/sprites/test_animation_batch_planner.py",
+        "start": 42,
+        "end": 49
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "items",
+          "definitions": [
+            {
+              "file": "tools/sprites/animation_batch_planner.py",
+              "line": 54,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "task_for",
+          "definitions": [
+            {
+              "file": "tools/sprites/animation_batch_planner.py",
+              "line": 43,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_plan_is_read_only": {
+      "source": {
+        "file": "tools/sprites/test_animation_batch_planner.py",
+        "start": 51,
+        "end": 56
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "items",
+          "definitions": [
+            {
+              "file": "tools/sprites/animation_batch_planner.py",
+              "line": 54,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    }
+  }
 }

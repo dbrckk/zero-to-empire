@@ -1,10 +1,10 @@
 # Change impact
 
-Base: d8e8543904faf417750d6b5a5eaf9742d7a1a670
-Head: ab1e47a49d7bbc481fb637abf16eb2ba53fe66d6
+Base: bb89aa40cd3e8da895c19424359333960e6d8cab
+Head: d6fc1f99b45effb26a456e0e771b8db12fc7e94f
 
 ## Changed files
-- M .github/workflows/tech-candidate-android-preview.yml
+- M .github/workflows/asset-pipeline-ci.yml
 
 ## Affected areas
 - .github
