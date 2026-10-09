@@ -1,11 +1,18 @@
 # CI status
 
-Summary: 3 success / 0 failure / 2 active
+Summary: 3 success / 1 failure / 2 active
 
-- Character strict review matrix: in_progress / pending (6903e197)
-- Character strict review matrix: completed / success (95775055)
-- Pollinations Character Atlas: in_progress / pending (8da8fa8a)
-- Character strict review matrix: completed / success (1fcab367)
-- Asset Autofactory 235: completed / success (eb4a5f16)
+- Pollinations Character Smoke: in_progress / pending (566eb21a)
+- Pollinations Character Atlas: in_progress / pending (cc2c70e0)
+- Asset Autofactory 235: completed / success (cc2c70e0)
+- Pollinations Character Atlas: completed / cancelled (cc2c70e0)
+- Asset Autofactory 235: completed / success (e1098396)
+- Character strict review matrix: completed / success (e1098396)
+- Pollinations Character Smoke: completed / failure (e1098396)
+- Pollinations Character Atlas: completed / cancelled (e1098396)
+
+## Latest failed run structure
+- Job: smoke
+  - Failed step: Resolve candidate
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

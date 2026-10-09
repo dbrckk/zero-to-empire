@@ -5,28 +5,388 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "_runs": {
+    "pending": {
       "source": {
-        "file": "tools/sprites/character_semantic_gate.py",
-        "start": 13,
-        "end": 19
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 36,
+        "end": 66
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "frame_geometry": {
+    "mark_queue": {
       "source": {
-        "file": "tools/sprites/character_semantic_gate.py",
-        "start": 22,
-        "end": 61
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 68,
+        "end": 82
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "fetch": {
+      "source": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 84,
+        "end": 104
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "validate_source_full_body": {
+      "source": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 106,
+        "end": 121
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "safe_source_margin": {
+      "source": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 123,
+        "end": 146
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "cutout": {
+      "source": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 149,
+        "end": 194
       },
       "symbol_dependencies": [
         {
-          "symbol": "_runs",
+          "symbol": "safe_source_margin",
           "definitions": [
             {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 13,
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 123,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "validate_source_full_body",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 106,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "iou": {
+      "source": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 196,
+        "end": 204
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "lower_body_motion": {
+      "source": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 206,
+        "end": 223
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "actionqa": {
+      "source": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 225,
+        "end": 239
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "iou",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 196,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "lower_body_motion",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 206,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "appearance_hist": {
+      "source": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 241,
+        "end": 251
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "hist_similarity": {
+      "source": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 253,
+        "end": 255
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "sheetqa": {
+      "source": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 257,
+        "end": 278
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "appearance_hist",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 241,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hist_similarity",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 253,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "iou",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 196,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "sheet_prompt": {
+      "source": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 280,
+        "end": 303
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "repair_frame_prompt": {
+      "source": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 305,
+        "end": 314
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "walk_frame_prompt": {
+      "source": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 316,
+        "end": 326
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "generate_walk_frames": {
+      "source": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 328,
+        "end": 351
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "cutout",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 149,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "fetch",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 84,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "walk_frame_prompt",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 316,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "generate_repair_frames": {
+      "source": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 353,
+        "end": 376
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "cutout",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 149,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "fetch",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 84,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "repair_frame_prompt",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 305,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "independent_frame_prompt": {
+      "source": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 388,
+        "end": 417
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "generate_independent_frames": {
+      "source": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 420,
+        "end": 449
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "cutout",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 149,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "fetch",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 84,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "independent_frame_prompt",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 388,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "extract_frames": {
+      "source": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 452,
+        "end": 462
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "cutout",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 149,
               "kind": "function",
               "language": "python"
             }
@@ -36,95 +396,25 @@
       ],
       "dependency_count": 1
     },
-    "color_signature": {
+    "main": {
       "source": {
-        "file": "tools/sprites/character_semantic_gate.py",
-        "start": 64,
-        "end": 76
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "palette_distance": {
-      "source": {
-        "file": "tools/sprites/character_semantic_gate.py",
-        "start": 79,
-        "end": 81
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "clip_risk": {
-      "source": {
-        "file": "tools/sprites/character_semantic_gate.py",
-        "start": 84,
-        "end": 135
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 464,
+        "end": 584
       },
       "symbol_dependencies": [
         {
-          "symbol": "color_signature",
+          "symbol": "actionqa",
           "definitions": [
             {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 64,
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 225,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "same_file"
         },
-        {
-          "symbol": "frame_geometry",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 22,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "palette_distance",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 79,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "person": {
-      "source": {
-        "file": "tools/sprites/test_character_semantic_gate.py",
-        "start": 7,
-        "end": 18
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "portrait": {
-      "source": {
-        "file": "tools/sprites/test_character_semantic_gate.py",
-        "start": 21,
-        "end": 27
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "SemanticGateTests": {
-      "source": {
-        "file": "tools/sprites/test_character_semantic_gate.py",
-        "start": 30,
-        "end": 66
-      },
-      "symbol_dependencies": [
         {
           "symbol": "clip_risk",
           "definitions": [
@@ -138,47 +428,11 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "color_signature",
+          "symbol": "generate_independent_frames",
           "definitions": [
             {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 64,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "frame_geometry",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 22,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "palette_distance",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 79,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "person",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_character_semantic_gate.py",
-              "line": 7,
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 420,
               "kind": "function",
               "language": "python"
             }
@@ -186,11 +440,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "portrait",
+          "symbol": "generate_repair_frames",
           "definitions": [
             {
-              "file": "tools/sprites/test_character_semantic_gate.py",
-              "line": 21,
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 353,
               "kind": "function",
               "language": "python"
             }
@@ -198,11 +452,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_consistent_full_body_is_not_blocked",
+          "symbol": "generate_walk_frames",
           "definitions": [
             {
-              "file": "tools/sprites/test_character_semantic_gate.py",
-              "line": 31,
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 328,
               "kind": "function",
               "language": "python"
             }
@@ -210,11 +464,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_empty_frame_fails_hard",
+          "symbol": "iou",
           "definitions": [
             {
-              "file": "tools/sprites/test_character_semantic_gate.py",
-              "line": 57,
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 196,
               "kind": "function",
               "language": "python"
             }
@@ -222,10 +476,22 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_portraits_and_fragments_block",
+          "symbol": "mark_queue",
           "definitions": [
             {
-              "file": "tools/sprites/test_character_semantic_gate.py",
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 68,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "pending",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
               "line": 36,
               "kind": "function",
               "language": "python"
@@ -234,35 +500,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_same_palette_is_identical",
+          "symbol": "sheetqa",
           "definitions": [
             {
-              "file": "tools/sprites/test_character_semantic_gate.py",
-              "line": 62,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_two_people_in_one_cell_cause_visible_mass_jump",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_character_semantic_gate.py",
-              "line": 47,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_unrelated_costume_palettes_are_detected",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_character_semantic_gate.py",
-              "line": 41,
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 257,
               "kind": "function",
               "language": "python"
             }
@@ -270,13 +512,22 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 12
+      "dependency_count": 9
     },
-    "test_consistent_full_body_is_not_blocked": {
+    "full_body": {
       "source": {
-        "file": "tools/sprites/test_character_semantic_gate.py",
-        "start": 31,
-        "end": 34
+        "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+        "start": 12,
+        "end": 19
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "IndependentFrameTests": {
+      "source": {
+        "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+        "start": 22,
+        "end": 87
       },
       "symbol_dependencies": [
         {
@@ -292,225 +543,429 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "person",
+          "symbol": "cutout",
           "definitions": [
             {
-              "file": "tools/sprites/test_character_semantic_gate.py",
-              "line": 7,
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 149,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "extract",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+              "line": 40,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "same_file"
+        },
+        {
+          "symbol": "fetch",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+              "line": 37,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "full_body",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+              "line": 12,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "generate_independent_frames",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 420,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "independent_frame_prompt",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 388,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "safe_source_margin",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 123,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "test_each_pose_is_its_own_image_not_an_atlas_slice",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+              "line": 34,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_margin_padding_does_not_erase_missing_body_parts",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+              "line": 65,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_prompt_never_requests_multi_pose_atlas",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+              "line": 23,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_unexpected_action_cannot_use_generic_fallback",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+              "line": 83,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "validate_source_full_body",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 106,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 13
+    },
+    "test_prompt_never_requests_multi_pose_atlas": {
+      "source": {
+        "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+        "start": 23,
+        "end": 32
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "independent_frame_prompt",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 388,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_each_pose_is_its_own_image_not_an_atlas_slice": {
+      "source": {
+        "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+        "start": 34,
+        "end": 63
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "clip_risk",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 84,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "cutout",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 149,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "extract",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+              "line": 40,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "fetch",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+              "line": 37,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "full_body",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+              "line": 12,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "generate_independent_frames",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 420,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 6
+    },
+    "extract": {
+      "source": {
+        "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+        "start": 40,
+        "end": 160
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "clip_risk",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 84,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "cutout",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 149,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "fetch",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+              "line": 37,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "full_body",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+              "line": 12,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "generate_independent_frames",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 420,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "safe_source_margin",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 123,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "test_margin_padding_does_not_erase_missing_body_parts",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+              "line": 65,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_unexpected_action_cannot_use_generic_fallback",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+              "line": 83,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "validate_source_full_body",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 106,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 9
+    },
+    "test_margin_padding_does_not_erase_missing_body_parts": {
+      "source": {
+        "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+        "start": 65,
+        "end": 81
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "safe_source_margin",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 123,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "validate_source_full_body",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 106,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
         }
       ],
       "dependency_count": 2
     },
-    "test_portraits_and_fragments_block": {
+    "test_unexpected_action_cannot_use_generic_fallback": {
       "source": {
-        "file": "tools/sprites/test_character_semantic_gate.py",
-        "start": 36,
-        "end": 39
+        "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+        "start": 83,
+        "end": 87
       },
       "symbol_dependencies": [
         {
-          "symbol": "clip_risk",
+          "symbol": "generate_independent_frames",
           "definitions": [
             {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 84,
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 420,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "imported_module"
-        },
-        {
-          "symbol": "portrait",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_character_semantic_gate.py",
-              "line": 21,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
         }
       ],
-      "dependency_count": 2
-    },
-    "test_unrelated_costume_palettes_are_detected": {
-      "source": {
-        "file": "tools/sprites/test_character_semantic_gate.py",
-        "start": 41,
-        "end": 45
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "clip_risk",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 84,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "person",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_character_semantic_gate.py",
-              "line": 7,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_two_people_in_one_cell_cause_visible_mass_jump": {
-      "source": {
-        "file": "tools/sprites/test_character_semantic_gate.py",
-        "start": 47,
-        "end": 55
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "clip_risk",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 84,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "person",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_character_semantic_gate.py",
-              "line": 7,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_empty_frame_fails_hard": {
-      "source": {
-        "file": "tools/sprites/test_character_semantic_gate.py",
-        "start": 57,
-        "end": 60
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "clip_risk",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 84,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "frame_geometry",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 22,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "person",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_character_semantic_gate.py",
-              "line": 7,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "test_same_palette_is_identical": {
-      "source": {
-        "file": "tools/sprites/test_character_semantic_gate.py",
-        "start": 62,
-        "end": 66
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "clip_risk",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 84,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "color_signature",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 64,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "palette_distance",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 79,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "person",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_character_semantic_gate.py",
-              "line": 7,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 4
+      "dependency_count": 1
     }
   }
 }

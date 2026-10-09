@@ -4554,6 +4554,9 @@ MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
 INCOMING=ROOT/'art/incoming/final-sprites'
 OUT=ROOT/'art/production'
 QUEUE=OUT/'controlled-character-regen-queue.json'
+# Each generation strategy owns its own cache: never reuse pre-v3 body
+# fragments/identity-drifts as successful images of a different strategy.
+STANDALONE_CACHE_EPOCH='full-body-per-frame-v3'
 ⋮----
 ROLES={
 ACTIONS={
@@ -4602,6 +4605,23 @@ edge=max(4,round(h*.018))
 ⋮----
 min_height=.65 if standalone else (.42 if action=='REPAIR' else .55)
 ⋮----
+def safe_source_margin(image)
+⋮----
+"""Pad an *already complete* source, never hallucinate missing body parts.
+
+    A fully isolated sprite may have only 8px of empty source margin,
+    though both feet are visibly present. Reframe its existing pixels on
+    transparent space before imposing conservative full-body constraints.
+    If ANY actual alpha touches an edge, fail instead of hiding truncation.
+    """
+⋮----
+bb=image.getchannel('A').getbbox()
+⋮----
+soft=max(4,round(h*.018))
+⋮----
+pad=round(min(w,h)*.075)
+padded=Image.new('RGBA',(w+2*pad,h+2*pad))
+⋮----
 def cutout(raw, action=None, standalone=False)
 ⋮----
 im=remove(raw,alpha_matting=False).convert('RGBA')
@@ -4615,6 +4635,8 @@ stack=[(x,y)]; seen.add((x,y)); comp=[]
 keep=set(max(comps,key=len))
 clean=Image.new('RGBA',(w,h),(0,0,0,0))
 src=im.load(); dst=clean.load()
+⋮----
+clean=safe_source_margin(clean)
 ⋮----
 bb=clean.getchannel('A').getbbox()
 ⋮----
@@ -4716,6 +4738,10 @@ def generate_repair_frames(item, seed)
 frame_seed=(19417 + sum((i+1)*ord(ch) for i,ch in enumerate(item['id']))*1009 + n*104729 + revision*1000003) % 2147483647
 raw=fetch(repair_frame_prompt(item,pose),frame_seed)
 ⋮----
+# Explicit immutable appearance descriptors for independent remote requests.
+# Opaque face protection deliberately reduces identity drift between poses.
+ROLE_IDENTITY_ANCHORS={
+⋮----
 def independent_frame_prompt(item,pose)
 ⋮----
 """Explicitly request ONE complete subject, never a sheet or sprite atlas."""
@@ -4725,6 +4751,8 @@ props={
 def generate_independent_frames(item,seed)
 ⋮----
 """Produce each pose separately; never split one tall image into limbs."""
+⋮----
+cache_dir=OUT/'pollinations-frame-cache'/item['id']/STANDALONE_CACHE_EPOCH
 ⋮----
 frame_seed=(seed+sum((i+1)*ord(ch) for i,ch in enumerate(item['id']))*1009+
 raw=fetch(independent_frame_prompt(item,pose),frame_seed)
@@ -4749,6 +4777,7 @@ fc=ACTIONS[it['action']][1]
 done=False; last=''
 ⋮----
 seed=(base+ix*100000+att*10007) % 2147483647
+screen=None
 ⋮----
 frames=generate_repair_frames(it,seed)
 ⋮----
@@ -4769,10 +4798,20 @@ producer_run_id=os.getenv('GITHUB_RUN_ID') or None
 done=True
 ⋮----
 last=str(e)
+# Never retry the same known-bad cached pixels. A producer
+# outage mid-sequence is different: retain the valid prefix.
+bad_frames=[]
 ⋮----
 bad_frames=[int(x) for x in last.rsplit(' frames=',1)[1].split(',') if x.strip()]
 ⋮----
-cache_file=OUT/'pollinations-frame-cache'/it['id']/f'{bad:02d}.png'
+bad_frames=[i for i,entry in enumerate(screen.get('frames',[]))
+⋮----
+bad_frames=list(range(1,fc))
+⋮----
+cache_dir=OUT/'pollinations-frame-cache'/it['id']
+⋮----
+cache_dir=cache_dir/STANDALONE_CACHE_EPOCH
+cache_file=cache_dir/f'{bad:02d}.png'
 ⋮----
 rev_file=cache_file.with_suffix('.rev')
 ⋮----
@@ -6315,11 +6354,26 @@ requests=[]
 def fetch(prompt,seed)
 def extract(raw,action,standalone=False)
 ⋮----
+# A source image saved before the new generation strategy must
+# never contaminate a modern identity-locked animation.
+old=Path(tmp)/'pollinations-frame-cache'/'CHR-LOG-CARRY'
+⋮----
 first=factory.generate_independent_frames(item,49017)
 ⋮----
 again=factory.generate_independent_frames(item,49017)
 ⋮----
 self.assertEqual(len(requests),8) # cache, no web calls
+⋮----
+def test_margin_padding_does_not_erase_missing_body_parts(self)
+⋮----
+near_edge=Image.new('RGBA',(768,768))
+d=ImageDraw.Draw(near_edge)
+⋮----
+padded=factory.safe_source_margin(near_edge)
+⋮----
+bb=padded.getchannel('A').getbbox()
+⋮----
+cropped=near_edge.copy()
 ⋮----
 def test_unexpected_action_cannot_use_generic_fallback(self)
 ```

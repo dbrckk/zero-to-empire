@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T16:05:48Z
+Generated: 2026-10-09T16:13:00Z
 
 ### Git
 - Branch: `main`
-- Head: `6903e197e147`
-- Commit date: 2026-10-09T18:05:27+02:00
-- Commit: test(art): reject doubled character silhouettes hidden inside valid sprite cells
-- Tracked files: 1484
+- Head: `566eb21aa206`
+- Commit date: 2026-10-09T18:12:44+02:00
+- Commit: fix(ci): avoid false smoke failures and paid-looking network calls when no Pollinations asset is queued
+- Tracked files: 1486
 
 ### Recently changed files
-- `tools/sprites/test_character_semantic_gate.py`
-- `tools/sprites/character_semantic_gate.py`
-- `art/production/character-visual-review-findings-2026-10-09.md`
-- `art/production/controlled-character-regen-queue.json`
-- `.github/workflows/character-review-matrix.yml`
+- `.github/workflows/pollinations-character-smoke.yml`
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
+- `tools/sprites/pollinations_character_sheet_factory.py`
+- `tools/sprites/test_pollinations_character_sheet_factory.py`
 
 ### Project signals
 - `build.gradle.kts`

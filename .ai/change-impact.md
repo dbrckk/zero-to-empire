@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 957750557bf45c59708411e93a656cf1ea68becb
-Head: 6903e197e1472dc32949c647f1b813122a7c4b73
+Base: cc2c70e0c528a86da23336c22015732b9bd0f634
+Head: 566eb21aa20602f06b09e1ec047683a717a340a4
 
 ## Changed files
-- M tools/sprites/test_character_semantic_gate.py
+- M .github/workflows/pollinations-character-smoke.yml
 
 ## Affected areas
-- tools
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.
