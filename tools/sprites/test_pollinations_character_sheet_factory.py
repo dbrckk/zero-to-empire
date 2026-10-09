@@ -46,7 +46,13 @@ class IndependentFrameTests(unittest.TestCase):
              patch.object(factory,'OUT',Path(tmp)), \
              patch.object(factory,'fetch',side_effect=fetch), \
              patch.object(factory,'cutout',side_effect=extract):
+            # A source image saved before the new generation strategy must
+            # never contaminate a modern identity-locked animation.
+            old=Path(tmp)/'pollinations-frame-cache'/'CHR-LOG-CARRY'
+            old.mkdir(parents=True,exist_ok=True)
+            Image.new('RGBA',(256,256)).save(old/'00.png')
             first=factory.generate_independent_frames(item,49017)
+            self.assertTrue((old/factory.STANDALONE_CACHE_EPOCH/'00.png').is_file())
             self.assertEqual(len(first),8)
             self.assertEqual(len(requests),8)
             self.assertEqual(len({seed for _,seed in requests}),8)
@@ -55,6 +61,24 @@ class IndependentFrameTests(unittest.TestCase):
             again=factory.generate_independent_frames(item,49017)
             self.assertEqual(len(again),8)
             self.assertEqual(len(requests),8) # cache, no web calls
+
+    def test_margin_padding_does_not_erase_missing_body_parts(self):
+        near_edge=Image.new('RGBA',(768,768))
+        d=ImageDraw.Draw(near_edge)
+        d.rectangle((110,23,650,758),fill=(80,125,155,255))
+        padded=factory.safe_source_margin(near_edge)
+        self.assertGreater(padded.height,near_edge.height)
+        self.assertGreater(padded.width,near_edge.width)
+        bb=padded.getchannel('A').getbbox()
+        factory.validate_source_full_body(bb,padded.width,padded.height,
+                                          'CARRY',standalone=True)
+        self.assertEqual(padded.getchannel('A').getbbox()[3]-
+                         padded.getchannel('A').getbbox()[1],736)
+        cropped=near_edge.copy()
+        ImageDraw.Draw(cropped).rectangle((110,0,650,758),
+                                          fill=(80,125,155,255))
+        with self.assertRaisesRegex(RuntimeError,'touches edge'):
+            factory.safe_source_margin(cropped)
 
     def test_unexpected_action_cannot_use_generic_fallback(self):
         for action in ('WALK','REPAIR'):
