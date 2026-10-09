@@ -5,1133 +5,741 @@
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
   "symbols": {
-    "digest": {
+    "spine_lean": {
       "definition": {
-        "file": "tools/sprites/export_tech_canonical_review.py",
-        "line": 25,
+        "file": "tools/sprites/rigged_tech_actions_v3.py",
+        "line": 30,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "kaggle/github_mass_factory.py",
-          "line": 13,
-          "preview": "def digest(p):",
-          "definition_candidate": false
-        },
-        {
-          "file": "kaggle/github_mass_factory.py",
-          "line": 141,
-          "preview": "if EXPECTED_GENERATOR_SHA and digest(candidate)!=EXPECTED_GENERATOR_SHA:continue",
-          "definition_candidate": false
-        },
-        {
-          "file": "kaggle/github_mass_factory.py",
-          "line": 155,
-          "preview": "actual_generator_sha=digest(generator_path)",
-          "definition_candidate": false
-        },
-        {
-          "file": "kaggle/github_mass_factory.py",
-          "line": 161,
-          "preview": "incoming=REPO/'art/incoming/final-sprites';incoming.mkdir(parents=True,exist_ok=True);before={p.name:digest(p) for p in incoming.glob('*_final.png') if p.is_file()};q=backlog();pri",
-          "definition_candidate": false
-        },
-        {
-          "file": "kaggle/github_mass_factory.py",
-          "line": 177,
-          "preview": "def current_fresh():return [p for p in sorted(incoming.glob('*_final.png')) if p.is_file() and (p.name not in before or before[p.name]!=digest(p))]",
-          "definition_candidate": false
-        },
-        {
-          "file": "kaggle/github_mass_factory.py",
-          "line": 185,
-          "preview": "if not dst.exists() or digest(dst)!=digest(f):shutil.copy2(f,dst)",
-          "definition_candidate": false
-        },
-        {
-          "file": "kaggle/github_mass_factory.py",
-          "line": 215,
-          "preview": "dst=cdir/f.name;shutil.copy2(f,dst);targets.append({'file':f.name,'sha256':digest(dst),'bytes':dst.stat().st_size})",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/metadata.py",
-          "line": 48,
-          "preview": "digest = hashlib.sha256()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/metadata.py",
-          "line": 51,
-          "preview": "digest.update(chunk)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/metadata.py",
-          "line": 52,
-          "preview": "return digest.hexdigest()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/colab_mass_factory.py",
-          "line": 26,
-          "preview": "def digest(path: Path) -> str:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/colab_mass_factory.py",
-          "line": 112,
-          "preview": "before = {p.name: digest(p) for p in incoming.glob('*_final.png') if p.is_file()}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/colab_mass_factory.py",
-          "line": 141,
-          "preview": "if p.is_file() and (p.name not in before or before[p.name] != digest(p))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/colab_mass_factory.py",
-          "line": 160,
-          "preview": "targets.append({'file': f.name, 'sha256': digest(dst), 'bytes': dst.stat().st_size})",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/export_tech_canonical_review.py",
-          "line": 25,
-          "preview": "def digest(path: Path) -> str:",
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 30,
+          "preview": "def spine_lean(t: float, action: str) -> float:",
           "definition_candidate": true
         },
         {
-          "file": "tools/sprites/export_tech_canonical_review.py",
-          "line": 44,
-          "preview": "if index.get(\"source_skin_sha256\") != digest(skin):",
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 57,
+          "preview": "p[\"torso_lean_rad\"] = spine_lean(t, action)",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/export_tech_canonical_review.py",
-          "line": 54,
-          "preview": "or row.get(\"source_skin_sha256\") != digest(skin)):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/export_tech_canonical_review.py",
-          "line": 93,
-          "preview": "frame_hashes.append(digest(path))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/export_tech_canonical_review.py",
-          "line": 129,
-          "preview": "\"staged_sha256\": digest(png),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/identity_locked_walk_candidate.py",
-          "line": 93,
-          "preview": "if len({hashlib.sha256(im.tobytes()).digest() for im in frames})<6:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/lightning_studio_factory.py",
-          "line": 26,
-          "preview": "def digest(path: Path) -> str:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/lightning_studio_factory.py",
-          "line": 112,
-          "preview": "before = {p.name: digest(p) for p in INCOMING.glob(\"*_final.png\") if p.is_file()}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/lightning_studio_factory.py",
-          "line": 121,
-          "preview": "if p.is_file() and (p.name not in before or before[p.name] != digest(p))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/lightning_studio_factory.py",
-          "line": 140,
-          "preview": "targets.append({\"file\": src.name, \"sha256\": digest(dst), \"bytes\": dst.stat().st_size})",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_export_tech_canonical_review.py",
-          "line": 11,
-          "preview": "ACTIONS, digest, selected_indices, stage_action, validate_index,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_export_tech_canonical_review.py",
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
           "line": 78,
-          "preview": "result = stage_action(source, output, \"CARRY\", digest(skin))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_export_tech_canonical_review.py",
-          "line": 105,
-          "preview": "stage_action(source, root / \"out\", \"CARRY\", digest(skin))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_export_tech_canonical_review.py",
-          "line": 110,
-          "preview": "stage_action(source, root / \"out\", \"CARRY\", digest(skin))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_identity_locked_walk_candidate.py",
-          "line": 22,
-          "preview": "digest=hashlib.sha256(source.read_bytes()).hexdigest()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_identity_locked_walk_candidate.py",
-          "line": 24,
-          "preview": "self.assertEqual(digest,hashlib.sha256(source.read_bytes()).hexdigest())",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_identity_locked_walk_candidate.py",
-          "line": 25,
-          "preview": "self.assertEqual(report['source_sha256'],digest)",
+          "preview": "\"torso_lean_rad\": spine_lean(t, action),",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/test_rigged_tech_actions_v3.py",
-          "line": 135,
-          "preview": "hashlib.sha256(first.tobytes()).digest(),",
+          "line": 12,
+          "preview": "ACTIONS, GROUND, build_action, draw_cargo, draw_frame, pose_for, spine_lean,",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/test_rigged_tech_actions_v3.py",
-          "line": 136,
-          "preview": "hashlib.sha256(second.tobytes()).digest())",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
-          "line": 69,
-          "preview": "self.assertEqual(hashlib.sha256(a.tobytes()).digest(),hashlib.sha256(b.tobytes()).digest())",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
-          "line": 70,
-          "preview": "self.assertNotEqual(hashlib.sha256(a.tobytes()).digest(),hashlib.sha256(c.tobytes()).digest())",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_temporal_sprite_audit.py",
-          "line": 128,
-          "preview": "digest=hashlib.sha256(source.read_bytes()).hexdigest()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_temporal_sprite_audit.py",
-          "line": 131,
-          "preview": "index['source_skin_sha256']=digest",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_temporal_sprite_audit.py",
-          "line": 136,
-          "preview": "data['source_skin_sha256']=digest",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 38
-    },
-    "selected_indices": {
-      "definition": {
-        "file": "tools/sprites/export_tech_canonical_review.py",
-        "line": 29,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/export_tech_canonical_review.py",
-          "line": 29,
-          "preview": "def selected_indices(count: int, source_count: int = SOURCE_FRAMES) -> list[int]:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/export_tech_canonical_review.py",
-          "line": 79,
-          "preview": "chosen = selected_indices(ACTIONS[action])",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_export_tech_canonical_review.py",
-          "line": 11,
-          "preview": "ACTIONS, digest, selected_indices, stage_action, validate_index,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_export_tech_canonical_review.py",
-          "line": 17,
-          "preview": "self.assertEqual(selected_indices(8), [0, 3, 6, 9, 12, 15, 18, 21])",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_export_tech_canonical_review.py",
-          "line": 18,
-          "preview": "self.assertEqual(selected_indices(10), [0, 2, 4, 7, 9, 12, 14, 16, 19, 21])",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_export_tech_canonical_review.py",
-          "line": 20,
-          "preview": "self.assertEqual(len(set(selected_indices(count))), count)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_export_tech_canonical_review.py",
-          "line": 23,
-          "preview": "selected_indices(count)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_export_tech_canonical_review.py",
-          "line": 59,
-          "preview": "for i in selected_indices(ACTIONS[action]):",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 8
-    },
-    "validate_index": {
-      "definition": {
-        "file": "tools/sprites/export_tech_canonical_review.py",
-        "line": 38,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/export_tech_canonical_review.py",
           "line": 38,
-          "preview": "def validate_index(source: Path, skin: Path) -> dict:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/export_tech_canonical_review.py",
-          "line": 145,
-          "preview": "index = validate_index(source, skin)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_export_tech_canonical_review.py",
-          "line": 11,
-          "preview": "ACTIONS, digest, selected_indices, stage_action, validate_index,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_export_tech_canonical_review.py",
-          "line": 95,
-          "preview": "validate_index(source, skin)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_export_tech_canonical_review.py",
-          "line": 99,
-          "preview": "validate_index(source, bad)",
+          "preview": "lean=spine_lean(t,action)",
           "definition_candidate": false
         }
       ],
       "occurrence_count": 5
     },
-    "stage_action": {
+    "pose_for": {
       "definition": {
-        "file": "tools/sprites/export_tech_canonical_review.py",
-        "line": 59,
+        "file": "tools/sprites/rigged_tech_actions_v3.py",
+        "line": 50,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/export_tech_canonical_review.py",
-          "line": 59,
-          "preview": "def stage_action(source: Path, output: Path, action: str, skin_sha: str) -> dict:",
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 50,
+          "preview": "def pose_for(t: float, action: str) -> dict:",
           "definition_candidate": true
         },
         {
-          "file": "tools/sprites/export_tech_canonical_review.py",
-          "line": 146,
-          "preview": "items = [stage_action(source, output, action, index[\"source_skin_sha256\"])",
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 86,
+          "preview": "pose_for(CARRY)'s exact left/right wrist anchors in every cycle frame.",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/test_export_tech_canonical_review.py",
-          "line": 11,
-          "preview": "ACTIONS, digest, selected_indices, stage_action, validate_index,",
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 252,
+          "preview": "p = pose_for(t, action)",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/test_export_tech_canonical_review.py",
-          "line": 78,
-          "preview": "result = stage_action(source, output, \"CARRY\", digest(skin))",
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 12,
+          "preview": "ACTIONS, GROUND, build_action, draw_cargo, draw_frame, pose_for, spine_lean,",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/test_export_tech_canonical_review.py",
-          "line": 105,
-          "preview": "stage_action(source, root / \"out\", \"CARRY\", digest(skin))",
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 24,
+          "preview": "a = pose_for(phase, action)",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/test_export_tech_canonical_review.py",
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 25,
+          "preview": "b = pose_for(phase + 1, action)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 36,
+          "preview": "before=pose_for(t,action)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 37,
+          "preview": "after=pose_for(t+1,action)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 56,
+          "preview": "p=pose_for(t,action)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 66,
+          "preview": "p = pose_for(i / 48, action)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 76,
+          "preview": "p = pose_for(i / 48, \"CARRY\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 84,
+          "preview": "pose = pose_for(t, \"CARRY\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
           "line": 110,
-          "preview": "stage_action(source, root / \"out\", \"CARRY\", digest(skin))",
+          "preview": "hand = [pose_for(i / 24, action)[\"handR\"] for i in range(24)]",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/test_export_tech_canonical_review.py",
-          "line": 115,
-          "preview": "stage_action(Path(tmp), Path(tmp) / \"out\", \"CELEB\", \"x\")",
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 116,
+          "preview": "p=pose_for(t,\"CELEB\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 125,
+          "preview": "q=pose_for(t+1,\"CELEB\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 133,
+          "preview": "work=pose_for(t,\"WORK\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 137,
+          "preview": "repair=pose_for(t,\"REPAIR\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 208,
+          "preview": "pose_for(sample,'WALK'),joint_fabric=False)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 211,
+          "preview": "core.draw_frame(sample,self.kit,pose_for(sample,'WALK'))[0].tobytes())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_soft_skin_deform.py",
+          "line": 9,
+          "preview": "from rigged_tech_actions_v3 import ACTIONS, draw_frame as draw_action, pose_for",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_soft_skin_deform.py",
+          "line": 70,
+          "preview": "source=pose_for(.125,\"WALK\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_tech_prop_mount.py",
+          "line": 9,
+          "preview": "from rigged_tech_actions_v3 import pose_for",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_tech_prop_mount.py",
+          "line": 16,
+          "preview": "p=pose_for(i/512,action)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_tech_prop_mount.py",
+          "line": 32,
+          "preview": "a=mount_geometry(action,pose_for(t,action)['root'])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_tech_prop_mount.py",
+          "line": 33,
+          "preview": "b=mount_geometry(action,pose_for(t+1,action)['root'])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_tech_prop_mount.py",
+          "line": 40,
+          "preview": "pose=pose_for(.125,action)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_tech_prop_mount.py",
+          "line": 59,
+          "preview": "pose_for(.25,action),action)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_weight_transfer.py",
+          "line": 7,
+          "preview": "from rigged_tech_actions_v3 import pose_for",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_weight_transfer.py",
+          "line": 25,
+          "preview": "new=pose_for(t,action)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_weight_transfer.py",
+          "line": 54,
+          "preview": "poses=[pose_for(i/192,action) for i in range(192)]",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 7
+      "occurrence_count": 30
     },
-    "stage": {
+    "draw_cargo": {
       "definition": {
-        "file": "tools/sprites/export_tech_canonical_review.py",
-        "line": 144,
+        "file": "tools/sprites/rigged_tech_actions_v3.py",
+        "line": 82,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 47,
-          "preview": "val stage = group01Stage(level)",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 55,
-          "preview": "0f to accent.copy(alpha = .23f + stage * .02f),",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 72,
-          "preview": "0 -> drawStreetStandAAA(stage, phase, breathe)",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 73,
-          "preview": "1 -> drawCornerShopAAA(stage, phase, breathe)",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 74,
-          "preview": "2 -> drawWorkshopAAA(stage, phase, breathe)",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 75,
-          "preview": "else -> drawFactoryAAA(stage, phase, breathe, lowPower)",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 78,
-          "preview": "if (stage >= 1) drawGroupProgressionRing(accent, phase, .435f, 3)",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 79,
-          "preview": "if (stage >= 2) drawGroupProgressionRing(Color.White, 1f - phase, .475f, 5)",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 80,
-          "preview": "if (stage >= 3) drawGroupSpokes(accent, phase, if (lowPower) 4 else 8)",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 81,
-          "preview": "if (stage >= 4) drawGroupCrown(accent, phase)",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
           "line": 82,
-          "preview": "if (stage >= 5) drawGroupMastery(accent, breathe, lowPower)",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 103,
-          "preview": "private fun DrawScope.drawStreetStandAAA(stage: Int, phase: Float, breathe: Float) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 131,
-          "preview": "if(stage>=1) drawRoundRect(green.copy(alpha=.65f),Offset(s*.31f,s*.18f),Size(s*.38f,s*.065f),CornerRadius(s*.018f))",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 132,
-          "preview": "if(stage>=2) repeat(3){i->drawCircle(green.copy(alpha=.8f),s*.012f,Offset(s*(.36f+i*.14f),s*.34f))}",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 133,
-          "preview": "if(stage>=3) drawLine(Color(0xFFFFD66B),Offset(s*.23f,s*.66f),Offset(s*.77f,s*.66f),s*.012f)",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 134,
-          "preview": "if(stage>=4) drawCircle(green.copy(alpha=.18f*breathe),s*.34f,Offset(s*.5f,s*.5f))",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 135,
-          "preview": "if(stage>=5) repeat(5){i->drawCircle(Color(0xFFFFE78A),s*.011f,Offset(s*(.30f+i*.10f),s*.22f))}",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 138,
-          "preview": "private fun DrawScope.drawCornerShopAAA(stage: Int, phase: Float, breathe: Float) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 160,
-          "preview": "if(stage>=1) drawCircle(blue.copy(alpha=.16f*breathe),s*.30f,Offset(s*.5f,s*.50f))",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 161,
-          "preview": "if(stage>=2) repeat(4){i->drawCircle(blue,s*.010f,Offset(s*(.33f+i*.11f),s*.30f))}",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 162,
-          "preview": "if(stage>=3) drawArc(blue.copy(alpha=.6f),195f+phase*15f,150f,false,Offset(s*.18f,s*.17f),Size(s*.64f,s*.64f),style=Stroke(s*.014f))",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 163,
-          "preview": "if(stage>=4) drawLine(Color.White.copy(alpha=.45f),Offset(s*.26f,s*.70f),Offset(s*.74f,s*.70f),s*.009f)",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 164,
-          "preview": "if(stage>=5) repeat(6){i->drawCircle(Color(0xFFB8F1FF),s*.009f,Offset(s*(.27f+i*.09f),s*.21f))}",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 167,
-          "preview": "private fun DrawScope.drawWorkshopAAA(stage:Int,phase:Float,breathe:Float){",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 185,
-          "preview": "if(stage>=1) repeat(3){i->drawCircle(hot,s*.009f,Offset(s*(.29f+i*.10f),s*.39f))}",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 186,
-          "preview": "if(stage>=2) drawLine(orange,Offset(s*.21f,s*.75f),Offset(s*.79f,s*.75f),s*.013f)",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 187,
-          "preview": "if(stage>=3) repeat(4){i->drawCircle(orange.copy(alpha=.65f*breathe),s*.016f,Offset(s*(.31f+i*.12f),s*.78f))}",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 188,
-          "preview": "if(stage>=4) drawArc(hot.copy(alpha=.6f),215f+phase*20f,110f,false,Offset(s*.19f,s*.18f),Size(s*.62f,s*.62f),style=Stroke(s*.014f))",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 189,
-          "preview": "if(stage>=5) repeat(5){i->drawCircle(Color.White.copy(alpha=.8f),s*.008f,Offset(s*(.30f+i*.10f),s*.25f))}",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 192,
-          "preview": "private fun DrawScope.drawFactoryAAA(stage:Int,phase:Float,breathe:Float,lowPower:Boolean){",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 217,
-          "preview": "if(stage>=1) drawCircle(violet.copy(alpha=.12f*breathe),s*.32f,Offset(s*.5f,s*.52f))",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 218,
-          "preview": "if(stage>=2) repeat(5){i->drawCircle(magenta,s*.008f,Offset(s*(.28f+i*.10f),s*.69f))}",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 219,
-          "preview": "if(stage>=3) drawArc(violet.copy(alpha=.55f),185f+phase*25f,165f,false,Offset(s*.13f,s*.14f),Size(s*.74f,s*.70f),style=Stroke(s*.014f))",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 220,
-          "preview": "if(stage>=4) repeat(if(lowPower)3 else 6){i->val a=i*PI.toFloat()/3f+phase;drawLine(violet.copy(alpha=.32f),Offset(s*.5f+cos(a)*s*.28f,s*.5f+sin(a)*s*.20f),Offset(s*.5f+cos(a)*s*.4",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Art.kt",
-          "line": 221,
-          "preview": "if(stage>=5) drawCircle(Color.White.copy(alpha=.12f*breathe),s*.40f,Offset(s*.5f,s*.5f),style=Stroke(s*.018f))",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 26,
-          "preview": "val stage = when {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 40,
-          "preview": "val previousStage = remember(id) { intArrayOf(stage) }",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 42,
-          "preview": "LaunchedEffect(stage, reducedMotion) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 44,
-          "preview": "previousStage[0] = stage",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 45,
-          "preview": "if (stage > prior && !reducedMotion) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 53,
-          "preview": "if (stage == 0) return",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 72,
-          "preview": "if (stage >= 4) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 92,
-          "preview": "if (stage >= 6) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 112,
-          "preview": "if (stage >= 7) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 127,
-          "preview": "if (stage >= 1) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 132,
-          "preview": "if (stage >= 2) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 136,
-          "preview": "if (stage >= 3) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 140,
-          "preview": "if (stage >= 4) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 144,
-          "preview": "if (stage >= 5) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 148,
-          "preview": "if (stage >= 6) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 151,
-          "preview": "if (stage >= 7) drawCircle(Color(0xFFFFE87A).copy(alpha = .82f), s * .455f, Offset(s * .5f, s * .5f), style = Stroke(s * .016f))",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 156,
-          "preview": "if (stage >= 1) drawRoundRect(blue.copy(alpha = .25f), Offset(s * .15f, s * .27f), Size(s * .70f, s * .50f), CornerRadius(s * .035f), style = Stroke(s * .012f))",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 157,
-          "preview": "if (stage >= 2) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 161,
-          "preview": "if (stage >= 3) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 166,
-          "preview": "if (stage >= 4) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 170,
-          "preview": "if (stage >= 5) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 174,
-          "preview": "if (stage >= 6) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 177,
-          "preview": "if (stage >= 7) drawCircle(Color(0xFFB8F1FF).copy(alpha = .84f), s * .455f, Offset(s * .5f, s * .5f), style = Stroke(s * .015f))",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 182,
-          "preview": "if (stage >= 1) drawRoundRect(Color(0xFF343A40), Offset(s * .11f, s * .51f), Size(s * .10f, s * .22f), CornerRadius(s * .012f))",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 183,
-          "preview": "if (stage >= 2) drawRoundRect(Color(0xFF4A5058), Offset(s * .72f, s * .25f), Size(s * .09f, s * .26f), CornerRadius(s * .012f))",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 184,
-          "preview": "if (stage >= 3) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 188,
-          "preview": "if (stage >= 4) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 192,
-          "preview": "if (stage >= 5) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 196,
-          "preview": "if (stage >= 6) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 199,
-          "preview": "if (stage >= 7) drawCircle(Color(0xFFFFD073).copy(alpha = .84f), s * .455f, Offset(s * .5f, s * .5f), style = Stroke(s * .016f))",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 204,
-          "preview": "if (stage >= 1) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 208,
-          "preview": "if (stage >= 2) repeat(2) { i -> drawRoundRect(Color(0xFF626879), Offset(s * (.17f + i * .58f), s * .23f), Size(s * .07f, s * .28f), CornerRadius(s * .010f)) }",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 209,
-          "preview": "if (stage >= 3) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 213,
-          "preview": "if (stage >= 4) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 217,
-          "preview": "if (stage >= 5) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 221,
-          "preview": "if (stage >= 6) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 224,
-          "preview": "if (stage >= 7) drawCircle(Color(0xFFFF72D8).copy(alpha = .82f), s * .46f, Offset(s * .5f, s * .5f), style = Stroke(s * .016f))",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup01Evolution.kt",
-          "line": 261,
-          "preview": "val rayCount = 8 + stage.coerceAtMost(4) * 2",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 43,
-          "preview": "val stage = group02Stage(level)",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 46,
-          "preview": "Box(modifier.size(iconSize).background(Brush.radialGradient(0f to accent.copy(alpha=.23f+stage*.02f), .46f to EmpireColors.SurfaceHigh, 1f to EmpireColors.Void), RoundedCornerShape",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 54,
-          "preview": "4 -> drawTechCompanyAAA(stage,phase,breathe)",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 55,
-          "preview": "5 -> drawMegacityAAA(stage,phase,breathe,lowPower)",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 56,
-          "preview": "6 -> drawMoonColonyAAA(stage,phase,breathe,lowPower)",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 57,
-          "preview": "else -> drawMarsEmpireAAA(stage,phase,breathe,lowPower)",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 59,
-          "preview": "if(stage>=1) drawGroup02Ring(accent,phase,.435f,3)",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 60,
-          "preview": "if(stage>=2) drawGroup02Ring(Color.White,1f-phase,.475f,5)",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 61,
-          "preview": "if(stage>=3) drawGroup02Spokes(accent,phase,if(lowPower)4 else 8)",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 62,
-          "preview": "if(stage>=4) drawGroup02Crown(accent,phase)",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 63,
-          "preview": "if(stage>=5) drawCircle(Brush.radialGradient(listOf(Color.White.copy(alpha=.12f*breathe),accent.copy(alpha=.08f),Color.Transparent)),s*.52f,c)",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 71,
-          "preview": "private fun DrawScope.drawTechCompanyAAA(stage:Int,phase:Float,breathe:Float){",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 77,
-          "preview": "repeat(if(stage>=3)10 else 6){i->val a=phase*2f*PI.toFloat()+i*2f*PI.toFloat()/(if(stage>=3)10 else 6);drawLine(cyan.copy(alpha=.65f),Offset(s*.5f+cos(a)*s*.13f,s*.48f+sin(a)*s*.13",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 78,
-          "preview": "if(stage>=1) drawRoundRect(purple.copy(alpha=.45f*breathe),Offset(s*.31f,s*.22f),Size(s*.38f,s*.06f),CornerRadius(s*.018f))",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 79,
-          "preview": "if(stage>=2) repeat(3){i->drawCircle(cyan,s*.012f,Offset(s*(.36f+i*.14f),s*.67f))}",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 80,
-          "preview": "if(stage>=4) drawArc(Color.White.copy(alpha=.45f),200f+phase*15f,140f,false,Offset(s*.16f,s*.15f),Size(s*.68f,s*.68f),style=Stroke(s*.012f))",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 81,
-          "preview": "if(stage>=5) repeat(5){i->drawCircle(Color(0xFFFFE79B),s*.009f,Offset(s*(.30f+i*.10f),s*.20f))}",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 84,
-          "preview": "private fun DrawScope.drawMegacityAAA(stage:Int,phase:Float,breathe:Float,lowPower:Boolean){",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 87,
-          "preview": "xs.forEachIndexed{i,x->val h=s*(hs[i]+stage*.012f);val w=s*if(i==3).12f else .095f;drawRoundRect(Brush.verticalGradient(listOf(violet.copy(alpha=.80f),Color(0xFF242838))),Offset(s*",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 89,
-          "preview": "if(stage>=1) drawArc(cyan.copy(alpha=.45f),190f+phase*12f,160f,false,Offset(s*.14f,s*.14f),Size(s*.72f,s*.72f),style=Stroke(s*.010f))",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 91,
-          "preview": "if(stage>=2) repeat(orbiters){i->val a=phase*2*PI+i*2*PI/orbiters;drawCircle(violet.copy(alpha=.8f),s*.010f,Offset(s*.5f+cos(a).toFloat()*s*.33f,s*.50f+sin(a).toFloat()*s*.10f))}",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 92,
-          "preview": "if(stage>=3) drawRoundRect(Color.White.copy(alpha=.10f*breathe),Offset(s*.28f,s*.18f),Size(s*.44f,s*.055f),CornerRadius(s*.018f))",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 93,
-          "preview": "if(stage>=4) repeat(3){i->drawLine(cyan.copy(alpha=.50f),Offset(s*(.29f+i*.19f),s*.66f),Offset(s*(.29f+i*.19f),s*.28f),s*.006f)}",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 94,
-          "preview": "if(stage>=5) drawCircle(violet.copy(alpha=.14f*breathe),s*.36f,Offset(s*.5f,s*.49f))",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 97,
-          "preview": "private fun DrawScope.drawMoonColonyAAA(stage:Int,phase:Float,breathe:Float,lowPower:Boolean){",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 103,
-          "preview": "if(stage>=1) repeat(3){i->drawCircle(ice.copy(alpha=.55f*breathe),s*.013f,Offset(s*(.32f+i*.18f),s*.45f))}",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 104,
-          "preview": "if(stage>=2) drawArc(Color.White.copy(alpha=.36f),185f+phase*15f,170f,false,Offset(s*.13f,s*.16f),Size(s*.74f,s*.62f),style=Stroke(s*.010f))",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 105,
-          "preview": "if(stage>=3) repeat(if(lowPower)2 else 4){i->drawCircle(Color(0xFFE9FBFF),s*.009f,Offset(s*(.28f+i*.14f),s*.74f))}",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 106,
-          "preview": "if(stage>=4) drawCircle(ice.copy(alpha=.12f*breathe),s*.35f,Offset(s*.5f,s*.53f))",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 107,
-          "preview": "if(stage>=5) repeat(5){i->drawCircle(Color.White.copy(alpha=.85f),s*.008f,Offset(s*(.30f+i*.10f),s*.20f))}",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 110,
-          "preview": "private fun DrawScope.drawMarsEmpireAAA(stage:Int,phase:Float,breathe:Float,lowPower:Boolean){",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 119,
-          "preview": "if(stage>=1) drawLine(gold,Offset(s*.24f,s*.73f),Offset(s*.76f,s*.73f),s*.012f)",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 120,
-          "preview": "if(stage>=2) repeat(3){i->drawCircle(red,s*.012f,Offset(s*(.36f+i*.14f),s*.33f))}",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 121,
-          "preview": "if(stage>=3) drawArc(red.copy(alpha=.55f),200f+phase*18f,140f,false,Offset(s*.16f,s*.15f),Size(s*.68f,s*.68f),style=Stroke(s*.012f))",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 122,
-          "preview": "if(stage>=4) drawCircle(gold.copy(alpha=.12f*breathe),s*.35f,Offset(s*.5f,s*.50f))",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Art.kt",
-          "line": 123,
-          "preview": "if(stage>=5) repeat(5){i->drawCircle(gold,s*.009f,Offset(s*(.30f+i*.10f),s*.19f))}",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Evolution.kt",
-          "line": 25,
-          "preview": "val stage = when {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Evolution.kt",
-          "line": 40,
-          "preview": "val previousStage = remember(id) { intArrayOf(stage) }",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Evolution.kt",
-          "line": 42,
-          "preview": "LaunchedEffect(stage, reducedMotion, lowPower) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Evolution.kt",
-          "line": 44,
-          "preview": "previousStage[0] = stage",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Evolution.kt",
-          "line": 45,
-          "preview": "if (stage > prior && !reducedMotion) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Evolution.kt",
-          "line": 53,
-          "preview": "if (stage == 0) return",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Evolution.kt",
-          "line": 72,
-          "preview": "if (stage >= 4) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Evolution.kt",
-          "line": 92,
-          "preview": "if (stage >= 6) {",
-          "definition_candidate": false
+          "preview": "def draw_cargo(layer: Image.Image, p: dict, t: float) -> None:",
+          "definition_candidate": true
         },
         {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Evolution.kt",
-          "line": 112,
-          "preview": "if (stage >= 7) {",
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 254,
+          "preview": "\"CARRY\": draw_cargo,",
           "definition_candidate": false
         },
         {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Evolution.kt",
-          "line": 126,
-          "preview": "if (stage >= 1) {",
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 12,
+          "preview": "ACTIONS, GROUND, build_action, draw_cargo, draw_frame, pose_for, spine_lean,",
           "definition_candidate": false
         },
         {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Evolution.kt",
-          "line": 130,
-          "preview": "if (stage >= 2) drawCircle(secondary.copy(.48f), s * .18f, center, style = Stroke(s * .010f))",
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 86,
+          "preview": "draw_cargo(layer, pose, t)",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 120
+      "occurrence_count": 4
+    },
+    "draw_console": {
+      "definition": {
+        "file": "tools/sprites/rigged_tech_actions_v3.py",
+        "line": 137,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 137,
+          "preview": "def draw_console(layer: Image.Image, p: dict, t: float) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 255,
+          "preview": "\"WORK\": draw_console,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "draw_work_touch": {
+      "definition": {
+        "file": "tools/sprites/rigged_tech_actions_v3.py",
+        "line": 155,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 155,
+          "preview": "def draw_work_touch(layer: Image.Image, p: dict, t: float) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 259,
+          "preview": "overlay = {\"CELEB\":draw_celebration,\"WORK\":draw_work_touch,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "draw_repair": {
+      "definition": {
+        "file": "tools/sprites/rigged_tech_actions_v3.py",
+        "line": 171,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 171,
+          "preview": "def draw_repair(layer: Image.Image, p: dict, t: float) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 256,
+          "preview": "\"REPAIR\": draw_repair,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "draw_repair_sparks": {
+      "definition": {
+        "file": "tools/sprites/rigged_tech_actions_v3.py",
+        "line": 194,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 194,
+          "preview": "def draw_repair_sparks(layer: Image.Image, p: dict, t: float) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 260,
+          "preview": "\"REPAIR\":draw_repair_sparks}.get(action)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "draw_celebration": {
+      "definition": {
+        "file": "tools/sprites/rigged_tech_actions_v3.py",
+        "line": 211,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 211,
+          "preview": "def draw_celebration(layer: Image.Image, p: dict, t: float) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 259,
+          "preview": "overlay = {\"CELEB\":draw_celebration,\"WORK\":draw_work_touch,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "draw_idle_readout": {
+      "definition": {
+        "file": "tools/sprites/rigged_tech_actions_v3.py",
+        "line": 240,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 240,
+          "preview": "def draw_idle_readout(layer: Image.Image, p: dict, t: float) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 257,
+          "preview": "\"IDLE\": draw_idle_readout,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "draw_frame": {
+      "definition": {
+        "file": "tools/sprites/rigged_tech_actions_v3.py",
+        "line": 251,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 251,
+          "preview": "def draw_frame(action: str, t: float, kit: dict):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 261,
+          "preview": "return core.draw_frame(t, kit, p, under, overlay, joint_fabric=True, soft_deform=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 382,
+          "preview": "im, p, b = draw_frame(action, phase, kit)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_walk_v2.py",
+          "line": 218,
+          "preview": "def draw_frame(t:float,kit:dict,pose_override=None,prop_underlay=None,prop_overlay=None,joint_fabric=False,soft_deform=False):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_walk_v2.py",
+          "line": 313,
+          "preview": "im,p,b=draw_frame(i/frames,kit)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 12,
+          "preview": "ACTIONS, GROUND, build_action, draw_cargo, draw_frame, pose_for, spine_lean,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 159,
+          "preview": "first, _, _ = draw_frame(action, .125, self.kit)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 160,
+          "preview": "second, _, _ = draw_frame(action, .125, self.kit)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 175,
+          "preview": "new,_,_=draw_frame(action,t,self.kit)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 177,
+          "preview": "old,_,_=draw_frame(action,t,self.kit)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 198,
+          "preview": "current,p,b = draw_frame(action,t,self.kit)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 200,
+          "preview": "duplicate,_,_ = draw_frame(action,t,self.kit)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 206,
+          "preview": "new,_,_=draw_frame('WALK',sample,self.kit)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 207,
+          "preview": "old,_,_=core.draw_frame(sample,self.kit,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 211,
+          "preview": "core.draw_frame(sample,self.kit,pose_for(sample,'WALK'))[0].tobytes())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
+          "line": 10,
+          "preview": "CANVAS, GROUND, PART_NAMES, build, draw_frame, foot_local, foot_roll,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
+          "line": 64,
+          "preview": "a,pa,ba=draw_frame(.125,self.kit)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
+          "line": 65,
+          "preview": "b,pb,bb=draw_frame(.125,self.kit)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
+          "line": 66,
+          "preview": "c,_,_=draw_frame(.375,self.kit)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
+          "line": 79,
+          "preview": "original,_,_=draw_frame(t,self.kit)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
+          "line": 81,
+          "preview": "unchanged,_,_=draw_frame(t,self.kit,neutral)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
+          "line": 84,
+          "preview": "img,_,boot=draw_frame(t,self.kit,tilted)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
+          "line": 91,
+          "preview": "draw_frame(.125,self.kit,bad)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
+          "line": 96,
+          "preview": "legacy,_,_=draw_frame(t,self.kit)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
+          "line": 97,
+          "preview": "explicit_off,_,_=draw_frame(t,self.kit,joint_fabric=False)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
+          "line": 98,
+          "preview": "textile,pose_a,boots=draw_frame(t,self.kit,joint_fabric=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
+          "line": 99,
+          "preview": "textile_again,pose_b,_=draw_frame(t,self.kit,joint_fabric=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_soft_skin_deform.py",
+          "line": 9,
+          "preview": "from rigged_tech_actions_v3 import ACTIONS, draw_frame as draw_action, pose_for",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_soft_skin_deform.py",
+          "line": 36,
+          "preview": "prior,_,_=core.draw_frame(t,self.kit,joint_fabric=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_soft_skin_deform.py",
+          "line": 37,
+          "preview": "explicit,_,_=core.draw_frame(t,self.kit,joint_fabric=True,soft_deform=False)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_soft_skin_deform.py",
+          "line": 38,
+          "preview": "changed,_,boots=core.draw_frame(t,self.kit,joint_fabric=True,soft_deform=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_soft_skin_deform.py",
+          "line": 39,
+          "preview": "duplicate,_,_=core.draw_frame(t,self.kit,joint_fabric=True,soft_deform=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_soft_skin_deform.py",
+          "line": 48,
+          "preview": "img,p,b=core.draw_frame(i/24,self.kit,joint_fabric=True,soft_deform=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_soft_skin_deform.py",
+          "line": 72,
+          "preview": "legacy,_,_=core.draw_frame(.125,self.kit,source,joint_fabric=True,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 34
+    },
+    "action_qa": {
+      "definition": {
+        "file": "tools/sprites/rigged_tech_actions_v3.py",
+        "line": 264,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 359,
+          "preview": "def action_qa(frames,action):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 500,
+          "preview": "action_ok,action_why=action_qa(frames,i['action'])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 264,
+          "preview": "def action_qa(action: str, poses: list, base_qa: dict) -> dict:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 408,
+          "preview": "qa = action_qa(action, poses, core.check(images, poses, boots))",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "rotated_shoulder": {
+      "definition": {
+        "file": "tools/sprites/rigged_tech_actions_v3.py",
+        "line": 273,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 273,
+          "preview": "def rotated_shoulder(dx, dy):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 275,
+          "preview": "shoulders = {\"handL\": rotated_shoulder(-24, -86),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 276,
+          "preview": "\"handR\": rotated_shoulder(23, -85)}",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "build_action": {
+      "definition": {
+        "file": "tools/sprites/rigged_tech_actions_v3.py",
+        "line": 367,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 367,
+          "preview": "def build_action(skin: Path, out: Path, action: str, frames: int = 24, fps: int = 12):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 477,
+          "preview": "manifest, bundle = build_action(args.skin, out, action, args.frames, args.fps)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 12,
+          "preview": "ACTIONS, GROUND, build_action, draw_cargo, draw_frame, pose_for, spine_lean,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 145,
+          "preview": "build_action(KIT, root / \"bad\", \"ATTACK\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 148,
+          "preview": "build_action(KIT, root / \"bad2\", \"WALK\", 7, 12)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 218,
+          "preview": "manifest, bundle = build_action(KIT, out, action, frames=8, fps=8)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 6
     },
     "main": {
       "definition": {
-        "file": "tools/sprites/export_tech_canonical_review.py",
-        "line": 168,
+        "file": "tools/sprites/rigged_tech_actions_v3.py",
+        "line": 464,
         "kind": "function",
         "language": "python"
       },
@@ -1530,7 +1138,7 @@
           "file": "tools/sprites/export_tech_canonical_review.py",
           "line": 168,
           "preview": "def main() -> int:",
-          "definition_candidate": true
+          "definition_candidate": false
         },
         {
           "file": "tools/sprites/export_tech_canonical_review.py",
@@ -1859,121 +1467,302 @@
       ],
       "occurrence_count": 120
     },
-    "TechCanonicalReviewTests": {
+    "MultiActionGeometryTests": {
       "definition": {
-        "file": "tools/sprites/test_export_tech_canonical_review.py",
-        "line": 15,
+        "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+        "line": 20,
         "kind": "class",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/test_export_tech_canonical_review.py",
-          "line": 15,
-          "preview": "class TechCanonicalReviewTests(unittest.TestCase):",
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 20,
+          "preview": "class MultiActionGeometryTests(unittest.TestCase):",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_phase_indices_are_stable_distinct_and_bounded": {
+    "test_each_action_is_strictly_periodic": {
       "definition": {
-        "file": "tools/sprites/test_export_tech_canonical_review.py",
-        "line": 16,
+        "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+        "line": 21,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/test_export_tech_canonical_review.py",
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 21,
+          "preview": "def test_each_action_is_strictly_periodic(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_action_spine_cycle_and_contact_are_stable": {
+      "definition": {
+        "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+        "line": 32,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 32,
+          "preview": "def test_action_spine_cycle_and_contact_are_stable(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_spine_offset_does_not_move_foot_targets": {
+      "definition": {
+        "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+        "line": 52,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 52,
+          "preview": "def test_spine_offset_does_not_move_foot_targets(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_stationary_actions_keep_feet_grounded_and_hands_reachable": {
+      "definition": {
+        "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+        "line": 63,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 63,
+          "preview": "def test_stationary_actions_keep_feet_grounded_and_hands_reachable(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_carry_grip_is_fixed_relative_to_crate": {
+      "definition": {
+        "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+        "line": 74,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 74,
+          "preview": "def test_carry_grip_is_fixed_relative_to_crate(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_carry_is_a_visible_amber_crate_with_both_handle_anchors": {
+      "definition": {
+        "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+        "line": 81,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 81,
+          "preview": "def test_carry_is_a_visible_amber_crate_with_both_handle_anchors(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_action_motion_is_not_identical_across_frames": {
+      "definition": {
+        "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+        "line": 108,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 108,
+          "preview": "def test_action_motion_is_not_identical_across_frames(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_celebration_is_overhead_and_periodic": {
+      "definition": {
+        "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+        "line": 113,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 113,
+          "preview": "def test_celebration_is_overhead_and_periodic(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_action_contacts_and_overlaid_feedback_are_phase_correct": {
+      "definition": {
+        "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+        "line": 130,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 130,
+          "preview": "def test_action_contacts_and_overlaid_feedback_are_phase_correct(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_invalid_action_and_impossible_settings_rejected": {
+      "definition": {
+        "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+        "line": 141,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 141,
+          "preview": "def test_invalid_action_and_impossible_settings_rejected(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "MultiActionRendererTests": {
+      "definition": {
+        "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+        "line": 152,
+        "kind": "class",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 152,
+          "preview": "class MultiActionRendererTests(unittest.TestCase):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "setUpClass": {
+      "definition": {
+        "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+        "line": 154,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 154,
+          "preview": "def setUpClass(cls):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
+          "line": 56,
+          "preview": "def setUpClass(cls): cls.kit=load_kit(KIT)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_soft_skin_deform.py",
           "line": 16,
-          "preview": "def test_phase_indices_are_stable_distinct_and_bounded(self):",
+          "preview": "def setUpClass(cls):",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "test_deterministic_unique_per_action": {
+      "definition": {
+        "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+        "line": 157,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 157,
+          "preview": "def test_deterministic_unique_per_action(self):",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "fixture": {
+    "test_work_repair_brackets_really_show_at_96px": {
       "definition": {
-        "file": "tools/sprites/test_export_tech_canonical_review.py",
-        "line": 25,
+        "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+        "line": 167,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/kaggle_sprite_factory.py",
-          "line": 26,
-          "preview": "'industrial laser cutting head over a compact material fixture',",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_export_tech_canonical_review.py",
-          "line": 25,
-          "preview": "def fixture(self, root: Path, action: str = \"CARRY\") -> tuple[Path, Path]:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/test_export_tech_canonical_review.py",
-          "line": 76,
-          "preview": "source, skin = self.fixture(root)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_export_tech_canonical_review.py",
-          "line": 94,
-          "preview": "source, skin = self.fixture(root)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 4
-    },
-    "test_real_staged_pixels_preserve_review_and_padding": {
-      "definition": {
-        "file": "tools/sprites/test_export_tech_canonical_review.py",
-        "line": 73,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/test_export_tech_canonical_review.py",
-          "line": 73,
-          "preview": "def test_real_staged_pixels_preserve_review_and_padding(self):",
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 167,
+          "preview": "def test_work_repair_brackets_really_show_at_96px(self):",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_refuse_unreviewable_metadata_and_missing_pixels": {
+    "test_six_actions_use_reversible_joint_fabric": {
       "definition": {
-        "file": "tools/sprites/test_export_tech_canonical_review.py",
-        "line": 91,
+        "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+        "line": 193,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/test_export_tech_canonical_review.py",
-          "line": 91,
-          "preview": "def test_refuse_unreviewable_metadata_and_missing_pixels(self):",
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 193,
+          "preview": "def test_six_actions_use_reversible_joint_fabric(self):",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_unsupported_action_is_rejected": {
+    "test_each_export_remains_a_review_candidate": {
       "definition": {
-        "file": "tools/sprites/test_export_tech_canonical_review.py",
-        "line": 112,
+        "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+        "line": 213,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/test_export_tech_canonical_review.py",
-          "line": 112,
-          "preview": "def test_unsupported_action_is_rejected(self):",
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 213,
+          "preview": "def test_each_export_remains_a_review_candidate(self):",
           "definition_candidate": true
         }
       ],

@@ -3,10 +3,10 @@
 - Index mode: incremental
 - Files indexed: 243
 - Files reparsed this run: 2
-- Symbols: 1265
+- Symbols: 1266
 - Internal import edges: 42
-- Impacted files: 2
-- Selected tests: 1
+- Impacted files: 5
+- Selected tests: 4
 
 ## Languages
 - kotlin: 159 files
@@ -25,10 +25,10 @@
 - tools/sprites/kaggle_building_family_factory.py: 17 symbols
 - tools/sprites/kaggle_building_family_factory_v11.py: 17 symbols
 - tools/sprites/kaggle_building_family_factory_v14.py: 17 symbols
+- tools/sprites/test_rigged_tech_actions_v3.py: 17 symbols
 - app/src/main/java/com/zerotoempire/game/BillingDiagnostics.kt: 16 symbols
 - tools/sprites/asset_wave_orchestrator.py: 16 symbols
 - tools/sprites/test_package_tech_actions_runtime.py: 16 symbols
-- tools/sprites/test_rigged_tech_actions_v3.py: 16 symbols
 - app/src/main/java/com/zerotoempire/game/IdentitySystems.kt: 15 symbols
 - app/src/main/java/com/zerotoempire/game/GameFeel.kt: 14 symbols
 - app/src/main/java/com/zerotoempire/game/GrowthTelemetry.kt: 14 symbols
@@ -46,7 +46,7 @@
 - AST files reparsed this run: 2
 - outline files retained: 248
 - top-level items retained: 3433
-- direct members retained: 793
+- direct members retained: 794
 - symbol shards: 26
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard
 

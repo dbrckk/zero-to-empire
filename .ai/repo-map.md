@@ -122,6 +122,7 @@ The content is organized as follows:
     sprite-completion-gate.yml
     sprite-production-plan.yml
     sprite-runtime-ci-bridge.yml
+    tech-candidate-android-preview.yml
     tech-canonical-review-stage.yml
     ter07-energy-conduit-candidate.yml
     unified-asset-pipeline.yml
@@ -8359,6 +8360,138 @@ jobs:
         run: gh workflow run android.yml --ref main
 ```
 
+## File: .github/workflows/tech-candidate-android-preview.yml
+```yaml
+name: TECH candidate Android preview (no promotion)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'art/production/character-rig-review-candidates/zte_chr_tech_*_final.png'
+      - '.github/workflows/tech-candidate-android-preview.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tech-candidate-android-preview
+  cancel-in-progress: true
+
+jobs:
+  debug-candidate-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout current canonical main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Python and Pillow
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install image validator
+        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
+      - name: Verify three review candidates against source evidence
+        run: |
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          folder=Path('art/production/character-rig-review-candidates')
+          r=json.loads((folder/'review-report.json').read_text())
+          assert r['format']=='zte-canonical-tech-review-v1'
+          assert r['target_ids']==['CHR-TECH-WALK','CHR-TECH-WORK','CHR-TECH-CARRY']
+          assert r['automatic_promotion_permitted'] is False
+          assert r['semantic_approved_count']==0
+          assert all(i['strict_status']=='NEEDS_REVIEW'
+                     and i['canonical_geometry_pass']
+                     and i['runtime_integrated'] is False
+                     and i['release_eligible'] is False for i in r['items'])
+          for i in r['items']:
+              p=folder/i['staged_png']
+              assert p.is_file()
+              assert hashlib.sha256(p.read_bytes()).hexdigest()==i['staged_sha256']
+          q=json.loads(Path('art/production/master-asset-queue.json').read_text())
+          for a in q['assets']:
+              if a['id'] in r['target_ids']:
+                  assert a['strict_status']!='DONE'
+          print('REVIEW_ONLY_VERIFIED=3 NO_STRICT_PROMOTION=1')
+          PY
+      - name: Convert staged candidates into temporary Android preview resources
+        env:
+          SPRITE_TARGETS: zte_chr_tech_walk_final,zte_chr_tech_work_final,zte_chr_tech_carry_final
+        run: |
+          set -euo pipefail
+          for action in walk work carry; do
+            cp "art/production/character-rig-review-candidates/zte_chr_tech_$action"_"final.png" \
+               "art/incoming/final-sprites/zte_chr_tech_$action"_"final.png"
+          done
+          python tools/sprites/process_final_sprites.py
+          for action in WALK WORK CARRY; do
+            lc="$(echo "$action" | tr '[:upper:]' '[:lower:]')"
+            python tools/sprites/validate_runtime_asset.py \
+              --asset-id "CHR-TECH-$action" \
+              --path "app/src/main/res/drawable-nodpi/zte_chr_tech_$lc"_"final.webp"
+          done
+          python tools/android/audit_character_runtime.py
+          git diff --exit-code -- art/production/master-asset-queue.json docs/art/FINAL_AAA_SPRITE_MANIFEST.md
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Set up Gradle 8.13
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.13'
+      - name: Build debug preview and verify tests/lint
+        run: |
+          gradle assembleDebug --stacktrace
+          gradle testDebugUnitTest --stacktrace
+          gradle lintDebug --stacktrace
+      - name: Persist temporary APK provenance, not a release claim
+        run: |
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          r=json.loads(Path('art/production/character-rig-review-candidates/review-report.json').read_text())
+          assets=[]
+          for x in r['items']:
+              stem=x['staged_png'].removesuffix('.png')
+              webp=Path('app/src/main/res/drawable-nodpi')/(stem+'.webp')
+              assets.append({
+                  'id':x['asset_id'],
+                  'candidate_sha256':x['staged_sha256'],
+                  'temporary_runtime_sha256':hashlib.sha256(webp.read_bytes()).hexdigest(),
+                  'semantic_approved':False,'release_eligible':False,
+              })
+          apk=Path('app/build/outputs/apk/debug/app-debug.apk')
+          assert apk.is_file() and apk.stat().st_size>100000
+          result={'format':'zte-tech-debug-preview-v1',
+                  'debug_apk_sha256':hashlib.sha256(apk.read_bytes()).hexdigest(),
+                  'candidate_count':3,'strict_status':'NEEDS_REVIEW',
+                  'production_files_committed':False,
+                  'source_and_runtime_staged_only_in_ci':True,
+                  'actual_playability_on_device':'NOT_YET_TESTED',
+                  'assets':assets}
+          Path('tech-candidate-debug-evidence.json').write_text(json.dumps(result,indent=2)+'\n')
+          print('DEBUG_TECH_CANDIDATE_PREVIEW_BUILT_NO_STRICT_DONE=1')
+          PY
+      - name: Upload isolated Android APK and evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tech-three-art-review-debug-apk-not-approved
+          path: |
+            app/build/outputs/apk/debug/app-debug.apk
+            tech-candidate-debug-evidence.json
+            art/production/character-rig-review-candidates/review-report.json
+          if-no-files-found: warn
+          retention-days: 14
+```
+
 ## File: .github/workflows/tech-canonical-review-stage.yml
 ```yaml
 name: TECH canonical review staging
@@ -8473,8 +8606,20 @@ jobs:
           git add art/production/character-rig-review-candidates/
           git diff --cached --quiet && exit 0
           git commit -m 'art(review): stage identity-locked TECH action candidates (not approved)'
-          git pull --rebase origin main
-          git push origin HEAD:main
+          # Multiple independent automations update main. Never force-push:
+          # rebase this isolated review candidate commit and retry races.
+          for attempt in $(seq 1 12); do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              echo "STAGED_REVIEW_PUSH_SUCCESS_ATTEMPT=$attempt"
+              exit 0
+            fi
+            echo "::warning::main advanced before review push, retry $attempt/12"
+            sleep $((attempt * 2))
+          done
+          echo "::error::Review candidates generated but could not be persisted after retries"
+          exit 1
 ```
 
 ## File: .github/workflows/ter07-energy-conduit-candidate.yml
@@ -30350,9 +30495,24 @@ hands = {
 ⋮----
 def draw_cargo(layer: Image.Image, p: dict, t: float) -> None
 ⋮----
-d = ImageDraw.Draw(layer, "RGBA")
+"""Readable two-hand cargo crate, not a glowing handheld screen.
+
+    Draw behind the character's articulated hands. Handle coordinates match
+    pose_for(CARRY)'s exact left/right wrist anchors in every cycle frame.
+    Shape/material QA is not a substitute for 96px artistic grip inspection.
+    """
 ⋮----
-xx = x + 17 + 10 * i
+d = ImageDraw.Draw(layer, "RGBA")
+# Three-dimensional warm industrial cargo container.
+⋮----
+# Recessed cargo reinforcement, hazard-style seams without baked letters.
+⋮----
+# A small metal lock reads as a cargo latch, not a display screen.
+⋮----
+# Right and left handle centers MUST coincide with the rig's two wrists:
+# handL = root+(29,-55); handR = root+(103,-55).
+⋮----
+# Wear and corner rivets are attached to the single rigid container.
 ⋮----
 def draw_console(layer: Image.Image, p: dict, t: float) -> None
 ⋮----
@@ -31558,6 +31718,17 @@ p = pose_for(i / 48, action)
 def test_carry_grip_is_fixed_relative_to_crate(self)
 ⋮----
 p = pose_for(i / 48, "CARRY")
+⋮----
+def test_carry_is_a_visible_amber_crate_with_both_handle_anchors(self)
+⋮----
+# Pixel test: a tiny cyan console must never masquerade as cargo.
+⋮----
+pose = pose_for(t, "CARRY")
+layer = Image.new("RGBA", (512, 512))
+⋮----
+cargo = layer.crop((l, top, l + 96, top + 65))
+amber = sum(
+blue = sum(
 ⋮----
 def test_action_motion_is_not_identical_across_frames(self)
 ⋮----

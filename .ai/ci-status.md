@@ -1,11 +1,16 @@
 # CI status
 
-Summary: 4 success / 0 failure / 1 active
+Summary: 2 success / 1 failure / 2 active
 
-- TECH canonical review staging: in_progress / pending (8a629e30)
-- Asset Autofactory 235: completed / success (1c8c212a)
-- Asset Autofactory 235: completed / success (b711e6ba)
-- Pollinations Building Candidate: completed / success (b711e6ba)
-- Reconcile Sprite Progress Ledger: completed / success (788ae5a3)
+- TECH candidate Android preview (no promotion): in_progress / pending (dac52211)
+- Six modular TECH animations (review only): in_progress / pending (30827929)
+- Six modular TECH animations (review only): completed / cancelled (cd401ab0)
+- TECH canonical review staging: completed / success (cd401ab0)
+- TECH canonical review staging: completed / success (64268460)
+- TECH canonical review staging: completed / failure (8a629e30)
+
+## Latest failed run structure
+- Job: render-and-stage-review-only
+  - Failed step: Persist visual candidates, never production masters
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

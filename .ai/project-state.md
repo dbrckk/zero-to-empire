@@ -22,20 +22,30 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T19:51:22Z
+Generated: 2026-10-09T19:57:44Z
 
 ### Git
 - Branch: `main`
-- Head: `8a629e302cfe`
-- Commit date: 2026-10-09T21:51:05+02:00
-- Commit: ci(art): build and stage canonical TECH review animations without runtime promotion
-- Tracked files: 1496
+- Head: `dac52211f3a2`
+- Commit date: 2026-10-09T21:57:30+02:00
+- Commit: ci(android): validate three TECH review candidates inside real debug APK without promotion
+- Tracked files: 1508
 
 ### Recently changed files
-- `.github/workflows/tech-canonical-review-stage.yml`
-- `tools/sprites/test_export_tech_canonical_review.py`
-- `tools/sprites/export_tech_canonical_review.py`
-- `.github/workflows/promote-approved-kaggle-characters.yml`
+- `.github/workflows/tech-candidate-android-preview.yml`
+- `art/production/character-rig-review-candidates/review-report.json`
+- `art/production/character-rig-review-candidates/zte_chr_tech_carry_final-contact.png`
+- `art/production/character-rig-review-candidates/zte_chr_tech_carry_final-preview.gif`
+- `art/production/character-rig-review-candidates/zte_chr_tech_carry_final.png`
+- `tools/sprites/test_rigged_tech_actions_v3.py`
+- `tools/sprites/rigged_tech_actions_v3.py`
+- `art/production/character-rig-review-candidates/REVIEW_REQUIRED.txt`
+- `art/production/character-rig-review-candidates/zte_chr_tech_walk_final-contact.png`
+- `art/production/character-rig-review-candidates/zte_chr_tech_walk_final-preview.gif`
+- `art/production/character-rig-review-candidates/zte_chr_tech_walk_final.png`
+- `art/production/character-rig-review-candidates/zte_chr_tech_work_final-contact.png`
+- `art/production/character-rig-review-candidates/zte_chr_tech_work_final-preview.gif`
+- `art/production/character-rig-review-candidates/zte_chr_tech_work_final.png`
 
 ### Project signals
 - `build.gradle.kts`

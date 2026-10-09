@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 4a66a6be20eb1d714fdd76cb148f914094e80aad
-Head: 8a629e302cfe7e5239d7cd09ffea8440875e2d0e
+Base: 7b7095243dffc790ed9a335c4af3685323e78d66
+Head: dac52211f3a24f286fd07c576dc36164b18db170
 
 ## Changed files
-- A .github/workflows/tech-canonical-review-stage.yml
+- A .github/workflows/tech-candidate-android-preview.yml
 
 ## Affected areas
 - .github

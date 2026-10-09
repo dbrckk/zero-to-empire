@@ -5544,9 +5544,24 @@ hands = {
 ⋮----
 def draw_cargo(layer: Image.Image, p: dict, t: float) -> None
 ⋮----
-d = ImageDraw.Draw(layer, "RGBA")
+"""Readable two-hand cargo crate, not a glowing handheld screen.
+
+    Draw behind the character's articulated hands. Handle coordinates match
+    pose_for(CARRY)'s exact left/right wrist anchors in every cycle frame.
+    Shape/material QA is not a substitute for 96px artistic grip inspection.
+    """
 ⋮----
-xx = x + 17 + 10 * i
+d = ImageDraw.Draw(layer, "RGBA")
+# Three-dimensional warm industrial cargo container.
+⋮----
+# Recessed cargo reinforcement, hazard-style seams without baked letters.
+⋮----
+# A small metal lock reads as a cargo latch, not a display screen.
+⋮----
+# Right and left handle centers MUST coincide with the rig's two wrists:
+# handL = root+(29,-55); handR = root+(103,-55).
+⋮----
+# Wear and corner rivets are attached to the single rigid container.
 ⋮----
 def draw_console(layer: Image.Image, p: dict, t: float) -> None
 ⋮----
@@ -6752,6 +6767,17 @@ p = pose_for(i / 48, action)
 def test_carry_grip_is_fixed_relative_to_crate(self)
 ⋮----
 p = pose_for(i / 48, "CARRY")
+⋮----
+def test_carry_is_a_visible_amber_crate_with_both_handle_anchors(self)
+⋮----
+# Pixel test: a tiny cyan console must never masquerade as cargo.
+⋮----
+pose = pose_for(t, "CARRY")
+layer = Image.new("RGBA", (512, 512))
+⋮----
+cargo = layer.crop((l, top, l + 96, top + 65))
+amber = sum(
+blue = sum(
 ⋮----
 def test_action_motion_is_not_identical_across_frames(self)
 ⋮----
