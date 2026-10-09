@@ -80,6 +80,31 @@ class IndependentFrameTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError,'touches edge'):
             factory.safe_source_margin(cropped)
 
+    def test_reserved_repair_stages_candidate_without_overwriting_canonical(self):
+        import json
+        item={'id':'CHR-LOG-CARRY','role':'LOG','action':'CARRY',
+              'stem':'zte_chr_log_carry_final'}
+        with tempfile.TemporaryDirectory() as tmp, \
+             patch.object(factory,'OUT',Path(tmp)/'production'), \
+             patch.object(factory,'INCOMING',Path(tmp)/'incoming'), \
+             patch.object(factory,'QUEUE',Path(tmp)/'repair-queue.json'):
+            factory.INCOMING.mkdir(parents=True,exist_ok=True)
+            historical=factory.INCOMING/'zte_chr_log_carry_final.png'
+            historical.write_bytes(b'unchanged historic candidate')
+            factory.QUEUE.write_text(json.dumps({
+                'mode':'pollinations-controlled-repair',
+                'targets':[{'id':'CHR-LOG-CARRY','status':'PENDING_POLLINATIONS'}]}))
+            target=factory.candidate_destination(item)
+            self.assertNotEqual(target,historical)
+            self.assertIn('character-repair-candidates',str(target))
+            target.parent.mkdir(parents=True,exist_ok=True)
+            Image.new('RGBA',(1024,1024)).save(target)
+            self.assertEqual(historical.read_bytes(),
+                             b'unchanged historic candidate')
+            self.assertTrue(target.is_file())
+            factory.QUEUE.write_text(json.dumps({'mode':'other','targets':[]}))
+            self.assertEqual(factory.candidate_destination(item),historical)
+
     def test_unexpected_action_cannot_use_generic_fallback(self):
         for action in ('WALK','REPAIR'):
             with self.assertRaises(ValueError):
