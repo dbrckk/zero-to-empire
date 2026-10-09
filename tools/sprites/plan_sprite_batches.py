@@ -26,6 +26,7 @@ BATCH_SIZE = {
     "gpu-static": 7,
     "gpu-animation": 2,
     "integration-only": 32,
+    "semantic-review": 24,
     "blocked": 24,
 }
 
@@ -50,6 +51,10 @@ def is_materialized(runtime: str) -> bool:
 def classify(asset_id: str, description: str, status: str, runtime: str, materialized: bool) -> str:
     if status == "BLOCKED":
         return "blocked"
+    # An installed but semantically rejected/review-pending character must not
+    # be counted as an ordinary integration-only task.
+    if asset_id.startswith("CHR-") and status == "RUNTIME":
+        return "semantic-review"
     if materialized or status in {"ART", "CLEAN", "RUNTIME"}:
         return "integration-only"
 
@@ -78,8 +83,15 @@ def main() -> int:
         materialized = is_materialized(d["runtime"])
         rows.append(Asset(**d, materialized=materialized, lane=classify(d["id"], d["description"], d["status"], d["runtime"], materialized)))
 
+    if len(rows) != 236 or len({a.id for a in rows}) != 236:
+        raise SystemExit(f"Manifest parsing safety check failed: expected 236 unique rows, got {len(rows)}")
+    onboarding = [a for a in rows if a.id == "ONB-00"]
+    if len(onboarding) != 1 or onboarding[0].status != "DONE":
+        raise SystemExit("Expected separately completed ONB-00 onboarding illustration")
+    # ONB-00 is intentionally outside the canonical strict 235-asset objective.
+    rows = [a for a in rows if a.id != "ONB-00"]
     if len(rows) != 235:
-        raise SystemExit(f"Manifest parsing safety check failed: expected 235 rows, got {len(rows)}")
+        raise SystemExit("Canonical 235-target scope mismatch")
 
     remaining = [a for a in rows if a.status != "DONE"]
     lanes: dict[str, list[Asset]] = {name: [] for name in BATCH_SIZE}
@@ -99,6 +111,8 @@ def main() -> int:
 
     plan = {
         "manifest_total": len(rows),
+        "actual_manifest_rows": 236,
+        "excluded_from_strict_target": ["ONB-00"],
         "done": len(rows) - len(remaining),
         "remaining": len(remaining),
         "materialized_remaining": sum(a.materialized for a in remaining),
