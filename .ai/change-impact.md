@@ -1,10 +1,10 @@
 # Change impact
 
-Base: e6f5c0daae865aed037a645efcba5f33bb95e050
-Head: 750cebd02ac3e9bfa93fea48a363ec05b549c121
+Base: 8e4aa144974ec1b19f3e48d9e427da56234fdeb3
+Head: eabd8c51be049f633db7b82c604238352a68f657
 
 ## Changed files
-- A docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md
+- M docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md
 
 ## Affected areas
 - docs

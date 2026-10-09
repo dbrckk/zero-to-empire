@@ -22,13 +22,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T19:58:58Z
+Generated: 2026-10-09T20:04:18Z
 
 ### Git
 - Branch: `main`
-- Head: `750cebd02ac3`
-- Commit date: 2026-10-09T21:58:32+02:00
-- Commit: docs(art): record direct TECH rig visual findings and remaining strict acceptance criteria
+- Head: `eabd8c51be04`
+- Commit date: 2026-10-09T22:04:01+02:00
+- Commit: docs(art): record passing real Android TECH preview build without strict promotion
 - Tracked files: 1509
 
 ### Recently changed files
@@ -39,7 +39,6 @@ Generated: 2026-10-09T19:58:58Z
 - `art/production/character-rig-review-candidates/zte_chr_tech_carry_final-preview.gif`
 - `art/production/character-rig-review-candidates/zte_chr_tech_carry_final.png`
 - `tools/sprites/test_rigged_tech_actions_v3.py`
-- `tools/sprites/rigged_tech_actions_v3.py`
 
 ### Project signals
 - `build.gradle.kts`
