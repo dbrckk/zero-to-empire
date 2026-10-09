@@ -1312,11 +1312,14 @@ jobs:
           python - <<'PY'
           import json
           report=json.load(open('/tmp/character-review-matrix.json'))
-          assert report['target_total']==235 and report['strict_done']==216
-          assert report['pending_count']==19
+          queue=json.load(open('art/production/master-asset-queue.json'))
+          assert report['target_total']==queue['target_total']==235
+          assert report['strict_done']==sum(a.get('strict_status')=='DONE' for a in queue['assets'])
+          assert report['pending_count']==len(queue['assets'])-report['strict_done']
+          assert len(report['items'])==report['pending_count']
           assert report['auto_promotion_permitted'] is False
           assert all(not x['semantic_review_pass'] for x in report['items'])
-          print('REVIEW_ONLY: 19 canonical assets, 216 strict DONE unchanged')
+          print(f"REVIEW_ONLY: {report['pending_count']} canonical assets, {report['strict_done']} strict DONE unchanged")
           PY
       - name: Audit actual canonical character sprite sheets
         run: python tools/sprites/audit_character_candidates.py --out /tmp/character-visual-audit
@@ -1325,7 +1328,9 @@ jobs:
           python - <<'PY'
           import json
           report=json.load(open('/tmp/character-visual-audit/canonical-character-audit.json'))
-          assert report["pending"] == 19
+          matrix=json.load(open('/tmp/character-review-matrix.json'))
+          assert report["pending"] == matrix["pending_count"]
+          assert report["strict_done"] == matrix["strict_done"]
           assert report["semantic_approved_count"] == 0
           assert report["all_visual_and_semantic_approved"] is False
           assert report["image_only_risk_checks_are_not_approval"] is True
@@ -8114,6 +8119,7 @@ on:
     branches: [main]
     paths:
       - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
+      - 'art/production/master-asset-queue.json'
       - 'docs/art/AAA_HISTORICAL_PROMOTION_REVIEW.md'
       - 'app/src/main/res/drawable-nodpi/**_final.webp'
       - 'tools/sprites/audit_complete_sprite_manifest.py'
@@ -8147,21 +8153,60 @@ jobs:
         shell: bash
         run: |
           python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
           from pathlib import Path
-          pending=0;total=0
-          review=Path('docs/art/AAA_HISTORICAL_PROMOTION_REVIEW.md').read_text(encoding='utf-8')
-          semantic_closed='**Status: CLOSED**' in review
-          for line in Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md').read_text().splitlines():
-              if not line.startswith('|') or 'app/src/main/res/' not in line: continue
-              cols=[c.strip() for c in line.split('|')[1:-1]]
-              if len(cols)!=5: continue
-              total+=1
-              pending += cols[4].upper()!='DONE'
-          print(f'total={total}')
-          print(f'pending={pending}')
+          manifest = []
+          for line in Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md').read_text(encoding='utf-8').splitlines():
+              if not line.startswith('|') or 'app/src/main/res/' not in line:
+                  continue
+              cols = [c.strip().strip('`') for c in line.split('|')[1:-1]]
+              if len(cols) == 5:
+                  manifest.append(cols)
+          queue = json.loads(Path('art/production/master-asset-queue.json').read_text(encoding='utf-8'))
+          assets = queue.get('assets', [])
+          ids = [a.get('id') for a in assets]
+          excluded = set(queue.get('excluded_from_target', []))
+          manifest_ids = [row[0] for row in manifest]
+          canonical_shape_valid = (
+              queue.get('target_total') == 235
+              and len(assets) == 235
+              and len(set(ids)) == 235
+              and len(manifest) == 236
+              and len(set(manifest_ids)) == 236
+              and set(manifest_ids) == set(ids) | excluded
+              and excluded == {'ONB-00'}
+              and not set(ids) & excluded
+          )
+          strict_done = sum(a.get('strict_status') == 'DONE' for a in assets)
+          strict_pending = len(assets) - strict_done
+          manifest_pending = sum(row[4].upper() != 'DONE' for row in manifest)
+          review = Path('docs/art/AAA_HISTORICAL_PROMOTION_REVIEW.md').read_text(encoding='utf-8')
+          semantic_closed = '**Status: CLOSED**' in review
+          premature = sorted(
+              aid for aid, status in ((row[0], row[4].upper()) for row in manifest)
+              if aid in set(ids)
+              and status == 'DONE'
+              and next(a for a in assets if a['id'] == aid).get('strict_status') != 'DONE'
+          )
+          complete = (
+              canonical_shape_valid and strict_pending == 0 and manifest_pending == 0
+              and not premature and semantic_closed
+          )
+          print(f'manifest_total={len(manifest)}')
+          print(f'manifest_pending={manifest_pending}')
+          print(f'strict_done={strict_done}')
+          print(f'strict_pending={strict_pending}')
+          print(f'canonical_shape_valid={str(canonical_shape_valid).lower()}')
+          print(f'premature_manifest_done={len(premature)}')
           print(f'semantic_closed={str(semantic_closed).lower()}')
-          print('complete=true' if total==236 and pending==0 and semantic_closed else 'complete=false')
+          print(f'complete={str(complete).lower()}')
           PY
+
+      - name: Refuse an unverified manual completion claim
+        if: github.event_name == 'workflow_dispatch' && steps.state.outputs.complete != 'true'
+        run: |
+          echo "::error::Strict completion is not verified. Canonical strict DONE must be 235/235, the 236-row manifest must match, and semantic review must be closed."
+          exit 1
 
       - name: Install Pillow
         if: steps.state.outputs.complete == 'true'

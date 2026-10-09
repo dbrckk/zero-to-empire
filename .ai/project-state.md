@@ -22,20 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T19:05:19Z
+Generated: 2026-10-09T19:16:25Z
 
 ### Git
 - Branch: `main`
-- Head: `a9021a86891b`
-- Commit date: 2026-10-09T21:04:14+02:00
-- Commit: fix(test): correct fixture quoting and Python continuation in reservation regression
+- Head: `ad0bf48c1e30`
+- Commit date: 2026-10-09T21:16:07+02:00
+- Commit: fix(ci): gate sprite completion on 235 canonical strict approvals
 - Tracked files: 1490
 
 ### Recently changed files
+- `.github/workflows/sprite-completion-gate.yml`
+- `.github/workflows/character-review-matrix.yml`
 - `tools/sprites/test_pollinations_character_sheet_factory.py`
 - `tools/sprites/pollinations_character_sheet_factory.py`
-- `art/production/character-strict-review-backlog.md`
-- `.github/workflows/identity-locked-walk-review.yml`
 
 ### Project signals
 - `build.gradle.kts`

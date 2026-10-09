@@ -1,13 +1,13 @@
 # Change impact
 
-Base: bc223af3a560e7db75e4daf6bd18122791303036
-Head: a9021a86891b94421f540b7402c997cff59cc368
+Base: 6fe179a793a7e17c648dad9d36d904003f35cabc
+Head: ad0bf48c1e303881d15c40dfc9b2ebc1b0aec5c0
 
 ## Changed files
-- M tools/sprites/test_pollinations_character_sheet_factory.py
+- M .github/workflows/sprite-completion-gate.yml
 
 ## Affected areas
-- tools
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.
