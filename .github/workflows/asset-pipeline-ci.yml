@@ -8,6 +8,8 @@ on:
       - 'tools/sprites/audit_complete_sprite_manifest.py'
       - 'tools/sprites/asset_queue_utils.py'
       - 'tools/sprites/asset_wave_orchestrator.py'
+      - 'tools/sprites/animation_batch_planner.py'
+      - 'tools/sprites/test_animation_batch_planner.py'
       - 'tools/sprites/kaggle_*factory*.py'
       - 'kaggle/github_mass_factory.py'
       - 'art/production/generation-rejection-ledger.json'
@@ -21,6 +23,8 @@ on:
       - 'tools/sprites/audit_complete_sprite_manifest.py'
       - 'tools/sprites/asset_queue_utils.py'
       - 'tools/sprites/asset_wave_orchestrator.py'
+      - 'tools/sprites/animation_batch_planner.py'
+      - 'tools/sprites/test_animation_batch_planner.py'
       - 'tools/sprites/kaggle_*factory*.py'
       - 'kaggle/github_mass_factory.py'
       - 'art/production/generation-rejection-ledger.json'
@@ -84,6 +88,20 @@ jobs:
 
       - name: Run unified asset pipeline unit tests
         run: python -m unittest discover -s tools/assets -p 'test_*.py' -v
+
+      - name: Verify live character-production plan against strict queue and Android frame contract
+        run: |
+          python -m unittest discover -s tools/sprites -p 'test_animation_batch_planner.py' -v
+          python tools/sprites/animation_batch_planner.py --kind CHR --count 16 > /tmp/character-animation-batch.json
+          python - <<'PY'
+          import json
+          report=json.load(open('/tmp/character-animation-batch.json'))
+          assert report['approved_by_planner']==0
+          assert report['strict_count_increased'] is False
+          assert report['regeneration_count']+report['semantic_review_count']<=report['unresolved_count']
+          assert all(not x['automatic_promotion_permitted'] for x in report['include'])
+          print('ANIMATION_BATCH_PLAN_SAFE=1 unresolved='+str(report['unresolved_count']))
+          PY
 
       - name: Audit authoritative sprite manifest
         run: python tools/sprites/audit_complete_sprite_manifest.py --allow-pending
