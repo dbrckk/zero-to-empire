@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 368f325631db3c8015fbb8a703d2efcff71100b3
-Head: a7ec927d3bde8f3f87f38659186ee2772bedcaba
+Base: f1afe8a83c484384bd109fd33a1cdc805c253076
+Head: 8bb89ab9a1641dd679574ab9a7af7cbc0ff6b389
 
 ## Changed files
-- M .github/workflows/modular-tech-actions.yml
+- M tools/sprites/test_package_tech_actions_runtime.py
 
 ## Affected areas
-- .github
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

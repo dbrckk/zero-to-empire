@@ -3901,7 +3901,20 @@ bbox=binary.getbbox()
 ⋮----
 margin=min(x0,y0,side-x1,side-y1)
 ⋮----
-def package(source:Path,output:Path)->dict
+def verify_temporal_evidence(index:dict,records:dict,report_path:Path)->dict
+⋮----
+"""Bind temporal QA to the exact ordered RGBA frames being packaged."""
+report=json.loads(report_path.read_text(encoding='utf-8'))
+⋮----
+actions=report.get('actions',{})
+⋮----
+entry=actions[action]
+⋮----
+chain=hashlib.sha256()
+⋮----
+def package(source:Path,output:Path,temporal_report:Path|None=None)->dict
+⋮----
+evidence=(verify_temporal_evidence(index,records,temporal_report)
 ⋮----
 exported={'format':'zte-tech-actions-runtime-v1','strict_status':'NEEDS_REVIEW',
 overview=Image.new('RGB',(900,672),(23,29,40))
@@ -3944,7 +3957,7 @@ def main()
 parser=argparse.ArgumentParser(description=__doc__)
 ⋮----
 args=parser.parse_args()
-result=package(args.source,args.output)
+result=package(args.source,args.output,args.temporal_report)
 ```
 
 ## File: sprites/patch_final_character_motion.py
@@ -5410,6 +5423,8 @@ mask=alpha>=128
 ⋮----
 b=(int(xx.min()),int(yy.min()),int(xx.max()+1),int(yy.max()+1))
 ⋮----
+ordered_digest=hashlib.sha256(''.join(digests).encode('ascii')).hexdigest()
+⋮----
 differences=[];area_jump=[];color_jumps=[]
 ⋮----
 j=(i+1)%frames_expected
@@ -5704,7 +5719,7 @@ project=json.loads((root/'project.json').read_text())
 ```python
 """Regression tests for six TECH runtime review atlases.
 
-Run AFTER the six-clip generator in CI. Never silently skip missing input.
+Run AFTER the six-clip generator in CI; independently audit its real pixels.
 """
 ⋮----
 FIXTURE=Path('build/tech-actions-v3').resolve()
@@ -5716,7 +5731,14 @@ def setUp(self)
 def test_six_atlases_keep_the_review_gate(self)
 ⋮----
 out=Path(temp)/'runtime'
-manifest=package(FIXTURE,out)
+temporal_dir=Path(temp)/'temporal'
+⋮----
+report_file=temporal_dir/'temporal-qa.json'
+manifest=package(FIXTURE,out,temporal_report=report_file)
+⋮----
+bad=json.loads(report_file.read_text())
+⋮----
+bad_file=Path(temp)/'stale-temporal.json'
 ⋮----
 var=item['variants'][str(size)]
 ⋮----
