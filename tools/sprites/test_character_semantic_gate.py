@@ -44,6 +44,16 @@ class SemanticGateTests(unittest.TestCase):
         result=clip_risk(frames)
         self.assertIn('PALETTE_IDENTITY_DISCONTINUITY_RISK',result['flags'])
 
+    def test_two_people_in_one_cell_cause_visible_mass_jump(self):
+        pair=Image.new('RGBA',(256,256))
+        pair.alpha_composite(person(-60))
+        pair.alpha_composite(person(60))
+        frames=[person() for _ in range(7)]+[pair]
+        result=clip_risk(frames)
+        self.assertEqual(result['risk_level'],'BLOCKING')
+        self.assertIn('SILHOUETTE_MASS_DISCONTINUITY_RISK',result['flags'])
+        self.assertGreater(result['max_silhouette_mass_ratio'],1.80)
+
     def test_empty_frame_fails_hard(self):
         self.assertFalse(frame_geometry(Image.new('RGBA',(256,256)))['valid'])
         frames=[person() for _ in range(7)]+[Image.new('RGBA',(256,256))]
