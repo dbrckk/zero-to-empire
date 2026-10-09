@@ -6,6 +6,10 @@ on:
     paths:
       - 'art/production/character-rig-review-candidates/zte_chr_tech_*_final.png'
       - '.github/workflows/tech-candidate-android-preview.yml'
+      - 'app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt'
+      - 'app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt'
+      - 'app/src/debug/AndroidManifest.xml'
+      - 'tools/android/character_preview_emulator_smoke.sh'
   workflow_dispatch:
 
 permissions:
@@ -18,7 +22,7 @@ concurrency:
 jobs:
   debug-candidate-preview:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 45
     steps:
       - name: Checkout current canonical main
         uses: actions/checkout@v4
@@ -115,6 +119,16 @@ jobs:
           Path('tech-candidate-debug-evidence.json').write_text(json.dumps(result,indent=2)+'\n')
           print('DEBUG_TECH_CANDIDATE_PREVIEW_BUILT_NO_STRICT_DONE=1')
           PY
+      - name: Validate actual review APK on an emulator
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: bash tools/android/character_preview_emulator_smoke.sh
       - name: Upload isolated Android APK and evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -124,5 +138,6 @@ jobs:
             app/build/outputs/apk/debug/app-debug.apk
             tech-candidate-debug-evidence.json
             art/production/character-rig-review-candidates/review-report.json
+            /tmp/zte-character-preview/**
           if-no-files-found: warn
           retention-days: 14
