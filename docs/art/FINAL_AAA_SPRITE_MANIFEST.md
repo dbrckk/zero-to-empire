@@ -5,7 +5,7 @@
 ## Counting rule
 A row is `DONE` only when the asset is individually authored/generated, cleaned, transparent, free of baked UI/text/logo artifacts, visually consistent with the 2.5D camera/light, optimized for Android, committed under the final runtime path, actually referenced by runtime code, visible in-game, and the Android CI for that commit is green. Source SVGs, concept sheets, collages, Compose/Canvas placeholders, temporary vectors, reference crops and non-integrated rasters are **not DONE**.
 
-Statuses: `TODO` → `ART` → `CLEAN` → `RUNTIME` → `DONE`. `BLOCKED` may be used with a note.
+Statuses: `TODO` → `ART` → `CLEAN` → `RUNTIME` → `DONE`. `RUNTIME` means an existing runtime resource still awaits strict visual/semantic approval; it is **not** strict DONE. `BLOCKED` means a rejected or invalid asset requires regeneration/review. Runtime presence or a green technical CI does not itself certify semantic approval.
 
 ## Locked scope v1
 **Total final deliverables: 236** = 98 building masters + 7 Power Core + 24 character sheets + 18 vehicle sprites/sheets + 28 machine sheets + 28 prop sprites + 14 terrain/infrastructure sprites + 18 FX sheets + 1 onboarding illustration.
@@ -143,29 +143,29 @@ If a new runtime sprite is later required, it must be added here first and the d
 | ID | Sheet | Description | Runtime target | Status |
 |---|---|---|---|---|
 | CHR-OP-IDLE | Foundry operator idle | idle breathing/look-around loop, 4–8 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_op_idle_final.webp` | DONE |
-| CHR-OP-WALK | Foundry operator walk | walk cycle, 6–10 frames, consistent foot pivot; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_op_walk_final.webp` | DONE |
-| CHR-OP-WORK | Foundry operator work | primary work/tool loop, 8–16 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_op_work_final.webp` | DONE |
-| CHR-OP-CARRY | Foundry operator carry | carry crate/component movement cycle, 6–10 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_op_carry_final.webp` | DONE |
-| CHR-OP-REPAIR | Foundry operator repair | repair/welding/diagnostic loop, 8–16 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_op_repair_final.webp` | DONE |
-| CHR-OP-CELEB | Foundry operator celeb | short celebration/milestone one-shot, 8–12 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_op_celeb_final.webp` | DONE |
+| CHR-OP-WALK | Foundry operator walk | walk cycle, 6–10 frames, consistent foot pivot; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_op_walk_final.webp` | RUNTIME |
+| CHR-OP-WORK | Foundry operator work | primary work/tool loop, 8–16 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_op_work_final.webp` | RUNTIME |
+| CHR-OP-CARRY | Foundry operator carry | carry crate/component movement cycle, 6–10 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_op_carry_final.webp` | RUNTIME |
+| CHR-OP-REPAIR | Foundry operator repair | repair/welding/diagnostic loop, 8–16 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_op_repair_final.webp` | RUNTIME |
+| CHR-OP-CELEB | Foundry operator celeb | short celebration/milestone one-shot, 8–12 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_op_celeb_final.webp` | RUNTIME |
 | CHR-TECH-IDLE | Technician idle | idle breathing/look-around loop, 4–8 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_tech_idle_final.webp` | DONE |
-| CHR-TECH-WALK | Technician walk | walk cycle, 6–10 frames, consistent foot pivot; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_tech_walk_final.webp` | DONE |
-| CHR-TECH-WORK | Technician work | primary work/tool loop, 8–16 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_tech_work_final.webp` | DONE |
-| CHR-TECH-CARRY | Technician carry | carry crate/component movement cycle, 6–10 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_tech_carry_final.webp` | DONE |
+| CHR-TECH-WALK | Technician walk | walk cycle, 6–10 frames, consistent foot pivot; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_tech_walk_final.webp` | BLOCKED |
+| CHR-TECH-WORK | Technician work | primary work/tool loop, 8–16 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_tech_work_final.webp` | RUNTIME |
+| CHR-TECH-CARRY | Technician carry | carry crate/component movement cycle, 6–10 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_tech_carry_final.webp` | RUNTIME |
 | CHR-TECH-REPAIR | Technician repair | repair/welding/diagnostic loop, 8–16 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_tech_repair_final.webp` | DONE |
 | CHR-TECH-CELEB | Technician celeb | short celebration/milestone one-shot, 8–12 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_tech_celeb_final.webp` | DONE |
 | CHR-LOG-IDLE | Logistics worker idle | idle breathing/look-around loop, 4–8 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_log_idle_final.webp` | DONE |
-| CHR-LOG-WALK | Logistics worker walk | walk cycle, 6–10 frames, consistent foot pivot; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_log_walk_final.webp` | DONE |
-| CHR-LOG-WORK | Logistics worker work | primary work/tool loop, 8–16 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_log_work_final.webp` | DONE |
-| CHR-LOG-CARRY | Logistics worker carry | carry crate/component movement cycle, 6–10 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_log_carry_final.webp` | DONE |
-| CHR-LOG-REPAIR | Logistics worker repair | repair/welding/diagnostic loop, 8–16 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_log_repair_final.webp` | DONE |
-| CHR-LOG-CELEB | Logistics worker celeb | short celebration/milestone one-shot, 8–12 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_log_celeb_final.webp` | DONE |
-| CHR-ENG-IDLE | Engineer idle | idle breathing/look-around loop, 4–8 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_eng_idle_final.webp` | DONE |
-| CHR-ENG-WALK | Engineer walk | walk cycle, 6–10 frames, consistent foot pivot; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_eng_walk_final.webp` | DONE |
-| CHR-ENG-WORK | Engineer work | primary work/tool loop, 8–16 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_eng_work_final.webp` | DONE |
-| CHR-ENG-CARRY | Engineer carry | carry crate/component movement cycle, 6–10 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_eng_carry_final.webp` | DONE |
-| CHR-ENG-REPAIR | Engineer repair | repair/welding/diagnostic loop, 8–16 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_eng_repair_final.webp` | DONE |
-| CHR-ENG-CELEB | Engineer celeb | short celebration/milestone one-shot, 8–12 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_eng_celeb_final.webp` | DONE |
+| CHR-LOG-WALK | Logistics worker walk | walk cycle, 6–10 frames, consistent foot pivot; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_log_walk_final.webp` | RUNTIME |
+| CHR-LOG-WORK | Logistics worker work | primary work/tool loop, 8–16 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_log_work_final.webp` | RUNTIME |
+| CHR-LOG-CARRY | Logistics worker carry | carry crate/component movement cycle, 6–10 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_log_carry_final.webp` | BLOCKED |
+| CHR-LOG-REPAIR | Logistics worker repair | repair/welding/diagnostic loop, 8–16 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_log_repair_final.webp` | RUNTIME |
+| CHR-LOG-CELEB | Logistics worker celeb | short celebration/milestone one-shot, 8–12 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_log_celeb_final.webp` | RUNTIME |
+| CHR-ENG-IDLE | Engineer idle | idle breathing/look-around loop, 4–8 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_eng_idle_final.webp` | RUNTIME |
+| CHR-ENG-WALK | Engineer walk | walk cycle, 6–10 frames, consistent foot pivot; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_eng_walk_final.webp` | RUNTIME |
+| CHR-ENG-WORK | Engineer work | primary work/tool loop, 8–16 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_eng_work_final.webp` | RUNTIME |
+| CHR-ENG-CARRY | Engineer carry | carry crate/component movement cycle, 6–10 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_eng_carry_final.webp` | RUNTIME |
+| CHR-ENG-REPAIR | Engineer repair | repair/welding/diagnostic loop, 8–16 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_eng_repair_final.webp` | RUNTIME |
+| CHR-ENG-CELEB | Engineer celeb | short celebration/milestone one-shot, 8–12 frames; clothing evolves by era through palette/accessory variants without changing pivot. | `app/src/main/res/drawable-nodpi/zte_chr_eng_celeb_final.webp` | RUNTIME |
 
 ## D. Vehicles — 18 / 18 planned
 
@@ -298,19 +298,14 @@ If a new runtime sprite is later required, it must be added here first and the d
 | FX-16 | singularity lens pulse | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_16_final.webp` |DONE |
 | FX-17 | mastery crown shimmer | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_17_final.webp` | DONE |
 
-## Progress ledger
-- **DONE: 126 / 236**
-- Buildings: **23 / 98**
-- Power Core: **7 / 7**
-- Characters: **0 / 24**
-- Vehicles: **18 / 18**
-- Machines: **28 / 28**
-- Props: **28 / 28**
-- Terrain/infrastructure: **14 / 14**
-- FX: **8 / 18**
+## Progress ledger — reconciled against canonical queue 2026-10-09
 
-### Next production target
-`FX-07 — construction dust/debris` (reverse-order production requested).
+- **235 canonical targets:** **216 strict DONE**, **19 awaiting replacement/review** (5 of 24 character actions accepted).
+- **236 manifest rows:** **217 DONE** including the separate `ONB-00` illustration, **17 RUNTIME awaiting semantic review**, **2 BLOCKED** (TECH-WALK, LOG-CARRY).
+- A manifest row may become `DONE` only after successful per-frame visual semantics, technical QA, actual runtime visibility and green Android CI for the exact committed asset.
+- The canonical approval status is recorded in `art/production/master-asset-queue.json`; do not infer strict approval from the presence of an older Android WebP.
+- **Breakdown (strict DONE / canonical target):** buildings 98/98; Power Core 7/7; characters 5/24; vehicles 18/18; machines 28/28; props 28/28; terrain/infrastructure 14/14; FX 18/18. The onboarding illustration is separately 1/1 and is excluded from the 235 target.
+- See `art/production/character-strict-review-backlog.md` and `art/production/character-visual-review-findings-2026-10-09.md` for the 19 remaining assets and specific rejection criteria.
 
 ## I. Onboarding authored illustrations
 
