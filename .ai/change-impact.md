@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 7b7095243dffc790ed9a335c4af3685323e78d66
-Head: dac52211f3a24f286fd07c576dc36164b18db170
+Base: e6f5c0daae865aed037a645efcba5f33bb95e050
+Head: 750cebd02ac3e9bfa93fea48a363ec05b549c121
 
 ## Changed files
-- A .github/workflows/tech-candidate-android-preview.yml
+- A docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md
 
 ## Affected areas
-- .github
+- docs
 
 ## Related test candidates
 - No direct filename-based test match detected.
