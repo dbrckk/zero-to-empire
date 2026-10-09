@@ -19,6 +19,27 @@ ACTIONS=('WALK','CARRY','IDLE','WORK','REPAIR','CELEB')
 SIDE=96
 
 
+
+def opaque_palette_signature(rgba:np.ndarray)->np.ndarray:
+    """Three normalized 8-bin opaque-channel histograms, invariant to limb position.
+
+    Unlike a median per-pixel difference, this catches partial recoloring of
+    garments while tolerating legitimate repositioning and transparent effects.
+    """
+    stable=rgba[:,:,3]>=220
+    rgb=rgba[:,:,:3][stable]
+    if rgb.shape[0]<200:
+        raise ValueError('Insufficient opaque character pixels for palette QA')
+    quant=np.minimum(rgb.astype(np.uint16)//32,7)
+    return np.stack([np.bincount(quant[:,channel],minlength=8)/len(quant)
+                     for channel in range(3)])
+
+
+def opaque_palette_distance(left:np.ndarray,right:np.ndarray)->float:
+    """Average total variation across R/G/B channel distributions [0,1]."""
+    return float(np.mean(np.sum(np.abs(left-right),axis=1)/2))
+
+
 def inspect_clip(root:Path,action:str,frames_expected:int=24) -> dict:
     directory=root/action
     manifest=json.loads((directory/'qa-manifest.json').read_text(encoding='utf-8'))
@@ -33,7 +54,7 @@ def inspect_clip(root:Path,action:str,frames_expected:int=24) -> dict:
     extra=list((directory/'frames').glob('*.png'))
     if len(extra)!=frames_expected or not all(f.is_file() for f in frames):
         raise ValueError('Missing, unordered or extra frames: '+action)
-    masks=[];areas=[];bbox=[];digests=[];rgba_frames=[]
+    masks=[];areas=[];bbox=[];digests=[];rgba_frames=[];palettes=[]
     for i,path in enumerate(frames):
         with Image.open(path) as source:
             if source.mode!='RGBA' or source.size!=(512,512):
@@ -56,12 +77,13 @@ def inspect_clip(root:Path,action:str,frames_expected:int=24) -> dict:
             raise ValueError(f'Clipped 96px sprite: {action}:{i}')
         masks.append(mask)
         rgba_frames.append(rgba)
+        palettes.append(opaque_palette_signature(rgba))
         areas.append(int(mask.sum()))
         bbox.append(list(b))
     ordered_digest=hashlib.sha256(''.join(digests).encode('ascii')).hexdigest()
     if len(set(digests))<int(math.ceil(frames_expected*.8)):
         raise ValueError('Excessive duplicate frames: '+action)
-    differences=[];area_jump=[];color_jumps=[]
+    differences=[];area_jump=[];color_jumps=[];palette_jumps=[]
     for i,a in enumerate(masks):
         j=(i+1)%frames_expected
         b=masks[j]
@@ -79,6 +101,7 @@ def inspect_clip(root:Path,action:str,frames_expected:int=24) -> dict:
         rgb_b=rgba_frames[j][:,:,:3].astype(np.int16)
         changed=np.mean(np.abs(rgb_a-rgb_b),axis=2)[stable]
         color_jumps.append(float(np.median(changed)))
+        palette_jumps.append(opaque_palette_distance(palettes[i],palettes[j]))
     median=statistics.median(differences)
     if median<.002:
         raise ValueError('Near-static or duplicated animation: '+action)
@@ -94,6 +117,9 @@ def inspect_clip(root:Path,action:str,frames_expected:int=24) -> dict:
     if max_ratio>4.5:problems.append('isolated-silhouette-jump')
     if max(area_jump)>.20:problems.append('sudden-alpha-area-change')
     if max_color_jump>rgb_limit:problems.append('global-rgb-flash-or-texture-drift')
+    palette_baseline=statistics.median(palette_jumps)
+    palette_limit=max(.18,palette_baseline*5.+.08)
+    if max(palette_jumps)>palette_limit:problems.append('localized-palette-flash-or-color-drift')
     if problems:
         raise ValueError(f'Temporal QA failed {action}: {", ".join(problems)}')
     return {'asset_id':manifest['asset_id'],'frames':frames_expected,
@@ -112,6 +138,10 @@ def inspect_clip(root:Path,action:str,frames_expected:int=24) -> dict:
             'largest_opaque_rgb_change':round(max_color_jump,3),
             'opaque_rgb_flash_threshold':round(rgb_limit,3),
             'per_transition_opaque_rgb_change':[round(v,3) for v in color_jumps],
+            'median_opaque_palette_change':round(palette_baseline,4),
+            'largest_opaque_palette_change':round(max(palette_jumps),4),
+            'opaque_palette_flash_threshold':round(palette_limit,4),
+            'per_transition_opaque_palette_change':[round(v,4) for v in palette_jumps],
             'per_transition_disagreement':[round(v,5) for v in differences],
             'temporal_technical_pass':True,
             'visual_review_pass':False,'semantic_review_pass':False,
