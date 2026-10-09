@@ -5402,6 +5402,22 @@ No canonical queue mutations; strict DONE is expressly forbidden.
 ACTIONS=('WALK','CARRY','IDLE','WORK','REPAIR','CELEB')
 SIDE=96
 ⋮----
+def opaque_palette_signature(rgba:np.ndarray)->np.ndarray
+⋮----
+"""Three normalized 8-bin opaque-channel histograms, invariant to limb position.
+
+    Unlike a median per-pixel difference, this catches partial recoloring of
+    garments while tolerating legitimate repositioning and transparent effects.
+    """
+stable=rgba[:,:,3]>=220
+rgb=rgba[:,:,:3][stable]
+⋮----
+quant=np.minimum(rgb.astype(np.uint16)//32,7)
+⋮----
+def opaque_palette_distance(left:np.ndarray,right:np.ndarray)->float
+⋮----
+"""Average total variation across R/G/B channel distributions [0,1]."""
+⋮----
 def inspect_clip(root:Path,action:str,frames_expected:int=24) -> dict
 ⋮----
 directory=root/action
@@ -5412,7 +5428,7 @@ qa=manifest.get('qa',{})
 frames=[directory/'frames'/f'CHR-TECH-{action}-{i:02d}.png' for i in range(frames_expected)]
 extra=list((directory/'frames').glob('*.png'))
 ⋮----
-masks=[];areas=[];bbox=[];digests=[];rgba_frames=[]
+masks=[];areas=[];bbox=[];digests=[];rgba_frames=[];palettes=[]
 ⋮----
 img=source.resize((SIDE,SIDE),Image.Resampling.LANCZOS)
 rgba=np.asarray(img.convert('RGBA'),dtype=np.uint8)
@@ -5425,7 +5441,7 @@ b=(int(xx.min()),int(yy.min()),int(xx.max()+1),int(yy.max()+1))
 ⋮----
 ordered_digest=hashlib.sha256(''.join(digests).encode('ascii')).hexdigest()
 ⋮----
-differences=[];area_jump=[];color_jumps=[]
+differences=[];area_jump=[];color_jumps=[];palette_jumps=[]
 ⋮----
 j=(i+1)%frames_expected
 b=masks[j]
@@ -5451,6 +5467,9 @@ max_color_jump=max(color_jumps)
 # intentional tiny glow changes affect a minority of stable pixels.
 rgb_limit=max(42.,color_baseline*6.+15.)
 problems=[]
+⋮----
+palette_baseline=statistics.median(palette_jumps)
+palette_limit=max(.18,palette_baseline*5.+.08)
 ⋮----
 def audit(root:Path,output:Path,skin:Path|None=None)->dict
 ⋮----
@@ -6017,6 +6036,16 @@ rgba=image.convert('RGBA')
 # Deliberately invert garment and skin RGB without moving even
 # one silhouette/alpha pixel; geometry-only QA must not pass it.
 corrupted=Image.merge('RGBA',tuple(
+⋮----
+def test_partial_costume_recolor_is_caught_even_when_rgb_median_is_zero(self)
+⋮----
+# Recolor <50% of stable garment pixels: the RGB median alone
+# stays unchanged, but the location-invariant palette must detect it.
+⋮----
+original=np.asarray(image.convert('RGBA')).copy()
+modified=original.copy()
+⋮----
+selected=(original[:,:,3]>=220)&(xx>252)
 ⋮----
 def test_optional_real_skin_digest_matches_output_provenance(self)
 ⋮----

@@ -22,21 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T09:07:13Z
+Generated: 2026-10-09T09:23:34Z
 
 ### Git
 - Branch: `main`
-- Head: `5497d5105682`
-- Commit date: 2026-10-09T11:06:59+02:00
-- Commit: docs(art): document RGB flicker QA and frame-bound evidence requirements
+- Head: `fa260735833f`
+- Commit date: 2026-10-09T11:23:02+02:00
+- Commit: test(art): detect recolored garment sections invisible to median RGB QA
 - Tracked files: 1472
 
 ### Recently changed files
-- `tools/sprites/MODULAR_ACTIONS_README.md`
 - `tools/sprites/test_temporal_sprite_audit.py`
+- `tools/sprites/temporal_sprite_audit.py`
+- `tools/sprites/MODULAR_ACTIONS_README.md`
 - `tools/sprites/test_package_tech_actions_runtime.py`
-- `.github/workflows/modular-tech-actions.yml`
-- `tools/sprites/package_tech_actions_runtime.py`
 
 ### Project signals
 - `build.gradle.kts`

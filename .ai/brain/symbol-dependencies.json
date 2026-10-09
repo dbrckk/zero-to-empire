@@ -5,11 +5,85 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "TemporalAuditTests": {
+    "opaque_palette_signature": {
       "source": {
-        "file": "tools/sprites/test_temporal_sprite_audit.py",
-        "start": 12,
-        "end": 134
+        "file": "tools/sprites/temporal_sprite_audit.py",
+        "start": 23,
+        "end": 35
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "opaque_palette_distance": {
+      "source": {
+        "file": "tools/sprites/temporal_sprite_audit.py",
+        "start": 38,
+        "end": 40
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "inspect_clip": {
+      "source": {
+        "file": "tools/sprites/temporal_sprite_audit.py",
+        "start": 43,
+        "end": 148
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "opaque_palette_distance",
+          "definitions": [
+            {
+              "file": "tools/sprites/temporal_sprite_audit.py",
+              "line": 38,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "opaque_palette_signature",
+          "definitions": [
+            {
+              "file": "tools/sprites/temporal_sprite_audit.py",
+              "line": 23,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "audit": {
+      "source": {
+        "file": "tools/sprites/temporal_sprite_audit.py",
+        "start": 151,
+        "end": 207
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "inspect_clip",
+          "definitions": [
+            {
+              "file": "tools/sprites/temporal_sprite_audit.py",
+              "line": 43,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "main": {
+      "source": {
+        "file": "tools/sprites/temporal_sprite_audit.py",
+        "start": 210,
+        "end": 330
       },
       "symbol_dependencies": [
         {
@@ -17,7 +91,29 @@
           "definitions": [
             {
               "file": "tools/sprites/temporal_sprite_audit.py",
-              "line": 121,
+              "line": 151,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "TemporalAuditTests": {
+      "source": {
+        "file": "tools/sprites/test_temporal_sprite_audit.py",
+        "start": 12,
+        "end": 152
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "audit",
+          "definitions": [
+            {
+              "file": "tools/sprites/temporal_sprite_audit.py",
+              "line": 151,
               "kind": "function",
               "language": "python"
             }
@@ -29,7 +125,7 @@
           "definitions": [
             {
               "file": "tools/sprites/temporal_sprite_audit.py",
-              "line": 22,
+              "line": 43,
               "kind": "function",
               "language": "python"
             }
@@ -77,7 +173,7 @@
           "definitions": [
             {
               "file": "tools/sprites/test_temporal_sprite_audit.py",
-              "line": 78,
+              "line": 81,
               "kind": "function",
               "language": "python"
             }
@@ -89,7 +185,7 @@
           "definitions": [
             {
               "file": "tools/sprites/test_temporal_sprite_audit.py",
-              "line": 66,
+              "line": 69,
               "kind": "function",
               "language": "python"
             }
@@ -101,7 +197,19 @@
           "definitions": [
             {
               "file": "tools/sprites/test_temporal_sprite_audit.py",
-              "line": 103,
+              "line": 121,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_partial_costume_recolor_is_caught_even_when_rgb_median_is_zero",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_temporal_sprite_audit.py",
+              "line": 106,
               "kind": "function",
               "language": "python"
             }
@@ -113,7 +221,7 @@
           "definitions": [
             {
               "file": "tools/sprites/test_temporal_sprite_audit.py",
-              "line": 123,
+              "line": 141,
               "kind": "function",
               "language": "python"
             }
@@ -125,7 +233,7 @@
           "definitions": [
             {
               "file": "tools/sprites/test_temporal_sprite_audit.py",
-              "line": 90,
+              "line": 93,
               "kind": "function",
               "language": "python"
             }
@@ -149,7 +257,7 @@
           "definitions": [
             {
               "file": "tools/sprites/test_temporal_sprite_audit.py",
-              "line": 85,
+              "line": 88,
               "kind": "function",
               "language": "python"
             }
@@ -157,7 +265,7 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 12
+      "dependency_count": 13
     },
     "setUp": {
       "source": {
@@ -203,7 +311,7 @@
       "source": {
         "file": "tools/sprites/test_temporal_sprite_audit.py",
         "start": 50,
-        "end": 64
+        "end": 67
       },
       "symbol_dependencies": [
         {
@@ -211,7 +319,7 @@
           "definitions": [
             {
               "file": "tools/sprites/temporal_sprite_audit.py",
-              "line": 121,
+              "line": 151,
               "kind": "function",
               "language": "python"
             }
@@ -224,8 +332,8 @@
     "test_empty_and_clipped_frames_are_rejected": {
       "source": {
         "file": "tools/sprites/test_temporal_sprite_audit.py",
-        "start": 66,
-        "end": 76
+        "start": 69,
+        "end": 79
       },
       "symbol_dependencies": [
         {
@@ -233,7 +341,7 @@
           "definitions": [
             {
               "file": "tools/sprites/temporal_sprite_audit.py",
-              "line": 22,
+              "line": 43,
               "kind": "function",
               "language": "python"
             }
@@ -258,8 +366,8 @@
     "test_duplicate_content_is_rejected": {
       "source": {
         "file": "tools/sprites/test_temporal_sprite_audit.py",
-        "start": 78,
-        "end": 83
+        "start": 81,
+        "end": 86
       },
       "symbol_dependencies": [
         {
@@ -267,7 +375,7 @@
           "definitions": [
             {
               "file": "tools/sprites/temporal_sprite_audit.py",
-              "line": 22,
+              "line": 43,
               "kind": "function",
               "language": "python"
             }
@@ -280,8 +388,8 @@
     "test_temporal_spike_and_bad_seam_are_rejected": {
       "source": {
         "file": "tools/sprites/test_temporal_sprite_audit.py",
-        "start": 85,
-        "end": 88
+        "start": 88,
+        "end": 91
       },
       "symbol_dependencies": [
         {
@@ -289,7 +397,7 @@
           "definitions": [
             {
               "file": "tools/sprites/temporal_sprite_audit.py",
-              "line": 22,
+              "line": 43,
               "kind": "function",
               "language": "python"
             }
@@ -314,8 +422,8 @@
     "test_single_frame_color_flash_is_detected_even_with_same_alpha": {
       "source": {
         "file": "tools/sprites/test_temporal_sprite_audit.py",
-        "start": 90,
-        "end": 101
+        "start": 93,
+        "end": 104
       },
       "symbol_dependencies": [
         {
@@ -323,7 +431,29 @@
           "definitions": [
             {
               "file": "tools/sprites/temporal_sprite_audit.py",
-              "line": 22,
+              "line": 43,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_partial_costume_recolor_is_caught_even_when_rgb_median_is_zero": {
+      "source": {
+        "file": "tools/sprites/test_temporal_sprite_audit.py",
+        "start": 106,
+        "end": 119
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "inspect_clip",
+          "definitions": [
+            {
+              "file": "tools/sprites/temporal_sprite_audit.py",
+              "line": 43,
               "kind": "function",
               "language": "python"
             }
@@ -336,8 +466,8 @@
     "test_optional_real_skin_digest_matches_output_provenance": {
       "source": {
         "file": "tools/sprites/test_temporal_sprite_audit.py",
-        "start": 103,
-        "end": 121
+        "start": 121,
+        "end": 139
       },
       "symbol_dependencies": [
         {
@@ -345,7 +475,7 @@
           "definitions": [
             {
               "file": "tools/sprites/temporal_sprite_audit.py",
-              "line": 121,
+              "line": 151,
               "kind": "function",
               "language": "python"
             }
@@ -358,8 +488,8 @@
     "test_review_and_identity_guards_are_enforced": {
       "source": {
         "file": "tools/sprites/test_temporal_sprite_audit.py",
-        "start": 123,
-        "end": 134
+        "start": 141,
+        "end": 152
       },
       "symbol_dependencies": [
         {
@@ -367,7 +497,7 @@
           "definitions": [
             {
               "file": "tools/sprites/temporal_sprite_audit.py",
-              "line": 121,
+              "line": 151,
               "kind": "function",
               "language": "python"
             }
@@ -379,7 +509,7 @@
           "definitions": [
             {
               "file": "tools/sprites/temporal_sprite_audit.py",
-              "line": 22,
+              "line": 43,
               "kind": "function",
               "language": "python"
             }
