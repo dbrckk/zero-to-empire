@@ -53,6 +53,12 @@ class TemporalAuditTests(unittest.TestCase):
         self.assertFalse(report['visual_review_pass'])
         self.assertFalse(report['semantic_review_pass'])
         self.assertEqual(report['strict_status'],'NEEDS_REVIEW')
+        for action,item in report['actions'].items():
+            self.assertEqual(len(item['ordered_frame_digest_sha256']),64)
+            self.assertEqual(len(item['per_transition_opaque_rgb_change']),24)
+            self.assertLess(item['largest_opaque_rgb_change'],
+                            item['opaque_rgb_flash_threshold'])
+            self.assertTrue(item['temporal_technical_pass'])
         self.assertTrue((Path(self.work.name)/'report/motion-timeline.png').exists())
         self.assertTrue((Path(self.work.name)/'report/frame-transition-metrics.csv').exists())
         self.assertTrue((Path(self.work.name)/'report/REVIEW_REQUIRED.txt').exists())
