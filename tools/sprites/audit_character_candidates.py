@@ -12,6 +12,7 @@ import math
 from pathlib import Path
 from PIL import Image, ImageDraw
 from character_review_matrix import build
+from character_semantic_gate import clip_risk
 
 ROOT=Path(__file__).resolve().parents[2]
 # Canonical incoming PNGs use the Kaggle producer's actual frame contract.
@@ -65,10 +66,12 @@ def inspect(path:Path,asset_id:str)->dict:
             alpha=rgba.getchannel("A")
             result["alpha_extrema"]=list(alpha.getextrema())
             metrics=[]
+            semantic_frames=[]
             for i in range(expected):
                 if i>=capacity:break
                 x=(i%4)*cell;y=(i//4)*cell
                 frame=rgba.crop((x,y,x+cell,y+cell))
+                semantic_frames.append(frame)
                 mask=frame.getchannel("A")
                 box=mask.getbbox()
                 if not box:
@@ -82,6 +85,13 @@ def inspect(path:Path,asset_id:str)->dict:
                 if margin<2:result["findings"].append(f"EDGE_CLIPPING_RISK_{i}")
             result["frame_metrics"]=metrics
             result["technical_pass"]=not result["findings"] and len(metrics)==expected
+            if len(semantic_frames)==expected:
+                # Unlike file format checks, these are *conservative risks*,
+                # not a proof of art quality, role identity or final approval.
+                result["visual_risk"]=clip_risk(semantic_frames)
+                result["visual_risk_blocking"]=result["visual_risk"]["risk_level"]=="BLOCKING"
+                result["semantic_review_approved"]=False
+                result["eligible_for_strict_done"]=False
     except Exception as exc:
         result["findings"].append("UNREADABLE_IMAGE_"+type(exc).__name__)
     return result
@@ -95,8 +105,12 @@ def contact(rows:list[dict],output:Path)->None:
     for i,row in enumerate(rows):
         y=50+i*148
         d.text((10,y+8),row["asset_id"],fill=(224,232,243))
-        d.text((10,y+27),("TECHNICAL PASS" if row["technical_pass"] else
-                           ", ".join(row["findings"])[:31]),fill=(166,195,216))
+        risk=row.get("visual_risk",{})
+        message=("BLOCKING: "+",".join(risk.get("flags",[])[:1])
+                 if row.get("visual_risk_blocking") else
+                 "FORMAT PASS; NEEDS SEMANTIC REVIEW"
+                 if row["technical_pass"] else ",".join(row["findings"])[:1])
+        d.text((10,y+27),message[:30],fill=(243,119,112) if row.get("visual_risk_blocking") else (166,195,216))
         if not row["exists"]:continue
         try:
             with Image.open(row["source_path"]) as original:
@@ -140,11 +154,17 @@ def main()->int:
             "all_semantic_approved":False,
             "legacy_frame_budget_differs_from_target":True,
             "all_technical_pass":all(x["technical_pass"] for x in rows),
+            "visual_risk_blocking_count":sum(x.get("visual_risk_blocking",False) for x in rows),
+            "semantic_approved_count":0,
+            "all_visual_and_semantic_approved":False,
+            "image_only_risk_checks_are_not_approval":True,
             "items":rows}
     (args.out/"canonical-character-audit.json").write_text(
         json.dumps(result,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
-    print("AUDIT="+str(args.out)+" PASS="+str(sum(x["technical_pass"] for x in rows))+
-          "/"+str(len(rows))+" STRICT_DONE="+str(report["strict_done"]))
+    print("AUDIT="+str(args.out)+" FORMAT_PASS="+str(sum(x["technical_pass"] for x in rows))+
+          "/"+str(len(rows))+
+          " VISUAL_RISK_BLOCKED="+str(result["visual_risk_blocking_count"])+
+          " SEMANTIC_APPROVED=0 STRICT_DONE="+str(report["strict_done"]))
     return 0
 
 
