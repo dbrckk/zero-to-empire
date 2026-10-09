@@ -136,17 +136,41 @@ h1{font-size:22px}.warn{color:#f8d18b}.grid{display:grid;grid-template-columns:r
 article{background:#1c2939;border:1px solid #36465a;border-radius:12px;padding:12px}
 header{display:flex;justify-content:space-between;margin-bottom:8px}
 canvas{width:100%;background:repeating-conic-gradient(#263444 0 25%,#314459 0 50%) 0 0/28px 28px;border-radius:8px}
-select{background:#172538;color:inherit;padding:5px}footer{color:#97abc1;margin-top:18px}
+select{background:#18283b;color:inherit;padding:8px 10px;border:1px solid #4c6280;
+border-radius:8px;min-height:44px;width:100%;font:inherit}
+.toolbar{display:flex;align-items:flex-end;flex-wrap:wrap;gap:12px;
+padding:12px 14px;margin:12px 0 18px;background:#182638;
+border:1px solid #344a63;border-radius:12px}
+.toolbar label{display:flex;flex:1 1 148px;flex-direction:column;gap:6px;
+font-size:13px;font-weight:600;color:#c6d9e9}
+.toolbar .shadow-toggle{flex-direction:row;align-items:center;gap:9px;
+min-height:44px;white-space:normal;font-weight:500}
+.shadow-toggle input{width:20px;height:20px;accent-color:#61bfe1}
+.toolbar button{min-height:44px;border-radius:8px;border:1px solid #6990aa;
+background:#224660;color:#eef8ff;padding:0 20px;font:inherit;
+font-weight:700;cursor:pointer}
+.toolbar :focus-visible{outline:3px solid #64d3f8;outline-offset:3px}
+article canvas{display:block;max-width:100%;height:auto}
+@media(max-width:500px){body{padding:12px}
+h1{font-size:20px;margin:4px 0 10px}
+.toolbar{padding:11px;gap:10px}
+.toolbar label{flex:1 1 calc(50% - 8px);min-width:0}
+.toolbar label.wide{flex-basis:100%}
+.toolbar button{flex:1 1 42%}
+.grid{grid-template-columns:1fr}}
+footer{color:#97abc1;margin-top:18px}
 </style></head><body><h1>TECH · six animations</h1>
 <p class="warn">Candidats non validés — revue visuelle obligatoire, aucun strict DONE.</p>
-<label>Vitesse <select id="speed"><option value=".5">0,5×</option><option selected value="1">1×</option>
+<div class="toolbar" role="group" aria-label="Réglages des animations">
+<label for="speed">Vitesse <select id="speed"><option value=".5">0,5×</option><option selected value="1">1×</option>
 <option value="1.5">1,5×</option><option value="2">2×</option></select></label>
-<label>Taille <select id="zoom"><option selected value="96">96 px — jeu</option>
+<label for="zoom">Taille <select id="zoom"><option selected value="96">96 px — jeu</option>
 <option value="128">128 px</option><option value="192">192 px</option><option value="256">256 px</option></select></label>
-<label>Cadrage <select id="framing"><option value="original">Original</option>
+<label class="wide" for="framing">Cadrage <select id="framing"><option value="original">Original</option>
 <option value="focused" selected>Optimisé · caméra commune</option></select></label>
-<label><input id="showShadows" type="checkbox"> Ombres facultatives</label>
-<button id="pause">Pause</button>
+<label class="shadow-toggle" for="showShadows"><input id="showShadows" type="checkbox"> Afficher les ombres</label>
+<button id="pause" type="button" aria-label="Mettre les animations en pause">Pause</button>
+</div>
 <div class="grid" id="grid"></div><footer>Lecture à 96 px par défaut ; ombres désactivées par défaut. Contrôle de revue uniquement : aucune validation ni modification du jeu.</footer>
 <script>const animations=__SOURCES__,nodes=[],grid=document.querySelector('#grid');
 for(const [name,c] of Object.entries(animations)){
