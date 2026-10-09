@@ -56,6 +56,9 @@ class TemporalAuditTests(unittest.TestCase):
         for action,item in report['actions'].items():
             self.assertEqual(len(item['ordered_frame_digest_sha256']),64)
             self.assertEqual(len(item['per_transition_opaque_rgb_change']),24)
+            self.assertEqual(len(item['per_transition_opaque_palette_change']),24)
+            self.assertLess(item['largest_opaque_palette_change'],
+                            item['opaque_palette_flash_threshold'])
             self.assertLess(item['largest_opaque_rgb_change'],
                             item['opaque_rgb_flash_threshold'])
             self.assertTrue(item['temporal_technical_pass'])
@@ -98,6 +101,21 @@ class TemporalAuditTests(unittest.TestCase):
                 x.point(lambda v:255-v) for x in (r,g,b))+(a,))
             corrupted.save(path)
         with self.assertRaisesRegex(ValueError,'global-rgb-flash-or-texture-drift'):
+            inspect_clip(self.root,'WORK',24)
+
+    def test_partial_costume_recolor_is_caught_even_when_rgb_median_is_zero(self):
+        # Recolor <50% of stable garment pixels: the RGB median alone
+        # stays unchanged, but the location-invariant palette must detect it.
+        import numpy as np
+        path=self.root/'WORK/frames/CHR-TECH-WORK-09.png'
+        with Image.open(path) as image:
+            original=np.asarray(image.convert('RGBA')).copy()
+        modified=original.copy()
+        yy,xx=np.indices(original.shape[:2])
+        selected=(original[:,:,3]>=220)&(xx>252)
+        modified[:,:,:3][selected]=255-modified[:,:,:3][selected]
+        Image.fromarray(modified,'RGBA').save(path)
+        with self.assertRaisesRegex(ValueError,'localized-palette-flash-or-color-drift'):
             inspect_clip(self.root,'WORK',24)
 
     def test_optional_real_skin_digest_matches_output_provenance(self):
