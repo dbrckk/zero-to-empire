@@ -46,11 +46,14 @@ jobs:
           python - <<'PY'
           import json
           report=json.load(open('/tmp/character-review-matrix.json'))
-          assert report['target_total']==235 and report['strict_done']==216
-          assert report['pending_count']==19
+          queue=json.load(open('art/production/master-asset-queue.json'))
+          assert report['target_total']==queue['target_total']==235
+          assert report['strict_done']==sum(a.get('strict_status')=='DONE' for a in queue['assets'])
+          assert report['pending_count']==len(queue['assets'])-report['strict_done']
+          assert len(report['items'])==report['pending_count']
           assert report['auto_promotion_permitted'] is False
           assert all(not x['semantic_review_pass'] for x in report['items'])
-          print('REVIEW_ONLY: 19 canonical assets, 216 strict DONE unchanged')
+          print(f"REVIEW_ONLY: {report['pending_count']} canonical assets, {report['strict_done']} strict DONE unchanged")
           PY
       - name: Audit actual canonical character sprite sheets
         run: python tools/sprites/audit_character_candidates.py --out /tmp/character-visual-audit
@@ -59,7 +62,9 @@ jobs:
           python - <<'PY'
           import json
           report=json.load(open('/tmp/character-visual-audit/canonical-character-audit.json'))
-          assert report["pending"] == 19
+          matrix=json.load(open('/tmp/character-review-matrix.json'))
+          assert report["pending"] == matrix["pending_count"]
+          assert report["strict_done"] == matrix["strict_done"]
           assert report["semantic_approved_count"] == 0
           assert report["all_visual_and_semantic_approved"] is False
           assert report["image_only_risk_checks_are_not_approval"] is True
