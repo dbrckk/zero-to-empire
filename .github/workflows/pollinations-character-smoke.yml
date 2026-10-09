@@ -20,7 +20,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
-      POLLINATIONS_CHR_FORCE: '1'
       POLLINATIONS_CHR_ATTEMPTS: '2'
       POLLINATIONS_CHR_SEED: ${{ github.run_id }}
     steps:
@@ -32,19 +31,40 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Determine whether an explicitly queued Pollinations candidate exists
+        id: gate
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+          p=Path('art/production/controlled-character-regen-queue.json')
+          q=json.loads(p.read_text(encoding='utf-8')) if p.exists() else {}
+          states={'PENDING','PENDING_POLLINATIONS'}
+          pending=any(str(i.get('status','')).upper() in states
+                      for i in q.get('targets',[]))
+          print('pending='+str(pending).lower())
+          PY
+      - name: Run offline independent-frame regression suite
+        run: |
+          python -m pip install Pillow==11.3.0
+          python -m unittest discover -s tools/sprites -p 'test_pollinations_character_sheet_factory.py' -v
       - name: Cache rembg U2Net model
+        if: steps.gate.outputs.pending == 'true'
         uses: actions/cache@v4
         with:
           path: ~/.u2net
           key: rembg-u2net-v0.0.0
 
       - name: Install image tooling
+        if: steps.gate.outputs.pending == 'true'
         run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0' 'rembg[cpu]>=2.0.68,<3'
 
-      - name: Generate one forced atlas candidate
+      - name: Generate one controlled full-body candidate
+        if: steps.gate.outputs.pending == 'true'
         run: python -u tools/sprites/pollinations_character_sheet_factory.py
 
       - name: Resolve candidate
+        if: steps.gate.outputs.pending == 'true'
         id: target
         shell: bash
         run: |
@@ -66,6 +86,7 @@ jobs:
           PY
 
       - name: Strict atlas QA
+        if: steps.gate.outputs.pending == 'true'
         run: |
           python tools/sprites/build_sprite_contact_sheet.py             --files '${{ steps.target.outputs.file }}'             --output art/production/pollinations-character-smoke-contact.png             --report art/production/pollinations-character-smoke-qa.json
           python - <<'PY'
@@ -77,6 +98,7 @@ jobs:
           PY
 
       - name: Finalize and revalidate runtime
+        if: steps.gate.outputs.pending == 'true'
         shell: bash
         run: |
           SPRITE_TARGETS='${{ steps.target.outputs.stem }}' python tools/sprites/process_final_sprites.py
