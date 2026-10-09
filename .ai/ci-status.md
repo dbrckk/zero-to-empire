@@ -1,13 +1,13 @@
 # CI status
 
-Summary: 7 success / 0 failure / 0 active
+Summary: 4 success / 0 failure / 0 active
 
-- Identity-locked WALK alternatives (review only): completed / success (d37661e4)
-- Asset Autofactory 235: completed / success (03437ed3)
-- Pollinations Character Atlas: completed / success (03437ed3)
-- Asset Autofactory 235: completed / success (03437ed3)
-- Kaggle Async Character Collector: completed / success (87a0fc73)
-- Pollinations Character Smoke: completed / success (87a0fc73)
-- Manifest Static GPU Batch: completed / success (84e24352)
+- Character strict review matrix: completed / success (a9021a86)
+- Character strict review matrix: completed / cancelled (a9021a86)
+- Character strict review matrix: completed / cancelled (bc223af3)
+- Asset Autofactory 235: completed / success (c65c4ebc)
+- Character strict review matrix: completed / cancelled (c65c4ebc)
+- Pollinations Character Smoke: completed / success (c65c4ebc)
+- Pollinations Character Atlas: completed / success (c65c4ebc)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

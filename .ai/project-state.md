@@ -22,20 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T19:00:07Z
+Generated: 2026-10-09T19:05:19Z
 
 ### Git
 - Branch: `main`
-- Head: `d37661e44706`
-- Commit date: 2026-10-09T20:59:31+02:00
-- Commit: ci(art): render four reproducible WALK alternatives while keeping canonical assets untouched
+- Head: `a9021a86891b`
+- Commit date: 2026-10-09T21:04:14+02:00
+- Commit: fix(test): correct fixture quoting and Python continuation in reservation regression
 - Tracked files: 1490
 
 ### Recently changed files
+- `tools/sprites/test_pollinations_character_sheet_factory.py`
+- `tools/sprites/pollinations_character_sheet_factory.py`
+- `art/production/character-strict-review-backlog.md`
 - `.github/workflows/identity-locked-walk-review.yml`
-- `tools/sprites/test_identity_locked_walk_candidate.py`
-- `tools/sprites/identity_locked_walk_candidate.py`
-- `art/production/kaggle-async-state.json`
 
 ### Project signals
 - `build.gradle.kts`

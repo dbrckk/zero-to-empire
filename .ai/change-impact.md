@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 5d6fc3da79d1d53ba061eb05aebbdb9ac40344f0
-Head: d37661e4470697490de06b8b172b98dba188d8e4
+Base: bc223af3a560e7db75e4daf6bd18122791303036
+Head: a9021a86891b94421f540b7402c997cff59cc368
 
 ## Changed files
-- A .github/workflows/identity-locked-walk-review.yml
+- M tools/sprites/test_pollinations_character_sheet_factory.py
 
 ## Affected areas
-- .github
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

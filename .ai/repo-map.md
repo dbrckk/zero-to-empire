@@ -29296,6 +29296,10 @@ out=[]
 ⋮----
 aid=str(item.get('id','')).upper()
 ⋮----
+# A controlled queue is authoritative, including when all targets are
+# BLOCKED, already reviewed, or reserved by another provider. Falling
+# through to unrelated manifest TODOs would bypass the reservation.
+⋮----
 def candidate_destination(item)
 ⋮----
 """Controlled semantic repairs are immutable staged candidates, not runtime art.
@@ -31166,6 +31170,13 @@ item={'id':'CHR-LOG-CARRY','role':'LOG','action':'CARRY',
 historical=factory.INCOMING/'zte_chr_log_carry_final.png'
 ⋮----
 target=factory.candidate_destination(item)
+⋮----
+def test_blocked_controlled_queue_cannot_fall_back_to_manifest_todos(self)
+⋮----
+root=Path(tmp)
+manifest=root/'manifest.md'
+⋮----
+queue=root/'controlled.json'
 ⋮----
 def test_unexpected_action_cannot_use_generic_fallback(self)
 ```
