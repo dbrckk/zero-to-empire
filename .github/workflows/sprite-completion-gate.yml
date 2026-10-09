@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
+      - 'art/production/master-asset-queue.json'
       - 'docs/art/AAA_HISTORICAL_PROMOTION_REVIEW.md'
       - 'app/src/main/res/drawable-nodpi/**_final.webp'
       - 'tools/sprites/audit_complete_sprite_manifest.py'
@@ -38,21 +39,60 @@ jobs:
         shell: bash
         run: |
           python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
           from pathlib import Path
-          pending=0;total=0
-          review=Path('docs/art/AAA_HISTORICAL_PROMOTION_REVIEW.md').read_text(encoding='utf-8')
-          semantic_closed='**Status: CLOSED**' in review
-          for line in Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md').read_text().splitlines():
-              if not line.startswith('|') or 'app/src/main/res/' not in line: continue
-              cols=[c.strip() for c in line.split('|')[1:-1]]
-              if len(cols)!=5: continue
-              total+=1
-              pending += cols[4].upper()!='DONE'
-          print(f'total={total}')
-          print(f'pending={pending}')
+          manifest = []
+          for line in Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md').read_text(encoding='utf-8').splitlines():
+              if not line.startswith('|') or 'app/src/main/res/' not in line:
+                  continue
+              cols = [c.strip().strip('`') for c in line.split('|')[1:-1]]
+              if len(cols) == 5:
+                  manifest.append(cols)
+          queue = json.loads(Path('art/production/master-asset-queue.json').read_text(encoding='utf-8'))
+          assets = queue.get('assets', [])
+          ids = [a.get('id') for a in assets]
+          excluded = set(queue.get('excluded_from_target', []))
+          manifest_ids = [row[0] for row in manifest]
+          canonical_shape_valid = (
+              queue.get('target_total') == 235
+              and len(assets) == 235
+              and len(set(ids)) == 235
+              and len(manifest) == 236
+              and len(set(manifest_ids)) == 236
+              and set(manifest_ids) == set(ids) | excluded
+              and excluded == {'ONB-00'}
+              and not set(ids) & excluded
+          )
+          strict_done = sum(a.get('strict_status') == 'DONE' for a in assets)
+          strict_pending = len(assets) - strict_done
+          manifest_pending = sum(row[4].upper() != 'DONE' for row in manifest)
+          review = Path('docs/art/AAA_HISTORICAL_PROMOTION_REVIEW.md').read_text(encoding='utf-8')
+          semantic_closed = '**Status: CLOSED**' in review
+          premature = sorted(
+              aid for aid, status in ((row[0], row[4].upper()) for row in manifest)
+              if aid in set(ids)
+              and status == 'DONE'
+              and next(a for a in assets if a['id'] == aid).get('strict_status') != 'DONE'
+          )
+          complete = (
+              canonical_shape_valid and strict_pending == 0 and manifest_pending == 0
+              and not premature and semantic_closed
+          )
+          print(f'manifest_total={len(manifest)}')
+          print(f'manifest_pending={manifest_pending}')
+          print(f'strict_done={strict_done}')
+          print(f'strict_pending={strict_pending}')
+          print(f'canonical_shape_valid={str(canonical_shape_valid).lower()}')
+          print(f'premature_manifest_done={len(premature)}')
           print(f'semantic_closed={str(semantic_closed).lower()}')
-          print('complete=true' if total==236 and pending==0 and semantic_closed else 'complete=false')
+          print(f'complete={str(complete).lower()}')
           PY
+
+      - name: Refuse an unverified manual completion claim
+        if: github.event_name == 'workflow_dispatch' && steps.state.outputs.complete != 'true'
+        run: |
+          echo "::error::Strict completion is not verified. Canonical strict DONE must be 235/235, the 236-row manifest must match, and semantic review must be closed."
+          exit 1
 
       - name: Install Pillow
         if: steps.state.outputs.complete == 'true'
