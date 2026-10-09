@@ -42,14 +42,40 @@ class RuntimePackTests(unittest.TestCase):
             self.assertFalse(manifest['integrated_into_game'])
             self.assertFalse(manifest['approved_for_release'])
             self.assertEqual(manifest['strict_status'],'NEEDS_REVIEW')
+            focus=manifest['focused_camera']
+            self.assertTrue(focus['optional_review_variant_only'])
+            self.assertEqual(focus['world_pivot_px'],[252,449])
+            self.assertGreaterEqual(focus['zoom_factor'],1.0)
+            self.assertLessEqual(focus['zoom_factor'],1.30)
+            self.assertEqual(len(focus['shared_crop_bounds_px']),4)
+            self.assertEqual(
+                len(list((out/'focused-atlases').glob('*.png'))),24)
             self.assertTrue((out/'REVIEW_REQUIRED.txt').exists())
             self.assertEqual(len(list((out/'atlases').glob('*.png'))),24)
+            with Image.open(out/'review-focused-all-actions-96.png') as focused:
+                self.assertEqual(focused.size,(888,688))
+                self.assertEqual(focused.mode,'RGB')
             with Image.open(out/'review-all-actions-96.png') as contact:
                 self.assertEqual(contact.size,(888,688))
                 self.assertEqual(contact.mode,'RGB')
             for action,item in manifest['animations'].items():
                 self.assertEqual(item['strict_status'],'NEEDS_REVIEW')
                 self.assertEqual(item['reference_pivot_px'],[252,449])
+                for size in (96,128):
+                    variant=item['focused_variants'][str(size)]
+                    shadow=item['optional_shadow_layer']['focused_variants'][str(size)]
+                    self.assertEqual(variant['shared_crop_bounds_px'],
+                                     focus['shared_crop_bounds_px'])
+                    crop=variant['shared_crop_bounds_px']
+                    expected_pivot=[round((252-crop[0])*size/(crop[2]-crop[0]),3),
+                                    round((449-crop[1])*size/(crop[2]-crop[0]),3)]
+                    self.assertEqual(variant['pivot_px'],expected_pivot)
+                    with Image.open(out/variant['path']) as atlas:
+                        self.assertEqual(atlas.mode,'RGBA')
+                        self.assertEqual(atlas.size,(size*6,size*4))
+                    with Image.open(out/shadow['path']) as layer:
+                        self.assertEqual(layer.mode,'RGBA')
+                        self.assertEqual(layer.size,(size*6,size*4))
                 self.assertFalse(item['optional_shadow_layer']['default_enabled'])
                 self.assertEqual(item['collision_boxes_status'],
                                  'NOT_DEFINED_REQUIRES_GAMEPLAY_REVIEW')
@@ -82,6 +108,10 @@ class RuntimePackTests(unittest.TestCase):
             self.assertIn('id="showShadows"',player)
             self.assertNotIn('id="showShadows" type="checkbox" checked',player)
             self.assertIn('id="pause"',player)
+            self.assertIn('id="framing"',player)
+            self.assertIn('focus_src',player)
+            self.assertIn('focused',player)
+            self.assertIn('focusShadow',player)
             self.assertIn('showShadows&&c.shadowReady',player)
 
     def test_game_scale_check_rejects_clipped_or_empty_frames(self):
