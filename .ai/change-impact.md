@@ -1,7 +1,7 @@
 # Change impact
 
-Base: de9038afd70e54eba7db0d29b4abc6c8f5cbc928
-Head: 4961997edf256ea8830710d10f125438e5cfcd37
+Base: c0fd37a75b7de9843242ee995096d5887d425cdf
+Head: 1d80b49d4b39b93c6257356925691a8f102feca6
 
 ## Changed files
 - M tools/sprites/test_package_tech_actions_runtime.py
