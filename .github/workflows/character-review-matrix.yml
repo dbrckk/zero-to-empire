@@ -9,6 +9,8 @@ on:
       - 'tools/sprites/audit_character_candidates.py'
       - 'tools/sprites/character_semantic_gate.py'
       - 'tools/sprites/test_character_semantic_gate.py'
+      - 'tools/sprites/pollinations_character_sheet_factory.py'
+      - 'tools/sprites/test_pollinations_character_sheet_factory.py'
       - 'art/incoming/final-sprites/zte_chr_*_final.png'
       - '.github/workflows/character-review-matrix.yml'
   workflow_dispatch:
@@ -32,6 +34,8 @@ jobs:
         run: python -m unittest discover -s tools/sprites -p 'test_character_review_matrix.py' -v
       - name: Test full-body and clothing identity rejection rules
         run: python -m unittest discover -s tools/sprites -p 'test_character_semantic_gate.py' -v
+      - name: Test per-frame provider generation without network access
+        run: python -m unittest discover -s tools/sprites -p 'test_pollinations_character_sheet_factory.py' -v
       - name: Generate evidence-only character review matrix
         run: |
           python tools/sprites/character_review_matrix.py --out-json /tmp/character-review-matrix.json --out-md /tmp/character-review-matrix.md
