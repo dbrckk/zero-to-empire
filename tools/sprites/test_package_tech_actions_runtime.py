@@ -112,7 +112,9 @@ class RuntimePackTests(unittest.TestCase):
             self.assertIn('focus_src',player)
             self.assertIn('focused',player)
             self.assertIn('focusShadow',player)
-            self.assertIn('showShadows&&c.shadowReady',player)
+            self.assertIn('if(showShadows)',player)
+            self.assertIn('if(useFocus?c.focusShadowReady:c.shadowReady)',player)
+            self.assertIn('ctx.drawImage(actual',player)
 
     def test_game_scale_check_rejects_clipped_or_empty_frames(self):
         from PIL import ImageDraw
