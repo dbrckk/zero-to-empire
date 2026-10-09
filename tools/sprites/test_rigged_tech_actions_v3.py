@@ -137,6 +137,32 @@ class MultiActionRendererTests(unittest.TestCase):
             self.assertEqual(first.mode, "RGBA")
             self.assertEqual(first.getpixel((0, 0))[3], 0)
 
+    def test_work_repair_brackets_really_show_at_96px(self):
+        # Geometry-only tests could pass if the bracket were fully hidden
+        # behind the torso. Compare the rendered output with a reversible
+        # support-free control at the actual 96px gameplay resolution.
+        import numpy as np
+        from unittest.mock import patch
+        for action,min_pixels in (("WORK",8),("REPAIR",20)):
+            for t in (0,.25,.5,.75):
+                new,_,_=draw_frame(action,t,self.kit)
+                with patch("rigged_tech_actions_v3.draw_mount",return_value=None):
+                    old,_,_=draw_frame(action,t,self.kit)
+                self.assertEqual(new.size,old.size)
+                self.assertNotEqual(new.tobytes(),old.tobytes())
+                before=np.asarray(
+                    old.resize((96,96),Image.Resampling.LANCZOS),
+                    dtype=np.int16)
+                after=np.asarray(
+                    new.resize((96,96),Image.Resampling.LANCZOS),
+                    dtype=np.int16)
+                changed=int(np.count_nonzero(
+                    np.any(np.abs(before-after)>6,axis=2)))
+                self.assertGreaterEqual(changed,min_pixels,
+                    f"{action} support invisible at t={t}: {changed} px")
+                self.assertLess(changed,300,
+                    "Mount overdraws too much at gameplay scale")
+
     def test_six_actions_use_reversible_joint_fabric(self):
         # Compare output against the SAME action/props rendered with the
         # old joint treatment; no pose, timing or event changes are permitted.
