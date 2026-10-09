@@ -22,20 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T19:16:25Z
+Generated: 2026-10-09T19:18:54Z
 
 ### Git
 - Branch: `main`
-- Head: `ad0bf48c1e30`
-- Commit date: 2026-10-09T21:16:07+02:00
-- Commit: fix(ci): gate sprite completion on 235 canonical strict approvals
+- Head: `50108f492d66`
+- Commit date: 2026-10-09T21:18:25+02:00
+- Commit: fix(audit): reconcile 236 manifest rows with 235 strict canonical approvals
 - Tracked files: 1490
 
 ### Recently changed files
+- `tools/sprites/audit_complete_sprite_manifest.py`
+- `art/production/controlled-character-regen-queue.json`
+- `.github/workflows/pollinations-character-atlas.yml`
 - `.github/workflows/sprite-completion-gate.yml`
 - `.github/workflows/character-review-matrix.yml`
-- `tools/sprites/test_pollinations_character_sheet_factory.py`
-- `tools/sprites/pollinations_character_sheet_factory.py`
 
 ### Project signals
 - `build.gradle.kts`

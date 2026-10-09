@@ -4192,7 +4192,7 @@ jobs:
           pending=0
           if p.exists():
               q=json.loads(p.read_text(encoding='utf-8'))
-              pending=sum(1 for x in q.get('targets',[]) if str(x.get('status','')).upper() in {'PENDING','PENDING_POLLINATIONS','PENDING_KAGGLE'})
+              pending=sum(1 for x in q.get('targets',[]) if str(x.get('status','')).upper() in {'PENDING','PENDING_POLLINATIONS'})
           print(f'pending={pending}')
           print(f'should_generate={str(pending > 0).lower()}')
           PY
@@ -4280,7 +4280,7 @@ jobs:
           from pathlib import Path
           p=Path('art/production/controlled-character-regen-queue.json')
           q=json.loads(p.read_text(encoding='utf-8')) if p.exists() else {}
-          print(sum(1 for x in q.get('targets',[]) if str(x.get('status','')).upper() in {'PENDING','PENDING_POLLINATIONS','PENDING_KAGGLE'}))
+          print(sum(1 for x in q.get('targets',[]) if str(x.get('status','')).upper() in {'PENDING','PENDING_POLLINATIONS'}))
           PY
           )
           depth="${POLLINATIONS_CHAIN_DEPTH:-0}"
@@ -25918,6 +25918,7 @@ result={"format":"zte-canonical-character-visual-audit-v1",
 ⋮----
 ROOT=Path(__file__).resolve().parents[2]
 MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
+MASTER=ROOT/'art/production/master-asset-queue.json'
 ⋮----
 EXPECTED_ROWS=236
 ⋮----
@@ -25931,7 +25932,15 @@ rows=[]
 ⋮----
 cols=[c.strip() for c in line.split('|')[1:-1]]
 ⋮----
-pending=[r[0] for r in rows if r[4].upper()!='DONE']
+queue=json.loads(MASTER.read_text(encoding='utf-8'))
+assets=queue.get('assets',[])
+ids=[a.get('id') for a in assets]
+excluded=set(queue.get('excluded_from_target',[]))
+manifest_ids=[row[0] for row in rows]
+⋮----
+strict_by_id={a['id']:a.get('strict_status') for a in assets}
+premature=[r[0] for r in rows
+pending=[r[0] for r in rows
 ⋮----
 seen=set(); report=[]; failed=[]
 ⋮----

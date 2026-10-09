@@ -4,5 +4,28 @@
   "scope": "symbols defined in changed source files",
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
-  "symbols": {}
+  "symbols": {
+    "main": {
+      "source": {
+        "file": "tools/sprites/audit_complete_sprite_manifest.py",
+        "start": 15,
+        "end": 71
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "validate",
+          "definitions": [
+            {
+              "file": "tools/sprites/validate_runtime_asset.py",
+              "line": 27,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    }
+  }
 }

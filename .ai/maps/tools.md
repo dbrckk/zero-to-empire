@@ -1260,6 +1260,7 @@ result={"format":"zte-canonical-character-visual-audit-v1",
 ⋮----
 ROOT=Path(__file__).resolve().parents[2]
 MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
+MASTER=ROOT/'art/production/master-asset-queue.json'
 ⋮----
 EXPECTED_ROWS=236
 ⋮----
@@ -1273,7 +1274,15 @@ rows=[]
 ⋮----
 cols=[c.strip() for c in line.split('|')[1:-1]]
 ⋮----
-pending=[r[0] for r in rows if r[4].upper()!='DONE']
+queue=json.loads(MASTER.read_text(encoding='utf-8'))
+assets=queue.get('assets',[])
+ids=[a.get('id') for a in assets]
+excluded=set(queue.get('excluded_from_target',[]))
+manifest_ids=[row[0] for row in rows]
+⋮----
+strict_by_id={a['id']:a.get('strict_status') for a in assets}
+premature=[r[0] for r in rows
+pending=[r[0] for r in rows
 ⋮----
 seen=set(); report=[]; failed=[]
 ⋮----

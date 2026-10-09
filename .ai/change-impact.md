@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 6fe179a793a7e17c648dad9d36d904003f35cabc
-Head: ad0bf48c1e303881d15c40dfc9b2ebc1b0aec5c0
+Base: d3b96eb9b1e4a24b5b0f525e8b91860be02beb5d
+Head: 50108f492d664c698ef84f23770f92f8f5cb9b55
 
 ## Changed files
-- M .github/workflows/sprite-completion-gate.yml
+- M tools/sprites/audit_complete_sprite_manifest.py
 
 ## Affected areas
-- .github
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.
