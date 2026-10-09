@@ -1,10 +1,10 @@
 # Change impact
 
-Base: c6dd3832811006d83afbfd7b24be948292bf8040
-Head: e03850fa1208914b5990d97612da78e37616f092
+Base: d130bf9733cc2503d0750a9fb7e110a41e40ba5b
+Head: 84fcdadc2a14621cf5d884da43b68ef9921ca41a
 
 ## Changed files
-- M tools/sprites/test_temporal_sprite_audit.py
+- M tools/sprites/test_package_tech_actions_runtime.py
 
 ## Affected areas
 - tools

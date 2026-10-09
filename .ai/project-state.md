@@ -22,20 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T09:26:41Z
+Generated: 2026-10-09T09:31:42Z
 
 ### Git
 - Branch: `main`
-- Head: `e03850fa1208`
-- Commit date: 2026-10-09T11:26:24+02:00
-- Commit: fix(test): accept early no-overlap rejection for corrupted sprite pose jump
+- Head: `84fcdadc2a14`
+- Commit date: 2026-10-09T11:31:11+02:00
+- Commit: test(art): reject low-arm CELEB animation even when general QA is green
 - Tracked files: 1472
 
 ### Recently changed files
+- `tools/sprites/test_package_tech_actions_runtime.py`
+- `tools/sprites/package_tech_actions_runtime.py`
+- `tools/sprites/test_rigged_tech_actions_v3.py`
+- `tools/sprites/rigged_tech_actions_v3.py`
 - `tools/sprites/test_temporal_sprite_audit.py`
-- `tools/sprites/test_action_contact.py`
-- `tools/sprites/test_weight_transfer.py`
-- `tools/sprites/temporal_sprite_audit.py`
 
 ### Project signals
 - `build.gradle.kts`

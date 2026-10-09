@@ -3860,6 +3860,8 @@ expected_origin=round(count*5/24) if action=='WORK' else 0
 transfer=m.get('weight_transfer',{})
 expected_transfer=action in ('WALK','CARRY')
 ⋮----
+arm_height=qa.get('celebration_min_arm_raise_px')
+⋮----
 tool=qa.get('repair_torch_length_range_px')
 ⋮----
 poses=json.loads((folder/'frame-poses.json').read_text(encoding='utf-8'))
@@ -5025,11 +5027,23 @@ dest = (round(tip[0] + math.cos(a) * radius),
 ⋮----
 def draw_celebration(layer: Image.Image, p: dict, t: float) -> None
 ⋮----
-a = 2 * math.pi * (n / 12 + t)
-xx = round(x + (-34 if n % 2 == 0 else 47) + 26 * math.cos(a))
-yy = round(y - 144 + 31 * math.sin(a))
-alpha = round(125 + 90 * (.5 + .5 * math.sin(a * 2)))
-color = (74, 219, 245, alpha) if n % 3 else (252, 188, 101, alpha)
+"""Both raised wrists emit restrained identity-locked tech celebration VFX.
+
+    Every mote is derived from a hand anchor and cyclic phase (never random),
+    so particles cannot drift off the rig or create frame 24→1 discontinuity.
+    """
+d=ImageDraw.Draw(layer,"RGBA")
+phase=2*math.pi*(t % 1.0)
+⋮----
+# A bright readable wrist ring, suitable for 96px game previews.
+ring=9+2*math.sin(phase+side*math.pi)
+⋮----
+a=2*math.pi*(n/9 + (t % 1.0)*(.35 if side==0 else -.3))
+radius=23+8*math.sin(phase+n*.7+side)
+px=round(x+math.cos(a)*radius)
+py=round(y+math.sin(a)*radius-3)
+alpha=round(150+65*(.5+.5*math.sin(2*a+phase)))
+color=(78,219,249,alpha) if (n+side)%3 else (252,198,110,alpha)
 ⋮----
 def draw_idle_readout(layer: Image.Image, p: dict, t: float) -> None
 ⋮----
@@ -5060,11 +5074,18 @@ interaction_ok = not work_bad and not tool_bad
 stationary = action in ("IDLE", "WORK", "REPAIR", "CELEB")
 grounded = all(q["lockL"] and q["lockR"] for q in poses) if stationary else True
 grip_ok = (all(
+raised_arm_heights=[]
+⋮----
+a=p.get("torso_lean_rad",0.)
+⋮----
+shoulders=((x-24*ca+86*sa,y-24*sa-86*ca),
+⋮----
+raised_arm_pass=(min(raised_arm_heights)>=65 if raised_arm_heights else True)
 legible_motion = (action not in ("WORK", "REPAIR", "CELEB")
 supports = [p.get("support_bias") for p in poses]
 amplitude = max(abs(p.get("weight_transfer_px",0)) for p in poses)
 transfer_ok = (all(v is not None and math.isfinite(v) and abs(v)<=1.00001
-kinetic = (not violations and grounded and grip_ok and legible_motion and transfer_ok and interaction_ok)
+kinetic = (not violations and grounded and grip_ok and legible_motion and
 ⋮----
 def build_action(skin: Path, out: Path, action: str, frames: int = 24, fps: int = 12)
 ⋮----
@@ -5787,6 +5808,10 @@ def test_refuse_desynchronized_visual_events(self)
 events=json.loads((FIXTURE/action/'footstep-events.json').read_text())
 changed=next(i for i,e in enumerate(events) if e.get('vfx_event')==event_kind)
 ⋮----
+def test_reject_celebration_below_overhead_qa_threshold(self)
+⋮----
+manifest=json.loads((FIXTURE/'CELEB'/'qa-manifest.json').read_text())
+⋮----
 def test_reject_mismatched_work_and_repair_contacts(self)
 ⋮----
 root=Path(tmp)
@@ -5847,6 +5872,17 @@ p = pose_for(i / 48, "CARRY")
 def test_action_motion_is_not_identical_across_frames(self)
 ⋮----
 hand = [pose_for(i / 24, action)["handR"] for i in range(24)]
+⋮----
+def test_celebration_is_overhead_and_periodic(self)
+⋮----
+t=i/192
+p=pose_for(t,"CELEB")
+⋮----
+angle=p["torso_lean_rad"]
+⋮----
+shoulder=(x+dx*co-dy*si,y+dx*si+dy*co)
+⋮----
+q=pose_for(t+1,"CELEB")
 ⋮----
 def test_action_contacts_and_overlaid_feedback_are_phase_correct(self)
 ⋮----
