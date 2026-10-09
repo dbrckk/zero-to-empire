@@ -196,13 +196,52 @@ def game_scale_metrics(frame:Image.Image, side:int=96)->dict:
             'pass':bool(opaque>=500 and x1-x0>=20 and y1-y0>=56 and margin>=3)}
 
 
-def package(source:Path,output:Path)->dict:
+def verify_temporal_evidence(index:dict,records:dict,report_path:Path)->dict:
+    """Bind temporal QA to the exact ordered RGBA frames being packaged."""
+    report=json.loads(report_path.read_text(encoding='utf-8'))
+    ensure(report.get('format')=='zte-temporal-qa-v1' and
+           report.get('technical_pass') is True and
+           report.get('review_required') is True and
+           report.get('strict_status')=='NEEDS_REVIEW' and
+           report.get('visual_review_pass') is False and
+           report.get('semantic_review_pass') is False,
+           'Temporal report is not review-only verified evidence')
+    ensure(report.get('source_skin_sha256')==index['source_skin_sha256'],
+           'Temporal source-skin hash mismatch')
+    actions=report.get('actions',{})
+    ensure(isinstance(actions,dict) and set(actions)==set(ACTIONS),
+           'Missing temporal evidence for one or more actions')
+    for action in ACTIONS:
+        entry=actions[action]
+        ensure(entry.get('asset_id')=='CHR-TECH-'+action and
+               entry.get('frames')==records[action]['count'] and
+               entry.get('temporal_technical_pass') is True and
+               entry.get('visual_review_pass') is False and
+               entry.get('semantic_review_pass') is False and
+               entry.get('strict_status')=='NEEDS_REVIEW',
+               'Invalid temporal evidence: '+action)
+        chain=hashlib.sha256()
+        for path in records[action]['frames']:
+            with Image.open(path) as im:
+                ensure(im.mode=='RGBA' and im.size==(SIDE,SIDE),
+                       'Temporal evidence frame format mismatch: '+action)
+                chain.update(hashlib.sha256(im.tobytes()).hexdigest().encode('ascii'))
+        ensure(chain.hexdigest()==entry.get('ordered_frame_digest_sha256'),
+               'Stale or mismatched temporal evidence: '+action)
+    return report
+
+
+def package(source:Path,output:Path,temporal_report:Path|None=None)->dict:
     index,records=verify(source)
+    evidence=(verify_temporal_evidence(index,records,temporal_report)
+              if temporal_report is not None else None)
     output.mkdir(parents=True,exist_ok=True)
     exported={'format':'zte-tech-actions-runtime-v1','strict_status':'NEEDS_REVIEW',
               'visual_review_pass':False,'semantic_review_pass':False,
               'review_required':True,'approved_for_release':False,'integrated_into_game':False,
               'reference_canvas_px':SIDE,'source_skin_sha256':index['source_skin_sha256'],
+              'temporal_evidence_verified':evidence is not None,
+              'temporal_evidence_format':evidence['format'] if evidence else None,
               'animations':{}}
     overview=Image.new('RGB',(900,672),(23,29,40))
     draw=ImageDraw.Draw(overview)
@@ -286,8 +325,9 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source',type=Path,default=Path('build/tech-actions-v3'))
     parser.add_argument('--output',type=Path,default=Path('build/tech-actions-runtime-review'))
+    parser.add_argument('--temporal-report',type=Path,default=None)
     args=parser.parse_args()
-    result=package(args.source,args.output)
+    result=package(args.source,args.output,args.temporal_report)
     print(json.dumps({'animations':list(result['animations']),
         'total_frames':sum(a['frames'] for a in result['animations'].values()),
         'strict_status':result['strict_status'],'output':str(args.output)},indent=2))
