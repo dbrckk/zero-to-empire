@@ -2226,15 +2226,17 @@
         "app/src/main/java/com/zerotoempire/game/GameRepository.kt",
         "tools/sprites/action_contact.py",
         "tools/sprites/rigged_tech_walk_v2.py",
+        "tools/sprites/tech_prop_mount.py",
         "tools/sprites/weight_transfer.py"
       ],
       "dependents": [
         "tools/sprites/test_rigged_tech_actions_v3.py",
         "tools/sprites/test_soft_skin_deform.py",
+        "tools/sprites/test_tech_prop_mount.py",
         "tools/sprites/test_weight_transfer.py"
       ],
-      "in_degree": 3,
-      "out_degree": 4
+      "in_degree": 4,
+      "out_degree": 5
     },
     "tools/sprites/rigged_tech_walk_v2.py": {
       "dependencies": [
@@ -2256,6 +2258,15 @@
       "dependents": [
         "tools/sprites/rigged_tech_walk_v2.py",
         "tools/sprites/test_soft_skin_deform.py"
+      ],
+      "in_degree": 2,
+      "out_degree": 0
+    },
+    "tools/sprites/tech_prop_mount.py": {
+      "dependencies": [],
+      "dependents": [
+        "tools/sprites/rigged_tech_actions_v3.py",
+        "tools/sprites/test_tech_prop_mount.py"
       ],
       "in_degree": 2,
       "out_degree": 0
@@ -2341,6 +2352,15 @@
       "dependents": [],
       "in_degree": 0,
       "out_degree": 3
+    },
+    "tools/sprites/test_tech_prop_mount.py": {
+      "dependencies": [
+        "tools/sprites/rigged_tech_actions_v3.py",
+        "tools/sprites/tech_prop_mount.py"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 2
     },
     "tools/sprites/test_temporal_sprite_audit.py": {
       "dependencies": [

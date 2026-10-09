@@ -21,25 +21,25 @@
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 355,
+          "line": 361,
           "preview": "'sha256':sha(shadow_path),'atlas_size':[size*cols,size*rows]}",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 356,
+          "line": 362,
           "preview": "variants[str(size)]={'path':path.relative_to(output).as_posix(),'sha256':sha(path),",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 378,
+          "line": 384,
           "preview": "'sha256':sha(focus_path),'sprite_size':[size,size],",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 384,
+          "line": 390,
           "preview": "'sha256':sha(shadow_path),'atlas_size':[size*cols,size*rows]}",
           "definition_candidate": false
         }
@@ -153,131 +153,143 @@
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
           "line": 80,
-          "preview": "ensure(qa.get('celebration_raised_arm_pass') is True,",
+          "preview": "ensure(qa.get('prop_support_connected_pass') is True and",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 82,
-          "preview": "ensure(qa.get('celebration_wide_arm_pass') is True,",
+          "line": 83,
+          "preview": "ensure(qa.get('prop_support_model')==",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
           "line": 86,
+          "preview": "ensure(qa.get('celebration_raised_arm_pass') is True,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 88,
+          "preview": "ensure(qa.get('celebration_wide_arm_pass') is True,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 92,
           "preview": "ensure(isinstance(arm_height,(int,float)) and arm_height>=65,",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 89,
+          "line": 95,
           "preview": "ensure(isinstance(wrist_span,(int,float)) and wrist_span>=135,",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 91,
+          "line": 97,
           "preview": "ensure(qa.get('work_screen_violation_frames') == [] and",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 96,
+          "line": 102,
           "preview": "ensure(isinstance(tool,list) and len(tool)==2 and",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 100,
+          "line": 106,
           "preview": "ensure((folder/'REVIEW_REQUIRED.txt').is_file(),'Missing review marker: '+action)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 103,
+          "line": 109,
           "preview": "ensure(len(poses)==count and len(events)==count,'Pose/event count mismatch: '+action)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 108,
+          "line": 114,
           "preview": "ensure(actual==expected and m.get('work_pulse_event_frames')==expected,",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 115,
+          "line": 121,
           "preview": "ensure(actual==expected,'REPAIR spark event/visual phase mismatch')",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 118,
+          "line": 124,
           "preview": "ensure(len(frames)==count and all(f.name==f'{asset}-{i:02d}.png' for i,f in enumerate(frames)),",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 256,
+          "line": 262,
           "preview": "ensure(report.get('format')=='zte-temporal-qa-v1' and",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 263,
+          "line": 269,
           "preview": "ensure(report.get('source_skin_sha256')==index['source_skin_sha256'],",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 266,
+          "line": 272,
           "preview": "ensure(isinstance(actions,dict) and set(actions)==set(ACTIONS),",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 270,
+          "line": 276,
           "preview": "ensure(entry.get('asset_id')=='CHR-TECH-'+action and",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 280,
+          "line": 286,
           "preview": "ensure(im.mode=='RGBA' and im.size==(SIDE,SIDE),",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 283,
+          "line": 289,
           "preview": "ensure(chain.hexdigest()==entry.get('ordered_frame_digest_sha256'),",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 320,
+          "line": 326,
           "preview": "ensure(image.size==(SIDE,SIDE) and image.mode=='RGBA','Source not 512px RGBA: '+str(path))",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 324,
+          "line": 330,
           "preview": "ensure(b is not None and b[0]>=6 and b[1]>=6 and b[2]<=SIDE-6 and b[3]<=SIDE-6,",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 326,
+          "line": 332,
           "preview": "ensure(alpha.getpixel((0,0))==0,'Missing transparent corner: '+str(path))",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 329,
+          "line": 335,
           "preview": "ensure(all(metric['pass'] for metric in game_scale),",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 37
+      "occurrence_count": 39
     },
     "verify": {
       "definition": {
@@ -313,7 +325,7 @@
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 289,
+          "line": 295,
           "preview": "index,records=verify(source)",
           "definition_candidate": false
         },
@@ -331,90 +343,96 @@
         },
         {
           "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 134,
+          "line": 138,
           "preview": "index,records=verify(FIXTURE)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 147,
+          "line": 151,
           "preview": "verify(root)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 161,
+          "line": 165,
           "preview": "verify(root)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 183,
+          "line": 187,
           "preview": "verify(root)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 198,
+          "line": 202,
           "preview": "verify(root)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 213,
+          "line": 217,
           "preview": "verify(root)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 229,
+          "line": 234,
           "preview": "verify(root)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 247,
+          "line": 250,
           "preview": "verify(root)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 262,
+          "line": 268,
           "preview": "verify(root)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 277,
+          "line": 283,
           "preview": "verify(root)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 292,
+          "line": 298,
+          "preview": "verify(root)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_package_tech_actions_runtime.py",
+          "line": 313,
           "preview": "verify(root)",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 18
+      "occurrence_count": 19
     },
     "review_html": {
       "definition": {
         "file": "tools/sprites/package_tech_actions_runtime.py",
-        "line": 124,
+        "line": 130,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 124,
+          "line": 130,
           "preview": "def review_html(data:dict)->str:",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 416,
+          "line": 422,
           "preview": "(output/'review-player.html').write_text(review_html(exported),encoding='utf-8')",
           "definition_candidate": false
         }
@@ -424,20 +442,20 @@
     "render_contact_shadow": {
       "definition": {
         "file": "tools/sprites/package_tech_actions_runtime.py",
-        "line": 218,
+        "line": 224,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 218,
+          "line": 224,
           "preview": "def render_contact_shadow(p:dict)->Image.Image:",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 339,
+          "line": 345,
           "preview": "shadow_frames=[render_contact_shadow(p) for p in rec['poses']]",
           "definition_candidate": false
         }
@@ -447,20 +465,20 @@
     "game_scale_metrics": {
       "definition": {
         "file": "tools/sprites/package_tech_actions_runtime.py",
-        "line": 235,
+        "line": 241,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 235,
+          "line": 241,
           "preview": "def game_scale_metrics(frame:Image.Image, side:int=96)->dict:",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 328,
+          "line": 334,
           "preview": "game_scale.append(game_scale_metrics(frame))",
           "definition_candidate": false
         },
@@ -472,19 +490,19 @@
         },
         {
           "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 126,
+          "line": 130,
           "preview": "self.assertFalse(game_scale_metrics(empty)['pass'])",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 129,
+          "line": 133,
           "preview": "self.assertFalse(game_scale_metrics(clipped)['pass'])",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 131,
+          "line": 135,
           "preview": "self.assertTrue(game_scale_metrics(image.convert('RGBA'))['pass'])",
           "definition_candidate": false
         }
@@ -494,20 +512,20 @@
     "verify_temporal_evidence": {
       "definition": {
         "file": "tools/sprites/package_tech_actions_runtime.py",
-        "line": 253,
+        "line": 259,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 253,
+          "line": 259,
           "preview": "def verify_temporal_evidence(index:dict,records:dict,report_path:Path)->dict:",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 291,
+          "line": 297,
           "preview": "evidence=(verify_temporal_evidence(index,records,temporal_report)",
           "definition_candidate": false
         },
@@ -529,7 +547,7 @@
     "package": {
       "definition": {
         "file": "tools/sprites/package_tech_actions_runtime.py",
-        "line": 288,
+        "line": 294,
         "kind": "function",
         "language": "python"
       },
@@ -1260,7 +1278,7 @@
     "main": {
       "definition": {
         "file": "tools/sprites/package_tech_actions_runtime.py",
-        "line": 420,
+        "line": 426,
         "kind": "function",
         "language": "python"
       },
@@ -1951,13 +1969,13 @@
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 420,
+          "line": 426,
           "preview": "def main():",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 432,
+          "line": 438,
           "preview": "if __name__=='__main__':main()",
           "definition_candidate": false
         },
@@ -1987,6 +2005,878 @@
         }
       ],
       "occurrence_count": 120
+    },
+    "spine_lean": {
+      "definition": {
+        "file": "tools/sprites/rigged_tech_actions_v3.py",
+        "line": 30,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 30,
+          "preview": "def spine_lean(t: float, action: str) -> float:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 57,
+          "preview": "p[\"torso_lean_rad\"] = spine_lean(t, action)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 78,
+          "preview": "\"torso_lean_rad\": spine_lean(t, action),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 12,
+          "preview": "ACTIONS, GROUND, build_action, draw_frame, pose_for, spine_lean,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 38,
+          "preview": "lean=spine_lean(t,action)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 5
+    },
+    "pose_for": {
+      "definition": {
+        "file": "tools/sprites/rigged_tech_actions_v3.py",
+        "line": 50,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 50,
+          "preview": "def pose_for(t: float, action: str) -> dict:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 219,
+          "preview": "p = pose_for(t, action)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 12,
+          "preview": "ACTIONS, GROUND, build_action, draw_frame, pose_for, spine_lean,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 24,
+          "preview": "a = pose_for(phase, action)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 25,
+          "preview": "b = pose_for(phase + 1, action)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 36,
+          "preview": "before=pose_for(t,action)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 37,
+          "preview": "after=pose_for(t+1,action)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 56,
+          "preview": "p=pose_for(t,action)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 66,
+          "preview": "p = pose_for(i / 48, action)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 76,
+          "preview": "p = pose_for(i / 48, \"CARRY\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 83,
+          "preview": "hand = [pose_for(i / 24, action)[\"handR\"] for i in range(24)]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 89,
+          "preview": "p=pose_for(t,\"CELEB\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 98,
+          "preview": "q=pose_for(t+1,\"CELEB\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 106,
+          "preview": "work=pose_for(t,\"WORK\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 110,
+          "preview": "repair=pose_for(t,\"REPAIR\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 155,
+          "preview": "pose_for(sample,'WALK'),joint_fabric=False)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 158,
+          "preview": "core.draw_frame(sample,self.kit,pose_for(sample,'WALK'))[0].tobytes())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_soft_skin_deform.py",
+          "line": 9,
+          "preview": "from rigged_tech_actions_v3 import ACTIONS, draw_frame as draw_action, pose_for",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_soft_skin_deform.py",
+          "line": 70,
+          "preview": "source=pose_for(.125,\"WALK\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_tech_prop_mount.py",
+          "line": 9,
+          "preview": "from rigged_tech_actions_v3 import pose_for",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_tech_prop_mount.py",
+          "line": 16,
+          "preview": "p=pose_for(i/512,action)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_tech_prop_mount.py",
+          "line": 32,
+          "preview": "a=mount_geometry(action,pose_for(t,action)['root'])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_tech_prop_mount.py",
+          "line": 33,
+          "preview": "b=mount_geometry(action,pose_for(t+1,action)['root'])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_tech_prop_mount.py",
+          "line": 40,
+          "preview": "pose=pose_for(.125,action)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_tech_prop_mount.py",
+          "line": 59,
+          "preview": "pose_for(.25,action),action)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_weight_transfer.py",
+          "line": 7,
+          "preview": "from rigged_tech_actions_v3 import pose_for",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_weight_transfer.py",
+          "line": 25,
+          "preview": "new=pose_for(t,action)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_weight_transfer.py",
+          "line": 54,
+          "preview": "poses=[pose_for(i/192,action) for i in range(192)]",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 28
+    },
+    "draw_cargo": {
+      "definition": {
+        "file": "tools/sprites/rigged_tech_actions_v3.py",
+        "line": 82,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 82,
+          "preview": "def draw_cargo(layer: Image.Image, p: dict, t: float) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 221,
+          "preview": "\"CARRY\": draw_cargo,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "draw_console": {
+      "definition": {
+        "file": "tools/sprites/rigged_tech_actions_v3.py",
+        "line": 104,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 104,
+          "preview": "def draw_console(layer: Image.Image, p: dict, t: float) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 222,
+          "preview": "\"WORK\": draw_console,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "draw_work_touch": {
+      "definition": {
+        "file": "tools/sprites/rigged_tech_actions_v3.py",
+        "line": 122,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 122,
+          "preview": "def draw_work_touch(layer: Image.Image, p: dict, t: float) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 226,
+          "preview": "overlay = {\"CELEB\":draw_celebration,\"WORK\":draw_work_touch,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "draw_repair": {
+      "definition": {
+        "file": "tools/sprites/rigged_tech_actions_v3.py",
+        "line": 138,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 138,
+          "preview": "def draw_repair(layer: Image.Image, p: dict, t: float) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 223,
+          "preview": "\"REPAIR\": draw_repair,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "draw_repair_sparks": {
+      "definition": {
+        "file": "tools/sprites/rigged_tech_actions_v3.py",
+        "line": 161,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 161,
+          "preview": "def draw_repair_sparks(layer: Image.Image, p: dict, t: float) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 227,
+          "preview": "\"REPAIR\":draw_repair_sparks}.get(action)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "draw_celebration": {
+      "definition": {
+        "file": "tools/sprites/rigged_tech_actions_v3.py",
+        "line": 178,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 178,
+          "preview": "def draw_celebration(layer: Image.Image, p: dict, t: float) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 226,
+          "preview": "overlay = {\"CELEB\":draw_celebration,\"WORK\":draw_work_touch,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "draw_idle_readout": {
+      "definition": {
+        "file": "tools/sprites/rigged_tech_actions_v3.py",
+        "line": 207,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 207,
+          "preview": "def draw_idle_readout(layer: Image.Image, p: dict, t: float) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 224,
+          "preview": "\"IDLE\": draw_idle_readout,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "draw_frame": {
+      "definition": {
+        "file": "tools/sprites/rigged_tech_actions_v3.py",
+        "line": 218,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 218,
+          "preview": "def draw_frame(action: str, t: float, kit: dict):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 228,
+          "preview": "return core.draw_frame(t, kit, p, under, overlay, joint_fabric=True, soft_deform=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 349,
+          "preview": "im, p, b = draw_frame(action, phase, kit)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_walk_v2.py",
+          "line": 218,
+          "preview": "def draw_frame(t:float,kit:dict,pose_override=None,prop_underlay=None,prop_overlay=None,joint_fabric=False,soft_deform=False):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_walk_v2.py",
+          "line": 313,
+          "preview": "im,p,b=draw_frame(i/frames,kit)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 12,
+          "preview": "ACTIONS, GROUND, build_action, draw_frame, pose_for, spine_lean,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 132,
+          "preview": "first, _, _ = draw_frame(action, .125, self.kit)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 133,
+          "preview": "second, _, _ = draw_frame(action, .125, self.kit)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 145,
+          "preview": "current,p,b = draw_frame(action,t,self.kit)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 147,
+          "preview": "duplicate,_,_ = draw_frame(action,t,self.kit)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 153,
+          "preview": "new,_,_=draw_frame('WALK',sample,self.kit)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 154,
+          "preview": "old,_,_=core.draw_frame(sample,self.kit,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 158,
+          "preview": "core.draw_frame(sample,self.kit,pose_for(sample,'WALK'))[0].tobytes())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
+          "line": 10,
+          "preview": "CANVAS, GROUND, PART_NAMES, build, draw_frame, foot_local, foot_roll,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
+          "line": 64,
+          "preview": "a,pa,ba=draw_frame(.125,self.kit)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
+          "line": 65,
+          "preview": "b,pb,bb=draw_frame(.125,self.kit)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
+          "line": 66,
+          "preview": "c,_,_=draw_frame(.375,self.kit)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
+          "line": 79,
+          "preview": "original,_,_=draw_frame(t,self.kit)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
+          "line": 81,
+          "preview": "unchanged,_,_=draw_frame(t,self.kit,neutral)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
+          "line": 84,
+          "preview": "img,_,boot=draw_frame(t,self.kit,tilted)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
+          "line": 91,
+          "preview": "draw_frame(.125,self.kit,bad)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
+          "line": 96,
+          "preview": "legacy,_,_=draw_frame(t,self.kit)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
+          "line": 97,
+          "preview": "explicit_off,_,_=draw_frame(t,self.kit,joint_fabric=False)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
+          "line": 98,
+          "preview": "textile,pose_a,boots=draw_frame(t,self.kit,joint_fabric=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
+          "line": 99,
+          "preview": "textile_again,pose_b,_=draw_frame(t,self.kit,joint_fabric=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_soft_skin_deform.py",
+          "line": 9,
+          "preview": "from rigged_tech_actions_v3 import ACTIONS, draw_frame as draw_action, pose_for",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_soft_skin_deform.py",
+          "line": 36,
+          "preview": "prior,_,_=core.draw_frame(t,self.kit,joint_fabric=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_soft_skin_deform.py",
+          "line": 37,
+          "preview": "explicit,_,_=core.draw_frame(t,self.kit,joint_fabric=True,soft_deform=False)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_soft_skin_deform.py",
+          "line": 38,
+          "preview": "changed,_,boots=core.draw_frame(t,self.kit,joint_fabric=True,soft_deform=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_soft_skin_deform.py",
+          "line": 39,
+          "preview": "duplicate,_,_=core.draw_frame(t,self.kit,joint_fabric=True,soft_deform=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_soft_skin_deform.py",
+          "line": 48,
+          "preview": "img,p,b=core.draw_frame(i/24,self.kit,joint_fabric=True,soft_deform=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_soft_skin_deform.py",
+          "line": 72,
+          "preview": "legacy,_,_=core.draw_frame(.125,self.kit,source,joint_fabric=True,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 32
+    },
+    "action_qa": {
+      "definition": {
+        "file": "tools/sprites/rigged_tech_actions_v3.py",
+        "line": 231,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 359,
+          "preview": "def action_qa(frames,action):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 500,
+          "preview": "action_ok,action_why=action_qa(frames,i['action'])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 231,
+          "preview": "def action_qa(action: str, poses: list, base_qa: dict) -> dict:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 375,
+          "preview": "qa = action_qa(action, poses, core.check(images, poses, boots))",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "rotated_shoulder": {
+      "definition": {
+        "file": "tools/sprites/rigged_tech_actions_v3.py",
+        "line": 240,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 240,
+          "preview": "def rotated_shoulder(dx, dy):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 242,
+          "preview": "shoulders = {\"handL\": rotated_shoulder(-24, -86),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 243,
+          "preview": "\"handR\": rotated_shoulder(23, -85)}",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "build_action": {
+      "definition": {
+        "file": "tools/sprites/rigged_tech_actions_v3.py",
+        "line": 334,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 334,
+          "preview": "def build_action(skin: Path, out: Path, action: str, frames: int = 24, fps: int = 12):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 444,
+          "preview": "manifest, bundle = build_action(args.skin, out, action, args.frames, args.fps)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 12,
+          "preview": "ACTIONS, GROUND, build_action, draw_frame, pose_for, spine_lean,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 118,
+          "preview": "build_action(KIT, root / \"bad\", \"ATTACK\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 121,
+          "preview": "build_action(KIT, root / \"bad2\", \"WALK\", 7, 12)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 165,
+          "preview": "manifest, bundle = build_action(KIT, out, action, frames=8, fps=8)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 6
+    },
+    "mount_geometry": {
+      "definition": {
+        "file": "tools/sprites/tech_prop_mount.py",
+        "line": 25,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 21,
+          "preview": "from tech_prop_mount import draw_mount, mount_geometry",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 265,
+          "preview": "mount=mount_geometry(action,p[\"root\"])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tech_prop_mount.py",
+          "line": 25,
+          "preview": "def mount_geometry(action: str, root: tuple[float,float]) -> dict:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/tech_prop_mount.py",
+          "line": 58,
+          "preview": "geo=mount_geometry(action,pose[\"root\"])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_tech_prop_mount.py",
+          "line": 8,
+          "preview": "from tech_prop_mount import SUPPORTS, mount_geometry, draw_mount",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_tech_prop_mount.py",
+          "line": 17,
+          "preview": "g=mount_geometry(action,p['root'])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_tech_prop_mount.py",
+          "line": 32,
+          "preview": "a=mount_geometry(action,pose_for(t,action)['root'])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_tech_prop_mount.py",
+          "line": 33,
+          "preview": "b=mount_geometry(action,pose_for(t+1,action)['root'])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_tech_prop_mount.py",
+          "line": 56,
+          "preview": "mount_geometry(action,bad)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_tech_prop_mount.py",
+          "line": 61,
+          "preview": "mount_geometry('IDLE',(252,270))",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 10
+    },
+    "draw_mount": {
+      "definition": {
+        "file": "tools/sprites/tech_prop_mount.py",
+        "line": 54,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 21,
+          "preview": "from tech_prop_mount import draw_mount, mount_geometry",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 105,
+          "preview": "draw_mount(layer,p,\"WORK\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 139,
+          "preview": "draw_mount(layer,p,\"REPAIR\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tech_prop_mount.py",
+          "line": 54,
+          "preview": "def draw_mount(layer:Image.Image,pose:dict,action:str)->dict:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/test_tech_prop_mount.py",
+          "line": 8,
+          "preview": "from tech_prop_mount import SUPPORTS, mount_geometry, draw_mount",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_tech_prop_mount.py",
+          "line": 44,
+          "preview": "geom=draw_mount(frame,pose,action)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_tech_prop_mount.py",
+          "line": 58,
+          "preview": "draw_mount(Image.new('RGB',(512,512)),",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 7
+    },
+    "pix": {
+      "definition": {
+        "file": "tools/sprites/tech_prop_mount.py",
+        "line": 60,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 287,
+          "preview": "pix=binary.load()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 290,
+          "preview": "if pix[sx,sy]==0 or (sx,sy) in seen:continue",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 295,
+          "preview": "if 0<=nx<256 and 0<=ny<256 and pix[nx,ny]>0 and (nx,ny) not in seen:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 385,
+          "preview": "ca=crop.getchannel('A');pix=list(crop.convert('RGB').getdata());mask=list(ca.getdata())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 386,
+          "preview": "vals=[p for p,m in zip(pix,mask) if m>=48]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tech_prop_mount.py",
+          "line": 60,
+          "preview": "def pix(p):return (round(p[0]),round(p[1]))",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/tech_prop_mount.py",
+          "line": 62,
+          "preview": "coords=[pix(p0),pix(p1),pix(p2)]",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 7
     },
     "RuntimePackTests": {
       "definition": {
@@ -2048,14 +2938,14 @@
     "test_game_scale_check_rejects_clipped_or_empty_frames": {
       "definition": {
         "file": "tools/sprites/test_package_tech_actions_runtime.py",
-        "line": 123,
+        "line": 127,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 123,
+          "line": 127,
           "preview": "def test_game_scale_check_rejects_clipped_or_empty_frames(self):",
           "definition_candidate": true
         }
@@ -2065,14 +2955,14 @@
     "test_source_contract_has_shared_skin_and_event_timeline": {
       "definition": {
         "file": "tools/sprites/test_package_tech_actions_runtime.py",
-        "line": 133,
+        "line": 137,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 133,
+          "line": 137,
           "preview": "def test_source_contract_has_shared_skin_and_event_timeline(self):",
           "definition_candidate": true
         }
@@ -2082,14 +2972,14 @@
     "test_reject_approved_or_corrupted_index": {
       "definition": {
         "file": "tools/sprites/test_package_tech_actions_runtime.py",
-        "line": 140,
+        "line": 144,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 140,
+          "line": 144,
           "preview": "def test_reject_approved_or_corrupted_index(self):",
           "definition_candidate": true
         }
@@ -2099,14 +2989,14 @@
     "test_reject_missing_review_marker": {
       "definition": {
         "file": "tools/sprites/test_package_tech_actions_runtime.py",
-        "line": 149,
+        "line": 153,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 149,
+          "line": 153,
           "preview": "def test_reject_missing_review_marker(self):",
           "definition_candidate": true
         }
@@ -2116,14 +3006,14 @@
     "test_refuse_desynchronized_visual_events": {
       "definition": {
         "file": "tools/sprites/test_package_tech_actions_runtime.py",
-        "line": 163,
+        "line": 167,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 163,
+          "line": 167,
           "preview": "def test_refuse_desynchronized_visual_events(self):",
           "definition_candidate": true
         }
@@ -2133,14 +3023,14 @@
     "test_reject_narrow_celebration_pose": {
       "definition": {
         "file": "tools/sprites/test_package_tech_actions_runtime.py",
-        "line": 185,
+        "line": 189,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 185,
+          "line": 189,
           "preview": "def test_reject_narrow_celebration_pose(self):",
           "definition_candidate": true
         }
@@ -2150,15 +3040,32 @@
     "test_reject_celebration_below_overhead_qa_threshold": {
       "definition": {
         "file": "tools/sprites/test_package_tech_actions_runtime.py",
-        "line": 200,
+        "line": 204,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 200,
+          "line": 204,
           "preview": "def test_reject_celebration_below_overhead_qa_threshold(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_reject_detached_mount_even_when_contact_with_screen_passes": {
+      "definition": {
+        "file": "tools/sprites/test_package_tech_actions_runtime.py",
+        "line": 219,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_package_tech_actions_runtime.py",
+          "line": 219,
+          "preview": "def test_reject_detached_mount_even_when_contact_with_screen_passes(self):",
           "definition_candidate": true
         }
       ],
@@ -2167,14 +3074,14 @@
     "test_reject_mismatched_work_and_repair_contacts": {
       "definition": {
         "file": "tools/sprites/test_package_tech_actions_runtime.py",
-        "line": 215,
+        "line": 236,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 215,
+          "line": 236,
           "preview": "def test_reject_mismatched_work_and_repair_contacts(self):",
           "definition_candidate": true
         }
@@ -2184,14 +3091,14 @@
     "test_reject_mismatched_phase_and_transfer_provenance": {
       "definition": {
         "file": "tools/sprites/test_package_tech_actions_runtime.py",
-        "line": 231,
+        "line": 252,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 231,
+          "line": 252,
           "preview": "def test_reject_mismatched_phase_and_transfer_provenance(self):",
           "definition_candidate": true
         }
@@ -2201,14 +3108,14 @@
     "test_reject_missing_fabric_renderer_provenance": {
       "definition": {
         "file": "tools/sprites/test_package_tech_actions_runtime.py",
-        "line": 249,
+        "line": 270,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 249,
+          "line": 270,
           "preview": "def test_reject_missing_fabric_renderer_provenance(self):",
           "definition_candidate": true
         }
@@ -2218,14 +3125,14 @@
     "test_reject_soft_deformation_disabled_in_manifest": {
       "definition": {
         "file": "tools/sprites/test_package_tech_actions_runtime.py",
-        "line": 264,
+        "line": 285,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 264,
+          "line": 285,
           "preview": "def test_reject_soft_deformation_disabled_in_manifest(self):",
           "definition_candidate": true
         }
@@ -2235,15 +3142,100 @@
     "test_reject_falsely_approved_visual_qa": {
       "definition": {
         "file": "tools/sprites/test_package_tech_actions_runtime.py",
-        "line": 279,
+        "line": 300,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 279,
+          "line": 300,
           "preview": "def test_reject_falsely_approved_visual_qa(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "TechPropMountTests": {
+      "definition": {
+        "file": "tools/sprites/test_tech_prop_mount.py",
+        "line": 12,
+        "kind": "class",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_tech_prop_mount.py",
+          "line": 12,
+          "preview": "class TechPropMountTests(unittest.TestCase):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_all_512_phase_samples_keep_belt_and_device_connected": {
+      "definition": {
+        "file": "tools/sprites/test_tech_prop_mount.py",
+        "line": 13,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_tech_prop_mount.py",
+          "line": 13,
+          "preview": "def test_all_512_phase_samples_keep_belt_and_device_connected(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_mount_follows_idle_bob_without_world_drift": {
+      "definition": {
+        "file": "tools/sprites/test_tech_prop_mount.py",
+        "line": 28,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_tech_prop_mount.py",
+          "line": 28,
+          "preview": "def test_mount_follows_idle_bob_without_world_drift(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_software_draw_is_deterministic_and_not_clipped": {
+      "definition": {
+        "file": "tools/sprites/test_tech_prop_mount.py",
+        "line": 38,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_tech_prop_mount.py",
+          "line": 38,
+          "preview": "def test_software_draw_is_deterministic_and_not_clipped(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_reject_invalid_roots_actions_canvases": {
+      "definition": {
+        "file": "tools/sprites/test_tech_prop_mount.py",
+        "line": 52,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_tech_prop_mount.py",
+          "line": 52,
+          "preview": "def test_reject_invalid_roots_actions_canvases(self):",
           "definition_candidate": true
         }
       ],

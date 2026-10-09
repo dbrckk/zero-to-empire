@@ -376,6 +376,7 @@ tools/
     rigged_tech_actions_v3.py
     rigged_tech_walk_v2.py
     soft_skin_deform.py
+    tech_prop_mount.py
     temporal_sprite_audit.py
     ter07_energy_conduit_candidate.py
     test_action_contact.py
@@ -385,6 +386,7 @@ tools/
     test_rigged_tech_actions_v3.py
     test_rigged_tech_walk_v2.py
     test_soft_skin_deform.py
+    test_tech_prop_mount.py
     test_temporal_sprite_audit.py
     test_weight_transfer.py
     validate_animation_sheet.py
@@ -3679,6 +3681,8 @@ on:
       - 'tools/sprites/soft_skin_deform.py'
       - 'tools/sprites/weight_transfer.py'
       - 'tools/sprites/action_contact.py'
+      - 'tools/sprites/tech_prop_mount.py'
+      - 'tools/sprites/test_tech_prop_mount.py'
       - 'tools/sprites/test_action_contact.py'
       - 'tools/sprites/focused_sprite_atlas.py'
       - 'tools/sprites/test_focused_sprite_atlas.py'
@@ -3719,6 +3723,7 @@ jobs:
           python -m unittest discover -s tools/sprites -p 'test_soft_skin_deform.py' -v
           python -m unittest discover -s tools/sprites -p 'test_weight_transfer.py' -v
           python -m unittest discover -s tools/sprites -p 'test_action_contact.py' -v
+          python -m unittest discover -s tools/sprites -p 'test_tech_prop_mount.py' -v
           python -m unittest discover -s tools/sprites -p 'test_focused_sprite_atlas.py' -v
           python -m unittest discover -s tools/sprites -p 'test_temporal_sprite_audit.py' -v
           python -m unittest discover -s tools/sprites -p 'test_rigged_tech_actions_v3.py' -v
@@ -29570,6 +29575,11 @@ work_bad = [i for i,p in enumerate(poses)
 repair_lengths = [repair_contact(p)["torch_length_px"] for p in poses
 tool_bad = [i for i,p in enumerate(poses) if action=="REPAIR"
 interaction_ok = not work_bad and not tool_bad
+support_bad=[]
+⋮----
+mount=mount_geometry(action,p["root"])
+⋮----
+support_ok=not support_bad
 stationary = action in ("IDLE", "WORK", "REPAIR", "CELEB")
 grounded = all(q["lockL"] and q["lockR"] for q in poses) if stationary else True
 grip_ok = (all(
@@ -29910,6 +29920,46 @@ sampled=np.concatenate((rgb,alpha),axis=-1)
 ⋮----
 pixels=np.uint8(np.clip(np.round(sampled*255),0,255))
 patch=Image.fromarray(pixels,'RGBA')
+```
+
+## File: tools/sprites/tech_prop_mount.py
+```python
+"""Physical support brackets for TECH interaction props (512px rig coordinates).
+
+WORK's console and REPAIR's service panel were visually floating. Both
+now have deterministic folding mounts running from the technician's belt
+to a socket *inside* the associated prop.
+
+This is lightweight 2D staging, not a simulated rig or visual approval.
+"""
+⋮----
+SUPPORTS = {
+# Bounds of the static graphics as painted in rigged_tech_actions_v3.py.
+PANEL_BOUNDS = {
+⋮----
+def mount_geometry(action: str, root: tuple[float,float]) -> dict
+⋮----
+"""Expose geometry for scene/contact assertions and compositor reuse."""
+⋮----
+offsets=SUPPORTS[action]
+points=tuple((x+dx,y+dy) for dx,dy in offsets)
+distances=[math.dist(a,b) for a,b in zip(points,points[1:])]
+⋮----
+end=points[-1]
+⋮----
+def draw_mount(layer:Image.Image,pose:dict,action:str)->dict
+⋮----
+"""Draw as prop underlay so the torso naturally occludes its belt socket."""
+⋮----
+geo=mount_geometry(action,pose["root"])
+⋮----
+def pix(p):return (round(p[0]),round(p[1]))
+d=ImageDraw.Draw(layer,"RGBA")
+coords=[pix(p0),pix(p1),pix(p2)]
+⋮----
+# Parallel power conductor with a limited cyan reflection.
+⋮----
+r=9 if n==1 else 7
 ```
 
 ## File: tools/sprites/temporal_sprite_audit.py
@@ -30331,6 +30381,9 @@ shadow=item['optional_shadow_layer']['focused_variants'][str(size)]
 crop=variant['shared_crop_bounds_px']
 expected_pivot=[round((252-crop[0])*size/(crop[2]-crop[0]),3),
 ⋮----
+# Published runtime clips must retain a valid attachment
+# gate for WORK and REPAIR, not just an on-screen hand marker.
+⋮----
 var=item['variants'][str(size)]
 ⋮----
 shadow=item['optional_shadow_layer']['variants'][str(size)]
@@ -30363,11 +30416,13 @@ manifest=json.loads((FIXTURE/'CELEB'/'qa-manifest.json').read_text())
 ⋮----
 def test_reject_celebration_below_overhead_qa_threshold(self)
 ⋮----
-def test_reject_mismatched_work_and_repair_contacts(self)
+def test_reject_detached_mount_even_when_contact_with_screen_passes(self)
 ⋮----
 root=Path(tmp)
 ⋮----
 manifest=json.loads((FIXTURE/action/'qa-manifest.json').read_text())
+⋮----
+def test_reject_mismatched_work_and_repair_contacts(self)
 ⋮----
 def test_reject_mismatched_phase_and_transfer_provenance(self)
 ⋮----
@@ -30573,6 +30628,36 @@ box=a.getchannel("A").getbbox()
 ⋮----
 # The WALK candidate must be soft deformed, unlike the explicit old path.
 source=pose_for(.125,"WALK")
+```
+
+## File: tools/sprites/test_tech_prop_mount.py
+```python
+"""Safety and frame-stability checks for mounted WORK/REPAIR hardware."""
+⋮----
+class TechPropMountTests(unittest.TestCase)
+⋮----
+def test_all_512_phase_samples_keep_belt_and_device_connected(self)
+⋮----
+p=pose_for(i/512,action)
+g=mount_geometry(action,p['root'])
+⋮----
+def test_mount_follows_idle_bob_without_world_drift(self)
+⋮----
+t=i/128
+a=mount_geometry(action,pose_for(t,action)['root'])
+b=mount_geometry(action,pose_for(t+1,action)['root'])
+⋮----
+def test_software_draw_is_deterministic_and_not_clipped(self)
+⋮----
+pose=pose_for(.125,action)
+images=[]
+⋮----
+frame=Image.new('RGBA',(512,512))
+geom=draw_mount(frame,pose,action)
+⋮----
+bbox=frame.getchannel('A').getbbox()
+⋮----
+def test_reject_invalid_roots_actions_canvases(self)
 ```
 
 ## File: tools/sprites/test_temporal_sprite_audit.py

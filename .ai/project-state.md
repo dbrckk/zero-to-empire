@@ -22,20 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T10:07:07Z
+Generated: 2026-10-09T10:18:15Z
 
 ### Git
 - Branch: `main`
-- Head: `1d80b49d4b39`
-- Commit date: 2026-10-09T12:06:39+02:00
-- Commit: test(art): keep mobile controls accessible and minimum touch-friendly size
-- Tracked files: 1474
+- Head: `f5f901d1c638`
+- Commit date: 2026-10-09T12:18:01+02:00
+- Commit: docs(art): record rig-attached TECH workstations and review-only bracket QA
+- Tracked files: 1476
 
 ### Recently changed files
+- `tools/sprites/MODULAR_ACTIONS_README.md`
+- `.github/workflows/modular-tech-actions.yml`
 - `tools/sprites/test_package_tech_actions_runtime.py`
 - `tools/sprites/package_tech_actions_runtime.py`
-- `tools/sprites/MODULAR_RUNTIME_PACK_README.md`
-- `.github/workflows/modular-tech-actions.yml`
+- `tools/sprites/test_tech_prop_mount.py`
 
 ### Project signals
 - `build.gradle.kts`
