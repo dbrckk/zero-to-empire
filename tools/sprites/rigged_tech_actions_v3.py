@@ -80,25 +80,58 @@ def pose_for(t: float, action: str) -> dict:
 
 
 def draw_cargo(layer: Image.Image, p: dict, t: float) -> None:
-    x, y = p["root"]
-    x, y = round(x + 20), round(y - 82)
+    """Readable two-hand cargo crate, not a glowing handheld screen.
+
+    Draw behind the character's articulated hands. Handle coordinates match
+    pose_for(CARRY)'s exact left/right wrist anchors in every cycle frame.
+    Shape/material QA is not a substitute for 96px artistic grip inspection.
+    """
+    root_x, root_y = p["root"]
+    x, y = round(root_x + 20), round(root_y - 82)
     d = ImageDraw.Draw(layer, "RGBA")
-    d.rounded_rectangle((x + 1, y + 5, x + 93, y + 56), radius=8,
-                        fill=(21, 34, 45, 250), outline=(107, 128, 144, 250), width=3)
-    d.polygon(((x + 9, y + 4), (x + 82, y + 4),
-               (x + 91, y + 10), (x + 17, y + 10)), fill=(91, 108, 124, 238))
-    d.rounded_rectangle((x + 11, y + 13, x + 82, y + 45), radius=5,
-                        fill=(37, 54, 67, 250), outline=(120, 137, 148, 230), width=2)
-    for i in range(6):
-        xx = x + 17 + 10 * i
-        d.line((xx, y + 16, xx, y + 42), fill=(16, 29, 39, 205), width=2)
-        d.line((xx + 2, y + 18, xx + 2, y + 41), fill=(84, 111, 129, 130), width=1)
-    d.rounded_rectangle((x + 33, y + 23, x + 62, y + 34), radius=3,
-                        fill=(10, 31, 39, 248), outline=(79, 175, 191, 230), width=2)
-    d.line((x + 37, y + 28, x + 57, y + 28), fill=(41, 215, 235, 205), width=2)
-    for xx in (x + 9, x + 85):
-        for yy in (y + 14, y + 46):
-            d.ellipse((xx - 2, yy - 2, xx + 2, yy + 2), fill=(172, 188, 195, 245))
+    # Three-dimensional warm industrial cargo container.
+    d.rounded_rectangle((x + 6, y + 10, x + 90, y + 60), radius=6,
+                        fill=(29, 33, 37, 252),
+                        outline=(75, 81, 85, 250), width=3)
+    d.polygon(((x + 13, y + 7), (x + 78, y + 7),
+               (x + 90, y + 14), (x + 23, y + 14)),
+              fill=(213, 143, 69, 252))
+    d.rounded_rectangle((x + 10, y + 14, x + 87, y + 55), radius=4,
+                        fill=(148, 84, 38, 255),
+                        outline=(231, 163, 83, 255), width=3)
+    d.polygon(((x + 76, y + 15), (x + 87, y + 15),
+               (x + 87, y + 53), (x + 76, y + 49)),
+              fill=(93, 53, 29, 255))
+    # Recessed cargo reinforcement, hazard-style seams without baked letters.
+    for offset in (27, 40, 53, 66):
+        d.line((x + offset, y + 18, x + offset, y + 49),
+               fill=(69, 54, 42, 190), width=3)
+        d.line((x + offset + 2, y + 18, x + offset + 2, y + 47),
+               fill=(238, 167, 90, 135), width=1)
+    d.line((x + 18, y + 44, x + 72, y + 44),
+           fill=(83, 57, 38, 232), width=4)
+    # A small metal lock reads as a cargo latch, not a display screen.
+    d.rounded_rectangle((x + 43, y + 27, x + 54, y + 36),
+                        radius=2, fill=(36, 48, 50, 255),
+                        outline=(170, 184, 166, 235), width=2)
+    d.line((x + 46, y + 31, x + 50, y + 31),
+           fill=(102, 208, 212, 235), width=1)
+
+    # Right and left handle centers MUST coincide with the rig's two wrists:
+    # handL = root+(29,-55); handR = root+(103,-55).
+    for cx in (x + 9, x + 83):
+        d.rounded_rectangle((cx - 7, y + 18, cx + 7, y + 36),
+                            radius=5, fill=(23, 29, 33, 255),
+                            outline=(233, 177, 106, 255), width=3)
+        d.rounded_rectangle((cx - 4, y + 22, cx + 4, y + 33),
+                            radius=3, fill=(56, 65, 69, 255),
+                            outline=(127, 146, 150, 250), width=1)
+    # Wear and corner rivets are attached to the single rigid container.
+    for px, py in ((x + 19, y + 20), (x + 70, y + 20),
+                   (x + 19, y + 48), (x + 70, y + 48)):
+        d.ellipse((px - 2, py - 2, px + 2, py + 2),
+                  fill=(241, 189, 111, 235))
+
 
 
 def draw_console(layer: Image.Image, p: dict, t: float) -> None:
