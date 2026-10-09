@@ -1,53 +1,59 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-04T12:48:00+02:00",
-  "task": "Advance character sprite production to strict 235/235 with semantic review, runtime QA and Android validation",
+  "updated_at": "2026-10-09",
+  "task": "Finish canonical 235/235 strict DONE with genuine semantic character animation, runtime integration and green Android CI",
   "branch": "main",
-  "current_head": "7f95639d045496afad7cf99cd791fd6bef952dc4",
+  "last_observed_head": "87fa0837751da8d9c3992066edd6c82d6abdcdee",
   "state": {
     "strict_done": 216,
     "target_total": 235,
     "strict_remaining": 19,
-    "production_processed": 216,
-    "awaiting_review": 0,
-    "generation_epoch": "identity-lock-v1.11",
-    "active_kaggle": {
-      "status": "ACTIVE",
-      "submit_run_id": 37194324774,
-      "dispatch_token": "37194071301",
-      "kernel_slug": "zero-to-empire-sprite-factory-37194071301-6769b119",
-      "last_observed_status": "KernelWorkerStatus.RUNNING",
-      "target_ids": [
-        "CHR-OP-REPAIR",
-        "CHR-LOG-REPAIR",
-        "CHR-LOG-CELEB",
-        "CHR-ENG-IDLE",
-        "CHR-ENG-WALK",
-        "CHR-ENG-WORK",
-        "CHR-ENG-CARRY",
-        "CHR-ENG-REPAIR",
-        "CHR-ENG-CELEB"
-      ]
-    },
-    "next_retry_batch": [
+    "production_processed": 233,
+    "awaiting_review": 17,
+    "rejected_semantic": 1,
+    "blocked": 1,
+    "remaining_asset_ids": [
       "CHR-OP-WALK",
       "CHR-OP-WORK",
       "CHR-OP-CARRY",
+      "CHR-OP-REPAIR",
       "CHR-OP-CELEB",
       "CHR-TECH-WALK",
       "CHR-TECH-WORK",
       "CHR-TECH-CARRY",
       "CHR-LOG-WALK",
       "CHR-LOG-WORK",
-      "CHR-LOG-CARRY"
+      "CHR-LOG-CARRY",
+      "CHR-LOG-REPAIR",
+      "CHR-LOG-CELEB",
+      "CHR-ENG-IDLE",
+      "CHR-ENG-WALK",
+      "CHR-ENG-WORK",
+      "CHR-ENG-CARRY",
+      "CHR-ENG-REPAIR",
+      "CHR-ENG-CELEB"
     ],
-    "blocked_assets": []
+    "provider_repair": {
+      "id": "CHR-LOG-CARRY",
+      "mode": "pollinations-controlled-repair",
+      "reservation_expires_utc": "2026-10-10T18:00:00Z",
+      "observed_workflow_run_id": 37979410539,
+      "observed_run_status": "in_progress",
+      "outcome": "not verified as of this update"
+    },
+    "manifest_discrepancy": {
+      "manifest_rows": 236,
+      "manifest_rows_marked_done": 236,
+      "canonical_strict_done": 216,
+      "excluded_item": "ONB-00",
+      "historical_semantic_review": "OPEN"
+    }
   },
-  "last_completed": "Fixed Kaggle async production root causes: nested repo_bundle discovery, unique/versioned kernel slugs, failure evidence capture, and restored retries after pre-generation infrastructure failures. OP-IDLE and TECH-IDLE are strict DONE with runtime/Android evidence.",
+  "last_completed": "Inspected 5 actual canonical character sheets; confirmed semantic failures; fixed dynamic character CI, strict completion gate, provider ownership, queued controlled LOG-CARRY retry, reconciled full runtime audit with canonical strict approvals; Asset Pipeline CI and review matrix passed.",
   "next_actions": [
-    "Collect v1.11 kernel 37194324774 when it reaches COMPLETE.",
-    "Visually review every generated atlas action-by-action before any strict promotion.",
-    "Integrate passing candidates into runtime and require Android CI before strict DONE.",
-    "Dispatch all ten remaining retryable character assets as the next v1.11 batch after the active wave completes."
+    "Collect Pollinations Character Atlas run 37979410539 and inspect staged LOG-CARRY frames; preserve canonical assets if rejected.",
+    "Repair all 19 character animations with fixed identity, full bodies, consistent camera, readable motion and props; no auto semantic approval.",
+    "For each visually approved replacement, verify technical/temporal QA, runtime references, playable Android build and green CI before strict DONE increment.",
+    "Reconcile 236-row manifest and progress docs with 235 canonical strict approvals; close historical review only with evidence."
   ]
 }
