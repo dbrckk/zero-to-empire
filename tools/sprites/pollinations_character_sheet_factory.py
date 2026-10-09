@@ -5,11 +5,11 @@ import hashlib
 from PIL import Image
 # Support both execution as a script and importlib-based tooling from tools/assets.
 try:
-    from character_semantic_gate import clip_risk
+    from character_semantic_gate import clip_risk, frame_geometry
 except ModuleNotFoundError as exc:
     if exc.name != 'character_semantic_gate':
         raise
-    from tools.sprites.character_semantic_gate import clip_risk
+    from tools.sprites.character_semantic_gate import clip_risk, frame_geometry
 
 ROOT=Path(__file__).resolve().parents[2]
 MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
@@ -438,6 +438,24 @@ def independent_frame_prompt(item,pose):
     )
 
 
+def require_standalone_body(frame):
+    """Do not cache obvious portrait/torso fragments as valid whole-body poses.
+
+    Risk screening only: cannot detect missing props or grant semantic approval.
+    """
+    geometry=frame_geometry(frame)
+    bad=set(geometry.get('risk_flags',[])) & {
+        'NOT_TALL_FULL_BODY_SILHOUETTE',
+        'PORTRAIT_OR_SOLID_TORSO_RISK',
+        'EMPTY_VISIBLE_FRAME',
+    }
+    if geometry.get('bbox_height_fraction',0)<.45:
+        bad.add('CHARACTER_TOO_SMALL_FOR_CELL')
+    if bad:
+        raise RuntimeError('standalone-fragment: '+','.join(sorted(bad)))
+    return geometry
+
+
 def generate_independent_frames(item,seed):
     """Produce each pose separately; never split one tall image into limbs."""
     action=item['action']
@@ -450,9 +468,23 @@ def generate_independent_frames(item,seed):
         cache_file=cache_dir/f'{n:02d}.png'
         if cache_file.is_file():
             frame=Image.open(cache_file).convert('RGBA')
-            cov=sum(frame.getchannel('A').histogram()[8:])/(256*256)
-            print(f'POLLINATIONS_CHR_FRAME_CACHE_HIT action={action} n={n}',flush=True)
-        else:
+            try:
+                require_standalone_body(frame)
+            except RuntimeError as exc:
+                # Old v3 caches can still contain cropped torsos. Never
+                # trust them on restart or retry the exact same bad seed.
+                cache_file.unlink()
+                rev_file=cache_dir/f'{n:02d}.rev'
+                try:
+                    current=int(rev_file.read_text(encoding='utf-8')) if rev_file.is_file() else 0
+                except ValueError:
+                    current=0
+                rev_file.write_text(str(current+1),encoding='utf-8')
+                print(f'POLLINATIONS_CHR_CACHE_REJECT n={n} reason={exc}',flush=True)
+            else:
+                cov=sum(frame.getchannel('A').histogram()[8:])/(256*256)
+                print(f'POLLINATIONS_CHR_FRAME_CACHE_HIT action={action} n={n}',flush=True)
+        if not cache_file.is_file():
             rev_file=cache_dir/f'{n:02d}.rev'
             try:
                 revision=int(rev_file.read_text(encoding='utf-8').strip()) if rev_file.is_file() else 0
@@ -462,6 +494,7 @@ def generate_independent_frames(item,seed):
                         n*104729+revision*1000003)%2147483647
             raw=fetch(independent_frame_prompt(item,pose),frame_seed)
             frame,cov=cutout(raw,action,standalone=True)
+            require_standalone_body(frame)
             frame.save(cache_file,'PNG',optimize=True)
             print(f'POLLINATIONS_CHR_FRAME_CACHE_SAVE action={action} n={n} '
                   f'revision={revision}',flush=True)
