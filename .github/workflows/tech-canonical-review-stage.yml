@@ -110,5 +110,17 @@ jobs:
           git add art/production/character-rig-review-candidates/
           git diff --cached --quiet && exit 0
           git commit -m 'art(review): stage identity-locked TECH action candidates (not approved)'
-          git pull --rebase origin main
-          git push origin HEAD:main
+          # Multiple independent automations update main. Never force-push:
+          # rebase this isolated review candidate commit and retry races.
+          for attempt in $(seq 1 12); do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              echo "STAGED_REVIEW_PUSH_SUCCESS_ATTEMPT=$attempt"
+              exit 0
+            fi
+            echo "::warning::main advanced before review push, retry $attempt/12"
+            sleep $((attempt * 2))
+          done
+          echo "::error::Review candidates generated but could not be persisted after retries"
+          exit 1
