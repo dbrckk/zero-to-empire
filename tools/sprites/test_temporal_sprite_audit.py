@@ -81,6 +81,39 @@ class TemporalAuditTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'Temporal QA failed'):
             inspect_clip(self.root,'WALK',24)
 
+    def test_single_frame_color_flash_is_detected_even_with_same_alpha(self):
+        path=self.root/'WORK/frames/CHR-TECH-WORK-09.png'
+        with Image.open(path) as image:
+            rgba=image.convert('RGBA')
+            r,g,b,a=rgba.split()
+            # Deliberately invert garment and skin RGB without moving even
+            # one silhouette/alpha pixel; geometry-only QA must not pass it.
+            corrupted=Image.merge('RGBA',tuple(
+                x.point(lambda v:255-v) for x in (r,g,b))+(a,))
+            corrupted.save(path)
+        with self.assertRaisesRegex(ValueError,'global-rgb-flash-or-texture-drift'):
+            inspect_clip(self.root,'WORK',24)
+
+    def test_optional_real_skin_digest_matches_output_provenance(self):
+        import hashlib
+        source=Path(self.work.name)/'skin.webp'
+        source.write_bytes(b'synthetic-source-skin-for-integrity-test')
+        digest=hashlib.sha256(source.read_bytes()).hexdigest()
+        index_path=self.root/'production-index.json'
+        index=json.loads(index_path.read_text())
+        index['source_skin_sha256']=digest
+        index_path.write_text(json.dumps(index))
+        for action in ACTIONS:
+            path=self.root/action/'qa-manifest.json'
+            data=json.loads(path.read_text())
+            data['source_skin_sha256']=digest
+            path.write_text(json.dumps(data))
+        accepted=audit(self.root,Path(self.work.name)/'good',skin=source)
+        self.assertTrue(accepted['technical_pass'])
+        source.write_bytes(b'synthetic-tampered-content')
+        with self.assertRaisesRegex(ValueError,'Actual skin atlas SHA-256 mismatch'):
+            audit(self.root,Path(self.work.name)/'tampered',skin=source)
+
     def test_review_and_identity_guards_are_enforced(self):
         file=self.root/'REPAIR/qa-manifest.json'
         record=json.loads(file.read_text())
