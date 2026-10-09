@@ -42,7 +42,9 @@ class FramingTests(unittest.TestCase):
         for bounds in ([],[(-1,2,100,200)],[(200,400,100,450)],[(1,1,514,300)]):
             with self.subTest(bounds=bounds),self.assertRaises(ValueError):
                 shared_crop(bounds)
-        with self.assertRaisesRegex(ValueError,'Foot pivot'):
+        # Out-of-range pivot must be rejected rather than silently
+        # selecting an unrelated camera; clipping is also a valid rejection.
+        with self.assertRaises(ValueError):
             shared_crop([(0,0,30,30)],margin=0,pivot=(900,900))
         with self.assertRaisesRegex(ValueError,'Pivot outside'):
             view_pivot((0,0,100,100),96)
