@@ -6,6 +6,8 @@ on:
       - 'art/production/master-asset-queue.json'
       - 'tools/sprites/character_review_matrix.py'
       - 'tools/sprites/test_character_review_matrix.py'
+      - 'tools/sprites/audit_character_candidates.py'
+      - 'art/incoming/final-sprites/zte_chr_*_final.png'
       - '.github/workflows/character-review-matrix.yml'
   workflow_dispatch:
 permissions:
@@ -22,6 +24,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Install image inspection dependencies
+        run: python -m pip install Pillow==11.3.0
       - name: Run no-promotion and prioritization regression tests
         run: python -m unittest discover -s tools/sprites -p 'test_character_review_matrix.py' -v
       - name: Generate evidence-only character review matrix
@@ -36,6 +40,8 @@ jobs:
           assert all(not x['semantic_review_pass'] for x in report['items'])
           print('REVIEW_ONLY: 19 canonical assets, 216 strict DONE unchanged')
           PY
+      - name: Audit actual canonical character sprite sheets
+        run: python tools/sprites/audit_character_candidates.py --out /tmp/character-visual-audit
       - name: Upload review-only evidence
         uses: actions/upload-artifact@v4
         with:
@@ -43,4 +49,6 @@ jobs:
           path: |
             /tmp/character-review-matrix.json
             /tmp/character-review-matrix.md
+            /tmp/character-visual-audit/canonical-character-audit.json
+            /tmp/character-visual-audit/canonical-character-contact.png
           retention-days: 30
