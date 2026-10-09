@@ -146,6 +146,21 @@ class RuntimePackTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError,expected):
                     verify(root)
 
+    def test_reject_narrow_celebration_pose(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp)
+            (root/'production-index.json').write_bytes(
+                (FIXTURE/'production-index.json').read_bytes())
+            for action in ACTIONS:
+                if action!='CELEB':
+                    (root/action).symlink_to(FIXTURE/action,target_is_directory=True)
+            (root/'CELEB').mkdir()
+            manifest=json.loads((FIXTURE/'CELEB'/'qa-manifest.json').read_text())
+            manifest['qa']['celebration_min_wrist_span_px']=20
+            (root/'CELEB'/'qa-manifest.json').write_text(json.dumps(manifest))
+            with self.assertRaisesRegex(ValueError,'Celebration arms not separated from head'):
+                verify(root)
+
     def test_reject_celebration_below_overhead_qa_threshold(self):
         with tempfile.TemporaryDirectory() as temp:
             root=Path(temp)
