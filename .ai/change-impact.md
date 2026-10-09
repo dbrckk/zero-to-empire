@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 194d69b9f009a86aa7e61afc1b29026fb2946f84
-Head: 3d0aee7640f3620a3a5e222b37547e77b133d79a
+Base: 8470baec0086a8962d72b732b32410ddd5756fcb
+Head: 3edf1d5c6c729bf5af7d9526da03778684eeea1d
 
 ## Changed files
-- M tools/sprites/audit_character_candidates.py
+- M .github/workflows/character-review-matrix.yml
 
 ## Affected areas
-- tools
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

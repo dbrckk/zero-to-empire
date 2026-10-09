@@ -338,6 +338,7 @@ tools/
     autonomous_walk.py
     build_sprite_contact_sheet.py
     character_review_matrix.py
+    character_semantic_gate.py
     colab_mass_factory.py
     focused_sprite_atlas.py
     generate_strict_review_backlog.py
@@ -385,6 +386,7 @@ tools/
     test_action_contact.py
     test_autonomous_walk.py
     test_character_review_matrix.py
+    test_character_semantic_gate.py
     test_focused_sprite_atlas.py
     test_package_tech_actions_runtime.py
     test_rigged_tech_actions_v3.py
@@ -1266,6 +1268,8 @@ on:
       - 'tools/sprites/character_review_matrix.py'
       - 'tools/sprites/test_character_review_matrix.py'
       - 'tools/sprites/audit_character_candidates.py'
+      - 'tools/sprites/character_semantic_gate.py'
+      - 'tools/sprites/test_character_semantic_gate.py'
       - 'art/incoming/final-sprites/zte_chr_*_final.png'
       - '.github/workflows/character-review-matrix.yml'
   workflow_dispatch:
@@ -1287,6 +1291,8 @@ jobs:
         run: python -m pip install Pillow==11.3.0
       - name: Run no-promotion and prioritization regression tests
         run: python -m unittest discover -s tools/sprites -p 'test_character_review_matrix.py' -v
+      - name: Test full-body and clothing identity rejection rules
+        run: python -m unittest discover -s tools/sprites -p 'test_character_semantic_gate.py' -v
       - name: Generate evidence-only character review matrix
         run: |
           python tools/sprites/character_review_matrix.py --out-json /tmp/character-review-matrix.json --out-md /tmp/character-review-matrix.md
@@ -1301,6 +1307,19 @@ jobs:
           PY
       - name: Audit actual canonical character sprite sheets
         run: python tools/sprites/audit_character_candidates.py --out /tmp/character-visual-audit
+      - name: Verify no artistic approval has been inferred from image heuristics
+        run: |
+          python - <<'PY'
+          import json
+          report=json.load(open('/tmp/character-visual-audit/canonical-character-audit.json'))
+          assert report["pending"] == 19
+          assert report["semantic_approved_count"] == 0
+          assert report["all_visual_and_semantic_approved"] is False
+          assert report["image_only_risk_checks_are_not_approval"] is True
+          assert all(a["eligible_for_strict_done"] is False for a in report["items"])
+          print("FORMAT_PASS=",sum(a["technical_pass"] for a in report["items"]))
+          print("BLOCKING_VISUAL_RISK=",report["visual_risk_blocking_count"])
+          PY
       - name: Upload review-only evidence
         uses: actions/upload-artifact@v4
         with:
@@ -25674,13 +25693,18 @@ px=(n%4)*cell;py=(n//4)*cell
 alpha=rgba.getchannel("A")
 ⋮----
 metrics=[]
+semantic_frames=[]
 ⋮----
 x=(i%4)*cell;y=(i//4)*cell
 frame=rgba.crop((x,y,x+cell,y+cell))
+⋮----
 mask=frame.getchannel("A")
 box=mask.getbbox()
 ⋮----
 margin=min(l,t,cell-r,cell-b)
+⋮----
+# Unlike file format checks, these are *conservative risks*,
+# not a proof of art quality, role identity or final approval.
 ⋮----
 def contact(rows:list[dict],output:Path)->None
 ⋮----
@@ -25689,6 +25713,9 @@ canvas=Image.new("RGB",(800,len(rows)*148+50),(19,27,39))
 d=ImageDraw.Draw(canvas)
 ⋮----
 y=50+i*148
+⋮----
+risk=row.get("visual_risk",{})
+message=("BLOCKING: "+",".join(risk.get("flags",[])[:1])
 ⋮----
 img=original.convert("RGBA")
 cell=img.width//4
@@ -26045,6 +26072,64 @@ p=argparse.ArgumentParser()
 ⋮----
 args=p.parse_args()
 report=build(json.loads(args.queue.read_text(encoding="utf-8")))
+```
+
+## File: tools/sprites/character_semantic_gate.py
+```python
+"""Image-only risk screening for full-body character animation candidates.
+
+This detects obvious portrait/fragments and palette identity jumps, not artistry.
+Even zero detected risks NEVER implies semantic or human visual approval.
+"""
+⋮----
+def _runs(occupancy)
+⋮----
+count=0; active=False
+⋮----
+active=value
+⋮----
+def frame_geometry(frame:Image.Image)->dict
+⋮----
+rgba=frame.convert('RGBA')
+alpha=rgba.getchannel('A')
+opaque=alpha.point(lambda a:255 if a>=64 else 0)
+bounds=opaque.getbbox()
+⋮----
+width=right-left; height=bottom-top
+pixels=opaque.load()
+y0=bottom-max(3,round(height*.18))
+band_h=bottom-y0
+occupancy=[
+⋮----
+runs=_runs(occupancy)
+opaque_area=sum(pixels[x,y]>=128 for y in range(top,bottom)
+ratio=height/max(width,1)
+fill=opaque_area/max(width*height,1)
+flags=[]
+⋮----
+def color_signature(frame:Image.Image)
+⋮----
+hist=[[0]*8 for _ in range(3)]
+count=0
+⋮----
+def palette_distance(a,b)->float
+⋮----
+def clip_risk(frames:list[Image.Image])->dict
+⋮----
+dims=[frame_geometry(f) for f in frames]
+⋮----
+signatures=[color_signature(frame) for frame in frames]
+adjacent=[
+median_aspect=statistics.median(f['aspect_ratio'] for f in dims)
+median_height=statistics.median(f['bbox_height_fraction'] for f in dims)
+flat=sum(f['aspect_ratio']<1.30 for f in dims)
+no_feet=sum(f['bottom_segment_count']<2 for f in dims)
+biggest=max(adjacent)
+⋮----
+sizes=[f['bbox_height_fraction'] for f in dims]
+⋮----
+blockers={'MULTIPLE_NON_FULL_BODY_FRAMES',
+blocking=bool(blockers.intersection(flags))
 ```
 
 ## File: tools/sprites/colab_mass_factory.py
@@ -30525,6 +30610,41 @@ def test_deterministic_order_and_source_immutability(self)
 ⋮----
 first=build(q)
 second=build(q)
+```
+
+## File: tools/sprites/test_character_semantic_gate.py
+```python
+"""Synthetic visual failure tests, no external models and no automatic approval."""
+⋮----
+def person(i=0,color=(80,144,187,255))
+⋮----
+frame=Image.new('RGBA',(256,256))
+d=ImageDraw.Draw(frame)
+⋮----
+def portrait(i=0)
+⋮----
+class SemanticGateTests(unittest.TestCase)
+⋮----
+def test_consistent_full_body_is_not_blocked(self)
+⋮----
+result=clip_risk([person(i%3) for i in range(8)])
+⋮----
+def test_portraits_and_fragments_block(self)
+⋮----
+result=clip_risk([portrait(i%2) for i in range(8)])
+⋮----
+def test_unrelated_costume_palettes_are_detected(self)
+⋮----
+frames=[person(0,(210,30,45,255)) if i%2 else
+result=clip_risk(frames)
+⋮----
+def test_empty_frame_fails_hard(self)
+⋮----
+frames=[person() for _ in range(7)]+[Image.new('RGBA',(256,256))]
+⋮----
+def test_same_palette_is_identical(self)
+⋮----
+signature=color_signature(person())
 ```
 
 ## File: tools/sprites/test_focused_sprite_atlas.py

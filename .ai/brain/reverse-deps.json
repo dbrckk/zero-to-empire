@@ -1919,11 +1919,12 @@
         "app/src/main/java/com/zerotoempire/game/GameRepository.kt",
         "app/src/main/java/com/zerotoempire/game/Monetization.kt",
         "tools/sprites/character_review_matrix.py",
+        "tools/sprites/character_semantic_gate.py",
         "tools/sprites/plan_sprite_batches.py"
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 4
+      "out_degree": 5
     },
     "tools/sprites/audit_complete_sprite_manifest.py": {
       "dependencies": [
@@ -1964,6 +1965,15 @@
       ],
       "in_degree": 2,
       "out_degree": 2
+    },
+    "tools/sprites/character_semantic_gate.py": {
+      "dependencies": [],
+      "dependents": [
+        "tools/sprites/audit_character_candidates.py",
+        "tools/sprites/test_character_semantic_gate.py"
+      ],
+      "in_degree": 2,
+      "out_degree": 0
     },
     "tools/sprites/focused_sprite_atlas.py": {
       "dependencies": [],
@@ -2339,6 +2349,14 @@
     "tools/sprites/test_character_review_matrix.py": {
       "dependencies": [
         "tools/sprites/character_review_matrix.py"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 1
+    },
+    "tools/sprites/test_character_semantic_gate.py": {
+      "dependencies": [
+        "tools/sprites/character_semantic_gate.py"
       ],
       "dependents": [],
       "in_degree": 0,

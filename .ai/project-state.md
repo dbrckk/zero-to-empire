@@ -22,18 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T12:15:52Z
+Generated: 2026-10-09T15:57:11Z
 
 ### Git
 - Branch: `main`
-- Head: `3d0aee7640f3`
-- Commit date: 2026-10-09T14:15:36+02:00
-- Commit: fix(art): distinguish Kaggle 6/8/10-frame contract from planned 8/10/12 and accept blank atlas padding
-- Tracked files: 1480
+- Head: `3edf1d5c6c72`
+- Commit date: 2026-10-09T17:56:53+02:00
+- Commit: ci(art): block false semantic promotion and run synthetic portrait regression checks
+- Tracked files: 1482
 
 ### Recently changed files
-- `tools/sprites/audit_character_candidates.py`
 - `.github/workflows/character-review-matrix.yml`
+- `tools/sprites/audit_character_candidates.py`
+- `tools/sprites/test_character_semantic_gate.py`
+- `tools/sprites/character_semantic_gate.py`
 
 ### Project signals
 - `build.gradle.kts`
