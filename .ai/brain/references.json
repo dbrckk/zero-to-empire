@@ -4,5 +4,520 @@
   "scope": "symbols defined in changed source files",
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
-  "symbols": {}
+  "symbols": {
+    "_runs": {
+      "definition": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 13,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 13,
+          "preview": "def _runs(occupancy):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 44,
+          "preview": "runs=_runs(occupancy)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "frame_geometry": {
+      "definition": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 22,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 22,
+          "preview": "def frame_geometry(frame:Image.Image)->dict:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 87,
+          "preview": "dims=[frame_geometry(f) for f in frames]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 4,
+          "preview": "from character_semantic_gate import clip_risk,frame_geometry,palette_distance,color_signature",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 58,
+          "preview": "self.assertFalse(frame_geometry(Image.new('RGBA',(256,256)))['valid'])",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "color_signature": {
+      "definition": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 64,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 64,
+          "preview": "def color_signature(frame:Image.Image):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 91,
+          "preview": "signatures=[color_signature(frame) for frame in frames]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 4,
+          "preview": "from character_semantic_gate import clip_risk,frame_geometry,palette_distance,color_signature",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 63,
+          "preview": "signature=color_signature(person())",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "palette_distance": {
+      "definition": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 79,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 79,
+          "preview": "def palette_distance(a,b)->float:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 93,
+          "preview": "palette_distance(signatures[i],signatures[(i+1)%len(frames)])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 4,
+          "preview": "from character_semantic_gate import clip_risk,frame_geometry,palette_distance,color_signature",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 64,
+          "preview": "self.assertAlmostEqual(palette_distance(signature,signature),0)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "clip_risk": {
+      "definition": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 84,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 15,
+          "preview": "from character_semantic_gate import clip_risk",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 91,
+          "preview": "result[\"visual_risk\"]=clip_risk(semantic_frames)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 84,
+          "preview": "def clip_risk(frames:list[Image.Image])->dict:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 5,
+          "preview": "from character_semantic_gate import clip_risk",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 444,
+          "preview": "screen=clip_risk(frames)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 4,
+          "preview": "from character_semantic_gate import clip_risk,frame_geometry,palette_distance,color_signature",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 32,
+          "preview": "result=clip_risk([person(i%3) for i in range(8)])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 37,
+          "preview": "result=clip_risk([portrait(i%2) for i in range(8)])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 44,
+          "preview": "result=clip_risk(frames)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 52,
+          "preview": "result=clip_risk(frames)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 60,
+          "preview": "self.assertEqual(clip_risk(frames)['risk_level'],'BLOCKING')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 66,
+          "preview": "clip_risk([person()])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+          "line": 9,
+          "preview": "from character_semantic_gate import clip_risk",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+          "line": 54,
+          "preview": "self.assertNotEqual(clip_risk(first)['risk_level'],'BLOCKING')",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 14
+    },
+    "person": {
+      "definition": {
+        "file": "tools/sprites/test_character_semantic_gate.py",
+        "line": 7,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 86,
+          "preview": "\"Absolutely no human, person, worker, character, car, truck, van, forklift, vehicle, drone, crate pile or detached prop. \"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v15.py",
+          "line": 22,
+          "preview": "\"NO construction site, crane, tower crane, jib, boom arm, hoist, gantry crane, scaffolding, temporary frame, flag, worker, person, vehicle, road, pavement, floor slab, platform, si",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 47,
+          "preview": "'CELEB':'clear arm-raising celebration with the same person and camera orientation throughout',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 131,
+          "preview": "\"Full body centered with both feet visible, neutral gray background, safe border, one person only.\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 191,
+          "preview": "core += \", one person only\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 201,
+          "preview": "\"Full body centered with both feet visible, neutral gray background, safe border, one person only. \"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 208,
+          "preview": "detail += \" Do not redesign the person; preserve headgear, face, jacket, gloves and accent colors exactly.\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 277,
+          "preview": "# Reject before resizing so technical QA cannot normalize a multi-person frame into a valid-looking cell.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 352,
+          "preview": "# Adjacent silhouettes must remain recognisably the same person even while the",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 7,
+          "preview": "def person(i=0,color=(80,144,187,255)):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 32,
+          "preview": "result=clip_risk([person(i%3) for i in range(8)])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 42,
+          "preview": "frames=[person(0,(210,30,45,255)) if i%2 else",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 43,
+          "preview": "person(0,(12,185,210,255)) for i in range(8)]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 49,
+          "preview": "pair.alpha_composite(person(-60))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 50,
+          "preview": "pair.alpha_composite(person(60))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 51,
+          "preview": "frames=[person() for _ in range(7)]+[pair]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 59,
+          "preview": "frames=[person() for _ in range(7)]+[Image.new('RGBA',(256,256))]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 63,
+          "preview": "signature=color_signature(person())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 66,
+          "preview": "clip_risk([person()])",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 19
+    },
+    "portrait": {
+      "definition": {
+        "file": "tools/sprites/test_character_semantic_gate.py",
+        "line": 21,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/CinematicArt.kt",
+          "line": 149,
+          "preview": "// higher tiers feel denser and more premium at the same physical portrait size.",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/ManagerGroup03Art.kt",
+          "line": 40,
+          "preview": "// Cinematic lens depth stays completely static; the existing portrait path remains cheap in lists.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 3,
+          "preview": "This detects obvious portrait/fragments and palette identity jumps, not artistry.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 369,
+          "preview": "'NO multiple people, NO detached body parts, NO close-up portrait, '",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 21,
+          "preview": "def portrait(i=0):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 37,
+          "preview": "result=clip_risk([portrait(i%2) for i in range(8)])",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 6
+    },
+    "SemanticGateTests": {
+      "definition": {
+        "file": "tools/sprites/test_character_semantic_gate.py",
+        "line": 30,
+        "kind": "class",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 30,
+          "preview": "class SemanticGateTests(unittest.TestCase):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_consistent_full_body_is_not_blocked": {
+      "definition": {
+        "file": "tools/sprites/test_character_semantic_gate.py",
+        "line": 31,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 31,
+          "preview": "def test_consistent_full_body_is_not_blocked(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_portraits_and_fragments_block": {
+      "definition": {
+        "file": "tools/sprites/test_character_semantic_gate.py",
+        "line": 36,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 36,
+          "preview": "def test_portraits_and_fragments_block(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_unrelated_costume_palettes_are_detected": {
+      "definition": {
+        "file": "tools/sprites/test_character_semantic_gate.py",
+        "line": 41,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 41,
+          "preview": "def test_unrelated_costume_palettes_are_detected(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_two_people_in_one_cell_cause_visible_mass_jump": {
+      "definition": {
+        "file": "tools/sprites/test_character_semantic_gate.py",
+        "line": 47,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 47,
+          "preview": "def test_two_people_in_one_cell_cause_visible_mass_jump(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_empty_frame_fails_hard": {
+      "definition": {
+        "file": "tools/sprites/test_character_semantic_gate.py",
+        "line": 57,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 57,
+          "preview": "def test_empty_frame_fails_hard(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_same_palette_is_identical": {
+      "definition": {
+        "file": "tools/sprites/test_character_semantic_gate.py",
+        "line": 62,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 62,
+          "preview": "def test_same_palette_is_identical(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    }
+  }
 }

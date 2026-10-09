@@ -1618,6 +1618,9 @@ biggest=max(adjacent)
 ⋮----
 sizes=[f['bbox_height_fraction'] for f in dims]
 ⋮----
+areas=[f['visible_alpha_area'] for f in dims]
+mass_ratio=max(areas)/max(min(areas),1)
+⋮----
 blockers={'MULTIPLE_NON_FULL_BODY_FRAMES',
 blocking=bool(blockers.intersection(flags))
 ```
@@ -6142,6 +6145,12 @@ def test_unrelated_costume_palettes_are_detected(self)
 ⋮----
 frames=[person(0,(210,30,45,255)) if i%2 else
 result=clip_risk(frames)
+⋮----
+def test_two_people_in_one_cell_cause_visible_mass_jump(self)
+⋮----
+pair=Image.new('RGBA',(256,256))
+⋮----
+frames=[person() for _ in range(7)]+[pair]
 ⋮----
 def test_empty_frame_fails_hard(self)
 ⋮----

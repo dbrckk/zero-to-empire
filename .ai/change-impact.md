@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 13c8dd236b050c8fbf5ff09f0e4e311162d83463
-Head: fcf86f90260df048d3eeee722e04f341c90e1b13
+Base: 957750557bf45c59708411e93a656cf1ea68becb
+Head: 6903e197e1472dc32949c647f1b813122a7c4b73
 
 ## Changed files
-- A art/production/character-visual-review-findings-2026-10-09.md
+- M tools/sprites/test_character_semantic_gate.py
 
 ## Affected areas
-- art
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.
