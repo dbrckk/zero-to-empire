@@ -22,21 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T09:59:27Z
+Generated: 2026-10-09T10:01:50Z
 
 ### Git
 - Branch: `main`
-- Head: `0195f5377568`
-- Commit date: 2026-10-09T11:58:57+02:00
-- Commit: docs(art): document review-only common camera, pivot-safe 96px framing and comparison
+- Head: `4961997edf25`
+- Commit date: 2026-10-09T12:01:36+02:00
+- Commit: fix(test): assert new dual-camera shadow selection instead of legacy player logic
 - Tracked files: 1474
 
 ### Recently changed files
+- `tools/sprites/test_package_tech_actions_runtime.py`
 - `tools/sprites/MODULAR_RUNTIME_PACK_README.md`
 - `.github/workflows/modular-tech-actions.yml`
 - `tools/sprites/test_focused_sprite_atlas.py`
-- `tools/sprites/test_package_tech_actions_runtime.py`
-- `tools/sprites/package_tech_actions_runtime.py`
 
 ### Project signals
 - `build.gradle.kts`
