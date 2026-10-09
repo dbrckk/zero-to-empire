@@ -18,6 +18,7 @@ import rigged_tech_walk_v2 as core
 from action_contact import (work_hands, work_contact, work_pulse, work_event_indices,
                             repair_tip, repair_contact, repair_spark_intensity)
 from weight_transfer import transfer_pose, support_bias, AMPLITUDES_PX
+from tech_prop_mount import draw_mount, mount_geometry
 
 ACTIONS = ("WALK", "CARRY", "IDLE", "WORK", "REPAIR", "CELEB")
 GROUND = core.GROUND
@@ -101,6 +102,7 @@ def draw_cargo(layer: Image.Image, p: dict, t: float) -> None:
 
 
 def draw_console(layer: Image.Image, p: dict, t: float) -> None:
+    draw_mount(layer,p,"WORK")
     x, y = p["root"]
     x, y = round(x + 26), round(y - 83)
     d = ImageDraw.Draw(layer, "RGBA")
@@ -134,6 +136,7 @@ def draw_work_touch(layer: Image.Image, p: dict, t: float) -> None:
 
 
 def draw_repair(layer: Image.Image, p: dict, t: float) -> None:
+    draw_mount(layer,p,"REPAIR")
     x, y = p["root"]
     x, y = round(x + 62), round(y - 105)
     d = ImageDraw.Draw(layer, "RGBA")
@@ -255,6 +258,16 @@ def action_qa(action: str, poses: list, base_qa: dict) -> dict:
     tool_bad = [i for i,p in enumerate(poses) if action=="REPAIR"
                 and not repair_contact(p)["torch_reachable"]]
     interaction_ok = not work_bad and not tool_bad
+    support_bad=[]
+    if action in ("WORK","REPAIR"):
+        for i,p in enumerate(poses):
+            try:
+                mount=mount_geometry(action,p["root"])
+                if not mount["all_links_connected"]:
+                    support_bad.append(i)
+            except ValueError:
+                support_bad.append(i)
+    support_ok=not support_bad
     stationary = action in ("IDLE", "WORK", "REPAIR", "CELEB")
     grounded = all(q["lockL"] and q["lockR"] for q in poses) if stationary else True
     grip_ok = (all(
@@ -284,7 +297,8 @@ def action_qa(action: str, poses: list, base_qa: dict) -> dict:
                    if action in AMPLITUDES_PX
                    else all(v is None for v in supports))
     kinetic = (not violations and grounded and grip_ok and legible_motion and
-               transfer_ok and interaction_ok and raised_arm_pass and wide_arms_pass)
+               transfer_ok and interaction_ok and support_ok and
+               raised_arm_pass and wide_arms_pass)
     base_qa.update({
         "action_kinematic_pass": kinetic, "hand_reach_violations": violations,
         "action_motion_range_px": motion, "stationary_ground_contact_pass": grounded,
@@ -297,6 +311,10 @@ def action_qa(action: str, poses: list, base_qa: dict) -> dict:
         "celebration_min_arm_raise_px": (round(min(raised_arm_heights),2)
                                          if raised_arm_heights else None),
         "interaction_contact_pass": interaction_ok,
+        "prop_support_connected_pass": support_ok,
+        "prop_support_violation_frames": support_bad,
+        "prop_support_model": ("folding-belt-bracket-v1"
+                               if action in ("WORK","REPAIR") else None),
         "work_screen_violation_frames": work_bad,
         "repair_tool_violation_frames": tool_bad,
         "repair_torch_length_range_px": ([round(min(repair_lengths),2),
