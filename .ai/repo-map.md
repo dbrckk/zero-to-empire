@@ -30083,6 +30083,8 @@ p=work_pulse(((frame+origin)%count)/count)
 prev=work_pulse(((frame-1+origin)%count)/count)
 nxt=work_pulse(((frame+1+origin)%count)/count)
 ⋮----
+# Match the renderer's tie tolerance for equal-height peaks.
+⋮----
 def test_repair_tool_physically_connects_to_wrist(self)
 ⋮----
 phase=2*math.pi*t
@@ -30449,6 +30451,9 @@ def test_duplicate_content_is_rejected(self)
 original=(self.root/'IDLE/frames/CHR-TECH-IDLE-00.png').read_bytes()
 ⋮----
 def test_temporal_spike_and_bad_seam_are_rejected(self)
+⋮----
+# A full pose jump may eliminate opaque overlap before silhouette
+# metrics are reached; both detections are correct hard failures.
 ⋮----
 def test_single_frame_color_flash_is_detected_even_with_same_alpha(self)
 ⋮----

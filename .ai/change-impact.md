@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 63a9d253497db8e7f29f02ff70a3573c7acc5851
-Head: 66c81b37a8553dcf2598563fe65c6321356578a8
+Base: c6dd3832811006d83afbfd7b24be948292bf8040
+Head: e03850fa1208914b5990d97612da78e37616f092
 
 ## Changed files
-- M tools/sprites/test_weight_transfer.py
+- M tools/sprites/test_temporal_sprite_audit.py
 
 ## Affected areas
 - tools

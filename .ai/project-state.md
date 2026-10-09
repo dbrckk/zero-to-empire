@@ -22,20 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T09:24:44Z
+Generated: 2026-10-09T09:26:41Z
 
 ### Git
 - Branch: `main`
-- Head: `66c81b37a855`
-- Commit date: 2026-10-09T11:24:28+02:00
-- Commit: fix(test): compare CARRY hands to cargo grips instead of WALK arm swing
+- Head: `e03850fa1208`
+- Commit date: 2026-10-09T11:26:24+02:00
+- Commit: fix(test): accept early no-overlap rejection for corrupted sprite pose jump
 - Tracked files: 1472
 
 ### Recently changed files
-- `tools/sprites/test_weight_transfer.py`
 - `tools/sprites/test_temporal_sprite_audit.py`
+- `tools/sprites/test_action_contact.py`
+- `tools/sprites/test_weight_transfer.py`
 - `tools/sprites/temporal_sprite_audit.py`
-- `tools/sprites/MODULAR_ACTIONS_README.md`
 
 ### Project signals
 - `build.gradle.kts`
