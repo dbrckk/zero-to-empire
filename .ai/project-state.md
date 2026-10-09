@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T21:17:51Z
+Generated: 2026-10-09T21:36:23Z
 
 ### Git
 - Branch: `main`
-- Head: `1fb1a49731df`
-- Commit date: 2026-10-09T23:17:37+02:00
-- Commit: fix(ci): recover UI hierarchy using adb exec-out when pull fails on emulator
+- Head: `f1937b2a742c`
+- Commit date: 2026-10-09T23:36:08+02:00
+- Commit: ci: validate TECH preview when Android UI dump helper changes
 - Tracked files: 1512
 
 ### Recently changed files
+- `.github/workflows/tech-candidate-android-preview.yml`
 - `tools/android/ui_dump_retry.sh`
 - `tools/android/character_preview_emulator_smoke.sh`
 - `.github/workflows/asset-pipeline-ci.yml`
 - `tools/sprites/test_animation_batch_planner.py`
-- `tools/sprites/animation_batch_planner.py`
 
 ### Project signals
 - `build.gradle.kts`

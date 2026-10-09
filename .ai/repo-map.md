@@ -8395,6 +8395,7 @@ on:
       - 'app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt'
       - 'app/src/debug/AndroidManifest.xml'
       - 'tools/android/character_preview_emulator_smoke.sh'
+      - 'tools/android/ui_dump_retry.sh'
   workflow_dispatch:
 
 permissions:
