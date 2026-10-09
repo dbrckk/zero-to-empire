@@ -3692,6 +3692,12 @@ on:
 permissions:
   contents: read
 
+# Only render the latest commit for each branch; superseded pushes should not
+# burn GitHub Actions minutes building 144 obsolete images.
+concurrency:
+  group: modular-tech-actions-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   render-six-review-clips:
     runs-on: ubuntu-latest

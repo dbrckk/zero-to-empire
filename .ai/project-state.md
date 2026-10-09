@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T09:36:36Z
+Generated: 2026-10-09T09:40:28Z
 
 ### Git
 - Branch: `main`
-- Head: `85648e09aeee`
-- Commit date: 2026-10-09T11:35:59+02:00
-- Commit: test(art): refuse narrow CELEB silhouette even with raised hands
+- Head: `28e89fc9ac85`
+- Commit date: 2026-10-09T11:40:14+02:00
+- Commit: ci(art): cancel superseded six-action renders to save GitHub Actions minutes
 - Tracked files: 1472
 
 ### Recently changed files
+- `.github/workflows/modular-tech-actions.yml`
 - `tools/sprites/test_package_tech_actions_runtime.py`
 - `tools/sprites/package_tech_actions_runtime.py`
 - `tools/sprites/test_rigged_tech_actions_v3.py`
