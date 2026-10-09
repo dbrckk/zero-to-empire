@@ -81,6 +81,10 @@ class RuntimePackTests(unittest.TestCase):
                                  'NOT_DEFINED_REQUIRES_GAMEPLAY_REVIEW')
                 self.assertEqual(len(item['per_frame_visual_bounds_px']),24)
                 self.assertTrue(item['game_scale_96px_technical_pass'])
+                # Published runtime clips must retain a valid attachment
+                # gate for WORK and REPAIR, not just an on-screen hand marker.
+                if action in ('WORK','REPAIR'):
+                    self.assertEqual(item['asset_id'],'CHR-TECH-'+action)
                 self.assertTrue(item['review_required'])
                 self.assertEqual(item['strict_status'],'NEEDS_REVIEW')
                 self.assertEqual(len(item['game_scale_96px_metrics']),24)
@@ -211,6 +215,23 @@ class RuntimePackTests(unittest.TestCase):
             (root/'CELEB'/'qa-manifest.json').write_text(json.dumps(manifest))
             with self.assertRaisesRegex(ValueError,'Celebration arms not visibly overhead'):
                 verify(root)
+
+    def test_reject_detached_mount_even_when_contact_with_screen_passes(self):
+        for action in ('WORK','REPAIR'):
+            with self.subTest(action=action),tempfile.TemporaryDirectory() as tmp:
+                root=Path(tmp)
+                (root/'production-index.json').write_bytes(
+                    (FIXTURE/'production-index.json').read_bytes())
+                for other in ACTIONS:
+                    if other!=action:
+                        (root/other).symlink_to(FIXTURE/other,target_is_directory=True)
+                (root/action).mkdir()
+                manifest=json.loads((FIXTURE/action/'qa-manifest.json').read_text())
+                manifest['qa']['prop_support_violation_frames']=[4]
+                manifest['qa']['prop_support_connected_pass']=False
+                (root/action/'qa-manifest.json').write_text(json.dumps(manifest))
+                with self.assertRaisesRegex(ValueError,'Detached TECH prop support'):
+                    verify(root)
 
     def test_reject_mismatched_work_and_repair_contacts(self):
         for action in ('WORK','REPAIR'):
