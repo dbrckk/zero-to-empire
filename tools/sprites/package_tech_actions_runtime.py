@@ -77,6 +77,12 @@ def verify(root:Path):
                'Failed weight-transfer geometry QA: '+action)
         ensure(qa.get('interaction_contact_pass') is True,
                'Interaction contact QA failed: '+action)
+        ensure(qa.get('prop_support_connected_pass') is True and
+               qa.get('prop_support_violation_frames')==[],
+               'Detached TECH prop support: '+action)
+        ensure(qa.get('prop_support_model')==
+               ('folding-belt-bracket-v1' if action in ('WORK','REPAIR') else None),
+               'Wrong physical prop support model: '+action)
         ensure(qa.get('celebration_raised_arm_pass') is True,
                'Celebration arm pose QA failed: '+action)
         ensure(qa.get('celebration_wide_arm_pass') is True,
