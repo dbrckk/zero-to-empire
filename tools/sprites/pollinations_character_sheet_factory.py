@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from pathlib import Path
 import json, os, time, urllib.parse, urllib.request
+import hashlib
 from PIL import Image
 # Support both execution as a script and importlib-based tooling from tools/assets.
 try:
@@ -70,6 +71,18 @@ def pending():
             return out
 
     return [x for x in manifest.values() if x['status']=='TODO' and (not requested or x['id'] in requested)]
+
+def candidate_destination(item):
+    """Controlled semantic repairs are immutable staged candidates, not runtime art.
+
+    The original Kaggle/legacy sheet remains untouched until an explicit
+    accepted review and separately verified runtime promotion.
+    """
+    q=json.loads(QUEUE.read_text(encoding='utf-8')) if QUEUE.is_file() else {}
+    if q.get('mode')=='pollinations-controlled-repair':
+        return OUT/'character-repair-candidates'/f"{item['stem']}.png"
+    return INCOMING/f"{item['stem']}.png"
+
 
 def mark_queue(aid,status,seed=None,producer=None,producer_run_id=None):
     if not QUEUE.is_file():
@@ -505,13 +518,21 @@ def main():
                 sheet=Image.new('RGBA',(1024,1024),(0,0,0,0))
                 for n,frame in enumerate(frames):
                     sheet.alpha_composite(frame,((n%4)*256,(n//4)*256))
-                p=INCOMING/f"{it['stem']}.png"
+                p=candidate_destination(it)
+                p.parent.mkdir(parents=True,exist_ok=True)
+                canonical=INCOMING/f"{it['stem']}.png"
+                original_sha256=(
+                    hashlib.sha256(canonical.read_bytes()).hexdigest()
+                    if canonical.is_file() else None)
                 sheet.save(p,'PNG',optimize=True)
                 producer_run_id=os.getenv('GITHUB_RUN_ID') or None
                 mark_queue(it['id'],'CANDIDATE',seed,'pollinations-character-atlas',producer_run_id)
                 rep.append({'id':it['id'],'status':'CANDIDATE','file':p.name,'frames':fc,
                             'qa':why,'semantic_risk':screen,'semantic_approved':False,
-                            'generation':'individual-full-body-frames-v2',
+                            'candidate_path':p.relative_to(ROOT).as_posix(),
+                            'historical_candidate_sha256':original_sha256,
+                            'staged_for_manual_review':p!=canonical,
+                            'generation':'individual-full-body-frames-v3',
                             'producer':'pollinations-character-atlas',
                             'producer_run_id':int(producer_run_id) if producer_run_id else None})
                 print(f"POLLINATIONS_CHR_VALIDATED={it['id']} {why}",flush=True)
