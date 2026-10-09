@@ -105,6 +105,28 @@ class IndependentFrameTests(unittest.TestCase):
             factory.QUEUE.write_text(json.dumps({'mode':'other','targets':[]}))
             self.assertEqual(factory.candidate_destination(item),historical)
 
+    def test_blocked_controlled_queue_cannot_fall_back_to_manifest_todos(self):
+        import json
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            manifest=root/'manifest.md'
+            manifest.write_text(
+                '| CHR-OP-WALK | OP | WALK | \`app/src/main/res/drawable/zte_chr_op_walk_final.png\` | TODO |\\n'
+                '| CHR-LOG-CARRY | LOG | CARRY | \`app/src/main/res/drawable/zte_chr_log_carry_final.png\` | TODO |\\n',
+                encoding='utf-8')
+            queue=root/'controlled.json'
+            with patch.object(factory,'MANIFEST',manifest), \\
+                 patch.object(factory,'QUEUE',queue):
+                queue.write_text(json.dumps({'mode':'pollinations-controlled-repair',
+                    'targets':[{'id':'CHR-LOG-CARRY','status':'BLOCKED'}]}))
+                self.assertEqual(factory.pending(),[])
+                queue.write_text(json.dumps({'mode':'pollinations-controlled-repair',
+                    'targets':[{'id':'CHR-LOG-CARRY','status':'PENDING_POLLINATIONS'}]}))
+                self.assertEqual([x['id'] for x in factory.pending()],
+                                 ['CHR-LOG-CARRY'])
+                queue.unlink()
+                self.assertEqual(len(factory.pending()),2)
+
     def test_unexpected_action_cannot_use_generic_fallback(self):
         for action in ('WALK','REPAIR'):
             with self.assertRaises(ValueError):
