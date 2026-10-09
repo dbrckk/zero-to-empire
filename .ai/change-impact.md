@@ -1,13 +1,13 @@
 # Change impact
 
-Base: d3b96eb9b1e4a24b5b0f525e8b91860be02beb5d
-Head: 50108f492d664c698ef84f23770f92f8f5cb9b55
+Base: cc496e3a9f62e4903402e8d65e8416026812cf0b
+Head: 87fa0837751da8d9c3992066edd6c82d6abdcdee
 
 ## Changed files
-- M tools/sprites/audit_complete_sprite_manifest.py
+- M PROJECT_CONTINUITY.md
 
 ## Affected areas
-- tools
+- (root)
 
 ## Related test candidates
 - No direct filename-based test match detected.

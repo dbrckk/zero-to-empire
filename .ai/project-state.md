@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T19:18:54Z
+Generated: 2026-10-09T19:22:38Z
 
 ### Git
 - Branch: `main`
-- Head: `50108f492d66`
-- Commit date: 2026-10-09T21:18:25+02:00
-- Commit: fix(audit): reconcile 236 manifest rows with 235 strict canonical approvals
+- Head: `87fa0837751d`
+- Commit date: 2026-10-09T21:22:22+02:00
+- Commit: docs(art): persist canonical 216/235 state and verified character blockers
 - Tracked files: 1490
 
 ### Recently changed files
+- `PROJECT_CONTINUITY.md`
 - `tools/sprites/audit_complete_sprite_manifest.py`
 - `art/production/controlled-character-regen-queue.json`
 - `.github/workflows/pollinations-character-atlas.yml`
 - `.github/workflows/sprite-completion-gate.yml`
-- `.github/workflows/character-review-matrix.yml`
 
 ### Project signals
 - `build.gradle.kts`
