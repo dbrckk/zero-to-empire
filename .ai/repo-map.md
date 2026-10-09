@@ -389,6 +389,7 @@ tools/
     test_character_semantic_gate.py
     test_focused_sprite_atlas.py
     test_package_tech_actions_runtime.py
+    test_pollinations_character_sheet_factory.py
     test_rigged_tech_actions_v3.py
     test_rigged_tech_walk_v2.py
     test_soft_skin_deform.py
@@ -1270,6 +1271,8 @@ on:
       - 'tools/sprites/audit_character_candidates.py'
       - 'tools/sprites/character_semantic_gate.py'
       - 'tools/sprites/test_character_semantic_gate.py'
+      - 'tools/sprites/pollinations_character_sheet_factory.py'
+      - 'tools/sprites/test_pollinations_character_sheet_factory.py'
       - 'art/incoming/final-sprites/zte_chr_*_final.png'
       - '.github/workflows/character-review-matrix.yml'
   workflow_dispatch:
@@ -1293,6 +1296,8 @@ jobs:
         run: python -m unittest discover -s tools/sprites -p 'test_character_review_matrix.py' -v
       - name: Test full-body and clothing identity rejection rules
         run: python -m unittest discover -s tools/sprites -p 'test_character_semantic_gate.py' -v
+      - name: Test per-frame provider generation without network access
+        run: python -m unittest discover -s tools/sprites -p 'test_pollinations_character_sheet_factory.py' -v
       - name: Generate evidence-only character review matrix
         run: |
           python tools/sprites/character_review_matrix.py --out-json /tmp/character-review-matrix.json --out-md /tmp/character-review-matrix.md
@@ -29223,6 +29228,19 @@ def generate_repair_frames(item, seed)
 frame_seed=(19417 + sum((i+1)*ord(ch) for i,ch in enumerate(item['id']))*1009 + n*104729 + revision*1000003) % 2147483647
 raw=fetch(repair_frame_prompt(item,pose),frame_seed)
 ⋮----
+def independent_frame_prompt(item,pose)
+⋮----
+"""Explicitly request ONE complete subject, never a sheet or sprite atlas."""
+action=item['action']
+props={
+⋮----
+def generate_independent_frames(item,seed)
+⋮----
+"""Produce each pose separately; never split one tall image into limbs."""
+⋮----
+frame_seed=(seed+sum((i+1)*ord(ch) for i,ch in enumerate(item['id']))*1009+
+raw=fetch(independent_frame_prompt(item,pose),frame_seed)
+⋮----
 def extract_frames(raw,frame_count,action=None)
 ⋮----
 raw=raw.resize((1024,1024),Image.Resampling.LANCZOS)
@@ -29248,8 +29266,10 @@ frames=generate_repair_frames(it,seed)
 ⋮----
 frames=generate_walk_frames(it,seed)
 ⋮----
-raw=fetch(sheet_prompt(it),seed)
-frames=extract_frames(raw,fc,it['action'])
+frames=generate_independent_frames(it,seed)
+# The atlas may be formed ONLY after each standalone frame
+# passes full-body risk screening and continuity checks.
+screen=clip_risk(frames)
 ⋮----
 why=f'{why} {action_why}'
 sheet=Image.new('RGBA',(1024,1024),(0,0,0,0))
@@ -30776,6 +30796,38 @@ manifest=json.loads((FIXTURE/'WALK'/'qa-manifest.json').read_text())
 def test_reject_falsely_approved_visual_qa(self)
 ⋮----
 qa=json.loads((FIXTURE/'WALK'/'qa-manifest.json').read_text())
+```
+
+## File: tools/sprites/test_pollinations_character_sheet_factory.py
+```python
+"""Offline regression checks: generation MUST return separate full-body frames."""
+⋮----
+def full_body()
+⋮----
+frame=Image.new('RGBA',(256,256))
+d=ImageDraw.Draw(frame)
+⋮----
+class IndependentFrameTests(unittest.TestCase)
+⋮----
+def test_prompt_never_requests_multi_pose_atlas(self)
+⋮----
+item={'id':'CHR-LOG-'+action,'role':'LOG','action':action}
+prompt=factory.independent_frame_prompt(item,'left foot forward')
+⋮----
+def test_each_pose_is_its_own_image_not_an_atlas_slice(self)
+⋮----
+item={'id':'CHR-LOG-CARRY','role':'LOG','action':'CARRY'}
+requests=[]
+def fetch(prompt,seed)
+def extract(raw,action,standalone=False)
+⋮----
+first=factory.generate_independent_frames(item,49017)
+⋮----
+again=factory.generate_independent_frames(item,49017)
+⋮----
+self.assertEqual(len(requests),8) # cache, no web calls
+⋮----
+def test_unexpected_action_cannot_use_generic_fallback(self)
 ```
 
 ## File: tools/sprites/test_rigged_tech_actions_v3.py

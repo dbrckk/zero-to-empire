@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 8470baec0086a8962d72b732b32410ddd5756fcb
-Head: 3edf1d5c6c729bf5af7d9526da03778684eeea1d
+Base: 1fcab367f9866fbcddd948322317329709cc2388
+Head: 8da8fa8a6a285b663c03e9881a5c42eb68e28548
 
 ## Changed files
-- M .github/workflows/character-review-matrix.yml
+- M art/production/controlled-character-regen-queue.json
 
 ## Affected areas
-- .github
+- art
 
 ## Related test candidates
 - No direct filename-based test match detected.

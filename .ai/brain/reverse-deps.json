@@ -1970,9 +1970,11 @@
       "dependencies": [],
       "dependents": [
         "tools/sprites/audit_character_candidates.py",
-        "tools/sprites/test_character_semantic_gate.py"
+        "tools/sprites/pollinations_character_sheet_factory.py",
+        "tools/sprites/test_character_semantic_gate.py",
+        "tools/sprites/test_pollinations_character_sheet_factory.py"
       ],
-      "in_degree": 2,
+      "in_degree": 4,
       "out_degree": 0
     },
     "tools/sprites/focused_sprite_atlas.py": {
@@ -2213,11 +2215,14 @@
       "dependencies": [
         "app/src/main/java/com/zerotoempire/game/GameFeel.kt",
         "app/src/main/java/com/zerotoempire/game/GameRepository.kt",
-        "app/src/main/java/com/zerotoempire/game/Monetization.kt"
+        "app/src/main/java/com/zerotoempire/game/Monetization.kt",
+        "tools/sprites/character_semantic_gate.py"
       ],
-      "dependents": [],
-      "in_degree": 0,
-      "out_degree": 3
+      "dependents": [
+        "tools/sprites/test_pollinations_character_sheet_factory.py"
+      ],
+      "in_degree": 1,
+      "out_degree": 4
     },
     "tools/sprites/procedural_fx_factory.py": {
       "dependencies": [
@@ -2374,6 +2379,15 @@
       "dependencies": [
         "tools/sprites/package_tech_actions_runtime.py",
         "tools/sprites/temporal_sprite_audit.py"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 2
+    },
+    "tools/sprites/test_pollinations_character_sheet_factory.py": {
+      "dependencies": [
+        "tools/sprites/character_semantic_gate.py",
+        "tools/sprites/pollinations_character_sheet_factory.py"
       ],
       "dependents": [],
       "in_degree": 0,

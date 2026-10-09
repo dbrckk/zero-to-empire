@@ -22,20 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T15:57:11Z
+Generated: 2026-10-09T16:02:57Z
 
 ### Git
 - Branch: `main`
-- Head: `3edf1d5c6c72`
-- Commit date: 2026-10-09T17:56:53+02:00
-- Commit: ci(art): block false semantic promotion and run synthetic portrait regression checks
-- Tracked files: 1482
+- Head: `8da8fa8a6a28`
+- Commit date: 2026-10-09T18:02:34+02:00
+- Commit: art(repair): queue LOG-CARRY for full-body per-frame regeneration without promoting old fragments
+- Tracked files: 1483
 
 ### Recently changed files
+- `art/production/controlled-character-regen-queue.json`
 - `.github/workflows/character-review-matrix.yml`
-- `tools/sprites/audit_character_candidates.py`
-- `tools/sprites/test_character_semantic_gate.py`
-- `tools/sprites/character_semantic_gate.py`
+- `tools/sprites/test_pollinations_character_sheet_factory.py`
+- `tools/sprites/pollinations_character_sheet_factory.py`
 
 ### Project signals
 - `build.gradle.kts`
