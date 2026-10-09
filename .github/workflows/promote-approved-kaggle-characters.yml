@@ -143,6 +143,32 @@ jobs:
           if missing: raise SystemExit('Approved IDs missing from master queue: '+','.join(sorted(missing)))
           p.write_text(json.dumps(q,indent=2)+'\n',encoding='utf-8')
 
+          # Canonical strict promotions must update the 236-row Android
+          # manifest in the SAME commit. ONB-00 is never promoted by this path.
+          manifest=Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
+          rows=manifest.read_text(encoding='utf-8').splitlines(keepends=True)
+          changed=set()
+          for i,row in enumerate(rows):
+              if not row.startswith('|') or 'app/src/main/res/' not in row:
+                  continue
+              parts=row.rstrip('\\n').split('|')
+              if len(parts)!=7:
+                  continue
+              aid=parts[1].strip()
+              if aid not in ids:
+                  continue
+              if aid in changed:
+                  raise SystemExit('Duplicate approved manifest ID: '+aid)
+              status=parts[5].strip()
+              if status not in {'RUNTIME','BLOCKED','DONE'}:
+                  raise SystemExit(f'Unexpected promotion status for {aid}: {status}')
+              parts[5]=' DONE '
+              rows[i]='|'.join(parts)+'\n'
+              changed.add(aid)
+          if changed!=ids:
+              raise SystemExit('Approved manifest IDs not found: '+','.join(sorted(ids-changed)))
+          manifest.write_text(''.join(rows),encoding='utf-8')
+
           strict=sum(1 for a in q['assets'] if a.get('strict_status')=='DONE')
           processed=sum(1 for a in q['assets'] if a.get('strict_status')=='DONE' or str(a.get('pipeline_status','')).upper() in {'AWAITING_REVIEW','CANDIDATE','TECHNICAL_PASS','VALIDATED','APPROVED','RUNTIME_READY','DONE'})
           remain=[a for a in q['assets'] if str(a.get('id','')).startswith('CHR-') and a.get('strict_status')!='DONE']
@@ -169,7 +195,7 @@ jobs:
           set -euo pipefail
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add art/incoming/final-sprites app/src/main/res/drawable-nodpi art/production/*-runtime-qa.json art/production/master-asset-queue.json art/production/character-strict-review-backlog.md
+          git add art/incoming/final-sprites app/src/main/res/drawable-nodpi art/production/*-runtime-qa.json art/production/master-asset-queue.json art/production/character-strict-review-backlog.md docs/art/FINAL_AAA_SPRITE_MANIFEST.md
           git diff --cached --quiet && exit 0
           git commit -m 'art: promote semantically approved Kaggle characters'
           git pull --rebase origin main
