@@ -22,21 +22,24 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T16:13:00Z
+Generated: 2026-10-09T16:19:29Z
 
 ### Git
 - Branch: `main`
-- Head: `566eb21aa206`
-- Commit date: 2026-10-09T18:12:44+02:00
-- Commit: fix(ci): avoid false smoke failures and paid-looking network calls when no Pollinations asset is queued
-- Tracked files: 1486
+- Head: `dec21ad77fb0`
+- Commit date: 2026-10-09T18:19:10+02:00
+- Commit: test(ci): verify frame-specific articulated Kaggle scaffolds instead of obsolete two-arg signature
+- Tracked files: 1487
 
 ### Recently changed files
-- `.github/workflows/pollinations-character-smoke.yml`
+- `tools/assets/test_workflow_policy.py`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
+- `art/production/master-asset-queue.json`
+- `tools/assets/test_queue_state_policy.py`
 - `tools/sprites/pollinations_character_sheet_factory.py`
-- `tools/sprites/test_pollinations_character_sheet_factory.py`
+- `art/production/controlled-character-regen-queue.json`
+- `art/production/pollinations-character-summary.json`
 
 ### Project signals
 - `build.gradle.kts`

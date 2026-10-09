@@ -1,13 +1,13 @@
 # Change impact
 
-Base: cc2c70e0c528a86da23336c22015732b9bd0f634
-Head: 566eb21aa20602f06b09e1ec047683a717a340a4
+Base: 986f6c4aa386b50b1ecdfe20bdcc0cb474e756ab
+Head: dec21ad77fb0d7caa01a3214840b85c6d92e2aa7
 
 ## Changed files
-- M .github/workflows/pollinations-character-smoke.yml
+- M tools/assets/test_workflow_policy.py
 
 ## Affected areas
-- .github
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

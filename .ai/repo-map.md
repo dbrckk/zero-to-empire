@@ -385,6 +385,7 @@ tools/
     ter07_energy_conduit_candidate.py
     test_action_contact.py
     test_autonomous_walk.py
+    test_character_provider_reservation.py
     test_character_review_matrix.py
     test_character_semantic_gate.py
     test_focused_sprite_atlas.py
@@ -1272,6 +1273,8 @@ on:
       - 'tools/sprites/character_semantic_gate.py'
       - 'tools/sprites/test_character_semantic_gate.py'
       - 'tools/sprites/pollinations_character_sheet_factory.py'
+      - 'tools/sprites/asset_wave_orchestrator.py'
+      - 'tools/sprites/test_character_provider_reservation.py'
       - 'tools/sprites/test_pollinations_character_sheet_factory.py'
       - 'art/incoming/final-sprites/zte_chr_*_final.png'
       - '.github/workflows/character-review-matrix.yml'
@@ -1298,6 +1301,8 @@ jobs:
         run: python -m unittest discover -s tools/sprites -p 'test_character_semantic_gate.py' -v
       - name: Test per-frame provider generation without network access
         run: python -m unittest discover -s tools/sprites -p 'test_pollinations_character_sheet_factory.py' -v
+      - name: Guard independent provider ownership against duplicate Kaggle dispatch
+        run: python -m unittest discover -s tools/sprites -p 'test_character_provider_reservation.py' -v
       - name: Generate evidence-only character review matrix
         run: |
           python tools/sprites/character_review_matrix.py --out-json /tmp/character-review-matrix.json --out-md /tmp/character-review-matrix.md
@@ -25190,7 +25195,7 @@ def test_character_batch_size_supports_multi_role_burst(self) -> None
 ⋮----
 def test_character_epoch_allows_three_informed_attempts(self) -> None
 ⋮----
-def test_character_epoch_is_v112_persistent_semantic_scaffold(self) -> None
+def test_character_epoch_is_v117_articulated_border_fix(self) -> None
 ⋮----
 def test_new_epoch_reopens_semantic_reject_even_with_high_legacy_attempts(self) -> None
 ⋮----
@@ -25644,6 +25649,21 @@ master = by_id(queue)
 ⋮----
 asset = master.get(aid)
 ⋮----
+def active_pollinations_repair() -> list[str]
+⋮----
+"""Honor a time-bounded independent repair lane; never replace its queue.
+
+    The provider is allowed to fail/retry without Autofactory dispatching the
+    same character to Kaggle or wiping its preserved source evidence.
+    """
+controlled=load_json(CHARACTER_QUEUE,{}) or {}
+⋮----
+end=controlled.get('reservation_expires_utc')
+⋮----
+expires=datetime.fromisoformat(end.replace('Z','+00:00'))
+⋮----
+blocked={'PENDING','PENDING_POLLINATIONS','BLOCKED','PROVIDER_ERROR',
+⋮----
 def pending_ids_from_controlled(path: Path, queue: dict[str, Any]) -> list[str]
 ⋮----
 ids = [str(x.get("id", "")).upper() for x in active_pending(path)]
@@ -25659,6 +25679,10 @@ ids = mark_dispatch(queue, building_pending, "kaggle-building-family")
 group = next_group(queue, "kaggle-building-family", BUILDING_PRIORITY)
 ⋮----
 prepared = prepare_building_group(queue, group)
+⋮----
+# Defer competing Kaggle character dispatches while the explicitly
+# reserved Pollinations repair lane is active (other lanes remain free).
+repair_ids=active_pollinations_repair()
 ⋮----
 character_pending = pending_ids_from_controlled(CHARACTER_QUEUE, queue)
 ⋮----
@@ -29086,6 +29110,8 @@ seed=int(os.getenv('POLLINATIONS_SEED','73117'))
 ```python
 #!/usr/bin/env python3
 ⋮----
+# Support both execution as a script and importlib-based tooling from tools/assets.
+⋮----
 ROOT=Path(__file__).resolve().parents[2]
 MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
 INCOMING=ROOT/'art/incoming/final-sprites'
@@ -30667,6 +30693,23 @@ events=json.loads((root/'frame-events.json').read_text())
 frame_poses=json.loads((root/'frame-poses.json').read_text())
 ⋮----
 project=json.loads((root/'project.json').read_text())
+```
+
+## File: tools/sprites/test_character_provider_reservation.py
+```python
+"""Prevent Kaggle/Autofactory from stealing a live provider-specific repair."""
+⋮----
+class ReservationTests(unittest.TestCase)
+⋮----
+def test_external_repair_excludes_concurrent_kaggle_character_dispatch(self)
+⋮----
+p=Path(d)/'queue.json'
+⋮----
+answer=worker.make_decision({
+⋮----
+def test_expired_or_other_provider_has_no_lock(self)
+⋮----
+def test_injected_invalid_or_missing_reservation_does_not_block(self)
 ```
 
 ## File: tools/sprites/test_character_review_matrix.py
