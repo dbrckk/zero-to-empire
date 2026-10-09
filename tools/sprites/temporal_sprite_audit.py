@@ -58,6 +58,7 @@ def inspect_clip(root:Path,action:str,frames_expected:int=24) -> dict:
         rgba_frames.append(rgba)
         areas.append(int(mask.sum()))
         bbox.append(list(b))
+    ordered_digest=hashlib.sha256(''.join(digests).encode('ascii')).hexdigest()
     if len(set(digests))<int(math.ceil(frames_expected*.8)):
         raise ValueError('Excessive duplicate frames: '+action)
     differences=[];area_jump=[];color_jumps=[]
@@ -97,6 +98,7 @@ def inspect_clip(root:Path,action:str,frames_expected:int=24) -> dict:
         raise ValueError(f'Temporal QA failed {action}: {", ".join(problems)}')
     return {'asset_id':manifest['asset_id'],'frames':frames_expected,
             'unique_frame_count':len(set(digests)),
+            'ordered_frame_digest_sha256':ordered_digest,
             'source_skin_sha256':manifest['source_skin_sha256'],
             'alpha_opaque_pixel_range_96px':[min(areas),max(areas)],
             'frame_bounds_96px':bbox,
