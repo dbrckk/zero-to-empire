@@ -58,6 +58,7 @@ The content is organized as follows:
     free-hf-sprite-factory.yml
     fx-historical-review-evidence.yml
     hf-public-flux-building.yml
+    identity-locked-walk-review.yml
     import-tech-runtime-atlases.yml
     instant-terrain-batch.yml
     integrate-bld08-final.yml
@@ -345,6 +346,7 @@ tools/
     hf_public_flux_factory.py
     hf_sprite_factory.py
     hf_static_manifest_factory.py
+    identity_locked_walk_candidate.py
     integrate_fx04_runtime.py
     integrate_fx05_runtime.py
     integrate_fx06_runtime.py
@@ -389,6 +391,7 @@ tools/
     test_character_review_matrix.py
     test_character_semantic_gate.py
     test_focused_sprite_atlas.py
+    test_identity_locked_walk_candidate.py
     test_package_tech_actions_runtime.py
     test_pollinations_character_sheet_factory.py
     test_rigged_tech_actions_v3.py
@@ -2020,6 +2023,69 @@ jobs:
             art/production/hf-public-flux-contact-sheet.png
           if-no-files-found: error
           retention-days: 14
+```
+
+## File: .github/workflows/identity-locked-walk-review.yml
+```yaml
+name: Identity-locked WALK alternatives (review only)
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/sprites/identity_locked_walk_candidate.py'
+      - 'tools/sprites/test_identity_locked_walk_candidate.py'
+      - '.github/workflows/identity-locked-walk-review.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: identity-locked-walk-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  generate-four-review-candidates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install CPU-only deterministic geometry tooling
+        run: python -m pip install --disable-pip-version-check Pillow==11.3.0 numpy==2.3.3
+      - name: Test identity locks, reproducibility and output isolation
+        run: python -m unittest discover -s tools/sprites -p 'test_identity_locked_walk_candidate.py' -v
+      - name: Render the four canonical identities as review-only candidate sheets
+        run: |
+          for role in OP LOG ENG TECH; do
+            python tools/sprites/identity_locked_walk_candidate.py \
+              --role "$role" --out build/identity-locked-walk-review
+          done
+      - name: Enforce no visual approval and no canonical mutation
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('build/identity-locked-walk-review')
+          results=[json.loads(p.read_text()) for p in root.glob('*-review.json')]
+          assert len(results)==4
+          assert {x['asset_id'] for x in results}=={
+              'CHR-OP-WALK','CHR-LOG-WALK','CHR-ENG-WALK','CHR-TECH-WALK'}
+          for x in results:
+              assert x['strict_status']=='NEEDS_REVIEW'
+              assert x['semantic_review_pass'] is False
+              assert x['visual_review_pass'] is False
+              assert x['integrated_into_game'] is False
+              assert x['canonical_source_overwritten'] is False
+              assert x['visual_risk_screen']['risk_level']!='BLOCKING'
+          print('FOUR_REVIEW_CANDIDATES; NO_CANONICAL_PROMOTION')
+          PY
+          git diff --exit-code -- art/incoming/final-sprites/ app/src/main/res/
+      - name: Upload identity-locked alternatives for honest visual inspection
+        uses: actions/upload-artifact@v4
+        with:
+          name: identity-locked-walk-four-roles-NEEDS_REVIEW
+          path: build/identity-locked-walk-review/
+          retention-days: 30
 ```
 
 ## File: .github/workflows/import-tech-runtime-atlases.yml
@@ -4176,6 +4242,9 @@ jobs:
           fi
           if [ "${{ steps.outcome.outputs.has_candidate }}" = "true" ]; then
             git add art/incoming/final-sprites/
+            if [ -d art/production/character-repair-candidates ]; then
+              git add art/production/character-repair-candidates/
+            fi
           fi
           git diff --cached --quiet && exit 0
           git commit -m 'art: persist controlled character atlas QA outcome'
@@ -4191,6 +4260,7 @@ jobs:
             art/production/controlled-character-regen-queue.json
             art/production/pollinations-frame-cache/
             art/incoming/final-sprites/zte_chr_*_final.png
+            art/production/character-repair-candidates/zte_chr_*_final.png
           if-no-files-found: warn
           retention-days: 14
       - name: Auto-chain controlled queue
@@ -4273,22 +4343,22 @@ jobs:
           python -m pip install Pillow==11.3.0
           python -m unittest discover -s tools/sprites -p 'test_pollinations_character_sheet_factory.py' -v
       - name: Cache rembg U2Net model
-        if: steps.gate.outputs.pending == 'true'
+        if: github.event_name == 'workflow_dispatch' && steps.gate.outputs.pending == 'true'
         uses: actions/cache@v4
         with:
           path: ~/.u2net
           key: rembg-u2net-v0.0.0
 
       - name: Install image tooling
-        if: steps.gate.outputs.pending == 'true'
+        if: github.event_name == 'workflow_dispatch' && steps.gate.outputs.pending == 'true'
         run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0' 'rembg[cpu]>=2.0.68,<3'
 
       - name: Generate one controlled full-body candidate
-        if: steps.gate.outputs.pending == 'true'
+        if: github.event_name == 'workflow_dispatch' && steps.gate.outputs.pending == 'true'
         run: python -u tools/sprites/pollinations_character_sheet_factory.py
 
       - name: Resolve candidate
-        if: steps.gate.outputs.pending == 'true'
+        if: github.event_name == 'workflow_dispatch' && steps.gate.outputs.pending == 'true'
         id: target
         shell: bash
         run: |
@@ -4301,16 +4371,18 @@ jobs:
           if not candidates:
               raise SystemExit('Pollinations smoke produced no candidate: '+json.dumps(rows))
           d=candidates[0]
-          p=Path('art/incoming/final-sprites') / d['file']
+          p=Path(d.get('candidate_path') or
+                 (Path('art/incoming/final-sprites') / d['file']))
           if not p.is_file():
               raise SystemExit(f'missing generated candidate: {p}')
           print(f"asset_id={d['id']}")
           print(f"file={p}")
           print(f"stem={p.stem}")
+          print(f"staged={str(d.get('staged_for_manual_review',False)).lower()}")
           PY
 
       - name: Strict atlas QA
-        if: steps.gate.outputs.pending == 'true'
+        if: github.event_name == 'workflow_dispatch' && steps.gate.outputs.pending == 'true'
         run: |
           python tools/sprites/build_sprite_contact_sheet.py             --files '${{ steps.target.outputs.file }}'             --output art/production/pollinations-character-smoke-contact.png             --report art/production/pollinations-character-smoke-qa.json
           python - <<'PY'
@@ -4322,7 +4394,8 @@ jobs:
           PY
 
       - name: Finalize and revalidate runtime
-        if: steps.gate.outputs.pending == 'true'
+        # Reserved repairs are only staged candidates, never runtime-ready assets.
+        if: github.event_name == 'workflow_dispatch' && steps.gate.outputs.pending == 'true' && steps.target.outputs.staged != 'true'
         shell: bash
         run: |
           SPRITE_TARGETS='${{ steps.target.outputs.stem }}' python tools/sprites/process_final_sprites.py
@@ -4338,6 +4411,7 @@ jobs:
             app/src/main/res/drawable-nodpi/zte_chr_*_final.webp
             art/production/pollinations-character-*.json
             art/production/pollinations-character-*.png
+            art/production/character-repair-candidates/zte_chr_*_final.png
           if-no-files-found: warn
           retention-days: 7
 ```
@@ -26598,6 +26672,87 @@ final = normalize(isolate(generate(prompt_for(rid,name,desc))), TARGET_SIDE[kind
 out=INCOMING/(Path(runtime).stem+".png")
 ```
 
+## File: tools/sprites/identity_locked_walk_candidate.py
+```python
+#!/usr/bin/env python3
+"""Deterministic identity-preserving WALK alternative, NOT approved game art.
+
+Reuses one canonical FULL-BODY source frame for the entire 8-frame loop.
+Conservative, smoothed gait mesh motion changes boots/legs and counter-swings
+sleeves without asking an independent text-to-image generator to redraw faces.
+All output goes to build/; never overwrite the canonical sprite or runtime.
+This is an experimental review candidate: geometry is not skeletal animation.
+"""
+⋮----
+ROLES={"OP":2,"LOG":0,"ENG":0,"TECH":0}
+SIZE=256
+N_FRAMES=8
+⋮----
+"""Vectorized bilinear sampling without transparent-edge dark fringes."""
+⋮----
+sx=np.clip(src_x,0,width-1)
+sy=np.clip(src_y,0,height-1)
+x0=np.floor(sx).astype(np.int32);y0=np.floor(sy).astype(np.int32)
+x1=np.minimum(x0+1,width-1);y1=np.minimum(y0+1,height-1)
+u=(sx-x0)[...,None];v=(sy-y0)[...,None]
+prem=source.astype(np.float32)/255.
+⋮----
+interp=(prem[y0,x0]*(1-u)*(1-v)+prem[y0,x1]*u*(1-v)
+alpha=interp[:,:,3:4]
+rgb=np.where(alpha>1e-5,interp[:,:,:3]/np.maximum(alpha,1e-5),0)
+⋮----
+def warp(anchor:Image.Image,t:float,amplitude:float=12)->Image.Image
+⋮----
+"""Cyclic paired-leg warp and tiny sleeve counter-motion, same identity."""
+⋮----
+array=np.asarray(anchor)
+⋮----
+phase=math.tau*(t%1.)
+lower=np.clip((yy-138)/94,0,1)
+side=np.tanh((xx-128)/5)
+lateral=amplitude*math.sin(phase)*lower*side
+swing=np.maximum(0,np.sin(phase)*(-side))
+foot_lift=2.5*swing*lower
+upper=np.clip((yy-58)/60,0,1)*np.clip((155-yy)/43,0,1)
+outward=np.clip((np.abs(xx-128)-21)/16,0,1)
+arms=-4*math.sin(phase)*side*upper*outward
+# Second quadrature channel prevents duplicate poses at mirrored
+# sine phases, without moving the planted boots or changing costume.
+torso_breath=.85*math.cos(phase)*np.clip((182-yy)/88,0,1)
+rgba=sample_premultiplied(array,xx-lateral-arms,
+⋮----
+def source_frame(path:Path,source_index:int)->Image.Image
+⋮----
+x=source_index%4*SIZE;y=source_index//4*SIZE
+frame=atlas.crop((x,y,x+SIZE,y+SIZE))
+bounds=frame.getchannel('A').getbbox()
+⋮----
+def render(source:Path,role:str,out:Path,amplitude:float=12)->dict
+⋮----
+role=role.upper()
+⋮----
+anchor=source_frame(source,ROLES[role])
+frames=[warp(anchor,n/N_FRAMES,amplitude) for n in range(N_FRAMES)]
+risk=clip_risk(frames)
+⋮----
+sheet=Image.new("RGBA",(1024,512))
+⋮----
+dest=out/f"CHR-{role}-WALK-identity-locked-REVIEW.png"
+⋮----
+grid=Image.new("RGB",(SIZE*N_FRAMES,SIZE),(25,34,46))
+⋮----
+source_digest=hashlib.sha256(source.read_bytes()).hexdigest()
+candidate_digest=hashlib.sha256(dest.read_bytes()).hexdigest()
+report={
+⋮----
+def main()
+⋮----
+parser=argparse.ArgumentParser()
+⋮----
+args=parser.parse_args()
+path=args.source or Path("art/incoming/final-sprites")/f"zte_chr_{args.role.lower()}_walk_final.png"
+```
+
 ## File: tools/sprites/integrate_fx04_runtime.py
 ```python
 #!/usr/bin/env python3
@@ -29141,6 +29296,15 @@ out=[]
 ⋮----
 aid=str(item.get('id','')).upper()
 ⋮----
+def candidate_destination(item)
+⋮----
+"""Controlled semantic repairs are immutable staged candidates, not runtime art.
+
+    The original Kaggle/legacy sheet remains untouched until an explicit
+    accepted review and separately verified runtime promotion.
+    """
+q=json.loads(QUEUE.read_text(encoding='utf-8')) if QUEUE.is_file() else {}
+⋮----
 def mark_queue(aid,status,seed=None,producer=None,producer_run_id=None)
 ⋮----
 def fetch(prompt,seed)
@@ -29354,7 +29518,10 @@ screen=clip_risk(frames)
 why=f'{why} {action_why}'
 sheet=Image.new('RGBA',(1024,1024),(0,0,0,0))
 ⋮----
-p=INCOMING/f"{it['stem']}.png"
+p=candidate_destination(it)
+⋮----
+canonical=INCOMING/f"{it['stem']}.png"
+original_sha256=(
 ⋮----
 producer_run_id=os.getenv('GITHUB_RUN_ID') or None
 ⋮----
@@ -30820,6 +30987,43 @@ image=Image.new('RGBA',(512,512))
 result=framed_sprite(image,crop,96)
 ```
 
+## File: tools/sprites/test_identity_locked_walk_candidate.py
+```python
+"""Regression tests for alternative identity-locked WALK review candidates."""
+⋮----
+ROOT=Path(__file__).resolve().parents[2]
+⋮----
+class IdentityLockedWalkTests(unittest.TestCase)
+⋮----
+def test_four_real_assets_are_not_overwritten_and_only_staged(self)
+⋮----
+source=(ROOT/'art/incoming/final-sprites'/
+⋮----
+digest=hashlib.sha256(source.read_bytes()).hexdigest()
+report=render(source,role,Path(tmp))
+⋮----
+atlas=Image.open(report['candidate_path'])
+⋮----
+cells=[atlas.crop((i%4*256,i//4*256,i%4*256+256,i//4*256+256))
+⋮----
+first=source_frame(source,ROLES[role])
+# Skeleton changes occur below the neck; identity pixels at
+# the crown remain unchanged, modulo tiny breathing motion.
+⋮----
+bounds=cell.getchannel('A').getbbox()
+⋮----
+def test_cycle_deterministic_and_source_identity_immutable(self)
+⋮----
+source=ROOT/'art/incoming/final-sprites/zte_chr_op_walk_final.png'
+first=source_frame(source,ROLES['OP'])
+data=first.tobytes()
+⋮----
+one=warp(first,t)
+two=warp(first,t)
+⋮----
+def test_refuses_bad_inputs(self)
+```
+
 ## File: tools/sprites/test_package_tech_actions_runtime.py
 ```python
 """Regression tests for six TECH runtime review atlases.
@@ -30954,6 +31158,14 @@ padded=factory.safe_source_margin(near_edge)
 bb=padded.getchannel('A').getbbox()
 ⋮----
 cropped=near_edge.copy()
+⋮----
+def test_reserved_repair_stages_candidate_without_overwriting_canonical(self)
+⋮----
+item={'id':'CHR-LOG-CARRY','role':'LOG','action':'CARRY',
+⋮----
+historical=factory.INCOMING/'zte_chr_log_carry_final.png'
+⋮----
+target=factory.candidate_destination(item)
 ⋮----
 def test_unexpected_action_cannot_use_generic_fallback(self)
 ```

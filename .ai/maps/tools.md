@@ -66,6 +66,7 @@ sprites/
   hf_public_flux_factory.py
   hf_sprite_factory.py
   hf_static_manifest_factory.py
+  identity_locked_walk_candidate.py
   integrate_fx04_runtime.py
   integrate_fx05_runtime.py
   integrate_fx06_runtime.py
@@ -110,6 +111,7 @@ sprites/
   test_character_review_matrix.py
   test_character_semantic_gate.py
   test_focused_sprite_atlas.py
+  test_identity_locked_walk_candidate.py
   test_package_tech_actions_runtime.py
   test_pollinations_character_sheet_factory.py
   test_rigged_tech_actions_v3.py
@@ -2055,6 +2057,87 @@ kind=rid.split("-",1)[0]
 final = normalize(isolate(generate(prompt_for(rid,name,desc))), TARGET_SIDE[kind])
 ⋮----
 out=INCOMING/(Path(runtime).stem+".png")
+```
+
+## File: sprites/identity_locked_walk_candidate.py
+```python
+#!/usr/bin/env python3
+"""Deterministic identity-preserving WALK alternative, NOT approved game art.
+
+Reuses one canonical FULL-BODY source frame for the entire 8-frame loop.
+Conservative, smoothed gait mesh motion changes boots/legs and counter-swings
+sleeves without asking an independent text-to-image generator to redraw faces.
+All output goes to build/; never overwrite the canonical sprite or runtime.
+This is an experimental review candidate: geometry is not skeletal animation.
+"""
+⋮----
+ROLES={"OP":2,"LOG":0,"ENG":0,"TECH":0}
+SIZE=256
+N_FRAMES=8
+⋮----
+"""Vectorized bilinear sampling without transparent-edge dark fringes."""
+⋮----
+sx=np.clip(src_x,0,width-1)
+sy=np.clip(src_y,0,height-1)
+x0=np.floor(sx).astype(np.int32);y0=np.floor(sy).astype(np.int32)
+x1=np.minimum(x0+1,width-1);y1=np.minimum(y0+1,height-1)
+u=(sx-x0)[...,None];v=(sy-y0)[...,None]
+prem=source.astype(np.float32)/255.
+⋮----
+interp=(prem[y0,x0]*(1-u)*(1-v)+prem[y0,x1]*u*(1-v)
+alpha=interp[:,:,3:4]
+rgb=np.where(alpha>1e-5,interp[:,:,:3]/np.maximum(alpha,1e-5),0)
+⋮----
+def warp(anchor:Image.Image,t:float,amplitude:float=12)->Image.Image
+⋮----
+"""Cyclic paired-leg warp and tiny sleeve counter-motion, same identity."""
+⋮----
+array=np.asarray(anchor)
+⋮----
+phase=math.tau*(t%1.)
+lower=np.clip((yy-138)/94,0,1)
+side=np.tanh((xx-128)/5)
+lateral=amplitude*math.sin(phase)*lower*side
+swing=np.maximum(0,np.sin(phase)*(-side))
+foot_lift=2.5*swing*lower
+upper=np.clip((yy-58)/60,0,1)*np.clip((155-yy)/43,0,1)
+outward=np.clip((np.abs(xx-128)-21)/16,0,1)
+arms=-4*math.sin(phase)*side*upper*outward
+# Second quadrature channel prevents duplicate poses at mirrored
+# sine phases, without moving the planted boots or changing costume.
+torso_breath=.85*math.cos(phase)*np.clip((182-yy)/88,0,1)
+rgba=sample_premultiplied(array,xx-lateral-arms,
+⋮----
+def source_frame(path:Path,source_index:int)->Image.Image
+⋮----
+x=source_index%4*SIZE;y=source_index//4*SIZE
+frame=atlas.crop((x,y,x+SIZE,y+SIZE))
+bounds=frame.getchannel('A').getbbox()
+⋮----
+def render(source:Path,role:str,out:Path,amplitude:float=12)->dict
+⋮----
+role=role.upper()
+⋮----
+anchor=source_frame(source,ROLES[role])
+frames=[warp(anchor,n/N_FRAMES,amplitude) for n in range(N_FRAMES)]
+risk=clip_risk(frames)
+⋮----
+sheet=Image.new("RGBA",(1024,512))
+⋮----
+dest=out/f"CHR-{role}-WALK-identity-locked-REVIEW.png"
+⋮----
+grid=Image.new("RGB",(SIZE*N_FRAMES,SIZE),(25,34,46))
+⋮----
+source_digest=hashlib.sha256(source.read_bytes()).hexdigest()
+candidate_digest=hashlib.sha256(dest.read_bytes()).hexdigest()
+report={
+⋮----
+def main()
+⋮----
+parser=argparse.ArgumentParser()
+⋮----
+args=parser.parse_args()
+path=args.source or Path("art/incoming/final-sprites")/f"zte_chr_{args.role.lower()}_walk_final.png"
 ```
 
 ## File: sprites/integrate_fx04_runtime.py
@@ -4600,6 +4683,15 @@ out=[]
 ⋮----
 aid=str(item.get('id','')).upper()
 ⋮----
+def candidate_destination(item)
+⋮----
+"""Controlled semantic repairs are immutable staged candidates, not runtime art.
+
+    The original Kaggle/legacy sheet remains untouched until an explicit
+    accepted review and separately verified runtime promotion.
+    """
+q=json.loads(QUEUE.read_text(encoding='utf-8')) if QUEUE.is_file() else {}
+⋮----
 def mark_queue(aid,status,seed=None,producer=None,producer_run_id=None)
 ⋮----
 def fetch(prompt,seed)
@@ -4813,7 +4905,10 @@ screen=clip_risk(frames)
 why=f'{why} {action_why}'
 sheet=Image.new('RGBA',(1024,1024),(0,0,0,0))
 ⋮----
-p=INCOMING/f"{it['stem']}.png"
+p=candidate_destination(it)
+⋮----
+canonical=INCOMING/f"{it['stem']}.png"
+original_sha256=(
 ⋮----
 producer_run_id=os.getenv('GITHUB_RUN_ID') or None
 ⋮----
@@ -6279,6 +6374,43 @@ image=Image.new('RGBA',(512,512))
 result=framed_sprite(image,crop,96)
 ```
 
+## File: sprites/test_identity_locked_walk_candidate.py
+```python
+"""Regression tests for alternative identity-locked WALK review candidates."""
+⋮----
+ROOT=Path(__file__).resolve().parents[2]
+⋮----
+class IdentityLockedWalkTests(unittest.TestCase)
+⋮----
+def test_four_real_assets_are_not_overwritten_and_only_staged(self)
+⋮----
+source=(ROOT/'art/incoming/final-sprites'/
+⋮----
+digest=hashlib.sha256(source.read_bytes()).hexdigest()
+report=render(source,role,Path(tmp))
+⋮----
+atlas=Image.open(report['candidate_path'])
+⋮----
+cells=[atlas.crop((i%4*256,i//4*256,i%4*256+256,i//4*256+256))
+⋮----
+first=source_frame(source,ROLES[role])
+# Skeleton changes occur below the neck; identity pixels at
+# the crown remain unchanged, modulo tiny breathing motion.
+⋮----
+bounds=cell.getchannel('A').getbbox()
+⋮----
+def test_cycle_deterministic_and_source_identity_immutable(self)
+⋮----
+source=ROOT/'art/incoming/final-sprites/zte_chr_op_walk_final.png'
+first=source_frame(source,ROLES['OP'])
+data=first.tobytes()
+⋮----
+one=warp(first,t)
+two=warp(first,t)
+⋮----
+def test_refuses_bad_inputs(self)
+```
+
 ## File: sprites/test_package_tech_actions_runtime.py
 ```python
 """Regression tests for six TECH runtime review atlases.
@@ -6413,6 +6545,14 @@ padded=factory.safe_source_margin(near_edge)
 bb=padded.getchannel('A').getbbox()
 ⋮----
 cropped=near_edge.copy()
+⋮----
+def test_reserved_repair_stages_candidate_without_overwriting_canonical(self)
+⋮----
+item={'id':'CHR-LOG-CARRY','role':'LOG','action':'CARRY',
+⋮----
+historical=factory.INCOMING/'zte_chr_log_carry_final.png'
+⋮----
+target=factory.candidate_destination(item)
 ⋮----
 def test_unexpected_action_cannot_use_generic_fallback(self)
 ```

@@ -638,6 +638,7 @@
         "tools/sprites/hf_public_flux_factory.py",
         "tools/sprites/hf_sprite_factory.py",
         "tools/sprites/hf_static_manifest_factory.py",
+        "tools/sprites/identity_locked_walk_candidate.py",
         "tools/sprites/kaggle_building_family_factory.py",
         "tools/sprites/kaggle_building_family_factory_v11.py",
         "tools/sprites/kaggle_building_family_factory_v13.py",
@@ -661,7 +662,7 @@
         "tools/sprites/test_pollinations_character_sheet_factory.py",
         "tools/sprites/test_temporal_sprite_audit.py"
       ],
-      "in_degree": 37,
+      "in_degree": 38,
       "out_degree": 7
     },
     "app/src/main/java/com/zerotoempire/game/GameTheme.kt": {
@@ -1973,11 +1974,12 @@
       "dependencies": [],
       "dependents": [
         "tools/sprites/audit_character_candidates.py",
+        "tools/sprites/identity_locked_walk_candidate.py",
         "tools/sprites/pollinations_character_sheet_factory.py",
         "tools/sprites/test_character_semantic_gate.py",
         "tools/sprites/test_pollinations_character_sheet_factory.py"
       ],
-      "in_degree": 4,
+      "in_degree": 5,
       "out_degree": 0
     },
     "tools/sprites/focused_sprite_atlas.py": {
@@ -2021,6 +2023,17 @@
       ],
       "dependents": [
         "tools/sprites/multi_provider_static_manifest_factory.py"
+      ],
+      "in_degree": 1,
+      "out_degree": 2
+    },
+    "tools/sprites/identity_locked_walk_candidate.py": {
+      "dependencies": [
+        "app/src/main/java/com/zerotoempire/game/GameRepository.kt",
+        "tools/sprites/character_semantic_gate.py"
+      ],
+      "dependents": [
+        "tools/sprites/test_identity_locked_walk_candidate.py"
       ],
       "in_degree": 1,
       "out_degree": 2
@@ -2381,6 +2394,14 @@
     "tools/sprites/test_focused_sprite_atlas.py": {
       "dependencies": [
         "tools/sprites/focused_sprite_atlas.py"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 1
+    },
+    "tools/sprites/test_identity_locked_walk_candidate.py": {
+      "dependencies": [
+        "tools/sprites/identity_locked_walk_candidate.py"
       ],
       "dependents": [],
       "in_degree": 0,

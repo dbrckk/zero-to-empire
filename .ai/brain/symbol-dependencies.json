@@ -5,672 +5,128 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "by_id": {
+    "sample_premultiplied": {
       "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 55,
-        "end": 56
+        "file": "tools/sprites/identity_locked_walk_candidate.py",
+        "start": 26,
+        "end": 41
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "mirror_character_outcomes_from_controlled": {
+    "warp": {
       "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 59,
-        "end": 81
+        "file": "tools/sprites/identity_locked_walk_candidate.py",
+        "start": 44,
+        "end": 66
       },
       "symbol_dependencies": [
         {
-          "symbol": "load_json",
+          "symbol": "sample_premultiplied",
           "definitions": [
             {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 43,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "update_from_trigger": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 84,
-        "end": 151
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "load_json",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 43,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "mirror_character_outcomes_from_controlled",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 59,
+              "file": "tools/sprites/identity_locked_walk_candidate.py",
+              "line": 26,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "same_file"
-        },
-        {
-          "symbol": "save_json",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 49,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "active_pending": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 154,
-        "end": 156
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "load_json",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 43,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
         }
       ],
       "dependency_count": 1
     },
-    "character_retry_available": {
+    "source_frame": {
       "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 159,
-        "end": 179
+        "file": "tools/sprites/identity_locked_walk_candidate.py",
+        "start": 69,
+        "end": 80
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "mark_dispatch": {
+    "render": {
       "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 182,
-        "end": 212
+        "file": "tools/sprites/identity_locked_walk_candidate.py",
+        "start": 83,
+        "end": 121
       },
       "symbol_dependencies": [
         {
-          "symbol": "by_id",
+          "symbol": "clip_risk",
           "definitions": [
             {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 55,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "character_retry_available",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 159,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "prioritize_controlled_character_targets": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 215,
-        "end": 223
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "load_json",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 43,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "save_json",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 49,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "building_family_ids": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 226,
-        "end": 227
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "prepare_building_group": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 230,
-        "end": 238
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "building_family_ids",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 226,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "by_id",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 55,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "mark_dispatch",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 182,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "save_json",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 49,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 4
-    },
-    "prepare_character_burst": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 241,
-        "end": 283
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "character_retry_available",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 159,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "mark_dispatch",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 182,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "prioritize_controlled_character_targets",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 215,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "save_json",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 49,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 4
-    },
-    "next_group": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 286,
-        "end": 302
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "character_retry_available",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 159,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "close_exhausted_character_dispatches": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 305,
-        "end": 323
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "by_id",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 55,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "character_retry_available",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 159,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "load_json",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 43,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "active_pollinations_repair": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 326,
-        "end": 348
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "load_json",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 43,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "pending_ids_from_controlled": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 351,
-        "end": 365
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "active_pending",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 154,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "by_id",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 55,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "character_retry_available",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 159,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "make_decision": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 368,
-        "end": 435
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "active_pollinations_repair",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 326,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "character_retry_available",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 159,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "close_exhausted_character_dispatches",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 305,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "mark_dispatch",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 182,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "next_group",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 286,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "pending_ids_from_controlled",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 351,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "prepare_building_group",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 230,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "prepare_character_burst",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 241,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "prioritize_controlled_character_targets",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 215,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "stats",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 210,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 10
-    },
-    "main": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 438,
-        "end": 451
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "ensure_master",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 116,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "make_decision",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 368,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "save_json",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 49,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "stats",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 210,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sync_controlled_queues",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 157,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "update_from_trigger",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
+              "file": "tools/sprites/character_semantic_gate.py",
               "line": 84,
               "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "same_file"
+          "relation": "imported_module"
         },
         {
-          "symbol": "write_summary",
+          "symbol": "source_frame",
           "definitions": [
             {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 237,
+              "file": "tools/sprites/identity_locked_walk_candidate.py",
+              "line": 69,
               "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "imported_module"
+          "relation": "same_file"
+        },
+        {
+          "symbol": "warp",
+          "definitions": [
+            {
+              "file": "tools/sprites/identity_locked_walk_candidate.py",
+              "line": 44,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
         }
       ],
-      "dependency_count": 7
+      "dependency_count": 3
+    },
+    "main": {
+      "source": {
+        "file": "tools/sprites/identity_locked_walk_candidate.py",
+        "start": 124,
+        "end": 244
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "render",
+          "definitions": [
+            {
+              "file": "tools/sprites/identity_locked_walk_candidate.py",
+              "line": 83,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
     },
     "pending": {
       "source": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 42,
-        "end": 72
+        "start": 43,
+        "end": 73
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "candidate_destination": {
+      "source": {
+        "file": "tools/sprites/pollinations_character_sheet_factory.py",
+        "start": 75,
+        "end": 84
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -678,8 +134,8 @@
     "mark_queue": {
       "source": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 74,
-        "end": 88
+        "start": 87,
+        "end": 101
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -687,8 +143,8 @@
     "fetch": {
       "source": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 90,
-        "end": 110
+        "start": 103,
+        "end": 123
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -696,8 +152,8 @@
     "validate_source_full_body": {
       "source": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 112,
-        "end": 127
+        "start": 125,
+        "end": 140
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -705,8 +161,8 @@
     "safe_source_margin": {
       "source": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 129,
-        "end": 152
+        "start": 142,
+        "end": 165
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -714,8 +170,8 @@
     "cutout": {
       "source": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 155,
-        "end": 200
+        "start": 168,
+        "end": 213
       },
       "symbol_dependencies": [
         {
@@ -723,7 +179,7 @@
           "definitions": [
             {
               "file": "tools/sprites/pollinations_character_sheet_factory.py",
-              "line": 129,
+              "line": 142,
               "kind": "function",
               "language": "python"
             }
@@ -735,7 +191,7 @@
           "definitions": [
             {
               "file": "tools/sprites/pollinations_character_sheet_factory.py",
-              "line": 112,
+              "line": 125,
               "kind": "function",
               "language": "python"
             }
@@ -748,8 +204,8 @@
     "iou": {
       "source": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 202,
-        "end": 210
+        "start": 215,
+        "end": 223
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -757,8 +213,8 @@
     "lower_body_motion": {
       "source": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 212,
-        "end": 229
+        "start": 225,
+        "end": 242
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -766,8 +222,8 @@
     "actionqa": {
       "source": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 231,
-        "end": 245
+        "start": 244,
+        "end": 258
       },
       "symbol_dependencies": [
         {
@@ -775,7 +231,7 @@
           "definitions": [
             {
               "file": "tools/sprites/pollinations_character_sheet_factory.py",
-              "line": 202,
+              "line": 215,
               "kind": "function",
               "language": "python"
             }
@@ -787,7 +243,7 @@
           "definitions": [
             {
               "file": "tools/sprites/pollinations_character_sheet_factory.py",
-              "line": 212,
+              "line": 225,
               "kind": "function",
               "language": "python"
             }
@@ -800,8 +256,8 @@
     "appearance_hist": {
       "source": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 247,
-        "end": 257
+        "start": 260,
+        "end": 270
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -809,8 +265,8 @@
     "hist_similarity": {
       "source": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 259,
-        "end": 261
+        "start": 272,
+        "end": 274
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -818,8 +274,8 @@
     "sheetqa": {
       "source": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 263,
-        "end": 284
+        "start": 276,
+        "end": 297
       },
       "symbol_dependencies": [
         {
@@ -827,7 +283,7 @@
           "definitions": [
             {
               "file": "tools/sprites/pollinations_character_sheet_factory.py",
-              "line": 247,
+              "line": 260,
               "kind": "function",
               "language": "python"
             }
@@ -839,7 +295,7 @@
           "definitions": [
             {
               "file": "tools/sprites/pollinations_character_sheet_factory.py",
-              "line": 259,
+              "line": 272,
               "kind": "function",
               "language": "python"
             }
@@ -851,7 +307,7 @@
           "definitions": [
             {
               "file": "tools/sprites/pollinations_character_sheet_factory.py",
-              "line": 202,
+              "line": 215,
               "kind": "function",
               "language": "python"
             }
@@ -864,8 +320,8 @@
     "sheet_prompt": {
       "source": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 286,
-        "end": 309
+        "start": 299,
+        "end": 322
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -873,8 +329,8 @@
     "repair_frame_prompt": {
       "source": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 311,
-        "end": 320
+        "start": 324,
+        "end": 333
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -882,8 +338,8 @@
     "walk_frame_prompt": {
       "source": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 322,
-        "end": 332
+        "start": 335,
+        "end": 345
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -891,8 +347,8 @@
     "generate_walk_frames": {
       "source": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 334,
-        "end": 357
+        "start": 347,
+        "end": 370
       },
       "symbol_dependencies": [
         {
@@ -900,7 +356,7 @@
           "definitions": [
             {
               "file": "tools/sprites/pollinations_character_sheet_factory.py",
-              "line": 155,
+              "line": 168,
               "kind": "function",
               "language": "python"
             }
@@ -912,7 +368,7 @@
           "definitions": [
             {
               "file": "tools/sprites/pollinations_character_sheet_factory.py",
-              "line": 90,
+              "line": 103,
               "kind": "function",
               "language": "python"
             }
@@ -924,7 +380,7 @@
           "definitions": [
             {
               "file": "tools/sprites/pollinations_character_sheet_factory.py",
-              "line": 322,
+              "line": 335,
               "kind": "function",
               "language": "python"
             }
@@ -937,8 +393,8 @@
     "generate_repair_frames": {
       "source": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 359,
-        "end": 382
+        "start": 372,
+        "end": 395
       },
       "symbol_dependencies": [
         {
@@ -946,7 +402,7 @@
           "definitions": [
             {
               "file": "tools/sprites/pollinations_character_sheet_factory.py",
-              "line": 155,
+              "line": 168,
               "kind": "function",
               "language": "python"
             }
@@ -958,7 +414,7 @@
           "definitions": [
             {
               "file": "tools/sprites/pollinations_character_sheet_factory.py",
-              "line": 90,
+              "line": 103,
               "kind": "function",
               "language": "python"
             }
@@ -970,7 +426,7 @@
           "definitions": [
             {
               "file": "tools/sprites/pollinations_character_sheet_factory.py",
-              "line": 311,
+              "line": 324,
               "kind": "function",
               "language": "python"
             }
@@ -983,8 +439,8 @@
     "independent_frame_prompt": {
       "source": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 394,
-        "end": 423
+        "start": 407,
+        "end": 436
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -992,8 +448,8 @@
     "generate_independent_frames": {
       "source": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 426,
-        "end": 455
+        "start": 439,
+        "end": 468
       },
       "symbol_dependencies": [
         {
@@ -1001,7 +457,7 @@
           "definitions": [
             {
               "file": "tools/sprites/pollinations_character_sheet_factory.py",
-              "line": 155,
+              "line": 168,
               "kind": "function",
               "language": "python"
             }
@@ -1013,7 +469,7 @@
           "definitions": [
             {
               "file": "tools/sprites/pollinations_character_sheet_factory.py",
-              "line": 90,
+              "line": 103,
               "kind": "function",
               "language": "python"
             }
@@ -1025,7 +481,7 @@
           "definitions": [
             {
               "file": "tools/sprites/pollinations_character_sheet_factory.py",
-              "line": 394,
+              "line": 407,
               "kind": "function",
               "language": "python"
             }
@@ -1038,8 +494,8 @@
     "extract_frames": {
       "source": {
         "file": "tools/sprites/pollinations_character_sheet_factory.py",
-        "start": 458,
-        "end": 468
+        "start": 471,
+        "end": 481
       },
       "symbol_dependencies": [
         {
@@ -1047,7 +503,7 @@
           "definitions": [
             {
               "file": "tools/sprites/pollinations_character_sheet_factory.py",
-              "line": 155,
+              "line": 168,
               "kind": "function",
               "language": "python"
             }
@@ -1057,19 +513,19 @@
       ],
       "dependency_count": 1
     },
-    "ReservationTests": {
+    "IdentityLockedWalkTests": {
       "source": {
-        "file": "tools/sprites/test_character_provider_reservation.py",
-        "start": 11,
-        "end": 51
+        "file": "tools/sprites/test_identity_locked_walk_candidate.py",
+        "start": 15,
+        "end": 65
       },
       "symbol_dependencies": [
         {
-          "symbol": "active_pollinations_repair",
+          "symbol": "render",
           "definitions": [
             {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 326,
+              "file": "tools/sprites/identity_locked_walk_candidate.py",
+              "line": 83,
               "kind": "function",
               "language": "python"
             }
@@ -1077,11 +533,11 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "make_decision",
+          "symbol": "source_frame",
           "definitions": [
             {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 368,
+              "file": "tools/sprites/identity_locked_walk_candidate.py",
+              "line": 69,
               "kind": "function",
               "language": "python"
             }
@@ -1089,35 +545,11 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "next_group",
+          "symbol": "test_cycle_deterministic_and_source_identity_immutable",
           "definitions": [
             {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 286,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "pending_ids_from_controlled",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 351,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "test_expired_or_other_provider_has_no_lock",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_character_provider_reservation.py",
-              "line": 30,
+              "file": "tools/sprites/test_identity_locked_walk_candidate.py",
+              "line": 48,
               "kind": "function",
               "language": "python"
             }
@@ -1125,10 +557,227 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_external_repair_excludes_concurrent_kaggle_character_dispatch",
+          "symbol": "test_four_real_assets_are_not_overwritten_and_only_staged",
           "definitions": [
             {
-              "file": "tools/sprites/test_character_provider_reservation.py",
+              "file": "tools/sprites/test_identity_locked_walk_candidate.py",
+              "line": 16,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_refuses_bad_inputs",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_identity_locked_walk_candidate.py",
+              "line": 60,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "warp",
+          "definitions": [
+            {
+              "file": "tools/sprites/identity_locked_walk_candidate.py",
+              "line": 44,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 6
+    },
+    "test_four_real_assets_are_not_overwritten_and_only_staged": {
+      "source": {
+        "file": "tools/sprites/test_identity_locked_walk_candidate.py",
+        "start": 16,
+        "end": 46
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "render",
+          "definitions": [
+            {
+              "file": "tools/sprites/identity_locked_walk_candidate.py",
+              "line": 83,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "source_frame",
+          "definitions": [
+            {
+              "file": "tools/sprites/identity_locked_walk_candidate.py",
+              "line": 69,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_cycle_deterministic_and_source_identity_immutable": {
+      "source": {
+        "file": "tools/sprites/test_identity_locked_walk_candidate.py",
+        "start": 48,
+        "end": 58
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "source_frame",
+          "definitions": [
+            {
+              "file": "tools/sprites/identity_locked_walk_candidate.py",
+              "line": 69,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "warp",
+          "definitions": [
+            {
+              "file": "tools/sprites/identity_locked_walk_candidate.py",
+              "line": 44,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_refuses_bad_inputs": {
+      "source": {
+        "file": "tools/sprites/test_identity_locked_walk_candidate.py",
+        "start": 60,
+        "end": 65
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "render",
+          "definitions": [
+            {
+              "file": "tools/sprites/identity_locked_walk_candidate.py",
+              "line": 83,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "warp",
+          "definitions": [
+            {
+              "file": "tools/sprites/identity_locked_walk_candidate.py",
+              "line": 44,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "full_body": {
+      "source": {
+        "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+        "start": 12,
+        "end": 19
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "IndependentFrameTests": {
+      "source": {
+        "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+        "start": 22,
+        "end": 112
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "candidate_destination",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 75,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "clip_risk",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 84,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "cutout",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 168,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "extract",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+              "line": 40,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "fetch",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+              "line": 37,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "full_body",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
               "line": 12,
               "kind": "function",
               "language": "python"
@@ -1137,91 +786,129 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_injected_invalid_or_missing_reservation_does_not_block",
+          "symbol": "generate_independent_frames",
           "definitions": [
             {
-              "file": "tools/sprites/test_character_provider_reservation.py",
-              "line": 43,
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 439,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "independent_frame_prompt",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 407,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "safe_source_margin",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 142,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "test_each_pose_is_its_own_image_not_an_atlas_slice",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+              "line": 34,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "same_file"
+        },
+        {
+          "symbol": "test_margin_padding_does_not_erase_missing_body_parts",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+              "line": 65,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_prompt_never_requests_multi_pose_atlas",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+              "line": 23,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_reserved_repair_stages_candidate_without_overwriting_canonical",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+              "line": 83,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_unexpected_action_cannot_use_generic_fallback",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+              "line": 108,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "validate_source_full_body",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 125,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
         }
       ],
-      "dependency_count": 7
+      "dependency_count": 15
     },
-    "test_external_repair_excludes_concurrent_kaggle_character_dispatch": {
+    "test_prompt_never_requests_multi_pose_atlas": {
       "source": {
-        "file": "tools/sprites/test_character_provider_reservation.py",
-        "start": 12,
-        "end": 28
+        "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+        "start": 23,
+        "end": 32
       },
       "symbol_dependencies": [
         {
-          "symbol": "active_pollinations_repair",
+          "symbol": "independent_frame_prompt",
           "definitions": [
             {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 326,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "make_decision",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 368,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "next_group",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 286,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "pending_ids_from_controlled",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 351,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 4
-    },
-    "test_expired_or_other_provider_has_no_lock": {
-      "source": {
-        "file": "tools/sprites/test_character_provider_reservation.py",
-        "start": 30,
-        "end": 41
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "active_pollinations_repair",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 326,
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 407,
               "kind": "function",
               "language": "python"
             }
@@ -1231,19 +918,299 @@
       ],
       "dependency_count": 1
     },
-    "test_injected_invalid_or_missing_reservation_does_not_block": {
+    "test_each_pose_is_its_own_image_not_an_atlas_slice": {
       "source": {
-        "file": "tools/sprites/test_character_provider_reservation.py",
-        "start": 43,
-        "end": 51
+        "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+        "start": 34,
+        "end": 63
       },
       "symbol_dependencies": [
         {
-          "symbol": "active_pollinations_repair",
+          "symbol": "clip_risk",
           "definitions": [
             {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 326,
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 84,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "cutout",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 168,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "extract",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+              "line": 40,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "fetch",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+              "line": 37,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "full_body",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+              "line": 12,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "generate_independent_frames",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 439,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 6
+    },
+    "extract": {
+      "source": {
+        "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+        "start": 40,
+        "end": 160
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "candidate_destination",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 75,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "clip_risk",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 84,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "cutout",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 168,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "fetch",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+              "line": 37,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "full_body",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+              "line": 12,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "generate_independent_frames",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 439,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "safe_source_margin",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 142,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "test_margin_padding_does_not_erase_missing_body_parts",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+              "line": 65,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_reserved_repair_stages_candidate_without_overwriting_canonical",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+              "line": 83,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_unexpected_action_cannot_use_generic_fallback",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+              "line": 108,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "validate_source_full_body",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 125,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 11
+    },
+    "test_margin_padding_does_not_erase_missing_body_parts": {
+      "source": {
+        "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+        "start": 65,
+        "end": 81
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "safe_source_margin",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 142,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "validate_source_full_body",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 125,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_reserved_repair_stages_candidate_without_overwriting_canonical": {
+      "source": {
+        "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+        "start": 83,
+        "end": 106
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "candidate_destination",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 75,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_unexpected_action_cannot_use_generic_fallback": {
+      "source": {
+        "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+        "start": 108,
+        "end": 112
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "generate_independent_frames",
+          "definitions": [
+            {
+              "file": "tools/sprites/pollinations_character_sheet_factory.py",
+              "line": 439,
               "kind": "function",
               "language": "python"
             }

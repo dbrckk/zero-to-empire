@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 986f6c4aa386b50b1ecdfe20bdcc0cb474e756ab
-Head: dec21ad77fb0d7caa01a3214840b85c6d92e2aa7
+Base: 5d6fc3da79d1d53ba061eb05aebbdb9ac40344f0
+Head: d37661e4470697490de06b8b172b98dba188d8e4
 
 ## Changed files
-- M tools/assets/test_workflow_policy.py
+- A .github/workflows/identity-locked-walk-review.yml
 
 ## Affected areas
-- tools
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

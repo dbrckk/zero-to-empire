@@ -105,6 +105,7 @@
         "tools/sprites/hf_public_flux_factory.py",
         "tools/sprites/hf_sprite_factory.py",
         "tools/sprites/hf_static_manifest_factory.py",
+        "tools/sprites/identity_locked_walk_candidate.py",
         "tools/sprites/kaggle_building_family_factory.py",
         "tools/sprites/kaggle_building_family_factory_v11.py",
         "tools/sprites/kaggle_building_family_factory_v13.py",
@@ -128,7 +129,7 @@
         "tools/sprites/test_pollinations_character_sheet_factory.py",
         "tools/sprites/test_temporal_sprite_audit.py"
       ],
-      "in_degree": 37,
+      "in_degree": 38,
       "out_degree": 7,
       "path": "app/src/main/java/com/zerotoempire/game/GameRepository.kt"
     },
@@ -855,6 +856,19 @@
       "path": "app/src/test/java/com/zerotoempire/game/PlayableFlowTest.kt"
     },
     {
+      "dependencies": [],
+      "dependents": [
+        "tools/sprites/audit_character_candidates.py",
+        "tools/sprites/identity_locked_walk_candidate.py",
+        "tools/sprites/pollinations_character_sheet_factory.py",
+        "tools/sprites/test_character_semantic_gate.py",
+        "tools/sprites/test_pollinations_character_sheet_factory.py"
+      ],
+      "in_degree": 5,
+      "out_degree": 0,
+      "path": "tools/sprites/character_semantic_gate.py"
+    },
+    {
       "dependencies": [
         "app/src/main/java/com/zerotoempire/game/GameFeel.kt"
       ],
@@ -1079,18 +1093,6 @@
       "path": "app/src/main/java/com/zerotoempire/game/EmpireNumberFormat.kt"
     },
     {
-      "dependencies": [],
-      "dependents": [
-        "tools/sprites/audit_character_candidates.py",
-        "tools/sprites/pollinations_character_sheet_factory.py",
-        "tools/sprites/test_character_semantic_gate.py",
-        "tools/sprites/test_pollinations_character_sheet_factory.py"
-      ],
-      "in_degree": 4,
-      "out_degree": 0,
-      "path": "tools/sprites/character_semantic_gate.py"
-    },
-    {
       "dependencies": [
         "app/src/main/java/com/zerotoempire/game/BillingFailurePolicy.kt"
       ],
@@ -1244,8 +1246,8 @@
       "path": "app/src/main/java/com/zerotoempire/game/PremiumSprites.kt"
     }
   ],
-  "edge_count": 488,
+  "edge_count": 491,
   "generated_by": "dbrckk/repo-brain-v7-graph",
-  "node_count": 210,
+  "node_count": 212,
   "schema_version": 1
 }

@@ -22,24 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T16:19:29Z
+Generated: 2026-10-09T19:00:07Z
 
 ### Git
 - Branch: `main`
-- Head: `dec21ad77fb0`
-- Commit date: 2026-10-09T18:19:10+02:00
-- Commit: test(ci): verify frame-specific articulated Kaggle scaffolds instead of obsolete two-arg signature
-- Tracked files: 1487
+- Head: `d37661e44706`
+- Commit date: 2026-10-09T20:59:31+02:00
+- Commit: ci(art): render four reproducible WALK alternatives while keeping canonical assets untouched
+- Tracked files: 1490
 
 ### Recently changed files
-- `tools/assets/test_workflow_policy.py`
-- `art/production/autofactory-state.json`
-- `art/production/autofactory-summary.md`
-- `art/production/master-asset-queue.json`
-- `tools/assets/test_queue_state_policy.py`
-- `tools/sprites/pollinations_character_sheet_factory.py`
-- `art/production/controlled-character-regen-queue.json`
-- `art/production/pollinations-character-summary.json`
+- `.github/workflows/identity-locked-walk-review.yml`
+- `tools/sprites/test_identity_locked_walk_candidate.py`
+- `tools/sprites/identity_locked_walk_candidate.py`
+- `art/production/kaggle-async-state.json`
 
 ### Project signals
 - `build.gradle.kts`
