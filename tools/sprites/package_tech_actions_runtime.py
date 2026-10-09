@@ -77,10 +77,15 @@ def verify(root:Path):
                'Interaction contact QA failed: '+action)
         ensure(qa.get('celebration_raised_arm_pass') is True,
                'Celebration arm pose QA failed: '+action)
+        ensure(qa.get('celebration_wide_arm_pass') is True,
+               'Celebration Y-arm silhouette QA failed: '+action)
         if action=='CELEB':
             arm_height=qa.get('celebration_min_arm_raise_px')
             ensure(isinstance(arm_height,(int,float)) and arm_height>=65,
                    'Celebration arms not visibly overhead')
+            wrist_span=qa.get('celebration_min_wrist_span_px')
+            ensure(isinstance(wrist_span,(int,float)) and wrist_span>=135,
+                   'Celebration arms not separated from head')
         ensure(qa.get('work_screen_violation_frames') == [] and
                qa.get('repair_tool_violation_frames') == [],
                'Hand/prop contact violation: '+action)
