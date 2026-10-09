@@ -67,8 +67,10 @@ def pending():
             if aid not in manifest:
                 raise RuntimeError('queued character missing from manifest: '+aid)
             out.append(manifest[aid])
-        if out:
-            return out
+        # A controlled queue is authoritative, including when all targets are
+        # BLOCKED, already reviewed, or reserved by another provider. Falling
+        # through to unrelated manifest TODOs would bypass the reservation.
+        return out
 
     return [x for x in manifest.values() if x['status']=='TODO' and (not requested or x['id'] in requested)]
 
