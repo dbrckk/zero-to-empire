@@ -75,6 +75,12 @@ def verify(root:Path):
                'Failed weight-transfer geometry QA: '+action)
         ensure(qa.get('interaction_contact_pass') is True,
                'Interaction contact QA failed: '+action)
+        ensure(qa.get('celebration_raised_arm_pass') is True,
+               'Celebration arm pose QA failed: '+action)
+        if action=='CELEB':
+            arm_height=qa.get('celebration_min_arm_raise_px')
+            ensure(isinstance(arm_height,(int,float)) and arm_height>=65,
+                   'Celebration arms not visibly overhead')
         ensure(qa.get('work_screen_violation_frames') == [] and
                qa.get('repair_tool_violation_frames') == [],
                'Hand/prop contact violation: '+action)
