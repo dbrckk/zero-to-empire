@@ -2,6 +2,7 @@
 from pathlib import Path
 import json, os, time, urllib.parse, urllib.request
 from PIL import Image
+from character_semantic_gate import clip_risk
 
 ROOT=Path(__file__).resolve().parents[2]
 MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
@@ -342,6 +343,68 @@ def generate_repair_frames(item, seed):
         print(f'POLLINATIONS_CHR_REPAIR_FRAME n={n} pose={pose} cov={cov:.3f}',flush=True)
     return frames
 
+def independent_frame_prompt(item,pose):
+    """Explicitly request ONE complete subject, never a sheet or sprite atlas."""
+    action=item['action']
+    props={
+        'IDLE':'hands relaxed and no tool or crate',
+        'WORK':'one small industrial tool gripped by the same visible hand while interacting with a compact work point',
+        'CARRY':'one intact metal cargo crate centered at waist height with BOTH hands visibly gripping its handles',
+        'CELEB':'one open, expressive arm-raised cheer with no tool or carried object',
+    }
+    if action not in props:
+        raise ValueError('Use specialized walking/repair prompt')
+    return (
+        f'ONE single standalone game character animation frame, NOT a sprite sheet, '
+        f'NOT a collage and NOT a character reference board. '
+        f'Professional painterly 2.5D premium mobile game character: '
+        f'{ROLES[item["role"]]}. Action: {ACTIONS[action][0]}, pose: {pose}. '
+        f'{props[action]}. '
+        'Exactly ONE human, fully visible head to toe including BOTH boots, '
+        'one consistent adult identity, same face, one helmet, same clothes and '
+        'same proportions in every frame. Fixed 34-degree three-quarter camera, '
+        'full body standing centered inside a plain neutral gray 1024x1024 canvas '
+        'with at least 12 percent empty space above head and below both feet. '
+        'All limbs and tools entirely within the margins. One pose only, '
+        'NO multiple people, NO detached body parts, NO close-up portrait, '
+        'NO head shot, NO duplicated characters, NO panels, NO grid, '
+        'NO text, NO labels, NO numbers, NO logos, NO watermark, '
+        'NO gradient, NO floor and NO scene.'
+    )
+
+
+def generate_independent_frames(item,seed):
+    """Produce each pose separately; never split one tall image into limbs."""
+    action=item['action']
+    if action not in {'IDLE','WORK','CARRY','CELEB'}:
+        raise ValueError('Unsupported generic per-frame action')
+    frames=[]
+    cache_dir=OUT/'pollinations-frame-cache'/item['id']
+    cache_dir.mkdir(parents=True,exist_ok=True)
+    for n,pose in enumerate(POSES[action][:ACTIONS[action][1]]):
+        cache_file=cache_dir/f'{n:02d}.png'
+        if cache_file.is_file():
+            frame=Image.open(cache_file).convert('RGBA')
+            cov=sum(frame.getchannel('A').histogram()[8:])/(256*256)
+            print(f'POLLINATIONS_CHR_FRAME_CACHE_HIT action={action} n={n}',flush=True)
+        else:
+            rev_file=cache_dir/f'{n:02d}.rev'
+            try:
+                revision=int(rev_file.read_text(encoding='utf-8').strip()) if rev_file.is_file() else 0
+            except ValueError:
+                revision=0
+            frame_seed=(seed+sum((i+1)*ord(ch) for i,ch in enumerate(item['id']))*1009+
+                        n*104729+revision*1000003)%2147483647
+            raw=fetch(independent_frame_prompt(item,pose),frame_seed)
+            frame,cov=cutout(raw,action,standalone=True)
+            frame.save(cache_file,'PNG',optimize=True)
+            print(f'POLLINATIONS_CHR_FRAME_CACHE_SAVE action={action} n={n} '
+                  f'revision={revision}',flush=True)
+        frames.append(frame)
+        print(f'POLLINATIONS_CHR_FRAME action={action} n={n} cov={cov:.3f}',flush=True)
+    return frames
+
+
 def extract_frames(raw,frame_count,action=None):
     if raw.size!=(1024,1024):
         raw=raw.resize((1024,1024),Image.Resampling.LANCZOS)
@@ -375,8 +438,12 @@ def main():
                 elif it['action'] == 'WALK':
                     frames=generate_walk_frames(it,seed)
                 else:
-                    raw=fetch(sheet_prompt(it),seed)
-                    frames=extract_frames(raw,fc,it['action'])
+                    frames=generate_independent_frames(it,seed)
+                # The atlas may be formed ONLY after each standalone frame
+                # passes full-body risk screening and continuity checks.
+                screen=clip_risk(frames)
+                if screen['risk_level']=='BLOCKING':
+                    raise RuntimeError('semantic-risk: '+','.join(screen['flags']))
                 ok,why=sheetqa(frames)
                 if not ok:
                     raise RuntimeError(why)
@@ -391,13 +458,17 @@ def main():
                 sheet.save(p,'PNG',optimize=True)
                 producer_run_id=os.getenv('GITHUB_RUN_ID') or None
                 mark_queue(it['id'],'CANDIDATE',seed,'pollinations-character-atlas',producer_run_id)
-                rep.append({'id':it['id'],'status':'CANDIDATE','file':p.name,'frames':fc,'qa':why,'generation':'frame-by-frame' if it['action'] in {'REPAIR','WALK'} else 'single-sheet','producer':'pollinations-character-atlas','producer_run_id':int(producer_run_id) if producer_run_id else None})
+                rep.append({'id':it['id'],'status':'CANDIDATE','file':p.name,'frames':fc,
+                            'qa':why,'semantic_risk':screen,'semantic_approved':False,
+                            'generation':'individual-full-body-frames-v2',
+                            'producer':'pollinations-character-atlas',
+                            'producer_run_id':int(producer_run_id) if producer_run_id else None})
                 print(f"POLLINATIONS_CHR_VALIDATED={it['id']} {why}",flush=True)
                 done=True
                 break
             except Exception as e:
                 last=str(e)
-                if it['action'] in {'REPAIR','WALK'} and last.startswith('identity-palette=') and ' frames=' in last:
+                if last.startswith('identity-palette=') and ' frames=' in last:
                     try:
                         bad_frames=[int(x) for x in last.rsplit(' frames=',1)[1].split(',') if x.strip()]
                         for bad in bad_frames:
@@ -429,7 +500,7 @@ def main():
                 'id':it['id'],
                 'status':'PROVIDER_ERROR' if provider_error else 'REJECT',
                 'reason':last,
-                'generation':'frame-by-frame' if it['action'] in {'REPAIR','WALK'} else 'single-sheet'
+                'generation':'individual-full-body-frames-v2'
             })
 
     (OUT/'pollinations-character-summary.json').write_text(json.dumps(rep,indent=2),encoding='utf-8')
