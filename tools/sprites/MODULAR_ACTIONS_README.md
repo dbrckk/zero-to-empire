@@ -172,3 +172,37 @@ Contrôles : `test_action_contact.py`,
 avant la production des 144 frames puis le packeur QA.
 Ces contrôles sont **techniques** et ne valident aucune qualité artistique.
 Tous les candidats restent `NEEDS_REVIEW` jusqu'à revue visuelle réelle.
+
+
+## Audit temporel v1 — contrôles des vraies images à 96 px
+
+Le pipeline contient désormais `tools/sprites/temporal_sprite_audit.py` et
+`test_temporal_sprite_audit.py`. Après la génération des six actions,
+l'audit lit **chaque PNG RGBA réellement exporté**, puis effectue :
+
+- détection des images vides, tronquées et massivement dupliquées ;
+- comparaison des silhouettes alpha entre chaque frame consécutive, y compris 24→1 ;
+- contrôle de la discontinuité de boucle, d'un saut de pose isolé et d'une brusque variation de surface opaque ;
+- vérification de l'identité du skin commun et du verrou de revue visuelle/sémantique.
+
+Les limites de rejet sont volontairement objectives et tolérantes :
+ratio de raccord >2,5, saut isolé >4,5× la variation médiane ou
+variation de surface opaque >20 % d'une frame à la suivante.
+Une animation très peu changeante (variation médiane <0,002)
+ou contenant trop d'images identiques (<80 % de frames uniques)
+est également refusée. Le seuil n'évalue **pas** le talent artistique,
+la cohérence des accessoires ni les contacts physiques.
+
+Exécution automatique :
+```bash
+python -m unittest discover -s tools/sprites -p 'test_temporal_sprite_audit.py' -v
+python tools/sprites/temporal_sprite_audit.py \
+  --source build/tech-actions-v3 --output build/tech-temporal-review
+```
+
+Le workflow GitHub Actions publie `temporal-qa.json`,
+`frame-transition-metrics.csv` et `motion-timeline.png` avec les
+candidats de revue. Cinq tests synthétiques vérifient aussi que des
+frames absentes/vides, coupées, dupliquées, une rupture de cycle et
+un faux statut visuellement approuvé sont rejetés. Tous les résultats
+restent `NEEDS_REVIEW` et ne modifient jamais la file stricte de 235 assets.
