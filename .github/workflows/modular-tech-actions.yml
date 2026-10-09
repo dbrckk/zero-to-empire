@@ -8,6 +8,8 @@ on:
       - 'tools/sprites/soft_skin_deform.py'
       - 'tools/sprites/weight_transfer.py'
       - 'tools/sprites/action_contact.py'
+      - 'tools/sprites/tech_prop_mount.py'
+      - 'tools/sprites/test_tech_prop_mount.py'
       - 'tools/sprites/test_action_contact.py'
       - 'tools/sprites/focused_sprite_atlas.py'
       - 'tools/sprites/test_focused_sprite_atlas.py'
@@ -48,6 +50,7 @@ jobs:
           python -m unittest discover -s tools/sprites -p 'test_soft_skin_deform.py' -v
           python -m unittest discover -s tools/sprites -p 'test_weight_transfer.py' -v
           python -m unittest discover -s tools/sprites -p 'test_action_contact.py' -v
+          python -m unittest discover -s tools/sprites -p 'test_tech_prop_mount.py' -v
           python -m unittest discover -s tools/sprites -p 'test_focused_sprite_atlas.py' -v
           python -m unittest discover -s tools/sprites -p 'test_temporal_sprite_audit.py' -v
           python -m unittest discover -s tools/sprites -p 'test_rigged_tech_actions_v3.py' -v
