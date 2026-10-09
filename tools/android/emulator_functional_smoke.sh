@@ -349,6 +349,25 @@ assert_ui_contains "HIRED" "autosave-restart-manager"
 click_node "EMPIRE" "autosave-restart-return-empire"
 dump_ui "post-autosave-restart"
 
+# The separate Character Review launcher entry exists in DEBUG builds only.
+# Exercise it on a real emulator to ensure a phone-only user can inspect
+# animation frames, pause and step, with screenshot evidence for review.
+adb shell am start -W -n "$PKG/.CharacterReviewActivity" > "$EVIDENCE/character-review-launch.txt"
+sleep 3
+check_alive
+assert_ui_contains "Animation QA" "character-qa-open"
+assert_ui_contains "Pause" "character-qa-playing"
+adb exec-out screencap -p > "$EVIDENCE/character-qa-playing.png"
+click_node "Pause" "character-qa-before-pause"
+assert_ui_contains "Lecture" "character-qa-paused"
+click_node "+1" "character-qa-before-step"
+assert_ui_contains "Lecture" "character-qa-stepped"
+adb exec-out screencap -p > "$EVIDENCE/character-qa-stepped.png"
+echo "CHARACTER_QA_EMULATOR_PASS=1"
+adb shell am start -W -n "$ACT" > "$EVIDENCE/character-qa-return-to-game.txt"
+sleep 2
+check_alive
+
 adb shell dumpsys meminfo "$PKG" > "$EVIDENCE/meminfo.txt"
 adb exec-out screencap -p > "$EVIDENCE/final.png"
 adb shell dumpsys activity activities > "$EVIDENCE/activity.txt"
