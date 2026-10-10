@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-10T18:59:22Z
+Generated: 2026-10-10T19:07:58Z
 
 ### Git
 - Branch: `main`
-- Head: `0ee05ac3a634`
-- Commit date: 2026-10-10T20:59:08+02:00
-- Commit: ci(android): expose foreground activity, visible nodes and crash clues for QA gallery failure
+- Head: `9b4710c47d45`
+- Commit date: 2026-10-10T21:07:45+02:00
+- Commit: docs(assets): sync strict review backlog with dispatched LOG carry state
 - Tracked files: 1512
 
 ### Recently changed files
+- `art/production/character-strict-review-backlog.md`
 - `tools/android/character_preview_emulator_smoke.sh`
 - `art/production/kaggle-async-state.json`
 - `art/production/autofactory-state.json`
