@@ -22,20 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T21:54:51Z
+Generated: 2026-10-10T06:13:42Z
 
 ### Git
 - Branch: `main`
-- Head: `74c8ed97cb16`
-- Commit date: 2026-10-09T23:54:36+02:00
-- Commit: fix(android): bound stalled UI hierarchy adb commands with timeouts
+- Head: `e5dcd4b6f196`
+- Commit date: 2026-10-10T08:13:28+02:00
+- Commit: ci(android): avoid TECH preview emulator boot timeout with lighter API 33 image
 - Tracked files: 1512
 
 ### Recently changed files
-- `tools/android/ui_dump_retry.sh`
 - `.github/workflows/tech-candidate-android-preview.yml`
+- `tools/android/ui_dump_retry.sh`
 - `tools/android/character_preview_emulator_smoke.sh`
-- `.github/workflows/asset-pipeline-ci.yml`
 
 ### Project signals
 - `build.gradle.kts`

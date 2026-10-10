@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 3 success / 0 failure / 4 active
+Summary: 7 success / 0 failure / 1 active
 
-- Android Emulator Smoke: in_progress / pending (74c8ed97)
-- TECH candidate Android preview (no promotion): pending / pending (74c8ed97)
-- Android CI: in_progress / pending (74c8ed97)
-- TECH candidate Android preview (no promotion): in_progress / pending (f1937b2a)
-- Reconcile reviewed run 25: completed / skipped (239da985)
-- Android Emulator Smoke: completed / success (1fb1a497)
-- Android CI: completed / success (1fb1a497)
-- Kaggle Async Character Collector: completed / success (814a8847)
+- TECH candidate Android preview (no promotion): in_progress / pending (e5dcd4b6)
+- Asset Autofactory 235: completed / success (a511734c)
+- Asset Autofactory 235: completed / success (a511734c)
+- Pollinations Building Candidate: completed / success (a511734c)
+- Asset Autofactory 235: completed / success (a511734c)
+- Pollinations Character Atlas: completed / success (a511734c)
+- Manifest Static GPU Batch: completed / success (a511734c)
+- Kaggle Async Character Collector: completed / success (a511734c)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

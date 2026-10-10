@@ -1,13 +1,13 @@
 # Change impact
 
-Base: cb016b75f474110b1f76a9e0d8d4503dbb454787
-Head: 74c8ed97cb163296a4d80062c7b43a0f3476cd22
+Base: a511734c67e590ad554bdf85b15355183a8e55c6
+Head: e5dcd4b6f1964828f8abf718df7773e2fb7554a2
 
 ## Changed files
-- M tools/android/ui_dump_retry.sh
+- M .github/workflows/tech-candidate-android-preview.yml
 
 ## Affected areas
-- tools
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.
