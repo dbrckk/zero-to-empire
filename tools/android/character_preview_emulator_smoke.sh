@@ -58,7 +58,7 @@ for attempt in 1 2 3 4 5 6; do
   # A System UI ANR dialog blocks accessibility even when our app is alive.
   # Dismiss it once with the system's "Wait" action, then relaunch QA.
   # Preserve the pre-recovery hierarchy as evidence; never count this as pass.
-  if [[ "$attempt" -eq 1 ]] && grep -Fq "System UI isn&apos;t responding" "$OUT/opening-attempt-$attempt.xml"; then
+  if [[ "$attempt" -eq 1 ]] && grep -Eq "System UI (isn.t|isn&amp;apos;t) responding" "$OUT/opening-attempt-$attempt.xml"; then
     echo "CHARACTER_PREVIEW_SYSTEM_UI_ANR_RECOVERY=attempted" >&2
     python3 "$SCRIPT_DIR/ui_click_target.py" "$OUT/opening-attempt-$attempt.xml" "Wait" > "$OUT/system-ui-wait-coordinates.txt" || true
     if read -r wait_x wait_y < "$OUT/system-ui-wait-coordinates.txt" &&
