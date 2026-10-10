@@ -1,13 +1,13 @@
 # Change impact
 
-Base: c1df2df5ba4fa15c8f8c44ed94443a74295e6617
-Head: a18436c82143243db7b7ad03c742e75c5d8561d4
+Base: ee76ea8dc5b68749fc6c2f056bd25bc792807708
+Head: d2e44fab5283fe46ed67cfc1ff62d77c8fcbe848
 
 ## Changed files
-- M docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md
+- M tools/android/character_preview_emulator_smoke.sh
 
 ## Affected areas
-- docs
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

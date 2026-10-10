@@ -22,20 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-10T22:03:20Z
+Generated: 2026-10-10T22:10:11Z
 
 ### Git
 - Branch: `main`
-- Head: `a18436c82143`
-- Commit date: 2026-10-11T00:03:01+02:00
-- Commit: docs(art): capture real stage-scale proof and record TECH night-contrast remediation
+- Head: `d2e44fab5283`
+- Commit date: 2026-10-11T00:09:58+02:00
+- Commit: test(android): scroll stage until actors appear, retain every failed viewport
 - Tracked files: 1521
 
 ### Recently changed files
+- `tools/android/character_preview_emulator_smoke.sh`
 - `docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md`
 - `app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt`
 - `.github/workflows/tech-candidate-android-preview.yml`
-- `tools/android/character_preview_emulator_smoke.sh`
 
 ### Project signals
 - `build.gradle.kts`
