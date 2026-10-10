@@ -22,18 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-10T21:43:15Z
+Generated: 2026-10-10T21:46:20Z
 
 ### Git
 - Branch: `main`
-- Head: `bf3067bf814b`
-- Commit date: 2026-10-10T23:42:57+02:00
-- Commit: docs(art): record real Android TECH preview and cross-action identity blocker
+- Head: `035a2fc6850b`
+- Commit date: 2026-10-10T23:46:05+02:00
+- Commit: art(review): stage all six identity-locked TECH actions as unapproved Android candidates
 - Tracked files: 1512
 
 ### Recently changed files
-- `docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md`
 - `.github/workflows/tech-candidate-android-preview.yml`
+- `.github/workflows/tech-canonical-review-stage.yml`
+- `tools/sprites/export_tech_canonical_review.py`
+- `tools/sprites/test_export_tech_canonical_review.py`
+- `docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md`
 - `tools/android/character_preview_emulator_smoke.sh`
 - `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
 

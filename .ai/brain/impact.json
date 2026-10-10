@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "faf54ee701ed001e172884d8f3b3ea64c2677854",
-  "head": "bf3067bf814bac289321d6f814ee700b2b0b2e94",
+  "base": "bf3067bf814bac289321d6f814ee700b2b0b2e94",
+  "head": "035a2fc6850b5c35b973771bc883cbb4067440a5",
   "index_mode": "incremental",
   "changed_files": [
     {
@@ -10,49 +10,101 @@
       "status": "M"
     },
     {
-      "path": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
+      "path": ".github/workflows/tech-canonical-review-stage.yml",
       "status": "M"
     },
     {
-      "path": "docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md",
+      "path": "tools/sprites/export_tech_canonical_review.py",
       "status": "M"
     },
     {
-      "path": "tools/android/character_preview_emulator_smoke.sh",
+      "path": "tools/sprites/test_export_tech_canonical_review.py",
       "status": "M"
     }
   ],
   "changed_source_files": [
-    "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt"
+    "tools/sprites/export_tech_canonical_review.py",
+    "tools/sprites/test_export_tech_canonical_review.py"
   ],
   "impacted_files": [
-    "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt"
+    "tools/sprites/export_tech_canonical_review.py",
+    "tools/sprites/test_export_tech_canonical_review.py"
   ],
   "impacted_symbols": [
     {
-      "name": "CharacterReviewActivity",
+      "name": "digest",
+      "kind": "function",
+      "file": "tools/sprites/export_tech_canonical_review.py",
+      "line": 25
+    },
+    {
+      "name": "selected_indices",
+      "kind": "function",
+      "file": "tools/sprites/export_tech_canonical_review.py",
+      "line": 29
+    },
+    {
+      "name": "validate_index",
+      "kind": "function",
+      "file": "tools/sprites/export_tech_canonical_review.py",
+      "line": 38
+    },
+    {
+      "name": "stage_action",
+      "kind": "function",
+      "file": "tools/sprites/export_tech_canonical_review.py",
+      "line": 59
+    },
+    {
+      "name": "stage",
+      "kind": "function",
+      "file": "tools/sprites/export_tech_canonical_review.py",
+      "line": 144
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "tools/sprites/export_tech_canonical_review.py",
+      "line": 168
+    },
+    {
+      "name": "TechCanonicalReviewTests",
       "kind": "class",
-      "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
-      "line": 44
+      "file": "tools/sprites/test_export_tech_canonical_review.py",
+      "line": 15
     },
     {
-      "name": "onCreate",
-      "kind": "symbol",
-      "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
-      "line": 45
+      "name": "test_phase_indices_are_stable_distinct_and_bounded",
+      "kind": "function",
+      "file": "tools/sprites/test_export_tech_canonical_review.py",
+      "line": 16
     },
     {
-      "name": "CharacterReviewGallery",
-      "kind": "symbol",
-      "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
-      "line": 52
+      "name": "fixture",
+      "kind": "function",
+      "file": "tools/sprites/test_export_tech_canonical_review.py",
+      "line": 25
     },
     {
-      "name": "ReviewCell",
-      "kind": "symbol",
-      "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
-      "line": 155
+      "name": "test_real_staged_pixels_preserve_review_and_padding",
+      "kind": "function",
+      "file": "tools/sprites/test_export_tech_canonical_review.py",
+      "line": 73
+    },
+    {
+      "name": "test_refuse_unreviewable_metadata_and_missing_pixels",
+      "kind": "function",
+      "file": "tools/sprites/test_export_tech_canonical_review.py",
+      "line": 91
+    },
+    {
+      "name": "test_unsupported_action_is_rejected",
+      "kind": "function",
+      "file": "tools/sprites/test_export_tech_canonical_review.py",
+      "line": 112
     }
   ],
-  "selected_tests": []
+  "selected_tests": [
+    "tools/sprites/test_export_tech_canonical_review.py"
+  ]
 }

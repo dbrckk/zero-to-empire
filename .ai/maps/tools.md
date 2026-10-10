@@ -1965,14 +1965,14 @@ archive = shutil.make_archive(str(WORK / 'zero-to-empire-colab-sprites'), 'zip',
 ## File: sprites/export_tech_canonical_review.py
 ```python
 #!/usr/bin/env python3
-"""Stage three canonical-format TECH animations from one deterministic textured rig.
+"""Stage all six canonical-format TECH animations from one deterministic textured rig.
 
 These are visual-review CANDIDATES, never replacements for canonical PNG/WebP
 or automatic strict-DONE promotions. The 24-frame articulated source is
 downsampled to the existing Android 4x4 / action-frame-count contract.
 """
 ⋮----
-ACTIONS = {"WALK": 8, "WORK": 10, "CARRY": 8}
+ACTIONS = {"IDLE": 6, "WALK": 8, "WORK": 10, "CARRY": 8, "REPAIR": 10, "CELEB": 8}
 SOURCE_FRAMES = 24
 CELL = 256
 ⋮----
