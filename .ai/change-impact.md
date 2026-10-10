@@ -1,13 +1,13 @@
 # Change impact
 
-Base: a511734c67e590ad554bdf85b15355183a8e55c6
-Head: e5dcd4b6f1964828f8abf718df7773e2fb7554a2
+Base: f7e85b67d709554c05d2e4efb3da48b782c840b2
+Head: cc041185769d1d85d7109866c216a0c6734eaba0
 
 ## Changed files
-- M .github/workflows/tech-candidate-android-preview.yml
+- M tools/android/character_preview_emulator_smoke.sh
 
 ## Affected areas
-- .github
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

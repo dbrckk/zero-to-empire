@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 7 success / 0 failure / 1 active
+Summary: 6 success / 0 failure / 2 active
 
-- TECH candidate Android preview (no promotion): in_progress / pending (e5dcd4b6)
-- Asset Autofactory 235: completed / success (a511734c)
-- Asset Autofactory 235: completed / success (a511734c)
-- Pollinations Building Candidate: completed / success (a511734c)
-- Asset Autofactory 235: completed / success (a511734c)
-- Pollinations Character Atlas: completed / success (a511734c)
-- Manifest Static GPU Batch: completed / success (a511734c)
-- Kaggle Async Character Collector: completed / success (a511734c)
+- TECH candidate Android preview (no promotion): in_progress / pending (cc041185)
+- Android CI: in_progress / pending (cc041185)
+- Asset Autofactory 235: completed / success (f7e85b67)
+- Pollinations Building Candidate: completed / success (f7e85b67)
+- Asset Autofactory 235: completed / success (f7e85b67)
+- Pollinations Character Atlas: completed / success (f7e85b67)
+- Manifest Static GPU Batch: completed / success (f7e85b67)
+- Kaggle Async Character Collector: completed / success (f7e85b67)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

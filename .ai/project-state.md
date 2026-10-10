@@ -22,19 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-10T06:13:42Z
+Generated: 2026-10-10T16:11:53Z
 
 ### Git
 - Branch: `main`
-- Head: `e5dcd4b6f196`
-- Commit date: 2026-10-10T08:13:28+02:00
-- Commit: ci(android): avoid TECH preview emulator boot timeout with lighter API 33 image
+- Head: `cc041185769d`
+- Commit date: 2026-10-10T18:11:37+02:00
+- Commit: test(android): wait for QA gallery heading and capture startup failure evidence
 - Tracked files: 1512
 
 ### Recently changed files
+- `tools/android/character_preview_emulator_smoke.sh`
 - `.github/workflows/tech-candidate-android-preview.yml`
 - `tools/android/ui_dump_retry.sh`
-- `tools/android/character_preview_emulator_smoke.sh`
 
 ### Project signals
 - `build.gradle.kts`
