@@ -22,22 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-10T21:26:02Z
+Generated: 2026-10-10T21:43:15Z
 
 ### Git
 - Branch: `main`
-- Head: `faf54ee701ed`
-- Commit date: 2026-10-10T23:25:49+02:00
-- Commit: ci(android): check KVM device before emulator package installation
+- Head: `bf3067bf814b`
+- Commit date: 2026-10-10T23:42:57+02:00
+- Commit: docs(art): record real Android TECH preview and cross-action identity blocker
 - Tracked files: 1512
 
 ### Recently changed files
+- `docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md`
 - `.github/workflows/tech-candidate-android-preview.yml`
-- `.github/workflows/asset-autofactory.yml`
-- `art/production/character-strict-review-backlog.md`
-- `art/production/autofactory-state.json`
-- `art/production/autofactory-summary.md`
-- `art/production/master-asset-queue.json`
+- `tools/android/character_preview_emulator_smoke.sh`
+- `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
 
 ### Project signals
 - `build.gradle.kts`

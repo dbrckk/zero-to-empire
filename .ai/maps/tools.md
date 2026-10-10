@@ -311,6 +311,33 @@ if [[ "$found" != true ]]; then
 fi
 assert_text TECHNICIAN "tech-scroll-$attempt"
 adb exec-out screencap -p > "$OUT/tech-candidate-grid.png"
+
+# The 96dp gallery proves only enlarged asset display. The next item uses
+# ReviewedCharacterLayer itself at the actual 35–46dp city actor sizes.
+# Locate its accessible heading, capture real Android pixels, and retain them
+# for manual QA. This is not automatic semantic approval.
+stage_found=false
+for stage_attempt in 0 1 2 3 4 5 6 7; do
+  dump "stage-scale-scroll-$stage_attempt"
+  if grep -Fq "STAGE-SCALE CHARACTER LAYER" "$OUT/stage-scale-scroll-$stage_attempt.xml"; then
+    stage_found=true
+    break
+  fi
+  adb shell input swipe "$((width/2))" "$((height*82/100))" "$((width/2))" "$((height*25/100))" 450
+  sleep 1
+done
+if [[ "$stage_found" != true ]]; then
+  echo "CHARACTER_PREVIEW_FAIL=game-scale-stage-not-visible" >&2
+  exit 1
+fi
+assert_text "STAGE-SCALE CHARACTER LAYER" "stage-scale-scroll-$stage_attempt"
+# Allow the stage to settle and use one modest scroll to expose its center.
+adb shell input swipe "$((width/2))" "$((height*65/100))" "$((width/2))" "$((height*39/100))" 350
+sleep 2
+adb exec-out screencap -p > "$OUT/tech-game-scale-layer.png"
+test -s "$OUT/tech-game-scale-layer.png"
+echo "CHARACTER_PREVIEW_GAME_SCALE_SCREENSHOT_PASS=1"
+
 adb logcat -d > "$OUT/logcat.txt"
 if grep -E "FATAL EXCEPTION|AndroidRuntime.*FATAL" "$OUT/logcat.txt"; then
   echo "CHARACTER_PREVIEW_FAIL=fatal_exception" >&2

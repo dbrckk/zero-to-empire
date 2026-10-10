@@ -225,11 +225,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -248,6 +250,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.unit.dp
@@ -325,6 +329,40 @@ private fun CharacterReviewGallery() {
                                     }
                                 }
                             }
+                        }
+                    }
+                }
+                item {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(
+                            "STAGE-SCALE CHARACTER LAYER",
+                            style = MaterialTheme.typography.titleMedium,
+                        )
+                        Text(
+                            "Exact city character renderer and positions at gameplay sizes " +
+                                "(35–46 dp). This debug comparison does not approve any sprite. " +
+                                "Pause and single-step above also control this layer.",
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                        // Only the real city character composable is used here.
+                        // CI injects review-only textures into the isolated APK,
+                        // never the shipped production masters.
+                        Box(
+                            Modifier
+                                .fillMaxWidth()
+                                .height(620.dp)
+                                .background(
+                                    Brush.verticalGradient(
+                                        listOf(Color(0xFF07101C), Color(0xFF101B24), Color(0xFF080D13))
+                                    )
+                                ),
+                        ) {
+                            ReviewedCharacterLayer(
+                                eraIndex = 0,
+                                worldFrame = worldFrame,
+                                reducedMotion = false,
+                                modifier = Modifier.fillMaxSize(),
+                            )
                         }
                     }
                 }

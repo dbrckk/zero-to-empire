@@ -8423,6 +8423,11 @@ jobs:
           python-version: '3.12'
       - name: Install image validator
         run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
+      - name: Static-validate Android QA shell and click helpers
+        run: |
+          bash -n tools/android/character_preview_emulator_smoke.sh
+          bash -n tools/android/ui_dump_retry.sh
+          python3 -m py_compile tools/android/ui_click_target.py
       - name: Verify three review candidates against source evidence
         run: |
           python - <<'PY'
@@ -8952,11 +8957,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -8975,6 +8982,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.unit.dp
@@ -9052,6 +9061,40 @@ private fun CharacterReviewGallery() {
                                     }
                                 }
                             }
+                        }
+                    }
+                }
+                item {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(
+                            "STAGE-SCALE CHARACTER LAYER",
+                            style = MaterialTheme.typography.titleMedium,
+                        )
+                        Text(
+                            "Exact city character renderer and positions at gameplay sizes " +
+                                "(35–46 dp). This debug comparison does not approve any sprite. " +
+                                "Pause and single-step above also control this layer.",
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                        // Only the real city character composable is used here.
+                        // CI injects review-only textures into the isolated APK,
+                        // never the shipped production masters.
+                        Box(
+                            Modifier
+                                .fillMaxWidth()
+                                .height(620.dp)
+                                .background(
+                                    Brush.verticalGradient(
+                                        listOf(Color(0xFF07101C), Color(0xFF101B24), Color(0xFF080D13))
+                                    )
+                                ),
+                        ) {
+                            ReviewedCharacterLayer(
+                                eraIndex = 0,
+                                worldFrame = worldFrame,
+                                reducedMotion = false,
+                                modifier = Modifier.fillMaxSize(),
+                            )
                         }
                     }
                 }
@@ -24995,6 +25038,33 @@ if [[ "$found" != true ]]; then
 fi
 assert_text TECHNICIAN "tech-scroll-$attempt"
 adb exec-out screencap -p > "$OUT/tech-candidate-grid.png"
+
+# The 96dp gallery proves only enlarged asset display. The next item uses
+# ReviewedCharacterLayer itself at the actual 35–46dp city actor sizes.
+# Locate its accessible heading, capture real Android pixels, and retain them
+# for manual QA. This is not automatic semantic approval.
+stage_found=false
+for stage_attempt in 0 1 2 3 4 5 6 7; do
+  dump "stage-scale-scroll-$stage_attempt"
+  if grep -Fq "STAGE-SCALE CHARACTER LAYER" "$OUT/stage-scale-scroll-$stage_attempt.xml"; then
+    stage_found=true
+    break
+  fi
+  adb shell input swipe "$((width/2))" "$((height*82/100))" "$((width/2))" "$((height*25/100))" 450
+  sleep 1
+done
+if [[ "$stage_found" != true ]]; then
+  echo "CHARACTER_PREVIEW_FAIL=game-scale-stage-not-visible" >&2
+  exit 1
+fi
+assert_text "STAGE-SCALE CHARACTER LAYER" "stage-scale-scroll-$stage_attempt"
+# Allow the stage to settle and use one modest scroll to expose its center.
+adb shell input swipe "$((width/2))" "$((height*65/100))" "$((width/2))" "$((height*39/100))" 350
+sleep 2
+adb exec-out screencap -p > "$OUT/tech-game-scale-layer.png"
+test -s "$OUT/tech-game-scale-layer.png"
+echo "CHARACTER_PREVIEW_GAME_SCALE_SCREENSHOT_PASS=1"
+
 adb logcat -d > "$OUT/logcat.txt"
 if grep -E "FATAL EXCEPTION|AndroidRuntime.*FATAL" "$OUT/logcat.txt"; then
   echo "CHARACTER_PREVIEW_FAIL=fatal_exception" >&2
