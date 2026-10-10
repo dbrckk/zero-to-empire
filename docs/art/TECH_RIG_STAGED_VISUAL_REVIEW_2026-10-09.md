@@ -36,3 +36,13 @@ Le workflow `TECH candidate Android preview (no promotion)` produit un APK de **
 - `gradle assembleDebug`, `testDebugUnitTest` et `lintDebug` : **SUCCESS**. Le fichier APK de test contient ces WebP temporaires ; aucune modification des masters et statuts canoniques n'a été committée.
 - SHA-256 APK debug : `c8c878e662b9950256f1a29a414120f3c50224c9bb7314f25b67e6ea11667eca` (vérifiée par rapport au rapport de provenance CI).
 - **Reste à vérifier :** lancement effectif sur Android, affichage des sprites dans la partie et qualité des interactions / animations dans le jeu. Une compilation verte n'accorde pas une revue artistique ni un strict DONE.
+
+## Preuve d'exécution Android et blocage d'identité — 2026-10-10
+
+- Exécution TECH debug APK [38087592549](https://github.com/dbrckk/zero-to-empire/actions/runs/38087592549) : **SUCCESS** après activation KVM sur GitHub Actions. Le journal confirme CHARACTER_PREVIEW_EMULATOR_PASS=1 et les vrais contrôles « Animation QA », « Pause », « Lecture », « +1 » et « TECHNICIAN ». Les APK et preuves sont dans l'artefact tech-three-art-review-debug-apk-not-approved.
+- Capture Android exacte : tmp/zte-character-preview/tech-candidate-grid.png dans cet artefact. Pixels produits par l'émulateur, pas des rendus exportés par le script artistique.
+- **Défaut transversal observé** : TECH-IDLE canonique présente un technicien debout en uniforme gris à accents cyan et casquette, de face/3⁄4 ; les trois candidats TECH-WALK, WORK, CARRY présentent un autre personnage, en armure noire et silhouette de profil. Les transitions IDLE → WALK/WORK/CARRY violent l'identité, la tenue et l'orientation cohérentes exigées pour une finition premium.
+- La CI Android prouve seulement l'affichage correct des fichiers candidats à 96 dp, pas la cohérence des six actions ni une approbation de production.
+- Le candidat TECH-WALK articulé issu du rig est distinct du candidat Kaggle REJECTED_SEMANTIC enregistré dans la file principale : ne pas confondre leurs provenances.
+- Une section STAGE-SCALE CHARACTER LAYER utilise maintenant le vrai composable ReviewedCharacterLayer à la taille de scène (35–46 dp), et le workflow capture tech-game-scale-layer.png après un vrai rendu Android. Cette preuve supplémentaire reste soumise à une nouvelle exécution CI.
+- **Décision** : aucun nouveau strict DONE. Unifier l'apparence et la perspective entre les six actions, examiner la séparation des pieds, les interactions mains/objets et le mouvement à l'échelle du jeu avant d'envisager toute promotion.
