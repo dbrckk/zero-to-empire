@@ -1,8 +1,8 @@
 # Asset Autofactory — 235 target
 
 - Strict DONE: **216 / 235**
-- Production processed to DONE/review: **233 / 235**
-- Awaiting semantic review: **17**
+- Production processed to DONE/review: **234 / 235**
+- Awaiting semantic review: **18**
 - Automation-blocked: **0**
 - Current action: **NO_AUTOMATIC_WORK_AVAILABLE**
 - Current group: **none**
