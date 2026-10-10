@@ -24907,8 +24907,23 @@ PY
 done
 if [[ "$ready" != true ]]; then
   adb shell dumpsys activity activities > "$OUT/activity-state.txt" || true
+  adb shell dumpsys window > "$OUT/window-state.txt" || true
   adb logcat -d > "$OUT/logcat-startup.txt" || true
   adb exec-out screencap -p > "$OUT/gallery-startup-failure.png" || true
+  echo "CHARACTER_PREVIEW_DIAGNOSTICS_BEGIN" >&2
+  grep -E 'mResumedActivity|topResumedActivity|mFocusedApp|mCurrentFocus' "$OUT/activity-state.txt" "$OUT/window-state.txt" | tail -15 >&2 || true
+  grep -E 'FATAL EXCEPTION|AndroidRuntime|ActivityTaskManager.*(Displayed|START)|am_crash' "$OUT/logcat-startup.txt" | tail -25 >&2 || true
+  python3 - "$OUT/opening-attempt-6.xml" <<'PY'
+import sys, xml.etree.ElementTree as ET
+try:
+    root=ET.parse(sys.argv[1]).getroot()
+    values=[(n.attrib.get('package',''),n.attrib.get('text',''),n.attrib.get('content-desc',''))
+            for n in root.iter('node')]
+    print('CHARACTER_PREVIEW_VISIBLE_NODES='+repr(values[:40]),file=sys.stderr)
+except Exception as exc:
+    print('CHARACTER_PREVIEW_XML_DIAGNOSTIC='+repr(exc),file=sys.stderr)
+PY
+  echo "CHARACTER_PREVIEW_DIAGNOSTICS_END" >&2
   echo "CHARACTER_PREVIEW_FAIL=gallery-heading-not-visible" >&2
   exit 1
 fi

@@ -22,19 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-10T17:46:06Z
+Generated: 2026-10-10T18:59:22Z
 
 ### Git
 - Branch: `main`
-- Head: `e94c66778932`
-- Commit date: 2026-10-10T19:45:51+02:00
-- Commit: fix(android): restore valid QA smoke shell script after malformed insertion
+- Head: `0ee05ac3a634`
+- Commit date: 2026-10-10T20:59:08+02:00
+- Commit: ci(android): expose foreground activity, visible nodes and crash clues for QA gallery failure
 - Tracked files: 1512
 
 ### Recently changed files
 - `tools/android/character_preview_emulator_smoke.sh`
-- `.github/workflows/tech-candidate-android-preview.yml`
-- `tools/android/ui_dump_retry.sh`
+- `art/production/kaggle-async-state.json`
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
+- `art/production/controlled-character-regen-queue.json`
+- `art/production/master-asset-queue.json`
 
 ### Project signals
 - `build.gradle.kts`
