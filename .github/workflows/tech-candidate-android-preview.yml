@@ -12,6 +12,12 @@ on:
       - 'app/src/debug/AndroidManifest.xml'
       - 'tools/android/character_preview_emulator_smoke.sh'
       - 'tools/android/ui_dump_retry.sh'
+  # A GITHUB_TOKEN commit made by the staging workflow does not trigger
+  # ordinary push workflows. Run this review APK build after staging completes.
+  workflow_run:
+    workflows:
+      - 'TECH canonical review staging'
+    types: [completed]
   workflow_dispatch:
 
 permissions:
@@ -23,6 +29,8 @@ concurrency:
 
 jobs:
   debug-candidate-preview:
+    # A failed/stale staging run must not validate an older batch of sprites.
+    if: ${{ github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_repository.full_name == github.repository) }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
