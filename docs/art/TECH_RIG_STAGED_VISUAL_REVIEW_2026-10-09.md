@@ -46,3 +46,11 @@ Le workflow `TECH candidate Android preview (no promotion)` produit un APK de **
 - Le candidat TECH-WALK articulé issu du rig est distinct du candidat Kaggle REJECTED_SEMANTIC enregistré dans la file principale : ne pas confondre leurs provenances.
 - Une section STAGE-SCALE CHARACTER LAYER utilise maintenant le vrai composable ReviewedCharacterLayer à la taille de scène (35–46 dp), et le workflow capture tech-game-scale-layer.png après un vrai rendu Android. Cette preuve supplémentaire reste soumise à une nouvelle exécution CI.
 - **Décision** : aucun nouveau strict DONE. Unifier l'apparence et la perspective entre les six actions, examiner la séparation des pieds, les interactions mains/objets et le mouvement à l'échelle du jeu avant d'envisager toute promotion.
+
+## Extension cohérente à six animations — 2026-10-10
+
+- L'exécution [38088886010](https://github.com/dbrckk/zero-to-empire/actions/runs/38088886010) a réussi le rendu du rig de 24 images par action, les contrôles temporels et les exports canoniques de **six** actions : TECH-IDLE (6 frames), TECH-WALK (8), TECH-WORK (10), TECH-CARRY (8), TECH-REPAIR (10), TECH-CELEB (8).
+- Les six planches et leurs planches de contact sont stockées dans art/production/character-rig-review-candidates/ avec le même SHA-256 de texture source, un rapport de provenance par frame et un indicateur semantic_approved=false. Chacune est review-only : aucun master, statut strict ou manifeste de production n'a été promu.
+- L'identité du rig est maintenant commune entre ces **six alternatives de revue**, ce qui permet d'évaluer la cohérence d'apparence lors des transitions. Les trois actions TECH-IDLE/REPAIR/CELEB déjà strict DONE dans la file officielle **ne sont pas remplacées** ; l'essai compare des alternatives d'identité unifiée, pas une rétrogradation.
+- Les réserves identifiées sur les vrais pixels ne disparaissent pas : perspective principalement latérale, chevauchement des pieds de WALK/CARRY, contact écran de WORK et geste de REPAIR à rendre lisibles à la taille réelle. Le premier vrai test Android du groupe de six est lancé par le workflow dédié et doit terminer avant toute nouvelle conclusion artistique.
+- La synchronisation du compte strict reste : **216/235 DONE** et **19 actions en revue**. Ne jamais compter six candidats exportés comme six validations.
