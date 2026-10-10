@@ -22,13 +22,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-10T16:11:53Z
+Generated: 2026-10-10T17:46:06Z
 
 ### Git
 - Branch: `main`
-- Head: `cc041185769d`
-- Commit date: 2026-10-10T18:11:37+02:00
-- Commit: test(android): wait for QA gallery heading and capture startup failure evidence
+- Head: `e94c66778932`
+- Commit date: 2026-10-10T19:45:51+02:00
+- Commit: fix(android): restore valid QA smoke shell script after malformed insertion
 - Tracked files: 1512
 
 ### Recently changed files
