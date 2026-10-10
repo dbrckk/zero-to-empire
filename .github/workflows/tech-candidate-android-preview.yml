@@ -35,6 +35,11 @@ jobs:
           python-version: '3.12'
       - name: Install image validator
         run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
+      - name: Static-validate Android QA shell and click helpers
+        run: |
+          bash -n tools/android/character_preview_emulator_smoke.sh
+          bash -n tools/android/ui_dump_retry.sh
+          python3 -m py_compile tools/android/ui_click_target.py
       - name: Verify three review candidates against source evidence
         run: |
           python - <<'PY'
