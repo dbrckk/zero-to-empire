@@ -19,7 +19,7 @@ Generated from `art/production/master-asset-queue.json` after production complet
 | CHR-TECH-CARRY | TECH | CARRY | AWAITING_REVIEW | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
 | CHR-LOG-WALK | LOG | WALK | AWAITING_REVIEW | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
 | CHR-LOG-WORK | LOG | WORK | AWAITING_REVIEW | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
-| CHR-LOG-CARRY | LOG | CARRY | BLOCKED | Restore full-body CARRY with one fixed helmet+amber vest identity, genuine 2-hand crate grip and consistent animation. Historical collage is visually invalid; strict semantic approval still required. |
+| CHR-LOG-CARRY | LOG | CARRY | DISPATCHED | Restore full-body CARRY with one fixed helmet+amber vest identity, genuine 2-hand crate grip and consistent animation. Historical collage is visually invalid; strict semantic approval still required. |
 | CHR-LOG-REPAIR | LOG | REPAIR | AWAITING_REVIEW | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
 | CHR-LOG-CELEB | LOG | CELEB | AWAITING_REVIEW | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
 | CHR-ENG-IDLE | ENG | IDLE | AWAITING_REVIEW | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
