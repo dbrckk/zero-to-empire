@@ -8515,11 +8515,11 @@ jobs:
           arch: x86_64
           profile: pixel_6
           cores: 2
-          ram-size: 2048M
-          heap-size: 256M
+          ram-size: 4096M
+          heap-size: 512M
           emulator-boot-timeout: 900
           disable-animations: true
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -no-snapshot
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -no-snapshot -no-metrics
           script: bash tools/android/character_preview_emulator_smoke.sh
       - name: Upload isolated Android APK and evidence
         if: always()

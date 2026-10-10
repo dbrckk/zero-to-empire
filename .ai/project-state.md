@@ -22,23 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-10T19:07:58Z
+Generated: 2026-10-10T19:44:26Z
 
 ### Git
 - Branch: `main`
-- Head: `9b4710c47d45`
-- Commit date: 2026-10-10T21:07:45+02:00
-- Commit: docs(assets): sync strict review backlog with dispatched LOG carry state
+- Head: `22b85fb3f75d`
+- Commit date: 2026-10-10T21:44:12+02:00
+- Commit: ci(android): increase emulator RAM after confirmed System UI ANR during TECH preview
 - Tracked files: 1512
 
 ### Recently changed files
+- `.github/workflows/tech-candidate-android-preview.yml`
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
 - `art/production/character-strict-review-backlog.md`
 - `tools/android/character_preview_emulator_smoke.sh`
 - `art/production/kaggle-async-state.json`
-- `art/production/autofactory-state.json`
-- `art/production/autofactory-summary.md`
-- `art/production/controlled-character-regen-queue.json`
-- `art/production/master-asset-queue.json`
 
 ### Project signals
 - `build.gradle.kts`

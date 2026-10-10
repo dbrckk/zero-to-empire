@@ -1,13 +1,13 @@
 # Change impact
 
-Base: b920ba4b018fb737dcd4812cf81a2e21a7ab85a9
-Head: 9b4710c47d4524a9eecfde0dc3e6ca5bf4008661
+Base: 13bd8e9f3bcfba70d33f4c8f37ecdecc3397dc15
+Head: 22b85fb3f75d33b8c7e48f0099624236941d5207
 
 ## Changed files
-- M art/production/character-strict-review-backlog.md
+- M .github/workflows/tech-candidate-android-preview.yml
 
 ## Affected areas
-- art
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.
