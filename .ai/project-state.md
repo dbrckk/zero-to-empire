@@ -22,24 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-10T21:24:42Z
+Generated: 2026-10-10T21:26:02Z
 
 ### Git
 - Branch: `main`
-- Head: `f56300af8abd`
-- Commit date: 2026-10-10T23:24:28+02:00
-- Commit: ci(assets): regenerate strict-review backlog atomically with autofactory queue updates
+- Head: `faf54ee701ed`
+- Commit date: 2026-10-10T23:25:49+02:00
+- Commit: ci(android): check KVM device before emulator package installation
 - Tracked files: 1512
 
 ### Recently changed files
+- `.github/workflows/tech-candidate-android-preview.yml`
 - `.github/workflows/asset-autofactory.yml`
 - `art/production/character-strict-review-backlog.md`
-- `.github/workflows/tech-candidate-android-preview.yml`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
 - `art/production/master-asset-queue.json`
-- `art/production/controlled-character-regen-queue.json`
-- `art/production/kaggle-async-state.json`
 
 ### Project signals
 - `build.gradle.kts`
