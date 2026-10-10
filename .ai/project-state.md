@@ -22,29 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-10T21:56:13Z
+Generated: 2026-10-10T22:03:20Z
 
 ### Git
 - Branch: `main`
-- Head: `926541e96a57`
-- Commit date: 2026-10-10T23:55:57+02:00
-- Commit: docs(art): distinguish real game-scale sprite proof from blank-scene screenshot
+- Head: `a18436c82143`
+- Commit date: 2026-10-11T00:03:01+02:00
+- Commit: docs(art): capture real stage-scale proof and record TECH night-contrast remediation
 - Tracked files: 1521
 
 ### Recently changed files
 - `docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md`
-- `tools/android/character_preview_emulator_smoke.sh`
+- `app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt`
 - `.github/workflows/tech-candidate-android-preview.yml`
-- `art/production/character-rig-review-candidates/review-report.json`
-- `art/production/character-rig-review-candidates/zte_chr_tech_celeb_final-contact.png`
-- `art/production/character-rig-review-candidates/zte_chr_tech_celeb_final-preview.gif`
-- `art/production/character-rig-review-candidates/zte_chr_tech_celeb_final.png`
-- `art/production/character-rig-review-candidates/zte_chr_tech_idle_final-contact.png`
-- `art/production/character-rig-review-candidates/zte_chr_tech_idle_final-preview.gif`
-- `art/production/character-rig-review-candidates/zte_chr_tech_idle_final.png`
-- `art/production/character-rig-review-candidates/zte_chr_tech_repair_final-contact.png`
-- `art/production/character-rig-review-candidates/zte_chr_tech_repair_final-preview.gif`
-- `art/production/character-rig-review-candidates/zte_chr_tech_repair_final.png`
+- `tools/android/character_preview_emulator_smoke.sh`
 
 ### Project signals
 - `build.gradle.kts`
