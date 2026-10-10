@@ -129,7 +129,9 @@ jobs:
           test -c /dev/kvm
           sudo chmod a+rw /dev/kvm
           test -r /dev/kvm && test -w /dev/kvm
-          "$ANDROID_HOME/emulator/emulator" -accel-check
+          # android-emulator-runner installs the emulator binary later.
+          # Its explicit disable-linux-hw-accel: false prevents fallback.
+          echo "KVM_NODE_ACCESS_VERIFIED=1"
       - name: Validate actual review APK on an emulator
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2
         with:
