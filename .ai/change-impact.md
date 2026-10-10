@@ -1,17 +1,13 @@
 # Change impact
 
-Base: 86f9ce5aee14b3b8276245f3c137f73d99def989
-Head: 035a2fc6850b5c35b973771bc883cbb4067440a5
+Base: 3a5b0fa8ad2f637932dbf0318347b7230168e82a
+Head: 6112678b4e20ab4643262d8660c1bf7add044fb0
 
 ## Changed files
-- M .github/workflows/tech-candidate-android-preview.yml
-- M .github/workflows/tech-canonical-review-stage.yml
-- M tools/sprites/export_tech_canonical_review.py
-- M tools/sprites/test_export_tech_canonical_review.py
+- M docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md
 
 ## Affected areas
-- .github
-- tools
+- docs
 
 ## Related test candidates
 - No direct filename-based test match detected.

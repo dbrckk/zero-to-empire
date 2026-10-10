@@ -1,13 +1,16 @@
 # CI status
 
-Summary: 0 success / 0 failure / 3 active
+Summary: 1 success / 1 failure / 1 active
 
-- TECH canonical review staging: in_progress / pending (035a2fc6)
-- TECH candidate Android preview (no promotion): queued / pending (035a2fc6)
+- TECH candidate Android preview (no promotion): in_progress / pending (3a5b0fa8)
+- Reconcile reviewed run 25: completed / skipped (035a2fc6)
+- TECH canonical review staging: completed / success (035a2fc6)
+- TECH candidate Android preview (no promotion): completed / failure (035a2fc6)
 - TECH candidate Android preview (no promotion): completed / cancelled (109bca4d)
 - Reconcile reviewed run 25: completed / skipped (94ab1be5)
-- Android CI: in_progress / pending (94ab1be5)
-- TECH candidate Android preview (no promotion): completed / cancelled (94ab1be5)
-- Android CI: completed / cancelled (9cef4716)
+
+## Latest failed run structure
+- Job: debug-candidate-preview
+  - Failed step: Verify six review candidates against source evidence
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

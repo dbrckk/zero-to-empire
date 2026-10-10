@@ -8393,6 +8393,7 @@ on:
     branches: [main]
     paths:
       - 'art/production/character-rig-review-candidates/zte_chr_tech_*_final.png'
+      - 'art/production/character-rig-review-candidates/review-report.json'
       - '.github/workflows/tech-candidate-android-preview.yml'
       - 'app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt'
       - 'app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt'
@@ -8439,6 +8440,9 @@ jobs:
           assert r['target_ids']==['CHR-TECH-IDLE','CHR-TECH-WALK','CHR-TECH-WORK','CHR-TECH-CARRY','CHR-TECH-REPAIR','CHR-TECH-CELEB']
           assert r['automatic_promotion_permitted'] is False
           assert r['candidate_count']==6
+          assert len(r['items'])==6
+          assert all(i['source_skin_sha256']==r['source_skin_sha256'] for i in r['items'])
+          assert len({i['staged_png'] for i in r['items']})==6
           assert r['semantic_approved_count']==0
           assert all(i['strict_status']=='NEEDS_REVIEW'
                      and i['canonical_geometry_pass']
