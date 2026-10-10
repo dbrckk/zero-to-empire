@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
@@ -19,6 +20,16 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+
+// A single device pixel of soft cyan edge separation makes very dark TECH
+// uniforms readable against the city night palette without redrawing or
+// altering the reviewed sprite pixels themselves.
+private val TECH_EDGE_OFFSETS = listOf(
+    IntOffset(-1, 0),
+    IntOffset(1, 0),
+    IntOffset(0, -1),
+    IntOffset(0, 1),
+)
 
 private data class CharacterPlacement(
     val role: ReviewedCharacterRole,
@@ -141,6 +152,11 @@ internal fun ReviewedCharacterLayer(
             CharacterAtlasFrame(
                 atlas = atlases.getValue(placement.role to placement.action),
                 frame = sample.spriteFrame,
+                edgeSeparation = if (placement.role == ReviewedCharacterRole.TECHNICIAN) {
+                    Color(0xFF8AD9EE)
+                } else {
+                    null
+                },
                 modifier = Modifier
                     .offset(x = x, y = y)
                     .size(dimension)
@@ -155,6 +171,7 @@ internal fun CharacterAtlasFrame(
     atlas: ImageBitmap,
     frame: Int,
     modifier: Modifier,
+    edgeSeparation: Color? = null,
 ) {
     Canvas(modifier) {
         val sourceFrame = frame.coerceIn(0, REVIEWED_CHARACTER_COLUMNS * REVIEWED_CHARACTER_ROWS - 1)
@@ -164,6 +181,23 @@ internal fun CharacterAtlasFrame(
         val dstX = ((size.width - side) / 2f).toInt()
         val dstY = ((size.height - side) / 2f).toInt()
 
+        if (edgeSeparation != null) {
+            // Under-image subpixel rim: only two TECH actors receive this
+            // treatment. Their real atlases, pivots, timing and source pixels
+            // stay unchanged; the light outline is contextual stage lighting.
+            val rim = ColorFilter.tint(edgeSeparation)
+            TECH_EDGE_OFFSETS.forEach { delta ->
+                drawImage(
+                    image = atlas,
+                    srcOffset = IntOffset(srcX, srcY),
+                    srcSize = IntSize(REVIEWED_CHARACTER_CELL_SIDE, REVIEWED_CHARACTER_CELL_SIDE),
+                    dstOffset = IntOffset(dstX + delta.x, dstY + delta.y),
+                    dstSize = IntSize(side, side),
+                    alpha = .22f,
+                    colorFilter = rim,
+                )
+            }
+        }
         drawOval(
             color = Color.Black.copy(alpha = .22f),
             topLeft = Offset(size.width * .23f, size.height * .78f),
