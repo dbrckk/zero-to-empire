@@ -22,22 +22,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-10T19:44:26Z
+Generated: 2026-10-10T21:21:48Z
 
 ### Git
 - Branch: `main`
-- Head: `22b85fb3f75d`
-- Commit date: 2026-10-10T21:44:12+02:00
-- Commit: ci(android): increase emulator RAM after confirmed System UI ANR during TECH preview
+- Head: `f4a5e3c421aa`
+- Commit date: 2026-10-10T23:21:33+02:00
+- Commit: ci(android): enable KVM and fail if TECH preview emulator lacks hardware acceleration
 - Tracked files: 1512
 
 ### Recently changed files
 - `.github/workflows/tech-candidate-android-preview.yml`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
-- `art/production/character-strict-review-backlog.md`
-- `tools/android/character_preview_emulator_smoke.sh`
+- `art/production/master-asset-queue.json`
+- `art/production/controlled-character-regen-queue.json`
 - `art/production/kaggle-async-state.json`
+- `tools/android/character_preview_emulator_smoke.sh`
 
 ### Project signals
 - `build.gradle.kts`

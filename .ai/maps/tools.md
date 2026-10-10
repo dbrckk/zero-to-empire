@@ -223,6 +223,19 @@ for attempt in 1 2 3 4 5 6; do
     exit 1
   fi
   dump "opening-attempt-$attempt"
+  # A System UI ANR dialog blocks accessibility even when our app is alive.
+  # Dismiss it once with the system's "Wait" action, then relaunch QA.
+  # Preserve the pre-recovery hierarchy as evidence; never count this as pass.
+  if [[ "$attempt" -eq 1 ]] && grep -Eq "System UI (isn.t|isn&amp;apos;t) responding" "$OUT/opening-attempt-$attempt.xml"; then
+    echo "CHARACTER_PREVIEW_SYSTEM_UI_ANR_RECOVERY=attempted" >&2
+    python3 "$SCRIPT_DIR/ui_click_target.py" "$OUT/opening-attempt-$attempt.xml" "Wait" > "$OUT/system-ui-wait-coordinates.txt" || true
+    if read -r wait_x wait_y < "$OUT/system-ui-wait-coordinates.txt" &&
+       [[ "$wait_x" =~ ^[0-9]+$ && "$wait_y" =~ ^[0-9]+$ ]]; then
+      adb shell input tap "$wait_x" "$wait_y" || true
+      sleep 4
+      adb shell am start -W -n "$PKG/.CharacterReviewActivity" > "$OUT/relaunch-after-system-ui-anr.txt" || true
+    fi
+  fi
   if python3 - "$OUT/opening-attempt-$attempt.xml" <<'PY'
 import sys
 import xml.etree.ElementTree as ET

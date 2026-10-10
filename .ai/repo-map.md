@@ -8505,19 +8505,31 @@ jobs:
           Path('tech-candidate-debug-evidence.json').write_text(json.dumps(result,indent=2)+'\n')
           print('DEBUG_TECH_CANDIDATE_PREVIEW_BUILT_NO_STRICT_DONE=1')
           PY
+      - name: Enable KVM acceleration on the ephemeral GitHub runner
+        run: |
+          set -euo pipefail
+          # Previously /dev/kvm existed but the runner lacked permission.
+          # Without KVM, Android's QEMU guest booted in >5 minutes and
+          # repeatedly blocked on "System UI isn't responding".
+          test -c /dev/kvm
+          sudo chmod a+rw /dev/kvm
+          test -r /dev/kvm && test -w /dev/kvm
+          "$ANDROID_HOME/emulator/emulator" -accel-check
       - name: Validate actual review APK on an emulator
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2
         with:
-          # API 35 Google APIs image repeatedly timed out during cold boot on CI.
-          # Use a smaller standard API 33 image for sprite preview verification.
+          # API 35 cold boot was unreliable without KVM.
+          # Keep the lighter API 33 image and smaller profile with KVM enabled.
           api-level: 33
           target: default
           arch: x86_64
-          profile: pixel_6
+          profile: pixel_2
           cores: 2
           ram-size: 4096M
           heap-size: 512M
           emulator-boot-timeout: 900
+          # Fail closed if acceleration cannot be enabled on the runner.
+          disable-linux-hw-accel: false
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -no-snapshot -no-metrics
           script: bash tools/android/character_preview_emulator_smoke.sh
@@ -24890,6 +24902,19 @@ for attempt in 1 2 3 4 5 6; do
     exit 1
   fi
   dump "opening-attempt-$attempt"
+  # A System UI ANR dialog blocks accessibility even when our app is alive.
+  # Dismiss it once with the system's "Wait" action, then relaunch QA.
+  # Preserve the pre-recovery hierarchy as evidence; never count this as pass.
+  if [[ "$attempt" -eq 1 ]] && grep -Eq "System UI (isn.t|isn&amp;apos;t) responding" "$OUT/opening-attempt-$attempt.xml"; then
+    echo "CHARACTER_PREVIEW_SYSTEM_UI_ANR_RECOVERY=attempted" >&2
+    python3 "$SCRIPT_DIR/ui_click_target.py" "$OUT/opening-attempt-$attempt.xml" "Wait" > "$OUT/system-ui-wait-coordinates.txt" || true
+    if read -r wait_x wait_y < "$OUT/system-ui-wait-coordinates.txt" &&
+       [[ "$wait_x" =~ ^[0-9]+$ && "$wait_y" =~ ^[0-9]+$ ]]; then
+      adb shell input tap "$wait_x" "$wait_y" || true
+      sleep 4
+      adb shell am start -W -n "$PKG/.CharacterReviewActivity" > "$OUT/relaunch-after-system-ui-anr.txt" || true
+    fi
+  fi
   if python3 - "$OUT/opening-attempt-$attempt.xml" <<'PY'
 import sys
 import xml.etree.ElementTree as ET

@@ -1,7 +1,7 @@
 # Change impact
 
-Base: 13bd8e9f3bcfba70d33f4c8f37ecdecc3397dc15
-Head: 22b85fb3f75d33b8c7e48f0099624236941d5207
+Base: 39497128668e822559d90b341e4e466ddcf97820
+Head: f4a5e3c421aa84f6b0f486ebfe0418b3d9224e23
 
 ## Changed files
 - M .github/workflows/tech-candidate-android-preview.yml

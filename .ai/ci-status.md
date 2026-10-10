@@ -1,15 +1,15 @@
 # CI status
 
-Summary: 5 success / 1 failure / 1 active
+Summary: 2 success / 1 failure / 1 active
 
-- TECH candidate Android preview (no promotion): in_progress / pending (22b85fb3)
-- Asset Autofactory 235: completed / success (0ca214ef)
-- Pollinations Building Candidate: completed / success (0ca214ef)
-- Reconcile reviewed run 25: completed / skipped (b920ba4b)
-- TECH candidate Android preview (no promotion): completed / failure (0ee05ac3)
-- Android CI: completed / success (0ee05ac3)
-- Kaggle Mass Sprite Factory: completed / success (7b4bd0ab)
-- Asset Autofactory 235: completed / success (510fba7f)
+- TECH candidate Android preview (no promotion): in_progress / pending (f4a5e3c4)
+- Reconcile reviewed run 25: completed / skipped (39497128)
+- Reconcile reviewed run 25: completed / skipped (69c29866)
+- Asset Autofactory 235: completed / success (69c29866)
+- TECH candidate Android preview (no promotion): completed / failure (48d91e39)
+- Android CI: completed / success (48d91e39)
+- TECH candidate Android preview (no promotion): completed / cancelled (52637a89)
+- Android CI: completed / cancelled (52637a89)
 
 ## Latest failed run structure
 - Job: debug-candidate-preview
