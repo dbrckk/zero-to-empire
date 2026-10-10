@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Stage three canonical-format TECH animations from one deterministic textured rig.
+"""Stage all six canonical-format TECH animations from one deterministic textured rig.
 
 These are visual-review CANDIDATES, never replacements for canonical PNG/WebP
 or automatic strict-DONE promotions. The 24-frame articulated source is
@@ -17,7 +17,7 @@ from PIL import Image, ImageDraw
 from audit_character_candidates import inspect
 from package_tech_actions_runtime import game_scale_metrics
 
-ACTIONS = {"WALK": 8, "WORK": 10, "CARRY": 8}
+ACTIONS = {"IDLE": 6, "WALK": 8, "WORK": 10, "CARRY": 8, "REPAIR": 10, "CELEB": 8}
 SOURCE_FRAMES = 24
 CELL = 256
 

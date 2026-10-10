@@ -53,7 +53,7 @@ jobs:
             --source build/tech-actions-v3 \
             --output build/tech-temporal-review \
             --skin tools/sprites/skin-tech-v1.webp
-      - name: Stage actual Android-format TECH WALK WORK CARRY candidates
+      - name: Stage all six Android-format TECH action candidates
         run: |
           python tools/sprites/export_tech_canonical_review.py \
             --source build/tech-actions-v3 \
@@ -72,8 +72,8 @@ jobs:
           from pathlib import Path
           report=json.loads(Path('art/production/character-rig-review-candidates/review-report.json').read_text())
           master=json.loads(Path('art/production/master-asset-queue.json').read_text())
-          assert report['candidate_count']==3
-          assert report['target_ids']==['CHR-TECH-WALK','CHR-TECH-WORK','CHR-TECH-CARRY']
+          assert report['candidate_count']==6
+          assert report['target_ids']==['CHR-TECH-IDLE','CHR-TECH-WALK','CHR-TECH-WORK','CHR-TECH-CARRY','CHR-TECH-REPAIR','CHR-TECH-CELEB']
           assert report['semantic_approved_count']==0
           assert report['automatic_promotion_permitted'] is False
           assert report['canonical_queue_mutated'] is False
@@ -84,16 +84,21 @@ jobs:
               assert item['runtime_integrated'] is False
               assert item['visual_review_pass'] is False
               assert item['semantic_approved'] is False
+          # Three backlog actions remain NEEDS_REVIEW; the other three
+          # are already canonical DONE, but their rig alternatives are
+          # separately staged and must never replace shipped assets here.
           for item in master['assets']:
-              if item['id'] in report['target_ids']:
+              if item['id'] in ('CHR-TECH-WALK', 'CHR-TECH-WORK', 'CHR-TECH-CARRY'):
                   assert item['strict_status']!='DONE'
-          print('CANONICAL_REVIEW_STAGE_PASS=3 STRICT_DONE_UNCHANGED=1')
+              if item['id'] in ('CHR-TECH-IDLE', 'CHR-TECH-REPAIR', 'CHR-TECH-CELEB'):
+                  assert item['strict_status']=='DONE'
+          print('CANONICAL_REVIEW_STAGE_PASS=6 STRICT_DONE_UNCHANGED=1')
           PY
       - name: Upload review files and source temporal evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: tech-three-canonical-review-not-approved
+          name: tech-six-canonical-review-not-approved
           path: |
             art/production/character-rig-review-candidates/
             build/tech-temporal-review/temporal-qa.json

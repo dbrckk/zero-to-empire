@@ -40,7 +40,7 @@ jobs:
           bash -n tools/android/character_preview_emulator_smoke.sh
           bash -n tools/android/ui_dump_retry.sh
           python3 -m py_compile tools/android/ui_click_target.py
-      - name: Verify three review candidates against source evidence
+      - name: Verify six review candidates against source evidence
         run: |
           python - <<'PY'
           import hashlib,json
@@ -48,8 +48,9 @@ jobs:
           folder=Path('art/production/character-rig-review-candidates')
           r=json.loads((folder/'review-report.json').read_text())
           assert r['format']=='zte-canonical-tech-review-v1'
-          assert r['target_ids']==['CHR-TECH-WALK','CHR-TECH-WORK','CHR-TECH-CARRY']
+          assert r['target_ids']==['CHR-TECH-IDLE','CHR-TECH-WALK','CHR-TECH-WORK','CHR-TECH-CARRY','CHR-TECH-REPAIR','CHR-TECH-CELEB']
           assert r['automatic_promotion_permitted'] is False
+          assert r['candidate_count']==6
           assert r['semantic_approved_count']==0
           assert all(i['strict_status']=='NEEDS_REVIEW'
                      and i['canonical_geometry_pass']
@@ -61,21 +62,23 @@ jobs:
               assert hashlib.sha256(p.read_bytes()).hexdigest()==i['staged_sha256']
           q=json.loads(Path('art/production/master-asset-queue.json').read_text())
           for a in q['assets']:
-              if a['id'] in r['target_ids']:
+              if a['id'] in ('CHR-TECH-WALK', 'CHR-TECH-WORK', 'CHR-TECH-CARRY'):
                   assert a['strict_status']!='DONE'
-          print('REVIEW_ONLY_VERIFIED=3 NO_STRICT_PROMOTION=1')
+              if a['id'] in ('CHR-TECH-IDLE', 'CHR-TECH-REPAIR', 'CHR-TECH-CELEB'):
+                  assert a['strict_status']=='DONE'
+          print('REVIEW_ONLY_VERIFIED=6 NO_STRICT_PROMOTION=1')
           PY
       - name: Convert staged candidates into temporary Android preview resources
         env:
-          SPRITE_TARGETS: zte_chr_tech_walk_final,zte_chr_tech_work_final,zte_chr_tech_carry_final
+          SPRITE_TARGETS: zte_chr_tech_idle_final,zte_chr_tech_walk_final,zte_chr_tech_work_final,zte_chr_tech_carry_final,zte_chr_tech_repair_final,zte_chr_tech_celeb_final
         run: |
           set -euo pipefail
-          for action in walk work carry; do
+          for action in idle walk work carry repair celeb; do
             cp "art/production/character-rig-review-candidates/zte_chr_tech_$action"_"final.png" \
                "art/incoming/final-sprites/zte_chr_tech_$action"_"final.png"
           done
           python tools/sprites/process_final_sprites.py
-          for action in WALK WORK CARRY; do
+          for action in IDLE WALK WORK CARRY REPAIR CELEB; do
             lc="$(echo "$action" | tr '[:upper:]' '[:lower:]')"
             python tools/sprites/validate_runtime_asset.py \
               --asset-id "CHR-TECH-$action" \
@@ -117,7 +120,7 @@ jobs:
           assert apk.is_file() and apk.stat().st_size>100000
           result={'format':'zte-tech-debug-preview-v1',
                   'debug_apk_sha256':hashlib.sha256(apk.read_bytes()).hexdigest(),
-                  'candidate_count':3,'strict_status':'NEEDS_REVIEW',
+                  'candidate_count':6,'strict_status':'NEEDS_REVIEW',
                   'production_files_committed':False,
                   'source_and_runtime_staged_only_in_ci':True,
                   'actual_playability_on_device':'NOT_YET_TESTED',
@@ -159,7 +162,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: tech-three-art-review-debug-apk-not-approved
+          name: tech-six-art-review-debug-apk-not-approved
           path: |
             app/build/outputs/apk/debug/app-debug.apk
             tech-candidate-debug-evidence.json

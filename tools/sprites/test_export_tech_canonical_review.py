@@ -112,7 +112,7 @@ class TechCanonicalReviewTests(unittest.TestCase):
     def test_unsupported_action_is_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:
             with self.assertRaisesRegex(ValueError, "Unknown action"):
-                stage_action(Path(tmp), Path(tmp) / "out", "CELEB", "x")
+                stage_action(Path(tmp), Path(tmp) / "out", "FLY", "x")
 
 
 if __name__ == "__main__":
