@@ -22,17 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-10T21:48:28Z
+Generated: 2026-10-10T21:56:13Z
 
 ### Git
 - Branch: `main`
-- Head: `6112678b4e20`
-- Commit date: 2026-10-10T23:48:07+02:00
-- Commit: docs(art): track six shared-identity TECH review variants and unchanged strict gate
+- Head: `926541e96a57`
+- Commit date: 2026-10-10T23:55:57+02:00
+- Commit: docs(art): distinguish real game-scale sprite proof from blank-scene screenshot
 - Tracked files: 1521
 
 ### Recently changed files
 - `docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md`
+- `tools/android/character_preview_emulator_smoke.sh`
 - `.github/workflows/tech-candidate-android-preview.yml`
 - `art/production/character-rig-review-candidates/review-report.json`
 - `art/production/character-rig-review-candidates/zte_chr_tech_celeb_final-contact.png`
@@ -44,9 +45,6 @@ Generated: 2026-10-10T21:48:28Z
 - `art/production/character-rig-review-candidates/zte_chr_tech_repair_final-contact.png`
 - `art/production/character-rig-review-candidates/zte_chr_tech_repair_final-preview.gif`
 - `art/production/character-rig-review-candidates/zte_chr_tech_repair_final.png`
-- `.github/workflows/tech-canonical-review-stage.yml`
-- `tools/sprites/export_tech_canonical_review.py`
-- `tools/sprites/test_export_tech_canonical_review.py`
 
 ### Project signals
 - `build.gradle.kts`

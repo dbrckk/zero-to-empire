@@ -331,11 +331,29 @@ if [[ "$stage_found" != true ]]; then
   exit 1
 fi
 assert_text "STAGE-SCALE CHARACTER LAYER" "stage-scale-scroll-$stage_attempt"
-# Allow the stage to settle and use one modest scroll to expose its center.
-adb shell input swipe "$((width/2))" "$((height*65/100))" "$((width/2))" "$((height*39/100))" 350
+# The actual city stage is 620dp high. On a high-density emulator
+# a short scroll leaves only its empty upper area on screen, while actors
+# live at 49–86% of the stage height. Scroll near the *bottom* before
+# capturing, then reject an empty background-only screenshot.
+adb shell input swipe "$((width/2))" "$((height*84/100))" "$((width/2))" "$((height*18/100))" 650
 sleep 2
 adb exec-out screencap -p > "$OUT/tech-game-scale-layer.png"
 test -s "$OUT/tech-game-scale-layer.png"
+python3 - "$OUT/tech-game-scale-layer.png" <<'PY'
+import sys
+from PIL import Image
+im=Image.open(sys.argv[1]).convert('RGB')
+w,h=im.size
+# Lower viewport: no gallery thumbnails or white heading should be here.
+# The stage's three dark gradient stops have max-min <= 21 and max <= 36.
+# Count distinctly colored actor pixels, not the stage background.
+crop=im.crop((int(w*.05),int(h*.54),int(w*.95),int(h*.85)))
+colored=sum(1 for r,g,b in crop.getdata()
+            if max(r,g,b)>=90 and max(r,g,b)-min(r,g,b)>35)
+print('CHARACTER_PREVIEW_GAME_SCALE_COLORED_PIXELS='+str(colored))
+if colored < 100:
+    raise SystemExit('CHARACTER_PREVIEW_FAIL=game-scale-actors-not-visible')
+PY
 echo "CHARACTER_PREVIEW_GAME_SCALE_SCREENSHOT_PASS=1"
 
 adb logcat -d > "$OUT/logcat.txt"

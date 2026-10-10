@@ -1,7 +1,7 @@
 # Change impact
 
-Base: 3a5b0fa8ad2f637932dbf0318347b7230168e82a
-Head: 6112678b4e20ab4643262d8660c1bf7add044fb0
+Base: aead84f43770035d1ba04be1f160b62f0da29f8c
+Head: 926541e96a575d4939964df608d395098fe85dee
 
 ## Changed files
 - M docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md
