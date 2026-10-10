@@ -1030,6 +1030,9 @@ jobs:
       - name: Reconcile queue and choose next autonomous wave
         run: python -u tools/sprites/asset_wave_orchestrator.py
 
+      - name: Regenerate strict-review backlog from the updated canonical queue
+        run: python3 tools/sprites/generate_strict_review_backlog.py
+
       - name: Validate queue invariants
         shell: bash
         run: |
@@ -1053,7 +1056,7 @@ jobs:
           set -euo pipefail
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add             art/production/master-asset-queue.json             art/production/autofactory-state.json             art/production/autofactory-summary.md             art/production/controlled-building-regen-queue.json             art/production/controlled-character-regen-queue.json
+          git add             art/production/master-asset-queue.json             art/production/autofactory-state.json             art/production/autofactory-summary.md             art/production/controlled-building-regen-queue.json             art/production/controlled-character-regen-queue.json             art/production/character-strict-review-backlog.md
           if git diff --cached --quiet; then
             echo 'No autofactory state change.'
           else

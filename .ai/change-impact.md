@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 39497128668e822559d90b341e4e466ddcf97820
-Head: f4a5e3c421aa84f6b0f486ebfe0418b3d9224e23
+Base: 8ba9842dfc003b426344268b7a7116522c4b33b4
+Head: f56300af8abd75ab01d84954eef51bad4d21dd8c
 
 ## Changed files
-- M .github/workflows/tech-candidate-android-preview.yml
+- M .github/workflows/asset-autofactory.yml
 
 ## Affected areas
 - .github

@@ -9,7 +9,6 @@ Summary: 2 success / 1 failure / 1 active
 - TECH candidate Android preview (no promotion): completed / failure (48d91e39)
 - Android CI: completed / success (48d91e39)
 - TECH candidate Android preview (no promotion): completed / cancelled (52637a89)
-- Android CI: completed / cancelled (52637a89)
 
 ## Latest failed run structure
 - Job: debug-candidate-preview
