@@ -123,12 +123,18 @@ jobs:
       - name: Validate actual review APK on an emulator
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2
         with:
-          api-level: 35
-          target: google_apis
+          # API 35 Google APIs image repeatedly timed out during cold boot on CI.
+          # Use a smaller standard API 33 image for sprite preview verification.
+          api-level: 33
+          target: default
           arch: x86_64
           profile: pixel_6
+          cores: 2
+          ram-size: 2048M
+          heap-size: 256M
+          emulator-boot-timeout: 900
           disable-animations: true
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -no-snapshot
           script: bash tools/android/character_preview_emulator_smoke.sh
       - name: Upload isolated Android APK and evidence
         if: always()
