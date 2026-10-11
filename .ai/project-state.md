@@ -22,24 +22,36 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T17:40:19Z
+Generated: 2026-10-11T17:44:35Z
 
 ### Git
 - Branch: `main`
-- Head: `7588333d0ba2`
-- Commit date: 2026-10-11T19:40:01+02:00
-- Commit: ci(art): harden reviewed character promotion gate
+- Head: `9f8351fcfea2`
+- Commit date: 2026-10-11T19:44:15+02:00
+- Commit: ci(art): recheck strict ENG character wave
 - Tracked files: 1524
 
 ### Recently changed files
-- `.github/workflows/promote-approved-kaggle-characters.yml`
 - `ops/kaggle-collector-trigger.txt`
-- `art/production/kaggle-async-state.json`
-- `.github/workflows/promote-reviewed-tech-sprites.yml`
-- `art/production/autofactory-state.json`
-- `art/production/autofactory-summary.md`
+- `docs/art/FINAL_AAA_SPRITE_MANIFEST.md`
+- `docs/art/FINAL_AAA_SPRITE_PROGRESS.md`
 - `art/production/character-strict-review-backlog.md`
+- `app/src/main/res/drawable-nodpi/zte_chr_tech_carry_final.webp`
+- `app/src/main/res/drawable-nodpi/zte_chr_tech_celeb_final.webp`
+- `app/src/main/res/drawable-nodpi/zte_chr_tech_idle_final.webp`
+- `app/src/main/res/drawable-nodpi/zte_chr_tech_repair_final.webp`
+- `app/src/main/res/drawable-nodpi/zte_chr_tech_walk_final.webp`
+- `app/src/main/res/drawable-nodpi/zte_chr_tech_work_final.webp`
+- `art/incoming/final-sprites/zte_chr_tech_carry_final.png`
+- `art/incoming/final-sprites/zte_chr_tech_celeb_final.png`
+- `art/incoming/final-sprites/zte_chr_tech_idle_final.png`
+- `art/incoming/final-sprites/zte_chr_tech_repair_final.png`
+- `art/incoming/final-sprites/zte_chr_tech_walk_final.png`
+- `art/incoming/final-sprites/zte_chr_tech_work_final.png`
+- `art/production/character-rig-review-candidates/review-report.json`
 - `art/production/master-asset-queue.json`
+- `art/production/zte_chr_tech_carry_final-runtime-qa.json`
+- `art/production/zte_chr_tech_celeb_final-runtime-qa.json`
 
 ### Project signals
 - `build.gradle.kts`

@@ -1,13 +1,13 @@
 # Change impact
 
-Base: f83558138eb22033ed62da19a4bf710993273f6c
-Head: 7588333d0ba2840f2fea3697e46c5f4e0f226da6
+Base: 720cd1ea96373e44ce5a4573ed5704fc43813ea5
+Head: 9f8351fcfea21cf79b478d76ec25c5f3ab9bf3b0
 
 ## Changed files
-- M .github/workflows/promote-approved-kaggle-characters.yml
+- M ops/kaggle-collector-trigger.txt
 
 ## Affected areas
-- .github
+- ops
 
 ## Related test candidates
 - No direct filename-based test match detected.
