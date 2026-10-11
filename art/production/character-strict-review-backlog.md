@@ -19,15 +19,15 @@ Generated from `art/production/master-asset-queue.json` after production complet
 | CHR-TECH-CARRY | TECH | CARRY | AWAITING_REVIEW | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
 | CHR-LOG-WALK | LOG | WALK | DISPATCHED | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
 | CHR-LOG-WORK | LOG | WORK | DISPATCHED | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
-| CHR-LOG-CARRY | LOG | CARRY | DISPATCHED | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
+| CHR-LOG-CARRY | LOG | CARRY | BLOCKED_AUTOMATION_LIMIT | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
 | CHR-LOG-REPAIR | LOG | REPAIR | DISPATCHED | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
 | CHR-LOG-CELEB | LOG | CELEB | DISPATCHED | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
-| CHR-ENG-IDLE | ENG | IDLE | PENDING_KAGGLE | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
-| CHR-ENG-WALK | ENG | WALK | PENDING_KAGGLE | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
-| CHR-ENG-WORK | ENG | WORK | PENDING_KAGGLE | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
-| CHR-ENG-CARRY | ENG | CARRY | PENDING_KAGGLE | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
-| CHR-ENG-REPAIR | ENG | REPAIR | PENDING_KAGGLE | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
-| CHR-ENG-CELEB | ENG | CELEB | PENDING_KAGGLE | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
+| CHR-ENG-IDLE | ENG | IDLE | DISPATCHED | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
+| CHR-ENG-WALK | ENG | WALK | DISPATCHED | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
+| CHR-ENG-WORK | ENG | WORK | DISPATCHED | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
+| CHR-ENG-CARRY | ENG | CARRY | DISPATCHED | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
+| CHR-ENG-REPAIR | ENG | REPAIR | DISPATCHED | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
+| CHR-ENG-CELEB | ENG | CELEB | DISPATCHED | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
 
 ## Review rule
 
