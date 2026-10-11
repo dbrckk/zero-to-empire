@@ -290,6 +290,14 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertLess(text.index("_,coverage=finish_frame(candidate,'IDLE')"),
                         text.index("for idx,i in enumerate(items):"))
 
+    def test_same_run_idle_identity_is_required_before_sibling_render(self):
+        text = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
+        self.assertIn("required_idle_roles={item['role'] for item in items if item['action']=='IDLE'}", text)
+        self.assertIn("i['role'] not in verified_idle_roles", text)
+        self.assertIn("required-role-idle-candidate-rejected", text)
+        self.assertIn("verified_idle_roles.add(i['role'])", text)
+        self.assertLess(text.index("required-role-idle-candidate-rejected"), text.index("frames=[];anchor_raw=None"))
+
     def test_kaggle_character_generator_rejects_blocking_visual_risks(self):
         generator = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
         workflow = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
