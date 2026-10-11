@@ -103,6 +103,10 @@ internal fun ReviewedCharacterLayer(
     worldFrame: Int,
     reducedMotion: Boolean,
     modifier: Modifier = Modifier,
+    // Debug QA can isolate one profession and render any of its six actions
+    // at the exact dimensions used in the city. Defaults preserve gameplay.
+    roleFilter: ReviewedCharacterRole? = null,
+    actionOverride: ReviewedCharacterAction? = null,
 ) {
     val context = LocalContext.current
     val lateEraScale = if (eraIndex >= 4) 1.08f else 1f
@@ -120,8 +124,19 @@ internal fun ReviewedCharacterLayer(
         )
     }
 
-    val atlases = remember {
+    val visiblePlacements = remember(placements, roleFilter, actionOverride) {
         placements
+            .filter { roleFilter == null || it.role == roleFilter }
+            .map { placement ->
+                if (actionOverride == null) placement
+                else placement.copy(action = actionOverride)
+            }
+    }
+    // An override must load the *new* action atlas, not reuse cached WALK
+    // while only changing its frame index. With no overrides, this is the
+    // same eight real game placements and sprite resources as before.
+    val atlases = remember(context, visiblePlacements) {
+        visiblePlacements
             .map { it.role to it.action }
             .distinct()
             .associateWith { (role, action) ->
@@ -135,7 +150,7 @@ internal fun ReviewedCharacterLayer(
     BoxWithConstraints(modifier.fillMaxSize()) {
         val scale = minOf(maxWidth.value / 360f, maxHeight.value / 620f)
             .coerceIn(.75f, 1.20f) * lateEraScale
-        placements.forEach { placement ->
+        visiblePlacements.forEach { placement ->
             val sample = ambientCharacterMotion(
                 action = placement.action,
                 worldFrame = worldFrame,
