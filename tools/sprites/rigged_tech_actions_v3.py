@@ -30,6 +30,11 @@ HIP_Y = core.HIP_Y
 # occlusion at crossover without changing stance velocity or Y grounding.
 # Static actions and the shipped legacy WALK renderer are untouched.
 FAR_FOOT_LANE_PX = 22.0
+# The back foot belongs to a deeper 2.5D ground lane, projected 14 source
+# pixels higher than the near lane. The offset is CONSTANT through the
+# entire footstep cycle: it cannot induce an extra foot slide. This is
+# a review-only camera-space projection, not a raised/hovering shoe.
+FAR_FOOT_DEPTH_Y_PX = 14.0
 
 
 
@@ -97,12 +102,13 @@ def pose_for(t: float, action: str) -> dict:
     phase = 2 * math.pi * t
     if action in ("WALK", "CARRY"):
         p = transfer_pose(core.pose(t),t,action)
-        # Same sole trajectory, same phase and ground contact: separate the
-        # far-side shoe laterally to make two legs readable at 39–42dp.
-        # IK for the far knee uses this displaced ankle rather than painting
-        # a disconnected boot over the old target.
+        # Preserve footstep phases and stance-lock flags while projecting
+        # the FAR foot into a slightly deeper 2.5D ground lane. Both X/Y
+        # offsets stay constant over the cycle, so the foot remains planted
+        # relative to its own lane. Re-solving knee IK connects the actual
+        # thigh/calf to the displaced ankle instead of floating a boot image.
         lx, ly = p["left"]
-        p["left"] = (lx - FAR_FOOT_LANE_PX, ly)
+        p["left"] = (lx - FAR_FOOT_LANE_PX, ly - FAR_FOOT_DEPTH_Y_PX)
         p["torso_lean_rad"] = spine_lean(t, action)
         if action == "CARRY":
             x, y = p["root"]

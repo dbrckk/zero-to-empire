@@ -9,7 +9,7 @@ import unittest
 from pathlib import Path
 from PIL import Image
 from rigged_tech_actions_v3 import (
-    ACTIONS, GROUND, FAR_FOOT_LANE_PX, build_action, draw_cargo, draw_frame, pose_for, spine_lean,
+    ACTIONS, GROUND, FAR_FOOT_LANE_PX, FAR_FOOT_DEPTH_Y_PX, build_action, draw_cargo, draw_frame, pose_for, spine_lean,
 )
 import rigged_tech_walk_v2 as core
 from action_contact import work_contact, repair_contact, repair_spark_intensity, work_event_indices
@@ -55,11 +55,13 @@ class MultiActionGeometryTests(unittest.TestCase):
                 t=i/96
                 p=pose_for(t,action)
                 base=core.pose(t)
-                self.assertEqual(p['left'],(base['left'][0]-FAR_FOOT_LANE_PX,base['left'][1]))
+                self.assertEqual(p['left'],(base['left'][0]-FAR_FOOT_LANE_PX,
+                                           base['left'][1]-FAR_FOOT_DEPTH_Y_PX))
                 self.assertEqual(p['right'],base['right'])
                 self.assertEqual(p['lockL'],base['lockL'])
                 self.assertEqual(p['lockR'],base['lockR'])
-                self.assertLessEqual(p['left'][1],GROUND)
+                self.assertLessEqual(p['left'][1],GROUND-FAR_FOOT_DEPTH_Y_PX)
+                self.assertEqual(p['left'][1]-base['left'][1], -FAR_FOOT_DEPTH_Y_PX)
                 self.assertLessEqual(math.dist(
                     (p['root'][0]-13,p['root'][1]),p['left']),193.0)
                 q=pose_for(t+1,action)
