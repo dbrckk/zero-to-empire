@@ -366,7 +366,107 @@
       "source_run_id": 37225678575,
       "reason": "Semantic review 2026-10-04 of v1.12 Kaggle run 37225678575: rejected; cells behave like front/back turntable pairs with large face/headgear/clothing changes, multiple people per cell appearance, and no coherent repair motion on one stable target.",
       "prompt_hint": "Lock one exact LOG worker identity, one three-quarter camera and one body orientation. One person only per frame. Keep a fixed repair panel and tool contact across all frames; prohibit front/back turntable compositions and headgear swaps."
+    },
+    {
+      "id": "CHR-OP-WALK",
+      "role": "OP",
+      "action": "WALK",
+      "target_prefix": "CHR-OP-WALK",
+      "source_run_id": 38170846318,
+      "review_artifact_run_id": 38175207078,
+      "reason": "Walk sequence rejected by animation QA: lower-body movement too static (0.156); action does not read as alternating stride.",
+      "prompt_hint": "Make left/right foot displacement and corresponding opposite arm swing visibly different every 2-3 frames, while keeping the same head, clothes and fixed facing direction."
+    },
+    {
+      "id": "CHR-OP-WORK",
+      "role": "OP",
+      "action": "WORK",
+      "target_prefix": "CHR-OP-WORK",
+      "source_run_id": 38170846318,
+      "review_artifact_run_id": 38175207078,
+      "reason": "Technically clean atlas, but rectangular device changes shape and appears beside the body rather than being consistently operated by a hand.",
+      "prompt_hint": "Use a single identical compact work tool firmly attached to the character's hands in every frame; change wrists/elbows and torso around one fixed work point, never a floating side device."
+    },
+    {
+      "id": "CHR-OP-CARRY",
+      "role": "OP",
+      "action": "CARRY",
+      "target_prefix": "CHR-OP-CARRY",
+      "source_run_id": 38170846318,
+      "review_artifact_run_id": 38175207078,
+      "reason": "Carry sequence rejected by animation QA: mean change 0.115 below required 0.120 and prior edge-contact retry.",
+      "prompt_hint": "One identical crate grasped with both hands at the same waist position while both legs visibly alternate carry steps; retain safe border on every frame."
+    },
+    {
+      "id": "CHR-OP-REPAIR",
+      "role": "OP",
+      "action": "REPAIR",
+      "target_prefix": "CHR-OP-REPAIR",
+      "source_run_id": 38170846318,
+      "review_artifact_run_id": 38175207078,
+      "reason": "Technically clean atlas, but repair device transforms from rectangular panel to round wheel and identity/head rendering varies across the sequence.",
+      "prompt_hint": "Keep a single recognisable diagnostic tool and same repair target in every frame, physically connected to hands; no prop morphing into wheels, rings or unrelated machines."
+    },
+    {
+      "id": "CHR-OP-CELEB",
+      "role": "OP",
+      "action": "CELEB",
+      "target_prefix": "CHR-OP-CELEB",
+      "source_run_id": 38170846318,
+      "review_artifact_run_id": 38175207078,
+      "reason": "Technical QA passes but nearly every frame is standing idle, then only the last frame raises the arms abruptly.",
+      "prompt_hint": "Animate a progressive celebration arc over all eight frames: elbows lift, arms rise, torso leans, then settle, while preserving the identical character identity."
+    },
+    {
+      "id": "CHR-LOG-WALK",
+      "role": "LOG",
+      "action": "WALK",
+      "target_prefix": "CHR-LOG-WALK",
+      "source_run_id": 38170846318,
+      "review_artifact_run_id": 38175207078,
+      "reason": "Walk sequence rejected by animation QA: lower-body movement too static (0.174), no readable locomotion.",
+      "prompt_hint": "Create a full-body logistics walking loop with alternating foot stride and arm swing across frames; maintain single stable face, white helmet and orange/amber jacket."
+    },
+    {
+      "id": "CHR-LOG-WORK",
+      "role": "LOG",
+      "action": "WORK",
+      "target_prefix": "CHR-LOG-WORK",
+      "source_run_id": 38170846318,
+      "review_artifact_run_id": 38175207078,
+      "reason": "Technically valid but the blue equipment appears disconnected from the hands and changes shape; the final two frames alter helmet and outfit.",
+      "prompt_hint": "A compact identical package station must stay in the same position and actually contact both hands; keep white helmet and identical amber jacket in all ten frames."
+    },
+    {
+      "id": "CHR-LOG-CARRY",
+      "role": "LOG",
+      "action": "CARRY",
+      "target_prefix": "CHR-LOG-CARRY",
+      "source_run_id": 38170846318,
+      "review_artifact_run_id": 38175207078,
+      "reason": "Carry sequence rejected by animation QA: mean change 0.069 below 0.120; no readable weight-bearing stride.",
+      "prompt_hint": "Keep the same opaque box gripped between both hands throughout eight frames, with an unmistakable alternating walking gait and one stable LOG identity."
+    },
+    {
+      "id": "CHR-LOG-REPAIR",
+      "role": "LOG",
+      "action": "REPAIR",
+      "target_prefix": "CHR-LOG-REPAIR",
+      "source_run_id": 38170846318,
+      "review_artifact_run_id": 38175207078,
+      "reason": "Technical QA passes but tools, wires, panels and round props vary heavily from frame to frame; no fixed repair point or coherent arm action.",
+      "prompt_hint": "Keep one identifiable repair tool contacting the exact same part in every frame; consistent helmet, uniform, face and body mass; no changing to rings, coils or floating wiring."
+    },
+    {
+      "id": "CHR-LOG-CELEB",
+      "role": "LOG",
+      "action": "CELEB",
+      "target_prefix": "CHR-LOG-CELEB",
+      "source_run_id": 38170846318,
+      "review_artifact_run_id": 38175207078,
+      "reason": "Technical QA passes but the character remains essentially neutral for all eight frames; arm raise and emotional action are not readable.",
+      "prompt_hint": "Progressively raise one or both arms in celebration with clear pose progression and stable orange workwear and white helmet, not tiny standing-pose variations."
     }
   ],
-  "last_validation_request": "v1.18 strict completion: ENG active collection, then coherent OP+LOG role families with IDLE identity anchors, blocking visual-risk gate and rejection-informed retries"
+  "last_validation_request": "Visual review 2026-10-11: superseded OP/LOG Kaggle source 38170846318 generated eight technically valid sheets, but six unresolved actions remain semantically rejected due to tool/prop continuity, action readability and cross-frame identity drift; WALK/CARRY rejected in generator QA. Newer OP/LOG wave 38174945678 remains independently active."
 }
