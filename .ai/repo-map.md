@@ -25300,7 +25300,18 @@ if after != (before+1)%1680:
     raise SystemExit('CHARACTER_PREVIEW_FAIL=stage-frame-step-not-applied')
 print(f'CHARACTER_PREVIEW_STAGE_STEP_PASS=before:{before} after:{after}')
 PY
-echo "CHARACTER_PREVIEW_TECH_ACTION_SELECTOR_PASS=1"
+# Inspect all six actions with the *real city renderer*, not just
+# the enlarged grid. Preserve an emulator screenshot per action for
+# frame-by-frame semantic review; selecting an action is not approval.
+for action in IDLE WALK WORK CARRY REPAIR CELEBRATE; do
+  click "$action" "before-tech-action-$action"
+  dump "tech-action-$action"
+  assert_text "TECH ACTION: $action" "tech-action-$action"
+  adb exec-out screencap -p > "$OUT/tech-stage-$action.png"
+  test -s "$OUT/tech-stage-$action.png"
+  echo "CHARACTER_PREVIEW_TECH_ACTION_CAPTURE=$action"
+done
+echo "CHARACTER_PREVIEW_TECH_ACTION_SELECTOR_PASS=6"
 
 adb logcat -d > "$OUT/logcat.txt"
 if grep -E "FATAL EXCEPTION|AndroidRuntime.*FATAL" "$OUT/logcat.txt"; then

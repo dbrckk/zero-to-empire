@@ -22,19 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T07:56:27Z
+Generated: 2026-10-11T08:08:29Z
 
 ### Git
 - Branch: `main`
-- Head: `5fb6d62e73c4`
-- Commit date: 2026-10-11T09:56:12+02:00
-- Commit: feat(android): inspect all six technician actions at gameplay scale
+- Head: `1bafd3f1f933`
+- Commit date: 2026-10-11T10:08:16+02:00
+- Commit: test(android): capture all six TECH actions through actual city renderer on emulator
 - Tracked files: 1521
 
 ### Recently changed files
+- `tools/android/character_preview_emulator_smoke.sh`
 - `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
 - `app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt`
-- `tools/android/character_preview_emulator_smoke.sh`
 - `docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md`
 - `art/production/character-rig-review-candidates/review-report.json`
 - `art/production/character-rig-review-candidates/zte_chr_tech_repair_final-contact.png`
