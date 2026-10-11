@@ -221,6 +221,15 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("deterministic", text)
         self.assertIn("lower=out.crop((0,hip_y,w,h))", text)
 
+    def test_character_role_anchor_is_validated_before_action_frames(self):
+        text = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
+        self.assertIn("for anchor_attempt in range(4):", text)
+        self.assertIn("_,coverage=finish_frame(candidate,'IDLE')", text)
+        self.assertIn("KAGGLE_CHR_ROLE_ANCHOR_REJECTED=", text)
+        self.assertIn("'reason':'role-anchor-validation-failed'", text)
+        self.assertLess(text.index("_,coverage=finish_frame(candidate,'IDLE')"),
+                        text.index("for idx,i in enumerate(items):"))
+
     def test_kaggle_character_generator_rejects_blocking_visual_risks(self):
         generator = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
         workflow = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
