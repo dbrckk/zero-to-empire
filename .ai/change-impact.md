@@ -1,13 +1,14 @@
 # Change impact
 
-Base: c5a8d72247c20403fa8b6759111771c55e910f36
-Head: 83e2cc42b92b0eb4fb3434afbe732347ac9cda41
+Base: 68fc3984c3392a38a0bf6cbafd961209a643b8c6
+Head: 7c62428c9609f0453e9cbf0d2686f21898be6dba
 
 ## Changed files
-- M app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt
+- M tools/sprites/rigged_tech_actions_v3.py
+- M tools/sprites/test_rigged_tech_actions_v3.py
 
 ## Affected areas
-- app
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

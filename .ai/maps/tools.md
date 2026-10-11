@@ -5884,24 +5884,23 @@ hands = {
 ⋮----
 def draw_cargo(layer: Image.Image, p: dict, t: float) -> None
 ⋮----
-"""Readable two-hand cargo crate, not a glowing handheld screen.
+"""A readable industrial crate physically supported by both wrists.
 
-    Draw behind the character's articulated hands. Handle coordinates match
-    pose_for(CARRY)'s exact left/right wrist anchors in every cycle frame.
-    Shape/material QA is not a substitute for 96px artistic grip inspection.
+    Review-only enlargement for real 39–42dp Android sprites. Repositioning
+    the shell MUST NOT move either wrist: handle centers are exact, invariant
+    rig coordinates. The same solid crate remains attached across all frames.
     """
 ⋮----
 d = ImageDraw.Draw(layer, "RGBA")
-# Three-dimensional warm industrial cargo container.
+# Larger luggage-sized load instead of a tiny tablet-sized block.
+# Its warm material and angled lid distinguish CARRY from WORK/REPAIR.
 ⋮----
-# Recessed cargo reinforcement, hazard-style seams without baked letters.
+# Vertical ribs preserve a physical cargo silhouette at 96px.
 ⋮----
-# A small metal lock reads as a cargo latch, not a display screen.
+# Hardware latch: small neutral/metal feature, not an electronic screen.
 ⋮----
-# Right and left handle centers MUST coincide with the rig's two wrists:
-# handL = root+(29,-55); handR = root+(103,-55).
-⋮----
-# Wear and corner rivets are attached to the single rigid container.
+# x=root+10 and y=root-95 imply wrist anchors x+19/y+40 and
+# x+93/y+40, exactly pose_for(CARRY)'s two fixed handle centers.
 ⋮----
 def draw_console(layer: Image.Image, p: dict, t: float) -> None
 ⋮----
@@ -7156,7 +7155,7 @@ def test_carry_is_a_visible_amber_crate_with_both_handle_anchors(self)
 pose = pose_for(t, "CARRY")
 layer = Image.new("RGBA", (512, 512))
 ⋮----
-cargo = layer.crop((l, top, l + 96, top + 65))
+cargo = layer.crop((l, top, l + 128, top + 90))
 amber = sum(
 blue = sum(
 ⋮----
