@@ -27271,7 +27271,15 @@ def close_exhausted_character_dispatches(queue: dict[str, Any]) -> None
 ⋮----
 master = by_id(queue)
 ⋮----
+controlled_status = {
+⋮----
 asset = master.get(aid)
+⋮----
+# A cancelled/superseded async producer can leave the master ledger in
+# DISPATCHED even though no Kaggle run remains active. The controlled
+# queue staying PENDING_KAGGLE is the durable evidence that no candidate
+# was collected. Recover that orphaned dispatch so the next autofactory
+# pass can retry it instead of deadlocking strict completion forever.
 ⋮----
 def active_pollinations_repair() -> list[str]
 ⋮----

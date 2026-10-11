@@ -1,13 +1,12 @@
 # CI status
 
-Summary: 5 success / 0 failure / 2 active
+Summary: 5 success / 0 failure / 0 active
 
-- Kaggle Async Character Collector: in_progress / pending (9f8351fc)
-- Sprite Completion Gate: completed / success (c0711a87)
-- Sprite Production Plan: completed / success (c0711a87)
-- Asset Pipeline CI: completed / success (c0711a87)
-- Android CI: in_progress / pending (c0711a87)
-- Reconcile Sprite Progress Ledger: completed / success (c0711a87)
-- Kaggle Async Character Collector: completed / success (f8355813)
+- Kaggle Async Character Collector: completed / success (81b6e168)
+- Character strict review matrix: completed / success (38fc9ae4)
+- Asset Pipeline CI: completed / success (38fc9ae4)
+- Asset Autofactory 235: completed / success (8a0237f1)
+- Reconcile reviewed run 25: completed / skipped (b4e07f2c)
+- Kaggle Async Character Collector: completed / success (9f8351fc)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.
