@@ -31,6 +31,7 @@ class QueueStatePolicyTests(unittest.TestCase):
             "epoch_attempts",
             "infra_failures",
             "dispatch_token",
+            "review_artifact_run_id",
         }
         self.assertTrue(required.issubset(set(queue_utils.PERSISTED_ASSET_STATE_FIELDS)))
 
