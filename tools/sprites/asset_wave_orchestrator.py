@@ -295,8 +295,11 @@ def prepare_building_group(queue: dict[str, Any], group: str) -> dict[str, Any]:
 
 def prepare_character_burst(queue: dict[str, Any], groups: list[str]) -> dict[str, Any]:
     action_order = {"IDLE": 0, "WALK": 1, "WORK": 2, "CARRY": 3, "REPAIR": 4, "CELEB": 5}
-    targets = []
-    selected_groups = []
+    targets: list[dict[str, Any]] = []
+    selected_groups: list[str] = []
+    producer_slots = 0
+    assets = by_id(queue)
+
     for group in groups:
         group_assets = sorted(
             [
@@ -304,31 +307,53 @@ def prepare_character_burst(queue: dict[str, Any], groups: list[str]) -> dict[st
                 if x["group"] == group
                 and x["strict_status"] != "DONE"
                 and str(x.get("pipeline_status", "")).upper() not in CHARACTER_PRODUCED_STATUSES
+                and character_retry_available(x)
             ],
             key=lambda x: action_order.get(x["id"].split("-")[-1], 99),
         )
-        group_targets = []
-        for x in group_assets:
-            if len(targets) >= CHARACTER_BATCH_SIZE:
-                break
-            if not character_retry_available(x):
-                x["pipeline_status"] = "BLOCKED_AUTOMATION_LIMIT"
-                continue
-            x["pipeline_status"] = "PENDING_KAGGLE"
-            row = {"id": x["id"], "status": "PENDING_KAGGLE"}
-            targets.append(row)
-            group_targets.append(row)
-        if group_targets:
-            selected_groups.append(group)
-        if len(targets) >= CHARACTER_BATCH_SIZE:
+        if not group_assets:
+            continue
+
+        idle_id = f"{group}-IDLE"
+        idle_is_selected = any(x["id"] == idle_id for x in group_assets)
+        needs_idle_context = (
+            not idle_is_selected
+            and idle_id in assets
+            and assets[idle_id]["strict_status"] == "DONE"
+        )
+        group_cost = len(group_assets) + (1 if needs_idle_context else 0)
+
+        # Keep role families together whenever possible. Splitting a six-action
+        # identity family across unrelated GPU runs weakens the semantic review
+        # evidence and can produce different faces/clothing for one role.
+        if producer_slots and producer_slots + group_cost > CHARACTER_BATCH_SIZE:
+            continue
+
+        available = CHARACTER_BATCH_SIZE - producer_slots - (1 if needs_idle_context else 0)
+        if available <= 0:
+            continue
+        chosen = group_assets[:available]
+        if not chosen:
+            continue
+
+        group_targets = [{"id": x["id"], "status": "PENDING_KAGGLE"} for x in chosen]
+        targets.extend(group_targets)
+        selected_groups.append(group)
+        producer_slots += len(chosen) + (1 if needs_idle_context else 0)
+
+        if producer_slots >= CHARACTER_BATCH_SIZE:
             break
+
     if not targets:
         return {"group": "+".join(groups), "ids": [], "count": 0}
+
     save_json(CHARACTER_QUEUE, {
-        "mode": "kaggle-character-burst-v1.12",
+        "mode": "kaggle-character-burst-v1.18-strict-completion",
         "reason": (
-            "Autofactory 235: high-throughput identity-locked character production; "
-            "each role keeps its own identity anchor and semantic promotion remains manual."
+            "Autofactory 235: high-throughput identity-locked character production. "
+            "Each role is kept in one producer wave when capacity allows; a strict-DONE "
+            "IDLE sheet may be regenerated as context-only identity evidence so review "
+            "and promotion can replace a legacy anchor with the same generated family."
         ),
         "groups": selected_groups,
         "targets": targets,
@@ -336,7 +361,6 @@ def prepare_character_burst(queue: dict[str, Any], groups: list[str]) -> dict[st
     dispatched = mark_dispatch(queue, [x["id"] for x in targets], "kaggle-character-sheet")
     producer_count = prioritize_controlled_character_targets(dispatched)
     return {"group": "+".join(selected_groups), "ids": dispatched, "count": producer_count}
-
 
 def next_group(queue: dict[str, Any], lane: str, priority: list[str]) -> str | None:
     groups = {
