@@ -1,13 +1,14 @@
 # Change impact
 
-Base: 7d8f9881e0675fd7a25c0745f87c236138a8280b
-Head: 335d6d0905766cfa7c54120c68857f75bad14aca
+Base: baabdbc68157842f897ccd78d801efbc0942016a
+Head: 947817c763980261d7b2744f1a8fe78d6af76b9d
 
 ## Changed files
-- M docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md
+- M tools/sprites/rigged_tech_actions_v3.py
+- M tools/sprites/test_rigged_tech_actions_v3.py
 
 ## Affected areas
-- docs
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

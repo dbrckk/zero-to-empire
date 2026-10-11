@@ -5963,6 +5963,11 @@ GROUND = core.GROUND
 CANVAS = core.CANVAS
 ROOT_X = core.ROOT_X
 HIP_Y = core.HIP_Y
+# Deliberate depth-lane offset for the FAR boot in review-only moving cycles.
+# 22 source pixels project to ~1.8px at a 42dp sprite, reducing total
+# occlusion at crossover without changing stance velocity or Y grounding.
+# Static actions and the shipped legacy WALK renderer are untouched.
+FAR_FOOT_LANE_PX = 22.0
 ⋮----
 def spine_lean(t: float, action: str) -> float
 ⋮----
@@ -5976,6 +5981,10 @@ def pose_for(t: float, action: str) -> dict
 phase = 2 * math.pi * t
 ⋮----
 p = transfer_pose(core.pose(t),t,action)
+# Same sole trajectory, same phase and ground contact: separate the
+# far-side shoe laterally to make two legs readable at 39–42dp.
+# IK for the far knee uses this displaced ankle rather than painting
+# a disconnected boot over the old target.
 ⋮----
 hands = {
 ⋮----
@@ -7231,11 +7240,12 @@ lean=spine_lean(t,action)
 ⋮----
 anchor=(x+dx*co-dy*si,y+dx*si+dy*co)
 ⋮----
-def test_spine_offset_does_not_move_foot_targets(self)
+def test_far_foot_depth_lane_preserves_contacts_and_near_foot(self)
 ⋮----
-t=i/24
 p=pose_for(t,action)
 base=core.pose(t)
+⋮----
+q=pose_for(t+1,action)
 ⋮----
 def test_stationary_actions_keep_feet_grounded_and_hands_reachable(self)
 ⋮----

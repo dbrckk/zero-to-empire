@@ -22,20 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T09:46:29Z
+Generated: 2026-10-11T10:24:09Z
 
 ### Git
 - Branch: `main`
-- Head: `335d6d090576`
-- Commit date: 2026-10-11T11:46:13+02:00
-- Commit: docs(art): close Android full-body clipping incident with verified six-action QA evidence
+- Head: `947817c76398`
+- Commit date: 2026-10-11T12:23:53+02:00
+- Commit: art(review): separate far TECH walking boot with grounded IK depth lane
 - Tracked files: 1522
 
 ### Recently changed files
+- `tools/sprites/rigged_tech_actions_v3.py`
+- `tools/sprites/test_rigged_tech_actions_v3.py`
 - `docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md`
 - `tools/android/character_preview_emulator_smoke.sh`
 - `tools/android/character_preview_pixel_audit.py`
-- `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
 
 ### Project signals
 - `build.gradle.kts`
