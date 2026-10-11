@@ -247,6 +247,11 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("detached-artifact", text)
         self.assertIn("qhint=queue_rejection_hint(i)", text)
 
+    def test_kaggle_character_retry_routes_detached_subject_to_single_mode(self):
+        text = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
+        self.assertIn("or 'detached-artifact' in r:return 'single'", text)
+        self.assertIn("or 'bad border' in r:return 'framing'", text)
+
 
 if __name__ == "__main__":
     unittest.main()
