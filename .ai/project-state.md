@@ -31,21 +31,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T21:16:46Z
+Generated: 2026-10-11T21:41:22Z
 
 ### Git
 - Branch: `main`
-- Head: `f0600f7a04e0`
-- Commit date: 2026-10-11T23:16:29+02:00
-- Commit: docs(art): reconcile current Kaggle dispatch owner in strict review backlog
+- Head: `5da83a026eac`
+- Commit date: 2026-10-11T23:41:09+02:00
+- Commit: ci(art): collect OP LOG character wave at current checkpoint
 - Tracked files: 1529
 
 ### Recently changed files
+- `ops/kaggle-collector-trigger.txt`
 - `art/production/character-strict-review-backlog.md`
 - `art/production/master-asset-queue.json`
 - `ops/sprite-wave-trigger.txt`
-- `ops/kaggle-collector-trigger.txt`
-- `tools/assets/test_workflow_policy.py`
 
 ### Project signals
 - `build.gradle.kts`
