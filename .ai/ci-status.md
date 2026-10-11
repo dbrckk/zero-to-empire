@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 4 success / 0 failure / 2 active
+Summary: 3 success / 0 failure / 3 active
 
-- TECH candidate Android preview (no promotion): in_progress / pending (f1ec3077)
-- Android CI: in_progress / pending (f1ec3077)
+- Android Emulator Smoke: in_progress / pending (f5b32577)
+- TECH candidate Android preview (no promotion): in_progress / pending (f5b32577)
+- Android CI: in_progress / pending (f5b32577)
+- Manifest Static GPU Batch: completed / success (e26d3753)
+- Reconcile reviewed run 25: completed / skipped (e26d3753)
+- TECH candidate Android preview (no promotion): completed / success (f1ec3077)
+- Android CI: completed / success (f1ec3077)
 - Reconcile reviewed run 25: completed / skipped (307bdedc)
-- TECH candidate Android preview (no promotion): completed / success (3937338f)
-- Six modular TECH animations (review only): completed / success (7c62428c)
-- TECH canonical review staging: completed / success (7c62428c)
-- Reconcile reviewed run 25: completed / skipped (83e2cc42)
-- Android CI: completed / success (83e2cc42)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

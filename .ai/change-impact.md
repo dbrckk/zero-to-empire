@@ -1,16 +1,13 @@
 # Change impact
 
-Base: da4ff81ee7c5fd1dc2361c3d9b572d2fe1318b99
-Head: f1ec307730f9a4dbe33db7f7fd69dbe43bfd39dd
+Base: e26d3753babf5ef7fda4d0f57cc84264d73cf242
+Head: f5b32577871035eb958e34ae263c95ee9c8a0eaf
 
 ## Changed files
-- M .github/workflows/tech-candidate-android-preview.yml
-- M tools/android/character_preview_emulator_smoke.sh
-- A tools/android/character_preview_pixel_audit.py
+- M app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt
 
 ## Affected areas
-- .github
-- tools
+- app
 
 ## Related test candidates
 - No direct filename-based test match detected.

@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T08:27:13Z
+Generated: 2026-10-11T09:29:42Z
 
 ### Git
 - Branch: `main`
-- Head: `f1ec307730f9`
-- Commit date: 2026-10-11T10:26:58+02:00
-- Commit: test(android): reject identical TECH actions using actual 42dp emulator sprite pixels
+- Head: `f5b325778710`
+- Commit date: 2026-10-11T11:29:26+02:00
+- Commit: fix(android-qa): position full-body TECH night/day preview above action controls to avoid viewport clipping
 - Tracked files: 1522
 
 ### Recently changed files
+- `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
 - `.github/workflows/tech-candidate-android-preview.yml`
 - `tools/android/character_preview_emulator_smoke.sh`
 - `tools/android/character_preview_pixel_audit.py`
@@ -42,7 +43,6 @@ Generated: 2026-10-11T08:27:13Z
 - `art/production/character-rig-review-candidates/zte_chr_tech_carry_final.png`
 - `tools/sprites/rigged_tech_actions_v3.py`
 - `tools/sprites/test_rigged_tech_actions_v3.py`
-- `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
 
 ### Project signals
 - `build.gradle.kts`
