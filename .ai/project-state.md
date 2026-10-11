@@ -31,21 +31,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T21:48:44Z
+Generated: 2026-10-11T21:50:29Z
 
 ### Git
 - Branch: `main`
-- Head: `2d49a0da4848`
-- Commit date: 2026-10-11T23:48:30+02:00
-- Commit: art(characters): lock OP LOG ENG face, helmet and outfit identity in prompts
+- Head: `3394deb72555`
+- Commit date: 2026-10-11T23:50:13+02:00
+- Commit: docs(art): document auditable 235-character production and review handoff
 - Tracked files: 1529
 
 ### Recently changed files
+- `docs/art/UNIFIED_ASSET_PIPELINE.md`
 - `tools/sprites/kaggle_character_sheet_factory_v1.py`
-- `.github/workflows/asset-pipeline-ci.yml`
-- `tools/assets/test_workflow_policy.py`
-- `.github/workflows/kaggle-async-character-collector.yml`
 - `tools/sprites/build_character_review_panels.py`
+- `.github/workflows/asset-pipeline-ci.yml`
 
 ### Project signals
 - `build.gradle.kts`

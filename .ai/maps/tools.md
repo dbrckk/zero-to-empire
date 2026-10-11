@@ -2095,6 +2095,23 @@ draw = ImageDraw.Draw(result)
 ⋮----
 def readable_font(size: int) -> ImageFont.ImageFont
 ⋮----
+def face_center_x(frame: Image.Image, bbox: tuple[int, int, int, int]) -> int
+⋮----
+"""Locate the dominant head/helmet mass, not the wider tool/crate bbox.
+
+    Looking at the top 6%-24% of the visible character reduces false shifts
+    when an action adds a large prop beside the hands. This is only a crop
+    heuristic; it never classifies identity or automatically approves a sheet.
+    """
+top = bbox[1] + round((bbox[3] - bbox[1]) * .06)
+bottom = bbox[1] + round((bbox[3] - bbox[1]) * .24)
+alpha = frame.getchannel("A")
+⋮----
+region = alpha.crop((0, max(0, top), CELL, min(CELL, bottom)))
+pixels = region.load()
+weighted_sum = 0
+weight = 0
+⋮----
 def create_head_panel(role: str, assets: dict[str, Path], output: Path) -> None
 ⋮----
 """Magnify each frame's face/headgear for cross-action identity review.
@@ -2120,7 +2137,7 @@ atlas = src.convert("RGBA")
 f = atlas.crop(((index % 4) * CELL, (index // 4) * CELL,
 bbox = f.getchannel("A").getbbox()
 ⋮----
-xmid = (bbox[0] + bbox[2]) // 2
+xmid = face_center_x(f, bbox)
 x0 = min(CELL - 96, max(0, xmid - 48))
 y0 = min(CELL - 96, max(0, bbox[1] - 5))
 head = f.crop((x0, y0, x0 + 96, y0 + 96)).resize(
