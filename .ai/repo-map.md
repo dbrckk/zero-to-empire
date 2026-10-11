@@ -2574,7 +2574,7 @@ jobs:
           find /tmp/kaggle-failure -maxdepth 5 -type f -print
           exit 0
       - name: Upload failed kernel evidence
-        if: steps.kernel.outputs.failed == 'true'
+        if: ${{ steps.kernel.outputs.failed == 'true' || (steps.kernel.outputs.ready == 'true' && failure()) }}
         uses: actions/upload-artifact@v4
         with:
           name: kaggle-async-failure-evidence-${{ steps.gate.outputs.submit_run_id }}
@@ -2582,7 +2582,7 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
       - name: Callback autofactory failure
-        if: steps.kernel.outputs.failed == 'true'
+        if: ${{ steps.kernel.outputs.failed == 'true' || (steps.kernel.outputs.ready == 'true' && failure()) }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -26892,6 +26892,13 @@ def test_current_epoch_still_allows_retry_below_epoch_limit(self) -> None
 ⋮----
 def test_character_batch_size_supports_multi_role_burst(self) -> None
 ⋮----
+def test_fresh_character_dispatch_clears_stale_error_and_reason(self) -> None
+⋮----
+orchestrator = self._load_orchestrator("wave-fresh")
+⋮----
+queue = {"assets": [asset]}
+dispatched = orchestrator.mark_dispatch(queue, ["CHR-OP-WALK"], "kaggle-character-sheet")
+⋮----
 def test_character_priority_includes_idle_identity_context(self) -> None
 ⋮----
 controlled = {
@@ -27361,6 +27368,10 @@ eligible: list[str] = []
 x = assets.get(aid)
 ⋮----
 attempts = int(x.get("attempts") or 0)
+⋮----
+# Once a fresh dispatch is accepted, historical retry/recovery errors
+# are no longer the current state. Keep evidence in the rejection
+# ledger, but do not surface stale errors as if the active wave failed.
 ⋮----
 def prioritize_controlled_character_targets(ids: list[str]) -> int
 ⋮----

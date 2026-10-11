@@ -31,19 +31,24 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T18:35:06Z
+Generated: 2026-10-11T20:08:02Z
 
 ### Git
 - Branch: `main`
-- Head: `9ca26322d3cc`
-- Commit date: 2026-10-11T20:34:49+02:00
-- Commit: test(ci): cover completed-wave validation failure recovery
+- Head: `599f2e8558b1`
+- Commit date: 2026-10-11T22:07:41+02:00
+- Commit: test(art): ensure fresh dispatch clears stale diagnostics
 - Tracked files: 1524
 
 ### Recently changed files
-- `tools/assets/test_workflow_policy.py`
-- `.github/workflows/kaggle-async-character-collector.yml`
-- `ops/kaggle-collector-trigger.txt`
+- `tools/assets/test_queue_state_policy.py`
+- `tools/sprites/asset_wave_orchestrator.py`
+- `art/production/kaggle-async-state.json`
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
+- `art/production/character-strict-review-backlog.md`
+- `art/production/controlled-character-regen-queue.json`
+- `art/production/master-asset-queue.json`
 
 ### Project signals
 - `build.gradle.kts`

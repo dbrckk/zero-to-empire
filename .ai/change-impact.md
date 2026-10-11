@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 0336bae3b4eb4339db702ab8159f2b5214fb0688
-Head: 9ca26322d3cc3b6dd1343302d430c6d6cf1ad904
+Base: 6e2bc70939b0c99ef72060074fb1fe69c9da8d27
+Head: 599f2e8558b1b40913c541afd37ef0c8d787ffec
 
 ## Changed files
-- M tools/assets/test_workflow_policy.py
+- M tools/assets/test_queue_state_policy.py
 
 ## Affected areas
 - tools

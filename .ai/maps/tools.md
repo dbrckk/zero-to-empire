@@ -1603,6 +1603,10 @@ x = assets.get(aid)
 ⋮----
 attempts = int(x.get("attempts") or 0)
 ⋮----
+# Once a fresh dispatch is accepted, historical retry/recovery errors
+# are no longer the current state. Keep evidence in the rejection
+# ledger, but do not surface stale errors as if the active wave failed.
+⋮----
 def prioritize_controlled_character_targets(ids: list[str]) -> int
 ⋮----
 """Put dispatched actions first and include one IDLE identity anchor per role.
