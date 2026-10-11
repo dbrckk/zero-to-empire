@@ -307,6 +307,10 @@ def close_exhausted_character_dispatches(queue: dict[str, Any]) -> None:
         return
     master = by_id(queue)
     controlled = load_json(CHARACTER_QUEUE, {}) or {}
+    controlled_status = {
+        str(item.get("id", "")).upper(): str(item.get("status", "")).upper()
+        for item in controlled.get("targets", [])
+    }
     for item in controlled.get("targets", []):
         aid = str(item.get("id", "")).upper()
         asset = master.get(aid)
@@ -314,6 +318,21 @@ def close_exhausted_character_dispatches(queue: dict[str, Any]) -> None:
             continue
         if str(asset.get("pipeline_status", "")).upper() != "DISPATCHED":
             continue
+
+        # A cancelled/superseded async producer can leave the master ledger in
+        # DISPATCHED even though no Kaggle run remains active. The controlled
+        # queue staying PENDING_KAGGLE is the durable evidence that no candidate
+        # was collected. Recover that orphaned dispatch so the next autofactory
+        # pass can retry it instead of deadlocking strict completion forever.
+        if controlled_status.get(aid) == "PENDING_KAGGLE":
+            asset["pipeline_status"] = "PENDING_KAGGLE"
+            asset["attempts"] = max(0, int(asset.get("attempts") or 0) - 1)
+            if asset.get("generation_epoch") == CHARACTER_GENERATION_EPOCH:
+                asset["epoch_attempts"] = max(0, int(asset.get("epoch_attempts") or 0) - 1)
+            asset["dispatch_token"] = None
+            asset["last_error"] = "Recovered orphaned Kaggle dispatch; no active async wave or collected candidate exists."
+            continue
+
         if not character_retry_available(asset):
             asset["pipeline_status"] = "BLOCKED_AUTOMATION_LIMIT"
             if asset.get("generation_epoch") == CHARACTER_GENERATION_EPOCH:
