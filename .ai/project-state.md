@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T16:38:07Z
+Generated: 2026-10-11T17:00:33Z
 
 ### Git
 - Branch: `main`
-- Head: `32dbf805e6ec`
-- Commit date: 2026-10-11T18:37:49+02:00
-- Commit: fix(art): verify TECH review board atlas SHA-256, shared skin and unique actions before evidence render
+- Head: `f816a528df28`
+- Commit date: 2026-10-11T19:00:19+02:00
+- Commit: fix(android): verify TECH selector state after tap and retry clipped buttons
 - Tracked files: 1524
 
 ### Recently changed files
+- `tools/android/character_preview_emulator_smoke.sh`
 - `tools/sprites/build_tech_review_board.py`
 - `docs/art/TECH_CHARACTER_VISUAL_DIRECTION.md`
 - `tools/sprites/test_weight_transfer.py`
@@ -42,7 +43,6 @@ Generated: 2026-10-11T16:38:07Z
 - `art/production/character-rig-review-candidates/zte_chr_tech_walk_final-contact.png`
 - `art/production/character-rig-review-candidates/zte_chr_tech_walk_final-preview.gif`
 - `art/production/character-rig-review-candidates/zte_chr_tech_walk_final.png`
-- `tools/sprites/test_rigged_tech_actions_v3.py`
 
 ### Project signals
 - `build.gradle.kts`

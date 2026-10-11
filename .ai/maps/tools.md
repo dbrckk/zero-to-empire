@@ -214,21 +214,38 @@ click() {
 # scrolling to a button is necessary before resolving its clickable bounds.
 click_action() {
   local action="$1" label="$2" name="$3" attempt xy x y
-  for attempt in 0 1 2 3 4 5 6 7; do
+  # The action label may be visible while its button is clipped by the
+  # viewport. A tap returning exit 0 does not prove Compose changed state.
+  # Retry until the *state heading* reflects the selected action.
+  for attempt in 0 1 2 3 4 5 6 7 8 9; do
     dump "$name-scroll-$attempt"
     if xy=$(python3 "$SCRIPT_DIR/ui_click_target.py" "$OUT/$name-scroll-$attempt.xml" "$label" 2>/dev/null); then
       read -r x y <<<"$xy"
-      if [[ "$x" =~ ^[0-9]+$ && "$y" =~ ^[0-9]+$ ]]; then
+      if [[ "$x" =~ ^[0-9]+$ && "$y" =~ ^[0-9]+$ &&
+            "$y" -gt "$((height*8/100))" && "$y" -lt "$((height*91/100))" ]]; then
         adb shell input tap "$x" "$y"
         sleep 1
-        echo "CHARACTER_PREVIEW_ACTION_CLICK=$action attempt=$attempt"
-        return 0
+        dump "$name-after-tap-$attempt"
+        if python3 - "$OUT/$name-after-tap-$attempt.xml" "$action" <<'PY'
+import sys, xml.etree.ElementTree as ET
+expected='TECH ACTION: '+sys.argv[2].upper()
+root=ET.parse(sys.argv[1]).getroot()
+labels=[n.attrib.get('text','') for n in root.iter('node')]
+raise SystemExit(0 if expected in labels else 1)
+PY
+        then
+          echo "CHARACTER_PREVIEW_ACTION_CONFIRMED=$action attempt=$attempt"
+          return 0
+        fi
+        echo "CHARACTER_PREVIEW_ACTION_TAP_NOT_APPLIED=$action attempt=$attempt" >&2
       fi
     fi
-    adb shell input swipe "$((width/2))" "$((height*78/100))" "$((width/2))" "$((height*40/100))" 350
+    # First recover from a clipped bottom row, then retry. Small swipes
+    # prevent skipping past the selector in LazyColumn.
+    adb shell input swipe "$((width/2))" "$((height*73/100))" "$((width/2))" "$((height*49/100))" 380
     sleep 1
   done
-  echo "CHARACTER_PREVIEW_FAIL=action-button-not-visible:$action" >&2
+  echo "CHARACTER_PREVIEW_FAIL=action-selection-not-confirmed:$action" >&2
   return 1
 }
 

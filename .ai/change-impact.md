@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 47d999301704f1beb0a025e057be2b3035fde317
-Head: 32dbf805e6ec5b0e9feca1e32e5a6eb8e0837a62
+Base: 8764ab659297079a55f9d9d9398d8420bb1b39bc
+Head: f816a528df28c35df4c367f4e813908a15a700c4
 
 ## Changed files
-- M tools/sprites/build_tech_review_board.py
+- M tools/android/character_preview_emulator_smoke.sh
 
 ## Affected areas
 - tools
