@@ -216,13 +216,14 @@ jobs:
               f'- Strict DONE: **{strict}/{q["target_total"]}**',
               f'- Semantic review remaining: **{len(remain)}**',
               '- This report does **not** grant strict approval or runtime promotion.','',
-              '| Asset | Role | Action | Technical status | Review note |',
-              '|---|---|---|---|---|',
+              '| Asset | Role | Action | Technical status | Review artifact run | Review note |',
+              '|---|---|---|---|---:|---|',
           ]
           for a in remain:
               parts=a['id'].split('-')
               note=str(a.get('review_reason') or 'Semantic review required.').replace('|','/')
-              lines.append(f'| {a["id"]} | {parts[1]} | {"-".join(parts[2:])} | {a.get("pipeline_status","")} | {note} |')
+              artifact_run=a.get('review_artifact_run_id') or '—'
+              lines.append(f'| {a["id"]} | {parts[1]} | {"-".join(parts[2:])} | {a.get("pipeline_status","")} | {artifact_run} | {note} |')
           lines += ['', '## Review rule', '', 'A reviewer must inspect identity continuity, full-body framing, role/clothing consistency, action readability, animation motion, and runtime suitability. Only explicit reviewed approvals may change `strict_status` to `DONE`.']
           Path('art/production/character-strict-review-backlog.md').write_text('\n'.join(lines)+'\n',encoding='utf-8')
           print(f'PROMOTION_STRICT_DONE={strict}/{q["target_total"]}')
