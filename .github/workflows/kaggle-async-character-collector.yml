@@ -212,7 +212,7 @@ jobs:
         run: |
           gh workflow run 'Asset Autofactory 235' --ref main             -f producer_workflow='Kaggle Mass Sprite Factory'             -f producer_conclusion='success'             -f producer_run_id='${{ steps.gate.outputs.submit_run_id }}'             -f producer_dispatch_token='${{ steps.gate.outputs.dispatch_token }}'
       - name: Download failed kernel evidence
-        if: steps.kernel.outputs.failed == 'true'
+        if: ${{ steps.kernel.outputs.failed == 'true' || (steps.kernel.outputs.ready == 'true' && failure()) }}
         shell: bash
         run: |
           set +e
