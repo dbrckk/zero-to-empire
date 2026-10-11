@@ -251,8 +251,8 @@ def prompt_pair(i,pose,mode='default'):
 def retry_mode(reason,attempt):
  if attempt==0:return 'default'
  r=(reason or '').lower()
- if 'edge contact' in r or 'coverage=' in r or 'full-body' in r:return 'framing'
- if 'too-wide' in r or 'multiple-subject' in r:return 'single'
+ if 'edge contact' in r or 'coverage=' in r or 'full-body' in r or 'bad border' in r:return 'framing'
+ if 'too-wide' in r or 'multiple-subject' in r or 'detached-artifact' in r:return 'single'
  return 'identity'
 
 def load_encode():
