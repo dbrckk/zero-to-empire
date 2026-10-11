@@ -342,7 +342,22 @@ def prepare_character_burst(queue: dict[str, Any], groups: list[str]) -> dict[st
         if not chosen:
             continue
 
-        group_targets = [{"id": x["id"], "status": "PENDING_KAGGLE"} for x in chosen]
+        # Keep the exact semantic rejection reason in the next producer
+        # overlay. Replacing the controlled queue without this evidence made
+        # queue_rejection_hint() forget why a previous ENG frame failed.
+        group_targets = [
+            {
+                "id": x["id"],
+                "status": "PENDING_KAGGLE",
+                **(
+                    {"review_reason": str(x["review_reason"])}
+                    if x.get("review_reason") and str(x.get("pipeline_status", "")).upper()
+                    in {"REJECTED", "REJECTED_SEMANTIC", "REJECT"}
+                    else {}
+                ),
+            }
+            for x in chosen
+        ]
         targets.extend(group_targets)
         selected_groups.append(group)
         producer_slots += len(chosen) + (1 if needs_idle_context else 0)
