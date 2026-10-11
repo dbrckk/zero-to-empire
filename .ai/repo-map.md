@@ -26842,6 +26842,19 @@ count = orchestrator.prioritize_controlled_character_targets(
 ⋮----
 targets = saved["value"]["targets"]
 ⋮----
+def test_character_burst_keeps_op_and_log_families_whole_within_twelve_slots(self) -> None
+⋮----
+assets = []
+⋮----
+queue = {"assets": assets}
+store = {}
+⋮----
+def fake_save(path, value)
+⋮----
+result = orchestrator.prepare_character_burst(
+⋮----
+produced = [x["id"] for x in store["controlled"]["targets"][:12]]
+⋮----
 def test_character_epoch_allows_three_informed_attempts(self) -> None
 ⋮----
 def test_character_epoch_is_v118_carry_identity_lock(self) -> None
@@ -27320,13 +27333,26 @@ dispatched = mark_dispatch(queue, unresolved, "kaggle-building-family")
 def prepare_character_burst(queue: dict[str, Any], groups: list[str]) -> dict[str, Any]
 ⋮----
 action_order = {"IDLE": 0, "WALK": 1, "WORK": 2, "CARRY": 3, "REPAIR": 4, "CELEB": 5}
-targets = []
-selected_groups = []
+targets: list[dict[str, Any]] = []
+selected_groups: list[str] = []
+producer_slots = 0
 ⋮----
 group_assets = sorted(
-group_targets = []
 ⋮----
-row = {"id": x["id"], "status": "PENDING_KAGGLE"}
+idle_id = f"{group}-IDLE"
+idle_is_selected = any(x["id"] == idle_id for x in group_assets)
+needs_idle_context = (
+group_cost = len(group_assets) + (1 if needs_idle_context else 0)
+⋮----
+# Keep role families together whenever possible. Splitting a six-action
+# identity family across unrelated GPU runs weakens the semantic review
+# evidence and can produce different faces/clothing for one role.
+⋮----
+available = CHARACTER_BATCH_SIZE - producer_slots - (1 if needs_idle_context else 0)
+⋮----
+chosen = group_assets[:available]
+⋮----
+group_targets = [{"id": x["id"], "status": "PENDING_KAGGLE"} for x in chosen]
 ⋮----
 dispatched = mark_dispatch(queue, [x["id"] for x in targets], "kaggle-character-sheet")
 producer_count = prioritize_controlled_character_targets(dispatched)
