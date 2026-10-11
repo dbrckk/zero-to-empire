@@ -9,16 +9,16 @@ Generated from `art/production/master-asset-queue.json` after production complet
 
 | Asset | Role | Action | Technical status | Review artifact run | Review note |
 |---|---|---|---|---:|---|
-| CHR-OP-WALK | OP | WALK | DISPATCHED | — | Fresh kaggle-character-sheet dispatch 38170820039 is active; semantic review remains required after candidate collection. |
-| CHR-OP-WORK | OP | WORK | DISPATCHED | — | Fresh kaggle-character-sheet dispatch 38170820039 is active; semantic review remains required after candidate collection. |
-| CHR-OP-CARRY | OP | CARRY | DISPATCHED | — | Fresh kaggle-character-sheet dispatch 38170820039 is active; semantic review remains required after candidate collection. |
-| CHR-OP-REPAIR | OP | REPAIR | DISPATCHED | — | Fresh kaggle-character-sheet dispatch 38170820039 is active; semantic review remains required after candidate collection. |
-| CHR-OP-CELEB | OP | CELEB | DISPATCHED | — | Fresh kaggle-character-sheet dispatch 38170820039 is active; semantic review remains required after candidate collection. |
-| CHR-LOG-WALK | LOG | WALK | DISPATCHED | — | Fresh kaggle-character-sheet dispatch 38170820039 is active; semantic review remains required after candidate collection. |
-| CHR-LOG-WORK | LOG | WORK | DISPATCHED | — | Fresh kaggle-character-sheet dispatch 38170820039 is active; semantic review remains required after candidate collection. |
-| CHR-LOG-CARRY | LOG | CARRY | DISPATCHED | — | Fresh kaggle-character-sheet dispatch 38170820039 is active; semantic review remains required after candidate collection. |
-| CHR-LOG-REPAIR | LOG | REPAIR | DISPATCHED | — | Fresh kaggle-character-sheet dispatch 38170820039 is active; semantic review remains required after candidate collection. |
-| CHR-LOG-CELEB | LOG | CELEB | DISPATCHED | — | Fresh kaggle-character-sheet dispatch 38170820039 is active; semantic review remains required after candidate collection. |
+| CHR-OP-WALK | OP | WALK | PENDING_KAGGLE | — | Fresh kaggle-character-sheet dispatch 38170820039 is active; semantic review remains required after candidate collection. |
+| CHR-OP-WORK | OP | WORK | PENDING_KAGGLE | — | Fresh kaggle-character-sheet dispatch 38170820039 is active; semantic review remains required after candidate collection. |
+| CHR-OP-CARRY | OP | CARRY | PENDING_KAGGLE | — | Fresh kaggle-character-sheet dispatch 38170820039 is active; semantic review remains required after candidate collection. |
+| CHR-OP-REPAIR | OP | REPAIR | PENDING_KAGGLE | — | Fresh kaggle-character-sheet dispatch 38170820039 is active; semantic review remains required after candidate collection. |
+| CHR-OP-CELEB | OP | CELEB | PENDING_KAGGLE | — | Fresh kaggle-character-sheet dispatch 38170820039 is active; semantic review remains required after candidate collection. |
+| CHR-LOG-WALK | LOG | WALK | PENDING_KAGGLE | — | Fresh kaggle-character-sheet dispatch 38170820039 is active; semantic review remains required after candidate collection. |
+| CHR-LOG-WORK | LOG | WORK | PENDING_KAGGLE | — | Fresh kaggle-character-sheet dispatch 38170820039 is active; semantic review remains required after candidate collection. |
+| CHR-LOG-CARRY | LOG | CARRY | PENDING_KAGGLE | — | Fresh kaggle-character-sheet dispatch 38170820039 is active; semantic review remains required after candidate collection. |
+| CHR-LOG-REPAIR | LOG | REPAIR | PENDING_KAGGLE | — | Fresh kaggle-character-sheet dispatch 38170820039 is active; semantic review remains required after candidate collection. |
+| CHR-LOG-CELEB | LOG | CELEB | PENDING_KAGGLE | — | Fresh kaggle-character-sheet dispatch 38170820039 is active; semantic review remains required after candidate collection. |
 | CHR-ENG-IDLE | ENG | IDLE | REJECTED_SEMANTIC | 38170795132 | Kaggle generator rejected candidate: frame-0-failed; retry-details=detached-artifact component=10558/10611 / detached-artifact component=10510/10546 / detached-artifact component=10538/10578 |
 | CHR-ENG-WALK | ENG | WALK | REJECTED_SEMANTIC | 38170795132 | Kaggle generator rejected candidate: frame-0-failed; retry-details=detached-artifact component=10723/10743 / detached-artifact component=10599/10643 / detached-artifact component=10547/10555 |
 | CHR-ENG-WORK | ENG | WORK | REJECTED_SEMANTIC | 38170795132 | Kaggle generator rejected candidate: frame-1-failed; retry-details=detached-artifact component=10566/10920 / detached-artifact component=10589/10916 / detached-artifact component=10754/10834 |
