@@ -123,6 +123,12 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("kaggle kernels output", text)
         self.assertIn("kaggle-async-failure-evidence-", text)
         self.assertLess(text.index("Download failed kernel evidence"), text.index("Callback autofactory failure"))
+    def test_async_collector_persists_kernel_observation_even_before_completion(self):
+        text = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
+        self.assertIn("kaggle-async-kernel-observation-", text)
+        self.assertIn("/tmp/kaggle-kernel-status.txt", text)
+        self.assertIn("Upload kernel observation", text)
+
     def test_async_kaggle_uses_unique_kernel_slug_and_stale_timeout(self):
         mass = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
         collector = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
