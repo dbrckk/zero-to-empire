@@ -26,10 +26,10 @@ FLUX='aniketppanchal/flux.1-schnell-nf4-pkg'
 ROW=re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$")
 CHR=re.compile(r'^CHR-(OP|TECH|LOG|ENG)-(IDLE|WALK|WORK|CARRY|REPAIR|CELEB)$')
 ROLE={
- 'OP':'foundry operator, practical dark workwear, rust-orange utility accents, gloves, one rust-orange safety hard hat worn in every frame and every animation',
+ 'OP':'one adult male foundry operator with the same face and dark protective glasses, one rust-orange safety hard hat, charcoal coveralls with rust-orange seams, matte work gloves and dark boots; keep this exact face, glasses, hat and uniform in every animation',
  'TECH':'industrial technician, graphite coveralls, cyan diagnostic accents, compact tool belt',
- 'LOG':'logistics worker, reinforced work jacket, amber safety accents, cargo gloves',
- 'ENG':'industrial engineer, clean graphite field suit, restrained cyan accents, utility harness',
+ 'LOG':'one adult female logistics worker with the same face, dark hair tucked inside a white industrial safety helmet, reinforced amber-orange and charcoal cargo jacket, charcoal trousers, cargo gloves and dark work boots; keep the same white helmet, face and amber jacket in every frame',
+ 'ENG':'one adult industrial field engineer with a stable face, white safety helmet bearing a single thin cyan stripe, clean graphite field suit with cyan seams and the same compact utility harness in every animation',
 }
 ACTION={
  'IDLE':('idle breathing and subtle look-around',6),
@@ -160,10 +160,10 @@ def rejection_hints(i):
 
 def anchor_prompt_pair(role):
  role_short={
-  'OP':'orange-hardhat foundry worker',
+  'OP':'male orange-hardhat foundry worker with dark protective glasses',
   'TECH':'cyan technician in graphite coveralls',
-  'LOG':'amber logistics worker',
-  'ENG':'cyan engineer in graphite field suit',
+  'LOG':'female amber logistics worker wearing white safety helmet',
+  'ENG':'white-helmet engineer in graphite cyan field suit',
  }[role]
  core=f"2.5D game sprite, one {role_short}, full body, three-quarter view, neutral relaxed stance, isolated"
  detail=(
@@ -242,10 +242,10 @@ def prompt_pair(i,pose,mode='default'):
  # optimistic. T5 carries the descriptive detail and rejection-memory hints.
  role=i['role'];action=i['action']
  role_short={
-  'OP':'orange-hardhat foundry worker',
+  'OP':'male orange-hardhat foundry worker with dark protective glasses',
   'TECH':'cyan technician in graphite coveralls',
-  'LOG':'amber logistics worker',
-  'ENG':'cyan engineer in graphite field suit',
+  'LOG':'female amber logistics worker wearing white safety helmet',
+  'ENG':'white-helmet engineer in graphite cyan field suit',
  }[role]
  core=(f"2.5D game sprite, one {role_short}, full body, "
        f"three-quarter view, {pose}, isolated")
