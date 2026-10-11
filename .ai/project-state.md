@@ -3,21 +3,30 @@
 Status: active
 
 ## Working
-- Central AI repo-map generation is configured through dbrckk/repo-standards.
-- Repository agent instructions are present.
+- Android game/runtime and canonical 235-asset ledger are active on `main`.
+- Strict asset count is currently 219/235; TECH is promoted and release-validated.
+- Asset Pipeline CI and character review-matrix checks are green on the current v1.18 character pipeline.
+- Async Kaggle character collection is observable through per-run kernel-status artifacts.
 
 ## Broken / blockers
-- None documented here yet.
+- Final strict completion is blocked only by 16 character assets: OP x5, LOG x5, ENG x6.
+- ENG v1.17 async Kaggle run 38160357834 is still RUNNING; it must finish or reject before its candidates can be semantically reviewed.
+- OP/LOG legacy runtime sheets were visually rejected for identity/framing inconsistency and are queued for coherent v1.18 regeneration.
+- No unresolved asset may be promoted only to raise the counter; semantic review plus runtime/Android validation remains mandatory.
 
 ## Current priority
-- Restore task-specific state here when substantial work resumes.
+- Collect and inspect the active ENG artifact immediately when Kaggle completes.
+- Approve and promote only coherent ENG candidates; rejected actions move to v1.18.
+- Then generate OP+LOG as intact role families with context-only IDLE anchors in the same producer wave.
+- Reach 235/235 strict DONE with provenance, runtime QA, Android build/lint/tests and release bundle validation.
 
 ## Validation
-- Standards workflow: configured.
-- Tests/build: use this repository's existing validation commands.
+- Asset Pipeline CI: green after v1.18 orchestration/generator changes.
+- Character strict review matrix: green and review-only.
+- Strict-review backlog is generated from the canonical master queue and now carries review artifact provenance.
 
 ## Last verified
-- 2026-09-18
+- 2026-10-11
 
 <!-- AUTO:START -->
 ## Automatic repository state
