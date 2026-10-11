@@ -211,17 +211,17 @@ def render_boot(layer,img,foot,angle,far_edge_light=False) -> dict[str,float]:
     px=round(foot[0]-center)
     py=round(foot[1]-bbox[3])
     if far_edge_light:
-        # Review-only far-side boot separation at 39-42dp. An 8 source-pixel
-        # exterior rim becomes ~0.7 physical pixels in the Android gallery.
+        # Review-only far-side boot material edge at 39-42dp. A 6 source-pixel
+        # exterior rim becomes ~0.5 physical pixels at game scale.
         # The shoe texture and sole contact remain exact and unchanged.
         # The brighter material edge is beneath the shoe, so it never paints
         # over its lace/metal texture or adds a second floating foot.
         alpha = turn.getchannel('A')
         exterior = ImageChops.subtract(
-            alpha.filter(ImageFilter.MaxFilter(17)), alpha
+            alpha.filter(ImageFilter.MaxFilter(13)), alpha
         )
-        exterior = exterior.point(lambda value: round(value * 0.61))
-        edge = Image.new('RGBA', turn.size, (110, 197, 219, 0))
+        exterior = exterior.point(lambda value: round(value * 0.34))
+        edge = Image.new('RGBA', turn.size, (126, 151, 159, 0))
         edge.putalpha(exterior)
         paste(layer, edge, px, py)
     paste(layer,turn,px,py)
