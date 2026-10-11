@@ -31,16 +31,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T20:11:32Z
+Generated: 2026-10-11T20:17:46Z
 
 ### Git
 - Branch: `main`
-- Head: `1db215fde2c6`
-- Commit date: 2026-10-11T22:11:06+02:00
-- Commit: art(state): reconcile active OP LOG dispatch diagnostics
+- Head: `7835027ac42d`
+- Commit date: 2026-10-11T22:17:33+02:00
+- Commit: docs(art): sync strict backlog with active OP LOG wave
 - Tracked files: 1524
 
 ### Recently changed files
+- `art/production/character-strict-review-backlog.md`
 - `art/production/master-asset-queue.json`
 - `ops/kaggle-collector-trigger.txt`
 - `tools/assets/test_workflow_policy.py`

@@ -1,8 +1,8 @@
 # CI status
 
-Summary: 3 success / 0 failure / 1 active
+Summary: 4 success / 0 failure / 0 active
 
-- Character strict review matrix: in_progress / pending (1db215fd)
+- Character strict review matrix: completed / success (1db215fd)
 - Sprite Completion Gate: completed / success (1db215fd)
 - Kaggle Async Character Collector: completed / success (6620bfb5)
 - Asset Pipeline CI: completed / success (89a42406)

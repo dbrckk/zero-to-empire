@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 6620bfb5b3626c2d98f7eabb1a943ebb87da3876
-Head: 1db215fde2c67bdfd32323c7de0712219c38a268
+Base: 43a18411eb594a390c7e76f13ac6082cb72bb39f
+Head: 7835027ac42d9efdc25fee8b4274f09082ac587b
 
 ## Changed files
-- M art/production/master-asset-queue.json
+- M art/production/character-strict-review-backlog.md
 
 ## Affected areas
 - art
