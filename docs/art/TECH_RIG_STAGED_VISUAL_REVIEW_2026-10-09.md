@@ -64,3 +64,20 @@ Le workflow `TECH candidate Android preview (no promotion)` produit un APK de **
 - L'inspection visuelle de cette capture met en évidence une **faible séparation tonale des deux TECH en armure noire sur le décor nocturne**. Ces figures restent minuscules ; ni le seuil de pixels, ni le PASS émulateur ne prouvent une lisibilité premium.
 - Un traitement de lumière de contour cyan **réversible, limité aux TECH dans ReviewedCharacterLayer** a été proposé sur le rendu de jeu, sans changer les masters ni le découpage des atlas. La nouvelle CI Android et la comparaison de captures sont nécessaires pour juger son bénéfice et son coût.
 - **Statut inchangé** : six variantes TECH en revue, aucun nouveau strict DONE. Vérifier ensuite la lisibilité sur fond nocturne, les poses, la continuité de costume/caméra et les contacts mains/objets à l'échelle véritable.
+
+## Inspection des captures Android réelles — 2026-10-11
+
+Sources : artefact `tech-six-art-review-debug-apk-not-approved` de [la CI 38089476096](https://github.com/dbrckk/zero-to-empire/actions/runs/38089476096), fichiers `tmp/zte-character-preview/tech-candidate-grid.png` et `tmp/zte-character-preview/tech-game-scale-layer.png`. Il s'agit de **captures d'écran réelles de l'émulateur Android** ; elles ont été ouvertes et examinées visuellement, pas simplement déclarées présentes par le script.
+
+| Contrôle | Observation vérifiable | Conséquence |
+|---|---|---|
+| Galerie, six actions TECH | Les six vignettes IDLE, WALK, WORK, CARRY, REPAIR, CELEBRATE présentent désormais la même silhouette masculine de profil, coiffure noire, équipement sombre et sac dorsal. Les anciens personnages gris/cyan de face ne sont pas mélangés à ces six *alternatives de revue*. | **Amélioration d'identité inter-actions**, pas une approbation des masters officiels. |
+| WALK à 96 dp | L'animation est dessinée de profil ; les chaussures se superposent et la séparation de la jambe arrière est faible sur certaines poses. | **Blocage de lisibilité** pour un jeu en vue 2.5D ; examiner l'intégralité des frames et améliorer le contraste des appuis. |
+| WORK et REPAIR à 96 dp | Les deux actions présentent chacune un panneau cyan devant le corps ; la différence gestuelle entre « travailler » et « réparer » est faible sur la vignette figée. | Rendre le contact de main, l'outil et la conséquence de l'action nettement distincts sur tout le cycle. |
+| CARRY à 96 dp | Une caisse ambrée remplace l'ancien panneau bleu ; sa lecture est plus claire, mais elle paraît petite par rapport au buste et son support par les deux mains reste difficile à juger. | Revoir la silhouette de charge et le contact main/poignée, sans prétendre que le test de coordonnées prouve l'illusion de poids. |
+| CELEBRATE à 96 dp | Les bras sont levés avec particules cyan, mais l'impact du geste est limité par la perspective latérale. | Accentuer l'arc de mouvement et la silhouette de célébration sans changer d'identité. |
+| Rendu dans la ville | La capture de scène montre **huit personnages**, dont deux TECH effectivement visibles à taille réelle. Les TECH sont très petits et sombres sur un fond bleu nuit. Le liseré cyan est subtil ; l'identification du métier par la silhouette seule demeure difficile. | L'existence de pixels visibles **n'est pas une preuve de qualité AAA**. Réviser lisibilité, éclairage local, hiérarchie visuelle et animation en contexte. |
+
+**Priorités de correction avant promotion :** (1) marche avec appuis distincts et direction cohérente avec la caméra ; (2) gestes WORK/REPAIR non interchangeables et accessoires en contact ; (3) charge CARRY visiblement portée ; (4) différenciation et contraste à 35–46 dp sur la scène ; (5) inspection temporelle Android en lecture, pause et pas-à-pas. Les tests d'export et le smoke Android sont verts, mais la revue sémantique reste **NON VALIDÉE**.
+
+**Compte officiel : 216/235 strict DONE ; 19 NEEDS_REVIEW.** Aucune promotion sur la base de ces captures.
