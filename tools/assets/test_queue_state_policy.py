@@ -168,6 +168,25 @@ class DispatchCorrelationTests(unittest.TestCase):
         }
         self.assertTrue(orchestrator.character_retry_available(asset))
 
+    def test_untouched_character_family_precedes_repeated_legacy_retries(self) -> None:
+        orchestrator = self._load_orchestrator("")
+        def make_asset(group, epoch, tries):
+            return {
+                "id": group + "-WALK", "group": group,
+                "strict_status": "NEEDS_REVIEW", "pipeline_status": "REJECTED_SEMANTIC",
+                "generation_epoch": epoch, "epoch_attempts": tries,
+                "attempts": tries + 3, "infra_failures": 0,
+            }
+        queue = {"assets": [
+            make_asset("CHR-OP", orchestrator.CHARACTER_GENERATION_EPOCH, 1),
+            make_asset("CHR-LOG", orchestrator.CHARACTER_GENERATION_EPOCH, 1),
+            make_asset("CHR-ENG", "identity-lock-v1.17-articulated-border-fix", 1),
+        ]}
+        ordered = orchestrator.order_character_groups_by_retry(
+            queue, ["CHR-OP", "CHR-LOG", "CHR-ENG"]
+        )
+        self.assertEqual(ordered, ["CHR-ENG", "CHR-OP", "CHR-LOG"])
+
     def test_character_batch_size_supports_multi_role_burst(self) -> None:
         orchestrator = self._load_orchestrator("")
         self.assertEqual(orchestrator.CHARACTER_BATCH_SIZE, 12)
