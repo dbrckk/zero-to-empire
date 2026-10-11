@@ -31,24 +31,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T20:08:02Z
+Generated: 2026-10-11T20:11:32Z
 
 ### Git
 - Branch: `main`
-- Head: `599f2e8558b1`
-- Commit date: 2026-10-11T22:07:41+02:00
-- Commit: test(art): ensure fresh dispatch clears stale diagnostics
+- Head: `1db215fde2c6`
+- Commit date: 2026-10-11T22:11:06+02:00
+- Commit: art(state): reconcile active OP LOG dispatch diagnostics
 - Tracked files: 1524
 
 ### Recently changed files
-- `tools/assets/test_queue_state_policy.py`
-- `tools/sprites/asset_wave_orchestrator.py`
-- `art/production/kaggle-async-state.json`
-- `art/production/autofactory-state.json`
-- `art/production/autofactory-summary.md`
-- `art/production/character-strict-review-backlog.md`
-- `art/production/controlled-character-regen-queue.json`
 - `art/production/master-asset-queue.json`
+- `ops/kaggle-collector-trigger.txt`
+- `tools/assets/test_workflow_policy.py`
+- `tools/sprites/kaggle_character_sheet_factory_v1.py`
 
 ### Project signals
 - `build.gradle.kts`

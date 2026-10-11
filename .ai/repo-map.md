@@ -2525,7 +2525,16 @@ jobs:
           if candidate_dir.is_dir():
               produced.update(stem_to_id.get(p.stem) for p in candidate_dir.glob('*_final.png'))
           produced.discard(None)
-          rejected={str(r.get('id','')).upper():str(r.get('reason') or 'generator rejection') for r in report if str(r.get('status','')).upper()=='REJECT'}
+          rejected={}
+          for row in report:
+              if str(row.get('status','')).upper()!='REJECT':
+                  continue
+              aid=str(row.get('id','')).upper()
+              reason=str(row.get('reason') or 'generator rejection')
+              retries=[str(x) for x in row.get('retry_reasons',[]) if str(x).strip()]
+              if retries:
+                  reason += '; retry-details=' + ' | '.join(dict.fromkeys(retries[-4:]))
+              rejected[aid]=reason
           p=Path('art/production/controlled-character-regen-queue.json')
           q=json.loads(p.read_text())
           run_id=int(os.environ.get('SUBMIT_RUN_ID') or 0)
@@ -27019,6 +27028,8 @@ text = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(
 ⋮----
 def test_async_collector_requires_full_expected_target_coverage(self)
 ⋮----
+def test_async_collector_preserves_retry_details_for_future_generation(self)
+⋮----
 def test_async_collector_releases_wave_when_completed_output_validation_fails(self)
 ⋮----
 condition = "steps.kernel.outputs.failed == 'true' || (steps.kernel.outputs.ready == 'true' && failure())"
@@ -27061,6 +27072,8 @@ def test_kaggle_character_generator_has_clean_main_tail(self)
 def test_kaggle_character_generator_reapplies_scaffold_each_frame(self)
 def test_kaggle_character_generator_adds_semantic_scaffolds_for_hard_actions(self)
 ⋮----
+def test_carry_scaffold_adds_deterministic_lower_body_motion(self)
+⋮----
 def test_kaggle_character_generator_rejects_blocking_visual_risks(self)
 ⋮----
 generator = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
@@ -27071,6 +27084,8 @@ def test_kaggle_character_generator_uses_neutral_role_anchor(self)
 def test_kaggle_rejection_memory_prefers_exact_asset_over_role_fallback(self)
 ⋮----
 def test_kaggle_character_retry_uses_controlled_queue_rejection_risks(self)
+⋮----
+def test_kaggle_character_retry_routes_detached_subject_to_single_mode(self)
 ```
 
 ## File: tools/sprites/action_contact.py
@@ -30035,6 +30050,17 @@ lower=lower.transform(lower.size,Image.Transform.AFFINE,(1,shear,-shear*(knee_y-
 margin=max(24,int(min(w,h)*.055))
 bg=source.convert('RGB').getpixel((0,0))
 draw=ImageDraw.Draw(out)
+⋮----
+# Preserve one anchored upper-body/crate identity while adding deterministic
+# lower-body travel. This makes the carrying stride readable without asking
+# the diffusion model to redesign the person or luggage each frame.
+⋮----
+hip_y=int(h*.58); knee_y=int(h*.75)
+⋮----
+shear=phase*.045
+lower=lower.transform(
+⋮----
+clean=ImageDraw.Draw(out)
 ⋮----
 draw=ImageDraw.Draw(out,'RGBA')
 ⋮----

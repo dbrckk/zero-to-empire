@@ -4270,6 +4270,17 @@ margin=max(24,int(min(w,h)*.055))
 bg=source.convert('RGB').getpixel((0,0))
 draw=ImageDraw.Draw(out)
 ⋮----
+# Preserve one anchored upper-body/crate identity while adding deterministic
+# lower-body travel. This makes the carrying stride readable without asking
+# the diffusion model to redesign the person or luggage each frame.
+⋮----
+hip_y=int(h*.58); knee_y=int(h*.75)
+⋮----
+shear=phase*.045
+lower=lower.transform(
+⋮----
+clean=ImageDraw.Draw(out)
+⋮----
 draw=ImageDraw.Draw(out,'RGBA')
 ⋮----
 def prompt_pair(i,pose,mode='default')

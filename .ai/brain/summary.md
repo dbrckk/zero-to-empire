@@ -5,8 +5,8 @@
 - Files reparsed this run: 1
 - Symbols: 1292
 - Internal import edges: 45
-- Impacted files: 2
-- Selected tests: 1
+- Impacted files: 1
+- Selected tests: 0
 
 ## Languages
 - kotlin: 160 files

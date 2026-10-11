@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 6e2bc70939b0c99ef72060074fb1fe69c9da8d27
-Head: 599f2e8558b1b40913c541afd37ef0c8d787ffec
+Base: 6620bfb5b3626c2d98f7eabb1a943ebb87da3876
+Head: 1db215fde2c67bdfd32323c7de0712219c38a268
 
 ## Changed files
-- M tools/assets/test_queue_state_policy.py
+- M art/production/master-asset-queue.json
 
 ## Affected areas
-- tools
+- art
 
 ## Related test candidates
 - No direct filename-based test match detected.
