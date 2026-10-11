@@ -1,0 +1,94 @@
+#!/usr/bin/env python3
+"""Debug-only: prove six TECH action screenshots contain distinct actor pixels.
+
+The gate is deliberately semantic-neutral: changing action text is NOT proof
+that the rendered sprite changed. This script crops the real 42dp night
+preview by locating its XML caption, outside all action labels/buttons, then
+checks that there is a nonempty actor and that each action differs visibly.
+It cannot grant strict DONE or visual release approval.
+"""
+from __future__ import annotations
+
+import re
+import sys
+import xml.etree.ElementTree as ET
+from pathlib import Path
+
+from PIL import Image
+
+ACTIONS = ("IDLE", "WALK", "WORK", "CARRY", "REPAIR", "CELEBRATE")
+LABEL = "NIGHT · 42 dp"
+BOUNDS = re.compile(r"^\[(\d+),(\d+)\]\[(\d+),(\d+)\]$")
+MIN_VISIBLE_PIXELS = 120
+MIN_DIFFERENT_PIXELS = 150
+TOLERANCE = 25
+
+
+def review_crop(folder: Path, action: str) -> tuple[Image.Image, int]:
+    xml = folder / f"tech-action-{action}.xml"
+    shot = folder / f"tech-stage-{action}.png"
+    root = ET.parse(xml).getroot()
+    text_values = [n.attrib.get("text", "") for n in root.iter("node")]
+    if f"TECH ACTION: {action}" not in text_values:
+        raise ValueError(f"{action}: the selected action is not shown")
+    frame_values = [v.split(":", 1)[1].strip() for v in text_values
+                    if v.startswith("STAGE FRAME:")]
+    if len(frame_values) != 1 or not frame_values[0].isdigit():
+        raise ValueError(f"{action}: no unique visible stage frame counter")
+    labels = [n for n in root.iter("node") if n.attrib.get("text") == LABEL]
+    if len(labels) != 1:
+        raise ValueError(f"{action}: real-scale preview is absent or duplicated")
+    rect = BOUNDS.fullmatch(labels[0].attrib.get("bounds", ""))
+    if not rect:
+        raise ValueError(f"{action}: invalid QA caption bounds")
+    x0, y0, x1, y1 = map(int, rect.groups())
+    height = y1 - y0
+    if height < 8 or x1 <= x0:
+        raise ValueError(f"{action}: invalid screen density")
+    with Image.open(shot) as source:
+        rgb = source.convert("RGB")
+    half_width = round(height * 2.14)
+    left, right = (x0 + x1) // 2 - half_width, (x0 + x1) // 2 + half_width
+    top, bottom = y1 + 5, y1 + 5 + round(height * 3.45)
+    if not (0 <= left < right <= rgb.width and 0 <= top < bottom <= rgb.height):
+        raise ValueError(f"{action}: actor pixels are outside the viewport")
+    crop = rgb.crop((left, top, right, bottom))
+    base = crop.getpixel((0, 0))
+    visible = sum(
+        max(abs(int(px[i]) - int(base[i])) for i in range(3)) > 30
+        for px in crop.getdata()
+    )
+    if visible < MIN_VISIBLE_PIXELS:
+        raise ValueError(f"{action}: background-only QA screenshot ({visible}px)")
+    print(f"CHARACTER_PREVIEW_VISIBLE_ACTOR={action}:{visible}")
+    return crop, int(frame_values[0])
+
+
+def audit(folder: Path) -> None:
+    renders = [review_crop(folder, action) for action in ACTIONS]
+    if len({frame for _, frame in renders}) != 1:
+        raise ValueError("Stage clock advanced across comparisons")
+    for index, (first, _) in enumerate(renders):
+        for other in range(index + 1, len(renders)):
+            second = renders[other][0]
+            if first.size != second.size:
+                raise ValueError("Inconsistent actor crop dimensions")
+            different = sum(
+                max(abs(int(a[i]) - int(b[i])) for i in range(3)) > TOLERANCE
+                for a, b in zip(first.getdata(), second.getdata())
+            )
+            if different < MIN_DIFFERENT_PIXELS:
+                raise ValueError(
+                    f"{ACTIONS[index]}/{ACTIONS[other]}: sprites identical "
+                    f"or visually indistinguishable ({different}px)")
+            print(f"CHARACTER_PREVIEW_DISTINCT_ACTIONS="
+                  f"{ACTIONS[index]}/{ACTIONS[other]}:{different}")
+    print("CHARACTER_PREVIEW_ALL_SIX_DISTINCT_GAME_SCALE_PASS=1")
+
+
+if __name__ == "__main__":
+    try:
+        audit(Path(sys.argv[1]) if len(sys.argv) == 2 else Path("/tmp/zte-character-preview"))
+    except (ValueError, OSError, ET.ParseError) as exc:
+        print(f"CHARACTER_PREVIEW_FAIL=action-pixel-audit:{exc}", file=sys.stderr)
+        raise SystemExit(1)

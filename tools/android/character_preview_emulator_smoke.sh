@@ -289,6 +289,10 @@ for action in IDLE WALK WORK CARRY REPAIR CELEBRATE; do
   echo "CHARACTER_PREVIEW_TECH_ACTION_CAPTURE=$action"
 done
 echo "CHARACTER_PREVIEW_TECH_ACTION_SELECTOR_PASS=6"
+# A nonempty screenshot is insufficient: reject six identical actor renders
+# even when the dropdown labels have changed. Crop only the compact actor
+# pixels beneath the 42dp QA caption, outside all interactive text.
+python3 "$SCRIPT_DIR/character_preview_pixel_audit.py" "$OUT"
 
 adb logcat -d > "$OUT/logcat.txt"
 if grep -E "FATAL EXCEPTION|AndroidRuntime.*FATAL" "$OUT/logcat.txt"; then

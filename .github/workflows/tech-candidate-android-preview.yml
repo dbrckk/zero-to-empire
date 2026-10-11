@@ -11,6 +11,7 @@ on:
       - 'app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt'
       - 'app/src/debug/AndroidManifest.xml'
       - 'tools/android/character_preview_emulator_smoke.sh'
+      - 'tools/android/character_preview_pixel_audit.py'
       - 'tools/android/ui_dump_retry.sh'
   # A GITHUB_TOKEN commit made by the staging workflow does not trigger
   # ordinary push workflows. Run this review APK build after staging completes.
@@ -49,6 +50,7 @@ jobs:
           bash -n tools/android/character_preview_emulator_smoke.sh
           bash -n tools/android/ui_dump_retry.sh
           python3 -m py_compile tools/android/ui_click_target.py
+          python3 -m py_compile tools/android/character_preview_pixel_audit.py
       - name: Verify six review candidates against source evidence
         run: |
           python - <<'PY'
