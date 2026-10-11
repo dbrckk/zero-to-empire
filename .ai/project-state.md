@@ -22,20 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T17:02:33Z
+Generated: 2026-10-11T17:24:03Z
 
 ### Git
 - Branch: `main`
-- Head: `b3cea42502b2`
-- Commit date: 2026-10-11T19:02:19+02:00
-- Commit: fix(android): search TECH action selectors in both scroll directions for six-action QA
+- Head: `d7ff9740a736`
+- Commit date: 2026-10-11T19:23:48+02:00
+- Commit: ci(tech): bind reviewed promotion to emulator evidence
 - Tracked files: 1524
 
 ### Recently changed files
+- `.github/workflows/promote-reviewed-tech-sprites.yml`
 - `tools/android/character_preview_emulator_smoke.sh`
 - `tools/sprites/build_tech_review_board.py`
 - `docs/art/TECH_CHARACTER_VISUAL_DIRECTION.md`
-- `tools/sprites/test_weight_transfer.py`
 
 ### Project signals
 - `build.gradle.kts`

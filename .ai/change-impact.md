@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 745e826163c092b4fc3c495cbc165751804795b2
-Head: b3cea42502b273d727383d42facef091793c80cf
+Base: 58249048e137e9c6d0584a8b475138a3b639c535
+Head: d7ff9740a7367375a07ddb69feb79fb54b816e7f
 
 ## Changed files
-- M tools/android/character_preview_emulator_smoke.sh
+- M .github/workflows/promote-reviewed-tech-sprites.yml
 
 ## Affected areas
-- tools
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.
