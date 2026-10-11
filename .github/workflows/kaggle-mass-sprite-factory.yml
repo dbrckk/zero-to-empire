@@ -63,7 +63,7 @@ jobs:
           if len(tokens)==1:
               token=next(iter(tokens))
           elif strict_completion:
-              token='strict-'+os.environ.get('GITHUB_RUN_ID','wave')
+              token=os.environ.get('GITHUB_RUN_ID','wave')
               print('STRICT_COMPLETION_DISPATCH_TOKEN='+token)
           else:
               raise SystemExit('Push-triggered wave requires one dispatch owner token: '+repr(sorted(tokens)))
