@@ -123,12 +123,12 @@ def audit(folder: Path) -> None:
 
 
 def audit_temporal(folder: Path) -> None:
-    """Real Android 42dp pixel motion: prove frame stepping changes the rig.
+    """Real Android 42dp pixel motion: prove five animated actions change frames.
 
     This is a technical motion gate only. Plausible weight, foot contact and
     human recognition still require semantic visual review.
     """
-    for action in ("WALK", "CARRY"):
+    for action in ("WALK", "WORK", "CARRY", "REPAIR", "CELEBRATE"):
         samples = [review_crop(folder, action, f"frame-{i}") for i in range(4)]
         frames = [number for _, number in samples]
         if any(frames[i] != (frames[i - 1] + 1) % 1680
@@ -149,7 +149,7 @@ def audit_temporal(folder: Path) -> None:
             raise ValueError(
                 f"{action}: insufficient real-size motion after frame steps "
                 f"{changed_counts}")
-        print(f"CHARACTER_PREVIEW_TEMPORAL_GAIT_PASS={action}")
+        print(f"CHARACTER_PREVIEW_TEMPORAL_ACTION_PASS={action}")
 
 
 if __name__ == "__main__":
