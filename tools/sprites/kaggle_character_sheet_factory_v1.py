@@ -199,6 +199,28 @@ def semantic_scaffold(source,action,frame_index=0):
   return out
  if action not in {'CARRY','WORK','REPAIR'}: return source
  out=source.copy()
+ if action=='CARRY':
+  # Preserve one anchored upper-body/crate identity while adding deterministic
+  # lower-body travel. This makes the carrying stride readable without asking
+  # the diffusion model to redesign the person or luggage each frame.
+  w,h=out.size
+  phase=(0,1,2,1,0,-1,-2,-1)[frame_index%8]
+  hip_y=int(h*.58); knee_y=int(h*.75)
+  lower=out.crop((0,hip_y,w,h))
+  shear=phase*.045
+  lower=lower.transform(
+   lower.size,Image.Transform.AFFINE,
+   (1,shear,-shear*(knee_y-hip_y),0,1,0),
+   resample=Image.Resampling.BICUBIC
+  )
+  out.paste(lower,(0,hip_y))
+  margin=max(24,int(min(w,h)*.055))
+  bg=source.convert('RGB').getpixel((0,0))
+  clean=ImageDraw.Draw(out)
+  clean.rectangle((0,0,w-1,margin),fill=bg)
+  clean.rectangle((0,h-margin,w-1,h-1),fill=bg)
+  clean.rectangle((0,0,margin,h-1),fill=bg)
+  clean.rectangle((w-margin,0,w-1,h-1),fill=bg)
  draw=ImageDraw.Draw(out,'RGBA')
  if action=='CARRY':
   draw.rounded_rectangle((345,455,680,620),radius=22,fill=(82,91,96,235),outline=(198,154,78,255),width=12)
