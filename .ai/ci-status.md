@@ -1,7 +1,8 @@
 # CI status
 
-Summary: 5 success / 0 failure / 0 active
+Summary: 5 success / 0 failure / 1 active
 
+- Kaggle Async Character Collector: in_progress / pending (b79193e2)
 - Kaggle Async Character Collector: completed / success (81b6e168)
 - Character strict review matrix: completed / success (38fc9ae4)
 - Asset Pipeline CI: completed / success (38fc9ae4)
