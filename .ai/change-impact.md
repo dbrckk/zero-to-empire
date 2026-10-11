@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 27c78010b57678fda834d3b006f9033a0e1e03fc
-Head: 77552087a7c653308dccbbb8fd3346d48566854a
+Base: eeedb00bf5ece1902d4d0849b0ec3ac6e8135965
+Head: f0600f7a04e0f6d97a6ea6342751ae7aed894d04
 
 ## Changed files
-- M ops/sprite-wave-trigger.txt
+- M art/production/character-strict-review-backlog.md
 
 ## Affected areas
-- ops
+- art
 
 ## Related test candidates
 - No direct filename-based test match detected.

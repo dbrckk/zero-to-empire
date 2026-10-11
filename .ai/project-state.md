@@ -31,21 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T21:15:27Z
+Generated: 2026-10-11T21:16:46Z
 
 ### Git
 - Branch: `main`
-- Head: `77552087a7c6`
-- Commit date: 2026-10-11T23:15:13+02:00
-- Commit: ci(art): verify GPU preflight skips dispatch while character kernel is active
+- Head: `f0600f7a04e0`
+- Commit date: 2026-10-11T23:16:29+02:00
+- Commit: docs(art): reconcile current Kaggle dispatch owner in strict review backlog
 - Tracked files: 1529
 
 ### Recently changed files
+- `art/production/character-strict-review-backlog.md`
+- `art/production/master-asset-queue.json`
 - `ops/sprite-wave-trigger.txt`
 - `ops/kaggle-collector-trigger.txt`
 - `tools/assets/test_workflow_policy.py`
-- `tools/sprites/kaggle_character_sheet_factory_v1.py`
-- `art/production/op-log-superseded-batch-semantic-review.md`
 
 ### Project signals
 - `build.gradle.kts`
