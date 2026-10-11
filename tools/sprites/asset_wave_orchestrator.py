@@ -499,6 +499,36 @@ def pending_ids_from_controlled(path: Path, queue: dict[str, Any]) -> list[str]:
     ]
 
 
+def order_character_groups_by_retry(queue: dict[str, Any], groups: list[str]) -> list[str]:
+    """Give untouched role families a chance before repeating failed GPU waves.
+
+    Tie-breaks preserve the canonical role priority. A legacy generation epoch
+    counts as zero use of the current algorithm, not a permanent penalty.
+    """
+    def current_epoch_attempts(group: str) -> float:
+        eligible = [
+            x for x in queue["assets"]
+            if x.get("group") == group
+            and x.get("strict_status") != "DONE"
+            and character_retry_available(x)
+            and str(x.get("pipeline_status", "")).upper()
+            not in CHARACTER_PRODUCED_STATUSES | {"DISPATCHED"}
+        ]
+        if not eligible:
+            return float("inf")
+        return sum(
+            int(x.get("epoch_attempts") or 0)
+            if x.get("generation_epoch") == CHARACTER_GENERATION_EPOCH else 0
+            for x in eligible
+        ) / len(eligible)
+
+    priority = {group: index for index, group in enumerate(CHARACTER_PRIORITY)}
+    return sorted(
+        dict.fromkeys(groups),
+        key=lambda group: (current_epoch_attempts(group), priority.get(group, len(priority)), group),
+    )
+
+
 def make_decision(queue: dict[str, Any]) -> dict[str, Any]:
     close_exhausted_character_dispatches(queue)
     s = stats(queue)
@@ -547,7 +577,7 @@ def make_decision(queue: dict[str, Any]) -> dict[str, Any]:
                 for x in queue["assets"]
             )
         ]
-        ordered = [first_group] + [g for g in candidate_groups if g != first_group]
+        ordered = order_character_groups_by_retry(queue, candidate_groups)
         burst_groups = ordered[:3]
         if KAGGLE_BUSY:
             return {"action": "WAIT_KAGGLE_BUSY", "group": "+".join(burst_groups), "stats": s}
