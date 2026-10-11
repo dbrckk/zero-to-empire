@@ -1,7 +1,7 @@
 # Change impact
 
-Base: 8e5c058e7c245944c9c302216b05f79ccac6c968
-Head: c9c1f169a86ea6f92e3af3d0c41264966bcbe98b
+Base: 28f576095b6878fdaf8f9bc99c3825d55a138e6c
+Head: 40c0aff57e484554221756d10fa6aba2afff82cd
 
 ## Changed files
 - M tools/sprites/build_tech_review_board.py

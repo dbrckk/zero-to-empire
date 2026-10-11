@@ -22,17 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T11:40:13Z
+Generated: 2026-10-11T11:44:16Z
 
 ### Git
 - Branch: `main`
-- Head: `c9c1f169a86e`
-- Commit date: 2026-10-11T13:40:00+02:00
-- Commit: art(review): export true-pixel 2x footfall closeups for TECH WALK/CARRY alongside 42px panels
+- Head: `40c0aff57e48`
+- Commit date: 2026-10-11T13:43:52+02:00
+- Commit: art(review): add eight-frame WALK/CARRY footfall close-up GIF from real atlas pixels
 - Tracked files: 1524
 
 ### Recently changed files
 - `tools/sprites/build_tech_review_board.py`
+- `docs/art/TECH_CHARACTER_VISUAL_DIRECTION.md`
 - `art/production/character-rig-review-candidates/review-report.json`
 - `art/production/character-rig-review-candidates/zte_chr_tech_carry_final-contact.png`
 - `art/production/character-rig-review-candidates/zte_chr_tech_carry_final-preview.gif`
@@ -51,7 +52,6 @@ Generated: 2026-10-11T11:40:13Z
 - `art/production/character-rig-review-candidates/zte_chr_tech_walk_final.png`
 - `art/production/character-rig-review-candidates/zte_chr_tech_work_final-contact.png`
 - `art/production/character-rig-review-candidates/zte_chr_tech_work_final-preview.gif`
-- `art/production/character-rig-review-candidates/zte_chr_tech_work_final.png`
 
 ### Project signals
 - `build.gradle.kts`

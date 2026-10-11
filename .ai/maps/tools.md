@@ -2129,6 +2129,24 @@ base_y = 150 + row * 485
 # bounding every foot would conceal its movement/occlusion.
 crop = frames[index].crop(frame_box).resize(
 ⋮----
+def footfall_motion(records, out: Path)
+⋮----
+"""Loop all eight ORIGINAL canonical WALK/CARRY frames at fixed framing.
+
+    Preview cadence is deliberately labeled as an inspection aid, not as the
+    game's playback speed or semantic proof of foot-plant stability.
+    """
+frames_out = []
+⋮----
+surface = Image.new('RGBA', (1100, 526), BG + (255,))
+⋮----
+x = 24 + index * 548
+⋮----
+crop = frames[tick].crop((55, 120, 215, 248))
+zoom = crop.resize((400, 320), Image.Resampling.NEAREST)
+⋮----
+# Conservative *physical-pixel* 42px preview, not dp.
+⋮----
 def animated(records, out: Path)
 ⋮----
 still = []

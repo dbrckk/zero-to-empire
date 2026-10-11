@@ -206,7 +206,7 @@
         },
         {
           "file": "tools/sprites/build_tech_review_board.py",
-          "line": 199,
+          "line": 236,
           "preview": "rec=tiles(args.source)",
           "definition_candidate": false
         },
@@ -697,31 +697,61 @@
         },
         {
           "file": "tools/sprites/build_tech_review_board.py",
-          "line": 179,
-          "preview": "label(d, 24, 17, 'TECH \u00b7 TRUE CANDIDATE FRAMES \u00b7 42 px \u00b7 NIGHT / DAY', size=22,bold=True)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_tech_review_board.py",
-          "line": 180,
-          "preview": "label(d, 24, 48, f'Preview tick {t+1:02d}/16 \u2022 NOT release assets or game captures', size=15, color=MUTED)",
+          "line": 184,
+          "preview": "label(d, 25, 17, 'TECH / FOOTFALL MOTION / ORIGINAL CANDIDATE PIXELS',",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/build_tech_review_board.py",
           "line": 186,
+          "preview": "label(d, 25, 55,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_tech_review_board.py",
+          "line": 192,
+          "preview": "label(d, x+12, 89, action, size=21, color=AQUA, bold=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_tech_review_board.py",
+          "line": 200,
+          "preview": "label(d, x+436, 288, '42 px', size=14, color=MUTED)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_tech_review_board.py",
+          "line": 201,
+          "preview": "label(d, 25, 493,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_tech_review_board.py",
+          "line": 216,
+          "preview": "label(d, 24, 17, 'TECH \u00b7 TRUE CANDIDATE FRAMES \u00b7 42 px \u00b7 NIGHT / DAY', size=22,bold=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_tech_review_board.py",
+          "line": 217,
+          "preview": "label(d, 24, 48, f'Preview tick {t+1:02d}/16 \u2022 NOT release assets or game captures', size=15, color=MUTED)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_tech_review_board.py",
+          "line": 223,
           "preview": "label(d, x+15, 260, a, size=16, color=AQUA,bold=True)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/build_tech_review_board.py",
-          "line": 187,
+          "line": 224,
           "preview": "label(d, x+15, 291, f'{(t%len(frames))+1:02d}/{len(frames):02d}', size=15,color=MUTED)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/build_tech_review_board.py",
-          "line": 188,
+          "line": 225,
           "preview": "label(d, 24, 355, 'Source PNGs: deterministic 4\u00d74 canonical review atlases \u2022 Motion on grid is not real in-city pathing', size=14,color=MUTED)",
           "definition_candidate": false
         },
@@ -882,7 +912,7 @@
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 109
+      "occurrence_count": 114
     },
     "checker": {
       "definition": {
@@ -942,12 +972,18 @@
         },
         {
           "file": "tools/sprites/build_tech_review_board.py",
-          "line": 184,
+          "line": 198,
+          "preview": "checker(surface, (x+429, 187), 91, night=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_tech_review_board.py",
+          "line": 221,
           "preview": "checker(img, (x, 95), 150, True)",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 9
+      "occurrence_count": 10
     },
     "place": {
       "definition": {
@@ -1007,7 +1043,13 @@
         },
         {
           "file": "tools/sprites/build_tech_review_board.py",
-          "line": 185,
+          "line": 199,
+          "preview": "place(surface, frames[tick], x+453, 210, 42)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_tech_review_board.py",
+          "line": 222,
           "preview": "place(img, frames[t % len(frames)], x+54, 147, 42)",
           "definition_candidate": false
         },
@@ -1036,7 +1078,7 @@
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 13
+      "occurrence_count": 14
     },
     "board": {
       "definition": {
@@ -1060,7 +1102,7 @@
         },
         {
           "file": "tools/sprites/build_tech_review_board.py",
-          "line": 200,
+          "line": 237,
           "preview": "board(rec,args.output/'tech-review-true-source-board.png')",
           "definition_candidate": false
         },
@@ -1119,8 +1161,31 @@
         },
         {
           "file": "tools/sprites/build_tech_review_board.py",
-          "line": 201,
+          "line": 238,
           "preview": "lower_limb_closeups(rec,args.output/'tech-review-footfall-closeups.png')",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "footfall_motion": {
+      "definition": {
+        "file": "tools/sprites/build_tech_review_board.py",
+        "line": 174,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/build_tech_review_board.py",
+          "line": 174,
+          "preview": "def footfall_motion(records, out: Path):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/build_tech_review_board.py",
+          "line": 239,
+          "preview": "footfall_motion(rec,args.output/'tech-review-footfall-motion.gif')",
           "definition_candidate": false
         }
       ],
@@ -1129,7 +1194,7 @@
     "animated": {
       "definition": {
         "file": "tools/sprites/build_tech_review_board.py",
-        "line": 173,
+        "line": 210,
         "kind": "function",
         "language": "python"
       },
@@ -1208,13 +1273,13 @@
         },
         {
           "file": "tools/sprites/build_tech_review_board.py",
-          "line": 173,
+          "line": 210,
           "preview": "def animated(records, out: Path):",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/build_tech_review_board.py",
-          "line": 202,
+          "line": 240,
           "preview": "animated(rec,args.output/'tech-review-true-source-motion.gif')",
           "definition_candidate": false
         },
@@ -1248,7 +1313,7 @@
     "main": {
       "definition": {
         "file": "tools/sprites/build_tech_review_board.py",
-        "line": 193,
+        "line": 230,
         "kind": "function",
         "language": "python"
       },
@@ -1609,13 +1674,13 @@
         },
         {
           "file": "tools/sprites/build_tech_review_board.py",
-          "line": 193,
+          "line": 230,
           "preview": "def main():",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/build_tech_review_board.py",
-          "line": 205,
+          "line": 243,
           "preview": "if __name__ == '__main__':main()",
           "definition_candidate": false
         },
