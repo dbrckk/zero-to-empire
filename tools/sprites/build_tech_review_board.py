@@ -120,6 +120,56 @@ def board(records, out: Path):
     im.convert('RGB').save(out, 'PNG', optimize=True)
 
 
+
+def lower_limb_closeups(records, out: Path):
+    """Unretouched walking/carrying foot crops and literal 42px previews.
+
+    A mass- or geometry-only gate cannot decide whether overlapping boots
+    are visually understandable. This supplemental board preserves the
+    exact candidate pixels and makes the ambiguous frames easy to inspect.
+    It never infers a semantic pass, contact validity or release eligibility.
+    """
+    w, h = 1632, 1140
+    surface = Image.new('RGBA', (w, h), BG + (255,))
+    d = ImageDraw.Draw(surface)
+    label(d, 40, 26, 'TECH / WALK + CARRY / LOWER-LIMB FRAME REVIEW',
+          size=31, bold=True)
+    label(d, 42, 76,
+          'Actual candidate PNG crop at 2x (NEAREST) + literal 42px night/day. No AI repaint.',
+          size=17, color=MUTED)
+    label(d, 42, 105,
+          'Silhouette separation must be judged in motion: six of eight frames were flagged.',
+          size=17, color=AMBER)
+    frame_box = (55, 120, 215, 248)
+    for row, action in enumerate(('WALK', 'CARRY')):
+        _item, frames = records[action]
+        base_y = 150 + row * 485
+        label(d, 42, base_y, action + ' — ORIGINAL FRAMES 0 / 2 / 4 / 6',
+              size=25, color=AQUA, bold=True)
+        for column, index in enumerate((0, 2, 4, 6)):
+            x, y = 37 + column * 400, base_y + 45
+            d.rounded_rectangle((x, y, x + 374, y + 418), radius=12,
+                                fill=TILE, outline=(72, 100, 118), width=2)
+            label(d, x + 20, y + 12, f'FRAME {index + 1:02d}',
+                  size=18, color=INK, bold=True)
+            # A fixed crop region across frames is essential: independently
+            # bounding every foot would conceal its movement/occlusion.
+            crop = frames[index].crop(frame_box).resize(
+                (320, 256), Image.Resampling.NEAREST)
+            d.rectangle((x+26,y+49,x+348,y+308),fill=(15,26,38))
+            surface.paste(crop, (x + 27, y + 50), crop)
+            label(d, x+25, y+312, 'REAL 42px / night', size=13, color=AQUA)
+            label(d, x+207, y+312, 'REAL 42px / day', size=13, color=AMBER)
+            checker(surface, (x+56,y+335), 68, night=True)
+            checker(surface, (x+247,y+335), 68, night=False)
+            place(surface,frames[index],x+69,y+348,42)
+            place(surface,frames[index],x+260,y+348,42)
+    label(d, 40, 1111,
+          'REVIEW ONLY · 216/235 strict DONE unchanged · no automatic foot or semantic approval',
+          size=17, color=AMBER)
+    surface.convert('RGB').save(out,'PNG',optimize=True)
+
+
 def animated(records, out: Path):
     W, H = 1040, 390
     still = []
@@ -148,6 +198,7 @@ def main():
     args.output.mkdir(parents=True,exist_ok=True)
     rec=tiles(args.source)
     board(rec,args.output/'tech-review-true-source-board.png')
+    lower_limb_closeups(rec,args.output/'tech-review-footfall-closeups.png')
     animated(rec,args.output/'tech-review-true-source-motion.gif')
     print('TECH_REVIEW_TRUE_SOURCE_PREVIEW_PASS=6 STRICT_PROMOTION=0')
 
