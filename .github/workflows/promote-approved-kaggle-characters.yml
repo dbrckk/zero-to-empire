@@ -19,7 +19,8 @@ permissions:
   actions: write
 
 concurrency:
-  group: promote-approved-kaggle-characters
+  # Serialise every canonical strict-ledger writer with Asset Autofactory.
+  group: asset-autofactory-235
   cancel-in-progress: false
 
 jobs:
@@ -88,22 +89,24 @@ jobs:
           echo "SPRITE_TARGETS=$(cat /tmp/approved-stems.txt)" >> "$GITHUB_ENV"
       - name: Run canonical runtime conversion and QA
         run: python tools/sprites/process_final_sprites.py
-      - name: Write runtime QA evidence
+      - name: Validate approved runtimes and write QA evidence
         env:
           APPROVED_IDS: ${{ env.APPROVED_IDS }}
+        shell: bash
         run: |
-          python - <<'PY'
-          import json, os
-          from pathlib import Path
-          from PIL import Image
-          for aid in [x.strip().upper() for x in os.environ['APPROVED_IDS'].split(',') if x.strip()]:
-              _,role,action=aid.split('-')
-              stem=f'zte_chr_{role.lower()}_{action.lower()}_final'
-              p=Path('app/src/main/res/drawable-nodpi')/(stem+'.webp')
-              with Image.open(p) as im: size=list(im.size)
-              out=Path('art/production')/(stem+'-runtime-qa.json')
-              out.write_text(json.dumps({'id':aid,'file':str(p),'size':size,'bytes':p.stat().st_size,'pass':size==[1024,1024],'issues':[] if size==[1024,1024] else ['bad-size']},indent=2)+'\n')
-          PY
+          set -euo pipefail
+          IFS=',' read -ra ids <<< "$APPROVED_IDS"
+          for raw in "${ids[@]}"; do
+            aid="$(echo "$raw" | tr -d ' ' | tr '[:lower:]' '[:upper:]')"
+            IFS='-' read -r prefix role action <<< "$aid"
+            test "$prefix" = "CHR"
+            stem="zte_chr_$(echo "$role" | tr '[:upper:]' '[:lower:]')_$(echo "$action" | tr '[:upper:]' '[:lower:]')_final"
+            python tools/sprites/validate_runtime_asset.py \
+              --asset-id "$aid" \
+              --path "app/src/main/res/drawable-nodpi/${stem}.webp" \
+              --report "art/production/${stem}-runtime-qa.json"
+          done
+          python3 tools/android/audit_character_runtime.py
       - name: Set up JDK 17
         uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961
         with:
@@ -113,13 +116,21 @@ jobs:
         uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb
         with:
           gradle-version: '8.13'
-      - name: Validate promoted Android runtime
+      - name: Validate promoted Android runtime at release grade
         run: |
           set -euo pipefail
           python3 tools/android/validate_manifest_policy.py
           python3 tools/android/validate_release_privacy.py
           python3 tools/android/audit_character_runtime.py
           gradle assembleDebug --stacktrace
+          gradle testDebugUnitTest --stacktrace
+          gradle lintDebug --stacktrace
+          gradle bundleRelease --stacktrace
+          AAB="app/build/outputs/bundle/release/app-release.aab"
+          test -s "$AAB"
+          unzip -t "$AAB" >/dev/null
+          test "$(wc -c < "$AAB")" -gt 100000
+          echo "KAGGLE_CHARACTER_RELEASE_VALIDATION_PASS=1"
       - name: Mark approved characters strict DONE
         env:
           APPROVED_IDS: ${{ env.APPROVED_IDS }}
@@ -137,7 +148,12 @@ jobs:
                   a['pipeline_status']='DONE'
                   a['generation_required']=False
                   a['last_error']=None
-                  a['review_reason']='Semantic review, runtime QA, canonical Android runtime audit and debug build passed.'
+                  a['review_reason']=(
+                      'Explicit semantic review approved Kaggle source run '
+                      + os.environ.get('SOURCE_RUN_ID','unknown')
+                      + '; deterministic runtime QA, canonical Android audit, '
+                        'debug build, existing tests, lint and release bundle all passed.'
+                  )
                   found.add(a['id'])
           missing=ids-found
           if missing: raise SystemExit('Approved IDs missing from master queue: '+','.join(sorted(missing)))
