@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reproducible review plan for the 19 remaining CHR assets.
+"""Reproducible review plan for the remaining canonical CHR assets.
 
 Never treats a generated candidate as approved; detects canonical-vs-preview
 conflicts (notably CHR-TECH-WALK) and prioritizes real human/artistic review.
@@ -79,7 +79,7 @@ def build(queue:dict)->dict:
         "human_approval_required":True,
         "auto_promotion_permitted":False,
         "limitations":["No original Kaggle frames are bundled in this report",
-                       "A separate TECH renderer does not clear a rejected canonical candidate",
+                       "Independent renderer evidence never clears a canonical rejection by itself",
                        "Prioritization is a review plan, not an aesthetic quality score"],
         "by_role":by_role,"items":rows,
     }
@@ -105,12 +105,24 @@ def markdown(report:dict)->str:
     lines+=["","## Per-action acceptance criteria",""]
     for action,checks in REVIEW.items():
         lines.append(f"- **{action}**: {checks[0]}; {checks[1]}.")
-    lines+=["","## Important evidence separation","",
-            "The modular TECH pipeline has independently produced review candidates for WALK, WORK and CARRY. "
-            "Its successful technical checks do **not** rewrite the canonical Kaggle result, "
-            "which still records a semantic rejection for `CHR-TECH-WALK`. "
-            "Human review must inspect the actual images and their provenance before any status change.",
-            ""]
+    lines += ["", "## Important evidence separation", ""]
+    tech_pending=[row for row in report["items"] if row["role"]=="TECH"]
+    if tech_pending:
+        rejected=[row["asset_id"] for row in tech_pending
+                  if row["canonical_pipeline_status"] in ("REJECTED_SEMANTIC","REJECTED")]
+        detail=(
+            "Independent TECH renderer evidence does **not** rewrite canonical pending state. "
+            "Human review must inspect the actual candidate images and provenance before any status change."
+        )
+        if rejected:
+            detail += " Canonical semantic rejection remains recorded for: " + ", ".join(rejected) + "."
+        lines.append(detail)
+    else:
+        lines.append(
+            "The TECH family is already outside the pending strict-review backlog. "
+            "Do not reuse older rejected TECH evidence when assessing the remaining OP, LOG or ENG families."
+        )
+    lines.append("")
     return "\n".join(lines)
 
 
