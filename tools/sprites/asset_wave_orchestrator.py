@@ -212,15 +212,70 @@ def mark_dispatch(queue: dict[str, Any], ids: list[str], generator: str) -> list
     return eligible
 
 
-def prioritize_controlled_character_targets(ids: list[str]) -> None:
-    """Keep exact dispatched assets first so Kaggle --count matches dispatch state."""
-    selected = set(ids)
+def prioritize_controlled_character_targets(ids: list[str]) -> int:
+    """Put dispatched actions first and include one IDLE identity anchor per role.
+
+    Strict-DONE IDLE sheets are allowed as context-only regeneration targets:
+    they do not consume strict progress or become dispatched in the master
+    queue, but producing them in the same Kaggle run gives semantic review a
+    complete six-action family and lets promotion replace a legacy IDLE sheet
+    with bytes from the exact same identity generation epoch.
+    """
+    ordered_ids = list(dict.fromkeys(str(aid).upper() for aid in ids if aid))
+    selected = set(ordered_ids)
     if not selected:
-        return
+        return 0
+
     controlled = load_json(CHARACTER_QUEUE, {}) or {}
-    targets = controlled.get("targets", [])
-    targets.sort(key=lambda item: 0 if str(item.get("id", "")).upper() in selected else 1)
+    targets = controlled.setdefault("targets", [])
+    by_target = {
+        str(item.get("id", "")).upper(): item
+        for item in targets
+        if item.get("id")
+    }
+
+    groups: list[str] = []
+    for aid in ordered_ids:
+        parts = aid.split("-")
+        if len(parts) >= 3 and parts[0] == "CHR":
+            group = "-".join(parts[:2])
+            if group not in groups:
+                groups.append(group)
+
+    context_ids: list[str] = []
+    for group in groups:
+        idle = f"{group}-IDLE"
+        if idle in selected:
+            continue
+        item = by_target.get(idle)
+        if item is None:
+            item = {
+                "id": idle,
+                "status": "PENDING_KAGGLE",
+                "autofactory_context_only": True,
+            }
+            targets.append(item)
+            by_target[idle] = item
+        else:
+            item["status"] = "PENDING_KAGGLE"
+            item["autofactory_context_only"] = True
+        context_ids.append(idle)
+
+    for aid in selected:
+        item = by_target.get(aid)
+        if item is not None:
+            item.pop("autofactory_context_only", None)
+
+    priority: list[str] = []
+    for group in groups:
+        idle = f"{group}-IDLE"
+        if idle in selected or idle in context_ids:
+            priority.append(idle)
+        priority.extend(aid for aid in ordered_ids if aid.startswith(group + "-") and aid != idle)
+    rank = {aid: i for i, aid in enumerate(priority)}
+    targets.sort(key=lambda item: rank.get(str(item.get("id", "")).upper(), len(rank)))
     save_json(CHARACTER_QUEUE, controlled)
+    return len(selected) + len(context_ids)
 
 
 def building_family_ids(group: str) -> list[str]:
@@ -279,8 +334,8 @@ def prepare_character_burst(queue: dict[str, Any], groups: list[str]) -> dict[st
         "targets": targets,
     })
     dispatched = mark_dispatch(queue, [x["id"] for x in targets], "kaggle-character-sheet")
-    prioritize_controlled_character_targets(dispatched)
-    return {"group": "+".join(selected_groups), "ids": dispatched, "count": len(dispatched)}
+    producer_count = prioritize_controlled_character_targets(dispatched)
+    return {"group": "+".join(selected_groups), "ids": dispatched, "count": producer_count}
 
 
 def next_group(queue: dict[str, Any], lane: str, priority: list[str]) -> str | None:
@@ -429,8 +484,8 @@ def make_decision(queue: dict[str, Any]) -> dict[str, Any]:
             return {"action": "WAIT_KAGGLE_BUSY", "group": "controlled-character", "stats": s}
         ids = mark_dispatch(queue, character_pending[:CHARACTER_BATCH_SIZE], "kaggle-character-sheet")
         if ids:
-            prioritize_controlled_character_targets(ids)
-            return {"action": "DISPATCH_KAGGLE_CHARACTER", "group": "controlled-character", "ids": ids, "count": len(ids), "stats": s}
+            producer_count = prioritize_controlled_character_targets(ids)
+            return {"action": "DISPATCH_KAGGLE_CHARACTER", "group": "controlled-character", "ids": ids, "count": producer_count, "stats": s}
     first_group = next_group(queue, "kaggle-character-sheet", CHARACTER_PRIORITY)
     if first_group:
         candidate_groups = [
