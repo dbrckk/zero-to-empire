@@ -191,6 +191,16 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("/tmp/kaggle-kernel-status.txt", text)
         self.assertIn("Upload kernel observation", text)
 
+    def test_superseded_kaggle_wave_evidence_is_review_only(self):
+        text = Path(".github/workflows/kaggle-superseded-character-evidence.yml").read_text(encoding="utf-8")
+        self.assertIn("kaggle-async-orphan-waves.json", text)
+        self.assertIn("kaggle-superseded-character-batch-", text)
+        self.assertIn("build_character_review_panels.py", text)
+        self.assertIn("'ARTIFACT_COLLECTED_REVIEW_ONLY'", text)
+        self.assertIn("automatic_strict_promotion", text)
+        self.assertNotIn("master-asset-queue.json", text)
+        self.assertNotIn("strict_status", text)
+
     def test_mass_gpu_preflight_blocks_duplicate_active_waves(self):
         text = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
         self.assertIn("jobs:\n  preflight:", text)
