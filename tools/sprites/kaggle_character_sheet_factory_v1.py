@@ -484,15 +484,34 @@ def main():
     with torch.no_grad():pe,ppe,_=enc.encode_prompt(prompt=clip_text,prompt_2=t5_text,max_sequence_length=256)
     variants[mode]=(pe.cpu(),ppe.cpu())
    encs[i['id']].append(variants)
- del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();report=[];role_anchor={};role_reference_cell={}
+ del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();report=[];role_anchor={};role_reference_cell={};anchor_failures={}
  for ri,role in enumerate(roles):
   pe,ppe=anchor_encs[role]
-  gen_anchor=torch.Generator(device='cuda').manual_seed(args.seed+700000+ri*50000)
-  with torch.inference_mode():
-   raw=base(height=1024,width=1024,num_inference_steps=6,guidance_scale=0,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),output_type='pil',generator=gen_anchor).images[0]
-  role_anchor[role]=raw.convert('RGB')
-  print('KAGGLE_CHR_CANONICAL_ROLE_ANCHOR='+role,flush=True)
+  failures=[]
+  # A single malformed text-to-image role anchor previously poisoned all six
+  # character actions. Reject multi-subject/cropped source images before any
+  # action frame is generated, and try independent deterministic seeds.
+  for anchor_attempt in range(4):
+   gen_anchor=torch.Generator(device='cuda').manual_seed(args.seed+700000+ri*50000+anchor_attempt*104729)
+   try:
+    with torch.inference_mode():
+     raw=base(height=1024,width=1024,num_inference_steps=6,guidance_scale=0,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),output_type='pil',generator=gen_anchor).images[0]
+    candidate=raw.convert('RGB')
+    _,coverage=finish_frame(candidate,'IDLE')
+    role_anchor[role]=candidate
+    print(f'KAGGLE_CHR_CANONICAL_ROLE_ANCHOR={role} attempt={anchor_attempt+1} coverage={coverage:.3f}',flush=True)
+    break
+   except Exception as exc:
+    failures.append(str(exc))
+    print(f'KAGGLE_CHR_ROLE_ANCHOR_RETRY={role} attempt={anchor_attempt+1} reason={exc}',flush=True)
+  if role not in role_anchor:
+   anchor_failures[role]=failures
+   print(f'KAGGLE_CHR_ROLE_ANCHOR_REJECTED={role} attempts={len(failures)}',flush=True)
  for idx,i in enumerate(items):
+  if i['role'] not in role_anchor:
+   report.append({'id':i['id'],'status':'REJECT','reason':'role-anchor-validation-failed',
+                  'frames':0,'retry_reasons':anchor_failures.get(i['role'],[])})
+   continue
   frames=[];anchor_raw=None;fail=None;retry_reasons=[]
   for fi,variants in enumerate(encs[i['id']]):
    ok=False;last_reason=''
