@@ -22,20 +22,24 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T07:42:55Z
+Generated: 2026-10-11T07:44:27Z
 
 ### Git
 - Branch: `main`
-- Head: `843ea8630720`
-- Commit date: 2026-10-11T09:42:38+02:00
-- Commit: art(tech): make REPAIR welding readable and distinct from WORK
+- Head: `779a7568c3e1`
+- Commit date: 2026-10-11T09:44:11+02:00
+- Commit: docs(art): trace warmed TECH repair arc with pixel comparison and explicit non-approval gate
 - Tracked files: 1521
 
 ### Recently changed files
+- `docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md`
+- `art/production/character-rig-review-candidates/review-report.json`
+- `art/production/character-rig-review-candidates/zte_chr_tech_repair_final-contact.png`
+- `art/production/character-rig-review-candidates/zte_chr_tech_repair_final-preview.gif`
+- `art/production/character-rig-review-candidates/zte_chr_tech_repair_final.png`
 - `tools/sprites/rigged_tech_actions_v3.py`
 - `tools/android/character_preview_emulator_smoke.sh`
 - `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
-- `docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md`
 
 ### Project signals
 - `build.gradle.kts`
