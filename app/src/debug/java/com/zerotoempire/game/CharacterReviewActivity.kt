@@ -156,25 +156,9 @@ private fun CharacterReviewGallery() {
                                     worldFrame = (worldFrame + 1) % 1680
                                 }) { Text("Stage +1") }
                             }
-                            // At 320dp widths, two labeled buttons per row
-                            // remain touchable; no hidden horizontal scrolling.
-                            ReviewedCharacterAction.entries.chunked(2).forEach { rowActions ->
-                                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                    rowActions.forEach { action ->
-                                        OutlinedButton(
-                                            modifier = Modifier.weight(1f),
-                                            onClick = { inspectedTechAction = action },
-                                        ) {
-                                            Text(
-                                                action.name,
-                                                style = MaterialTheme.typography.labelSmall,
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        if (technicianOnly) {
+                            // This full-body preview must be above the six selector
+                            // buttons. On narrow Android viewports the former
+                            // bottom placement clipped both actors at the waist.
                             Text(
                                 "TECH · REAL GAME SIZE · NIGHT / DAY",
                                 style = MaterialTheme.typography.labelMedium,
@@ -220,6 +204,23 @@ private fun CharacterReviewGallery() {
                                             edgeSeparation = Color(0xFF8AD9EE),
                                             modifier = Modifier.size(side),
                                         )
+                                    }
+                                }
+                            }
+                            // At 320dp widths, two labeled buttons per row
+                            // remain touchable; no hidden horizontal scrolling.
+                            ReviewedCharacterAction.entries.chunked(2).forEach { rowActions ->
+                                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    rowActions.forEach { action ->
+                                        OutlinedButton(
+                                            modifier = Modifier.weight(1f),
+                                            onClick = { inspectedTechAction = action },
+                                        ) {
+                                            Text(
+                                                action.name,
+                                                style = MaterialTheme.typography.labelSmall,
+                                            )
+                                        }
                                     }
                                 }
                             }
