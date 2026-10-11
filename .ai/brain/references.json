@@ -4,5 +4,219 @@
   "scope": "symbols defined in changed source files",
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
-  "symbols": {}
+  "symbols": {
+    "review_crop": {
+      "definition": {
+        "file": "tools/android/character_preview_pixel_audit.py",
+        "line": 27,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/android/character_preview_pixel_audit.py",
+          "line": 27,
+          "preview": "def review_crop(folder: Path, action: str, frame_label: str = \"\") -> tuple[Image.Image, int]:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/android/character_preview_pixel_audit.py",
+          "line": 104,
+          "preview": "renders = [review_crop(folder, action) for action in ACTIONS]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/character_preview_pixel_audit.py",
+          "line": 132,
+          "preview": "samples = [review_crop(folder, action, f\"frame-{i}\") for i in range(4)]",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "audit": {
+      "definition": {
+        "file": "tools/android/character_preview_pixel_audit.py",
+        "line": 103,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/android/character_preview_pixel_audit.py",
+          "line": 103,
+          "preview": "def audit(folder: Path) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/android/character_preview_pixel_audit.py",
+          "line": 161,
+          "preview": "audit(Path(args[0]) if args else Path(\"/tmp/zte-character-preview\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/character_preview_pixel_audit.py",
+          "line": 165,
+          "preview": "print(f\"CHARACTER_PREVIEW_FAIL=action-pixel-audit:{exc}\", file=sys.stderr)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 135,
+          "preview": "parser.add_argument(\"--out\",type=Path,default=Path(\"/tmp/character-visual-audit\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 143,
+          "preview": "audit=inspect(source,asset_id)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 144,
+          "preview": "rows.append(audit)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 146,
+          "preview": "\"dims=\"+str(audit.get(\"dimensions\")),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 147,
+          "preview": "\"mode=\"+str(audit.get(\"mode\")),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 148,
+          "preview": "\"capacity=\"+str(audit.get(\"capacity\")),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 149,
+          "preview": "\"findings=\"+\",\".join(audit[\"findings\"]))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 152,
+          "preview": "result={\"format\":\"zte-canonical-character-visual-audit-v1\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 162,
+          "preview": "(args.out/\"canonical-character-audit.json\").write_text(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_complete_sprite_manifest.py",
+          "line": 61,
+          "preview": "out=ROOT/'art/production/final-sprite-completion-audit.json'",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_complete_sprite_manifest.py",
+          "line": 70,
+          "preview": "raise SystemExit('Final sprite audit failures: '+','.join(r['id'] for r in failed))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/temporal_sprite_audit.py",
+          "line": 151,
+          "preview": "def audit(root:Path,output:Path,skin:Path|None=None)->dict:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/temporal_sprite_audit.py",
+          "line": 216,
+          "preview": "report=audit(args.source,args.output,args.skin)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_package_tech_actions_runtime.py",
+          "line": 3,
+          "preview": "Run AFTER the six-clip generator in CI; independently audit its real pixels.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_package_tech_actions_runtime.py",
+          "line": 13,
+          "preview": "from temporal_sprite_audit import audit",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_package_tech_actions_runtime.py",
+          "line": 26,
+          "preview": "audit(FIXTURE,temporal_dir)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_temporal_sprite_audit.py",
+          "line": 1,
+          "preview": "\"\"\"Synthetic regression tests for 96px frame-to-frame TECH audit.\"\"\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_temporal_sprite_audit.py",
+          "line": 9,
+          "preview": "from temporal_sprite_audit import ACTIONS, audit, inspect_clip",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_temporal_sprite_audit.py",
+          "line": 51,
+          "preview": "report=audit(self.root,Path(self.work.name)/'report')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_temporal_sprite_audit.py",
+          "line": 138,
+          "preview": "accepted=audit(self.root,Path(self.work.name)/'good',skin=source)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_temporal_sprite_audit.py",
+          "line": 142,
+          "preview": "audit(self.root,Path(self.work.name)/'tampered',skin=source)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_temporal_sprite_audit.py",
+          "line": 155,
+          "preview": "audit(self.root,Path(self.work.name)/'bad-report')",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 25
+    },
+    "audit_temporal": {
+      "definition": {
+        "file": "tools/android/character_preview_pixel_audit.py",
+        "line": 125,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/android/character_preview_pixel_audit.py",
+          "line": 125,
+          "preview": "def audit_temporal(folder: Path) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/android/character_preview_pixel_audit.py",
+          "line": 159,
+          "preview": "audit_temporal(Path(args[1]))",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    }
+  }
 }

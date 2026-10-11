@@ -25411,9 +25411,9 @@ echo "CHARACTER_PREVIEW_TECH_ACTION_SELECTOR_PASS=6"
 python3 "$SCRIPT_DIR/character_preview_pixel_audit.py" "$OUT"
 
 # Pixel-proof of temporal animation at 42dp, not just six static poses:
-# step each moving action four real Android frames while paused. Every
+# step five moving actions four real Android frames while paused. Every
 # screenshot and accessibility hierarchy remains in the CI artifact.
-for moving_action in WALK CARRY; do
+for moving_action in WALK WORK CARRY REPAIR CELEBRATE; do
   click "$moving_action" "before-temporal-action-$moving_action"
   for tick in 0 1 2 3; do
     if [[ "$tick" -gt 0 ]]; then
@@ -25510,7 +25510,7 @@ different = sum(
 ⋮----
 def audit_temporal(folder: Path) -> None
 ⋮----
-"""Real Android 42dp pixel motion: prove frame stepping changes the rig.
+"""Real Android 42dp pixel motion: prove five animated actions change frames.
 
     This is a technical motion gate only. Plausible weight, foot contact and
     human recognition still require semantic visual review.

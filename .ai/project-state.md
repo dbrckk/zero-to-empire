@@ -22,16 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T11:08:10Z
+Generated: 2026-10-11T11:15:23Z
 
 ### Git
 - Branch: `main`
-- Head: `ccdab9c49a5a`
-- Commit date: 2026-10-11T13:07:57+02:00
-- Commit: docs(art): quantify source-derived TECH midtone legibility without claiming semantic approval
+- Head: `d9b2c8eb3a09`
+- Commit date: 2026-10-11T13:14:57+02:00
+- Commit: test(android): capture four real-size frames for five TECH animations
 - Tracked files: 1524
 
 ### Recently changed files
+- `tools/android/character_preview_emulator_smoke.sh`
+- `tools/android/character_preview_pixel_audit.py`
 - `docs/art/TECH_CHARACTER_VISUAL_DIRECTION.md`
 - `art/production/character-rig-review-candidates/review-report.json`
 - `art/production/character-rig-review-candidates/zte_chr_tech_carry_final-contact.png`
@@ -50,8 +52,6 @@ Generated: 2026-10-11T11:08:10Z
 - `art/production/character-rig-review-candidates/zte_chr_tech_walk_final-preview.gif`
 - `art/production/character-rig-review-candidates/zte_chr_tech_walk_final.png`
 - `art/production/character-rig-review-candidates/zte_chr_tech_work_final-contact.png`
-- `art/production/character-rig-review-candidates/zte_chr_tech_work_final-preview.gif`
-- `art/production/character-rig-review-candidates/zte_chr_tech_work_final.png`
 
 ### Project signals
 - `build.gradle.kts`

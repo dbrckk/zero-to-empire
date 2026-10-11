@@ -4,5 +4,59 @@
   "scope": "symbols defined in changed source files",
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
-  "symbols": {}
+  "symbols": {
+    "review_crop": {
+      "source": {
+        "file": "tools/android/character_preview_pixel_audit.py",
+        "start": 27,
+        "end": 100
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "audit": {
+      "source": {
+        "file": "tools/android/character_preview_pixel_audit.py",
+        "start": 103,
+        "end": 122
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "review_crop",
+          "definitions": [
+            {
+              "file": "tools/android/character_preview_pixel_audit.py",
+              "line": 27,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "audit_temporal": {
+      "source": {
+        "file": "tools/android/character_preview_pixel_audit.py",
+        "start": 125,
+        "end": 152
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "review_crop",
+          "definitions": [
+            {
+              "file": "tools/android/character_preview_pixel_audit.py",
+              "line": 27,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    }
+  }
 }
