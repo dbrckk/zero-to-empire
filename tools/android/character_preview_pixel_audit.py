@@ -24,9 +24,12 @@ MIN_DIFFERENT_PIXELS = 150
 TOLERANCE = 25
 
 
-def review_crop(folder: Path, action: str) -> tuple[Image.Image, int]:
-    xml = folder / f"tech-action-{action}.xml"
-    shot = folder / f"tech-stage-{action}.png"
+def review_crop(folder: Path, action: str, frame_label: str = "") -> tuple[Image.Image, int]:
+    # The same real-size crop validator is used by single-action and
+    # consecutive-frame Android screenshots, with identical clipping gates.
+    suffix = f"-{frame_label}" if frame_label else ""
+    xml = folder / f"tech-action-{action}{suffix}.xml"
+    shot = folder / f"tech-stage-{action}{suffix}.png"
     root = ET.parse(xml).getroot()
     text_values = [n.attrib.get("text", "") for n in root.iter("node")]
     if f"TECH ACTION: {action}" not in text_values:
@@ -119,9 +122,45 @@ def audit(folder: Path) -> None:
     print("CHARACTER_PREVIEW_ALL_SIX_DISTINCT_GAME_SCALE_PASS=1")
 
 
+def audit_temporal(folder: Path) -> None:
+    """Real Android 42dp pixel motion: prove frame stepping changes the rig.
+
+    This is a technical motion gate only. Plausible weight, foot contact and
+    human recognition still require semantic visual review.
+    """
+    for action in ("WALK", "CARRY"):
+        samples = [review_crop(folder, action, f"frame-{i}") for i in range(4)]
+        frames = [number for _, number in samples]
+        if any(frames[i] != (frames[i - 1] + 1) % 1680
+               for i in range(1, len(frames))):
+            raise ValueError(f"{action}: frame counter did not advance: {frames}")
+        changed_counts = []
+        for (before, _), (after, _) in zip(samples, samples[1:]):
+            if before.size != after.size:
+                raise ValueError(f"{action}: changing Android actor crop")
+            changed = sum(
+                max(abs(int(a[c]) - int(b[c])) for c in range(3)) > TOLERANCE
+                for a, b in zip(before.getdata(), after.getdata())
+            )
+            changed_counts.append(changed)
+        print(f"CHARACTER_PREVIEW_TEMPORAL_MOTION={action}:"
+              + ",".join(str(n) for n in changed_counts))
+        if min(changed_counts) < 12 or sum(changed_counts) < 90:
+            raise ValueError(
+                f"{action}: insufficient real-size motion after frame steps "
+                f"{changed_counts}")
+        print(f"CHARACTER_PREVIEW_TEMPORAL_GAIT_PASS={action}")
+
+
 if __name__ == "__main__":
     try:
-        audit(Path(sys.argv[1]) if len(sys.argv) == 2 else Path("/tmp/zte-character-preview"))
+        args = sys.argv[1:]
+        if len(args) == 2 and args[0] == "--temporal":
+            audit_temporal(Path(args[1]))
+        elif len(args) <= 1:
+            audit(Path(args[0]) if args else Path("/tmp/zte-character-preview"))
+        else:
+            raise ValueError("Usage: pixel_audit.py [folder] | --temporal folder")
     except (ValueError, OSError, ET.ParseError) as exc:
         print(f"CHARACTER_PREVIEW_FAIL=action-pixel-audit:{exc}", file=sys.stderr)
         raise SystemExit(1)

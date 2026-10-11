@@ -315,6 +315,23 @@ echo "CHARACTER_PREVIEW_TECH_ACTION_SELECTOR_PASS=6"
 # pixels beneath the 42dp QA caption, outside all interactive text.
 python3 "$SCRIPT_DIR/character_preview_pixel_audit.py" "$OUT"
 
+# Pixel-proof of temporal animation at 42dp, not just six static poses:
+# step each moving action four real Android frames while paused. Every
+# screenshot and accessibility hierarchy remains in the CI artifact.
+for moving_action in WALK CARRY; do
+  click "$moving_action" "before-temporal-action-$moving_action"
+  for tick in 0 1 2 3; do
+    if [[ "$tick" -gt 0 ]]; then
+      click "Stage +1" "before-temporal-step-$moving_action-$tick"
+    fi
+    dump "tech-action-$moving_action-frame-$tick"
+    assert_text "TECH ACTION: $moving_action" "tech-action-$moving_action-frame-$tick"
+    adb exec-out screencap -p > "$OUT/tech-stage-$moving_action-frame-$tick.png"
+    test -s "$OUT/tech-stage-$moving_action-frame-$tick.png"
+  done
+done
+python3 "$SCRIPT_DIR/character_preview_pixel_audit.py" --temporal "$OUT"
+
 adb logcat -d > "$OUT/logcat.txt"
 if grep -E "FATAL EXCEPTION|AndroidRuntime.*FATAL" "$OUT/logcat.txt"; then
   echo "CHARACTER_PREVIEW_FAIL=fatal_exception" >&2
