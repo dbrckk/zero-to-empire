@@ -8,6 +8,7 @@ labeled explicitly as candidates, not Android screenshots or approved art.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
@@ -39,13 +40,24 @@ def tiles(root: Path):
     if report['semantic_approved_count'] != 0 or report['automatic_promotion_permitted']:
         raise ValueError('This renderer accepts unapproved review candidates only')
     records = {}
+    if len(report['items']) != len(ACTIONS):
+        raise ValueError('Review report must contain exactly six item records')
     for item in report['items']:
         action = item['asset_id'].split('-')[-1]
+        if action not in ACTIONS or action in records:
+            raise ValueError(f'Unexpected or duplicate TECH review action: {action}')
+        if item['source_skin_sha256'] != report['source_skin_sha256']:
+            raise ValueError(f'{action}: character identity source differs')
         if item['semantic_approved'] or item['visual_review_pass'] or item['strict_status'] != 'NEEDS_REVIEW':
             raise ValueError(f'{action}: forbidden review promotion')
         if item['frame_count'] != FRAMES[action] or item['atlas_size'] != [1024, 1024]:
             raise ValueError(f'{action}: invalid atlas geometry')
-        with Image.open(root / item['staged_png']) as im:
+        atlas_path = root / item['staged_png']
+        if atlas_path.parent.resolve() != root.resolve():
+            raise ValueError(f'{action}: atlas must be directly inside review directory')
+        if hashlib.sha256(atlas_path.read_bytes()).hexdigest() != item['staged_sha256']:
+            raise ValueError(f'{action}: candidate PNG SHA-256 does not match provenance')
+        with Image.open(atlas_path) as im:
             if im.size != (1024, 1024):
                 raise ValueError(f'{action}: PNG geometry does not match metadata')
             rgba = im.convert('RGBA')
