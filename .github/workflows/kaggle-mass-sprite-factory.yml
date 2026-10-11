@@ -50,7 +50,7 @@ jobs:
         run: |
           set -euo pipefail
           python - <<'PY' >> "$GITHUB_ENV"
-          import json
+          import json, os
           from pathlib import Path
           cq=json.loads(Path('art/production/controlled-character-regen-queue.json').read_text())
           ids=[str(x.get('id','')).upper() for x in cq.get('targets',[]) if str(x.get('status','')).upper()=='PENDING_KAGGLE']
@@ -59,9 +59,16 @@ jobs:
           by={x['id']:x for x in mq['assets']}
           tokens={str(by[i].get('dispatch_token') or '') for i in ids if i in by}
           tokens.discard('')
-          if len(tokens)!=1: raise SystemExit('Push-triggered wave requires one dispatch owner token: '+repr(sorted(tokens)))
+          strict_completion=str(cq.get('mode','')).startswith('kaggle-character-burst-v1.16')
+          if len(tokens)==1:
+              token=next(iter(tokens))
+          elif strict_completion:
+              token='strict-'+os.environ.get('GITHUB_RUN_ID','wave')
+              print('STRICT_COMPLETION_DISPATCH_TOKEN='+token)
+          else:
+              raise SystemExit('Push-triggered wave requires one dispatch owner token: '+repr(sorted(tokens)))
           print('SPRITE_COUNT='+str(min(12,len(ids))))
-          print('DISPATCH_TOKEN='+next(iter(tokens)))
+          print('DISPATCH_TOKEN='+token)
           print('ASYNC_SUBMIT=true')
           PY
       - name: Resolve Kaggle kernel slug
