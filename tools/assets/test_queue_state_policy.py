@@ -72,6 +72,70 @@ class DispatchCorrelationTests(unittest.TestCase):
         self.assertEqual(asset["attempts"], 1)
         self.assertIsNone(asset.get("last_run_id"))
 
+    def test_superseded_dispatch_recovers_while_newer_async_wave_is_busy(self) -> None:
+        orchestrator = self._load_orchestrator("")
+        orchestrator.KAGGLE_BUSY = True
+        original = orchestrator.load_json
+        try:
+            def fake_load(path, default=None):
+                if path == orchestrator.CHARACTER_QUEUE:
+                    return {"targets": [{"id": "CHR-OP-WALK", "status": "PENDING_KAGGLE"}]}
+                if str(path).endswith("kaggle-async-state.json"):
+                    return {"status": "ACTIVE", "dispatch_token": "new-wave"}
+                return default
+            orchestrator.load_json = fake_load
+            queue = {"assets": [{
+                "id": "CHR-OP-WALK",
+                "strict_status": "NEEDS_REVIEW",
+                "pipeline_status": "DISPATCHED",
+                "dispatch_token": "old-wave",
+                "attempts": 5,
+                "generation_epoch": orchestrator.CHARACTER_GENERATION_EPOCH,
+                "epoch_attempts": 1,
+                "last_generator": "kaggle-character-sheet",
+                "last_error": None,
+            }]}
+            orchestrator.close_exhausted_character_dispatches(queue)
+        finally:
+            orchestrator.load_json = original
+        asset = queue["assets"][0]
+        self.assertEqual(asset["pipeline_status"], "PENDING_KAGGLE")
+        self.assertIsNone(asset["dispatch_token"])
+        self.assertEqual(asset["attempts"], 4)
+        self.assertEqual(asset["epoch_attempts"], 0)
+
+    def test_active_dispatch_token_is_not_recovered_while_wave_is_busy(self) -> None:
+        orchestrator = self._load_orchestrator("")
+        orchestrator.KAGGLE_BUSY = True
+        original = orchestrator.load_json
+        try:
+            def fake_load(path, default=None):
+                if path == orchestrator.CHARACTER_QUEUE:
+                    return {"targets": [{"id": "CHR-ENG-WALK", "status": "PENDING_KAGGLE"}]}
+                if str(path).endswith("kaggle-async-state.json"):
+                    return {"status": "ACTIVE", "dispatch_token": "active-wave"}
+                return default
+            orchestrator.load_json = fake_load
+            queue = {"assets": [{
+                "id": "CHR-ENG-WALK",
+                "strict_status": "NEEDS_REVIEW",
+                "pipeline_status": "DISPATCHED",
+                "dispatch_token": "active-wave",
+                "attempts": 4,
+                "generation_epoch": orchestrator.CHARACTER_GENERATION_EPOCH,
+                "epoch_attempts": 1,
+                "last_generator": "kaggle-character-sheet",
+                "last_error": None,
+            }]}
+            orchestrator.close_exhausted_character_dispatches(queue)
+        finally:
+            orchestrator.load_json = original
+        asset = queue["assets"][0]
+        self.assertEqual(asset["pipeline_status"], "DISPATCHED")
+        self.assertEqual(asset["dispatch_token"], "active-wave")
+        self.assertEqual(asset["attempts"], 4)
+        self.assertEqual(asset["epoch_attempts"], 1)
+
     def test_current_epoch_attempt_limit_takes_precedence_over_legacy_total_attempts(self) -> None:
         orchestrator = self._load_orchestrator("")
         asset = {
