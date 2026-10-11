@@ -5877,21 +5877,34 @@ def draw_repair(layer: Image.Image, p: dict, t: float) -> None
 ⋮----
 xx = x + 12 + n * 10
 ⋮----
+# REPAIR is physically a welding/maintenance station, not another
+# cyan telemetry console like WORK. Warm industrial seam light makes
+# the action distinguishable even when shrunk to the 96px QA thumbnail.
+⋮----
 tip = tuple(round(v) for v in repair_tip(p["root"]))
 # Keep the welding torch physically attached to the animated wrist.
 hand = (round(p["handR"][0]), round(p["handR"][1]))
 ⋮----
 def draw_repair_sparks(layer: Image.Image, p: dict, t: float) -> None
 ⋮----
-"""Emit front-layer sparks at one stable physical weld seam."""
+"""Weld at the actual contact seam, with an unmistakable warm arc.
+
+    WORK keeps blue data-interface feedback while REPAIR emits a pulsed,
+    warm metalworking arc and short-lived sparks. All particles are tied
+    deterministically to the SAME torch tip (no floating secondary prop).
+    The seam position, rig, costume and collision contacts are unchanged.
+    """
 ⋮----
-tip=(x,y)
-d=ImageDraw.Draw(layer, "RGBA")
+tip = (x, y)
+⋮----
 intensity = repair_spark_intensity(t)
 ⋮----
-a = 2 * math.pi * n / 7 + .1 * math.sin(2 * math.pi * t)
-radius = (7 + 13 * intensity) * (1 + ((n * 7) % 5) / 12)
-dest = (round(tip[0] + math.cos(a) * radius),
+angle = 2 * math.pi * n / 11 + 0.15 * math.sin(phase)
+radius = (9 + 23 * intensity) * (0.70 + ((n * 7) % 6) / 9)
+px = round(x + math.cos(angle) * radius)
+py = round(y + math.sin(angle) * radius)
+tone = (255, 236, 161) if n % 3 == 0 else (255, 166, 62)
+alpha = round((230 if n % 3 == 0 else 195) * intensity)
 ⋮----
 def draw_celebration(layer: Image.Image, p: dict, t: float) -> None
 ⋮----

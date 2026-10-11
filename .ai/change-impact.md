@@ -1,10 +1,10 @@
 # Change impact
 
-Base: a8d7ef3d9ab4ab885be5a677da12a98ed489925c
-Head: 95d758750e7dd63a34470501beee7a20347c8b50
+Base: e17e566886fefcf1ad347658984fe21eb1bb2d19
+Head: 843ea86307205e85ea116087a3e1bfebb2fb5542
 
 ## Changed files
-- M tools/android/character_preview_emulator_smoke.sh
+- M tools/sprites/rigged_tech_actions_v3.py
 
 ## Affected areas
 - tools

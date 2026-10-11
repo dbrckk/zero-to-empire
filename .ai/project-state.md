@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T07:36:08Z
+Generated: 2026-10-11T07:42:55Z
 
 ### Git
 - Branch: `main`
-- Head: `95d758750e7d`
-- Commit date: 2026-10-11T09:35:54+02:00
-- Commit: test(android): verify real day-night QA switch with matched emulator screenshots and contrast gate
+- Head: `843ea8630720`
+- Commit date: 2026-10-11T09:42:38+02:00
+- Commit: art(tech): make REPAIR welding readable and distinct from WORK
 - Tracked files: 1521
 
 ### Recently changed files
+- `tools/sprites/rigged_tech_actions_v3.py`
 - `tools/android/character_preview_emulator_smoke.sh`
 - `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
 - `docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md`
