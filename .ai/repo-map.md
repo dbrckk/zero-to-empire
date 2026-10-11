@@ -67,6 +67,7 @@ The content is organized as follows:
     kaggle-gpu-orchestrator.yml
     kaggle-mass-sprite-factory.yml
     kaggle-recover-existing-run.yml
+    kaggle-superseded-character-evidence.yml
     lightning-sprite-factory.yml
     lightning-ssh-bootstrap.yml
     manifest-static-gpu-batch.yml
@@ -1131,6 +1132,7 @@ on:
       - '.github/workflows/asset-autofactory.yml'
       - '.github/workflows/kaggle-mass-sprite-factory.yml'
       - '.github/workflows/kaggle-async-character-collector.yml'
+      - '.github/workflows/kaggle-superseded-character-evidence.yml'
       - '.github/workflows/promote-approved-kaggle-characters.yml'
   push:
     branches: [ main ]
@@ -1151,6 +1153,7 @@ on:
       - '.github/workflows/asset-autofactory.yml'
       - '.github/workflows/kaggle-mass-sprite-factory.yml'
       - '.github/workflows/kaggle-async-character-collector.yml'
+      - '.github/workflows/kaggle-superseded-character-evidence.yml'
       - '.github/workflows/promote-approved-kaggle-characters.yml'
   workflow_dispatch:
 
@@ -3681,6 +3684,137 @@ jobs:
         run: echo "RECOVERY_FINAL_STATUS=${{ steps.wait.outputs.final_status }}"
 
 # Recovery only: this workflow NEVER pushes a new Kaggle kernel, so it cannot replace an active long-running generation.
+```
+
+## File: .github/workflows/kaggle-superseded-character-evidence.yml
+```yaml
+name: Kaggle Superseded Character Evidence
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/30 * * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'ops/kaggle-orphan-trigger.txt'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: kaggle-superseded-character-evidence
+  cancel-in-progress: false
+
+jobs:
+  rescue:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    env:
+      KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+      KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+      - name: Sync latest orphan ledger
+        run: git pull --ff-only origin main
+      - name: Select one uncollected superseded wave
+        id: orphan
+        shell: bash
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+          p=Path('art/production/kaggle-async-orphan-waves.json')
+          data=json.loads(p.read_text()) if p.is_file() else {}
+          row=next((w for w in data.get('waves',[]) if w.get('status')=='SUPERSEDED_UNCOLLECTED'),None)
+          print('active='+str(row is not None).lower())
+          if row:
+              print('slug='+str(row['kernel_slug']))
+              print('token='+str(row['dispatch_token']))
+          PY
+      - name: Install Kaggle CLI and review dependencies
+        if: steps.orphan.outputs.active == 'true'
+        run: python -m pip install --disable-pip-version-check --upgrade kaggle 'Pillow<12'
+      - name: Inspect superseded remote kernel
+        if: steps.orphan.outputs.active == 'true'
+        id: kernel
+        shell: bash
+        run: |
+          set -euo pipefail
+          slug="$KAGGLE_USERNAME/${{ steps.orphan.outputs.slug }}"
+          status="$(kaggle kernels status "$slug" 2>&1 || true)"
+          printf '%s\n' "$status" | tee /tmp/kaggle-orphan-status.txt
+          if printf '%s\n' "$status" | grep -qi 'complete'; then
+            echo 'ready=true' >> "$GITHUB_OUTPUT"
+          elif printf '%s\n' "$status" | grep -Eqi 'error|cancel|failed'; then
+            echo 'failed=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'ready=false' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Download completed superseded evidence
+        if: steps.kernel.outputs.ready == 'true'
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/kaggle-orphan-output
+          kaggle kernels output "$KAGGLE_USERNAME/${{ steps.orphan.outputs.slug }}" -p /tmp/kaggle-orphan-output --force
+          find /tmp/kaggle-orphan-output -maxdepth 4 -type f -print
+      - name: Create read-only role visual review panels
+        if: steps.kernel.outputs.ready == 'true'
+        run: |
+          python tools/sprites/build_character_review_panels.py \
+            --candidates /tmp/kaggle-orphan-output/output/candidates \
+            --qa-report /tmp/kaggle-orphan-output/output/batch-qa-report.json \
+            --output-dir /tmp/kaggle-orphan-output/output/review-panels
+      - name: Upload evidence without canonical promotion
+        if: steps.kernel.outputs.ready == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: kaggle-superseded-character-batch-${{ steps.orphan.outputs.token }}
+          path: /tmp/kaggle-orphan-output/**
+          if-no-files-found: error
+          retention-days: 90
+      - name: Upload remote status observation
+        if: steps.orphan.outputs.active == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: kaggle-superseded-status-${{ steps.orphan.outputs.token }}
+          path: /tmp/kaggle-orphan-status.txt
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Record collected or failed superseded wave
+        if: steps.kernel.outputs.ready == 'true' || steps.kernel.outputs.failed == 'true'
+        env:
+          ORPHAN_TOKEN: ${{ steps.orphan.outputs.token }}
+          ORPHAN_FAILED: ${{ steps.kernel.outputs.failed }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,os
+          from datetime import datetime,timezone
+          from pathlib import Path
+          p=Path('art/production/kaggle-async-orphan-waves.json')
+          data=json.loads(p.read_text())
+          token=os.environ['ORPHAN_TOKEN']
+          rows=[w for w in data.get('waves',[]) if w.get('dispatch_token')==token]
+          if len(rows)!=1:raise SystemExit('Orphan owner mismatch')
+          row=rows[0]
+          if row.get('status')!='SUPERSEDED_UNCOLLECTED':raise SystemExit('Orphan already reconciled')
+          row['status']='KERNEL_FAILED' if os.environ['ORPHAN_FAILED']=='true' else 'ARTIFACT_COLLECTED_REVIEW_ONLY'
+          row['collector_run_id']=int(os.environ['GITHUB_RUN_ID'])
+          row['observed_at']=datetime.now(timezone.utc).isoformat()
+          row['automatic_strict_promotion']=False
+          p.write_text(json.dumps(data,indent=2)+'\n')
+          PY
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add art/production/kaggle-async-orphan-waves.json
+          git commit -m 'art(auto): archive superseded character Kaggle evidence'
+          git pull --rebase origin main
+          git push origin HEAD:main
 ```
 
 ## File: .github/workflows/lightning-sprite-factory.yml
@@ -27176,6 +27310,10 @@ def test_async_kernel_slug_changes_when_character_generator_changes(self)
 def test_kaggle_kernel_title_resolves_to_requested_slug(self)
 def test_async_collector_captures_failed_kernel_evidence(self)
 def test_async_collector_persists_kernel_observation_even_before_completion(self)
+⋮----
+def test_superseded_kaggle_wave_evidence_is_review_only(self)
+⋮----
+text = Path(".github/workflows/kaggle-superseded-character-evidence.yml").read_text(encoding="utf-8")
 ⋮----
 def test_mass_gpu_preflight_blocks_duplicate_active_waves(self)
 ⋮----

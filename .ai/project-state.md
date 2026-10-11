@@ -31,23 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T21:08:41Z
+Generated: 2026-10-11T21:12:25Z
 
 ### Git
 - Branch: `main`
-- Head: `82c7d6ab36f0`
-- Commit date: 2026-10-11T23:08:18+02:00
-- Commit: test(ci): block duplicate Kaggle kernels on source-only pushes
-- Tracked files: 1526
+- Head: `2c5b8faf84aa`
+- Commit date: 2026-10-11T23:12:07+02:00
+- Commit: docs(art): document visual rejection of recovered OP LOG candidate actions
+- Tracked files: 1529
 
 ### Recently changed files
-- `tools/assets/test_workflow_policy.py`
-- `.github/workflows/kaggle-mass-sprite-factory.yml`
+- `art/production/op-log-superseded-batch-semantic-review.md`
+- `art/production/generation-rejection-ledger.json`
 - `art/production/kaggle-async-orphan-waves.json`
-- `art/production/autofactory-state.json`
-- `art/production/autofactory-summary.md`
-- `art/production/character-strict-review-backlog.md`
-- `art/production/master-asset-queue.json`
+- `ops/kaggle-orphan-trigger.txt`
+- `tools/assets/test_workflow_policy.py`
 
 ### Project signals
 - `build.gradle.kts`

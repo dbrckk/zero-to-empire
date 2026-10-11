@@ -1,13 +1,13 @@
 # Change impact
 
-Base: b9992a1bd7c54d20064a4f79c87c44fb2ac4fe80
-Head: 82c7d6ab36f0fe39a66ad220ee0afc77961a549b
+Base: 232bd2a1b6b788dfaab17679f90aac19df0a495a
+Head: 2c5b8faf84aadd279cf3bd2dd11383cd8e4cec74
 
 ## Changed files
-- M tools/assets/test_workflow_policy.py
+- A art/production/op-log-superseded-batch-semantic-review.md
 
 ## Affected areas
-- tools
+- art
 
 ## Related test candidates
 - No direct filename-based test match detected.
