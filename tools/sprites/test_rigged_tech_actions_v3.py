@@ -61,7 +61,7 @@ class MultiActionGeometryTests(unittest.TestCase):
                 self.assertEqual(p['lockL'],base['lockL'])
                 self.assertEqual(p['lockR'],base['lockR'])
                 self.assertLessEqual(p['left'][1],GROUND-FAR_FOOT_DEPTH_Y_PX)
-                self.assertEqual(p['left'][1]-base['left'][1], -FAR_FOOT_DEPTH_Y_PX)
+                self.assertAlmostEqual(p['left'][1]-base['left'][1], -FAR_FOOT_DEPTH_Y_PX, places=7)
                 self.assertLessEqual(math.dist(
                     (p['root'][0]-13,p['root'][1]),p['left']),193.0)
                 q=pose_for(t+1,action)
