@@ -71,6 +71,26 @@ jobs:
             )"
           fi
           test -n "$source_run"
+          SOURCE_RUN_ID="$source_run" APPROVED_IDS="$approved" python - <<'PY'
+          import json, os
+          from pathlib import Path
+          source=str(os.environ['SOURCE_RUN_ID'])
+          ids={x.strip().upper() for x in os.environ['APPROVED_IDS'].split(',') if x.strip()}
+          q=json.loads(Path('art/production/master-asset-queue.json').read_text())
+          mismatched=[]
+          for asset in q.get('assets',[]):
+              if asset.get('id') not in ids:
+                  continue
+              recorded=asset.get('review_artifact_run_id')
+              if recorded and str(recorded)!=source:
+                  mismatched.append(f"{asset['id']}:{recorded}")
+          if mismatched:
+              raise SystemExit(
+                  'Promotion source run does not match canonical review provenance: '
+                  + ','.join(sorted(mismatched))
+              )
+          print('PROMOTION_SOURCE_PROVENANCE_PASS='+source)
+          PY
           echo "SOURCE_RUN_ID=$source_run" >> "$GITHUB_ENV"
           echo "APPROVED_IDS=$approved" >> "$GITHUB_ENV"
       - name: Download source artifact
