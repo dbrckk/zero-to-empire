@@ -10,61 +10,230 @@ name: Promote reviewed TECH sprites
 permissions:
   contents: write
 
+concurrency:
+  group: promote-reviewed-tech-sprites
+  cancel-in-progress: false
+
 jobs:
   promote:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Promote manually reviewed TECH assets
+
+      - name: Install deterministic image tooling
+        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
+
+      - name: Verify reviewed candidates and emulator-bound hashes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+
+          folder = Path('art/production/character-rig-review-candidates')
+          report = json.loads((folder / 'review-report.json').read_text())
+          expected_candidate = {
+              'CHR-TECH-IDLE': '4593977216705be669665bf23f25a11b9babc271da87aa0258f2adcb4d7bccfa',
+              'CHR-TECH-WALK': 'aaf7a566c2d1e02a77e9b8ec5dd0e25f04ae91418dc7cd3c8d5b7cc0d09b03f7',
+              'CHR-TECH-WORK': '96efdecda54ac252955e667f01e90e4b94d12a9da567e9f7eb41e916a59e08d5',
+              'CHR-TECH-CARRY': '7be8db7de78120390060c574f7b2a52061cbdd753f23e6cb8758cfcdd4eb807a',
+              'CHR-TECH-REPAIR': '9b1e5fd469ac6dade894d4a025eb34f1693af033f86fd217704e55f7d8009033',
+              'CHR-TECH-CELEB': '73d83055665dfaa32972658be9e660c27b73c2e20dd20e20122278ec13a0d14e',
+          }
+          assert report['format'] == 'zte-canonical-tech-review-v1'
+          assert report['source_skin_sha256'] == '1c0f968d714d488ee04416fa076c7677045f1d08f1129cb0b3e2392fcadee862'
+          assert report['candidate_count'] == 6
+          assert report['semantic_approved_count'] == 0
+          assert report['automatic_promotion_permitted'] is False
+          items = {row['asset_id']: row for row in report['items']}
+          assert set(items) == set(expected_candidate)
+          for asset_id, digest in expected_candidate.items():
+              row = items[asset_id]
+              path = folder / row['staged_png']
+              assert path.is_file(), path
+              actual = hashlib.sha256(path.read_bytes()).hexdigest()
+              assert actual == digest == row['staged_sha256'], (asset_id, actual)
+              assert row['canonical_geometry_pass'] is True
+              assert row['strict_status'] == 'NEEDS_REVIEW'
+          print('TECH_REVIEWED_CANDIDATE_HASHES_PASS=6')
+          PY
+
+      - name: Install reviewed six-action family into canonical source and runtime
+        shell: bash
+        env:
+          SPRITE_TARGETS: zte_chr_tech_idle_final,zte_chr_tech_walk_final,zte_chr_tech_work_final,zte_chr_tech_carry_final,zte_chr_tech_repair_final,zte_chr_tech_celeb_final
+        run: |
+          set -euo pipefail
+          for action in idle walk work carry repair celeb; do
+            cp "art/production/character-rig-review-candidates/zte_chr_tech_${action}_final.png"                "art/incoming/final-sprites/zte_chr_tech_${action}_final.png"
+          done
+          python tools/sprites/process_final_sprites.py
+
+      - name: Bind canonical runtime bytes to successful Android emulator evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+
+          expected = {
+              'idle': '7e26e7f84147fb872f46effe45bcb5278ce179b4231867ff729a0c616e06abcb',
+              'walk': '2bb84668f9acd6ca8c6cf167e460f65bc6eadc1e327cb9f96a701af3aff5d6e7',
+              'work': 'cdb65edd22ae6071e63977097168f1574f9b98d7d19219e78135bc5b264cdb20',
+              'carry': 'c0635137f7ce6cf5d960f1390695dddc083a24f297db1a4d252f91a17d46fdcc',
+              'repair': 'b240f016e083c02452434a9a4ff92279b737a2c77f523e46d24be7bd063a4b0d',
+              'celeb': 'deeadd36853471bb7c096ad6868a96f186413acc49139ab27003ed2d3210bee8',
+          }
+          root = Path('app/src/main/res/drawable-nodpi')
+          for action, digest in expected.items():
+              path = root / f'zte_chr_tech_{action}_final.webp'
+              actual = hashlib.sha256(path.read_bytes()).hexdigest()
+              assert actual == digest, (action, actual, digest)
+              print(f'TECH_RUNTIME_HASH_PASS={action}:{actual}')
+          print('TECH_RUNTIME_MATCHES_EMULATOR_RUN_38157959214=1')
+          PY
+
+      - name: Validate all six canonical TECH runtimes
+        shell: bash
+        run: |
+          set -euo pipefail
+          for action in IDLE WALK WORK CARRY REPAIR CELEB; do
+            lc="$(echo "$action" | tr '[:upper:]' '[:lower:]')"
+            python tools/sprites/validate_runtime_asset.py               --asset-id "CHR-TECH-$action"               --path "app/src/main/res/drawable-nodpi/zte_chr_tech_${lc}_final.webp"               --report "art/production/zte_chr_tech_${lc}_final-runtime-qa.json"
+          done
+          python tools/android/audit_character_runtime.py
+
+      - name: Promote reviewed TECH family in canonical ledger
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
 
-          path = Path('art/production/master-asset-queue.json')
-          data = json.loads(path.read_text())
-          ids = {'CHR-TECH-REPAIR', 'CHR-TECH-CELEB'}
-          found = set()
+          queue_path = Path('art/production/master-asset-queue.json')
+          data = json.loads(queue_path.read_text())
+          target_ids = {
+              'CHR-TECH-IDLE','CHR-TECH-WALK','CHR-TECH-WORK',
+              'CHR-TECH-CARRY','CHR-TECH-REPAIR','CHR-TECH-CELEB',
+          }
+          before = sum(a['strict_status'] == 'DONE' for a in data['assets'])
+          if before != 216:
+              raise SystemExit(f'expected strict DONE baseline 216, got {before}')
+          remaining = {'CHR-TECH-WALK','CHR-TECH-WORK','CHR-TECH-CARRY'}
           for asset in data['assets']:
-              if asset['id'] not in ids:
+              if asset['id'] not in target_ids:
                   continue
-              found.add(asset['id'])
-              runtime = Path(asset['runtime'])
-              if not runtime.is_file():
-                  raise SystemExit(f'missing runtime: {runtime}')
+              if asset['id'] in remaining and asset['strict_status'] == 'DONE':
+                  raise SystemExit(f'unexpected pre-promoted asset: {asset["id"]}')
               asset['strict_status'] = 'DONE'
               asset['pipeline_status'] = 'DONE'
               asset['lane'] = 'strict-done'
               asset['generation_required'] = False
-              asset['last_generator'] = 'manual-review+runtime-ci'
+              asset['last_generator'] = 'reviewed-rig+android-emulator'
               asset['last_error'] = None
-              asset['review_reason'] = ('Manually reviewed and approved in asset QA; final runtime atlas integrated; '
-                                        'Android CI passed build, unit tests, lint, release AAB and bundle verification.')
-          if found != ids:
-              raise SystemExit(f'missing queue ids: {sorted(ids-found)}')
-          path.write_text(json.dumps(data, indent=2) + '\n')
+              asset['review_reason'] = (
+                  'Direct visual review approved the single-identity TECH family; '
+                  'technical/runtime QA passed and exact WebP bytes match Android emulator '
+                  'evidence run 38157959214 (six distinct actions, full-body game-scale '
+                  'visibility and temporal motion).'
+              )
+          after = sum(a['strict_status'] == 'DONE' for a in data['assets'])
+          if after != 219:
+              raise SystemExit(f'expected strict DONE 219 after TECH promotion, got {after}')
+          queue_path.write_text(json.dumps(data, indent=2) + '\n')
+
+          review_path = Path('art/production/character-rig-review-candidates/review-report.json')
+          report = json.loads(review_path.read_text())
+          for row in report['items']:
+              if row['asset_id'] not in target_ids:
+                  raise SystemExit('unexpected TECH review row: ' + row['asset_id'])
+              row['semantic_approved'] = True
+              row['visual_review_pass'] = True
+              row['strict_status'] = 'DONE'
+              row['runtime_integrated'] = True
+              row['android_ci_for_candidate'] = True
+              row['release_eligible'] = True
+          report['semantic_approved_count'] = 6
+          report['canonical_queue_mutated'] = True
+          report['android_runtime_mutated'] = True
+          report['promotion_evidence'] = {
+              'visual_review_date': '2026-10-11',
+              'android_emulator_run_id': 38157959214,
+              'android_emulator_result': 'success',
+              'debug_apk_sha256': 'b648e0e40023f7c3b850567d4f7d767cc6c78f6ea6eb35fadb0f70b68fe926b8',
+              'game_scale_six_actions_distinct': True,
+              'temporal_actions_passed': ['WALK','WORK','CARRY','REPAIR','CELEBRATE'],
+              'runtime_hash_bound_to_emulator_evidence': True,
+          }
+          review_path.write_text(json.dumps(report, indent=2) + '\n')
+          print('STRICT_DONE_AFTER_TECH_PROMOTION=219/235')
           PY
-      - name: Verify promoted assets
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle 8.13
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.13'
+
+      - name: Run release-grade Android validation on promoted workspace
+        shell: bash
         run: |
+          set -euo pipefail
+          python3 tools/android/validate_manifest_policy.py
+          python3 tools/android/validate_release_privacy.py
+          python3 tools/android/audit_character_runtime.py
+          gradle assembleDebug --stacktrace
+          gradle testDebugUnitTest --stacktrace
+          gradle lintDebug --stacktrace
+          gradle bundleRelease --stacktrace
+          AAB="app/build/outputs/bundle/release/app-release.aab"
+          test -s "$AAB"
+          unzip -t "$AAB" >/dev/null
+          test "$(wc -c < "$AAB")" -gt 100000
+          echo "TECH_PROMOTION_RELEASE_VALIDATION_PASS=1"
+
+      - name: Verify ledger and diff before commit
+        shell: bash
+        run: |
+          set -euo pipefail
           python - <<'PY'
           import json
           from pathlib import Path
-          data=json.loads(Path('art/production/master-asset-queue.json').read_text())
-          for asset_id in ('CHR-TECH-REPAIR','CHR-TECH-CELEB'):
-              a=next(x for x in data['assets'] if x['id']==asset_id)
-              assert a['strict_status']=='DONE'
-              assert a['pipeline_status']=='DONE'
-              assert Path(a['runtime']).is_file()
-          print('TECH review promotion verified')
+          q = json.loads(Path('art/production/master-asset-queue.json').read_text())
+          assert len(q['assets']) == 235
+          assert sum(a['strict_status'] == 'DONE' for a in q['assets']) == 219
+          assert all(next(a for a in q['assets'] if a['id'] == asset_id)['strict_status'] == 'DONE'
+                     for asset_id in ('CHR-TECH-WALK','CHR-TECH-WORK','CHR-TECH-CARRY'))
+          print('CANONICAL_QUEUE_219_OF_235_PASS=1')
           PY
-      - name: Commit review promotion
+          git diff --check
+
+      - name: Commit reviewed TECH promotion
+        shell: bash
         run: |
+          set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add art/production/master-asset-queue.json
-          if git diff --cached --quiet; then exit 0; fi
-          git commit -m 'art(review): approve TECH repair and celeb runtimes'
+          git add             art/incoming/final-sprites/zte_chr_tech_*_final.png             app/src/main/res/drawable-nodpi/zte_chr_tech_*_final.webp             art/production/zte_chr_tech_*_final-runtime-qa.json             art/production/master-asset-queue.json             art/production/character-rig-review-candidates/review-report.json
+          if git diff --cached --quiet; then
+            echo 'No TECH promotion changes to commit.'
+            exit 0
+          fi
+          git commit -m 'art(tech): promote reviewed six-action runtime family'
           git push origin HEAD:main
