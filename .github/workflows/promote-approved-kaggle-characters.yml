@@ -89,11 +89,10 @@ jobs:
           q=json.loads(Path('art/production/master-asset-queue.json').read_text())
           controlled=json.loads(Path('art/production/controlled-character-regen-queue.json').read_text())
           contexts={str(item.get('id','')).upper():item for item in controlled.get('targets',[])}
-          mismatched=[]
-          for asset in q.get('assets',[]):
-              aid=asset.get('id')
-              if aid not in ids:
-                  continue
+          known={str(a.get('id','')).upper():a for a in q.get('assets',[])}
+          mismatched=[f"{aid}:unknown-asset" for aid in ids-known.keys()]
+          for aid in ids & known.keys():
+              asset=known[aid]
               if asset.get('strict_status')=='DONE':
                   # Replacing a legacy strict-DONE IDLE sheet does not raise
                   # strict progress, but is necessary for full-role identity.
@@ -107,8 +106,27 @@ jobs:
                       mismatched.append(f"{aid}:unreviewed-context-anchor")
                   continue
               recorded=asset.get('review_artifact_run_id')
-              if recorded and str(recorded)!=source:
-                  mismatched.append(f"{aid}:{recorded}")
+              if (str(asset.get('pipeline_status','')).upper()!='AWAITING_REVIEW'
+                  or str(recorded or '')!=source):
+                  mismatched.append(f"{aid}:not-current-reviewed-candidate:{recorded}")
+          # Every newly promoted action must share the reference IDLE identity
+          # in the same verified artifact. A previously replaced IDLE is valid
+          # only when its strict promotion retains provenance from this run.
+          for aid in ids:
+              parts=aid.split('-')
+              if len(parts)!=3 or parts[0]!='CHR' or parts[2]=='IDLE':
+                  continue
+              idle=f"CHR-{parts[1]}-IDLE"
+              if idle in ids:
+                  continue
+              anchor=known.get(idle,{})
+              approved_anchor=(
+                  anchor.get('strict_status')=='DONE'
+                  and str(anchor.get('review_artifact_run_id') or '')==source
+                  and 'Explicit semantic review approved' in str(anchor.get('review_reason') or '')
+              )
+              if not approved_anchor:
+                  mismatched.append(f"{aid}:missing-coherent-{idle}-anchor")
           if mismatched:
               raise SystemExit(
                   'Promotion source run does not match canonical review provenance: '
@@ -214,6 +232,7 @@ jobs:
                   a['pipeline_status']='DONE'
                   a['generation_required']=False
                   a['last_error']=None
+                  a['review_artifact_run_id']=int(os.environ['SOURCE_RUN_ID'])
                   a['review_reason']=(
                       'Explicit semantic review approved Kaggle source run '
                       + os.environ.get('SOURCE_RUN_ID','unknown')
