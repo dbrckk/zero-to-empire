@@ -257,6 +257,7 @@ jobs:
              tools/sprites/kaggle_building_family_factory_v15.py \
              tools/sprites/kaggle_building_family_factory_v14.py \
              tools/sprites/kaggle_character_sheet_factory_v1.py \
+             tools/sprites/character_semantic_gate.py \
              /tmp/zte-kaggle/tools/sprites/
           sed "s/__KAGGLE_USERNAME__/${KAGGLE_USERNAME}/g" kaggle/kernel-metadata.template.json > /tmp/zte-kaggle/kernel-metadata.json
           python - <<'PY'
@@ -283,6 +284,7 @@ jobs:
               'kaggle_building_family_factory_v15.py',
               'kaggle_building_family_factory_v14.py',
               'kaggle_character_sheet_factory_v1.py',
+              'character_semantic_gate.py',
           ]
           buf=io.BytesIO()
           with zipfile.ZipFile(buf,'w',zipfile.ZIP_DEFLATED) as z:
