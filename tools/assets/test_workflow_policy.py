@@ -114,6 +114,12 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("incomplete/stale Kaggle output", text)
         self.assertNotIn("if expected and not (expected & actual)", text)
 
+    def test_async_collector_releases_wave_when_completed_output_validation_fails(self):
+        text = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
+        condition = "steps.kernel.outputs.failed == 'true' || (steps.kernel.outputs.ready == 'true' && failure())"
+        self.assertGreaterEqual(text.count(condition), 3)
+        self.assertIn("Callback autofactory failure", text)
+
     def test_kaggle_bundle_tree_fallback_finds_nested_repo_bundle(self):
         text = Path("kaggle/github_mass_factory.py").read_text(encoding="utf-8")
         self.assertIn("base.glob('**/repo_bundle')", text)
