@@ -31,7 +31,7 @@ MAX_ATTEMPTS = 8
 PERSISTED_ASSET_STATE_FIELDS = (
     "strict_status", "pipeline_status", "attempts", "last_run_id",
     "last_generator", "last_error", "review_reason", "generation_epoch",
-    "epoch_attempts", "infra_failures", "dispatch_token",
+    "epoch_attempts", "infra_failures", "dispatch_token", "review_artifact_run_id",
 )
 
 BUILDING_PRIORITY = ["BLD-10", "BLD-05", "BLD-08",
@@ -201,6 +201,8 @@ def sync_controlled_queues(queue: dict[str, Any]) -> None:
                 asset["last_error"] = None
                 if str(asset.get("review_reason") or "").startswith("Regenerate with identity-locked"):
                     asset["review_reason"] = "Fresh identity-locked candidate produced; semantic review is still required."
+        if item.get("review_artifact_run_id"):
+            asset["review_artifact_run_id"] = int(item["review_artifact_run_id"])
         if item.get("review_reason"):
             asset["review_reason"] = item["review_reason"]
 
