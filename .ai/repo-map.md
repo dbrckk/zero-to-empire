@@ -26798,9 +26798,20 @@ queue = {"assets": [
 ⋮----
 asset = queue["assets"][0]
 ⋮----
-def test_current_epoch_attempt_limit_takes_precedence_over_legacy_total_attempts(self) -> None
+def test_superseded_dispatch_recovers_while_newer_async_wave_is_busy(self) -> None
 ⋮----
 orchestrator = self._load_orchestrator("")
+⋮----
+original = orchestrator.load_json
+⋮----
+def fake_load(path, default=None)
+⋮----
+queue = {"assets": [{
+⋮----
+def test_active_dispatch_token_is_not_recovered_while_wave_is_busy(self) -> None
+⋮----
+def test_current_epoch_attempt_limit_takes_precedence_over_legacy_total_attempts(self) -> None
+⋮----
 asset = {
 ⋮----
 def test_current_epoch_still_allows_retry_below_epoch_limit(self) -> None
@@ -26809,7 +26820,7 @@ def test_character_batch_size_supports_multi_role_burst(self) -> None
 ⋮----
 def test_character_epoch_allows_three_informed_attempts(self) -> None
 ⋮----
-def test_character_epoch_is_v117_articulated_border_fix(self) -> None
+def test_character_epoch_is_v118_carry_identity_lock(self) -> None
 ⋮----
 def test_new_epoch_reopens_semantic_reject_even_with_high_legacy_attempts(self) -> None
 ⋮----
@@ -26834,7 +26845,6 @@ def test_character_burst_builder_exists_and_caps_at_batch_size(self) -> None
 def test_successful_character_outcomes_mirror_into_master(self) -> None
 ⋮----
 active = queue["assets"]
-original = orchestrator.load_json
 ```
 
 ## File: tools/assets/test_static_processing.py

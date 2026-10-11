@@ -22,23 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T18:13:53Z
+Generated: 2026-10-11T18:17:49Z
 
 ### Git
 - Branch: `main`
-- Head: `6c8616949915`
-- Commit date: 2026-10-11T20:13:36+02:00
-- Commit: ci(art): schedule v1.18 carry identity-lock retry
+- Head: `a81f1a4690ac`
+- Commit date: 2026-10-11T20:17:29+02:00
+- Commit: ci(art): recheck ENG wave after v1.18 pipeline validation
 - Tracked files: 1524
 
 ### Recently changed files
+- `ops/kaggle-collector-trigger.txt`
+- `tools/assets/test_queue_state_policy.py`
+- `tools/assets/test_workflow_policy.py`
 - `ops/autofactory-kick.txt`
-- `tools/sprites/asset_wave_orchestrator.py`
-- `tools/sprites/kaggle_character_sheet_factory_v1.py`
-- `art/production/autofactory-state.json`
-- `art/production/autofactory-summary.md`
-- `art/production/character-strict-review-backlog.md`
-- `art/production/master-asset-queue.json`
 
 ### Project signals
 - `build.gradle.kts`

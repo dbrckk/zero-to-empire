@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 1710360a211b13b14ec4bc855797c997d7fc29c5
-Head: 6c86169499152ede02a9519c617ecdff754bccb0
+Base: 20f24683208ae8636d93beb83ff7092e6d538ce3
+Head: a81f1a4690ac67e5e03589305ff6a2a13cfdaad2
 
 ## Changed files
-- M ops/autofactory-kick.txt
+- M ops/kaggle-collector-trigger.txt
 
 ## Affected areas
 - ops

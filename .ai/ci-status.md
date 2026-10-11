@@ -1,14 +1,13 @@
 # CI status
 
-Summary: 5 success / 1 failure / 0 active
+Summary: 2 success / 1 failure / 1 active
 
+- Kaggle Async Character Collector: in_progress / pending (a81f1a46)
+- Asset Pipeline CI: completed / success (20f24683)
+- Asset Pipeline CI: completed / cancelled (61800931)
+- Asset Pipeline CI: completed / cancelled (9a5e5059)
 - Asset Autofactory 235: completed / success (6c861694)
 - Asset Pipeline CI: completed / failure (1710360a)
-- Character strict review matrix: completed / success (1710360a)
-- Asset Pipeline CI: completed / cancelled (9a9656ae)
-- Asset Autofactory 235: completed / success (f4da89f8)
-- Asset Pipeline CI: completed / success (d652bcd0)
-- Character strict review matrix: completed / success (d652bcd0)
 
 ## Latest failed run structure
 - Job: validate
