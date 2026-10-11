@@ -246,6 +246,9 @@ class DispatchCorrelationTests(unittest.TestCase):
                 "attempts": 0, "infra_failures": 0,
                 "generation_epoch": "legacy", "epoch_attempts": 0,
             })
+        rejected_op = next(x for x in assets if x["id"] == "CHR-OP-WALK")
+        rejected_op["pipeline_status"] = "REJECTED_SEMANTIC"
+        rejected_op["review_reason"] = "detached-artifact component=10000/11000"
         queue = {"assets": assets}
         store = {}
         original_load = orchestrator.load_json
@@ -274,6 +277,8 @@ class DispatchCorrelationTests(unittest.TestCase):
         self.assertIn("CHR-OP-IDLE", produced)
         self.assertIn("CHR-LOG-IDLE", produced)
         self.assertFalse(any(x.startswith("CHR-ENG-") for x in produced))
+        op_walk = next(x for x in store["controlled"]["targets"] if x["id"] == "CHR-OP-WALK")
+        self.assertEqual(op_walk["review_reason"], "detached-artifact component=10000/11000")
 
 
     def test_character_epoch_allows_three_informed_attempts(self) -> None:
