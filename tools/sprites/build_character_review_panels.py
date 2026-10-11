@@ -30,15 +30,24 @@ def checkerboard() -> Image.Image:
     return result
 
 
+def readable_font(size: int) -> ImageFont.ImageFont:
+    try:
+        return ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", size)
+    except OSError:
+        return ImageFont.load_default()
+
+
 def create_panel(role: str, assets: dict[str, Path], output: Path, qa: dict[str, dict]) -> dict:
-    font = ImageFont.load_default()
+    font = readable_font(15)
+    heading = readable_font(21)
+    labels = readable_font(18)
     width = LABEL_WIDTH + 10 * TILE
     height = HEADER_HEIGHT + len(ACTIONS) * ROW_HEIGHT
     sheet = Image.new("RGB", (width, height), (24, 27, 34))
     draw = ImageDraw.Draw(sheet)
     draw.rectangle((0, 0, width, HEADER_HEIGHT - 1), fill=(43, 50, 61))
-    draw.text((18, 18), f"ZERO TO EMPIRE  |  {role.upper()} CHARACTER IDENTITY", font=font, fill=(246, 248, 250))
-    draw.text((18, 43), "Original 256x256 frames. Compare face, outfit, body scale and pose across ALL actions.", font=font, fill=(187, 202, 220))
+    draw.text((18, 15), f"ZERO TO EMPIRE  |  {role.upper()} CHARACTER IDENTITY", font=heading, fill=(246, 248, 250))
+    draw.text((18, 47), "Original 256x256 frames. Compare face, outfit, body scale and pose across ALL actions.", font=font, fill=(187, 202, 220))
     base = checkerboard()
     status: dict = {}
     for row, (action, frame_count) in enumerate(ACTIONS.items()):
@@ -48,7 +57,7 @@ def create_panel(role: str, assets: dict[str, Path], output: Path, qa: dict[str,
         qa_row = qa.get(path.name, {}) if path else {}
         is_pass = qa_row.get("pass") is True
         label_color = (105, 202, 157) if is_pass else (236, 184, 97) if path else (166, 170, 179)
-        draw.text((14, y + 12), action.upper(), font=font, fill=label_color)
+        draw.text((14, y + 12), action.upper(), font=labels, fill=label_color)
         if path is None:
             status[action] = {"candidate": False, "expected_frames": frame_count, "qa_pass": None}
             draw.text((14, y + 36), "NOT GENERATED", font=font, fill=(183, 189, 199))
