@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T10:56:10Z
+Generated: 2026-10-11T10:59:01Z
 
 ### Git
 - Branch: `main`
-- Head: `63acd5a579ac`
-- Commit date: 2026-10-11T12:55:50+02:00
-- Commit: ci(art): attach real-source 42px TECH day/night board and GIF to each canonical review run
+- Head: `0f1706fb5e7f`
+- Commit date: 2026-10-11T12:58:49+02:00
+- Commit: docs(art): evidence-link real-source TECH preview boards, note pixel-vs-dp limits and review gates
 - Tracked files: 1523
 
 ### Recently changed files
+- `docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md`
 - `.github/workflows/tech-canonical-review-stage.yml`
 - `tools/sprites/build_tech_review_board.py`
 - `art/production/character-rig-review-candidates/review-report.json`
@@ -43,8 +44,6 @@ Generated: 2026-10-11T10:56:10Z
 - `art/production/character-rig-review-candidates/zte_chr_tech_walk_final.png`
 - `tools/sprites/rigged_tech_actions_v3.py`
 - `tools/sprites/rigged_tech_walk_v2.py`
-- `tools/android/character_preview_emulator_smoke.sh`
-- `tools/android/character_preview_pixel_audit.py`
 
 ### Project signals
 - `build.gradle.kts`
