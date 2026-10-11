@@ -2,9 +2,9 @@
 
 Generated from `art/production/master-asset-queue.json` after production completion.
 
-- Production processed: **218/235**
-- Strict DONE: **216/235**
-- Semantic review remaining: **19**
+- Production processed: **219/235**
+- Strict DONE: **219/235**
+- Semantic review remaining: **16**
 - This report does **not** grant strict approval or runtime promotion.
 
 | Asset | Role | Action | Technical status | Review note |
@@ -14,9 +14,6 @@ Generated from `art/production/master-asset-queue.json` after production complet
 | CHR-OP-CARRY | OP | CARRY | DISPATCHED | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
 | CHR-OP-REPAIR | OP | REPAIR | DISPATCHED | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
 | CHR-OP-CELEB | OP | CELEB | DISPATCHED | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
-| CHR-TECH-WALK | TECH | WALK | REJECTED_SEMANTIC | Kaggle generator rejected candidate: walk-orientation/silhouette-jump=0.30 |
-| CHR-TECH-WORK | TECH | WORK | AWAITING_REVIEW | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
-| CHR-TECH-CARRY | TECH | CARRY | AWAITING_REVIEW | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
 | CHR-LOG-WALK | LOG | WALK | DISPATCHED | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
 | CHR-LOG-WORK | LOG | WORK | DISPATCHED | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
 | CHR-LOG-CARRY | LOG | CARRY | PENDING_KAGGLE | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
