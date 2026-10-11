@@ -114,6 +114,12 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("incomplete/stale Kaggle output", text)
         self.assertNotIn("if expected and not (expected & actual)", text)
 
+    def test_async_collector_preserves_retry_details_for_future_generation(self):
+        text = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
+        self.assertIn("retry-details=", text)
+        self.assertIn("row.get('retry_reasons',[])", text)
+        self.assertIn("dict.fromkeys(retries[-4:])", text)
+
     def test_async_collector_releases_wave_when_completed_output_validation_fails(self):
         text = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
         condition = "steps.kernel.outputs.failed == 'true' || (steps.kernel.outputs.ready == 'true' && failure())"
@@ -237,6 +243,8 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("palette_identity_discontinuity", text)
         self.assertIn("silhouette_mass_discontinuity", text)
         self.assertIn("walk-too-static", text)
+        self.assertIn("carry-too-static", text)
+        self.assertIn("detached-artifact", text)
         self.assertIn("qhint=queue_rejection_hint(i)", text)
 
 
