@@ -37,6 +37,62 @@ def readable_font(size: int) -> ImageFont.ImageFont:
         return ImageFont.load_default()
 
 
+def create_head_panel(role: str, assets: dict[str, Path], output: Path) -> None:
+    """Magnify each frame's face/headgear for cross-action identity review.
+
+    Visual evidence only: a matching crop does not prove animation or identity
+    correctness. It is easier to read on Android than the wide full-frame sheet.
+    """
+    tile_width, cell_width, row_height = 172, 144, 194
+    header, label_width = 70, 130
+    width = label_width + 10 * tile_width
+    height = header + len(ACTIONS) * row_height
+    panel = Image.new("RGB", (width, height), (26, 29, 36))
+    draw = ImageDraw.Draw(panel)
+    title_font = readable_font(20)
+    font = readable_font(14)
+    label_font = readable_font(18)
+    draw.text((14, 12), f"{role.upper()} - FACE + HEADGEAR CONTINUITY REVIEW", font=title_font,
+              fill=(245, 245, 250))
+    draw.text((14, 40), "Enlarged 256px sprite crops. Visual review only; not automatic approval.",
+              font=font, fill=(194, 204, 222))
+    for row, (action, frames) in enumerate(ACTIONS.items()):
+        y = header + row * row_height
+        draw.line((0, y, width, y), fill=(68, 75, 86), width=1)
+        draw.text((12, y + 12), action.upper(), font=label_font, fill=(228, 234, 246))
+        path = assets.get(action)
+        if path is None:
+            draw.text((12, y + 38), "NO CANDIDATE", font=font, fill=(191, 194, 203))
+            continue
+        try:
+            with Image.open(path) as src:
+                if src.size != (1024, 1024):
+                    raise ValueError("Expected a 1024x1024 character atlas")
+                atlas = src.convert("RGBA")
+            for index in range(frames):
+                f = atlas.crop(((index % 4) * CELL, (index // 4) * CELL,
+                                ((index % 4) + 1) * CELL, ((index // 4) + 1) * CELL))
+                bbox = f.getchannel("A").getbbox()
+                if bbox is None:
+                    continue
+                xmid = (bbox[0] + bbox[2]) // 2
+                x0 = min(CELL - 96, max(0, xmid - 48))
+                y0 = min(CELL - 96, max(0, bbox[1] - 5))
+                head = f.crop((x0, y0, x0 + 96, y0 + 96)).resize(
+                    (cell_width, cell_width), Image.Resampling.NEAREST)
+                background = checkerboard().resize((cell_width, cell_width))
+                background.paste(head, (0, 0), head)
+                x = label_width + index * tile_width + 7
+                panel.paste(background, (x, y + 12))
+                draw.text((x + 2, y + 164), f"Frame {index + 1:02d}", font=font,
+                          fill=(215, 221, 230))
+        except (OSError, ValueError) as exc:
+            draw.text((label_width + 8, y + 30), f"REVIEW ERROR: {exc}"[:90],
+                      font=font, fill=(236, 158, 148))
+    output.parent.mkdir(parents=True, exist_ok=True)
+    panel.save(output, "PNG", optimize=True)
+
+
 def create_panel(role: str, assets: dict[str, Path], output: Path, qa: dict[str, dict]) -> dict:
     font = readable_font(15)
     heading = readable_font(21)
@@ -111,8 +167,12 @@ def main() -> int:
                 role, action = match.groups()
                 by_role.setdefault(role, {})[action] = path
     args.output_dir.mkdir(parents=True, exist_ok=True)
-    results = [create_panel(role, assets, args.output_dir / f"review-frames-{role}.png", qa)
-               for role, assets in sorted(by_role.items())]
+    results = []
+    for role, assets in sorted(by_role.items()):
+        item = create_panel(role, assets, args.output_dir / f"review-frames-{role}.png", qa)
+        create_head_panel(role, assets, args.output_dir / f"review-heads-{role}.png")
+        item["head_detail_file"] = f"review-heads-{role}.png"
+        results.append(item)
     summary = {"schema_version": 1, "review_only": True, "roles": results}
     (args.output_dir / "review-panels.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
     print(f"CHARACTER_REVIEW_PANELS={len(results)}")
