@@ -1,13 +1,13 @@
 # Change impact
 
-Base: a0d88adf301ae35bedceb82b5117bd34d9384963
-Head: 5f3d8d83e05da0e97982ffb0be93d75a78d17e57
+Base: ef069af7e56109a5089612174f7d9a03453f85ac
+Head: 28314e06e3149a1a978c7997e76268d0f552c95d
 
 ## Changed files
-- M ops/kaggle-collector-trigger.txt
+- M tools/assets/test_workflow_policy.py
 
 ## Affected areas
-- ops
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

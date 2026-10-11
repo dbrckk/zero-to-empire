@@ -2492,9 +2492,17 @@ jobs:
           from pathlib import Path
           d=json.loads(Path('/tmp/kaggle-output/output/github-qa-report.json').read_text())
           rows=d if isinstance(d,list) else d.get('assets',d.get('sprites',d.get('results',[])))
-          failed=[r for r in rows if not r.get('pass')]
-          if failed: raise SystemExit('technical QA rejected: '+','.join(str(r.get('file')) for r in failed))
-          print('KAGGLE_ASYNC_QA_PASS='+str(len(rows)))
+          files={p.name for p in Path('/tmp/kaggle-output/output/candidates').glob('*_final.png')}
+          reported=[str(r.get('file') or '') for r in rows]
+          if len(reported)!=len(set(reported)) or set(reported)!=files:
+              raise SystemExit('incomplete/duplicate technical QA coverage')
+          passed=[r for r in rows if r.get('pass') is True]
+          failed=[r for r in rows if r.get('pass') is not True]
+          # Do not lose nine valid actions because one of twelve failed QA.
+          # Failed sprites are carried to controlled state as specific rejects,
+          # never as AWAITING_REVIEW candidates.
+          print('KAGGLE_ASYNC_QA_PASS='+str(len(passed)))
+          print('KAGGLE_ASYNC_QA_REJECT='+str(len(failed)))
           PY
           else
             python - <<'PY'
@@ -2532,6 +2540,18 @@ jobs:
               produced.update(stem_to_id.get(p.stem) for p in candidate_dir.glob('*_final.png'))
           produced.discard(None)
           rejected={}
+          qa_path=Path('/tmp/kaggle-output/output/github-qa-report.json')
+          if qa_path.exists():
+              qa=json.loads(qa_path.read_text())
+              qa_rows=qa if isinstance(qa,list) else qa.get('assets',qa.get('sprites',qa.get('results',[])))
+              for row in qa_rows:
+                  if row.get('pass') is True:
+                      continue
+                  aid=stem_to_id.get(Path(str(row.get('file') or '')).stem)
+                  if not aid:
+                      raise SystemExit('Unmapped rejected QA candidate: '+str(row.get('file')))
+                  produced.discard(aid)
+                  rejected[aid]='technical-qa:'+','.join(str(x) for x in row.get('issues',[]) or ['unknown'])
           for row in report:
               if str(row.get('status','')).upper()!='REJECT':
                   continue
@@ -2540,7 +2560,8 @@ jobs:
               retries=[str(x) for x in row.get('retry_reasons',[]) if str(x).strip()]
               if retries:
                   reason += '; retry-details=' + ' | '.join(dict.fromkeys(retries[-4:]))
-              rejected[aid]=reason
+              if aid not in produced and aid not in rejected:
+                  rejected[aid]=reason
           p=Path('art/production/controlled-character-regen-queue.json')
           q=json.loads(p.read_text())
           run_id=int(os.environ.get('SUBMIT_RUN_ID') or 0)
@@ -5057,11 +5078,10 @@ jobs:
           q=json.loads(Path('art/production/master-asset-queue.json').read_text())
           controlled=json.loads(Path('art/production/controlled-character-regen-queue.json').read_text())
           contexts={str(item.get('id','')).upper():item for item in controlled.get('targets',[])}
-          mismatched=[]
-          for asset in q.get('assets',[]):
-              aid=asset.get('id')
-              if aid not in ids:
-                  continue
+          known={str(a.get('id','')).upper():a for a in q.get('assets',[])}
+          mismatched=[f"{aid}:unknown-asset" for aid in ids-known.keys()]
+          for aid in ids & known.keys():
+              asset=known[aid]
               if asset.get('strict_status')=='DONE':
                   # Replacing a legacy strict-DONE IDLE sheet does not raise
                   # strict progress, but is necessary for full-role identity.
@@ -5075,8 +5095,27 @@ jobs:
                       mismatched.append(f"{aid}:unreviewed-context-anchor")
                   continue
               recorded=asset.get('review_artifact_run_id')
-              if recorded and str(recorded)!=source:
-                  mismatched.append(f"{aid}:{recorded}")
+              if (str(asset.get('pipeline_status','')).upper()!='AWAITING_REVIEW'
+                  or str(recorded or '')!=source):
+                  mismatched.append(f"{aid}:not-current-reviewed-candidate:{recorded}")
+          # Every newly promoted action must share the reference IDLE identity
+          # in the same verified artifact. A previously replaced IDLE is valid
+          # only when its strict promotion retains provenance from this run.
+          for aid in ids:
+              parts=aid.split('-')
+              if len(parts)!=3 or parts[0]!='CHR' or parts[2]=='IDLE':
+                  continue
+              idle=f"CHR-{parts[1]}-IDLE"
+              if idle in ids:
+                  continue
+              anchor=known.get(idle,{})
+              approved_anchor=(
+                  anchor.get('strict_status')=='DONE'
+                  and str(anchor.get('review_artifact_run_id') or '')==source
+                  and 'Explicit semantic review approved' in str(anchor.get('review_reason') or '')
+              )
+              if not approved_anchor:
+                  mismatched.append(f"{aid}:missing-coherent-{idle}-anchor")
           if mismatched:
               raise SystemExit(
                   'Promotion source run does not match canonical review provenance: '
@@ -5182,6 +5221,7 @@ jobs:
                   a['pipeline_status']='DONE'
                   a['generation_required']=False
                   a['last_error']=None
+                  a['review_artifact_run_id']=int(os.environ['SOURCE_RUN_ID'])
                   a['review_reason']=(
                       'Explicit semantic review approved Kaggle source run '
                       + os.environ.get('SOURCE_RUN_ID','unknown')
@@ -27062,12 +27102,16 @@ def test_character_promotion_can_resolve_source_artifact_run_from_queue(self)
 ⋮----
 def test_character_promotion_allows_only_reviewed_same_run_idle_replacement(self)
 ⋮----
+def test_character_promotion_requires_pending_review_and_coherent_anchor(self)
+⋮----
 def test_character_promotion_rejects_wrong_artifact_provenance(self)
 ⋮----
 def test_character_promotion_requires_android_runtime_validation_before_done(self)
 def test_async_collector_recovers_candidates_when_generated_targets_is_empty(self)
 ⋮----
 text = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
+⋮----
+def test_async_collector_keeps_valid_candidates_when_other_qa_rows_fail(self)
 ⋮----
 def test_async_collector_requires_full_expected_target_coverage(self)
 ⋮----

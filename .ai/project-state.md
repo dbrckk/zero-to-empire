@@ -31,20 +31,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T20:51:45Z
+Generated: 2026-10-11T21:03:40Z
 
 ### Git
 - Branch: `main`
-- Head: `5f3d8d83e05d`
-- Commit date: 2026-10-11T22:51:28+02:00
-- Commit: ci(art): check OP LOG v1.18 full-family producer progress
+- Head: `28314e06e314`
+- Commit date: 2026-10-11T23:03:12+02:00
+- Commit: test(ci): protect valid character candidates from sibling QA failures
 - Tracked files: 1524
 
 ### Recently changed files
-- `ops/kaggle-collector-trigger.txt`
 - `tools/assets/test_workflow_policy.py`
-- `tools/assets/test_queue_state_policy.py`
-- `tools/sprites/asset_wave_orchestrator.py`
+- `.github/workflows/kaggle-async-character-collector.yml`
+- `.github/workflows/promote-approved-kaggle-characters.yml`
+- `ops/kaggle-collector-trigger.txt`
 
 ### Project signals
 - `build.gradle.kts`
