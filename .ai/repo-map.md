@@ -2464,9 +2464,13 @@ jobs:
           if report_path.exists():
               report=json.loads(report_path.read_text())
               actual.update(str(r.get('id','')).upper() for r in report if r.get('id'))
-          if expected and not (expected & actual):
-              raise SystemExit(f'stale Kaggle output expected={sorted(expected)} actual={sorted(actual)}')
-          print('KAGGLE_ASYNC_MATCH='+','.join(sorted(expected & actual)))
+          missing=expected-actual
+          if missing:
+              raise SystemExit(
+                  f'incomplete/stale Kaggle output missing={sorted(missing)} '
+                  f'expected={sorted(expected)} actual={sorted(actual)}'
+              )
+          print('KAGGLE_ASYNC_MATCH='+','.join(sorted(expected)))
           PY
       - name: Technical QA
         if: steps.kernel.outputs.ready == 'true'
@@ -2556,7 +2560,7 @@ jobs:
         run: |
           gh workflow run 'Asset Autofactory 235' --ref main             -f producer_workflow='Kaggle Mass Sprite Factory'             -f producer_conclusion='success'             -f producer_run_id='${{ steps.gate.outputs.submit_run_id }}'             -f producer_dispatch_token='${{ steps.gate.outputs.dispatch_token }}'
       - name: Download failed kernel evidence
-        if: steps.kernel.outputs.failed == 'true'
+        if: ${{ steps.kernel.outputs.failed == 'true' || (steps.kernel.outputs.ready == 'true' && failure()) }}
         shell: bash
         run: |
           set +e
@@ -27005,6 +27009,12 @@ def test_character_promotion_requires_android_runtime_validation_before_done(sel
 def test_async_collector_recovers_candidates_when_generated_targets_is_empty(self)
 ⋮----
 text = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
+⋮----
+def test_async_collector_requires_full_expected_target_coverage(self)
+⋮----
+def test_async_collector_releases_wave_when_completed_output_validation_fails(self)
+⋮----
+condition = "steps.kernel.outputs.failed == 'true' || (steps.kernel.outputs.ready == 'true' && failure())"
 ⋮----
 def test_kaggle_bundle_tree_fallback_finds_nested_repo_bundle(self)
 ⋮----
