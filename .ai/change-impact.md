@@ -1,13 +1,13 @@
 # Change impact
 
-Base: d909dd2dd0c842d55b1cdc0eee50f6d7953f1391
-Head: 63083470dd96a03b73b01b6fea7f8e76c3af01ba
+Base: d45bbba363c4e4ac60507b141dc34bcc5c5488a7
+Head: 317704d2da682673551e8120fa0cd92e98442f2e
 
 ## Changed files
-- M .github/workflows/tech-canonical-review-stage.yml
+- A docs/art/TECH_CHARACTER_VISUAL_DIRECTION.md
 
 ## Affected areas
-- .github
+- docs
 
 ## Related test candidates
 - No direct filename-based test match detected.
