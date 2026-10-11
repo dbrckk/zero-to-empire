@@ -22,16 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T10:29:21Z
+Generated: 2026-10-11T10:33:10Z
 
 ### Git
 - Branch: `main`
-- Head: `9b0d28bfadef`
-- Commit date: 2026-10-11T12:29:08+02:00
-- Commit: docs(art): measure TECH depth-lane before/after and retain leg occlusion review blocker
+- Head: `bc7c252305cc`
+- Commit date: 2026-10-11T12:32:54+02:00
+- Commit: test(android): verify consecutive WALK/CARRY pixel motion at real 42dp on emulator
 - Tracked files: 1522
 
 ### Recently changed files
+- `tools/android/character_preview_emulator_smoke.sh`
+- `tools/android/character_preview_pixel_audit.py`
 - `docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md`
 - `art/production/character-rig-review-candidates/review-report.json`
 - `art/production/character-rig-review-candidates/zte_chr_tech_carry_final-contact.png`
@@ -42,7 +44,6 @@ Generated: 2026-10-11T10:29:21Z
 - `art/production/character-rig-review-candidates/zte_chr_tech_walk_final.png`
 - `.github/workflows/tech-canonical-review-stage.yml`
 - `tools/sprites/test_weight_transfer.py`
-- `tools/sprites/test_rigged_tech_actions_v3.py`
 
 ### Project signals
 - `build.gradle.kts`

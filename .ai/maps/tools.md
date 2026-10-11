@@ -484,6 +484,23 @@ echo "CHARACTER_PREVIEW_TECH_ACTION_SELECTOR_PASS=6"
 # pixels beneath the 42dp QA caption, outside all interactive text.
 python3 "$SCRIPT_DIR/character_preview_pixel_audit.py" "$OUT"
 
+# Pixel-proof of temporal animation at 42dp, not just six static poses:
+# step each moving action four real Android frames while paused. Every
+# screenshot and accessibility hierarchy remains in the CI artifact.
+for moving_action in WALK CARRY; do
+  click "$moving_action" "before-temporal-action-$moving_action"
+  for tick in 0 1 2 3; do
+    if [[ "$tick" -gt 0 ]]; then
+      click "Stage +1" "before-temporal-step-$moving_action-$tick"
+    fi
+    dump "tech-action-$moving_action-frame-$tick"
+    assert_text "TECH ACTION: $moving_action" "tech-action-$moving_action-frame-$tick"
+    adb exec-out screencap -p > "$OUT/tech-stage-$moving_action-frame-$tick.png"
+    test -s "$OUT/tech-stage-$moving_action-frame-$tick.png"
+  done
+done
+python3 "$SCRIPT_DIR/character_preview_pixel_audit.py" --temporal "$OUT"
+
 adb logcat -d > "$OUT/logcat.txt"
 if grep -E "FATAL EXCEPTION|AndroidRuntime.*FATAL" "$OUT/logcat.txt"; then
   echo "CHARACTER_PREVIEW_FAIL=fatal_exception" >&2
@@ -511,10 +528,13 @@ MIN_VISIBLE_PIXELS = 120
 MIN_DIFFERENT_PIXELS = 150
 TOLERANCE = 25
 ⋮----
-def review_crop(folder: Path, action: str) -> tuple[Image.Image, int]
+def review_crop(folder: Path, action: str, frame_label: str = "") -> tuple[Image.Image, int]
 ⋮----
-xml = folder / f"tech-action-{action}.xml"
-shot = folder / f"tech-stage-{action}.png"
+# The same real-size crop validator is used by single-action and
+# consecutive-frame Android screenshots, with identical clipping gates.
+suffix = f"-{frame_label}" if frame_label else ""
+xml = folder / f"tech-action-{action}{suffix}.xml"
+shot = folder / f"tech-stage-{action}{suffix}.png"
 root = ET.parse(xml).getroot()
 text_values = [n.attrib.get("text", "") for n in root.iter("node")]
 ⋮----
@@ -561,6 +581,23 @@ renders = [review_crop(folder, action) for action in ACTIONS]
 second = renders[other][0]
 ⋮----
 different = sum(
+⋮----
+def audit_temporal(folder: Path) -> None
+⋮----
+"""Real Android 42dp pixel motion: prove frame stepping changes the rig.
+
+    This is a technical motion gate only. Plausible weight, foot contact and
+    human recognition still require semantic visual review.
+    """
+⋮----
+samples = [review_crop(folder, action, f"frame-{i}") for i in range(4)]
+frames = [number for _, number in samples]
+⋮----
+changed_counts = []
+⋮----
+changed = sum(
+⋮----
+args = sys.argv[1:]
 ```
 
 ## File: android/emulator_functional_smoke.sh
