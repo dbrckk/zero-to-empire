@@ -6129,6 +6129,15 @@ gamma = TECH_REVIEW_MATERIAL_GAMMA
 ⋮----
 lut = [round(255 * ((i / 255) ** gamma)) for i in range(256)]
 result = {}
+far_lower_leg = {
+# A second, subtler material pass establishes depth without changing
+# either leg's pose, ground contact, silhouette or source texture alpha.
+# Only the FAR lower limb receives a cooler steel-blue bounce light.
+# This is deliberately a diffuse material shift, NOT neon footwear:
+# it should be judged at 39-42dp against the ungraded near leg.
+far_red = [max(0, min(255, round(i * 0.82))) for i in range(256)]
+far_green = [max(0, min(255, round(i * 0.94 + 5))) for i in range(256)]
+far_blue = [max(0, min(255, round(i * 1.07 + 13))) for i in range(256)]
 ⋮----
 def spine_lean(t: float, action: str) -> float
 ⋮----

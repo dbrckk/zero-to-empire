@@ -1,18 +1,14 @@
 # CI status
 
-Summary: 1 success / 1 failure / 2 active
+Summary: 3 success / 0 failure / 2 active
 
-- Android CI: in_progress / pending (114a4848)
-- TECH candidate Android preview (no promotion): in_progress / pending (114a4848)
+- Six modular TECH animations (review only): in_progress / pending (87c759be)
+- TECH canonical review staging: in_progress / pending (87c759be)
+- Asset Autofactory 235: completed / success (5f9dd2f6)
+- Reconcile reviewed run 25: completed / skipped (5f9dd2f6)
+- Android CI: completed / success (114a4848)
+- TECH candidate Android preview (no promotion): completed / success (114a4848)
 - Reconcile reviewed run 25: completed / skipped (c5da6e15)
 - Reconcile reviewed run 25: completed / skipped (d9b2c8eb)
-- Android CI: completed / success (d9b2c8eb)
-- TECH candidate Android preview (no promotion): completed / failure (d9b2c8eb)
-- TECH candidate Android preview (no promotion): completed / cancelled (ae190fc8)
-- Android CI: completed / cancelled (ae190fc8)
-
-## Latest failed run structure
-- Job: debug-candidate-preview
-  - Failed step: Validate actual review APK on an emulator
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.
