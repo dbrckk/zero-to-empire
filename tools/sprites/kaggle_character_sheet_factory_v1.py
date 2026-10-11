@@ -405,6 +405,23 @@ def lower_body_motion(frames):
   vals.append(1-(inter/union if union else 1))
  return sum(vals)/len(vals) if vals else 0.0
 
+def upper_body_transition_changes(frames):
+ # For CELEB, a large whole-body alpha change can come from a morphing
+ # prop, outfit or leg rather than an expressive arm gesture. Analyze the
+ # top 45% of the body's visible silhouette separately for readability.
+ changes=[]
+ for previous,current in zip(frames,frames[1:]):
+  boxes=[f.getchannel('A').getbbox() for f in (previous,current)]
+  if not all(boxes):
+   changes.append(1.0)
+   continue
+  limit=min(255,max(int(b[1]+(b[3]-b[1])*.45) for b in boxes))
+  area=(0,0,256,max(16,limit))
+  a=previous.crop(area)
+  b=current.crop(area)
+  changes.append(1-alpha_iou(a,b))
+ return changes
+
 def walk_consistency_qa(frames):
  # Guard against semantic false positives where motion is large only because the
  # model flips viewpoint or redesigns the character between cells.
@@ -440,12 +457,14 @@ def action_qa(frames,action):
   motion=lower_body_motion(frames)
   if motion<.19:return False,f'carry-lacks-stride lower-motion={motion:.3f}<0.190'
  if action=='CELEB':
-  changes=[1-x for x in ious]
-  # Reject a "celebration" whose only visible change is the last frame.
-  # Positive motion spread across the loop is needed for a readable gesture.
-  expressive=sum(delta>=.14 for delta in changes)
+  changes=upper_body_transition_changes(frames)
+  # Arm movement should progress across multiple frames, not originate from
+  # one terminal animation jump or from isolated lower-body changes.
+  expressive=sum(delta>=.15 for delta in changes)
   if expressive<3:
-   return False,f'celeb-unreadable-gesture transitions={expressive}/{len(changes)}'
+   return False,f'celeb-unreadable-gesture upper-transitions={expressive}/{len(changes)}'
+  if changes and max(changes)>.47:
+   return False,f'celeb-upper-silhouette-jump={max(changes):.3f}>0.470'
  return True,f'{action.lower()}-motion={mean_change:.3f}'
 
 def appearance_signature(cell):
