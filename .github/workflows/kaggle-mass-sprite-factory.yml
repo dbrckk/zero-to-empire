@@ -33,7 +33,33 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    outputs:
+      permitted: ${{ steps.gate.outputs.permitted }}
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: main, fetch-depth: 2}
+      - name: Read current wave ownership
+        id: gate
+        shell: bash
+        run: |
+          git pull --ff-only origin main
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+          p=Path('art/production/kaggle-async-state.json')
+          state=json.loads(p.read_text()) if p.is_file() else {}
+          active=str(state.get('status','')).upper()=='ACTIVE'
+          print('permitted='+('false' if active else 'true'))
+          if active:
+              print('KAGGLE_DUPLICATE_WAVE_PREVENTED=1',flush=True)
+              print('EXISTING_DISPATCH_TOKEN='+str(state.get('dispatch_token','')),flush=True)
+          PY
+
   kaggle:
+    needs: preflight
+    if: needs.preflight.outputs.permitted == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 180
     env:
