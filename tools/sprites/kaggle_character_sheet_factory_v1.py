@@ -463,8 +463,8 @@ def action_qa(frames,action):
   expressive=sum(delta>=.15 for delta in changes)
   if expressive<3:
    return False,f'celeb-unreadable-gesture upper-transitions={expressive}/{len(changes)}'
-  if changes and max(changes)>.47:
-   return False,f'celeb-upper-silhouette-jump={max(changes):.3f}>0.470'
+  if changes and max(changes)>.45:
+   return False,f'celeb-upper-silhouette-jump={max(changes):.3f}>0.450'
  return True,f'{action.lower()}-motion={mean_change:.3f}'
 
 def appearance_signature(cell):
