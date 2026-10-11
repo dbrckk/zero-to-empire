@@ -416,6 +416,37 @@ click "Night stage" before-night-restore
 dump night-restored
 assert_text "NIGHT CONTRAST REVIEW" night-restored
 
+# Prove the stage can isolate the two actual city TECH placements, switch
+# their rendered atlas to a DIFFERENT action, and step that action's frame
+# without scrolling back to the main gallery controls.
+click "TECH only" before-tech-focus
+dump tech-focused
+assert_text "TECH ACTION: WALK" tech-focused
+click "REPAIR" before-tech-repair-selection
+dump tech-repair-selected
+assert_text "TECH ACTION: REPAIR" tech-repair-selected
+click "Stage +1" before-tech-stage-step
+dump tech-repair-stepped
+assert_text "TECH ACTION: REPAIR" tech-repair-stepped
+python3 - "$OUT/tech-repair-selected.xml" "$OUT/tech-repair-stepped.xml" <<'PY'
+import re, sys
+import xml.etree.ElementTree as ET
+def stage_frame(path):
+    root=ET.parse(path).getroot()
+    values=[n.attrib.get('text','')+' '+n.attrib.get('content-desc','')
+            for n in root.iter('node')]
+    hits=[int(m.group(1)) for v in values
+          if (m:=re.search(r'STAGE FRAME:\s*(\d+)', v))]
+    if len(hits)!=1:
+        raise SystemExit('CHARACTER_PREVIEW_FAIL=stage-frame-counter-not-visible')
+    return hits[0]
+before,after=(stage_frame(path) for path in sys.argv[1:3])
+if after != (before+1)%1680:
+    raise SystemExit('CHARACTER_PREVIEW_FAIL=stage-frame-step-not-applied')
+print(f'CHARACTER_PREVIEW_STAGE_STEP_PASS=before:{before} after:{after}')
+PY
+echo "CHARACTER_PREVIEW_TECH_ACTION_SELECTOR_PASS=1"
+
 adb logcat -d > "$OUT/logcat.txt"
 if grep -E "FATAL EXCEPTION|AndroidRuntime.*FATAL" "$OUT/logcat.txt"; then
   echo "CHARACTER_PREVIEW_FAIL=fatal_exception" >&2

@@ -22,24 +22,25 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T07:44:27Z
+Generated: 2026-10-11T07:56:27Z
 
 ### Git
 - Branch: `main`
-- Head: `779a7568c3e1`
-- Commit date: 2026-10-11T09:44:11+02:00
-- Commit: docs(art): trace warmed TECH repair arc with pixel comparison and explicit non-approval gate
+- Head: `5fb6d62e73c4`
+- Commit date: 2026-10-11T09:56:12+02:00
+- Commit: feat(android): inspect all six technician actions at gameplay scale
 - Tracked files: 1521
 
 ### Recently changed files
+- `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
+- `app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt`
+- `tools/android/character_preview_emulator_smoke.sh`
 - `docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md`
 - `art/production/character-rig-review-candidates/review-report.json`
 - `art/production/character-rig-review-candidates/zte_chr_tech_repair_final-contact.png`
 - `art/production/character-rig-review-candidates/zte_chr_tech_repair_final-preview.gif`
 - `art/production/character-rig-review-candidates/zte_chr_tech_repair_final.png`
 - `tools/sprites/rigged_tech_actions_v3.py`
-- `tools/android/character_preview_emulator_smoke.sh`
-- `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
 
 ### Project signals
 - `build.gradle.kts`

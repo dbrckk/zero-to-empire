@@ -273,6 +273,8 @@ private fun CharacterReviewGallery() {
     var worldFrame by remember { mutableIntStateOf(0) }
     var playing by remember { mutableStateOf(true) }
     var daylightStage by remember { mutableStateOf(false) }
+    var technicianOnly by remember { mutableStateOf(false) }
+    var inspectedTechAction by remember { mutableStateOf(ReviewedCharacterAction.WALK) }
     LaunchedEffect(playing) {
         while (playing) {
             delay(100L)
@@ -352,6 +354,45 @@ private fun CharacterReviewGallery() {
                             if (daylightStage) "DAYLIGHT CONTRAST REVIEW" else "NIGHT CONTRAST REVIEW",
                             style = MaterialTheme.typography.labelMedium,
                         )
+                        OutlinedButton(onClick = { technicianOnly = !technicianOnly }) {
+                            Text(if (technicianOnly) "Show all roles" else "TECH only")
+                        }
+                        if (technicianOnly) {
+                            Text(
+                                "TECH ACTION: ${inspectedTechAction.name}",
+                                style = MaterialTheme.typography.labelMedium,
+                            )
+                            Text(
+                                "STAGE FRAME: $worldFrame",
+                                style = MaterialTheme.typography.labelSmall,
+                            )
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                OutlinedButton(onClick = { playing = !playing }) {
+                                    Text(if (playing) "Pause stage" else "Play stage")
+                                }
+                                OutlinedButton(onClick = {
+                                    playing = false
+                                    worldFrame = (worldFrame + 1) % 1680
+                                }) { Text("Stage +1") }
+                            }
+                            // At 320dp widths, two labeled buttons per row
+                            // remain touchable; no hidden horizontal scrolling.
+                            ReviewedCharacterAction.entries.chunked(2).forEach { rowActions ->
+                                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    rowActions.forEach { action ->
+                                        OutlinedButton(
+                                            modifier = Modifier.weight(1f),
+                                            onClick = { inspectedTechAction = action },
+                                        ) {
+                                            Text(
+                                                action.name,
+                                                style = MaterialTheme.typography.labelSmall,
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         // Only the real city character composable is used here.
                         // CI injects review-only textures into the isolated APK,
                         // never the shipped production masters.
@@ -374,6 +415,12 @@ private fun CharacterReviewGallery() {
                                 worldFrame = worldFrame,
                                 reducedMotion = false,
                                 modifier = Modifier.fillMaxSize(),
+                                roleFilter = if (technicianOnly) {
+                                    ReviewedCharacterRole.TECHNICIAN
+                                } else {
+                                    null
+                                },
+                                actionOverride = if (technicianOnly) inspectedTechAction else null,
                             )
                         }
                     }
@@ -11645,6 +11692,10 @@ internal fun ReviewedCharacterLayer(
     worldFrame: Int,
     reducedMotion: Boolean,
     modifier: Modifier = Modifier,
+    // Debug QA can isolate one profession and render any of its six actions
+    // at the exact dimensions used in the city. Defaults preserve gameplay.
+    roleFilter: ReviewedCharacterRole? = null,
+    actionOverride: ReviewedCharacterAction? = null,
 ) {
     val context = LocalContext.current
     val lateEraScale = if (eraIndex >= 4) 1.08f else 1f
@@ -11662,8 +11713,19 @@ internal fun ReviewedCharacterLayer(
         )
     }
 
-    val atlases = remember {
+    val visiblePlacements = remember(placements, roleFilter, actionOverride) {
         placements
+            .filter { roleFilter == null || it.role == roleFilter }
+            .map { placement ->
+                if (actionOverride == null) placement
+                else placement.copy(action = actionOverride)
+            }
+    }
+    // An override must load the *new* action atlas, not reuse cached WALK
+    // while only changing its frame index. With no overrides, this is the
+    // same eight real game placements and sprite resources as before.
+    val atlases = remember(context, visiblePlacements) {
+        visiblePlacements
             .map { it.role to it.action }
             .distinct()
             .associateWith { (role, action) ->
@@ -11677,7 +11739,7 @@ internal fun ReviewedCharacterLayer(
     BoxWithConstraints(modifier.fillMaxSize()) {
         val scale = minOf(maxWidth.value / 360f, maxHeight.value / 620f)
             .coerceIn(.75f, 1.20f) * lateEraScale
-        placements.forEach { placement ->
+        visiblePlacements.forEach { placement ->
             val sample = ambientCharacterMotion(
                 action = placement.action,
                 worldFrame = worldFrame,

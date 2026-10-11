@@ -1,13 +1,16 @@
 # Change impact
 
-Base: 328b6b78aab9452251eff70abb0a7e3e36c157e6
-Head: 779a7568c3e1c109a44b73ae889a0c9ac8d21d41
+Base: 978c58337c0dcb2498df667e80e0459f0449fa8b
+Head: 5fb6d62e73c47fc24efa6675bef9c56a2d222d98
 
 ## Changed files
-- M docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md
+- M app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt
+- M app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt
+- M tools/android/character_preview_emulator_smoke.sh
 
 ## Affected areas
-- docs
+- app
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

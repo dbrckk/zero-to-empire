@@ -9025,6 +9025,8 @@ private fun CharacterReviewGallery() {
     var worldFrame by remember { mutableIntStateOf(0) }
     var playing by remember { mutableStateOf(true) }
     var daylightStage by remember { mutableStateOf(false) }
+    var technicianOnly by remember { mutableStateOf(false) }
+    var inspectedTechAction by remember { mutableStateOf(ReviewedCharacterAction.WALK) }
     LaunchedEffect(playing) {
         while (playing) {
             delay(100L)
@@ -9104,6 +9106,45 @@ private fun CharacterReviewGallery() {
                             if (daylightStage) "DAYLIGHT CONTRAST REVIEW" else "NIGHT CONTRAST REVIEW",
                             style = MaterialTheme.typography.labelMedium,
                         )
+                        OutlinedButton(onClick = { technicianOnly = !technicianOnly }) {
+                            Text(if (technicianOnly) "Show all roles" else "TECH only")
+                        }
+                        if (technicianOnly) {
+                            Text(
+                                "TECH ACTION: ${inspectedTechAction.name}",
+                                style = MaterialTheme.typography.labelMedium,
+                            )
+                            Text(
+                                "STAGE FRAME: $worldFrame",
+                                style = MaterialTheme.typography.labelSmall,
+                            )
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                OutlinedButton(onClick = { playing = !playing }) {
+                                    Text(if (playing) "Pause stage" else "Play stage")
+                                }
+                                OutlinedButton(onClick = {
+                                    playing = false
+                                    worldFrame = (worldFrame + 1) % 1680
+                                }) { Text("Stage +1") }
+                            }
+                            // At 320dp widths, two labeled buttons per row
+                            // remain touchable; no hidden horizontal scrolling.
+                            ReviewedCharacterAction.entries.chunked(2).forEach { rowActions ->
+                                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    rowActions.forEach { action ->
+                                        OutlinedButton(
+                                            modifier = Modifier.weight(1f),
+                                            onClick = { inspectedTechAction = action },
+                                        ) {
+                                            Text(
+                                                action.name,
+                                                style = MaterialTheme.typography.labelSmall,
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         // Only the real city character composable is used here.
                         // CI injects review-only textures into the isolated APK,
                         // never the shipped production masters.
@@ -9126,6 +9167,12 @@ private fun CharacterReviewGallery() {
                                 worldFrame = worldFrame,
                                 reducedMotion = false,
                                 modifier = Modifier.fillMaxSize(),
+                                roleFilter = if (technicianOnly) {
+                                    ReviewedCharacterRole.TECHNICIAN
+                                } else {
+                                    null
+                                },
+                                actionOverride = if (technicianOnly) inspectedTechAction else null,
                             )
                         }
                     }
@@ -20397,6 +20444,10 @@ internal fun ReviewedCharacterLayer(
     worldFrame: Int,
     reducedMotion: Boolean,
     modifier: Modifier = Modifier,
+    // Debug QA can isolate one profession and render any of its six actions
+    // at the exact dimensions used in the city. Defaults preserve gameplay.
+    roleFilter: ReviewedCharacterRole? = null,
+    actionOverride: ReviewedCharacterAction? = null,
 ) {
     val context = LocalContext.current
     val lateEraScale = if (eraIndex >= 4) 1.08f else 1f
@@ -20414,8 +20465,19 @@ internal fun ReviewedCharacterLayer(
         )
     }
 
-    val atlases = remember {
+    val visiblePlacements = remember(placements, roleFilter, actionOverride) {
         placements
+            .filter { roleFilter == null || it.role == roleFilter }
+            .map { placement ->
+                if (actionOverride == null) placement
+                else placement.copy(action = actionOverride)
+            }
+    }
+    // An override must load the *new* action atlas, not reuse cached WALK
+    // while only changing its frame index. With no overrides, this is the
+    // same eight real game placements and sprite resources as before.
+    val atlases = remember(context, visiblePlacements) {
+        visiblePlacements
             .map { it.role to it.action }
             .distinct()
             .associateWith { (role, action) ->
@@ -20429,7 +20491,7 @@ internal fun ReviewedCharacterLayer(
     BoxWithConstraints(modifier.fillMaxSize()) {
         val scale = minOf(maxWidth.value / 360f, maxHeight.value / 620f)
             .coerceIn(.75f, 1.20f) * lateEraScale
-        placements.forEach { placement ->
+        visiblePlacements.forEach { placement ->
             val sample = ambientCharacterMotion(
                 action = placement.action,
                 worldFrame = worldFrame,
@@ -25208,6 +25270,37 @@ PY
 click "Night stage" before-night-restore
 dump night-restored
 assert_text "NIGHT CONTRAST REVIEW" night-restored
+
+# Prove the stage can isolate the two actual city TECH placements, switch
+# their rendered atlas to a DIFFERENT action, and step that action's frame
+# without scrolling back to the main gallery controls.
+click "TECH only" before-tech-focus
+dump tech-focused
+assert_text "TECH ACTION: WALK" tech-focused
+click "REPAIR" before-tech-repair-selection
+dump tech-repair-selected
+assert_text "TECH ACTION: REPAIR" tech-repair-selected
+click "Stage +1" before-tech-stage-step
+dump tech-repair-stepped
+assert_text "TECH ACTION: REPAIR" tech-repair-stepped
+python3 - "$OUT/tech-repair-selected.xml" "$OUT/tech-repair-stepped.xml" <<'PY'
+import re, sys
+import xml.etree.ElementTree as ET
+def stage_frame(path):
+    root=ET.parse(path).getroot()
+    values=[n.attrib.get('text','')+' '+n.attrib.get('content-desc','')
+            for n in root.iter('node')]
+    hits=[int(m.group(1)) for v in values
+          if (m:=re.search(r'STAGE FRAME:\s*(\d+)', v))]
+    if len(hits)!=1:
+        raise SystemExit('CHARACTER_PREVIEW_FAIL=stage-frame-counter-not-visible')
+    return hits[0]
+before,after=(stage_frame(path) for path in sys.argv[1:3])
+if after != (before+1)%1680:
+    raise SystemExit('CHARACTER_PREVIEW_FAIL=stage-frame-step-not-applied')
+print(f'CHARACTER_PREVIEW_STAGE_STEP_PASS=before:{before} after:{after}')
+PY
+echo "CHARACTER_PREVIEW_TECH_ACTION_SELECTOR_PASS=1"
 
 adb logcat -d > "$OUT/logcat.txt"
 if grep -E "FATAL EXCEPTION|AndroidRuntime.*FATAL" "$OUT/logcat.txt"; then
