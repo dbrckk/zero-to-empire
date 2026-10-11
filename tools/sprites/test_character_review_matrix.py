@@ -12,7 +12,8 @@ def fake_queue():
     assets += [{'id':a,'strict_status':'NEEDS_REVIEW',
                 'pipeline_status':'REJECTED_SEMANTIC' if a=='CHR-TECH-WALK' else 'AWAITING_REVIEW',
                 'review_reason':'walk-orientation/silhouette-jump=0.30' if a=='CHR-TECH-WALK' else 'Needs review',
-                'last_generator':'kaggle-character-sheet','last_run_id':1234}
+                'last_generator':'kaggle-character-sheet','last_run_id':1234,
+                'review_artifact_run_id':5678}
                for a in ids]
     return {'target_total':235,'assets':assets}
 
@@ -31,9 +32,12 @@ class MatrixTests(unittest.TestCase):
         report=build(fake_queue())
         self.assertEqual(report['items'][0]['asset_id'],'CHR-TECH-WALK')
         self.assertEqual(report['items'][0]['canonical_pipeline_status'],'REJECTED_SEMANTIC')
+        self.assertEqual(report['items'][0]['canonical_review_artifact_run_id'],5678)
         self.assertTrue(report['items'][0]['alternate_tech_renderer_available'])
         self.assertTrue(report['items'][0]['alternate_is_not_canonical_approval'])
-        self.assertIn('semantic rejection',markdown(report))
+        text=markdown(report)
+        self.assertIn('semantic rejection',text)
+        self.assertIn('5678',text)
 
     def test_live_markdown_does_not_repeat_stale_tech_rejection_after_promotion(self):
         q=fake_queue()
