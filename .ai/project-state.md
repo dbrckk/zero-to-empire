@@ -22,20 +22,24 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T17:24:03Z
+Generated: 2026-10-11T17:40:19Z
 
 ### Git
 - Branch: `main`
-- Head: `d7ff9740a736`
-- Commit date: 2026-10-11T19:23:48+02:00
-- Commit: ci(tech): bind reviewed promotion to emulator evidence
+- Head: `7588333d0ba2`
+- Commit date: 2026-10-11T19:40:01+02:00
+- Commit: ci(art): harden reviewed character promotion gate
 - Tracked files: 1524
 
 ### Recently changed files
+- `.github/workflows/promote-approved-kaggle-characters.yml`
+- `ops/kaggle-collector-trigger.txt`
+- `art/production/kaggle-async-state.json`
 - `.github/workflows/promote-reviewed-tech-sprites.yml`
-- `tools/android/character_preview_emulator_smoke.sh`
-- `tools/sprites/build_tech_review_board.py`
-- `docs/art/TECH_CHARACTER_VISUAL_DIRECTION.md`
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
+- `art/production/character-strict-review-backlog.md`
+- `art/production/master-asset-queue.json`
 
 ### Project signals
 - `build.gradle.kts`

@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 58249048e137e9c6d0584a8b475138a3b639c535
-Head: d7ff9740a7367375a07ddb69feb79fb54b816e7f
+Base: f83558138eb22033ed62da19a4bf710993273f6c
+Head: 7588333d0ba2840f2fea3697e46c5f4e0f226da6
 
 ## Changed files
-- M .github/workflows/promote-reviewed-tech-sprites.yml
+- M .github/workflows/promote-approved-kaggle-characters.yml
 
 ## Affected areas
 - .github

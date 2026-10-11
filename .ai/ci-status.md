@@ -1,14 +1,17 @@
 # CI status
 
-Summary: 3 success / 0 failure / 1 active
+Summary: 4 success / 1 failure / 1 active
 
-- Promote reviewed TECH sprites: in_progress / pending (d7ff9740)
-- Reconcile reviewed run 25: completed / skipped (58249048)
-- Reconcile reviewed run 25: completed / skipped (b3cea425)
-- TECH candidate Android preview (no promotion): completed / success (b3cea425)
-- Android CI: completed / success (b3cea425)
-- TECH candidate Android preview (no promotion): completed / cancelled (f816a528)
-- Android CI: completed / cancelled (f816a528)
-- Asset Autofactory 235: completed / success (8764ab65)
+- Kaggle Async Character Collector: completed / success (f8355813)
+- Promote reviewed TECH sprites: in_progress / pending (8104ca7b)
+- Kaggle Mass Sprite Factory: completed / success (1c26e90b)
+- Asset Autofactory 235: completed / success (cf243ece)
+- Asset Autofactory 235: completed / cancelled (d678e15b)
+- Asset Autofactory 235: completed / success (d678e15b)
+- Kaggle Mass Sprite Factory: completed / failure (d678e15b)
+
+## Latest failed run structure
+- Job: kaggle
+  - Failed step: Push and start Kaggle GPU run
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.
