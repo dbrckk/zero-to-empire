@@ -22,36 +22,27 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T11:44:16Z
+Generated: 2026-10-11T11:48:38Z
 
 ### Git
 - Branch: `main`
-- Head: `40c0aff57e48`
-- Commit date: 2026-10-11T13:43:52+02:00
-- Commit: art(review): add eight-frame WALK/CARRY footfall close-up GIF from real atlas pixels
+- Head: `0d38056f1e0d`
+- Commit date: 2026-10-11T13:48:22+02:00
+- Commit: fix(tech): align existing stance invariant with fixed far-ground 2.5D projection
 - Tracked files: 1524
 
 ### Recently changed files
-- `tools/sprites/build_tech_review_board.py`
-- `docs/art/TECH_CHARACTER_VISUAL_DIRECTION.md`
+- `tools/sprites/test_weight_transfer.py`
 - `art/production/character-rig-review-candidates/review-report.json`
 - `art/production/character-rig-review-candidates/zte_chr_tech_carry_final-contact.png`
 - `art/production/character-rig-review-candidates/zte_chr_tech_carry_final-preview.gif`
 - `art/production/character-rig-review-candidates/zte_chr_tech_carry_final.png`
-- `art/production/character-rig-review-candidates/zte_chr_tech_celeb_final-contact.png`
-- `art/production/character-rig-review-candidates/zte_chr_tech_celeb_final-preview.gif`
-- `art/production/character-rig-review-candidates/zte_chr_tech_celeb_final.png`
-- `art/production/character-rig-review-candidates/zte_chr_tech_idle_final-contact.png`
-- `art/production/character-rig-review-candidates/zte_chr_tech_idle_final-preview.gif`
-- `art/production/character-rig-review-candidates/zte_chr_tech_idle_final.png`
-- `art/production/character-rig-review-candidates/zte_chr_tech_repair_final-contact.png`
-- `art/production/character-rig-review-candidates/zte_chr_tech_repair_final-preview.gif`
-- `art/production/character-rig-review-candidates/zte_chr_tech_repair_final.png`
 - `art/production/character-rig-review-candidates/zte_chr_tech_walk_final-contact.png`
 - `art/production/character-rig-review-candidates/zte_chr_tech_walk_final-preview.gif`
 - `art/production/character-rig-review-candidates/zte_chr_tech_walk_final.png`
-- `art/production/character-rig-review-candidates/zte_chr_tech_work_final-contact.png`
-- `art/production/character-rig-review-candidates/zte_chr_tech_work_final-preview.gif`
+- `tools/sprites/test_rigged_tech_actions_v3.py`
+- `tools/sprites/rigged_tech_actions_v3.py`
+- `tools/sprites/build_tech_review_board.py`
 
 ### Project signals
 - `build.gradle.kts`
