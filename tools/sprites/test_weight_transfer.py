@@ -4,7 +4,7 @@ import math
 import unittest
 import rigged_tech_walk_v2 as core
 from weight_transfer import AMPLITUDES_PX, support_bias, stance_load, transfer_pose
-from rigged_tech_actions_v3 import pose_for
+from rigged_tech_actions_v3 import FAR_FOOT_LANE_PX, pose_for
 
 
 class WeightTransferTests(unittest.TestCase):
@@ -17,13 +17,13 @@ class WeightTransferTests(unittest.TestCase):
         for t in (0,.5,1):
             self.assertLess(abs(support_bias(t-1e-7)-support_bias(t+1e-7)),.0001)
 
-    def test_foot_targets_and_grips_unchanged(self):
+    def test_foot_depth_lane_preserves_ground_contact_and_grips(self):
         for action in ('WALK','CARRY'):
             for i in range(384):
                 t=i/384
                 old=core.pose(t)
                 new=pose_for(t,action)
-                self.assertEqual(new['left'],old['left'])
+                self.assertEqual(new['left'],(old['left'][0]-FAR_FOOT_LANE_PX,old['left'][1]))
                 self.assertEqual(new['right'],old['right'])
                 self.assertEqual(new['lockL'],old['lockL'])
                 self.assertEqual(new['lockR'],old['lockR'])
