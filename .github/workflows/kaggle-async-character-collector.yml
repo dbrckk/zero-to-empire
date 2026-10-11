@@ -177,7 +177,16 @@ jobs:
           if candidate_dir.is_dir():
               produced.update(stem_to_id.get(p.stem) for p in candidate_dir.glob('*_final.png'))
           produced.discard(None)
-          rejected={str(r.get('id','')).upper():str(r.get('reason') or 'generator rejection') for r in report if str(r.get('status','')).upper()=='REJECT'}
+          rejected={}
+          for row in report:
+              if str(row.get('status','')).upper()!='REJECT':
+                  continue
+              aid=str(row.get('id','')).upper()
+              reason=str(row.get('reason') or 'generator rejection')
+              retries=[str(x) for x in row.get('retry_reasons',[]) if str(x).strip()]
+              if retries:
+                  reason += '; retry-details=' + ' | '.join(dict.fromkeys(retries[-4:]))
+              rejected[aid]=reason
           p=Path('art/production/controlled-character-regen-queue.json')
           q=json.loads(p.read_text())
           run_id=int(os.environ.get('SUBMIT_RUN_ID') or 0)
