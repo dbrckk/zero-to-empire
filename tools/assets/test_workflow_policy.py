@@ -108,6 +108,12 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("candidate_dir.glob('*_final.png')", text)
         self.assertIn("ops/kaggle-collector-trigger.txt", text)
 
+    def test_async_collector_requires_full_expected_target_coverage(self):
+        text = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
+        self.assertIn("missing=expected-actual", text)
+        self.assertIn("incomplete/stale Kaggle output", text)
+        self.assertNotIn("if expected and not (expected & actual)", text)
+
     def test_kaggle_bundle_tree_fallback_finds_nested_repo_bundle(self):
         text = Path("kaggle/github_mass_factory.py").read_text(encoding="utf-8")
         self.assertIn("base.glob('**/repo_bundle')", text)
