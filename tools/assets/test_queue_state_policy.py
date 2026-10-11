@@ -201,6 +201,58 @@ class DispatchCorrelationTests(unittest.TestCase):
         self.assertNotIn("autofactory_context_only", targets[1])
         self.assertNotIn("autofactory_context_only", targets[2])
 
+    def test_character_burst_keeps_op_and_log_families_whole_within_twelve_slots(self) -> None:
+        orchestrator = self._load_orchestrator("")
+        assets = []
+        for group in ("CHR-OP", "CHR-LOG"):
+            assets.append({
+                "id": group + "-IDLE", "group": group, "strict_status": "DONE",
+                "pipeline_status": "DONE", "attempts": 0, "infra_failures": 0,
+            })
+            for action in ("WALK", "WORK", "CARRY", "REPAIR", "CELEB"):
+                assets.append({
+                    "id": group + "-" + action, "group": group,
+                    "strict_status": "NEEDS_REVIEW", "pipeline_status": "PENDING_KAGGLE",
+                    "attempts": 0, "infra_failures": 0,
+                    "generation_epoch": "legacy", "epoch_attempts": 0,
+                })
+        for action in ("IDLE", "WALK", "WORK", "CARRY", "REPAIR", "CELEB"):
+            assets.append({
+                "id": "CHR-ENG-" + action, "group": "CHR-ENG",
+                "strict_status": "NEEDS_REVIEW", "pipeline_status": "PENDING_KAGGLE",
+                "attempts": 0, "infra_failures": 0,
+                "generation_epoch": "legacy", "epoch_attempts": 0,
+            })
+        queue = {"assets": assets}
+        store = {}
+        original_load = orchestrator.load_json
+        original_save = orchestrator.save_json
+        try:
+            def fake_save(path, value):
+                if path == orchestrator.CHARACTER_QUEUE:
+                    store["controlled"] = value
+            def fake_load(path, default=None):
+                if path == orchestrator.CHARACTER_QUEUE:
+                    return store.get("controlled", default)
+                return default
+            orchestrator.save_json = fake_save
+            orchestrator.load_json = fake_load
+            result = orchestrator.prepare_character_burst(
+                queue, ["CHR-OP", "CHR-LOG", "CHR-ENG"]
+            )
+        finally:
+            orchestrator.load_json = original_load
+            orchestrator.save_json = original_save
+
+        self.assertEqual(result["group"], "CHR-OP+CHR-LOG")
+        self.assertEqual(len(result["ids"]), 10)
+        self.assertEqual(result["count"], 12)
+        produced = [x["id"] for x in store["controlled"]["targets"][:12]]
+        self.assertIn("CHR-OP-IDLE", produced)
+        self.assertIn("CHR-LOG-IDLE", produced)
+        self.assertFalse(any(x.startswith("CHR-ENG-") for x in produced))
+
+
     def test_character_epoch_allows_three_informed_attempts(self) -> None:
         orchestrator = self._load_orchestrator("")
         self.assertEqual(orchestrator.CHARACTER_EPOCH_ATTEMPT_LIMIT, 3)
