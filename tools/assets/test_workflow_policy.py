@@ -89,6 +89,11 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("review_artifact_run_id", text)
         self.assertIn("Automatic source run resolution requires one shared review_artifact_run_id", text)
 
+    def test_character_promotion_rejects_wrong_artifact_provenance(self):
+        text = Path(".github/workflows/promote-approved-kaggle-characters.yml").read_text(encoding="utf-8")
+        self.assertIn("Promotion source run does not match canonical review provenance", text)
+        self.assertIn("PROMOTION_SOURCE_PROVENANCE_PASS=", text)
+
     def test_character_promotion_requires_android_runtime_validation_before_done(self):
         text = Path(".github/workflows/promote-approved-kaggle-characters.yml").read_text(encoding="utf-8")
         self.assertIn("Validate promoted Android runtime", text)
