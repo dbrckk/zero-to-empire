@@ -26,13 +26,14 @@ def main() -> int:
         f"- Strict DONE: **{strict_done}/{queue['target_total']}**",
         f"- Semantic review remaining: **{len(remaining)}**",
         "- This report does **not** grant strict approval or runtime promotion.", "",
-        "| Asset | Role | Action | Technical status | Review note |",
-        "|---|---|---|---|---|",
+        "| Asset | Role | Action | Technical status | Review artifact run | Review note |",
+        "|---|---|---|---|---:|---|",
     ]
     for asset in remaining:
         parts = asset["id"].split("-")
         reason = asset.get("review_reason") or "Semantic review required; no specific automated defect recorded."
-        lines.append(f"| {asset['id']} | {parts[1]} | {'-'.join(parts[2:])} | {asset['pipeline_status']} | {reason.replace('|', '/')} |")
+        artifact_run = asset.get("review_artifact_run_id") or "—"
+        lines.append(f"| {asset['id']} | {parts[1]} | {'-'.join(parts[2:])} | {asset['pipeline_status']} | {artifact_run} | {reason.replace('|', '/')} |")
     lines += ["", "## Review rule", "",
         "A reviewer must inspect identity continuity, full-body framing, role/clothing consistency, action readability, animation motion, and runtime suitability. Only explicit reviewed approvals may change `strict_status` to `DONE`.",
     ]
