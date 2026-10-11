@@ -174,6 +174,7 @@ class DispatchCorrelationTests(unittest.TestCase):
 
     def test_fresh_character_dispatch_clears_stale_error_and_reason(self) -> None:
         orchestrator = self._load_orchestrator("wave-fresh")
+        orchestrator.CURRENT_DISPATCH_TOKEN = "wave-fresh"
         asset = {
             "id": "CHR-OP-WALK",
             "strict_status": "NEEDS_REVIEW",
