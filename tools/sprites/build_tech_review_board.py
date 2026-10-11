@@ -170,6 +170,43 @@ def lower_limb_closeups(records, out: Path):
     surface.convert('RGB').save(out,'PNG',optimize=True)
 
 
+
+def footfall_motion(records, out: Path):
+    """Loop all eight ORIGINAL canonical WALK/CARRY frames at fixed framing.
+
+    Preview cadence is deliberately labeled as an inspection aid, not as the
+    game's playback speed or semantic proof of foot-plant stability.
+    """
+    frames_out = []
+    for tick in range(8):
+        surface = Image.new('RGBA', (1100, 526), BG + (255,))
+        d = ImageDraw.Draw(surface)
+        label(d, 25, 17, 'TECH / FOOTFALL MOTION / ORIGINAL CANDIDATE PIXELS',
+              size=24, bold=True)
+        label(d, 25, 55,
+              f'Frame {tick+1:02d}/08  |  3x crop NEAREST  |  no retouch, no semantic approval',
+              size=16, color=MUTED)
+        for index, action in enumerate(('WALK', 'CARRY')):
+            x = 24 + index * 548
+            _item, frames = records[action]
+            label(d, x+12, 89, action, size=21, color=AQUA, bold=True)
+            crop = frames[tick].crop((55, 120, 215, 248))
+            zoom = crop.resize((400, 320), Image.Resampling.NEAREST)
+            d.rectangle((x+12, y:=125, x+414, y+322), fill=(17, 29, 43))
+            surface.paste(zoom, (x+13, y+1), zoom)
+            # Conservative *physical-pixel* 42px preview, not dp.
+            checker(surface, (x+429, 187), 91, night=True)
+            place(surface, frames[tick], x+453, 210, 42)
+            label(d, x+436, 288, '42 px', size=14, color=MUTED)
+        label(d, 25, 493,
+              'Unreviewed source sprites only. No Android capture; check feet during actual game motion.',
+              size=15, color=AMBER)
+        frames_out.append(surface.convert('RGB'))
+    frames_out[0].save(out, format='GIF', save_all=True,
+                       append_images=frames_out[1:], duration=125,
+                       loop=0, optimize=False)
+
+
 def animated(records, out: Path):
     W, H = 1040, 390
     still = []
@@ -199,6 +236,7 @@ def main():
     rec=tiles(args.source)
     board(rec,args.output/'tech-review-true-source-board.png')
     lower_limb_closeups(rec,args.output/'tech-review-footfall-closeups.png')
+    footfall_motion(rec,args.output/'tech-review-footfall-motion.gif')
     animated(rec,args.output/'tech-review-true-source-motion.gif')
     print('TECH_REVIEW_TRUE_SOURCE_PREVIEW_PASS=6 STRICT_PROMOTION=0')
 
