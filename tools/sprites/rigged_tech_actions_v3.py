@@ -292,7 +292,7 @@ def draw_frame(action: str, t: float, kit: dict):
     }.get(action)
     overlay = {"CELEB":draw_celebration,"WORK":draw_work_touch,
                "REPAIR":draw_repair_sparks}.get(action)
-    return core.draw_frame(t, kit, p, under, overlay, joint_fabric=True, soft_deform=True)
+    return core.draw_frame(t, kit, p, under, overlay, joint_fabric=True, soft_deform=True, far_boot_edge_light=(action in ('WALK','CARRY')))
 
 
 def action_qa(action: str, poses: list, base_qa: dict) -> dict:

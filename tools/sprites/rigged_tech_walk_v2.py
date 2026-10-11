@@ -13,7 +13,7 @@ import statistics
 import zipfile
 from pathlib import Path
 from typing import Any
-from PIL import Image, ImageDraw, ImageFilter
+from PIL import Image, ImageDraw, ImageFilter, ImageChops
 import numpy as np
 from soft_skin_deform import soft_limb, signed_joint_bend
 
@@ -194,7 +194,7 @@ def joint_cap(layer,p,r=14,depth='near'):
     paste(layer,cap,p[0]-cx,p[1]-cy)
 
 
-def render_boot(layer,img,foot,angle) -> dict[str,float]:
+def render_boot(layer,img,foot,angle,far_edge_light=False) -> dict[str,float]:
     """Place sole at demanded contact Y, instead of guessing boot ankle offset."""
     width=69
     height=round(width*img.height/img.width)
@@ -210,12 +210,26 @@ def render_boot(layer,img,foot,angle) -> dict[str,float]:
     # Anchor visually consistent ankle X while sole follows the foot path.
     px=round(foot[0]-center)
     py=round(foot[1]-bbox[3])
+    if far_edge_light:
+        # Review-only far-side boot separation at 39-42dp. An 8 source-pixel
+        # exterior rim becomes ~0.7 physical pixels in the Android gallery.
+        # The shoe texture and sole contact remain exact and unchanged.
+        # The brighter material edge is beneath the shoe, so it never paints
+        # over its lace/metal texture or adds a second floating foot.
+        alpha = turn.getchannel('A')
+        exterior = ImageChops.subtract(
+            alpha.filter(ImageFilter.MaxFilter(17)), alpha
+        )
+        exterior = exterior.point(lambda value: round(value * 0.61))
+        edge = Image.new('RGBA', turn.size, (110, 197, 219, 0))
+        edge.putalpha(exterior)
+        paste(layer, edge, px, py)
     paste(layer,turn,px,py)
     return {'sole_y':py+bbox[3],'foot_target_y':foot[1],
             'sole_error_px':abs(py+bbox[3]-foot[1]), 'toe_x':px+bbox[2]}
 
 
-def draw_frame(t:float,kit:dict,pose_override=None,prop_underlay=None,prop_overlay=None,joint_fabric=False,soft_deform=False):
+def draw_frame(t:float,kit:dict,pose_override=None,prop_underlay=None,prop_overlay=None,joint_fabric=False,soft_deform=False,far_boot_edge_light=False):
     p=pose(t) if pose_override is None else pose_override
     x,y=p['root']
     canvas=Image.new('RGBA',(CANVAS,CANVAS))
@@ -255,7 +269,7 @@ def draw_frame(t:float,kit:dict,pose_override=None,prop_underlay=None,prop_overl
     if joint_fabric: fabric_hinge(canvas,lhip,kneeL,p['left'],12,False)
     joint_cap(canvas,kneeL,10,'far')
     if joint_fabric: ankle_gaiter(canvas,kneeL,p['left'],False)
-    bootL=render_boot(canvas,kit['shin_boot_far_boot'],p['left'],p['rollL'])
+    bootL=render_boot(canvas,kit['shin_boot_far_boot'],p['left'],p['rollL'],far_edge_light=far_boot_edge_light)
     segment(kit['upper_arm_far'],shoulderL,elbowL,.88,.88,bend_arm_l*.6)
     segment(kit['forearm_far'],elbowL,p['handL'],.87,.88,bend_arm_l)
     if joint_fabric: fabric_hinge(canvas,shoulderL,elbowL,p['handL'],9,False)
