@@ -1,14 +1,18 @@
 # CI status
 
-Summary: 2 success / 0 failure / 4 active
+Summary: 2 success / 1 failure / 2 active
 
-- TECH candidate Android preview (no promotion): pending / pending (8380bce8)
-- Android CI: queued / pending (8380bce8)
-- Android Emulator Smoke: in_progress / pending (f5b32577)
-- TECH candidate Android preview (no promotion): in_progress / pending (f5b32577)
-- Android CI: completed / cancelled (f5b32577)
-- Manifest Static GPU Batch: completed / success (e26d3753)
-- Reconcile reviewed run 25: completed / skipped (e26d3753)
-- TECH candidate Android preview (no promotion): completed / success (f1ec3077)
+- Android CI: in_progress / pending (9c06bc3b)
+- TECH candidate Android preview (no promotion): in_progress / pending (9c06bc3b)
+- Reconcile reviewed run 25: completed / skipped (75746f1d)
+- Reconcile reviewed run 25: completed / skipped (8380bce8)
+- TECH candidate Android preview (no promotion): completed / failure (8380bce8)
+- Android CI: completed / success (8380bce8)
+- Android Emulator Smoke: completed / success (f5b32577)
+- TECH candidate Android preview (no promotion): completed / cancelled (f5b32577)
+
+## Latest failed run structure
+- Job: debug-candidate-preview
+  - Failed step: Validate actual review APK on an emulator
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

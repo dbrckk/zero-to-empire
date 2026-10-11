@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 7f157d502779d2f53996f6170171c36536157834
-Head: 8380bce8a04adf33df08c028f5e33dea846172c0
+Base: 75746f1da3dcd485a3bd6723950f177656ec378b
+Head: 9c06bc3b8b1b6c0d01a06bffdef13d5f4edae496
 
 ## Changed files
-- M tools/android/character_preview_pixel_audit.py
+- M tools/android/character_preview_emulator_smoke.sh
 
 ## Affected areas
 - tools

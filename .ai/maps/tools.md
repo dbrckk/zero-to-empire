@@ -374,7 +374,28 @@ fi
 daylight_toggle_visible=false
 for daylight_attempt in 0 1 2 3 4 5 6; do
   dump "daylight-toggle-scroll-$daylight_attempt"
-  if grep -Fq 'Daylight stage' "$OUT/daylight-toggle-scroll-$daylight_attempt.xml"; then
+  # uiautomator can expose a label clipped to only a few pixels at
+  # the top of the viewport. A grep hit is NOT a usable touch target:
+  # the previous run tapped a 5px fragment and never changed modes.
+  if python3 - "$OUT/daylight-toggle-scroll-$daylight_attempt.xml" "$height" <<'PY'
+import re, sys, xml.etree.ElementTree as ET
+root = ET.parse(sys.argv[1]).getroot()
+height = int(sys.argv[2])
+for node in root.iter('node'):
+    if node.attrib.get('text') != 'Daylight stage':
+        continue
+    m = re.fullmatch(r'\[(\d+),(\d+)\]\[(\d+),(\d+)\]',
+                     node.attrib.get('bounds', ''))
+    if not m:
+        continue
+    x0, y0, x1, y1 = map(int, m.groups())
+    if (x1 > x0 and y1-y0 >= max(24, height//100)
+            and y0 >= height//20 and y1 <= height*93//100):
+        print('CHARACTER_PREVIEW_DAYLIGHT_BUTTON_FULLY_VISIBLE=1')
+        raise SystemExit(0)
+raise SystemExit(1)
+PY
+  then
     daylight_toggle_visible=true
     break
   fi
