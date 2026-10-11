@@ -60,6 +60,7 @@ sprites/
   audit_complete_sprite_manifest.py
   autonomous_walk.py
   build_sprite_contact_sheet.py
+  build_tech_review_board.py
   character_review_matrix.py
   character_semantic_gate.py
   colab_mass_factory.py
@@ -2014,6 +2015,92 @@ paths = [p for p in paths if p.exists() and p.stat().st_size > 0]
 results = [inspect(p) for p in paths]
 ⋮----
 report = {
+```
+
+## File: sprites/build_tech_review_board.py
+```python
+#!/usr/bin/env python3
+"""Deterministic review-only TECH atlases visualization; never promotes assets.
+
+Reads canonical-format 4x4 transparent PNG review candidates. Produces a
+static side-by-side 42px day/night comparison and an animated GIF; both are
+labeled explicitly as candidates, not Android screenshots or approved art.
+"""
+⋮----
+ACTIONS = ('IDLE', 'WALK', 'WORK', 'CARRY', 'REPAIR', 'CELEB')
+FRAMES = {'IDLE': 6, 'WALK': 8, 'WORK': 10, 'CARRY': 8, 'REPAIR': 10, 'CELEB': 8}
+BG = (13, 22, 34)
+TILE = (26, 38, 54)
+INK = (229, 239, 245)
+MUTED = (149, 174, 190)
+AQUA = (76, 222, 228)
+AMBER = (246, 182, 86)
+⋮----
+def font(n: int, bold: bool = False)
+⋮----
+name = 'DejaVuSans-Bold.ttf' if bold else 'DejaVuSans.ttf'
+⋮----
+path = Path(folder) / name
+⋮----
+def tiles(root: Path)
+⋮----
+report = json.loads((root / 'review-report.json').read_text(encoding='utf-8'))
+expected = [f'CHR-TECH-{a}' for a in ACTIONS]
+⋮----
+records = {}
+⋮----
+action = item['asset_id'].split('-')[-1]
+⋮----
+rgba = im.convert('RGBA')
+frames = []
+⋮----
+frame = rgba.crop((x, y, x + 256, y + 256))
+⋮----
+def label(d, x, y, message, *, size=18, color=INK, bold=False)
+⋮----
+def checker(surface: Image.Image, xy, side, night: bool)
+⋮----
+base = (19, 32, 46, 255) if night else (203, 222, 232, 255)
+alt = (24, 40, 55, 255) if night else (192, 214, 227, 255)
+squares = Image.new('RGBA', (side, side), base)
+d = ImageDraw.Draw(squares)
+step = max(8, side // 5)
+⋮----
+def place(surface: Image.Image, frame: Image.Image, x, y, side)
+⋮----
+resized = frame.resize((side, side), Image.Resampling.LANCZOS)
+⋮----
+def board(records, out: Path)
+⋮----
+im = Image.new('RGBA', (W, H), BG + (255,))
+d = ImageDraw.Draw(im)
+⋮----
+# Most discriminative frames of each rigged cycle, sampled without changing their order.
+order = [0, len(frames)//4, len(frames)//2, 3*len(frames)//4]
+⋮----
+fx = x+22+k*132
+⋮----
+# Frame is rendered at a literal 42 px, centered on a 146 px test panel.
+⋮----
+ambiguity = item.get('automated_visual_risks', {}).get('foot_profile_ambiguous_frames', 0)
+note = (f'Leg visibility flagged: {ambiguity}/{len(frames)}' if action in ('WALK', 'CARRY')
+⋮----
+def animated(records, out: Path)
+⋮----
+still = []
+⋮----
+img = Image.new('RGB', (W,H), BG)
+d=ImageDraw.Draw(img)
+⋮----
+x=18+i*170
+⋮----
+def main()
+⋮----
+ap=argparse.ArgumentParser()
+⋮----
+args=ap.parse_args()
+⋮----
+rec=tiles(args.source)
 ```
 
 ## File: sprites/character_review_matrix.py

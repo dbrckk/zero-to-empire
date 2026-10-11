@@ -22,21 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T10:54:07Z
+Generated: 2026-10-11T10:56:10Z
 
 ### Git
 - Branch: `main`
-- Head: `f45371c779e8`
-- Commit date: 2026-10-11T12:53:51+02:00
-- Commit: art(tech): add reversible far-boot edge lighting for readable gait at 42dp
-- Tracked files: 1522
+- Head: `63acd5a579ac`
+- Commit date: 2026-10-11T12:55:50+02:00
+- Commit: ci(art): attach real-source 42px TECH day/night board and GIF to each canonical review run
+- Tracked files: 1523
 
 ### Recently changed files
-- `tools/sprites/rigged_tech_actions_v3.py`
-- `tools/sprites/rigged_tech_walk_v2.py`
-- `tools/android/character_preview_emulator_smoke.sh`
-- `tools/android/character_preview_pixel_audit.py`
-- `docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md`
+- `.github/workflows/tech-canonical-review-stage.yml`
+- `tools/sprites/build_tech_review_board.py`
 - `art/production/character-rig-review-candidates/review-report.json`
 - `art/production/character-rig-review-candidates/zte_chr_tech_carry_final-contact.png`
 - `art/production/character-rig-review-candidates/zte_chr_tech_carry_final-preview.gif`
@@ -44,7 +41,10 @@ Generated: 2026-10-11T10:54:07Z
 - `art/production/character-rig-review-candidates/zte_chr_tech_walk_final-contact.png`
 - `art/production/character-rig-review-candidates/zte_chr_tech_walk_final-preview.gif`
 - `art/production/character-rig-review-candidates/zte_chr_tech_walk_final.png`
-- `.github/workflows/tech-canonical-review-stage.yml`
+- `tools/sprites/rigged_tech_actions_v3.py`
+- `tools/sprites/rigged_tech_walk_v2.py`
+- `tools/android/character_preview_emulator_smoke.sh`
+- `tools/android/character_preview_pixel_audit.py`
 
 ### Project signals
 - `build.gradle.kts`

@@ -1,14 +1,13 @@
 # Change impact
 
-Base: d57f5c6cfc28b98360507cdfc6d6dddbfd20ed31
-Head: f45371c779e8292e9be28f18cff9db759c34947e
+Base: 2cb6e17e74afd41340233766208793f5bc2d33f7
+Head: 63acd5a579ac8c606ddf3bad7678f4a9b24b19a7
 
 ## Changed files
-- M tools/sprites/rigged_tech_actions_v3.py
-- M tools/sprites/rigged_tech_walk_v2.py
+- M .github/workflows/tech-canonical-review-stage.yml
 
 ## Affected areas
-- tools
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.
