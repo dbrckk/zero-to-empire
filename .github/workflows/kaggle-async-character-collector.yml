@@ -144,9 +144,17 @@ jobs:
           from pathlib import Path
           d=json.loads(Path('/tmp/kaggle-output/output/github-qa-report.json').read_text())
           rows=d if isinstance(d,list) else d.get('assets',d.get('sprites',d.get('results',[])))
-          failed=[r for r in rows if not r.get('pass')]
-          if failed: raise SystemExit('technical QA rejected: '+','.join(str(r.get('file')) for r in failed))
-          print('KAGGLE_ASYNC_QA_PASS='+str(len(rows)))
+          files={p.name for p in Path('/tmp/kaggle-output/output/candidates').glob('*_final.png')}
+          reported=[str(r.get('file') or '') for r in rows]
+          if len(reported)!=len(set(reported)) or set(reported)!=files:
+              raise SystemExit('incomplete/duplicate technical QA coverage')
+          passed=[r for r in rows if r.get('pass') is True]
+          failed=[r for r in rows if r.get('pass') is not True]
+          # Do not lose nine valid actions because one of twelve failed QA.
+          # Failed sprites are carried to controlled state as specific rejects,
+          # never as AWAITING_REVIEW candidates.
+          print('KAGGLE_ASYNC_QA_PASS='+str(len(passed)))
+          print('KAGGLE_ASYNC_QA_REJECT='+str(len(failed)))
           PY
           else
             python - <<'PY'
@@ -184,6 +192,18 @@ jobs:
               produced.update(stem_to_id.get(p.stem) for p in candidate_dir.glob('*_final.png'))
           produced.discard(None)
           rejected={}
+          qa_path=Path('/tmp/kaggle-output/output/github-qa-report.json')
+          if qa_path.exists():
+              qa=json.loads(qa_path.read_text())
+              qa_rows=qa if isinstance(qa,list) else qa.get('assets',qa.get('sprites',qa.get('results',[])))
+              for row in qa_rows:
+                  if row.get('pass') is True:
+                      continue
+                  aid=stem_to_id.get(Path(str(row.get('file') or '')).stem)
+                  if not aid:
+                      raise SystemExit('Unmapped rejected QA candidate: '+str(row.get('file')))
+                  produced.discard(aid)
+                  rejected[aid]='technical-qa:'+','.join(str(x) for x in row.get('issues',[]) or ['unknown'])
           for row in report:
               if str(row.get('status','')).upper()!='REJECT':
                   continue
@@ -192,7 +212,8 @@ jobs:
               retries=[str(x) for x in row.get('retry_reasons',[]) if str(x).strip()]
               if retries:
                   reason += '; retry-details=' + ' | '.join(dict.fromkeys(retries[-4:]))
-              rejected[aid]=reason
+              if aid not in produced and aid not in rejected:
+                  rejected[aid]=reason
           p=Path('art/production/controlled-character-regen-queue.json')
           q=json.loads(p.read_text())
           run_id=int(os.environ.get('SUBMIT_RUN_ID') or 0)
