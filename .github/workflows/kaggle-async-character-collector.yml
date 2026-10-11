@@ -43,13 +43,19 @@ jobs:
           from datetime import datetime, timezone
           active=str(d.get('status','')).upper()=='ACTIVE'
           submitted=str(d.get('submitted_at',''))
+          # Full 12-sheet bursts need roughly twice the compute of a six-action
+          # role. Do not cancel a healthy RUNNING GPU merely because the older
+          # six-action fixed timeout (150 min) has elapsed.
+          target_count=len(d.get('target_ids') or [])
+          stale_limit_minutes=360 if target_count >= 10 else 210
           stale=False
           if active and submitted:
               try:
                   ts=datetime.fromisoformat(submitted.replace('Z','+00:00'))
-                  stale=(datetime.now(timezone.utc)-ts).total_seconds() > 150*60
-              except Exception:
+                  stale=(datetime.now(timezone.utc)-ts).total_seconds() > stale_limit_minutes*60
+              except (ValueError, TypeError):
                   stale=False
+          print('stale_limit_minutes='+str(stale_limit_minutes))
           print('active='+str(active).lower())
           print('dispatch_token='+str(d.get('dispatch_token','')))
           print('submit_run_id='+str(d.get('submit_run_id','')))
