@@ -146,3 +146,53 @@ Do not attempt all 235 assets at once. The first implementation slice is deliber
 6. only then migrate animation and external-pack import lanes.
 
 This sequence prevents another unreviewed collage/sheet from being treated as production art and keeps provider automation independent from semantic mapping.
+
+## Current 235-asset character completion lane (October 2026)
+
+The unified orchestration design above is the desired long-term architecture.
+The currently operational strict-completion lane uses these explicit, auditable
+components while that migration is not complete:
+
+- Canonical state: `art/production/master-asset-queue.json` and
+  `docs/art/FINAL_AAA_SPRITE_MANIFEST.md` (235 assets excluding ONB-00).
+- Producer queue: `art/production/controlled-character-regen-queue.json`
+  with one IDLE identity anchor for each OP/LOG/ENG action family.
+- GPU owner: `art/production/kaggle-async-state.json`; an `ACTIVE` wave
+  must **not** be replaced by a code-only push or another producer request.
+- Producer: `Kaggle Mass Sprite Factory`; preflight skips duplicate active
+  waves. The controlled generator records either an image candidate or an
+  explicit rejection for every requested action.
+- Collector: `Kaggle Async Character Collector`, scheduled every five minutes.
+  Its in-progress job is never cancelled by a newer check; it uploads
+  `kaggle-async-character-batch` with candidate PNGs, action QA, generated
+  target report, full-frame character review and enlarged face/headgear strips.
+- Historical GPU collision: `Kaggle Superseded Character Evidence` stores
+  separately recovered older runs; recovered evidence **never** grants
+  automatic strict promotion or replaces the canonical active wave.
+- Review provenance: the master/controlled queue stores
+  `review_artifact_run_id`. Use the collector run, not an unrelated submit
+  run, when resolving an exact candidate image. Explicitly approved IDLE
+  replacements must come from the same role-family artifact.
+- Promotion: `promote-approved-kaggle-characters.yml` accepts only declared
+  manifest IDs with an exact reviewed artifact source; it performs runtime
+  conversion/QA, Android character audit, debug build, existing tests, lint
+  and release bundle validation **before** updating `strict_status`.
+- Semantics: `image-only` alpha, palette, gait and motion metrics may reject,
+  but cannot approve identity, actual carried objects, hand/tool contact,
+  animation readability, costume continuity or premium visual quality.
+  Review the full frames and enlarged head strips. Never claim 235/235 merely
+  because 235 image files or 235 technically passing QA rows exist.
+
+### Known defects from recovered OP/LOG wave
+
+The superseded OP/LOG source `38170846318` was recovered as artifact
+`38175207078`. Eight of twelve sheets were technical candidates, but
+action-level review identified identity/prop drift and unreadable motion;
+zero new actions were manually approved. The precise action-specific findings
+are in `art/production/op-log-superseded-batch-semantic-review.md` and
+`art/production/generation-rejection-ledger.json`. Later generation
+epochs must use this evidence to avoid silently repeating defects.
+
+The 235-item ledger is authoritative for progress. The latest live count
+must always be recomputed from `strict_status == DONE` rather than copied
+from documentation, summaries or producer-reported candidate counts.
