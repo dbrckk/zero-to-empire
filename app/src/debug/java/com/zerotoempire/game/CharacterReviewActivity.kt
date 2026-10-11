@@ -142,6 +142,19 @@ private fun CharacterReviewGallery() {
                                 "TECH ACTION: ${inspectedTechAction.name}",
                                 style = MaterialTheme.typography.labelMedium,
                             )
+                            Text(
+                                "STAGE FRAME: $worldFrame",
+                                style = MaterialTheme.typography.labelSmall,
+                            )
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                OutlinedButton(onClick = { playing = !playing }) {
+                                    Text(if (playing) "Pause stage" else "Play stage")
+                                }
+                                OutlinedButton(onClick = {
+                                    playing = false
+                                    worldFrame = (worldFrame + 1) % 1680
+                                }) { Text("Stage +1") }
+                            }
                             // At 320dp widths, two labeled buttons per row
                             // remain touchable; no hidden horizontal scrolling.
                             ReviewedCharacterAction.entries.chunked(2).forEach { rowActions ->
