@@ -58,6 +58,7 @@ def build(queue:dict)->dict:
             "recorded_reason":reason,
             "canonical_last_generator":a.get("last_generator"),
             "canonical_last_run_id":a.get("last_run_id"),
+            "canonical_review_artifact_run_id":a.get("review_artifact_run_id"),
             "alternate_tech_renderer_available":alternate,
             "alternate_is_not_canonical_approval":True,
             "candidate_evidence_verified":False,
@@ -101,7 +102,7 @@ def markdown(report:dict)->str:
         action=row["next_step"].replace("|","/")
         lines.append(f"| {n} | `{row['asset_id']}` | "
                      f"{row['canonical_pipeline_status']} | "
-                     f"{row['canonical_last_run_id'] or 'unavailable'} | {action} |")
+                     f"{row['canonical_review_artifact_run_id'] or row['canonical_last_run_id'] or 'unavailable'} | {action} |")
     lines+=["","## Per-action acceptance criteria",""]
     for action,checks in REVIEW.items():
         lines.append(f"- **{action}**: {checks[0]}; {checks[1]}.")
