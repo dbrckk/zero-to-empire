@@ -4508,6 +4508,11 @@ motion=lower_body_motion(frames)
 floors={'WORK':.10,'CARRY':.12,'REPAIR':.09,'CELEB':.10,'IDLE':.025}
 floor=floors.get(action,.05)
 ⋮----
+changes=[1-x for x in ious]
+# Reject a "celebration" whose only visible change is the last frame.
+# Positive motion spread across the loop is needed for a readable gesture.
+expressive=sum(delta>=.14 for delta in changes)
+⋮----
 def appearance_signature(cell)
 ⋮----
 rgba=cell.convert('RGBA');a=rgba.getchannel('A');bb=a.getbbox()

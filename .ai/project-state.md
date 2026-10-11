@@ -31,21 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T21:12:25Z
+Generated: 2026-10-11T21:14:33Z
 
 ### Git
 - Branch: `main`
-- Head: `2c5b8faf84aa`
-- Commit date: 2026-10-11T23:12:07+02:00
-- Commit: docs(art): document visual rejection of recovered OP LOG candidate actions
+- Head: `111f6c308cc2`
+- Commit date: 2026-10-11T23:14:15+02:00
+- Commit: ci(art): inspect newer OP LOG GPU wave after superseded artifact recovery
 - Tracked files: 1529
 
 ### Recently changed files
+- `ops/kaggle-collector-trigger.txt`
+- `tools/assets/test_workflow_policy.py`
+- `tools/sprites/kaggle_character_sheet_factory_v1.py`
 - `art/production/op-log-superseded-batch-semantic-review.md`
 - `art/production/generation-rejection-ledger.json`
-- `art/production/kaggle-async-orphan-waves.json`
-- `ops/kaggle-orphan-trigger.txt`
-- `tools/assets/test_workflow_policy.py`
 
 ### Project signals
 - `build.gradle.kts`

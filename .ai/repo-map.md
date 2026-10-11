@@ -27341,6 +27341,8 @@ def test_kaggle_character_generator_has_clean_main_tail(self)
 def test_kaggle_character_generator_reapplies_scaffold_each_frame(self)
 def test_kaggle_character_generator_adds_semantic_scaffolds_for_hard_actions(self)
 ⋮----
+def test_character_qa_requires_carry_stride_and_progressive_celebration(self)
+⋮----
 def test_carry_scaffold_adds_deterministic_lower_body_motion(self)
 ⋮----
 def test_character_role_anchor_is_validated_before_action_frames(self)
@@ -30558,6 +30560,11 @@ motion=lower_body_motion(frames)
 ⋮----
 floors={'WORK':.10,'CARRY':.12,'REPAIR':.09,'CELEB':.10,'IDLE':.025}
 floor=floors.get(action,.05)
+⋮----
+changes=[1-x for x in ious]
+# Reject a "celebration" whose only visible change is the last frame.
+# Positive motion spread across the loop is needed for a readable gesture.
+expressive=sum(delta>=.14 for delta in changes)
 ⋮----
 def appearance_signature(cell)
 ⋮----
