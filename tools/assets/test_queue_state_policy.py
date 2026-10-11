@@ -171,6 +171,36 @@ class DispatchCorrelationTests(unittest.TestCase):
         orchestrator = self._load_orchestrator("")
         self.assertEqual(orchestrator.CHARACTER_BATCH_SIZE, 12)
 
+    def test_character_priority_includes_idle_identity_context(self) -> None:
+        orchestrator = self._load_orchestrator("")
+        controlled = {
+            "targets": [
+                {"id": "CHR-OP-WALK", "status": "PENDING_KAGGLE"},
+                {"id": "CHR-OP-WORK", "status": "PENDING_KAGGLE"},
+                {"id": "CHR-OP-IDLE", "status": "DONE"},
+            ]
+        }
+        saved = {}
+        original_load = orchestrator.load_json
+        original_save = orchestrator.save_json
+        try:
+            orchestrator.load_json = lambda path, default=None: controlled
+            orchestrator.save_json = lambda path, value: saved.update({"value": value})
+            count = orchestrator.prioritize_controlled_character_targets(
+                ["CHR-OP-WALK", "CHR-OP-WORK"]
+            )
+        finally:
+            orchestrator.load_json = original_load
+            orchestrator.save_json = original_save
+        self.assertEqual(count, 3)
+        targets = saved["value"]["targets"]
+        self.assertEqual([x["id"] for x in targets[:3]],
+                         ["CHR-OP-IDLE", "CHR-OP-WALK", "CHR-OP-WORK"])
+        self.assertEqual(targets[0]["status"], "PENDING_KAGGLE")
+        self.assertTrue(targets[0]["autofactory_context_only"])
+        self.assertNotIn("autofactory_context_only", targets[1])
+        self.assertNotIn("autofactory_context_only", targets[2])
+
     def test_character_epoch_allows_three_informed_attempts(self) -> None:
         orchestrator = self._load_orchestrator("")
         self.assertEqual(orchestrator.CHARACTER_EPOCH_ATTEMPT_LIMIT, 3)
