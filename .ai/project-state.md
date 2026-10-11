@@ -22,13 +22,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T09:41:33Z
+Generated: 2026-10-11T09:46:29Z
 
 ### Git
 - Branch: `main`
-- Head: `cf5e6795b92c`
-- Commit date: 2026-10-11T11:41:19+02:00
-- Commit: docs(art): root-cause clipped TECH sprite screenshots and inaccessible Android QA toggle
+- Head: `335d6d090576`
+- Commit date: 2026-10-11T11:46:13+02:00
+- Commit: docs(art): close Android full-body clipping incident with verified six-action QA evidence
 - Tracked files: 1522
 
 ### Recently changed files
@@ -36,7 +36,6 @@ Generated: 2026-10-11T09:41:33Z
 - `tools/android/character_preview_emulator_smoke.sh`
 - `tools/android/character_preview_pixel_audit.py`
 - `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
-- `.github/workflows/tech-candidate-android-preview.yml`
 
 ### Project signals
 - `build.gradle.kts`
