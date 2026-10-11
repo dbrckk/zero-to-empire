@@ -120,6 +120,13 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("row.get('retry_reasons',[])", text)
         self.assertIn("dict.fromkeys(retries[-4:])", text)
 
+    def test_async_collector_allows_large_role_bursts_to_finish(self):
+        workflow = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
+        self.assertIn("target_count=len(d.get('target_ids') or [])", workflow)
+        self.assertIn("stale_limit_minutes=360 if target_count >= 10 else 210", workflow)
+        self.assertIn("stale_limit_minutes*60", workflow)
+        self.assertNotIn("total_seconds() > 150*60", workflow)
+
     def test_async_collector_releases_wave_when_completed_output_validation_fails(self):
         text = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
         condition = "steps.kernel.outputs.failed == 'true' || (steps.kernel.outputs.ready == 'true' && failure())"
