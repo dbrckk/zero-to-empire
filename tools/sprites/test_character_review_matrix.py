@@ -35,6 +35,19 @@ class MatrixTests(unittest.TestCase):
         self.assertTrue(report['items'][0]['alternate_is_not_canonical_approval'])
         self.assertIn('semantic rejection',markdown(report))
 
+    def test_live_markdown_does_not_repeat_stale_tech_rejection_after_promotion(self):
+        q=fake_queue()
+        for asset in q["assets"]:
+            if str(asset.get("id","")).startswith("CHR-TECH-"):
+                asset["strict_status"]="DONE"
+                asset["pipeline_status"]="DONE"
+        report=build(q)
+        text=markdown(report)
+        self.assertEqual(report["strict_done"],219)
+        self.assertFalse(any(x["role"]=="TECH" for x in report["items"]))
+        self.assertIn("TECH family is already outside the pending strict-review backlog",text)
+        self.assertNotIn("Canonical semantic rejection remains recorded for: CHR-TECH-WALK",text)
+
     def test_cannot_inflate_canonical_queue(self):
         q=fake_queue()
         q['assets'].append(q['assets'][-1])
