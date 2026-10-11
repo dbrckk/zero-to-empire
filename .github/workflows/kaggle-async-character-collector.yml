@@ -13,9 +13,11 @@ permissions:
   contents: write
   actions: write
 
+# A scheduled check must never cancel a collector while it is downloading
+# and reconciling a finished GPU batch. Queue the next check instead.
 concurrency:
   group: kaggle-async-character-collector
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   collect:
