@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T11:02:24Z
+Generated: 2026-10-11T11:05:42Z
 
 ### Git
 - Branch: `main`
-- Head: `317704d2da68`
-- Commit date: 2026-10-11T13:02:11+02:00
-- Commit: docs(art): document TECH 2.5D silhouette and six-action visual direction
+- Head: `d8cf8087e33d`
+- Commit date: 2026-10-11T13:05:28+02:00
+- Commit: art(tech): lift graphite material midtones for legibility at 42dp without changing source alpha
 - Tracked files: 1524
 
 ### Recently changed files
+- `tools/sprites/rigged_tech_actions_v3.py`
 - `docs/art/TECH_CHARACTER_VISUAL_DIRECTION.md`
 - `art/production/character-rig-review-candidates/review-report.json`
 - `art/production/character-rig-review-candidates/zte_chr_tech_carry_final-contact.png`
@@ -42,7 +43,6 @@ Generated: 2026-10-11T11:02:24Z
 - `art/production/character-rig-review-candidates/zte_chr_tech_walk_final.png`
 - `.github/workflows/tech-canonical-review-stage.yml`
 - `tools/sprites/rigged_tech_walk_v2.py`
-- `docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md`
 
 ### Project signals
 - `build.gradle.kts`

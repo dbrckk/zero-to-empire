@@ -2,11 +2,11 @@
 
 - Index mode: incremental
 - Files indexed: 247
-- Files reparsed this run: 0
-- Symbols: 1287
+- Files reparsed this run: 1
+- Symbols: 1288
 - Internal import edges: 44
-- Impacted files: 0
-- Selected tests: 0
+- Impacted files: 5
+- Selected tests: 4
 
 ## Languages
 - kotlin: 160 files
@@ -30,9 +30,9 @@
 - tools/sprites/asset_wave_orchestrator.py: 16 symbols
 - tools/sprites/test_package_tech_actions_runtime.py: 16 symbols
 - app/src/main/java/com/zerotoempire/game/IdentitySystems.kt: 15 symbols
+- tools/sprites/rigged_tech_actions_v3.py: 15 symbols
 - app/src/main/java/com/zerotoempire/game/GameFeel.kt: 14 symbols
 - app/src/main/java/com/zerotoempire/game/GrowthTelemetry.kt: 14 symbols
-- tools/sprites/autonomous_walk.py: 14 symbols
 
 ## Agent routing
 - Read impact.json first after project/change context.
@@ -43,9 +43,9 @@
 ## ast-grep enrichment
 - ast-grep outline: available
 - AST index mode: incremental
-- AST files reparsed this run: 0
+- AST files reparsed this run: 1
 - outline files retained: 252
-- top-level items retained: 3495
+- top-level items retained: 3497
 - direct members retained: 807
 - symbol shards: 26
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard

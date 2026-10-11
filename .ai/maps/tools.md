@@ -6093,6 +6093,20 @@ HIP_Y = core.HIP_Y
 # Static actions and the shipped legacy WALK renderer are untouched.
 FAR_FOOT_LANE_PX = 22.0
 ⋮----
+# Reversible, REVIEW-ONLY material lift for the dark graphite uniform.
+# Pixels at 39-42dp lose most of their shadow detail in the night city.
+# Gamma 0.76 restores midtone separation while keeping pure black/white,
+# all alpha, joint geometry, props and the original skin file unchanged.
+TECH_REVIEW_MATERIAL_GAMMA = 0.76
+⋮----
+def grade_review_kit(kit: dict[str, Image.Image]) -> dict[str, Image.Image]
+⋮----
+"""Create lifted review textures without ever mutating the source atlas."""
+gamma = TECH_REVIEW_MATERIAL_GAMMA
+⋮----
+lut = [round(255 * ((i / 255) ** gamma)) for i in range(256)]
+result = {}
+⋮----
 def spine_lean(t: float, action: str) -> float
 ⋮----
 """Cyclic, phase-coupled spine bend in radians. Foot/hip world anchors
@@ -6248,7 +6262,7 @@ kinetic = (not violations and grounded and grip_ok and legible_motion and
 ⋮----
 def build_action(skin: Path, out: Path, action: str, frames: int = 24, fps: int = 12)
 ⋮----
-kit = core.load_kit(skin)
+kit = grade_review_kit(core.load_kit(skin))
 ⋮----
 asset_id = f"CHR-TECH-{action}"
 # Rotate WORK's loop start to a low-motion seam, without interpolating,
