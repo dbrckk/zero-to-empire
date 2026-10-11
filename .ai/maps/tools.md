@@ -41,6 +41,7 @@ The content is organized as follows:
 android/
   audit_character_runtime.py
   character_preview_emulator_smoke.sh
+  character_preview_pixel_audit.py
   emulator_functional_smoke.sh
   test_ui_click_target.py
   test_ui_dump_retry.py
@@ -457,6 +458,10 @@ for action in IDLE WALK WORK CARRY REPAIR CELEBRATE; do
   echo "CHARACTER_PREVIEW_TECH_ACTION_CAPTURE=$action"
 done
 echo "CHARACTER_PREVIEW_TECH_ACTION_SELECTOR_PASS=6"
+# A nonempty screenshot is insufficient: reject six identical actor renders
+# even when the dropdown labels have changed. Crop only the compact actor
+# pixels beneath the 42dp QA caption, outside all interactive text.
+python3 "$SCRIPT_DIR/character_preview_pixel_audit.py" "$OUT"
 
 adb logcat -d > "$OUT/logcat.txt"
 if grep -E "FATAL EXCEPTION|AndroidRuntime.*FATAL" "$OUT/logcat.txt"; then
@@ -464,6 +469,56 @@ if grep -E "FATAL EXCEPTION|AndroidRuntime.*FATAL" "$OUT/logcat.txt"; then
   exit 1
 fi
 echo "CHARACTER_PREVIEW_EMULATOR_PASS=1"
+```
+
+## File: android/character_preview_pixel_audit.py
+```python
+#!/usr/bin/env python3
+"""Debug-only: prove six TECH action screenshots contain distinct actor pixels.
+
+The gate is deliberately semantic-neutral: changing action text is NOT proof
+that the rendered sprite changed. This script crops the real 42dp night
+preview by locating its XML caption, outside all action labels/buttons, then
+checks that there is a nonempty actor and that each action differs visibly.
+It cannot grant strict DONE or visual release approval.
+"""
+⋮----
+ACTIONS = ("IDLE", "WALK", "WORK", "CARRY", "REPAIR", "CELEBRATE")
+LABEL = "NIGHT · 42 dp"
+BOUNDS = re.compile(r"^\[(\d+),(\d+)\]\[(\d+),(\d+)\]$")
+MIN_VISIBLE_PIXELS = 120
+MIN_DIFFERENT_PIXELS = 150
+TOLERANCE = 25
+⋮----
+def review_crop(folder: Path, action: str) -> tuple[Image.Image, int]
+⋮----
+xml = folder / f"tech-action-{action}.xml"
+shot = folder / f"tech-stage-{action}.png"
+root = ET.parse(xml).getroot()
+text_values = [n.attrib.get("text", "") for n in root.iter("node")]
+⋮----
+frame_values = [v.split(":", 1)[1].strip() for v in text_values
+⋮----
+labels = [n for n in root.iter("node") if n.attrib.get("text") == LABEL]
+⋮----
+rect = BOUNDS.fullmatch(labels[0].attrib.get("bounds", ""))
+⋮----
+height = y1 - y0
+⋮----
+rgb = source.convert("RGB")
+half_width = round(height * 2.14)
+⋮----
+crop = rgb.crop((left, top, right, bottom))
+base = crop.getpixel((0, 0))
+visible = sum(
+⋮----
+def audit(folder: Path) -> None
+⋮----
+renders = [review_crop(folder, action) for action in ACTIONS]
+⋮----
+second = renders[other][0]
+⋮----
+different = sum(
 ```
 
 ## File: android/emulator_functional_smoke.sh

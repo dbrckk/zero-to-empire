@@ -1,13 +1,16 @@
 # Change impact
 
-Base: 3937338fdb86dfdded0fba354c1426f2dfbd8ca6
-Head: 307bdedc2d06ffd3854e4b792528bfe3fe78a262
+Base: da4ff81ee7c5fd1dc2361c3d9b572d2fe1318b99
+Head: f1ec307730f9a4dbe33db7f7fd69dbe43bfd39dd
 
 ## Changed files
-- M docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md
+- M .github/workflows/tech-candidate-android-preview.yml
+- M tools/android/character_preview_emulator_smoke.sh
+- A tools/android/character_preview_pixel_audit.py
 
 ## Affected areas
-- docs
+- .github
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.
