@@ -53,6 +53,8 @@ private fun CharacterReviewGallery() {
     var worldFrame by remember { mutableIntStateOf(0) }
     var playing by remember { mutableStateOf(true) }
     var daylightStage by remember { mutableStateOf(false) }
+    var technicianOnly by remember { mutableStateOf(false) }
+    var inspectedTechAction by remember { mutableStateOf(ReviewedCharacterAction.WALK) }
     LaunchedEffect(playing) {
         while (playing) {
             delay(100L)
@@ -132,6 +134,32 @@ private fun CharacterReviewGallery() {
                             if (daylightStage) "DAYLIGHT CONTRAST REVIEW" else "NIGHT CONTRAST REVIEW",
                             style = MaterialTheme.typography.labelMedium,
                         )
+                        OutlinedButton(onClick = { technicianOnly = !technicianOnly }) {
+                            Text(if (technicianOnly) "Show all roles" else "TECH only")
+                        }
+                        if (technicianOnly) {
+                            Text(
+                                "TECH ACTION: ${inspectedTechAction.name}",
+                                style = MaterialTheme.typography.labelMedium,
+                            )
+                            // At 320dp widths, two labeled buttons per row
+                            // remain touchable; no hidden horizontal scrolling.
+                            ReviewedCharacterAction.entries.chunked(2).forEach { rowActions ->
+                                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    rowActions.forEach { action ->
+                                        OutlinedButton(
+                                            modifier = Modifier.weight(1f),
+                                            onClick = { inspectedTechAction = action },
+                                        ) {
+                                            Text(
+                                                action.name,
+                                                style = MaterialTheme.typography.labelSmall,
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         // Only the real city character composable is used here.
                         // CI injects review-only textures into the isolated APK,
                         // never the shipped production masters.
@@ -154,6 +182,12 @@ private fun CharacterReviewGallery() {
                                 worldFrame = worldFrame,
                                 reducedMotion = false,
                                 modifier = Modifier.fillMaxSize(),
+                                roleFilter = if (technicianOnly) {
+                                    ReviewedCharacterRole.TECHNICIAN
+                                } else {
+                                    null
+                                },
+                                actionOverride = if (technicianOnly) inspectedTechAction else null,
                             )
                         }
                     }
