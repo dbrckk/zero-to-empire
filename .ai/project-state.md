@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T09:38:37Z
+Generated: 2026-10-11T09:41:33Z
 
 ### Git
 - Branch: `main`
-- Head: `9c06bc3b8b1b`
-- Commit date: 2026-10-11T11:38:25+02:00
-- Commit: fix(android-qa): require fully visible daylight toggle before tapping on scrolled emulator
+- Head: `cf5e6795b92c`
+- Commit date: 2026-10-11T11:41:19+02:00
+- Commit: docs(art): root-cause clipped TECH sprite screenshots and inaccessible Android QA toggle
 - Tracked files: 1522
 
 ### Recently changed files
+- `docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md`
 - `tools/android/character_preview_emulator_smoke.sh`
 - `tools/android/character_preview_pixel_audit.py`
 - `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
 - `.github/workflows/tech-candidate-android-preview.yml`
-- `docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md`
 
 ### Project signals
 - `build.gradle.kts`
