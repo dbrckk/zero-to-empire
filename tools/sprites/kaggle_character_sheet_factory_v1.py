@@ -14,6 +14,7 @@ import torch
 from PIL import Image,ImageDraw,ImageFilter
 from diffusers import FluxPipeline,FluxImg2ImgPipeline,FluxTransformer2DModel
 from transformers import T5EncoderModel
+from character_semantic_gate import clip_risk
 
 ROOT=Path(__file__).resolve().parents[2]
 MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
@@ -505,6 +506,12 @@ def main():
   if not action_ok:
    print(f"KAGGLE_CHR_REJECTED={i['id']} reason={action_why}",flush=True)
    report.append({'id':i['id'],'status':'REJECT','reason':action_why,'frames':len(frames),'retry_reasons':retry_reasons});continue
+  visual_risk=clip_risk(frames)
+  if visual_risk.get('risk_level')=='BLOCKING':
+   risk_reason='image-risk:'+','.join(visual_risk.get('flags') or ['UNKNOWN'])
+   print(f"KAGGLE_CHR_REJECTED={i['id']} reason={risk_reason}",flush=True)
+   report.append({'id':i['id'],'status':'REJECT','reason':risk_reason,'frames':len(frames),
+                  'visual_risk':visual_risk,'retry_reasons':retry_reasons});continue
   why=why+' '+action_why
   identity_distance=0.0
   ref=role_reference_cell.get(i['role'])
@@ -520,7 +527,7 @@ def main():
   sheet=make_sheet(frames)
   if sheet.size!=(1024,1024):raise RuntimeError(f'bad atlas size {sheet.size}')
   p=INCOMING/f"{i['stem']}.png";sheet.save(p,'PNG',optimize=True)
-  print(f"KAGGLE_CHR_VALIDATED={p.relative_to(ROOT)} {why} atlas=1024x1024",flush=True);report.append({'id':i['id'],'status':'CANDIDATE','reason':why,'frames':len(frames),'atlas':'1024x1024','cell':'256x256','file':p.name,'cross_animation_appearance_distance':round(identity_distance,2),'retry_reasons':retry_reasons})
+  print(f"KAGGLE_CHR_VALIDATED={p.relative_to(ROOT)} {why} atlas=1024x1024",flush=True);report.append({'id':i['id'],'status':'CANDIDATE','reason':why,'frames':len(frames),'atlas':'1024x1024','cell':'256x256','file':p.name,'cross_animation_appearance_distance':round(identity_distance,2),'visual_risk':visual_risk,'retry_reasons':retry_reasons})
  REPORT.write_text(json.dumps(report,indent=2),encoding='utf-8')
  print(f"KAGGLE_CHARACTER_CANDIDATES={sum(r['status']=='CANDIDATE' for r in report)} ATTEMPTED={len(items)}",flush=True)
 if __name__=='__main__':main()
