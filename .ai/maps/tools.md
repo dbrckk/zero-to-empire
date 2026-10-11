@@ -1603,12 +1603,41 @@ x = assets.get(aid)
 ⋮----
 attempts = int(x.get("attempts") or 0)
 ⋮----
-def prioritize_controlled_character_targets(ids: list[str]) -> None
+def prioritize_controlled_character_targets(ids: list[str]) -> int
 ⋮----
-"""Keep exact dispatched assets first so Kaggle --count matches dispatch state."""
-selected = set(ids)
+"""Put dispatched actions first and include one IDLE identity anchor per role.
+
+    Strict-DONE IDLE sheets are allowed as context-only regeneration targets:
+    they do not consume strict progress or become dispatched in the master
+    queue, but producing them in the same Kaggle run gives semantic review a
+    complete six-action family and lets promotion replace a legacy IDLE sheet
+    with bytes from the exact same identity generation epoch.
+    """
+ordered_ids = list(dict.fromkeys(str(aid).upper() for aid in ids if aid))
+selected = set(ordered_ids)
 ⋮----
-targets = controlled.get("targets", [])
+targets = controlled.setdefault("targets", [])
+by_target = {
+⋮----
+groups: list[str] = []
+⋮----
+parts = aid.split("-")
+⋮----
+group = "-".join(parts[:2])
+⋮----
+context_ids: list[str] = []
+⋮----
+idle = f"{group}-IDLE"
+⋮----
+item = by_target.get(idle)
+⋮----
+item = {
+⋮----
+item = by_target.get(aid)
+⋮----
+priority: list[str] = []
+⋮----
+rank = {aid: i for i, aid in enumerate(priority)}
 ⋮----
 def building_family_ids(group: str) -> list[str]
 ⋮----
@@ -1632,6 +1661,7 @@ group_targets = []
 row = {"id": x["id"], "status": "PENDING_KAGGLE"}
 ⋮----
 dispatched = mark_dispatch(queue, [x["id"] for x in targets], "kaggle-character-sheet")
+producer_count = prioritize_controlled_character_targets(dispatched)
 ⋮----
 def next_group(queue: dict[str, Any], lane: str, priority: list[str]) -> str | None
 ⋮----
@@ -1700,6 +1730,8 @@ repair_ids=active_pollinations_repair()
 character_pending = pending_ids_from_controlled(CHARACTER_QUEUE, queue)
 ⋮----
 ids = mark_dispatch(queue, character_pending[:CHARACTER_BATCH_SIZE], "kaggle-character-sheet")
+⋮----
+producer_count = prioritize_controlled_character_targets(ids)
 ⋮----
 first_group = next_group(queue, "kaggle-character-sheet", CHARACTER_PRIORITY)
 ⋮----

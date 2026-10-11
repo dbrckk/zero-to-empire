@@ -1,7 +1,7 @@
 # Change impact
 
-Base: ba698afdae84cc3fe7a2504fa86c1dc389fa6a96
-Head: 2c4642ad0d7cd8e4882acde2cae306528547e0e9
+Base: a500859d33796611fae93eac3eb8a11cf085df33
+Head: 838decde962a3fbaebe208bf49c237fa8c8df441
 
 ## Changed files
 - M tools/assets/test_queue_state_policy.py

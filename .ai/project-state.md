@@ -22,20 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T18:18:57Z
+Generated: 2026-10-11T18:20:21Z
 
 ### Git
 - Branch: `main`
-- Head: `2c4642ad0d7c`
-- Commit date: 2026-10-11T20:18:37+02:00
-- Commit: test(art): lock canonical queue policy to v1.18
+- Head: `838decde962a`
+- Commit date: 2026-10-11T20:19:53+02:00
+- Commit: test(art): require IDLE context in character family waves
 - Tracked files: 1524
 
 ### Recently changed files
 - `tools/assets/test_queue_state_policy.py`
+- `tools/sprites/asset_wave_orchestrator.py`
 - `tools/sprites/asset_queue_utils.py`
 - `ops/kaggle-collector-trigger.txt`
-- `tools/assets/test_workflow_policy.py`
 
 ### Project signals
 - `build.gradle.kts`
