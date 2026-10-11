@@ -67,7 +67,7 @@ jobs:
           set -euo pipefail
           slug="${KAGGLE_USERNAME}/${{ steps.gate.outputs.kernel_slug }}"
           status="$(kaggle kernels status "$slug" 2>&1 || true)"
-          echo "$status"
+          printf '%s\n' "$status" | tee /tmp/kaggle-kernel-status.txt
           if echo "$status" | grep -qi 'complete'; then
             echo 'ready=true' >> "$GITHUB_OUTPUT"
             exit 0
@@ -83,6 +83,14 @@ jobs:
             exit 0
           fi
           echo 'ready=false' >> "$GITHUB_OUTPUT"
+      - name: Upload kernel observation
+        if: steps.gate.outputs.active == 'true' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kaggle-async-kernel-observation-${{ steps.gate.outputs.submit_run_id }}
+          path: /tmp/kaggle-kernel-status.txt
+          if-no-files-found: warn
+          retention-days: 7
       - name: Download completed output
         if: steps.kernel.outputs.ready == 'true'
         run: |
