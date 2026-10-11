@@ -59,6 +59,7 @@ sprites/
   audit_character_candidates.py
   audit_complete_sprite_manifest.py
   autonomous_walk.py
+  build_character_review_panels.py
   build_sprite_contact_sheet.py
   build_tech_review_board.py
   character_review_matrix.py
@@ -2069,6 +2070,78 @@ args=parser.parse_args()
 settings=WalkSettings(asset_id=args.asset_id,frames=args.frames,fps=args.fps,stride=args.stride,clearance=args.clearance,stance_fraction=args.stance,palette=args.palette)
 manifest=export(args.output, settings, args.studio)
 qa=manifest['qa']
+```
+
+## File: sprites/build_character_review_panels.py
+```python
+#!/usr/bin/env python3
+"""Make lossless action-by-action frame sheets for human character review.
+
+Outputs are review evidence only. This tool never promotes or edits sprites.
+"""
+⋮----
+ACTIONS = {"idle": 6, "walk": 8, "work": 10, "carry": 8, "repair": 10, "celeb": 8}
+PATTERN = re.compile(r"^zte_chr_(op|tech|log|eng)_(idle|walk|work|carry|repair|celeb)_final\.png$")
+CELL = 256
+TILE = 276
+ROW_HEIGHT = 306
+LABEL_WIDTH = 154
+HEADER_HEIGHT = 76
+⋮----
+def checkerboard() -> Image.Image
+⋮----
+result = Image.new("RGB", (CELL, CELL), (221, 225, 232))
+draw = ImageDraw.Draw(result)
+⋮----
+def readable_font(size: int) -> ImageFont.ImageFont
+⋮----
+def create_panel(role: str, assets: dict[str, Path], output: Path, qa: dict[str, dict]) -> dict
+⋮----
+font = readable_font(15)
+heading = readable_font(21)
+labels = readable_font(18)
+width = LABEL_WIDTH + 10 * TILE
+height = HEADER_HEIGHT + len(ACTIONS) * ROW_HEIGHT
+sheet = Image.new("RGB", (width, height), (24, 27, 34))
+draw = ImageDraw.Draw(sheet)
+⋮----
+base = checkerboard()
+status: dict = {}
+⋮----
+y = HEADER_HEIGHT + row * ROW_HEIGHT
+⋮----
+path = assets.get(action)
+qa_row = qa.get(path.name, {}) if path else {}
+is_pass = qa_row.get("pass") is True
+label_color = (105, 202, 157) if is_pass else (236, 184, 97) if path else (166, 170, 179)
+⋮----
+issues = list(qa_row.get("issues", []) or [])
+⋮----
+rgba = src.convert("RGBA")
+⋮----
+fx = (frame_idx % 4) * CELL
+fy = (frame_idx // 4) * CELL
+tile = rgba.crop((fx, fy, fx + CELL, fy + CELL))
+bx = LABEL_WIDTH + frame_idx * TILE + 10
+by = y + 23
+background = base.copy()
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser()
+⋮----
+args = parser.parse_args()
+qa: dict[str, dict] = {}
+⋮----
+data = json.loads(args.qa_report.read_text(encoding="utf-8"))
+rows = data if isinstance(data, list) else data.get("assets", [])
+qa = {str(row.get("file", "")): row for row in rows}
+by_role: dict[str, dict[str, Path]] = {}
+⋮----
+match = PATTERN.fullmatch(path.name)
+⋮----
+results = [create_panel(role, assets, args.output_dir / f"review-frames-{role}.png", qa)
+summary = {"schema_version": 1, "review_only": True, "roles": results}
 ```
 
 ## File: sprites/build_sprite_contact_sheet.py

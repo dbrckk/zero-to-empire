@@ -72,10 +72,9 @@
         "app/src/test/java/com/zerotoempire/game/ProgressionCycleTest.kt",
         "app/src/test/java/com/zerotoempire/game/UpgradeProgressionTest.kt",
         "app/src/test/java/com/zerotoempire/game/WeeklyChallengeTest.kt",
-        "tools/sprites/integrate_fx06_runtime.py",
         "tools/sprites/pollinations_building_factory.py"
       ],
-      "in_degree": 57,
+      "in_degree": 56,
       "out_degree": 7,
       "path": "app/src/main/java/com/zerotoempire/game/GameEngine.kt"
     },
@@ -101,6 +100,7 @@
         "tools/process_final_assets.py",
         "tools/sprites/audit_character_candidates.py",
         "tools/sprites/autonomous_walk.py",
+        "tools/sprites/build_character_review_panels.py",
         "tools/sprites/build_sprite_contact_sheet.py",
         "tools/sprites/build_tech_review_board.py",
         "tools/sprites/export_tech_canonical_review.py",
@@ -132,7 +132,7 @@
         "tools/sprites/test_pollinations_character_sheet_factory.py",
         "tools/sprites/test_temporal_sprite_audit.py"
       ],
-      "in_degree": 41,
+      "in_degree": 42,
       "out_degree": 7,
       "path": "app/src/main/java/com/zerotoempire/game/GameRepository.kt"
     },
@@ -349,10 +349,9 @@
         "app/src/main/java/com/zerotoempire/game/PremiumSprites.kt",
         "app/src/main/java/com/zerotoempire/game/UpgradeTreeUi.kt",
         "app/src/main/java/com/zerotoempire/game/ViralUi.kt",
-        "tools/sprites/integrate_fx05_runtime.py",
-        "tools/sprites/integrate_fx06_runtime.py"
+        "tools/sprites/integrate_fx05_runtime.py"
       ],
-      "in_degree": 31,
+      "in_degree": 30,
       "out_degree": 0,
       "path": "app/src/main/java/com/zerotoempire/game/GameTheme.kt"
     },
@@ -416,33 +415,6 @@
       "path": "app/src/main/java/com/zerotoempire/game/Managers.kt"
     },
     {
-      "dependencies": [
-        "app/src/main/java/com/zerotoempire/game/GameEconomy.kt",
-        "app/src/main/java/com/zerotoempire/game/GameEngine.kt",
-        "app/src/main/java/com/zerotoempire/game/GameFeel.kt",
-        "app/src/main/java/com/zerotoempire/game/PremiumSfx.kt"
-      ],
-      "dependents": [
-        "app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt",
-        "app/src/main/java/com/zerotoempire/game/GameEngine.kt",
-        "app/src/main/java/com/zerotoempire/game/GameRepository.kt",
-        "app/src/main/java/com/zerotoempire/game/GameViewModel.kt",
-        "app/src/main/java/com/zerotoempire/game/GrowthRuntime.kt",
-        "app/src/main/java/com/zerotoempire/game/IdentityUi.kt",
-        "app/src/main/java/com/zerotoempire/game/PremiumGameFeel.kt",
-        "app/src/main/java/com/zerotoempire/game/PremiumGameFeelV2.kt",
-        "app/src/main/java/com/zerotoempire/game/PremiumGameUiV2.kt",
-        "app/src/main/java/com/zerotoempire/game/PremiumMotion.kt",
-        "app/src/main/java/com/zerotoempire/game/ProgressionSystems.kt",
-        "app/src/test/java/com/zerotoempire/game/EndgameProgressionTest.kt",
-        "app/src/test/java/com/zerotoempire/game/IdentitySystemsTest.kt",
-        "tools/sprites/integrate_fx06_runtime.py"
-      ],
-      "in_degree": 14,
-      "out_degree": 4,
-      "path": "app/src/main/java/com/zerotoempire/game/IdentitySystems.kt"
-    },
-    {
       "dependencies": [],
       "dependents": [
         "app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt",
@@ -492,6 +464,32 @@
       "in_degree": 14,
       "out_degree": 3,
       "path": "app/src/main/java/com/zerotoempire/game/BulkPurchase.kt"
+    },
+    {
+      "dependencies": [
+        "app/src/main/java/com/zerotoempire/game/GameEconomy.kt",
+        "app/src/main/java/com/zerotoempire/game/GameEngine.kt",
+        "app/src/main/java/com/zerotoempire/game/GameFeel.kt",
+        "app/src/main/java/com/zerotoempire/game/PremiumSfx.kt"
+      ],
+      "dependents": [
+        "app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt",
+        "app/src/main/java/com/zerotoempire/game/GameEngine.kt",
+        "app/src/main/java/com/zerotoempire/game/GameRepository.kt",
+        "app/src/main/java/com/zerotoempire/game/GameViewModel.kt",
+        "app/src/main/java/com/zerotoempire/game/GrowthRuntime.kt",
+        "app/src/main/java/com/zerotoempire/game/IdentityUi.kt",
+        "app/src/main/java/com/zerotoempire/game/PremiumGameFeel.kt",
+        "app/src/main/java/com/zerotoempire/game/PremiumGameFeelV2.kt",
+        "app/src/main/java/com/zerotoempire/game/PremiumGameUiV2.kt",
+        "app/src/main/java/com/zerotoempire/game/PremiumMotion.kt",
+        "app/src/main/java/com/zerotoempire/game/ProgressionSystems.kt",
+        "app/src/test/java/com/zerotoempire/game/EndgameProgressionTest.kt",
+        "app/src/test/java/com/zerotoempire/game/IdentitySystemsTest.kt"
+      ],
+      "in_degree": 13,
+      "out_degree": 4,
+      "path": "app/src/main/java/com/zerotoempire/game/IdentitySystems.kt"
     },
     {
       "dependencies": [],
@@ -1264,7 +1262,7 @@
       "path": "app/src/main/java/com/zerotoempire/game/AscensionAdvisor.kt"
     }
   ],
-  "edge_count": 510,
+  "edge_count": 508,
   "generated_by": "dbrckk/repo-brain-v7-graph",
   "node_count": 218,
   "schema_version": 1

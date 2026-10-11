@@ -1,16 +1,16 @@
 # Repo Brain
 
 - Index mode: incremental
-- Files indexed: 247
-- Files reparsed this run: 0
-- Symbols: 1294
+- Files indexed: 248
+- Files reparsed this run: 2
+- Symbols: 1298
 - Internal import edges: 45
-- Impacted files: 0
+- Impacted files: 2
 - Selected tests: 0
 
 ## Languages
 - kotlin: 160 files
-- python: 87 files
+- python: 88 files
 
 ## Highest-density symbol files
 - app/src/main/java/com/zerotoempire/game/GameViewModel.kt: 40 symbols
@@ -43,9 +43,9 @@
 ## ast-grep enrichment
 - ast-grep outline: available
 - AST index mode: incremental
-- AST files reparsed this run: 0
-- outline files retained: 252
-- top-level items retained: 3504
+- AST files reparsed this run: 2
+- outline files retained: 253
+- top-level items retained: 3520
 - direct members retained: 808
 - symbol shards: 26
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard

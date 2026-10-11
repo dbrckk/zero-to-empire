@@ -31,20 +31,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T21:03:40Z
+Generated: 2026-10-11T21:08:41Z
 
 ### Git
 - Branch: `main`
-- Head: `28314e06e314`
-- Commit date: 2026-10-11T23:03:12+02:00
-- Commit: test(ci): protect valid character candidates from sibling QA failures
-- Tracked files: 1524
+- Head: `82c7d6ab36f0`
+- Commit date: 2026-10-11T23:08:18+02:00
+- Commit: test(ci): block duplicate Kaggle kernels on source-only pushes
+- Tracked files: 1526
 
 ### Recently changed files
 - `tools/assets/test_workflow_policy.py`
-- `.github/workflows/kaggle-async-character-collector.yml`
-- `.github/workflows/promote-approved-kaggle-characters.yml`
-- `ops/kaggle-collector-trigger.txt`
+- `.github/workflows/kaggle-mass-sprite-factory.yml`
+- `art/production/kaggle-async-orphan-waves.json`
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
+- `art/production/character-strict-review-backlog.md`
+- `art/production/master-asset-queue.json`
 
 ### Project signals
 - `build.gradle.kts`
