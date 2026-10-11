@@ -1126,6 +1126,10 @@ on:
       - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
       - 'docs/art/UNIFIED_ASSET_PIPELINE.md'
       - '.github/workflows/asset-pipeline-ci.yml'
+      - '.github/workflows/asset-autofactory.yml'
+      - '.github/workflows/kaggle-mass-sprite-factory.yml'
+      - '.github/workflows/kaggle-async-character-collector.yml'
+      - '.github/workflows/promote-approved-kaggle-characters.yml'
   push:
     branches: [ main ]
     paths:
@@ -1141,6 +1145,10 @@ on:
       - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
       - 'docs/art/UNIFIED_ASSET_PIPELINE.md'
       - '.github/workflows/asset-pipeline-ci.yml'
+      - '.github/workflows/asset-autofactory.yml'
+      - '.github/workflows/kaggle-mass-sprite-factory.yml'
+      - '.github/workflows/kaggle-async-character-collector.yml'
+      - '.github/workflows/promote-approved-kaggle-characters.yml'
   workflow_dispatch:
 
 permissions:
@@ -3124,6 +3132,7 @@ jobs:
              tools/sprites/kaggle_building_family_factory_v15.py \
              tools/sprites/kaggle_building_family_factory_v14.py \
              tools/sprites/kaggle_character_sheet_factory_v1.py \
+             tools/sprites/character_semantic_gate.py \
              /tmp/zte-kaggle/tools/sprites/
           sed "s/__KAGGLE_USERNAME__/${KAGGLE_USERNAME}/g" kaggle/kernel-metadata.template.json > /tmp/zte-kaggle/kernel-metadata.json
           python - <<'PY'
@@ -3150,6 +3159,7 @@ jobs:
               'kaggle_building_family_factory_v15.py',
               'kaggle_building_family_factory_v14.py',
               'kaggle_character_sheet_factory_v1.py',
+              'character_semantic_gate.py',
           ]
           buf=io.BytesIO()
           with zipfile.ZipFile(buf,'w',zipfile.ZIP_DEFLATED) as z:
@@ -5010,6 +5020,26 @@ jobs:
             )"
           fi
           test -n "$source_run"
+          SOURCE_RUN_ID="$source_run" APPROVED_IDS="$approved" python - <<'PY'
+          import json, os
+          from pathlib import Path
+          source=str(os.environ['SOURCE_RUN_ID'])
+          ids={x.strip().upper() for x in os.environ['APPROVED_IDS'].split(',') if x.strip()}
+          q=json.loads(Path('art/production/master-asset-queue.json').read_text())
+          mismatched=[]
+          for asset in q.get('assets',[]):
+              if asset.get('id') not in ids:
+                  continue
+              recorded=asset.get('review_artifact_run_id')
+              if recorded and str(recorded)!=source:
+                  mismatched.append(f"{asset['id']}:{recorded}")
+          if mismatched:
+              raise SystemExit(
+                  'Promotion source run does not match canonical review provenance: '
+                  + ','.join(sorted(mismatched))
+              )
+          print('PROMOTION_SOURCE_PROVENANCE_PASS='+source)
+          PY
           echo "SOURCE_RUN_ID=$source_run" >> "$GITHUB_ENV"
           echo "APPROVED_IDS=$approved" >> "$GITHUB_ENV"
       - name: Download source artifact
@@ -26969,6 +26999,8 @@ text = Path(".github/workflows/promote-approved-kaggle-characters.yml").read_tex
 ⋮----
 def test_character_promotion_can_resolve_source_artifact_run_from_queue(self)
 ⋮----
+def test_character_promotion_rejects_wrong_artifact_provenance(self)
+⋮----
 def test_character_promotion_requires_android_runtime_validation_before_done(self)
 def test_async_collector_recovers_candidates_when_generated_targets_is_empty(self)
 ⋮----
@@ -27012,9 +27044,16 @@ def test_kaggle_character_generator_has_clean_main_tail(self)
 def test_kaggle_character_generator_reapplies_scaffold_each_frame(self)
 def test_kaggle_character_generator_adds_semantic_scaffolds_for_hard_actions(self)
 ⋮----
+def test_kaggle_character_generator_rejects_blocking_visual_risks(self)
+⋮----
+generator = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
+workflow = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
+⋮----
 def test_kaggle_character_generator_uses_neutral_role_anchor(self)
 ⋮----
 def test_kaggle_rejection_memory_prefers_exact_asset_over_role_fallback(self)
+⋮----
+def test_kaggle_character_retry_uses_controlled_queue_rejection_risks(self)
 ```
 
 ## File: tools/sprites/action_contact.py
@@ -29916,6 +29955,15 @@ controlled=[]
 ⋮----
 aid=str(item.get('id','')).upper()
 ⋮----
+def queue_rejection_hint(i)
+⋮----
+row=next((x for x in q.get('targets',[]) if str(x.get('id','')).upper()==i['id']),None)
+⋮----
+reason=str(row.get('review_reason') or '').lower()
+⋮----
+rules=[]
+mapping=(
+⋮----
 def rejection_hints(i)
 ⋮----
 hints=[]
@@ -29935,7 +29983,9 @@ matched=bool(role and role==i['role'] and (not action or action==i['action']))
 ⋮----
 hint=str(row.get('prompt_hint','')).strip()
 ⋮----
-merged=' '.join(hints[-2:])
+qhint=queue_rejection_hint(i)
+⋮----
+merged=' '.join(hints[-3:])
 words=merged.split()
 ⋮----
 def anchor_prompt_pair(role)
@@ -30186,6 +30236,10 @@ frame,cov=finish_frame(raw,i['action']);frames.append(frame);ok=True;print(f"KAG
 ⋮----
 last_reason=str(e);retry_reasons.append(last_reason);print(f"KAGGLE_CHR_RETRY={i['id']} frame={fi} attempt={attempt+1} mode={mode} reason={e}",flush=True)
 if not ok:fail=f'frame-{fi}-failed';break
+⋮----
+visual_risk=clip_risk(frames)
+⋮----
+risk_reason='image-risk:'+','.join(visual_risk.get('flags') or ['UNKNOWN'])
 ⋮----
 why=why+' '+action_why
 identity_distance=0.0

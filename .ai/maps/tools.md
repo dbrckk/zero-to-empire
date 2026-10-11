@@ -4206,6 +4206,15 @@ controlled=[]
 ⋮----
 aid=str(item.get('id','')).upper()
 ⋮----
+def queue_rejection_hint(i)
+⋮----
+row=next((x for x in q.get('targets',[]) if str(x.get('id','')).upper()==i['id']),None)
+⋮----
+reason=str(row.get('review_reason') or '').lower()
+⋮----
+rules=[]
+mapping=(
+⋮----
 def rejection_hints(i)
 ⋮----
 hints=[]
@@ -4225,7 +4234,9 @@ matched=bool(role and role==i['role'] and (not action or action==i['action']))
 ⋮----
 hint=str(row.get('prompt_hint','')).strip()
 ⋮----
-merged=' '.join(hints[-2:])
+qhint=queue_rejection_hint(i)
+⋮----
+merged=' '.join(hints[-3:])
 words=merged.split()
 ⋮----
 def anchor_prompt_pair(role)
@@ -4476,6 +4487,10 @@ frame,cov=finish_frame(raw,i['action']);frames.append(frame);ok=True;print(f"KAG
 ⋮----
 last_reason=str(e);retry_reasons.append(last_reason);print(f"KAGGLE_CHR_RETRY={i['id']} frame={fi} attempt={attempt+1} mode={mode} reason={e}",flush=True)
 if not ok:fail=f'frame-{fi}-failed';break
+⋮----
+visual_risk=clip_risk(frames)
+⋮----
+risk_reason='image-risk:'+','.join(visual_risk.get('flags') or ['UNKNOWN'])
 ⋮----
 why=why+' '+action_why
 identity_distance=0.0

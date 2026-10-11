@@ -1,12 +1,16 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "66abc5e54a6ed4e19a5b794837b495b92c818957",
-  "head": "a31ffc76e7fe2be64ec54a926435044471972695",
+  "base": "a31ffc76e7fe2be64ec54a926435044471972695",
+  "head": "605298abd7e1994bfd00e1fe44bac9e6c2ad4d4b",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": ".github/workflows/kaggle-async-character-collector.yml",
+      "path": ".github/workflows/asset-pipeline-ci.yml",
+      "status": "M"
+    },
+    {
+      "path": ".github/workflows/kaggle-mass-sprite-factory.yml",
       "status": "M"
     },
     {
@@ -14,11 +18,15 @@
       "status": "M"
     },
     {
-      "path": "ops/kaggle-collector-trigger.txt",
+      "path": "art/production/character-strict-review-backlog.md",
       "status": "M"
     },
     {
-      "path": "tools/assets/test_queue_state_policy.py",
+      "path": "art/production/generation-rejection-ledger.json",
+      "status": "M"
+    },
+    {
+      "path": "ops/kaggle-collector-trigger.txt",
       "status": "M"
     },
     {
@@ -26,273 +34,155 @@
       "status": "M"
     },
     {
-      "path": "tools/sprites/asset_queue_utils.py",
-      "status": "M"
-    },
-    {
-      "path": "tools/sprites/character_review_matrix.py",
-      "status": "M"
-    },
-    {
-      "path": "tools/sprites/generate_strict_review_backlog.py",
-      "status": "M"
-    },
-    {
-      "path": "tools/sprites/test_character_review_matrix.py",
+      "path": "tools/sprites/kaggle_character_sheet_factory_v1.py",
       "status": "M"
     }
   ],
   "changed_source_files": [
-    "tools/sprites/asset_queue_utils.py",
-    "tools/sprites/character_review_matrix.py",
-    "tools/sprites/generate_strict_review_backlog.py",
-    "tools/sprites/test_character_review_matrix.py"
+    "tools/sprites/kaggle_character_sheet_factory_v1.py"
   ],
   "impacted_files": [
-    "tools/sprites/asset_queue_utils.py",
-    "tools/sprites/asset_wave_orchestrator.py",
-    "tools/sprites/audit_character_candidates.py",
-    "tools/sprites/character_review_matrix.py",
-    "tools/sprites/generate_strict_review_backlog.py",
-    "tools/sprites/test_character_review_matrix.py"
+    "tools/sprites/kaggle_character_sheet_factory_v1.py"
   ],
   "impacted_symbols": [
     {
-      "name": "load_json",
+      "name": "rows",
       "kind": "function",
-      "file": "tools/sprites/asset_queue_utils.py",
-      "line": 43
-    },
-    {
-      "name": "save_json",
-      "kind": "function",
-      "file": "tools/sprites/asset_queue_utils.py",
-      "line": 49
-    },
-    {
-      "name": "manifest_rows",
-      "kind": "function",
-      "file": "tools/sprites/asset_queue_utils.py",
-      "line": 54
-    },
-    {
-      "name": "unresolved_ids",
-      "kind": "function",
-      "file": "tools/sprites/asset_queue_utils.py",
-      "line": 77
-    },
-    {
-      "name": "default_asset",
-      "kind": "function",
-      "file": "tools/sprites/asset_queue_utils.py",
-      "line": 84
-    },
-    {
-      "name": "ensure_master",
-      "kind": "function",
-      "file": "tools/sprites/asset_queue_utils.py",
-      "line": 116
-    },
-    {
-      "name": "sync_controlled_queues",
-      "kind": "function",
-      "file": "tools/sprites/asset_queue_utils.py",
-      "line": 157
-    },
-    {
-      "name": "stats",
-      "kind": "function",
-      "file": "tools/sprites/asset_queue_utils.py",
-      "line": 212
-    },
-    {
-      "name": "write_summary",
-      "kind": "function",
-      "file": "tools/sprites/asset_queue_utils.py",
-      "line": 239
-    },
-    {
-      "name": "by_id",
-      "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 55
-    },
-    {
-      "name": "mirror_character_outcomes_from_controlled",
-      "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
       "line": 59
     },
     {
-      "name": "update_from_trigger",
+      "name": "queue_rejection_hint",
       "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 84
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 95
     },
     {
-      "name": "active_pending",
+      "name": "rejection_hints",
       "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 154
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 129
     },
     {
-      "name": "character_retry_available",
+      "name": "anchor_prompt_pair",
       "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 159
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 157
     },
     {
-      "name": "mark_dispatch",
+      "name": "semantic_scaffold",
       "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 182
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 173
     },
     {
-      "name": "prioritize_controlled_character_targets",
+      "name": "prompt_pair",
       "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 215
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 214
     },
     {
-      "name": "building_family_ids",
+      "name": "retry_mode",
       "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 249
+    },
+    {
+      "name": "load_encode",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 256
+    },
+    {
+      "name": "load_render",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 261
+    },
+    {
+      "name": "border_bg",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 268
+    },
+    {
+      "name": "isolate",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 277
+    },
+    {
+      "name": "dist",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
       "line": 281
     },
     {
-      "name": "prepare_building_group",
+      "name": "validate_source_full_body",
       "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 285
-    },
-    {
-      "name": "prepare_character_burst",
-      "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
       "line": 296
     },
     {
-      "name": "next_group",
+      "name": "finish_frame",
       "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 306
+    },
+    {
+      "name": "alpha_iou",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 343
+    },
+    {
+      "name": "sheet_qa",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 352
+    },
+    {
+      "name": "lower_body_motion",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
       "line": 365
     },
     {
-      "name": "close_exhausted_character_dispatches",
+      "name": "walk_consistency_qa",
       "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 384
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 382
     },
     {
-      "name": "active_pollinations_repair",
+      "name": "action_qa",
       "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 439
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 397
     },
     {
-      "name": "pending_ids_from_controlled",
+      "name": "appearance_signature",
       "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 464
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 415
     },
     {
-      "name": "make_decision",
+      "name": "appearance_distance",
       "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 481
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 429
     },
     {
-      "name": "main",
+      "name": "make_sheet",
       "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 551
-    },
-    {
-      "name": "inspect",
-      "kind": "function",
-      "file": "tools/sprites/audit_character_candidates.py",
-      "line": 24
-    },
-    {
-      "name": "contact",
-      "kind": "function",
-      "file": "tools/sprites/audit_character_candidates.py",
-      "line": 100
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 432
     },
     {
       "name": "main",
       "kind": "function",
-      "file": "tools/sprites/audit_character_candidates.py",
-      "line": 132
-    },
-    {
-      "name": "build",
-      "kind": "function",
-      "file": "tools/sprites/character_review_matrix.py",
-      "line": 30
-    },
-    {
-      "name": "markdown",
-      "kind": "function",
-      "file": "tools/sprites/character_review_matrix.py",
-      "line": 89
-    },
-    {
-      "name": "main",
-      "kind": "function",
-      "file": "tools/sprites/character_review_matrix.py",
-      "line": 130
-    },
-    {
-      "name": "main",
-      "kind": "function",
-      "file": "tools/sprites/generate_strict_review_backlog.py",
-      "line": 13
-    },
-    {
-      "name": "fake_queue",
-      "kind": "function",
-      "file": "tools/sprites/test_character_review_matrix.py",
-      "line": 5
-    },
-    {
-      "name": "MatrixTests",
-      "kind": "class",
-      "file": "tools/sprites/test_character_review_matrix.py",
-      "line": 21
-    },
-    {
-      "name": "test_exact_pending_roles_and_no_auto_promotion",
-      "kind": "function",
-      "file": "tools/sprites/test_character_review_matrix.py",
-      "line": 22
-    },
-    {
-      "name": "test_semantic_rejection_before_technical_success",
-      "kind": "function",
-      "file": "tools/sprites/test_character_review_matrix.py",
-      "line": 31
-    },
-    {
-      "name": "test_live_markdown_does_not_repeat_stale_tech_rejection_after_promotion",
-      "kind": "function",
-      "file": "tools/sprites/test_character_review_matrix.py",
-      "line": 42
-    },
-    {
-      "name": "test_cannot_inflate_canonical_queue",
-      "kind": "function",
-      "file": "tools/sprites/test_character_review_matrix.py",
-      "line": 55
-    },
-    {
-      "name": "test_deterministic_order_and_source_immutability",
-      "kind": "function",
-      "file": "tools/sprites/test_character_review_matrix.py",
-      "line": 66
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 440
     }
   ],
-  "selected_tests": [
-    "tools/sprites/test_character_review_matrix.py"
-  ]
+  "selected_tests": []
 }

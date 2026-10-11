@@ -31,20 +31,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T18:27:31Z
+Generated: 2026-10-11T18:32:09Z
 
 ### Git
 - Branch: `main`
-- Head: `a31ffc76e7fe`
-- Commit date: 2026-10-11T20:27:05+02:00
-- Commit: ci(art): recheck active ENG kernel for completion
+- Head: `605298abd7e1`
+- Commit date: 2026-10-11T20:31:51+02:00
+- Commit: ci(art): check ENG kernel after pipeline hardening
 - Tracked files: 1524
 
 ### Recently changed files
 - `ops/kaggle-collector-trigger.txt`
-- `.github/workflows/promote-approved-kaggle-characters.yml`
-- `tools/sprites/generate_strict_review_backlog.py`
 - `tools/assets/test_workflow_policy.py`
+- `.github/workflows/promote-approved-kaggle-characters.yml`
+- `art/production/generation-rejection-ledger.json`
 
 ### Project signals
 - `build.gradle.kts`
