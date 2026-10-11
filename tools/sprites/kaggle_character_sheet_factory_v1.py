@@ -456,6 +456,7 @@ def action_qa(frames,action):
  if action=='CARRY':
   motion=lower_body_motion(frames)
   if motion<.19:return False,f'carry-lacks-stride lower-motion={motion:.3f}<0.190'
+  return True,f'carry-motion={mean_change:.3f} lower-stride-motion={motion:.3f}'
  if action=='CELEB':
   changes=upper_body_transition_changes(frames)
   # Arm movement should progress across multiple frames, not originate from
@@ -465,6 +466,8 @@ def action_qa(frames,action):
    return False,f'celeb-unreadable-gesture upper-transitions={expressive}/{len(changes)}'
   if changes and max(changes)>.45:
    return False,f'celeb-upper-silhouette-jump={max(changes):.3f}>0.450'
+  return True,(f'celeb-motion={mean_change:.3f} upper-transitions={expressive}/{len(changes)} '
+               f'upper-max-step={max(changes):.3f}')
  return True,f'{action.lower()}-motion={mean_change:.3f}'
 
 def appearance_signature(cell):
