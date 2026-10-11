@@ -209,6 +209,29 @@ click() {
   sleep 1
 }
 
+# LazyColumn keeps only the currently visible action rows in its accessibility
+# hierarchy. On narrow Android screens REPAIR and CELEBRATE are below the fold;
+# scrolling to a button is necessary before resolving its clickable bounds.
+click_action() {
+  local action="$1" label="$2" name="$3" attempt xy x y
+  for attempt in 0 1 2 3 4 5 6 7; do
+    dump "$name-scroll-$attempt"
+    if xy=$(python3 "$SCRIPT_DIR/ui_click_target.py" "$OUT/$name-scroll-$attempt.xml" "$label" 2>/dev/null); then
+      read -r x y <<<"$xy"
+      if [[ "$x" =~ ^[0-9]+$ && "$y" =~ ^[0-9]+$ ]]; then
+        adb shell input tap "$x" "$y"
+        sleep 1
+        echo "CHARACTER_PREVIEW_ACTION_CLICK=$action attempt=$attempt"
+        return 0
+      fi
+    fi
+    adb shell input swipe "$((width/2))" "$((height*78/100))" "$((width/2))" "$((height*40/100))" 350
+    sleep 1
+  done
+  echo "CHARACTER_PREVIEW_FAIL=action-button-not-visible:$action" >&2
+  return 1
+}
+
 APK="app/build/outputs/apk/debug/app-debug.apk"
 test -s "$APK"
 adb install -r "$APK" >/dev/null
@@ -445,7 +468,7 @@ assert_text "NIGHT CONTRAST REVIEW" night-restored
 click "TECH only" before-tech-focus
 dump tech-focused
 assert_text "TECH ACTION: WALK" tech-focused
-click "REPAIR" before-tech-repair-selection
+click_action REPAIR REPAIR before-tech-repair-selection
 dump tech-repair-selected
 assert_text "TECH ACTION: REPAIR" tech-repair-selected
 click "Stage +1" before-tech-stage-step
@@ -472,7 +495,7 @@ PY
 # the enlarged grid. Preserve an emulator screenshot per action for
 # frame-by-frame semantic review; selecting an action is not approval.
 for action in IDLE WALK WORK CARRY REPAIR CELEBRATE; do
-  click "$action" "before-tech-action-$action"
+  click_action "$action" "$action" "before-tech-action-$action"
   dump "tech-action-$action"
   assert_text "TECH ACTION: $action" "tech-action-$action"
   adb exec-out screencap -p > "$OUT/tech-stage-$action.png"
@@ -489,7 +512,7 @@ python3 "$SCRIPT_DIR/character_preview_pixel_audit.py" "$OUT"
 # step five moving actions four real Android frames while paused. Every
 # screenshot and accessibility hierarchy remains in the CI artifact.
 for moving_action in WALK WORK CARRY REPAIR CELEBRATE; do
-  click "$moving_action" "before-temporal-action-$moving_action"
+  click_action "$moving_action" "$moving_action" "before-temporal-action-$moving_action"
   for tick in 0 1 2 3; do
     if [[ "$tick" -gt 0 ]]; then
       click "Stage +1" "before-temporal-step-$moving_action-$tick"
