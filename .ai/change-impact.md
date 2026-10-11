@@ -1,13 +1,13 @@
 # Change impact
 
-Base: b274562e44314538d390f2a7b83ddd0244043009
-Head: 5da83a026eac0858452f68c53078558ce1be27ae
+Base: b375b217460f749ba2eac29b0bd88daf63c73553
+Head: 78e618413a8e5d6d535b27fde6dbd16509b2b1d2
 
 ## Changed files
-- M ops/kaggle-collector-trigger.txt
+- M .github/workflows/asset-pipeline-ci.yml
 
 ## Affected areas
-- ops
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

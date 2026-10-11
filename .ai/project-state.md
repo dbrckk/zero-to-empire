@@ -31,20 +31,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T21:41:22Z
+Generated: 2026-10-11T21:47:41Z
 
 ### Git
 - Branch: `main`
-- Head: `5da83a026eac`
-- Commit date: 2026-10-11T23:41:09+02:00
-- Commit: ci(art): collect OP LOG character wave at current checkpoint
+- Head: `78e618413a8e`
+- Commit date: 2026-10-11T23:47:20+02:00
+- Commit: ci(art): render and validate mobile-friendly identity review panels
 - Tracked files: 1529
 
 ### Recently changed files
-- `ops/kaggle-collector-trigger.txt`
-- `art/production/character-strict-review-backlog.md`
-- `art/production/master-asset-queue.json`
-- `ops/sprite-wave-trigger.txt`
+- `.github/workflows/asset-pipeline-ci.yml`
+- `tools/assets/test_workflow_policy.py`
+- `.github/workflows/kaggle-async-character-collector.yml`
+- `tools/sprites/build_character_review_panels.py`
 
 ### Project signals
 - `build.gradle.kts`

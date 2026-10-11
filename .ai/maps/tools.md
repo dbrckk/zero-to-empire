@@ -2095,6 +2095,39 @@ draw = ImageDraw.Draw(result)
 ⋮----
 def readable_font(size: int) -> ImageFont.ImageFont
 ⋮----
+def create_head_panel(role: str, assets: dict[str, Path], output: Path) -> None
+⋮----
+"""Magnify each frame's face/headgear for cross-action identity review.
+
+    Visual evidence only: a matching crop does not prove animation or identity
+    correctness. It is easier to read on Android than the wide full-frame sheet.
+    """
+⋮----
+width = label_width + 10 * tile_width
+height = header + len(ACTIONS) * row_height
+panel = Image.new("RGB", (width, height), (26, 29, 36))
+draw = ImageDraw.Draw(panel)
+title_font = readable_font(20)
+font = readable_font(14)
+label_font = readable_font(18)
+⋮----
+y = header + row * row_height
+⋮----
+path = assets.get(action)
+⋮----
+atlas = src.convert("RGBA")
+⋮----
+f = atlas.crop(((index % 4) * CELL, (index // 4) * CELL,
+bbox = f.getchannel("A").getbbox()
+⋮----
+xmid = (bbox[0] + bbox[2]) // 2
+x0 = min(CELL - 96, max(0, xmid - 48))
+y0 = min(CELL - 96, max(0, bbox[1] - 5))
+head = f.crop((x0, y0, x0 + 96, y0 + 96)).resize(
+background = checkerboard().resize((cell_width, cell_width))
+⋮----
+x = label_width + index * tile_width + 7
+⋮----
 def create_panel(role: str, assets: dict[str, Path], output: Path, qa: dict[str, dict]) -> dict
 ⋮----
 font = readable_font(15)
@@ -2110,7 +2143,6 @@ status: dict = {}
 ⋮----
 y = HEADER_HEIGHT + row * ROW_HEIGHT
 ⋮----
-path = assets.get(action)
 qa_row = qa.get(path.name, {}) if path else {}
 is_pass = qa_row.get("pass") is True
 label_color = (105, 202, 157) if is_pass else (236, 184, 97) if path else (166, 170, 179)
@@ -2140,7 +2172,10 @@ by_role: dict[str, dict[str, Path]] = {}
 ⋮----
 match = PATTERN.fullmatch(path.name)
 ⋮----
-results = [create_panel(role, assets, args.output_dir / f"review-frames-{role}.png", qa)
+results = []
+⋮----
+item = create_panel(role, assets, args.output_dir / f"review-frames-{role}.png", qa)
+⋮----
 summary = {"schema_version": 1, "review_only": True, "roles": results}
 ```
 
@@ -4484,6 +4519,20 @@ pa,pb=a.load(),b.load();inter=union=0
 ⋮----
 aa=pa[x,y]>0;bbb=pb[x,y]>0;inter+=aa and bbb;union+=aa or bbb
 ⋮----
+def upper_body_transition_changes(frames)
+⋮----
+# For CELEB, a large whole-body alpha change can come from a morphing
+# prop, outfit or leg rather than an expressive arm gesture. Analyze the
+# top 45% of the body's visible silhouette separately for readability.
+changes=[]
+⋮----
+boxes=[f.getchannel('A').getbbox() for f in (previous,current)]
+⋮----
+limit=min(255,max(int(b[1]+(b[3]-b[1])*.45) for b in boxes))
+area=(0,0,256,max(16,limit))
+a=previous.crop(area)
+b=current.crop(area)
+⋮----
 def walk_consistency_qa(frames)
 ⋮----
 # Guard against semantic false positives where motion is large only because the
@@ -4508,10 +4557,10 @@ motion=lower_body_motion(frames)
 floors={'WORK':.10,'CARRY':.12,'REPAIR':.09,'CELEB':.10,'IDLE':.025}
 floor=floors.get(action,.05)
 ⋮----
-changes=[1-x for x in ious]
-# Reject a "celebration" whose only visible change is the last frame.
-# Positive motion spread across the loop is needed for a readable gesture.
-expressive=sum(delta>=.14 for delta in changes)
+changes=upper_body_transition_changes(frames)
+# Arm movement should progress across multiple frames, not originate from
+# one terminal animation jump or from isolated lower-body changes.
+expressive=sum(delta>=.15 for delta in changes)
 ⋮----
 def appearance_signature(cell)
 ⋮----
@@ -4547,6 +4596,12 @@ hints=POSE_HINT[i['action']][:ACTION[i['action']][1]]
 variants={}
 ⋮----
 del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();report=[];role_anchor={};role_reference_cell={};anchor_failures={}
+# When the strict-completion batch includes an IDLE identity anchor, every
+# sibling action must share the SAME successfully validated anchor. If the
+# IDLE atlas is rejected, rendering unrelated actions would burn GPU time
+# yet be ineligible for coherent-role strict promotion.
+required_idle_roles={item['role'] for item in items if item['action']=='IDLE'}
+verified_idle_roles=set()
 ⋮----
 failures=[]
 # A single malformed text-to-image role anchor previously poisoned all six
@@ -4557,6 +4612,8 @@ gen_anchor=torch.Generator(device='cuda').manual_seed(args.seed+700000+ri*50000+
 ⋮----
 raw=base(height=1024,width=1024,num_inference_steps=6,guidance_scale=0,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),output_type='pil',generator=gen_anchor).images[0]
 candidate=raw.convert('RGB')
+⋮----
+why='required-role-idle-candidate-rejected'
 ⋮----
 frames=[];anchor_raw=None;fail=None;retry_reasons=[]
 ⋮----

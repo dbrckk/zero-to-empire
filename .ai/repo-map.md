@@ -1194,6 +1194,40 @@ jobs:
             tools/sprites/kaggle_building_family_factory_v16_10.py \
             tools/sprites/kaggle_building_family_factory_v17.py
 
+      - name: Exercise role review panels with a real rendered atlas
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/zte-smoke-candidates /tmp/zte-smoke-review
+          python - <<'PY'
+          from PIL import Image,ImageDraw
+          from pathlib import Path
+          atlas=Image.new('RGBA',(1024,1024),(0,0,0,0))
+          draw=ImageDraw.Draw(atlas)
+          for index in range(6):
+              x=(index%4)*256
+              y=(index//4)*256
+              draw.ellipse((x+105,y+30,x+151,y+76),fill=(175,123,90,255))
+              draw.rounded_rectangle((x+88,y+76,x+166,y+170),radius=14,fill=(58,73,91,255))
+              draw.line((x+106,y+170,x+98,y+226),fill=(58,73,91,255),width=18)
+              draw.line((x+149,y+170,x+160,y+226),fill=(58,73,91,255),width=18)
+          atlas.save('/tmp/zte-smoke-candidates/zte_chr_op_idle_final.png')
+          PY
+          python tools/sprites/build_character_review_panels.py \
+            --candidates /tmp/zte-smoke-candidates \
+            --output-dir /tmp/zte-smoke-review
+          test -s /tmp/zte-smoke-review/review-frames-op.png
+          test -s /tmp/zte-smoke-review/review-heads-op.png
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('/tmp/zte-smoke-review/review-panels.json').read_text())
+          assert d['review_only'] is True
+          assert d['roles'][0]['automatically_approved'] is False
+          assert d['roles'][0]['head_detail_file']=='review-heads-op.png'
+          assert d['roles'][0]['actions']['idle']['candidate'] is True
+          print('CHARACTER_REVIEW_PANEL_SMOKE_PASS=1')
+          PY
+
       - name: Validate rejection-memory schema
         run: |
           python - <<'PY'
@@ -2368,9 +2402,11 @@ permissions:
   contents: write
   actions: write
 
+# A scheduled check must never cancel a collector while it is downloading
+# and reconciling a finished GPU batch. Queue the next check instead.
 concurrency:
   group: kaggle-async-character-collector
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   collect:
@@ -27289,6 +27325,8 @@ def test_async_collector_requires_full_expected_target_coverage(self)
 ⋮----
 def test_async_collector_preserves_retry_details_for_future_generation(self)
 ⋮----
+def test_async_collector_does_not_cancel_in_progress_evidence_download(self)
+⋮----
 def test_async_collector_allows_large_role_bursts_to_finish(self)
 ⋮----
 workflow = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
@@ -27346,6 +27384,8 @@ def test_character_qa_requires_carry_stride_and_progressive_celebration(self)
 def test_carry_scaffold_adds_deterministic_lower_body_motion(self)
 ⋮----
 def test_character_role_anchor_is_validated_before_action_frames(self)
+⋮----
+def test_same_run_idle_identity_is_required_before_sibling_render(self)
 ⋮----
 def test_kaggle_character_generator_rejects_blocking_visual_risks(self)
 ⋮----
@@ -28148,6 +28188,39 @@ draw = ImageDraw.Draw(result)
 ⋮----
 def readable_font(size: int) -> ImageFont.ImageFont
 ⋮----
+def create_head_panel(role: str, assets: dict[str, Path], output: Path) -> None
+⋮----
+"""Magnify each frame's face/headgear for cross-action identity review.
+
+    Visual evidence only: a matching crop does not prove animation or identity
+    correctness. It is easier to read on Android than the wide full-frame sheet.
+    """
+⋮----
+width = label_width + 10 * tile_width
+height = header + len(ACTIONS) * row_height
+panel = Image.new("RGB", (width, height), (26, 29, 36))
+draw = ImageDraw.Draw(panel)
+title_font = readable_font(20)
+font = readable_font(14)
+label_font = readable_font(18)
+⋮----
+y = header + row * row_height
+⋮----
+path = assets.get(action)
+⋮----
+atlas = src.convert("RGBA")
+⋮----
+f = atlas.crop(((index % 4) * CELL, (index // 4) * CELL,
+bbox = f.getchannel("A").getbbox()
+⋮----
+xmid = (bbox[0] + bbox[2]) // 2
+x0 = min(CELL - 96, max(0, xmid - 48))
+y0 = min(CELL - 96, max(0, bbox[1] - 5))
+head = f.crop((x0, y0, x0 + 96, y0 + 96)).resize(
+background = checkerboard().resize((cell_width, cell_width))
+⋮----
+x = label_width + index * tile_width + 7
+⋮----
 def create_panel(role: str, assets: dict[str, Path], output: Path, qa: dict[str, dict]) -> dict
 ⋮----
 font = readable_font(15)
@@ -28163,7 +28236,6 @@ status: dict = {}
 ⋮----
 y = HEADER_HEIGHT + row * ROW_HEIGHT
 ⋮----
-path = assets.get(action)
 qa_row = qa.get(path.name, {}) if path else {}
 is_pass = qa_row.get("pass") is True
 label_color = (105, 202, 157) if is_pass else (236, 184, 97) if path else (166, 170, 179)
@@ -28193,7 +28265,10 @@ by_role: dict[str, dict[str, Path]] = {}
 ⋮----
 match = PATTERN.fullmatch(path.name)
 ⋮----
-results = [create_panel(role, assets, args.output_dir / f"review-frames-{role}.png", qa)
+results = []
+⋮----
+item = create_panel(role, assets, args.output_dir / f"review-frames-{role}.png", qa)
+⋮----
 summary = {"schema_version": 1, "review_only": True, "roles": results}
 ```
 
@@ -30537,6 +30612,20 @@ pa,pb=a.load(),b.load();inter=union=0
 ⋮----
 aa=pa[x,y]>0;bbb=pb[x,y]>0;inter+=aa and bbb;union+=aa or bbb
 ⋮----
+def upper_body_transition_changes(frames)
+⋮----
+# For CELEB, a large whole-body alpha change can come from a morphing
+# prop, outfit or leg rather than an expressive arm gesture. Analyze the
+# top 45% of the body's visible silhouette separately for readability.
+changes=[]
+⋮----
+boxes=[f.getchannel('A').getbbox() for f in (previous,current)]
+⋮----
+limit=min(255,max(int(b[1]+(b[3]-b[1])*.45) for b in boxes))
+area=(0,0,256,max(16,limit))
+a=previous.crop(area)
+b=current.crop(area)
+⋮----
 def walk_consistency_qa(frames)
 ⋮----
 # Guard against semantic false positives where motion is large only because the
@@ -30561,10 +30650,10 @@ motion=lower_body_motion(frames)
 floors={'WORK':.10,'CARRY':.12,'REPAIR':.09,'CELEB':.10,'IDLE':.025}
 floor=floors.get(action,.05)
 ⋮----
-changes=[1-x for x in ious]
-# Reject a "celebration" whose only visible change is the last frame.
-# Positive motion spread across the loop is needed for a readable gesture.
-expressive=sum(delta>=.14 for delta in changes)
+changes=upper_body_transition_changes(frames)
+# Arm movement should progress across multiple frames, not originate from
+# one terminal animation jump or from isolated lower-body changes.
+expressive=sum(delta>=.15 for delta in changes)
 ⋮----
 def appearance_signature(cell)
 ⋮----
@@ -30600,6 +30689,12 @@ hints=POSE_HINT[i['action']][:ACTION[i['action']][1]]
 variants={}
 ⋮----
 del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();report=[];role_anchor={};role_reference_cell={};anchor_failures={}
+# When the strict-completion batch includes an IDLE identity anchor, every
+# sibling action must share the SAME successfully validated anchor. If the
+# IDLE atlas is rejected, rendering unrelated actions would burn GPU time
+# yet be ineligible for coherent-role strict promotion.
+required_idle_roles={item['role'] for item in items if item['action']=='IDLE'}
+verified_idle_roles=set()
 ⋮----
 failures=[]
 # A single malformed text-to-image role anchor previously poisoned all six
@@ -30610,6 +30705,8 @@ gen_anchor=torch.Generator(device='cuda').manual_seed(args.seed+700000+ri*50000+
 ⋮----
 raw=base(height=1024,width=1024,num_inference_steps=6,guidance_scale=0,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),output_type='pil',generator=gen_anchor).images[0]
 candidate=raw.convert('RGB')
+⋮----
+why='required-role-idle-candidate-rejected'
 ⋮----
 frames=[];anchor_raw=None;fail=None;retry_reasons=[]
 ⋮----

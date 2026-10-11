@@ -2,10 +2,10 @@
 
 - Index mode: incremental
 - Files indexed: 248
-- Files reparsed this run: 0
-- Symbols: 1298
+- Files reparsed this run: 2
+- Symbols: 1300
 - Internal import edges: 45
-- Impacted files: 0
+- Impacted files: 2
 - Selected tests: 0
 
 ## Languages
@@ -15,8 +15,8 @@
 ## Highest-density symbol files
 - app/src/main/java/com/zerotoempire/game/GameViewModel.kt: 40 symbols
 - app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt: 25 symbols
+- tools/sprites/kaggle_character_sheet_factory_v1.py: 24 symbols
 - app/src/main/java/com/zerotoempire/game/Monetization.kt: 23 symbols
-- tools/sprites/kaggle_character_sheet_factory_v1.py: 23 symbols
 - tools/sprites/pollinations_character_sheet_factory.py: 23 symbols
 - tools/sprites/rigged_tech_walk_v2.py: 19 symbols
 - tools/sprites/asset_wave_orchestrator.py: 18 symbols
@@ -43,9 +43,9 @@
 ## ast-grep enrichment
 - ast-grep outline: available
 - AST index mode: incremental
-- AST files reparsed this run: 0
+- AST files reparsed this run: 2
 - outline files retained: 253
-- top-level items retained: 3520
+- top-level items retained: 3522
 - direct members retained: 808
 - symbol shards: 26
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard
