@@ -47,11 +47,26 @@ def grade_review_kit(kit: dict[str, Image.Image]) -> dict[str, Image.Image]:
         raise ValueError("Unsafe review material grading gamma")
     lut = [round(255 * ((i / 255) ** gamma)) for i in range(256)]
     result = {}
+    far_lower_leg = {
+        "thigh_far", "shin_boot_far", "shin_boot_far_calf",
+        "shin_boot_far_boot",
+    }
+    # A second, subtler material pass establishes depth without changing
+    # either leg's pose, ground contact, silhouette or source texture alpha.
+    # Only the FAR lower limb receives a cooler steel-blue bounce light.
+    # This is deliberately a diffuse material shift, NOT neon footwear:
+    # it should be judged at 39-42dp against the ungraded near leg.
+    far_red = [max(0, min(255, round(i * 0.82))) for i in range(256)]
+    far_green = [max(0, min(255, round(i * 0.94 + 5))) for i in range(256)]
+    far_blue = [max(0, min(255, round(i * 1.07 + 13))) for i in range(256)]
     for part, texture in kit.items():
         r, g, b, a = texture.convert("RGBA").split()
-        result[part] = Image.merge(
-            "RGBA", (r.point(lut), g.point(lut), b.point(lut), a)
-        )
+        r, g, b = r.point(lut), g.point(lut), b.point(lut)
+        if part in far_lower_leg:
+            r, g, b = (
+                r.point(far_red), g.point(far_green), b.point(far_blue)
+            )
+        result[part] = Image.merge("RGBA", (r, g, b, a))
     return result
 
 
