@@ -182,8 +182,17 @@ def draw_repair(layer: Image.Image, p: dict, t: float) -> None:
         d.line((xx, y + 16, xx, y + 56), fill=(11, 29, 44, 230), width=3)
     d.ellipse((x + 18, y + 23, x + 45, y + 50),
               fill=(22, 43, 53, 250), outline=(128, 160, 168, 245), width=3)
+    # REPAIR is physically a welding/maintenance station, not another
+    # cyan telemetry console like WORK. Warm industrial seam light makes
+    # the action distinguishable even when shrunk to the 96px QA thumbnail.
     d.ellipse((x + 26, y + 31, x + 37, y + 43),
-              fill=(10, 92, 111, 245), outline=(48, 207, 220, 245), width=2)
+              fill=(128, 55, 21, 245), outline=(255, 170, 68, 245), width=3)
+    d.line((x + 8, y + 69, x + 53, y + 69),
+           fill=(231, 138, 51, 225), width=5)
+    for offset in (14, 27, 40):
+        d.polygon(((x + offset, y + 66), (x + offset + 7, y + 66),
+                   (x + offset + 3, y + 72)),
+                  fill=(28, 35, 39, 235))
     tip = tuple(round(v) for v in repair_tip(p["root"]))
     # Keep the welding torch physically attached to the animated wrist.
     hand = (round(p["handR"][0]), round(p["handR"][1]))
@@ -192,20 +201,34 @@ def draw_repair(layer: Image.Image, p: dict, t: float) -> None:
            fill=(128, 157, 164, 240), width=2)
 
 def draw_repair_sparks(layer: Image.Image, p: dict, t: float) -> None:
-    """Emit front-layer sparks at one stable physical weld seam."""
-    x,y=(round(v) for v in repair_tip(p["root"]))
-    tip=(x,y)
-    d=ImageDraw.Draw(layer, "RGBA")
+    """Weld at the actual contact seam, with an unmistakable warm arc.
+
+    WORK keeps blue data-interface feedback while REPAIR emits a pulsed,
+    warm metalworking arc and short-lived sparks. All particles are tied
+    deterministically to the SAME torch tip (no floating secondary prop).
+    The seam position, rig, costume and collision contacts are unchanged.
+    """
+    x, y = (round(v) for v in repair_tip(p["root"]))
+    tip = (x, y)
+    d = ImageDraw.Draw(layer, "RGBA")
     intensity = repair_spark_intensity(t)
-    if intensity > 0:
-        for n in range(7):
-            a = 2 * math.pi * n / 7 + .1 * math.sin(2 * math.pi * t)
-            radius = (7 + 13 * intensity) * (1 + ((n * 7) % 5) / 12)
-            dest = (round(tip[0] + math.cos(a) * radius),
-                    round(tip[1] + math.sin(a) * radius))
-            d.line((tip, dest), fill=(69, 204, 241, round(195 * intensity)), width=2)
-        d.ellipse((tip[0] - 5, tip[1] - 5, tip[0] + 5, tip[1] + 5),
-                  fill=(103, 223, 252, round(230 * intensity)))
+    if intensity <= 0:
+        return
+    phase = 2 * math.pi * (t % 1.0)
+    d.ellipse((x - 16, y - 16, x + 16, y + 16),
+              fill=(238, 99, 28, round(54 * intensity)))
+    for n in range(11):
+        angle = 2 * math.pi * n / 11 + 0.15 * math.sin(phase)
+        radius = (9 + 23 * intensity) * (0.70 + ((n * 7) % 6) / 9)
+        px = round(x + math.cos(angle) * radius)
+        py = round(y + math.sin(angle) * radius)
+        tone = (255, 236, 161) if n % 3 == 0 else (255, 166, 62)
+        alpha = round((230 if n % 3 == 0 else 195) * intensity)
+        d.line((tip, (px, py)), fill=(*tone, alpha), width=3)
+        d.ellipse((px - 2, py - 2, px + 2, py + 2),
+                  fill=(*tone, round(245 * intensity)))
+    d.ellipse((x - 5, y - 5, x + 5, y + 5),
+              fill=(255, 250, 221, round(245 * intensity)))
 
 
 def draw_celebration(layer: Image.Image, p: dict, t: float) -> None:
