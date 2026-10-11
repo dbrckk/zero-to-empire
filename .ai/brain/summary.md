@@ -3,10 +3,10 @@
 - Index mode: incremental
 - Files indexed: 247
 - Files reparsed this run: 1
-- Symbols: 1288
+- Symbols: 1289
 - Internal import edges: 44
-- Impacted files: 5
-- Selected tests: 4
+- Impacted files: 1
+- Selected tests: 0
 
 ## Languages
 - kotlin: 160 files
@@ -45,7 +45,7 @@
 - AST index mode: incremental
 - AST files reparsed this run: 1
 - outline files retained: 252
-- top-level items retained: 3497
+- top-level items retained: 3498
 - direct members retained: 807
 - symbol shards: 26
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard

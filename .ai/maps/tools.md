@@ -2108,6 +2108,27 @@ fx = x+22+k*132
 ambiguity = item.get('automated_visual_risks', {}).get('foot_profile_ambiguous_frames', 0)
 note = (f'Leg visibility flagged: {ambiguity}/{len(frames)}' if action in ('WALK', 'CARRY')
 ⋮----
+def lower_limb_closeups(records, out: Path)
+⋮----
+"""Unretouched walking/carrying foot crops and literal 42px previews.
+
+    A mass- or geometry-only gate cannot decide whether overlapping boots
+    are visually understandable. This supplemental board preserves the
+    exact candidate pixels and makes the ambiguous frames easy to inspect.
+    It never infers a semantic pass, contact validity or release eligibility.
+    """
+⋮----
+surface = Image.new('RGBA', (w, h), BG + (255,))
+d = ImageDraw.Draw(surface)
+⋮----
+frame_box = (55, 120, 215, 248)
+⋮----
+base_y = 150 + row * 485
+⋮----
+# A fixed crop region across frames is essential: independently
+# bounding every foot would conceal its movement/occlusion.
+crop = frames[index].crop(frame_box).resize(
+⋮----
 def animated(records, out: Path)
 ⋮----
 still = []

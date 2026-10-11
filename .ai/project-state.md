@@ -22,20 +22,36 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T11:39:12Z
+Generated: 2026-10-11T11:40:13Z
 
 ### Git
 - Branch: `main`
-- Head: `87c759be3644`
-- Commit date: 2026-10-11T13:38:57+02:00
-- Commit: art(tech): separate far lower-leg steel-blue material from near leg at gameplay scale (review only)
+- Head: `c9c1f169a86e`
+- Commit date: 2026-10-11T13:40:00+02:00
+- Commit: art(review): export true-pixel 2x footfall closeups for TECH WALK/CARRY alongside 42px panels
 - Tracked files: 1524
 
 ### Recently changed files
-- `tools/sprites/rigged_tech_actions_v3.py`
-- `tools/android/character_preview_emulator_smoke.sh`
-- `tools/android/character_preview_pixel_audit.py`
-- `docs/art/TECH_CHARACTER_VISUAL_DIRECTION.md`
+- `tools/sprites/build_tech_review_board.py`
+- `art/production/character-rig-review-candidates/review-report.json`
+- `art/production/character-rig-review-candidates/zte_chr_tech_carry_final-contact.png`
+- `art/production/character-rig-review-candidates/zte_chr_tech_carry_final-preview.gif`
+- `art/production/character-rig-review-candidates/zte_chr_tech_carry_final.png`
+- `art/production/character-rig-review-candidates/zte_chr_tech_celeb_final-contact.png`
+- `art/production/character-rig-review-candidates/zte_chr_tech_celeb_final-preview.gif`
+- `art/production/character-rig-review-candidates/zte_chr_tech_celeb_final.png`
+- `art/production/character-rig-review-candidates/zte_chr_tech_idle_final-contact.png`
+- `art/production/character-rig-review-candidates/zte_chr_tech_idle_final-preview.gif`
+- `art/production/character-rig-review-candidates/zte_chr_tech_idle_final.png`
+- `art/production/character-rig-review-candidates/zte_chr_tech_repair_final-contact.png`
+- `art/production/character-rig-review-candidates/zte_chr_tech_repair_final-preview.gif`
+- `art/production/character-rig-review-candidates/zte_chr_tech_repair_final.png`
+- `art/production/character-rig-review-candidates/zte_chr_tech_walk_final-contact.png`
+- `art/production/character-rig-review-candidates/zte_chr_tech_walk_final-preview.gif`
+- `art/production/character-rig-review-candidates/zte_chr_tech_walk_final.png`
+- `art/production/character-rig-review-candidates/zte_chr_tech_work_final-contact.png`
+- `art/production/character-rig-review-candidates/zte_chr_tech_work_final-preview.gif`
+- `art/production/character-rig-review-candidates/zte_chr_tech_work_final.png`
 
 ### Project signals
 - `build.gradle.kts`
