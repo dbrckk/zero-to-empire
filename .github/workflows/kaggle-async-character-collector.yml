@@ -226,7 +226,7 @@ jobs:
           find /tmp/kaggle-failure -maxdepth 5 -type f -print
           exit 0
       - name: Upload failed kernel evidence
-        if: steps.kernel.outputs.failed == 'true'
+        if: ${{ steps.kernel.outputs.failed == 'true' || (steps.kernel.outputs.ready == 'true' && failure()) }}
         uses: actions/upload-artifact@v4
         with:
           name: kaggle-async-failure-evidence-${{ steps.gate.outputs.submit_run_id }}
@@ -234,7 +234,7 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
       - name: Callback autofactory failure
-        if: steps.kernel.outputs.failed == 'true'
+        if: ${{ steps.kernel.outputs.failed == 'true' || (steps.kernel.outputs.ready == 'true' && failure()) }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
