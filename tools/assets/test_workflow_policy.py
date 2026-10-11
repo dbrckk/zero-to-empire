@@ -269,8 +269,10 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
     def test_character_qa_requires_carry_stride_and_progressive_celebration(self):
         text = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
         self.assertIn("carry-lacks-stride lower-motion=", text)
-        self.assertIn("expressive=sum(delta>=.14 for delta in changes)", text)
-        self.assertIn("celeb-unreadable-gesture transitions=", text)
+        self.assertIn("changes=upper_body_transition_changes(frames)", text)
+        self.assertIn("expressive=sum(delta>=.15 for delta in changes)", text)
+        self.assertIn("celeb-unreadable-gesture upper-transitions=", text)
+        self.assertIn("celeb-upper-silhouette-jump=", text)
 
     def test_carry_scaffold_adds_deterministic_lower_body_motion(self):
         text = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
