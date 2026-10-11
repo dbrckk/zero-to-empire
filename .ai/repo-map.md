@@ -9024,6 +9024,7 @@ class CharacterReviewActivity : ComponentActivity() {
 private fun CharacterReviewGallery() {
     var worldFrame by remember { mutableIntStateOf(0) }
     var playing by remember { mutableStateOf(true) }
+    var daylightStage by remember { mutableStateOf(false) }
     LaunchedEffect(playing) {
         while (playing) {
             delay(100L)
@@ -9096,6 +9097,13 @@ private fun CharacterReviewGallery() {
                                 "Pause and single-step above also control this layer.",
                             style = MaterialTheme.typography.bodySmall,
                         )
+                        OutlinedButton(onClick = { daylightStage = !daylightStage }) {
+                            Text(if (daylightStage) "Night stage" else "Daylight stage")
+                        }
+                        Text(
+                            if (daylightStage) "DAYLIGHT CONTRAST REVIEW" else "NIGHT CONTRAST REVIEW",
+                            style = MaterialTheme.typography.labelMedium,
+                        )
                         // Only the real city character composable is used here.
                         // CI injects review-only textures into the isolated APK,
                         // never the shipped production masters.
@@ -9105,7 +9113,11 @@ private fun CharacterReviewGallery() {
                                 .height(620.dp)
                                 .background(
                                     Brush.verticalGradient(
-                                        listOf(Color(0xFF07101C), Color(0xFF101B24), Color(0xFF080D13))
+                                        if (daylightStage) {
+                                            listOf(Color(0xFFD7E4EB), Color(0xFFBACCD6), Color(0xFF91ABB8))
+                                        } else {
+                                            listOf(Color(0xFF07101C), Color(0xFF101B24), Color(0xFF080D13))
+                                        }
                                     )
                                 ),
                         ) {
