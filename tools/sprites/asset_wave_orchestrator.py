@@ -303,14 +303,23 @@ def next_group(queue: dict[str, Any], lane: str, priority: list[str]) -> str | N
 
 
 def close_exhausted_character_dispatches(queue: dict[str, Any]) -> None:
-    if KAGGLE_BUSY:
-        return
     master = by_id(queue)
     controlled = load_json(CHARACTER_QUEUE, {}) or {}
     controlled_status = {
         str(item.get("id", "")).upper(): str(item.get("status", "")).upper()
         for item in controlled.get("targets", [])
     }
+
+    # KAGGLE_BUSY is repository-wide, but only one async character wave owns
+    # the durable active token. A newer wave can supersede an older one via
+    # workflow concurrency; do not let the newer ENG wave keep stale OP/LOG
+    # dispatches locked merely because *some* Kaggle work is still active.
+    async_state = load_json(Path("art/production/kaggle-async-state.json"), {}) or {}
+    active_async_token = (
+        str(async_state.get("dispatch_token") or "")
+        if str(async_state.get("status", "")).upper() == "ACTIVE"
+        else ""
+    )
     for item in controlled.get("targets", []):
         aid = str(item.get("id", "")).upper()
         asset = master.get(aid)
@@ -318,6 +327,12 @@ def close_exhausted_character_dispatches(queue: dict[str, Any]) -> None:
             continue
         if str(asset.get("pipeline_status", "")).upper() != "DISPATCHED":
             continue
+        if KAGGLE_BUSY:
+            asset_token = str(asset.get("dispatch_token") or "")
+            # Preserve only dispatches owned by the currently active async wave.
+            # If no active token is known, keep the conservative old behaviour.
+            if not active_async_token or asset_token == active_async_token:
+                continue
 
         # A cancelled/superseded async producer can leave the master ledger in
         # DISPATCHED even though no Kaggle run remains active. The controlled
