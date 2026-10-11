@@ -172,6 +172,27 @@ class DispatchCorrelationTests(unittest.TestCase):
         orchestrator = self._load_orchestrator("")
         self.assertEqual(orchestrator.CHARACTER_BATCH_SIZE, 12)
 
+    def test_fresh_character_dispatch_clears_stale_error_and_reason(self) -> None:
+        orchestrator = self._load_orchestrator("wave-fresh")
+        asset = {
+            "id": "CHR-OP-WALK",
+            "strict_status": "NEEDS_REVIEW",
+            "pipeline_status": "PENDING_KAGGLE",
+            "attempts": 2,
+            "infra_failures": 0,
+            "generation_epoch": "legacy",
+            "epoch_attempts": 3,
+            "last_error": "Recovered orphaned Kaggle dispatch",
+            "review_reason": "Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion.",
+        }
+        queue = {"assets": [asset]}
+        dispatched = orchestrator.mark_dispatch(queue, ["CHR-OP-WALK"], "kaggle-character-sheet")
+        self.assertEqual(dispatched, ["CHR-OP-WALK"])
+        self.assertEqual(asset["pipeline_status"], "DISPATCHED")
+        self.assertIsNone(asset["last_error"])
+        self.assertIn("wave-fresh", asset["review_reason"])
+        self.assertIn("semantic review remains required", asset["review_reason"])
+
     def test_character_priority_includes_idle_identity_context(self) -> None:
         orchestrator = self._load_orchestrator("")
         controlled = {
