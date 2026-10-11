@@ -2,13 +2,13 @@
 
 Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains the canonical 236-item scope. Candidate art is never confused with DONE runtime assets.
 
-## Official progress — canonical reconciliation (2026-10-09)
+## Official progress — canonical reconciliation (2026-10-11)
 
-- Canonical strict DONE: **216 / 235** (source: master-asset-queue.json).
-- Manifest DONE: **217 / 236**, including ONB-00 outside the 235-target scope.
-- Manifest RUNTIME awaiting semantic approval: **17 / 236**.
-- Manifest BLOCKED: **2 / 236**.
-- Strict characters: **5 / 24** approved; **19 / 24** await review.
+- Canonical strict DONE: **219 / 235** (source: master-asset-queue.json).
+- Manifest DONE: **220 / 236**, including ONB-00 outside the 235-target scope.
+- Manifest RUNTIME awaiting semantic approval: **15 / 236**.
+- Manifest BLOCKED: **1 / 236**.
+- Strict characters: **8 / 24** approved; **16 / 24** await review.
 - Historical art promotion review: **OPEN**.
 - Only visual/semantic approval, runtime evidence and green Android CI justify new strict DONE records.
 - Prior historical production details below are not current aggregate totals.
