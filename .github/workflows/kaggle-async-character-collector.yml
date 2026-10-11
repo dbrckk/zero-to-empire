@@ -116,9 +116,13 @@ jobs:
           if report_path.exists():
               report=json.loads(report_path.read_text())
               actual.update(str(r.get('id','')).upper() for r in report if r.get('id'))
-          if expected and not (expected & actual):
-              raise SystemExit(f'stale Kaggle output expected={sorted(expected)} actual={sorted(actual)}')
-          print('KAGGLE_ASYNC_MATCH='+','.join(sorted(expected & actual)))
+          missing=expected-actual
+          if missing:
+              raise SystemExit(
+                  f'incomplete/stale Kaggle output missing={sorted(missing)} '
+                  f'expected={sorted(expected)} actual={sorted(actual)}'
+              )
+          print('KAGGLE_ASYNC_MATCH='+','.join(sorted(expected)))
           PY
       - name: Technical QA
         if: steps.kernel.outputs.ready == 'true'
