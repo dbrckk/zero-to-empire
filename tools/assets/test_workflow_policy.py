@@ -191,6 +191,14 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("source=semantic_scaffold(shared,i['action'],fi)", text)
         self.assertIn("ImageDraw", text)
 
+    def test_kaggle_character_generator_rejects_blocking_visual_risks(self):
+        generator = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
+        workflow = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
+        self.assertIn("from character_semantic_gate import clip_risk", generator)
+        self.assertIn("visual_risk=clip_risk(frames)", generator)
+        self.assertIn("risk_level')=='BLOCKING", generator)
+        self.assertIn("character_semantic_gate.py", workflow)
+
     def test_kaggle_character_generator_uses_neutral_role_anchor(self):
         text = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
         self.assertIn("def anchor_prompt_pair(role):", text)
