@@ -22,20 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T18:17:49Z
+Generated: 2026-10-11T18:18:57Z
 
 ### Git
 - Branch: `main`
-- Head: `a81f1a4690ac`
-- Commit date: 2026-10-11T20:17:29+02:00
-- Commit: ci(art): recheck ENG wave after v1.18 pipeline validation
+- Head: `2c4642ad0d7c`
+- Commit date: 2026-10-11T20:18:37+02:00
+- Commit: test(art): lock canonical queue policy to v1.18
 - Tracked files: 1524
 
 ### Recently changed files
-- `ops/kaggle-collector-trigger.txt`
 - `tools/assets/test_queue_state_policy.py`
+- `tools/sprites/asset_queue_utils.py`
+- `ops/kaggle-collector-trigger.txt`
 - `tools/assets/test_workflow_policy.py`
-- `ops/autofactory-kick.txt`
 
 ### Project signals
 - `build.gradle.kts`

@@ -26784,6 +26784,10 @@ def test_persisted_fields_are_unique(self) -> None
 ⋮----
 fields = queue_utils.PERSISTED_ASSET_STATE_FIELDS
 ⋮----
+def test_canonical_queue_policy_matches_current_character_epoch(self) -> None
+⋮----
+text = MODULE_PATH.read_text(encoding="utf-8")
+⋮----
 class DispatchCorrelationTests(unittest.TestCase)
 ⋮----
 def _load_orchestrator(self, token: str)
