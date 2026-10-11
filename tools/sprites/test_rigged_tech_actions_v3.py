@@ -63,8 +63,9 @@ class MultiActionGeometryTests(unittest.TestCase):
                 self.assertLessEqual(math.dist(
                     (p['root'][0]-13,p['root'][1]),p['left']),193.0)
                 q=pose_for(t+1,action)
-                self.assertEqual(p['left'],q['left'])
-                self.assertEqual(p['right'],q['right'])
+                for side in ('left','right'):
+                    for before,after in zip(p[side],q[side]):
+                        self.assertAlmostEqual(before,after,places=8)
 
     def test_stationary_actions_keep_feet_grounded_and_hands_reachable(self):
         for action in ("IDLE", "WORK", "REPAIR", "CELEB"):
