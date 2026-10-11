@@ -92,6 +92,40 @@ def rows():
   if x['manifest_status']=='TODO' and not (ROOT/x['runtime']).is_file()
  ]
 
+def queue_rejection_hint(i):
+ if not QUEUE.is_file():
+  return ''
+ try:
+  q=json.loads(QUEUE.read_text(encoding='utf-8'))
+ except Exception:
+  return ''
+ row=next((x for x in q.get('targets',[]) if str(x.get('id','')).upper()==i['id']),None)
+ if not row:
+  return ''
+ reason=str(row.get('review_reason') or '').lower()
+ if not reason:
+  return ''
+ rules=[]
+ mapping=(
+  (('palette_identity_discontinuity','appearance-drift','identity/silhouette'),
+   'Preserve the exact same face, headgear, clothing colors, materials and body proportions in every frame.'),
+  (('silhouette_mass_discontinuity','scale discontinuity','coverage='),
+   'Keep character body scale and prop size stable across the sequence; do not zoom or crop between frames.'),
+  (('multiple_non_full_body','multiple-subject','too-wide'),
+   'Render exactly one full-body worker only, never a duplicate, companion, reflection or second torso.'),
+  (('lower_limb','feet-pivot','edge contact'),
+   'Keep both legs and both feet fully visible with a stable ground pivot and safe transparent border.'),
+  (('walk-too-static','duplicate-adjacent-frame'),
+   'Increase real alternating limb motion between frames while preserving the same camera and identity.'),
+  (('horizontal-drift',),
+   'Keep the body centered on one fixed world pivot with no lateral camera drift.'),
+ )
+ for needles,hint in mapping:
+  if any(n in reason for n in needles) and hint not in rules:
+   rules.append(hint)
+ return ' '.join(rules)
+
+
 def rejection_hints(i):
  hints=[]
  if REJECTION_LEDGER.is_file():
@@ -113,9 +147,12 @@ def rejection_hints(i):
      if hint and hint not in hints:hints.append(hint)
   except Exception as e:
    print('KAGGLE_CHR_REJECTION_MEMORY_SKIP='+str(e),flush=True)
- merged=' '.join(hints[-2:])
+ qhint=queue_rejection_hint(i)
+ if qhint:
+  hints.append(qhint)
+ merged=' '.join(hints[-3:])
  words=merged.split()
- return ' '.join(words[:48])
+ return ' '.join(words[:72])
 
 def anchor_prompt_pair(role):
  role_short={
