@@ -83,6 +83,12 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("actions: write", text)
         self.assertIn("kaggle-async-character-batch", text)
 
+    def test_character_promotion_can_resolve_source_artifact_run_from_queue(self):
+        text = Path(".github/workflows/promote-approved-kaggle-characters.yml").read_text(encoding="utf-8")
+        self.assertIn("default: 'auto'", text)
+        self.assertIn("review_artifact_run_id", text)
+        self.assertIn("Automatic source run resolution requires one shared review_artifact_run_id", text)
+
     def test_character_promotion_requires_android_runtime_validation_before_done(self):
         text = Path(".github/workflows/promote-approved-kaggle-characters.yml").read_text(encoding="utf-8")
         self.assertIn("Validate promoted Android runtime", text)
