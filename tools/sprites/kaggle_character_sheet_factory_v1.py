@@ -9,7 +9,7 @@ from __future__ import annotations
 import argparse,gc,json,re
 from collections import deque
 from pathlib import Path
-print('KAGGLE_STARTUP=character-sheet-flux-v1.12-persistent-semantic-scaffold',flush=True)
+print('KAGGLE_STARTUP=character-sheet-flux-v1.18-carry-identity-lock',flush=True)
 import torch
 from PIL import Image,ImageDraw,ImageFilter
 from diffusers import FluxPipeline,FluxImg2ImgPipeline,FluxTransformer2DModel
@@ -454,7 +454,7 @@ def main():
 
         'WORK':(.58,.03,.68),
 
-        'CARRY':(.66,.025,.74),
+        'CARRY':(.52,.020,.60),
 
         'REPAIR':(.62,.03,.72),
 
@@ -477,7 +477,11 @@ def main():
        elif i['action']=='WORK':
         strength=min(.72,.54+fi*.018+attempt*.025)
        elif i['action']=='CARRY':
-        strength=min(.78,.62+fi*.018+attempt*.025)
+        # v1.18: keep the role identity and clothing materially closer to the
+        # canonical anchor. The deterministic crate scaffold already supplies
+        # the carry semantic, so high denoise only encourages face/body drift
+        # and oversized/duplicated luggage.
+        strength=min(.64,.48+fi*.012+attempt*.020)
        elif i['action']=='REPAIR':
         strength=min(.76,.58+fi*.018+attempt*.03)
        elif i['action']=='CELEB':
