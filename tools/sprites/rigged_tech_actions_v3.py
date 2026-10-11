@@ -80,57 +80,57 @@ def pose_for(t: float, action: str) -> dict:
 
 
 def draw_cargo(layer: Image.Image, p: dict, t: float) -> None:
-    """Readable two-hand cargo crate, not a glowing handheld screen.
+    """A readable industrial crate physically supported by both wrists.
 
-    Draw behind the character's articulated hands. Handle coordinates match
-    pose_for(CARRY)'s exact left/right wrist anchors in every cycle frame.
-    Shape/material QA is not a substitute for 96px artistic grip inspection.
+    Review-only enlargement for real 39–42dp Android sprites. Repositioning
+    the shell MUST NOT move either wrist: handle centers are exact, invariant
+    rig coordinates. The same solid crate remains attached across all frames.
     """
     root_x, root_y = p["root"]
-    x, y = round(root_x + 20), round(root_y - 82)
+    x, y = round(root_x + 10), round(root_y - 95)
     d = ImageDraw.Draw(layer, "RGBA")
-    # Three-dimensional warm industrial cargo container.
-    d.rounded_rectangle((x + 6, y + 10, x + 90, y + 60), radius=6,
-                        fill=(29, 33, 37, 252),
-                        outline=(75, 81, 85, 250), width=3)
-    d.polygon(((x + 13, y + 7), (x + 78, y + 7),
-               (x + 90, y + 14), (x + 23, y + 14)),
-              fill=(213, 143, 69, 252))
-    d.rounded_rectangle((x + 10, y + 14, x + 87, y + 55), radius=4,
-                        fill=(148, 84, 38, 255),
-                        outline=(231, 163, 83, 255), width=3)
-    d.polygon(((x + 76, y + 15), (x + 87, y + 15),
-               (x + 87, y + 53), (x + 76, y + 49)),
-              fill=(93, 53, 29, 255))
-    # Recessed cargo reinforcement, hazard-style seams without baked letters.
-    for offset in (27, 40, 53, 66):
-        d.line((x + offset, y + 18, x + offset, y + 49),
-               fill=(69, 54, 42, 190), width=3)
-        d.line((x + offset + 2, y + 18, x + offset + 2, y + 47),
-               fill=(238, 167, 90, 135), width=1)
-    d.line((x + 18, y + 44, x + 72, y + 44),
-           fill=(83, 57, 38, 232), width=4)
-    # A small metal lock reads as a cargo latch, not a display screen.
-    d.rounded_rectangle((x + 43, y + 27, x + 54, y + 36),
-                        radius=2, fill=(36, 48, 50, 255),
-                        outline=(170, 184, 166, 235), width=2)
-    d.line((x + 46, y + 31, x + 50, y + 31),
-           fill=(102, 208, 212, 235), width=1)
+    # Larger luggage-sized load instead of a tiny tablet-sized block.
+    # Its warm material and angled lid distinguish CARRY from WORK/REPAIR.
+    d.rounded_rectangle((x + 6, y + 12, x + 117, y + 83), radius=7,
+                        fill=(26, 32, 38, 253),
+                        outline=(87, 91, 92, 250), width=4)
+    d.polygon(((x + 14, y + 9), (x + 103, y + 9),
+               (x + 117, y + 20), (x + 25, y + 20)),
+              fill=(222, 151, 75, 253))
+    d.rounded_rectangle((x + 11, y + 20, x + 110, y + 77), radius=5,
+                        fill=(150, 84, 38, 255),
+                        outline=(239, 172, 92, 255), width=4)
+    d.polygon(((x + 98, y + 20), (x + 110, y + 20),
+               (x + 110, y + 75), (x + 98, y + 69)),
+              fill=(91, 53, 32, 255))
+    # Vertical ribs preserve a physical cargo silhouette at 96px.
+    for offset in (34, 51, 68, 85):
+        d.line((x + offset, y + 25, x + offset, y + 67),
+               fill=(70, 55, 43, 210), width=4)
+        d.line((x + offset + 2, y + 25, x + offset + 2, y + 65),
+               fill=(241, 175, 99, 155), width=2)
+    d.line((x + 27, y + 64, x + 92, y + 64),
+           fill=(88, 55, 36, 230), width=5)
+    # Hardware latch: small neutral/metal feature, not an electronic screen.
+    d.rounded_rectangle((x + 54, y + 42, x + 67, y + 55),
+                        radius=2, fill=(38, 49, 52, 255),
+                        outline=(183, 192, 179, 245), width=2)
+    d.line((x + 58, y + 47, x + 63, y + 47),
+           fill=(139, 197, 188, 240), width=2)
 
-    # Right and left handle centers MUST coincide with the rig's two wrists:
-    # handL = root+(29,-55); handR = root+(103,-55).
-    for cx in (x + 9, x + 83):
-        d.rounded_rectangle((cx - 7, y + 18, cx + 7, y + 36),
+    # x=root+10 and y=root-95 imply wrist anchors x+19/y+40 and
+    # x+93/y+40, exactly pose_for(CARRY)'s two fixed handle centers.
+    for cx in (x + 19, x + 93):
+        d.rounded_rectangle((cx - 9, y + 28, cx + 9, y + 52),
                             radius=5, fill=(23, 29, 33, 255),
-                            outline=(233, 177, 106, 255), width=3)
-        d.rounded_rectangle((cx - 4, y + 22, cx + 4, y + 33),
-                            radius=3, fill=(56, 65, 69, 255),
-                            outline=(127, 146, 150, 250), width=1)
-    # Wear and corner rivets are attached to the single rigid container.
-    for px, py in ((x + 19, y + 20), (x + 70, y + 20),
-                   (x + 19, y + 48), (x + 70, y + 48)):
+                            outline=(245, 184, 113, 255), width=4)
+        d.rounded_rectangle((cx - 5, y + 33, cx + 5, y + 47),
+                            radius=3, fill=(62, 70, 73, 255),
+                            outline=(139, 156, 160, 250), width=1)
+    for px, py in ((x + 29, y + 25), (x + 92, y + 25),
+                   (x + 29, y + 71), (x + 92, y + 71)):
         d.ellipse((px - 2, py - 2, px + 2, py + 2),
-                  fill=(241, 189, 111, 235))
+                  fill=(247, 192, 117, 235))
 
 
 

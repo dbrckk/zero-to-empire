@@ -85,8 +85,8 @@ class MultiActionGeometryTests(unittest.TestCase):
             layer = Image.new("RGBA", (512, 512))
             draw_cargo(layer, pose, t)
             x, y = pose["root"]
-            l, top = round(x + 20), round(y - 82)
-            cargo = layer.crop((l, top, l + 96, top + 65))
+            l, top = round(x + 10), round(y - 95)
+            cargo = layer.crop((l, top, l + 128, top + 90))
             amber = sum(
                 a >= 220 and r > g * 1.20 and g > b * 1.15
                 for r, g, b, a in cargo.getdata()
@@ -95,13 +95,13 @@ class MultiActionGeometryTests(unittest.TestCase):
                 a >= 220 and b > r * 1.8 and g > r * 1.8
                 for r, g, b, a in cargo.getdata()
             )
-            self.assertGreater(amber, 650, "Cargo must read as a crate")
+            self.assertGreater(amber, 1500, "Larger cargo must read at small scale")
             self.assertLess(blue, 80, "Cargo must not look like a screen")
             for handle in ("handL", "handR"):
                 hx, hy = (round(c) for c in pose[handle])
                 self.assertEqual(layer.getpixel((hx, hy))[3], 255)
                 self.assertTrue(
-                    l <= hx < l + 96 and top <= hy < top + 65,
+                    l <= hx < l + 128 and top <= hy < top + 90,
                     "Grip must remain attached to the crate",
                 )
 
