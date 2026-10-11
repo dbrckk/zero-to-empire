@@ -1,13 +1,13 @@
 # Change impact
 
-Base: a500859d33796611fae93eac3eb8a11cf085df33
-Head: 838decde962a3fbaebe208bf49c237fa8c8df441
+Base: a5b187a1c905d6fc60eb69b8c0cf88d97383408f
+Head: e5e674e97d018ec689cf17aa3807ec090c3a7693
 
 ## Changed files
-- M tools/assets/test_queue_state_policy.py
+- M ops/kaggle-collector-trigger.txt
 
 ## Affected areas
-- tools
+- ops
 
 ## Related test candidates
 - No direct filename-based test match detected.

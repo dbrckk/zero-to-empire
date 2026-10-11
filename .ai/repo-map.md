@@ -2407,7 +2407,7 @@ jobs:
           set -euo pipefail
           slug="${KAGGLE_USERNAME}/${{ steps.gate.outputs.kernel_slug }}"
           status="$(kaggle kernels status "$slug" 2>&1 || true)"
-          echo "$status"
+          printf '%s\n' "$status" | tee /tmp/kaggle-kernel-status.txt
           if echo "$status" | grep -qi 'complete'; then
             echo 'ready=true' >> "$GITHUB_OUTPUT"
             exit 0
@@ -2423,6 +2423,14 @@ jobs:
             exit 0
           fi
           echo 'ready=false' >> "$GITHUB_OUTPUT"
+      - name: Upload kernel observation
+        if: steps.gate.outputs.active == 'true' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kaggle-async-kernel-observation-${{ steps.gate.outputs.submit_run_id }}
+          path: /tmp/kaggle-kernel-status.txt
+          if-no-files-found: warn
+          retention-days: 7
       - name: Download completed output
         if: steps.kernel.outputs.ready == 'true'
         run: |
@@ -2913,7 +2921,8 @@ jobs:
           by={x['id']:x for x in mq['assets']}
           tokens={str(by[i].get('dispatch_token') or '') for i in ids if i in by}
           tokens.discard('')
-          strict_completion=str(cq.get('mode','')).startswith('kaggle-character-burst-v1.16')
+          mode=str(cq.get('mode','')).lower()
+          strict_completion=(mode.startswith('kaggle-character-burst-v1.') and 'strict-completion' in mode)
           if len(tokens)==1:
               token=next(iter(tokens))
           elif strict_completion:
@@ -26912,6 +26921,8 @@ text = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encodi
 def test_async_preflight_failure_returns_dispatch_to_autofactory(self)
 def test_push_triggered_kaggle_wave_is_async_and_preserves_dispatch_owner(self)
 ⋮----
+def test_strict_completion_mode_is_not_pinned_to_one_generator_version(self)
+⋮----
 def test_character_promotion_accepts_async_collector_artifact_and_can_continue_factory(self)
 ⋮----
 text = Path(".github/workflows/promote-approved-kaggle-characters.yml").read_text(encoding="utf-8")
@@ -26933,6 +26944,8 @@ factory = Path("kaggle/github_mass_factory.py").read_text(encoding="utf-8")
 def test_async_kernel_slug_changes_when_character_generator_changes(self)
 def test_kaggle_kernel_title_resolves_to_requested_slug(self)
 def test_async_collector_captures_failed_kernel_evidence(self)
+def test_async_collector_persists_kernel_observation_even_before_completion(self)
+⋮----
 def test_async_kaggle_uses_unique_kernel_slug_and_stale_timeout(self)
 ⋮----
 collector = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
