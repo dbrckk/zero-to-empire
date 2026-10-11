@@ -191,6 +191,15 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("/tmp/kaggle-kernel-status.txt", text)
         self.assertIn("Upload kernel observation", text)
 
+    def test_mass_gpu_preflight_blocks_duplicate_active_waves(self):
+        text = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
+        self.assertIn("jobs:\n  preflight:", text)
+        self.assertIn("KAGGLE_DUPLICATE_WAVE_PREVENTED=1", text)
+        self.assertIn("needs: preflight", text)
+        self.assertIn("if: needs.preflight.outputs.permitted == 'true'", text)
+        self.assertNotIn("      - 'kaggle/github_mass_factory.py'", text)
+        self.assertNotIn("      - 'kaggle/kernel-metadata.template.json'", text)
+
     def test_async_kaggle_uses_unique_kernel_slug_and_stale_timeout(self):
         mass = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
         collector = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
