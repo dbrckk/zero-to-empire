@@ -11,7 +11,9 @@ permissions:
   contents: write
 
 concurrency:
-  group: promote-reviewed-tech-sprites
+  # Share the canonical ledger lock with Asset Autofactory 235 so the
+  # validated promotion cannot race a concurrent master-queue rewrite.
+  group: asset-autofactory-235
   cancel-in-progress: false
 
 jobs:
