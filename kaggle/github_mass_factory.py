@@ -127,6 +127,7 @@ overlay_names=(
  'kaggle_building_family_factory_v15.py',
  'kaggle_building_family_factory_v14.py',
  'kaggle_character_sheet_factory_v1.py',
+ 'character_semantic_gate.py',
 )
 overlay_applied=False
 if GENERATOR_OVERLAY_B64:
