@@ -181,9 +181,14 @@ jobs:
               aid=str(item.get('id','')).upper()
               if str(item.get('status','')).upper()!='PENDING_KAGGLE': continue
               if aid in produced:
-                  item['status']='AWAITING_REVIEW'; item['kaggle_run_id']=run_id; item.pop('review_reason',None)
+                  item['status']='AWAITING_REVIEW'
+                  item['kaggle_run_id']=run_id
+                  item['review_artifact_run_id']=int(os.environ['GITHUB_RUN_ID'])
+                  item.pop('review_reason',None)
               elif aid in rejected:
-                  item['status']='REJECTED'; item['kaggle_run_id']=run_id
+                  item['status']='REJECTED'
+                  item['kaggle_run_id']=run_id
+                  item['review_artifact_run_id']=int(os.environ['GITHUB_RUN_ID'])
                   item['review_reason']='Kaggle generator rejected candidate: '+rejected[aid]
           p.write_text(json.dumps(q,indent=2)+'\n')
           state=Path('art/production/kaggle-async-state.json')
