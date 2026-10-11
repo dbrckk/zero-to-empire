@@ -1,13 +1,13 @@
 # Change impact
 
-Base: e729296fd642e2cb7766c0cbfab5981e349cc4a7
-Head: 0d38056f1e0dd823dfd4bf2f341f844cf4349991
+Base: 23e33747cec94acbc1c3d2e60004db36a8c77ce4
+Head: 43ad8d1e68d59d4041601bb700797b6a6ffeed1d
 
 ## Changed files
-- M tools/sprites/test_weight_transfer.py
+- M docs/art/TECH_CHARACTER_VISUAL_DIRECTION.md
 
 ## Affected areas
-- tools
+- docs
 
 ## Related test candidates
 - No direct filename-based test match detected.

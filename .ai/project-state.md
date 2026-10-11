@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T11:48:38Z
+Generated: 2026-10-11T11:51:15Z
 
 ### Git
 - Branch: `main`
-- Head: `0d38056f1e0d`
-- Commit date: 2026-10-11T13:48:22+02:00
-- Commit: fix(tech): align existing stance invariant with fixed far-ground 2.5D projection
+- Head: `43ad8d1e68d5`
+- Commit date: 2026-10-11T13:51:00+02:00
+- Commit: docs(art): record measured fixed 2.5D far-foot depth trial and unchanged lower-limb review risk
 - Tracked files: 1524
 
 ### Recently changed files
+- `docs/art/TECH_CHARACTER_VISUAL_DIRECTION.md`
 - `tools/sprites/test_weight_transfer.py`
 - `art/production/character-rig-review-candidates/review-report.json`
 - `art/production/character-rig-review-candidates/zte_chr_tech_carry_final-contact.png`
@@ -42,7 +43,6 @@ Generated: 2026-10-11T11:48:38Z
 - `art/production/character-rig-review-candidates/zte_chr_tech_walk_final.png`
 - `tools/sprites/test_rigged_tech_actions_v3.py`
 - `tools/sprites/rigged_tech_actions_v3.py`
-- `tools/sprites/build_tech_review_board.py`
 
 ### Project signals
 - `build.gradle.kts`
