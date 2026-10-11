@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -27,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
@@ -36,6 +38,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * The debug build exposes this surface as a separate launcher icon. It is
@@ -53,6 +56,10 @@ private fun CharacterReviewGallery() {
     var worldFrame by remember { mutableIntStateOf(0) }
     var playing by remember { mutableStateOf(true) }
     var daylightStage by remember { mutableStateOf(false) }
+    val listState = rememberLazyListState()
+    val scrollScope = rememberCoroutineScope()
+    // One header and one item for each of the four professions precede stage.
+    val stageIndex = ReviewedCharacterRole.entries.size + 1
     var technicianOnly by remember { mutableStateOf(false) }
     var inspectedTechAction by remember { mutableStateOf(ReviewedCharacterAction.WALK) }
     LaunchedEffect(playing) {
@@ -65,6 +72,7 @@ private fun CharacterReviewGallery() {
     MaterialTheme {
         Surface(Modifier.fillMaxSize()) {
             LazyColumn(
+                state = listState,
                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 14.dp),
                 verticalArrangement = Arrangement.spacedBy(14.dp),
             ) {
@@ -89,6 +97,11 @@ private fun CharacterReviewGallery() {
                                 playing = false
                                 worldFrame = (worldFrame + 1) % 1680
                             }) { Text("+1") }
+                        }
+                        OutlinedButton(onClick = {
+                            scrollScope.launch { listState.animateScrollToItem(stageIndex) }
+                        }) {
+                            Text("Jump to game-scale stage")
                         }
                         Text(
                             "Image : $worldFrame · 10 FPS · testez aussi le jeu réel",
@@ -121,6 +134,9 @@ private fun CharacterReviewGallery() {
                             "STAGE-SCALE CHARACTER LAYER",
                             style = MaterialTheme.typography.titleMedium,
                         )
+                        OutlinedButton(onClick = {
+                            scrollScope.launch { listState.animateScrollToItem(0) }
+                        }) { Text("Back to animation gallery") }
                         Text(
                             "Exact city character renderer and positions at gameplay sizes " +
                                 "(35–46 dp). This debug comparison does not approve any sprite. " +
