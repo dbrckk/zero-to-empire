@@ -22,22 +22,25 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T08:16:37Z
+Generated: 2026-10-11T08:18:14Z
 
 ### Git
 - Branch: `main`
-- Head: `7c62428c9609`
-- Commit date: 2026-10-11T10:16:22+02:00
-- Commit: art(tech): enlarge industrial CARRY crate while keeping both wrist grips exactly fixed
+- Head: `307bdedc2d06`
+- Commit date: 2026-10-11T10:18:00+02:00
+- Commit: docs(art): document larger TECH cargo pixel review and unchanged strict gate
 - Tracked files: 1521
 
 ### Recently changed files
+- `docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md`
+- `art/production/character-rig-review-candidates/review-report.json`
+- `art/production/character-rig-review-candidates/zte_chr_tech_carry_final-contact.png`
+- `art/production/character-rig-review-candidates/zte_chr_tech_carry_final-preview.gif`
+- `art/production/character-rig-review-candidates/zte_chr_tech_carry_final.png`
 - `tools/sprites/rigged_tech_actions_v3.py`
 - `tools/sprites/test_rigged_tech_actions_v3.py`
 - `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
 - `tools/android/character_preview_emulator_smoke.sh`
-- `app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt`
-- `docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md`
 
 ### Project signals
 - `build.gradle.kts`
