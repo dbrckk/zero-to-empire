@@ -18,10 +18,11 @@ on:
   push:
     branches:
       - main
+    # Starting another GPU kernel merely because its source code changed
+    # can overwrite the active wave ledger and strand a long-running batch.
+    # Only an explicit dispatch marker is allowed to trigger push production.
     paths:
       - 'ops/sprite-wave-trigger.txt'
-      - 'kaggle/github_mass_factory.py'
-      - 'kaggle/kernel-metadata.template.json'
 
 permissions:
   contents: write
