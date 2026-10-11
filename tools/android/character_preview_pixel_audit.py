@@ -47,6 +47,39 @@ def review_crop(folder: Path, action: str) -> tuple[Image.Image, int]:
         raise ValueError(f"{action}: invalid screen density")
     with Image.open(shot) as source:
         rgb = source.convert("RGB")
+    # A previously green emulator run had its 42dp actor cropped at the
+    # waist by the LazyColumn viewport. The old crop also included the
+    # Android navbar, which inflated the non-background pixel count.
+    # Prove the NIGHT and DAY preview panes extend below the whole sprite
+    # before comparing any action pixels. Coordinates scale with the actual
+    # Android caption size, not hard-coded emulator resolution.
+    for text, expected in (
+        ("NIGHT · 42 dp", (16, 27, 36)),
+        ("DAY · 39 dp", (186, 204, 214)),
+    ):
+        matches = [n for n in root.iter("node")
+                   if n.attrib.get("text") == text]
+        if len(matches) != 1:
+            raise ValueError(f"{action}: missing full-body panel {text}")
+        bounds = BOUNDS.fullmatch(matches[0].attrib.get("bounds", ""))
+        if not bounds:
+            raise ValueError(f"{action}: invalid panel bounds {text}")
+        cx0, cy0, cx1, cy1 = map(int, bounds.groups())
+        caption_px = cy1 - cy0
+        # The avatar is 39-42dp tall beneath this 14sp caption.
+        # The pane must still have its native background well below the
+        # shoes. A screenshot captured mid-scroll / below the viewport
+        # fails, even when it contains the actor's head and shoulders.
+        probe_x = cx0 - max(8, round(caption_px * .35))
+        probe_y = cy1 + round(caption_px * 3.25)
+        if not (0 <= probe_x < rgb.width and 0 <= probe_y < rgb.height - 80):
+            raise ValueError(f"{action}: {text} full-body preview is off-screen")
+        sample = rgb.getpixel((probe_x, probe_y))
+        if max(abs(sample[i] - expected[i]) for i in range(3)) > 18:
+            raise ValueError(
+                f"{action}: {text} full-body preview is vertically clipped "
+                f"(foot-depth={probe_y}, got={sample}, expected={expected})")
+    print(f"CHARACTER_PREVIEW_FULL_BODY_PANELS={action}:NIGHT+DAY")
     half_width = round(height * 2.14)
     left, right = (x0 + x1) // 2 - half_width, (x0 + x1) // 2 + half_width
     top, bottom = y1 + 5, y1 + 5 + round(height * 3.45)
