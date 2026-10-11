@@ -109,6 +109,33 @@ assert_text "Animation QA" opening
 assert_text "Pause" opening
 adb exec-out screencap -p > "$OUT/gallery-playing.png"
 
+# Prove both fast-navigation controls operate within the debug LazyColumn.
+# Do this before pausing playback; the game renderer and current sprite
+# status remain untouched.
+click "Jump to game-scale stage" before-fast-jump
+jumped=false
+for jump_attempt in 1 2 3 4 5; do
+  dump "fast-jump-$jump_attempt"
+  if grep -Fq 'STAGE-SCALE CHARACTER LAYER' "$OUT/fast-jump-$jump_attempt.xml"; then
+    jumped=true
+    break
+  fi
+  sleep 1
+done
+[[ "$jumped" == true ]] || { echo "CHARACTER_PREVIEW_FAIL=fast-jump-did-not-reach-stage" >&2; exit 1; }
+click "Back to animation gallery" before-fast-return
+returned=false
+for return_attempt in 1 2 3 4 5; do
+  dump "fast-return-$return_attempt"
+  if grep -Fqi 'Animation QA' "$OUT/fast-return-$return_attempt.xml"; then
+    returned=true
+    break
+  fi
+  sleep 1
+done
+[[ "$returned" == true ]] || { echo "CHARACTER_PREVIEW_FAIL=fast-return-did-not-reach-gallery" >&2; exit 1; }
+echo "CHARACTER_PREVIEW_FAST_NAVIGATION_PASS=1"
+
 click Pause before-pause
 dump paused
 assert_text Lecture paused
