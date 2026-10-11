@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 23e33747cec94acbc1c3d2e60004db36a8c77ce4
-Head: 43ad8d1e68d59d4041601bb700797b6a6ffeed1d
+Base: 47d999301704f1beb0a025e057be2b3035fde317
+Head: 32dbf805e6ec5b0e9feca1e32e5a6eb8e0837a62
 
 ## Changed files
-- M docs/art/TECH_CHARACTER_VISUAL_DIRECTION.md
+- M tools/sprites/build_tech_review_board.py
 
 ## Affected areas
-- docs
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

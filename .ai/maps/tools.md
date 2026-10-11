@@ -2074,6 +2074,8 @@ records = {}
 ⋮----
 action = item['asset_id'].split('-')[-1]
 ⋮----
+atlas_path = root / item['staged_png']
+⋮----
 rgba = im.convert('RGBA')
 frames = []
 ⋮----

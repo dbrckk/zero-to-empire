@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T11:51:15Z
+Generated: 2026-10-11T16:38:07Z
 
 ### Git
 - Branch: `main`
-- Head: `43ad8d1e68d5`
-- Commit date: 2026-10-11T13:51:00+02:00
-- Commit: docs(art): record measured fixed 2.5D far-foot depth trial and unchanged lower-limb review risk
+- Head: `32dbf805e6ec`
+- Commit date: 2026-10-11T18:37:49+02:00
+- Commit: fix(art): verify TECH review board atlas SHA-256, shared skin and unique actions before evidence render
 - Tracked files: 1524
 
 ### Recently changed files
+- `tools/sprites/build_tech_review_board.py`
 - `docs/art/TECH_CHARACTER_VISUAL_DIRECTION.md`
 - `tools/sprites/test_weight_transfer.py`
 - `art/production/character-rig-review-candidates/review-report.json`
@@ -42,7 +43,6 @@ Generated: 2026-10-11T11:51:15Z
 - `art/production/character-rig-review-candidates/zte_chr_tech_walk_final-preview.gif`
 - `art/production/character-rig-review-candidates/zte_chr_tech_walk_final.png`
 - `tools/sprites/test_rigged_tech_actions_v3.py`
-- `tools/sprites/rigged_tech_actions_v3.py`
 
 ### Project signals
 - `build.gradle.kts`
