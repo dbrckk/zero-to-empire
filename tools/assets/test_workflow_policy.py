@@ -146,6 +146,11 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("row.get('retry_reasons',[])", text)
         self.assertIn("dict.fromkeys(retries[-4:])", text)
 
+    def test_async_collector_does_not_cancel_in_progress_evidence_download(self):
+        text = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
+        self.assertIn("group: kaggle-async-character-collector", text)
+        self.assertIn("cancel-in-progress: false", text)
+
     def test_async_collector_allows_large_role_bursts_to_finish(self):
         workflow = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
         self.assertIn("target_count=len(d.get('target_ids') or [])", workflow)
