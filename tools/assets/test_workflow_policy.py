@@ -180,7 +180,7 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("Resolve Kaggle kernel slug", mass)
         self.assertIn("KAGGLE_KERNEL_FULL", mass)
         self.assertIn("'kernel_slug':os.environ.get('KAGGLE_KERNEL_SLUG'", mass)
-        self.assertIn("150*60", collector)
+        self.assertIn("stale_limit_minutes*60", collector)
         self.assertIn("KAGGLE_ASYNC_STALE=1", collector)
         self.assertIn("FAILED_STALE", collector)
     def test_async_kaggle_character_mode_releases_runner_and_uses_collector(self):
