@@ -37,6 +37,30 @@ def readable_font(size: int) -> ImageFont.ImageFont:
         return ImageFont.load_default()
 
 
+def face_center_x(frame: Image.Image, bbox: tuple[int, int, int, int]) -> int:
+    """Locate the dominant head/helmet mass, not the wider tool/crate bbox.
+
+    Looking at the top 6%-24% of the visible character reduces false shifts
+    when an action adds a large prop beside the hands. This is only a crop
+    heuristic; it never classifies identity or automatically approves a sheet.
+    """
+    top = bbox[1] + round((bbox[3] - bbox[1]) * .06)
+    bottom = bbox[1] + round((bbox[3] - bbox[1]) * .24)
+    alpha = frame.getchannel("A")
+    if bottom <= top:
+        return (bbox[0] + bbox[2]) // 2
+    region = alpha.crop((0, max(0, top), CELL, min(CELL, bottom)))
+    pixels = region.load()
+    weighted_sum = 0
+    weight = 0
+    for y in range(region.height):
+        for x in range(region.width):
+            if pixels[x, y] >= 64:
+                weighted_sum += x
+                weight += 1
+    return round(weighted_sum / weight) if weight else (bbox[0] + bbox[2]) // 2
+
+
 def create_head_panel(role: str, assets: dict[str, Path], output: Path) -> None:
     """Magnify each frame's face/headgear for cross-action identity review.
 
@@ -75,7 +99,7 @@ def create_head_panel(role: str, assets: dict[str, Path], output: Path) -> None:
                 bbox = f.getchannel("A").getbbox()
                 if bbox is None:
                     continue
-                xmid = (bbox[0] + bbox[2]) // 2
+                xmid = face_center_x(f, bbox)
                 x0 = min(CELL - 96, max(0, xmid - 48))
                 y0 = min(CELL - 96, max(0, bbox[1] - 5))
                 head = f.crop((x0, y0, x0 + 96, y0 + 96)).resize(
