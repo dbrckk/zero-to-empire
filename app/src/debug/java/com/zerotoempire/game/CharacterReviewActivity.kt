@@ -29,6 +29,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -169,6 +170,56 @@ private fun CharacterReviewGallery() {
                                                 style = MaterialTheme.typography.labelSmall,
                                             )
                                         }
+                                    }
+                                }
+                            }
+                        }
+                        if (technicianOnly) {
+                            Text(
+                                "TECH · REAL GAME SIZE · NIGHT / DAY",
+                                style = MaterialTheme.typography.labelMedium,
+                            )
+                            val context = LocalContext.current
+                            val actionAtlas = remember(inspectedTechAction) {
+                                ImageBitmap.imageResource(
+                                    context.resources,
+                                    reviewedCharacterRasterRes(
+                                        ReviewedCharacterRole.TECHNICIAN,
+                                        inspectedTechAction,
+                                    ),
+                                )
+                            }
+                            val actionFrame = worldFrame % reviewedCharacterFrameCount(
+                                inspectedTechAction,
+                            )
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                listOf(
+                                    Triple("NIGHT · 42 dp", Color(0xFF101B24), 42.dp),
+                                    Triple("DAY · 39 dp", Color(0xFFBACCD6), 39.dp),
+                                ).forEach { (label, ground, side) ->
+                                    Column(
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .background(ground)
+                                            .padding(vertical = 8.dp),
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        verticalArrangement = Arrangement.spacedBy(6.dp),
+                                    ) {
+                                        Text(
+                                            label,
+                                            color = if (ground == Color(0xFF101B24)) {
+                                                Color.White
+                                            } else {
+                                                Color(0xFF172B37)
+                                            },
+                                            style = MaterialTheme.typography.labelSmall,
+                                        )
+                                        CharacterAtlasFrame(
+                                            atlas = actionAtlas,
+                                            frame = actionFrame,
+                                            edgeSeparation = Color(0xFF8AD9EE),
+                                            modifier = Modifier.size(side),
+                                        )
                                     }
                                 }
                             }
