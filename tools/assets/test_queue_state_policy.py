@@ -38,6 +38,11 @@ class QueueStatePolicyTests(unittest.TestCase):
         fields = queue_utils.PERSISTED_ASSET_STATE_FIELDS
         self.assertEqual(len(fields), len(set(fields)))
 
+    def test_canonical_queue_policy_matches_current_character_epoch(self) -> None:
+        text = MODULE_PATH.read_text(encoding="utf-8")
+        self.assertIn('"character_generation_epoch": "identity-lock-v1.18-carry-identity-lock"', text)
+        self.assertIn('"max_attempts_per_character_epoch": 3', text)
+
 
 class DispatchCorrelationTests(unittest.TestCase):
     def _load_orchestrator(self, token: str):
