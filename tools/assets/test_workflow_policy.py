@@ -98,6 +98,15 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("context.get('review_artifact_run_id')", text)
         self.assertIn("item.get('autofactory_context_only')", text)
 
+    def test_character_promotion_requires_pending_review_and_coherent_anchor(self):
+        text = Path(".github/workflows/promote-approved-kaggle-characters.yml").read_text(encoding="utf-8")
+        self.assertIn("not-current-reviewed-candidate", text)
+        self.assertIn("str(recorded or '')!=source", text)
+        self.assertIn("missing-coherent-", text)
+        self.assertIn("approved_anchor=(", text)
+        self.assertIn("a['review_artifact_run_id']=int(os.environ['SOURCE_RUN_ID'])", text)
+        self.assertIn("unknown-asset", text)
+
     def test_character_promotion_rejects_wrong_artifact_provenance(self):
         text = Path(".github/workflows/promote-approved-kaggle-characters.yml").read_text(encoding="utf-8")
         self.assertIn("Promotion source run does not match canonical review provenance", text)
