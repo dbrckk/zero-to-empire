@@ -82,6 +82,40 @@ jobs:
             tools/sprites/kaggle_building_family_factory_v16_10.py \
             tools/sprites/kaggle_building_family_factory_v17.py
 
+      - name: Exercise role review panels with a real rendered atlas
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/zte-smoke-candidates /tmp/zte-smoke-review
+          python - <<'PY'
+          from PIL import Image,ImageDraw
+          from pathlib import Path
+          atlas=Image.new('RGBA',(1024,1024),(0,0,0,0))
+          draw=ImageDraw.Draw(atlas)
+          for index in range(6):
+              x=(index%4)*256
+              y=(index//4)*256
+              draw.ellipse((x+105,y+30,x+151,y+76),fill=(175,123,90,255))
+              draw.rounded_rectangle((x+88,y+76,x+166,y+170),radius=14,fill=(58,73,91,255))
+              draw.line((x+106,y+170,x+98,y+226),fill=(58,73,91,255),width=18)
+              draw.line((x+149,y+170,x+160,y+226),fill=(58,73,91,255),width=18)
+          atlas.save('/tmp/zte-smoke-candidates/zte_chr_op_idle_final.png')
+          PY
+          python tools/sprites/build_character_review_panels.py \
+            --candidates /tmp/zte-smoke-candidates \
+            --output-dir /tmp/zte-smoke-review
+          test -s /tmp/zte-smoke-review/review-frames-op.png
+          test -s /tmp/zte-smoke-review/review-heads-op.png
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('/tmp/zte-smoke-review/review-panels.json').read_text())
+          assert d['review_only'] is True
+          assert d['roles'][0]['automatically_approved'] is False
+          assert d['roles'][0]['head_detail_file']=='review-heads-op.png'
+          assert d['roles'][0]['actions']['idle']['candidate'] is True
+          print('CHARACTER_REVIEW_PANEL_SMOKE_PASS=1')
+          PY
+
       - name: Validate rejection-memory schema
         run: |
           python - <<'PY'
