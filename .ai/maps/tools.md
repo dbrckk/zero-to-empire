@@ -506,6 +506,27 @@ rect = BOUNDS.fullmatch(labels[0].attrib.get("bounds", ""))
 height = y1 - y0
 ⋮----
 rgb = source.convert("RGB")
+# A previously green emulator run had its 42dp actor cropped at the
+# waist by the LazyColumn viewport. The old crop also included the
+# Android navbar, which inflated the non-background pixel count.
+# Prove the NIGHT and DAY preview panes extend below the whole sprite
+# before comparing any action pixels. Coordinates scale with the actual
+# Android caption size, not hard-coded emulator resolution.
+⋮----
+matches = [n for n in root.iter("node")
+⋮----
+bounds = BOUNDS.fullmatch(matches[0].attrib.get("bounds", ""))
+⋮----
+caption_px = cy1 - cy0
+# The avatar is 39-42dp tall beneath this 14sp caption.
+# The pane must still have its native background well below the
+# shoes. A screenshot captured mid-scroll / below the viewport
+# fails, even when it contains the actor's head and shoulders.
+probe_x = cx0 - max(8, round(caption_px * .35))
+probe_y = cy1 + round(caption_px * 3.25)
+⋮----
+sample = rgb.getpixel((probe_x, probe_y))
+⋮----
 half_width = round(height * 2.14)
 ⋮----
 crop = rgb.crop((left, top, right, bottom))

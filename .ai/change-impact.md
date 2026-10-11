@@ -1,13 +1,13 @@
 # Change impact
 
-Base: e26d3753babf5ef7fda4d0f57cc84264d73cf242
-Head: f5b32577871035eb958e34ae263c95ee9c8a0eaf
+Base: 7f157d502779d2f53996f6170171c36536157834
+Head: 8380bce8a04adf33df08c028f5e33dea846172c0
 
 ## Changed files
-- M app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt
+- M tools/android/character_preview_pixel_audit.py
 
 ## Affected areas
-- app
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

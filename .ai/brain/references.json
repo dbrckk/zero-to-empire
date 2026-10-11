@@ -5,103 +5,189 @@
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
   "symbols": {
-    "CharacterReviewActivity": {
+    "review_crop": {
       "definition": {
-        "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
-        "line": 45,
-        "kind": "class",
-        "language": "kotlin"
+        "file": "tools/android/character_preview_pixel_audit.py",
+        "line": 27,
+        "kind": "function",
+        "language": "python"
       },
       "occurrences": [
         {
-          "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
-          "line": 45,
-          "preview": "class CharacterReviewActivity : ComponentActivity() {",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "onCreate": {
-      "definition": {
-        "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
-        "line": 46,
-        "kind": "symbol",
-        "language": "kotlin"
-      },
-      "occurrences": [
-        {
-          "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
-          "line": 46,
-          "preview": "override fun onCreate(savedInstanceState: Bundle?) {",
-          "definition_candidate": true
-        },
-        {
-          "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
-          "line": 47,
-          "preview": "super.onCreate(savedInstanceState)",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/MainActivity.kt",
-          "line": 26,
-          "preview": "override fun onCreate(savedInstanceState: Bundle?) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/MainActivity.kt",
+          "file": "tools/android/character_preview_pixel_audit.py",
           "line": 27,
-          "preview": "super.onCreate(savedInstanceState)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 4
-    },
-    "CharacterReviewGallery": {
-      "definition": {
-        "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
-        "line": 53,
-        "kind": "symbol",
-        "language": "kotlin"
-      },
-      "occurrences": [
-        {
-          "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
-          "line": 48,
-          "preview": "setContent { CharacterReviewGallery() }",
-          "definition_candidate": false
+          "preview": "def review_crop(folder: Path, action: str) -> tuple[Image.Image, int]:",
+          "definition_candidate": true
         },
         {
-          "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
-          "line": 53,
-          "preview": "private fun CharacterReviewGallery() {",
-          "definition_candidate": true
+          "file": "tools/android/character_preview_pixel_audit.py",
+          "line": 101,
+          "preview": "renders = [review_crop(folder, action) for action in ACTIONS]",
+          "definition_candidate": false
         }
       ],
       "occurrence_count": 2
     },
-    "ReviewCell": {
+    "audit": {
       "definition": {
-        "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
-        "line": 266,
-        "kind": "symbol",
-        "language": "kotlin"
+        "file": "tools/android/character_preview_pixel_audit.py",
+        "line": 100,
+        "kind": "function",
+        "language": "python"
       },
       "occurrences": [
         {
-          "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
-          "line": 111,
-          "preview": "ReviewCell(role, action, worldFrame)",
+          "file": "tools/android/character_preview_pixel_audit.py",
+          "line": 100,
+          "preview": "def audit(folder: Path) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/android/character_preview_pixel_audit.py",
+          "line": 124,
+          "preview": "audit(Path(sys.argv[1]) if len(sys.argv) == 2 else Path(\"/tmp/zte-character-preview\"))",
           "definition_candidate": false
         },
         {
-          "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
-          "line": 266,
-          "preview": "private fun ReviewCell(",
-          "definition_candidate": true
+          "file": "tools/android/character_preview_pixel_audit.py",
+          "line": 126,
+          "preview": "print(f\"CHARACTER_PREVIEW_FAIL=action-pixel-audit:{exc}\", file=sys.stderr)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 135,
+          "preview": "parser.add_argument(\"--out\",type=Path,default=Path(\"/tmp/character-visual-audit\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 143,
+          "preview": "audit=inspect(source,asset_id)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 144,
+          "preview": "rows.append(audit)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 146,
+          "preview": "\"dims=\"+str(audit.get(\"dimensions\")),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 147,
+          "preview": "\"mode=\"+str(audit.get(\"mode\")),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 148,
+          "preview": "\"capacity=\"+str(audit.get(\"capacity\")),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 149,
+          "preview": "\"findings=\"+\",\".join(audit[\"findings\"]))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 152,
+          "preview": "result={\"format\":\"zte-canonical-character-visual-audit-v1\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 162,
+          "preview": "(args.out/\"canonical-character-audit.json\").write_text(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_complete_sprite_manifest.py",
+          "line": 61,
+          "preview": "out=ROOT/'art/production/final-sprite-completion-audit.json'",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_complete_sprite_manifest.py",
+          "line": 70,
+          "preview": "raise SystemExit('Final sprite audit failures: '+','.join(r['id'] for r in failed))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/temporal_sprite_audit.py",
+          "line": 151,
+          "preview": "def audit(root:Path,output:Path,skin:Path|None=None)->dict:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/temporal_sprite_audit.py",
+          "line": 216,
+          "preview": "report=audit(args.source,args.output,args.skin)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_package_tech_actions_runtime.py",
+          "line": 3,
+          "preview": "Run AFTER the six-clip generator in CI; independently audit its real pixels.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_package_tech_actions_runtime.py",
+          "line": 13,
+          "preview": "from temporal_sprite_audit import audit",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_package_tech_actions_runtime.py",
+          "line": 26,
+          "preview": "audit(FIXTURE,temporal_dir)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_temporal_sprite_audit.py",
+          "line": 1,
+          "preview": "\"\"\"Synthetic regression tests for 96px frame-to-frame TECH audit.\"\"\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_temporal_sprite_audit.py",
+          "line": 9,
+          "preview": "from temporal_sprite_audit import ACTIONS, audit, inspect_clip",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_temporal_sprite_audit.py",
+          "line": 51,
+          "preview": "report=audit(self.root,Path(self.work.name)/'report')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_temporal_sprite_audit.py",
+          "line": 138,
+          "preview": "accepted=audit(self.root,Path(self.work.name)/'good',skin=source)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_temporal_sprite_audit.py",
+          "line": 142,
+          "preview": "audit(self.root,Path(self.work.name)/'tampered',skin=source)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_temporal_sprite_audit.py",
+          "line": 155,
+          "preview": "audit(self.root,Path(self.work.name)/'bad-report')",
+          "definition_candidate": false
         }
       ],
-      "occurrence_count": 2
+      "occurrence_count": 25
     }
   }
 }

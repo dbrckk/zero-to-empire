@@ -22,27 +22,25 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T09:29:42Z
+Generated: 2026-10-11T09:30:52Z
 
 ### Git
 - Branch: `main`
-- Head: `f5b325778710`
-- Commit date: 2026-10-11T11:29:26+02:00
-- Commit: fix(android-qa): position full-body TECH night/day preview above action controls to avoid viewport clipping
+- Head: `8380bce8a04a`
+- Commit date: 2026-10-11T11:30:38+02:00
+- Commit: test(android): fail preview audit when TECH shoes or either 42dp day/night panel are clipped
 - Tracked files: 1522
 
 ### Recently changed files
+- `tools/android/character_preview_pixel_audit.py`
 - `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
 - `.github/workflows/tech-candidate-android-preview.yml`
 - `tools/android/character_preview_emulator_smoke.sh`
-- `tools/android/character_preview_pixel_audit.py`
 - `docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md`
 - `art/production/character-rig-review-candidates/review-report.json`
 - `art/production/character-rig-review-candidates/zte_chr_tech_carry_final-contact.png`
 - `art/production/character-rig-review-candidates/zte_chr_tech_carry_final-preview.gif`
 - `art/production/character-rig-review-candidates/zte_chr_tech_carry_final.png`
-- `tools/sprites/rigged_tech_actions_v3.py`
-- `tools/sprites/test_rigged_tech_actions_v3.py`
 
 ### Project signals
 - `build.gradle.kts`
