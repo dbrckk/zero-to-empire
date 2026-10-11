@@ -240,9 +240,25 @@ PY
         echo "CHARACTER_PREVIEW_ACTION_TAP_NOT_APPLIED=$action attempt=$attempt" >&2
       fi
     fi
-    # First recover from a clipped bottom row, then retry. Small swipes
-    # prevent skipping past the selector in LazyColumn.
-    adb shell input swipe "$((width/2))" "$((height*73/100))" "$((width/2))" "$((height*49/100))" 380
+    # Action selectors are inside a LazyColumn. After CELEBRATE or REPAIR,
+    # earlier actions (IDLE/WALK/WORK) are above the fold. Scrolling only
+    # downward makes the full six-action audit fail despite a healthy UI.
+    # Search in the expected direction first, then reverse once if the
+    # viewport was already beyond the desired row.
+    local from_y to_y
+    if [[ "$action" == "IDLE" || "$action" == "WALK" || "$action" == "WORK" ]]; then
+      from_y="$((height*32/100))"
+      to_y="$((height*73/100))"
+    else
+      from_y="$((height*73/100))"
+      to_y="$((height*32/100))"
+    fi
+    if (( attempt >= 6 )); then
+      local temp="$from_y"
+      from_y="$to_y"
+      to_y="$temp"
+    fi
+    adb shell input swipe "$((width/2))" "$from_y" "$((width/2))" "$to_y" 380
     sleep 1
   done
   echo "CHARACTER_PREVIEW_FAIL=action-selection-not-confirmed:$action" >&2

@@ -1,7 +1,7 @@
 # Change impact
 
-Base: 8764ab659297079a55f9d9d9398d8420bb1b39bc
-Head: f816a528df28c35df4c367f4e813908a15a700c4
+Base: 745e826163c092b4fc3c495cbc165751804795b2
+Head: b3cea42502b273d727383d42facef091793c80cf
 
 ## Changed files
 - M tools/android/character_preview_emulator_smoke.sh

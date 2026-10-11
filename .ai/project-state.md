@@ -22,13 +22,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T17:00:33Z
+Generated: 2026-10-11T17:02:33Z
 
 ### Git
 - Branch: `main`
-- Head: `f816a528df28`
-- Commit date: 2026-10-11T19:00:19+02:00
-- Commit: fix(android): verify TECH selector state after tap and retry clipped buttons
+- Head: `b3cea42502b2`
+- Commit date: 2026-10-11T19:02:19+02:00
+- Commit: fix(android): search TECH action selectors in both scroll directions for six-action QA
 - Tracked files: 1524
 
 ### Recently changed files
@@ -36,13 +36,6 @@ Generated: 2026-10-11T17:00:33Z
 - `tools/sprites/build_tech_review_board.py`
 - `docs/art/TECH_CHARACTER_VISUAL_DIRECTION.md`
 - `tools/sprites/test_weight_transfer.py`
-- `art/production/character-rig-review-candidates/review-report.json`
-- `art/production/character-rig-review-candidates/zte_chr_tech_carry_final-contact.png`
-- `art/production/character-rig-review-candidates/zte_chr_tech_carry_final-preview.gif`
-- `art/production/character-rig-review-candidates/zte_chr_tech_carry_final.png`
-- `art/production/character-rig-review-candidates/zte_chr_tech_walk_final-contact.png`
-- `art/production/character-rig-review-candidates/zte_chr_tech_walk_final-preview.gif`
-- `art/production/character-rig-review-candidates/zte_chr_tech_walk_final.png`
 
 ### Project signals
 - `build.gradle.kts`
