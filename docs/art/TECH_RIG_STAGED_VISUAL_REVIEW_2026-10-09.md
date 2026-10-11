@@ -90,3 +90,12 @@ Sources : artefact `tech-six-art-review-debug-apk-not-approved` de [la CI 380894
 - Comparaison locale de la frame source REPAIR-04, mise à l'échelle d'affichage 192×192 : le nombre de pixels définis comme « ambrés » par une heuristique simple passe de **79 à 183**. Il s'agit d'une mesure de changement de palette, **pas** d'un score de qualité graphique ou d'une approbation automatique.
 - L'APK de revue de ces nouveaux pixels est en cours de validation via [38122340570](https://github.com/dbrckk/zero-to-empire/actions/runs/38122340570). Même une CI verte ne prouve ni le contact crédible à 35–46 dp, ni une qualité AAA : inspection temporelle des gestes et de la perspective toujours requise.
 - **Décision :** six candidats TECH encore en revue, zéro nouvelle promotion. Nombre strict canonique inchangé : **216/235**.
+
+## CARRY — nouvelle charge industrielle lisible — 2026-10-11
+
+- Source : commit [7c62428](https://github.com/dbrckk/zero-to-empire/commit/7c62428c9609f0453e9cbf0d2686f21898be6dba), générateur `rigged_tech_actions_v3.py` et contrôle `test_rigged_tech_actions_v3.py`. La caisse occupe maintenant une plus grande surface de silhouette : bandeaux, nervures ambrées, serrure centrale et couvercle en légère perspective.
+- Cinématique préservée : poignées relatives fixes `(root_x+29,root_y-55)` et `(root_x+103,root_y-55)` ; le renderer conserve le rig, l'identité du personnage, les 24 phases et les deux appuis. La modification est un prop de revue, pas une retouche de master.
+- [Pipeline de staging 38124224085](https://github.com/dbrckk/zero-to-empire/actions/runs/38124224085) : **SUCCESS** ; le nouvel export est stocké dans `art/production/character-rig-review-candidates/zte_chr_tech_carry_final.png`. Son SHA-256 dans `review-report.json` commence par `3a6059d78d71b5`, différent de l'ancien `3d1b10d44b46`. Les autres actions ne changent pas sur ce point.
+- **Examen des huit vraies vignettes CARRY à 96px :** caisse nettement plus volumineuse et orange distincte de l'écran cyan de WORK ; la tenue et la silhouette restent stables entre images. La lisibilité des deux points de prise, le poids de l'objet et la jambe arrière restent insuffisamment démontrés à 39–42dp pour accorder strict DONE.
+- L'exporteur a conservé `LOWER_LIMB_STRUCTURE_UNVERIFIED` pour CARRY et WALK. Le test Android de ce **nouveau** SHA doit encore être vérifié avant une éventuelle décision.
+- **Statut officiel inchangé : 216/235 strict DONE** ; six TECH alternatives restent hors production.
