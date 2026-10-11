@@ -89,6 +89,15 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("review_artifact_run_id", text)
         self.assertIn("Automatic source run resolution requires one shared review_artifact_run_id", text)
 
+    def test_character_promotion_allows_only_reviewed_same_run_idle_replacement(self):
+        text = Path(".github/workflows/promote-approved-kaggle-characters.yml").read_text(encoding="utf-8")
+        self.assertIn("include the same-run IDLE anchor", text)
+        self.assertIn("not str(aid).endswith('-IDLE')", text)
+        self.assertIn("unreviewed-context-anchor", text)
+        self.assertIn("context.get('status')!='AWAITING_REVIEW'", text)
+        self.assertIn("context.get('review_artifact_run_id')", text)
+        self.assertIn("item.get('autofactory_context_only')", text)
+
     def test_character_promotion_rejects_wrong_artifact_provenance(self):
         text = Path(".github/workflows/promote-approved-kaggle-characters.yml").read_text(encoding="utf-8")
         self.assertIn("Promotion source run does not match canonical review provenance", text)
