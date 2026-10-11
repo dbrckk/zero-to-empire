@@ -31,16 +31,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T21:47:41Z
+Generated: 2026-10-11T21:48:44Z
 
 ### Git
 - Branch: `main`
-- Head: `78e618413a8e`
-- Commit date: 2026-10-11T23:47:20+02:00
-- Commit: ci(art): render and validate mobile-friendly identity review panels
+- Head: `2d49a0da4848`
+- Commit date: 2026-10-11T23:48:30+02:00
+- Commit: art(characters): lock OP LOG ENG face, helmet and outfit identity in prompts
 - Tracked files: 1529
 
 ### Recently changed files
+- `tools/sprites/kaggle_character_sheet_factory_v1.py`
 - `.github/workflows/asset-pipeline-ci.yml`
 - `tools/assets/test_workflow_policy.py`
 - `.github/workflows/kaggle-async-character-collector.yml`

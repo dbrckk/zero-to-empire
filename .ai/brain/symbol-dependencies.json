@@ -5,126 +5,6 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "checkerboard": {
-      "source": {
-        "file": "tools/sprites/build_character_review_panels.py",
-        "start": 23,
-        "end": 30
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "readable_font": {
-      "source": {
-        "file": "tools/sprites/build_character_review_panels.py",
-        "start": 33,
-        "end": 37
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "create_head_panel": {
-      "source": {
-        "file": "tools/sprites/build_character_review_panels.py",
-        "start": 40,
-        "end": 93
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "checkerboard",
-          "definitions": [
-            {
-              "file": "tools/sprites/build_character_review_panels.py",
-              "line": 23,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "readable_font",
-          "definitions": [
-            {
-              "file": "tools/sprites/build_character_review_panels.py",
-              "line": 33,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "create_panel": {
-      "source": {
-        "file": "tools/sprites/build_character_review_panels.py",
-        "start": 96,
-        "end": 148
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "checkerboard",
-          "definitions": [
-            {
-              "file": "tools/sprites/build_character_review_panels.py",
-              "line": 23,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "readable_font",
-          "definitions": [
-            {
-              "file": "tools/sprites/build_character_review_panels.py",
-              "line": 33,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "main": {
-      "source": {
-        "file": "tools/sprites/build_character_review_panels.py",
-        "start": 151,
-        "end": 271
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "create_head_panel",
-          "definitions": [
-            {
-              "file": "tools/sprites/build_character_review_panels.py",
-              "line": 40,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "create_panel",
-          "definitions": [
-            {
-              "file": "tools/sprites/build_character_review_panels.py",
-              "line": 96,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
     "rows": {
       "source": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
@@ -629,6 +509,112 @@
       },
       "symbol_dependencies": [],
       "dependency_count": 0
+    },
+    "main": {
+      "source": {
+        "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "start": 495,
+        "end": 615
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "anchor_prompt_pair",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 161,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "finish_frame",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 332,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "load_encode",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 282,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "load_render",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 287,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "prompt_pair",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 240,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "retry_mode",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 275,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "rows",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 59,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "semantic_scaffold",
+          "definitions": [
+            {
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 177,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 8
     }
   }
 }

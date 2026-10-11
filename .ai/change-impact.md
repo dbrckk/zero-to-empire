@@ -1,13 +1,13 @@
 # Change impact
 
-Base: b375b217460f749ba2eac29b0bd88daf63c73553
-Head: 78e618413a8e5d6d535b27fde6dbd16509b2b1d2
+Base: ad89e95d31e1fb526822ebb4b05ff83ad2c07529
+Head: 2d49a0da484821d9f0a9917311c52159d823acfd
 
 ## Changed files
-- M .github/workflows/asset-pipeline-ci.yml
+- M tools/sprites/kaggle_character_sheet_factory_v1.py
 
 ## Affected areas
-- .github
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.
