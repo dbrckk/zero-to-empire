@@ -206,8 +206,14 @@ def mark_dispatch(queue: dict[str, Any], ids: list[str], generator: str) -> list
         x["pipeline_status"] = "DISPATCHED"
         x["last_generator"] = generator
         x["dispatch_token"] = CURRENT_DISPATCH_TOKEN or None
-        if str(x.get("review_reason") or "").startswith("Character production paused until"):
-            x["review_reason"] = "Identity-locked character generation is available; automatic candidate production resumed."
+        # Once a fresh dispatch is accepted, historical retry/recovery errors
+        # are no longer the current state. Keep evidence in the rejection
+        # ledger, but do not surface stale errors as if the active wave failed.
+        x["last_error"] = None
+        x["review_reason"] = (
+            f"Fresh {generator} dispatch {CURRENT_DISPATCH_TOKEN or 'manual'} is active; "
+            "semantic review remains required after candidate collection."
+        )
         eligible.append(aid)
     return eligible
 
