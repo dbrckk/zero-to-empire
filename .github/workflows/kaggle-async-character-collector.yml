@@ -168,6 +168,13 @@ jobs:
           print('KAGGLE_ASYNC_CLEAN_REJECT_BATCH='+str(len(rejected)))
           PY
           fi
+      - name: Build full-frame role review panels
+        if: steps.kernel.outputs.ready == 'true'
+        run: |
+          python tools/sprites/build_character_review_panels.py \
+            --candidates /tmp/kaggle-output/output/candidates \
+            --qa-report /tmp/kaggle-output/output/github-qa-report.json \
+            --output-dir /tmp/kaggle-output/output/review-panels
       - name: Reconcile controlled character queue
         if: steps.kernel.outputs.ready == 'true'
         env:
