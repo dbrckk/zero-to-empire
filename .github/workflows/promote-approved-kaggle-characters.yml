@@ -8,8 +8,9 @@ on:
   workflow_dispatch:
     inputs:
       source_run_id:
-        description: Kaggle Mass Sprite Factory run containing the approved artifact
-        required: true
+        description: Collector/source run containing the approved artifact, or auto
+        required: false
+        default: 'auto'
       approved_ids:
         description: Comma-separated approved CHR asset IDs
         required: true
@@ -45,11 +46,31 @@ jobs:
           set -euo pipefail
           source_run="$INPUT_SOURCE_RUN_ID"
           approved="$INPUT_APPROVED_IDS"
-          if [ -z "$source_run" ] || [ -z "$approved" ]; then
+          if [ -z "$approved" ]; then
             IFS='|' read -r source_run approved < ops/promote-kaggle-trigger.txt
           fi
-          test -n "$source_run"
           test -n "$approved"
+          if [ -z "$source_run" ] || [ "$source_run" = auto ]; then
+            source_run="$(APPROVED_IDS="$approved" python - <<'PY'
+          import json, os
+          from pathlib import Path
+          ids={x.strip().upper() for x in os.environ['APPROVED_IDS'].split(',') if x.strip()}
+          q=json.loads(Path('art/production/master-asset-queue.json').read_text())
+          runs={
+              str(a.get('review_artifact_run_id'))
+              for a in q.get('assets',[])
+              if a.get('id') in ids and a.get('review_artifact_run_id')
+          }
+          if len(runs)!=1:
+              raise SystemExit(
+                  'Automatic source run resolution requires one shared review_artifact_run_id; '
+                  f'approved={sorted(ids)} runs={sorted(runs)}'
+              )
+          print(next(iter(runs)))
+          PY
+            )"
+          fi
+          test -n "$source_run"
           echo "SOURCE_RUN_ID=$source_run" >> "$GITHUB_ENV"
           echo "APPROVED_IDS=$approved" >> "$GITHUB_ENV"
       - name: Download source artifact
