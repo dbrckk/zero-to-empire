@@ -214,6 +214,13 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("source=semantic_scaffold(shared,i['action'],fi)", text)
         self.assertIn("ImageDraw", text)
 
+    def test_carry_scaffold_adds_deterministic_lower_body_motion(self):
+        text = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
+        self.assertIn("phase=(0,1,2,1,0,-1,-2,-1)[frame_index%8]", text)
+        self.assertIn("shear=phase*.045", text)
+        self.assertIn("deterministic", text)
+        self.assertIn("lower=out.crop((0,hip_y,w,h))", text)
+
     def test_kaggle_character_generator_rejects_blocking_visual_risks(self):
         generator = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
         workflow = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
