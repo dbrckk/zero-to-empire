@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 6143fd3e44984e82fcdb4cc40f456b599e1ddaf0
-Head: 111f6c308cc2e75f7c3c9aab407777b1f3573184
+Base: 27c78010b57678fda834d3b006f9033a0e1e03fc
+Head: 77552087a7c653308dccbbb8fd3346d48566854a
 
 ## Changed files
-- M ops/kaggle-collector-trigger.txt
+- M ops/sprite-wave-trigger.txt
 
 ## Affected areas
 - ops
