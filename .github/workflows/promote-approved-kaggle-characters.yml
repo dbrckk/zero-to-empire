@@ -12,7 +12,7 @@ on:
         required: false
         default: 'auto'
       approved_ids:
-        description: Comma-separated approved CHR asset IDs
+        description: Comma-separated visually approved CHR IDs; include the same-run IDLE anchor when replacing a legacy role family
         required: true
 
 permissions:
@@ -59,8 +59,18 @@ jobs:
           runs={
               str(a.get('review_artifact_run_id'))
               for a in q.get('assets',[])
-              if a.get('id') in ids and a.get('review_artifact_run_id')
+              if a.get('id') in ids and a.get('strict_status')!='DONE'
+              and a.get('review_artifact_run_id')
           }
+          # Context-only IDLE anchors are already strict DONE in the master,
+          # so their new artifact provenance lives in the controlled queue.
+          controlled=json.loads(Path('art/production/controlled-character-regen-queue.json').read_text())
+          runs.update(
+              str(item['review_artifact_run_id'])
+              for item in controlled.get('targets',[])
+              if item.get('id') in ids and item.get('autofactory_context_only')
+              and item.get('review_artifact_run_id')
+          )
           if len(runs)!=1:
               raise SystemExit(
                   'Automatic source run resolution requires one shared review_artifact_run_id; '
@@ -77,13 +87,28 @@ jobs:
           source=str(os.environ['SOURCE_RUN_ID'])
           ids={x.strip().upper() for x in os.environ['APPROVED_IDS'].split(',') if x.strip()}
           q=json.loads(Path('art/production/master-asset-queue.json').read_text())
+          controlled=json.loads(Path('art/production/controlled-character-regen-queue.json').read_text())
+          contexts={str(item.get('id','')).upper():item for item in controlled.get('targets',[])}
           mismatched=[]
           for asset in q.get('assets',[]):
-              if asset.get('id') not in ids:
+              aid=asset.get('id')
+              if aid not in ids:
+                  continue
+              if asset.get('strict_status')=='DONE':
+                  # Replacing a legacy strict-DONE IDLE sheet does not raise
+                  # strict progress, but is necessary for full-role identity.
+                  if not str(aid).endswith('-IDLE'):
+                      mismatched.append(f"{aid}:already-DONE-non-IDLE")
+                      continue
+                  context=contexts.get(aid,{})
+                  if (not context.get('autofactory_context_only')
+                      or context.get('status')!='AWAITING_REVIEW'
+                      or str(context.get('review_artifact_run_id') or '')!=source):
+                      mismatched.append(f"{aid}:unreviewed-context-anchor")
                   continue
               recorded=asset.get('review_artifact_run_id')
               if recorded and str(recorded)!=source:
-                  mismatched.append(f"{asset['id']}:{recorded}")
+                  mismatched.append(f"{aid}:{recorded}")
           if mismatched:
               raise SystemExit(
                   'Promotion source run does not match canonical review provenance: '
