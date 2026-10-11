@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 43a18411eb594a390c7e76f13ac6082cb72bb39f
-Head: 7835027ac42d9efdc25fee8b4274f09082ac587b
+Base: a0d88adf301ae35bedceb82b5117bd34d9384963
+Head: 5f3d8d83e05da0e97982ffb0be93d75a78d17e57
 
 ## Changed files
-- M art/production/character-strict-review-backlog.md
+- M ops/kaggle-collector-trigger.txt
 
 ## Affected areas
-- art
+- ops
 
 ## Related test candidates
 - No direct filename-based test match detected.

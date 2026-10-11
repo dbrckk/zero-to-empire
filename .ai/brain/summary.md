@@ -2,11 +2,11 @@
 
 - Index mode: incremental
 - Files indexed: 247
-- Files reparsed this run: 0
-- Symbols: 1292
+- Files reparsed this run: 2
+- Symbols: 1294
 - Internal import edges: 45
-- Impacted files: 0
-- Selected tests: 0
+- Impacted files: 3
+- Selected tests: 1
 
 ## Languages
 - kotlin: 160 files
@@ -19,6 +19,7 @@
 - tools/sprites/kaggle_character_sheet_factory_v1.py: 23 symbols
 - tools/sprites/pollinations_character_sheet_factory.py: 23 symbols
 - tools/sprites/rigged_tech_walk_v2.py: 19 symbols
+- tools/sprites/asset_wave_orchestrator.py: 18 symbols
 - tools/sprites/hf_sprite_factory.py: 18 symbols
 - tools/sprites/kaggle_building_family_factory_v13.py: 18 symbols
 - app/src/main/java/com/zerotoempire/game/AdaptiveMusic.kt: 17 symbols
@@ -27,7 +28,6 @@
 - tools/sprites/kaggle_building_family_factory_v14.py: 17 symbols
 - tools/sprites/test_rigged_tech_actions_v3.py: 17 symbols
 - app/src/main/java/com/zerotoempire/game/BillingDiagnostics.kt: 16 symbols
-- tools/sprites/asset_wave_orchestrator.py: 16 symbols
 - tools/sprites/test_package_tech_actions_runtime.py: 16 symbols
 - app/src/main/java/com/zerotoempire/game/IdentitySystems.kt: 15 symbols
 - tools/sprites/rigged_tech_actions_v3.py: 15 symbols
@@ -43,9 +43,9 @@
 ## ast-grep enrichment
 - ast-grep outline: available
 - AST index mode: incremental
-- AST files reparsed this run: 0
+- AST files reparsed this run: 2
 - outline files retained: 252
-- top-level items retained: 3503
+- top-level items retained: 3504
 - direct members retained: 808
 - symbol shards: 26
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard

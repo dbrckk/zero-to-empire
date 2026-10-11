@@ -1675,7 +1675,10 @@ available = CHARACTER_BATCH_SIZE - producer_slots - (1 if needs_idle_context els
 ⋮----
 chosen = group_assets[:available]
 ⋮----
-group_targets = [{"id": x["id"], "status": "PENDING_KAGGLE"} for x in chosen]
+# Keep the exact semantic rejection reason in the next producer
+# overlay. Replacing the controlled queue without this evidence made
+# queue_rejection_hint() forget why a previous ENG frame failed.
+group_targets = [
 ⋮----
 dispatched = mark_dispatch(queue, [x["id"] for x in targets], "kaggle-character-sheet")
 producer_count = prioritize_controlled_character_targets(dispatched)
@@ -1728,6 +1731,19 @@ def pending_ids_from_controlled(path: Path, queue: dict[str, Any]) -> list[str]
 ⋮----
 ids = [str(x.get("id", "")).upper() for x in active_pending(path)]
 ⋮----
+def order_character_groups_by_retry(queue: dict[str, Any], groups: list[str]) -> list[str]
+⋮----
+"""Give untouched role families a chance before repeating failed GPU waves.
+
+    Tie-breaks preserve the canonical role priority. A legacy generation epoch
+    counts as zero use of the current algorithm, not a permanent penalty.
+    """
+def current_epoch_attempts(group: str) -> float
+⋮----
+eligible = [
+⋮----
+priority = {group: index for index, group in enumerate(CHARACTER_PRIORITY)}
+⋮----
 def make_decision(queue: dict[str, Any]) -> dict[str, Any]
 ⋮----
 s = stats(queue)
@@ -1753,7 +1769,7 @@ producer_count = prioritize_controlled_character_targets(ids)
 first_group = next_group(queue, "kaggle-character-sheet", CHARACTER_PRIORITY)
 ⋮----
 candidate_groups = [
-ordered = [first_group] + [g for g in candidate_groups if g != first_group]
+ordered = order_character_groups_by_retry(queue, candidate_groups)
 burst_groups = ordered[:3]
 ⋮----
 prepared = prepare_character_burst(queue, burst_groups)
@@ -4452,11 +4468,17 @@ hints=POSE_HINT[i['action']][:ACTION[i['action']][1]]
 ⋮----
 variants={}
 ⋮----
-del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();report=[];role_anchor={};role_reference_cell={}
+del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();report=[];role_anchor={};role_reference_cell={};anchor_failures={}
 ⋮----
-gen_anchor=torch.Generator(device='cuda').manual_seed(args.seed+700000+ri*50000)
+failures=[]
+# A single malformed text-to-image role anchor previously poisoned all six
+# character actions. Reject multi-subject/cropped source images before any
+# action frame is generated, and try independent deterministic seeds.
+⋮----
+gen_anchor=torch.Generator(device='cuda').manual_seed(args.seed+700000+ri*50000+anchor_attempt*104729)
 ⋮----
 raw=base(height=1024,width=1024,num_inference_steps=6,guidance_scale=0,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),output_type='pil',generator=gen_anchor).images[0]
+candidate=raw.convert('RGB')
 ⋮----
 frames=[];anchor_raw=None;fail=None;retry_reasons=[]
 ⋮----

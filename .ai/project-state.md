@@ -31,21 +31,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T20:17:46Z
+Generated: 2026-10-11T20:51:45Z
 
 ### Git
 - Branch: `main`
-- Head: `7835027ac42d`
-- Commit date: 2026-10-11T22:17:33+02:00
-- Commit: docs(art): sync strict backlog with active OP LOG wave
+- Head: `5f3d8d83e05d`
+- Commit date: 2026-10-11T22:51:28+02:00
+- Commit: ci(art): check OP LOG v1.18 full-family producer progress
 - Tracked files: 1524
 
 ### Recently changed files
-- `art/production/character-strict-review-backlog.md`
-- `art/production/master-asset-queue.json`
 - `ops/kaggle-collector-trigger.txt`
 - `tools/assets/test_workflow_policy.py`
-- `tools/sprites/kaggle_character_sheet_factory_v1.py`
+- `tools/assets/test_queue_state_policy.py`
+- `tools/sprites/asset_wave_orchestrator.py`
 
 ### Project signals
 - `build.gradle.kts`

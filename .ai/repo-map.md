@@ -2391,13 +2391,19 @@ jobs:
           from datetime import datetime, timezone
           active=str(d.get('status','')).upper()=='ACTIVE'
           submitted=str(d.get('submitted_at',''))
+          # Full 12-sheet bursts need roughly twice the compute of a six-action
+          # role. Do not cancel a healthy RUNNING GPU merely because the older
+          # six-action fixed timeout (150 min) has elapsed.
+          target_count=len(d.get('target_ids') or [])
+          stale_limit_minutes=360 if target_count >= 10 else 210
           stale=False
           if active and submitted:
               try:
                   ts=datetime.fromisoformat(submitted.replace('Z','+00:00'))
-                  stale=(datetime.now(timezone.utc)-ts).total_seconds() > 150*60
-              except Exception:
+                  stale=(datetime.now(timezone.utc)-ts).total_seconds() > stale_limit_minutes*60
+              except (ValueError, TypeError):
                   stale=False
+          print('stale_limit_minutes='+str(stale_limit_minutes))
           print('active='+str(active).lower())
           print('dispatch_token='+str(d.get('dispatch_token','')))
           print('submit_run_id='+str(d.get('submit_run_id','')))
@@ -4974,7 +4980,7 @@ on:
         required: false
         default: 'auto'
       approved_ids:
-        description: Comma-separated approved CHR asset IDs
+        description: Comma-separated visually approved CHR IDs; include the same-run IDLE anchor when replacing a legacy role family
         required: true
 
 permissions:
@@ -5021,8 +5027,18 @@ jobs:
           runs={
               str(a.get('review_artifact_run_id'))
               for a in q.get('assets',[])
-              if a.get('id') in ids and a.get('review_artifact_run_id')
+              if a.get('id') in ids and a.get('strict_status')!='DONE'
+              and a.get('review_artifact_run_id')
           }
+          # Context-only IDLE anchors are already strict DONE in the master,
+          # so their new artifact provenance lives in the controlled queue.
+          controlled=json.loads(Path('art/production/controlled-character-regen-queue.json').read_text())
+          runs.update(
+              str(item['review_artifact_run_id'])
+              for item in controlled.get('targets',[])
+              if item.get('id') in ids and item.get('autofactory_context_only')
+              and item.get('review_artifact_run_id')
+          )
           if len(runs)!=1:
               raise SystemExit(
                   'Automatic source run resolution requires one shared review_artifact_run_id; '
@@ -5039,13 +5055,28 @@ jobs:
           source=str(os.environ['SOURCE_RUN_ID'])
           ids={x.strip().upper() for x in os.environ['APPROVED_IDS'].split(',') if x.strip()}
           q=json.loads(Path('art/production/master-asset-queue.json').read_text())
+          controlled=json.loads(Path('art/production/controlled-character-regen-queue.json').read_text())
+          contexts={str(item.get('id','')).upper():item for item in controlled.get('targets',[])}
           mismatched=[]
           for asset in q.get('assets',[]):
-              if asset.get('id') not in ids:
+              aid=asset.get('id')
+              if aid not in ids:
+                  continue
+              if asset.get('strict_status')=='DONE':
+                  # Replacing a legacy strict-DONE IDLE sheet does not raise
+                  # strict progress, but is necessary for full-role identity.
+                  if not str(aid).endswith('-IDLE'):
+                      mismatched.append(f"{aid}:already-DONE-non-IDLE")
+                      continue
+                  context=contexts.get(aid,{})
+                  if (not context.get('autofactory_context_only')
+                      or context.get('status')!='AWAITING_REVIEW'
+                      or str(context.get('review_artifact_run_id') or '')!=source):
+                      mismatched.append(f"{aid}:unreviewed-context-anchor")
                   continue
               recorded=asset.get('review_artifact_run_id')
               if recorded and str(recorded)!=source:
-                  mismatched.append(f"{asset['id']}:{recorded}")
+                  mismatched.append(f"{aid}:{recorded}")
           if mismatched:
               raise SystemExit(
                   'Promotion source run does not match canonical review provenance: '
@@ -26899,6 +26930,12 @@ asset = {
 ⋮----
 def test_current_epoch_still_allows_retry_below_epoch_limit(self) -> None
 ⋮----
+def test_untouched_character_family_precedes_repeated_legacy_retries(self) -> None
+⋮----
+def make_asset(group, epoch, tries)
+⋮----
+ordered = orchestrator.order_character_groups_by_retry(
+⋮----
 def test_character_batch_size_supports_multi_role_burst(self) -> None
 ⋮----
 def test_fresh_character_dispatch_clears_stale_error_and_reason(self) -> None
@@ -26923,6 +26960,8 @@ def test_character_burst_keeps_op_and_log_families_whole_within_twelve_slots(sel
 ⋮----
 assets = []
 ⋮----
+rejected_op = next(x for x in assets if x["id"] == "CHR-OP-WALK")
+⋮----
 queue = {"assets": assets}
 store = {}
 ⋮----
@@ -26931,6 +26970,8 @@ def fake_save(path, value)
 result = orchestrator.prepare_character_burst(
 ⋮----
 produced = [x["id"] for x in store["controlled"]["targets"][:12]]
+⋮----
+op_walk = next(x for x in store["controlled"]["targets"] if x["id"] == "CHR-OP-WALK")
 ⋮----
 def test_character_epoch_allows_three_informed_attempts(self) -> None
 ⋮----
@@ -27019,6 +27060,8 @@ text = Path(".github/workflows/promote-approved-kaggle-characters.yml").read_tex
 ⋮----
 def test_character_promotion_can_resolve_source_artifact_run_from_queue(self)
 ⋮----
+def test_character_promotion_allows_only_reviewed_same_run_idle_replacement(self)
+⋮----
 def test_character_promotion_rejects_wrong_artifact_provenance(self)
 ⋮----
 def test_character_promotion_requires_android_runtime_validation_before_done(self)
@@ -27029,6 +27072,10 @@ text = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(
 def test_async_collector_requires_full_expected_target_coverage(self)
 ⋮----
 def test_async_collector_preserves_retry_details_for_future_generation(self)
+⋮----
+def test_async_collector_allows_large_role_bursts_to_finish(self)
+⋮----
+workflow = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
 ⋮----
 def test_async_collector_releases_wave_when_completed_output_validation_fails(self)
 ⋮----
@@ -27073,6 +27120,8 @@ def test_kaggle_character_generator_reapplies_scaffold_each_frame(self)
 def test_kaggle_character_generator_adds_semantic_scaffolds_for_hard_actions(self)
 ⋮----
 def test_carry_scaffold_adds_deterministic_lower_body_motion(self)
+⋮----
+def test_character_role_anchor_is_validated_before_action_frames(self)
 ⋮----
 def test_kaggle_character_generator_rejects_blocking_visual_risks(self)
 ⋮----
@@ -27456,7 +27505,10 @@ available = CHARACTER_BATCH_SIZE - producer_slots - (1 if needs_idle_context els
 ⋮----
 chosen = group_assets[:available]
 ⋮----
-group_targets = [{"id": x["id"], "status": "PENDING_KAGGLE"} for x in chosen]
+# Keep the exact semantic rejection reason in the next producer
+# overlay. Replacing the controlled queue without this evidence made
+# queue_rejection_hint() forget why a previous ENG frame failed.
+group_targets = [
 ⋮----
 dispatched = mark_dispatch(queue, [x["id"] for x in targets], "kaggle-character-sheet")
 producer_count = prioritize_controlled_character_targets(dispatched)
@@ -27509,6 +27561,19 @@ def pending_ids_from_controlled(path: Path, queue: dict[str, Any]) -> list[str]
 ⋮----
 ids = [str(x.get("id", "")).upper() for x in active_pending(path)]
 ⋮----
+def order_character_groups_by_retry(queue: dict[str, Any], groups: list[str]) -> list[str]
+⋮----
+"""Give untouched role families a chance before repeating failed GPU waves.
+
+    Tie-breaks preserve the canonical role priority. A legacy generation epoch
+    counts as zero use of the current algorithm, not a permanent penalty.
+    """
+def current_epoch_attempts(group: str) -> float
+⋮----
+eligible = [
+⋮----
+priority = {group: index for index, group in enumerate(CHARACTER_PRIORITY)}
+⋮----
 def make_decision(queue: dict[str, Any]) -> dict[str, Any]
 ⋮----
 s = stats(queue)
@@ -27534,7 +27599,7 @@ producer_count = prioritize_controlled_character_targets(ids)
 first_group = next_group(queue, "kaggle-character-sheet", CHARACTER_PRIORITY)
 ⋮----
 candidate_groups = [
-ordered = [first_group] + [g for g in candidate_groups if g != first_group]
+ordered = order_character_groups_by_retry(queue, candidate_groups)
 burst_groups = ordered[:3]
 ⋮----
 prepared = prepare_character_burst(queue, burst_groups)
@@ -30233,11 +30298,17 @@ hints=POSE_HINT[i['action']][:ACTION[i['action']][1]]
 ⋮----
 variants={}
 ⋮----
-del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();report=[];role_anchor={};role_reference_cell={}
+del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();report=[];role_anchor={};role_reference_cell={};anchor_failures={}
 ⋮----
-gen_anchor=torch.Generator(device='cuda').manual_seed(args.seed+700000+ri*50000)
+failures=[]
+# A single malformed text-to-image role anchor previously poisoned all six
+# character actions. Reject multi-subject/cropped source images before any
+# action frame is generated, and try independent deterministic seeds.
+⋮----
+gen_anchor=torch.Generator(device='cuda').manual_seed(args.seed+700000+ri*50000+anchor_attempt*104729)
 ⋮----
 raw=base(height=1024,width=1024,num_inference_steps=6,guidance_scale=0,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),output_type='pil',generator=gen_anchor).images[0]
+candidate=raw.convert('RGB')
 ⋮----
 frames=[];anchor_raw=None;fail=None;retry_reasons=[]
 ⋮----
