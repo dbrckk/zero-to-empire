@@ -59,7 +59,8 @@ jobs:
           by={x['id']:x for x in mq['assets']}
           tokens={str(by[i].get('dispatch_token') or '') for i in ids if i in by}
           tokens.discard('')
-          strict_completion=str(cq.get('mode','')).startswith('kaggle-character-burst-v1.16')
+          mode=str(cq.get('mode','')).lower()
+          strict_completion=(mode.startswith('kaggle-character-burst-v1.') and 'strict-completion' in mode)
           if len(tokens)==1:
               token=next(iter(tokens))
           elif strict_completion:
