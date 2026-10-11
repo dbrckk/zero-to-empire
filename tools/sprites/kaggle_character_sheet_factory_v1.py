@@ -117,8 +117,10 @@ def queue_rejection_hint(i):
    'Keep both legs and both feet fully visible with a stable ground pivot and safe transparent border.'),
   (('walk-too-static','duplicate-adjacent-frame'),
    'Increase real alternating limb motion between frames while preserving the same camera and identity.'),
-  (('carry-too-static',),
+  (('carry-too-static','carry-lacks-stride'),
    'Keep one identical crate attached between both hands while increasing alternating leg stride and torso counter-motion enough to read clearly as carrying.'),
+  (('celeb-unreadable-gesture',),
+   'Animate both arms raising progressively during at least three successive stages, then lowering for a natural loop. Avoid nearly static poses followed by one abrupt last-frame jump.'),
   (('horizontal-drift',),
    'Keep the body centered on one fixed world pivot with no lateral camera drift.'),
  )
@@ -434,6 +436,16 @@ def action_qa(frames,action):
  floor=floors.get(action,.05)
  if mean_change<floor:
   return False,f'{action.lower()}-too-static mean-change={mean_change:.3f}<{floor:.3f}'
+ if action=='CARRY':
+  motion=lower_body_motion(frames)
+  if motion<.19:return False,f'carry-lacks-stride lower-motion={motion:.3f}<0.190'
+ if action=='CELEB':
+  changes=[1-x for x in ious]
+  # Reject a "celebration" whose only visible change is the last frame.
+  # Positive motion spread across the loop is needed for a readable gesture.
+  expressive=sum(delta>=.14 for delta in changes)
+  if expressive<3:
+   return False,f'celeb-unreadable-gesture transitions={expressive}/{len(changes)}'
  return True,f'{action.lower()}-motion={mean_change:.3f}'
 
 def appearance_signature(cell):
