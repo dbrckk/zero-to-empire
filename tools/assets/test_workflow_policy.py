@@ -214,6 +214,14 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("elif prefix:", text)
         self.assertIn("(not action or action==i['action'])", text)
 
+    def test_kaggle_character_retry_uses_controlled_queue_rejection_risks(self):
+        text = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
+        self.assertIn("def queue_rejection_hint(i):", text)
+        self.assertIn("palette_identity_discontinuity", text)
+        self.assertIn("silhouette_mass_discontinuity", text)
+        self.assertIn("walk-too-static", text)
+        self.assertIn("qhint=queue_rejection_hint(i)", text)
+
 
 if __name__ == "__main__":
     unittest.main()
