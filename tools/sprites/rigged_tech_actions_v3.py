@@ -32,6 +32,29 @@ HIP_Y = core.HIP_Y
 FAR_FOOT_LANE_PX = 22.0
 
 
+
+# Reversible, REVIEW-ONLY material lift for the dark graphite uniform.
+# Pixels at 39-42dp lose most of their shadow detail in the night city.
+# Gamma 0.76 restores midtone separation while keeping pure black/white,
+# all alpha, joint geometry, props and the original skin file unchanged.
+TECH_REVIEW_MATERIAL_GAMMA = 0.76
+
+
+def grade_review_kit(kit: dict[str, Image.Image]) -> dict[str, Image.Image]:
+    """Create lifted review textures without ever mutating the source atlas."""
+    gamma = TECH_REVIEW_MATERIAL_GAMMA
+    if not 0.55 <= gamma <= 1.0:
+        raise ValueError("Unsafe review material grading gamma")
+    lut = [round(255 * ((i / 255) ** gamma)) for i in range(256)]
+    result = {}
+    for part, texture in kit.items():
+        r, g, b, a = texture.convert("RGBA").split()
+        result[part] = Image.merge(
+            "RGBA", (r.point(lut), g.point(lut), b.point(lut), a)
+        )
+    return result
+
+
 def spine_lean(t: float, action: str) -> float:
     """Cyclic, phase-coupled spine bend in radians. Foot/hip world anchors
     are not modified, so contact geometry stays deterministic and reversible.
@@ -403,7 +426,7 @@ def build_action(skin: Path, out: Path, action: str, frames: int = 24, fps: int 
         raise ValueError(f"Unsupported action: {action}")
     if not (8 <= frames <= 64 and frames % 2 == 0 and 3 <= fps <= 24):
         raise ValueError("frames must be even 8-64, fps 3-24")
-    kit = core.load_kit(skin)
+    kit = grade_review_kit(core.load_kit(skin))
     out.mkdir(parents=True, exist_ok=True)
     (out / "frames").mkdir(exist_ok=True)
     images, poses, boots = [], [], []
@@ -465,7 +488,7 @@ def build_action(skin: Path, out: Path, action: str, frames: int = 24, fps: int 
         "weight_transfer": {"enabled": action in AMPLITUDES_PX,
                             "model": "stance-load-sine-squared-v1",
                             "amplitude_px": AMPLITUDES_PX.get(action,0.0)},
-        "renderer_features": {"joint_fabric": True, "spine_flex": True, "foot_roll": True, "soft_deform": True},
+        "renderer_features": {"joint_fabric": True, "spine_flex": True, "foot_roll": True, "soft_deform": True, "review_midtone_gamma": TECH_REVIEW_MATERIAL_GAMMA},
         "source_skin_sha256": hashlib.sha256(skin.read_bytes()).hexdigest(),
         "frames": frames, "fps": fps, "frame_size": [CANVAS, CANVAS],
         "atlas_columns": cols, "atlas_rows": rows,
