@@ -1,11 +1,16 @@
 {
-  "mode": "kaggle-character-burst-v1.16",
-  "reason": "Strict-completion recovery: regenerate complete OP and LOG six-action families with the current identity-anchored v1.16 generator. Existing IDLE assets are included as review anchors so the final promoted family can preserve one identity across all actions.",
+  "mode": "kaggle-character-burst-v1.17",
+  "reason": "Strict-completion recovery: regenerate complete OP, LOG and ENG six-action families with one identity anchor per role. Manual review of the current ENG runtime on 2026-10-11 rejected strict promotion because identity, framing and action readability are inconsistent across the six sheets. Existing IDLE assets remain generation/review anchors only; no asset may become strict DONE without semantic review plus runtime QA.",
   "groups": [
     "CHR-OP",
-    "CHR-LOG"
+    "CHR-LOG",
+    "CHR-ENG"
   ],
   "targets": [
+    {
+      "id": "CHR-OP-IDLE",
+      "status": "PENDING_KAGGLE"
+    },
     {
       "id": "CHR-OP-WALK",
       "status": "PENDING_KAGGLE"
@@ -24,6 +29,10 @@
     },
     {
       "id": "CHR-OP-CELEB",
+      "status": "PENDING_KAGGLE"
+    },
+    {
+      "id": "CHR-LOG-IDLE",
       "status": "PENDING_KAGGLE"
     },
     {
@@ -47,11 +56,27 @@
       "status": "PENDING_KAGGLE"
     },
     {
-      "id": "CHR-OP-IDLE",
+      "id": "CHR-ENG-IDLE",
       "status": "PENDING_KAGGLE"
     },
     {
-      "id": "CHR-LOG-IDLE",
+      "id": "CHR-ENG-WALK",
+      "status": "PENDING_KAGGLE"
+    },
+    {
+      "id": "CHR-ENG-WORK",
+      "status": "PENDING_KAGGLE"
+    },
+    {
+      "id": "CHR-ENG-CARRY",
+      "status": "PENDING_KAGGLE"
+    },
+    {
+      "id": "CHR-ENG-REPAIR",
+      "status": "PENDING_KAGGLE"
+    },
+    {
+      "id": "CHR-ENG-CELEB",
       "status": "PENDING_KAGGLE"
     }
   ]
