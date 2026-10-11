@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 325830cb92cfd0c06594af0d55ec04cac2644a68
-Head: 0f1706fb5e7f442ad5ef318903d2d884f570481b
+Base: d909dd2dd0c842d55b1cdc0eee50f6d7953f1391
+Head: 63083470dd96a03b73b01b6fea7f8e76c3af01ba
 
 ## Changed files
-- M docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md
+- M .github/workflows/tech-canonical-review-stage.yml
 
 ## Affected areas
-- docs
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

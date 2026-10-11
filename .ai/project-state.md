@@ -22,28 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T10:59:01Z
+Generated: 2026-10-11T11:01:10Z
 
 ### Git
 - Branch: `main`
-- Head: `0f1706fb5e7f`
-- Commit date: 2026-10-11T12:58:49+02:00
-- Commit: docs(art): evidence-link real-source TECH preview boards, note pixel-vs-dp limits and review gates
+- Head: `63083470dd96`
+- Commit date: 2026-10-11T13:00:54+02:00
+- Commit: ci(art): restage TECH atlases when source rig, skin or contact renderers change
 - Tracked files: 1523
 
 ### Recently changed files
-- `docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md`
 - `.github/workflows/tech-canonical-review-stage.yml`
-- `tools/sprites/build_tech_review_board.py`
-- `art/production/character-rig-review-candidates/review-report.json`
-- `art/production/character-rig-review-candidates/zte_chr_tech_carry_final-contact.png`
-- `art/production/character-rig-review-candidates/zte_chr_tech_carry_final-preview.gif`
-- `art/production/character-rig-review-candidates/zte_chr_tech_carry_final.png`
-- `art/production/character-rig-review-candidates/zte_chr_tech_walk_final-contact.png`
-- `art/production/character-rig-review-candidates/zte_chr_tech_walk_final-preview.gif`
-- `art/production/character-rig-review-candidates/zte_chr_tech_walk_final.png`
-- `tools/sprites/rigged_tech_actions_v3.py`
 - `tools/sprites/rigged_tech_walk_v2.py`
+- `docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md`
+- `tools/sprites/build_tech_review_board.py`
 
 ### Project signals
 - `build.gradle.kts`
