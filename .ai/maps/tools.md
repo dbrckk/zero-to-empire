@@ -7554,7 +7554,7 @@ def test_load_is_smooth_periodic_and_bounded(self)
 ⋮----
 t=i/2000
 ⋮----
-def test_foot_targets_and_grips_unchanged(self)
+def test_foot_depth_lane_preserves_ground_contact_and_grips(self)
 ⋮----
 t=i/384
 old=core.pose(t)

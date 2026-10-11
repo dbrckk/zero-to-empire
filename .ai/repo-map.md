@@ -8586,6 +8586,8 @@ on:
       - 'tools/sprites/export_tech_canonical_review.py'
       - 'tools/sprites/test_export_tech_canonical_review.py'
       - 'tools/sprites/rigged_tech_actions_v3.py'
+      - 'tools/sprites/test_rigged_tech_actions_v3.py'
+      - 'tools/sprites/test_weight_transfer.py'
       - '.github/workflows/tech-canonical-review-stage.yml'
   workflow_dispatch:
 
@@ -32973,7 +32975,7 @@ def test_load_is_smooth_periodic_and_bounded(self)
 ⋮----
 t=i/2000
 ⋮----
-def test_foot_targets_and_grips_unchanged(self)
+def test_foot_depth_lane_preserves_ground_contact_and_grips(self)
 ⋮----
 t=i/384
 old=core.pose(t)

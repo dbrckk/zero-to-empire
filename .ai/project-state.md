@@ -22,21 +22,27 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T10:24:09Z
+Generated: 2026-10-11T10:29:21Z
 
 ### Git
 - Branch: `main`
-- Head: `947817c76398`
-- Commit date: 2026-10-11T12:23:53+02:00
-- Commit: art(review): separate far TECH walking boot with grounded IK depth lane
+- Head: `9b0d28bfadef`
+- Commit date: 2026-10-11T12:29:08+02:00
+- Commit: docs(art): measure TECH depth-lane before/after and retain leg occlusion review blocker
 - Tracked files: 1522
 
 ### Recently changed files
-- `tools/sprites/rigged_tech_actions_v3.py`
-- `tools/sprites/test_rigged_tech_actions_v3.py`
 - `docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md`
-- `tools/android/character_preview_emulator_smoke.sh`
-- `tools/android/character_preview_pixel_audit.py`
+- `art/production/character-rig-review-candidates/review-report.json`
+- `art/production/character-rig-review-candidates/zte_chr_tech_carry_final-contact.png`
+- `art/production/character-rig-review-candidates/zte_chr_tech_carry_final-preview.gif`
+- `art/production/character-rig-review-candidates/zte_chr_tech_carry_final.png`
+- `art/production/character-rig-review-candidates/zte_chr_tech_walk_final-contact.png`
+- `art/production/character-rig-review-candidates/zte_chr_tech_walk_final-preview.gif`
+- `art/production/character-rig-review-candidates/zte_chr_tech_walk_final.png`
+- `.github/workflows/tech-canonical-review-stage.yml`
+- `tools/sprites/test_weight_transfer.py`
+- `tools/sprites/test_rigged_tech_actions_v3.py`
 
 ### Project signals
 - `build.gradle.kts`
