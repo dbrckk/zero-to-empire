@@ -9,7 +9,7 @@ import unittest
 from pathlib import Path
 from PIL import Image
 from rigged_tech_actions_v3 import (
-    ACTIONS, GROUND, build_action, draw_cargo, draw_frame, pose_for, spine_lean,
+    ACTIONS, GROUND, FAR_FOOT_LANE_PX, build_action, draw_cargo, draw_frame, pose_for, spine_lean,
 )
 import rigged_tech_walk_v2 as core
 from action_contact import work_contact, repair_contact, repair_spark_intensity, work_event_indices
@@ -49,16 +49,22 @@ class MultiActionGeometryTests(unittest.TestCase):
                     anchor=(x+dx*co-dy*si,y+dx*si+dy*co)
                     self.assertLessEqual(math.dist(anchor,before[hand]),118)
 
-    def test_spine_offset_does_not_move_foot_targets(self):
+    def test_far_foot_depth_lane_preserves_contacts_and_near_foot(self):
         for action in ('WALK','CARRY'):
-            for i in range(24):
-                t=i/24
+            for i in range(96):
+                t=i/96
                 p=pose_for(t,action)
                 base=core.pose(t)
-                self.assertEqual(p['left'],base['left'])
+                self.assertEqual(p['left'],(base['left'][0]-FAR_FOOT_LANE_PX,base['left'][1]))
                 self.assertEqual(p['right'],base['right'])
                 self.assertEqual(p['lockL'],base['lockL'])
                 self.assertEqual(p['lockR'],base['lockR'])
+                self.assertLessEqual(p['left'][1],GROUND)
+                self.assertLessEqual(math.dist(
+                    (p['root'][0]-13,p['root'][1]),p['left']),193.0)
+                q=pose_for(t+1,action)
+                self.assertEqual(p['left'],q['left'])
+                self.assertEqual(p['right'],q['right'])
 
     def test_stationary_actions_keep_feet_grounded_and_hands_reachable(self):
         for action in ("IDLE", "WORK", "REPAIR", "CELEB"):
