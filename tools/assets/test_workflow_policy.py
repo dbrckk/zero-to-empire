@@ -126,6 +126,14 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("candidate_dir.glob('*_final.png')", text)
         self.assertIn("ops/kaggle-collector-trigger.txt", text)
 
+    def test_async_collector_keeps_valid_candidates_when_other_qa_rows_fail(self):
+        text = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
+        self.assertIn("incomplete/duplicate technical QA coverage", text)
+        self.assertIn("KAGGLE_ASYNC_QA_REJECT=", text)
+        self.assertIn("produced.discard(aid)", text)
+        self.assertIn("rejected[aid]='technical-qa:'", text)
+        self.assertNotIn("if failed: raise SystemExit('technical QA rejected:", text)
+
     def test_async_collector_requires_full_expected_target_coverage(self):
         text = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
         self.assertIn("missing=expected-actual", text)
