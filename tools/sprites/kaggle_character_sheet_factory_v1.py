@@ -516,6 +516,12 @@ def main():
     variants[mode]=(pe.cpu(),ppe.cpu())
    encs[i['id']].append(variants)
  del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();report=[];role_anchor={};role_reference_cell={};anchor_failures={}
+ # When the strict-completion batch includes an IDLE identity anchor, every
+ # sibling action must share the SAME successfully validated anchor. If the
+ # IDLE atlas is rejected, rendering unrelated actions would burn GPU time
+ # yet be ineligible for coherent-role strict promotion.
+ required_idle_roles={item['role'] for item in items if item['action']=='IDLE'}
+ verified_idle_roles=set()
  for ri,role in enumerate(roles):
   pe,ppe=anchor_encs[role]
   failures=[]
@@ -539,6 +545,13 @@ def main():
    anchor_failures[role]=failures
    print(f'KAGGLE_CHR_ROLE_ANCHOR_REJECTED={role} attempts={len(failures)}',flush=True)
  for idx,i in enumerate(items):
+  if (i['action']!='IDLE' and i['role'] in required_idle_roles
+      and i['role'] not in verified_idle_roles):
+   why='required-role-idle-candidate-rejected'
+   print(f"KAGGLE_CHR_REJECTED={i['id']} reason={why}",flush=True)
+   report.append({'id':i['id'],'status':'REJECT','reason':why,
+                  'frames':0,'retry_reasons':['The same-run IDLE identity sheet must pass generation and visual-risk QA before sibling actions are generated.']})
+   continue
   if i['role'] not in role_anchor:
    report.append({'id':i['id'],'status':'REJECT','reason':'role-anchor-validation-failed',
                   'frames':0,'retry_reasons':anchor_failures.get(i['role'],[])})
@@ -638,6 +651,9 @@ def main():
   sheet=make_sheet(frames)
   if sheet.size!=(1024,1024):raise RuntimeError(f'bad atlas size {sheet.size}')
   p=INCOMING/f"{i['stem']}.png";sheet.save(p,'PNG',optimize=True)
+  if i['action']=='IDLE':
+   verified_idle_roles.add(i['role'])
+   print(f"KAGGLE_CHR_IDLE_IDENTITY_VALIDATED={i['role']}",flush=True)
   print(f"KAGGLE_CHR_VALIDATED={p.relative_to(ROOT)} {why} atlas=1024x1024",flush=True);report.append({'id':i['id'],'status':'CANDIDATE','reason':why,'frames':len(frames),'atlas':'1024x1024','cell':'256x256','file':p.name,'cross_animation_appearance_distance':round(identity_distance,2),'visual_risk':visual_risk,'retry_reasons':retry_reasons})
  REPORT.write_text(json.dumps(report,indent=2),encoding='utf-8')
  print(f"KAGGLE_CHARACTER_CANDIDATES={sum(r['status']=='CANDIDATE' for r in report)} ATTEMPTED={len(items)}",flush=True)
