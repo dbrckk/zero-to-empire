@@ -22,22 +22,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T18:11:21Z
+Generated: 2026-10-11T18:13:53Z
 
 ### Git
 - Branch: `main`
-- Head: `b79193e2b007`
-- Commit date: 2026-10-11T20:11:08+02:00
-- Commit: ci(art): recheck active ENG Kaggle strict wave
+- Head: `6c8616949915`
+- Commit date: 2026-10-11T20:13:36+02:00
+- Commit: ci(art): schedule v1.18 carry identity-lock retry
 - Tracked files: 1524
 
 ### Recently changed files
-- `ops/kaggle-collector-trigger.txt`
+- `ops/autofactory-kick.txt`
 - `tools/sprites/asset_wave_orchestrator.py`
+- `tools/sprites/kaggle_character_sheet_factory_v1.py`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
+- `art/production/character-strict-review-backlog.md`
 - `art/production/master-asset-queue.json`
-- `ops/autofactory-kick.txt`
 
 ### Project signals
 - `build.gradle.kts`

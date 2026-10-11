@@ -1,13 +1,17 @@
 # CI status
 
-Summary: 5 success / 0 failure / 1 active
+Summary: 5 success / 1 failure / 0 active
 
-- Kaggle Async Character Collector: in_progress / pending (b79193e2)
-- Kaggle Async Character Collector: completed / success (81b6e168)
-- Character strict review matrix: completed / success (38fc9ae4)
-- Asset Pipeline CI: completed / success (38fc9ae4)
-- Asset Autofactory 235: completed / success (8a0237f1)
-- Reconcile reviewed run 25: completed / skipped (b4e07f2c)
-- Kaggle Async Character Collector: completed / success (9f8351fc)
+- Asset Autofactory 235: completed / success (6c861694)
+- Asset Pipeline CI: completed / failure (1710360a)
+- Character strict review matrix: completed / success (1710360a)
+- Asset Pipeline CI: completed / cancelled (9a9656ae)
+- Asset Autofactory 235: completed / success (f4da89f8)
+- Asset Pipeline CI: completed / success (d652bcd0)
+- Character strict review matrix: completed / success (d652bcd0)
+
+## Latest failed run structure
+- Job: validate
+  - Failed step: Run unified asset pipeline unit tests
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

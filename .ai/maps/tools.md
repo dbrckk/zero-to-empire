@@ -1540,7 +1540,7 @@ TRIGGER_DISPATCH_TOKEN = os.getenv("AUTOF_TRIGGER_DISPATCH_TOKEN", "")
 CURRENT_DISPATCH_TOKEN = os.getenv("GITHUB_RUN_ID", "")
 KAGGLE_BUSY = os.getenv("AUTOF_KAGGLE_BUSY", "0") == "1"
 FX_BUSY = os.getenv("AUTOF_FX_BUSY", "0") == "1"
-CHARACTER_GENERATION_EPOCH = "identity-lock-v1.17-articulated-border-fix"
+CHARACTER_GENERATION_EPOCH = "identity-lock-v1.18-carry-identity-lock"
 CHARACTER_EPOCH_ATTEMPT_LIMIT = 3
 CHARACTER_BATCH_SIZE = 12
 INFRA_FAILURE_LIMIT = 3
@@ -1643,7 +1643,18 @@ master = by_id(queue)
 ⋮----
 controlled_status = {
 ⋮----
+# KAGGLE_BUSY is repository-wide, but only one async character wave owns
+# the durable active token. A newer wave can supersede an older one via
+# workflow concurrency; do not let the newer ENG wave keep stale OP/LOG
+# dispatches locked merely because *some* Kaggle work is still active.
+async_state = load_json(Path("art/production/kaggle-async-state.json"), {}) or {}
+active_async_token = (
+⋮----
 asset = master.get(aid)
+⋮----
+asset_token = str(asset.get("dispatch_token") or "")
+# Preserve only dispatches owned by the currently active async wave.
+# If no active token is known, keep the conservative old behaviour.
 ⋮----
 # A cancelled/superseded async producer can leave the master ledger in
 # DISPATCHED even though no Kaggle run remains active. The controlled
@@ -4396,7 +4407,11 @@ strength=min(.46,.34+fi*.008+attempt*.018)
 ⋮----
 strength=min(.72,.54+fi*.018+attempt*.025)
 ⋮----
-strength=min(.78,.62+fi*.018+attempt*.025)
+# v1.18: keep the role identity and clothing materially closer to the
+# canonical anchor. The deterministic crate scaffold already supplies
+# the carry semantic, so high denoise only encourages face/body drift
+# and oversized/duplicated luggage.
+strength=min(.64,.48+fi*.012+attempt*.020)
 ⋮----
 strength=min(.76,.58+fi*.018+attempt*.03)
 ⋮----
