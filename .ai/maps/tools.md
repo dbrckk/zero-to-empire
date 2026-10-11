@@ -6324,7 +6324,7 @@ tint=1.0 if depth=='near' else .8
 cap=Image.fromarray(main,'RGBA')
 draw=ImageDraw.Draw(cap,'RGBA')
 ⋮----
-def render_boot(layer,img,foot,angle) -> dict[str,float]
+def render_boot(layer,img,foot,angle,far_edge_light=False) -> dict[str,float]
 ⋮----
 """Place sole at demanded contact Y, instead of guessing boot ankle offset."""
 width=69
@@ -6341,7 +6341,17 @@ bbox=turn.getchannel('A').getbbox()
 px=round(foot[0]-center)
 py=round(foot[1]-bbox[3])
 ⋮----
-def draw_frame(t:float,kit:dict,pose_override=None,prop_underlay=None,prop_overlay=None,joint_fabric=False,soft_deform=False)
+# Review-only far-side boot separation at 39-42dp. An 8 source-pixel
+# exterior rim becomes ~0.7 physical pixels in the Android gallery.
+# The shoe texture and sole contact remain exact and unchanged.
+# The brighter material edge is beneath the shoe, so it never paints
+# over its lace/metal texture or adds a second floating foot.
+alpha = turn.getchannel('A')
+exterior = ImageChops.subtract(
+exterior = exterior.point(lambda value: round(value * 0.61))
+edge = Image.new('RGBA', turn.size, (110, 197, 219, 0))
+⋮----
+def draw_frame(t:float,kit:dict,pose_override=None,prop_underlay=None,prop_overlay=None,joint_fabric=False,soft_deform=False,far_boot_edge_light=False)
 ⋮----
 p=pose(t) if pose_override is None else pose_override
 ⋮----
@@ -6371,7 +6381,7 @@ bend_r=signed_joint_bend(rhip,kneeR,p['right'])
 bend_arm_l=signed_joint_bend(shoulderL,elbowL,p['handL'],3.4)
 bend_arm_r=signed_joint_bend(shoulderR,elbowR,p['handR'],3.4)
 ⋮----
-bootL=render_boot(canvas,kit['shin_boot_far_boot'],p['left'],p['rollL'])
+bootL=render_boot(canvas,kit['shin_boot_far_boot'],p['left'],p['rollL'],far_edge_light=far_boot_edge_light)
 ⋮----
 bootR=render_boot(canvas,kit['shin_boot_near_boot'],p['right'],p['rollR'])
 ⋮----
