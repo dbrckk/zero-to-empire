@@ -1,27 +1,116 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "e5e674e97d018ec689cf17aa3807ec090c3a7693",
-  "head": "66abc5e54a6ed4e19a5b794837b495b92c818957",
+  "base": "66abc5e54a6ed4e19a5b794837b495b92c818957",
+  "head": "a31ffc76e7fe2be64ec54a926435044471972695",
   "index_mode": "incremental",
   "changed_files": [
+    {
+      "path": ".github/workflows/kaggle-async-character-collector.yml",
+      "status": "M"
+    },
+    {
+      "path": ".github/workflows/promote-approved-kaggle-characters.yml",
+      "status": "M"
+    },
+    {
+      "path": "ops/kaggle-collector-trigger.txt",
+      "status": "M"
+    },
     {
       "path": "tools/assets/test_queue_state_policy.py",
       "status": "M"
     },
     {
-      "path": "tools/sprites/asset_wave_orchestrator.py",
+      "path": "tools/assets/test_workflow_policy.py",
+      "status": "M"
+    },
+    {
+      "path": "tools/sprites/asset_queue_utils.py",
+      "status": "M"
+    },
+    {
+      "path": "tools/sprites/character_review_matrix.py",
+      "status": "M"
+    },
+    {
+      "path": "tools/sprites/generate_strict_review_backlog.py",
+      "status": "M"
+    },
+    {
+      "path": "tools/sprites/test_character_review_matrix.py",
       "status": "M"
     }
   ],
   "changed_source_files": [
-    "tools/sprites/asset_wave_orchestrator.py"
+    "tools/sprites/asset_queue_utils.py",
+    "tools/sprites/character_review_matrix.py",
+    "tools/sprites/generate_strict_review_backlog.py",
+    "tools/sprites/test_character_review_matrix.py"
   ],
   "impacted_files": [
+    "tools/sprites/asset_queue_utils.py",
     "tools/sprites/asset_wave_orchestrator.py",
-    "tools/sprites/test_character_provider_reservation.py"
+    "tools/sprites/audit_character_candidates.py",
+    "tools/sprites/character_review_matrix.py",
+    "tools/sprites/generate_strict_review_backlog.py",
+    "tools/sprites/test_character_review_matrix.py"
   ],
   "impacted_symbols": [
+    {
+      "name": "load_json",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 43
+    },
+    {
+      "name": "save_json",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 49
+    },
+    {
+      "name": "manifest_rows",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 54
+    },
+    {
+      "name": "unresolved_ids",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 77
+    },
+    {
+      "name": "default_asset",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 84
+    },
+    {
+      "name": "ensure_master",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 116
+    },
+    {
+      "name": "sync_controlled_queues",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 157
+    },
+    {
+      "name": "stats",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 212
+    },
+    {
+      "name": "write_summary",
+      "kind": "function",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 239
+    },
     {
       "name": "by_id",
       "kind": "function",
@@ -119,31 +208,91 @@
       "line": 551
     },
     {
-      "name": "ReservationTests",
-      "kind": "class",
-      "file": "tools/sprites/test_character_provider_reservation.py",
-      "line": 11
+      "name": "inspect",
+      "kind": "function",
+      "file": "tools/sprites/audit_character_candidates.py",
+      "line": 24
     },
     {
-      "name": "test_external_repair_excludes_concurrent_kaggle_character_dispatch",
+      "name": "contact",
       "kind": "function",
-      "file": "tools/sprites/test_character_provider_reservation.py",
-      "line": 12
+      "file": "tools/sprites/audit_character_candidates.py",
+      "line": 100
     },
     {
-      "name": "test_expired_or_other_provider_has_no_lock",
+      "name": "main",
       "kind": "function",
-      "file": "tools/sprites/test_character_provider_reservation.py",
+      "file": "tools/sprites/audit_character_candidates.py",
+      "line": 132
+    },
+    {
+      "name": "build",
+      "kind": "function",
+      "file": "tools/sprites/character_review_matrix.py",
       "line": 30
     },
     {
-      "name": "test_injected_invalid_or_missing_reservation_does_not_block",
+      "name": "markdown",
       "kind": "function",
-      "file": "tools/sprites/test_character_provider_reservation.py",
-      "line": 43
+      "file": "tools/sprites/character_review_matrix.py",
+      "line": 89
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "tools/sprites/character_review_matrix.py",
+      "line": 130
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "tools/sprites/generate_strict_review_backlog.py",
+      "line": 13
+    },
+    {
+      "name": "fake_queue",
+      "kind": "function",
+      "file": "tools/sprites/test_character_review_matrix.py",
+      "line": 5
+    },
+    {
+      "name": "MatrixTests",
+      "kind": "class",
+      "file": "tools/sprites/test_character_review_matrix.py",
+      "line": 21
+    },
+    {
+      "name": "test_exact_pending_roles_and_no_auto_promotion",
+      "kind": "function",
+      "file": "tools/sprites/test_character_review_matrix.py",
+      "line": 22
+    },
+    {
+      "name": "test_semantic_rejection_before_technical_success",
+      "kind": "function",
+      "file": "tools/sprites/test_character_review_matrix.py",
+      "line": 31
+    },
+    {
+      "name": "test_live_markdown_does_not_repeat_stale_tech_rejection_after_promotion",
+      "kind": "function",
+      "file": "tools/sprites/test_character_review_matrix.py",
+      "line": 42
+    },
+    {
+      "name": "test_cannot_inflate_canonical_queue",
+      "kind": "function",
+      "file": "tools/sprites/test_character_review_matrix.py",
+      "line": 55
+    },
+    {
+      "name": "test_deterministic_order_and_source_immutability",
+      "kind": "function",
+      "file": "tools/sprites/test_character_review_matrix.py",
+      "line": 66
     }
   ],
   "selected_tests": [
-    "tools/sprites/test_character_provider_reservation.py"
+    "tools/sprites/test_character_review_matrix.py"
   ]
 }

@@ -2267,7 +2267,7 @@ rec=tiles(args.source)
 ## File: sprites/character_review_matrix.py
 ```python
 #!/usr/bin/env python3
-"""Reproducible review plan for the 19 remaining CHR assets.
+"""Reproducible review plan for the remaining canonical CHR assets.
 
 Never treats a generated candidate as approved; detects canonical-vs-preview
 conflicts (notably CHR-TECH-WALK) and prioritizes real human/artistic review.
@@ -2310,6 +2310,11 @@ def markdown(report:dict)->str
 lines=[
 ⋮----
 action=row["next_step"].replace("|","/")
+⋮----
+tech_pending=[row for row in report["items"] if row["role"]=="TECH"]
+⋮----
+rejected=[row["asset_id"] for row in tech_pending
+detail=(
 ⋮----
 def main()->int
 ⋮----
@@ -2596,6 +2601,7 @@ lines = [
 ⋮----
 parts = asset["id"].split("-")
 reason = asset.get("review_reason") or "Semantic review required; no specific automated defect recorded."
+artifact_run = asset.get("review_artifact_run_id") or "—"
 ```
 
 ## File: sprites/hf_public_flux_factory.py
@@ -7222,9 +7228,15 @@ report=build(fake_queue())
 ⋮----
 def test_semantic_rejection_before_technical_success(self)
 ⋮----
-def test_cannot_inflate_canonical_queue(self)
+text=markdown(report)
+⋮----
+def test_live_markdown_does_not_repeat_stale_tech_rejection_after_promotion(self)
 ⋮----
 q=fake_queue()
+⋮----
+report=build(q)
+⋮----
+def test_cannot_inflate_canonical_queue(self)
 ⋮----
 def test_deterministic_order_and_source_immutability(self)
 ⋮----

@@ -2521,9 +2521,14 @@ jobs:
               aid=str(item.get('id','')).upper()
               if str(item.get('status','')).upper()!='PENDING_KAGGLE': continue
               if aid in produced:
-                  item['status']='AWAITING_REVIEW'; item['kaggle_run_id']=run_id; item.pop('review_reason',None)
+                  item['status']='AWAITING_REVIEW'
+                  item['kaggle_run_id']=run_id
+                  item['review_artifact_run_id']=int(os.environ['GITHUB_RUN_ID'])
+                  item.pop('review_reason',None)
               elif aid in rejected:
-                  item['status']='REJECTED'; item['kaggle_run_id']=run_id
+                  item['status']='REJECTED'
+                  item['kaggle_run_id']=run_id
+                  item['review_artifact_run_id']=int(os.environ['GITHUB_RUN_ID'])
                   item['review_reason']='Kaggle generator rejected candidate: '+rejected[aid]
           p.write_text(json.dumps(q,indent=2)+'\n')
           state=Path('art/production/kaggle-async-state.json')
@@ -4942,8 +4947,9 @@ on:
   workflow_dispatch:
     inputs:
       source_run_id:
-        description: Kaggle Mass Sprite Factory run containing the approved artifact
-        required: true
+        description: Collector/source run containing the approved artifact, or auto
+        required: false
+        default: 'auto'
       approved_ids:
         description: Comma-separated approved CHR asset IDs
         required: true
@@ -4979,11 +4985,31 @@ jobs:
           set -euo pipefail
           source_run="$INPUT_SOURCE_RUN_ID"
           approved="$INPUT_APPROVED_IDS"
-          if [ -z "$source_run" ] || [ -z "$approved" ]; then
+          if [ -z "$approved" ]; then
             IFS='|' read -r source_run approved < ops/promote-kaggle-trigger.txt
           fi
-          test -n "$source_run"
           test -n "$approved"
+          if [ -z "$source_run" ] || [ "$source_run" = auto ]; then
+            source_run="$(APPROVED_IDS="$approved" python - <<'PY'
+          import json, os
+          from pathlib import Path
+          ids={x.strip().upper() for x in os.environ['APPROVED_IDS'].split(',') if x.strip()}
+          q=json.loads(Path('art/production/master-asset-queue.json').read_text())
+          runs={
+              str(a.get('review_artifact_run_id'))
+              for a in q.get('assets',[])
+              if a.get('id') in ids and a.get('review_artifact_run_id')
+          }
+          if len(runs)!=1:
+              raise SystemExit(
+                  'Automatic source run resolution requires one shared review_artifact_run_id; '
+                  f'approved={sorted(ids)} runs={sorted(runs)}'
+              )
+          print(next(iter(runs)))
+          PY
+            )"
+          fi
+          test -n "$source_run"
           echo "SOURCE_RUN_ID=$source_run" >> "$GITHUB_ENV"
           echo "APPROVED_IDS=$approved" >> "$GITHUB_ENV"
       - name: Download source artifact
@@ -5129,13 +5155,14 @@ jobs:
               f'- Strict DONE: **{strict}/{q["target_total"]}**',
               f'- Semantic review remaining: **{len(remain)}**',
               '- This report does **not** grant strict approval or runtime promotion.','',
-              '| Asset | Role | Action | Technical status | Review note |',
-              '|---|---|---|---|---|',
+              '| Asset | Role | Action | Technical status | Review artifact run | Review note |',
+              '|---|---|---|---|---:|---|',
           ]
           for a in remain:
               parts=a['id'].split('-')
               note=str(a.get('review_reason') or 'Semantic review required.').replace('|','/')
-              lines.append(f'| {a["id"]} | {parts[1]} | {"-".join(parts[2:])} | {a.get("pipeline_status","")} | {note} |')
+              artifact_run=a.get('review_artifact_run_id') or '—'
+              lines.append(f'| {a["id"]} | {parts[1]} | {"-".join(parts[2:])} | {a.get("pipeline_status","")} | {artifact_run} | {note} |')
           lines += ['', '## Review rule', '', 'A reviewer must inspect identity continuity, full-body framing, role/clothing consistency, action readability, animation motion, and runtime suitability. Only explicit reviewed approvals may change `strict_status` to `DONE`.']
           Path('art/production/character-strict-review-backlog.md').write_text('\n'.join(lines)+'\n',encoding='utf-8')
           print(f'PROMOTION_STRICT_DONE={strict}/{q["target_total"]}')
@@ -26940,6 +26967,8 @@ def test_character_promotion_accepts_async_collector_artifact_and_can_continue_f
 ⋮----
 text = Path(".github/workflows/promote-approved-kaggle-characters.yml").read_text(encoding="utf-8")
 ⋮----
+def test_character_promotion_can_resolve_source_artifact_run_from_queue(self)
+⋮----
 def test_character_promotion_requires_android_runtime_validation_before_done(self)
 def test_async_collector_recovers_candidates_when_generated_targets_is_empty(self)
 ⋮----
@@ -27948,7 +27977,7 @@ rec=tiles(args.source)
 ## File: tools/sprites/character_review_matrix.py
 ```python
 #!/usr/bin/env python3
-"""Reproducible review plan for the 19 remaining CHR assets.
+"""Reproducible review plan for the remaining canonical CHR assets.
 
 Never treats a generated candidate as approved; detects canonical-vs-preview
 conflicts (notably CHR-TECH-WALK) and prioritizes real human/artistic review.
@@ -27991,6 +28020,11 @@ def markdown(report:dict)->str
 lines=[
 ⋮----
 action=row["next_step"].replace("|","/")
+⋮----
+tech_pending=[row for row in report["items"] if row["role"]=="TECH"]
+⋮----
+rejected=[row["asset_id"] for row in tech_pending
+detail=(
 ⋮----
 def main()->int
 ⋮----
@@ -28277,6 +28311,7 @@ lines = [
 ⋮----
 parts = asset["id"].split("-")
 reason = asset.get("review_reason") or "Semantic review required; no specific automated defect recorded."
+artifact_run = asset.get("review_artifact_run_id") or "—"
 ```
 
 ## File: tools/sprites/hf_public_flux_factory.py
@@ -32903,9 +32938,15 @@ report=build(fake_queue())
 ⋮----
 def test_semantic_rejection_before_technical_success(self)
 ⋮----
-def test_cannot_inflate_canonical_queue(self)
+text=markdown(report)
+⋮----
+def test_live_markdown_does_not_repeat_stale_tech_rejection_after_promotion(self)
 ⋮----
 q=fake_queue()
+⋮----
+report=build(q)
+⋮----
+def test_cannot_inflate_canonical_queue(self)
 ⋮----
 def test_deterministic_order_and_source_immutability(self)
 ⋮----

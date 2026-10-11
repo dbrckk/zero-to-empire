@@ -22,21 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T18:24:01Z
+Generated: 2026-10-11T18:27:31Z
 
 ### Git
 - Branch: `main`
-- Head: `66abc5e54a6e`
-- Commit date: 2026-10-11T20:23:42+02:00
-- Commit: test(art): keep role families intact within GPU batch
+- Head: `a31ffc76e7fe`
+- Commit date: 2026-10-11T20:27:05+02:00
+- Commit: ci(art): recheck active ENG kernel for completion
 - Tracked files: 1524
 
 ### Recently changed files
-- `tools/assets/test_queue_state_policy.py`
-- `tools/sprites/asset_wave_orchestrator.py`
 - `ops/kaggle-collector-trigger.txt`
+- `.github/workflows/promote-approved-kaggle-characters.yml`
+- `tools/sprites/generate_strict_review_backlog.py`
 - `tools/assets/test_workflow_policy.py`
-- `.github/workflows/kaggle-async-character-collector.yml`
 
 ### Project signals
 - `build.gradle.kts`
