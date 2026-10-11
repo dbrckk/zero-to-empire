@@ -22,20 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T07:20:17Z
+Generated: 2026-10-11T07:36:08Z
 
 ### Git
 - Branch: `main`
-- Head: `e50fca47a61c`
-- Commit date: 2026-10-11T09:19:46+02:00
-- Commit: feat(android): compare exact city TECH sprites against daylight and night backdrops in debug QA
+- Head: `95d758750e7d`
+- Commit date: 2026-10-11T09:35:54+02:00
+- Commit: test(android): verify real day-night QA switch with matched emulator screenshots and contrast gate
 - Tracked files: 1521
 
 ### Recently changed files
+- `tools/android/character_preview_emulator_smoke.sh`
 - `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
 - `docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md`
-- `tools/android/character_preview_emulator_smoke.sh`
-- `app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt`
 
 ### Project signals
 - `build.gradle.kts`

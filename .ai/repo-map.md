@@ -25159,6 +25159,56 @@ if [[ "$actor_visible" != true ]]; then
   exit 1
 fi
 
+# Exercise the new day/night QA comparison, not just the default night
+# state. Keep both Android screenshots taken from the SAME scroll position
+# so the pixel contrast comparison is meaningful. Never interpret this
+# automated background check as aesthetic or semantic sprite approval.
+daylight_toggle_visible=false
+for daylight_attempt in 0 1 2 3 4 5 6; do
+  dump "daylight-toggle-scroll-$daylight_attempt"
+  if grep -Fq 'Daylight stage' "$OUT/daylight-toggle-scroll-$daylight_attempt.xml"; then
+    daylight_toggle_visible=true
+    break
+  fi
+  # Return towards the title if actor framing scrolled past the button.
+  adb shell input swipe "$((width/2))" "$((height*24/100))" "$((width/2))" "$((height*75/100))" 420
+  sleep 1
+done
+if [[ "$daylight_toggle_visible" != true ]]; then
+  echo "CHARACTER_PREVIEW_FAIL=daylight-toggle-not-visible" >&2
+  exit 1
+fi
+assert_text "NIGHT CONTRAST REVIEW" "daylight-toggle-scroll-$daylight_attempt"
+adb exec-out screencap -p > "$OUT/tech-night-matched-viewport.png"
+click "Daylight stage" before-daylight-toggle
+dump daylight-active
+assert_text "DAYLIGHT CONTRAST REVIEW" daylight-active
+assert_text "Night stage" daylight-active
+adb exec-out screencap -p > "$OUT/tech-daylight-matched-viewport.png"
+python3 - "$OUT/tech-night-matched-viewport.png" "$OUT/tech-daylight-matched-viewport.png" <<'PY'
+import sys
+from PIL import Image, ImageStat
+night = Image.open(sys.argv[1]).convert('RGB')
+day = Image.open(sys.argv[2]).convert('RGB')
+if night.size != day.size:
+    raise SystemExit('CHARACTER_PREVIEW_FAIL=contrast-image-dimensions')
+w, h = night.size
+# The lower central screen shows the stage, with no toggle text. Median
+# luminance resists variations from animated characters and shadows.
+box = (int(w*.30), int(h*.60), int(w*.70), int(h*.82))
+def med_brightness(im):
+    med = ImageStat.Stat(im.crop(box).resize((40, 40))).median
+    return sum(med)/3
+dark, light = med_brightness(night), med_brightness(day)
+print(f'CHARACTER_PREVIEW_DAY_NIGHT_LUMA night={dark:.1f} day={light:.1f}')
+if dark >= 85 or light <= 90 or light-dark <= 55:
+    raise SystemExit('CHARACTER_PREVIEW_FAIL=day-night-contrast-not-visible')
+print('CHARACTER_PREVIEW_DAY_NIGHT_CONTRAST_PASS=1')
+PY
+click "Night stage" before-night-restore
+dump night-restored
+assert_text "NIGHT CONTRAST REVIEW" night-restored
+
 adb logcat -d > "$OUT/logcat.txt"
 if grep -E "FATAL EXCEPTION|AndroidRuntime.*FATAL" "$OUT/logcat.txt"; then
   echo "CHARACTER_PREVIEW_FAIL=fatal_exception" >&2
