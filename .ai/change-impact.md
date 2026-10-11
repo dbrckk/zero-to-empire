@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 9aba2a895f15a0134388869cbe876a251b57fd5c
-Head: d8cf8087e33d51a4affd21d70dc89549b799e5cd
+Base: d339c2beea9c50d65f40c49fa2b3538bf575f4f2
+Head: ccdab9c49a5a53a7937a410278b95e389bdf1f26
 
 ## Changed files
-- M tools/sprites/rigged_tech_actions_v3.py
+- M docs/art/TECH_CHARACTER_VISUAL_DIRECTION.md
 
 ## Affected areas
-- tools
+- docs
 
 ## Related test candidates
 - No direct filename-based test match detected.

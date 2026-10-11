@@ -22,27 +22,36 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T11:05:42Z
+Generated: 2026-10-11T11:08:10Z
 
 ### Git
 - Branch: `main`
-- Head: `d8cf8087e33d`
-- Commit date: 2026-10-11T13:05:28+02:00
-- Commit: art(tech): lift graphite material midtones for legibility at 42dp without changing source alpha
+- Head: `ccdab9c49a5a`
+- Commit date: 2026-10-11T13:07:57+02:00
+- Commit: docs(art): quantify source-derived TECH midtone legibility without claiming semantic approval
 - Tracked files: 1524
 
 ### Recently changed files
-- `tools/sprites/rigged_tech_actions_v3.py`
 - `docs/art/TECH_CHARACTER_VISUAL_DIRECTION.md`
 - `art/production/character-rig-review-candidates/review-report.json`
 - `art/production/character-rig-review-candidates/zte_chr_tech_carry_final-contact.png`
 - `art/production/character-rig-review-candidates/zte_chr_tech_carry_final-preview.gif`
 - `art/production/character-rig-review-candidates/zte_chr_tech_carry_final.png`
+- `art/production/character-rig-review-candidates/zte_chr_tech_celeb_final-contact.png`
+- `art/production/character-rig-review-candidates/zte_chr_tech_celeb_final-preview.gif`
+- `art/production/character-rig-review-candidates/zte_chr_tech_celeb_final.png`
+- `art/production/character-rig-review-candidates/zte_chr_tech_idle_final-contact.png`
+- `art/production/character-rig-review-candidates/zte_chr_tech_idle_final-preview.gif`
+- `art/production/character-rig-review-candidates/zte_chr_tech_idle_final.png`
+- `art/production/character-rig-review-candidates/zte_chr_tech_repair_final-contact.png`
+- `art/production/character-rig-review-candidates/zte_chr_tech_repair_final-preview.gif`
+- `art/production/character-rig-review-candidates/zte_chr_tech_repair_final.png`
 - `art/production/character-rig-review-candidates/zte_chr_tech_walk_final-contact.png`
 - `art/production/character-rig-review-candidates/zte_chr_tech_walk_final-preview.gif`
 - `art/production/character-rig-review-candidates/zte_chr_tech_walk_final.png`
-- `.github/workflows/tech-canonical-review-stage.yml`
-- `tools/sprites/rigged_tech_walk_v2.py`
+- `art/production/character-rig-review-candidates/zte_chr_tech_work_final-contact.png`
+- `art/production/character-rig-review-candidates/zte_chr_tech_work_final-preview.gif`
+- `art/production/character-rig-review-candidates/zte_chr_tech_work_final.png`
 
 ### Project signals
 - `build.gradle.kts`
