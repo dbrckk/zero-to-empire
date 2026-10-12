@@ -1,13 +1,16 @@
 # CI status
 
-Summary: 5 success / 0 failure / 2 active
+Summary: 3 success / 1 failure / 0 active
 
-- Asset Pipeline CI: in_progress / pending (099b8370)
-- Character strict review matrix: completed / success (5670579e)
-- Sprite Completion Gate: queued / pending (5670579e)
-- Kaggle Mass Sprite Factory: completed / success (d4ad2187)
-- Asset Autofactory 235: completed / success (434834ed)
-- Kaggle Async Character Collector: completed / success (ef35aa21)
-- Asset Pipeline CI: completed / success (b85b0ee7)
+- Asset Pipeline CI: completed / failure (b9aa0f38)
+- Asset Pipeline CI: completed / cancelled (a1c19970)
+- Asset Pipeline CI: completed / cancelled (baef4a7b)
+- Asset Pipeline CI: completed / success (59f6e64f)
+- Asset Autofactory 235: completed / success (eb69465a)
+- Pollinations Character Atlas: completed / success (eb69465a)
+
+## Latest failed run structure
+- Job: validate
+  - Failed step: Run unified asset pipeline and visual-semantic gate checks
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

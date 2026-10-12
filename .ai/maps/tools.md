@@ -63,6 +63,7 @@ sprites/
   build_sprite_contact_sheet.py
   build_tech_review_board.py
   character_cargo_identity_lock.py
+  character_ground_shadow_cleanup.py
   character_head_identity_lock.py
   character_review_matrix.py
   character_semantic_gate.py
@@ -116,6 +117,7 @@ sprites/
   test_animation_batch_planner.py
   test_autonomous_walk.py
   test_character_action_gate.py
+  test_character_ground_shadow_cleanup.py
   test_character_head_identity_lock.py
   test_character_provider_reservation.py
   test_character_review_matrix.py
@@ -2509,6 +2511,48 @@ feather = 8
 factor = min((y - top) / feather, (bottom - y - 1) / feather, 1)
 ```
 
+## File: sprites/character_ground_shadow_cleanup.py
+```python
+"""Conservative cleanup of neutral gray ground-shadow pixels in character cells.
+
+Never manufactures missing geometry, guesses limb positions, or approves a
+sprite. Only apply when a broad bright neutral shadow extends visibly past
+both lower legs. Dark/colored shadows stay for semantic review.
+"""
+⋮----
+CELL_SIZE = (256, 256)
+⋮----
+def remove_baked_ground_shadow(frame: Image.Image) -> tuple[Image.Image, int]
+⋮----
+"""Return cleaned RGBA frame and the count of discarded gray pixels.
+
+    A long, near-neutral cast shadow on a light gray AI generation background
+    sometimes fuses to the boots in alpha. An outside-of-leg evidence check
+    protects pale shoe materials from indiscriminate deletion.
+    """
+rgba = frame.convert("RGBA")
+⋮----
+bounds = rgba.getchannel("A").getbbox()
+⋮----
+height = bottom - top
+⋮----
+# Knee-level silhouette estimates where the feet can legitimately extend.
+knee_y = max(0, min(255, top + round(.79 * height)))
+knee_xs = [
+⋮----
+start = max(0, bottom - round(.13 * height))
+⋮----
+candidates = []
+outside = 0
+pixels = rgba.load()
+⋮----
+# Shadows seen in failed ENG/OP assets are flat neutral gray,
+# unlike the dark textured shoes, coat and bright safety colors.
+⋮----
+# Don't alter white shoes, light trousers or ordinary pale details that
+# stay inside the limb envelope. Ambiguous cases remain for manual review.
+```
+
 ## File: sprites/character_head_identity_lock.py
 ```python
 """Conservative identity-preserving face/headgear transfer for sprite candidates.
@@ -4775,6 +4819,7 @@ crop=m.crop(bb);cw,ch=crop.size
 ⋮----
 scale=min(176/cw,218/ch); crop=crop.resize((max(1,round(cw*scale)),max(1,round(ch*scale))),Image.Resampling.LANCZOS)
 cell=Image.new('RGBA',(256,256));x=(256-crop.width)//2;y=238-crop.height;cell.alpha_composite(crop,(x,y))
+⋮----
 # Reject detached generated props/background fragments. After isolation a valid
 # character should form one dominant connected silhouette; small antialiased
 # islands are tolerated, but a second substantial component is semantic noise.
@@ -7751,6 +7796,36 @@ last = worker()
 def test_static_walk_is_rejected(self)
 ⋮----
 same = worker()
+```
+
+## File: sprites/test_character_ground_shadow_cleanup.py
+```python
+"""Ground shadow cleanup regressions; image-only recovery, no approvals."""
+⋮----
+def character(shadow: bool = True, white_shoes: bool = False)
+⋮----
+image = Image.new("RGBA", (256, 256))
+d = ImageDraw.Draw(image)
+⋮----
+sole = (204, 204, 205, 255) if white_shoes else (48, 55, 70, 255)
+⋮----
+class GroundShadowCleanupTests(unittest.TestCase)
+⋮----
+def test_long_neutral_shadow_removed_without_erasing_dark_boots(self)
+⋮----
+source=character()
+⋮----
+def test_without_shadow_has_no_changes(self)
+⋮----
+source=character(shadow=False)
+⋮----
+def test_pale_shoes_do_not_get_erased_without_external_shadow(self)
+⋮----
+source=character(shadow=False, white_shoes=True)
+⋮----
+def test_wrong_shape_is_left_untouched(self)
+⋮----
+source=Image.new("RGBA", (128, 128), (225, 225, 225, 255))
 ```
 
 ## File: sprites/test_character_head_identity_lock.py

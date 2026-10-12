@@ -31,23 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T08:31:09Z
+Generated: 2026-10-12T11:04:47Z
 
 ### Git
 - Branch: `main`
-- Head: `099b8370f52a`
-- Commit date: 2026-10-12T10:30:47+02:00
-- Commit: art(qa): feed fifth-wave ENG shadow and OP idle failure back to bounded generator
-- Tracked files: 1535
+- Head: `b9aa0f38b8ad`
+- Commit date: 2026-10-12T13:04:25+02:00
+- Commit: ci(art): test confirmed shadow removal and keep GPU cleanup modules tracked
+- Tracked files: 1537
 
 ### Recently changed files
-- `art/production/generation-rejection-ledger.json`
-- `art/production/character-strict-review-backlog.md`
-- `art/production/master-asset-queue.json`
-- `art/production/kaggle-async-state.json`
-- `art/production/autofactory-state.json`
-- `art/production/autofactory-summary.md`
-- `art/production/controlled-character-regen-queue.json`
+- `.github/workflows/asset-pipeline-ci.yml`
+- `.github/workflows/kaggle-mass-sprite-factory.yml`
+- `kaggle/github_mass_factory.py`
+- `tools/sprites/test_character_ground_shadow_cleanup.py`
+- `tools/sprites/kaggle_character_sheet_factory_v1.py`
 
 ### Project signals
 - `build.gradle.kts`
