@@ -4446,12 +4446,19 @@ draw=ImageDraw.Draw(out)
 ⋮----
 hip_y=int(h*.58); knee_y=int(h*.75)
 ⋮----
-shear=phase*.045
+shear=phase*.060
 lower=lower.transform(
 ⋮----
 clean=ImageDraw.Draw(out)
 ⋮----
 draw=ImageDraw.Draw(out,'RGBA')
+⋮----
+# A formerly detached 160x215 control panel poisoned later img2img frames:
+# the model produced floating blue boxes and even generated "ENG" labels.
+# Seed a single compact handheld tool instead, joined to the right wrist.
+⋮----
+# The generated 165x255 floating console was not physically part of the
+# worker. Keep one short diagnostic probe firmly inside arm reach instead.
 ⋮----
 def prompt_pair(i,pose,mode='default')
 ⋮----
@@ -4691,7 +4698,7 @@ strength=min(.72,.54+fi*.018+attempt*.025)
 # canonical anchor. The deterministic crate scaffold already supplies
 # the carry semantic, so high denoise only encourages face/body drift
 # and oversized/duplicated luggage.
-strength=min(.64,.48+fi*.012+attempt*.020)
+strength=min(.54,.41+fi*.012+attempt*.018)
 ⋮----
 strength=min(.76,.58+fi*.018+attempt*.03)
 ⋮----

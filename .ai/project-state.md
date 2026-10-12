@@ -31,21 +31,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T04:04:44Z
+Generated: 2026-10-12T04:06:44Z
 
 ### Git
 - Branch: `main`
-- Head: `3e992a12daf0`
-- Commit date: 2026-10-12T06:04:25+02:00
-- Commit: test(art): protect pending IDLE provenance and 12-sheet role-burst capacity
-- Tracked files: 1529
+- Head: `4b086264180c`
+- Commit date: 2026-10-12T06:06:26+02:00
+- Commit: docs(art): record verified ENG OP third-wave visual decisions and corrective actions
+- Tracked files: 1530
 
 ### Recently changed files
+- `art/production/eng-op-third-batch-semantic-review.md`
+- `tools/assets/test_workflow_policy.py`
+- `tools/sprites/kaggle_character_sheet_factory_v1.py`
 - `tools/assets/test_queue_state_policy.py`
-- `tools/sprites/asset_queue_utils.py`
-- `tools/sprites/asset_wave_orchestrator.py`
-- `art/production/generation-rejection-ledger.json`
-- `art/production/character-strict-review-backlog.md`
 
 ### Project signals
 - `build.gradle.kts`

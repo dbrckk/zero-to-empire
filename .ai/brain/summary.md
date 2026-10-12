@@ -2,11 +2,11 @@
 
 - Index mode: incremental
 - Files indexed: 248
-- Files reparsed this run: 5
+- Files reparsed this run: 1
 - Symbols: 1304
 - Internal import edges: 45
-- Impacted files: 10
-- Selected tests: 3
+- Impacted files: 1
+- Selected tests: 0
 
 ## Languages
 - kotlin: 160 files
@@ -43,7 +43,7 @@
 ## ast-grep enrichment
 - ast-grep outline: available
 - AST index mode: incremental
-- AST files reparsed this run: 5
+- AST files reparsed this run: 1
 - outline files retained: 253
 - top-level items retained: 3524
 - direct members retained: 810

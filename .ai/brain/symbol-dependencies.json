@@ -5,1297 +5,6 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "load_json": {
-      "source": {
-        "file": "tools/sprites/asset_queue_utils.py",
-        "start": 43,
-        "end": 46
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "save_json": {
-      "source": {
-        "file": "tools/sprites/asset_queue_utils.py",
-        "start": 49,
-        "end": 51
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "manifest_rows": {
-      "source": {
-        "file": "tools/sprites/asset_queue_utils.py",
-        "start": 54,
-        "end": 74
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "unresolved_ids": {
-      "source": {
-        "file": "tools/sprites/asset_queue_utils.py",
-        "start": 77,
-        "end": 81
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "manifest_rows",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 54,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "default_asset": {
-      "source": {
-        "file": "tools/sprites/asset_queue_utils.py",
-        "start": 84,
-        "end": 113
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "ensure_master": {
-      "source": {
-        "file": "tools/sprites/asset_queue_utils.py",
-        "start": 116,
-        "end": 154
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "default_asset",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 84,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "load_json",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 43,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "manifest_rows",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 54,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "save_json",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 49,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "unresolved_ids",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 77,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 5
-    },
-    "sync_controlled_queues": {
-      "source": {
-        "file": "tools/sprites/asset_queue_utils.py",
-        "start": 157,
-        "end": 218
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "Pending",
-          "definitions": [
-            {
-              "file": "app/src/main/java/com/zerotoempire/game/Monetization.kt",
-              "line": 53,
-              "kind": "class",
-              "language": "kotlin"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "load_json",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 43,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "save_json",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 49,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "stats": {
-      "source": {
-        "file": "tools/sprites/asset_queue_utils.py",
-        "start": 221,
-        "end": 245
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "write_summary": {
-      "source": {
-        "file": "tools/sprites/asset_queue_utils.py",
-        "start": 248,
-        "end": 264
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "Asset",
-          "definitions": [
-            {
-              "file": "tools/sprites/plan_sprite_batches.py",
-              "line": 34,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "stats",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 221,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "by_id": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 55,
-        "end": 56
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "mirror_character_outcomes_from_controlled": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 59,
-        "end": 81
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "load_json",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 43,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "update_from_trigger": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 84,
-        "end": 151
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "load_json",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 43,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "mirror_character_outcomes_from_controlled",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 59,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "save_json",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 49,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "active_pending": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 154,
-        "end": 156
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "load_json",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 43,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "character_retry_available": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 159,
-        "end": 179
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "mark_dispatch": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 182,
-        "end": 218
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "by_id",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 55,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "character_retry_available",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 159,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "prioritize_controlled_character_targets": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 221,
-        "end": 284
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "load_json",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 43,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "save_json",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 49,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "building_family_ids": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 287,
-        "end": 288
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "prepare_building_group": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 291,
-        "end": 299
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "building_family_ids",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 287,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "by_id",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 55,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "mark_dispatch",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 182,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "save_json",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 49,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 4
-    },
-    "prepare_character_burst": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 302,
-        "end": 388
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "by_id",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 55,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "character_retry_available",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 159,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "mark_dispatch",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 182,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "prioritize_controlled_character_targets",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 221,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "save_json",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 49,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 5
-    },
-    "next_group": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 390,
-        "end": 406
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "character_retry_available",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 159,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "close_exhausted_character_dispatches": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 409,
-        "end": 461
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "by_id",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 55,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "character_retry_available",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 159,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "load_json",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 43,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "active_pollinations_repair": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 464,
-        "end": 486
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "load_json",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 43,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "pending_ids_from_controlled": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 489,
-        "end": 503
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "active_pending",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 154,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "by_id",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 55,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "character_retry_available",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 159,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "order_character_groups_by_retry": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 506,
-        "end": 533
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "character_retry_available",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 159,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "current_epoch_attempts",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 512,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "current_epoch_attempts": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 512,
-        "end": 632
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "active_pollinations_repair",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 464,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "character_retry_available",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 159,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "close_exhausted_character_dispatches",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 409,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "ensure_master",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 116,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "main",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 606,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "make_decision",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 536,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "mark_dispatch",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 182,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "next_group",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 390,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "order_character_groups_by_retry",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 506,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "pending_ids_from_controlled",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 489,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "prepare_building_group",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 291,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "prepare_character_burst",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 302,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "prioritize_controlled_character_targets",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 221,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "save_json",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 49,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "stats",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 221,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sync_controlled_queues",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 157,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "update_from_trigger",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 84,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "write_summary",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 248,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 18
-    },
-    "make_decision": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 536,
-        "end": 603
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "active_pollinations_repair",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 464,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "character_retry_available",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 159,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "close_exhausted_character_dispatches",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 409,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "mark_dispatch",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 182,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "next_group",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 390,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "order_character_groups_by_retry",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 506,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "pending_ids_from_controlled",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 489,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "prepare_building_group",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 291,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "prepare_character_burst",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 302,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "prioritize_controlled_character_targets",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 221,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "stats",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 221,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 11
-    },
-    "main": {
-      "source": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "start": 606,
-        "end": 619
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "ensure_master",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 116,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "make_decision",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 536,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "save_json",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 49,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "stats",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 221,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "sync_controlled_queues",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 157,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "update_from_trigger",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_wave_orchestrator.py",
-              "line": 84,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "write_summary",
-          "definitions": [
-            {
-              "file": "tools/sprites/asset_queue_utils.py",
-              "line": 248,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 7
-    },
-    "_runs": {
-      "source": {
-        "file": "tools/sprites/character_semantic_gate.py",
-        "start": 13,
-        "end": 19
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "frame_geometry": {
-      "source": {
-        "file": "tools/sprites/character_semantic_gate.py",
-        "start": 22,
-        "end": 61
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "_runs",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 13,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "color_signature": {
-      "source": {
-        "file": "tools/sprites/character_semantic_gate.py",
-        "start": 64,
-        "end": 76
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "palette_distance": {
-      "source": {
-        "file": "tools/sprites/character_semantic_gate.py",
-        "start": 79,
-        "end": 81
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "_body_region_color_signature": {
-      "source": {
-        "file": "tools/sprites/character_semantic_gate.py",
-        "start": 84,
-        "end": 97
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "color_signature",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 64,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "clip_risk": {
-      "source": {
-        "file": "tools/sprites/character_semantic_gate.py",
-        "start": 100,
-        "end": 172
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "_body_region_color_signature",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 84,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "color_signature",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 64,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "frame_geometry",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 22,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "palette_distance",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 79,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 4
-    },
     "rows": {
       "source": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
@@ -1349,7 +58,7 @@
       "source": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
         "start": 177,
-        "end": 238
+        "end": 248
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -1357,8 +66,8 @@
     "prompt_pair": {
       "source": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "start": 240,
-        "end": 273
+        "start": 250,
+        "end": 283
       },
       "symbol_dependencies": [
         {
@@ -1379,8 +88,8 @@
     "retry_mode": {
       "source": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "start": 275,
-        "end": 280
+        "start": 285,
+        "end": 290
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -1388,8 +97,8 @@
     "load_encode": {
       "source": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "start": 282,
-        "end": 285
+        "start": 292,
+        "end": 295
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -1397,8 +106,8 @@
     "load_render": {
       "source": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "start": 287,
-        "end": 292
+        "start": 297,
+        "end": 302
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -1406,8 +115,8 @@
     "border_bg": {
       "source": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "start": 294,
-        "end": 301
+        "start": 304,
+        "end": 311
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -1415,8 +124,8 @@
     "isolate": {
       "source": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "start": 303,
-        "end": 320
+        "start": 313,
+        "end": 330
       },
       "symbol_dependencies": [
         {
@@ -1424,7 +133,7 @@
           "definitions": [
             {
               "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-              "line": 294,
+              "line": 304,
               "kind": "function",
               "language": "python"
             }
@@ -1436,7 +145,7 @@
           "definitions": [
             {
               "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-              "line": 307,
+              "line": 317,
               "kind": "function",
               "language": "python"
             }
@@ -1449,8 +158,8 @@
     "dist": {
       "source": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "start": 307,
-        "end": 427
+        "start": 317,
+        "end": 437
       },
       "symbol_dependencies": [
         {
@@ -1458,7 +167,7 @@
           "definitions": [
             {
               "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-              "line": 369,
+              "line": 379,
               "kind": "function",
               "language": "python"
             }
@@ -1470,7 +179,7 @@
           "definitions": [
             {
               "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-              "line": 332,
+              "line": 342,
               "kind": "function",
               "language": "python"
             }
@@ -1482,7 +191,7 @@
           "definitions": [
             {
               "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-              "line": 303,
+              "line": 313,
               "kind": "function",
               "language": "python"
             }
@@ -1494,7 +203,7 @@
           "definitions": [
             {
               "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-              "line": 391,
+              "line": 401,
               "kind": "function",
               "language": "python"
             }
@@ -1506,7 +215,7 @@
           "definitions": [
             {
               "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-              "line": 378,
+              "line": 388,
               "kind": "function",
               "language": "python"
             }
@@ -1518,7 +227,7 @@
           "definitions": [
             {
               "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-              "line": 408,
+              "line": 418,
               "kind": "function",
               "language": "python"
             }
@@ -1530,7 +239,7 @@
           "definitions": [
             {
               "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-              "line": 322,
+              "line": 332,
               "kind": "function",
               "language": "python"
             }
@@ -1542,7 +251,7 @@
           "definitions": [
             {
               "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-              "line": 425,
+              "line": 435,
               "kind": "function",
               "language": "python"
             }
@@ -1555,8 +264,8 @@
     "validate_source_full_body": {
       "source": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "start": 322,
-        "end": 330
+        "start": 332,
+        "end": 340
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -1564,8 +273,8 @@
     "finish_frame": {
       "source": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "start": 332,
-        "end": 367
+        "start": 342,
+        "end": 377
       },
       "symbol_dependencies": [
         {
@@ -1573,7 +282,7 @@
           "definitions": [
             {
               "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-              "line": 303,
+              "line": 313,
               "kind": "function",
               "language": "python"
             }
@@ -1585,7 +294,7 @@
           "definitions": [
             {
               "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-              "line": 322,
+              "line": 332,
               "kind": "function",
               "language": "python"
             }
@@ -1598,8 +307,8 @@
     "alpha_iou": {
       "source": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "start": 369,
-        "end": 376
+        "start": 379,
+        "end": 386
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -1607,8 +316,8 @@
     "sheet_qa": {
       "source": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "start": 378,
-        "end": 389
+        "start": 388,
+        "end": 399
       },
       "symbol_dependencies": [
         {
@@ -1616,7 +325,7 @@
           "definitions": [
             {
               "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-              "line": 369,
+              "line": 379,
               "kind": "function",
               "language": "python"
             }
@@ -1629,8 +338,8 @@
     "lower_body_motion": {
       "source": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "start": 391,
-        "end": 406
+        "start": 401,
+        "end": 416
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -1638,8 +347,8 @@
     "upper_body_transition_changes": {
       "source": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "start": 408,
-        "end": 423
+        "start": 418,
+        "end": 433
       },
       "symbol_dependencies": [
         {
@@ -1647,7 +356,7 @@
           "definitions": [
             {
               "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-              "line": 369,
+              "line": 379,
               "kind": "function",
               "language": "python"
             }
@@ -1660,8 +369,8 @@
     "walk_consistency_qa": {
       "source": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "start": 425,
-        "end": 438
+        "start": 435,
+        "end": 448
       },
       "symbol_dependencies": [
         {
@@ -1669,7 +378,7 @@
           "definitions": [
             {
               "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-              "line": 369,
+              "line": 379,
               "kind": "function",
               "language": "python"
             }
@@ -1681,7 +390,7 @@
           "definitions": [
             {
               "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-              "line": 487,
+              "line": 497,
               "kind": "function",
               "language": "python"
             }
@@ -1693,7 +402,7 @@
           "definitions": [
             {
               "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-              "line": 473,
+              "line": 483,
               "kind": "function",
               "language": "python"
             }
@@ -1706,8 +415,8 @@
     "action_qa": {
       "source": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "start": 440,
-        "end": 471
+        "start": 450,
+        "end": 481
       },
       "symbol_dependencies": [
         {
@@ -1715,7 +424,7 @@
           "definitions": [
             {
               "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-              "line": 369,
+              "line": 379,
               "kind": "function",
               "language": "python"
             }
@@ -1727,7 +436,7 @@
           "definitions": [
             {
               "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-              "line": 391,
+              "line": 401,
               "kind": "function",
               "language": "python"
             }
@@ -1739,7 +448,7 @@
           "definitions": [
             {
               "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-              "line": 408,
+              "line": 418,
               "kind": "function",
               "language": "python"
             }
@@ -1751,7 +460,7 @@
           "definitions": [
             {
               "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-              "line": 425,
+              "line": 435,
               "kind": "function",
               "language": "python"
             }
@@ -1764,8 +473,8 @@
     "appearance_signature": {
       "source": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "start": 473,
-        "end": 485
+        "start": 483,
+        "end": 495
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -1773,8 +482,8 @@
     "appearance_distance": {
       "source": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "start": 487,
-        "end": 488
+        "start": 497,
+        "end": 498
       },
       "symbol_dependencies": [
         {
@@ -1782,7 +491,7 @@
           "definitions": [
             {
               "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-              "line": 473,
+              "line": 483,
               "kind": "function",
               "language": "python"
             }
@@ -1795,91 +504,25 @@
     "make_sheet": {
       "source": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "start": 490,
-        "end": 496
+        "start": 500,
+        "end": 506
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "person": {
+    "main": {
       "source": {
-        "file": "tools/sprites/test_character_semantic_gate.py",
-        "start": 7,
-        "end": 18
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "portrait": {
-      "source": {
-        "file": "tools/sprites/test_character_semantic_gate.py",
-        "start": 21,
-        "end": 27
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "SemanticGateTests": {
-      "source": {
-        "file": "tools/sprites/test_character_semantic_gate.py",
-        "start": 30,
-        "end": 94
+        "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "start": 508,
+        "end": 628
       },
       "symbol_dependencies": [
         {
-          "symbol": "clip_risk",
+          "symbol": "anchor_prompt_pair",
           "definitions": [
             {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 100,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "color_signature",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 64,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "frame_geometry",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 22,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "palette_distance",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 79,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "person",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_character_semantic_gate.py",
-              "line": 7,
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 161,
               "kind": "function",
               "language": "python"
             }
@@ -1887,11 +530,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "portrait",
+          "symbol": "finish_frame",
           "definitions": [
             {
-              "file": "tools/sprites/test_character_semantic_gate.py",
-              "line": 21,
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 342,
               "kind": "function",
               "language": "python"
             }
@@ -1899,11 +542,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_alternating_helmet_or_face_color_blocks_identity",
+          "symbol": "load_encode",
           "definitions": [
             {
-              "file": "tools/sprites/test_character_semantic_gate.py",
-              "line": 62,
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 292,
               "kind": "function",
               "language": "python"
             }
@@ -1911,11 +554,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_consistent_full_body_is_not_blocked",
+          "symbol": "load_render",
           "definitions": [
             {
-              "file": "tools/sprites/test_character_semantic_gate.py",
-              "line": 31,
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 297,
               "kind": "function",
               "language": "python"
             }
@@ -1923,11 +566,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_empty_frame_fails_hard",
+          "symbol": "prompt_pair",
           "definitions": [
             {
-              "file": "tools/sprites/test_character_semantic_gate.py",
-              "line": 57,
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 250,
               "kind": "function",
               "language": "python"
             }
@@ -1935,11 +578,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_morphing_crate_palette_blocks_carrying",
+          "symbol": "retry_mode",
           "definitions": [
             {
-              "file": "tools/sprites/test_character_semantic_gate.py",
-              "line": 74,
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 285,
               "kind": "function",
               "language": "python"
             }
@@ -1947,11 +590,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_portraits_and_fragments_block",
+          "symbol": "rows",
           "definitions": [
             {
-              "file": "tools/sprites/test_character_semantic_gate.py",
-              "line": 36,
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 59,
               "kind": "function",
               "language": "python"
             }
@@ -1959,35 +602,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_same_palette_is_identical",
+          "symbol": "semantic_scaffold",
           "definitions": [
             {
-              "file": "tools/sprites/test_character_semantic_gate.py",
-              "line": 90,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_two_people_in_one_cell_cause_visible_mass_jump",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_character_semantic_gate.py",
-              "line": 47,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_unrelated_costume_palettes_are_detected",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_character_semantic_gate.py",
-              "line": 41,
+              "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+              "line": 177,
               "kind": "function",
               "language": "python"
             }
@@ -1995,315 +614,7 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 14
-    },
-    "test_consistent_full_body_is_not_blocked": {
-      "source": {
-        "file": "tools/sprites/test_character_semantic_gate.py",
-        "start": 31,
-        "end": 34
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "clip_risk",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 100,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "person",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_character_semantic_gate.py",
-              "line": 7,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_portraits_and_fragments_block": {
-      "source": {
-        "file": "tools/sprites/test_character_semantic_gate.py",
-        "start": 36,
-        "end": 39
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "clip_risk",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 100,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "portrait",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_character_semantic_gate.py",
-              "line": 21,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_unrelated_costume_palettes_are_detected": {
-      "source": {
-        "file": "tools/sprites/test_character_semantic_gate.py",
-        "start": 41,
-        "end": 45
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "clip_risk",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 100,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "person",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_character_semantic_gate.py",
-              "line": 7,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_two_people_in_one_cell_cause_visible_mass_jump": {
-      "source": {
-        "file": "tools/sprites/test_character_semantic_gate.py",
-        "start": 47,
-        "end": 55
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "clip_risk",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 100,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "person",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_character_semantic_gate.py",
-              "line": 7,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_empty_frame_fails_hard": {
-      "source": {
-        "file": "tools/sprites/test_character_semantic_gate.py",
-        "start": 57,
-        "end": 60
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "clip_risk",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 100,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "frame_geometry",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 22,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "person",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_character_semantic_gate.py",
-              "line": 7,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "test_alternating_helmet_or_face_color_blocks_identity": {
-      "source": {
-        "file": "tools/sprites/test_character_semantic_gate.py",
-        "start": 62,
-        "end": 72
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "clip_risk",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 100,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "person",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_character_semantic_gate.py",
-              "line": 7,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_morphing_crate_palette_blocks_carrying": {
-      "source": {
-        "file": "tools/sprites/test_character_semantic_gate.py",
-        "start": 74,
-        "end": 88
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "clip_risk",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 100,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "person",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_character_semantic_gate.py",
-              "line": 7,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_same_palette_is_identical": {
-      "source": {
-        "file": "tools/sprites/test_character_semantic_gate.py",
-        "start": 90,
-        "end": 94
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "clip_risk",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 100,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "color_signature",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 64,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "palette_distance",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 79,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "person",
-          "definitions": [
-            {
-              "file": "tools/sprites/test_character_semantic_gate.py",
-              "line": 7,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 4
+      "dependency_count": 8
     }
   }
 }

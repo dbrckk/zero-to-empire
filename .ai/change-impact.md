@@ -1,13 +1,13 @@
 # Change impact
 
-Base: c18427c907ee545e085a76acc61e65ee09dbd770
-Head: 3e992a12daf0e91cfb33f7f26a72ecf75643ba1a
+Base: 3f483bf416605fd97fce09a23d5296dc63f229d5
+Head: 4b086264180c6f1c3903455419dbd12f974880eb
 
 ## Changed files
-- M tools/assets/test_queue_state_policy.py
+- A art/production/eng-op-third-batch-semantic-review.md
 
 ## Affected areas
-- tools
+- art
 
 ## Related test candidates
 - No direct filename-based test match detected.
