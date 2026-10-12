@@ -1,7 +1,7 @@
 """Synthetic visual failure tests, no external models and no automatic approval."""
 import unittest
 from PIL import Image,ImageDraw
-from character_semantic_gate import clip_risk,frame_geometry,palette_distance,color_signature
+from character_semantic_gate import clip_risk,frame_geometry,palette_distance,color_signature,idle_visual_activity
 
 
 def person(i=0,color=(80,144,187,255)):
@@ -86,6 +86,23 @@ class SemanticGateTests(unittest.TestCase):
         # non-prop action should be blocked on mid-body content alone.
         self.assertNotIn('TOOL_CRATE_TORSO_COLOR_DISCONTINUITY_RISK',
                          clip_risk(frames,'IDLE')['flags'])
+
+    def test_idles_with_subtle_eye_blinks_have_visible_activity(self):
+        base=person()
+        frames=[]
+        for index in range(6):
+            frame=base.copy()
+            if index%2:
+                ImageDraw.Draw(frame).rectangle((118,34,140,39),
+                                                fill=(12,18,24,255))
+            frames.append(frame)
+        self.assertEqual(idle_visual_activity([base]*6),0)
+        self.assertGreater(idle_visual_activity(frames),.00035)
+        self.assertLess(idle_visual_activity(frames),.03)
+
+    def test_idle_visual_activity_requires_multiple_nonempty_frames(self):
+        self.assertEqual(idle_visual_activity([person()]),0.0)
+        self.assertEqual(idle_visual_activity([]),0.0)
 
     def test_same_palette_is_identical(self):
         signature=color_signature(person())
