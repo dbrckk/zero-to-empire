@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import math
 import statistics
-from PIL import Image
+from PIL import Image, ImageChops
 
 
 def _runs(occupancy):
@@ -293,6 +293,75 @@ def idle_distinct_head_clusters(frame:Image.Image)->int:
     return 1 if runs else 0
 
 
+def _upper_head_centroid(frame:Image.Image):
+    """Approximate actor registration from the upper opaque head silhouette."""
+    rgba=frame.convert('RGBA')
+    alpha=rgba.getchannel('A')
+    bbox=alpha.getbbox()
+    if bbox is None:
+        return None
+    height=bbox[3]-bbox[1]
+    y0=max(0,bbox[1]+round(height*.04))
+    y1=min(frame.height,max(y0+1,bbox[1]+round(height*.25)))
+    region=alpha.crop((0,y0,frame.width,y1))
+    pixels=region.load()
+    sum_x=sum_y=count=0
+    for y in range(region.height):
+        for x in range(region.width):
+            if pixels[x,y]>=120:
+                sum_x+=x
+                sum_y+=y+y0
+                count+=1
+    if count<60:
+        return None
+    return round(sum_x/count),round(sum_y/count)
+
+
+def _binary_alpha_iou(a:Image.Image,b:Image.Image)->float:
+    aa=a.getchannel('A').point(lambda v:255 if v>=32 else 0)
+    bb=b.getchannel('A').point(lambda v:255 if v>=32 else 0)
+    overlap=ImageChops.darker(aa,bb).histogram()[255]
+    union=ImageChops.lighter(aa,bb).histogram()[255]
+    return overlap/union if union else 1.0
+
+
+def action_translation_metrics(frames:list[Image.Image])->dict:
+    """Detect apparent action motion due mainly to shifting the whole actor.
+
+    A 256px WORK/REPAIR atlas can exceed the alpha-change threshold if the
+    standing character slides horizontally, even with no raised forearms.
+    Register the upper head silhouette and measure the pose-change remainder.
+    This is a reject-only risk signal, never a semantic quality approval.
+    """
+    if len(frames)<4:
+        raise ValueError('At least four frames are needed for action motion')
+    rgba=[f.convert('RGBA') for f in frames]
+    if any(f.size!=(256,256) for f in rgba):
+        raise ValueError('Expected 256x256 character action frames')
+    anchors=[_upper_head_centroid(f) for f in rgba]
+    if any(anchor is None for anchor in anchors):
+        return {'translation_dominated':False,
+                'insufficient_registration_evidence':True}
+    first=anchors[0]
+    aligned=[]
+    for frame,(x,y) in zip(rgba,anchors):
+        registered=Image.new('RGBA',frame.size,(0,0,0,0))
+        registered.paste(frame,(first[0]-x,first[1]-y))
+        aligned.append(registered)
+    raw=sum(1-_binary_alpha_iou(a,b) for a,b in zip(rgba,rgba[1:]))/(len(rgba)-1)
+    residual=sum(1-_binary_alpha_iou(a,b)
+                 for a,b in zip(aligned,aligned[1:]))/(len(aligned)-1)
+    head_excursion=max(x for x,y in anchors)-min(x for x,y in anchors)
+    ratio=residual/max(raw,.001)
+    dominated=raw>=.15 and head_excursion>=12 and ratio<.43
+    return {'mean_raw_alpha_motion':round(raw,4),
+            'mean_registered_alpha_motion':round(residual,4),
+            'retained_pose_motion_ratio':round(ratio,4),
+            'head_horizontal_excursion_px':head_excursion,
+            'translation_dominated':dominated,
+            'insufficient_registration_evidence':False}
+
+
 def clip_risk(frames:list[Image.Image],action:str|None=None)->dict:
     if len(frames)<4:
         raise ValueError('At least four images needed')
@@ -333,6 +402,11 @@ def clip_risk(frames:list[Image.Image],action:str|None=None)->dict:
     )
     double_head_frames=sum(value>=2 for value in idle_head_clusters)
     flags=[]
+    action_pose_metrics={}
+    if str(action or '').upper() in {'WORK','REPAIR'}:
+        action_pose_metrics=action_translation_metrics(frames)
+        if action_pose_metrics.get('translation_dominated'):
+            flags.append('ACTION_TRANSLATION_DOMINATES_POSE_RISK')
     if double_head_frames>=2:
         flags.append('MULTIPLE_IDLE_HEADS_RISK')
     if ground_band_count>=math.ceil(len(frames)*.5):
@@ -368,7 +442,8 @@ def clip_risk(frames:list[Image.Image],action:str|None=None)->dict:
     mass_ratio=max(areas)/max(min(areas),1)
     if mass_ratio>1.80:
         flags.append('SILHOUETTE_MASS_DISCONTINUITY_RISK')
-    blockers={'MULTIPLE_IDLE_HEADS_RISK',
+    blockers={'ACTION_TRANSLATION_DOMINATES_POSE_RISK',
+              'MULTIPLE_IDLE_HEADS_RISK',
               'MULTIPLE_NON_FULL_BODY_FRAMES',
               'MEDIAN_SILHOUETTE_NOT_FULL_BODY',
               'PALETTE_IDENTITY_DISCONTINUITY_RISK',
@@ -383,6 +458,7 @@ def clip_risk(frames:list[Image.Image],action:str|None=None)->dict:
     return {'risk_level':'BLOCKING' if blocking else
             ('REVIEW' if flags else 'NOT_DETECTED'),
             'flags':flags,
+            'action_pose_metrics':action_pose_metrics,
             'max_palette_adjacent_distance':round(biggest,4),
             'max_headgear_adjacent_color_distance':round(head_max,4),
             'max_face_headgear_structural_drift':round(head_shape_drift,4),
