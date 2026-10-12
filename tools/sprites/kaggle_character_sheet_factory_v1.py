@@ -14,7 +14,7 @@ import torch
 from PIL import Image,ImageDraw,ImageFilter
 from diffusers import FluxPipeline,FluxImg2ImgPipeline,FluxTransformer2DModel
 from transformers import T5EncoderModel
-from character_semantic_gate import clip_risk,idle_visual_activity
+from character_semantic_gate import clip_risk,idle_visual_activity,celebration_arm_reach_counts
 from character_head_identity_lock import lock_head_to_idle
 
 ROOT=Path(__file__).resolve().parents[2]
@@ -488,8 +488,12 @@ def action_qa(frames,action):
    return False,f'celeb-unreadable-gesture upper-transitions={expressive}/{len(changes)}'
   if changes and max(changes)>.45:
    return False,f'celeb-upper-silhouette-jump={max(changes):.3f}>0.450'
+  arms=celebration_arm_reach_counts(frames)
+  active=sum(count>=28 for count in arms)
+  if active<3:
+   return False,f'celeb-no-progressive-arm-raise active-frames={active}/{len(arms)}'
   return True,(f'celeb-motion={mean_change:.3f} upper-transitions={expressive}/{len(changes)} '
-               f'upper-max-step={max(changes):.3f}')
+               f'upper-max-step={max(changes):.3f} arm-frames={active}/{len(arms)}')
  return True,f'{action.lower()}-motion={mean_change:.3f}'
 
 def appearance_signature(cell):
