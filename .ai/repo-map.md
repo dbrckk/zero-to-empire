@@ -399,6 +399,7 @@ tools/
     test_action_contact.py
     test_animation_batch_planner.py
     test_autonomous_walk.py
+    test_character_action_gate.py
     test_character_head_identity_lock.py
     test_character_provider_reservation.py
     test_character_review_matrix.py
@@ -1129,6 +1130,7 @@ on:
       - 'tools/sprites/test_character_head_identity_lock.py'
       - 'tools/sprites/character_semantic_gate.py'
       - 'tools/sprites/test_character_semantic_gate.py'
+      - 'tools/sprites/test_character_action_gate.py'
       - 'tools/sprites/test_animation_batch_planner.py'
       - 'tools/sprites/kaggle_*factory*.py'
       - 'kaggle/github_mass_factory.py'
@@ -1154,6 +1156,7 @@ on:
       - 'tools/sprites/test_character_head_identity_lock.py'
       - 'tools/sprites/character_semantic_gate.py'
       - 'tools/sprites/test_character_semantic_gate.py'
+      - 'tools/sprites/test_character_action_gate.py'
       - 'tools/sprites/test_animation_batch_planner.py'
       - 'tools/sprites/kaggle_*factory*.py'
       - 'kaggle/github_mass_factory.py'
@@ -1273,6 +1276,7 @@ jobs:
           python -m unittest discover -s tools/assets -p 'test_*.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_semantic_gate.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_head_identity_lock.py' -v
+          python -m unittest discover -s tools/sprites -p 'test_character_action_gate.py' -v
 
       - name: Verify live character-production plan against strict queue and Android frame contract
         run: |
@@ -33794,6 +33798,62 @@ events=json.loads((root/'frame-events.json').read_text())
 frame_poses=json.loads((root/'frame-poses.json').read_text())
 ⋮----
 project=json.loads((root/'project.json').read_text())
+```
+
+## File: tools/sprites/test_character_action_gate.py
+```python
+"""Exercise the real lightweight character action QA without loading Flux/GPU.
+
+The production module imports PyTorch/diffusers at module load. Extract only
+its pure PIL functions through Python AST, so these tests execute the exact
+shipping action gate without requiring Kaggle or model downloads.
+"""
+⋮----
+ROOT = Path(__file__).resolve().parents[2]
+⋮----
+FUNCTIONS = {
+⋮----
+def load_shipping_action_gate()
+⋮----
+source = (ROOT / "tools" / "sprites" / "kaggle_character_sheet_factory_v1.py").read_text(
+tree = ast.parse(source)
+selected = [
+⋮----
+module = ast.fix_missing_locations(ast.Module(body=selected, type_ignores=[]))
+namespace = {
+⋮----
+def worker()
+⋮----
+im = Image.new("RGBA", (256, 256))
+d = ImageDraw.Draw(im)
+⋮----
+class ProductionActionQATests(unittest.TestCase)
+⋮----
+@classmethod
+    def setUpClass(cls)
+⋮----
+def test_exactly_frozen_idle_is_rejected(self)
+⋮----
+frozen = worker()
+⋮----
+def test_subtle_eye_blink_idle_is_retained_for_manual_review(self)
+⋮----
+frames = []
+⋮----
+frame = worker()
+⋮----
+def test_stationary_carry_does_not_pass_for_a_walk_cycle(self)
+⋮----
+static = worker()
+⋮----
+def test_single_last_frame_arm_jerk_is_not_celebration(self)
+⋮----
+neutral = worker()
+last = worker()
+⋮----
+def test_static_walk_is_rejected(self)
+⋮----
+same = worker()
 ```
 
 ## File: tools/sprites/test_character_head_identity_lock.py

@@ -31,24 +31,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T08:14:56Z
+Generated: 2026-10-12T08:17:44Z
 
 ### Git
 - Branch: `main`
-- Head: `b9c34383dc39`
-- Commit date: 2026-10-12T10:14:41+02:00
-- Commit: feat(art): stabilize carried cargo and gripping hands across frames
-- Tracked files: 1534
+- Head: `bcf1322dae02`
+- Commit date: 2026-10-12T10:17:12+02:00
+- Commit: ci(art): run actual character action QA unit checks on each pipeline update
+- Tracked files: 1535
 
 ### Recently changed files
+- `.github/workflows/asset-pipeline-ci.yml`
+- `tools/sprites/test_character_action_gate.py`
 - `tools/sprites/character_cargo_identity_lock.py`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
 - `art/production/character-strict-review-backlog.md`
 - `art/production/master-asset-queue.json`
-- `.github/workflows/asset-pipeline-ci.yml`
-- `tools/sprites/build_character_review_panels.py`
-- `tools/assets/test_workflow_policy.py`
 
 ### Project signals
 - `build.gradle.kts`

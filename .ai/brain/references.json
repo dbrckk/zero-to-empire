@@ -5,18 +5,436 @@
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
   "symbols": {
-    "lock_cargo_region": {
+    "load_shipping_action_gate": {
       "definition": {
-        "file": "tools/sprites/character_cargo_identity_lock.py",
-        "line": 13,
+        "file": "tools/sprites/test_character_action_gate.py",
+        "line": 31,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/character_cargo_identity_lock.py",
-          "line": 13,
-          "preview": "def lock_cargo_region(frame: Image.Image, first_frame: Image.Image):",
+          "file": "tools/sprites/test_character_action_gate.py",
+          "line": 31,
+          "preview": "def load_shipping_action_gate():",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/test_character_action_gate.py",
+          "line": 67,
+          "preview": "cls.gate = staticmethod(load_shipping_action_gate())",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "worker": {
+      "definition": {
+        "file": "tools/sprites/test_character_action_gate.py",
+        "line": 52,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/AdaptiveMusic.kt",
+          "line": 22,
+          "preview": "private var worker: Thread? = null",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/AdaptiveMusic.kt",
+          "line": 85,
+          "preview": "worker = thread(name = \"EmpireAdaptiveMusic\", isDaemon = true) { renderLoop() }",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/AdaptiveMusic.kt",
+          "line": 113,
+          "preview": "worker?.join(250)",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/AdaptiveMusic.kt",
+          "line": 114,
+          "preview": "worker = null",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/FoundryWorldMotion.kt",
+          "line": 21,
+          "preview": "* One shared motion phase for lightweight authored worker, vehicle and machine activity",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/FoundryWorldMotion.kt",
+          "line": 52,
+          "preview": "// clock. The second worker is two frames out of phase so the crowd does not march",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/GameViewModel.kt",
+          "line": 111,
+          "preview": "// coalescing worker owns that flag and will persist the newer state.",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/GameViewModel.kt",
+          "line": 321,
+          "preview": "// will set the flag again and force the coalescing worker to perform another pass.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_sprite_factory.py",
+          "line": 2,
+          "preview": "\"\"\"Zero -> Empire free sprite generation worker.\"\"\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_sprite_factory.py",
+          "line": 195,
+          "preview": "raise SystemExit(f\"Unsupported target for this worker: {target}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 86,
+          "preview": "\"Absolutely no human, person, worker, character, car, truck, van, forklift, vehicle, drone, crate pile or detached prop. \"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v15.py",
+          "line": 22,
+          "preview": "\"NO construction site, crane, tower crane, jib, boom arm, hoist, gantry crane, scaffolding, temporary frame, flag, worker, person, vehicle, road, pavement, floor slab, platform, si",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 32,
+          "preview": "'LOG':'one adult female logistics worker with the same face, dark hair tucked inside a white industrial safety helmet, reinforced amber-orange and charcoal cargo jacket, charcoal t",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 48,
+          "preview": "'REPAIR':'one visible diagnostic or welding tool repeatedly contacts a clear repair point; keep one worker only',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 116,
+          "preview": "'Render exactly one full-body worker only, never a duplicate, companion, reflection or second torso. Keep tools and props physically connected to the same worker silhouette.'),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 168,
+          "preview": "'OP':'male orange-hardhat foundry worker with dark protective glasses',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 170,
+          "preview": "'LOG':'female amber logistics worker wearing white safety helmet',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 248,
+          "preview": "# worker. Keep one short diagnostic probe firmly inside arm reach instead.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 261,
+          "preview": "'OP':'male orange-hardhat foundry worker with dark protective glasses',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 263,
+          "preview": "'LOG':'female amber logistics worker wearing white safety helmet',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 288,
+          "preview": "detail += \" Render one worker only; never depict a second body, reflection, duplicate or companion.\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_sprite_factory.py",
+          "line": 86,
+          "preview": "if i['kind']=='MCH':return f\"AAA premium mobile strategy production sprite of {s}. Exactly ONE self-contained industrial machine assembly, fully visible, isolated on pure black wit",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 26,
+          "preview": "'LOG':'logistics worker, reinforced work jacket, amber safety accents, cargo gloves',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 307,
+          "preview": "'Scale the worker smaller inside each cell if necessary. Never let any body part or tool touch a cell edge; never crop head, arms, tool, knees, legs, boots, or feet. '",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 312,
+          "preview": "'Scale the worker smaller if needed. Never crop the head, arms, hands, knees, legs, heels, toes, or boots; no limb may touch a cell edge. '",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 320,
+          "preview": "'Each cell contains exactly one full-body view of the same worker, same face, same gender presentation, same hair, same helmet, same clothes, same colors, same body proportions, sa",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_action_gate.py",
+          "line": 52,
+          "preview": "def worker():",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/test_character_action_gate.py",
+          "line": 70,
+          "preview": "frozen = worker()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_action_gate.py",
+          "line": 78,
+          "preview": "frame = worker()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_action_gate.py",
+          "line": 87,
+          "preview": "static = worker()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_action_gate.py",
+          "line": 93,
+          "preview": "neutral = worker()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_action_gate.py",
+          "line": 94,
+          "preview": "last = worker()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_action_gate.py",
+          "line": 106,
+          "preview": "same = worker()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_provider_reservation.py",
+          "line": 8,
+          "preview": "import asset_wave_orchestrator as worker",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_provider_reservation.py",
+          "line": 20,
+          "preview": "with patch.object(worker,'CHARACTER_QUEUE',p):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_provider_reservation.py",
+          "line": 21,
+          "preview": "self.assertEqual(worker.active_pollinations_repair(),['CHR-LOG-CARRY'])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_provider_reservation.py",
+          "line": 22,
+          "preview": "with patch.object(worker,'stats',return_value={'strict_done':216}), \\",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_provider_reservation.py",
+          "line": 23,
+          "preview": "patch.object(worker,'pending_ids_from_controlled',return_value=[]), \\",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_provider_reservation.py",
+          "line": 24,
+          "preview": "patch.object(worker,'next_group',return_value=None):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_provider_reservation.py",
+          "line": 25,
+          "preview": "answer=worker.make_decision({",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_provider_reservation.py",
+          "line": 40,
+          "preview": "with patch.object(worker,'CHARACTER_QUEUE',p):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_provider_reservation.py",
+          "line": 41,
+          "preview": "self.assertEqual(worker.active_pollinations_repair(),expected)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_provider_reservation.py",
+          "line": 50,
+          "preview": "with patch.object(worker,'CHARACTER_QUEUE',p):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_provider_reservation.py",
+          "line": 51,
+          "preview": "self.assertEqual(worker.active_pollinations_repair(),[])",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 44
+    },
+    "ProductionActionQATests": {
+      "definition": {
+        "file": "tools/sprites/test_character_action_gate.py",
+        "line": 64,
+        "kind": "class",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_character_action_gate.py",
+          "line": 64,
+          "preview": "class ProductionActionQATests(unittest.TestCase):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "setUpClass": {
+      "definition": {
+        "file": "tools/sprites/test_character_action_gate.py",
+        "line": 66,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_character_action_gate.py",
+          "line": 66,
+          "preview": "def setUpClass(cls):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 163,
+          "preview": "def setUpClass(cls):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
+          "line": 56,
+          "preview": "def setUpClass(cls): cls.kit=load_kit(KIT)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_soft_skin_deform.py",
+          "line": 16,
+          "preview": "def setUpClass(cls):",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "test_exactly_frozen_idle_is_rejected": {
+      "definition": {
+        "file": "tools/sprites/test_character_action_gate.py",
+        "line": 69,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_character_action_gate.py",
+          "line": 69,
+          "preview": "def test_exactly_frozen_idle_is_rejected(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_subtle_eye_blink_idle_is_retained_for_manual_review": {
+      "definition": {
+        "file": "tools/sprites/test_character_action_gate.py",
+        "line": 75,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_character_action_gate.py",
+          "line": 75,
+          "preview": "def test_subtle_eye_blink_idle_is_retained_for_manual_review(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_stationary_carry_does_not_pass_for_a_walk_cycle": {
+      "definition": {
+        "file": "tools/sprites/test_character_action_gate.py",
+        "line": 86,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_character_action_gate.py",
+          "line": 86,
+          "preview": "def test_stationary_carry_does_not_pass_for_a_walk_cycle(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_single_last_frame_arm_jerk_is_not_celebration": {
+      "definition": {
+        "file": "tools/sprites/test_character_action_gate.py",
+        "line": 92,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_character_action_gate.py",
+          "line": 92,
+          "preview": "def test_single_last_frame_arm_jerk_is_not_celebration(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_static_walk_is_rejected": {
+      "definition": {
+        "file": "tools/sprites/test_character_action_gate.py",
+        "line": 105,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_character_action_gate.py",
+          "line": 105,
+          "preview": "def test_static_walk_is_rejected(self):",
           "definition_candidate": true
         }
       ],

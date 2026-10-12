@@ -1,44 +1,82 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "0225ccda5314b7180a4b9e1ad34788885a493b8c",
-  "head": "b9c34383dc392976bdc89743bffbc2fe82a0a224",
+  "base": "b9c34383dc392976bdc89743bffbc2fe82a0a224",
+  "head": "bcf1322dae02786476bd49b46bc442ded8692bbe",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": "art/production/autofactory-state.json",
+      "path": ".github/workflows/asset-pipeline-ci.yml",
       "status": "M"
     },
     {
-      "path": "art/production/autofactory-summary.md",
-      "status": "M"
-    },
-    {
-      "path": "art/production/character-strict-review-backlog.md",
-      "status": "M"
-    },
-    {
-      "path": "art/production/master-asset-queue.json",
-      "status": "M"
-    },
-    {
-      "path": "tools/sprites/character_cargo_identity_lock.py",
+      "path": "tools/sprites/test_character_action_gate.py",
       "status": "A"
     }
   ],
   "changed_source_files": [
-    "tools/sprites/character_cargo_identity_lock.py"
+    "tools/sprites/test_character_action_gate.py"
   ],
   "impacted_files": [
-    "tools/sprites/character_cargo_identity_lock.py"
+    "tools/sprites/test_character_action_gate.py"
   ],
   "impacted_symbols": [
     {
-      "name": "lock_cargo_region",
+      "name": "load_shipping_action_gate",
       "kind": "function",
-      "file": "tools/sprites/character_cargo_identity_lock.py",
-      "line": 13
+      "file": "tools/sprites/test_character_action_gate.py",
+      "line": 31
+    },
+    {
+      "name": "worker",
+      "kind": "function",
+      "file": "tools/sprites/test_character_action_gate.py",
+      "line": 52
+    },
+    {
+      "name": "ProductionActionQATests",
+      "kind": "class",
+      "file": "tools/sprites/test_character_action_gate.py",
+      "line": 64
+    },
+    {
+      "name": "setUpClass",
+      "kind": "function",
+      "file": "tools/sprites/test_character_action_gate.py",
+      "line": 66
+    },
+    {
+      "name": "test_exactly_frozen_idle_is_rejected",
+      "kind": "function",
+      "file": "tools/sprites/test_character_action_gate.py",
+      "line": 69
+    },
+    {
+      "name": "test_subtle_eye_blink_idle_is_retained_for_manual_review",
+      "kind": "function",
+      "file": "tools/sprites/test_character_action_gate.py",
+      "line": 75
+    },
+    {
+      "name": "test_stationary_carry_does_not_pass_for_a_walk_cycle",
+      "kind": "function",
+      "file": "tools/sprites/test_character_action_gate.py",
+      "line": 86
+    },
+    {
+      "name": "test_single_last_frame_arm_jerk_is_not_celebration",
+      "kind": "function",
+      "file": "tools/sprites/test_character_action_gate.py",
+      "line": 92
+    },
+    {
+      "name": "test_static_walk_is_rejected",
+      "kind": "function",
+      "file": "tools/sprites/test_character_action_gate.py",
+      "line": 105
     }
   ],
-  "selected_tests": []
+  "selected_tests": [
+    "tools/sprites/test_character_action_gate.py"
+  ]
 }
