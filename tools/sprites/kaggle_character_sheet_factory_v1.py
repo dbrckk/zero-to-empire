@@ -16,6 +16,7 @@ from diffusers import FluxPipeline,FluxImg2ImgPipeline,FluxTransformer2DModel
 from transformers import T5EncoderModel
 from character_semantic_gate import clip_risk,idle_visual_activity,celebration_arm_reach_counts
 from character_head_identity_lock import lock_head_to_idle
+from character_ground_shadow_cleanup import remove_baked_ground_shadow
 
 ROOT=Path(__file__).resolve().parents[2]
 MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
@@ -360,6 +361,9 @@ def finish_frame(raw,action):
  if cw/ch>1.08:raise RuntimeError(f'too-wide/multiple-subject silhouette ratio={cw/ch:.2f}')
  scale=min(176/cw,218/ch); crop=crop.resize((max(1,round(cw*scale)),max(1,round(ch*scale))),Image.Resampling.LANCZOS)
  cell=Image.new('RGBA',(256,256));x=(256-crop.width)//2;y=238-crop.height;cell.alpha_composite(crop,(x,y))
+ cell,discarded_shadow_pixels=remove_baked_ground_shadow(cell)
+ if discarded_shadow_pixels:
+  print(f'KAGGLE_CHR_SHADOW_CLEANED action={action} pixels={discarded_shadow_pixels}',flush=True)
  # Reject detached generated props/background fragments. After isolation a valid
  # character should form one dominant connected silhouette; small antialiased
  # islands are tolerated, but a second substantial component is semantic noise.
