@@ -31,21 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T14:51:55Z
+Generated: 2026-10-12T14:52:48Z
 
 ### Git
 - Branch: `main`
-- Head: `0aeee0dbefde`
-- Commit date: 2026-10-12T16:51:40+02:00
-- Commit: test(ci): match GPU producer v1.20 provenance label
+- Head: `2dd40dfbd684`
+- Commit date: 2026-10-12T16:52:30+02:00
+- Commit: docs(art): explain v1.20 IDLE rescue, provenance and strict review contract
 - Tracked files: 1551
 
 ### Recently changed files
+- `docs/art/UNIFIED_ASSET_PIPELINE.md`
 - `tools/assets/test_workflow_policy.py`
 - `tools/assets/test_queue_state_policy.py`
 - `tools/sprites/kaggle_character_sheet_factory_v1.py`
 - `tools/sprites/asset_queue_utils.py`
-- `tools/sprites/asset_wave_orchestrator.py`
 
 ### Project signals
 - `build.gradle.kts`
