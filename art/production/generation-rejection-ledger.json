@@ -596,7 +596,27 @@
       "target_prefix": "CHR-OP-IDLE",
       "source_run_id": 38220241414,
       "review_artifact_run_id": 38223743012
+    },
+    {
+      "id": "CHR-OP-IDLE",
+      "role": "OP",
+      "action": "IDLE",
+      "target_prefix": "CHR-OP-IDLE",
+      "source_run_id": 38223829684,
+      "review_artifact_run_id": 38240796531,
+      "reason": "Collector 38240796531: OP reference IDLE generated six frames but was rejected for BAKED_GROUND_SHADOW_RISK and LOWER_LIMB_STRUCTURE_UNVERIFIED; five sibling actions were correctly skipped by same-wave identity gate.",
+      "prompt_hint": "One single clean orange-hardhat worker, identical face and uniform across frames, two visible distinct boot silhouettes. Completely neutral empty background with no floor ellipse or gray fused shadow; subtle natural breathing and blink."
+    },
+    {
+      "id": "CHR-LOG-IDLE",
+      "role": "LOG",
+      "action": "IDLE",
+      "target_prefix": "CHR-LOG-IDLE",
+      "source_run_id": 38223829684,
+      "review_artifact_run_id": 38240796531,
+      "reason": "Collector 38240796531: all four LOG role-anchor attempts failed because the generated frame contained two similarly sized disconnected full-body people (detached-artifact component near 1:1), preventing IDLE and all five actions.",
+      "prompt_hint": "Exactly ONE adult female logistics worker standing alone in full body, centered. One face, one torso, precisely two arms and two legs, only one white helmet and amber cargo uniform; never another person, identical twin, duplicate pose, mirror image, or companion."
     }
   ],
-  "last_validation_request": "Fifth GPU wave 38220241414, collector 38223743012: OP-IDLE fails legacy static alpha floor .017<.025 and 5 OP actions skipped; ENG produced four QA-pass candidates but manual + current image-risk gate reject 4 for floor shadows (IDLE 5/6, WORK 9/10, CARRY 7/8), unreadable moving carry/work and drifting repair tools. Only valid DONE remains 219/235. A subsequent v1.19 OP LOG run 38223829684 is submitted."
+  "last_validation_request": "Sixth OP/LOG Kaggle 38223829684 collected at 38240796531: all 12 targets rejected (OP IDLE persistent fused shadow/feet, LOG role anchor two disconnected full-body figures). No sprites promoted, strict DONE 219. Improved neutral-shadow cleanup applied in subsequent GPU wave, and conservative duplicate-role-anchor salvage will apply after its code reaches a future GPU source bundle."
 }
