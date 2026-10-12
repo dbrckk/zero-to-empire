@@ -1,13 +1,13 @@
 # Change impact
 
-Base: f7ae05d2999f5a94bf1b852bedf9b36b5f2eda17
-Head: fec7977fe6b1a1a4f4ccae34afc6e3c3762127fd
+Base: 05f021f85d9b6ff24f8ed8336f5caf659691ffdf
+Head: 6ff881e5c0785a3c3e392ab07e2f77a23b5e353a
 
 ## Changed files
-- M .github/workflows/asset-pipeline-ci.yml
+- M tools/assets/test_workflow_policy.py
 
 ## Affected areas
-- .github
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

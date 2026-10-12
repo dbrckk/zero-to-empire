@@ -27411,6 +27411,8 @@ def test_carry_scaffold_adds_deterministic_lower_body_motion(self)
 ⋮----
 def test_character_role_anchor_is_validated_before_action_frames(self)
 ⋮----
+def test_headgear_lock_never_uses_an_unverified_non_idle_reference(self)
+⋮----
 def test_same_run_idle_identity_is_required_before_sibling_render(self)
 ⋮----
 def test_kaggle_character_generator_rejects_blocking_visual_risks(self)
