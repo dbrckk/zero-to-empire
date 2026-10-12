@@ -41,6 +41,32 @@ class GroundShadowCleanupTests(unittest.TestCase):
         self.assertEqual(removed, 0)
         self.assertEqual(clean.tobytes(), source.tobytes())
 
+    def test_darker_shadow_trapped_between_boots_is_removed(self):
+        original = character(shadow=False)
+        trapped = Image.new("RGBA", (256, 256))
+        draw = ImageDraw.Draw(trapped)
+        draw.rectangle((120, 174, 146, 232), fill=(132, 132, 132, 255))
+        draw.ellipse((80, 221, 173, 235), fill=(132, 132, 132, 255))
+        trapped.alpha_composite(original)
+        before_face = trapped.getpixel((128, 42))
+        before_boot = trapped.getpixel((105, 228))
+        cleaned, removed = remove_baked_ground_shadow(trapped)
+        self.assertGreater(removed, 100)
+        self.assertEqual(cleaned.getpixel((130, 226))[3], 0)
+        self.assertEqual(cleaned.getpixel((128, 42)), before_face)
+        self.assertEqual(cleaned.getpixel((105, 228)), before_boot)
+
+    def test_gray_pants_with_connected_feet_are_not_split(self):
+        source = Image.new("RGBA", (256, 256))
+        draw = ImageDraw.Draw(source)
+        draw.ellipse((112, 20, 150, 70), fill=(175, 125, 88, 255))
+        draw.rounded_rectangle((93, 70, 167, 174), radius=15,
+                               fill=(56, 65, 79, 255))
+        draw.rectangle((96, 167, 164, 233), fill=(155, 155, 155, 255))
+        cleaned, removed = remove_baked_ground_shadow(source)
+        self.assertEqual(removed, 0)
+        self.assertEqual(cleaned.tobytes(), source.tobytes())
+
     def test_wrong_shape_is_left_untouched(self):
         source=Image.new("RGBA", (128, 128), (225, 225, 225, 255))
         clean, removed = remove_baked_ground_shadow(source)
