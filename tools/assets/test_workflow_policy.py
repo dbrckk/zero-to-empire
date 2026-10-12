@@ -278,6 +278,8 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("expressive=sum(delta>=.15 for delta in changes)", text)
         self.assertIn("celeb-unreadable-gesture upper-transitions=", text)
         self.assertIn("celeb-upper-silhouette-jump=", text)
+        self.assertIn("arms=celebration_arm_reach_counts(frames)", text)
+        self.assertIn("celeb-no-progressive-arm-raise active-frames=", text)
 
     def test_carry_scaffold_adds_deterministic_lower_body_motion(self):
         text = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
