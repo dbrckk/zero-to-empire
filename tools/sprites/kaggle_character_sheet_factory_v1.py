@@ -131,6 +131,8 @@ def queue_rejection_hint(i):
    'Do not redraw or rotate the face, helmet, hairstyle or goggles between frames. Preserve identical head silhouette and facial details.'),
   (('idle-frozen',),
    'Add tiny breathing or blinking while keeping the same fixed pose and identical face; do not make an IDLE character walk or swing arms.'),
+  (('action_translation_dominates_pose_risk','translation-dominated','translation dominates pose'),
+   'Do not slide the entire actor sideways to fake WORK or REPAIR motion. Fix head and feet near the same screen location. Instead bend shoulders and elbows, visibly reposition hands, and keep one identical tool contacting its fixed work or repair point throughout all ten frames.'),
   (('horizontal-drift',),
    'Keep the body centered on one fixed world pivot with no lateral camera drift.'),
  )
