@@ -75,7 +75,7 @@ class QueueStatePolicyTests(unittest.TestCase):
 
     def test_canonical_queue_policy_matches_current_character_epoch(self) -> None:
         text = MODULE_PATH.read_text(encoding="utf-8")
-        self.assertIn('"character_generation_epoch": "identity-lock-v1.19-pose-aware-head-and-prop-stability"', text)
+        self.assertIn('"character_generation_epoch": "identity-lock-v1.20-stable-idle-breathing-rescue"', text)
         self.assertIn('"max_attempts_per_character_epoch": 3', text)
 
 
@@ -379,7 +379,7 @@ class DispatchCorrelationTests(unittest.TestCase):
     def test_character_epoch_is_v118_carry_identity_lock(self) -> None:
         orchestrator = self._load_orchestrator("")
         self.assertEqual(orchestrator.CHARACTER_GENERATION_EPOCH,
-                         "identity-lock-v1.19-pose-aware-head-and-prop-stability")
+                         "identity-lock-v1.20-stable-idle-breathing-rescue")
 
     def test_new_epoch_reopens_semantic_reject_even_with_high_legacy_attempts(self) -> None:
         orchestrator = self._load_orchestrator("")
