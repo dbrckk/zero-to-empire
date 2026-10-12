@@ -68,6 +68,17 @@ def lock_head_to_idle(frame: Image.Image, idle: Image.Image):
         return target, False, "unsafe-head-crop"
     piece = reference.crop((sx - width // 2, sy - height // 2,
                             sx + width // 2, sy + height // 2))
+    target_head = target.crop((tx - width // 2, ty - height // 2,
+                               tx + width // 2, ty + height // 2))
+    # A copy from a different helmet profile, silhouette orientation or
+    # displaced head would form a ghost/double-face. Enforce close shape
+    # registration before compositing, then preserve manual review.
+    source_binary = [v >= 64 for v in piece.getchannel("A").getdata()]
+    target_binary = [v >= 64 for v in target_head.getchannel("A").getdata()]
+    overlap = sum(a and b for a, b in zip(source_binary, target_binary))
+    union = sum(a or b for a, b in zip(source_binary, target_binary))
+    if not union or overlap / union < .78:
+        return target, False, "unsafe-head-silhouette-overlap"
     soft = Image.new("L", (width, height), 0)
     ImageDraw.Draw(soft).ellipse((2, 1, width - 3, height - 2), fill=255)
     soft = soft.filter(ImageFilter.GaussianBlur(5))
