@@ -31,20 +31,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T17:16:59Z
+Generated: 2026-10-12T17:20:06Z
 
 ### Git
 - Branch: `main`
-- Head: `abc46a38acc9`
-- Commit date: 2026-10-12T19:16:26+02:00
-- Commit: ci(art): smoke-check deterministic work and repair motion without GPU
+- Head: `9b6b6455dd34`
+- Commit date: 2026-10-12T19:19:52+02:00
+- Commit: test(ci): preserve distinction between queued Kaggle GPU and active processing
 - Tracked files: 1555
 
 ### Recently changed files
+- `tools/assets/test_workflow_policy.py`
+- `.github/workflows/kaggle-async-character-collector.yml`
+- `ops/kaggle-collector-trigger.txt`
 - `.github/workflows/asset-pipeline-ci.yml`
-- `tools/sprites/kaggle_character_sheet_factory_v1.py`
-- `.github/workflows/character-single-subject-gpu-evidence.yml`
-- `tools/sprites/test_verify_character_idle_candidates.py`
 
 ### Project signals
 - `build.gradle.kts`

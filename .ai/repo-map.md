@@ -2745,14 +2745,19 @@ jobs:
           # orphaning generated PNGs solely because a large batch needs time.
           target_count=len(d.get('target_ids') or [])
           stale_limit_minutes=600 if target_count >= 10 else 420
+          queued_stale_limit_minutes=1440
+          queued_stale=False
           stale=False
           if active and submitted:
               try:
                   ts=datetime.fromisoformat(submitted.replace('Z','+00:00'))
-                  stale=(datetime.now(timezone.utc)-ts).total_seconds() > stale_limit_minutes*60
+                  elapsed=(datetime.now(timezone.utc)-ts).total_seconds()
+                  stale=elapsed > stale_limit_minutes*60
+                  queued_stale=elapsed > queued_stale_limit_minutes*60
               except (ValueError, TypeError):
                   stale=False
           print('stale_limit_minutes='+str(stale_limit_minutes))
+          print('queued_stale='+str(queued_stale).lower())
           print('active='+str(active).lower())
           print('dispatch_token='+str(d.get('dispatch_token','')))
           print('submit_run_id='+str(d.get('submit_run_id','')))
@@ -2779,10 +2784,16 @@ jobs:
             echo 'failed=true' >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          if [ "${{ steps.gate.outputs.stale }}" = true ] && echo "$status" | grep -Eqi 'RUNNING|QUEUED'; then
+          if [ "${{ steps.gate.outputs.stale }}" = true ] && echo "$status" | grep -qi 'RUNNING'; then
             echo 'failed=true' >> "$GITHUB_OUTPUT"
             echo 'stale=true' >> "$GITHUB_OUTPUT"
             echo 'KAGGLE_ASYNC_STALE=1'
+            exit 0
+          fi
+          if [ "${{ steps.gate.outputs.queued_stale }}" = true ] && echo "$status" | grep -qi 'QUEUED'; then
+            echo 'failed=true' >> "$GITHUB_OUTPUT"
+            echo 'stale=true' >> "$GITHUB_OUTPUT"
+            echo 'KAGGLE_ASYNC_QUEUE_TIMEOUT=1'
             exit 0
           fi
           echo 'ready=false' >> "$GITHUB_OUTPUT"
