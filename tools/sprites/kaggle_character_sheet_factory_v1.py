@@ -142,6 +142,25 @@ def queue_rejection_hint(i):
  return ' '.join(rules)
 
 
+def compact_rejection_hints(memory_hints,queue_hint,max_words=72):
+ # 86+ historical failures accumulate repeated, occasionally contradictory
+ # advice. When simply taking the last 72 words, the newest *specific* defect
+ # could be cut off by generic queue mapping. Prioritize the most recent
+ # reviewed action defect, then targeted queue diagnosis, then older context.
+ if not 1<=max_words<=256:raise ValueError('invalid rejection prompt budget')
+ newest=memory_hints[-1] if memory_hints else ''
+ previous=list(reversed(memory_hints[:-1]))
+ selected=[];seen=set()
+ for hint,cap in [(newest,54),(queue_hint,18)]+[(x,12) for x in previous]:
+  hint=' '.join(str(hint or '').split())
+  if not hint or hint.casefold() in seen:continue
+  seen.add(hint.casefold())
+  remain=max_words-len(selected)
+  if remain<=0:break
+  selected.extend(hint.split()[:min(remain,cap)])
+ return ' '.join(selected)
+
+
 def rejection_hints(i):
  hints=[]
  if REJECTION_LEDGER.is_file():
@@ -164,11 +183,7 @@ def rejection_hints(i):
   except Exception as e:
    print('KAGGLE_CHR_REJECTION_MEMORY_SKIP='+str(e),flush=True)
  qhint=queue_rejection_hint(i)
- if qhint:
-  hints.append(qhint)
- merged=' '.join(hints[-3:])
- words=merged.split()
- return ' '.join(words[:72])
+ return compact_rejection_hints(hints,qhint)
 
 def anchor_prompt_pair(role):
  role_short={
