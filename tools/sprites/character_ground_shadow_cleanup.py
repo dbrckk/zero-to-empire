@@ -51,12 +51,12 @@ def remove_baked_ground_shadow(frame: Image.Image) -> tuple[Image.Image, int]:
             if alpha < 32 or min(r, g, b) < 155 or max(r, g, b) - min(r, g, b) > 16:
                 continue
             candidates.append((x, y))
-            if x < knee_left - 13 or x > knee_right + 13:
+            if x < knee_left - 24 or x > knee_right + 24:
                 outside += 1
 
     # Don't alter white shoes, light trousers or ordinary pale details that
     # stay inside the limb envelope. Ambiguous cases remain for manual review.
-    if outside < 30:
+    if outside < 80:
         return rgba, 0
     for x, y in candidates:
         pixels[x, y] = (0, 0, 0, 0)
