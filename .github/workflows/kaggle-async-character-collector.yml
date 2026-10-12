@@ -143,6 +143,9 @@ jobs:
           files=(/tmp/kaggle-output/output/candidates/*_final.png)
           if (( ${#files[@]} > 0 )); then
             python tools/sprites/build_sprite_contact_sheet.py               --output /tmp/kaggle-output/output/github-contact-sheet.png               --report /tmp/kaggle-output/output/github-qa-report.json               --files "${files[@]}"
+            python tools/sprites/verify_character_idle_candidates.py \
+              --candidates /tmp/kaggle-output/output/candidates \
+              --qa-report /tmp/kaggle-output/output/github-qa-report.json
             python - <<'PY'
           import json
           from pathlib import Path
