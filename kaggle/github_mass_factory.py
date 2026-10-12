@@ -133,6 +133,7 @@ overlay_names=(
  'character_anchor_pair_salvage.py',
  'character_approved_idle_fallback.py',
  'character_rejection_evidence.py',
+ 'character_idle_breathing_fallback.py',
 )
 overlay_applied=False
 if GENERATOR_OVERLAY_B64:
