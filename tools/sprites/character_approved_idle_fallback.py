@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from PIL import Image, ImageFilter
+from PIL import Image
 
 _ALLOWED = {"OP", "LOG", "TECH"}
 _ITEM = re.compile(r"^\|\s*(CHR-(?:OP|LOG|TECH)-IDLE)\s*\|")
@@ -46,6 +46,32 @@ def load_approved_idle_anchor(
     bbox = alpha.getbbox()
     if bbox is None:
         return None, "strict-done-idle-first-cell-empty"
+    # Reject a pair of separate foreground people, even if combined bbox
+    # is still tall. A large secondary connected alpha component cannot be
+    # treated as an approved single-character identity anchor.
+    foreground = alpha.load()
+    visited: set[tuple[int, int]] = set()
+    components: list[int] = []
+    for yy in range(256):
+        for xx in range(256):
+            if foreground[xx, yy] == 0 or (xx, yy) in visited:
+                continue
+            stack = [(xx, yy)]
+            visited.add((xx, yy))
+            area = 0
+            while stack:
+                cx, cy = stack.pop()
+                area += 1
+                for nx, ny in ((cx - 1, cy), (cx + 1, cy),
+                               (cx, cy - 1), (cx, cy + 1)):
+                    if (0 <= nx < 256 and 0 <= ny < 256
+                            and foreground[nx, ny] > 0 and (nx, ny) not in visited):
+                        visited.add((nx, ny))
+                        stack.append((nx, ny))
+            components.append(area)
+    components.sort(reverse=True)
+    if len(components) > 1 and components[1] > max(150, .12 * components[0]):
+        return None, "strict-done-idle-multiple-foreground-people"
     x0, y0, x1, y1 = bbox
     width, height = x1 - x0, y1 - y0
     if height < 125 or width < 25 or width / height > 0.90:
