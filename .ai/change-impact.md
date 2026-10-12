@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 63a777c1664c3c91f9d840bfe86b763057785687
-Head: d51f1c4bcf16af3c0e051a8d7ff2bdfb44e81ce0
+Base: 81d6ee94e30c32b33ee0fe06a36ba137687fb806
+Head: c4e44a9a430f8660752fb05f56ad302c9184a1cd
 
 ## Changed files
-- M .github/workflows/retroactive-character-motion-qa.yml
+- M docs/art/UNIFIED_ASSET_PIPELINE.md
 
 ## Affected areas
-- .github
+- docs
 
 ## Related test candidates
 - No direct filename-based test match detected.

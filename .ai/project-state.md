@@ -31,21 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T19:50:57Z
+Generated: 2026-10-12T19:51:55Z
 
 ### Git
 - Branch: `main`
-- Head: `d51f1c4bcf16`
-- Commit date: 2026-10-12T21:50:41+02:00
-- Commit: ci(art): attach animated mobile review playback to immutable retroactive character QA
+- Head: `c4e44a9a430f`
+- Commit date: 2026-10-12T21:51:39+02:00
+- Commit: docs(art): document mobile GIF review evidence and non-promotable raster gait limitations
 - Tracked files: 1560
 
 ### Recently changed files
+- `docs/art/UNIFIED_ASSET_PIPELINE.md`
 - `.github/workflows/retroactive-character-motion-qa.yml`
 - `.github/workflows/asset-pipeline-ci.yml`
 - `tools/sprites/build_character_review_panels.py`
 - `tools/assets/test_workflow_policy.py`
-- `tools/sprites/kaggle_character_sheet_factory_v1.py`
 
 ### Project signals
 - `build.gradle.kts`
