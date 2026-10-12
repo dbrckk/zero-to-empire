@@ -6,9 +6,82 @@ both lower legs. Dark/colored shadows stay for semantic review.
 """
 from __future__ import annotations
 
+from collections import deque
 from PIL import Image
 
 CELL_SIZE = (256, 256)
+
+
+def _remove_foot_gap_background(rgba: Image.Image) -> int:
+    """Clear only confidently missegmented neutral background between boots.
+
+    An AI-generated gray cast shadow can connect both boots and prevent the
+    border flood-fill from reaching the open space between two lower legs.
+    Resolve that gap from two separately visible feet in the final rows.
+    No limb, boot or colored uniform pixel may be synthesized or repainted.
+    """
+    bounds = rgba.getchannel("A").getbbox()
+    if not bounds:
+        return 0
+    left, top, right, bottom = bounds
+    height = bottom - top
+    if height < 120:
+        return 0
+    pixels = rgba.load()
+    feet = None
+    for y in range(bottom - 3, max(top, bottom - 11), -1):
+        xs = [x for x in range(left, right) if pixels[x, y][3] >= 120]
+        if not xs:
+            continue
+        runs = []
+        start = previous = xs[0]
+        for x in xs[1:]:
+            if x > previous + 1:
+                runs.append((start, previous))
+                start = x
+            previous = x
+        runs.append((start, previous))
+        visible_feet = [(x0, x1) for x0, x1 in runs if x1 - x0 + 1 >= 9]
+        if (len(visible_feet) == 2
+                and visible_feet[1][0] - visible_feet[0][1] >= 13):
+            feet = visible_feet
+            break
+    if feet is None:
+        return 0
+
+    gap_left, gap_right = feet[0][1] + 1, feet[1][0] - 1
+    if gap_right - gap_left < 10:
+        return 0
+    upper_limit = top + round(.66 * height)
+    pending = deque((x, bottom - 2) for x in range(gap_left, gap_right + 1))
+    seen = set()
+    removable = []
+    while pending:
+        x, y = pending.popleft()
+        if ((x, y) in seen or not gap_left <= x <= gap_right
+                or not upper_limit <= y < bottom):
+            continue
+        seen.add((x, y))
+        r, g, b, alpha = pixels[x, y]
+        neutral_gray = (
+            max(r, g, b) - min(r, g, b) <= 20
+            and 95 <= min(r, g, b) <= 245
+        )
+        if alpha >= 32 and not neutral_gray:
+            continue
+        if alpha >= 32:
+            removable.append((x, y))
+        pending.extend(((x - 1, y), (x + 1, y),
+                        (x, y - 1), (x, y + 1)))
+
+    if len(removable) < 100:
+        return 0
+    ys = [y for _, y in removable]
+    if max(ys) - min(ys) < .06 * height:
+        return 0
+    for x, y in removable:
+        pixels[x, y] = (0, 0, 0, 0)
+    return len(removable)
 
 
 def remove_baked_ground_shadow(frame: Image.Image) -> tuple[Image.Image, int]:
@@ -56,8 +129,15 @@ def remove_baked_ground_shadow(frame: Image.Image) -> tuple[Image.Image, int]:
 
     # Don't alter white shoes, light trousers or ordinary pale details that
     # stay inside the limb envelope. Ambiguous cases remain for manual review.
-    if outside < 80:
-        return rgba, 0
-    for x, y in candidates:
-        pixels[x, y] = (0, 0, 0, 0)
-    return rgba, len(candidates)
+    removed = 0
+    if outside >= 80:
+        # Even with a genuine exterior shadow, retain boots and pale cuffs
+        # inside the leg envelope rather than erasing every neutral pixel.
+        for x, y in candidates:
+            if x < knee_left - 14 or x > knee_right + 14:
+                pixels[x, y] = (0, 0, 0, 0)
+                removed += 1
+    # Most rejected ENG/LOG sprites instead have an enclosed gray region
+    # bridging the two boots. The outside-only pass cannot reach that shadow.
+    removed += _remove_foot_gap_background(rgba)
+    return rgba, removed
