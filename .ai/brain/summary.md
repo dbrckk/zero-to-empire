@@ -2,11 +2,11 @@
 
 - Index mode: incremental
 - Files indexed: 266
-- Files reparsed this run: 1
-- Symbols: 1397
+- Files reparsed this run: 2
+- Symbols: 1398
 - Internal import edges: 65
-- Impacted files: 2
-- Selected tests: 1
+- Impacted files: 12
+- Selected tests: 4
 
 ## Languages
 - kotlin: 160 files
@@ -18,7 +18,7 @@
 - app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt: 25 symbols
 - app/src/main/java/com/zerotoempire/game/Monetization.kt: 23 symbols
 - tools/sprites/pollinations_character_sheet_factory.py: 23 symbols
-- tools/sprites/test_character_semantic_gate.py: 22 symbols
+- tools/sprites/test_character_semantic_gate.py: 23 symbols
 - tools/sprites/rigged_tech_walk_v2.py: 19 symbols
 - tools/sprites/asset_wave_orchestrator.py: 18 symbols
 - tools/sprites/hf_sprite_factory.py: 18 symbols
@@ -43,10 +43,10 @@
 ## ast-grep enrichment
 - ast-grep outline: available
 - AST index mode: incremental
-- AST files reparsed this run: 1
+- AST files reparsed this run: 2
 - outline files retained: 271
 - top-level items retained: 3670
-- direct members retained: 853
+- direct members retained: 854
 - symbol shards: 26
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard
 

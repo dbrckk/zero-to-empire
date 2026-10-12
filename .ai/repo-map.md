@@ -29620,22 +29620,34 @@ def palette_distance(a,b)->float
 ⋮----
 def celebration_arm_reach_counts(frames:list[Image.Image])->list[int]
 ⋮----
-"""Count raised-limb silhouette away from the upper torso per frame.
+"""Measure arms raised *beside the head*, not head/shoulder width.
 
-    Avoid mistaking a changing head, costume or a final-frame sparkle for a
-    progressive cheering gesture. Detect actual visible outward/raised arms
-    in at least three action frames; this is still NOT semantic approval.
+    The previous detector used the centre of the entire bounding box and
+    interpreted the head itself as an upraised arm when a character stood
+    off-centre. The v1.20 OP-CELEB candidate reported 8/8 active arm frames
+    although every actual arm stayed down. Estimate a robust head midpoint
+    from opaque pixels in the top of each frame and require upper silhouette
+    mass beyond the helmet plus a lateral safety margin.
+
+    This is a conservative reject-only proxy. Raised arms overlapping the
+    head may be missed and still require explicit human review.
     """
 counts=[]
 ⋮----
-alpha=frame.convert('RGBA').getchannel('A')
-bb=alpha.getbbox()
+bounds=alpha.getbbox()
 ⋮----
 height=bottom-top
-centre=(left+right)/2
-y0=max(0,top+int(height*.18))
-y1=min(frame.height,top+int(height*.34))
-pixels=alpha.load()
+⋮----
+pix=alpha.load()
+head_top=max(0,top+round(height*.04))
+head_bottom=min(frame.height,top+round(height*.19))
+head_xs=sorted(
+⋮----
+head_centre=head_xs[len(head_xs)//2]
+lateral_margin=max(29,round(height*.15))
+arm_y0=max(0,top+round(height*.06))
+arm_y1=min(frame.height,top+round(height*.31))
+count=sum(
 ⋮----
 def idle_visual_activity(frames:list[Image.Image])->float
 ⋮----
@@ -29663,6 +29675,8 @@ def head_structure_drift(frames:list[Image.Image])->float
     """
 heads=[]
 ⋮----
+bb=alpha.getbbox()
+⋮----
 band=alpha.crop((0,top,256,top+max(1,int((bottom-top)*.23))))
 weighted=count=0
 px=band.load()
@@ -29687,9 +29701,9 @@ def lower_ground_band_ratio(frame:Image.Image)->float
     distinguishes it from naturally spread feet. This is a risk heuristic:
     passing this check is not proof of transparency or visual acceptability.
     """
+alpha=frame.convert('RGBA').getchannel('A')
 ⋮----
-bounds=alpha.getbbox()
-⋮----
+pixels=alpha.load()
 reference_top=max(top,bottom-round(height*.20))
 reference_bottom=max(reference_top+2,bottom-round(height*.10))
 needed=max(2,round((reference_bottom-reference_top)*.18))
@@ -35207,6 +35221,16 @@ altered=person()
 draw=ImageDraw.Draw(altered)
 ⋮----
 frames=[reference.copy() for _ in range(10)]
+⋮----
+def test_off_center_head_does_not_count_as_raised_arm(self)
+⋮----
+# Regression for v1.20 OP-CELEB: the helmet is left of the centre of
+# a standing figure's full bbox. The old detector counted the helmet
+# and shoulders as if both hands were raised in all eight frames.
+⋮----
+counts=celebration_arm_reach_counts([frame.copy() for _ in range(8)])
+⋮----
+raised=frame.copy()
 ⋮----
 def test_celebration_counts_actual_raised_arm_frames_not_final_sparkle(self)
 ⋮----

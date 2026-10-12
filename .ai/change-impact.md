@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 43dcdc24b37caa30a3e780795aee86d1de30175c
-Head: 6f04ca8c335df3c0c8cd72587651cff778729467
+Base: 6431fc096f752279fc4192b0872f8b9e599a9fb0
+Head: b293dc70256dc4a9ad63109d5a752a4ee4c1b341
 
 ## Changed files
-- M tools/sprites/identity_locked_walk_candidate.py
+- M tools/sprites/test_character_semantic_gate.py
 
 ## Affected areas
 - tools

@@ -31,23 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T18:07:08Z
+Generated: 2026-10-12T19:22:00Z
 
 ### Git
 - Branch: `main`
-- Head: `6f04ca8c335d`
-- Commit date: 2026-10-12T20:06:56+02:00
-- Commit: fix(art): remove confident baked floor shadows from IDLE-anchored WALK review frames
+- Head: `b293dc70256d`
+- Commit date: 2026-10-12T21:21:28+02:00
+- Commit: test(art): prevent false CELEB arm raises from displaced head and shoulder
 - Tracked files: 1558
 
 ### Recently changed files
-- `tools/sprites/identity_locked_walk_candidate.py`
-- `.github/workflows/identity-locked-walk-review.yml`
-- `art/production/autofactory-state.json`
-- `art/production/autofactory-summary.md`
+- `tools/sprites/test_character_semantic_gate.py`
+- `tools/sprites/character_semantic_gate.py`
 - `art/production/character-strict-review-backlog.md`
 - `art/production/master-asset-queue.json`
-- `ops/kaggle-collector-trigger.txt`
+- `art/production/kaggle-async-state.json`
 
 ### Project signals
 - `build.gradle.kts`
