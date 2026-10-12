@@ -232,6 +232,12 @@ jobs:
                       raise SystemExit('Unmapped rejected QA candidate: '+str(row.get('file')))
                   produced.discard(aid)
                   rejected[aid]='technical-qa:'+','.join(str(x) for x in row.get('issues',[]) or ['unknown'])
+                  pose=(row.get('action_visual_risk') or {}).get('action_pose_metrics') or {}
+                  if pose.get('translation_dominated'):
+                      rejected[aid]+=(
+                          '; head-excursion-px='+str(pose.get('head_horizontal_excursion_px'))
+                          +'; retained-pose-motion-ratio='+str(pose.get('retained_pose_motion_ratio'))
+                      )
           for row in report:
               if str(row.get('status','')).upper()!='REJECT':
                   continue
