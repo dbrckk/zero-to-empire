@@ -209,7 +209,7 @@ def semantic_scaffold(source,action,frame_index=0):
   phase=(0,1,2,1,0,-1,-2,-1)[frame_index%8]
   hip_y=int(h*.58); knee_y=int(h*.75)
   lower=out.crop((0,hip_y,w,h))
-  shear=phase*.045
+  shear=phase*.060
   lower=lower.transform(
    lower.size,Image.Transform.AFFINE,
    (1,shear,-shear*(knee_y-hip_y),0,1,0),
@@ -592,7 +592,7 @@ def main():
 
         'WORK':(.58,.03,.68),
 
-        'CARRY':(.52,.020,.60),
+        'CARRY':(.48,.018,.55),
 
         'REPAIR':(.62,.03,.72),
 
@@ -619,7 +619,7 @@ def main():
         # canonical anchor. The deterministic crate scaffold already supplies
         # the carry semantic, so high denoise only encourages face/body drift
         # and oversized/duplicated luggage.
-        strength=min(.64,.48+fi*.012+attempt*.020)
+        strength=min(.54,.41+fi*.012+attempt*.018)
        elif i['action']=='REPAIR':
         strength=min(.76,.58+fi*.018+attempt*.03)
        elif i['action']=='CELEB':
