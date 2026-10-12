@@ -15,6 +15,7 @@ from PIL import Image,ImageDraw,ImageFilter
 from diffusers import FluxPipeline,FluxImg2ImgPipeline,FluxTransformer2DModel
 from transformers import T5EncoderModel
 from character_semantic_gate import clip_risk
+from character_head_identity_lock import lock_head_to_idle
 
 ROOT=Path(__file__).resolve().parents[2]
 MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
@@ -569,7 +570,7 @@ def main():
    report.append({'id':i['id'],'status':'REJECT','reason':'role-anchor-validation-failed',
                   'frames':0,'retry_reasons':anchor_failures.get(i['role'],[])})
    continue
-  frames=[];anchor_raw=None;fail=None;retry_reasons=[]
+  frames=[];anchor_raw=None;fail=None;retry_reasons=[];head_lock_frames=0
   for fi,variants in enumerate(encs[i['id']]):
    ok=False;last_reason=''
    for attempt in range(3):
@@ -629,7 +630,16 @@ def main():
        if mode in {'single','identity'} and i['action']!='WALK':strength=max(.24,strength-.035)
        source=semantic_scaffold(anchor_raw,i['action'],fi)
        raw=img(image=source,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=6,guidance_scale=0,output_type='pil',generator=gen).images[0]
-     frame,cov=finish_frame(raw,i['action']);frames.append(frame);ok=True;print(f"KAGGLE_CHR_FRAME={i['id']} frame={fi} attempt={attempt+1} mode={mode} cov={cov:.2f}",flush=True);break
+     frame,cov=finish_frame(raw,i['action'])
+     # Freeze only correctly registered faces/headgear against the validated
+     # same-wave IDLE reference. Raised-arm/crouching poses are bypassed.
+     # This is candidate visual stabilization, never semantic approval.
+     if i['action']!='IDLE' and i['role'] in role_reference_cell:
+      frame,locked,lock_note=lock_head_to_idle(frame,role_reference_cell[i['role']])
+      head_lock_frames+=int(locked)
+      if not locked:
+       print(f"KAGGLE_CHR_HEAD_LOCK_SKIP={i['id']} frame={fi} reason={lock_note}",flush=True)
+     frames.append(frame);ok=True;print(f"KAGGLE_CHR_FRAME={i['id']} frame={fi} attempt={attempt+1} mode={mode} cov={cov:.2f}",flush=True);break
     except Exception as e:
      last_reason=str(e);retry_reasons.append(last_reason);print(f"KAGGLE_CHR_RETRY={i['id']} frame={fi} attempt={attempt+1} mode={mode} reason={e}",flush=True)
    if not ok:fail=f'frame-{fi}-failed';break
@@ -667,7 +677,7 @@ def main():
   if i['action']=='IDLE':
    verified_idle_roles.add(i['role'])
    print(f"KAGGLE_CHR_IDLE_IDENTITY_VALIDATED={i['role']}",flush=True)
-  print(f"KAGGLE_CHR_VALIDATED={p.relative_to(ROOT)} {why} atlas=1024x1024",flush=True);report.append({'id':i['id'],'status':'CANDIDATE','reason':why,'frames':len(frames),'atlas':'1024x1024','cell':'256x256','file':p.name,'cross_animation_appearance_distance':round(identity_distance,2),'visual_risk':visual_risk,'retry_reasons':retry_reasons})
+  print(f"KAGGLE_CHR_VALIDATED={p.relative_to(ROOT)} {why} atlas=1024x1024",flush=True);report.append({'id':i['id'],'status':'CANDIDATE','reason':why,'frames':len(frames),'atlas':'1024x1024','cell':'256x256','file':p.name,'cross_animation_appearance_distance':round(identity_distance,2),'visual_risk':visual_risk,'retry_reasons':retry_reasons,'same_run_idle_head_locked_frames':head_lock_frames})
  REPORT.write_text(json.dumps(report,indent=2),encoding='utf-8')
  print(f"KAGGLE_CHARACTER_CANDIDATES={sum(r['status']=='CANDIDATE' for r in report)} ATTEMPTED={len(items)}",flush=True)
 if __name__=='__main__':main()
