@@ -133,8 +133,10 @@ jobs:
           print(f"REJECTION_MEMORY_SCHEMA_PASS={len(rows)}")
           PY
 
-      - name: Run unified asset pipeline unit tests
-        run: python -m unittest discover -s tools/assets -p 'test_*.py' -v
+      - name: Run unified asset pipeline and visual-semantic gate checks
+        run: |
+          python -m unittest discover -s tools/assets -p 'test_*.py' -v
+          python -m unittest discover -s tools/sprites -p 'test_character_semantic_gate.py' -v
 
       - name: Verify live character-production plan against strict queue and Android frame contract
         run: |
