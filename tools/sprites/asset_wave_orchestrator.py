@@ -322,11 +322,10 @@ def prepare_character_burst(queue: dict[str, Any], groups: list[str]) -> dict[st
 
         idle_id = f"{group}-IDLE"
         idle_is_selected = any(x["id"] == idle_id for x in group_assets)
-        needs_idle_context = (
-            not idle_is_selected
-            and idle_id in assets
-            and assets[idle_id]["strict_status"] == "DONE"
-        )
+        # An IDLE already awaiting review still needs its own same-run anchor
+        # slot when regenerating siblings. Otherwise the subsequent implicit
+        # context insertion can silently exceed the 12-sheet Kaggle capacity.
+        needs_idle_context = not idle_is_selected and idle_id in assets
         group_cost = len(group_assets) + (1 if needs_idle_context else 0)
 
         # Keep role families together whenever possible. Splitting a six-action
@@ -381,6 +380,11 @@ def prepare_character_burst(queue: dict[str, Any], groups: list[str]) -> dict[st
     })
     dispatched = mark_dispatch(queue, [x["id"] for x in targets], "kaggle-character-sheet")
     producer_count = prioritize_controlled_character_targets(dispatched)
+    if producer_count > CHARACTER_BATCH_SIZE:
+        raise RuntimeError(
+            f"Character identity anchors exceed producer capacity: "
+            f"{producer_count}/{CHARACTER_BATCH_SIZE}"
+        )
     return {"group": "+".join(selected_groups), "ids": dispatched, "count": producer_count}
 
 def next_group(queue: dict[str, Any], lane: str, priority: list[str]) -> str | None:
