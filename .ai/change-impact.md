@@ -1,13 +1,13 @@
 # Change impact
 
-Base: f1544841dc844522ebad120ff5fe6aa2861ca1a4
-Head: f7059de3d4240de72ca769be6b836f3833befb73
+Base: 38ed3166d1044182e6e74612cadee2334a49ea53
+Head: a16c812b291662b9eebc754e9c04c0492df0e8e4
 
 ## Changed files
-- M art/production/generation-rejection-ledger.json
+- M tools/sprites/test_character_ground_shadow_cleanup.py
 
 ## Affected areas
-- art
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

@@ -31,21 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T11:12:52Z
+Generated: 2026-10-12T11:23:58Z
 
 ### Git
 - Branch: `main`
-- Head: `f7059de3d424`
-- Commit date: 2026-10-12T13:12:39+02:00
-- Commit: art(qa): preserve OP shadow and LOG dual-person anchor failure hints for future GPU waves
+- Head: `a16c812b2916`
+- Commit date: 2026-10-12T13:23:37+02:00
+- Commit: test(art): clean trapped charcoal shadows but preserve boots and fused trouser silhouettes
 - Tracked files: 1546
 
 ### Recently changed files
+- `tools/sprites/test_character_ground_shadow_cleanup.py`
+- `tools/sprites/character_ground_shadow_cleanup.py`
 - `art/production/generation-rejection-ledger.json`
 - `.github/workflows/asset-pipeline-ci.yml`
 - `kaggle/github_mass_factory.py`
-- `.github/workflows/kaggle-mass-sprite-factory.yml`
-- `tools/sprites/kaggle_character_sheet_factory_v1.py`
 
 ### Project signals
 - `build.gradle.kts`

@@ -28897,6 +28897,43 @@ both lower legs. Dark/colored shadows stay for semantic review.
 ⋮----
 CELL_SIZE = (256, 256)
 ⋮----
+def _remove_foot_gap_background(rgba: Image.Image) -> int
+⋮----
+"""Clear only confidently missegmented neutral background between boots.
+
+    An AI-generated gray cast shadow can connect both boots and prevent the
+    border flood-fill from reaching the open space between two lower legs.
+    Resolve that gap from two separately visible feet in the final rows.
+    No limb, boot or colored uniform pixel may be synthesized or repainted.
+    """
+bounds = rgba.getchannel("A").getbbox()
+⋮----
+height = bottom - top
+⋮----
+pixels = rgba.load()
+feet = None
+⋮----
+xs = [x for x in range(left, right) if pixels[x, y][3] >= 120]
+⋮----
+runs = []
+start = previous = xs[0]
+⋮----
+start = x
+previous = x
+⋮----
+visible_feet = [(x0, x1) for x0, x1 in runs if x1 - x0 + 1 >= 9]
+⋮----
+feet = visible_feet
+⋮----
+upper_limit = top + round(.66 * height)
+pending = deque((x, bottom - 2) for x in range(gap_left, gap_right + 1))
+seen = set()
+removable = []
+⋮----
+neutral_gray = (
+⋮----
+ys = [y for _, y in removable]
+⋮----
 def remove_baked_ground_shadow(frame: Image.Image) -> tuple[Image.Image, int]
 ⋮----
 """Return cleaned RGBA frame and the count of discarded gray pixels.
@@ -28907,10 +28944,6 @@ def remove_baked_ground_shadow(frame: Image.Image) -> tuple[Image.Image, int]
     """
 rgba = frame.convert("RGBA")
 ⋮----
-bounds = rgba.getchannel("A").getbbox()
-⋮----
-height = bottom - top
-⋮----
 # Knee-level silhouette estimates where the feet can legitimately extend.
 knee_y = max(0, min(255, top + round(.79 * height)))
 knee_xs = [
@@ -28919,13 +28952,19 @@ start = max(0, bottom - round(.13 * height))
 ⋮----
 candidates = []
 outside = 0
-pixels = rgba.load()
 ⋮----
 # Shadows seen in failed ENG/OP assets are flat neutral gray,
 # unlike the dark textured shoes, coat and bright safety colors.
 ⋮----
 # Don't alter white shoes, light trousers or ordinary pale details that
 # stay inside the limb envelope. Ambiguous cases remain for manual review.
+removed = 0
+⋮----
+# Even with a genuine exterior shadow, retain boots and pale cuffs
+# inside the leg envelope rather than erasing every neutral pixel.
+⋮----
+# Most rejected ENG/LOG sprites instead have an enclosed gray region
+# bridging the two boots. The outside-only pass cannot reach that shadow.
 ```
 
 ## File: tools/sprites/character_head_identity_lock.py
@@ -34268,6 +34307,20 @@ source=character(shadow=False)
 def test_pale_shoes_do_not_get_erased_without_external_shadow(self)
 ⋮----
 source=character(shadow=False, white_shoes=True)
+⋮----
+def test_darker_shadow_trapped_between_boots_is_removed(self)
+⋮----
+original = character(shadow=False)
+trapped = Image.new("RGBA", (256, 256))
+draw = ImageDraw.Draw(trapped)
+⋮----
+before_face = trapped.getpixel((128, 42))
+before_boot = trapped.getpixel((105, 228))
+⋮----
+def test_gray_pants_with_connected_feet_are_not_split(self)
+⋮----
+source = Image.new("RGBA", (256, 256))
+draw = ImageDraw.Draw(source)
 ⋮----
 def test_wrong_shape_is_left_untouched(self)
 ⋮----
