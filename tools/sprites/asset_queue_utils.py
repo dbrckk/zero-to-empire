@@ -182,6 +182,15 @@ def sync_controlled_queues(queue: dict[str, Any]) -> None:
         if not asset or asset["strict_status"] == "DONE":
             continue
         status = str(item.get("status", "")).upper()
+        # A producer may regenerate an optional identity anchor for a sibling
+        # wave while the master has a distinct, unapproved IDLE candidate.
+        # Pending/rejected context evidence must not overwrite that older
+        # candidate or its artifact provenance. A newly produced IDLE candidate
+        # may replace it only with an actual collected review artifact.
+        if item.get("autofactory_context_only") and status not in {
+            "AWAITING_REVIEW", "CANDIDATE", "TECHNICAL_PASS", "VALIDATED", "APPROVED"
+        }:
+            continue
         pollinations_only = status in {"PENDING_POLLINATIONS", "PROVIDER_ERROR"}
         normalized_status = "REJECTED_SEMANTIC" if status in {"REJECTED", "REJECTED_SEMANTIC"} else status
         if normalized_status and not pollinations_only and not (
