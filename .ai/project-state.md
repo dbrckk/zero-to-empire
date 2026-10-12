@@ -31,20 +31,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T04:06:44Z
+Generated: 2026-10-12T04:07:36Z
 
 ### Git
 - Branch: `main`
-- Head: `4b086264180c`
-- Commit date: 2026-10-12T06:06:26+02:00
-- Commit: docs(art): record verified ENG OP third-wave visual decisions and corrective actions
+- Head: `049f001d9b2c`
+- Commit date: 2026-10-12T06:07:22+02:00
+- Commit: ci(art): inspect live LOG ENG identity-locked character wave
 - Tracked files: 1530
 
 ### Recently changed files
+- `ops/kaggle-collector-trigger.txt`
 - `art/production/eng-op-third-batch-semantic-review.md`
 - `tools/assets/test_workflow_policy.py`
 - `tools/sprites/kaggle_character_sheet_factory_v1.py`
-- `tools/assets/test_queue_state_policy.py`
 
 ### Project signals
 - `build.gradle.kts`

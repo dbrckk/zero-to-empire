@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 3f483bf416605fd97fce09a23d5296dc63f229d5
-Head: 4b086264180c6f1c3903455419dbd12f974880eb
+Base: afbf4699bfb035d6bbc7d51153bf7f8767907ca6
+Head: 049f001d9b2c2a19a33dc0f52f7c2a6e92f47466
 
 ## Changed files
-- A art/production/eng-op-third-batch-semantic-review.md
+- M ops/kaggle-collector-trigger.txt
 
 ## Affected areas
-- art
+- ops
 
 ## Related test candidates
 - No direct filename-based test match detected.
