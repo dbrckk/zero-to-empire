@@ -81,6 +81,32 @@ def palette_distance(a,b)->float:
                for aa,bb in zip(a,b))/3
 
 
+def idle_visual_activity(frames:list[Image.Image])->float:
+    """Measure subtle blink/breathing changes without requiring body motion.
+
+    Silhouette-only alpha overlap falsely rejects excellent six-frame IDLE
+    animations with a fixed body and tiny facial or uniform detail changes.
+    RGB + alpha differences are normalized over the visible character region.
+    An exact repeated sprite still scores 0.0 and is rejected upstream.
+    This is evidence of image activity only, never an artistic approval.
+    """
+    if len(frames)<2:
+        return 0.0
+    sampled=[
+        list(f.convert('RGBA').resize((64,64),Image.Resampling.BILINEAR).getdata())
+        for f in frames
+    ]
+    diff=0
+    total=0
+    for previous,current in zip(sampled,sampled[1:]):
+        for a,b in zip(previous,current):
+            if max(a[3],b[3])<32:
+                continue
+            diff+=sum(abs(a[k]-b[k]) for k in range(4))
+            total+=4*255
+    return diff/total if total else 0.0
+
+
 def _body_region_color_signature(frame:Image.Image,start:float,end:float):
     """Masked RGB histogram of a stable vertical region relative to the sprite.
 
