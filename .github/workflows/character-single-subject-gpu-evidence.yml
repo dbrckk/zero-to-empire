@@ -1,0 +1,106 @@
+name: Character Single-Subject GPU Evidence
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_run_id:
+        description: Collector run with kaggle-async-character-batch
+        required: true
+        default: '38281126201'
+      expected_double_head_id:
+        description: Exact IDLE asset expected to contain two heads, leave empty for general audit
+        required: false
+        default: 'CHR-LOG-IDLE'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/character-single-subject-gpu-evidence.yml'
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check Pillow==11.3.0
+      - name: Download original immutable Kaggle candidate artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_RUN: ${{ inputs.source_run_id || '38281126201' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/zte-single-subject
+          gh run download "$SOURCE_RUN" \
+            --repo "${{ github.repository }}" \
+            --name kaggle-async-character-batch \
+            --dir /tmp/zte-single-subject
+          find /tmp/zte-single-subject/output/candidates -maxdepth 1 -type f -name '*_final.png' -print
+      - name: Exercise current image risk gate against real role IDLE images
+        env:
+          SOURCE_RUN: ${{ inputs.source_run_id || '38281126201' }}
+          EXPECTED_DOUBLE: ${{ inputs.expected_double_head_id || 'CHR-LOG-IDLE' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHONPATH=tools/sprites python - <<'PY'
+          import json,os
+          from pathlib import Path
+          from PIL import Image
+          from character_semantic_gate import clip_risk,idle_distinct_head_clusters
+          root=Path('/tmp/zte-single-subject/output/candidates')
+          rows=[]
+          for image_path in sorted(root.glob('zte_chr_*_idle_final.png')):
+              role=image_path.stem.split('_')[2].upper()
+              asset_id='CHR-'+role+'-IDLE'
+              with Image.open(image_path) as source:
+                  rgba=source.convert('RGBA')
+              if rgba.size!=(1024,1024):
+                  raise SystemExit('Invalid source atlas '+str(image_path))
+              frames=[rgba.crop(((i%4)*256,(i//4)*256,((i%4)+1)*256,((i//4)+1)*256))
+                      for i in range(6)]
+              head_counts=[idle_distinct_head_clusters(frame) for frame in frames]
+              result=clip_risk(frames,'IDLE')
+              record={'id':asset_id,'source':image_path.name,
+                      'head_counts':head_counts,'risk_level':result['risk_level'],
+                      'flags':result['flags'],'semantic_approval':False}
+              rows.append(record)
+              print('IDLE_MULTIPLE_SUBJECT_EVIDENCE='+json.dumps(record,sort_keys=True))
+          expected=os.environ['EXPECTED_DOUBLE'].strip().upper()
+          if expected:
+              observed=next((x for x in rows if x['id']==expected),None)
+              if observed is None:
+                  raise SystemExit('Expected sample asset not present: '+expected)
+              if ('MULTIPLE_IDLE_HEADS_RISK' not in observed['flags']
+                  or observed['risk_level']!='BLOCKING'
+                  or sum(n>=2 for n in observed['head_counts'])<2):
+                  raise SystemExit('FAILED: known two-worker IDLE escaped image risk gate: '+expected)
+              # Same collector wave contains the healthy single-worker OP
+              # reference; this must not be mislabeled as conjoined workers.
+              if expected=='CHR-LOG-IDLE':
+                  normal=next((x for x in rows if x['id']=='CHR-OP-IDLE'),None)
+                  if not normal or 'MULTIPLE_IDLE_HEADS_RISK' in normal['flags']:
+                      raise SystemExit('FAILED: single-subject OP control falsely flagged')
+          if not rows:
+              raise SystemExit('No IDLE atlas found in source artifact')
+          output={'source_run_id':os.environ['SOURCE_RUN'],
+                  'review_only':True,'automatic_promotion':False,
+                  'image_risk_results':rows}
+          Path('/tmp/zte-single-subject/single-subject-evidence.json').write_text(
+              json.dumps(output,indent=2)+'\n')
+          print('CHARACTER_SINGLE_SUBJECT_REAL_ARTIFACT_QA_PASS=1')
+          PY
+      - name: Save forensic verification without promotion
+        uses: actions/upload-artifact@v4
+        with:
+          name: character-single-subject-evidence-${{ inputs.source_run_id || '38281126201' }}
+          path: /tmp/zte-single-subject/single-subject-evidence.json
+          retention-days: 90
+          if-no-files-found: error
