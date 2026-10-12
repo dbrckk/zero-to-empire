@@ -159,6 +159,48 @@ def create_mobile_action_panel(role: str, action: str, path: Path,
     image.save(output, "PNG", optimize=True)
 
 
+def _frame_alpha_iou(left: Image.Image, right: Image.Image) -> float:
+    """Downsampled alpha overlap only; not an identity or action verdict."""
+    a = left.getchannel("A").resize((64, 64), Image.Resampling.BILINEAR)
+    b = right.getchannel("A").resize((64, 64), Image.Resampling.BILINEAR)
+    left_mask = [v >= 32 for v in a.getdata()]
+    right_mask = [v >= 32 for v in b.getdata()]
+    overlap = sum(x and y for x, y in zip(left_mask, right_mask))
+    union = sum(x or y for x, y in zip(left_mask, right_mask))
+    return overlap / union if union else 1.0
+
+
+def motion_review_evidence(frames: list[Image.Image], action: str) -> dict:
+    """Measure animation loop cuts separately from the generator's frame QA.
+
+    The closing transition (last -> first) is rendered continuously in the
+    Android loop but was absent from previous adjacent-frame QA. A bad seam
+    is flagged for human review, *never* promoted or auto-approved.
+    """
+    if len(frames) < 2:
+        return {"status": "INSUFFICIENT_EVIDENCE", "flags": ["TOO_FEW_FRAMES"]}
+    steps = [1 - _frame_alpha_iou(a, b) for a, b in zip(frames[:-1], frames[1:])]
+    loop_step = 1 - _frame_alpha_iou(frames[-1], frames[0])
+    mean_step = sum(steps) / len(steps)
+    seam_ratio = loop_step / max(.015, mean_step)
+    flags = []
+    if action != "idle" and loop_step > .28 and seam_ratio > 1.6:
+        flags.append("ANIMATION_LOOP_SEAM_REVIEW")
+    if max(steps) > .5:
+        flags.append("SUDDEN_ADJACENT_SILHOUETTE_CHANGE_REVIEW")
+    if action not in {"idle"} and mean_step < .08:
+        flags.append("LOW_VISIBLE_MOTION_REVIEW")
+    return {
+        "status": "REVIEW_ONLY",
+        "mean_adjacent_alpha_change": round(mean_step, 4),
+        "max_adjacent_alpha_change": round(max(steps), 4),
+        "last_to_first_alpha_change": round(loop_step, 4),
+        "loop_seam_to_mean_step_ratio": round(seam_ratio, 3),
+        "flags": flags,
+        "automatic_semantic_approval": False,
+    }
+
+
 def create_panel(role: str, assets: dict[str, Path], output: Path, qa: dict[str, dict]) -> dict:
     font = readable_font(15)
     heading = readable_font(21)
@@ -193,6 +235,12 @@ def create_panel(role: str, assets: dict[str, Path], output: Path, qa: dict[str,
                 if src.size != (1024, 1024):
                     raise ValueError(f"Expected atlas 1024x1024, got {src.size}")
                 rgba = src.convert("RGBA")
+            raw_frames = [
+                rgba.crop(((idx % 4) * CELL, (idx // 4) * CELL,
+                           ((idx % 4) + 1) * CELL, ((idx // 4) + 1) * CELL))
+                for idx in range(frame_count)
+            ]
+            diagnostics = motion_review_evidence(raw_frames, action)
             for frame_idx in range(frame_count):
                 fx = (frame_idx % 4) * CELL
                 fy = (frame_idx // 4) * CELL
@@ -203,7 +251,11 @@ def create_panel(role: str, assets: dict[str, Path], output: Path, qa: dict[str,
                 background.paste(tile, (0, 0), tile)
                 sheet.paste(background, (bx, by))
                 draw.text((bx + 2, by + CELL + 8), f"Frame {frame_idx + 1:02d}", font=font, fill=(212, 216, 223))
-            status[action] = {"candidate": True, "expected_frames": frame_count, "qa_pass": is_pass, "issues": issues}
+            status[action] = {
+                "candidate": True, "expected_frames": frame_count,
+                "qa_pass": is_pass, "issues": issues,
+                "temporal_evidence": diagnostics,
+            }
         except Exception as exc:
             status[action] = {"candidate": True, "expected_frames": frame_count, "qa_pass": False,
                               "issues": issues + [f"review-panel-error:{exc}"]}
