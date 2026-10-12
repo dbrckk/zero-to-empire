@@ -1,8 +1,9 @@
 # CI status
 
-Summary: 2 success / 0 failure / 1 active
+Summary: 3 success / 0 failure / 1 active
 
-- Asset Pipeline CI: in_progress / pending (a73341bc)
+- Retroactive Character Motion QA Evidence: in_progress / pending (d51f1c4b)
+- Asset Pipeline CI: completed / success (a73341bc)
 - Asset Pipeline CI: completed / cancelled (4937325a)
 - Asset Pipeline CI: completed / success (88a2eb38)
 - Asset Pipeline CI: completed / cancelled (40f1a813)

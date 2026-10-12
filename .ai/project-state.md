@@ -31,21 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T19:50:01Z
+Generated: 2026-10-12T19:50:57Z
 
 ### Git
 - Branch: `main`
-- Head: `a73341bc525f`
-- Commit date: 2026-10-12T21:49:43+02:00
-- Commit: ci(art): verify animated character review GIF loops and never auto-approves
+- Head: `d51f1c4bcf16`
+- Commit date: 2026-10-12T21:50:41+02:00
+- Commit: ci(art): attach animated mobile review playback to immutable retroactive character QA
 - Tracked files: 1560
 
 ### Recently changed files
+- `.github/workflows/retroactive-character-motion-qa.yml`
 - `.github/workflows/asset-pipeline-ci.yml`
 - `tools/sprites/build_character_review_panels.py`
 - `tools/assets/test_workflow_policy.py`
 - `tools/sprites/kaggle_character_sheet_factory_v1.py`
-- `ops/kaggle-collector-trigger.txt`
 
 ### Project signals
 - `build.gradle.kts`
