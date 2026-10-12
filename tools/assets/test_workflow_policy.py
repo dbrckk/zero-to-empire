@@ -319,6 +319,16 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("verified_idle_roles.add(i['role'])", text)
         self.assertLess(text.index("required-role-idle-candidate-rejected"), text.index("frames=[];anchor_raw=None"))
 
+    def test_malformed_character_visual_qa_does_not_abort_valid_gpu_siblings(self):
+        code = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("except (ValueError, IndexError, OSError) as exc:", code)
+        self.assertIn("candidate-visual-qa-error:", code)
+        self.assertIn("'status':'REJECT','reason':reason", code)
+        self.assertLess(code.index("except (ValueError, IndexError, OSError) as exc:"),
+                        code.index("if visual_risk.get('risk_level')=='BLOCKING':"))
+
     def test_kaggle_character_generator_rejects_blocking_visual_risks(self):
         generator = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
         workflow = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
