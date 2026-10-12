@@ -136,6 +136,51 @@ def idle_visual_activity(frames:list[Image.Image])->float:
     return diff/total if total else 0.0
 
 
+def head_structure_drift(frames:list[Image.Image])->float:
+    """Pixel-structure drift of aligned face/headgear texture from frame zero.
+
+    Plain RGB histograms miss cases where the entire face/helmet changes shape
+    while retaining orange/white/graphite colors. Crop only the upper head
+    instead of shoulders, hands or accessories; avoid model dependencies.
+    This is a rejection risk, NOT face recognition or automatic approval.
+    """
+    heads=[]
+    for frame in frames:
+        rgba=frame.convert('RGBA')
+        if rgba.size!=(256,256):
+            raise ValueError('Character head structural QA expects 256x256 frames')
+        alpha=rgba.getchannel('A')
+        bb=alpha.getbbox()
+        if bb is None:
+            return 1.0
+        left,top,right,bottom=bb
+        band=alpha.crop((0,top,256,top+max(1,int((bottom-top)*.23))))
+        weighted=count=0
+        px=band.load()
+        for y in range(band.height):
+            for x in range(256):
+                if px[x,y]>=128:
+                    weighted+=x
+                    count+=1
+        centre=round(weighted/count) if count else (left+right)//2
+        crop_x=max(0,min(188,centre-34))
+        crop_y=max(0,min(188,top-2))
+        heads.append(list(rgba.crop((crop_x,crop_y,crop_x+68,crop_y+68))
+                     .resize((48,48),Image.Resampling.BILINEAR).getdata()))
+    reference=heads[0]
+    result=0.0
+    for current in heads[1:]:
+        error=total=0
+        for p,q in zip(reference,current):
+            if max(p[3],q[3])<32:
+                continue
+            error+=sum(abs(p[channel]-q[channel]) for channel in range(4))
+            total+=1020
+        if total:
+            result=max(result,error/total)
+    return result
+
+
 def _body_region_color_signature(frame:Image.Image,start:float,end:float):
     """Masked RGB histogram of a stable vertical region relative to the sprite.
 
@@ -181,9 +226,14 @@ def clip_risk(frames:list[Image.Image],action:str|None=None)->dict:
         for i in range(1,len(frames))
     ]
     mid_max=max(mid_changes,default=0.0)
+    head_shape_drift=(head_structure_drift(frames)
+                      if str(action or '').upper() in {'WALK','WORK','CARRY','REPAIR'}
+                      else 0.0)
     flags=[]
     if head_max>.24:
         flags.append('HEAD_FACE_HEADGEAR_COLOR_DISCONTINUITY_RISK')
+    if head_shape_drift>.19:
+        flags.append('FACE_HEADGEAR_STRUCTURE_DRIFT_RISK')
     if (str(action or '').upper() in {'WORK','CARRY','REPAIR'}
         and mid_max>.30):
         flags.append('TOOL_CRATE_TORSO_COLOR_DISCONTINUITY_RISK')
@@ -218,6 +268,7 @@ def clip_risk(frames:list[Image.Image],action:str|None=None)->dict:
               'FRAME_SCALE_COLLAPSE_RISK',
               'SILHOUETTE_MASS_DISCONTINUITY_RISK',
               'HEAD_FACE_HEADGEAR_COLOR_DISCONTINUITY_RISK',
+              'FACE_HEADGEAR_STRUCTURE_DRIFT_RISK',
               'TOOL_CRATE_TORSO_COLOR_DISCONTINUITY_RISK'}
     blocking=bool(blockers.intersection(flags))
     return {'risk_level':'BLOCKING' if blocking else
@@ -225,6 +276,7 @@ def clip_risk(frames:list[Image.Image],action:str|None=None)->dict:
             'flags':flags,
             'max_palette_adjacent_distance':round(biggest,4),
             'max_headgear_adjacent_color_distance':round(head_max,4),
+            'max_face_headgear_structural_drift':round(head_shape_drift,4),
             'max_mid_body_prop_adjacent_color_distance':round(mid_max,4),
             'median_palette_adjacent_distance':round(statistics.median(adjacent),4),
             'median_aspect_ratio':round(median_aspect,4),
