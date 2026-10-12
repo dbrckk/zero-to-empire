@@ -2,75 +2,59 @@
   "mode": "kaggle-character-burst-v1.18-strict-completion",
   "reason": "Autofactory 235: high-throughput identity-locked character production. Each role is kept in one producer wave when capacity allows; a strict-DONE IDLE sheet may be regenerated as context-only identity evidence so review and promotion can replace a legacy anchor with the same generated family.",
   "groups": [
-    "CHR-ENG",
-    "CHR-OP"
+    "CHR-LOG",
+    "CHR-ENG"
   ],
   "targets": [
     {
+      "id": "CHR-LOG-IDLE",
+      "status": "PENDING_KAGGLE",
+      "autofactory_context_only": true
+    },
+    {
+      "id": "CHR-LOG-WALK",
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Kaggle generator rejected candidate: walk-too-static lower-motion=0.112"
+    },
+    {
+      "id": "CHR-LOG-WORK",
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Manual full-frame review of collector 38185962170 REJECTED: blue equipment floats outside hands/morphs, last frames alter accessories and pose; inconsistent hand-to-work-point contact."
+    },
+    {
+      "id": "CHR-LOG-CARRY",
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Manual full-frame review of collector 38185962170 REJECTED: crate stays in front but legs remain mostly static and carrying contact unreadable; helmet/head color differs noticeably from LOG-WORK; LOG-IDLE identity anchor was rejected in same batch."
+    },
+    {
+      "id": "CHR-LOG-REPAIR",
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Kaggle generator rejected candidate: image-risk:LOWER_LIMB_STRUCTURE_UNVERIFIED,PALETTE_IDENTITY_DISCONTINUITY_RISK; retry-details=edge contact"
+    },
+    {
+      "id": "CHR-LOG-CELEB",
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Kaggle generator rejected candidate: frame-3-failed; retry-details=edge contact"
+    },
+    {
       "id": "CHR-ENG-IDLE",
-      "status": "AWAITING_REVIEW",
-      "kaggle_run_id": 38186016651,
-      "review_artifact_run_id": 38201816567
+      "status": "PENDING_KAGGLE",
+      "autofactory_context_only": true
     },
     {
       "id": "CHR-ENG-WALK",
-      "status": "REJECTED",
-      "review_reason": "Kaggle generator rejected candidate: identity/silhouette jump=0.27",
-      "kaggle_run_id": 38186016651,
-      "review_artifact_run_id": 38201816567
-    },
-    {
-      "id": "CHR-ENG-WORK",
-      "status": "AWAITING_REVIEW",
-      "kaggle_run_id": 38186016651,
-      "review_artifact_run_id": 38201816567
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Kaggle generator rejected candidate: identity/silhouette jump=0.27"
     },
     {
       "id": "CHR-ENG-CARRY",
-      "status": "REJECTED",
-      "review_reason": "Kaggle generator rejected candidate: identity/silhouette jump=0.15",
-      "kaggle_run_id": 38186016651,
-      "review_artifact_run_id": 38201816567
-    },
-    {
-      "id": "CHR-ENG-REPAIR",
-      "status": "AWAITING_REVIEW",
-      "kaggle_run_id": 38186016651,
-      "review_artifact_run_id": 38201816567
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Kaggle generator rejected candidate: identity/silhouette jump=0.15"
     },
     {
       "id": "CHR-ENG-CELEB",
-      "status": "REJECTED",
-      "review_reason": "Kaggle generator rejected candidate: celeb-unreadable-gesture upper-transitions=2/7",
-      "kaggle_run_id": 38186016651,
-      "review_artifact_run_id": 38201816567
-    },
-    {
-      "id": "CHR-OP-IDLE",
-      "status": "AWAITING_REVIEW",
-      "autofactory_context_only": true,
-      "kaggle_run_id": 38186016651,
-      "review_artifact_run_id": 38201816567
-    },
-    {
-      "id": "CHR-OP-WALK",
-      "status": "REJECTED",
-      "review_reason": "Kaggle generator rejected candidate: walk-too-static lower-motion=0.167",
-      "kaggle_run_id": 38186016651,
-      "review_artifact_run_id": 38201816567
-    },
-    {
-      "id": "CHR-OP-CARRY",
-      "status": "AWAITING_REVIEW",
-      "kaggle_run_id": 38186016651,
-      "review_artifact_run_id": 38201816567
-    },
-    {
-      "id": "CHR-OP-REPAIR",
-      "status": "REJECTED",
-      "review_reason": "Kaggle generator rejected candidate: frame-5-failed; retry-details=edge contact | detached-artifact component=2452/10701",
-      "kaggle_run_id": 38186016651,
-      "review_artifact_run_id": 38201816567
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Kaggle generator rejected candidate: celeb-unreadable-gesture upper-transitions=2/7"
     }
   ]
 }
