@@ -39,6 +39,40 @@ class QueueStatePolicyTests(unittest.TestCase):
         fields = queue_utils.PERSISTED_ASSET_STATE_FIELDS
         self.assertEqual(len(fields), len(set(fields)))
 
+    def test_optional_id_anchor_preserves_unapproved_candidate_until_collected(self) -> None:
+        candidate = {
+            "id": "CHR-ENG-IDLE",
+            "strict_status": "NEEDS_REVIEW",
+            "pipeline_status": "AWAITING_REVIEW",
+            "review_artifact_run_id": 38201816567,
+            "review_reason": "Older usable review evidence",
+        }
+        queue = {"assets": [candidate]}
+        controlled = {"targets": [
+            {"id": "CHR-ENG-IDLE", "status": "PENDING_KAGGLE",
+             "autofactory_context_only": True, "review_artifact_run_id": 99}
+        ]}
+        original_load, original_save = queue_utils.load_json, queue_utils.save_json
+        try:
+            queue_utils.load_json = lambda path, default=None: (
+                controlled if path == queue_utils.CHARACTER_QUEUE else {}
+            )
+            queue_utils.save_json = lambda path, value: None
+            queue_utils.sync_controlled_queues(queue)
+            self.assertEqual(candidate["pipeline_status"], "AWAITING_REVIEW")
+            self.assertEqual(candidate["review_artifact_run_id"], 38201816567)
+            controlled["targets"][0]["status"] = "REJECTED"
+            queue_utils.sync_controlled_queues(queue)
+            self.assertEqual(candidate["pipeline_status"], "AWAITING_REVIEW")
+            self.assertEqual(candidate["review_artifact_run_id"], 38201816567)
+            controlled["targets"][0]["status"] = "AWAITING_REVIEW"
+            controlled["targets"][0]["kaggle_run_id"] = 123456
+            queue_utils.sync_controlled_queues(queue)
+            self.assertEqual(candidate["review_artifact_run_id"], 99)
+            self.assertEqual(candidate["pipeline_status"], "AWAITING_REVIEW")
+        finally:
+            queue_utils.load_json, queue_utils.save_json = original_load, original_save
+
     def test_canonical_queue_policy_matches_current_character_epoch(self) -> None:
         text = MODULE_PATH.read_text(encoding="utf-8")
         self.assertIn('"character_generation_epoch": "identity-lock-v1.18-carry-identity-lock"', text)
@@ -242,6 +276,44 @@ class DispatchCorrelationTests(unittest.TestCase):
         self.assertTrue(targets[0]["autofactory_context_only"])
         self.assertNotIn("autofactory_context_only", targets[1])
         self.assertNotIn("autofactory_context_only", targets[2])
+
+    def test_batch_reserves_review_pending_idle_anchors_under_capacity(self) -> None:
+        orchestrator = self._load_orchestrator("")
+        assets = []
+        for group in ("CHR-ENG", "CHR-LOG"):
+            assets.append({
+                "id": group + "-IDLE", "group": group,
+                "strict_status": "NEEDS_REVIEW", "pipeline_status": "AWAITING_REVIEW",
+                "attempts": 0, "infra_failures": 0,
+            })
+            for action in ("WALK", "WORK", "CARRY", "REPAIR", "CELEB"):
+                assets.append({
+                    "id": group + "-" + action, "group": group,
+                    "strict_status": "NEEDS_REVIEW", "pipeline_status": "REJECTED_SEMANTIC",
+                    "attempts": 0, "infra_failures": 0,
+                    "generation_epoch": "legacy", "epoch_attempts": 0,
+                })
+        assets.append({
+            "id": "CHR-OP-IDLE", "group": "CHR-OP",
+            "strict_status": "NEEDS_REVIEW", "pipeline_status": "PENDING_KAGGLE",
+            "attempts": 0, "infra_failures": 0, "generation_epoch": "legacy",
+        })
+        saved = {}
+        old_load, old_save = orchestrator.load_json, orchestrator.save_json
+        try:
+            orchestrator.load_json = lambda path, default=None: saved.get("value", default)
+            orchestrator.save_json = lambda path, value: saved.update(value=value)
+            result = orchestrator.prepare_character_burst(
+                {"assets": assets}, ["CHR-ENG", "CHR-LOG", "CHR-OP"]
+            )
+        finally:
+            orchestrator.load_json, orchestrator.save_json = old_load, old_save
+        self.assertEqual(result["count"], 12)
+        self.assertEqual(len(result["ids"]), 10)
+        ids = [row["id"] for row in saved["value"]["targets"]]
+        self.assertIn("CHR-ENG-IDLE", ids)
+        self.assertIn("CHR-LOG-IDLE", ids)
+        self.assertNotIn("CHR-OP-IDLE", ids)
 
     def test_character_burst_keeps_op_and_log_families_whole_within_twelve_slots(self) -> None:
         orchestrator = self._load_orchestrator("")
