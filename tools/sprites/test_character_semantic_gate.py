@@ -170,6 +170,26 @@ class SemanticGateTests(unittest.TestCase):
         self.assertGreater(result['max_face_headgear_structural_drift'],.19)
         self.assertGreater(head_structure_drift(frames),.19)
 
+    def test_off_center_head_does_not_count_as_raised_arm(self):
+        # Regression for v1.20 OP-CELEB: the helmet is left of the centre of
+        # a standing figure's full bbox. The old detector counted the helmet
+        # and shoulders as if both hands were raised in all eight frames.
+        frame=Image.new('RGBA',(256,256))
+        d=ImageDraw.Draw(frame)
+        d.ellipse((84,20,121,59),fill=(198,118,55,255))
+        d.polygon(((96,62),(140,62),(153,150),(93,150)),
+                  fill=(58,78,92,255))
+        d.line((98,82,82,148),fill=(58,78,92,255),width=14)
+        d.line((145,81,170,148),fill=(58,78,92,255),width=14)
+        d.line((110,144,99,222),fill=(45,56,66,255),width=16)
+        d.line((138,144,152,222),fill=(45,56,66,255),width=16)
+        counts=celebration_arm_reach_counts([frame.copy() for _ in range(8)])
+        self.assertEqual(counts,[0]*8)
+        raised=frame.copy()
+        ImageDraw.Draw(raised).line((99,80,55,42),
+                                    fill=(58,78,92,255),width=14)
+        self.assertGreaterEqual(celebration_arm_reach_counts([raised])[0],28)
+
     def test_celebration_counts_actual_raised_arm_frames_not_final_sparkle(self):
         def simple(raised=False):
             frame=Image.new('RGBA',(256,256))
