@@ -31,21 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T19:31:58Z
+Generated: 2026-10-12T19:44:41Z
 
 ### Git
 - Branch: `main`
-- Head: `e4caba3dd833`
-- Commit date: 2026-10-12T21:31:43+02:00
-- Commit: docs(art): preserve v1.20 OP LOG visual evidence, false CELEB pass and WALK v2 limits
+- Head: `9715b43b1479`
+- Commit date: 2026-10-12T21:44:26+02:00
+- Commit: ci(art): inspect active OP ENG v1.20 GPU character wave
 - Tracked files: 1560
 
 ### Recently changed files
+- `ops/kaggle-collector-trigger.txt`
 - `art/production/op-log-v120-semantic-review.md`
 - `tools/sprites/identity_locked_walk_candidate.py`
 - `.github/workflows/retroactive-character-motion-qa.yml`
 - `tools/sprites/test_verify_character_action_candidates.py`
-- `tools/sprites/verify_character_action_candidates.py`
 
 ### Project signals
 - `build.gradle.kts`
