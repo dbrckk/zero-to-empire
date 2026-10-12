@@ -9210,6 +9210,28 @@ def test_true_arm_pose_variation_is_not_mistaken_for_actor_translation(self)
 ⋮----
 frames = [figure(0, raised_hand=i * 4) for i in range(10)]
 ⋮----
+def test_eight_frames_without_overhead_arms_cannot_pass_celebration(self)
+⋮----
+# Regression for the real collector 38296422676 OP-CELEB: visual
+# variations from torso/helmet redrawing do not equal raised fists.
+frames = [figure() for _ in range(8)]
+⋮----
+name = "zte_chr_op_celeb_final.png"
+⋮----
+qa = {"assets": [{"file": name, "pass": True, "issues": []}]}
+⋮----
+row = result["assets"][0]
+⋮----
+def test_several_overhead_arm_frames_do_not_trigger_false_celebration_block(self)
+⋮----
+frames = []
+⋮----
+frame = figure()
+⋮----
+path = Path(temp) / "zte_chr_log_celeb_final.png"
+⋮----
+evidence = check_action_atlas(path, "celeb")
+⋮----
 def test_bad_work_atlas_is_rejected_without_aborting_sibling_candidates(self)
 ⋮----
 target = Path(temp) / "zte_chr_eng_repair_final.png"
@@ -9398,16 +9420,24 @@ were detected. Every pass still needs explicit artistic and Android review.
 This annotates a derived QA report; source sprites and strict DONE stay intact.
 """
 ⋮----
-ACTION_FILENAME = re.compile(r"^zte_chr_(op|log|eng|tech)_(work|repair)_final\.png$")
+ACTION_FILENAME = re.compile(r"^zte_chr_(op|log|eng|tech)_(work|repair|celeb)_final\.png$")
 ATLAS_SIZE = (1024, 1024)
 CELL_SIZE = 256
-FRAME_COUNT = 10
+ACTION_FRAME_COUNTS = {"work": 10, "repair": 10, "celeb": 8}
 ⋮----
 def check_action_atlas(path: Path, action: str) -> dict
 ⋮----
 rgba = file.convert("RGBA")
 frames = [
 risk = clip_risk(frames, action.upper())
+flags = list(risk["flags"])
+evidence = {"action_pose_metrics": risk.get("action_pose_metrics", {})}
+⋮----
+# Recheck generated CELEB sheets independently of the historical
+# producer's arm detector: the v1.20 OP artifact falsely passed with
+# eight helmet/shoulder pixels mislabeled as a raised-arm gesture.
+scores = celebration_arm_reach_counts(frames)
+active = sum(n >= 28 for n in scores)
 ⋮----
 def annotate_report(candidates_dir: Path, report: dict) -> dict
 ⋮----

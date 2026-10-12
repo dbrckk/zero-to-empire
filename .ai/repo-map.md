@@ -121,6 +121,7 @@ The content is organized as follows:
     repair-bld13-main.yml
     repair-bld13-runtime.yml
     repair-promote-bld03-run75.yml
+    retroactive-character-motion-qa.yml
     semantic-refresh.yml
     sprite-completion-gate.yml
     sprite-production-plan.yml
@@ -9270,6 +9271,105 @@ jobs:
           git commit -m 'art: promote BLD-03 T2-T6 to strict DONE'
           git pull --rebase origin main
           git push
+```
+
+## File: .github/workflows/retroactive-character-motion-qa.yml
+```yaml
+name: Retroactive Character Motion QA Evidence
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_run_id:
+        description: Collector run whose immutable sprites need a current QA recheck
+        required: false
+        default: '38296422676'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/retroactive-character-motion-qa.yml'
+      - 'ops/retroactive-character-motion-trigger.txt'
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: retroactive-character-motion-evidence
+  cancel-in-progress: false
+
+jobs:
+  recheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      SOURCE_RUN_ID: ${{ inputs.source_run_id || '38296422676' }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check Pillow==11.3.0
+      - name: Download exact immutable collector artifact
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/zte-motion-forensics
+          gh run download "$SOURCE_RUN_ID" --repo "${{ github.repository }}" \
+            --name kaggle-async-character-batch \
+            --dir /tmp/zte-motion-forensics
+          test -s /tmp/zte-motion-forensics/output/github-qa-report.json
+          cp /tmp/zte-motion-forensics/output/github-qa-report.json \
+            /tmp/zte-motion-forensics/prior-qa.json
+          cp /tmp/zte-motion-forensics/output/github-qa-report.json \
+            /tmp/zte-motion-forensics/current-qa.json
+      - name: Apply current independent action-motion risk gates
+        run: |
+          python tools/sprites/verify_character_action_candidates.py \
+            --candidates /tmp/zte-motion-forensics/output/candidates \
+            --qa-report /tmp/zte-motion-forensics/current-qa.json
+      - name: Reconcile source QA and mark review-only correction
+        run: |
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          root=Path('/tmp/zte-motion-forensics')
+          old=json.loads((root/'prior-qa.json').read_text())['assets']
+          new=json.loads((root/'current-qa.json').read_text())['assets']
+          original={x['file']:x for x in old}
+          revised={x['file']:x for x in new}
+          changed=[]
+          for name,row in revised.items():
+              before=original[name]
+              if before['pass'] is True and row['pass'] is False:
+                  changed.append({'file':name,'flags':row.get('action_visual_risk',{}).get('flags',[]),
+                                  'original_technical_pass':True,'now_blocked':True})
+          if os.environ['SOURCE_RUN_ID']=='38296422676':
+              target='zte_chr_op_celeb_final.png'
+              assert original[target]['pass'] is True,original[target]
+              result=revised[target]
+              assert result['pass'] is False,result
+              assert 'action-visual-risk:CELEBRATION_NO_OVERHEAD_ARM_GESTURE_RISK' in result['issues'],result
+              assert result['action_visual_risk']['raised_arm_frames']==0,result
+              print('RETROACTIVE_REAL_OP_CELEB_FALSE_POSITIVE_BLOCKED=1')
+          audit={'source_collector_run_id':os.environ['SOURCE_RUN_ID'],
+                 'review_only':True,'automatic_semantic_approval':False,
+                 'strict_status_mutations':0,'retroactively_blocked':changed}
+          (root/'retroactive-motion-report.json').write_text(
+              json.dumps(audit,indent=2)+'\n',encoding='utf-8')
+          print('RETROACTIVE_BLOCKED_CANDIDATES='+str(len(changed)))
+          PY
+          git diff --exit-code -- art/incoming/final-sprites/ app/src/main/res/
+      - name: Upload immutable source comparison and new QA evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: retroactive-character-motion-${{ env.SOURCE_RUN_ID }}
+          path: |
+            /tmp/zte-motion-forensics/prior-qa.json
+            /tmp/zte-motion-forensics/current-qa.json
+            /tmp/zte-motion-forensics/retroactive-motion-report.json
+          retention-days: 90
+          if-no-files-found: error
 ```
 
 ## File: .github/workflows/semantic-refresh.yml
@@ -35891,6 +35991,28 @@ def test_true_arm_pose_variation_is_not_mistaken_for_actor_translation(self)
 ⋮----
 frames = [figure(0, raised_hand=i * 4) for i in range(10)]
 ⋮----
+def test_eight_frames_without_overhead_arms_cannot_pass_celebration(self)
+⋮----
+# Regression for the real collector 38296422676 OP-CELEB: visual
+# variations from torso/helmet redrawing do not equal raised fists.
+frames = [figure() for _ in range(8)]
+⋮----
+name = "zte_chr_op_celeb_final.png"
+⋮----
+qa = {"assets": [{"file": name, "pass": True, "issues": []}]}
+⋮----
+row = result["assets"][0]
+⋮----
+def test_several_overhead_arm_frames_do_not_trigger_false_celebration_block(self)
+⋮----
+frames = []
+⋮----
+frame = figure()
+⋮----
+path = Path(temp) / "zte_chr_log_celeb_final.png"
+⋮----
+evidence = check_action_atlas(path, "celeb")
+⋮----
 def test_bad_work_atlas_is_rejected_without_aborting_sibling_candidates(self)
 ⋮----
 target = Path(temp) / "zte_chr_eng_repair_final.png"
@@ -36079,16 +36201,24 @@ were detected. Every pass still needs explicit artistic and Android review.
 This annotates a derived QA report; source sprites and strict DONE stay intact.
 """
 ⋮----
-ACTION_FILENAME = re.compile(r"^zte_chr_(op|log|eng|tech)_(work|repair)_final\.png$")
+ACTION_FILENAME = re.compile(r"^zte_chr_(op|log|eng|tech)_(work|repair|celeb)_final\.png$")
 ATLAS_SIZE = (1024, 1024)
 CELL_SIZE = 256
-FRAME_COUNT = 10
+ACTION_FRAME_COUNTS = {"work": 10, "repair": 10, "celeb": 8}
 ⋮----
 def check_action_atlas(path: Path, action: str) -> dict
 ⋮----
 rgba = file.convert("RGBA")
 frames = [
 risk = clip_risk(frames, action.upper())
+flags = list(risk["flags"])
+evidence = {"action_pose_metrics": risk.get("action_pose_metrics", {})}
+⋮----
+# Recheck generated CELEB sheets independently of the historical
+# producer's arm detector: the v1.20 OP artifact falsely passed with
+# eight helmet/shoulder pixels mislabeled as a raised-arm gesture.
+scores = celebration_arm_reach_counts(frames)
+active = sum(n >= 28 for n in scores)
 ⋮----
 def annotate_report(candidates_dir: Path, report: dict) -> dict
 ⋮----

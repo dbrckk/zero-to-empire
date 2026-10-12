@@ -31,20 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T19:23:59Z
+Generated: 2026-10-12T19:27:07Z
 
 ### Git
 - Branch: `main`
-- Head: `44942acccf66`
-- Commit date: 2026-10-12T21:23:44+02:00
-- Commit: art(review): preserve OP celebration false-positive and LOG tool drift evidence
-- Tracked files: 1558
+- Head: `81d242dbfb90`
+- Commit date: 2026-10-12T21:26:44+02:00
+- Commit: ci(art): verify true v1.20 CELEB false-positive against immutable GPU artifact
+- Tracked files: 1559
 
 ### Recently changed files
+- `.github/workflows/retroactive-character-motion-qa.yml`
+- `tools/sprites/test_verify_character_action_candidates.py`
+- `tools/sprites/verify_character_action_candidates.py`
 - `art/production/generation-rejection-ledger.json`
 - `tools/sprites/character_semantic_gate.py`
-- `tools/sprites/test_character_semantic_gate.py`
-- `art/production/character-strict-review-backlog.md`
 
 ### Project signals
 - `build.gradle.kts`

@@ -5,193 +5,31 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "_runs": {
+    "figure": {
       "source": {
-        "file": "tools/sprites/character_semantic_gate.py",
-        "start": 13,
-        "end": 19
+        "file": "tools/sprites/test_verify_character_action_candidates.py",
+        "start": 11,
+        "end": 22
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "frame_geometry": {
+    "atlas": {
       "source": {
-        "file": "tools/sprites/character_semantic_gate.py",
-        "start": 22,
-        "end": 61
+        "file": "tools/sprites/test_verify_character_action_candidates.py",
+        "start": 25,
+        "end": 29
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "CharacterActionCollectorTests": {
+      "source": {
+        "file": "tools/sprites/test_verify_character_action_candidates.py",
+        "start": 32,
+        "end": 103
       },
       "symbol_dependencies": [
-        {
-          "symbol": "_runs",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 13,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "color_signature": {
-      "source": {
-        "file": "tools/sprites/character_semantic_gate.py",
-        "start": 64,
-        "end": 76
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "palette_distance": {
-      "source": {
-        "file": "tools/sprites/character_semantic_gate.py",
-        "start": 79,
-        "end": 81
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "celebration_arm_reach_counts": {
-      "source": {
-        "file": "tools/sprites/character_semantic_gate.py",
-        "start": 84,
-        "end": 134
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "idle_visual_activity": {
-      "source": {
-        "file": "tools/sprites/character_semantic_gate.py",
-        "start": 136,
-        "end": 159
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "head_structure_drift": {
-      "source": {
-        "file": "tools/sprites/character_semantic_gate.py",
-        "start": 162,
-        "end": 204
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "lower_ground_band_ratio": {
-      "source": {
-        "file": "tools/sprites/character_semantic_gate.py",
-        "start": 207,
-        "end": 255
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "_body_region_color_signature": {
-      "source": {
-        "file": "tools/sprites/character_semantic_gate.py",
-        "start": 258,
-        "end": 271
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "color_signature",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 64,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "idle_distinct_head_clusters": {
-      "source": {
-        "file": "tools/sprites/character_semantic_gate.py",
-        "start": 274,
-        "end": 316
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "_upper_head_centroid": {
-      "source": {
-        "file": "tools/sprites/character_semantic_gate.py",
-        "start": 319,
-        "end": 340
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "_binary_alpha_iou": {
-      "source": {
-        "file": "tools/sprites/character_semantic_gate.py",
-        "start": 343,
-        "end": 348
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "action_translation_metrics": {
-      "source": {
-        "file": "tools/sprites/character_semantic_gate.py",
-        "start": 351,
-        "end": 385
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "_binary_alpha_iou",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 343,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_upper_head_centroid",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 319,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "clip_risk": {
-      "source": {
-        "file": "tools/sprites/character_semantic_gate.py",
-        "start": 388,
-        "end": 499
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "_body_region_color_signature",
-          "definitions": [
-            {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 258,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
         {
           "symbol": "action_translation_metrics",
           "definitions": [
@@ -202,14 +40,26 @@
               "language": "python"
             }
           ],
-          "relation": "same_file"
+          "relation": "imported_module"
         },
         {
-          "symbol": "color_signature",
+          "symbol": "annotate_report",
           "definitions": [
             {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 64,
+              "file": "tools/sprites/verify_character_action_candidates.py",
+              "line": 58,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "atlas",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_verify_character_action_candidates.py",
+              "line": 25,
               "kind": "function",
               "language": "python"
             }
@@ -217,11 +67,23 @@
           "relation": "same_file"
         },
         {
-          "symbol": "frame_geometry",
+          "symbol": "check_action_atlas",
           "definitions": [
             {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 22,
+              "file": "tools/sprites/verify_character_action_candidates.py",
+              "line": 25,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "figure",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_verify_character_action_candidates.py",
+              "line": 11,
               "kind": "function",
               "language": "python"
             }
@@ -229,11 +91,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "head_structure_drift",
+          "symbol": "test_bad_work_atlas_is_rejected_without_aborting_sibling_candidates",
           "definitions": [
             {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 162,
+              "file": "tools/sprites/test_verify_character_action_candidates.py",
+              "line": 91,
               "kind": "function",
               "language": "python"
             }
@@ -241,11 +103,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "idle_distinct_head_clusters",
+          "symbol": "test_eight_frames_without_overhead_arms_cannot_pass_celebration",
           "definitions": [
             {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 274,
+              "file": "tools/sprites/test_verify_character_action_candidates.py",
+              "line": 59,
               "kind": "function",
               "language": "python"
             }
@@ -253,11 +115,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "lower_ground_band_ratio",
+          "symbol": "test_rejects_ten_frames_of_standing_character_sliding_sideways",
           "definitions": [
             {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 207,
+              "file": "tools/sprites/test_verify_character_action_candidates.py",
+              "line": 33,
               "kind": "function",
               "language": "python"
             }
@@ -265,11 +127,23 @@
           "relation": "same_file"
         },
         {
-          "symbol": "palette_distance",
+          "symbol": "test_several_overhead_arm_frames_do_not_trigger_false_celebration_block",
           "definitions": [
             {
-              "file": "tools/sprites/character_semantic_gate.py",
-              "line": 79,
+              "file": "tools/sprites/test_verify_character_action_candidates.py",
+              "line": 75,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_true_arm_pose_variation_is_not_mistaken_for_actor_translation",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_verify_character_action_candidates.py",
+              "line": 53,
               "kind": "function",
               "language": "python"
             }
@@ -277,7 +151,291 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 8
+      "dependency_count": 10
+    },
+    "test_rejects_ten_frames_of_standing_character_sliding_sideways": {
+      "source": {
+        "file": "tools/sprites/test_verify_character_action_candidates.py",
+        "start": 33,
+        "end": 51
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "action_translation_metrics",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 351,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "annotate_report",
+          "definitions": [
+            {
+              "file": "tools/sprites/verify_character_action_candidates.py",
+              "line": 58,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "atlas",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_verify_character_action_candidates.py",
+              "line": 25,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "figure",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_verify_character_action_candidates.py",
+              "line": 11,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 4
+    },
+    "test_true_arm_pose_variation_is_not_mistaken_for_actor_translation": {
+      "source": {
+        "file": "tools/sprites/test_verify_character_action_candidates.py",
+        "start": 53,
+        "end": 57
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "action_translation_metrics",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 351,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "figure",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_verify_character_action_candidates.py",
+              "line": 11,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_eight_frames_without_overhead_arms_cannot_pass_celebration": {
+      "source": {
+        "file": "tools/sprites/test_verify_character_action_candidates.py",
+        "start": 59,
+        "end": 73
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "annotate_report",
+          "definitions": [
+            {
+              "file": "tools/sprites/verify_character_action_candidates.py",
+              "line": 58,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "atlas",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_verify_character_action_candidates.py",
+              "line": 25,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "figure",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_verify_character_action_candidates.py",
+              "line": 11,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "test_several_overhead_arm_frames_do_not_trigger_false_celebration_block": {
+      "source": {
+        "file": "tools/sprites/test_verify_character_action_candidates.py",
+        "start": 75,
+        "end": 89
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "atlas",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_verify_character_action_candidates.py",
+              "line": 25,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "check_action_atlas",
+          "definitions": [
+            {
+              "file": "tools/sprites/verify_character_action_candidates.py",
+              "line": 25,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "figure",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_verify_character_action_candidates.py",
+              "line": 11,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "test_bad_work_atlas_is_rejected_without_aborting_sibling_candidates": {
+      "source": {
+        "file": "tools/sprites/test_verify_character_action_candidates.py",
+        "start": 91,
+        "end": 103
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "annotate_report",
+          "definitions": [
+            {
+              "file": "tools/sprites/verify_character_action_candidates.py",
+              "line": 58,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "check_action_atlas": {
+      "source": {
+        "file": "tools/sprites/verify_character_action_candidates.py",
+        "start": 25,
+        "end": 56
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "celebration_arm_reach_counts",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 84,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "clip_risk",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 388,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "annotate_report": {
+      "source": {
+        "file": "tools/sprites/verify_character_action_candidates.py",
+        "start": 58,
+        "end": 86
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "check_action_atlas",
+          "definitions": [
+            {
+              "file": "tools/sprites/verify_character_action_candidates.py",
+              "line": 25,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "main": {
+      "source": {
+        "file": "tools/sprites/verify_character_action_candidates.py",
+        "start": 89,
+        "end": 209
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "annotate_report",
+          "definitions": [
+            {
+              "file": "tools/sprites/verify_character_action_candidates.py",
+              "line": 58,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
     }
   }
 }
