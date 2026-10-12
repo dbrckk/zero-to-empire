@@ -129,6 +129,7 @@ overlay_names=(
  'kaggle_character_sheet_factory_v1.py',
  'character_semantic_gate.py',
  'character_head_identity_lock.py',
+ 'character_ground_shadow_cleanup.py',
 )
 overlay_applied=False
 if GENERATOR_OVERLAY_B64:
