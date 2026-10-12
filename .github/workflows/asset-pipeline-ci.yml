@@ -114,6 +114,7 @@ jobs:
             --output-dir /tmp/zte-smoke-review
           test -s /tmp/zte-smoke-review/review-frames-op.png
           test -s /tmp/zte-smoke-review/review-heads-op.png
+          test -s /tmp/zte-smoke-review/review-mobile-op-idle.png
           python - <<'PY'
           import json
           from pathlib import Path
@@ -122,6 +123,10 @@ jobs:
           assert d['roles'][0]['automatically_approved'] is False
           assert d['roles'][0]['head_detail_file']=='review-heads-op.png'
           assert d['roles'][0]['actions']['idle']['candidate'] is True
+          assert d['roles'][0]['mobile_action_files']['idle']=='review-mobile-op-idle.png'
+          from PIL import Image
+          mobile=Image.open('/tmp/zte-smoke-review/review-mobile-op-idle.png')
+          assert mobile.width<700 and mobile.height>900
           print('CHARACTER_REVIEW_PANEL_SMOKE_PASS=1')
           PY
 
