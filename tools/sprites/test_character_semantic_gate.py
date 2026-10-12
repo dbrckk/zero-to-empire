@@ -59,6 +59,34 @@ class SemanticGateTests(unittest.TestCase):
         frames=[person() for _ in range(7)]+[Image.new('RGBA',(256,256))]
         self.assertEqual(clip_risk(frames)['risk_level'],'BLOCKING')
 
+    def test_alternating_helmet_or_face_color_blocks_identity(self):
+        frames=[]
+        for index in range(8):
+            frame=person()
+            color=(245,65,35,255) if index%2 else (30,235,224,255)
+            ImageDraw.Draw(frame).ellipse((102,10,155,70),fill=color)
+            frames.append(frame)
+        result=clip_risk(frames,'IDLE')
+        self.assertEqual(result['risk_level'],'BLOCKING')
+        self.assertIn('HEAD_FACE_HEADGEAR_COLOR_DISCONTINUITY_RISK',result['flags'])
+        self.assertGreater(result['max_headgear_adjacent_color_distance'],.24)
+
+    def test_morphing_crate_palette_blocks_carrying(self):
+        frames=[]
+        for index in range(8):
+            frame=person()
+            color=(230,50,32,255) if index%2 else (15,225,226,255)
+            ImageDraw.Draw(frame).rectangle((78,106,175,169),fill=color)
+            frames.append(frame)
+        result=clip_risk(frames,'CARRY')
+        self.assertEqual(result['risk_level'],'BLOCKING')
+        self.assertIn('TOOL_CRATE_TORSO_COLOR_DISCONTINUITY_RISK',result['flags'])
+        self.assertGreater(result['max_mid_body_prop_adjacent_color_distance'],.30)
+        # The same synthetic color change is not proof that a different
+        # non-prop action should be blocked on mid-body content alone.
+        self.assertNotIn('TOOL_CRATE_TORSO_COLOR_DISCONTINUITY_RISK',
+                         clip_risk(frames,'IDLE')['flags'])
+
     def test_same_palette_is_identical(self):
         signature=color_signature(person())
         self.assertAlmostEqual(palette_distance(signature,signature),0)
