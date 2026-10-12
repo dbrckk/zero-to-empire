@@ -119,8 +119,11 @@ def celebration_arm_reach_counts(frames:list[Image.Image])->list[int]:
             continue
         head_centre=head_xs[len(head_xs)//2]
         lateral_margin=max(29,round(height*.15))
-        arm_y0=max(0,top+round(height*.06))
-        arm_y1=min(frame.height,top+round(height*.31))
+        # Raised-fist evidence must reach helmet height. Counting through
+        # the shoulder band (down to 31% of body height) incorrectly treated
+        # a broad right shoulder as a raised arm on offset-head characters.
+        arm_y0=max(0,top+round(height*.04))
+        arm_y1=min(frame.height,top+round(height*.19))
         count=sum(
             pix[x,y]>=120
             for y in range(arm_y0,arm_y1)
