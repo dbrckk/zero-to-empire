@@ -97,10 +97,38 @@ jobs:
               json.dumps(output,indent=2)+'\n')
           print('CHARACTER_SINGLE_SUBJECT_REAL_ARTIFACT_QA_PASS=1')
           PY
+      - name: Validate collector rejects the original false-positive QA rows
+        env:
+          EXPECTED_DOUBLE: ${{ inputs.expected_double_head_id || 'CHR-LOG-IDLE' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp /tmp/zte-single-subject/output/github-qa-report.json \
+             /tmp/zte-single-subject/retroactive-collector-qa.json
+          python tools/sprites/verify_character_idle_candidates.py \
+            --candidates /tmp/zte-single-subject/output/candidates \
+            --qa-report /tmp/zte-single-subject/retroactive-collector-qa.json
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          d=json.loads(Path('/tmp/zte-single-subject/retroactive-collector-qa.json').read_text())
+          by_file={x['file']:x for x in d['assets']}
+          expected=os.environ['EXPECTED_DOUBLE'].strip().upper().split('-')
+          if len(expected)==3 and expected[2]=='IDLE':
+              name='zte_chr_'+expected[1].lower()+'_idle_final.png'
+              if by_file[name]['pass'] is not False:
+                  raise SystemExit('Collector failed to reject known double-subject IDLE')
+          if os.environ['EXPECTED_DOUBLE']=='CHR-LOG-IDLE':
+              if by_file['zte_chr_op_idle_final.png']['pass'] is not True:
+                  raise SystemExit('Collector rejected the single-subject OP control')
+          print('RETROACTIVE_GPU_COLLECTOR_SUBJECT_QA_PASS=1')
+          PY
       - name: Save forensic verification without promotion
         uses: actions/upload-artifact@v4
         with:
           name: character-single-subject-evidence-${{ inputs.source_run_id || '38281126201' }}
-          path: /tmp/zte-single-subject/single-subject-evidence.json
+          path: |
+            /tmp/zte-single-subject/single-subject-evidence.json
+            /tmp/zte-single-subject/retroactive-collector-qa.json
           retention-days: 90
           if-no-files-found: error
