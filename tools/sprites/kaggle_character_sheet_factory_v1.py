@@ -171,7 +171,8 @@ def anchor_prompt_pair(role):
   f"AAA stylized painterly 2.5D mobile game character. {ROLE[role]}. "
   "Canonical identity reference only. Neutral relaxed standing pose, both arms down, feet apart. "
   "No tool, no crate, no machine, no action pose. Same exact face, headgear, clothing, palette and proportions. "
-  "Full body centered with both feet visible, neutral gray background, safe border, one person only."
+  "Full body centered with both feet visible, neutral gray background, safe border, one person only. "
+  "No typography, fake logos, lettering, floating equipment or ground shadows."
  )
  return core,detail
 
@@ -274,6 +275,8 @@ def prompt_pair(i,pose,mode='default'):
          f"{ACTION[action][0]}. {ACTION_SEMANTIC[action]}. {pose}. "
          "Same exact adult identity, face, headgear, clothing, palette and proportions. "
          "Full body centered with both feet visible, neutral gray background, safe border, one person only. "
+         "No writing, letters, numbers, labels, logos, floating screens or watermark. "
+         "No cast floor shadow, ground plane or scenery baked into the character alpha silhouette. "
          + rejection_hints(i))
  if mode=='framing':
   detail += " Keep the full figure clearly inside frame with at least ten percent empty margin on every side."
