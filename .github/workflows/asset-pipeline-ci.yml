@@ -14,6 +14,7 @@ on:
       - 'tools/sprites/test_character_head_identity_lock.py'
       - 'tools/sprites/character_semantic_gate.py'
       - 'tools/sprites/test_character_semantic_gate.py'
+      - 'tools/sprites/test_character_action_gate.py'
       - 'tools/sprites/test_animation_batch_planner.py'
       - 'tools/sprites/kaggle_*factory*.py'
       - 'kaggle/github_mass_factory.py'
@@ -39,6 +40,7 @@ on:
       - 'tools/sprites/test_character_head_identity_lock.py'
       - 'tools/sprites/character_semantic_gate.py'
       - 'tools/sprites/test_character_semantic_gate.py'
+      - 'tools/sprites/test_character_action_gate.py'
       - 'tools/sprites/test_animation_batch_planner.py'
       - 'tools/sprites/kaggle_*factory*.py'
       - 'kaggle/github_mass_factory.py'
@@ -158,6 +160,7 @@ jobs:
           python -m unittest discover -s tools/assets -p 'test_*.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_semantic_gate.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_head_identity_lock.py' -v
+          python -m unittest discover -s tools/sprites -p 'test_character_action_gate.py' -v
 
       - name: Verify live character-production plan against strict queue and Android frame contract
         run: |
