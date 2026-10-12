@@ -4998,12 +4998,18 @@ clean=ImageDraw.Draw(out)
 ⋮----
 draw=ImageDraw.Draw(out,'RGBA')
 ⋮----
-# A formerly detached 160x215 control panel poisoned later img2img frames:
-# the model produced floating blue boxes and even generated "ENG" labels.
-# Seed a single compact handheld tool instead, joined to the right wrist.
+# The original giant detached console encouraged floating and morphing
+# equipment. Keep a single same-sized wrist-connected handheld tool, while
+# articulating the wrist in a ten-frame press/operate/release cycle. Its
+# working tip remains near the same fixed target instead of teleporting.
+phase=(0,6,12,18,12,0,-6,-12,-18,-6)[frame_index%10]
+tip_delta=round(phase*.25)
 ⋮----
-# The generated 165x255 floating console was not physically part of the
-# worker. Keep one short diagnostic probe firmly inside arm reach instead.
+# Keep the compact diagnostic probe consistent but move it through a
+# gradual inspect/contact/withdraw cycle connected to the same arm. The
+# endpoint stays close to the fixed repair point in every pose.
+phase=(0,8,16,23,16,0,-8,-16,-8,0)[frame_index%10]
+tip_delta=round(phase*.3)
 ⋮----
 def prompt_pair(i,pose,mode='default')
 ⋮----

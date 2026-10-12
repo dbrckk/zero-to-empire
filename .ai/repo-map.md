@@ -1284,6 +1284,36 @@ jobs:
           print('IDLE_RECOVERY_TECHNICAL_SMOKE_PASS=1')
           PY
 
+      - name: Exercise frame-varying work and repair action scaffolds
+        run: |
+          python - <<'PY'
+          import ast
+          from pathlib import Path
+          from PIL import Image,ImageDraw
+          source=Path('tools/sprites/kaggle_character_sheet_factory_v1.py').read_text()
+          tree=ast.parse(source)
+          fn=next(n for n in tree.body if isinstance(n,ast.FunctionDef)
+                  and n.name=='semantic_scaffold')
+          # Isolate its Pillow-only function; importing the full GPU producer
+          # here would need FLUX/CUDA and cannot run on the GitHub CI runner.
+          scope={'Image':Image,'ImageDraw':ImageDraw}
+          exec(compile(ast.Module(body=[fn],type_ignores=[]),
+                       'semantic_scaffold','exec'),scope)
+          scaffold=scope['semantic_scaffold']
+          base=Image.new('RGB',(1024,1024),(217,217,217))
+          draw=ImageDraw.Draw(base)
+          draw.ellipse((390,95,615,310),fill=(202,137,102))
+          draw.rectangle((386,315,615,710),fill=(67,82,94))
+          for action in ('WORK','REPAIR'):
+              frames=[scaffold(base,action,i) for i in range(10)]
+              assert all(f.size==(1024,1024) for f in frames)
+              assert len({f.tobytes() for f in frames}) >= 6, action
+              assert frames[0].tobytes()==scaffold(base,action,0).tobytes()
+              assert frames[0].getpixel((0,0))==base.getpixel((0,0))
+              assert frames[0].getpixel((512,110))==base.getpixel((512,110))
+              print('ACTION_SCAFFOLD_CYCLE_PASS='+action)
+          PY
+
       - name: Exercise role review panels with a real rendered atlas
         run: |
           set -euo pipefail
@@ -31544,12 +31574,18 @@ clean=ImageDraw.Draw(out)
 ⋮----
 draw=ImageDraw.Draw(out,'RGBA')
 ⋮----
-# A formerly detached 160x215 control panel poisoned later img2img frames:
-# the model produced floating blue boxes and even generated "ENG" labels.
-# Seed a single compact handheld tool instead, joined to the right wrist.
+# The original giant detached console encouraged floating and morphing
+# equipment. Keep a single same-sized wrist-connected handheld tool, while
+# articulating the wrist in a ten-frame press/operate/release cycle. Its
+# working tip remains near the same fixed target instead of teleporting.
+phase=(0,6,12,18,12,0,-6,-12,-18,-6)[frame_index%10]
+tip_delta=round(phase*.25)
 ⋮----
-# The generated 165x255 floating console was not physically part of the
-# worker. Keep one short diagnostic probe firmly inside arm reach instead.
+# Keep the compact diagnostic probe consistent but move it through a
+# gradual inspect/contact/withdraw cycle connected to the same arm. The
+# endpoint stays close to the fixed repair point in every pose.
+phase=(0,8,16,23,16,0,-8,-16,-8,0)[frame_index%10]
+tip_delta=round(phase*.3)
 ⋮----
 def prompt_pair(i,pose,mode='default')
 ⋮----

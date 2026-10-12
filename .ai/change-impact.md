@@ -1,10 +1,10 @@
 # Change impact
 
-Base: af421575464a4c7a22f768efd0725b1d9119ac06
-Head: 2992cc86ae84469f40c0a8329d3a2be91c620020
+Base: ed64c0af2abc5833ab59c31247ce599dce75076f
+Head: abc46a38acc95d5d5789c8f34131e4e95ccd1245
 
 ## Changed files
-- M .github/workflows/character-single-subject-gpu-evidence.yml
+- M .github/workflows/asset-pipeline-ci.yml
 
 ## Affected areas
 - .github
