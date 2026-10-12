@@ -14,12 +14,12 @@ from pathlib import Path
 
 from PIL import Image
 
-from character_semantic_gate import clip_risk
+from character_semantic_gate import clip_risk, celebration_arm_reach_counts
 
-ACTION_FILENAME = re.compile(r"^zte_chr_(op|log|eng|tech)_(work|repair)_final\.png$")
+ACTION_FILENAME = re.compile(r"^zte_chr_(op|log|eng|tech)_(work|repair|celeb)_final\.png$")
 ATLAS_SIZE = (1024, 1024)
 CELL_SIZE = 256
-FRAME_COUNT = 10
+ACTION_FRAME_COUNTS = {"work": 10, "repair": 10, "celeb": 8}
 
 
 def check_action_atlas(path: Path, action: str) -> dict:
@@ -30,16 +30,30 @@ def check_action_atlas(path: Path, action: str) -> dict:
     frames = [
         rgba.crop(((i % 4) * CELL_SIZE, (i // 4) * CELL_SIZE,
                    ((i % 4) + 1) * CELL_SIZE, ((i // 4) + 1) * CELL_SIZE))
-        for i in range(FRAME_COUNT)
+        for i in range(ACTION_FRAME_COUNTS[action.lower()])
     ]
     risk = clip_risk(frames, action.upper())
+    flags = list(risk["flags"])
+    evidence = {"action_pose_metrics": risk.get("action_pose_metrics", {})}
+    if action.lower() == "celeb":
+        # Recheck generated CELEB sheets independently of the historical
+        # producer's arm detector: the v1.20 OP artifact falsely passed with
+        # eight helmet/shoulder pixels mislabeled as a raised-arm gesture.
+        scores = celebration_arm_reach_counts(frames)
+        active = sum(n >= 28 for n in scores)
+        evidence["raised_arm_scores"] = scores
+        evidence["raised_arm_frames"] = active
+        if active < 3:
+            flags.append("CELEBRATION_NO_OVERHEAD_ARM_GESTURE_RISK")
     return {
-        "risk_level": risk["risk_level"],
-        "flags": risk["flags"],
-        "action_pose_metrics": risk.get("action_pose_metrics", {}),
+        "risk_level": "BLOCKING" if (
+            risk["risk_level"] == "BLOCKING"
+            or "CELEBRATION_NO_OVERHEAD_ARM_GESTURE_RISK" in flags
+        ) else risk["risk_level"],
+        "flags": flags,
+        **evidence,
         "image_only_semantic_approval": False,
     }
-
 
 def annotate_report(candidates_dir: Path, report: dict) -> dict:
     if not isinstance(report, dict) or not isinstance(report.get("assets"), list):
