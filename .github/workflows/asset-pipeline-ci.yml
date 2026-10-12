@@ -208,6 +208,7 @@ jobs:
           test -s /tmp/zte-smoke-review/review-frames-op.png
           test -s /tmp/zte-smoke-review/review-heads-op.png
           test -s /tmp/zte-smoke-review/review-mobile-op-idle.png
+          test -s /tmp/zte-smoke-review/review-motion-op-idle.gif
           python - <<'PY'
           import json
           from pathlib import Path
@@ -229,7 +230,15 @@ jobs:
           from PIL import Image
           mobile=Image.open('/tmp/zte-smoke-review/review-mobile-op-idle.png')
           assert mobile.width<700 and mobile.height>900
-          print('CHARACTER_REVIEW_PANEL_SMOKE_PASS=1')
+          anim=d['roles'][0]['animated_motion_previews']['idle']
+          assert anim['file']=='review-motion-op-idle.gif'
+          assert anim['review_only'] is True
+          assert anim['automatic_semantic_approval'] is False
+          with Image.open('/tmp/zte-smoke-review/review-motion-op-idle.gif') as gif:
+              assert gif.n_frames==6
+              assert gif.info['loop']==0
+              assert gif.info['duration']==210
+          print('CHARACTER_REVIEW_PANEL_AND_LOOP_PLAYBACK_PASS=1')
           PY
 
       - name: Verify fallback identity source against actual canonical OP LOG atlases
