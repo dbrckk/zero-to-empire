@@ -38,7 +38,7 @@ ACTION={
  'WORK':('operating a compact industrial hand tool',10),
  'CARRY':('carrying one compact industrial crate with both hands',8),
  'REPAIR':('repairing with a compact diagnostic or welding tool',10),
- 'CELEB':('short restrained milestone celebration, raised arm, no props',8),
+ 'CELEB':('clear energetic raised-arm victory gesture without props or visual effects',8),
 }
 ACTION_SEMANTIC={
  'IDLE':'subtle breathing and head motion only; keep the same three-quarter facing direction',
@@ -46,7 +46,7 @@ ACTION_SEMANTIC={
  'WORK':'one visible compact hand tool held at the work point in every frame; arms and torso visibly operate it',
  'CARRY':'one opaque rectangular industrial crate visibly held between both hands at waist height in every frame; same crate throughout',
  'REPAIR':'one visible diagnostic or welding tool repeatedly contacts a clear repair point; keep one worker only',
- 'CELEB':'clear arm-raising celebration with the same person and camera orientation throughout',
+ 'CELEB':'real raised-hand celebration: both shoulders and elbows move through multiple progressive poses, fist visibly overhead at peak, then lower smoothly; no sparks, rays, confetti, magic effects, props or stationary facial-only changes',
 }
 POSE_HINT={
  'IDLE':['neutral stance','weight slightly left','neutral stance','weight slightly right','small head turn left','small head turn right'],
@@ -110,7 +110,7 @@ def queue_rejection_hint(i):
  mapping=(
   (('palette_identity_discontinuity','appearance-drift','identity/silhouette'),
    'Preserve the exact same face, headgear, clothing colors, materials and body proportions in every frame.'),
-  (('silhouette_mass_discontinuity','scale discontinuity','coverage='),
+  (('silhouette_mass_discontinuity','scale discontinuity','frame_scale_collapse','coverage='),
    'Keep character body scale and prop size stable across the sequence; do not zoom or crop between frames.'),
   (('multiple_non_full_body','multiple-subject','too-wide','detached-artifact'),
    'Render exactly one full-body worker only, never a duplicate, companion, reflection or second torso. Keep tools and props physically connected to the same worker silhouette.'),
@@ -120,8 +120,12 @@ def queue_rejection_hint(i):
    'Increase real alternating limb motion between frames while preserving the same camera and identity.'),
   (('carry-too-static','carry-lacks-stride'),
    'Keep one identical crate attached between both hands while increasing alternating leg stride and torso counter-motion enough to read clearly as carrying.'),
-  (('celeb-unreadable-gesture',),
+  (('celeb-unreadable-gesture','celeb-no-progressive-arm-raise',),
    'Animate both arms raising progressively during at least three successive stages, then lowering for a natural loop. Avoid nearly static poses followed by one abrupt last-frame jump.'),
+  (('face_headgear_structure_drift','head_face_headgear_color_discontinuity','face/headgear','headgear drift'),
+   'Do not redraw or rotate the face, helmet, hairstyle or goggles between frames. Preserve identical head silhouette and facial details.'),
+  (('idle-frozen',),
+   'Add tiny breathing or blinking while keeping the same fixed pose and identical face; do not make an IDLE character walk or swing arms.'),
   (('horizontal-drift',),
    'Keep the body centered on one fixed world pivot with no lateral camera drift.'),
  )
