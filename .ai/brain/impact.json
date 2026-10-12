@@ -1,324 +1,42 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "099b8370f52a54337cd528fdbc89605652cee17c",
-  "head": "b9aa0f38b8ad3fa65f77c1572b080c0654dd1244",
+  "base": "b9aa0f38b8ad3fa65f77c1572b080c0654dd1244",
+  "head": "dcf84375fd8571ebd086ea76fcc7b7866b9d4b01",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": ".github/workflows/asset-pipeline-ci.yml",
-      "status": "M"
-    },
-    {
-      "path": ".github/workflows/kaggle-mass-sprite-factory.yml",
-      "status": "M"
-    },
-    {
-      "path": "art/production/autofactory-state.json",
-      "status": "M"
-    },
-    {
-      "path": "art/production/autofactory-summary.md",
-      "status": "M"
-    },
-    {
-      "path": "art/production/character-strict-review-backlog.md",
-      "status": "M"
-    },
-    {
-      "path": "art/production/master-asset-queue.json",
-      "status": "M"
-    },
-    {
-      "path": "kaggle/github_mass_factory.py",
-      "status": "M"
-    },
-    {
-      "path": "tools/sprites/character_ground_shadow_cleanup.py",
+      "path": ".github/workflows/recover-shadowed-eng-idle.yml",
       "status": "A"
     },
     {
-      "path": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "status": "M"
+      "path": "ops/recover-eng-idle-trigger.txt",
+      "status": "A"
     },
     {
-      "path": "tools/sprites/test_character_ground_shadow_cleanup.py",
+      "path": "tools/sprites/repair_shadowed_character_atlas.py",
       "status": "A"
     }
   ],
   "changed_source_files": [
-    "kaggle/github_mass_factory.py",
-    "tools/sprites/character_ground_shadow_cleanup.py",
-    "tools/sprites/kaggle_character_sheet_factory_v1.py",
-    "tools/sprites/test_character_ground_shadow_cleanup.py"
+    "tools/sprites/repair_shadowed_character_atlas.py"
   ],
   "impacted_files": [
-    "kaggle/github_mass_factory.py",
-    "tools/sprites/character_ground_shadow_cleanup.py",
-    "tools/sprites/kaggle_character_sheet_factory_v1.py",
-    "tools/sprites/test_character_ground_shadow_cleanup.py"
+    "tools/sprites/repair_shadowed_character_atlas.py"
   ],
   "impacted_symbols": [
     {
       "name": "digest",
       "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 13
-    },
-    {
-      "name": "ensure_gpu",
-      "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 18
-    },
-    {
-      "name": "ensure_flux",
-      "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 29
-    },
-    {
-      "name": "runtime_exists",
-      "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 38
-    },
-    {
-      "name": "controlled_queue_backlog",
-      "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 39
-    },
-    {
-      "name": "controlled_character_backlog",
-      "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 45
-    },
-    {
-      "name": "controlled_building_backlog",
-      "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 46
-    },
-    {
-      "name": "backlog",
-      "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 47
-    },
-    {
-      "name": "valid_tree",
-      "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 59
-    },
-    {
-      "name": "resolve_source",
-      "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 61
-    },
-    {
-      "name": "current_fresh",
-      "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 180
-    },
-    {
-      "name": "checkpoint_fresh",
-      "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 181
-    },
-    {
-      "name": "remove_baked_ground_shadow",
-      "kind": "function",
-      "file": "tools/sprites/character_ground_shadow_cleanup.py",
-      "line": 14
-    },
-    {
-      "name": "rows",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 61
-    },
-    {
-      "name": "queue_rejection_hint",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 97
-    },
-    {
-      "name": "rejection_hints",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 139
-    },
-    {
-      "name": "anchor_prompt_pair",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 167
-    },
-    {
-      "name": "semantic_scaffold",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 184
-    },
-    {
-      "name": "prompt_pair",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 257
-    },
-    {
-      "name": "retry_mode",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 294
-    },
-    {
-      "name": "load_encode",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 301
-    },
-    {
-      "name": "load_render",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 306
-    },
-    {
-      "name": "border_bg",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 313
-    },
-    {
-      "name": "isolate",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 322
-    },
-    {
-      "name": "dist",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 326
-    },
-    {
-      "name": "validate_source_full_body",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 341
-    },
-    {
-      "name": "finish_frame",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 351
-    },
-    {
-      "name": "alpha_iou",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 391
-    },
-    {
-      "name": "sheet_qa",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 400
-    },
-    {
-      "name": "lower_body_motion",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 413
-    },
-    {
-      "name": "upper_body_transition_changes",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 430
-    },
-    {
-      "name": "walk_consistency_qa",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 447
-    },
-    {
-      "name": "action_qa",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 462
-    },
-    {
-      "name": "appearance_signature",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 507
-    },
-    {
-      "name": "appearance_distance",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 521
-    },
-    {
-      "name": "make_sheet",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 524
+      "file": "tools/sprites/repair_shadowed_character_atlas.py",
+      "line": 23
     },
     {
       "name": "main",
       "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 532
-    },
-    {
-      "name": "character",
-      "kind": "function",
-      "file": "tools/sprites/test_character_ground_shadow_cleanup.py",
-      "line": 7
-    },
-    {
-      "name": "GroundShadowCleanupTests",
-      "kind": "class",
-      "file": "tools/sprites/test_character_ground_shadow_cleanup.py",
-      "line": 22
-    },
-    {
-      "name": "test_long_neutral_shadow_removed_without_erasing_dark_boots",
-      "kind": "function",
-      "file": "tools/sprites/test_character_ground_shadow_cleanup.py",
-      "line": 23
-    },
-    {
-      "name": "test_without_shadow_has_no_changes",
-      "kind": "function",
-      "file": "tools/sprites/test_character_ground_shadow_cleanup.py",
-      "line": 32
-    },
-    {
-      "name": "test_pale_shoes_do_not_get_erased_without_external_shadow",
-      "kind": "function",
-      "file": "tools/sprites/test_character_ground_shadow_cleanup.py",
-      "line": 38
-    },
-    {
-      "name": "test_wrong_shape_is_left_untouched",
-      "kind": "function",
-      "file": "tools/sprites/test_character_ground_shadow_cleanup.py",
-      "line": 44
+      "file": "tools/sprites/repair_shadowed_character_atlas.py",
+      "line": 27
     }
   ],
-  "selected_tests": [
-    "tools/sprites/test_character_ground_shadow_cleanup.py"
-  ]
+  "selected_tests": []
 }

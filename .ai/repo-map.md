@@ -115,6 +115,7 @@ The content is organized as follows:
     reconcile-prp05a.yml
     reconcile-run75-bld03-status.yml
     reconcile-sprite-progress-ledger.yml
+    recover-shadowed-eng-idle.yml
     refine-run66-stragglers.yml
     repair-bld13-main.yml
     repair-bld13-runtime.yml
@@ -391,6 +392,7 @@ tools/
     process_final_sprites.py
     promote_ter07_v3.py
     reconcile_strict_approvals.py
+    repair_shadowed_character_atlas.py
     rigged_tech_actions_v3.py
     rigged_tech_walk_v2.py
     soft_skin_deform.py
@@ -8496,6 +8498,116 @@ jobs:
           git push
 
 # This workflow never changes per-asset status. It reconciles 236 manifest rows to the strict 235-item queue, excluding ONB-00.
+```
+
+## File: .github/workflows/recover-shadowed-eng-idle.yml
+```yaml
+name: Recover Shadowed ENG Idle Candidate
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'ops/recover-eng-idle-trigger.txt'
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: recover-eng-idle-shadow-evidence
+  cancel-in-progress: false
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GH_TOKEN: ${{ github.token }}
+      SOURCE_RUN_ID: '38223743012'
+      ASSET_ID: 'CHR-ENG-IDLE'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Sync canonical main
+        run: git pull --ff-only origin main
+      - name: Install image-only repair requirements
+        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
+      - name: Recover original Kaggle candidate artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/eng-idle-source
+          gh run download "$SOURCE_RUN_ID" --name kaggle-async-character-batch --dir /tmp/eng-idle-source
+          test -s /tmp/eng-idle-source/output/candidates/zte_chr_eng_idle_final.png
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          src=Path('/tmp/eng-idle-source/output/character-sheet-report.json')
+          report=json.loads(src.read_text())
+          rows=report if isinstance(report,list) else report.get('results',[])
+          matching=[row for row in rows if row.get('id')=='CHR-ENG-IDLE']
+          if len(matching)!=1 or matching[0].get('status')!='CANDIDATE':
+              raise SystemExit('Original ENG IDLE not a traceable Kaggle candidate')
+          print('ENG_IDLE_SOURCE_PROVENANCE_VERIFIED=1')
+          PY
+      - name: Render repaired review candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/sprites/repair_shadowed_character_atlas.py \
+            --input /tmp/eng-idle-source/output/candidates/zte_chr_eng_idle_final.png \
+            --output art/production/character-repair-candidates/zte_chr_eng_idle_shadow_review.png \
+            --report art/production/character-repair-candidates/zte_chr_eng_idle_shadow_review.json \
+            --asset-id "$ASSET_ID" \
+            --source-run-id "$SOURCE_RUN_ID" \
+            --min-removed 100
+          python -m unittest discover -s tools/sprites -p 'test_character_ground_shadow_cleanup.py' -v
+          python - <<'PY'
+          import json
+          from PIL import Image
+          from pathlib import Path
+          folder=Path('art/production/character-repair-candidates')
+          report=json.loads((folder/'zte_chr_eng_idle_shadow_review.json').read_text())
+          atlas=Image.open(folder/'zte_chr_eng_idle_shadow_review.png').convert('RGBA')
+          assert atlas.size==(1024,1024)
+          assert len(report['frames'])==6 and report['pixels_removed_total']>=100
+          assert report['semantic_approval'] is False
+          assert report['strict_status_changed'] is False
+          assert report['source_collector_run_id']==38223743012
+          print('ENG_IDLE_RECOVERY_VISUAL_QA_PENDING=1')
+          PY
+      - name: Commit only independent review evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add art/production/character-repair-candidates/zte_chr_eng_idle_shadow_review.png
+          git add art/production/character-repair-candidates/zte_chr_eng_idle_shadow_review.json
+          if git diff --cached --quiet; then
+            echo 'ENG_IDLE_REVIEW_CANDIDATE_ALREADY_CURRENT=1'
+            exit 0
+          fi
+          git commit -m 'art(review): preserve corrected ENG IDLE shadow evidence without strict promotion'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Upload independent repair result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eng-idle-ground-shadow-review
+          path: |
+            art/production/character-repair-candidates/zte_chr_eng_idle_shadow_review.png
+            art/production/character-repair-candidates/zte_chr_eng_idle_shadow_review.json
+          retention-days: 90
+          if-no-files-found: warn
 ```
 
 ## File: .github/workflows/refine-run66-stragglers.yml
@@ -32946,6 +33058,41 @@ asset = by_id[aid]
 runtime = runtime_for(asset)
 ⋮----
 strict_done = sum(a.get("strict_status") == "DONE" for a in queue["assets"])
+```
+
+## File: tools/sprites/repair_shadowed_character_atlas.py
+```python
+#!/usr/bin/env python3
+"""Repair AI-generated neutral ground shadows in an already collected atlas.
+
+Produces an independent review-only candidate and a provenance JSON report.
+Does not touch canonical runtime assets, queues, or strict DONE status.
+"""
+⋮----
+ACTION_FRAMES = {"IDLE": 6, "WALK": 8, "WORK": 10, "CARRY": 8, "REPAIR": 10, "CELEB": 8}
+CHARACTER_ID = re.compile(r"^CHR-(OP|TECH|LOG|ENG)-(IDLE|WALK|WORK|CARRY|REPAIR|CELEB)$")
+⋮----
+def digest(path: Path) -> str
+⋮----
+def main() -> None
+⋮----
+parser = argparse.ArgumentParser()
+⋮----
+args = parser.parse_args()
+match = CHARACTER_ID.fullmatch(args.asset_id)
+⋮----
+action = match.group(2)
+expected = ACTION_FRAMES[action]
+⋮----
+source = image.convert("RGBA")
+result = Image.new("RGBA", (1024, 1024))
+details = []
+⋮----
+frame = source.crop((x, y, x + 256, y + 256))
+⋮----
+total = sum(item["removed_gray_pixels"] for item in details)
+⋮----
+evidence = {
 ```
 
 ## File: tools/sprites/rigged_tech_actions_v3.py

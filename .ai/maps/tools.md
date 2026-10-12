@@ -107,6 +107,7 @@ sprites/
   process_final_sprites.py
   promote_ter07_v3.py
   reconcile_strict_approvals.py
+  repair_shadowed_character_atlas.py
   rigged_tech_actions_v3.py
   rigged_tech_walk_v2.py
   soft_skin_deform.py
@@ -6790,6 +6791,41 @@ asset = by_id[aid]
 runtime = runtime_for(asset)
 ⋮----
 strict_done = sum(a.get("strict_status") == "DONE" for a in queue["assets"])
+```
+
+## File: sprites/repair_shadowed_character_atlas.py
+```python
+#!/usr/bin/env python3
+"""Repair AI-generated neutral ground shadows in an already collected atlas.
+
+Produces an independent review-only candidate and a provenance JSON report.
+Does not touch canonical runtime assets, queues, or strict DONE status.
+"""
+⋮----
+ACTION_FRAMES = {"IDLE": 6, "WALK": 8, "WORK": 10, "CARRY": 8, "REPAIR": 10, "CELEB": 8}
+CHARACTER_ID = re.compile(r"^CHR-(OP|TECH|LOG|ENG)-(IDLE|WALK|WORK|CARRY|REPAIR|CELEB)$")
+⋮----
+def digest(path: Path) -> str
+⋮----
+def main() -> None
+⋮----
+parser = argparse.ArgumentParser()
+⋮----
+args = parser.parse_args()
+match = CHARACTER_ID.fullmatch(args.asset_id)
+⋮----
+action = match.group(2)
+expected = ACTION_FRAMES[action]
+⋮----
+source = image.convert("RGBA")
+result = Image.new("RGBA", (1024, 1024))
+details = []
+⋮----
+frame = source.crop((x, y, x + 256, y + 256))
+⋮----
+total = sum(item["removed_gray_pixels"] for item in details)
+⋮----
+evidence = {
 ```
 
 ## File: sprites/rigged_tech_actions_v3.py
