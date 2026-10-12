@@ -263,7 +263,7 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
     def test_kaggle_character_generator_reapplies_scaffold_each_frame(self):
         text = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
         self.assertIn("source=semantic_scaffold(anchor_raw,i['action'],fi)", text)
-        self.assertIn("character-sheet-flux-v1.18-carry-identity-lock", text)
+        self.assertIn("character-sheet-flux-v1.19-pose-aware-head-and-prop-stability", text)
     def test_kaggle_character_generator_adds_semantic_scaffolds_for_hard_actions(self):
         text = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
         self.assertIn("def semantic_scaffold(source,action,frame_index=0):", text)
