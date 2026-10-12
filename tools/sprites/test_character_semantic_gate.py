@@ -1,7 +1,7 @@
 """Synthetic visual failure tests, no external models and no automatic approval."""
 import unittest
 from PIL import Image,ImageDraw
-from character_semantic_gate import clip_risk,frame_geometry,palette_distance,color_signature,idle_visual_activity
+from character_semantic_gate import clip_risk,frame_geometry,palette_distance,color_signature,idle_visual_activity,celebration_arm_reach_counts
 
 
 def person(i=0,color=(80,144,187,255)):
@@ -98,6 +98,30 @@ class SemanticGateTests(unittest.TestCase):
         # non-prop action should be blocked on mid-body content alone.
         self.assertNotIn('TOOL_CRATE_TORSO_COLOR_DISCONTINUITY_RISK',
                          clip_risk(frames,'IDLE')['flags'])
+
+    def test_celebration_counts_actual_raised_arm_frames_not_final_sparkle(self):
+        def simple(raised=False):
+            frame=Image.new('RGBA',(256,256))
+            d=ImageDraw.Draw(frame)
+            d.ellipse((113,20,144,52),fill=(160,120,120,255))
+            d.rounded_rectangle((104,58,150,157),radius=14,fill=(60,80,100,255))
+            d.line((110,80,91,150),fill=(60,80,100,255),width=11)
+            d.line((147,80,165,150),fill=(60,80,100,255),width=11)
+            d.line((116,150,110,230),fill=(60,80,100,255),width=14)
+            d.line((138,150,150,230),fill=(60,80,100,255),width=14)
+            if raised:
+                d.line((110,75,78,48),fill=(60,80,100,255),width=14)
+            return frame
+        neutral=simple()
+        cheering=simple(True)
+        # The historical LOG-CELEB produced mostly neutral poses, then a
+        # final-frame effect. It must not pass as progressive arm animation.
+        false_loop=[neutral.copy() for _ in range(7)]+[cheering]
+        counts=celebration_arm_reach_counts(false_loop)
+        self.assertLess(sum(n>=28 for n in counts),3)
+        progressive=[neutral.copy() for _ in range(3)]+[cheering.copy() for _ in range(5)]
+        scores=celebration_arm_reach_counts(progressive)
+        self.assertGreaterEqual(sum(n>=28 for n in scores),3)
 
     def test_idles_with_subtle_eye_blinks_have_visible_activity(self):
         base=person()
