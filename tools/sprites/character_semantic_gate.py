@@ -81,6 +81,35 @@ def palette_distance(a,b)->float:
                for aa,bb in zip(a,b))/3
 
 
+def celebration_arm_reach_counts(frames:list[Image.Image])->list[int]:
+    """Count raised-limb silhouette away from the upper torso per frame.
+
+    Avoid mistaking a changing head, costume or a final-frame sparkle for a
+    progressive cheering gesture. Detect actual visible outward/raised arms
+    in at least three action frames; this is still NOT semantic approval.
+    """
+    counts=[]
+    for frame in frames:
+        alpha=frame.convert('RGBA').getchannel('A')
+        bb=alpha.getbbox()
+        if bb is None:
+            counts.append(0)
+            continue
+        left,top,right,bottom=bb
+        height=bottom-top
+        centre=(left+right)/2
+        y0=max(0,top+int(height*.18))
+        y1=min(frame.height,top+int(height*.34))
+        pixels=alpha.load()
+        count=0
+        for y in range(y0,y1):
+            for x in range(frame.width):
+                if abs(x-centre)>34 and pixels[x,y]>=120:
+                    count+=1
+        counts.append(count)
+    return counts
+
+
 def idle_visual_activity(frames:list[Image.Image])->float:
     """Measure subtle blink/breathing changes without requiring body motion.
 
