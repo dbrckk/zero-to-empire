@@ -3696,9 +3696,13 @@ def render(source:Path,role:str,out:Path,amplitude:float=12)->dict
 ⋮----
 role=role.upper()
 ⋮----
-anchor=source_frame(source,ROLES[role])
-frames=[warp(anchor,n/N_FRAMES,amplitude) for n in range(N_FRAMES)]
-risk=clip_risk(frames)
+original=source_frame(source,ROLES[role])
+⋮----
+raw_frames=[warp(anchor,n/N_FRAMES,amplitude) for n in range(N_FRAMES)]
+cleaned=[remove_baked_ground_shadow(frame) for frame in raw_frames]
+frames=[item[0] for item in cleaned]
+removed_frame_shadow=sum(item[1] for item in cleaned)
+risk=clip_risk(frames,'WALK')
 ⋮----
 sheet=Image.new("RGBA",(1024,512))
 ⋮----

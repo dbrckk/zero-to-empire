@@ -31,23 +31,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T18:04:48Z
+Generated: 2026-10-12T18:07:08Z
 
 ### Git
 - Branch: `main`
-- Head: `8739bba26bc1`
-- Commit date: 2026-10-12T20:04:32+02:00
-- Commit: fix(art): retain viable WALK identity reviews when a canonical IDLE reference fails QA
+- Head: `6f04ca8c335d`
+- Commit date: 2026-10-12T20:06:56+02:00
+- Commit: fix(art): remove confident baked floor shadows from IDLE-anchored WALK review frames
 - Tracked files: 1558
 
 ### Recently changed files
+- `tools/sprites/identity_locked_walk_candidate.py`
 - `.github/workflows/identity-locked-walk-review.yml`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
 - `art/production/character-strict-review-backlog.md`
 - `art/production/master-asset-queue.json`
 - `ops/kaggle-collector-trigger.txt`
-- `tools/assets/test_workflow_policy.py`
 
 ### Project signals
 - `build.gradle.kts`

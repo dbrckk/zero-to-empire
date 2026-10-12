@@ -1,13 +1,13 @@
 # Change impact
 
-Base: be440100fe8aa8339e5d75160dc097a139febe46
-Head: 8739bba26bc18de04b4a2fd68ef6ad6071dc3ee4
+Base: 43dcdc24b37caa30a3e780795aee86d1de30175c
+Head: 6f04ca8c335df3c0c8cd72587651cff778729467
 
 ## Changed files
-- M .github/workflows/identity-locked-walk-review.yml
+- M tools/sprites/identity_locked_walk_candidate.py
 
 ## Affected areas
-- .github
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.
