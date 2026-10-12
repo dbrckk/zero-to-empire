@@ -634,7 +634,9 @@ def main():
      # Freeze only correctly registered faces/headgear against the validated
      # same-wave IDLE reference. Raised-arm/crouching poses are bypassed.
      # This is candidate visual stabilization, never semantic approval.
-     if i['action']!='IDLE' and i['role'] in role_reference_cell:
+     if (i['action']!='IDLE'
+         and i['role'] in verified_idle_roles
+         and i['role'] in role_reference_cell):
       frame,locked,lock_note=lock_head_to_idle(frame,role_reference_cell[i['role']])
       head_lock_frames+=int(locked)
       if not locked:
