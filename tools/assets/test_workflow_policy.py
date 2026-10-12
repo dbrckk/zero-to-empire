@@ -317,6 +317,17 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("risk_level')=='BLOCKING", generator)
         self.assertIn("character_semantic_gate.py", workflow)
 
+    def test_kaggle_head_identity_lock_is_present_in_all_gpu_fallbacks(self):
+        generator = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
+        workflow = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
+        fallback = Path("kaggle/github_mass_factory.py").read_text(encoding="utf-8")
+        self.assertIn("from character_head_identity_lock import lock_head_to_idle", generator)
+        self.assertIn("character_head_identity_lock.py", workflow)
+        self.assertIn("'character_head_identity_lock.py'", fallback)
+        self.assertIn("and i['role'] in verified_idle_roles", generator)
+        self.assertIn("unsafe-head-silhouette-overlap", Path(
+            "tools/sprites/character_head_identity_lock.py").read_text(encoding="utf-8"))
+
     def test_kaggle_character_generator_uses_neutral_role_anchor(self):
         text = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
         self.assertIn("def anchor_prompt_pair(role):", text)
