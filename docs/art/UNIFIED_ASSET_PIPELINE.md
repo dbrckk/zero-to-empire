@@ -228,3 +228,27 @@ epochs must use this evidence to avoid silently repeating defects.
 The 235-item ledger is authoritative for progress. The latest live count
 must always be recomputed from `strict_status == DONE` rather than copied
 from documentation, summaries or producer-reported candidate counts.
+
+### Sprite transparency and floor-shadow rejection (v1.19)
+
+`tools/sprites/character_semantic_gate.py` inspects the visible-alpha
+silhouette near the feet before an asset can enter manual review. A persistent
+nearly solid horizontal band wider than the two legs is a **baked floor-shadow
+risk**, not acceptable character transparency. The new signal is
+`BAKED_GROUND_SHADOW_RISK`; the generated evidence includes
+`baked_ground_band_suspected_frames` and
+`max_ground_band_to_leg_width`.
+
+This gate was calibrated against the recovered LOG wave in
+[collector 38220177038](https://github.com/dbrckk/zero-to-empire/actions/runs/38220177038):
+the floor-band signature appeared in all six IDLE frames and eight of eight
+CELEB frames. The synthetic QA fixture confirms that separated boots without a
+ground oval remain unflagged, while recurring ovals are blocked. A single
+unusual wide stance is insufficient by itself to reject an entire atlas.
+
+The review-only report from `build_character_review_panels.py` now runs the
+latest image-risk checks on **historical candidates**, independent of the
+version that generated their pixels. This is not an automatic approval: even
+`risk_level=NOT_DETECTED` still requires same-person identity, continuous
+hand/tool interaction, correct motion and Android runtime acceptance. These
+checks apply to subsequent producer kernels, not an already running GPU job.
