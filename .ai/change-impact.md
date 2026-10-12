@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 6516b1e2610c41087387134421239f65c4c95f70
-Head: d8826e0da8db231c24833aefe14b950652aca3dc
+Base: af421575464a4c7a22f768efd0725b1d9119ac06
+Head: 2992cc86ae84469f40c0a8329d3a2be91c620020
 
 ## Changed files
-- A art/production/op-log-v120-two-head-semantic-review.md
+- M .github/workflows/character-single-subject-gpu-evidence.yml
 
 ## Affected areas
-- art
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

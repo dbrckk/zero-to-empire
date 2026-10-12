@@ -31,21 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T17:05:29Z
+Generated: 2026-10-12T17:08:41Z
 
 ### Git
 - Branch: `main`
-- Head: `d8826e0da8db`
-- Commit date: 2026-10-12T19:05:11+02:00
-- Commit: docs(art): preserve two-headed LOG IDLE forensic review and corrected acceptance gates
-- Tracked files: 1552
+- Head: `2992cc86ae84`
+- Commit date: 2026-10-12T19:07:58+02:00
+- Commit: ci(art): verify collector overrides historical false-positive IDLE QA in real artifact
+- Tracked files: 1555
 
 ### Recently changed files
-- `art/production/op-log-v120-two-head-semantic-review.md`
-- `tools/assets/test_workflow_policy.py`
-- `tools/sprites/kaggle_character_sheet_factory_v1.py`
-- `art/production/generation-rejection-ledger.json`
-- `art/production/character-strict-review-backlog.md`
+- `.github/workflows/character-single-subject-gpu-evidence.yml`
+- `tools/sprites/test_verify_character_idle_candidates.py`
+- `.github/workflows/asset-pipeline-ci.yml`
+- `.github/workflows/kaggle-async-character-collector.yml`
+- `tools/sprites/verify_character_idle_candidates.py`
 
 ### Project signals
 - `build.gradle.kts`

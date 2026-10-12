@@ -50,6 +50,7 @@ The content is organized as follows:
     asset-pipeline-ci.yml
     build-test-apk.yml
     character-review-matrix.yml
+    character-single-subject-gpu-evidence.yml
     final-aaa-assets.yml
     final-character-motion-patch.yml
     final-sprite-pipeline.yml
@@ -425,9 +426,11 @@ tools/
     test_soft_skin_deform.py
     test_tech_prop_mount.py
     test_temporal_sprite_audit.py
+    test_verify_character_idle_candidates.py
     test_weight_transfer.py
     validate_animation_sheet.py
     validate_runtime_asset.py
+    verify_character_idle_candidates.py
     weight_transfer.py
   process_final_assets.py
   validate_isolated_sprite.py
@@ -1155,6 +1158,8 @@ on:
       - 'tools/sprites/test_character_head_identity_lock.py'
       - 'tools/sprites/character_semantic_gate.py'
       - 'tools/sprites/test_character_semantic_gate.py'
+      - 'tools/sprites/verify_character_idle_candidates.py'
+      - 'tools/sprites/test_verify_character_idle_candidates.py'
       - 'tools/sprites/test_character_action_gate.py'
       - 'tools/sprites/test_animation_batch_planner.py'
       - 'tools/sprites/kaggle_*factory*.py'
@@ -1190,6 +1195,8 @@ on:
       - 'tools/sprites/test_character_head_identity_lock.py'
       - 'tools/sprites/character_semantic_gate.py'
       - 'tools/sprites/test_character_semantic_gate.py'
+      - 'tools/sprites/verify_character_idle_candidates.py'
+      - 'tools/sprites/test_verify_character_idle_candidates.py'
       - 'tools/sprites/test_character_action_gate.py'
       - 'tools/sprites/test_animation_batch_planner.py'
       - 'tools/sprites/kaggle_*factory*.py'
@@ -1236,6 +1243,7 @@ jobs:
             tools/sprites/asset_wave_orchestrator.py \
             tools/sprites/build_character_review_panels.py \
             tools/sprites/character_head_identity_lock.py \
+            tools/sprites/verify_character_idle_candidates.py \
             tools/sprites/character_approved_idle_fallback.py \
             tools/sprites/character_ground_shadow_cleanup.py \
             tools/sprites/character_anchor_pair_salvage.py \
@@ -1368,6 +1376,7 @@ jobs:
         run: |
           python -m unittest discover -s tools/assets -p 'test_*.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_semantic_gate.py' -v
+          python -m unittest discover -s tools/sprites -p 'test_verify_character_idle_candidates.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_head_identity_lock.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_approved_idle_fallback.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_ground_shadow_cleanup.py' -v
@@ -1554,6 +1563,144 @@ jobs:
             /tmp/character-visual-audit/canonical-character-audit.json
             /tmp/character-visual-audit/canonical-character-contact.png
           retention-days: 30
+```
+
+## File: .github/workflows/character-single-subject-gpu-evidence.yml
+```yaml
+name: Character Single-Subject GPU Evidence
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_run_id:
+        description: Collector run with kaggle-async-character-batch
+        required: true
+        default: '38281126201'
+      expected_double_head_id:
+        description: Exact IDLE asset expected to contain two heads, leave empty for general audit
+        required: false
+        default: 'CHR-LOG-IDLE'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/character-single-subject-gpu-evidence.yml'
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check Pillow==11.3.0
+      - name: Download original immutable Kaggle candidate artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_RUN: ${{ inputs.source_run_id || '38281126201' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/zte-single-subject
+          gh run download "$SOURCE_RUN" \
+            --repo "${{ github.repository }}" \
+            --name kaggle-async-character-batch \
+            --dir /tmp/zte-single-subject
+          find /tmp/zte-single-subject/output/candidates -maxdepth 1 -type f -name '*_final.png' -print
+      - name: Exercise current image risk gate against real role IDLE images
+        env:
+          SOURCE_RUN: ${{ inputs.source_run_id || '38281126201' }}
+          EXPECTED_DOUBLE: ${{ inputs.expected_double_head_id || 'CHR-LOG-IDLE' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHONPATH=tools/sprites python - <<'PY'
+          import json,os
+          from pathlib import Path
+          from PIL import Image
+          from character_semantic_gate import clip_risk,idle_distinct_head_clusters
+          root=Path('/tmp/zte-single-subject/output/candidates')
+          rows=[]
+          for image_path in sorted(root.glob('zte_chr_*_idle_final.png')):
+              role=image_path.stem.split('_')[2].upper()
+              asset_id='CHR-'+role+'-IDLE'
+              with Image.open(image_path) as source:
+                  rgba=source.convert('RGBA')
+              if rgba.size!=(1024,1024):
+                  raise SystemExit('Invalid source atlas '+str(image_path))
+              frames=[rgba.crop(((i%4)*256,(i//4)*256,((i%4)+1)*256,((i//4)+1)*256))
+                      for i in range(6)]
+              head_counts=[idle_distinct_head_clusters(frame) for frame in frames]
+              result=clip_risk(frames,'IDLE')
+              record={'id':asset_id,'source':image_path.name,
+                      'head_counts':head_counts,'risk_level':result['risk_level'],
+                      'flags':result['flags'],'semantic_approval':False}
+              rows.append(record)
+              print('IDLE_MULTIPLE_SUBJECT_EVIDENCE='+json.dumps(record,sort_keys=True))
+          expected=os.environ['EXPECTED_DOUBLE'].strip().upper()
+          if expected:
+              observed=next((x for x in rows if x['id']==expected),None)
+              if observed is None:
+                  raise SystemExit('Expected sample asset not present: '+expected)
+              if ('MULTIPLE_IDLE_HEADS_RISK' not in observed['flags']
+                  or observed['risk_level']!='BLOCKING'
+                  or sum(n>=2 for n in observed['head_counts'])<2):
+                  raise SystemExit('FAILED: known two-worker IDLE escaped image risk gate: '+expected)
+              # Same collector wave contains the healthy single-worker OP
+              # reference; this must not be mislabeled as conjoined workers.
+              if expected=='CHR-LOG-IDLE':
+                  normal=next((x for x in rows if x['id']=='CHR-OP-IDLE'),None)
+                  if not normal or 'MULTIPLE_IDLE_HEADS_RISK' in normal['flags']:
+                      raise SystemExit('FAILED: single-subject OP control falsely flagged')
+          if not rows:
+              raise SystemExit('No IDLE atlas found in source artifact')
+          output={'source_run_id':os.environ['SOURCE_RUN'],
+                  'review_only':True,'automatic_promotion':False,
+                  'image_risk_results':rows}
+          Path('/tmp/zte-single-subject/single-subject-evidence.json').write_text(
+              json.dumps(output,indent=2)+'\n')
+          print('CHARACTER_SINGLE_SUBJECT_REAL_ARTIFACT_QA_PASS=1')
+          PY
+      - name: Validate collector rejects the original false-positive QA rows
+        env:
+          EXPECTED_DOUBLE: ${{ inputs.expected_double_head_id || 'CHR-LOG-IDLE' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp /tmp/zte-single-subject/output/github-qa-report.json \
+             /tmp/zte-single-subject/retroactive-collector-qa.json
+          python tools/sprites/verify_character_idle_candidates.py \
+            --candidates /tmp/zte-single-subject/output/candidates \
+            --qa-report /tmp/zte-single-subject/retroactive-collector-qa.json
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          d=json.loads(Path('/tmp/zte-single-subject/retroactive-collector-qa.json').read_text())
+          by_file={x['file']:x for x in d['assets']}
+          expected=os.environ['EXPECTED_DOUBLE'].strip().upper().split('-')
+          if len(expected)==3 and expected[2]=='IDLE':
+              name='zte_chr_'+expected[1].lower()+'_idle_final.png'
+              if by_file[name]['pass'] is not False:
+                  raise SystemExit('Collector failed to reject known double-subject IDLE')
+          if os.environ['EXPECTED_DOUBLE']=='CHR-LOG-IDLE':
+              if by_file['zte_chr_op_idle_final.png']['pass'] is not True:
+                  raise SystemExit('Collector rejected the single-subject OP control')
+          print('RETROACTIVE_GPU_COLLECTOR_SUBJECT_QA_PASS=1')
+          PY
+      - name: Save forensic verification without promotion
+        uses: actions/upload-artifact@v4
+        with:
+          name: character-single-subject-evidence-${{ inputs.source_run_id || '38281126201' }}
+          path: |
+            /tmp/zte-single-subject/single-subject-evidence.json
+            /tmp/zte-single-subject/retroactive-collector-qa.json
+          retention-days: 90
+          if-no-files-found: error
 ```
 
 ## File: .github/workflows/final-aaa-assets.yml
@@ -2659,6 +2806,9 @@ jobs:
           files=(/tmp/kaggle-output/output/candidates/*_final.png)
           if (( ${#files[@]} > 0 )); then
             python tools/sprites/build_sprite_contact_sheet.py               --output /tmp/kaggle-output/output/github-contact-sheet.png               --report /tmp/kaggle-output/output/github-qa-report.json               --files "${files[@]}"
+            python tools/sprites/verify_character_idle_candidates.py \
+              --candidates /tmp/kaggle-output/output/candidates \
+              --qa-report /tmp/kaggle-output/output/github-qa-report.json
             python - <<'PY'
           import json
           from pathlib import Path
@@ -35489,6 +35639,35 @@ file=self.root/'REPAIR/qa-manifest.json'
 record=json.loads(file.read_text())
 ```
 
+## File: tools/sprites/test_verify_character_idle_candidates.py
+```python
+"""Offline collector fallback QA checks, without model/GPU or strict promotion."""
+⋮----
+def atlas(two_heads: bool) -> Image.Image
+⋮----
+im = Image.new("RGBA", (1024, 1024))
+⋮----
+tile = Image.new("RGBA", (256, 256))
+painter = ImageDraw.Draw(tile)
+⋮----
+class CollectorSingleSubjectQA(unittest.TestCase)
+⋮----
+def test_realistic_two_worker_pair_overrides_producer_pass(self)
+⋮----
+directory = Path(tmp)
+⋮----
+report = {"assets": [
+output = annotate_report(directory, report)
+⋮----
+again = annotate_report(directory, output)
+⋮----
+def test_missing_idle_candidate_fails_closed(self)
+⋮----
+output = annotate_report(Path(tmp), report)
+⋮----
+def test_non_idle_status_is_never_altered(self)
+```
+
 ## File: tools/sprites/test_weight_transfer.py
 ```python
 """Pure tests for cyclic IK-supported gait loading (no sprite approvals)."""
@@ -35629,6 +35808,49 @@ ap=argparse.ArgumentParser()
 ⋮----
 a=ap.parse_args()
 result=validate(a.asset_id,a.path)
+```
+
+## File: tools/sprites/verify_character_idle_candidates.py
+```python
+#!/usr/bin/env python3
+"""Fail-closed visual risk screening for generated IDLE candidate atlases.
+
+Runs on the GitHub collector after producer output download, regardless of
+which generator snapshot ran on Kaggle. Mutates only a derived QA JSON report,
+never source sprites, strict status, or runtime resource files.
+"""
+⋮----
+IDLE_FILENAME = re.compile(r"^zte_chr_(op|log|eng|tech)_idle_final\.png$")
+FRAME = 256
+ATLAS = (1024, 1024)
+⋮----
+def check_idle_atlas(path: Path) -> dict
+⋮----
+atlas = file.convert("RGBA")
+frames = [
+risk = clip_risk(frames, "IDLE")
+⋮----
+def annotate_report(candidates_dir: Path, report: dict) -> dict
+⋮----
+name = Path(str(row.get("file") or "")).name
+⋮----
+details = check_idle_atlas(candidates_dir / name)
+⋮----
+details = {
+⋮----
+issues = [str(x) for x in row.get("issues", [])]
+⋮----
+issue = "idle-visual-risk:" + flag
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser()
+⋮----
+args = parser.parse_args()
+qa = json.loads(args.qa_report.read_text(encoding="utf-8"))
+qa = annotate_report(args.candidates, qa)
+⋮----
+details = row.get("idle_identity_risk")
 ```
 
 ## File: tools/sprites/weight_transfer.py

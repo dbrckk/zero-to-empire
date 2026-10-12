@@ -666,9 +666,10 @@
         "tools/sprites/test_character_approved_idle_fallback.py",
         "tools/sprites/test_export_tech_canonical_review.py",
         "tools/sprites/test_pollinations_character_sheet_factory.py",
-        "tools/sprites/test_temporal_sprite_audit.py"
+        "tools/sprites/test_temporal_sprite_audit.py",
+        "tools/sprites/test_verify_character_idle_candidates.py"
       ],
-      "in_degree": 45,
+      "in_degree": 46,
       "out_degree": 7
     },
     "app/src/main/java/com/zerotoempire/game/GameTheme.kt": {
@@ -2089,9 +2090,10 @@
         "tools/sprites/pollinations_character_sheet_factory.py",
         "tools/sprites/test_character_action_gate.py",
         "tools/sprites/test_character_semantic_gate.py",
-        "tools/sprites/test_pollinations_character_sheet_factory.py"
+        "tools/sprites/test_pollinations_character_sheet_factory.py",
+        "tools/sprites/verify_character_idle_candidates.py"
       ],
-      "in_degree": 8,
+      "in_degree": 9,
       "out_degree": 0
     },
     "tools/sprites/export_tech_canonical_review.py": {
@@ -2685,6 +2687,15 @@
       "in_degree": 0,
       "out_degree": 2
     },
+    "tools/sprites/test_verify_character_idle_candidates.py": {
+      "dependencies": [
+        "app/src/main/java/com/zerotoempire/game/GameRepository.kt",
+        "tools/sprites/verify_character_idle_candidates.py"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 2
+    },
     "tools/sprites/test_weight_transfer.py": {
       "dependencies": [
         "tools/sprites/rigged_tech_actions_v3.py",
@@ -2701,6 +2712,16 @@
       ],
       "dependents": [
         "tools/sprites/audit_complete_sprite_manifest.py"
+      ],
+      "in_degree": 1,
+      "out_degree": 1
+    },
+    "tools/sprites/verify_character_idle_candidates.py": {
+      "dependencies": [
+        "tools/sprites/character_semantic_gate.py"
+      ],
+      "dependents": [
+        "tools/sprites/test_verify_character_idle_candidates.py"
       ],
       "in_degree": 1,
       "out_degree": 1

@@ -140,9 +140,11 @@ sprites/
   test_soft_skin_deform.py
   test_tech_prop_mount.py
   test_temporal_sprite_audit.py
+  test_verify_character_idle_candidates.py
   test_weight_transfer.py
   validate_animation_sheet.py
   validate_runtime_asset.py
+  verify_character_idle_candidates.py
   weight_transfer.py
 process_final_assets.py
 validate_isolated_sprite.py
@@ -9091,6 +9093,35 @@ file=self.root/'REPAIR/qa-manifest.json'
 record=json.loads(file.read_text())
 ```
 
+## File: sprites/test_verify_character_idle_candidates.py
+```python
+"""Offline collector fallback QA checks, without model/GPU or strict promotion."""
+⋮----
+def atlas(two_heads: bool) -> Image.Image
+⋮----
+im = Image.new("RGBA", (1024, 1024))
+⋮----
+tile = Image.new("RGBA", (256, 256))
+painter = ImageDraw.Draw(tile)
+⋮----
+class CollectorSingleSubjectQA(unittest.TestCase)
+⋮----
+def test_realistic_two_worker_pair_overrides_producer_pass(self)
+⋮----
+directory = Path(tmp)
+⋮----
+report = {"assets": [
+output = annotate_report(directory, report)
+⋮----
+again = annotate_report(directory, output)
+⋮----
+def test_missing_idle_candidate_fails_closed(self)
+⋮----
+output = annotate_report(Path(tmp), report)
+⋮----
+def test_non_idle_status_is_never_altered(self)
+```
+
 ## File: sprites/test_weight_transfer.py
 ```python
 """Pure tests for cyclic IK-supported gait loading (no sprite approvals)."""
@@ -9231,6 +9262,49 @@ ap=argparse.ArgumentParser()
 ⋮----
 a=ap.parse_args()
 result=validate(a.asset_id,a.path)
+```
+
+## File: sprites/verify_character_idle_candidates.py
+```python
+#!/usr/bin/env python3
+"""Fail-closed visual risk screening for generated IDLE candidate atlases.
+
+Runs on the GitHub collector after producer output download, regardless of
+which generator snapshot ran on Kaggle. Mutates only a derived QA JSON report,
+never source sprites, strict status, or runtime resource files.
+"""
+⋮----
+IDLE_FILENAME = re.compile(r"^zte_chr_(op|log|eng|tech)_idle_final\.png$")
+FRAME = 256
+ATLAS = (1024, 1024)
+⋮----
+def check_idle_atlas(path: Path) -> dict
+⋮----
+atlas = file.convert("RGBA")
+frames = [
+risk = clip_risk(frames, "IDLE")
+⋮----
+def annotate_report(candidates_dir: Path, report: dict) -> dict
+⋮----
+name = Path(str(row.get("file") or "")).name
+⋮----
+details = check_idle_atlas(candidates_dir / name)
+⋮----
+details = {
+⋮----
+issues = [str(x) for x in row.get("issues", [])]
+⋮----
+issue = "idle-visual-risk:" + flag
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser()
+⋮----
+args = parser.parse_args()
+qa = json.loads(args.qa_report.read_text(encoding="utf-8"))
+qa = annotate_report(args.candidates, qa)
+⋮----
+details = row.get("idle_identity_risk")
 ```
 
 ## File: sprites/weight_transfer.py
