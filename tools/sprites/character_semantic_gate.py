@@ -82,33 +82,53 @@ def palette_distance(a,b)->float:
 
 
 def celebration_arm_reach_counts(frames:list[Image.Image])->list[int]:
-    """Count raised-limb silhouette away from the upper torso per frame.
+    """Measure arms raised *beside the head*, not head/shoulder width.
 
-    Avoid mistaking a changing head, costume or a final-frame sparkle for a
-    progressive cheering gesture. Detect actual visible outward/raised arms
-    in at least three action frames; this is still NOT semantic approval.
+    The previous detector used the centre of the entire bounding box and
+    interpreted the head itself as an upraised arm when a character stood
+    off-centre. The v1.20 OP-CELEB candidate reported 8/8 active arm frames
+    although every actual arm stayed down. Estimate a robust head midpoint
+    from opaque pixels in the top of each frame and require upper silhouette
+    mass beyond the helmet plus a lateral safety margin.
+
+    This is a conservative reject-only proxy. Raised arms overlapping the
+    head may be missed and still require explicit human review.
     """
     counts=[]
     for frame in frames:
-        alpha=frame.convert('RGBA').getchannel('A')
-        bb=alpha.getbbox()
-        if bb is None:
+        rgba=frame.convert('RGBA')
+        alpha=rgba.getchannel('A')
+        bounds=alpha.getbbox()
+        if bounds is None:
             counts.append(0)
             continue
-        left,top,right,bottom=bb
+        left,top,right,bottom=bounds
         height=bottom-top
-        centre=(left+right)/2
-        y0=max(0,top+int(height*.18))
-        y1=min(frame.height,top+int(height*.34))
-        pixels=alpha.load()
-        count=0
-        for y in range(y0,y1):
-            for x in range(frame.width):
-                if abs(x-centre)>34 and pixels[x,y]>=120:
-                    count+=1
+        if height<96:
+            counts.append(0)
+            continue
+        pix=alpha.load()
+        head_top=max(0,top+round(height*.04))
+        head_bottom=min(frame.height,top+round(height*.19))
+        head_xs=sorted(
+            x for y in range(head_top,head_bottom)
+            for x in range(frame.width) if pix[x,y]>=120
+        )
+        if len(head_xs)<32:
+            counts.append(0)
+            continue
+        head_centre=head_xs[len(head_xs)//2]
+        lateral_margin=max(29,round(height*.15))
+        arm_y0=max(0,top+round(height*.06))
+        arm_y1=min(frame.height,top+round(height*.31))
+        count=sum(
+            pix[x,y]>=120
+            for y in range(arm_y0,arm_y1)
+            for x in range(frame.width)
+            if abs(x-head_centre)>lateral_margin
+        )
         counts.append(count)
     return counts
-
 
 def idle_visual_activity(frames:list[Image.Image])->float:
     """Measure subtle blink/breathing changes without requiring body motion.
