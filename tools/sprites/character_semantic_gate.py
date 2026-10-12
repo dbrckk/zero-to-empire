@@ -208,11 +208,21 @@ def lower_ground_band_ratio(frame:Image.Image)->float:
     if len(leg_columns)<12:
         return 0.0
     leg_span=max(leg_columns)-min(leg_columns)+1
+    # Connected dark shoes can have the *same alpha silhouette* as a cast
+    # floor shadow. The prior alpha-only heuristic blocked valid-looking ENG
+    # idle anchors, cascading into five skipped actions. Count only broad,
+    # nearly neutral, low-contrast ground-colored bands below the ankles.
+    # Preserve the strict rejection of genuine gray shadows; this is not an
+    # automatic semantic acceptance of the full sheet.
+    rgb=frame.convert('RGBA').load()
     longest=0
     for y in range(max(top,bottom-round(height*.075)),bottom):
         run=0
         for x in range(left,right):
-            if pixels[x,y]>=96:
+            red,green,blue,a=rgb[x,y]
+            neutral=(a>=96 and 70<=min(red,green,blue)<=235
+                     and max(red,green,blue)-min(red,green,blue)<=21)
+            if neutral:
                 run+=1
                 longest=max(longest,run)
             else:
