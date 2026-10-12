@@ -79,6 +79,40 @@ jobs:
           assert report['source_collector_run_id']==38223743012
           print('ENG_IDLE_RECOVERY_VISUAL_QA_PENDING=1')
           PY
+      - name: Validate canonical atlas contract and image-only risk
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/sprites/validate_runtime_asset.py \
+            --asset-id CHR-ENG-IDLE \
+            --path art/production/character-repair-candidates/zte_chr_eng_idle_shadow_review.png \
+            --report art/production/character-repair-candidates/zte_chr_eng_idle_shadow_runtime_qa.json
+          python - <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+          from PIL import Image
+          sys.path.insert(0,'tools/sprites')
+          from character_semantic_gate import clip_risk
+          root=Path('art/production/character-repair-candidates')
+          with Image.open(root/'zte_chr_eng_idle_shadow_review.png') as im:
+              atlas=im.convert('RGBA')
+          frames=[
+              atlas.crop(((n%4)*256,(n//4)*256,(n%4+1)*256,(n//4+1)*256))
+              for n in range(6)
+          ]
+          risk=clip_risk(frames,'IDLE')
+          risk['review_required']=True
+          risk['semantic_approval']=False
+          risk['android_runtime_approval']=False
+          (root/'zte_chr_eng_idle_shadow_semantic_screen.json').write_text(
+              json.dumps(risk,indent=2)+'\n',encoding='utf-8'
+          )
+          print('ENG_IDLE_VISUAL_RISK='+risk['risk_level'])
+          print('ENG_IDLE_VISUAL_RISK_FLAGS='+','.join(risk['flags']))
+          if risk['risk_level']=='BLOCKING':
+              raise SystemExit('Corrected atlas still has blocking image-only risk')
+          PY
       - name: Commit only independent review evidence
         shell: bash
         run: |
@@ -87,6 +121,8 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add art/production/character-repair-candidates/zte_chr_eng_idle_shadow_review.png
           git add art/production/character-repair-candidates/zte_chr_eng_idle_shadow_review.json
+          git add art/production/character-repair-candidates/zte_chr_eng_idle_shadow_runtime_qa.json
+          git add art/production/character-repair-candidates/zte_chr_eng_idle_shadow_semantic_screen.json
           if git diff --cached --quiet; then
             echo 'ENG_IDLE_REVIEW_CANDIDATE_ALREADY_CURRENT=1'
             exit 0
@@ -102,5 +138,7 @@ jobs:
           path: |
             art/production/character-repair-candidates/zte_chr_eng_idle_shadow_review.png
             art/production/character-repair-candidates/zte_chr_eng_idle_shadow_review.json
+            art/production/character-repair-candidates/zte_chr_eng_idle_shadow_runtime_qa.json
+            art/production/character-repair-candidates/zte_chr_eng_idle_shadow_semantic_screen.json
           retention-days: 90
           if-no-files-found: warn
