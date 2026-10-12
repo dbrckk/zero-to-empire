@@ -28100,6 +28100,22 @@ def test_strict_done_idle_fallback_is_included_in_all_kaggle_code_paths(self)
 ⋮----
 def test_kaggle_character_generator_uses_neutral_role_anchor(self)
 ⋮----
+def test_recent_semantic_defect_survives_rejection_prompt_budget(self)
+⋮----
+# Extract pure helper as AST; importing the full GPU generator would
+# unnecessarily load torch/diffusers into this CPU-only CI check.
+⋮----
+code = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
+nodes = ast.parse(code).body
+node = next(x for x in nodes if isinstance(x, ast.FunctionDef)
+namespace = {}
+⋮----
+fn = namespace["compact_rejection_hints"]
+older = "Older broad palette risk instruction " * 20
+latest = "MOST_RECENT_CRATE_SHAPE must remain unchanged in every frame " * 6
+generic = "QUEUE_DIAGNOSIS preserve actual grip and same role identity " * 5
+result = fn([older,latest],generic)
+⋮----
 def test_kaggle_rejection_memory_prefers_exact_asset_over_role_fallback(self)
 ⋮----
 def test_kaggle_character_retry_uses_controlled_queue_rejection_risks(self)
@@ -31788,6 +31804,21 @@ reason=str(row.get('review_reason') or '').lower()
 rules=[]
 mapping=(
 ⋮----
+def compact_rejection_hints(memory_hints,queue_hint,max_words=72)
+⋮----
+# 86+ historical failures accumulate repeated, occasionally contradictory
+# advice. When simply taking the last 72 words, the newest *specific* defect
+# could be cut off by generic queue mapping. Prioritize the most recent
+# reviewed action defect, then targeted queue diagnosis, then older context.
+⋮----
+newest=memory_hints[-1] if memory_hints else ''
+previous=list(reversed(memory_hints[:-1]))
+selected=[];seen=set()
+⋮----
+hint=' '.join(str(hint or '').split())
+⋮----
+remain=max_words-len(selected)
+⋮----
 def rejection_hints(i)
 ⋮----
 hints=[]
@@ -31808,9 +31839,6 @@ matched=bool(role and role==i['role'] and (not action or action==i['action']))
 hint=str(row.get('prompt_hint','')).strip()
 ⋮----
 qhint=queue_rejection_hint(i)
-⋮----
-merged=' '.join(hints[-3:])
-words=merged.split()
 ⋮----
 def anchor_prompt_pair(role)
 ⋮----

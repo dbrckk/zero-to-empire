@@ -31,21 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T19:44:41Z
+Generated: 2026-10-12T19:47:36Z
 
 ### Git
 - Branch: `main`
-- Head: `9715b43b1479`
-- Commit date: 2026-10-12T21:44:26+02:00
-- Commit: ci(art): inspect active OP ENG v1.20 GPU character wave
+- Head: `88a2eb3823b1`
+- Commit date: 2026-10-12T21:47:04+02:00
+- Commit: test(ci): execute budgeted rejection prompts without importing GPU dependencies
 - Tracked files: 1560
 
 ### Recently changed files
+- `tools/assets/test_workflow_policy.py`
+- `tools/sprites/kaggle_character_sheet_factory_v1.py`
 - `ops/kaggle-collector-trigger.txt`
 - `art/production/op-log-v120-semantic-review.md`
 - `tools/sprites/identity_locked_walk_candidate.py`
-- `.github/workflows/retroactive-character-motion-qa.yml`
-- `tools/sprites/test_verify_character_action_candidates.py`
 
 ### Project signals
 - `build.gradle.kts`

@@ -5007,6 +5007,21 @@ reason=str(row.get('review_reason') or '').lower()
 rules=[]
 mapping=(
 ⋮----
+def compact_rejection_hints(memory_hints,queue_hint,max_words=72)
+⋮----
+# 86+ historical failures accumulate repeated, occasionally contradictory
+# advice. When simply taking the last 72 words, the newest *specific* defect
+# could be cut off by generic queue mapping. Prioritize the most recent
+# reviewed action defect, then targeted queue diagnosis, then older context.
+⋮----
+newest=memory_hints[-1] if memory_hints else ''
+previous=list(reversed(memory_hints[:-1]))
+selected=[];seen=set()
+⋮----
+hint=' '.join(str(hint or '').split())
+⋮----
+remain=max_words-len(selected)
+⋮----
 def rejection_hints(i)
 ⋮----
 hints=[]
@@ -5027,9 +5042,6 @@ matched=bool(role and role==i['role'] and (not action or action==i['action']))
 hint=str(row.get('prompt_hint','')).strip()
 ⋮----
 qhint=queue_rejection_hint(i)
-⋮----
-merged=' '.join(hints[-3:])
-words=merged.split()
 ⋮----
 def anchor_prompt_pair(role)
 ⋮----
