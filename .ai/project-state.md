@@ -31,21 +31,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T14:52:48Z
+Generated: 2026-10-12T14:54:17Z
 
 ### Git
 - Branch: `main`
-- Head: `2dd40dfbd684`
-- Commit date: 2026-10-12T16:52:30+02:00
-- Commit: docs(art): explain v1.20 IDLE rescue, provenance and strict review contract
+- Head: `80990e5e8536`
+- Commit date: 2026-10-12T16:54:01+02:00
+- Commit: fix(art): retain failed GPU IDLE forensic frames alongside successful fallback provenance
 - Tracked files: 1551
 
 ### Recently changed files
+- `tools/sprites/kaggle_character_sheet_factory_v1.py`
 - `docs/art/UNIFIED_ASSET_PIPELINE.md`
 - `tools/assets/test_workflow_policy.py`
 - `tools/assets/test_queue_state_policy.py`
-- `tools/sprites/kaggle_character_sheet_factory_v1.py`
-- `tools/sprites/asset_queue_utils.py`
 
 ### Project signals
 - `build.gradle.kts`

@@ -31609,7 +31609,7 @@ candidate=single
 # Reuse only a strict-DONE OP/LOG/TECH IDLE as a visual identity SOURCE,
 # never as a newly approved role action. Reject invalid/multi-person seed.
 ⋮----
-def try_role_seed_idle_fallback(item,failed_reason)
+def try_role_seed_idle_fallback(item,failed_reason,failed_frames)
 ⋮----
 # In the old pipeline a single failed IDLE frame discarded the five
 # sibling actions without even trying them. Reuse the already validated
@@ -31623,6 +31623,8 @@ risk=clip_risk(recovered,'IDLE')
 ⋮----
 sheet=make_sheet(recovered)
 dst=INCOMING/f"{item['stem']}.png"
+⋮----
+rejected_preview=keep_rejected_idle_for_review(item,failed_frames,failed_reason)
 ⋮----
 why='required-role-idle-candidate-rejected'
 ⋮----

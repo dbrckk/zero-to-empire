@@ -1,13 +1,13 @@
 # Change impact
 
-Base: f7b8228b2bcdf380969a6524b96b40645aa7b997
-Head: 2dd40dfbd684b5d576b6a362fd572dc3a969dcf6
+Base: e72105eae272e1e0e66b61150c0c45aff53dc4dc
+Head: 80990e5e8536a29e2df7cc4c4e1b0a2cce1202e4
 
 ## Changed files
-- M docs/art/UNIFIED_ASSET_PIPELINE.md
+- M tools/sprites/kaggle_character_sheet_factory_v1.py
 
 ## Affected areas
-- docs
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.
