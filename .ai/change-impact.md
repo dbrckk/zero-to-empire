@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 6431fc096f752279fc4192b0872f8b9e599a9fb0
-Head: b293dc70256dc4a9ad63109d5a752a4ee4c1b341
+Base: c2aabceb8c056c24cdd5fff4f6867f4e5b6fe052
+Head: 44942acccf66d3a9671f9c4c83efc9af0e664ec3
 
 ## Changed files
-- M tools/sprites/test_character_semantic_gate.py
+- M art/production/generation-rejection-ledger.json
 
 ## Affected areas
-- tools
+- art
 
 ## Related test candidates
 - No direct filename-based test match detected.

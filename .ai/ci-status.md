@@ -1,15 +1,14 @@
 # CI status
 
-Summary: 4 success / 2 failure / 0 active
+Summary: 2 success / 2 failure / 1 active
 
+- Asset Pipeline CI: in_progress / pending (44942acc)
+- Character strict review matrix: completed / success (c2aabceb)
+- Asset Pipeline CI: completed / success (c2aabceb)
 - Character strict review matrix: completed / failure (b293dc70)
 - Asset Pipeline CI: completed / failure (b293dc70)
 - Character strict review matrix: completed / cancelled (6431fc09)
 - Asset Pipeline CI: completed / cancelled (6431fc09)
-- Sprite Completion Gate: completed / success (d4878d9e)
-- Character strict review matrix: completed / success (d4878d9e)
-- Kaggle Mass Sprite Factory: completed / success (68deb39f)
-- Asset Autofactory 235: completed / success (41873fa8)
 
 ## Latest failed run structure
 - Job: verify-review-matrix

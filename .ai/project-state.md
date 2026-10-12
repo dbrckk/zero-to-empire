@@ -31,21 +31,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T19:22:00Z
+Generated: 2026-10-12T19:23:59Z
 
 ### Git
 - Branch: `main`
-- Head: `b293dc70256d`
-- Commit date: 2026-10-12T21:21:28+02:00
-- Commit: test(art): prevent false CELEB arm raises from displaced head and shoulder
+- Head: `44942acccf66`
+- Commit date: 2026-10-12T21:23:44+02:00
+- Commit: art(review): preserve OP celebration false-positive and LOG tool drift evidence
 - Tracked files: 1558
 
 ### Recently changed files
-- `tools/sprites/test_character_semantic_gate.py`
+- `art/production/generation-rejection-ledger.json`
 - `tools/sprites/character_semantic_gate.py`
+- `tools/sprites/test_character_semantic_gate.py`
 - `art/production/character-strict-review-backlog.md`
-- `art/production/master-asset-queue.json`
-- `art/production/kaggle-async-state.json`
 
 ### Project signals
 - `build.gradle.kts`
