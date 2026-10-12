@@ -2,7 +2,7 @@
 
 Generated from `art/production/master-asset-queue.json` after production completion.
 
-- Production processed: **223/235**
+- Production processed: **219/235**
 - Strict DONE: **219/235**
 - Semantic review remaining: **16**
 - This report does **not** grant strict approval or runtime promotion.
@@ -10,13 +10,13 @@ Generated from `art/production/master-asset-queue.json` after production complet
 | Asset | Role | Action | Technical status | Review artifact run | Review note |
 |---|---|---|---|---:|---|
 | CHR-OP-WALK | OP | WALK | DISPATCHED | 38185962170 | Kaggle generator rejected candidate: walk-too-static lower-motion=0.105 |
-| CHR-OP-WORK | OP | WORK | AWAITING_REVIEW | 38185962170 | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
+| CHR-OP-WORK | OP | WORK | REJECTED_SEMANTIC | 38185962170 | Manual full-frame review of collector 38185962170 REJECTED: hand tool is detached/morphs between box, camera-like wheel and panel, not consistently held or operated; unsafe to promote. |
 | CHR-OP-CARRY | OP | CARRY | DISPATCHED | 38185962170 | Kaggle generator rejected candidate: frame-4-failed; retry-details=detached-artifact component=3930/8360 / detached-artifact component=3800/9305 / detached-artifact component=3794/9110 / detached-artifact component=3872/9238 |
 | CHR-OP-REPAIR | OP | REPAIR | DISPATCHED | 38185962170 | Kaggle generator rejected candidate: identity/silhouette jump=0.10; retry-details=edge contact |
-| CHR-OP-CELEB | OP | CELEB | AWAITING_REVIEW | 38185962170 | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
+| CHR-OP-CELEB | OP | CELEB | REJECTED_SEMANTIC | 38185962170 | Manual full-frame review of collector 38185962170 REJECTED: poses remain mostly standing neutral; a wheel-like accessory appears near the final frame; no coherent progressive raised-arm celebration. |
 | CHR-LOG-WALK | LOG | WALK | REJECTED_SEMANTIC | 38185962170 | Kaggle generator rejected candidate: walk-too-static lower-motion=0.112 |
-| CHR-LOG-WORK | LOG | WORK | AWAITING_REVIEW | 38185962170 | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
-| CHR-LOG-CARRY | LOG | CARRY | AWAITING_REVIEW | 38185962170 | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
+| CHR-LOG-WORK | LOG | WORK | REJECTED_SEMANTIC | 38185962170 | Manual full-frame review of collector 38185962170 REJECTED: blue equipment floats outside hands/morphs, last frames alter accessories and pose; inconsistent hand-to-work-point contact. |
+| CHR-LOG-CARRY | LOG | CARRY | REJECTED_SEMANTIC | 38185962170 | Manual full-frame review of collector 38185962170 REJECTED: crate stays in front but legs remain mostly static and carrying contact unreadable; helmet/head color differs noticeably from LOG-WORK; LOG-IDLE identity anchor was rejected in same batch. |
 | CHR-LOG-REPAIR | LOG | REPAIR | REJECTED_SEMANTIC | 38185962170 | Kaggle generator rejected candidate: image-risk:LOWER_LIMB_STRUCTURE_UNVERIFIED,PALETTE_IDENTITY_DISCONTINUITY_RISK; retry-details=edge contact |
 | CHR-LOG-CELEB | LOG | CELEB | REJECTED_SEMANTIC | 38185962170 | Kaggle generator rejected candidate: frame-3-failed; retry-details=edge contact |
 | CHR-ENG-IDLE | ENG | IDLE | DISPATCHED | 38170795132 | Kaggle generator rejected candidate: frame-0-failed; retry-details=detached-artifact component=10558/10611 / detached-artifact component=10510/10546 / detached-artifact component=10538/10578 |
