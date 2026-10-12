@@ -31,21 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T14:50:32Z
+Generated: 2026-10-12T14:51:55Z
 
 ### Git
 - Branch: `main`
-- Head: `d3c068657aba`
-- Commit date: 2026-10-12T16:50:10+02:00
-- Commit: ci(art): validate IDLE rescue with full-frame sprite semantic gates
+- Head: `0aeee0dbefde`
+- Commit date: 2026-10-12T16:51:40+02:00
+- Commit: test(ci): match GPU producer v1.20 provenance label
 - Tracked files: 1551
 
 ### Recently changed files
-- `.github/workflows/asset-pipeline-ci.yml`
-- `kaggle/github_mass_factory.py`
-- `.github/workflows/kaggle-mass-sprite-factory.yml`
+- `tools/assets/test_workflow_policy.py`
+- `tools/assets/test_queue_state_policy.py`
 - `tools/sprites/kaggle_character_sheet_factory_v1.py`
-- `tools/sprites/character_idle_breathing_fallback.py`
+- `tools/sprites/asset_queue_utils.py`
+- `tools/sprites/asset_wave_orchestrator.py`
 
 ### Project signals
 - `build.gradle.kts`

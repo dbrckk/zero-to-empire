@@ -1,25 +1,25 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "8651019231426e8539dec0e5180961c99dccf400",
-  "head": "d3c068657aba6f0c548313ea4794f16fd4b4851b",
+  "base": "d3c068657aba6f0c548313ea4794f16fd4b4851b",
+  "head": "0aeee0dbefde4a5fe4f5ad1541455177d87c0bf6",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": ".github/workflows/asset-pipeline-ci.yml",
+      "path": "tools/assets/test_queue_state_policy.py",
       "status": "M"
     },
     {
-      "path": ".github/workflows/kaggle-mass-sprite-factory.yml",
+      "path": "tools/assets/test_workflow_policy.py",
       "status": "M"
     },
     {
-      "path": "kaggle/github_mass_factory.py",
+      "path": "tools/sprites/asset_queue_utils.py",
       "status": "M"
     },
     {
-      "path": "tools/sprites/character_idle_breathing_fallback.py",
-      "status": "A"
+      "path": "tools/sprites/asset_wave_orchestrator.py",
+      "status": "M"
     },
     {
       "path": "tools/sprites/kaggle_character_sheet_factory_v1.py",
@@ -27,93 +27,178 @@
     }
   ],
   "changed_source_files": [
-    "kaggle/github_mass_factory.py",
-    "tools/sprites/character_idle_breathing_fallback.py",
+    "tools/sprites/asset_queue_utils.py",
+    "tools/sprites/asset_wave_orchestrator.py",
     "tools/sprites/kaggle_character_sheet_factory_v1.py"
   ],
   "impacted_files": [
-    "kaggle/github_mass_factory.py",
-    "tools/sprites/character_idle_breathing_fallback.py",
-    "tools/sprites/kaggle_character_sheet_factory_v1.py"
+    "tools/sprites/asset_queue_utils.py",
+    "tools/sprites/asset_wave_orchestrator.py",
+    "tools/sprites/kaggle_character_sheet_factory_v1.py",
+    "tools/sprites/test_character_provider_reservation.py"
   ],
   "impacted_symbols": [
     {
-      "name": "digest",
+      "name": "load_json",
       "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 13
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 43
     },
     {
-      "name": "ensure_gpu",
+      "name": "save_json",
       "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 18
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 49
     },
     {
-      "name": "ensure_flux",
+      "name": "manifest_rows",
       "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 29
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 54
     },
     {
-      "name": "runtime_exists",
+      "name": "unresolved_ids",
       "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 38
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 77
     },
     {
-      "name": "controlled_queue_backlog",
+      "name": "default_asset",
       "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 39
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 84
     },
     {
-      "name": "controlled_character_backlog",
+      "name": "ensure_master",
       "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 45
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 116
     },
     {
-      "name": "controlled_building_backlog",
+      "name": "sync_controlled_queues",
       "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 46
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 157
     },
     {
-      "name": "backlog",
+      "name": "stats",
       "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 47
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 221
     },
     {
-      "name": "valid_tree",
+      "name": "write_summary",
       "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 248
+    },
+    {
+      "name": "by_id",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 55
+    },
+    {
+      "name": "mirror_character_outcomes_from_controlled",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
       "line": 59
     },
     {
-      "name": "resolve_source",
+      "name": "update_from_trigger",
       "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 61
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 84
     },
     {
-      "name": "current_fresh",
+      "name": "active_pending",
       "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 184
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 154
     },
     {
-      "name": "checkpoint_fresh",
+      "name": "character_retry_available",
       "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 185
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 159
     },
     {
-      "name": "build_idle_breathing_frames",
+      "name": "mark_dispatch",
       "kind": "function",
-      "file": "tools/sprites/character_idle_breathing_fallback.py",
-      "line": 16
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 182
+    },
+    {
+      "name": "prioritize_controlled_character_targets",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 221
+    },
+    {
+      "name": "building_family_ids",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 287
+    },
+    {
+      "name": "prepare_building_group",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 291
+    },
+    {
+      "name": "prepare_character_burst",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 302
+    },
+    {
+      "name": "next_group",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 390
+    },
+    {
+      "name": "close_exhausted_character_dispatches",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 409
+    },
+    {
+      "name": "active_pollinations_repair",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 464
+    },
+    {
+      "name": "pending_ids_from_controlled",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 489
+    },
+    {
+      "name": "order_character_groups_by_retry",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 506
+    },
+    {
+      "name": "current_epoch_attempts",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 512
+    },
+    {
+      "name": "make_decision",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 536
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 606
     },
     {
       "name": "rows",
@@ -270,7 +355,33 @@
       "kind": "function",
       "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
       "line": 635
+    },
+    {
+      "name": "ReservationTests",
+      "kind": "class",
+      "file": "tools/sprites/test_character_provider_reservation.py",
+      "line": 11
+    },
+    {
+      "name": "test_external_repair_excludes_concurrent_kaggle_character_dispatch",
+      "kind": "function",
+      "file": "tools/sprites/test_character_provider_reservation.py",
+      "line": 12
+    },
+    {
+      "name": "test_expired_or_other_provider_has_no_lock",
+      "kind": "function",
+      "file": "tools/sprites/test_character_provider_reservation.py",
+      "line": 30
+    },
+    {
+      "name": "test_injected_invalid_or_missing_reservation_does_not_block",
+      "kind": "function",
+      "file": "tools/sprites/test_character_provider_reservation.py",
+      "line": 43
     }
   ],
-  "selected_tests": []
+  "selected_tests": [
+    "tools/sprites/test_character_provider_reservation.py"
+  ]
 }
