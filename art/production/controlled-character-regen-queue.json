@@ -2,95 +2,69 @@
   "mode": "kaggle-character-burst-v1.19-strict-completion",
   "reason": "Autofactory 235: high-throughput identity-locked character production. Each role is kept in one producer wave when capacity allows; a strict-DONE IDLE sheet may be regenerated as context-only identity evidence so review and promotion can replace a legacy anchor with the same generated family.",
   "groups": [
-    "CHR-OP",
-    "CHR-LOG"
+    "CHR-ENG",
+    "CHR-OP"
   ],
   "targets": [
     {
+      "id": "CHR-ENG-IDLE",
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Full-frame manual review of collector 38223743012 REJECTED: helmet/face identity is materially more coherent across six frames, but a long baked gray ground-shadow bar appears in 5/6 frames (BAKED_GROUND_SHADOW_RISK); all six feet/ankle profiles remain fused (LOWER_LIMB_STRUCTURE_UNVERIFIED). Transparent standalone idle is not release-grade."
+    },
+    {
+      "id": "CHR-ENG-WALK",
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Kaggle generator rejected candidate: walk-too-static lower-motion=0.196"
+    },
+    {
+      "id": "CHR-ENG-WORK",
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Full-frame manual review of collector 38223743012 REJECTED: head identity stabilized by 10/10 IDLE locks, but tools/panels and glove-hand attachment change across ten frames; mostly idle body poses rather than readable work motion. Ground shadows contaminate 9/10 frames, image-only risk BLOCKING."
+    },
+    {
+      "id": "CHR-ENG-CARRY",
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Full-frame manual review of collector 38223743012 REJECTED: crate shape and face continuity improved and 8 frames passed technical QA, but leg/feet sequence is mostly planted with sudden silhouette jump (max adjacent alpha-change 0.683); baked ground shadow 7/8 frames and foot structure not verifiable. Not a convincing walking carry loop."
+    },
+    {
+      "id": "CHR-ENG-REPAIR",
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Full-frame manual review of collector 38223743012 REJECTED: stable head mask but inconsistent tools, missing repair target, changing belts/gloves/boots and an unanchored cable in frame 7; abrupt pose jump (max adjacent alpha-change 0.501), inconsistent floor shadow in several frames. No coherent frame-to-frame repair contact."
+    },
+    {
+      "id": "CHR-ENG-CELEB",
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Kaggle generator rejected candidate: celeb-upper-silhouette-jump=0.630>0.450"
+    },
+    {
       "id": "CHR-OP-IDLE",
-      "status": "REJECTED",
-      "autofactory_context_only": true,
-      "kaggle_run_id": 38223829684,
-      "review_artifact_run_id": 38240796531,
-      "review_reason": "Kaggle generator rejected candidate: image-risk:BAKED_GROUND_SHADOW_RISK,LOWER_LIMB_STRUCTURE_UNVERIFIED"
+      "status": "PENDING_KAGGLE",
+      "autofactory_context_only": true
     },
     {
       "id": "CHR-OP-WALK",
-      "status": "REJECTED",
-      "review_reason": "Kaggle generator rejected candidate: required-role-idle-candidate-rejected; retry-details=The same-run IDLE identity sheet must pass generation and visual-risk QA before sibling actions are generated.",
-      "kaggle_run_id": 38223829684,
-      "review_artifact_run_id": 38240796531
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Kaggle generator rejected candidate: required-role-idle-candidate-rejected; retry-details=The same-run IDLE identity sheet must pass generation and visual-risk QA before sibling actions are generated."
     },
     {
       "id": "CHR-OP-WORK",
-      "status": "REJECTED",
-      "review_reason": "Kaggle generator rejected candidate: required-role-idle-candidate-rejected; retry-details=The same-run IDLE identity sheet must pass generation and visual-risk QA before sibling actions are generated.",
-      "kaggle_run_id": 38223829684,
-      "review_artifact_run_id": 38240796531
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Kaggle generator rejected candidate: required-role-idle-candidate-rejected; retry-details=The same-run IDLE identity sheet must pass generation and visual-risk QA before sibling actions are generated."
     },
     {
       "id": "CHR-OP-CARRY",
-      "status": "REJECTED",
-      "review_reason": "Kaggle generator rejected candidate: required-role-idle-candidate-rejected; retry-details=The same-run IDLE identity sheet must pass generation and visual-risk QA before sibling actions are generated.",
-      "kaggle_run_id": 38223829684,
-      "review_artifact_run_id": 38240796531
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Kaggle generator rejected candidate: required-role-idle-candidate-rejected; retry-details=The same-run IDLE identity sheet must pass generation and visual-risk QA before sibling actions are generated."
     },
     {
       "id": "CHR-OP-REPAIR",
-      "status": "REJECTED",
-      "review_reason": "Kaggle generator rejected candidate: required-role-idle-candidate-rejected; retry-details=The same-run IDLE identity sheet must pass generation and visual-risk QA before sibling actions are generated.",
-      "kaggle_run_id": 38223829684,
-      "review_artifact_run_id": 38240796531
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Kaggle generator rejected candidate: required-role-idle-candidate-rejected; retry-details=The same-run IDLE identity sheet must pass generation and visual-risk QA before sibling actions are generated."
     },
     {
       "id": "CHR-OP-CELEB",
-      "status": "REJECTED",
-      "review_reason": "Kaggle generator rejected candidate: required-role-idle-candidate-rejected; retry-details=The same-run IDLE identity sheet must pass generation and visual-risk QA before sibling actions are generated.",
-      "kaggle_run_id": 38223829684,
-      "review_artifact_run_id": 38240796531
-    },
-    {
-      "id": "CHR-LOG-IDLE",
-      "status": "REJECTED",
-      "autofactory_context_only": true,
-      "kaggle_run_id": 38223829684,
-      "review_artifact_run_id": 38240796531,
-      "review_reason": "Kaggle generator rejected candidate: role-anchor-validation-failed; retry-details=detached-artifact component=7647/7667 | detached-artifact component=8593/9901 | detached-artifact component=4098/5931 | edge contact"
-    },
-    {
-      "id": "CHR-LOG-WALK",
-      "status": "REJECTED",
-      "review_reason": "Kaggle generator rejected candidate: required-role-idle-candidate-rejected; retry-details=The same-run IDLE identity sheet must pass generation and visual-risk QA before sibling actions are generated.",
-      "kaggle_run_id": 38223829684,
-      "review_artifact_run_id": 38240796531
-    },
-    {
-      "id": "CHR-LOG-WORK",
-      "status": "REJECTED",
-      "review_reason": "Kaggle generator rejected candidate: required-role-idle-candidate-rejected; retry-details=The same-run IDLE identity sheet must pass generation and visual-risk QA before sibling actions are generated.",
-      "kaggle_run_id": 38223829684,
-      "review_artifact_run_id": 38240796531
-    },
-    {
-      "id": "CHR-LOG-CARRY",
-      "status": "REJECTED",
-      "review_reason": "Kaggle generator rejected candidate: required-role-idle-candidate-rejected; retry-details=The same-run IDLE identity sheet must pass generation and visual-risk QA before sibling actions are generated.",
-      "kaggle_run_id": 38223829684,
-      "review_artifact_run_id": 38240796531
-    },
-    {
-      "id": "CHR-LOG-REPAIR",
-      "status": "REJECTED",
-      "review_reason": "Kaggle generator rejected candidate: required-role-idle-candidate-rejected; retry-details=The same-run IDLE identity sheet must pass generation and visual-risk QA before sibling actions are generated.",
-      "kaggle_run_id": 38223829684,
-      "review_artifact_run_id": 38240796531
-    },
-    {
-      "id": "CHR-LOG-CELEB",
-      "status": "REJECTED",
-      "review_reason": "Kaggle generator rejected candidate: required-role-idle-candidate-rejected; retry-details=The same-run IDLE identity sheet must pass generation and visual-risk QA before sibling actions are generated.",
-      "kaggle_run_id": 38223829684,
-      "review_artifact_run_id": 38240796531
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Kaggle generator rejected candidate: required-role-idle-candidate-rejected; retry-details=The same-run IDLE identity sheet must pass generation and visual-risk QA before sibling actions are generated."
     }
   ]
 }
