@@ -1,15 +1,11 @@
 # CI status
 
-Summary: 4 success / 1 failure / 0 active
+Summary: 2 success / 0 failure / 1 active
 
-- Character Single-Subject GPU Evidence: completed / failure (dc2dd25f)
-- Asset Pipeline CI: completed / success (210f1d8c)
-- Asset Pipeline CI: completed / success (698f7447)
-- Asset Pipeline CI: completed / success (648c6864)
-- Character strict review matrix: completed / success (648c6864)
-
-## Latest failed run structure
-- Job: review
-  - Failed step: Validate collector rejects the original false-positive QA rows
+- Asset Pipeline CI: in_progress / pending (912957c5)
+- Asset Pipeline CI: completed / cancelled (f43be7a3)
+- Asset Pipeline CI: completed / cancelled (692a4669)
+- Asset Pipeline CI: completed / success (d9ddf563)
+- Character Single-Subject GPU Evidence: completed / success (59938097)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

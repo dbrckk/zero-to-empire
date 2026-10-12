@@ -31,21 +31,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T17:37:07Z
+Generated: 2026-10-12T17:41:49Z
 
 ### Git
 - Branch: `main`
-- Head: `dc2dd25f2421`
-- Commit date: 2026-10-12T19:36:40+02:00
-- Commit: ci(art): prove motion registration rejects known OP-WORK and OP-REPAIR real GPU atlases
-- Tracked files: 1557
+- Head: `912957c582bf`
+- Commit date: 2026-10-12T19:41:22+02:00
+- Commit: test(ci): trace action-motion failure metrics into guided Kaggle retries
+- Tracked files: 1558
 
 ### Recently changed files
-- `.github/workflows/character-single-subject-gpu-evidence.yml`
-- `.github/workflows/asset-pipeline-ci.yml`
-- `tools/sprites/test_verify_character_action_candidates.py`
+- `tools/assets/test_workflow_policy.py`
 - `.github/workflows/kaggle-async-character-collector.yml`
-- `tools/sprites/verify_character_action_candidates.py`
+- `tools/sprites/kaggle_character_sheet_factory_v1.py`
+- `art/production/op-work-repair-translation-motion-evidence.md`
 
 ### Project signals
 - `build.gradle.kts`

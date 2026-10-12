@@ -1712,7 +1712,6 @@ jobs:
           set -euo pipefail
           cp /tmp/zte-single-subject/output/github-qa-report.json \
              /tmp/zte-single-subject/retroactive-collector-qa.json
-            /tmp/zte-single-subject/retroactive-action-qa.json
           python tools/sprites/verify_character_idle_candidates.py \
             --candidates /tmp/zte-single-subject/output/candidates \
             --qa-report /tmp/zte-single-subject/retroactive-collector-qa.json
@@ -1765,6 +1764,7 @@ jobs:
           path: |
             /tmp/zte-single-subject/single-subject-evidence.json
             /tmp/zte-single-subject/retroactive-collector-qa.json
+            /tmp/zte-single-subject/retroactive-action-qa.json
           retention-days: 90
           if-no-files-found: error
 ```
@@ -2961,6 +2961,12 @@ jobs:
                       raise SystemExit('Unmapped rejected QA candidate: '+str(row.get('file')))
                   produced.discard(aid)
                   rejected[aid]='technical-qa:'+','.join(str(x) for x in row.get('issues',[]) or ['unknown'])
+                  pose=(row.get('action_visual_risk') or {}).get('action_pose_metrics') or {}
+                  if pose.get('translation_dominated'):
+                      rejected[aid]+=(
+                          '; head-excursion-px='+str(pose.get('head_horizontal_excursion_px'))
+                          +'; retained-pose-motion-ratio='+str(pose.get('retained_pose_motion_ratio'))
+                      )
           for row in report:
               if str(row.get('status','')).upper()!='REJECT':
                   continue
@@ -27848,6 +27854,13 @@ def test_async_collector_recovers_candidates_when_generated_targets_is_empty(sel
 ⋮----
 text = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
 ⋮----
+def test_action_translation_reviewer_precedes_candidate_promotion(self)
+⋮----
+collector = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
+verifier = Path("tools/sprites/verify_character_action_candidates.py").read_text(encoding="utf-8")
+⋮----
+generator = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
+⋮----
 def test_async_collector_keeps_valid_candidates_when_other_qa_rows_fail(self)
 ⋮----
 def test_async_collector_requires_full_expected_target_coverage(self)
@@ -27885,9 +27898,6 @@ text = Path(".github/workflows/kaggle-superseded-character-evidence.yml").read_t
 def test_mass_gpu_preflight_blocks_duplicate_active_waves(self)
 ⋮----
 def test_async_kaggle_uses_unique_kernel_slug_and_stale_timeout(self)
-⋮----
-collector = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
-⋮----
 def test_async_kaggle_character_mode_releases_runner_and_uses_collector(self)
 ⋮----
 autof = Path(".github/workflows/asset-autofactory.yml").read_text(encoding="utf-8")
@@ -27928,7 +27938,6 @@ code = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(
 ⋮----
 def test_kaggle_character_generator_rejects_blocking_visual_risks(self)
 ⋮----
-generator = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
 workflow = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
 ⋮----
 def test_rejected_idle_images_are_isolated_from_promotable_candidates(self)

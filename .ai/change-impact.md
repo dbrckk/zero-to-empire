@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 210f1d8ce1aca5b4fdecf90f4c119265b95ae2bc
-Head: dc2dd25f24216cc55470b85e88868e2e91e6c782
+Base: f43be7a38bb5f3694adfb84bcd3163693dfb50ff
+Head: 912957c582bfd165dc9d55b523f731c52ba9bb90
 
 ## Changed files
-- M .github/workflows/character-single-subject-gpu-evidence.yml
+- M tools/assets/test_workflow_policy.py
 
 ## Affected areas
-- .github
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.
