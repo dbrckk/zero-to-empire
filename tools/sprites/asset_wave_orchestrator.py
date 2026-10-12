@@ -35,7 +35,7 @@ TRIGGER_DISPATCH_TOKEN = os.getenv("AUTOF_TRIGGER_DISPATCH_TOKEN", "")
 CURRENT_DISPATCH_TOKEN = os.getenv("GITHUB_RUN_ID", "")
 KAGGLE_BUSY = os.getenv("AUTOF_KAGGLE_BUSY", "0") == "1"
 FX_BUSY = os.getenv("AUTOF_FX_BUSY", "0") == "1"
-CHARACTER_GENERATION_EPOCH = "identity-lock-v1.19-pose-aware-head-and-prop-stability"
+CHARACTER_GENERATION_EPOCH = "identity-lock-v1.20-stable-idle-breathing-rescue"
 CHARACTER_EPOCH_ATTEMPT_LIMIT = 3
 CHARACTER_BATCH_SIZE = 12
 INFRA_FAILURE_LIMIT = 3
@@ -368,7 +368,7 @@ def prepare_character_burst(queue: dict[str, Any], groups: list[str]) -> dict[st
         return {"group": "+".join(groups), "ids": [], "count": 0}
 
     save_json(CHARACTER_QUEUE, {
-        "mode": "kaggle-character-burst-v1.19-strict-completion",
+        "mode": "kaggle-character-burst-v1.20-strict-completion",
         "reason": (
             "Autofactory 235: high-throughput identity-locked character production. "
             "Each role is kept in one producer wave when capacity allows; a strict-DONE "
