@@ -215,6 +215,33 @@ review examples and rejected asset IDs are documented in
 `art/production/log-eng-fourth-wave-review.md`. The reason-to-retry hints
 are retained in `art/production/generation-rejection-ledger.json`.
 
+
+### Forensic artifacts from rejected IDLE frames
+
+A full action-family GPU batch may be blocked because the same-run IDLE
+reference fails character framing, silhouette, ground-shadow or motion QA.
+The GPU producer now writes non-promotable IDLE diagnostics to
+`output/character-rejection-previews/` when one or more 256px cells were
+rendered before rejection. Each `*_rejected_review_only.png` is paired with a
+JSON record containing the exact manifest ID, rejection reason, number of
+visible frames and `strict_promotion_permitted: false`. Missing or
+failed-to-segment frames remain absent; the preview must never be interpreted
+as a completed six-frame animation.
+
+The collector retains these files inside the GitHub
+`kaggle-async-character-batch` artifact. They are deliberately excluded from
+`output/candidates/` and cannot trigger master-queue `AWAITING_REVIEW` or
+strict `DONE`. Reviewers should compare the rejected previews with the
+reported `BAKED_GROUND_SHADOW_RISK`, `LOWER_LIMB_STRUCTURE_UNVERIFIED`,
+`edge contact` and other failures before adjusting future producer versions.
+
+The ground-band image-risk heuristic checks both alpha and near-neutral RGB
+rather than automatically treating an extended dark work-boot silhouette as a
+gray cast shadow. True broad gray shadows still block candidate promotion.
+Both the cleanup and detection are conservative; the user-facing visual
+review remains mandatory. The remaining strict count is authoritative only
+in `master-asset-queue.json`.
+
 ### Known defects from recovered OP/LOG wave
 
 The superseded OP/LOG source `38170846318` was recovered as artifact
