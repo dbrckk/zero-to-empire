@@ -31,20 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T08:03:46Z
+Generated: 2026-10-12T08:05:33Z
 
 ### Git
 - Branch: `main`
-- Head: `895ef03372a9`
-- Commit date: 2026-10-12T10:03:26+02:00
-- Commit: docs(art): explain new evidence-driven face, frame and celebration quality gates
+- Head: `0376102d3e0c`
+- Commit date: 2026-10-12T10:05:16+02:00
+- Commit: ci(art): verify portrait mobile action review images and metadata
 - Tracked files: 1533
 
 ### Recently changed files
+- `.github/workflows/asset-pipeline-ci.yml`
+- `tools/sprites/build_character_review_panels.py`
+- `tools/sprites/kaggle_character_sheet_factory_v1.py`
 - `docs/art/UNIFIED_ASSET_PIPELINE.md`
 - `tools/sprites/test_character_semantic_gate.py`
-- `tools/sprites/character_semantic_gate.py`
-- `tools/assets/test_workflow_policy.py`
 
 ### Project signals
 - `build.gradle.kts`

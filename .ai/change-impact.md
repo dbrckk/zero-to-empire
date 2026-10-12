@@ -1,13 +1,13 @@
 # Change impact
 
-Base: b95834a1ad18935b6dab8d354dd73159ebf3c721
-Head: 895ef03372a9bdcf756eac8971d247ea3df758dc
+Base: 4ce247a9a7a830f2830bc19cea608d2e04bc29f7
+Head: 0376102d3e0cd220dcfd2284e6b0d983492fbc5b
 
 ## Changed files
-- M docs/art/UNIFIED_ASSET_PIPELINE.md
+- M .github/workflows/asset-pipeline-ci.yml
 
 ## Affected areas
-- docs
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

@@ -1228,6 +1228,7 @@ jobs:
             --output-dir /tmp/zte-smoke-review
           test -s /tmp/zte-smoke-review/review-frames-op.png
           test -s /tmp/zte-smoke-review/review-heads-op.png
+          test -s /tmp/zte-smoke-review/review-mobile-op-idle.png
           python - <<'PY'
           import json
           from pathlib import Path
@@ -1236,6 +1237,10 @@ jobs:
           assert d['roles'][0]['automatically_approved'] is False
           assert d['roles'][0]['head_detail_file']=='review-heads-op.png'
           assert d['roles'][0]['actions']['idle']['candidate'] is True
+          assert d['roles'][0]['mobile_action_files']['idle']=='review-mobile-op-idle.png'
+          from PIL import Image
+          mobile=Image.open('/tmp/zte-smoke-review/review-mobile-op-idle.png')
+          assert mobile.width<700 and mobile.height>900
           print('CHARACTER_REVIEW_PANEL_SMOKE_PASS=1')
           PY
 
@@ -28283,6 +28288,28 @@ background = checkerboard().resize((cell_width, cell_width))
 ⋮----
 x = label_width + index * tile_width + 7
 ⋮----
+"""Portrait 2-column contact sheet readable on an Android smartphone.
+
+    Every frame retains its original 256x256 pixels, not a tiny thumbnail.
+    Only review evidence is produced; a QA PASS is not semantic approval.
+    """
+frame_count = ACTIONS[action]
+⋮----
+width = columns * stride + 18
+height = header + ((frame_count + columns - 1) // columns) * 308
+image = Image.new("RGB", (width, height), (23, 27, 33))
+draw = ImageDraw.Draw(image)
+⋮----
+record = qa.get(path.name, {})
+status = "TECHNICAL PASS - VISUAL REVIEW REQUIRED" if record.get("pass") is True else (
+⋮----
+background = checkerboard()
+⋮----
+x = 15 + (index % columns) * stride
+y = header + (index // columns) * 308 + 8
+tile = atlas.crop(((index % 4) * CELL, (index // 4) * CELL,
+opaque = background.copy()
+⋮----
 def create_panel(role: str, assets: dict[str, Path], output: Path, qa: dict[str, dict]) -> dict
 ⋮----
 font = readable_font(15)
@@ -28330,6 +28357,10 @@ match = PATTERN.fullmatch(path.name)
 results = []
 ⋮----
 item = create_panel(role, assets, args.output_dir / f"review-frames-{role}.png", qa)
+⋮----
+mobile_files = {}
+⋮----
+filename = f"review-mobile-{role}-{action}.png"
 ⋮----
 summary = {"schema_version": 1, "review_only": True, "roles": results}
 ```
