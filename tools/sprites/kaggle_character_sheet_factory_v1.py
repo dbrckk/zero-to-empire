@@ -14,7 +14,7 @@ import torch
 from PIL import Image,ImageDraw,ImageFilter
 from diffusers import FluxPipeline,FluxImg2ImgPipeline,FluxTransformer2DModel
 from transformers import T5EncoderModel
-from character_semantic_gate import clip_risk,idle_visual_activity,celebration_arm_reach_counts
+from character_semantic_gate import clip_risk,idle_visual_activity,celebration_arm_reach_counts,idle_distinct_head_clusters
 from character_head_identity_lock import lock_head_to_idle
 from character_ground_shadow_cleanup import remove_baked_ground_shadow
 from character_rejection_evidence import save_rejected_idle_preview
@@ -392,6 +392,15 @@ def finish_frame(raw,action):
  if not .10<=cov<=.48:raise RuntimeError(f'coverage={cov:.2f}')
  return cell,cov
 
+def validated_single_role_anchor(source):
+ # Validate the source *before* costly multi-frame diffusion. Two conjoined
+ # workers with touching shoulders previously passed connected-component and
+ # aspect checks; reject their distinct helmet silhouettes immediately.
+ cell,cov=finish_frame(source,'IDLE')
+ if idle_distinct_head_clusters(cell)>=2:
+  raise RuntimeError('multiple-idle-heads-in-canonical-role-anchor')
+ return cov
+
 def alpha_iou(a,b):
  A=a.getchannel('A').resize((64,64),Image.Resampling.BILINEAR).point(lambda p:255 if p>=32 else 0)
  B=b.getchannel('A').resize((64,64),Image.Resampling.BILINEAR).point(lambda p:255 if p>=32 else 0)
@@ -591,7 +600,7 @@ def main():
      raw=base(height=1024,width=1024,num_inference_steps=6,guidance_scale=0,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),output_type='pil',generator=gen_anchor).images[0]
     candidate=raw.convert('RGB')
     try:
-     _,coverage=finish_frame(candidate,'IDLE')
+     coverage=validated_single_role_anchor(candidate)
     except RuntimeError as anchor_error:
      reason=str(anchor_error).lower()
      if 'detached-artifact' not in reason and 'too-wide/multiple-subject' not in reason:
@@ -605,7 +614,7 @@ def main():
      )
      if single is None:
       raise RuntimeError(f'{anchor_error}; anchor-pair-salvage:{salvage_evidence}') from anchor_error
-     _,coverage=finish_frame(single,'IDLE')
+     coverage=validated_single_role_anchor(single)
      candidate=single
      role_anchor_salvage[role]=salvage_evidence
      print(f'KAGGLE_CHR_ROLE_ANCHOR_PAIR_RECOVERED={role} attempt={anchor_attempt+1}',flush=True)
@@ -621,7 +630,7 @@ def main():
    fallback,source_note=load_approved_idle_anchor(role,MANIFEST,INCOMING)
    if fallback is not None:
     try:
-     _,coverage=finish_frame(fallback,'IDLE')
+     coverage=validated_single_role_anchor(fallback)
      role_anchor[role]=fallback
      role_anchor_salvage[role]=source_note
      print(f'KAGGLE_CHR_ROLE_ANCHOR_APPROVED_SOURCE={role} {source_note} coverage={coverage:.3f}',flush=True)
