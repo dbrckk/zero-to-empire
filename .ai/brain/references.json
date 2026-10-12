@@ -5,6 +5,106 @@
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
   "symbols": {
+    "_head_anchor": {
+      "definition": {
+        "file": "tools/sprites/character_head_identity_lock.py",
+        "line": 14,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/character_head_identity_lock.py",
+          "line": 14,
+          "preview": "def _head_anchor(frame: Image.Image):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/character_head_identity_lock.py",
+          "line": 51,
+          "preview": "a = _head_anchor(reference)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_head_identity_lock.py",
+          "line": 52,
+          "preview": "b = _head_anchor(target)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "lock_head_to_idle": {
+      "definition": {
+        "file": "tools/sprites/character_head_identity_lock.py",
+        "line": 42,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 301,
+          "preview": "self.assertIn(\"frame,locked,lock_note=lock_head_to_idle\", text)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 324,
+          "preview": "self.assertIn(\"from character_head_identity_lock import lock_head_to_idle\", generator)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_head_identity_lock.py",
+          "line": 42,
+          "preview": "def lock_head_to_idle(frame: Image.Image, idle: Image.Image):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 18,
+          "preview": "from character_head_identity_lock import lock_head_to_idle",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 643,
+          "preview": "frame,locked,lock_note=lock_head_to_idle(frame,role_reference_cell[i['role']])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_head_identity_lock.py",
+          "line": 4,
+          "preview": "from character_head_identity_lock import lock_head_to_idle",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_head_identity_lock.py",
+          "line": 25,
+          "preview": "result, applied, reason = lock_head_to_idle(target, anchor)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_head_identity_lock.py",
+          "line": 36,
+          "preview": "result, applied, reason = lock_head_to_idle(target, source)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_head_identity_lock.py",
+          "line": 47,
+          "preview": "restored, applied, reason = lock_head_to_idle(target, source)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_head_identity_lock.py",
+          "line": 54,
+          "preview": "result, applied, reason = lock_head_to_idle(make_person(), image)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 10
+    },
     "rows": {
       "definition": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
@@ -507,7 +607,7 @@
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 511,
+          "line": 514,
           "preview": "items=rows()[:max(1,args.count)];print('KAGGLE_CHARACTER_PLAN='+','.join(i['id'] for i in items),flush=True)",
           "definition_candidate": false
         },
@@ -746,13 +846,13 @@
       "occurrences": [
         {
           "file": "tools/assets/test_workflow_policy.py",
-          "line": 337,
+          "line": 348,
           "preview": "self.assertIn(\"def queue_rejection_hint(i):\", text)",
           "definition_candidate": false
         },
         {
           "file": "tools/assets/test_workflow_policy.py",
-          "line": 343,
+          "line": 354,
           "preview": "self.assertIn(\"qhint=queue_rejection_hint(i)\", text)",
           "definition_candidate": false
         },
@@ -817,7 +917,7 @@
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 277,
+          "line": 280,
           "preview": "+ rejection_hints(i))",
           "definition_candidate": false
         }
@@ -834,7 +934,7 @@
       "occurrences": [
         {
           "file": "tools/assets/test_workflow_policy.py",
-          "line": 322,
+          "line": 333,
           "preview": "self.assertIn(\"def anchor_prompt_pair(role):\", text)",
           "definition_candidate": false
         },
@@ -846,7 +946,7 @@
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 519,
+          "line": 522,
           "preview": "clip_text,t5_text=anchor_prompt_pair(role)",
           "definition_candidate": false
         }
@@ -856,7 +956,7 @@
     "semantic_scaffold": {
       "definition": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "line": 178,
+        "line": 179,
         "kind": "function",
         "language": "python"
       },
@@ -881,19 +981,19 @@
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 178,
+          "line": 179,
           "preview": "def semantic_scaffold(source,action,frame_index=0):",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 586,
+          "line": 589,
           "preview": "source=semantic_scaffold(shared,i['action'],fi)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 631,
+          "line": 634,
           "preview": "source=semantic_scaffold(anchor_raw,i['action'],fi)",
           "definition_candidate": false
         }
@@ -903,20 +1003,20 @@
     "prompt_pair": {
       "definition": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "line": 251,
+        "line": 252,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 251,
+          "line": 252,
           "preview": "def prompt_pair(i,pose,mode='default'):",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 528,
+          "line": 531,
           "preview": "clip_text,t5_text=prompt_pair(i,pose,mode)",
           "definition_candidate": false
         }
@@ -926,20 +1026,20 @@
     "retry_mode": {
       "definition": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "line": 286,
+        "line": 289,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 286,
+          "line": 289,
           "preview": "def retry_mode(reason,attempt):",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 577,
+          "line": 580,
           "preview": "mode=retry_mode(last_reason,attempt)",
           "definition_candidate": false
         }
@@ -949,7 +1049,7 @@
     "load_encode": {
       "definition": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "line": 293,
+        "line": 296,
         "kind": "function",
         "language": "python"
       },
@@ -1010,13 +1110,13 @@
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 293,
+          "line": 296,
           "preview": "def load_encode():",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 514,
+          "line": 517,
           "preview": "encs={};anchor_encs={};t,enc=load_encode()",
           "definition_candidate": false
         },
@@ -1038,7 +1138,7 @@
     "load_render": {
       "definition": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "line": 298,
+        "line": 301,
         "kind": "function",
         "language": "python"
       },
@@ -1099,13 +1199,13 @@
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 298,
+          "line": 301,
           "preview": "def load_render():",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 532,
+          "line": 535,
           "preview": "del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();report=[];role_anchor={};role_reference_cell={};anchor_failures={}",
           "definition_candidate": false
         }
@@ -1115,20 +1215,20 @@
     "border_bg": {
       "definition": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "line": 305,
+        "line": 308,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 305,
+          "line": 308,
           "preview": "def border_bg(im):",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 315,
+          "line": 318,
           "preview": "rgb=im.convert('RGB');w,h=rgb.size;bg=border_bg(rgb);px=rgb.load();seen=set();q=deque()",
           "definition_candidate": false
         }
@@ -1138,7 +1238,7 @@
     "isolate": {
       "definition": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "line": 314,
+        "line": 317,
         "kind": "function",
         "language": "python"
       },
@@ -1241,13 +1341,13 @@
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 314,
+          "line": 317,
           "preview": "def isolate(im):",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 344,
+          "line": 347,
           "preview": "m=isolate(raw);a=m.getchannel('A');bb=a.getbbox()",
           "definition_candidate": false
         },
@@ -1293,7 +1393,7 @@
     "dist": {
       "definition": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "line": 318,
+        "line": 321,
         "kind": "function",
         "language": "python"
       },
@@ -1348,13 +1448,13 @@
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 318,
+          "line": 321,
           "preview": "def dist(p):return ((p[0]-bg[0])**2+(p[1]-bg[1])**2+(p[2]-bg[2])**2)**.5",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 323,
+          "line": 326,
           "preview": "if dist(px[x,y])>28:continue",
           "definition_candidate": false
         },
@@ -1514,7 +1614,7 @@
     "validate_source_full_body": {
       "definition": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "line": 333,
+        "line": 336,
         "kind": "function",
         "language": "python"
       },
@@ -1545,13 +1645,13 @@
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 333,
+          "line": 336,
           "preview": "def validate_source_full_body(bb,w,h,action):",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 348,
+          "line": 351,
           "preview": "validate_source_full_body(bb,w,h,action)",
           "definition_candidate": false
         },
@@ -1579,7 +1679,7 @@
     "finish_frame": {
       "definition": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "line": 343,
+        "line": 346,
         "kind": "function",
         "language": "python"
       },
@@ -1604,19 +1704,19 @@
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 343,
+          "line": 346,
           "preview": "def finish_frame(raw,action):",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 551,
+          "line": 554,
           "preview": "_,coverage=finish_frame(candidate,'IDLE')",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 633,
+          "line": 636,
           "preview": "frame,cov=finish_frame(raw,i['action'])",
           "definition_candidate": false
         }
@@ -1626,38 +1726,38 @@
     "alpha_iou": {
       "definition": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "line": 380,
+        "line": 383,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 380,
+          "line": 383,
           "preview": "def alpha_iou(a,b):",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 391,
+          "line": 394,
           "preview": "ious=[alpha_iou(frames[n-1],frames[n]) for n in range(1,len(frames))]",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 433,
+          "line": 436,
           "preview": "changes.append(1-alpha_iou(a,b))",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 446,
+          "line": 449,
           "preview": "adj=[alpha_iou(frames[n-1],frames[n]) for n in range(1,len(frames))]",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 454,
+          "line": 457,
           "preview": "ious=[alpha_iou(frames[n-1],frames[n]) for n in range(1,len(frames))]",
           "definition_candidate": false
         }
@@ -1667,20 +1767,20 @@
     "sheet_qa": {
       "definition": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "line": 389,
+        "line": 392,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 389,
+          "line": 392,
           "preview": "def sheet_qa(frames,action=None):",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 651,
+          "line": 654,
           "preview": "ok,why=sheet_qa(frames,i['action'])",
           "definition_candidate": false
         }
@@ -1690,26 +1790,26 @@
     "lower_body_motion": {
       "definition": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "line": 402,
+        "line": 405,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 402,
+          "line": 405,
           "preview": "def lower_body_motion(frames):",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 459,
+          "line": 462,
           "preview": "motion=lower_body_motion(frames)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 468,
+          "line": 471,
           "preview": "motion=lower_body_motion(frames)",
           "definition_candidate": false
         },
@@ -1731,7 +1831,7 @@
     "upper_body_transition_changes": {
       "definition": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "line": 419,
+        "line": 422,
         "kind": "function",
         "language": "python"
       },
@@ -1744,13 +1844,13 @@
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 419,
+          "line": 422,
           "preview": "def upper_body_transition_changes(frames):",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 472,
+          "line": 475,
           "preview": "changes=upper_body_transition_changes(frames)",
           "definition_candidate": false
         }
@@ -1760,20 +1860,20 @@
     "walk_consistency_qa": {
       "definition": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "line": 436,
+        "line": 439,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 436,
+          "line": 439,
           "preview": "def walk_consistency_qa(frames):",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 457,
+          "line": 460,
           "preview": "consistent,why=walk_consistency_qa(frames)",
           "definition_candidate": false
         }
@@ -1783,20 +1883,20 @@
     "action_qa": {
       "definition": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "line": 451,
+        "line": 454,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 451,
+          "line": 454,
           "preview": "def action_qa(frames,action):",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 654,
+          "line": 657,
           "preview": "action_ok,action_why=action_qa(frames,i['action'])",
           "definition_candidate": false
         },
@@ -1818,26 +1918,26 @@
     "appearance_signature": {
       "definition": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "line": 484,
+        "line": 487,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 440,
+          "line": 443,
           "preview": "ref_sig=appearance_signature(ref)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 484,
+          "line": 487,
           "preview": "def appearance_signature(cell):",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 499,
+          "line": 502,
           "preview": "return sum(abs(x-y) for x,y in zip(appearance_signature(a),appearance_signature(b)))/6.0",
           "definition_candidate": false
         }
@@ -1847,26 +1947,26 @@
     "appearance_distance": {
       "definition": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "line": 498,
+        "line": 501,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 441,
+          "line": 444,
           "preview": "distances=[appearance_distance(ref,f) for f in frames[1:]]",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 498,
+          "line": 501,
           "preview": "def appearance_distance(a,b):",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 670,
+          "line": 673,
           "preview": "identity_distance=appearance_distance(ref,frames[0])",
           "definition_candidate": false
         }
@@ -1876,7 +1976,7 @@
     "make_sheet": {
       "definition": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "line": 501,
+        "line": 504,
         "kind": "function",
         "language": "python"
       },
@@ -1907,13 +2007,13 @@
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 501,
+          "line": 504,
           "preview": "def make_sheet(frames):",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 676,
+          "line": 679,
           "preview": "sheet=make_sheet(frames)",
           "definition_candidate": false
         }
@@ -1923,7 +2023,7 @@
     "main": {
       "definition": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "line": 509,
+        "line": 512,
         "kind": "function",
         "language": "python"
       },
@@ -2176,7 +2276,7 @@
         },
         {
           "file": "tools/assets/test_workflow_policy.py",
-          "line": 352,
+          "line": 363,
           "preview": "unittest.main()",
           "definition_candidate": false
         },
@@ -2590,13 +2690,13 @@
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 509,
+          "line": 512,
           "preview": "def main():",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 685,
+          "line": 688,
           "preview": "if __name__=='__main__':main()",
           "definition_candidate": false
         },
@@ -2650,6 +2750,150 @@
         }
       ],
       "occurrence_count": 120
+    },
+    "make_person": {
+      "definition": {
+        "file": "tools/sprites/test_character_head_identity_lock.py",
+        "line": 7,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_character_head_identity_lock.py",
+          "line": 7,
+          "preview": "def make_person(helmet=(245, 88, 38, 255), raised_arm=False):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/test_character_head_identity_lock.py",
+          "line": 23,
+          "preview": "anchor = make_person((241, 71, 40, 255))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_head_identity_lock.py",
+          "line": 24,
+          "preview": "target = make_person((23, 218, 228, 255))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_head_identity_lock.py",
+          "line": 34,
+          "preview": "source = make_person()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_head_identity_lock.py",
+          "line": 35,
+          "preview": "target = make_person((12, 225, 234, 255), raised_arm=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_head_identity_lock.py",
+          "line": 42,
+          "preview": "source = make_person()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_head_identity_lock.py",
+          "line": 43,
+          "preview": "target = make_person((25, 223, 234, 255))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_head_identity_lock.py",
+          "line": 54,
+          "preview": "result, applied, reason = lock_head_to_idle(make_person(), image)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 8
+    },
+    "HeadIdentityLockTests": {
+      "definition": {
+        "file": "tools/sprites/test_character_head_identity_lock.py",
+        "line": 21,
+        "kind": "class",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_character_head_identity_lock.py",
+          "line": 21,
+          "preview": "class HeadIdentityLockTests(unittest.TestCase):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_identical_upright_reference_restores_stable_headgear": {
+      "definition": {
+        "file": "tools/sprites/test_character_head_identity_lock.py",
+        "line": 22,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_character_head_identity_lock.py",
+          "line": 22,
+          "preview": "def test_identical_upright_reference_restores_stable_headgear(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_raised_arm_with_unreliable_top_alignment_is_not_pasted": {
+      "definition": {
+        "file": "tools/sprites/test_character_head_identity_lock.py",
+        "line": 33,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_character_head_identity_lock.py",
+          "line": 33,
+          "preview": "def test_raised_arm_with_unreliable_top_alignment_is_not_pasted(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_wide_incompatible_head_shape_is_not_pasted": {
+      "definition": {
+        "file": "tools/sprites/test_character_head_identity_lock.py",
+        "line": 41,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_character_head_identity_lock.py",
+          "line": 41,
+          "preview": "def test_wide_incompatible_head_shape_is_not_pasted(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_empty_frames_cannot_be_identity_references": {
+      "definition": {
+        "file": "tools/sprites/test_character_head_identity_lock.py",
+        "line": 52,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_character_head_identity_lock.py",
+          "line": 52,
+          "preview": "def test_empty_frames_cannot_be_identity_references(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
     }
   }
 }

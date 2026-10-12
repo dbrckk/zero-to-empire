@@ -31,21 +31,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T04:12:38Z
+Generated: 2026-10-12T04:14:43Z
 
 ### Git
 - Branch: `main`
-- Head: `6ff881e5c078`
-- Commit date: 2026-10-12T06:12:18+02:00
-- Commit: test(art): block face reference transfer before validated IDLE
+- Head: `2df5330c9bb5`
+- Commit date: 2026-10-12T06:14:18+02:00
+- Commit: test(ci): verify head identity stabilizer reaches every Kaggle kernel overlay
 - Tracked files: 1532
 
 ### Recently changed files
 - `tools/assets/test_workflow_policy.py`
 - `tools/sprites/kaggle_character_sheet_factory_v1.py`
-- `.github/workflows/asset-pipeline-ci.yml`
-- `kaggle/github_mass_factory.py`
-- `.github/workflows/kaggle-mass-sprite-factory.yml`
+- `tools/sprites/test_character_head_identity_lock.py`
+- `tools/sprites/character_head_identity_lock.py`
 
 ### Project signals
 - `build.gradle.kts`

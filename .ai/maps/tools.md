@@ -2467,6 +2467,15 @@ source_height = source_box[3] - source_box[1]
 target_height = target_box[3] - target_box[1]
 ⋮----
 piece = reference.crop((sx - width // 2, sy - height // 2,
+target_head = target.crop((tx - width // 2, ty - height // 2,
+# A copy from a different helmet profile, silhouette orientation or
+# displaced head would form a ghost/double-face. Enforce close shape
+# registration before compositing, then preserve manual review.
+source_binary = [v >= 64 for v in piece.getchannel("A").getdata()]
+target_binary = [v >= 64 for v in target_head.getchannel("A").getdata()]
+overlap = sum(a and b for a, b in zip(source_binary, target_binary))
+union = sum(a or b for a, b in zip(source_binary, target_binary))
+⋮----
 soft = Image.new("L", (width, height), 0)
 ⋮----
 soft = soft.filter(ImageFilter.GaussianBlur(5))
@@ -7517,6 +7526,12 @@ def test_raised_arm_with_unreliable_top_alignment_is_not_pasted(self)
 ⋮----
 source = make_person()
 target = make_person((12, 225, 234, 255), raised_arm=True)
+⋮----
+def test_wide_incompatible_head_shape_is_not_pasted(self)
+⋮----
+target = make_person((25, 223, 234, 255))
+# Keep the rest of the body while replacing the helmet silhouette
+# with an oversized incompatible rectangular obstruction.
 ⋮----
 def test_empty_frames_cannot_be_identity_references(self)
 ⋮----

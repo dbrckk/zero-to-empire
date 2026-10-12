@@ -1,7 +1,7 @@
 # Change impact
 
-Base: 05f021f85d9b6ff24f8ed8336f5caf659691ffdf
-Head: 6ff881e5c0785a3c3e392ab07e2f77a23b5e353a
+Base: 23e07a8af5de03620c7e52c63fe3a33417b275d2
+Head: 2df5330c9bb5a0803616755d84d7ac46f0f884f5
 
 ## Changed files
 - M tools/assets/test_workflow_policy.py
