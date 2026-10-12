@@ -31,21 +31,24 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T18:00:26Z
+Generated: 2026-10-12T18:03:28Z
 
 ### Git
 - Branch: `main`
-- Head: `74a862d6ec07`
-- Commit date: 2026-10-12T20:00:01+02:00
-- Commit: ci(art): check latest OP LOG GPU queue and collect completed output
+- Head: `2b17668ee15d`
+- Commit date: 2026-10-12T20:03:13+02:00
+- Commit: art(review): compare OP LOG IDLE-anchored WALK without GPU and generate 4x4 review panels
 - Tracked files: 1558
 
 ### Recently changed files
+- `.github/workflows/identity-locked-walk-review.yml`
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
+- `art/production/character-strict-review-backlog.md`
+- `art/production/master-asset-queue.json`
 - `ops/kaggle-collector-trigger.txt`
 - `tools/assets/test_workflow_policy.py`
 - `.github/workflows/kaggle-async-character-collector.yml`
-- `tools/sprites/kaggle_character_sheet_factory_v1.py`
-- `art/production/op-work-repair-translation-motion-evidence.md`
 
 ### Project signals
 - `build.gradle.kts`

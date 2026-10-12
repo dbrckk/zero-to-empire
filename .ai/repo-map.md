@@ -2478,12 +2478,41 @@ jobs:
         run: python -m pip install --disable-pip-version-check Pillow==11.3.0 numpy==2.3.3
       - name: Test identity locks, reproducibility and output isolation
         run: python -m unittest discover -s tools/sprites -p 'test_identity_locked_walk_candidate.py' -v
-      - name: Render the four canonical identities as review-only candidate sheets
+      - name: Render role-stable alternatives using approved OP and LOG IDLE sources
         run: |
-          for role in OP LOG ENG TECH; do
+          set -euo pipefail
+          for role in OP LOG; do
+            lowercase="$(printf '%s' "$role" | tr '[:upper:]' '[:lower:]')"
+            python tools/sprites/identity_locked_walk_candidate.py \
+              --role "$role" \
+              --source "art/incoming/final-sprites/zte_chr_${lowercase}_idle_final.png" \
+              --out build/identity-locked-walk-review
+          done
+          # ENG is not strictly reviewed; its inherited historical WALK source
+          # is kept as non-canonical comparison evidence, not as a new identity.
+          for role in ENG TECH; do
             python tools/sprites/identity_locked_walk_candidate.py \
               --role "$role" --out build/identity-locked-walk-review
           done
+      - name: Produce 4x4 runtime-size comparison panels without promoting
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          root=Path('build/identity-locked-walk-review')
+          comparison=root/'runtime-size-review-only'
+          comparison.mkdir(exist_ok=True)
+          for role in ('OP','LOG','ENG','TECH'):
+              src=root/f'CHR-{role}-WALK-identity-locked-REVIEW.png'
+              with Image.open(src) as old:
+                  if old.size!=(1024,512):raise SystemExit('unexpected review source size')
+                  image=Image.new('RGBA',(1024,1024),(0,0,0,0))
+                  image.alpha_composite(old.convert('RGBA'),(0,0))
+                  image.save(comparison/f'zte_chr_{role.lower()}_walk_final.png',optimize=True)
+          PY
+          python tools/sprites/build_character_review_panels.py \
+            --candidates build/identity-locked-walk-review/runtime-size-review-only \
+            --output-dir build/identity-locked-walk-review/frame-panels
       - name: Enforce no visual approval and no canonical mutation
         run: |
           python - <<'PY'

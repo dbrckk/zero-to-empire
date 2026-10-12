@@ -1,12 +1,13 @@
 # CI status
 
-Summary: 2 success / 0 failure / 2 active
+Summary: 5 success / 0 failure / 1 active
 
-- Pollinations Building Candidate: in_progress / pending (74a862d6)
-- Kaggle Async Character Collector: in_progress / pending (74a862d6)
+- Identity-locked WALK alternatives (review only): in_progress / pending (2b17668e)
+- Manifest Static GPU Batch: completed / success (acc00ab3)
+- Asset Autofactory 235: completed / success (74a862d6)
+- Pollinations Building Candidate: completed / success (74a862d6)
+- Kaggle Async Character Collector: completed / success (74a862d6)
 - Asset Pipeline CI: completed / success (912957c5)
 - Asset Pipeline CI: completed / cancelled (f43be7a3)
-- Asset Pipeline CI: completed / cancelled (692a4669)
-- Asset Pipeline CI: completed / success (d9ddf563)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.
