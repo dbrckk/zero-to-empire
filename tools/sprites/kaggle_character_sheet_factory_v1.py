@@ -19,6 +19,7 @@ from character_head_identity_lock import lock_head_to_idle
 from character_ground_shadow_cleanup import remove_baked_ground_shadow
 from character_rejection_evidence import save_rejected_idle_preview
 from character_anchor_pair_salvage import salvage_two_full_body_subjects
+from character_approved_idle_fallback import load_approved_idle_anchor
 
 ROOT=Path(__file__).resolve().parents[2]
 MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
@@ -614,6 +615,20 @@ def main():
     failures.append(str(exc))
     print(f'KAGGLE_CHR_ROLE_ANCHOR_RETRY={role} attempt={anchor_attempt+1} reason={exc}',flush=True)
   if role not in role_anchor:
+   # Reuse only a strict-DONE OP/LOG/TECH IDLE as a visual identity SOURCE,
+   # never as a newly approved role action. Reject invalid/multi-person seed.
+   fallback,source_note=load_approved_idle_anchor(role,MANIFEST,INCOMING)
+   if fallback is not None:
+    try:
+     _,coverage=finish_frame(fallback,'IDLE')
+     role_anchor[role]=fallback
+     role_anchor_salvage[role]=source_note
+     print(f'KAGGLE_CHR_ROLE_ANCHOR_APPROVED_SOURCE={role} {source_note} coverage={coverage:.3f}',flush=True)
+    except (RuntimeError,ValueError) as exc:
+     failures.append(f'approved-idle-fallback-QA:{exc}')
+   else:
+    failures.append(f'approved-idle-fallback-unavailable:{source_note}')
+  if role not in role_anchor:
    anchor_failures[role]=failures
    print(f'KAGGLE_CHR_ROLE_ANCHOR_REJECTED={role} attempts={len(failures)}',flush=True)
  for idx,i in enumerate(items):
@@ -766,7 +781,7 @@ def main():
   if i['action']=='IDLE':
    verified_idle_roles.add(i['role'])
    print(f"KAGGLE_CHR_IDLE_IDENTITY_VALIDATED={i['role']}",flush=True)
-  print(f"KAGGLE_CHR_VALIDATED={p.relative_to(ROOT)} {why} atlas=1024x1024",flush=True);report.append({'id':i['id'],'status':'CANDIDATE','reason':why,'frames':len(frames),'atlas':'1024x1024','cell':'256x256','file':p.name,'cross_animation_appearance_distance':round(identity_distance,2),'visual_risk':visual_risk,'retry_reasons':retry_reasons,'same_run_idle_head_locked_frames':head_lock_frames,'anchor_pair_salvage':role_anchor_salvage.get(i['role'])})
+  print(f"KAGGLE_CHR_VALIDATED={p.relative_to(ROOT)} {why} atlas=1024x1024",flush=True);report.append({'id':i['id'],'status':'CANDIDATE','reason':why,'frames':len(frames),'atlas':'1024x1024','cell':'256x256','file':p.name,'cross_animation_appearance_distance':round(identity_distance,2),'visual_risk':visual_risk,'retry_reasons':retry_reasons,'same_run_idle_head_locked_frames':head_lock_frames,'anchor_pair_salvage':role_anchor_salvage.get(i['role']) if isinstance(role_anchor_salvage.get(i['role']),dict) else None,'anchor_source':role_anchor_salvage.get(i['role']) if isinstance(role_anchor_salvage.get(i['role']),str) else 'fresh-generated'})
  REPORT.write_text(json.dumps(report,indent=2),encoding='utf-8')
  print(f"KAGGLE_CHARACTER_CANDIDATES={sum(r['status']=='CANDIDATE' for r in report)} ATTEMPTED={len(items)}",flush=True)
 if __name__=='__main__':main()
