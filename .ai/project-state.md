@@ -31,21 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T08:26:02Z
+Generated: 2026-10-12T08:27:28Z
 
 ### Git
 - Branch: `main`
-- Head: `336a48c73166`
-- Commit date: 2026-10-12T10:25:24+02:00
-- Commit: test(art): distinguish persistent floor shadow from ordinary sprite feet
+- Head: `587bec898ba7`
+- Commit date: 2026-10-12T10:27:04+02:00
+- Commit: test(ci): ensure image-risk evidence accompanies mobile character review panels
 - Tracked files: 1535
 
 ### Recently changed files
+- `.github/workflows/asset-pipeline-ci.yml`
+- `tools/sprites/build_character_review_panels.py`
 - `tools/sprites/test_character_semantic_gate.py`
 - `tools/sprites/character_semantic_gate.py`
 - `ops/kaggle-collector-trigger.txt`
-- `tools/assets/test_workflow_policy.py`
-- `tools/sprites/kaggle_character_sheet_factory_v1.py`
 
 ### Project signals
 - `build.gradle.kts`

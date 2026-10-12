@@ -2229,6 +2229,13 @@ issues = list(qa_row.get("issues", []) or [])
 rgba = src.convert("RGBA")
 raw_frames = [
 diagnostics = motion_review_evidence(raw_frames, action)
+# Review candidates with the newest image-only risk rules, even
+# when their GPU run used an older generator. These signals cannot
+# alter an asset's canonical review or strict DONE state.
+⋮----
+visual_risk = clip_risk(raw_frames, action.upper())
+⋮----
+visual_risk = {
 ⋮----
 fx = (frame_idx % 4) * CELL
 fy = (frame_idx // 4) * CELL

@@ -1,13 +1,13 @@
 # CI status
 
-Summary: 2 success / 0 failure / 2 active
+Summary: 4 success / 0 failure / 1 active
 
-- Asset Pipeline CI: in_progress / pending (336a48c7)
-- Character strict review matrix: in_progress / pending (336a48c7)
+- Asset Pipeline CI: in_progress / pending (587bec89)
+- Asset Pipeline CI: completed / success (d03f5161)
+- Asset Pipeline CI: completed / success (336a48c7)
+- Character strict review matrix: completed / success (336a48c7)
 - Character strict review matrix: completed / cancelled (d73ab78c)
 - Asset Pipeline CI: completed / cancelled (d73ab78c)
 - Kaggle Async Character Collector: completed / success (202775da)
-- Asset Pipeline CI: completed / success (eb86a0c8)
-- Asset Pipeline CI: completed / cancelled (9a1a9882)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

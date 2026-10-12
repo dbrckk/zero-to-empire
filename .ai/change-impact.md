@@ -1,13 +1,13 @@
 # Change impact
 
-Base: d73ab78c91202ed4407d6fa337055e8e79e16a0d
-Head: 336a48c73166785aa3b2dee931b52363d6e5eb85
+Base: d03f51614e3600280cd58e90e8211cc3fede3d78
+Head: 587bec898ba7431524dac259a9adadc6e34b44e0
 
 ## Changed files
-- M tools/sprites/test_character_semantic_gate.py
+- M .github/workflows/asset-pipeline-ci.yml
 
 ## Affected areas
-- tools
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

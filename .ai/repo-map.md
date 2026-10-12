@@ -1242,6 +1242,9 @@ jobs:
           assert d['roles'][0]['head_detail_file']=='review-heads-op.png'
           idle=d['roles'][0]['actions']['idle']
           assert idle['candidate'] is True
+          visual=idle['image_only_risk']
+          assert visual['image_only_semantic_approval'] is False
+          assert visual['risk_level'] in {'BLOCKING','REVIEW','NOT_DETECTED'}
           timing=idle['temporal_evidence']
           assert timing['status']=='REVIEW_ONLY'
           assert timing['automatic_semantic_approval'] is False
@@ -28374,6 +28377,13 @@ issues = list(qa_row.get("issues", []) or [])
 rgba = src.convert("RGBA")
 raw_frames = [
 diagnostics = motion_review_evidence(raw_frames, action)
+# Review candidates with the newest image-only risk rules, even
+# when their GPU run used an older generator. These signals cannot
+# alter an asset's canonical review or strict DONE state.
+⋮----
+visual_risk = clip_risk(raw_frames, action.upper())
+⋮----
+visual_risk = {
 ⋮----
 fx = (frame_idx % 4) * CELL
 fy = (frame_idx // 4) * CELL
