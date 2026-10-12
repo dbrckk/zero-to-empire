@@ -1,7 +1,7 @@
 # Change impact
 
-Base: acc00ab36831f828f0d57fff57c56ce81d6d2765
-Head: 2b17668ee15d3542aa9068d592f108df9b9ecbe0
+Base: be440100fe8aa8339e5d75160dc097a139febe46
+Head: 8739bba26bc18de04b4a2fd68ef6ad6071dc3ee4
 
 ## Changed files
 - M .github/workflows/identity-locked-walk-review.yml

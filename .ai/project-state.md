@@ -31,13 +31,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T18:03:28Z
+Generated: 2026-10-12T18:04:48Z
 
 ### Git
 - Branch: `main`
-- Head: `2b17668ee15d`
-- Commit date: 2026-10-12T20:03:13+02:00
-- Commit: art(review): compare OP LOG IDLE-anchored WALK without GPU and generate 4x4 review panels
+- Head: `8739bba26bc1`
+- Commit date: 2026-10-12T20:04:32+02:00
+- Commit: fix(art): retain viable WALK identity reviews when a canonical IDLE reference fails QA
 - Tracked files: 1558
 
 ### Recently changed files
@@ -48,7 +48,6 @@ Generated: 2026-10-12T18:03:28Z
 - `art/production/master-asset-queue.json`
 - `ops/kaggle-collector-trigger.txt`
 - `tools/assets/test_workflow_policy.py`
-- `.github/workflows/kaggle-async-character-collector.yml`
 
 ### Project signals
 - `build.gradle.kts`
