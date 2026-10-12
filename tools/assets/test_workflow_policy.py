@@ -156,6 +156,11 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("target_count=len(d.get('target_ids') or [])", workflow)
         self.assertIn("stale_limit_minutes=600 if target_count >= 10 else 420", workflow)
         self.assertIn("stale_limit_minutes*60", workflow)
+        self.assertIn("queued_stale_limit_minutes=1440", workflow)
+        self.assertIn("queued_stale=elapsed > queued_stale_limit_minutes*60", workflow)
+        self.assertIn("steps.gate.outputs.queued_stale", workflow)
+        self.assertIn("KAGGLE_ASYNC_QUEUE_TIMEOUT=1", workflow)
+        self.assertNotIn("'RUNNING|QUEUED'", workflow)
         self.assertNotIn("total_seconds() > 150*60", workflow)
 
     def test_async_collector_releases_wave_when_completed_output_validation_fails(self):
