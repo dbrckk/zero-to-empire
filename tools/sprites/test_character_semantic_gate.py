@@ -59,6 +59,18 @@ class SemanticGateTests(unittest.TestCase):
         frames=[person() for _ in range(7)]+[Image.new('RGBA',(256,256))]
         self.assertEqual(clip_risk(frames)['risk_level'],'BLOCKING')
 
+    def test_one_collapsed_work_frame_blocks_even_if_nine_others_are_full_body(self):
+        normal=person()
+        tiny=normal.crop((0,16,256,229)).resize((256,164))
+        short=Image.new('RGBA',(256,256))
+        short.alpha_composite(tiny,(0,65))
+        frames=[normal.copy() for _ in range(10)]
+        frames[4]=short
+        result=clip_risk(frames,'WORK')
+        self.assertEqual(result['risk_level'],'BLOCKING')
+        self.assertIn('FRAME_SCALE_COLLAPSE_RISK',result['flags'])
+        self.assertLess(result['min_relative_frame_height'],.82)
+
     def test_alternating_helmet_or_face_color_blocks_identity(self):
         frames=[]
         for index in range(8):
