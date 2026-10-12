@@ -62,6 +62,7 @@ sprites/
   build_character_review_panels.py
   build_sprite_contact_sheet.py
   build_tech_review_board.py
+  character_head_identity_lock.py
   character_review_matrix.py
   character_semantic_gate.py
   colab_mass_factory.py
@@ -113,6 +114,7 @@ sprites/
   test_action_contact.py
   test_animation_batch_planner.py
   test_autonomous_walk.py
+  test_character_head_identity_lock.py
   test_character_provider_reservation.py
   test_character_review_matrix.py
   test_character_semantic_gate.py
@@ -2418,6 +2420,61 @@ args=ap.parse_args()
 rec=tiles(args.source)
 ```
 
+## File: sprites/character_head_identity_lock.py
+```python
+"""Conservative identity-preserving face/headgear transfer for sprite candidates.
+
+A role's same-run IDLE frame is the visual reference; no external face model
+or identity inference is involved. This never accepts semantics, never writes
+runtime resources and skips poses whose full-body registration is unsafe.
+"""
+⋮----
+FRAME_SIZE = (256, 256)
+⋮----
+def _head_anchor(frame: Image.Image)
+⋮----
+rgba = frame.convert("RGBA")
+⋮----
+alpha = rgba.getchannel("A")
+bounds = alpha.getbbox()
+⋮----
+height = bottom - top
+⋮----
+# Centroid of the upper silhouette is less affected by a tool at waist
+# height than the geometric centre of the entire character bounding box.
+end = min(bottom, top + max(1, round(height * .25)))
+mask = alpha.crop((left, top, right, end))
+pix = mask.load()
+count = weighted = 0
+⋮----
+centre_x = round(weighted / count) if count else (left + right) // 2
+centre_y = top + round(height * .195)
+⋮----
+def lock_head_to_idle(frame: Image.Image, idle: Image.Image)
+⋮----
+"""Return (RGBA frame, applied bool, reason), no speculative approval.
+
+    Only nearly upright, identically sized character silhouettes qualify.
+    Crouching, high-arm silhouettes, small figures and strange framing retain
+    the generated image for explicit manual review rather than a bad paste.
+    """
+target = frame.convert("RGBA")
+reference = idle.convert("RGBA")
+a = _head_anchor(reference)
+b = _head_anchor(target)
+⋮----
+source_height = source_box[3] - source_box[1]
+target_height = target_box[3] - target_box[1]
+⋮----
+piece = reference.crop((sx - width // 2, sy - height // 2,
+soft = Image.new("L", (width, height), 0)
+⋮----
+soft = soft.filter(ImageFilter.GaussianBlur(5))
+mask = ImageChops.multiply(piece.getchannel("A"), soft)
+⋮----
+result = target.copy()
+```
+
 ## File: sprites/character_review_matrix.py
 ```python
 #!/usr/bin/env python3
@@ -4668,7 +4725,7 @@ candidate=raw.convert('RGB')
 ⋮----
 why='required-role-idle-candidate-rejected'
 ⋮----
-frames=[];anchor_raw=None;fail=None;retry_reasons=[]
+frames=[];anchor_raw=None;fail=None;retry_reasons=[];head_lock_frames=0
 ⋮----
 ok=False;last_reason=''
 ⋮----
@@ -4708,7 +4765,11 @@ strength=min(.38,.24+fi*.012+attempt*.02)
 if mode in {'single','identity'} and i['action']!='WALK':strength=max(.24,strength-.035)
 source=semantic_scaffold(anchor_raw,i['action'],fi)
 ⋮----
-frame,cov=finish_frame(raw,i['action']);frames.append(frame);ok=True;print(f"KAGGLE_CHR_FRAME={i['id']} frame={fi} attempt={attempt+1} mode={mode} cov={cov:.2f}",flush=True);break
+# Freeze only correctly registered faces/headgear against the validated
+# same-wave IDLE reference. Raised-arm/crouching poses are bypassed.
+# This is candidate visual stabilization, never semantic approval.
+⋮----
+frames.append(frame);ok=True;print(f"KAGGLE_CHR_FRAME={i['id']} frame={fi} attempt={attempt+1} mode={mode} cov={cov:.2f}",flush=True);break
 ⋮----
 last_reason=str(e);retry_reasons.append(last_reason);print(f"KAGGLE_CHR_RETRY={i['id']} frame={fi} attempt={attempt+1} mode={mode} reason={e}",flush=True)
 if not ok:fail=f'frame-{fi}-failed';break
@@ -7432,6 +7493,34 @@ events=json.loads((root/'frame-events.json').read_text())
 frame_poses=json.loads((root/'frame-poses.json').read_text())
 ⋮----
 project=json.loads((root/'project.json').read_text())
+```
+
+## File: sprites/test_character_head_identity_lock.py
+```python
+"""Image-only headgear identity registration checks; no GPU or semantic approval."""
+⋮----
+def make_person(helmet=(245, 88, 38, 255), raised_arm=False)
+⋮----
+frame = Image.new("RGBA", (256, 256))
+draw = ImageDraw.Draw(frame)
+⋮----
+class HeadIdentityLockTests(unittest.TestCase)
+⋮----
+def test_identical_upright_reference_restores_stable_headgear(self)
+⋮----
+anchor = make_person((241, 71, 40, 255))
+target = make_person((23, 218, 228, 255))
+⋮----
+# Center of the head stays a real part of the same IDLE reference.
+⋮----
+def test_raised_arm_with_unreliable_top_alignment_is_not_pasted(self)
+⋮----
+source = make_person()
+target = make_person((12, 225, 234, 255), raised_arm=True)
+⋮----
+def test_empty_frames_cannot_be_identity_references(self)
+⋮----
+image = Image.new("RGBA", (256, 256))
 ```
 
 ## File: sprites/test_character_provider_reservation.py

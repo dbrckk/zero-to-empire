@@ -31,20 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T04:07:36Z
+Generated: 2026-10-12T04:11:04Z
 
 ### Git
 - Branch: `main`
-- Head: `049f001d9b2c`
-- Commit date: 2026-10-12T06:07:22+02:00
-- Commit: ci(art): inspect live LOG ENG identity-locked character wave
-- Tracked files: 1530
+- Head: `fec7977fe6b1`
+- Commit date: 2026-10-12T06:10:40+02:00
+- Commit: ci(art): run pixel-level head identity lock regressions and monitor all gate modules
+- Tracked files: 1532
 
 ### Recently changed files
-- `ops/kaggle-collector-trigger.txt`
-- `art/production/eng-op-third-batch-semantic-review.md`
-- `tools/assets/test_workflow_policy.py`
+- `.github/workflows/asset-pipeline-ci.yml`
+- `kaggle/github_mass_factory.py`
+- `.github/workflows/kaggle-mass-sprite-factory.yml`
 - `tools/sprites/kaggle_character_sheet_factory_v1.py`
+- `tools/sprites/test_character_head_identity_lock.py`
 
 ### Project signals
 - `build.gradle.kts`
