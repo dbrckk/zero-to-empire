@@ -411,6 +411,29 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("shared=role_anchor[i['role']]", text)
         self.assertNotIn("KAGGLE_CHR_IDENTITY_ANCHOR=", text)
 
+    def test_recent_semantic_defect_survives_rejection_prompt_budget(self):
+        # Extract pure helper as AST; importing the full GPU generator would
+        # unnecessarily load torch/diffusers into this CPU-only CI check.
+        import ast
+        code = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
+        nodes = ast.parse(code).body
+        node = next(x for x in nodes if isinstance(x, ast.FunctionDef)
+                    and x.name == "compact_rejection_hints")
+        namespace = {}
+        exec(compile(ast.Module(body=[node],type_ignores=[]),
+                     "<character-rejection-budget>", "exec"), namespace)
+        fn = namespace["compact_rejection_hints"]
+        older = "Older broad palette risk instruction " * 20
+        latest = "MOST_RECENT_CRATE_SHAPE must remain unchanged in every frame " * 6
+        generic = "QUEUE_DIAGNOSIS preserve actual grip and same role identity " * 5
+        result = fn([older,latest],generic)
+        self.assertTrue(result.startswith("MOST_RECENT_CRATE_SHAPE"))
+        self.assertIn("QUEUE_DIAGNOSIS",result)
+        self.assertLessEqual(len(result.split()),72)
+        self.assertEqual(fn([],""),"")
+        with self.assertRaises(ValueError):
+            fn([latest],generic,max_words=0)
+
     def test_kaggle_rejection_memory_prefers_exact_asset_over_role_fallback(self):
         text = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
         self.assertIn("exact=str(row.get('id','')).upper()", text)
