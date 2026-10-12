@@ -105,7 +105,6 @@ jobs:
           set -euo pipefail
           cp /tmp/zte-single-subject/output/github-qa-report.json \
              /tmp/zte-single-subject/retroactive-collector-qa.json
-            /tmp/zte-single-subject/retroactive-action-qa.json
           python tools/sprites/verify_character_idle_candidates.py \
             --candidates /tmp/zte-single-subject/output/candidates \
             --qa-report /tmp/zte-single-subject/retroactive-collector-qa.json
@@ -158,5 +157,6 @@ jobs:
           path: |
             /tmp/zte-single-subject/single-subject-evidence.json
             /tmp/zte-single-subject/retroactive-collector-qa.json
+            /tmp/zte-single-subject/retroactive-action-qa.json
           retention-days: 90
           if-no-files-found: error
