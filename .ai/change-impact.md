@@ -1,13 +1,13 @@
 # Change impact
 
-Base: def9d0bc6e208f6b91466e962321fd973dc0813a
-Head: b81d3a126e2713d5f51a824e9c7b0cdccfc447c9
+Base: d5a302eb5de0705730fbc19edc43985d45816937
+Head: 4c26ee76d588487cac1dc9491c0336618c6cc4e1
 
 ## Changed files
-- M tools/assets/test_workflow_policy.py
+- M docs/art/UNIFIED_ASSET_PIPELINE.md
 
 ## Affected areas
-- tools
+- docs
 
 ## Related test candidates
 - No direct filename-based test match detected.

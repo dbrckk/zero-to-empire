@@ -31,21 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T13:58:21Z
+Generated: 2026-10-12T14:00:48Z
 
 ### Git
 - Branch: `main`
-- Head: `b81d3a126e27`
-- Commit date: 2026-10-12T15:57:53+02:00
-- Commit: test(ci): require explicit non-promotable provenance for rejected IDLE diagnostics
+- Head: `4c26ee76d588`
+- Commit date: 2026-10-12T16:00:31+02:00
+- Commit: docs(art): document non-promotable IDLE rejection evidence and color-aware shadow QA
 - Tracked files: 1548
 
 ### Recently changed files
+- `docs/art/UNIFIED_ASSET_PIPELINE.md`
 - `tools/assets/test_workflow_policy.py`
 - `.github/workflows/asset-pipeline-ci.yml`
 - `kaggle/github_mass_factory.py`
 - `.github/workflows/kaggle-mass-sprite-factory.yml`
-- `tools/sprites/kaggle_character_sheet_factory_v1.py`
 
 ### Project signals
 - `build.gradle.kts`
