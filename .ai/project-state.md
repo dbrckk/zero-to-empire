@@ -31,21 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T17:03:25Z
+Generated: 2026-10-12T17:05:29Z
 
 ### Git
 - Branch: `main`
-- Head: `205b52fd70b8`
-- Commit date: 2026-10-12T19:02:52+02:00
-- Commit: fix(art): screen two-headed canonical role anchors before expensive GPU action generation
-- Tracked files: 1551
+- Head: `d8826e0da8db`
+- Commit date: 2026-10-12T19:05:11+02:00
+- Commit: docs(art): preserve two-headed LOG IDLE forensic review and corrected acceptance gates
+- Tracked files: 1552
 
 ### Recently changed files
+- `art/production/op-log-v120-two-head-semantic-review.md`
+- `tools/assets/test_workflow_policy.py`
 - `tools/sprites/kaggle_character_sheet_factory_v1.py`
 - `art/production/generation-rejection-ledger.json`
 - `art/production/character-strict-review-backlog.md`
-- `art/production/master-asset-queue.json`
-- `tools/sprites/test_character_semantic_gate.py`
 
 ### Project signals
 - `build.gradle.kts`

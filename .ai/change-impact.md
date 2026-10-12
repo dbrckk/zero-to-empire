@@ -1,13 +1,13 @@
 # Change impact
 
-Base: ae9d712a428a9106fa42a985d8619ef18b1ae4d9
-Head: 205b52fd70b8927d3230d43fae24e0b86d1b5868
+Base: 6516b1e2610c41087387134421239f65c4c95f70
+Head: d8826e0da8db231c24833aefe14b950652aca3dc
 
 ## Changed files
-- M tools/sprites/kaggle_character_sheet_factory_v1.py
+- A art/production/op-log-v120-two-head-semantic-review.md
 
 ## Affected areas
-- tools
+- art
 
 ## Related test candidates
 - No direct filename-based test match detected.
