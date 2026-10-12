@@ -337,6 +337,19 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("risk_level')=='BLOCKING", generator)
         self.assertIn("character_semantic_gate.py", workflow)
 
+    def test_rejected_idle_images_are_isolated_from_promotable_candidates(self):
+        generator = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
+        gpu = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
+        fallback = Path("kaggle/github_mass_factory.py").read_text(encoding="utf-8")
+        diagnostic = Path("tools/sprites/character_rejection_evidence.py").read_text(encoding="utf-8")
+        self.assertIn("from character_rejection_evidence import save_rejected_idle_preview", generator)
+        self.assertIn("character-rejection-previews", generator)
+        self.assertIn("'rejection_preview_file':preview", generator)
+        self.assertIn("character_rejection_evidence.py", gpu)
+        self.assertIn("'character_rejection_evidence.py'", fallback)
+        self.assertIn('"strict_promotion_permitted": False', diagnostic)
+        self.assertNotIn("INCOMING", diagnostic)
+
     def test_kaggle_head_identity_lock_is_present_in_all_gpu_fallbacks(self):
         generator = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
         workflow = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
