@@ -74,6 +74,20 @@ class SemanticGateTests(unittest.TestCase):
         self.assertIn('BAKED_GROUND_SHADOW_RISK',report['flags'])
         self.assertGreaterEqual(report['baked_ground_band_suspected_frames'],4)
 
+    def test_connected_dark_boot_silhouette_is_not_labeled_gray_cast_shadow(self):
+        frames=[]
+        for _ in range(6):
+            frame=person()
+            # Long dark continuous sole reproduces the geometry that the
+            # alpha-only ground-band risk falsely classified as a gray shadow.
+            ImageDraw.Draw(frame).rectangle((70,226,185,233),
+                                           fill=(32,49,65,255))
+            frames.append(frame)
+        self.assertEqual(lower_ground_band_ratio(frames[0]),0.0)
+        report=clip_risk(frames,'IDLE')
+        self.assertNotIn('BAKED_GROUND_SHADOW_RISK',report['flags'])
+        self.assertFalse(report['image_only_semantic_approval'])
+
     def test_one_long_ground_contact_is_not_a_persistent_shadow(self):
         frames=[person(i%2) for i in range(8)]
         ImageDraw.Draw(frames[3]).ellipse((70,221,187,239),
