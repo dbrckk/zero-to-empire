@@ -228,13 +228,23 @@ def semantic_scaffold(source,action,frame_index=0):
   draw.rounded_rectangle((345,455,680,620),radius=22,fill=(82,91,96,235),outline=(198,154,78,255),width=12)
   draw.rectangle((430,430,595,470),fill=(74,82,87,230),outline=(198,154,78,255),width=8)
  elif action=='WORK':
-  draw.rounded_rectangle((640,435,800,650),radius=18,fill=(70,78,84,210),outline=(62,194,205,245),width=9)
-  draw.line((505,520,675,530),fill=(55,63,68,255),width=24)
-  draw.ellipse((490,505,535,550),fill=(62,194,205,240))
+  # A formerly detached 160x215 control panel poisoned later img2img frames:
+  # the model produced floating blue boxes and even generated "ENG" labels.
+  # Seed a single compact handheld tool instead, joined to the right wrist.
+  draw.line((508,530,568,517),fill=(54,62,68,255),width=22)
+  draw.rounded_rectangle((547,479,640,541),radius=13,
+                         fill=(69,78,85,237),outline=(63,188,193,240),width=7)
+  draw.rounded_rectangle((565,527,595,579),radius=7,fill=(49,54,60,245))
+  draw.line((633,502,697,500),fill=(95,109,115,250),width=12)
+  draw.ellipse((686,491,704,509),fill=(192,153,87,255))
  elif action=='REPAIR':
-  draw.rounded_rectangle((650,410,815,665),radius=20,fill=(68,77,83,220),outline=(210,149,70,245),width=10)
-  draw.line((500,545,690,520),fill=(52,60,66,255),width=22)
-  draw.ellipse((485,530,525,570),fill=(62,194,205,240))
+  # The generated 165x255 floating console was not physically part of the
+  # worker. Keep one short diagnostic probe firmly inside arm reach instead.
+  draw.line((493,542,551,528),fill=(57,65,72,255),width=24)
+  draw.rounded_rectangle((531,492,626,539),radius=12,
+                         fill=(72,82,91,238),outline=(198,147,75,250),width=7)
+  draw.line((620,513,700,485),fill=(100,112,121,250),width=11)
+  draw.ellipse((692,476,710,494),fill=(65,195,208,250))
  return out
 
 def prompt_pair(i,pose,mode='default'):
