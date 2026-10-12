@@ -546,7 +546,57 @@
       "target_prefix": "CHR-ENG-IDLE",
       "source_run_id": 38201875119,
       "review_artifact_run_id": 38220177038
+    },
+    {
+      "id": "CHR-ENG-IDLE",
+      "role": "ENG",
+      "action": "IDLE",
+      "reason": "Collector 38223743012 visual rejection: despite a stable face and cyan-striped helmet, 5/6 frames have a long fused gray floor-shadow strip; both feet remain joined in alpha.",
+      "prompt_hint": "Keep the identical ENG white hardhat, cyan band and face through six frames. Render only the person: distinct feet and boots, zero baked floor ellipse/shadow/background strip, visible air gap between feet, subtle blink/breathing without moving the ground.",
+      "target_prefix": "CHR-ENG-IDLE",
+      "source_run_id": 38220241414,
+      "review_artifact_run_id": 38223743012
+    },
+    {
+      "id": "CHR-ENG-WORK",
+      "role": "ENG",
+      "action": "WORK",
+      "reason": "Collector 38223743012 visual rejection: same-run IDLE face lock works in 10/10 frames but tools and wrist contact drift and worker hardly gestures; baked ground shadows appear 9/10.",
+      "prompt_hint": "One identical compact wrist-held work tool at one fixed contact point; move elbow and shoulders while tool stays connected and stable. Keep single ENG face and gear, separated feet and no oval ground shadow.",
+      "target_prefix": "CHR-ENG-WORK",
+      "source_run_id": 38220241414,
+      "review_artifact_run_id": 38223743012
+    },
+    {
+      "id": "CHR-ENG-CARRY",
+      "role": "ENG",
+      "action": "CARRY",
+      "reason": "Collector 38223743012 visual rejection: box is more consistent but no convincing weight-bearing foot alternation; adjacent silhouette jump 0.683 and large ground shadow in 7/8.",
+      "prompt_hint": "Keep precisely the same ENG crate and consistent two-handed grip across 8 frames, alternating deliberate foot strides and weight transfer without viewpoint or face change. Feet remain separately visible without shadow artifacts.",
+      "target_prefix": "CHR-ENG-CARRY",
+      "source_run_id": 38220241414,
+      "review_artifact_run_id": 38223743012
+    },
+    {
+      "id": "CHR-ENG-REPAIR",
+      "role": "ENG",
+      "action": "REPAIR",
+      "reason": "Collector 38223743012 visual rejection: tools, cable, work target, belt and gloves change frame-to-frame; silhouette jump 0.501, shadow and no actual fixed repair point.",
+      "prompt_hint": "Same ENG body and uniform, one identical handheld diagnostic probe in the same hand, repeatedly contacting one consistent repair point; no tool/cable/belt morph, no loose floor wires or shadows; show real elbow and torso changes.",
+      "target_prefix": "CHR-ENG-REPAIR",
+      "source_run_id": 38220241414,
+      "review_artifact_run_id": 38223743012
+    },
+    {
+      "id": "CHR-OP-IDLE",
+      "role": "OP",
+      "action": "IDLE",
+      "reason": "Collector 38223743012 source rejected the OP IDLE for mean-change 0.017 under old fixed 0.025 alpha threshold; all five OP sibling actions were skipped without output.",
+      "prompt_hint": "Keep subtle breathing and blinking in OP IDLE, with clean transparent feet and stable face. New action_qa IDLE measures true pixel activity without requiring exaggerated alpha silhouette motion.",
+      "target_prefix": "CHR-OP-IDLE",
+      "source_run_id": 38220241414,
+      "review_artifact_run_id": 38223743012
     }
   ],
-  "last_validation_request": "Fourth LOG/ENG character batch 38201875119, collector 38220177038: 4 technical candidates LOG-IDLE/WORK/REPAIR/CELEB, action candidates rejected in visual review; ENG IDLE false-blocked by too-high idle alpha motion floor .025, causing all ENG sibling actions to skip. Next GPU wave 38220241414 is active; strict DONE 219."
+  "last_validation_request": "Fifth GPU wave 38220241414, collector 38223743012: OP-IDLE fails legacy static alpha floor .017<.025 and 5 OP actions skipped; ENG produced four QA-pass candidates but manual + current image-risk gate reject 4 for floor shadows (IDLE 5/6, WORK 9/10, CARRY 7/8), unreadable moving carry/work and drifting repair tools. Only valid DONE remains 219/235. A subsequent v1.19 OP LOG run 38223829684 is submitted."
 }
