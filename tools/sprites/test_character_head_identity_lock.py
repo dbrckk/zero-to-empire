@@ -38,6 +38,17 @@ class HeadIdentityLockTests(unittest.TestCase):
         self.assertIn(reason, {"unsafe-top-silhouette", "unsafe-body-scale"})
         self.assertEqual(result.tobytes(), target.tobytes())
 
+    def test_wide_incompatible_head_shape_is_not_pasted(self):
+        source = make_person()
+        target = make_person((25, 223, 234, 255))
+        # Keep the rest of the body while replacing the helmet silhouette
+        # with an oversized incompatible rectangular obstruction.
+        ImageDraw.Draw(target).rectangle((60, 12, 195, 87), fill=(18, 200, 226, 255))
+        restored, applied, reason = lock_head_to_idle(target, source)
+        self.assertFalse(applied)
+        self.assertIn(reason, {"unsafe-head-silhouette-overlap", "unsafe-body-scale"})
+        self.assertEqual(restored.tobytes(), target.tobytes())
+
     def test_empty_frames_cannot_be_identity_references(self):
         image = Image.new("RGBA", (256, 256))
         result, applied, reason = lock_head_to_idle(make_person(), image)
