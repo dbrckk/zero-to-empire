@@ -14,7 +14,7 @@ import torch
 from PIL import Image,ImageDraw,ImageFilter
 from diffusers import FluxPipeline,FluxImg2ImgPipeline,FluxTransformer2DModel
 from transformers import T5EncoderModel
-from character_semantic_gate import clip_risk
+from character_semantic_gate import clip_risk,idle_visual_activity
 from character_head_identity_lock import lock_head_to_idle
 
 ROOT=Path(__file__).resolve().parents[2]
@@ -463,7 +463,15 @@ def action_qa(frames,action):
   if motion<.22:return False,f'walk-too-static lower-motion={motion:.3f}'
   if mean_change<.12:return False,f'walk-too-static mean-change={mean_change:.3f}'
   return True,f'walk-motion={motion:.3f} mean-change={mean_change:.3f}'
- floors={'WORK':.10,'CARRY':.12,'REPAIR':.09,'CELEB':.10,'IDLE':.025}
+ if action=='IDLE':
+  # Visible facial blinking or breathing can be excellent idle animation with
+  # nearly identical alpha silhouettes. Earlier .025 alpha-only floor blocked
+  # a usable ENG reference (.010) and needlessly skipped its three actions.
+  activity=idle_visual_activity(frames)
+  if mean_change<.008 and activity<.00035:
+   return False,f'idle-frozen alpha-motion={mean_change:.4f} pixel-activity={activity:.5f}'
+  return True,f'idle-subtle-alpha-motion={mean_change:.4f} pixel-activity={activity:.5f}'
+ floors={'WORK':.10,'CARRY':.12,'REPAIR':.09,'CELEB':.10}
  floor=floors.get(action,.05)
  if mean_change<floor:
   return False,f'{action.lower()}-too-static mean-change={mean_change:.3f}<{floor:.3f}'
