@@ -46,7 +46,7 @@ class GroundShadowCleanupTests(unittest.TestCase):
         trapped = Image.new("RGBA", (256, 256))
         draw = ImageDraw.Draw(trapped)
         draw.rectangle((120, 174, 146, 232), fill=(132, 132, 132, 255))
-        draw.ellipse((80, 221, 173, 235), fill=(132, 132, 132, 255))
+        draw.ellipse((80, 221, 173, 233), fill=(132, 132, 132, 255))
         trapped.alpha_composite(original)
         before_face = trapped.getpixel((128, 42))
         before_boot = trapped.getpixel((105, 228))
