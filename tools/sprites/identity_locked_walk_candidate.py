@@ -17,6 +17,7 @@ from pathlib import Path
 import numpy as np
 from PIL import Image,ImageDraw
 from character_semantic_gate import clip_risk
+from character_ground_shadow_cleanup import remove_baked_ground_shadow
 
 ROLES={"OP":2,"LOG":0,"ENG":0,"TECH":0}
 SIZE=256
@@ -63,7 +64,7 @@ def warp(anchor:Image.Image,t:float,amplitude:float=12)->Image.Image:
     torso_breath=.85*math.cos(phase)*np.clip((182-yy)/88,0,1)
     rgba=sample_premultiplied(array,xx-lateral-arms,
                              yy+foot_lift+torso_breath)
-    return Image.fromarray(rgba,'RGBA')
+    return Image.fromarray(rgba)
 
 
 def source_frame(path:Path,source_index:int)->Image.Image:
@@ -84,9 +85,13 @@ def render(source:Path,role:str,out:Path,amplitude:float=12)->dict:
     role=role.upper()
     if role not in ROLES:
         raise ValueError("Unknown role")
-    anchor=source_frame(source,ROLES[role])
-    frames=[warp(anchor,n/N_FRAMES,amplitude) for n in range(N_FRAMES)]
-    risk=clip_risk(frames)
+    original=source_frame(source,ROLES[role])
+    anchor,removed_reference_shadow=remove_baked_ground_shadow(original)
+    raw_frames=[warp(anchor,n/N_FRAMES,amplitude) for n in range(N_FRAMES)]
+    cleaned=[remove_baked_ground_shadow(frame) for frame in raw_frames]
+    frames=[item[0] for item in cleaned]
+    removed_frame_shadow=sum(item[1] for item in cleaned)
+    risk=clip_risk(frames,'WALK')
     if risk["risk_level"]=="BLOCKING":
         raise ValueError("Generated candidate failed identity/full-body risk screen: "+
                          ",".join(risk["flags"]))
@@ -112,6 +117,8 @@ def render(source:Path,role:str,out:Path,amplitude:float=12)->dict:
         "animation_mode":"identity-locked-continuous-mesh-experimental-v1",
         "identity_source_count":1,"inferred_art_quality":"NOT_CERTIFIED",
         "visual_risk_screen":risk,"motion_quality":"UNVERIFIED_MECHANICAL_WARP",
+        "shadow_cleanup_reference_pixels":removed_reference_shadow,
+        "shadow_cleanup_animated_pixels":removed_frame_shadow,
         "semantic_review_pass":False,"visual_review_pass":False,
         "strict_status":"NEEDS_REVIEW","integrated_into_game":False,
         "canonical_source_overwritten":False
