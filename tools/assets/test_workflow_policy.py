@@ -126,6 +126,18 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("candidate_dir.glob('*_final.png')", text)
         self.assertIn("ops/kaggle-collector-trigger.txt", text)
 
+    def test_action_translation_reviewer_precedes_candidate_promotion(self):
+        collector = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
+        verifier = Path("tools/sprites/verify_character_action_candidates.py").read_text(encoding="utf-8")
+        self.assertIn("verify_character_action_candidates.py", collector)
+        self.assertLess(collector.index("verify_character_action_candidates.py"),
+                        collector.index("Reconcile controlled character queue"))
+        self.assertIn("ACTION_TRANSLATION_DOMINATES_POSE_RISK", Path(
+            "tools/sprites/character_semantic_gate.py").read_text(encoding="utf-8"))
+        self.assertIn("if details[\"risk_level\"] == \"BLOCKING\":", verifier)
+        self.assertNotIn("strict_status", verifier)
+        self.assertNotIn("app/src/main/res/", verifier)
+
     def test_async_collector_keeps_valid_candidates_when_other_qa_rows_fail(self):
         text = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
         self.assertIn("incomplete/duplicate technical QA coverage", text)
