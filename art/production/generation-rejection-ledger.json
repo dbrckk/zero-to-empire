@@ -506,7 +506,47 @@
       "target_prefix": "CHR-OP-IDLE",
       "source_run_id": 38186016651,
       "review_artifact_run_id": 38201816567
+    },
+    {
+      "id": "CHR-LOG-WORK",
+      "role": "LOG",
+      "action": "WORK",
+      "reason": "Collector 38220177038 visual rejection: control screen floats off hands, size and texture morph; frame 5 short body, helmet and face change over ten frames, no stable work interaction.",
+      "prompt_hint": "One identical LOG female in amber jacket, white helmet, exact same face and proportions in all ten frames. A single wrist-held compact tool visibly contacts a fixed work target. No floating or changing console, no shortened body, no outfit/face swaps.",
+      "target_prefix": "CHR-LOG-WORK",
+      "source_run_id": 38201875119,
+      "review_artifact_run_id": 38220177038
+    },
+    {
+      "id": "CHR-LOG-REPAIR",
+      "role": "LOG",
+      "action": "REPAIR",
+      "reason": "Collector 38220177038 visual rejection: headset, helmet, face and orange workwear shift considerably; loose wires and screen shape morph between frames; repair point is inconsistent.",
+      "prompt_hint": "Repeat identical logistics worker woman with same white hardhat, facial features, amber jacket and dark boots across all ten frames. Keep one fixed repair point and one same-size wrist-held tool physically contacting it; no floating wires, changing panel or identity.",
+      "target_prefix": "CHR-LOG-REPAIR",
+      "source_run_id": 38201875119,
+      "review_artifact_run_id": 38220177038
+    },
+    {
+      "id": "CHR-LOG-CELEB",
+      "role": "LOG",
+      "action": "CELEB",
+      "reason": "Collector 38220177038 visual rejection: first seven frames nearly neutral, last frame has cartoon gold spark rays instead of gradual arm raise; identity drifts between frames.",
+      "prompt_hint": "Progressive human celebration with clearly rising arms over all eight frames, shoulders/elbows moving smoothly and returning toward neutral; preserve identical LOG face, helmet and jacket. Do not generate detached confetti, sparkles, golden rays or decorative props.",
+      "target_prefix": "CHR-LOG-CELEB",
+      "source_run_id": 38201875119,
+      "review_artifact_run_id": 38220177038
+    },
+    {
+      "id": "CHR-ENG-IDLE",
+      "role": "ENG",
+      "action": "IDLE",
+      "reason": "Producer 38201875119 rejected six-frame ENG IDLE for mean alpha silhouette change .010 below overly strict .025; this was a false block on legitimately subtle idle breathing and prevented three downstream ENG actions.",
+      "prompt_hint": "Subtle realistic idle breathing and small alternating posture, with same face, white helmet, graphite/cyan uniform, both feet and pivot stable; avoid silhouette redesign or oversized motion. A slight blink or chest movement is sufficient.",
+      "target_prefix": "CHR-ENG-IDLE",
+      "source_run_id": 38201875119,
+      "review_artifact_run_id": 38220177038
     }
   ],
-  "last_validation_request": "Overnight GPU collector 38201816567: ENG-IDLE remains review-only; ENG-WORK/REPAIR and OP-CARRY rejected by full-frame manual review for identity/prop/text contamination, OP context IDLE has baked ground shadow; subsequent LOG+ENG wave 38201875119 active. Preserve 219 strict DONE."
+  "last_validation_request": "Fourth LOG/ENG character batch 38201875119, collector 38220177038: 4 technical candidates LOG-IDLE/WORK/REPAIR/CELEB, action candidates rejected in visual review; ENG IDLE false-blocked by too-high idle alpha motion floor .025, causing all ENG sibling actions to skip. Next GPU wave 38220241414 is active; strict DONE 219."
 }
