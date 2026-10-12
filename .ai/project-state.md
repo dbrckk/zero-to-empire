@@ -31,21 +31,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T14:00:48Z
+Generated: 2026-10-12T14:02:58Z
 
 ### Git
 - Branch: `main`
-- Head: `4c26ee76d588`
-- Commit date: 2026-10-12T16:00:31+02:00
-- Commit: docs(art): document non-promotable IDLE rejection evidence and color-aware shadow QA
+- Head: `c1a08448ffdc`
+- Commit date: 2026-10-12T16:01:43+02:00
+- Commit: test(art): keep IDLE framing retries within conservative diffusion strength
 - Tracked files: 1548
 
 ### Recently changed files
-- `docs/art/UNIFIED_ASSET_PIPELINE.md`
 - `tools/assets/test_workflow_policy.py`
+- `tools/sprites/kaggle_character_sheet_factory_v1.py`
+- `docs/art/UNIFIED_ASSET_PIPELINE.md`
 - `.github/workflows/asset-pipeline-ci.yml`
-- `kaggle/github_mass_factory.py`
-- `.github/workflows/kaggle-mass-sprite-factory.yml`
 
 ### Project signals
 - `build.gradle.kts`

@@ -5137,6 +5137,11 @@ strength=min(first_strength[2],first_strength[0]+attempt*first_strength[1])
 ⋮----
 if mode=='identity' and i['action']!='WALK':strength=max(.26,strength-.035)
 ⋮----
+# The role anchor already passed full-body validation. On an
+# edge-contact retry, favor preserving its intact shape rather than
+# introducing a larger pose displacement with stronger diffusion.
+strength=min(strength,.23)
+⋮----
 raw=img(image=source,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),strength=strength,num_inference_steps=6,guidance_scale=0,output_type='pil',generator=gen).images[0]
 ⋮----
 anchor_raw=raw.convert('RGB')
@@ -5157,6 +5162,8 @@ strength=min(.76,.56+fi*.018+attempt*.03)
 ⋮----
 strength=min(.38,.24+fi*.012+attempt*.02)
 if mode in {'single','identity'} and i['action']!='WALK':strength=max(.24,strength-.035)
+⋮----
+strength=min(strength,.21)
 source=semantic_scaffold(anchor_raw,i['action'],fi)
 ⋮----
 # Freeze only correctly registered faces/headgear against the validated
