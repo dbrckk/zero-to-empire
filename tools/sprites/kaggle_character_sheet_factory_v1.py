@@ -239,23 +239,34 @@ def semantic_scaffold(source,action,frame_index=0):
   draw.rounded_rectangle((345,455,680,620),radius=22,fill=(82,91,96,235),outline=(198,154,78,255),width=12)
   draw.rectangle((430,430,595,470),fill=(74,82,87,230),outline=(198,154,78,255),width=8)
  elif action=='WORK':
-  # A formerly detached 160x215 control panel poisoned later img2img frames:
-  # the model produced floating blue boxes and even generated "ENG" labels.
-  # Seed a single compact handheld tool instead, joined to the right wrist.
-  draw.line((508,530,568,517),fill=(54,62,68,255),width=22)
-  draw.rounded_rectangle((547,479,640,541),radius=13,
+  # The original giant detached console encouraged floating and morphing
+  # equipment. Keep a single same-sized wrist-connected handheld tool, while
+  # articulating the wrist in a ten-frame press/operate/release cycle. Its
+  # working tip remains near the same fixed target instead of teleporting.
+  phase=(0,6,12,18,12,0,-6,-12,-18,-6)[frame_index%10]
+  tip_delta=round(phase*.25)
+  draw.line((508,530,568,517+phase),fill=(54,62,68,255),width=22)
+  draw.rounded_rectangle((547,479+phase,640,541+phase),radius=13,
                          fill=(69,78,85,237),outline=(63,188,193,240),width=7)
-  draw.rounded_rectangle((565,527,595,579),radius=7,fill=(49,54,60,245))
-  draw.line((633,502,697,500),fill=(95,109,115,250),width=12)
-  draw.ellipse((686,491,704,509),fill=(192,153,87,255))
+  draw.rounded_rectangle((565,527+phase,595,579+phase),radius=7,
+                         fill=(49,54,60,245))
+  draw.line((633,502+phase,697,500+tip_delta),
+            fill=(95,109,115,250),width=12)
+  draw.ellipse((686,491+tip_delta,704,509+tip_delta),
+               fill=(192,153,87,255))
  elif action=='REPAIR':
-  # The generated 165x255 floating console was not physically part of the
-  # worker. Keep one short diagnostic probe firmly inside arm reach instead.
-  draw.line((493,542,551,528),fill=(57,65,72,255),width=24)
-  draw.rounded_rectangle((531,492,626,539),radius=12,
+  # Keep the compact diagnostic probe consistent but move it through a
+  # gradual inspect/contact/withdraw cycle connected to the same arm. The
+  # endpoint stays close to the fixed repair point in every pose.
+  phase=(0,8,16,23,16,0,-8,-16,-8,0)[frame_index%10]
+  tip_delta=round(phase*.3)
+  draw.line((493,542,551,528+phase),fill=(57,65,72,255),width=24)
+  draw.rounded_rectangle((531,492+phase,626,539+phase),radius=12,
                          fill=(72,82,91,238),outline=(198,147,75,250),width=7)
-  draw.line((620,513,700,485),fill=(100,112,121,250),width=11)
-  draw.ellipse((692,476,710,494),fill=(65,195,208,250))
+  draw.line((620,513+phase,700,485+tip_delta),
+            fill=(100,112,121,250),width=11)
+  draw.ellipse((692,476+tip_delta,710,494+tip_delta),
+               fill=(65,195,208,250))
  return out
 
 def prompt_pair(i,pose,mode='default'):
