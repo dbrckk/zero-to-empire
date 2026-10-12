@@ -31,21 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T07:59:31Z
+Generated: 2026-10-12T08:01:05Z
 
 ### Git
 - Branch: `main`
-- Head: `aaca3c954b71`
-- Commit date: 2026-10-12T09:59:06+02:00
-- Commit: docs(art): record fourth-wave LOG visuals and ENG IDLE false-block regression
+- Head: `57c21086ca4b`
+- Commit date: 2026-10-12T10:00:48+02:00
+- Commit: test(ci): require multi-frame raised-arm check in celebration generator
 - Tracked files: 1533
 
 ### Recently changed files
-- `art/production/log-eng-fourth-wave-review.md`
 - `tools/assets/test_workflow_policy.py`
-- `.github/workflows/kaggle-async-character-collector.yml`
 - `tools/sprites/test_character_semantic_gate.py`
+- `tools/sprites/kaggle_character_sheet_factory_v1.py`
 - `tools/sprites/character_semantic_gate.py`
+- `art/production/log-eng-fourth-wave-review.md`
 
 ### Project signals
 - `build.gradle.kts`

@@ -2584,6 +2584,25 @@ count=0
 ⋮----
 def palette_distance(a,b)->float
 ⋮----
+def celebration_arm_reach_counts(frames:list[Image.Image])->list[int]
+⋮----
+"""Count raised-limb silhouette away from the upper torso per frame.
+
+    Avoid mistaking a changing head, costume or a final-frame sparkle for a
+    progressive cheering gesture. Detect actual visible outward/raised arms
+    in at least three action frames; this is still NOT semantic approval.
+    """
+counts=[]
+⋮----
+alpha=frame.convert('RGBA').getchannel('A')
+bb=alpha.getbbox()
+⋮----
+height=bottom-top
+centre=(left+right)/2
+y0=max(0,top+int(height*.18))
+y1=min(frame.height,top+int(height*.34))
+pixels=alpha.load()
+⋮----
 def idle_visual_activity(frames:list[Image.Image])->float
 ⋮----
 """Measure subtle blink/breathing changes without requiring body motion.
@@ -4704,6 +4723,9 @@ changes=upper_body_transition_changes(frames)
 # Arm movement should progress across multiple frames, not originate from
 # one terminal animation jump or from isolated lower-body changes.
 expressive=sum(delta>=.15 for delta in changes)
+⋮----
+arms=celebration_arm_reach_counts(frames)
+active=sum(count>=28 for count in arms)
 ⋮----
 def appearance_signature(cell)
 ⋮----
@@ -7675,6 +7697,19 @@ result=clip_risk(frames,'CARRY')
 ⋮----
 # The same synthetic color change is not proof that a different
 # non-prop action should be blocked on mid-body content alone.
+⋮----
+def test_celebration_counts_actual_raised_arm_frames_not_final_sparkle(self)
+⋮----
+def simple(raised=False)
+neutral=simple()
+cheering=simple(True)
+# The historical LOG-CELEB produced mostly neutral poses, then a
+# final-frame effect. It must not pass as progressive arm animation.
+false_loop=[neutral.copy() for _ in range(7)]+[cheering]
+counts=celebration_arm_reach_counts(false_loop)
+⋮----
+progressive=[neutral.copy() for _ in range(3)]+[cheering.copy() for _ in range(5)]
+scores=celebration_arm_reach_counts(progressive)
 ⋮----
 def test_idles_with_subtle_eye_blinks_have_visible_activity(self)
 ⋮----
