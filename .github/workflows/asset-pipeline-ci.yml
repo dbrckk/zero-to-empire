@@ -126,6 +126,9 @@ jobs:
           assert d['roles'][0]['head_detail_file']=='review-heads-op.png'
           idle=d['roles'][0]['actions']['idle']
           assert idle['candidate'] is True
+          visual=idle['image_only_risk']
+          assert visual['image_only_semantic_approval'] is False
+          assert visual['risk_level'] in {'BLOCKING','REVIEW','NOT_DETECTED'}
           timing=idle['temporal_evidence']
           assert timing['status']=='REVIEW_ONLY'
           assert timing['automatic_semantic_approval'] is False
