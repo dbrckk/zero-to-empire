@@ -286,6 +286,50 @@ def create_panel(role: str, assets: dict[str, Path], output: Path, qa: dict[str,
             "context_only": True, "automatically_approved": False}
 
 
+def create_motion_preview(role: str, action: str, atlas_path: Path, output: Path) -> dict:
+    """Animated mobile-size evidence, NEVER a replacement for lossless PNG.
+
+    Loop playback exposes frozen gestures, teleporting tools and hard cuts that
+    a long contact sheet can hide. GIF is color-quantized for portability, so
+    review exact costume and pixels in the separately preserved full PNG atlas.
+    """
+    if action not in ACTIONS:
+        raise ValueError("Unsupported character action")
+    with Image.open(atlas_path) as image:
+        if image.size != (1024, 1024):
+            raise ValueError("Expected complete 1024x1024 RGBA character atlas")
+        atlas = image.convert("RGBA")
+    frames = []
+    background = checkerboard()
+    header_font = readable_font(16)
+    body_font = readable_font(13)
+    frame_total = ACTIONS[action]
+    for index in range(frame_total):
+        x, y = index % 4 * CELL, index // 4 * CELL
+        sprite = atlas.crop((x, y, x + CELL, y + CELL))
+        tile = background.copy()
+        tile.paste(sprite, (0, 0), sprite)
+        visual = Image.new("RGB", (288, 320), (29, 33, 42))
+        visual.paste(tile, (16, 34))
+        draw = ImageDraw.Draw(visual)
+        draw.text((16, 8), f"{role.upper()} / {action.upper()} - REVIEW", font=header_font,
+                  fill=(241, 244, 250))
+        draw.text((16, 297), f"Frame {index + 1}/{frame_total} - no approval", font=body_font,
+                  fill=(199, 207, 219))
+        frames.append(visual)
+    durations = {"idle": 210, "walk": 115, "work": 145,
+                 "carry": 135, "repair": 145, "celeb": 140}
+    duration = durations[action]
+    output.parent.mkdir(parents=True, exist_ok=True)
+    frames[0].save(output, format="GIF", save_all=True,
+                   append_images=frames[1:], duration=duration,
+                   loop=0, disposal=2, optimize=False)
+    return {"file": output.name, "frame_count": frame_total,
+            "duration_ms_per_frame": duration, "looped": True,
+            "gif_is_color_quantized": True, "review_only": True,
+            "automatic_semantic_approval": False}
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--candidates", type=Path, required=True)
@@ -311,11 +355,17 @@ def main() -> int:
         create_head_panel(role, assets, args.output_dir / f"review-heads-{role}.png")
         item["head_detail_file"] = f"review-heads-{role}.png"
         mobile_files = {}
+        motion_files = {}
         for action, path in sorted(assets.items()):
             filename = f"review-mobile-{role}-{action}.png"
             create_mobile_action_panel(role, action, path, args.output_dir / filename, qa)
             mobile_files[action] = filename
+            preview = f"review-motion-{role}-{action}.gif"
+            motion_files[action] = create_motion_preview(
+                role, action, path, args.output_dir / preview
+            )
         item["mobile_action_files"] = mobile_files
+        item["animated_motion_previews"] = motion_files
         results.append(item)
     summary = {"schema_version": 1, "review_only": True, "roles": results}
     (args.output_dir / "review-panels.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
