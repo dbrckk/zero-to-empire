@@ -16,6 +16,7 @@ on:
       - 'tools/sprites/character_ground_shadow_cleanup.py'
       - 'tools/sprites/character_anchor_pair_salvage.py'
       - 'tools/sprites/character_rejection_evidence.py'
+      - 'tools/sprites/character_idle_breathing_fallback.py'
       - 'tools/sprites/test_character_rejection_evidence.py'
       - 'tools/sprites/test_character_anchor_pair_salvage.py'
       - 'tools/sprites/test_character_ground_shadow_cleanup.py'
@@ -50,6 +51,7 @@ on:
       - 'tools/sprites/character_ground_shadow_cleanup.py'
       - 'tools/sprites/character_anchor_pair_salvage.py'
       - 'tools/sprites/character_rejection_evidence.py'
+      - 'tools/sprites/character_idle_breathing_fallback.py'
       - 'tools/sprites/test_character_rejection_evidence.py'
       - 'tools/sprites/test_character_anchor_pair_salvage.py'
       - 'tools/sprites/test_character_ground_shadow_cleanup.py'
@@ -106,12 +108,41 @@ jobs:
             tools/sprites/character_ground_shadow_cleanup.py \
             tools/sprites/character_anchor_pair_salvage.py \
             tools/sprites/character_rejection_evidence.py \
+            tools/sprites/character_idle_breathing_fallback.py \
             tools/sprites/kaggle_character_sheet_factory_v1.py \
             tools/sprites/kaggle_building_family_factory_v14.py \
             tools/sprites/kaggle_building_family_factory_v15.py \
             tools/sprites/kaggle_building_family_factory_v16.py \
             tools/sprites/kaggle_building_family_factory_v16_10.py \
             tools/sprites/kaggle_building_family_factory_v17.py
+
+      - name: Exercise identity-preserving IDLE recovery against real sprite gates
+        run: |
+          python - <<'PY'
+          import sys
+          sys.path.insert(0,'tools/sprites')
+          from PIL import Image,ImageDraw
+          from character_idle_breathing_fallback import build_idle_breathing_frames
+          from character_semantic_gate import clip_risk,idle_visual_activity
+          base=Image.new('RGBA',(256,256))
+          d=ImageDraw.Draw(base)
+          d.ellipse((109,23,151,70),fill=(180,120,82,255))
+          d.rounded_rectangle((91,71,167,157),radius=12,fill=(61,75,91,255))
+          d.line((99,92,81,133),fill=(61,75,91,255),width=13)
+          d.line((159,92,178,133),fill=(61,75,91,255),width=13)
+          d.line((110,150,104,222),fill=(51,61,71,255),width=17)
+          d.line((148,150,157,223),fill=(51,61,71,255),width=17)
+          frames=build_idle_breathing_frames(base)
+          assert len(frames)==6
+          assert all(frame.size==(256,256) for frame in frames)
+          assert all(frame.crop((0,0,256,70)).tobytes()==base.crop((0,0,256,70)).tobytes() for frame in frames)
+          assert all(frame.crop((0,225,256,256)).tobytes()==base.crop((0,225,256,256)).tobytes() for frame in frames)
+          assert idle_visual_activity(frames)>.00035
+          result=clip_risk(frames,'IDLE')
+          assert result['risk_level']!='BLOCKING',result['flags']
+          assert result['image_only_semantic_approval'] is False
+          print('IDLE_RECOVERY_TECHNICAL_SMOKE_PASS=1')
+          PY
 
       - name: Exercise role review panels with a real rendered atlas
         run: |
