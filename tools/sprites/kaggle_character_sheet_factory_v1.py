@@ -17,6 +17,7 @@ from transformers import T5EncoderModel
 from character_semantic_gate import clip_risk,idle_visual_activity,celebration_arm_reach_counts
 from character_head_identity_lock import lock_head_to_idle
 from character_ground_shadow_cleanup import remove_baked_ground_shadow
+from character_anchor_pair_salvage import salvage_two_full_body_subjects
 
 ROOT=Path(__file__).resolve().parents[2]
 MANIFEST=ROOT/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
@@ -552,7 +553,7 @@ def main():
     with torch.no_grad():pe,ppe,_=enc.encode_prompt(prompt=clip_text,prompt_2=t5_text,max_sequence_length=256)
     variants[mode]=(pe.cpu(),ppe.cpu())
    encs[i['id']].append(variants)
- del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();report=[];role_anchor={};role_reference_cell={};anchor_failures={}
+ del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();report=[];role_anchor={};role_reference_cell={};anchor_failures={};role_anchor_salvage={}
  # When the strict-completion batch includes an IDLE identity anchor, every
  # sibling action must share the SAME successfully validated anchor. If the
  # IDLE atlas is rejected, rendering unrelated actions would burn GPU time
@@ -571,7 +572,25 @@ def main():
     with torch.inference_mode():
      raw=base(height=1024,width=1024,num_inference_steps=6,guidance_scale=0,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),output_type='pil',generator=gen_anchor).images[0]
     candidate=raw.convert('RGB')
-    _,coverage=finish_frame(candidate,'IDLE')
+    try:
+     _,coverage=finish_frame(candidate,'IDLE')
+    except RuntimeError as anchor_error:
+     reason=str(anchor_error).lower()
+     if 'detached-artifact' not in reason and 'too-wide/multiple-subject' not in reason:
+      raise
+     # FLUX can yield two side-by-side workers even with a "one person"
+     # prompt. When two independently tall figures have no overlap, retain
+     # one original foreground without repainting faces or inventing limbs.
+     # Ambiguous duplicates still fail rather than contaminating all actions.
+     single,salvage_evidence=salvage_two_full_body_subjects(
+      candidate,isolate(candidate)
+     )
+     if single is None:
+      raise RuntimeError(f'{anchor_error}; anchor-pair-salvage:{salvage_evidence}') from anchor_error
+     _,coverage=finish_frame(single,'IDLE')
+     candidate=single
+     role_anchor_salvage[role]=salvage_evidence
+     print(f'KAGGLE_CHR_ROLE_ANCHOR_PAIR_RECOVERED={role} attempt={anchor_attempt+1}',flush=True)
     role_anchor[role]=candidate
     print(f'KAGGLE_CHR_CANONICAL_ROLE_ANCHOR={role} attempt={anchor_attempt+1} coverage={coverage:.3f}',flush=True)
     break
@@ -714,7 +733,7 @@ def main():
   if i['action']=='IDLE':
    verified_idle_roles.add(i['role'])
    print(f"KAGGLE_CHR_IDLE_IDENTITY_VALIDATED={i['role']}",flush=True)
-  print(f"KAGGLE_CHR_VALIDATED={p.relative_to(ROOT)} {why} atlas=1024x1024",flush=True);report.append({'id':i['id'],'status':'CANDIDATE','reason':why,'frames':len(frames),'atlas':'1024x1024','cell':'256x256','file':p.name,'cross_animation_appearance_distance':round(identity_distance,2),'visual_risk':visual_risk,'retry_reasons':retry_reasons,'same_run_idle_head_locked_frames':head_lock_frames})
+  print(f"KAGGLE_CHR_VALIDATED={p.relative_to(ROOT)} {why} atlas=1024x1024",flush=True);report.append({'id':i['id'],'status':'CANDIDATE','reason':why,'frames':len(frames),'atlas':'1024x1024','cell':'256x256','file':p.name,'cross_animation_appearance_distance':round(identity_distance,2),'visual_risk':visual_risk,'retry_reasons':retry_reasons,'same_run_idle_head_locked_frames':head_lock_frames,'anchor_pair_salvage':role_anchor_salvage.get(i['role'])})
  REPORT.write_text(json.dumps(report,indent=2),encoding='utf-8')
  print(f"KAGGLE_CHARACTER_CANDIDATES={sum(r['status']=='CANDIDATE' for r in report)} ATTEMPTED={len(items)}",flush=True)
 if __name__=='__main__':main()
