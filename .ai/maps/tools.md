@@ -67,6 +67,7 @@ sprites/
   character_cargo_identity_lock.py
   character_ground_shadow_cleanup.py
   character_head_identity_lock.py
+  character_idle_breathing_fallback.py
   character_rejection_evidence.py
   character_review_matrix.py
   character_semantic_gate.py
@@ -2773,6 +2774,43 @@ mask = ImageChops.multiply(piece.getchannel("A"), soft)
 result = target.copy()
 ```
 
+## File: sprites/character_idle_breathing_fallback.py
+```python
+"""Identity-preserving emergency IDLE breathing from a validated 256px seed.
+
+The six poses contain *only* pixels derived from the same isolated character.
+No new face, helmet, costume, limbs, objects, or shadows are painted. This is a
+candidate-only fallback for a failed stochastic IDLE, not semantic approval.
+"""
+⋮----
+FRAME_SIZE=(256,256)
+PHASES=(0.0,0.65,1.0,0.65,0.0,-0.35)
+⋮----
+def build_idle_breathing_frames(seed: Image.Image) -> list[Image.Image]
+⋮----
+"""Subtly expand the mid-torso while leaving the face/feet untouched."""
+⋮----
+base=seed.convert("RGBA")
+bb=base.getchannel("A").getbbox()
+⋮----
+centre=(left+right)/2
+height=bottom-top
+mask=Image.new("L",FRAME_SIZE)
+mp=mask.load()
+⋮----
+fraction=(y-top)/height
+⋮----
+weight=math.sin(math.pi*(fraction-.25)/.56)**1.5
+opacity=round(255*weight)
+⋮----
+frames=[]
+⋮----
+# The geometric warp uses fractional pixels; torso-only compositing
+# protects the helmet, face, boots, and the fixed Android foot pivot.
+scale=1.0+.017*phase
+warped=base.transform(
+```
+
 ## File: sprites/character_rejection_evidence.py
 ```python
 """Review-only sprites preserved when IDLE generation fails.
@@ -5172,6 +5210,21 @@ candidate=single
 ⋮----
 # Reuse only a strict-DONE OP/LOG/TECH IDLE as a visual identity SOURCE,
 # never as a newly approved role action. Reject invalid/multi-person seed.
+⋮----
+def try_role_seed_idle_fallback(item,failed_reason)
+⋮----
+# In the old pipeline a single failed IDLE frame discarded the five
+# sibling actions without even trying them. Reuse the already validated
+# single-person anchor to make six conservative breathing poses, then run
+# the EXACT same technical and image-risk checks as GPU output. This only
+# creates a manual-review candidate; it NEVER marks semantic strict DONE.
+⋮----
+recovered=build_idle_breathing_frames(seed)
+⋮----
+risk=clip_risk(recovered,'IDLE')
+⋮----
+sheet=make_sheet(recovered)
+dst=INCOMING/f"{item['stem']}.png"
 ⋮----
 why='required-role-idle-candidate-rejected'
 ⋮----

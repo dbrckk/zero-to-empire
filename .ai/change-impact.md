@@ -1,13 +1,13 @@
 # Change impact
 
-Base: ba00e8894fbf675cc4e996903b8c5d97c4861c4b
-Head: 8651019231426e8539dec0e5180961c99dccf400
+Base: a2089b0d27ecfa01c2f2fb2abc8d791206542ac7
+Head: d3c068657aba6f0c548313ea4794f16fd4b4851b
 
 ## Changed files
-- M art/production/generation-rejection-ledger.json
+- M .github/workflows/asset-pipeline-ci.yml
 
 ## Affected areas
-- art
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

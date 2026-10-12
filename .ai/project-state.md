@@ -31,20 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T14:38:42Z
+Generated: 2026-10-12T14:50:32Z
 
 ### Git
 - Branch: `main`
-- Head: `865101923142`
-- Commit date: 2026-10-12T16:38:25+02:00
-- Commit: art(review): document failed LOG role anchors and ENG motion failures for next GPU iteration
-- Tracked files: 1550
+- Head: `d3c068657aba`
+- Commit date: 2026-10-12T16:50:10+02:00
+- Commit: ci(art): validate IDLE rescue with full-frame sprite semantic gates
+- Tracked files: 1551
 
 ### Recently changed files
-- `art/production/generation-rejection-ledger.json`
-- `.github/workflows/ai-repo-map.yml`
 - `.github/workflows/asset-pipeline-ci.yml`
-- `tools/assets/test_workflow_policy.py`
+- `kaggle/github_mass_factory.py`
+- `.github/workflows/kaggle-mass-sprite-factory.yml`
+- `tools/sprites/kaggle_character_sheet_factory_v1.py`
+- `tools/sprites/character_idle_breathing_fallback.py`
 
 ### Project signals
 - `build.gradle.kts`
