@@ -295,6 +295,12 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertLess(text.index("_,coverage=finish_frame(candidate,'IDLE')"),
                         text.index("for idx,i in enumerate(items):"))
 
+    def test_headgear_lock_never_uses_an_unverified_non_idle_reference(self):
+        text = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
+        self.assertIn("and i['role'] in verified_idle_roles", text)
+        self.assertIn("frame,locked,lock_note=lock_head_to_idle", text)
+        self.assertIn("'same_run_idle_head_locked_frames':head_lock_frames", text)
+
     def test_same_run_idle_identity_is_required_before_sibling_render(self):
         text = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
         self.assertIn("required_idle_roles={item['role'] for item in items if item['action']=='IDLE'}", text)
