@@ -131,7 +131,7 @@ jobs:
           fi
 
       - name: Compile sprite generators
-        run: python -m py_compile tools/sprites/kaggle_building_family_factory_v16.py tools/sprites/kaggle_character_sheet_factory_v1.py tools/sprites/character_head_identity_lock.py kaggle/github_mass_factory.py
+        run: python -m py_compile tools/sprites/kaggle_building_family_factory_v16.py tools/sprites/kaggle_character_sheet_factory_v1.py tools/sprites/character_head_identity_lock.py tools/sprites/character_ground_shadow_cleanup.py kaggle/github_mass_factory.py
       - name: Recover async preflight failure
         if: ${{ failure() && env.ASYNC_SUBMIT == 'true' }}
         env:
@@ -286,6 +286,7 @@ jobs:
              tools/sprites/kaggle_character_sheet_factory_v1.py \
              tools/sprites/character_semantic_gate.py \
              tools/sprites/character_head_identity_lock.py \
+             tools/sprites/character_ground_shadow_cleanup.py \
              /tmp/zte-kaggle/tools/sprites/
           sed "s/__KAGGLE_USERNAME__/${KAGGLE_USERNAME}/g" kaggle/kernel-metadata.template.json > /tmp/zte-kaggle/kernel-metadata.json
           python - <<'PY'
@@ -314,6 +315,7 @@ jobs:
               'kaggle_character_sheet_factory_v1.py',
               'character_semantic_gate.py',
               'character_head_identity_lock.py',
+              'character_ground_shadow_cleanup.py',
           ]
           buf=io.BytesIO()
           with zipfile.ZipFile(buf,'w',zipfile.ZIP_DEFLATED) as z:
