@@ -181,6 +181,47 @@ def head_structure_drift(frames:list[Image.Image])->float:
     return result
 
 
+def lower_ground_band_ratio(frame:Image.Image)->float:
+    """Look for a suspicious solid ground bar beneath two narrower legs.
+
+    A baked oval floor shadow often spans the full base of the character even
+    when shoes are separated. A wide *connected horizontal run* near the bottom
+    distinguishes it from naturally spread feet. This is a risk heuristic:
+    passing this check is not proof of transparency or visual acceptability.
+    """
+    alpha=frame.convert('RGBA').getchannel('A')
+    bounds=alpha.getbbox()
+    if not bounds:
+        return 0.0
+    left,top,right,bottom=bounds
+    height=bottom-top
+    if height<96:
+        return 0.0
+    pixels=alpha.load()
+    reference_top=max(top,bottom-round(height*.20))
+    reference_bottom=max(reference_top+2,bottom-round(height*.10))
+    needed=max(2,round((reference_bottom-reference_top)*.18))
+    leg_columns=[
+        x for x in range(left,right)
+        if sum(pixels[x,y]>=96 for y in range(reference_top,reference_bottom))>=needed
+    ]
+    if len(leg_columns)<12:
+        return 0.0
+    leg_span=max(leg_columns)-min(leg_columns)+1
+    longest=0
+    for y in range(max(top,bottom-round(height*.075)),bottom):
+        run=0
+        for x in range(left,right):
+            if pixels[x,y]>=96:
+                run+=1
+                longest=max(longest,run)
+            else:
+                run=0
+    if longest<50:
+        return 0.0
+    return longest/max(leg_span,1)
+
+
 def _body_region_color_signature(frame:Image.Image,start:float,end:float):
     """Masked RGB histogram of a stable vertical region relative to the sprite.
 
@@ -229,7 +270,11 @@ def clip_risk(frames:list[Image.Image],action:str|None=None)->dict:
     head_shape_drift=(head_structure_drift(frames)
                       if str(action or '').upper() in {'WALK','WORK','CARRY','REPAIR'}
                       else 0.0)
+    ground_band_ratios=[lower_ground_band_ratio(frame) for frame in frames]
+    ground_band_count=sum(value>=1.27 for value in ground_band_ratios)
     flags=[]
+    if ground_band_count>=math.ceil(len(frames)*.5):
+        flags.append('BAKED_GROUND_SHADOW_RISK')
     if head_max>.24:
         flags.append('HEAD_FACE_HEADGEAR_COLOR_DISCONTINUITY_RISK')
     if head_shape_drift>.19:
@@ -269,6 +314,7 @@ def clip_risk(frames:list[Image.Image],action:str|None=None)->dict:
               'SILHOUETTE_MASS_DISCONTINUITY_RISK',
               'HEAD_FACE_HEADGEAR_COLOR_DISCONTINUITY_RISK',
               'FACE_HEADGEAR_STRUCTURE_DRIFT_RISK',
+              'BAKED_GROUND_SHADOW_RISK',
               'TOOL_CRATE_TORSO_COLOR_DISCONTINUITY_RISK'}
     blocking=bool(blockers.intersection(flags))
     return {'risk_level':'BLOCKING' if blocking else
@@ -283,6 +329,8 @@ def clip_risk(frames:list[Image.Image],action:str|None=None)->dict:
             'median_height_fraction':round(median_height,4),
             'min_relative_frame_height':round(min_relative_height,4),
             'max_silhouette_mass_ratio':round(mass_ratio,3),
+            'baked_ground_band_suspected_frames':ground_band_count,
+            'max_ground_band_to_leg_width':round(max(ground_band_ratios),3),
             'non_full_body_frames':flat,
             'foot_profile_ambiguous_frames':no_feet,
             'image_only_semantic_approval':False,'frames':dims}
