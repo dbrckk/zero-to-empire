@@ -31,20 +31,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T04:14:43Z
+Generated: 2026-10-12T07:57:28Z
 
 ### Git
 - Branch: `main`
-- Head: `2df5330c9bb5`
-- Commit date: 2026-10-12T06:14:18+02:00
-- Commit: test(ci): verify head identity stabilizer reaches every Kaggle kernel overlay
+- Head: `33f2aec66faa`
+- Commit date: 2026-10-12T09:57:13+02:00
+- Commit: test(art): detect one-frame character scale collapse in ten-frame WORK animation
 - Tracked files: 1532
 
 ### Recently changed files
+- `tools/sprites/test_character_semantic_gate.py`
+- `tools/sprites/character_semantic_gate.py`
 - `tools/assets/test_workflow_policy.py`
 - `tools/sprites/kaggle_character_sheet_factory_v1.py`
-- `tools/sprites/test_character_head_identity_lock.py`
-- `tools/sprites/character_head_identity_lock.py`
 
 ### Project signals
 - `build.gradle.kts`

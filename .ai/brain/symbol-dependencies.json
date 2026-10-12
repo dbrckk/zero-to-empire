@@ -5,28 +5,28 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "_head_anchor": {
+    "_runs": {
       "source": {
-        "file": "tools/sprites/character_head_identity_lock.py",
-        "start": 14,
-        "end": 39
+        "file": "tools/sprites/character_semantic_gate.py",
+        "start": 13,
+        "end": 19
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "lock_head_to_idle": {
+    "frame_geometry": {
       "source": {
-        "file": "tools/sprites/character_head_identity_lock.py",
-        "start": 42,
-        "end": 89
+        "file": "tools/sprites/character_semantic_gate.py",
+        "start": 22,
+        "end": 61
       },
       "symbol_dependencies": [
         {
-          "symbol": "_head_anchor",
+          "symbol": "_runs",
           "definitions": [
             {
-              "file": "tools/sprites/character_head_identity_lock.py",
-              "line": 14,
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 13,
               "kind": "function",
               "language": "python"
             }
@@ -35,6 +35,113 @@
         }
       ],
       "dependency_count": 1
+    },
+    "color_signature": {
+      "source": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "start": 64,
+        "end": 76
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "palette_distance": {
+      "source": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "start": 79,
+        "end": 81
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "idle_visual_activity": {
+      "source": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "start": 84,
+        "end": 107
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "_body_region_color_signature": {
+      "source": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "start": 110,
+        "end": 123
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "color_signature",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 64,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "clip_risk": {
+      "source": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "start": 126,
+        "end": 207
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_body_region_color_signature",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 110,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "color_signature",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 64,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "frame_geometry",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 22,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "palette_distance",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 79,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 4
     },
     "rows": {
       "source": {
@@ -421,7 +528,7 @@
           "definitions": [
             {
               "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-              "line": 501,
+              "line": 509,
               "kind": "function",
               "language": "python"
             }
@@ -433,7 +540,7 @@
           "definitions": [
             {
               "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-              "line": 487,
+              "line": 495,
               "kind": "function",
               "language": "python"
             }
@@ -447,7 +554,7 @@
       "source": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
         "start": 454,
-        "end": 485
+        "end": 493
       },
       "symbol_dependencies": [
         {
@@ -461,6 +568,18 @@
             }
           ],
           "relation": "same_file"
+        },
+        {
+          "symbol": "idle_visual_activity",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 84,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
         },
         {
           "symbol": "lower_body_motion",
@@ -499,13 +618,13 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 4
+      "dependency_count": 5
     },
     "appearance_signature": {
       "source": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "start": 487,
-        "end": 499
+        "start": 495,
+        "end": 507
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -513,8 +632,8 @@
     "appearance_distance": {
       "source": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "start": 501,
-        "end": 502
+        "start": 509,
+        "end": 510
       },
       "symbol_dependencies": [
         {
@@ -522,7 +641,7 @@
           "definitions": [
             {
               "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-              "line": 487,
+              "line": 495,
               "kind": "function",
               "language": "python"
             }
@@ -535,8 +654,8 @@
     "make_sheet": {
       "source": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "start": 504,
-        "end": 510
+        "start": 512,
+        "end": 518
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -544,8 +663,8 @@
     "main": {
       "source": {
         "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-        "start": 512,
-        "end": 632
+        "start": 520,
+        "end": 640
       },
       "symbol_dependencies": [
         {
@@ -647,28 +766,37 @@
       ],
       "dependency_count": 8
     },
-    "make_person": {
+    "person": {
       "source": {
-        "file": "tools/sprites/test_character_head_identity_lock.py",
+        "file": "tools/sprites/test_character_semantic_gate.py",
         "start": 7,
         "end": 18
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "HeadIdentityLockTests": {
+    "portrait": {
       "source": {
-        "file": "tools/sprites/test_character_head_identity_lock.py",
+        "file": "tools/sprites/test_character_semantic_gate.py",
         "start": 21,
-        "end": 57
+        "end": 27
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "SemanticGateTests": {
+      "source": {
+        "file": "tools/sprites/test_character_semantic_gate.py",
+        "start": 30,
+        "end": 123
       },
       "symbol_dependencies": [
         {
-          "symbol": "lock_head_to_idle",
+          "symbol": "clip_risk",
           "definitions": [
             {
-              "file": "tools/sprites/character_head_identity_lock.py",
-              "line": 42,
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 126,
               "kind": "function",
               "language": "python"
             }
@@ -676,10 +804,58 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "make_person",
+          "symbol": "color_signature",
           "definitions": [
             {
-              "file": "tools/sprites/test_character_head_identity_lock.py",
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 64,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "frame_geometry",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 22,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "idle_visual_activity",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 84,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "palette_distance",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 79,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "person",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_character_semantic_gate.py",
               "line": 7,
               "kind": "function",
               "language": "python"
@@ -688,11 +864,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_empty_frames_cannot_be_identity_references",
+          "symbol": "portrait",
           "definitions": [
             {
-              "file": "tools/sprites/test_character_head_identity_lock.py",
-              "line": 52,
+              "file": "tools/sprites/test_character_semantic_gate.py",
+              "line": 21,
               "kind": "function",
               "language": "python"
             }
@@ -700,11 +876,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_identical_upright_reference_restores_stable_headgear",
+          "symbol": "test_alternating_helmet_or_face_color_blocks_identity",
           "definitions": [
             {
-              "file": "tools/sprites/test_character_head_identity_lock.py",
-              "line": 22,
+              "file": "tools/sprites/test_character_semantic_gate.py",
+              "line": 74,
               "kind": "function",
               "language": "python"
             }
@@ -712,11 +888,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_raised_arm_with_unreliable_top_alignment_is_not_pasted",
+          "symbol": "test_consistent_full_body_is_not_blocked",
           "definitions": [
             {
-              "file": "tools/sprites/test_character_head_identity_lock.py",
-              "line": 33,
+              "file": "tools/sprites/test_character_semantic_gate.py",
+              "line": 31,
               "kind": "function",
               "language": "python"
             }
@@ -724,10 +900,106 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_wide_incompatible_head_shape_is_not_pasted",
+          "symbol": "test_empty_frame_fails_hard",
           "definitions": [
             {
-              "file": "tools/sprites/test_character_head_identity_lock.py",
+              "file": "tools/sprites/test_character_semantic_gate.py",
+              "line": 57,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_idle_visual_activity_requires_multiple_nonempty_frames",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_character_semantic_gate.py",
+              "line": 115,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_idles_with_subtle_eye_blinks_have_visible_activity",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_character_semantic_gate.py",
+              "line": 102,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_morphing_crate_palette_blocks_carrying",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_character_semantic_gate.py",
+              "line": 86,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_one_collapsed_work_frame_blocks_even_if_nine_others_are_full_body",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_character_semantic_gate.py",
+              "line": 62,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_portraits_and_fragments_block",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_character_semantic_gate.py",
+              "line": 36,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_same_palette_is_identical",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_character_semantic_gate.py",
+              "line": 119,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_two_people_in_one_cell_cause_visible_mass_jump",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_character_semantic_gate.py",
+              "line": 47,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_unrelated_costume_palettes_are_detected",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_character_semantic_gate.py",
               "line": 41,
               "kind": "function",
               "language": "python"
@@ -736,21 +1008,21 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 6
+      "dependency_count": 18
     },
-    "test_identical_upright_reference_restores_stable_headgear": {
+    "test_consistent_full_body_is_not_blocked": {
       "source": {
-        "file": "tools/sprites/test_character_head_identity_lock.py",
-        "start": 22,
-        "end": 31
+        "file": "tools/sprites/test_character_semantic_gate.py",
+        "start": 31,
+        "end": 34
       },
       "symbol_dependencies": [
         {
-          "symbol": "lock_head_to_idle",
+          "symbol": "clip_risk",
           "definitions": [
             {
-              "file": "tools/sprites/character_head_identity_lock.py",
-              "line": 42,
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 126,
               "kind": "function",
               "language": "python"
             }
@@ -758,10 +1030,10 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "make_person",
+          "symbol": "person",
           "definitions": [
             {
-              "file": "tools/sprites/test_character_head_identity_lock.py",
+              "file": "tools/sprites/test_character_semantic_gate.py",
               "line": 7,
               "kind": "function",
               "language": "python"
@@ -772,19 +1044,19 @@
       ],
       "dependency_count": 2
     },
-    "test_raised_arm_with_unreliable_top_alignment_is_not_pasted": {
+    "test_portraits_and_fragments_block": {
       "source": {
-        "file": "tools/sprites/test_character_head_identity_lock.py",
-        "start": 33,
+        "file": "tools/sprites/test_character_semantic_gate.py",
+        "start": 36,
         "end": 39
       },
       "symbol_dependencies": [
         {
-          "symbol": "lock_head_to_idle",
+          "symbol": "clip_risk",
           "definitions": [
             {
-              "file": "tools/sprites/character_head_identity_lock.py",
-              "line": 42,
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 126,
               "kind": "function",
               "language": "python"
             }
@@ -792,11 +1064,11 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "make_person",
+          "symbol": "portrait",
           "definitions": [
             {
-              "file": "tools/sprites/test_character_head_identity_lock.py",
-              "line": 7,
+              "file": "tools/sprites/test_character_semantic_gate.py",
+              "line": 21,
               "kind": "function",
               "language": "python"
             }
@@ -806,19 +1078,19 @@
       ],
       "dependency_count": 2
     },
-    "test_wide_incompatible_head_shape_is_not_pasted": {
+    "test_unrelated_costume_palettes_are_detected": {
       "source": {
-        "file": "tools/sprites/test_character_head_identity_lock.py",
+        "file": "tools/sprites/test_character_semantic_gate.py",
         "start": 41,
-        "end": 50
+        "end": 45
       },
       "symbol_dependencies": [
         {
-          "symbol": "lock_head_to_idle",
+          "symbol": "clip_risk",
           "definitions": [
             {
-              "file": "tools/sprites/character_head_identity_lock.py",
-              "line": 42,
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 126,
               "kind": "function",
               "language": "python"
             }
@@ -826,10 +1098,10 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "make_person",
+          "symbol": "person",
           "definitions": [
             {
-              "file": "tools/sprites/test_character_head_identity_lock.py",
+              "file": "tools/sprites/test_character_semantic_gate.py",
               "line": 7,
               "kind": "function",
               "language": "python"
@@ -840,19 +1112,19 @@
       ],
       "dependency_count": 2
     },
-    "test_empty_frames_cannot_be_identity_references": {
+    "test_two_people_in_one_cell_cause_visible_mass_jump": {
       "source": {
-        "file": "tools/sprites/test_character_head_identity_lock.py",
-        "start": 52,
-        "end": 57
+        "file": "tools/sprites/test_character_semantic_gate.py",
+        "start": 47,
+        "end": 55
       },
       "symbol_dependencies": [
         {
-          "symbol": "lock_head_to_idle",
+          "symbol": "clip_risk",
           "definitions": [
             {
-              "file": "tools/sprites/character_head_identity_lock.py",
-              "line": 42,
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 126,
               "kind": "function",
               "language": "python"
             }
@@ -860,10 +1132,10 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "make_person",
+          "symbol": "person",
           "definitions": [
             {
-              "file": "tools/sprites/test_character_head_identity_lock.py",
+              "file": "tools/sprites/test_character_semantic_gate.py",
               "line": 7,
               "kind": "function",
               "language": "python"
@@ -873,6 +1145,280 @@
         }
       ],
       "dependency_count": 2
+    },
+    "test_empty_frame_fails_hard": {
+      "source": {
+        "file": "tools/sprites/test_character_semantic_gate.py",
+        "start": 57,
+        "end": 60
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "clip_risk",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 126,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "frame_geometry",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 22,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "person",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_character_semantic_gate.py",
+              "line": 7,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "test_one_collapsed_work_frame_blocks_even_if_nine_others_are_full_body": {
+      "source": {
+        "file": "tools/sprites/test_character_semantic_gate.py",
+        "start": 62,
+        "end": 72
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "clip_risk",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 126,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "person",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_character_semantic_gate.py",
+              "line": 7,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_alternating_helmet_or_face_color_blocks_identity": {
+      "source": {
+        "file": "tools/sprites/test_character_semantic_gate.py",
+        "start": 74,
+        "end": 84
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "clip_risk",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 126,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "person",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_character_semantic_gate.py",
+              "line": 7,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_morphing_crate_palette_blocks_carrying": {
+      "source": {
+        "file": "tools/sprites/test_character_semantic_gate.py",
+        "start": 86,
+        "end": 100
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "clip_risk",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 126,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "person",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_character_semantic_gate.py",
+              "line": 7,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_idles_with_subtle_eye_blinks_have_visible_activity": {
+      "source": {
+        "file": "tools/sprites/test_character_semantic_gate.py",
+        "start": 102,
+        "end": 113
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "idle_visual_activity",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 84,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "person",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_character_semantic_gate.py",
+              "line": 7,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_idle_visual_activity_requires_multiple_nonempty_frames": {
+      "source": {
+        "file": "tools/sprites/test_character_semantic_gate.py",
+        "start": 115,
+        "end": 117
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "idle_visual_activity",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 84,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "person",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_character_semantic_gate.py",
+              "line": 7,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_same_palette_is_identical": {
+      "source": {
+        "file": "tools/sprites/test_character_semantic_gate.py",
+        "start": 119,
+        "end": 123
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "clip_risk",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 126,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "color_signature",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 64,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "palette_distance",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 79,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "person",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_character_semantic_gate.py",
+              "line": 7,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 4
     }
   }
 }

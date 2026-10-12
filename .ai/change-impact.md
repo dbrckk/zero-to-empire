@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 23e07a8af5de03620c7e52c63fe3a33417b275d2
-Head: 2df5330c9bb5a0803616755d84d7ac46f0f884f5
+Base: de85f37d6d4a712b10d24ba750543cd87d5febba
+Head: 33f2aec66faa953146b5a5b22837c19482d60286
 
 ## Changed files
-- M tools/assets/test_workflow_policy.py
+- M tools/sprites/test_character_semantic_gate.py
 
 ## Affected areas
 - tools

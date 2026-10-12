@@ -27413,6 +27413,8 @@ def test_character_role_anchor_is_validated_before_action_frames(self)
 ⋮----
 def test_headgear_lock_never_uses_an_unverified_non_idle_reference(self)
 ⋮----
+def test_idle_animation_gate_accepts_blinks_without_fake_locomotion(self)
+⋮----
 def test_same_run_idle_identity_is_required_before_sibling_render(self)
 ⋮----
 def test_kaggle_character_generator_rejects_blocking_visual_risks(self)
@@ -28707,6 +28709,21 @@ count=0
 ⋮----
 def palette_distance(a,b)->float
 ⋮----
+def idle_visual_activity(frames:list[Image.Image])->float
+⋮----
+"""Measure subtle blink/breathing changes without requiring body motion.
+
+    Silhouette-only alpha overlap falsely rejects excellent six-frame IDLE
+    animations with a fixed body and tiny facial or uniform detail changes.
+    RGB + alpha differences are normalized over the visible character region.
+    An exact repeated sprite still scores 0.0 and is rejected upstream.
+    This is evidence of image activity only, never an artistic approval.
+    """
+⋮----
+sampled=[
+diff=0
+total=0
+⋮----
 def _body_region_color_signature(frame:Image.Image,start:float,end:float)
 ⋮----
 """Masked RGB histogram of a stable vertical region relative to the sprite.
@@ -28740,6 +28757,10 @@ mid_changes=[
 mid_max=max(mid_changes,default=0.0)
 ⋮----
 sizes=[f['bbox_height_fraction'] for f in dims]
+# A single mysteriously shortened frame was accepted in LOG-WORK even
+# though its neighbors retained normal full-body framing. Reject per-frame
+# collapses instead of waiting for >=2 portrait fragments or a 2x jump.
+min_relative_height=min(sizes)/max(statistics.median(sizes),.01)
 ⋮----
 areas=[f['visible_alpha_area'] for f in dims]
 mass_ratio=max(areas)/max(min(areas),1)
@@ -30796,7 +30817,12 @@ mean_change=(sum(1-x for x in ious)/len(ious)) if ious else 0.0
 ⋮----
 motion=lower_body_motion(frames)
 ⋮----
-floors={'WORK':.10,'CARRY':.12,'REPAIR':.09,'CELEB':.10,'IDLE':.025}
+# Visible facial blinking or breathing can be excellent idle animation with
+# nearly identical alpha silhouettes. Earlier .025 alpha-only floor blocked
+# a usable ENG reference (.010) and needlessly skipped its three actions.
+activity=idle_visual_activity(frames)
+⋮----
+floors={'WORK':.10,'CARRY':.12,'REPAIR':.09,'CELEB':.10}
 floor=floors.get(action,.05)
 ⋮----
 changes=upper_body_transition_changes(frames)
@@ -33747,6 +33773,16 @@ def test_empty_frame_fails_hard(self)
 ⋮----
 frames=[person() for _ in range(7)]+[Image.new('RGBA',(256,256))]
 ⋮----
+def test_one_collapsed_work_frame_blocks_even_if_nine_others_are_full_body(self)
+⋮----
+normal=person()
+tiny=normal.crop((0,16,256,229)).resize((256,164))
+short=Image.new('RGBA',(256,256))
+⋮----
+frames=[normal.copy() for _ in range(10)]
+⋮----
+result=clip_risk(frames,'WORK')
+⋮----
 def test_alternating_helmet_or_face_color_blocks_identity(self)
 ⋮----
 frames=[]
@@ -33764,6 +33800,14 @@ result=clip_risk(frames,'CARRY')
 ⋮----
 # The same synthetic color change is not proof that a different
 # non-prop action should be blocked on mid-body content alone.
+⋮----
+def test_idles_with_subtle_eye_blinks_have_visible_activity(self)
+⋮----
+base=person()
+⋮----
+frame=base.copy()
+⋮----
+def test_idle_visual_activity_requires_multiple_nonempty_frames(self)
 ⋮----
 def test_same_palette_is_identical(self)
 ⋮----
