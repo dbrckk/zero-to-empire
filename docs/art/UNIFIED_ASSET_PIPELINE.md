@@ -183,6 +183,38 @@ components while that migration is not complete:
   Review the full frames and enlarged head strips. Never claim 235/235 merely
   because 235 image files or 235 technically passing QA rows exist.
 
+### October 12: evidence-driven animation gates
+
+The LOG/ENG collector `38220177038` exposed several machine-passing but
+semantically invalid animations, including a one-frame 175px body amid normal
+218px frames, neutral celebrations with gold rays only at the end, and faces
+redrawn into different people despite broadly similar uniform palettes.
+
+The character-only, **rejection-side** tests now include:
+
+- `FRAME_SCALE_COLLAPSE_RISK`: any action frame whose visible body height
+  falls below 82% of the animation's median is blocked; prevents isolated
+  shortened/fragmented bodies.
+- `FACE_HEADGEAR_STRUCTURE_DRIFT_RISK`: normalized, aligned 68x68 head and
+  helmet pixel texture must not change drastically from the first frame
+  (threshold .19) on WALK/WORK/CARRY/REPAIR; supplements color histograms.
+- `celebration_arm_reach_counts`: at least three frames of a CELEB loop
+  must actually place visible arms above/outside the upper torso, rather than
+  counting a final sparkle effect or changing face as a gesture.
+- `idle_visual_activity`: IDLE may show subtle breathing or blinking with
+  nearly identical alpha silhouettes, but cannot be a completely frozen
+  sequence. This replaces the excessive .025 alpha-only motion minimum,
+  which unnecessarily prevented an ENG batch.
+- Existing frame-level technical, pose, appearance, connected components,
+  sprite atlas and Android runtime checks remain mandatory.
+- None of these image-only tests, even if all pass, constitutes visual
+  semantic approval or changes `strict_status` automatically.
+
+Each threshold has a regression using synthetic 256px sprites, while real
+review examples and rejected asset IDs are documented in
+`art/production/log-eng-fourth-wave-review.md`. The reason-to-retry hints
+are retained in `art/production/generation-rejection-ledger.json`.
+
 ### Known defects from recovered OP/LOG wave
 
 The superseded OP/LOG source `38170846318` was recovered as artifact
