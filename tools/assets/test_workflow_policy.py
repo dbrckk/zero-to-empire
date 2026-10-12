@@ -282,7 +282,7 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
     def test_carry_scaffold_adds_deterministic_lower_body_motion(self):
         text = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
         self.assertIn("phase=(0,1,2,1,0,-1,-2,-1)[frame_index%8]", text)
-        self.assertIn("shear=phase*.045", text)
+        self.assertIn("shear=phase*.060", text)
         self.assertIn("deterministic", text)
         self.assertIn("lower=out.crop((0,hip_y,w,h))", text)
 
