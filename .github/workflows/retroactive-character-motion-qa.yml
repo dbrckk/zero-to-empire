@@ -51,6 +51,25 @@ jobs:
           python tools/sprites/verify_character_action_candidates.py \
             --candidates /tmp/zte-motion-forensics/output/candidates \
             --qa-report /tmp/zte-motion-forensics/current-qa.json
+      - name: Render action-by-action GIF playback from immutable source
+        run: |
+          python tools/sprites/build_character_review_panels.py \
+            --candidates /tmp/zte-motion-forensics/output/candidates \
+            --qa-report /tmp/zte-motion-forensics/current-qa.json \
+            --output-dir /tmp/zte-motion-forensics/current-review-playback
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('/tmp/zte-motion-forensics/current-review-playback')
+          report=json.loads((root/'review-panels.json').read_text())
+          assert report['review_only'] is True
+          animated=[item for role in report['roles']
+                    for item in role['animated_motion_previews'].values()]
+          assert animated and all(not row['automatic_semantic_approval'] for row in animated)
+          for item in animated:
+              assert (root/item['file']).is_file(),item
+          print('RETROACTIVE_MOBILE_MOTION_PREVIEWS='+str(len(animated)))
+          PY
       - name: Reconcile source QA and mark review-only correction
         run: |
           python - <<'PY'
@@ -91,5 +110,6 @@ jobs:
             /tmp/zte-motion-forensics/prior-qa.json
             /tmp/zte-motion-forensics/current-qa.json
             /tmp/zte-motion-forensics/retroactive-motion-report.json
+            /tmp/zte-motion-forensics/current-review-playback/**
           retention-days: 90
           if-no-files-found: error
