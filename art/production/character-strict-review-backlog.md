@@ -2,7 +2,7 @@
 
 Generated from `art/production/master-asset-queue.json` after production completion.
 
-- Production processed: **222/235**
+- Production processed: **220/235**
 - Strict DONE: **219/235**
 - Semantic review remaining: **16**
 - This report does **not** grant strict approval or runtime promotion.
@@ -10,9 +10,9 @@ Generated from `art/production/master-asset-queue.json` after production complet
 | Asset | Role | Action | Technical status | Review artifact run | Review note |
 |---|---|---|---|---:|---|
 | CHR-OP-WALK | OP | WALK | DISPATCHED | 38281126201 | Fresh kaggle-character-sheet dispatch 38281171130 is active; semantic review remains required after candidate collection. |
-| CHR-OP-WORK | OP | WORK | AWAITING_REVIEW | 38281126201 | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
+| CHR-OP-WORK | OP | WORK | REJECTED_SEMANTIC | 38281126201 | Manual complete 10-frame review of Kaggle collector 38281126201: face/headgear relatively stable, but all ten poses remain near idle; wrist tools and screens appear/disappear or morph, frame 7 changes uniform/arm proportions, and no fixed work target or tool-contact action is visible. REJECTED for premium work semantics. |
 | CHR-OP-CARRY | OP | CARRY | DISPATCHED | 38281126201 | Fresh kaggle-character-sheet dispatch 38281171130 is active; semantic review remains required after candidate collection. |
-| CHR-OP-REPAIR | OP | REPAIR | AWAITING_REVIEW | 38281126201 | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
+| CHR-OP-REPAIR | OP | REPAIR | REJECTED_SEMANTIC | 38281126201 | Manual complete 10-frame review of Kaggle collector 38281126201: face stable but arms/tools change randomly, frame 7 shows a large disconnected disc/console over torso; no consistent repair point or progressive repair animation. REJECTED for props and action semantics. |
 | CHR-OP-CELEB | OP | CELEB | DISPATCHED | 38281126201 | Fresh kaggle-character-sheet dispatch 38281171130 is active; semantic review remains required after candidate collection. |
 | CHR-LOG-WALK | LOG | WALK | DISPATCHED | 38281126201 | Fresh kaggle-character-sheet dispatch 38281171130 is active; semantic review remains required after candidate collection. |
 | CHR-LOG-WORK | LOG | WORK | DISPATCHED | 38281126201 | Fresh kaggle-character-sheet dispatch 38281171130 is active; semantic review remains required after candidate collection. |
