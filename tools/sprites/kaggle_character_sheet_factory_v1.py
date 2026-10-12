@@ -632,7 +632,7 @@ def main():
   if role not in role_anchor:
    anchor_failures[role]=failures
    print(f'KAGGLE_CHR_ROLE_ANCHOR_REJECTED={role} attempts={len(failures)}',flush=True)
- def try_role_seed_idle_fallback(item,failed_reason):
+ def try_role_seed_idle_fallback(item,failed_reason,failed_frames):
   # In the old pipeline a single failed IDLE frame discarded the five
   # sibling actions without even trying them. Reuse the already validated
   # single-person anchor to make six conservative breathing poses, then run
@@ -654,11 +654,14 @@ def main():
    sheet.save(dst,'PNG',optimize=True)
    role_reference_cell[item['role']]=recovered[0].copy()
    verified_idle_roles.add(item['role'])
+   rejected_preview=keep_rejected_idle_for_review(item,failed_frames,failed_reason)
    report.append({
     'id':item['id'],'status':'CANDIDATE',
     'reason':f'role-seed-breathing-fallback after={failed_reason}; {sheet_reason}; {action_reason}',
     'frames':len(recovered),'atlas':'1024x1024','cell':'256x256',
     'file':dst.name,'candidate_origin':'validated-role-seed-breathing-fallback',
+    'role_anchor_source':role_anchor_salvage.get(item['role'],'fresh-role-anchor'),
+    'rejection_preview_file':rejected_preview,
     'visual_risk':risk,'same_run_idle_head_locked_frames':0,
     'automatic_semantic_approval':False,
    })
@@ -764,7 +767,7 @@ def main():
    if not ok:fail=f'frame-{fi}-failed';break
    gc.collect();torch.cuda.empty_cache()
   if fail:
-   if try_role_seed_idle_fallback(i,fail):continue
+   if try_role_seed_idle_fallback(i,fail,frames):continue
    preview=keep_rejected_idle_for_review(i,frames,fail)
    report.append({'id':i['id'],'status':'REJECT','reason':fail,'frames':len(frames),
                   'retry_reasons':retry_reasons,'rejection_preview_file':preview});continue
@@ -772,7 +775,7 @@ def main():
    ok,why=sheet_qa(frames,i['action'])
    if not ok:
     print(f"KAGGLE_CHR_REJECTED={i['id']} reason={why}",flush=True)
-    if try_role_seed_idle_fallback(i,why):continue
+    if try_role_seed_idle_fallback(i,why,frames):continue
     preview=keep_rejected_idle_for_review(i,frames,why)
     report.append({'id':i['id'],'status':'REJECT','reason':why,
                    'frames':len(frames),'retry_reasons':retry_reasons,
@@ -780,7 +783,7 @@ def main():
    action_ok,action_why=action_qa(frames,i['action'])
    if not action_ok:
     print(f"KAGGLE_CHR_REJECTED={i['id']} reason={action_why}",flush=True)
-    if try_role_seed_idle_fallback(i,action_why):continue
+    if try_role_seed_idle_fallback(i,action_why,frames):continue
     preview=keep_rejected_idle_for_review(i,frames,action_why)
     report.append({'id':i['id'],'status':'REJECT','reason':action_why,
                    'frames':len(frames),'retry_reasons':retry_reasons,
@@ -792,7 +795,7 @@ def main():
    # this candidate and preserve exact diagnostics for the next attempt.
    reason=f'candidate-visual-qa-error:{type(exc).__name__}:{str(exc)[:180]}'
    print(f"KAGGLE_CHR_REJECTED={i['id']} reason={reason}",flush=True)
-   if try_role_seed_idle_fallback(i,reason):continue
+   if try_role_seed_idle_fallback(i,reason,frames):continue
    preview=keep_rejected_idle_for_review(i,frames,reason)
    report.append({'id':i['id'],'status':'REJECT','reason':reason,
                   'frames':len(frames),'retry_reasons':retry_reasons,
@@ -800,7 +803,7 @@ def main():
   if visual_risk.get('risk_level')=='BLOCKING':
    risk_reason='image-risk:'+','.join(visual_risk.get('flags') or ['UNKNOWN'])
    print(f"KAGGLE_CHR_REJECTED={i['id']} reason={risk_reason}",flush=True)
-   if try_role_seed_idle_fallback(i,risk_reason):continue
+   if try_role_seed_idle_fallback(i,risk_reason,frames):continue
    preview=keep_rejected_idle_for_review(i,frames,risk_reason)
    report.append({'id':i['id'],'status':'REJECT','reason':risk_reason,'frames':len(frames),
                   'visual_risk':visual_risk,'retry_reasons':retry_reasons,
