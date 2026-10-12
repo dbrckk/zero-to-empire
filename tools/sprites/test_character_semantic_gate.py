@@ -1,7 +1,7 @@
 """Synthetic visual failure tests, no external models and no automatic approval."""
 import unittest
 from PIL import Image,ImageDraw
-from character_semantic_gate import clip_risk,frame_geometry,palette_distance,color_signature,idle_visual_activity,celebration_arm_reach_counts,head_structure_drift
+from character_semantic_gate import clip_risk,frame_geometry,palette_distance,color_signature,idle_visual_activity,lower_ground_band_ratio,celebration_arm_reach_counts,head_structure_drift
 
 
 def person(i=0,color=(80,144,187,255)):
@@ -58,6 +58,28 @@ class SemanticGateTests(unittest.TestCase):
         self.assertFalse(frame_geometry(Image.new('RGBA',(256,256)))['valid'])
         frames=[person() for _ in range(7)]+[Image.new('RGBA',(256,256))]
         self.assertEqual(clip_risk(frames)['risk_level'],'BLOCKING')
+
+    def test_persistent_flat_floor_shadow_blocks_candidate(self):
+        clean=[person(i%2) for i in range(8)]
+        self.assertTrue(all(lower_ground_band_ratio(frame)<1.27 for frame in clean))
+        self.assertNotIn('BAKED_GROUND_SHADOW_RISK',clip_risk(clean,'IDLE')['flags'])
+        shadowed=[]
+        for frame in clean:
+            with_shadow=frame.copy()
+            ImageDraw.Draw(with_shadow).ellipse((70,221,187,239),
+                                               fill=(80,83,87,230))
+            shadowed.append(with_shadow)
+        report=clip_risk(shadowed,'IDLE')
+        self.assertEqual(report['risk_level'],'BLOCKING')
+        self.assertIn('BAKED_GROUND_SHADOW_RISK',report['flags'])
+        self.assertGreaterEqual(report['baked_ground_band_suspected_frames'],4)
+
+    def test_one_long_ground_contact_is_not_a_persistent_shadow(self):
+        frames=[person(i%2) for i in range(8)]
+        ImageDraw.Draw(frames[3]).ellipse((70,221,187,239),
+                                         fill=(80,83,87,230))
+        report=clip_risk(frames,'WORK')
+        self.assertNotIn('BAKED_GROUND_SHADOW_RISK',report['flags'])
 
     def test_one_collapsed_work_frame_blocks_even_if_nine_others_are_full_body(self):
         normal=person()
