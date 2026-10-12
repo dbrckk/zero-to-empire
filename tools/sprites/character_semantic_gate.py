@@ -81,7 +81,23 @@ def palette_distance(a,b)->float:
                for aa,bb in zip(a,b))/3
 
 
-def clip_risk(frames:list[Image.Image])->dict:
+def _body_region_color_signature(frame:Image.Image,start:float,end:float):
+    """Masked RGB histogram of a stable vertical region relative to the sprite.
+
+    The top 28% targets headgear/face; the 40%-73% region targets hands,
+    equipment and carried cargo. This reports visual risk, not semantic truth.
+    """
+    rgba=frame.convert('RGBA')
+    bounds=rgba.getchannel('A').getbbox()
+    if not bounds:
+        raise ValueError('Empty character frame')
+    height=bounds[3]-bounds[1]
+    top=max(0,bounds[1]+round(height*start))
+    bottom=min(rgba.height,max(top+1,bounds[1]+round(height*end)))
+    return color_signature(rgba.crop((0,top,rgba.width,bottom)))
+
+
+def clip_risk(frames:list[Image.Image],action:str|None=None)->dict:
     if len(frames)<4:
         raise ValueError('At least four images needed')
     dims=[frame_geometry(f) for f in frames]
@@ -98,7 +114,24 @@ def clip_risk(frames:list[Image.Image])->dict:
     flat=sum(f['aspect_ratio']<1.30 for f in dims)
     no_feet=sum(f['bottom_segment_count']<2 for f in dims)
     biggest=max(adjacent)
+    head_signatures=[_body_region_color_signature(f,0,.28) for f in frames]
+    head_changes=[
+        palette_distance(head_signatures[i-1],head_signatures[i])
+        for i in range(1,len(frames))
+    ]
+    head_max=max(head_changes,default=0.0)
+    mid_signatures=[_body_region_color_signature(f,.40,.73) for f in frames]
+    mid_changes=[
+        palette_distance(mid_signatures[i-1],mid_signatures[i])
+        for i in range(1,len(frames))
+    ]
+    mid_max=max(mid_changes,default=0.0)
     flags=[]
+    if head_max>.24:
+        flags.append('HEAD_FACE_HEADGEAR_COLOR_DISCONTINUITY_RISK')
+    if (str(action or '').upper() in {'WORK','CARRY','REPAIR'}
+        and mid_max>.30):
+        flags.append('TOOL_CRATE_TORSO_COLOR_DISCONTINUITY_RISK')
     if flat>=max(2,math.ceil(len(frames)*.25)):
         flags.append('MULTIPLE_NON_FULL_BODY_FRAMES')
     if median_aspect<1.40:
@@ -120,12 +153,16 @@ def clip_risk(frames:list[Image.Image])->dict:
               'MEDIAN_SILHOUETTE_NOT_FULL_BODY',
               'PALETTE_IDENTITY_DISCONTINUITY_RISK',
               'CHARACTER_SCALE_DISCONTINUITY_RISK',
-              'SILHOUETTE_MASS_DISCONTINUITY_RISK'}
+              'SILHOUETTE_MASS_DISCONTINUITY_RISK',
+              'HEAD_FACE_HEADGEAR_COLOR_DISCONTINUITY_RISK',
+              'TOOL_CRATE_TORSO_COLOR_DISCONTINUITY_RISK'}
     blocking=bool(blockers.intersection(flags))
     return {'risk_level':'BLOCKING' if blocking else
             ('REVIEW' if flags else 'NOT_DETECTED'),
             'flags':flags,
             'max_palette_adjacent_distance':round(biggest,4),
+            'max_headgear_adjacent_color_distance':round(head_max,4),
+            'max_mid_body_prop_adjacent_color_distance':round(mid_max,4),
             'median_palette_adjacent_distance':round(statistics.median(adjacent),4),
             'median_aspect_ratio':round(median_aspect,4),
             'median_height_fraction':round(median_height,4),
