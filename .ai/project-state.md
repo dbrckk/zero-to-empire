@@ -31,21 +31,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T08:27:28Z
+Generated: 2026-10-12T08:31:09Z
 
 ### Git
 - Branch: `main`
-- Head: `587bec898ba7`
-- Commit date: 2026-10-12T10:27:04+02:00
-- Commit: test(ci): ensure image-risk evidence accompanies mobile character review panels
+- Head: `099b8370f52a`
+- Commit date: 2026-10-12T10:30:47+02:00
+- Commit: art(qa): feed fifth-wave ENG shadow and OP idle failure back to bounded generator
 - Tracked files: 1535
 
 ### Recently changed files
-- `.github/workflows/asset-pipeline-ci.yml`
-- `tools/sprites/build_character_review_panels.py`
-- `tools/sprites/test_character_semantic_gate.py`
-- `tools/sprites/character_semantic_gate.py`
-- `ops/kaggle-collector-trigger.txt`
+- `art/production/generation-rejection-ledger.json`
+- `art/production/character-strict-review-backlog.md`
+- `art/production/master-asset-queue.json`
+- `art/production/kaggle-async-state.json`
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
+- `art/production/controlled-character-regen-queue.json`
 
 ### Project signals
 - `build.gradle.kts`
