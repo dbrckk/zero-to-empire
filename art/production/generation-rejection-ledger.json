@@ -616,7 +616,67 @@
       "review_artifact_run_id": 38240796531,
       "reason": "Collector 38240796531: all four LOG role-anchor attempts failed because the generated frame contained two similarly sized disconnected full-body people (detached-artifact component near 1:1), preventing IDLE and all five actions.",
       "prompt_hint": "Exactly ONE adult female logistics worker standing alone in full body, centered. One face, one torso, precisely two arms and two legs, only one white helmet and amber cargo uniform; never another person, identical twin, duplicate pose, mirror image, or companion."
+    },
+    {
+      "id": "CHR-LOG-IDLE",
+      "role": "LOG",
+      "action": "IDLE",
+      "reason": "Wave 38246849469, collector 38263062708: all four fresh role anchors rejected. Attempts produced two full-body people (component ratios 8847/9154 and 5276/7249), one unstable gray border sd=14.7, and one unsafe split/no safe framing. Five LOG actions skipped because IDLE anchor never validated.",
+      "prompt_hint": "Generate one single full-body adult female logistics worker alone. Exactly one head, one torso and one pair of legs; white hardhat and amber jacket on a quiet uniform neutral gray background. No companion, duplicate, overlapping bodies, shadow copies or scene. If fresh anchoring fails again, reuse the existing CHR-LOG-IDLE strict-DONE atlas only as an identity source, then create a new reviewed candidate.",
+      "target_prefix": "CHR-LOG-IDLE",
+      "source_run_id": 38246849469,
+      "review_artifact_run_id": 38263062708
+    },
+    {
+      "id": "CHR-ENG-WALK",
+      "role": "ENG",
+      "action": "WALK",
+      "reason": "Wave 38246849469, collector 38263062708: leg motion too static (lower-body change 0.098 below required 0.22). IDLE from same wave passed technical QA, but WALK was rejected.",
+      "prompt_hint": "Ensure a clear left/right alternating leg stride over eight poses with feet separated on the ground and meaningful opposite arm swing; same cyan-striped white helmet and graphite face throughout.",
+      "target_prefix": "CHR-ENG-WALK",
+      "source_run_id": 38246849469,
+      "review_artifact_run_id": 38263062708
+    },
+    {
+      "id": "CHR-ENG-WORK",
+      "role": "ENG",
+      "action": "WORK",
+      "reason": "Wave 38246849469, collector 38263062708: baked ground shadow across five of ten frames (max ground/leg band 1.647), loose lower-foot silhouettes and missed border retries.",
+      "prompt_hint": "Maintain full-body engineer with two separate boots and no ground-plane, baked cast shadow, floor strip or grey smudge. Tool remains in worker's hand and touches one fixed work point across ten frames.",
+      "target_prefix": "CHR-ENG-WORK",
+      "source_run_id": 38246849469,
+      "review_artifact_run_id": 38263062708
+    },
+    {
+      "id": "CHR-ENG-CARRY",
+      "role": "ENG",
+      "action": "CARRY",
+      "reason": "Wave 38246849469, collector 38263062708: seven of eight frames show fused lower foot band and baked ground shadow (band ratio up to 1.796); carrying stance unreadable.",
+      "prompt_hint": "One identical rectangular crate held securely by two hands at waist. Both feet remain distinct with clearly alternating stride and no horizontal gray floor shadow or merged boot strip.",
+      "target_prefix": "CHR-ENG-CARRY",
+      "source_run_id": 38246849469,
+      "review_artifact_run_id": 38263062708
+    },
+    {
+      "id": "CHR-ENG-REPAIR",
+      "role": "ENG",
+      "action": "REPAIR",
+      "reason": "Wave 38246849469, collector 38263062708: face/headgear silhouette drift metric 0.2272 exceeded permitted 0.19; generated props inconsistent with stable repair point.",
+      "prompt_hint": "Same stable single engineer face and white cyan-striped helmet every frame. Keep the same diagnostic tool connected to the wrist, consistent target and no prop switching. Preserve upper-face silhouette across all ten frames.",
+      "target_prefix": "CHR-ENG-REPAIR",
+      "source_run_id": 38246849469,
+      "review_artifact_run_id": 38263062708
+    },
+    {
+      "id": "CHR-ENG-CELEB",
+      "role": "ENG",
+      "action": "CELEB",
+      "reason": "Wave 38246849469, collector 38263062708: abrupt upper-silhouette jump of 0.660 exceeded 0.450, meaning the arm raise was a sudden last-frame identity/motion discontinuity.",
+      "prompt_hint": "Progressively lift and lower both arms in a natural smooth eight-frame celebration cycle without abrupt jumps, rays, confetti, extra props or changing face/helmet.",
+      "target_prefix": "CHR-ENG-CELEB",
+      "source_run_id": 38246849469,
+      "review_artifact_run_id": 38263062708
     }
   ],
-  "last_validation_request": "Sixth OP/LOG Kaggle 38223829684 collected at 38240796531: all 12 targets rejected (OP IDLE persistent fused shadow/feet, LOG role anchor two disconnected full-body figures). No sprites promoted, strict DONE 219. Improved neutral-shadow cleanup applied in subsequent GPU wave, and conservative duplicate-role-anchor salvage will apply after its code reaches a future GPU source bundle."
+  "last_validation_request": "Collector 38263062708 recovered batch 38246849469: 1/12 technically valid CHR-ENG-IDLE (review-only), 11 generator rejections mostly triggered by LOG role-anchor duplicates and ENG gait/shadow/head-motion limits. Existing strict-DONE OP LOG IDLE fallback has passed canonical file CI smoke and is included in future GPU bundles. Canonical strict DONE remains 219/235."
 }
