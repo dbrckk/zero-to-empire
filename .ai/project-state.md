@@ -31,21 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T19:30:06Z
+Generated: 2026-10-12T19:31:58Z
 
 ### Git
 - Branch: `main`
-- Head: `c1c6d30d4c95`
-- Commit date: 2026-10-12T21:29:53+02:00
-- Commit: fix(art): smooth procedural WALK thigh deformation to avoid crotch tearing
-- Tracked files: 1559
+- Head: `e4caba3dd833`
+- Commit date: 2026-10-12T21:31:43+02:00
+- Commit: docs(art): preserve v1.20 OP LOG visual evidence, false CELEB pass and WALK v2 limits
+- Tracked files: 1560
 
 ### Recently changed files
+- `art/production/op-log-v120-semantic-review.md`
 - `tools/sprites/identity_locked_walk_candidate.py`
 - `.github/workflows/retroactive-character-motion-qa.yml`
 - `tools/sprites/test_verify_character_action_candidates.py`
 - `tools/sprites/verify_character_action_candidates.py`
-- `art/production/generation-rejection-ledger.json`
 
 ### Project signals
 - `build.gradle.kts`

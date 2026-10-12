@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 1a95a04a34e91cfc76579c95888540655b4f04ef
-Head: c1c6d30d4c95b272b3cea7f21fafbd4c977ef6be
+Base: b5fde67e75d4da07252b9ff1c060761dfb861ede
+Head: e4caba3dd833fee4c4885a6997f3bae3cd3e48e1
 
 ## Changed files
-- M tools/sprites/identity_locked_walk_candidate.py
+- A art/production/op-log-v120-semantic-review.md
 
 ## Affected areas
-- tools
+- art
 
 ## Related test candidates
 - No direct filename-based test match detected.
