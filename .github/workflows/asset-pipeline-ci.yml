@@ -122,7 +122,13 @@ jobs:
           assert d['review_only'] is True
           assert d['roles'][0]['automatically_approved'] is False
           assert d['roles'][0]['head_detail_file']=='review-heads-op.png'
-          assert d['roles'][0]['actions']['idle']['candidate'] is True
+          idle=d['roles'][0]['actions']['idle']
+          assert idle['candidate'] is True
+          timing=idle['temporal_evidence']
+          assert timing['status']=='REVIEW_ONLY'
+          assert timing['automatic_semantic_approval'] is False
+          assert 'last_to_first_alpha_change' in timing
+          assert 'loop_seam_to_mean_step_ratio' in timing
           assert d['roles'][0]['mobile_action_files']['idle']=='review-mobile-op-idle.png'
           from PIL import Image
           mobile=Image.open('/tmp/zte-smoke-review/review-mobile-op-idle.png')
