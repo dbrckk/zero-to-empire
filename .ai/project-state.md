@@ -31,13 +31,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T11:23:58Z
+Generated: 2026-10-12T11:25:10Z
 
 ### Git
 - Branch: `main`
-- Head: `a16c812b2916`
-- Commit date: 2026-10-12T13:23:37+02:00
-- Commit: test(art): clean trapped charcoal shadows but preserve boots and fused trouser silhouettes
+- Head: `ee4b1c5967f4`
+- Commit date: 2026-10-12T13:24:56+02:00
+- Commit: test(art): preserve separate boot anchors while exercising trapped-shadow cleanup
 - Tracked files: 1546
 
 ### Recently changed files
@@ -45,7 +45,6 @@ Generated: 2026-10-12T11:23:58Z
 - `tools/sprites/character_ground_shadow_cleanup.py`
 - `art/production/generation-rejection-ledger.json`
 - `.github/workflows/asset-pipeline-ci.yml`
-- `kaggle/github_mass_factory.py`
 
 ### Project signals
 - `build.gradle.kts`

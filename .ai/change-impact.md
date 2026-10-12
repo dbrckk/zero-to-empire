@@ -1,7 +1,7 @@
 # Change impact
 
-Base: 38ed3166d1044182e6e74612cadee2334a49ea53
-Head: a16c812b291662b9eebc754e9c04c0492df0e8e4
+Base: d5301d07e36617ec14576c948a84a20f10871f8f
+Head: ee4b1c5967f4209d3d23b42057b2e5f8aee04fa1
 
 ## Changed files
 - M tools/sprites/test_character_ground_shadow_cleanup.py
