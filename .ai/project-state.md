@@ -31,20 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T21:50:29Z
+Generated: 2026-10-12T04:04:44Z
 
 ### Git
 - Branch: `main`
-- Head: `3394deb72555`
-- Commit date: 2026-10-11T23:50:13+02:00
-- Commit: docs(art): document auditable 235-character production and review handoff
+- Head: `3e992a12daf0`
+- Commit date: 2026-10-12T06:04:25+02:00
+- Commit: test(art): protect pending IDLE provenance and 12-sheet role-burst capacity
 - Tracked files: 1529
 
 ### Recently changed files
-- `docs/art/UNIFIED_ASSET_PIPELINE.md`
-- `tools/sprites/kaggle_character_sheet_factory_v1.py`
-- `tools/sprites/build_character_review_panels.py`
-- `.github/workflows/asset-pipeline-ci.yml`
+- `tools/assets/test_queue_state_policy.py`
+- `tools/sprites/asset_queue_utils.py`
+- `tools/sprites/asset_wave_orchestrator.py`
+- `art/production/generation-rejection-ledger.json`
+- `art/production/character-strict-review-backlog.md`
 
 ### Project signals
 - `build.gradle.kts`

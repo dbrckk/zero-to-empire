@@ -1,13 +1,13 @@
 # Change impact
 
-Base: c5f86ac72b41ad0af69d7efaeaa644b7439480c3
-Head: 3394deb72555ef246968dc18bdf8c116e08fb56b
+Base: c18427c907ee545e085a76acc61e65ee09dbd770
+Head: 3e992a12daf0e91cfb33f7f26a72ecf75643ba1a
 
 ## Changed files
-- M docs/art/UNIFIED_ASSET_PIPELINE.md
+- M tools/assets/test_queue_state_policy.py
 
 ## Affected areas
-- docs
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

@@ -1245,8 +1245,10 @@ jobs:
           print(f"REJECTION_MEMORY_SCHEMA_PASS={len(rows)}")
           PY
 
-      - name: Run unified asset pipeline unit tests
-        run: python -m unittest discover -s tools/assets -p 'test_*.py' -v
+      - name: Run unified asset pipeline and visual-semantic gate checks
+        run: |
+          python -m unittest discover -s tools/assets -p 'test_*.py' -v
+          python -m unittest discover -s tools/sprites -p 'test_character_semantic_gate.py' -v
 
       - name: Verify live character-production plan against strict queue and Android frame contract
         run: |
@@ -27142,6 +27144,12 @@ def test_persisted_fields_are_unique(self) -> None
 ⋮----
 fields = queue_utils.PERSISTED_ASSET_STATE_FIELDS
 ⋮----
+def test_optional_id_anchor_preserves_unapproved_candidate_until_collected(self) -> None
+⋮----
+candidate = {
+queue = {"assets": [candidate]}
+controlled = {"targets": [
+⋮----
 def test_canonical_queue_policy_matches_current_character_epoch(self) -> None
 ⋮----
 text = MODULE_PATH.read_text(encoding="utf-8")
@@ -27204,9 +27212,15 @@ count = orchestrator.prioritize_controlled_character_targets(
 ⋮----
 targets = saved["value"]["targets"]
 ⋮----
-def test_character_burst_keeps_op_and_log_families_whole_within_twelve_slots(self) -> None
+def test_batch_reserves_review_pending_idle_anchors_under_capacity(self) -> None
 ⋮----
 assets = []
+⋮----
+result = orchestrator.prepare_character_burst(
+⋮----
+ids = [row["id"] for row in saved["value"]["targets"]]
+⋮----
+def test_character_burst_keeps_op_and_log_families_whole_within_twelve_slots(self) -> None
 ⋮----
 rejected_op = next(x for x in assets if x["id"] == "CHR-OP-WALK")
 ⋮----
@@ -27214,8 +27228,6 @@ queue = {"assets": assets}
 store = {}
 ⋮----
 def fake_save(path, value)
-⋮----
-result = orchestrator.prepare_character_burst(
 ⋮----
 produced = [x["id"] for x in store["controlled"]["targets"][:12]]
 ⋮----
@@ -27600,6 +27612,12 @@ status = str(item.get("status", "")).upper()
 ⋮----
 cq = load_json(CHARACTER_QUEUE, {}) or {}
 ⋮----
+# A producer may regenerate an optional identity anchor for a sibling
+# wave while the master has a distinct, unapproved IDLE candidate.
+# Pending/rejected context evidence must not overwrite that older
+# candidate or its artifact provenance. A newly produced IDLE candidate
+# may replace it only with an actual collected review artifact.
+⋮----
 pollinations_only = status in {"PENDING_POLLINATIONS", "PROVIDER_ERROR"}
 normalized_status = "REJECTED_SEMANTIC" if status in {"REJECTED", "REJECTED_SEMANTIC"} else status
 ⋮----
@@ -27758,7 +27776,10 @@ group_assets = sorted(
 ⋮----
 idle_id = f"{group}-IDLE"
 idle_is_selected = any(x["id"] == idle_id for x in group_assets)
-needs_idle_context = (
+# An IDLE already awaiting review still needs its own same-run anchor
+# slot when regenerating siblings. Otherwise the subsequent implicit
+# context insertion can silently exceed the 12-sheet Kaggle capacity.
+needs_idle_context = not idle_is_selected and idle_id in assets
 group_cost = len(group_assets) + (1 if needs_idle_context else 0)
 ⋮----
 # Keep role families together whenever possible. Splitting a six-action
@@ -28602,7 +28623,21 @@ count=0
 ⋮----
 def palette_distance(a,b)->float
 ⋮----
-def clip_risk(frames:list[Image.Image])->dict
+def _body_region_color_signature(frame:Image.Image,start:float,end:float)
+⋮----
+"""Masked RGB histogram of a stable vertical region relative to the sprite.
+
+    The top 28% targets headgear/face; the 40%-73% region targets hands,
+    equipment and carried cargo. This reports visual risk, not semantic truth.
+    """
+⋮----
+bounds=rgba.getchannel('A').getbbox()
+⋮----
+height=bounds[3]-bounds[1]
+top=max(0,bounds[1]+round(height*start))
+bottom=min(rgba.height,max(top+1,bounds[1]+round(height*end)))
+⋮----
+def clip_risk(frames:list[Image.Image],action:str|None=None)->dict
 ⋮----
 dims=[frame_geometry(f) for f in frames]
 ⋮----
@@ -28613,6 +28648,12 @@ median_height=statistics.median(f['bbox_height_fraction'] for f in dims)
 flat=sum(f['aspect_ratio']<1.30 for f in dims)
 no_feet=sum(f['bottom_segment_count']<2 for f in dims)
 biggest=max(adjacent)
+head_signatures=[_body_region_color_signature(f,0,.28) for f in frames]
+head_changes=[
+head_max=max(head_changes,default=0.0)
+mid_signatures=[_body_region_color_signature(f,.40,.73) for f in frames]
+mid_changes=[
+mid_max=max(mid_changes,default=0.0)
 ⋮----
 sizes=[f['bbox_height_fraction'] for f in dims]
 ⋮----
@@ -30770,7 +30811,7 @@ frame,cov=finish_frame(raw,i['action']);frames.append(frame);ok=True;print(f"KAG
 last_reason=str(e);retry_reasons.append(last_reason);print(f"KAGGLE_CHR_RETRY={i['id']} frame={fi} attempt={attempt+1} mode={mode} reason={e}",flush=True)
 if not ok:fail=f'frame-{fi}-failed';break
 ⋮----
-visual_risk=clip_risk(frames)
+visual_risk=clip_risk(frames,i['action'])
 ⋮----
 risk_reason='image-risk:'+','.join(visual_risk.get('flags') or ['UNKNOWN'])
 ⋮----
@@ -33576,6 +33617,24 @@ frames=[person() for _ in range(7)]+[pair]
 def test_empty_frame_fails_hard(self)
 ⋮----
 frames=[person() for _ in range(7)]+[Image.new('RGBA',(256,256))]
+⋮----
+def test_alternating_helmet_or_face_color_blocks_identity(self)
+⋮----
+frames=[]
+⋮----
+frame=person()
+color=(245,65,35,255) if index%2 else (30,235,224,255)
+⋮----
+result=clip_risk(frames,'IDLE')
+⋮----
+def test_morphing_crate_palette_blocks_carrying(self)
+⋮----
+color=(230,50,32,255) if index%2 else (15,225,226,255)
+⋮----
+result=clip_risk(frames,'CARRY')
+⋮----
+# The same synthetic color change is not proof that a different
+# non-prop action should be blocked on mid-body content alone.
 ⋮----
 def test_same_palette_is_identical(self)
 ⋮----
