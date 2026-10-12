@@ -31,20 +31,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T17:20:06Z
+Generated: 2026-10-12T17:30:30Z
 
 ### Git
 - Branch: `main`
-- Head: `9b6b6455dd34`
-- Commit date: 2026-10-12T19:19:52+02:00
-- Commit: test(ci): preserve distinction between queued Kaggle GPU and active processing
+- Head: `3795dc75d7b3`
+- Commit date: 2026-10-12T19:30:18+02:00
+- Commit: ci(art): verify current OP LOG Kaggle GPU queue status
 - Tracked files: 1555
 
 ### Recently changed files
+- `ops/kaggle-collector-trigger.txt`
 - `tools/assets/test_workflow_policy.py`
 - `.github/workflows/kaggle-async-character-collector.yml`
-- `ops/kaggle-collector-trigger.txt`
-- `.github/workflows/asset-pipeline-ci.yml`
 
 ### Project signals
 - `build.gradle.kts`
