@@ -667,14 +667,26 @@ def main():
    gc.collect();torch.cuda.empty_cache()
   if fail:
    report.append({'id':i['id'],'status':'REJECT','reason':fail,'frames':len(frames),'retry_reasons':retry_reasons});continue
-  ok,why=sheet_qa(frames,i['action'])
-  if not ok:
-   print(f"KAGGLE_CHR_REJECTED={i['id']} reason={why}",flush=True);report.append({'id':i['id'],'status':'REJECT','reason':why,'frames':len(frames),'retry_reasons':retry_reasons});continue
-  action_ok,action_why=action_qa(frames,i['action'])
-  if not action_ok:
-   print(f"KAGGLE_CHR_REJECTED={i['id']} reason={action_why}",flush=True)
-   report.append({'id':i['id'],'status':'REJECT','reason':action_why,'frames':len(frames),'retry_reasons':retry_reasons});continue
-  visual_risk=clip_risk(frames,i['action'])
+  try:
+   ok,why=sheet_qa(frames,i['action'])
+   if not ok:
+    print(f"KAGGLE_CHR_REJECTED={i['id']} reason={why}",flush=True)
+    report.append({'id':i['id'],'status':'REJECT','reason':why,
+                   'frames':len(frames),'retry_reasons':retry_reasons});continue
+   action_ok,action_why=action_qa(frames,i['action'])
+   if not action_ok:
+    print(f"KAGGLE_CHR_REJECTED={i['id']} reason={action_why}",flush=True)
+    report.append({'id':i['id'],'status':'REJECT','reason':action_why,
+                   'frames':len(frames),'retry_reasons':retry_reasons});continue
+   visual_risk=clip_risk(frames,i['action'])
+  except (ValueError, IndexError, OSError) as exc:
+   # One bizarre empty head/hand crop must not abort a 12-sheet GPU kernel,
+   # dropping valid siblings and their producer report. Explicitly reject
+   # this candidate and preserve exact diagnostics for the next attempt.
+   reason=f'candidate-visual-qa-error:{type(exc).__name__}:{str(exc)[:180]}'
+   print(f"KAGGLE_CHR_REJECTED={i['id']} reason={reason}",flush=True)
+   report.append({'id':i['id'],'status':'REJECT','reason':reason,
+                  'frames':len(frames),'retry_reasons':retry_reasons});continue
   if visual_risk.get('risk_level')=='BLOCKING':
    risk_reason='image-risk:'+','.join(visual_risk.get('flags') or ['UNKNOWN'])
    print(f"KAGGLE_CHR_REJECTED={i['id']} reason={risk_reason}",flush=True)
