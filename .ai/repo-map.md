@@ -1236,7 +1236,13 @@ jobs:
           assert d['review_only'] is True
           assert d['roles'][0]['automatically_approved'] is False
           assert d['roles'][0]['head_detail_file']=='review-heads-op.png'
-          assert d['roles'][0]['actions']['idle']['candidate'] is True
+          idle=d['roles'][0]['actions']['idle']
+          assert idle['candidate'] is True
+          timing=idle['temporal_evidence']
+          assert timing['status']=='REVIEW_ONLY'
+          assert timing['automatic_semantic_approval'] is False
+          assert 'last_to_first_alpha_change' in timing
+          assert 'loop_seam_to_mean_step_ratio' in timing
           assert d['roles'][0]['mobile_action_files']['idle']=='review-mobile-op-idle.png'
           from PIL import Image
           mobile=Image.open('/tmp/zte-smoke-review/review-mobile-op-idle.png')
@@ -27681,7 +27687,7 @@ TRIGGER_DISPATCH_TOKEN = os.getenv("AUTOF_TRIGGER_DISPATCH_TOKEN", "")
 CURRENT_DISPATCH_TOKEN = os.getenv("GITHUB_RUN_ID", "")
 KAGGLE_BUSY = os.getenv("AUTOF_KAGGLE_BUSY", "0") == "1"
 FX_BUSY = os.getenv("AUTOF_FX_BUSY", "0") == "1"
-CHARACTER_GENERATION_EPOCH = "identity-lock-v1.18-carry-identity-lock"
+CHARACTER_GENERATION_EPOCH = "identity-lock-v1.19-pose-aware-head-and-prop-stability"
 CHARACTER_EPOCH_ATTEMPT_LIMIT = 3
 CHARACTER_BATCH_SIZE = 12
 INFRA_FAILURE_LIMIT = 3
@@ -28310,6 +28316,31 @@ y = header + (index // columns) * 308 + 8
 tile = atlas.crop(((index % 4) * CELL, (index // 4) * CELL,
 opaque = background.copy()
 ⋮----
+def _frame_alpha_iou(left: Image.Image, right: Image.Image) -> float
+⋮----
+"""Downsampled alpha overlap only; not an identity or action verdict."""
+a = left.getchannel("A").resize((64, 64), Image.Resampling.BILINEAR)
+b = right.getchannel("A").resize((64, 64), Image.Resampling.BILINEAR)
+left_mask = [v >= 32 for v in a.getdata()]
+right_mask = [v >= 32 for v in b.getdata()]
+overlap = sum(x and y for x, y in zip(left_mask, right_mask))
+union = sum(x or y for x, y in zip(left_mask, right_mask))
+⋮----
+def motion_review_evidence(frames: list[Image.Image], action: str) -> dict
+⋮----
+"""Measure animation loop cuts separately from the generator's frame QA.
+
+    The closing transition (last -> first) is rendered continuously in the
+    Android loop but was absent from previous adjacent-frame QA. A bad seam
+    is flagged for human review, *never* promoted or auto-approved.
+    """
+⋮----
+steps = [1 - _frame_alpha_iou(a, b) for a, b in zip(frames[:-1], frames[1:])]
+loop_step = 1 - _frame_alpha_iou(frames[-1], frames[0])
+mean_step = sum(steps) / len(steps)
+seam_ratio = loop_step / max(.015, mean_step)
+flags = []
+⋮----
 def create_panel(role: str, assets: dict[str, Path], output: Path, qa: dict[str, dict]) -> dict
 ⋮----
 font = readable_font(15)
@@ -28332,6 +28363,8 @@ label_color = (105, 202, 157) if is_pass else (236, 184, 97) if path else (166, 
 issues = list(qa_row.get("issues", []) or [])
 ⋮----
 rgba = src.convert("RGBA")
+raw_frames = [
+diagnostics = motion_review_evidence(raw_frames, action)
 ⋮----
 fx = (frame_idx % 4) * CELL
 fy = (frame_idx // 4) * CELL

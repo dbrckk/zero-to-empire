@@ -1,7 +1,7 @@
 # Change impact
 
-Base: 4ce247a9a7a830f2830bc19cea608d2e04bc29f7
-Head: 0376102d3e0cd220dcfd2284e6b0d983492fbc5b
+Base: 13f18a3c5db6d36d1e846e9398c074b51e676b48
+Head: 0225ccda5314b7180a4b9e1ad34788885a493b8c
 
 ## Changed files
 - M .github/workflows/asset-pipeline-ci.yml

@@ -31,21 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T08:05:33Z
+Generated: 2026-10-12T08:12:16Z
 
 ### Git
 - Branch: `main`
-- Head: `0376102d3e0c`
-- Commit date: 2026-10-12T10:05:16+02:00
-- Commit: ci(art): verify portrait mobile action review images and metadata
+- Head: `0225ccda5314`
+- Commit date: 2026-10-12T10:11:55+02:00
+- Commit: ci(art): verify real atlas review includes unapproved loop-seam timing evidence
 - Tracked files: 1533
 
 ### Recently changed files
 - `.github/workflows/asset-pipeline-ci.yml`
 - `tools/sprites/build_character_review_panels.py`
+- `tools/assets/test_workflow_policy.py`
+- `tools/assets/test_queue_state_policy.py`
 - `tools/sprites/kaggle_character_sheet_factory_v1.py`
-- `docs/art/UNIFIED_ASSET_PIPELINE.md`
-- `tools/sprites/test_character_semantic_gate.py`
 
 ### Project signals
 - `build.gradle.kts`
