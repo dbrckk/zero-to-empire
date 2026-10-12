@@ -313,3 +313,42 @@ v1.19 remain recorded as history; new attempts are eligible only under the
 new algorithm. The current in-progress GPU wave keeps its original dispatch
 token and must finish before the next epoch is scheduled. Do not increase the
 235-asset strict counter when a fallback is merely generated.
+
+## Mobile animation review evidence (October 2026)
+
+`Kaggle Async Character Collector` now produces three complementary types
+of evidence for each accepted **candidate**, all under the same immutable
+collector-run provenance:
+
+- `review-mobile-ROLE-ACTION.png`: every 256px frame in a readable
+  two-column contact sheet, including visual risk and QA status.
+- `review-motion-ROLE-ACTION.gif`: 256px game-scale frames played in a
+  continuous loop. This reveals frozen hands, rubber limbs, prop morphing,
+  abrupt gestures, and an awkward last-to-first seam which a still image can
+  hide. Loop timings are action-specific.
+- `review-frames-ROLE.png`, `review-heads-ROLE.png` and original
+  `candidates/zte_chr_ROLE_ACTION_final.png`: lossless PNG source for checking
+  precise silhouette boundaries, identity, fabric and tool color. Animated
+  GIF uses color quantization and is **not** authoritative for palette fidelity.
+
+The review metadata records `automatic_semantic_approval:false`; these
+files never modify canonical `strict_status`, Android resources, or runtime
+animation assets. The `Retroactive Character Motion QA Evidence` workflow
+can regenerate current lossless review panels and GIFs from a previously
+collected batch without triggering Kaggle generation again.
+
+### Why the experimental single-frame WALK warp is review-only
+
+The CPU `identity_locked_walk_candidate.py` experiment preserves a
+character's helmet, face and outfit by deforming **one** existing full-body
+frame. But the source does not contain hidden leg geometry. Increasing
+apparent stride in the raster creates stretched boots, joined thigh texture
+and potentially a torn crotch; lower-body pixel differences can therefore
+look like walking to automated QA while failing normal human motion review.
+
+Do not promote this procedural variant solely from its stable identity or
+image-only PASS. Production-grade WALK needs a properly articulated rig or
+independently authored foot-contact poses, preserved wardrobe/texture,
+smooth weight transfer, stable ground pivot, visual review at actual Android
+playback size and the usual release validation. Keep all warped candidates
+strict `NEEDS_REVIEW` until those requirements are met.
