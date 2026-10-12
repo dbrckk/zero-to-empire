@@ -11,6 +11,8 @@ on:
       - 'tools/sprites/animation_batch_planner.py'
       - 'tools/sprites/build_character_review_panels.py'
       - 'tools/sprites/character_head_identity_lock.py'
+      - 'tools/sprites/character_ground_shadow_cleanup.py'
+      - 'tools/sprites/test_character_ground_shadow_cleanup.py'
       - 'tools/sprites/test_character_head_identity_lock.py'
       - 'tools/sprites/character_semantic_gate.py'
       - 'tools/sprites/test_character_semantic_gate.py'
@@ -37,6 +39,8 @@ on:
       - 'tools/sprites/animation_batch_planner.py'
       - 'tools/sprites/build_character_review_panels.py'
       - 'tools/sprites/character_head_identity_lock.py'
+      - 'tools/sprites/character_ground_shadow_cleanup.py'
+      - 'tools/sprites/test_character_ground_shadow_cleanup.py'
       - 'tools/sprites/test_character_head_identity_lock.py'
       - 'tools/sprites/character_semantic_gate.py'
       - 'tools/sprites/test_character_semantic_gate.py'
@@ -86,6 +90,7 @@ jobs:
             tools/sprites/asset_wave_orchestrator.py \
             tools/sprites/build_character_review_panels.py \
             tools/sprites/character_head_identity_lock.py \
+            tools/sprites/character_ground_shadow_cleanup.py \
             tools/sprites/kaggle_character_sheet_factory_v1.py \
             tools/sprites/kaggle_building_family_factory_v14.py \
             tools/sprites/kaggle_building_family_factory_v15.py \
@@ -163,6 +168,7 @@ jobs:
           python -m unittest discover -s tools/assets -p 'test_*.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_semantic_gate.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_head_identity_lock.py' -v
+          python -m unittest discover -s tools/sprites -p 'test_character_ground_shadow_cleanup.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_action_gate.py' -v
 
       - name: Verify live character-production plan against strict queue and Android frame contract
