@@ -157,6 +157,9 @@ jobs:
             python tools/sprites/verify_character_idle_candidates.py \
               --candidates /tmp/kaggle-output/output/candidates \
               --qa-report /tmp/kaggle-output/output/github-qa-report.json
+            python tools/sprites/verify_character_action_candidates.py \
+              --candidates /tmp/kaggle-output/output/candidates \
+              --qa-report /tmp/kaggle-output/output/github-qa-report.json
             python - <<'PY'
           import json
           from pathlib import Path
