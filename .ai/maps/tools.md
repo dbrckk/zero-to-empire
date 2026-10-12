@@ -2726,6 +2726,30 @@ error=total=0
 ⋮----
 result=max(result,error/total)
 ⋮----
+def lower_ground_band_ratio(frame:Image.Image)->float
+⋮----
+"""Look for a suspicious solid ground bar beneath two narrower legs.
+
+    A baked oval floor shadow often spans the full base of the character even
+    when shoes are separated. A wide *connected horizontal run* near the bottom
+    distinguishes it from naturally spread feet. This is a risk heuristic:
+    passing this check is not proof of transparency or visual acceptability.
+    """
+⋮----
+bounds=alpha.getbbox()
+⋮----
+reference_top=max(top,bottom-round(height*.20))
+reference_bottom=max(reference_top+2,bottom-round(height*.10))
+needed=max(2,round((reference_bottom-reference_top)*.18))
+leg_columns=[
+⋮----
+leg_span=max(leg_columns)-min(leg_columns)+1
+longest=0
+⋮----
+run=0
+⋮----
+longest=max(longest,run)
+⋮----
 def _body_region_color_signature(frame:Image.Image,start:float,end:float)
 ⋮----
 """Masked RGB histogram of a stable vertical region relative to the sprite.
@@ -2758,6 +2782,8 @@ mid_signatures=[_body_region_color_signature(f,.40,.73) for f in frames]
 mid_changes=[
 mid_max=max(mid_changes,default=0.0)
 head_shape_drift=(head_structure_drift(frames)
+ground_band_ratios=[lower_ground_band_ratio(frame) for frame in frames]
+ground_band_count=sum(value>=1.27 for value in ground_band_ratios)
 ⋮----
 sizes=[f['bbox_height_fraction'] for f in dims]
 # A single mysteriously shortened frame was accepted in LOG-WORK even
@@ -7839,6 +7865,22 @@ frames=[person() for _ in range(7)]+[pair]
 def test_empty_frame_fails_hard(self)
 ⋮----
 frames=[person() for _ in range(7)]+[Image.new('RGBA',(256,256))]
+⋮----
+def test_persistent_flat_floor_shadow_blocks_candidate(self)
+⋮----
+clean=[person(i%2) for i in range(8)]
+⋮----
+shadowed=[]
+⋮----
+with_shadow=frame.copy()
+⋮----
+report=clip_risk(shadowed,'IDLE')
+⋮----
+def test_one_long_ground_contact_is_not_a_persistent_shadow(self)
+⋮----
+frames=[person(i%2) for i in range(8)]
+⋮----
+report=clip_risk(frames,'WORK')
 ⋮----
 def test_one_collapsed_work_frame_blocks_even_if_nine_others_are_full_body(self)
 ⋮----

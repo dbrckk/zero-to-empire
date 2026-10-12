@@ -1,13 +1,13 @@
 # Change impact
 
-Base: eb86a0c8f7f056d406327fedd510b43407bb9275
-Head: 202775da9ca13970e151fece0070d98faefd8d81
+Base: d73ab78c91202ed4407d6fa337055e8e79e16a0d
+Head: 336a48c73166785aa3b2dee931b52363d6e5eb85
 
 ## Changed files
-- M ops/kaggle-collector-trigger.txt
+- M tools/sprites/test_character_semantic_gate.py
 
 ## Affected areas
-- ops
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

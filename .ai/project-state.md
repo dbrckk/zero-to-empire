@@ -31,21 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T08:19:40Z
+Generated: 2026-10-12T08:26:02Z
 
 ### Git
 - Branch: `main`
-- Head: `202775da9ca1`
-- Commit date: 2026-10-12T10:19:22+02:00
-- Commit: ci(art): verify active OP ENG GPU batch and preserve review evidence
+- Head: `336a48c73166`
+- Commit date: 2026-10-12T10:25:24+02:00
+- Commit: test(art): distinguish persistent floor shadow from ordinary sprite feet
 - Tracked files: 1535
 
 ### Recently changed files
+- `tools/sprites/test_character_semantic_gate.py`
+- `tools/sprites/character_semantic_gate.py`
 - `ops/kaggle-collector-trigger.txt`
 - `tools/assets/test_workflow_policy.py`
 - `tools/sprites/kaggle_character_sheet_factory_v1.py`
-- `.github/workflows/asset-pipeline-ci.yml`
-- `tools/sprites/test_character_action_gate.py`
 
 ### Project signals
 - `build.gradle.kts`
