@@ -31,21 +31,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T08:01:05Z
+Generated: 2026-10-12T08:03:46Z
 
 ### Git
 - Branch: `main`
-- Head: `57c21086ca4b`
-- Commit date: 2026-10-12T10:00:48+02:00
-- Commit: test(ci): require multi-frame raised-arm check in celebration generator
+- Head: `895ef03372a9`
+- Commit date: 2026-10-12T10:03:26+02:00
+- Commit: docs(art): explain new evidence-driven face, frame and celebration quality gates
 - Tracked files: 1533
 
 ### Recently changed files
-- `tools/assets/test_workflow_policy.py`
+- `docs/art/UNIFIED_ASSET_PIPELINE.md`
 - `tools/sprites/test_character_semantic_gate.py`
-- `tools/sprites/kaggle_character_sheet_factory_v1.py`
 - `tools/sprites/character_semantic_gate.py`
-- `art/production/log-eng-fourth-wave-review.md`
+- `tools/assets/test_workflow_policy.py`
 
 ### Project signals
 - `build.gradle.kts`

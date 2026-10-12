@@ -2,8 +2,8 @@
 
 - Index mode: incremental
 - Files indexed: 250
-- Files reparsed this run: 3
-- Symbols: 1319
+- Files reparsed this run: 2
+- Symbols: 1321
 - Internal import edges: 47
 - Impacted files: 7
 - Selected tests: 2
@@ -26,9 +26,9 @@
 - tools/sprites/kaggle_building_family_factory.py: 17 symbols
 - tools/sprites/kaggle_building_family_factory_v11.py: 17 symbols
 - tools/sprites/kaggle_building_family_factory_v14.py: 17 symbols
+- tools/sprites/test_character_semantic_gate.py: 17 symbols
 - tools/sprites/test_rigged_tech_actions_v3.py: 17 symbols
 - app/src/main/java/com/zerotoempire/game/BillingDiagnostics.kt: 16 symbols
-- tools/sprites/test_character_semantic_gate.py: 16 symbols
 - tools/sprites/test_package_tech_actions_runtime.py: 16 symbols
 - app/src/main/java/com/zerotoempire/game/IdentitySystems.kt: 15 symbols
 - tools/sprites/rigged_tech_actions_v3.py: 15 symbols
@@ -43,10 +43,10 @@
 ## ast-grep enrichment
 - ast-grep outline: available
 - AST index mode: incremental
-- AST files reparsed this run: 3
+- AST files reparsed this run: 2
 - outline files retained: 255
-- top-level items retained: 3536
-- direct members retained: 818
+- top-level items retained: 3537
+- direct members retained: 819
 - symbol shards: 26
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard
 

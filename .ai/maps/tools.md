@@ -2618,6 +2618,32 @@ sampled=[
 diff=0
 total=0
 ⋮----
+def head_structure_drift(frames:list[Image.Image])->float
+⋮----
+"""Pixel-structure drift of aligned face/headgear texture from frame zero.
+
+    Plain RGB histograms miss cases where the entire face/helmet changes shape
+    while retaining orange/white/graphite colors. Crop only the upper head
+    instead of shoulders, hands or accessories; avoid model dependencies.
+    This is a rejection risk, NOT face recognition or automatic approval.
+    """
+heads=[]
+⋮----
+band=alpha.crop((0,top,256,top+max(1,int((bottom-top)*.23))))
+weighted=count=0
+px=band.load()
+⋮----
+centre=round(weighted/count) if count else (left+right)//2
+crop_x=max(0,min(188,centre-34))
+crop_y=max(0,min(188,top-2))
+⋮----
+reference=heads[0]
+result=0.0
+⋮----
+error=total=0
+⋮----
+result=max(result,error/total)
+⋮----
 def _body_region_color_signature(frame:Image.Image,start:float,end:float)
 ⋮----
 """Masked RGB histogram of a stable vertical region relative to the sprite.
@@ -2649,6 +2675,7 @@ head_max=max(head_changes,default=0.0)
 mid_signatures=[_body_region_color_signature(f,.40,.73) for f in frames]
 mid_changes=[
 mid_max=max(mid_changes,default=0.0)
+head_shape_drift=(head_structure_drift(frames)
 ⋮----
 sizes=[f['bbox_height_fraction'] for f in dims]
 # A single mysteriously shortened frame was accepted in LOG-WORK even
@@ -7697,6 +7724,14 @@ result=clip_risk(frames,'CARRY')
 ⋮----
 # The same synthetic color change is not proof that a different
 # non-prop action should be blocked on mid-body content alone.
+⋮----
+def test_face_helmet_morph_blocks_work_even_when_color_palette_matches(self)
+⋮----
+reference=person()
+altered=person()
+draw=ImageDraw.Draw(altered)
+⋮----
+frames=[reference.copy() for _ in range(10)]
 ⋮----
 def test_celebration_counts_actual_raised_arm_frames_not_final_sparkle(self)
 ⋮----
