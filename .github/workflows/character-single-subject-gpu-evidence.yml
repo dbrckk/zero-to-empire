@@ -105,6 +105,7 @@ jobs:
           set -euo pipefail
           cp /tmp/zte-single-subject/output/github-qa-report.json \
              /tmp/zte-single-subject/retroactive-collector-qa.json
+            /tmp/zte-single-subject/retroactive-action-qa.json
           python tools/sprites/verify_character_idle_candidates.py \
             --candidates /tmp/zte-single-subject/output/candidates \
             --qa-report /tmp/zte-single-subject/retroactive-collector-qa.json
@@ -122,6 +123,33 @@ jobs:
               if by_file['zte_chr_op_idle_final.png']['pass'] is not True:
                   raise SystemExit('Collector rejected the single-subject OP control')
           print('RETROACTIVE_GPU_COLLECTOR_SUBJECT_QA_PASS=1')
+          PY
+      - name: Verify previously accepted OP actions against registered-motion QA
+        env:
+          SOURCE_RUN: ${{ inputs.source_run_id || '38281126201' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp /tmp/zte-single-subject/output/github-qa-report.json \
+             /tmp/zte-single-subject/retroactive-action-qa.json
+          python tools/sprites/verify_character_action_candidates.py \
+            --candidates /tmp/zte-single-subject/output/candidates \
+            --qa-report /tmp/zte-single-subject/retroactive-action-qa.json
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          rows=json.loads(Path('/tmp/zte-single-subject/retroactive-action-qa.json').read_text())['assets']
+          by_name={row['file']:row for row in rows}
+          if os.environ['SOURCE_RUN']=='38281126201':
+              for name in ('zte_chr_op_work_final.png','zte_chr_op_repair_final.png'):
+                  row=by_name[name]
+                  assert row['pass'] is False,(name,row)
+                  assert 'action-visual-risk:ACTION_TRANSLATION_DOMINATES_POSE_RISK' in row['issues'],(name,row)
+                  metrics=row['action_visual_risk']['action_pose_metrics']
+                  assert metrics['head_horizontal_excursion_px']>=12,(name,metrics)
+                  assert metrics['retained_pose_motion_ratio']<.43,(name,metrics)
+              print('REAL_OP_TRANSLATION_ONLY_ACTION_REJECTED=2')
+          print('ACTION_COLLECTOR_RETROACTIVE_REVIEW_PASS=1')
           PY
       - name: Save forensic verification without promotion
         uses: actions/upload-artifact@v4
