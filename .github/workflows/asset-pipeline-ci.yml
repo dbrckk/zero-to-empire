@@ -13,6 +13,8 @@ on:
       - 'tools/sprites/character_head_identity_lock.py'
       - 'tools/sprites/character_ground_shadow_cleanup.py'
       - 'tools/sprites/character_anchor_pair_salvage.py'
+      - 'tools/sprites/character_rejection_evidence.py'
+      - 'tools/sprites/test_character_rejection_evidence.py'
       - 'tools/sprites/test_character_anchor_pair_salvage.py'
       - 'tools/sprites/test_character_ground_shadow_cleanup.py'
       - 'tools/sprites/test_character_head_identity_lock.py'
@@ -43,6 +45,8 @@ on:
       - 'tools/sprites/character_head_identity_lock.py'
       - 'tools/sprites/character_ground_shadow_cleanup.py'
       - 'tools/sprites/character_anchor_pair_salvage.py'
+      - 'tools/sprites/character_rejection_evidence.py'
+      - 'tools/sprites/test_character_rejection_evidence.py'
       - 'tools/sprites/test_character_anchor_pair_salvage.py'
       - 'tools/sprites/test_character_ground_shadow_cleanup.py'
       - 'tools/sprites/test_character_head_identity_lock.py'
@@ -96,6 +100,7 @@ jobs:
             tools/sprites/character_head_identity_lock.py \
             tools/sprites/character_ground_shadow_cleanup.py \
             tools/sprites/character_anchor_pair_salvage.py \
+            tools/sprites/character_rejection_evidence.py \
             tools/sprites/kaggle_character_sheet_factory_v1.py \
             tools/sprites/kaggle_building_family_factory_v14.py \
             tools/sprites/kaggle_building_family_factory_v15.py \
@@ -175,6 +180,7 @@ jobs:
           python -m unittest discover -s tools/sprites -p 'test_character_head_identity_lock.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_ground_shadow_cleanup.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_anchor_pair_salvage.py' -v
+          python -m unittest discover -s tools/sprites -p 'test_character_rejection_evidence.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_action_gate.py' -v
 
       - name: Verify live character-production plan against strict queue and Android frame contract
