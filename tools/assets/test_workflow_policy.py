@@ -368,6 +368,17 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("unsafe-head-silhouette-overlap", Path(
             "tools/sprites/character_head_identity_lock.py").read_text(encoding="utf-8"))
 
+    def test_strict_done_idle_fallback_is_included_in_all_kaggle_code_paths(self):
+        generator = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
+        workflow = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
+        fallback = Path("kaggle/github_mass_factory.py").read_text(encoding="utf-8")
+        self.assertIn("from character_approved_idle_fallback import load_approved_idle_anchor", generator)
+        self.assertIn("fallback,source_note=load_approved_idle_anchor(role,MANIFEST,INCOMING)", generator)
+        self.assertIn("character_approved_idle_fallback.py", workflow)
+        self.assertIn("'character_approved_idle_fallback.py'", fallback)
+        self.assertIn("source-idle-not-uniquely-strict-done", Path(
+            "tools/sprites/character_approved_idle_fallback.py").read_text(encoding="utf-8"))
+
     def test_kaggle_character_generator_uses_neutral_role_anchor(self):
         text = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
         self.assertIn("def anchor_prompt_pair(role):", text)
