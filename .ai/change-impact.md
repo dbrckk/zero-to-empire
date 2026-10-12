@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 27a4e14ad180d150786df8a8cab3bc2864163dd9
-Head: 3795dc75d7b3cce7044570095760aa19425b7d93
+Base: 210f1d8ce1aca5b4fdecf90f4c119265b95ae2bc
+Head: dc2dd25f24216cc55470b85e88868e2e91e6c782
 
 ## Changed files
-- M ops/kaggle-collector-trigger.txt
+- M .github/workflows/character-single-subject-gpu-evidence.yml
 
 ## Affected areas
-- ops
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

@@ -4,5 +4,2527 @@
   "scope": "symbols defined in changed source files",
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
-  "symbols": {}
+  "symbols": {
+    "_runs": {
+      "definition": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 13,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 13,
+          "preview": "def _runs(occupancy):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 44,
+          "preview": "runs=_runs(occupancy)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "frame_geometry": {
+      "definition": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 22,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 22,
+          "preview": "def frame_geometry(frame:Image.Image)->dict:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 368,
+          "preview": "dims=[frame_geometry(f) for f in frames]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 8,
+          "preview": "from character_semantic_gate import clip_risk, frame_geometry",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 12,
+          "preview": "from tools.sprites.character_semantic_gate import clip_risk, frame_geometry",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 446,
+          "preview": "geometry=frame_geometry(frame)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 4,
+          "preview": "from character_semantic_gate import clip_risk,frame_geometry,palette_distance,color_signature,idle_visual_activity,idle_distinct_head_clusters,lower_ground_band_ratio,celebration_a",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 79,
+          "preview": "self.assertFalse(frame_geometry(Image.new('RGBA',(256,256)))['valid'])",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 7
+    },
+    "color_signature": {
+      "definition": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 64,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 64,
+          "preview": "def color_signature(frame:Image.Image):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 248,
+          "preview": "return color_signature(rgba.crop((0,top,rgba.width,bottom)))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 372,
+          "preview": "signatures=[color_signature(frame) for frame in frames]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 4,
+          "preview": "from character_semantic_gate import clip_risk,frame_geometry,palette_distance,color_signature,idle_visual_activity,idle_distinct_head_clusters,lower_ground_band_ratio,celebration_a",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 215,
+          "preview": "signature=color_signature(person())",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 5
+    },
+    "palette_distance": {
+      "definition": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 79,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 79,
+          "preview": "def palette_distance(a,b)->float:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 374,
+          "preview": "palette_distance(signatures[i],signatures[(i+1)%len(frames)])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 384,
+          "preview": "palette_distance(head_signatures[i-1],head_signatures[i])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 390,
+          "preview": "palette_distance(mid_signatures[i-1],mid_signatures[i])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 4,
+          "preview": "from character_semantic_gate import clip_risk,frame_geometry,palette_distance,color_signature,idle_visual_activity,idle_distinct_head_clusters,lower_ground_band_ratio,celebration_a",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 216,
+          "preview": "self.assertAlmostEqual(palette_distance(signature,signature),0)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 6
+    },
+    "celebration_arm_reach_counts": {
+      "definition": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 84,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 286,
+          "preview": "self.assertIn(\"arms=celebration_arm_reach_counts(frames)\", text)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 84,
+          "preview": "def celebration_arm_reach_counts(frames:list[Image.Image])->list[int]:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 17,
+          "preview": "from character_semantic_gate import clip_risk,idle_visual_activity,celebration_arm_reach_counts,idle_distinct_head_clusters",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 523,
+          "preview": "arms=celebration_arm_reach_counts(frames)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_action_gate.py",
+          "line": 18,
+          "preview": "from character_semantic_gate import idle_visual_activity, celebration_arm_reach_counts",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_action_gate.py",
+          "line": 46,
+          "preview": "\"celebration_arm_reach_counts\": celebration_arm_reach_counts,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 4,
+          "preview": "from character_semantic_gate import clip_risk,frame_geometry,palette_distance,color_signature,idle_visual_activity,idle_distinct_head_clusters,lower_ground_band_ratio,celebration_a",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 191,
+          "preview": "counts=celebration_arm_reach_counts(false_loop)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 194,
+          "preview": "scores=celebration_arm_reach_counts(progressive)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 9
+    },
+    "idle_visual_activity": {
+      "definition": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 113,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 324,
+          "preview": "self.assertIn(\"from character_semantic_gate import clip_risk,idle_visual_activity\", text)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 325,
+          "preview": "self.assertIn(\"activity=idle_visual_activity(frames)\", text)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 113,
+          "preview": "def idle_visual_activity(frames:list[Image.Image])->float:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 17,
+          "preview": "from character_semantic_gate import clip_risk,idle_visual_activity,celebration_arm_reach_counts,idle_distinct_head_clusters",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 502,
+          "preview": "activity=idle_visual_activity(frames)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_action_gate.py",
+          "line": 18,
+          "preview": "from character_semantic_gate import idle_visual_activity, celebration_arm_reach_counts",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_action_gate.py",
+          "line": 45,
+          "preview": "\"idle_visual_activity\": idle_visual_activity,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 4,
+          "preview": "from character_semantic_gate import clip_risk,frame_geometry,palette_distance,color_signature,idle_visual_activity,idle_distinct_head_clusters,lower_ground_band_ratio,celebration_a",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 206,
+          "preview": "self.assertEqual(idle_visual_activity([base]*6),0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 207,
+          "preview": "self.assertGreater(idle_visual_activity(frames),.00035)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 208,
+          "preview": "self.assertLess(idle_visual_activity(frames),.03)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 211,
+          "preview": "self.assertEqual(idle_visual_activity([person()]),0.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 212,
+          "preview": "self.assertEqual(idle_visual_activity([]),0.0)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 13
+    },
+    "head_structure_drift": {
+      "definition": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 139,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 139,
+          "preview": "def head_structure_drift(frames:list[Image.Image])->float:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 394,
+          "preview": "head_shape_drift=(head_structure_drift(frames)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 4,
+          "preview": "from character_semantic_gate import clip_risk,frame_geometry,palette_distance,color_signature,idle_visual_activity,idle_distinct_head_clusters,lower_ground_band_ratio,celebration_a",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 171,
+          "preview": "self.assertGreater(head_structure_drift(frames),.19)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "lower_ground_band_ratio": {
+      "definition": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 184,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 184,
+          "preview": "def lower_ground_band_ratio(frame:Image.Image)->float:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 397,
+          "preview": "ground_band_ratios=[lower_ground_band_ratio(frame) for frame in frames]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 4,
+          "preview": "from character_semantic_gate import clip_risk,frame_geometry,palette_distance,color_signature,idle_visual_activity,idle_distinct_head_clusters,lower_ground_band_ratio,celebration_a",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 85,
+          "preview": "self.assertTrue(all(lower_ground_band_ratio(frame)<1.27 for frame in clean))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 107,
+          "preview": "self.assertEqual(lower_ground_band_ratio(frames[0]),0.0)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 5
+    },
+    "_body_region_color_signature": {
+      "definition": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 235,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 235,
+          "preview": "def _body_region_color_signature(frame:Image.Image,start:float,end:float):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 382,
+          "preview": "head_signatures=[_body_region_color_signature(f,0,.28) for f in frames]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 388,
+          "preview": "mid_signatures=[_body_region_color_signature(f,.40,.73) for f in frames]",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "idle_distinct_head_clusters": {
+      "definition": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 251,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 302,
+          "preview": "self.assertIn(\"idle_distinct_head_clusters(cell)>=2\", text)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 251,
+          "preview": "def idle_distinct_head_clusters(frame:Image.Image)->int:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 400,
+          "preview": "[idle_distinct_head_clusters(frame) for frame in frames]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 17,
+          "preview": "from character_semantic_gate import clip_risk,idle_visual_activity,celebration_arm_reach_counts,idle_distinct_head_clusters",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 411,
+          "preview": "if idle_distinct_head_clusters(cell)>=2:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 4,
+          "preview": "from character_semantic_gate import clip_risk,frame_geometry,palette_distance,color_signature,idle_visual_activity,idle_distinct_head_clusters,lower_ground_band_ratio,celebration_a",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 57,
+          "preview": "self.assertEqual(idle_distinct_head_clusters(frame),2)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 65,
+          "preview": "self.assertTrue(all(idle_distinct_head_clusters(frame)<=1 for frame in frames))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/verify_character_idle_candidates.py",
+          "line": 17,
+          "preview": "from character_semantic_gate import clip_risk, idle_distinct_head_clusters",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/verify_character_idle_candidates.py",
+          "line": 38,
+          "preview": "\"head_counts\": [idle_distinct_head_clusters(frame) for frame in frames],",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 10
+    },
+    "_upper_head_centroid": {
+      "definition": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 296,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 296,
+          "preview": "def _upper_head_centroid(frame:Image.Image):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 341,
+          "preview": "anchors=[_upper_head_centroid(f) for f in rgba]",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_binary_alpha_iou": {
+      "definition": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 320,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 320,
+          "preview": "def _binary_alpha_iou(a:Image.Image,b:Image.Image)->float:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 351,
+          "preview": "raw=sum(1-_binary_alpha_iou(a,b) for a,b in zip(rgba,rgba[1:]))/(len(rgba)-1)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 352,
+          "preview": "residual=sum(1-_binary_alpha_iou(a,b)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "action_translation_metrics": {
+      "definition": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 328,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 328,
+          "preview": "def action_translation_metrics(frames:list[Image.Image])->dict:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 407,
+          "preview": "action_pose_metrics=action_translation_metrics(frames)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_verify_character_action_candidates.py",
+          "line": 7,
+          "preview": "from character_semantic_gate import action_translation_metrics",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_verify_character_action_candidates.py",
+          "line": 36,
+          "preview": "metrics = action_translation_metrics(frames)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_verify_character_action_candidates.py",
+          "line": 55,
+          "preview": "metrics = action_translation_metrics(frames)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 5
+    },
+    "clip_risk": {
+      "definition": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 365,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 324,
+          "preview": "self.assertIn(\"from character_semantic_gate import clip_risk,idle_visual_activity\", text)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 351,
+          "preview": "self.assertIn(\"from character_semantic_gate import clip_risk\", generator)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 352,
+          "preview": "self.assertIn(\"visual_risk=clip_risk(frames,i['action'])\", generator)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 15,
+          "preview": "from character_semantic_gate import clip_risk",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 91,
+          "preview": "result[\"visual_risk\"]=clip_risk(semantic_frames)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 13,
+          "preview": "from character_semantic_gate import clip_risk",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 249,
+          "preview": "visual_risk = clip_risk(raw_frames, action.upper())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 365,
+          "preview": "def clip_risk(frames:list[Image.Image],action:str|None=None)->dict:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/identity_locked_walk_candidate.py",
+          "line": 19,
+          "preview": "from character_semantic_gate import clip_risk",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/identity_locked_walk_candidate.py",
+          "line": 89,
+          "preview": "risk=clip_risk(frames)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 17,
+          "preview": "from character_semantic_gate import clip_risk,idle_visual_activity,celebration_arm_reach_counts,idle_distinct_head_clusters",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 668,
+          "preview": "risk=clip_risk(recovered,'IDLE')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 811,
+          "preview": "visual_risk=clip_risk(frames,i['action'])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 8,
+          "preview": "from character_semantic_gate import clip_risk, frame_geometry",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 12,
+          "preview": "from tools.sprites.character_semantic_gate import clip_risk, frame_geometry",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 543,
+          "preview": "screen=clip_risk(frames)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 4,
+          "preview": "from character_semantic_gate import clip_risk,frame_geometry,palette_distance,color_signature,idle_visual_activity,idle_distinct_head_clusters,lower_ground_band_ratio,celebration_a",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 32,
+          "preview": "result=clip_risk([person(i%3) for i in range(8)])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 37,
+          "preview": "result=clip_risk([portrait(i%2) for i in range(8)])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 44,
+          "preview": "result=clip_risk(frames)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 58,
+          "preview": "result=clip_risk([frame.copy() for _ in range(6)],'IDLE')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 66,
+          "preview": "self.assertNotIn('MULTIPLE_IDLE_HEADS_RISK',clip_risk(frames,'IDLE')['flags'])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 73,
+          "preview": "result=clip_risk(frames)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 81,
+          "preview": "self.assertEqual(clip_risk(frames)['risk_level'],'BLOCKING')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 86,
+          "preview": "self.assertNotIn('BAKED_GROUND_SHADOW_RISK',clip_risk(clean,'IDLE')['flags'])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 93,
+          "preview": "report=clip_risk(shadowed,'IDLE')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 108,
+          "preview": "report=clip_risk(frames,'IDLE')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 116,
+          "preview": "report=clip_risk(frames,'WORK')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 126,
+          "preview": "result=clip_risk(frames,'WORK')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 138,
+          "preview": "result=clip_risk(frames,'IDLE')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 150,
+          "preview": "result=clip_risk(frames,'CARRY')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 157,
+          "preview": "clip_risk(frames,'IDLE')['flags'])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 167,
+          "preview": "result=clip_risk(frames,'WORK')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 218,
+          "preview": "clip_risk([person()])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+          "line": 9,
+          "preview": "from character_semantic_gate import clip_risk",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+          "line": 60,
+          "preview": "self.assertNotEqual(clip_risk(first)['risk_level'],'BLOCKING')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/verify_character_action_candidates.py",
+          "line": 17,
+          "preview": "from character_semantic_gate import clip_risk",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/verify_character_action_candidates.py",
+          "line": 35,
+          "preview": "risk = clip_risk(frames, action.upper())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/verify_character_idle_candidates.py",
+          "line": 17,
+          "preview": "from character_semantic_gate import clip_risk, idle_distinct_head_clusters",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/verify_character_idle_candidates.py",
+          "line": 34,
+          "preview": "risk = clip_risk(frames, \"IDLE\")",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 40
+    },
+    "figure": {
+      "definition": {
+        "file": "tools/sprites/test_verify_character_action_candidates.py",
+        "line": 11,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/character_anchor_pair_salvage.py",
+          "line": 66,
+          "preview": "# Keep only the dominant full-height connected figure (ties go to the",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_anchor_pair_salvage.py",
+          "line": 76,
+          "preview": "return None,\"source-figure-clipped-at-image-border\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_anchor_pair_salvage.py",
+          "line": 79,
+          "preview": "return None,\"source-figure-lacks-safe-framing\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_anchor_pair_salvage.py",
+          "line": 91,
+          "preview": "\"strategy\":\"one-connected-full-body-figure-from-side-by-side-pair\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 302,
+          "preview": "detail += \" Keep the full figure clearly inside frame with at least ten percent empty margin on every side.\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_verify_character_action_candidates.py",
+          "line": 11,
+          "preview": "def figure(offset: int = 0, raised_hand: int = 0) -> Image.Image:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/test_verify_character_action_candidates.py",
+          "line": 35,
+          "preview": "frames = [figure(offset) for offset in offsets]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_verify_character_action_candidates.py",
+          "line": 54,
+          "preview": "frames = [figure(0, raised_hand=i * 4) for i in range(10)]",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 8
+    },
+    "atlas": {
+      "definition": {
+        "file": "tools/sprites/test_verify_character_action_candidates.py",
+        "line": 25,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
+          "line": 202,
+          "preview": "atlas = actionAtlas,",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
+          "line": 272,
+          "preview": "val atlas = remember(role, action) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
+          "line": 282,
+          "preview": "atlas = atlas,",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/CanonicalCharacterRaster.kt",
+          "line": 6,
+          "preview": "* Every authored sheet uses the same 4x4 atlas contract (256px cells on a",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/CanonicalCharacterRaster.kt",
+          "line": 8,
+          "preview": "* displaying the whole atlas as a static image.",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
+          "line": 97,
+          "preview": "* Only reviewed atlas frames are rendered; all speculative candidates remain",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
+          "line": 135,
+          "preview": "// An override must load the *new* action atlas, not reuse cached WALK",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
+          "line": 168,
+          "preview": "atlas = atlases.getValue(placement.role to placement.action),",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
+          "line": 186,
+          "preview": "atlas: ImageBitmap,",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
+          "line": 206,
+          "preview": "image = atlas,",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
+          "line": 222,
+          "preview": "image = atlas,",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/AmbientCharacterMotionTest.kt",
+          "line": 56,
+          "preview": "fun `reduced motion freezes travel and source atlas pose`() {",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/CanonicalCharacterRasterTest.kt",
+          "line": 61,
+          "preview": "fun `character atlas contract matches production sheets`() {",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/audit_character_runtime.py",
+          "line": 2,
+          "preview": "\"\"\"Audit canonical character atlas registration and runtime exercise coverage.\"\"\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 60,
+          "preview": "# Blank atlas cells are intentional padding, not extra animation",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/autonomous_walk.py",
+          "line": 233,
+          "preview": "atlas=Image.new('RGBA',(CANVAS*4,CANVAS*math.ceil(settings.frames/4)))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/autonomous_walk.py",
+          "line": 238,
+          "preview": "atlas.alpha_composite(im,((i%4)*CANVAS,(i//4)*CANVAS))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/autonomous_walk.py",
+          "line": 239,
+          "preview": "atlas.save(output/'atlas.png', optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 95,
+          "preview": "raise ValueError(\"Expected a 1024x1024 character atlas\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 96,
+          "preview": "atlas = src.convert(\"RGBA\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 98,
+          "preview": "f = atlas.crop(((index % 4) * CELL, (index // 4) * CELL,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 146,
+          "preview": "raise ValueError(f\"Invalid mobile review atlas: {path}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 147,
+          "preview": "atlas = src.convert(\"RGBA\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 152,
+          "preview": "tile = atlas.crop(((index % 4) * CELL, (index // 4) * CELL,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 237,
+          "preview": "raise ValueError(f\"Expected atlas 1024x1024, got {src.size}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_sprite_contact_sheet.py",
+          "line": 44,
+          "preview": "issues.append(\"bad-fx-atlas-size\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_sprite_contact_sheet.py",
+          "line": 57,
+          "preview": "issues.append(\"bad-character-atlas-size\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_tech_review_board.py",
+          "line": 54,
+          "preview": "raise ValueError(f'{action}: invalid atlas geometry')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_tech_review_board.py",
+          "line": 57,
+          "preview": "raise ValueError(f'{action}: atlas must be directly inside review directory')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_approved_idle_fallback.py",
+          "line": 41,
+          "preview": "return None, \"strict-done-idle-invalid-atlas-size\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_rejection_evidence.py",
+          "line": 30,
+          "preview": "atlas = Image.new(\"RGBA\", (1024, 1024), (0, 0, 0, 0))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_rejection_evidence.py",
+          "line": 32,
+          "preview": "atlas.alpha_composite(frame.convert(\"RGBA\"),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_rejection_evidence.py",
+          "line": 37,
+          "preview": "atlas.save(image_path, \"PNG\", optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 331,
+          "preview": "A 256px WORK/REPAIR atlas can exceed the alpha-change threshold if the",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/export_tech_canonical_review.py",
+          "line": 80,
+          "preview": "atlas = Image.new(\"RGBA\", (1024, 1024), (0, 0, 0, 0))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/export_tech_canonical_review.py",
+          "line": 95,
+          "preview": "atlas.alpha_composite(scaled, ((cell_index % 4) * CELL,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/export_tech_canonical_review.py",
+          "line": 104,
+          "preview": "atlas.save(png, optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/export_tech_canonical_review.py",
+          "line": 108,
+          "preview": "raise ValueError(f\"Canonical atlas structural QA rejected {action}: \"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/identity_locked_walk_candidate.py",
+          "line": 70,
+          "preview": "with Image.open(path) as atlas:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/identity_locked_walk_candidate.py",
+          "line": 71,
+          "preview": "if atlas.size!=(1024,1024) or atlas.mode!='RGBA':",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/identity_locked_walk_candidate.py",
+          "line": 76,
+          "preview": "frame=atlas.crop((x,y,x+SIZE,y+SIZE))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 549,
+          "preview": "# Canonical character deliverable: fixed 1024x1024 transparent atlas.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 551,
+          "preview": "if len(frames)>16:raise RuntimeError('character atlas supports at most 16 frames')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 597,
+          "preview": "# IDLE atlas is rejected, rendering unrelated actions would burn GPU time",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 681,
+          "preview": "'frames':len(recovered),'atlas':'1024x1024','cell':'256x256',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 844,
+          "preview": "if sheet.size!=(1024,1024):raise RuntimeError(f'bad atlas size {sheet.size}')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 849,
+          "preview": "print(f\"KAGGLE_CHR_VALIDATED={p.relative_to(ROOT)} {why} atlas=1024x1024\",flush=True);report.append({'id':i['id'],'status':'CANDIDATE','reason':why,'frames':len(frames),'atlas':'10",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_fx_sheet_factory_v1.py",
+          "line": 113,
+          "preview": "if sheet.size!=(512,256): raise RuntimeError(f'bad-runtime-atlas-size={sheet.size}')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_fx_sheet_factory_v1.py",
+          "line": 114,
+          "preview": "return sheet,{'frames':FRAMES,'render_cell':'256x256','runtime_cell':'128x128','layout':'4x2','atlas':'512x256','duplicate_adjacent':dup,'max_center_drift':round(drift,2),**tempora",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_fx_sheet_factory_v1.py",
+          "line": 119,
+          "preview": "rep={'engine':'procedural-fx-v1.2-runtime-atlas','attempted':0,'accepted':0,'rejected':0,'runtime_contract':'8 frames; 4x2 atlas; 128x128 runtime cell; 512x256 texture; matches exi",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_fx_sheet_factory_v1.py",
+          "line": 128,
+          "preview": "sheet,m,attempt=accepted; p=INCOMING/f\"{item['stem']}.png\"; sheet.save(p,'PNG',optimize=True); rep['accepted']+=1;rep['items'].append({'id':item['id'],'accepted':True,'attempt':att",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 225,
+          "preview": "\"\"\"Optional frame-aligned ground-shadow atlas, isolated from character pixels.\"\"\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 348,
+          "preview": "atlas=Image.new('RGBA',(size*cols,size*rows))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 351,
+          "preview": "atlas.alpha_composite(scaled,((i%cols)*size,(i//cols)*size))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 353,
+          "preview": "atlas.save(path,optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 319,
+          "preview": "'Create one exact 4 columns by 4 rows animation atlas on a perfectly flat uniform neutral gray background. '",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 410,
+          "preview": "\"\"\"Explicitly request ONE complete subject, never a sheet or sprite atlas.\"\"\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 541,
+          "preview": "# The atlas may be formed ONLY after each standalone frame",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 564,
+          "preview": "mark_queue(it['id'],'CANDIDATE',seed,'pollinations-character-atlas',producer_run_id)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 571,
+          "preview": "'producer':'pollinations-character-atlas',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/process_final_sprites.py",
+          "line": 165,
+          "preview": "fail(f\"{path.name}: unused character atlas cell {i} is not transparent\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/repair_shadowed_character_atlas.py",
+          "line": 2,
+          "preview": "\"\"\"Repair AI-generated neutral ground shadows in an already collected atlas.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/repair_shadowed_character_atlas.py",
+          "line": 46,
+          "preview": "raise ValueError(\"Expected a canonical 1024x1024 atlas\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 49,
+          "preview": "\"\"\"Create lifted review textures without ever mutating the source atlas.\"\"\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 467,
+          "preview": "atlas = Image.new(\"RGBA\", (CANVAS * cols, CANVAS * rows))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 472,
+          "preview": "atlas.alpha_composite(im, ((i % cols) * CANVAS, (i // cols) * CANVAS))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 481,
+          "preview": "atlas.save(out / \"atlas.png\", optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_walk_v2.py",
+          "line": 4,
+          "preview": "Self-contained apart from a packed RGBA skin atlas and Pillow/numpy. Never writes",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_walk_v2.py",
+          "line": 73,
+          "preview": "def load_kit(atlas:Path) -> dict[str,Image.Image]:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_walk_v2.py",
+          "line": 74,
+          "preview": "if not atlas.exists(): raise FileNotFoundError(atlas)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_walk_v2.py",
+          "line": 75,
+          "preview": "with Image.open(atlas) as image:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_walk_v2.py",
+          "line": 76,
+          "preview": "if image.size != (1024,768): raise ValueError('skin atlas must be 1024x768')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_walk_v2.py",
+          "line": 255,
+          "preview": "# Warp the SAME cached atlas pieces along mildly curved limb strips.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_walk_v2.py",
+          "line": 319,
+          "preview": "def build(atlas:Path,out:Path,frames=24,fps=12):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_walk_v2.py",
+          "line": 322,
+          "preview": "kit=load_kit(atlas)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_walk_v2.py",
+          "line": 338,
+          "preview": "atlas_img.save(out/'atlas.png',optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_walk_v2.py",
+          "line": 347,
+          "preview": "'rig':'deterministic_two_bone_ik','render_source':'single-texture-atlas',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_walk_v2.py",
+          "line": 348,
+          "preview": "'source_skin_sha256':hashlib.sha256(atlas.read_bytes()).hexdigest(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/soft_skin_deform.py",
+          "line": 3,
+          "preview": "Inverse mapping of an atlas piece onto a mildly curved strip. No generative calls,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/soft_skin_deform.py",
+          "line": 27,
+          "preview": "\"\"\"Draw atlas texture along a gently curved IK bone with bilinear sampling.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/temporal_sprite_audit.py",
+          "line": 173,
+          "preview": "raise ValueError('Actual skin atlas SHA-256 mismatch')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_autonomous_walk.py",
+          "line": 81,
+          "preview": "with Image.open(root/'atlas.png') as atlas:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_autonomous_walk.py",
+          "line": 82,
+          "preview": "self.assertEqual(atlas.size,(2048,1024))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_autonomous_walk.py",
+          "line": 83,
+          "preview": "self.assertEqual(atlas.mode,'RGBA')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_approved_idle_fallback.py",
+          "line": 11,
+          "preview": "atlas = Image.new(\"RGBA\", (1024, 1024))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_approved_idle_fallback.py",
+          "line": 12,
+          "preview": "d = ImageDraw.Draw(atlas)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_approved_idle_fallback.py",
+          "line": 20,
+          "preview": "atlas.save(path)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_rejection_evidence.py",
+          "line": 34,
+          "preview": "with Image.open(image_path) as atlas:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_rejection_evidence.py",
+          "line": 35,
+          "preview": "self.assertEqual(atlas.size,(1024,1024))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_rejection_evidence.py",
+          "line": 37,
+          "preview": "cell=atlas.crop(((index%4)*256,(index//4)*256,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_identity_locked_walk_candidate.py",
+          "line": 34,
+          "preview": "atlas=Image.open(report['candidate_path'])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_identity_locked_walk_candidate.py",
+          "line": 35,
+          "preview": "self.assertEqual(atlas.size,(1024,512))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_identity_locked_walk_candidate.py",
+          "line": 36,
+          "preview": "self.assertEqual(atlas.mode,'RGBA')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_identity_locked_walk_candidate.py",
+          "line": 37,
+          "preview": "cells=[atlas.crop((i%4*256,i//4*256,i%4*256+256,i//4*256+256))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_package_tech_actions_runtime.py",
+          "line": 73,
+          "preview": "with Image.open(out/variant['path']) as atlas:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_package_tech_actions_runtime.py",
+          "line": 74,
+          "preview": "self.assertEqual(atlas.mode,'RGBA')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_package_tech_actions_runtime.py",
+          "line": 75,
+          "preview": "self.assertEqual(atlas.size,(size*6,size*4))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 287,
+          "preview": "with Image.open(out / \"atlas.png\") as atlas:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 288,
+          "preview": "self.assertEqual(atlas.size, (3072, 1024))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 289,
+          "preview": "self.assertEqual(atlas.mode, \"RGBA\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
+          "line": 127,
+          "preview": "with Image.open(out/'atlas.png') as atlas:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
+          "line": 128,
+          "preview": "self.assertEqual(atlas.size,(3072,1024))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
+          "line": 129,
+          "preview": "self.assertEqual(atlas.mode,'RGBA')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_soft_skin_deform.py",
+          "line": 1,
+          "preview": "\"\"\"Tests for deterministic, opt-in bending of TECH modular atlas textures.\"\"\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_temporal_sprite_audit.py",
+          "line": 141,
+          "preview": "with self.assertRaisesRegex(ValueError,'Actual skin atlas SHA-256 mismatch'):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_verify_character_action_candidates.py",
+          "line": 1,
+          "preview": "\"\"\"Synthetic regressions for WORK/REPAIR translation-only atlas rejection.\"\"\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_verify_character_action_candidates.py",
+          "line": 25,
+          "preview": "def atlas(frames: list[Image.Image]) -> Image.Image:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/test_verify_character_action_candidates.py",
+          "line": 42,
+          "preview": "atlas(frames).save(target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_verify_character_idle_candidates.py",
+          "line": 13,
+          "preview": "def atlas(two_heads: bool) -> Image.Image:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_verify_character_idle_candidates.py",
+          "line": 37,
+          "preview": "atlas(True).save(directory / \"zte_chr_log_idle_final.png\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_verify_character_idle_candidates.py",
+          "line": 38,
+          "preview": "atlas(False).save(directory / \"zte_chr_op_idle_final.png\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/verify_character_action_candidates.py",
+          "line": 4,
+          "preview": "A technical atlas passes only if no obvious image-only identity/motion risks",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/verify_character_action_candidates.py",
+          "line": 28,
+          "preview": "raise ValueError(f\"wrong-action-atlas-shape={file.size}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/verify_character_idle_candidates.py",
+          "line": 27,
+          "preview": "raise ValueError(f\"wrong-idle-atlas-shape={file.size}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/verify_character_idle_candidates.py",
+          "line": 28,
+          "preview": "atlas = file.convert(\"RGBA\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/verify_character_idle_candidates.py",
+          "line": 30,
+          "preview": "atlas.crop(((index % 4) * FRAME, (index // 4) * FRAME,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/validate_isolated_sprite.py",
+          "line": 83,
+          "preview": "raise ValueError(f'fragmented/atlas-like alpha layout; dominant component only {dominant:.1%}')",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 117
+    },
+    "CharacterActionCollectorTests": {
+      "definition": {
+        "file": "tools/sprites/test_verify_character_action_candidates.py",
+        "line": 32,
+        "kind": "class",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_verify_character_action_candidates.py",
+          "line": 32,
+          "preview": "class CharacterActionCollectorTests(unittest.TestCase):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_rejects_ten_frames_of_standing_character_sliding_sideways": {
+      "definition": {
+        "file": "tools/sprites/test_verify_character_action_candidates.py",
+        "line": 33,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_verify_character_action_candidates.py",
+          "line": 33,
+          "preview": "def test_rejects_ten_frames_of_standing_character_sliding_sideways(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_true_arm_pose_variation_is_not_mistaken_for_actor_translation": {
+      "definition": {
+        "file": "tools/sprites/test_verify_character_action_candidates.py",
+        "line": 53,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_verify_character_action_candidates.py",
+          "line": 53,
+          "preview": "def test_true_arm_pose_variation_is_not_mistaken_for_actor_translation(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_bad_work_atlas_is_rejected_without_aborting_sibling_candidates": {
+      "definition": {
+        "file": "tools/sprites/test_verify_character_action_candidates.py",
+        "line": 59,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_verify_character_action_candidates.py",
+          "line": 59,
+          "preview": "def test_bad_work_atlas_is_rejected_without_aborting_sibling_candidates(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "check_action_atlas": {
+      "definition": {
+        "file": "tools/sprites/verify_character_action_candidates.py",
+        "line": 25,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_verify_character_action_candidates.py",
+          "line": 8,
+          "preview": "from verify_character_action_candidates import annotate_report, check_action_atlas",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/verify_character_action_candidates.py",
+          "line": 25,
+          "preview": "def check_action_atlas(path: Path, action: str) -> dict:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/verify_character_action_candidates.py",
+          "line": 53,
+          "preview": "details = check_action_atlas(candidates_dir / name, match.group(2))",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "annotate_report": {
+      "definition": {
+        "file": "tools/sprites/verify_character_action_candidates.py",
+        "line": 44,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_verify_character_action_candidates.py",
+          "line": 8,
+          "preview": "from verify_character_action_candidates import annotate_report, check_action_atlas",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_verify_character_action_candidates.py",
+          "line": 44,
+          "preview": "result = annotate_report(Path(temp), qa)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_verify_character_action_candidates.py",
+          "line": 67,
+          "preview": "result = annotate_report(Path(temp), qa)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_verify_character_idle_candidates.py",
+          "line": 10,
+          "preview": "from verify_character_idle_candidates import annotate_report",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_verify_character_idle_candidates.py",
+          "line": 43,
+          "preview": "output = annotate_report(directory, report)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_verify_character_idle_candidates.py",
+          "line": 56,
+          "preview": "again = annotate_report(directory, output)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_verify_character_idle_candidates.py",
+          "line": 65,
+          "preview": "output = annotate_report(Path(tmp), report)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_verify_character_idle_candidates.py",
+          "line": 75,
+          "preview": "output = annotate_report(Path(tmp), report)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/verify_character_action_candidates.py",
+          "line": 44,
+          "preview": "def annotate_report(candidates_dir: Path, report: dict) -> dict:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/verify_character_action_candidates.py",
+          "line": 81,
+          "preview": "qa = annotate_report(args.candidates, qa)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/verify_character_idle_candidates.py",
+          "line": 43,
+          "preview": "def annotate_report(candidates_dir: Path, report: dict) -> dict:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/verify_character_idle_candidates.py",
+          "line": 80,
+          "preview": "qa = annotate_report(args.candidates, qa)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 12
+    },
+    "main": {
+      "definition": {
+        "file": "tools/sprites/verify_character_action_candidates.py",
+        "line": 75,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/PremiumGameFeelOverlay.kt",
+          "line": 10,
+          "preview": "* simply reacts to the already-sanitized GameState supplied by the main UI.",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/PlayBillingGatewayInvariantTest.kt",
+          "line": 76,
+          "preview": "val relative = \"src/main/java/com/zerotoempire/game/PlayBillingGateway.kt\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/ReviewedTerrainLayerTest.kt",
+          "line": 11,
+          "preview": "val relativePath = \"src/main/java/com/zerotoempire/game/ReviewedTerrainLayer.kt\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt",
+          "line": 45,
+          "preview": "val moduleRelative = File(\"src/main/java/com/zerotoempire/game/$name\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt",
+          "line": 46,
+          "preview": "val repoRelative = File(\"app/src/main/java/com/zerotoempire/game/$name\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/audit_character_runtime.py",
+          "line": 10,
+          "preview": "RASTER = ROOT / \"app/src/main/java/com/zerotoempire/game/CanonicalCharacterRaster.kt\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/audit_character_runtime.py",
+          "line": 11,
+          "preview": "LAYER = ROOT / \"app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/audit_character_runtime.py",
+          "line": 12,
+          "preview": "DRAWABLES = ROOT / \"app/src/main/res/drawable-nodpi\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/test_ui_click_target.py",
+          "line": 40,
+          "preview": "unittest.main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/test_ui_dump_retry.py",
+          "line": 86,
+          "preview": "unittest.main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/test_ui_economy_probe.py",
+          "line": 41,
+          "preview": "unittest.main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/ui_click_target.py",
+          "line": 93,
+          "preview": "def main(argv: list[str]) -> int:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/ui_click_target.py",
+          "line": 107,
+          "preview": "raise SystemExit(main(sys.argv))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/ui_economy_probe.py",
+          "line": 49,
+          "preview": "def main(argv: list[str]) -> int:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/ui_economy_probe.py",
+          "line": 62,
+          "preview": "raise SystemExit(main(sys.argv))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/validate_manifest_policy.py",
+          "line": 5,
+          "preview": "path = sys.argv[1] if len(sys.argv) > 1 else \"app/src/main/AndroidManifest.xml\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/validate_manifest_policy.py",
+          "line": 39,
+          "preview": "backup = ET.parse(\"app/src/main/res/xml/backup_rules.xml\").getroot()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/validate_manifest_policy.py",
+          "line": 44,
+          "preview": "extract = ET.parse(\"app/src/main/res/xml/data_extraction_rules.xml\").getroot()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/validate_release_privacy.py",
+          "line": 9,
+          "preview": "COMMERCE = ROOT / \"app/src/main/java/com/zerotoempire/game/CommerceUi.kt\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/validate_release_privacy.py",
+          "line": 10,
+          "preview": "IN_APP_POLICY = ROOT / \"app/src/main/java/com/zerotoempire/game/PrivacyPolicy.kt\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/validate_release_privacy.py",
+          "line": 79,
+          "preview": "ROOT / \"app/src/main/AndroidManifest.xml\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_manifest.py",
+          "line": 21,
+          "preview": "\"| ONB-00 | Onboarding step 0 | Power-core ignition illustration. | `app/src/main/res/drawable-nodpi/zte_onboarding_00_final.webp` | TODO |\\n\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_manifest.py",
+          "line": 26,
+          "preview": "\"app/src/main/res/drawable-nodpi/zte_onboarding_00_final.webp\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_manifest.py",
+          "line": 34,
+          "preview": "\"| ONB-00 | Onboarding step 0 | Core illustration. | `app/src/main/res/drawable-nodpi/zte_onboarding_00_final.webp` | TODO |\\n\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_manifest.py",
+          "line": 54,
+          "preview": "\"app/src/main/res/drawable-nodpi/zte_business_00_t0_final.webp\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_manifest.py",
+          "line": 63,
+          "preview": "\"app/src/main/res/drawable-nodpi/zte_onboarding_00_final.webp\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_manifest.py",
+          "line": 69,
+          "preview": "unittest.main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_metadata.py",
+          "line": 19,
+          "preview": "runtime_path=\"app/src/main/res/drawable-nodpi/zte_onboarding_00_final.webp\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_metadata.py",
+          "line": 47,
+          "preview": "runtime_path=\"app/src/main/res/drawable-nodpi/zte_wrong.webp\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_metadata.py",
+          "line": 91,
+          "preview": "unittest.main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_pipeline.py",
+          "line": 30,
+          "preview": "\"app/src/main/res/drawable-nodpi/prop_test.png\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_pipeline.py",
+          "line": 65,
+          "preview": "unittest.main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_pollinations_character_qa.py",
+          "line": 47,
+          "preview": "unittest.main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_qa_report.py",
+          "line": 23,
+          "preview": "\"runtime_path\": \"app/src/main/res/drawable-nodpi/zte_onboarding_00_final.webp\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_qa_report.py",
+          "line": 67,
+          "preview": "unittest.main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_queue_state_policy.py",
+          "line": 464,
+          "preview": "unittest.main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_static_processing.py",
+          "line": 37,
+          "preview": "unittest.main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 36,
+          "preview": "self.assertNotIn(\"app/src/main/res/drawable-nodpi\", text)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 49,
+          "preview": "self.assertNotIn(\"DISPATCH_KAGGLE_CHARACTER)\\\\n              gh workflow run 'Kaggle Mass Sprite Factory' --ref main -f count=2\", text)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 265,
+          "preview": "self.assertTrue(text.rstrip().endswith(\"if __name__=='__main__':main()\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 266,
+          "preview": "self.assertNotIn(\"main(       if fi==0\", text)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 423,
+          "preview": "unittest.main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/process_final_assets.py",
+          "line": 10,
+          "preview": "RUNTIME = ROOT / 'app/src/main/res/drawable-nodpi'",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/process_final_assets.py",
+          "line": 118,
+          "preview": "def main() -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/process_final_assets.py",
+          "line": 141,
+          "preview": "main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/animation_batch_planner.py",
+          "line": 122,
+          "preview": "def main() -> int:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/animation_batch_planner.py",
+          "line": 143,
+          "preview": "raise SystemExit(main())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_queue_utils.py",
+          "line": 65,
+          "preview": "runtime = f\"app/src/main/res/drawable-nodpi/zte_business_08_t{tier}_final.png\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 606,
+          "preview": "def main() -> int:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 623,
+          "preview": "raise SystemExit(main())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 132,
+          "preview": "def main()->int:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 171,
+          "preview": "if __name__==\"__main__\":raise SystemExit(main())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_complete_sprite_manifest.py",
+          "line": 15,
+          "preview": "def main():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_complete_sprite_manifest.py",
+          "line": 22,
+          "preview": "if not line.startswith('|') or 'app/src/main/res/' not in line: continue",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_complete_sprite_manifest.py",
+          "line": 73,
+          "preview": "if __name__=='__main__':main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/autonomous_walk.py",
+          "line": 297,
+          "preview": "def main():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/autonomous_walk.py",
+          "line": 319,
+          "preview": "if __name__=='__main__':main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 289,
+          "preview": "def main() -> int:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 327,
+          "preview": "raise SystemExit(main())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_sprite_contact_sheet.py",
+          "line": 152,
+          "preview": "def main() -> int:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_sprite_contact_sheet.py",
+          "line": 181,
+          "preview": "raise SystemExit(main())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_tech_review_board.py",
+          "line": 242,
+          "preview": "def main():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_tech_review_board.py",
+          "line": 255,
+          "preview": "if __name__ == '__main__':main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_review_matrix.py",
+          "line": 130,
+          "preview": "def main()->int:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_review_matrix.py",
+          "line": 146,
+          "preview": "raise SystemExit(main())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/colab_mass_factory.py",
+          "line": 43,
+          "preview": "sh('git', '-C', str(REPO), 'fetch', '--depth', '1', 'origin', 'main')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/colab_mass_factory.py",
+          "line": 44,
+          "preview": "sh('git', '-C', str(REPO), 'reset', '--hard', 'origin/main')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/colab_mass_factory.py",
+          "line": 102,
+          "preview": "def main():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/colab_mass_factory.py",
+          "line": 178,
+          "preview": "main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/export_tech_canonical_review.py",
+          "line": 168,
+          "preview": "def main() -> int:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/export_tech_canonical_review.py",
+          "line": 184,
+          "preview": "raise SystemExit(main())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/generate_strict_review_backlog.py",
+          "line": 13,
+          "preview": "def main() -> int:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/generate_strict_review_backlog.py",
+          "line": 46,
+          "preview": "raise SystemExit(main())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_public_flux_factory.py",
+          "line": 20,
+          "preview": "if not line.startswith('|') or 'app/src/main/res/' not in line: continue",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_public_flux_factory.py",
+          "line": 71,
+          "preview": "def main():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_public_flux_factory.py",
+          "line": 116,
+          "preview": "if __name__=='__main__': main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_sprite_factory.py",
+          "line": 189,
+          "preview": "def main() -> int:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_sprite_factory.py",
+          "line": 207,
+          "preview": "raise SystemExit(main())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_static_manifest_factory.py",
+          "line": 139,
+          "preview": "def main():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_static_manifest_factory.py",
+          "line": 155,
+          "preview": "main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/identity_locked_walk_candidate.py",
+          "line": 124,
+          "preview": "def main():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/identity_locked_walk_candidate.py",
+          "line": 135,
+          "preview": "main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/integrate_fx04_runtime.py",
+          "line": 6,
+          "preview": "PATH = ROOT / \"app/src/main/java/com/zerotoempire/game/PurchaseImpactVfx.kt\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/integrate_fx05_runtime.py",
+          "line": 6,
+          "preview": "PATH = ROOT / \"app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/integrate_fx05_runtime.py",
+          "line": 9,
+          "preview": "def main() -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/integrate_fx05_runtime.py",
+          "line": 73,
+          "preview": "main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/integrate_fx06_runtime.py",
+          "line": 6,
+          "preview": "PATH = ROOT / \"app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/integrate_fx06_runtime.py",
+          "line": 124,
+          "preview": "def main() -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/integrate_fx06_runtime.py",
+          "line": 139,
+          "preview": "main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/integrate_fx07_runtime.py",
+          "line": 6,
+          "preview": "PATH = ROOT / \"app/src/main/java/com/zerotoempire/game/PurchaseImpactVfx.kt\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/integrate_fx07_runtime.py",
+          "line": 9,
+          "preview": "def main() -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/integrate_fx07_runtime.py",
+          "line": 67,
+          "preview": "main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory.py",
+          "line": 210,
+          "preview": "def main():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory.py",
+          "line": 242,
+          "preview": "if __name__=='__main__':main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 82,
+          "preview": "\"Preserve facade, production core, roof orientation, camera center and structural anchors; every new element physically attached to the main structure. \"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 228,
+          "preview": "def main():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 268,
+          "preview": "if __name__=='__main__':main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
+          "line": 90,
+          "preview": "integrity = \"Preserve facade, production core, roof orientation and structural anchors from the previous tier. Every new part is physically attached to the main building. No people",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
+          "line": 289,
+          "preview": "def main():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
+          "line": 327,
+          "preview": "if __name__=='__main__': main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v14.py",
+          "line": 142,
+          "preview": "def main():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v14.py",
+          "line": 168,
+          "preview": "if __name__=='__main__':main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v15.py",
+          "line": 28,
+          "preview": "\"\"\"Detect crane-like thin long horizontal structures high above the main mass.\"\"\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v15.py",
+          "line": 99,
+          "preview": "def main():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v15.py",
+          "line": 147,
+          "preview": "if __name__=='__main__':main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+          "line": 334,
+          "preview": "v15.main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16_10.py",
+          "line": 34,
+          "preview": "4:'Tech Company, one single enclosed futuristic R&D headquarters building, graphite glass-and-alloy shell, central data core, attached lab wings fused directly to the main building",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16_10.py",
+          "line": 79,
+          "preview": "'Every tank, pipe, vent, bay and service module is fused to the main architectural mass. '",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16_10.py",
+          "line": 223,
+          "preview": "if __name__=='__main__':v15.main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v17.py",
+          "line": 334,
+          "preview": "v15.main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 571,
+          "preview": "def main():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 852,
+          "preview": "if __name__=='__main__':main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_fx_sheet_factory_v1.py",
+          "line": 116,
+          "preview": "def main():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_fx_sheet_factory_v1.py",
+          "line": 132,
+          "preview": "if __name__=='__main__':main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_sprite_factory.py",
+          "line": 145,
+          "preview": "def main():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_sprite_factory.py",
+          "line": 169,
+          "preview": "if __name__=='__main__':main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/lightning_remote_runner.py",
+          "line": 31,
+          "preview": "def main() -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/lightning_remote_runner.py",
+          "line": 53,
+          "preview": "git fetch origin main",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/lightning_remote_runner.py",
+          "line": 54,
+          "preview": "git reset --hard origin/main",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/lightning_remote_runner.py",
+          "line": 81,
+          "preview": "main()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 120
+    }
+  }
 }

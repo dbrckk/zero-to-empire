@@ -31,19 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T17:30:30Z
+Generated: 2026-10-12T17:37:07Z
 
 ### Git
 - Branch: `main`
-- Head: `3795dc75d7b3`
-- Commit date: 2026-10-12T19:30:18+02:00
-- Commit: ci(art): verify current OP LOG Kaggle GPU queue status
-- Tracked files: 1555
+- Head: `dc2dd25f2421`
+- Commit date: 2026-10-12T19:36:40+02:00
+- Commit: ci(art): prove motion registration rejects known OP-WORK and OP-REPAIR real GPU atlases
+- Tracked files: 1557
 
 ### Recently changed files
-- `ops/kaggle-collector-trigger.txt`
-- `tools/assets/test_workflow_policy.py`
+- `.github/workflows/character-single-subject-gpu-evidence.yml`
+- `.github/workflows/asset-pipeline-ci.yml`
+- `tools/sprites/test_verify_character_action_candidates.py`
 - `.github/workflows/kaggle-async-character-collector.yml`
+- `tools/sprites/verify_character_action_candidates.py`
 
 ### Project signals
 - `build.gradle.kts`

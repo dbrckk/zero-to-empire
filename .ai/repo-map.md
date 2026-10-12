@@ -426,10 +426,12 @@ tools/
     test_soft_skin_deform.py
     test_tech_prop_mount.py
     test_temporal_sprite_audit.py
+    test_verify_character_action_candidates.py
     test_verify_character_idle_candidates.py
     test_weight_transfer.py
     validate_animation_sheet.py
     validate_runtime_asset.py
+    verify_character_action_candidates.py
     verify_character_idle_candidates.py
     weight_transfer.py
   process_final_assets.py
@@ -1157,6 +1159,8 @@ on:
       - 'tools/sprites/test_character_ground_shadow_cleanup.py'
       - 'tools/sprites/test_character_head_identity_lock.py'
       - 'tools/sprites/character_semantic_gate.py'
+      - 'tools/sprites/verify_character_action_candidates.py'
+      - 'tools/sprites/test_verify_character_action_candidates.py'
       - 'tools/sprites/test_character_semantic_gate.py'
       - 'tools/sprites/verify_character_idle_candidates.py'
       - 'tools/sprites/test_verify_character_idle_candidates.py'
@@ -1194,6 +1198,8 @@ on:
       - 'tools/sprites/test_character_ground_shadow_cleanup.py'
       - 'tools/sprites/test_character_head_identity_lock.py'
       - 'tools/sprites/character_semantic_gate.py'
+      - 'tools/sprites/verify_character_action_candidates.py'
+      - 'tools/sprites/test_verify_character_action_candidates.py'
       - 'tools/sprites/test_character_semantic_gate.py'
       - 'tools/sprites/verify_character_idle_candidates.py'
       - 'tools/sprites/test_verify_character_idle_candidates.py'
@@ -1243,6 +1249,7 @@ jobs:
             tools/sprites/asset_wave_orchestrator.py \
             tools/sprites/build_character_review_panels.py \
             tools/sprites/character_head_identity_lock.py \
+            tools/sprites/verify_character_action_candidates.py \
             tools/sprites/verify_character_idle_candidates.py \
             tools/sprites/character_approved_idle_fallback.py \
             tools/sprites/character_ground_shadow_cleanup.py \
@@ -1408,6 +1415,7 @@ jobs:
           python -m unittest discover -s tools/sprites -p 'test_character_semantic_gate.py' -v
           python -m unittest discover -s tools/sprites -p 'test_verify_character_idle_candidates.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_head_identity_lock.py' -v
+          python -m unittest discover -s tools/sprites -p 'test_verify_character_action_candidates.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_approved_idle_fallback.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_ground_shadow_cleanup.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_anchor_pair_salvage.py' -v
@@ -1704,6 +1712,7 @@ jobs:
           set -euo pipefail
           cp /tmp/zte-single-subject/output/github-qa-report.json \
              /tmp/zte-single-subject/retroactive-collector-qa.json
+            /tmp/zte-single-subject/retroactive-action-qa.json
           python tools/sprites/verify_character_idle_candidates.py \
             --candidates /tmp/zte-single-subject/output/candidates \
             --qa-report /tmp/zte-single-subject/retroactive-collector-qa.json
@@ -1721,6 +1730,33 @@ jobs:
               if by_file['zte_chr_op_idle_final.png']['pass'] is not True:
                   raise SystemExit('Collector rejected the single-subject OP control')
           print('RETROACTIVE_GPU_COLLECTOR_SUBJECT_QA_PASS=1')
+          PY
+      - name: Verify previously accepted OP actions against registered-motion QA
+        env:
+          SOURCE_RUN: ${{ inputs.source_run_id || '38281126201' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp /tmp/zte-single-subject/output/github-qa-report.json \
+             /tmp/zte-single-subject/retroactive-action-qa.json
+          python tools/sprites/verify_character_action_candidates.py \
+            --candidates /tmp/zte-single-subject/output/candidates \
+            --qa-report /tmp/zte-single-subject/retroactive-action-qa.json
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          rows=json.loads(Path('/tmp/zte-single-subject/retroactive-action-qa.json').read_text())['assets']
+          by_name={row['file']:row for row in rows}
+          if os.environ['SOURCE_RUN']=='38281126201':
+              for name in ('zte_chr_op_work_final.png','zte_chr_op_repair_final.png'):
+                  row=by_name[name]
+                  assert row['pass'] is False,(name,row)
+                  assert 'action-visual-risk:ACTION_TRANSLATION_DOMINATES_POSE_RISK' in row['issues'],(name,row)
+                  metrics=row['action_visual_risk']['action_pose_metrics']
+                  assert metrics['head_horizontal_excursion_px']>=12,(name,metrics)
+                  assert metrics['retained_pose_motion_ratio']<.43,(name,metrics)
+              print('REAL_OP_TRANSLATION_ONLY_ACTION_REJECTED=2')
+          print('ACTION_COLLECTOR_RETROACTIVE_REVIEW_PASS=1')
           PY
       - name: Save forensic verification without promotion
         uses: actions/upload-artifact@v4
@@ -2848,6 +2884,9 @@ jobs:
           if (( ${#files[@]} > 0 )); then
             python tools/sprites/build_sprite_contact_sheet.py               --output /tmp/kaggle-output/output/github-contact-sheet.png               --report /tmp/kaggle-output/output/github-qa-report.json               --files "${files[@]}"
             python tools/sprites/verify_character_idle_candidates.py \
+              --candidates /tmp/kaggle-output/output/candidates \
+              --qa-report /tmp/kaggle-output/output/github-qa-report.json
+            python tools/sprites/verify_character_action_candidates.py \
               --candidates /tmp/kaggle-output/output/candidates \
               --qa-report /tmp/kaggle-output/output/github-qa-report.json
             python - <<'PY'
@@ -29655,6 +29694,49 @@ start=x
 center_a=(left_run[0]+left_run[1])/2
 center_b=(right_run[0]+right_run[1])/2
 ⋮----
+def _upper_head_centroid(frame:Image.Image)
+⋮----
+"""Approximate actor registration from the upper opaque head silhouette."""
+⋮----
+height=bbox[3]-bbox[1]
+y0=max(0,bbox[1]+round(height*.04))
+y1=min(frame.height,max(y0+1,bbox[1]+round(height*.25)))
+region=alpha.crop((0,y0,frame.width,y1))
+pixels=region.load()
+sum_x=sum_y=count=0
+⋮----
+def _binary_alpha_iou(a:Image.Image,b:Image.Image)->float
+⋮----
+aa=a.getchannel('A').point(lambda v:255 if v>=32 else 0)
+bb=b.getchannel('A').point(lambda v:255 if v>=32 else 0)
+overlap=ImageChops.darker(aa,bb).histogram()[255]
+union=ImageChops.lighter(aa,bb).histogram()[255]
+⋮----
+def action_translation_metrics(frames:list[Image.Image])->dict
+⋮----
+"""Detect apparent action motion due mainly to shifting the whole actor.
+
+    A 256px WORK/REPAIR atlas can exceed the alpha-change threshold if the
+    standing character slides horizontally, even with no raised forearms.
+    Register the upper head silhouette and measure the pose-change remainder.
+    This is a reject-only risk signal, never a semantic quality approval.
+    """
+⋮----
+rgba=[f.convert('RGBA') for f in frames]
+⋮----
+anchors=[_upper_head_centroid(f) for f in rgba]
+⋮----
+first=anchors[0]
+aligned=[]
+⋮----
+registered=Image.new('RGBA',frame.size,(0,0,0,0))
+⋮----
+raw=sum(1-_binary_alpha_iou(a,b) for a,b in zip(rgba,rgba[1:]))/(len(rgba)-1)
+residual=sum(1-_binary_alpha_iou(a,b)
+head_excursion=max(x for x,y in anchors)-min(x for x,y in anchors)
+ratio=residual/max(raw,.001)
+dominated=raw>=.15 and head_excursion>=12 and ratio<.43
+⋮----
 def clip_risk(frames:list[Image.Image],action:str|None=None)->dict
 ⋮----
 dims=[frame_geometry(f) for f in frames]
@@ -29678,6 +29760,10 @@ ground_band_count=sum(value>=1.27 for value in ground_band_ratios)
 idle_head_clusters=(
 double_head_frames=sum(value>=2 for value in idle_head_clusters)
 ⋮----
+action_pose_metrics={}
+⋮----
+action_pose_metrics=action_translation_metrics(frames)
+⋮----
 sizes=[f['bbox_height_fraction'] for f in dims]
 # A single mysteriously shortened frame was accepted in LOG-WORK even
 # though its neighbors retained normal full-body framing. Reject per-frame
@@ -29687,7 +29773,7 @@ min_relative_height=min(sizes)/max(statistics.median(sizes),.01)
 areas=[f['visible_alpha_area'] for f in dims]
 mass_ratio=max(areas)/max(min(areas),1)
 ⋮----
-blockers={'MULTIPLE_IDLE_HEADS_RISK',
+blockers={'ACTION_TRANSLATION_DOMINATES_POSE_RISK',
 blocking=bool(blockers.intersection(flags))
 ```
 
@@ -35686,6 +35772,44 @@ file=self.root/'REPAIR/qa-manifest.json'
 record=json.loads(file.read_text())
 ```
 
+## File: tools/sprites/test_verify_character_action_candidates.py
+```python
+"""Synthetic regressions for WORK/REPAIR translation-only atlas rejection."""
+⋮----
+def figure(offset: int = 0, raised_hand: int = 0) -> Image.Image
+⋮----
+frame = Image.new("RGBA", (256, 256), (0, 0, 0, 0))
+d = ImageDraw.Draw(frame)
+dx = offset
+⋮----
+def atlas(frames: list[Image.Image]) -> Image.Image
+⋮----
+output = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
+⋮----
+class CharacterActionCollectorTests(unittest.TestCase)
+⋮----
+def test_rejects_ten_frames_of_standing_character_sliding_sideways(self)
+⋮----
+offsets = (0, 4, 8, 12, 16, 20, 16, 12, 8, 4)
+frames = [figure(offset) for offset in offsets]
+metrics = action_translation_metrics(frames)
+⋮----
+target = Path(temp) / "zte_chr_op_work_final.png"
+⋮----
+qa = {"assets": [{"file": target.name, "pass": True, "issues": []}]}
+result = annotate_report(Path(temp), qa)
+⋮----
+def test_true_arm_pose_variation_is_not_mistaken_for_actor_translation(self)
+⋮----
+frames = [figure(0, raised_hand=i * 4) for i in range(10)]
+⋮----
+def test_bad_work_atlas_is_rejected_without_aborting_sibling_candidates(self)
+⋮----
+target = Path(temp) / "zte_chr_eng_repair_final.png"
+⋮----
+qa = {"assets": [
+```
+
 ## File: tools/sprites/test_verify_character_idle_candidates.py
 ```python
 """Offline collector fallback QA checks, without model/GPU or strict promotion."""
@@ -35855,6 +35979,49 @@ ap=argparse.ArgumentParser()
 ⋮----
 a=ap.parse_args()
 result=validate(a.asset_id,a.path)
+```
+
+## File: tools/sprites/verify_character_action_candidates.py
+```python
+#!/usr/bin/env python3
+"""Collector-side action-motion audit, independent of Kaggle generator version.
+
+A technical atlas passes only if no obvious image-only identity/motion risks
+were detected. Every pass still needs explicit artistic and Android review.
+This annotates a derived QA report; source sprites and strict DONE stay intact.
+"""
+⋮----
+ACTION_FILENAME = re.compile(r"^zte_chr_(op|log|eng|tech)_(work|repair)_final\.png$")
+ATLAS_SIZE = (1024, 1024)
+CELL_SIZE = 256
+FRAME_COUNT = 10
+⋮----
+def check_action_atlas(path: Path, action: str) -> dict
+⋮----
+rgba = file.convert("RGBA")
+frames = [
+risk = clip_risk(frames, action.upper())
+⋮----
+def annotate_report(candidates_dir: Path, report: dict) -> dict
+⋮----
+name = Path(str(row.get("file") or "")).name
+match = ACTION_FILENAME.fullmatch(name)
+⋮----
+details = check_action_atlas(candidates_dir / name, match.group(2))
+⋮----
+details = {
+⋮----
+issues = [str(v) for v in row.get("issues", [])]
+⋮----
+issue = "action-visual-risk:" + str(flag)
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser()
+⋮----
+args = parser.parse_args()
+qa = json.loads(args.qa_report.read_text(encoding="utf-8"))
+qa = annotate_report(args.candidates, qa)
 ```
 
 ## File: tools/sprites/verify_character_idle_candidates.py

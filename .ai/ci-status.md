@@ -1,12 +1,15 @@
 # CI status
 
-Summary: 3 success / 0 failure / 1 active
+Summary: 4 success / 1 failure / 0 active
 
-- Kaggle Async Character Collector: in_progress / pending (3795dc75)
-- Asset Pipeline CI: completed / success (9b6b6455)
-- Asset Pipeline CI: completed / cancelled (7d900b65)
-- Asset Pipeline CI: completed / cancelled (31a773fe)
-- Kaggle Async Character Collector: completed / success (ea519690)
-- Asset Pipeline CI: completed / success (abc46a38)
+- Character Single-Subject GPU Evidence: completed / failure (dc2dd25f)
+- Asset Pipeline CI: completed / success (210f1d8c)
+- Asset Pipeline CI: completed / success (698f7447)
+- Asset Pipeline CI: completed / success (648c6864)
+- Character strict review matrix: completed / success (648c6864)
+
+## Latest failed run structure
+- Job: review
+  - Failed step: Validate collector rejects the original false-positive QA rows
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.
