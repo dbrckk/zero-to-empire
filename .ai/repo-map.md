@@ -348,6 +348,7 @@ tools/
     build_sprite_contact_sheet.py
     build_tech_review_board.py
     character_anchor_pair_salvage.py
+    character_approved_idle_fallback.py
     character_cargo_identity_lock.py
     character_ground_shadow_cleanup.py
     character_head_identity_lock.py
@@ -406,6 +407,7 @@ tools/
     test_autonomous_walk.py
     test_character_action_gate.py
     test_character_anchor_pair_salvage.py
+    test_character_approved_idle_fallback.py
     test_character_ground_shadow_cleanup.py
     test_character_head_identity_lock.py
     test_character_provider_reservation.py
@@ -541,6 +543,11 @@ concurrency:
 jobs:
   repository-standards:
     uses: dbrckk/repo-standards/.github/workflows/reusable-unified.yml@main
+    with:
+      # The new sprite QA modules pushed the real generated map just beyond
+      # the shared 1.5 MB default. Increase only this repo's scoped budget;
+      # do not weaken standards or change other repositories.
+      ai_map_max_bytes: 1800000
 
   strict-review-backlog:
     name: Strict review backlog consistency
@@ -1135,6 +1142,8 @@ on:
       - 'tools/sprites/animation_batch_planner.py'
       - 'tools/sprites/build_character_review_panels.py'
       - 'tools/sprites/character_head_identity_lock.py'
+      - 'tools/sprites/character_approved_idle_fallback.py'
+      - 'tools/sprites/test_character_approved_idle_fallback.py'
       - 'tools/sprites/character_ground_shadow_cleanup.py'
       - 'tools/sprites/character_anchor_pair_salvage.py'
       - 'tools/sprites/character_rejection_evidence.py'
@@ -1167,6 +1176,8 @@ on:
       - 'tools/sprites/animation_batch_planner.py'
       - 'tools/sprites/build_character_review_panels.py'
       - 'tools/sprites/character_head_identity_lock.py'
+      - 'tools/sprites/character_approved_idle_fallback.py'
+      - 'tools/sprites/test_character_approved_idle_fallback.py'
       - 'tools/sprites/character_ground_shadow_cleanup.py'
       - 'tools/sprites/character_anchor_pair_salvage.py'
       - 'tools/sprites/character_rejection_evidence.py'
@@ -1222,6 +1233,7 @@ jobs:
             tools/sprites/asset_wave_orchestrator.py \
             tools/sprites/build_character_review_panels.py \
             tools/sprites/character_head_identity_lock.py \
+            tools/sprites/character_approved_idle_fallback.py \
             tools/sprites/character_ground_shadow_cleanup.py \
             tools/sprites/character_anchor_pair_salvage.py \
             tools/sprites/character_rejection_evidence.py \
@@ -1280,6 +1292,29 @@ jobs:
           print('CHARACTER_REVIEW_PANEL_SMOKE_PASS=1')
           PY
 
+      - name: Verify fallback identity source against actual canonical OP LOG atlases
+        run: |
+          python - <<'PY'
+          import sys
+          from pathlib import Path
+          sys.path.insert(0,'tools/sprites')
+          from character_approved_idle_fallback import load_approved_idle_anchor
+          manifest=Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
+          source=Path('art/incoming/final-sprites')
+          for role in ('OP','LOG'):
+              seed,reason=load_approved_idle_anchor(role,manifest,source)
+              if seed is None:
+                  raise SystemExit(f'{role} strictly approved IDLE fallback unusable: {reason}')
+              assert seed.size==(1024,1024)
+              assert seed.getpixel((0,0))==(139,139,139)
+              assert seed.getpixel((512,510))!=(139,139,139)
+              print(f'KAGGLE_APPROVED_IDLE_SOURCE_READY={role} {reason}')
+          # Engineer IDLE must not be promoted by inference from a legacy file.
+          seed,reason=load_approved_idle_anchor('ENG',manifest,source)
+          assert seed is None
+          print('KAGGLE_ENG_REVIEW_ONLY_REFERENCE_ENFORCED=1')
+          PY
+
       - name: Validate rejection-memory schema
         run: |
           python - <<'PY'
@@ -1302,6 +1337,7 @@ jobs:
           python -m unittest discover -s tools/assets -p 'test_*.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_semantic_gate.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_head_identity_lock.py' -v
+          python -m unittest discover -s tools/sprites -p 'test_character_approved_idle_fallback.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_ground_shadow_cleanup.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_anchor_pair_salvage.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_rejection_evidence.py' -v
@@ -3157,7 +3193,7 @@ jobs:
           fi
 
       - name: Compile sprite generators
-        run: python -m py_compile tools/sprites/kaggle_building_family_factory_v16.py tools/sprites/kaggle_character_sheet_factory_v1.py tools/sprites/character_head_identity_lock.py tools/sprites/character_ground_shadow_cleanup.py tools/sprites/character_anchor_pair_salvage.py tools/sprites/character_rejection_evidence.py kaggle/github_mass_factory.py
+        run: python -m py_compile tools/sprites/kaggle_building_family_factory_v16.py tools/sprites/kaggle_character_sheet_factory_v1.py tools/sprites/character_head_identity_lock.py tools/sprites/character_ground_shadow_cleanup.py tools/sprites/character_anchor_pair_salvage.py tools/sprites/character_approved_idle_fallback.py tools/sprites/character_rejection_evidence.py kaggle/github_mass_factory.py
       - name: Recover async preflight failure
         if: ${{ failure() && env.ASYNC_SUBMIT == 'true' }}
         env:
@@ -3314,6 +3350,7 @@ jobs:
              tools/sprites/character_head_identity_lock.py \
              tools/sprites/character_ground_shadow_cleanup.py \
              tools/sprites/character_anchor_pair_salvage.py \
+             tools/sprites/character_approved_idle_fallback.py \
              tools/sprites/character_rejection_evidence.py \
              /tmp/zte-kaggle/tools/sprites/
           sed "s/__KAGGLE_USERNAME__/${KAGGLE_USERNAME}/g" kaggle/kernel-metadata.template.json > /tmp/zte-kaggle/kernel-metadata.json
@@ -3345,6 +3382,7 @@ jobs:
               'character_head_identity_lock.py',
               'character_ground_shadow_cleanup.py',
               'character_anchor_pair_salvage.py',
+              'character_approved_idle_fallback.py',
               'character_rejection_evidence.py',
           ]
           buf=io.BytesIO()
@@ -27637,6 +27675,8 @@ diagnostic = Path("tools/sprites/character_rejection_evidence.py").read_text(enc
 ⋮----
 def test_kaggle_head_identity_lock_is_present_in_all_gpu_fallbacks(self)
 ⋮----
+def test_strict_done_idle_fallback_is_included_in_all_kaggle_code_paths(self)
+⋮----
 def test_kaggle_character_generator_uses_neutral_role_anchor(self)
 ⋮----
 def test_kaggle_rejection_memory_prefers_exact_asset_over_role_fallback(self)
@@ -28873,6 +28913,57 @@ bg=tuple(sorted(pixel[k] for pixel in corners)[1:3][0] for k in range(3))
 canvas=Image.new("RGB",(1024,1024),bg)
 x=(1024-region.width)//2
 y=(1024-region.height)//2
+```
+
+## File: tools/sprites/character_approved_idle_fallback.py
+```python
+"""Fallback role identity from an existing strict-DONE IDLE sprite.
+
+This is ONLY a source for *new* GPU regeneration when fresh text-to-image
+anchors fail repeatedly. It never returns a valid review decision, never
+changes the manifest, never updates runtime resources and cannot invent an
+unreviewed engineer IDLE. Source pixels must pass full-body and isolation QA
+in the caller before use.
+"""
+⋮----
+_ALLOWED = {"OP", "LOG", "TECH"}
+_ITEM = re.compile(r"^\|\s*(CHR-(?:OP|LOG|TECH)-IDLE)\s*\|")
+⋮----
+"""Return a neutral 1024x1024 RGB seed or a specific rejection reason."""
+role = role.upper()
+⋮----
+source_id = f"CHR-{role}-IDLE"
+⋮----
+statuses = []
+⋮----
+filename = sprite_dir / f"zte_chr_{role.lower()}_idle_final.png"
+⋮----
+frame = src.convert("RGBA").crop((0, 0, 256, 256))
+⋮----
+alpha = frame.getchannel("A").point(lambda a: 255 if a >= 64 else 0)
+bbox = alpha.getbbox()
+⋮----
+# Reject a pair of separate foreground people, even if combined bbox
+# is still tall. A large secondary connected alpha component cannot be
+# treated as an approved single-character identity anchor.
+foreground = alpha.load()
+visited: set[tuple[int, int]] = set()
+components: list[int] = []
+⋮----
+stack = [(xx, yy)]
+⋮----
+area = 0
+⋮----
+# Use the original, already-approved character pixels. Rescale without
+# re-generating the face or drawing a new helmet/costume.
+crop = frame.crop(bbox)
+desired_height = 770
+desired_width = round(width * desired_height / height)
+⋮----
+resized = crop.resize((desired_width, desired_height), Image.Resampling.LANCZOS)
+background = Image.new("RGB", (1024, 1024), (139, 139, 139))
+target_x = (1024 - desired_width) // 2
+target_y = (1024 - desired_height) // 2
 ```
 
 ## File: tools/sprites/character_cargo_identity_lock.py
@@ -31443,6 +31534,9 @@ reason=str(anchor_error).lower()
 # Ambiguous duplicates still fail rather than contaminating all actions.
 ⋮----
 candidate=single
+⋮----
+# Reuse only a strict-DONE OP/LOG/TECH IDLE as a visual identity SOURCE,
+# never as a newly approved role action. Reject invalid/multi-person seed.
 ⋮----
 why='required-role-idle-candidate-rejected'
 ⋮----
@@ -34354,6 +34448,31 @@ def test_single_person_is_not_falsely_salvaged(self)
 def test_overlap_is_left_for_manual_rejection(self)
 ⋮----
 def test_short_detached_panel_is_not_treated_as_another_worker(self)
+```
+
+## File: tools/sprites/test_character_approved_idle_fallback.py
+```python
+"""Tests for approved legacy IDLE anchoring; no external models or GPU."""
+⋮----
+def approved_atlas(path: Path, doubled: bool = False)
+⋮----
+atlas = Image.new("RGBA", (1024, 1024))
+d = ImageDraw.Draw(atlas)
+⋮----
+class ApprovedIdleFallbackTests(unittest.TestCase)
+⋮----
+def test_reuses_exact_existing_strict_done_visual_reference(self)
+⋮----
+root = Path(tmp)
+m = root / "manifest.md"
+⋮----
+original = root / "zte_chr_log_idle_final.png"
+⋮----
+def test_runtimes_unapproved_idle_never_becomes_reference(self)
+⋮----
+def test_rejects_duplicate_person_in_single_cell(self)
+⋮----
+manifest = root / "manifest.md"
 ```
 
 ## File: tools/sprites/test_character_ground_shadow_cleanup.py

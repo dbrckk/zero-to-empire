@@ -1,13 +1,13 @@
 # Change impact
 
-Base: ef2aad0b22b3368077174a89030b4223e3b81d48
-Head: c1a08448ffdccfa5ac8ebfaa2b03b47ca644f247
+Base: 22dd68332f964a0edbae484d588ce0731cb3494a
+Head: de7c65bd9b31930b0013b6c016afa5db6bc10ee6
 
 ## Changed files
-- M tools/assets/test_workflow_policy.py
+- M .github/workflows/ai-repo-map.yml
 
 ## Affected areas
-- tools
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

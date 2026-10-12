@@ -63,6 +63,7 @@ sprites/
   build_sprite_contact_sheet.py
   build_tech_review_board.py
   character_anchor_pair_salvage.py
+  character_approved_idle_fallback.py
   character_cargo_identity_lock.py
   character_ground_shadow_cleanup.py
   character_head_identity_lock.py
@@ -121,6 +122,7 @@ sprites/
   test_autonomous_walk.py
   test_character_action_gate.py
   test_character_anchor_pair_salvage.py
+  test_character_approved_idle_fallback.py
   test_character_ground_shadow_cleanup.py
   test_character_head_identity_lock.py
   test_character_provider_reservation.py
@@ -2546,6 +2548,57 @@ bg=tuple(sorted(pixel[k] for pixel in corners)[1:3][0] for k in range(3))
 canvas=Image.new("RGB",(1024,1024),bg)
 x=(1024-region.width)//2
 y=(1024-region.height)//2
+```
+
+## File: sprites/character_approved_idle_fallback.py
+```python
+"""Fallback role identity from an existing strict-DONE IDLE sprite.
+
+This is ONLY a source for *new* GPU regeneration when fresh text-to-image
+anchors fail repeatedly. It never returns a valid review decision, never
+changes the manifest, never updates runtime resources and cannot invent an
+unreviewed engineer IDLE. Source pixels must pass full-body and isolation QA
+in the caller before use.
+"""
+⋮----
+_ALLOWED = {"OP", "LOG", "TECH"}
+_ITEM = re.compile(r"^\|\s*(CHR-(?:OP|LOG|TECH)-IDLE)\s*\|")
+⋮----
+"""Return a neutral 1024x1024 RGB seed or a specific rejection reason."""
+role = role.upper()
+⋮----
+source_id = f"CHR-{role}-IDLE"
+⋮----
+statuses = []
+⋮----
+filename = sprite_dir / f"zte_chr_{role.lower()}_idle_final.png"
+⋮----
+frame = src.convert("RGBA").crop((0, 0, 256, 256))
+⋮----
+alpha = frame.getchannel("A").point(lambda a: 255 if a >= 64 else 0)
+bbox = alpha.getbbox()
+⋮----
+# Reject a pair of separate foreground people, even if combined bbox
+# is still tall. A large secondary connected alpha component cannot be
+# treated as an approved single-character identity anchor.
+foreground = alpha.load()
+visited: set[tuple[int, int]] = set()
+components: list[int] = []
+⋮----
+stack = [(xx, yy)]
+⋮----
+area = 0
+⋮----
+# Use the original, already-approved character pixels. Rescale without
+# re-generating the face or drawing a new helmet/costume.
+crop = frame.crop(bbox)
+desired_height = 770
+desired_width = round(width * desired_height / height)
+⋮----
+resized = crop.resize((desired_width, desired_height), Image.Resampling.LANCZOS)
+background = Image.new("RGB", (1024, 1024), (139, 139, 139))
+target_x = (1024 - desired_width) // 2
+target_y = (1024 - desired_height) // 2
 ```
 
 ## File: sprites/character_cargo_identity_lock.py
@@ -5116,6 +5169,9 @@ reason=str(anchor_error).lower()
 # Ambiguous duplicates still fail rather than contaminating all actions.
 ⋮----
 candidate=single
+⋮----
+# Reuse only a strict-DONE OP/LOG/TECH IDLE as a visual identity SOURCE,
+# never as a newly approved role action. Reject invalid/multi-person seed.
 ⋮----
 why='required-role-idle-candidate-rejected'
 ⋮----
@@ -8027,6 +8083,31 @@ def test_single_person_is_not_falsely_salvaged(self)
 def test_overlap_is_left_for_manual_rejection(self)
 ⋮----
 def test_short_detached_panel_is_not_treated_as_another_worker(self)
+```
+
+## File: sprites/test_character_approved_idle_fallback.py
+```python
+"""Tests for approved legacy IDLE anchoring; no external models or GPU."""
+⋮----
+def approved_atlas(path: Path, doubled: bool = False)
+⋮----
+atlas = Image.new("RGBA", (1024, 1024))
+d = ImageDraw.Draw(atlas)
+⋮----
+class ApprovedIdleFallbackTests(unittest.TestCase)
+⋮----
+def test_reuses_exact_existing_strict_done_visual_reference(self)
+⋮----
+root = Path(tmp)
+m = root / "manifest.md"
+⋮----
+original = root / "zte_chr_log_idle_final.png"
+⋮----
+def test_runtimes_unapproved_idle_never_becomes_reference(self)
+⋮----
+def test_rejects_duplicate_person_in_single_cell(self)
+⋮----
+manifest = root / "manifest.md"
 ```
 
 ## File: sprites/test_character_ground_shadow_cleanup.py
