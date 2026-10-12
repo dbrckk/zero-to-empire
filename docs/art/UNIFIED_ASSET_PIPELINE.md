@@ -279,3 +279,37 @@ version that generated their pixels. This is not an automatic approval: even
 `risk_level=NOT_DETECTED` still requires same-person identity, continuous
 hand/tool interaction, correct motion and Android runtime acceptance. These
 checks apply to subsequent producer kernels, not an already running GPU job.
+
+
+### v1.20: candidate-only same-role IDLE breathing rescue
+
+Character waves were repeatedly cascading into failed action batches because a
+stochastic six-frame IDLE reference was rejected. The v1.20 fallback in
+`tools/sprites/character_idle_breathing_fallback.py` is activated **only after
+the IDLE generation itself fails** and a single-person source anchor already
+passed full-body, border, segmentation and connected-component validation.
+
+The fallback derives six discreet breathing poses from that same 256px source
+by horizontally expanding the middle torso at subpixel scale. It leaves the
+head, helmet, face, hands and bottom foot pivot unchanged. It does not
+generate a new person or introduce unrelated parts. The full IDLE
+`sheet_qa`, `action_qa` and `clip_risk` still run; if they fail, the
+source IDLE remains rejected and the related actions do not run. If all three
+pass, the sprite becomes an `AWAITING_REVIEW` **candidate** with
+`candidate_origin=validated-role-seed-breathing-fallback` and
+`automatic_semantic_approval=false`. That action family is then permitted
+to generate its sibling animations from this same-role visual reference.
+
+This avoids spending an entire GPU wave only to skip five sibling actions,
+but it does **not** certify lifelike premium movement. A human must still
+inspect the six frames, exact character identity across sibling actions,
+and Android/runtime behavior before any strict promotion. The fallback
+is included in the Kaggle source tarball and direct inline overlay, and
+an integration smoke test exercises it against the real sprite risk gates.
+
+The production orchestrator uses the independent retry epoch
+`identity-lock-v1.20-stable-idle-breathing-rescue`. Attempts exhausted by
+v1.19 remain recorded as history; new attempts are eligible only under the
+new algorithm. The current in-progress GPU wave keeps its original dispatch
+token and must finish before the next epoch is scheduled. Do not increase the
+235-asset strict counter when a fallback is merely generated.
