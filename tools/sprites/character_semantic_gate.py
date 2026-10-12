@@ -248,6 +248,51 @@ def _body_region_color_signature(frame:Image.Image,start:float,end:float):
     return color_signature(rgba.crop((0,top,rgba.width,bottom)))
 
 
+def idle_distinct_head_clusters(frame:Image.Image)->int:
+    """Count well-separated opaque heads in the top 2%-14% of the sprite.
+
+    This detects two side-by-side workers whose shoulders touch into one
+    connected silhouette. The whole-character connected-component and aspect
+    checks previously missed these (LOG IDLE collector 38281126201). Limit
+    this check to IDLE: raised arms or props can add upper clusters in actions.
+    """
+    alpha=frame.convert('RGBA').getchannel('A')
+    bbox=alpha.getbbox()
+    if not bbox:
+        return 0
+    left,top,right,bottom=bbox
+    height=bottom-top
+    y0=top+round(height*.02)
+    y1=min(frame.height,top+round(height*.14))
+    if y1<=y0:
+        return 0
+    pixels=alpha.load()
+    occupancy=[
+        sum(pixels[x,y]>=64 for y in range(y0,y1))
+        for x in range(frame.width)
+    ]
+    cutoff=max(3,round((y1-y0)*.20))
+    runs=[]
+    start=None
+    for x,count in enumerate(occupancy):
+        present=count>=cutoff
+        if present and start is None:
+            start=x
+        if not present and start is not None:
+            if x-start>=8:
+                runs.append((start,x-1))
+            start=None
+    if start is not None and frame.width-start>=8:
+        runs.append((start,frame.width-1))
+    for index,left_run in enumerate(runs):
+        for right_run in runs[index+1:]:
+            center_a=(left_run[0]+left_run[1])/2
+            center_b=(right_run[0]+right_run[1])/2
+            if right_run[0]-left_run[1]>=8 and center_b-center_a>=24:
+                return 2
+    return 1 if runs else 0
+
+
 def clip_risk(frames:list[Image.Image],action:str|None=None)->dict:
     if len(frames)<4:
         raise ValueError('At least four images needed')
@@ -282,7 +327,14 @@ def clip_risk(frames:list[Image.Image],action:str|None=None)->dict:
                       else 0.0)
     ground_band_ratios=[lower_ground_band_ratio(frame) for frame in frames]
     ground_band_count=sum(value>=1.27 for value in ground_band_ratios)
+    idle_head_clusters=(
+        [idle_distinct_head_clusters(frame) for frame in frames]
+        if str(action or '').upper()=='IDLE' else []
+    )
+    double_head_frames=sum(value>=2 for value in idle_head_clusters)
     flags=[]
+    if double_head_frames>=2:
+        flags.append('MULTIPLE_IDLE_HEADS_RISK')
     if ground_band_count>=math.ceil(len(frames)*.5):
         flags.append('BAKED_GROUND_SHADOW_RISK')
     if head_max>.24:
@@ -316,7 +368,8 @@ def clip_risk(frames:list[Image.Image],action:str|None=None)->dict:
     mass_ratio=max(areas)/max(min(areas),1)
     if mass_ratio>1.80:
         flags.append('SILHOUETTE_MASS_DISCONTINUITY_RISK')
-    blockers={'MULTIPLE_NON_FULL_BODY_FRAMES',
+    blockers={'MULTIPLE_IDLE_HEADS_RISK',
+              'MULTIPLE_NON_FULL_BODY_FRAMES',
               'MEDIAN_SILHOUETTE_NOT_FULL_BODY',
               'PALETTE_IDENTITY_DISCONTINUITY_RISK',
               'CHARACTER_SCALE_DISCONTINUITY_RISK',
@@ -340,6 +393,7 @@ def clip_risk(frames:list[Image.Image],action:str|None=None)->dict:
             'min_relative_frame_height':round(min_relative_height,4),
             'max_silhouette_mass_ratio':round(mass_ratio,3),
             'baked_ground_band_suspected_frames':ground_band_count,
+            'two_head_idle_frames':double_head_frames,
             'max_ground_band_to_leg_width':round(max(ground_band_ratios),3),
             'non_full_body_frames':flat,
             'foot_profile_ambiguous_frames':no_feet,
