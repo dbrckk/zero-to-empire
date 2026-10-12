@@ -3040,6 +3040,32 @@ height=bounds[3]-bounds[1]
 top=max(0,bounds[1]+round(height*start))
 bottom=min(rgba.height,max(top+1,bounds[1]+round(height*end)))
 ⋮----
+def idle_distinct_head_clusters(frame:Image.Image)->int
+⋮----
+"""Count well-separated opaque heads in the top 2%-14% of the sprite.
+
+    This detects two side-by-side workers whose shoulders touch into one
+    connected silhouette. The whole-character connected-component and aspect
+    checks previously missed these (LOG IDLE collector 38281126201). Limit
+    this check to IDLE: raised arms or props can add upper clusters in actions.
+    """
+⋮----
+bbox=alpha.getbbox()
+⋮----
+y0=top+round(height*.02)
+y1=min(frame.height,top+round(height*.14))
+⋮----
+cutoff=max(3,round((y1-y0)*.20))
+runs=[]
+start=None
+⋮----
+present=count>=cutoff
+⋮----
+start=x
+⋮----
+center_a=(left_run[0]+left_run[1])/2
+center_b=(right_run[0]+right_run[1])/2
+⋮----
 def clip_risk(frames:list[Image.Image],action:str|None=None)->dict
 ⋮----
 dims=[frame_geometry(f) for f in frames]
@@ -3060,6 +3086,8 @@ mid_max=max(mid_changes,default=0.0)
 head_shape_drift=(head_structure_drift(frames)
 ground_band_ratios=[lower_ground_band_ratio(frame) for frame in frames]
 ground_band_count=sum(value>=1.27 for value in ground_band_ratios)
+idle_head_clusters=(
+double_head_frames=sum(value>=2 for value in idle_head_clusters)
 ⋮----
 sizes=[f['bbox_height_fraction'] for f in dims]
 # A single mysteriously shortened frame was accepted in LOG-WORK even
@@ -3070,7 +3098,7 @@ min_relative_height=min(sizes)/max(statistics.median(sizes),.01)
 areas=[f['visible_alpha_area'] for f in dims]
 mass_ratio=max(areas)/max(min(areas),1)
 ⋮----
-blockers={'MULTIPLE_NON_FULL_BODY_FRAMES',
+blockers={'MULTIPLE_IDLE_HEADS_RISK',
 blocking=bool(blockers.intersection(flags))
 ```
 
@@ -5057,6 +5085,12 @@ stack=[(sx,sy)];seen.add((sx,sy));n=0
 ⋮----
 cov=sum(aa.histogram()[8:])/(256*256)
 ⋮----
+def validated_single_role_anchor(source)
+⋮----
+# Validate the source *before* costly multi-frame diffusion. Two conjoined
+# workers with touching shoulders previously passed connected-component and
+# aspect checks; reject their distinct helmet silhouettes immediately.
+⋮----
 def alpha_iou(a,b)
 ⋮----
 A=a.getchannel('A').resize((64,64),Image.Resampling.BILINEAR).point(lambda p:255 if p>=32 else 0)
@@ -5199,6 +5233,8 @@ gen_anchor=torch.Generator(device='cuda').manual_seed(args.seed+700000+ri*50000+
 raw=base(height=1024,width=1024,num_inference_steps=6,guidance_scale=0,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),output_type='pil',generator=gen_anchor).images[0]
 candidate=raw.convert('RGB')
 ⋮----
+coverage=validated_single_role_anchor(candidate)
+⋮----
 reason=str(anchor_error).lower()
 ⋮----
 # FLUX can yield two side-by-side workers even with a "one person"
@@ -5206,10 +5242,13 @@ reason=str(anchor_error).lower()
 # one original foreground without repainting faces or inventing limbs.
 # Ambiguous duplicates still fail rather than contaminating all actions.
 ⋮----
+coverage=validated_single_role_anchor(single)
 candidate=single
 ⋮----
 # Reuse only a strict-DONE OP/LOG/TECH IDLE as a visual identity SOURCE,
 # never as a newly approved role action. Reject invalid/multi-person seed.
+⋮----
+coverage=validated_single_role_anchor(fallback)
 ⋮----
 def try_role_seed_idle_fallback(item,failed_reason,failed_frames)
 ⋮----
@@ -8345,6 +8384,18 @@ def test_unrelated_costume_palettes_are_detected(self)
 ⋮----
 frames=[person(0,(210,30,45,255)) if i%2 else
 result=clip_risk(frames)
+⋮----
+def test_conjoined_double_workers_are_detected_even_with_one_body_component(self)
+⋮----
+draw=ImageDraw.Draw(frame)
+# Two separate helmet/head shapes, shoulders and torsos fused into a
+# single continuous shape: the old component/width check passed it.
+⋮----
+result=clip_risk([frame.copy() for _ in range(6)],'IDLE')
+⋮----
+def test_one_realistic_idle_head_does_not_trigger_multi_head_gate(self)
+⋮----
+frames=[person(i%2) for i in range(6)]
 ⋮----
 def test_two_people_in_one_cell_cause_visible_mass_jump(self)
 ⋮----

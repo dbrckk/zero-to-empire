@@ -31,20 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T14:54:17Z
+Generated: 2026-10-12T17:03:25Z
 
 ### Git
 - Branch: `main`
-- Head: `80990e5e8536`
-- Commit date: 2026-10-12T16:54:01+02:00
-- Commit: fix(art): retain failed GPU IDLE forensic frames alongside successful fallback provenance
+- Head: `205b52fd70b8`
+- Commit date: 2026-10-12T19:02:52+02:00
+- Commit: fix(art): screen two-headed canonical role anchors before expensive GPU action generation
 - Tracked files: 1551
 
 ### Recently changed files
 - `tools/sprites/kaggle_character_sheet_factory_v1.py`
-- `docs/art/UNIFIED_ASSET_PIPELINE.md`
-- `tools/assets/test_workflow_policy.py`
-- `tools/assets/test_queue_state_policy.py`
+- `art/production/generation-rejection-ledger.json`
+- `art/production/character-strict-review-backlog.md`
+- `art/production/master-asset-queue.json`
+- `tools/sprites/test_character_semantic_gate.py`
 
 ### Project signals
 - `build.gradle.kts`

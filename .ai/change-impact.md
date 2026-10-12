@@ -1,7 +1,7 @@
 # Change impact
 
-Base: e72105eae272e1e0e66b61150c0c45aff53dc4dc
-Head: 80990e5e8536a29e2df7cc4c4e1b0a2cce1202e4
+Base: ae9d712a428a9106fa42a985d8619ef18b1ae4d9
+Head: 205b52fd70b8927d3230d43fae24e0b86d1b5868
 
 ## Changed files
 - M tools/sprites/kaggle_character_sheet_factory_v1.py

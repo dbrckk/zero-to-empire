@@ -2,11 +2,11 @@
 
 - Index mode: incremental
 - Files indexed: 262
-- Files reparsed this run: 1
-- Symbols: 1373
+- Files reparsed this run: 3
+- Symbols: 1377
 - Internal import edges: 59
-- Impacted files: 1
-- Selected tests: 0
+- Impacted files: 9
+- Selected tests: 3
 
 ## Languages
 - kotlin: 160 files
@@ -14,11 +14,11 @@
 
 ## Highest-density symbol files
 - app/src/main/java/com/zerotoempire/game/GameViewModel.kt: 40 symbols
-- tools/sprites/kaggle_character_sheet_factory_v1.py: 26 symbols
+- tools/sprites/kaggle_character_sheet_factory_v1.py: 27 symbols
 - app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt: 25 symbols
 - app/src/main/java/com/zerotoempire/game/Monetization.kt: 23 symbols
 - tools/sprites/pollinations_character_sheet_factory.py: 23 symbols
-- tools/sprites/test_character_semantic_gate.py: 20 symbols
+- tools/sprites/test_character_semantic_gate.py: 22 symbols
 - tools/sprites/rigged_tech_walk_v2.py: 19 symbols
 - tools/sprites/asset_wave_orchestrator.py: 18 symbols
 - tools/sprites/hf_sprite_factory.py: 18 symbols
@@ -43,10 +43,10 @@
 ## ast-grep enrichment
 - ast-grep outline: available
 - AST index mode: incremental
-- AST files reparsed this run: 1
+- AST files reparsed this run: 3
 - outline files retained: 267
-- top-level items retained: 3623
-- direct members retained: 845
+- top-level items retained: 3625
+- direct members retained: 847
 - symbol shards: 26
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard
 

@@ -1,12 +1,16 @@
 # CI status
 
-Summary: 2 success / 0 failure / 1 active
+Summary: 4 success / 1 failure / 0 active
 
-- Asset Pipeline CI: in_progress / pending (80990e5e)
-- Asset Pipeline CI: completed / success (2dd40dfb)
-- Asset Pipeline CI: completed / success (0aeee0db)
-- Asset Pipeline CI: completed / cancelled (5f8e9396)
-- Asset Pipeline CI: completed / cancelled (ac17e330)
-- Asset Pipeline CI: completed / cancelled (65280bab)
+- Asset Pipeline CI: completed / failure (205b52fd)
+- Asset Pipeline CI: completed / success (ae9d712a)
+- Character strict review matrix: completed / success (55b7caac)
+- Sprite Completion Gate: completed / success (55b7caac)
+- Asset Pipeline CI: completed / success (3dce5fcf)
+- Character strict review matrix: completed / cancelled (3dce5fcf)
+
+## Latest failed run structure
+- Job: validate
+  - Failed step: Run unified asset pipeline and visual-semantic gate checks
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.
