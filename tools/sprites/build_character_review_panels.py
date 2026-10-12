@@ -10,6 +10,7 @@ import json
 import re
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
+from character_semantic_gate import clip_risk
 
 ACTIONS = {"idle": 6, "walk": 8, "work": 10, "carry": 8, "repair": 10, "celeb": 8}
 PATTERN = re.compile(r"^zte_chr_(op|tech|log|eng)_(idle|walk|work|carry|repair|celeb)_final\.png$")
@@ -241,6 +242,24 @@ def create_panel(role: str, assets: dict[str, Path], output: Path, qa: dict[str,
                 for idx in range(frame_count)
             ]
             diagnostics = motion_review_evidence(raw_frames, action)
+            # Review candidates with the newest image-only risk rules, even
+            # when their GPU run used an older generator. These signals cannot
+            # alter an asset's canonical review or strict DONE state.
+            try:
+                visual_risk = clip_risk(raw_frames, action.upper())
+            except (ValueError, IndexError, OSError) as exc:
+                visual_risk = {
+                    "risk_level": "BLOCKING",
+                    "flags": ["VISUAL_RISK_CHECK_UNAVAILABLE"],
+                    "error": str(exc),
+                    "image_only_semantic_approval": False,
+                }
+            if visual_risk["risk_level"] == "BLOCKING":
+                draw.text((10, y + 196), "IMAGE RISK", font=font,
+                          fill=(231, 142, 127))
+                draw.text((10, y + 218),
+                          ",".join(visual_risk.get("flags", []))[:21],
+                          font=font, fill=(226, 158, 151))
             for frame_idx in range(frame_count):
                 fx = (frame_idx % 4) * CELL
                 fy = (frame_idx // 4) * CELL
@@ -255,6 +274,7 @@ def create_panel(role: str, assets: dict[str, Path], output: Path, qa: dict[str,
                 "candidate": True, "expected_frames": frame_count,
                 "qa_pass": is_pass, "issues": issues,
                 "temporal_evidence": diagnostics,
+                "image_only_risk": visual_risk,
             }
         except Exception as exc:
             status[action] = {"candidate": True, "expected_frames": frame_count, "qa_pass": False,
