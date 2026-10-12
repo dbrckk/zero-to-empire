@@ -131,6 +131,7 @@ overlay_names=(
  'character_head_identity_lock.py',
  'character_ground_shadow_cleanup.py',
  'character_anchor_pair_salvage.py',
+ 'character_rejection_evidence.py',
 )
 overlay_applied=False
 if GENERATOR_OVERLAY_B64:
