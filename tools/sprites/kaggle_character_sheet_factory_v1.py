@@ -17,6 +17,7 @@ from transformers import T5EncoderModel
 from character_semantic_gate import clip_risk,idle_visual_activity,celebration_arm_reach_counts
 from character_head_identity_lock import lock_head_to_idle
 from character_ground_shadow_cleanup import remove_baked_ground_shadow
+from character_rejection_evidence import save_rejected_idle_preview
 from character_anchor_pair_salvage import salvage_two_full_body_subjects
 
 ROOT=Path(__file__).resolve().parents[2]
@@ -530,6 +531,21 @@ def make_sheet(frames):
  for n,f in enumerate(frames):out.alpha_composite(f,((n%4)*256,(n//4)*256))
  return out
 
+def keep_rejected_idle_for_review(item,frames,reason):
+ """Keep rejected IDLE pixels as evidence, separate from final-sprites."""
+ if item['action']!='IDLE' or not frames:return None
+ try:
+  result=save_rejected_idle_preview(
+   frames,item['id'],reason,REPORT.parent/'character-rejection-previews')
+  if result:
+   print(f"KAGGLE_CHR_IDLE_REJECTION_EVIDENCE={item['id']} file={result[0]}",flush=True)
+   return result[0].name
+ except (OSError,ValueError) as exc:
+  # Failure to record optional diagnostics must never make the entire
+  # multi-role GPU wave unusable.
+  print(f"KAGGLE_CHR_IDLE_REJECTION_EVIDENCE_ERROR={item['id']} {exc}",flush=True)
+ return None
+
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--count',type=int,default=8);ap.add_argument('--seed',type=int,default=19417);args=ap.parse_args()
  items=rows()[:max(1,args.count)];print('KAGGLE_CHARACTER_PLAN='+','.join(i['id'] for i in items),flush=True)
@@ -689,18 +705,24 @@ def main():
    if not ok:fail=f'frame-{fi}-failed';break
    gc.collect();torch.cuda.empty_cache()
   if fail:
-   report.append({'id':i['id'],'status':'REJECT','reason':fail,'frames':len(frames),'retry_reasons':retry_reasons});continue
+   preview=keep_rejected_idle_for_review(i,frames,fail)
+   report.append({'id':i['id'],'status':'REJECT','reason':fail,'frames':len(frames),
+                  'retry_reasons':retry_reasons,'rejection_preview_file':preview});continue
   try:
    ok,why=sheet_qa(frames,i['action'])
    if not ok:
     print(f"KAGGLE_CHR_REJECTED={i['id']} reason={why}",flush=True)
+    preview=keep_rejected_idle_for_review(i,frames,why)
     report.append({'id':i['id'],'status':'REJECT','reason':why,
-                   'frames':len(frames),'retry_reasons':retry_reasons});continue
+                   'frames':len(frames),'retry_reasons':retry_reasons,
+                   'rejection_preview_file':preview});continue
    action_ok,action_why=action_qa(frames,i['action'])
    if not action_ok:
     print(f"KAGGLE_CHR_REJECTED={i['id']} reason={action_why}",flush=True)
+    preview=keep_rejected_idle_for_review(i,frames,action_why)
     report.append({'id':i['id'],'status':'REJECT','reason':action_why,
-                   'frames':len(frames),'retry_reasons':retry_reasons});continue
+                   'frames':len(frames),'retry_reasons':retry_reasons,
+                   'rejection_preview_file':preview});continue
    visual_risk=clip_risk(frames,i['action'])
   except (ValueError, IndexError, OSError) as exc:
    # One bizarre empty head/hand crop must not abort a 12-sheet GPU kernel,
@@ -708,13 +730,17 @@ def main():
    # this candidate and preserve exact diagnostics for the next attempt.
    reason=f'candidate-visual-qa-error:{type(exc).__name__}:{str(exc)[:180]}'
    print(f"KAGGLE_CHR_REJECTED={i['id']} reason={reason}",flush=True)
+   preview=keep_rejected_idle_for_review(i,frames,reason)
    report.append({'id':i['id'],'status':'REJECT','reason':reason,
-                  'frames':len(frames),'retry_reasons':retry_reasons});continue
+                  'frames':len(frames),'retry_reasons':retry_reasons,
+                  'rejection_preview_file':preview});continue
   if visual_risk.get('risk_level')=='BLOCKING':
    risk_reason='image-risk:'+','.join(visual_risk.get('flags') or ['UNKNOWN'])
    print(f"KAGGLE_CHR_REJECTED={i['id']} reason={risk_reason}",flush=True)
+   preview=keep_rejected_idle_for_review(i,frames,risk_reason)
    report.append({'id':i['id'],'status':'REJECT','reason':risk_reason,'frames':len(frames),
-                  'visual_risk':visual_risk,'retry_reasons':retry_reasons});continue
+                  'visual_risk':visual_risk,'retry_reasons':retry_reasons,
+                  'rejection_preview_file':preview});continue
   why=why+' '+action_why
   identity_distance=0.0
   ref=role_reference_cell.get(i['role'])
