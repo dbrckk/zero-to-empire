@@ -56,6 +56,38 @@ class CharacterActionCollectorTests(unittest.TestCase):
         self.assertFalse(metrics["translation_dominated"])
         self.assertEqual(metrics["head_horizontal_excursion_px"], 0)
 
+    def test_eight_frames_without_overhead_arms_cannot_pass_celebration(self):
+        # Regression for the real collector 38296422676 OP-CELEB: visual
+        # variations from torso/helmet redrawing do not equal raised fists.
+        frames = [figure() for _ in range(8)]
+        with tempfile.TemporaryDirectory() as temp:
+            name = "zte_chr_op_celeb_final.png"
+            atlas(frames).save(Path(temp) / name)
+            qa = {"assets": [{"file": name, "pass": True, "issues": []}]}
+            result = annotate_report(Path(temp), qa)
+            row = result["assets"][0]
+            self.assertFalse(row["pass"])
+            self.assertIn("action-visual-risk:CELEBRATION_NO_OVERHEAD_ARM_GESTURE_RISK",
+                          row["issues"])
+            self.assertEqual(row["action_visual_risk"]["raised_arm_frames"], 0)
+            self.assertEqual(result["automatic_pass"], 0)
+
+    def test_several_overhead_arm_frames_do_not_trigger_false_celebration_block(self):
+        frames = []
+        for index in range(8):
+            frame = figure()
+            if index in (2,3,4,5):
+                ImageDraw.Draw(frame).line((110,75,63,29),
+                    fill=(70,70,70,255), width=14)
+            frames.append(frame)
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "zte_chr_log_celeb_final.png"
+            atlas(frames).save(path)
+            evidence = check_action_atlas(path, "celeb")
+            self.assertGreaterEqual(evidence["raised_arm_frames"], 3)
+            self.assertNotIn("CELEBRATION_NO_OVERHEAD_ARM_GESTURE_RISK",
+                             evidence["flags"])
+
     def test_bad_work_atlas_is_rejected_without_aborting_sibling_candidates(self):
         with tempfile.TemporaryDirectory() as temp:
             target = Path(temp) / "zte_chr_eng_repair_final.png"
