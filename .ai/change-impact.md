@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 22dd68332f964a0edbae484d588ce0731cb3494a
-Head: de7c65bd9b31930b0013b6c016afa5db6bc10ee6
+Base: ba00e8894fbf675cc4e996903b8c5d97c4861c4b
+Head: 8651019231426e8539dec0e5180961c99dccf400
 
 ## Changed files
-- M .github/workflows/ai-repo-map.yml
+- M art/production/generation-rejection-ledger.json
 
 ## Affected areas
-- .github
+- art
 
 ## Related test candidates
 - No direct filename-based test match detected.

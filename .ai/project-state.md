@@ -31,20 +31,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T14:37:18Z
+Generated: 2026-10-12T14:38:42Z
 
 ### Git
 - Branch: `main`
-- Head: `de7c65bd9b31`
-- Commit date: 2026-10-12T16:37:04+02:00
-- Commit: fix(ci): raise only Zero to Empire repo-map budget for expanded sprite QA code
+- Head: `865101923142`
+- Commit date: 2026-10-12T16:38:25+02:00
+- Commit: art(review): document failed LOG role anchors and ENG motion failures for next GPU iteration
 - Tracked files: 1550
 
 ### Recently changed files
+- `art/production/generation-rejection-ledger.json`
 - `.github/workflows/ai-repo-map.yml`
 - `.github/workflows/asset-pipeline-ci.yml`
 - `tools/assets/test_workflow_policy.py`
-- `kaggle/github_mass_factory.py`
 
 ### Project signals
 - `build.gradle.kts`
