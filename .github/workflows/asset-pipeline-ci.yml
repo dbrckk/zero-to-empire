@@ -161,6 +161,29 @@ jobs:
           print('CHARACTER_REVIEW_PANEL_SMOKE_PASS=1')
           PY
 
+      - name: Verify fallback identity source against actual canonical OP LOG atlases
+        run: |
+          python - <<'PY'
+          import sys
+          from pathlib import Path
+          sys.path.insert(0,'tools/sprites')
+          from character_approved_idle_fallback import load_approved_idle_anchor
+          manifest=Path('docs/art/FINAL_AAA_SPRITE_MANIFEST.md')
+          source=Path('art/incoming/final-sprites')
+          for role in ('OP','LOG'):
+              seed,reason=load_approved_idle_anchor(role,manifest,source)
+              if seed is None:
+                  raise SystemExit(f'{role} strictly approved IDLE fallback unusable: {reason}')
+              assert seed.size==(1024,1024)
+              assert seed.getpixel((0,0))==(139,139,139)
+              assert seed.getpixel((512,510))!=(139,139,139)
+              print(f'KAGGLE_APPROVED_IDLE_SOURCE_READY={role} {reason}')
+          # Engineer IDLE must not be promoted by inference from a legacy file.
+          seed,reason=load_approved_idle_anchor('ENG',manifest,source)
+          assert seed is None
+          print('KAGGLE_ENG_REVIEW_ONLY_REFERENCE_ENFORCED=1')
+          PY
+
       - name: Validate rejection-memory schema
         run: |
           python - <<'PY'
