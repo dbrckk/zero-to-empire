@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 28af14e1b891ed6c52d30636fcf5ca5c9d64d059
-Head: 81d242dbfb90b2a8cb19abb590771d5d7fd55cbc
+Base: 1a95a04a34e91cfc76579c95888540655b4f04ef
+Head: c1c6d30d4c95b272b3cea7f21fafbd4c977ef6be
 
 ## Changed files
-- A .github/workflows/retroactive-character-motion-qa.yml
+- M tools/sprites/identity_locked_walk_candidate.py
 
 ## Affected areas
-- .github
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

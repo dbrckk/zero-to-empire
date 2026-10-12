@@ -31,21 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T19:27:07Z
+Generated: 2026-10-12T19:30:06Z
 
 ### Git
 - Branch: `main`
-- Head: `81d242dbfb90`
-- Commit date: 2026-10-12T21:26:44+02:00
-- Commit: ci(art): verify true v1.20 CELEB false-positive against immutable GPU artifact
+- Head: `c1c6d30d4c95`
+- Commit date: 2026-10-12T21:29:53+02:00
+- Commit: fix(art): smooth procedural WALK thigh deformation to avoid crotch tearing
 - Tracked files: 1559
 
 ### Recently changed files
+- `tools/sprites/identity_locked_walk_candidate.py`
 - `.github/workflows/retroactive-character-motion-qa.yml`
 - `tools/sprites/test_verify_character_action_candidates.py`
 - `tools/sprites/verify_character_action_candidates.py`
 - `art/production/generation-rejection-ledger.json`
-- `tools/sprites/character_semantic_gate.py`
 
 ### Project signals
 - `build.gradle.kts`

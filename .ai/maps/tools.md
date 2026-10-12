@@ -3683,15 +3683,18 @@ interp=(prem[y0,x0]*(1-u)*(1-v)+prem[y0,x1]*u*(1-v)
 alpha=interp[:,:,3:4]
 rgb=np.where(alpha>1e-5,interp[:,:,:3]/np.maximum(alpha,1e-5),0)
 ⋮----
-def warp(anchor:Image.Image,t:float,amplitude:float=12)->Image.Image
+def warp(anchor:Image.Image,t:float,amplitude:float=14)->Image.Image
 ⋮----
-"""Cyclic paired-leg warp and tiny sleeve counter-motion, same identity."""
+"""Continuously blended ankle-led stride and sleeve counter-motion."""
 ⋮----
 array=np.asarray(anchor)
 ⋮----
 phase=math.tau*(t%1.)
-lower=np.clip((yy-138)/94,0,1)
-side=np.tanh((xx-128)/5)
+# Earlier mesh split the legs sharply at x=128 starting above the hips,
+# creating a triangular tear/open gap through the crotch on real OP frame
+# 3. Start deformation below the thighs and feather the left/right blend.
+lower=np.clip((yy-156)/82,0,1)**1.3
+side=np.tanh((xx-128)/19)
 lateral=amplitude*math.sin(phase)*lower*side
 swing=np.maximum(0,np.sin(phase)*(-side))
 foot_lift=2.5*swing*lower
@@ -3709,7 +3712,7 @@ x=source_index%4*SIZE;y=source_index//4*SIZE
 frame=atlas.crop((x,y,x+SIZE,y+SIZE))
 bounds=frame.getchannel('A').getbbox()
 ⋮----
-def render(source:Path,role:str,out:Path,amplitude:float=12)->dict
+def render(source:Path,role:str,out:Path,amplitude:float=14)->dict
 ⋮----
 role=role.upper()
 ⋮----
