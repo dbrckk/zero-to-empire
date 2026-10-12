@@ -31,21 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T19:47:36Z
+Generated: 2026-10-12T19:50:01Z
 
 ### Git
 - Branch: `main`
-- Head: `88a2eb3823b1`
-- Commit date: 2026-10-12T21:47:04+02:00
-- Commit: test(ci): execute budgeted rejection prompts without importing GPU dependencies
+- Head: `a73341bc525f`
+- Commit date: 2026-10-12T21:49:43+02:00
+- Commit: ci(art): verify animated character review GIF loops and never auto-approves
 - Tracked files: 1560
 
 ### Recently changed files
+- `.github/workflows/asset-pipeline-ci.yml`
+- `tools/sprites/build_character_review_panels.py`
 - `tools/assets/test_workflow_policy.py`
 - `tools/sprites/kaggle_character_sheet_factory_v1.py`
 - `ops/kaggle-collector-trigger.txt`
-- `art/production/op-log-v120-semantic-review.md`
-- `tools/sprites/identity_locked_walk_candidate.py`
 
 ### Project signals
 - `build.gradle.kts`

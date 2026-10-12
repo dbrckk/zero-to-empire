@@ -2258,6 +2258,32 @@ bx = LABEL_WIDTH + frame_idx * TILE + 10
 by = y + 23
 background = base.copy()
 ⋮----
+def create_motion_preview(role: str, action: str, atlas_path: Path, output: Path) -> dict
+⋮----
+"""Animated mobile-size evidence, NEVER a replacement for lossless PNG.
+
+    Loop playback exposes frozen gestures, teleporting tools and hard cuts that
+    a long contact sheet can hide. GIF is color-quantized for portability, so
+    review exact costume and pixels in the separately preserved full PNG atlas.
+    """
+⋮----
+atlas = image.convert("RGBA")
+frames = []
+⋮----
+header_font = readable_font(16)
+body_font = readable_font(13)
+frame_total = ACTIONS[action]
+⋮----
+sprite = atlas.crop((x, y, x + CELL, y + CELL))
+tile = background.copy()
+⋮----
+visual = Image.new("RGB", (288, 320), (29, 33, 42))
+⋮----
+draw = ImageDraw.Draw(visual)
+⋮----
+durations = {"idle": 210, "walk": 115, "work": 145,
+duration = durations[action]
+⋮----
 def main() -> int
 ⋮----
 parser = argparse.ArgumentParser()
@@ -2277,8 +2303,11 @@ results = []
 item = create_panel(role, assets, args.output_dir / f"review-frames-{role}.png", qa)
 ⋮----
 mobile_files = {}
+motion_files = {}
 ⋮----
 filename = f"review-mobile-{role}-{action}.png"
+⋮----
+preview = f"review-motion-{role}-{action}.gif"
 ⋮----
 summary = {"schema_version": 1, "review_only": True, "roles": results}
 ```
