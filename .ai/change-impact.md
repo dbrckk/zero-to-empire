@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 13f18a3c5db6d36d1e846e9398c074b51e676b48
-Head: 0225ccda5314b7180a4b9e1ad34788885a493b8c
+Base: 34af8d64f5dc8f34bdda7dafaa734d7de31069fb
+Head: b9c34383dc392976bdc89743bffbc2fe82a0a224
 
 ## Changed files
-- M .github/workflows/asset-pipeline-ci.yml
+- A tools/sprites/character_cargo_identity_lock.py
 
 ## Affected areas
-- .github
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

@@ -31,21 +31,24 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T08:12:16Z
+Generated: 2026-10-12T08:14:56Z
 
 ### Git
 - Branch: `main`
-- Head: `0225ccda5314`
-- Commit date: 2026-10-12T10:11:55+02:00
-- Commit: ci(art): verify real atlas review includes unapproved loop-seam timing evidence
-- Tracked files: 1533
+- Head: `b9c34383dc39`
+- Commit date: 2026-10-12T10:14:41+02:00
+- Commit: feat(art): stabilize carried cargo and gripping hands across frames
+- Tracked files: 1534
 
 ### Recently changed files
+- `tools/sprites/character_cargo_identity_lock.py`
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
+- `art/production/character-strict-review-backlog.md`
+- `art/production/master-asset-queue.json`
 - `.github/workflows/asset-pipeline-ci.yml`
 - `tools/sprites/build_character_review_panels.py`
 - `tools/assets/test_workflow_policy.py`
-- `tools/assets/test_queue_state_policy.py`
-- `tools/sprites/kaggle_character_sheet_factory_v1.py`
 
 ### Project signals
 - `build.gradle.kts`

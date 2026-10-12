@@ -62,6 +62,7 @@ sprites/
   build_character_review_panels.py
   build_sprite_contact_sheet.py
   build_tech_review_board.py
+  character_cargo_identity_lock.py
   character_head_identity_lock.py
   character_review_matrix.py
   character_semantic_gate.py
@@ -2471,6 +2472,33 @@ ap=argparse.ArgumentParser()
 args=ap.parse_args()
 ⋮----
 rec=tiles(args.source)
+```
+
+## File: sprites/character_cargo_identity_lock.py
+```python
+"""Conservative 256px sprite cargo/hand-region lock for CARRY actions.
+
+The first action frame supplies the unchanged waist-and-cargo pixels. When
+subsequent frames retain the same character scale, foot pivot and alignment,
+copy that bounded region back with feathered vertical boundaries, leaving
+leg/boot motion intact. This cannot establish semantics or grant strict DONE.
+"""
+⋮----
+def lock_cargo_region(frame: Image.Image, first_frame: Image.Image)
+⋮----
+"""Return (candidate_rgba, applied_bool, diagnostic_reason)."""
+⋮----
+ref_box = reference.getchannel("A").getbbox()
+dst_box = target.getchannel("A").getbbox()
+⋮----
+top = round(y0 + height * .38)
+bottom = round(y0 + height * .72)
+⋮----
+mask = Image.new("L", (256, 256), 0)
+brush = ImageDraw.Draw(mask)
+feather = 8
+⋮----
+factor = min((y - top) / feather, (bottom - y - 1) / feather, 1)
 ```
 
 ## File: sprites/character_head_identity_lock.py
