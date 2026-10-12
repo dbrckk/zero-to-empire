@@ -1,10 +1,10 @@
 # Change impact
 
-Base: d5301d07e36617ec14576c948a84a20f10871f8f
-Head: ee4b1c5967f4209d3d23b42057b2e5f8aee04fa1
+Base: def9d0bc6e208f6b91466e962321fd973dc0813a
+Head: b81d3a126e2713d5f51a824e9c7b0cdccfc447c9
 
 ## Changed files
-- M tools/sprites/test_character_ground_shadow_cleanup.py
+- M tools/assets/test_workflow_policy.py
 
 ## Affected areas
 - tools

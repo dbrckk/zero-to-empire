@@ -351,6 +351,7 @@ tools/
     character_cargo_identity_lock.py
     character_ground_shadow_cleanup.py
     character_head_identity_lock.py
+    character_rejection_evidence.py
     character_review_matrix.py
     character_semantic_gate.py
     colab_mass_factory.py
@@ -408,6 +409,7 @@ tools/
     test_character_ground_shadow_cleanup.py
     test_character_head_identity_lock.py
     test_character_provider_reservation.py
+    test_character_rejection_evidence.py
     test_character_review_matrix.py
     test_character_semantic_gate.py
     test_export_tech_canonical_review.py
@@ -1135,6 +1137,8 @@ on:
       - 'tools/sprites/character_head_identity_lock.py'
       - 'tools/sprites/character_ground_shadow_cleanup.py'
       - 'tools/sprites/character_anchor_pair_salvage.py'
+      - 'tools/sprites/character_rejection_evidence.py'
+      - 'tools/sprites/test_character_rejection_evidence.py'
       - 'tools/sprites/test_character_anchor_pair_salvage.py'
       - 'tools/sprites/test_character_ground_shadow_cleanup.py'
       - 'tools/sprites/test_character_head_identity_lock.py'
@@ -1165,6 +1169,8 @@ on:
       - 'tools/sprites/character_head_identity_lock.py'
       - 'tools/sprites/character_ground_shadow_cleanup.py'
       - 'tools/sprites/character_anchor_pair_salvage.py'
+      - 'tools/sprites/character_rejection_evidence.py'
+      - 'tools/sprites/test_character_rejection_evidence.py'
       - 'tools/sprites/test_character_anchor_pair_salvage.py'
       - 'tools/sprites/test_character_ground_shadow_cleanup.py'
       - 'tools/sprites/test_character_head_identity_lock.py'
@@ -1218,6 +1224,7 @@ jobs:
             tools/sprites/character_head_identity_lock.py \
             tools/sprites/character_ground_shadow_cleanup.py \
             tools/sprites/character_anchor_pair_salvage.py \
+            tools/sprites/character_rejection_evidence.py \
             tools/sprites/kaggle_character_sheet_factory_v1.py \
             tools/sprites/kaggle_building_family_factory_v14.py \
             tools/sprites/kaggle_building_family_factory_v15.py \
@@ -1297,6 +1304,7 @@ jobs:
           python -m unittest discover -s tools/sprites -p 'test_character_head_identity_lock.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_ground_shadow_cleanup.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_anchor_pair_salvage.py' -v
+          python -m unittest discover -s tools/sprites -p 'test_character_rejection_evidence.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_action_gate.py' -v
 
       - name: Verify live character-production plan against strict queue and Android frame contract
@@ -3149,7 +3157,7 @@ jobs:
           fi
 
       - name: Compile sprite generators
-        run: python -m py_compile tools/sprites/kaggle_building_family_factory_v16.py tools/sprites/kaggle_character_sheet_factory_v1.py tools/sprites/character_head_identity_lock.py tools/sprites/character_ground_shadow_cleanup.py tools/sprites/character_anchor_pair_salvage.py kaggle/github_mass_factory.py
+        run: python -m py_compile tools/sprites/kaggle_building_family_factory_v16.py tools/sprites/kaggle_character_sheet_factory_v1.py tools/sprites/character_head_identity_lock.py tools/sprites/character_ground_shadow_cleanup.py tools/sprites/character_anchor_pair_salvage.py tools/sprites/character_rejection_evidence.py kaggle/github_mass_factory.py
       - name: Recover async preflight failure
         if: ${{ failure() && env.ASYNC_SUBMIT == 'true' }}
         env:
@@ -3306,6 +3314,7 @@ jobs:
              tools/sprites/character_head_identity_lock.py \
              tools/sprites/character_ground_shadow_cleanup.py \
              tools/sprites/character_anchor_pair_salvage.py \
+             tools/sprites/character_rejection_evidence.py \
              /tmp/zte-kaggle/tools/sprites/
           sed "s/__KAGGLE_USERNAME__/${KAGGLE_USERNAME}/g" kaggle/kernel-metadata.template.json > /tmp/zte-kaggle/kernel-metadata.json
           python - <<'PY'
@@ -3336,6 +3345,7 @@ jobs:
               'character_head_identity_lock.py',
               'character_ground_shadow_cleanup.py',
               'character_anchor_pair_salvage.py',
+              'character_rejection_evidence.py',
           ]
           buf=io.BytesIO()
           with zipfile.ZipFile(buf,'w',zipfile.ZIP_DEFLATED) as z:
@@ -27617,9 +27627,13 @@ def test_kaggle_character_generator_rejects_blocking_visual_risks(self)
 generator = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
 workflow = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
 ⋮----
-def test_kaggle_head_identity_lock_is_present_in_all_gpu_fallbacks(self)
+def test_rejected_idle_images_are_isolated_from_promotable_candidates(self)
 ⋮----
+gpu = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
 fallback = Path("kaggle/github_mass_factory.py").read_text(encoding="utf-8")
+diagnostic = Path("tools/sprites/character_rejection_evidence.py").read_text(encoding="utf-8")
+⋮----
+def test_kaggle_head_identity_lock_is_present_in_all_gpu_fallbacks(self)
 ⋮----
 def test_kaggle_character_generator_uses_neutral_role_anchor(self)
 ⋮----
@@ -29031,6 +29045,28 @@ mask = ImageChops.multiply(piece.getchannel("A"), soft)
 result = target.copy()
 ```
 
+## File: tools/sprites/character_rejection_evidence.py
+```python
+"""Review-only sprites preserved when IDLE generation fails.
+
+Rejected frames are never written to the incoming candidate directory.
+They are strictly forensic evidence for the next GPU retry and manual QA.
+"""
+⋮----
+IDLE_ID = re.compile(r"^CHR-(OP|TECH|LOG|ENG)-IDLE$")
+CELL = 256
+⋮----
+"""Write unapproved frames and a provenance-readable rejection record."""
+⋮----
+root = Path(output_directory)
+⋮----
+atlas = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
+⋮----
+stem = asset_id.lower().replace("-", "_")
+image_path = root / f"{stem}_rejected_review_only.png"
+report_path = root / f"{stem}_rejected_review_only.json"
+```
+
 ## File: tools/sprites/character_review_matrix.py
 ```python
 #!/usr/bin/env python3
@@ -29209,9 +29245,18 @@ needed=max(2,round((reference_bottom-reference_top)*.18))
 leg_columns=[
 ⋮----
 leg_span=max(leg_columns)-min(leg_columns)+1
+# Connected dark shoes can have the *same alpha silhouette* as a cast
+# floor shadow. The prior alpha-only heuristic blocked valid-looking ENG
+# idle anchors, cascading into five skipped actions. Count only broad,
+# nearly neutral, low-contrast ground-colored bands below the ankles.
+# Preserve the strict rejection of genuine gray shadows; this is not an
+# automatic semantic acceptance of the full sheet.
+rgb=frame.convert('RGBA').load()
 longest=0
 ⋮----
 run=0
+⋮----
+neutral=(a>=96 and 70<=min(red,green,blue)<=235
 ⋮----
 longest=max(longest,run)
 ⋮----
@@ -31349,6 +31394,15 @@ def make_sheet(frames)
 ⋮----
 out=Image.new('RGBA',(1024,1024),(0,0,0,0))
 ⋮----
+def keep_rejected_idle_for_review(item,frames,reason)
+⋮----
+"""Keep rejected IDLE pixels as evidence, separate from final-sprites."""
+⋮----
+result=save_rejected_idle_preview(
+⋮----
+# Failure to record optional diagnostics must never make the entire
+# multi-role GPU wave unusable.
+⋮----
 def main()
 ⋮----
 ap=argparse.ArgumentParser();ap.add_argument('--count',type=int,default=8);ap.add_argument('--seed',type=int,default=19417);args=ap.parse_args()
@@ -31439,6 +31493,12 @@ frames.append(frame);ok=True;print(f"KAGGLE_CHR_FRAME={i['id']} frame={fi} attem
 last_reason=str(e);retry_reasons.append(last_reason);print(f"KAGGLE_CHR_RETRY={i['id']} frame={fi} attempt={attempt+1} mode={mode} reason={e}",flush=True)
 if not ok:fail=f'frame-{fi}-failed';break
 ⋮----
+preview=keep_rejected_idle_for_review(i,frames,fail)
+⋮----
+preview=keep_rejected_idle_for_review(i,frames,why)
+⋮----
+preview=keep_rejected_idle_for_review(i,frames,action_why)
+⋮----
 visual_risk=clip_risk(frames,i['action'])
 ⋮----
 # One bizarre empty head/hand crop must not abort a 12-sheet GPU kernel,
@@ -31446,7 +31506,11 @@ visual_risk=clip_risk(frames,i['action'])
 # this candidate and preserve exact diagnostics for the next attempt.
 reason=f'candidate-visual-qa-error:{type(exc).__name__}:{str(exc)[:180]}'
 ⋮----
+preview=keep_rejected_idle_for_review(i,frames,reason)
+⋮----
 risk_reason='image-risk:'+','.join(visual_risk.get('flags') or ['UNKNOWN'])
+⋮----
+preview=keep_rejected_idle_for_review(i,frames,risk_reason)
 ⋮----
 why=why+' '+action_why
 identity_distance=0.0
@@ -34378,6 +34442,33 @@ def test_expired_or_other_provider_has_no_lock(self)
 def test_injected_invalid_or_missing_reservation_does_not_block(self)
 ```
 
+## File: tools/sprites/test_character_rejection_evidence.py
+```python
+"""Synthetic tests for opt-in review evidence; never creates approval."""
+⋮----
+class RejectionEvidenceTests(unittest.TestCase)
+⋮----
+def setUp(self)
+⋮----
+def test_rejected_idle_keeps_exact_frames_and_no_approval(self)
+⋮----
+frames=[]
+⋮----
+frame=Image.new("RGBA", (256, 256))
+⋮----
+result=save_rejected_idle_preview(frames,"CHR-ENG-IDLE",
+⋮----
+data=json.loads(report_path.read_text())
+⋮----
+cell=atlas.crop(((index%4)*256,(index//4)*256,
+⋮----
+def test_non_idle_asset_and_no_frames_never_write_preview(self)
+⋮----
+frames=[Image.new("RGBA",(256,256)) for _ in range(6)]
+⋮----
+def test_bad_dimensions_are_not_silently_published(self)
+```
+
 ## File: tools/sprites/test_character_review_matrix.py
 ```python
 def fake_queue()
@@ -34457,6 +34548,16 @@ with_shadow=frame.copy()
 ⋮----
 report=clip_risk(shadowed,'IDLE')
 ⋮----
+def test_connected_dark_boot_silhouette_is_not_labeled_gray_cast_shadow(self)
+⋮----
+frames=[]
+⋮----
+frame=person()
+# Long dark continuous sole reproduces the geometry that the
+# alpha-only ground-band risk falsely classified as a gray shadow.
+⋮----
+report=clip_risk(frames,'IDLE')
+⋮----
 def test_one_long_ground_contact_is_not_a_persistent_shadow(self)
 ⋮----
 frames=[person(i%2) for i in range(8)]
@@ -34475,9 +34576,6 @@ result=clip_risk(frames,'WORK')
 ⋮----
 def test_alternating_helmet_or_face_color_blocks_identity(self)
 ⋮----
-frames=[]
-⋮----
-frame=person()
 color=(245,65,35,255) if index%2 else (30,235,224,255)
 ⋮----
 result=clip_risk(frames,'IDLE')

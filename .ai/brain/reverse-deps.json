@@ -636,6 +636,7 @@
         "tools/sprites/build_character_review_panels.py",
         "tools/sprites/build_sprite_contact_sheet.py",
         "tools/sprites/build_tech_review_board.py",
+        "tools/sprites/character_rejection_evidence.py",
         "tools/sprites/export_tech_canonical_review.py",
         "tools/sprites/hf_public_flux_factory.py",
         "tools/sprites/hf_sprite_factory.py",
@@ -666,7 +667,7 @@
         "tools/sprites/test_pollinations_character_sheet_factory.py",
         "tools/sprites/test_temporal_sprite_audit.py"
       ],
-      "in_degree": 43,
+      "in_degree": 44,
       "out_degree": 7
     },
     "app/src/main/java/com/zerotoempire/game/GameTheme.kt": {
@@ -2037,6 +2038,17 @@
       "in_degree": 2,
       "out_degree": 0
     },
+    "tools/sprites/character_rejection_evidence.py": {
+      "dependencies": [
+        "app/src/main/java/com/zerotoempire/game/GameRepository.kt"
+      ],
+      "dependents": [
+        "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "tools/sprites/test_character_rejection_evidence.py"
+      ],
+      "in_degree": 2,
+      "out_degree": 1
+    },
     "tools/sprites/character_review_matrix.py": {
       "dependencies": [
         "app/src/main/java/com/zerotoempire/game/Monetization.kt",
@@ -2211,11 +2223,12 @@
         "tools/sprites/character_anchor_pair_salvage.py",
         "tools/sprites/character_ground_shadow_cleanup.py",
         "tools/sprites/character_head_identity_lock.py",
+        "tools/sprites/character_rejection_evidence.py",
         "tools/sprites/character_semantic_gate.py"
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 5
+      "out_degree": 6
     },
     "tools/sprites/kaggle_fx_sheet_factory_v1.py": {
       "dependencies": [
@@ -2521,6 +2534,14 @@
     "tools/sprites/test_character_provider_reservation.py": {
       "dependencies": [
         "tools/sprites/asset_wave_orchestrator.py"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 1
+    },
+    "tools/sprites/test_character_rejection_evidence.py": {
+      "dependencies": [
+        "tools/sprites/character_rejection_evidence.py"
       ],
       "dependents": [],
       "in_degree": 0,

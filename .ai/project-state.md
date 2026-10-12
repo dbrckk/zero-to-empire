@@ -31,20 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T11:25:10Z
+Generated: 2026-10-12T13:58:21Z
 
 ### Git
 - Branch: `main`
-- Head: `ee4b1c5967f4`
-- Commit date: 2026-10-12T13:24:56+02:00
-- Commit: test(art): preserve separate boot anchors while exercising trapped-shadow cleanup
-- Tracked files: 1546
+- Head: `b81d3a126e27`
+- Commit date: 2026-10-12T15:57:53+02:00
+- Commit: test(ci): require explicit non-promotable provenance for rejected IDLE diagnostics
+- Tracked files: 1548
 
 ### Recently changed files
-- `tools/sprites/test_character_ground_shadow_cleanup.py`
-- `tools/sprites/character_ground_shadow_cleanup.py`
-- `art/production/generation-rejection-ledger.json`
+- `tools/assets/test_workflow_policy.py`
 - `.github/workflows/asset-pipeline-ci.yml`
+- `kaggle/github_mass_factory.py`
+- `.github/workflows/kaggle-mass-sprite-factory.yml`
+- `tools/sprites/kaggle_character_sheet_factory_v1.py`
 
 ### Project signals
 - `build.gradle.kts`
