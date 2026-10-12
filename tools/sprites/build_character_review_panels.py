@@ -117,6 +117,48 @@ def create_head_panel(role: str, assets: dict[str, Path], output: Path) -> None:
     panel.save(output, "PNG", optimize=True)
 
 
+def create_mobile_action_panel(role: str, action: str, path: Path,
+                               output: Path, qa: dict[str, dict]) -> None:
+    """Portrait 2-column contact sheet readable on an Android smartphone.
+
+    Every frame retains its original 256x256 pixels, not a tiny thumbnail.
+    Only review evidence is produced; a QA PASS is not semantic approval.
+    """
+    frame_count = ACTIONS[action]
+    columns, stride, header = 2, 290, 112
+    width = columns * stride + 18
+    height = header + ((frame_count + columns - 1) // columns) * 308
+    image = Image.new("RGB", (width, height), (23, 27, 33))
+    draw = ImageDraw.Draw(image)
+    draw.rectangle((0, 0, width, header - 2), fill=(43, 50, 61))
+    draw.text((18, 13), f"{role.upper()}  /  {action.upper()}",
+              font=readable_font(27), fill=(248, 250, 253))
+    record = qa.get(path.name, {})
+    status = "TECHNICAL PASS - VISUAL REVIEW REQUIRED" if record.get("pass") is True else (
+        "TECHNICAL REVIEW REQUIRED")
+    draw.text((18, 55), status, font=readable_font(15),
+              fill=(245, 202, 146) if record.get("pass") is True else (245, 159, 151))
+    draw.text((18, 79), "No automatic semantic approval", font=readable_font(15),
+              fill=(199, 210, 226))
+    with Image.open(path) as src:
+        if src.size != (1024, 1024):
+            raise ValueError(f"Invalid mobile review atlas: {path}")
+        atlas = src.convert("RGBA")
+    background = checkerboard()
+    for index in range(frame_count):
+        x = 15 + (index % columns) * stride
+        y = header + (index // columns) * 308 + 8
+        tile = atlas.crop(((index % 4) * CELL, (index // 4) * CELL,
+                           ((index % 4) + 1) * CELL, ((index // 4) + 1) * CELL))
+        opaque = background.copy()
+        opaque.paste(tile, (0, 0), tile)
+        image.paste(opaque, (x, y))
+        draw.text((x + 2, y + CELL + 8), f"Frame {index+1:02d} / {frame_count:02d}",
+                  font=readable_font(18), fill=(223, 231, 242))
+    output.parent.mkdir(parents=True, exist_ok=True)
+    image.save(output, "PNG", optimize=True)
+
+
 def create_panel(role: str, assets: dict[str, Path], output: Path, qa: dict[str, dict]) -> dict:
     font = readable_font(15)
     heading = readable_font(21)
@@ -196,6 +238,12 @@ def main() -> int:
         item = create_panel(role, assets, args.output_dir / f"review-frames-{role}.png", qa)
         create_head_panel(role, assets, args.output_dir / f"review-heads-{role}.png")
         item["head_detail_file"] = f"review-heads-{role}.png"
+        mobile_files = {}
+        for action, path in sorted(assets.items()):
+            filename = f"review-mobile-{role}-{action}.png"
+            create_mobile_action_panel(role, action, path, args.output_dir / filename, qa)
+            mobile_files[action] = filename
+        item["mobile_action_files"] = mobile_files
         results.append(item)
     summary = {"schema_version": 1, "review_only": True, "roles": results}
     (args.output_dir / "review-panels.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
