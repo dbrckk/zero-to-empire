@@ -66,7 +66,7 @@ class ApprovedIdleFallbackTests(unittest.TestCase):
             approved_atlas(root / "zte_chr_log_idle_final.png", doubled=True)
             image, reason = load_approved_idle_anchor("LOG", manifest, root)
             self.assertIsNone(image)
-            self.assertEqual(reason, "strict-done-idle-not-tall-single-subject")
+            self.assertEqual(reason, "strict-done-idle-multiple-foreground-people")
 
 
 if __name__ == "__main__":
