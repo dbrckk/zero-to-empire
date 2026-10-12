@@ -466,7 +466,47 @@
       "review_artifact_run_id": 38175207078,
       "reason": "Technical QA passes but the character remains essentially neutral for all eight frames; arm raise and emotional action are not readable.",
       "prompt_hint": "Progressively raise one or both arms in celebration with clear pose progression and stable orange workwear and white helmet, not tiny standing-pose variations."
+    },
+    {
+      "id": "CHR-OP-CARRY",
+      "role": "OP",
+      "action": "CARRY",
+      "reason": "Collector 38201816567 visual rejection: cargo crate changes panel/handle shape across eight frames; gloves inconsistently hold it; face/glasses drift and baked oval shadows are visible.",
+      "prompt_hint": "Keep precisely one unchanged matte black/yellow cargo crate with identical handles and panel design attached between both hands in every frame; consistent mustache, orange hardhat, dark glasses and face; remove baked ground shadow; show genuine weight-bearing alternating gait.",
+      "target_prefix": "CHR-OP-CARRY",
+      "source_run_id": 38186016651,
+      "review_artifact_run_id": 38201816567
+    },
+    {
+      "id": "CHR-ENG-WORK",
+      "role": "ENG",
+      "action": "WORK",
+      "reason": "Collector 38201816567 visual rejection: impossible persistent identity with changing face/helmet and detached blue panel with hallucinated 'ENG' text; device does not stay attached to hands.",
+      "prompt_hint": "Maintain one identical engineer face, cyan-striped white helmet and graphite suit in all ten work frames; one consistent compact tool must contact a fixed work point and be held by the worker. No text, letters, pseudo-branding, floating screens or detached devices.",
+      "target_prefix": "CHR-ENG-WORK",
+      "source_run_id": 38186016651,
+      "review_artifact_run_id": 38201816567
+    },
+    {
+      "id": "CHR-ENG-REPAIR",
+      "role": "ENG",
+      "action": "REPAIR",
+      "reason": "Collector 38201816567 visual rejection: different worker faces and head shapes; gear mutates between floating panels, cables and handheld tools; body gestures not a coherent repair animation.",
+      "prompt_hint": "Keep one unchanging ENG face, headgear and suit in all ten frames; one single fixed repair target and one identical diagnostic tool connected to the same hand; no accessory swaps, turntable changes, disconnected panels or floating cables.",
+      "target_prefix": "CHR-ENG-REPAIR",
+      "source_run_id": 38186016651,
+      "review_artifact_run_id": 38201816567
+    },
+    {
+      "id": "CHR-OP-IDLE",
+      "role": "OP",
+      "action": "IDLE",
+      "reason": "Collector 38201816567 context-only IDLE visual review: adult OP identity stable enough as reference, but generated gray horizontal ground shadows are baked into transparent sprite; no same-family acceptance.",
+      "prompt_hint": "Isolate only the OP person. Transparent safety margins around feet and no baked gray floor shadow or terrain. Same orange hardhat, black protective glasses and charcoal coveralls in all frames.",
+      "target_prefix": "CHR-OP-IDLE",
+      "source_run_id": 38186016651,
+      "review_artifact_run_id": 38201816567
     }
   ],
-  "last_validation_request": "Visual review 2026-10-11: superseded OP/LOG Kaggle source 38170846318 generated eight technically valid sheets, but six unresolved actions remain semantically rejected due to tool/prop continuity, action readability and cross-frame identity drift; WALK/CARRY rejected in generator QA. Newer OP/LOG wave 38174945678 remains independently active."
+  "last_validation_request": "Overnight GPU collector 38201816567: ENG-IDLE remains review-only; ENG-WORK/REPAIR and OP-CARRY rejected by full-frame manual review for identity/prop/text contamination, OP context IDLE has baked ground shadow; subsequent LOG+ENG wave 38201875119 active. Preserve 219 strict DONE."
 }
