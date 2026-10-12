@@ -291,10 +291,14 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
     def test_character_role_anchor_is_validated_before_action_frames(self):
         text = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
         self.assertIn("for anchor_attempt in range(4):", text)
-        self.assertIn("_,coverage=finish_frame(candidate,'IDLE')", text)
+        self.assertIn("coverage=validated_single_role_anchor(candidate)", text)
+        self.assertIn("coverage=validated_single_role_anchor(single)", text)
+        self.assertIn("coverage=validated_single_role_anchor(fallback)", text)
+        self.assertIn("idle_distinct_head_clusters(cell)>=2", text)
+        self.assertIn("multiple-idle-heads-in-canonical-role-anchor", text)
         self.assertIn("KAGGLE_CHR_ROLE_ANCHOR_REJECTED=", text)
         self.assertIn("'reason':'role-anchor-validation-failed'", text)
-        self.assertLess(text.index("_,coverage=finish_frame(candidate,'IDLE')"),
+        self.assertLess(text.index("coverage=validated_single_role_anchor(candidate)"),
                         text.index("for idx,i in enumerate(items):"))
 
     def test_headgear_lock_never_uses_an_unverified_non_idle_reference(self):
