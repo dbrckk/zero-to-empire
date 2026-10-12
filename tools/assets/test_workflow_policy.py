@@ -303,6 +303,13 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("frame,locked,lock_note=lock_head_to_idle", text)
         self.assertIn("'same_run_idle_head_locked_frames':head_lock_frames", text)
 
+    def test_idle_edge_retries_preserve_validated_anchor(self):
+        text = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
+        self.assertEqual(text.count("if i['action']=='IDLE' and mode=='framing':"),2)
+        self.assertIn("strength=min(strength,.23)",text)
+        self.assertIn("strength=min(strength,.21)",text)
+        self.assertIn("required-role-idle-candidate-rejected",text)
+
     def test_idle_animation_gate_accepts_blinks_without_fake_locomotion(self):
         text = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
         self.assertIn("from character_semantic_gate import clip_risk,idle_visual_activity", text)
