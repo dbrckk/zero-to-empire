@@ -42,8 +42,8 @@ def sample_premultiplied(source:np.ndarray, src_x:np.ndarray,
     return np.uint8(np.clip(np.concatenate([rgb,alpha],axis=2)*255,0,255))
 
 
-def warp(anchor:Image.Image,t:float,amplitude:float=12)->Image.Image:
-    """Cyclic paired-leg warp and tiny sleeve counter-motion, same identity."""
+def warp(anchor:Image.Image,t:float,amplitude:float=14)->Image.Image:
+    """Continuously blended ankle-led stride and sleeve counter-motion."""
     if anchor.mode!='RGBA' or anchor.size!=(SIZE,SIZE):
         raise ValueError("Expected an isolated 256x256 RGBA source frame")
     if not math.isfinite(t) or not 2<=amplitude<=18:
@@ -51,8 +51,11 @@ def warp(anchor:Image.Image,t:float,amplitude:float=12)->Image.Image:
     array=np.asarray(anchor)
     yy,xx=np.mgrid[:SIZE,:SIZE].astype(np.float32)
     phase=math.tau*(t%1.)
-    lower=np.clip((yy-138)/94,0,1)
-    side=np.tanh((xx-128)/5)
+    # Earlier mesh split the legs sharply at x=128 starting above the hips,
+    # creating a triangular tear/open gap through the crotch on real OP frame
+    # 3. Start deformation below the thighs and feather the left/right blend.
+    lower=np.clip((yy-156)/82,0,1)**1.3
+    side=np.tanh((xx-128)/19)
     lateral=amplitude*math.sin(phase)*lower*side
     swing=np.maximum(0,np.sin(phase)*(-side))
     foot_lift=2.5*swing*lower
@@ -81,7 +84,7 @@ def source_frame(path:Path,source_index:int)->Image.Image:
     return frame
 
 
-def render(source:Path,role:str,out:Path,amplitude:float=12)->dict:
+def render(source:Path,role:str,out:Path,amplitude:float=14)->dict:
     role=role.upper()
     if role not in ROLES:
         raise ValueError("Unknown role")
@@ -114,7 +117,7 @@ def render(source:Path,role:str,out:Path,amplitude:float=12)->dict:
         "source":str(source),"source_sha256":source_digest,
         "reference_frame":ROLES[role],"frame_count":N_FRAMES,
         "candidate_path":str(dest),"candidate_sha256":candidate_digest,
-        "animation_mode":"identity-locked-continuous-mesh-experimental-v1",
+        "animation_mode":"identity-locked-continuous-mesh-experimental-v2",
         "identity_source_count":1,"inferred_art_quality":"NOT_CERTIFIED",
         "visual_risk_screen":risk,"motion_quality":"UNVERIFIED_MECHANICAL_WARP",
         "shadow_cleanup_reference_pixels":removed_reference_shadow,
