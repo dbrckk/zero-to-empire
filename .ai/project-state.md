@@ -31,20 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T07:57:28Z
+Generated: 2026-10-12T07:59:31Z
 
 ### Git
 - Branch: `main`
-- Head: `33f2aec66faa`
-- Commit date: 2026-10-12T09:57:13+02:00
-- Commit: test(art): detect one-frame character scale collapse in ten-frame WORK animation
-- Tracked files: 1532
+- Head: `aaca3c954b71`
+- Commit date: 2026-10-12T09:59:06+02:00
+- Commit: docs(art): record fourth-wave LOG visuals and ENG IDLE false-block regression
+- Tracked files: 1533
 
 ### Recently changed files
+- `art/production/log-eng-fourth-wave-review.md`
+- `tools/assets/test_workflow_policy.py`
+- `.github/workflows/kaggle-async-character-collector.yml`
 - `tools/sprites/test_character_semantic_gate.py`
 - `tools/sprites/character_semantic_gate.py`
-- `tools/assets/test_workflow_policy.py`
-- `tools/sprites/kaggle_character_sheet_factory_v1.py`
 
 ### Project signals
 - `build.gradle.kts`

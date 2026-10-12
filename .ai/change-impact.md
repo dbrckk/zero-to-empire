@@ -1,13 +1,13 @@
 # Change impact
 
-Base: de85f37d6d4a712b10d24ba750543cd87d5febba
-Head: 33f2aec66faa953146b5a5b22837c19482d60286
+Base: 5141716c2f4b9d850212cde5e2cea96164106102
+Head: aaca3c954b71e10ccc7a91d3e18f2b8e0d18a9e5
 
 ## Changed files
-- M tools/sprites/test_character_semantic_gate.py
+- A art/production/log-eng-fourth-wave-review.md
 
 ## Affected areas
-- tools
+- art
 
 ## Related test candidates
 - No direct filename-based test match detected.
