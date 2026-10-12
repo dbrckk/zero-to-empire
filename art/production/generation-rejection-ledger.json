@@ -676,7 +676,47 @@
       "target_prefix": "CHR-ENG-CELEB",
       "source_run_id": 38246849469,
       "review_artifact_run_id": 38263062708
+    },
+    {
+      "role": "LOG",
+      "action": "IDLE",
+      "reason": "Collector 38281126201: LOG-IDLE generated two side-by-side women with separate helmeted heads throughout all six frames, despite whole-silhouette technical QA pass; one connected pair of torsos evaded the connected component and 1.08 aspect checks.",
+      "prompt_hint": "Exactly ONE LOG woman in every IDLE frame. Do not render two workers, side-by-side duplicates or conjoined bodies; ensure only one distinct head silhouette in top 2-14% of body. Single white helmet, same amber jacket and full-body stance, no shadow.",
+      "id": "CHR-LOG-IDLE",
+      "target_prefix": "CHR-LOG-IDLE",
+      "source_run_id": 38263143986,
+      "review_artifact_run_id": 38281126201
+    },
+    {
+      "role": "OP",
+      "action": "WORK",
+      "reason": "Collector 38281126201: stable hardhat and glasses but work tools disappear or reshape and the body remains largely static; frame 7 alters workwear, no recognisable hand-to-workpoint animation.",
+      "prompt_hint": "One identical held tool fixed to a common work point, actively and progressively manipulating it across all ten frames; clear wrist and elbow contact, no floating or morphing devices, no uniform changes, same orange helmet and glasses.",
+      "id": "CHR-OP-WORK",
+      "target_prefix": "CHR-OP-WORK",
+      "source_run_id": 38263143986,
+      "review_artifact_run_id": 38281126201
+    },
+    {
+      "role": "OP",
+      "action": "REPAIR",
+      "reason": "Collector 38281126201: mostly idle standing with unrelated arm prop changes, a large floating round panel over the torso in frame 7 and no stable repair target/interaction despite technical QA pass.",
+      "prompt_hint": "Real ten-frame REPAIR: one persistent compact diagnostic tool gripped in the same hand and applied to one clearly defined fixed repair component; consistent wrist/target contact; no giant floating wheel/disc over body or changing accessories.",
+      "id": "CHR-OP-REPAIR",
+      "target_prefix": "CHR-OP-REPAIR",
+      "source_run_id": 38263143986,
+      "review_artifact_run_id": 38281126201
+    },
+    {
+      "role": "OP",
+      "action": "IDLE",
+      "reason": "Collector 38281126201 context OP IDLE: single stable face and orange helmet; sprite has baked gray ground shadow in several frames. QA reports no ground risk, so avoid automatic approval until shadow and floor evidence removed.",
+      "prompt_hint": "Exact same OP hardhat/face/glasses and full-body across six frames, no gray horizontal floor shadow or ground-plane under boots, fully transparent background outside character.",
+      "id": "CHR-OP-IDLE",
+      "target_prefix": "CHR-OP-IDLE",
+      "source_run_id": 38263143986,
+      "review_artifact_run_id": 38281126201
     }
   ],
-  "last_validation_request": "Collector 38263062708 recovered batch 38246849469: 1/12 technically valid CHR-ENG-IDLE (review-only), 11 generator rejections mostly triggered by LOG role-anchor duplicates and ENG gait/shadow/head-motion limits. Existing strict-DONE OP LOG IDLE fallback has passed canonical file CI smoke and is included in future GPU bundles. Canonical strict DONE remains 219/235."
+  "last_validation_request": "OP/LOG source 38263143986 collector 38281126201: four technical candidates; LOG-IDLE contains TWO people every frame despite technical pass; OP WORK/REPAIR manual semantic rejects for disappearing props, static gestures. OP/LOG context IDLEs not approved. New two-head IDLE risk gate added after GPU submission, affects future waves. Strict DONE remains 219/235."
 }
