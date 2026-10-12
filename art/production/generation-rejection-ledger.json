@@ -716,7 +716,27 @@
       "target_prefix": "CHR-OP-IDLE",
       "source_run_id": 38263143986,
       "review_artifact_run_id": 38281126201
+    },
+    {
+      "id": "CHR-OP-CELEB",
+      "role": "OP",
+      "action": "CELEB",
+      "reason": "Collector 38296422676 v1.20 manual review: all eight frames are standing with arms down. Technical celeb gate incorrectly counted helmet/shoulder width as raised hands (arm-frames=8/8); apparel and foot cast shadow also vary.",
+      "prompt_hint": "Genuine victory arms lifted beside and ABOVE the helmet for at least three middle frames, with distinct shoulders and elbows progressively lifting and lowering. Do not count face, helmet, wide shoulders or belt changes as a celebration. Same face, outfit and no cast floor shadow.",
+      "target_prefix": "CHR-OP-CELEB",
+      "source_run_id": 38281199147,
+      "review_artifact_run_id": 38296422676
+    },
+    {
+      "id": "CHR-LOG-WORK",
+      "role": "LOG",
+      "action": "WORK",
+      "reason": "Collector 38296422676 v1.20 manual review: ten near-idle standing poses; a separate cyan work box flickers/moves across hands and small tool shape morphs, no consistent machine engagement.",
+      "prompt_hint": "Show clearly distinct tool-operating arm/elbow/torso gestures and a single identical hand-held device in physical contact with the same target in all ten frames. No floating blue/cyan box, drifting kit, hands hanging idle or floor shadow.",
+      "target_prefix": "CHR-LOG-WORK",
+      "source_run_id": 38281199147,
+      "review_artifact_run_id": 38296422676
     }
   ],
-  "last_validation_request": "OP/LOG source 38263143986 collector 38281126201: four technical candidates; LOG-IDLE contains TWO people every frame despite technical pass; OP WORK/REPAIR manual semantic rejects for disappearing props, static gestures. OP/LOG context IDLEs not approved. New two-head IDLE risk gate added after GPU submission, affects future waves. Strict DONE remains 219/235."
+  "last_validation_request": "v1.20 collector 38296422676, producer 38281199147: OP CELEB falsely technically passed 8/8 arm frames due miscentered helmet; LOG WORK technically passed despite idle-like tool/prop flicker. Both rejected semantically. Head-centered helmet-height reach QA implemented. Strict DONE stays 219/235."
 }
