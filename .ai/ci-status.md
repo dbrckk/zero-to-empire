@@ -1,14 +1,11 @@
 # CI status
 
-Summary: 0 success / 1 failure / 1 active
+Summary: 1 success / 0 failure / 1 active
 
-- Recover Shadowed ENG Idle Candidate: in_progress / pending (dcf84375)
-- Asset Pipeline CI: completed / failure (b9aa0f38)
-- Asset Pipeline CI: completed / cancelled (a1c19970)
-- Asset Pipeline CI: completed / cancelled (baef4a7b)
-
-## Latest failed run structure
-- Job: validate
-  - Failed step: Run unified asset pipeline and visual-semantic gate checks
+- Asset Pipeline CI: in_progress / pending (f7059de3)
+- Asset Pipeline CI: completed / cancelled (1db43796)
+- Asset Pipeline CI: completed / cancelled (f1544841)
+- Asset Pipeline CI: completed / cancelled (5502b463)
+- Asset Pipeline CI: completed / success (13ee322b)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

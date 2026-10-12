@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 90d550ad206dd809a2fba56eefc6f5808f08d727
-Head: dcf84375fd8571ebd086ea76fcc7b7866b9d4b01
+Base: f1544841dc844522ebad120ff5fe6aa2861ca1a4
+Head: f7059de3d4240de72ca769be6b836f3833befb73
 
 ## Changed files
-- A ops/recover-eng-idle-trigger.txt
+- M art/production/generation-rejection-ledger.json
 
 ## Affected areas
-- ops
+- art
 
 ## Related test candidates
 - No direct filename-based test match detected.

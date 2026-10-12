@@ -2006,6 +2006,15 @@
       "in_degree": 0,
       "out_degree": 1
     },
+    "tools/sprites/character_anchor_pair_salvage.py": {
+      "dependencies": [],
+      "dependents": [
+        "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "tools/sprites/test_character_anchor_pair_salvage.py"
+      ],
+      "in_degree": 2,
+      "out_degree": 0
+    },
     "tools/sprites/character_ground_shadow_cleanup.py": {
       "dependencies": [],
       "dependents": [
@@ -2196,13 +2205,14 @@
     "tools/sprites/kaggle_character_sheet_factory_v1.py": {
       "dependencies": [
         "app/src/main/java/com/zerotoempire/game/GameRepository.kt",
+        "tools/sprites/character_anchor_pair_salvage.py",
         "tools/sprites/character_ground_shadow_cleanup.py",
         "tools/sprites/character_head_identity_lock.py",
         "tools/sprites/character_semantic_gate.py"
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 4
+      "out_degree": 5
     },
     "tools/sprites/kaggle_fx_sheet_factory_v1.py": {
       "dependencies": [
@@ -2476,6 +2486,14 @@
     "tools/sprites/test_character_action_gate.py": {
       "dependencies": [
         "tools/sprites/character_semantic_gate.py"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 1
+    },
+    "tools/sprites/test_character_anchor_pair_salvage.py": {
+      "dependencies": [
+        "tools/sprites/character_anchor_pair_salvage.py"
       ],
       "dependents": [],
       "in_degree": 0,

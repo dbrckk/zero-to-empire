@@ -31,21 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T11:05:59Z
+Generated: 2026-10-12T11:12:52Z
 
 ### Git
 - Branch: `main`
-- Head: `dcf84375fd85`
-- Commit date: 2026-10-12T13:05:44+02:00
-- Commit: ci(art): launch real ENG IDLE ground-shadow repair and evidence upload
-- Tracked files: 1540
+- Head: `f7059de3d424`
+- Commit date: 2026-10-12T13:12:39+02:00
+- Commit: art(qa): preserve OP shadow and LOG dual-person anchor failure hints for future GPU waves
+- Tracked files: 1546
 
 ### Recently changed files
-- `ops/recover-eng-idle-trigger.txt`
-- `.github/workflows/recover-shadowed-eng-idle.yml`
-- `tools/sprites/repair_shadowed_character_atlas.py`
+- `art/production/generation-rejection-ledger.json`
 - `.github/workflows/asset-pipeline-ci.yml`
+- `kaggle/github_mass_factory.py`
 - `.github/workflows/kaggle-mass-sprite-factory.yml`
+- `tools/sprites/kaggle_character_sheet_factory_v1.py`
 
 ### Project signals
 - `build.gradle.kts`

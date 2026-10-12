@@ -62,6 +62,7 @@ sprites/
   build_character_review_panels.py
   build_sprite_contact_sheet.py
   build_tech_review_board.py
+  character_anchor_pair_salvage.py
   character_cargo_identity_lock.py
   character_ground_shadow_cleanup.py
   character_head_identity_lock.py
@@ -118,6 +119,7 @@ sprites/
   test_animation_batch_planner.py
   test_autonomous_walk.py
   test_character_action_gate.py
+  test_character_anchor_pair_salvage.py
   test_character_ground_shadow_cleanup.py
   test_character_head_identity_lock.py
   test_character_provider_reservation.py
@@ -2483,6 +2485,65 @@ ap=argparse.ArgumentParser()
 args=ap.parse_args()
 ⋮----
 rec=tiles(args.source)
+```
+
+## File: sprites/character_anchor_pair_salvage.py
+```python
+"""Conservative recovery of one full-body subject from two-person role anchors.
+
+Works only on a known foreground segmentation mask. Never guesses a person's
+identity, invents limbs or marks assets approved. Ambiguous overlaps remain
+rejected and recorded rather than silently generating unusable role families.
+"""
+⋮----
+def _components(mask: Image.Image)
+⋮----
+thumb=mask.convert("L").resize((256,256),Image.Resampling.NEAREST)
+data=thumb.load()
+seen=set()
+found=[]
+⋮----
+queue=deque([(x,y)])
+⋮----
+area=0
+bounds=[x,y,x+1,y+1]
+⋮----
+def salvage_two_full_body_subjects(raw:Image.Image, isolated:Image.Image)
+⋮----
+"""Return (RGB isolated character, evidence) or (None, rejection reason).
+
+    This is deliberately narrow: two similarly sized, distinct, tall and
+    horizontally separated foreground components must be visible. An
+    overlapping double person or a disconnected machine is not recoverable.
+    """
+rgb=raw.convert("RGB")
+⋮----
+pairs=_components(isolated.getchannel("A"))
+⋮----
+width=box[2]-box[0]
+height=box[3]-box[1]
+⋮----
+# Avoid cropping a second worker or important overlapping object.
+⋮----
+# Keep only the dominant full-height connected figure (ties go to the
+# leftmost subject). Preserve its painterly pixels with no new synthesis.
+chosen=first if first_n>second_n else min(first,second,key=lambda b:b[0])
+scale=4
+pad=12
+left=max(0,chosen[0]*scale-pad)
+top=max(0,chosen[1]*scale-pad)
+right=min(1024,chosen[2]*scale+pad)
+bottom=min(1024,chosen[3]*scale+pad)
+⋮----
+region=rgb.crop((left,top,right,bottom))
+⋮----
+# Median-of-corners neutral background approximates the original source
+# without adding a second actor, halo, or painted prop.
+corners=(rgb.getpixel((0,0)),rgb.getpixel((1023,0)),
+bg=tuple(sorted(pixel[k] for pixel in corners)[1:3][0] for k in range(3))
+canvas=Image.new("RGB",(1024,1024),bg)
+x=(1024-region.width)//2
+y=(1024-region.height)//2
 ```
 
 ## File: sprites/character_cargo_identity_lock.py
@@ -4948,7 +5009,7 @@ hints=POSE_HINT[i['action']][:ACTION[i['action']][1]]
 ⋮----
 variants={}
 ⋮----
-del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();report=[];role_anchor={};role_reference_cell={};anchor_failures={}
+del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();report=[];role_anchor={};role_reference_cell={};anchor_failures={};role_anchor_salvage={}
 # When the strict-completion batch includes an IDLE identity anchor, every
 # sibling action must share the SAME successfully validated anchor. If the
 # IDLE atlas is rejected, rendering unrelated actions would burn GPU time
@@ -4965,6 +5026,15 @@ gen_anchor=torch.Generator(device='cuda').manual_seed(args.seed+700000+ri*50000+
 ⋮----
 raw=base(height=1024,width=1024,num_inference_steps=6,guidance_scale=0,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),output_type='pil',generator=gen_anchor).images[0]
 candidate=raw.convert('RGB')
+⋮----
+reason=str(anchor_error).lower()
+⋮----
+# FLUX can yield two side-by-side workers even with a "one person"
+# prompt. When two independently tall figures have no overlap, retain
+# one original foreground without repainting faces or inventing limbs.
+# Ambiguous duplicates still fail rather than contaminating all actions.
+⋮----
+candidate=single
 ⋮----
 why='required-role-idle-candidate-rejected'
 ⋮----
@@ -7832,6 +7902,33 @@ last = worker()
 def test_static_walk_is_rejected(self)
 ⋮----
 same = worker()
+```
+
+## File: sprites/test_character_anchor_pair_salvage.py
+```python
+"""Synthetic multi-person role-anchor recovery tests; no semantic approval."""
+⋮----
+def pair(second=True, overlapping=False, second_short=False)
+⋮----
+bg=(219,219,219)
+image=Image.new('RGB',(1024,1024),bg)
+alpha=Image.new('L',(1024,1024))
+draw=ImageDraw.Draw(image)
+mask=ImageDraw.Draw(alpha)
+left=(120,90,315,800)
+right=(270 if overlapping else 670,100,480 if overlapping else 850,
+⋮----
+isolated=image.convert('RGBA')
+⋮----
+class PairAnchorRecoveryTests(unittest.TestCase)
+⋮----
+def test_one_person_is_kept_from_two_separate_full_bodies(self)
+⋮----
+def test_single_person_is_not_falsely_salvaged(self)
+⋮----
+def test_overlap_is_left_for_manual_rejection(self)
+⋮----
+def test_short_detached_panel_is_not_treated_as_another_worker(self)
 ```
 
 ## File: sprites/test_character_ground_shadow_cleanup.py

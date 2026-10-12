@@ -347,6 +347,7 @@ tools/
     build_character_review_panels.py
     build_sprite_contact_sheet.py
     build_tech_review_board.py
+    character_anchor_pair_salvage.py
     character_cargo_identity_lock.py
     character_ground_shadow_cleanup.py
     character_head_identity_lock.py
@@ -403,6 +404,7 @@ tools/
     test_animation_batch_planner.py
     test_autonomous_walk.py
     test_character_action_gate.py
+    test_character_anchor_pair_salvage.py
     test_character_ground_shadow_cleanup.py
     test_character_head_identity_lock.py
     test_character_provider_reservation.py
@@ -1132,6 +1134,8 @@ on:
       - 'tools/sprites/build_character_review_panels.py'
       - 'tools/sprites/character_head_identity_lock.py'
       - 'tools/sprites/character_ground_shadow_cleanup.py'
+      - 'tools/sprites/character_anchor_pair_salvage.py'
+      - 'tools/sprites/test_character_anchor_pair_salvage.py'
       - 'tools/sprites/test_character_ground_shadow_cleanup.py'
       - 'tools/sprites/test_character_head_identity_lock.py'
       - 'tools/sprites/character_semantic_gate.py'
@@ -1160,6 +1164,8 @@ on:
       - 'tools/sprites/build_character_review_panels.py'
       - 'tools/sprites/character_head_identity_lock.py'
       - 'tools/sprites/character_ground_shadow_cleanup.py'
+      - 'tools/sprites/character_anchor_pair_salvage.py'
+      - 'tools/sprites/test_character_anchor_pair_salvage.py'
       - 'tools/sprites/test_character_ground_shadow_cleanup.py'
       - 'tools/sprites/test_character_head_identity_lock.py'
       - 'tools/sprites/character_semantic_gate.py'
@@ -1211,6 +1217,7 @@ jobs:
             tools/sprites/build_character_review_panels.py \
             tools/sprites/character_head_identity_lock.py \
             tools/sprites/character_ground_shadow_cleanup.py \
+            tools/sprites/character_anchor_pair_salvage.py \
             tools/sprites/kaggle_character_sheet_factory_v1.py \
             tools/sprites/kaggle_building_family_factory_v14.py \
             tools/sprites/kaggle_building_family_factory_v15.py \
@@ -1289,6 +1296,7 @@ jobs:
           python -m unittest discover -s tools/sprites -p 'test_character_semantic_gate.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_head_identity_lock.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_ground_shadow_cleanup.py' -v
+          python -m unittest discover -s tools/sprites -p 'test_character_anchor_pair_salvage.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_action_gate.py' -v
 
       - name: Verify live character-production plan against strict queue and Android frame contract
@@ -3141,7 +3149,7 @@ jobs:
           fi
 
       - name: Compile sprite generators
-        run: python -m py_compile tools/sprites/kaggle_building_family_factory_v16.py tools/sprites/kaggle_character_sheet_factory_v1.py tools/sprites/character_head_identity_lock.py tools/sprites/character_ground_shadow_cleanup.py kaggle/github_mass_factory.py
+        run: python -m py_compile tools/sprites/kaggle_building_family_factory_v16.py tools/sprites/kaggle_character_sheet_factory_v1.py tools/sprites/character_head_identity_lock.py tools/sprites/character_ground_shadow_cleanup.py tools/sprites/character_anchor_pair_salvage.py kaggle/github_mass_factory.py
       - name: Recover async preflight failure
         if: ${{ failure() && env.ASYNC_SUBMIT == 'true' }}
         env:
@@ -3297,6 +3305,7 @@ jobs:
              tools/sprites/character_semantic_gate.py \
              tools/sprites/character_head_identity_lock.py \
              tools/sprites/character_ground_shadow_cleanup.py \
+             tools/sprites/character_anchor_pair_salvage.py \
              /tmp/zte-kaggle/tools/sprites/
           sed "s/__KAGGLE_USERNAME__/${KAGGLE_USERNAME}/g" kaggle/kernel-metadata.template.json > /tmp/zte-kaggle/kernel-metadata.json
           python - <<'PY'
@@ -3326,6 +3335,7 @@ jobs:
               'character_semantic_gate.py',
               'character_head_identity_lock.py',
               'character_ground_shadow_cleanup.py',
+              'character_anchor_pair_salvage.py',
           ]
           buf=io.BytesIO()
           with zipfile.ZipFile(buf,'w',zipfile.ZIP_DEFLATED) as z:
@@ -8583,6 +8593,40 @@ jobs:
           assert report['source_collector_run_id']==38223743012
           print('ENG_IDLE_RECOVERY_VISUAL_QA_PENDING=1')
           PY
+      - name: Validate canonical atlas contract and image-only risk
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/sprites/validate_runtime_asset.py \
+            --asset-id CHR-ENG-IDLE \
+            --path art/production/character-repair-candidates/zte_chr_eng_idle_shadow_review.png \
+            --report art/production/character-repair-candidates/zte_chr_eng_idle_shadow_runtime_qa.json
+          python - <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+          from PIL import Image
+          sys.path.insert(0,'tools/sprites')
+          from character_semantic_gate import clip_risk
+          root=Path('art/production/character-repair-candidates')
+          with Image.open(root/'zte_chr_eng_idle_shadow_review.png') as im:
+              atlas=im.convert('RGBA')
+          frames=[
+              atlas.crop(((n%4)*256,(n//4)*256,(n%4+1)*256,(n//4+1)*256))
+              for n in range(6)
+          ]
+          risk=clip_risk(frames,'IDLE')
+          risk['review_required']=True
+          risk['semantic_approval']=False
+          risk['android_runtime_approval']=False
+          (root/'zte_chr_eng_idle_shadow_semantic_screen.json').write_text(
+              json.dumps(risk,indent=2)+'\n',encoding='utf-8'
+          )
+          print('ENG_IDLE_VISUAL_RISK='+risk['risk_level'])
+          print('ENG_IDLE_VISUAL_RISK_FLAGS='+','.join(risk['flags']))
+          if risk['risk_level']=='BLOCKING':
+              raise SystemExit('Corrected atlas still has blocking image-only risk')
+          PY
       - name: Commit only independent review evidence
         shell: bash
         run: |
@@ -8591,6 +8635,8 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add art/production/character-repair-candidates/zte_chr_eng_idle_shadow_review.png
           git add art/production/character-repair-candidates/zte_chr_eng_idle_shadow_review.json
+          git add art/production/character-repair-candidates/zte_chr_eng_idle_shadow_runtime_qa.json
+          git add art/production/character-repair-candidates/zte_chr_eng_idle_shadow_semantic_screen.json
           if git diff --cached --quiet; then
             echo 'ENG_IDLE_REVIEW_CANDIDATE_ALREADY_CURRENT=1'
             exit 0
@@ -8606,6 +8652,8 @@ jobs:
           path: |
             art/production/character-repair-candidates/zte_chr_eng_idle_shadow_review.png
             art/production/character-repair-candidates/zte_chr_eng_idle_shadow_review.json
+            art/production/character-repair-candidates/zte_chr_eng_idle_shadow_runtime_qa.json
+            art/production/character-repair-candidates/zte_chr_eng_idle_shadow_semantic_screen.json
           retention-days: 90
           if-no-files-found: warn
 ```
@@ -28752,6 +28800,65 @@ args=ap.parse_args()
 rec=tiles(args.source)
 ```
 
+## File: tools/sprites/character_anchor_pair_salvage.py
+```python
+"""Conservative recovery of one full-body subject from two-person role anchors.
+
+Works only on a known foreground segmentation mask. Never guesses a person's
+identity, invents limbs or marks assets approved. Ambiguous overlaps remain
+rejected and recorded rather than silently generating unusable role families.
+"""
+⋮----
+def _components(mask: Image.Image)
+⋮----
+thumb=mask.convert("L").resize((256,256),Image.Resampling.NEAREST)
+data=thumb.load()
+seen=set()
+found=[]
+⋮----
+queue=deque([(x,y)])
+⋮----
+area=0
+bounds=[x,y,x+1,y+1]
+⋮----
+def salvage_two_full_body_subjects(raw:Image.Image, isolated:Image.Image)
+⋮----
+"""Return (RGB isolated character, evidence) or (None, rejection reason).
+
+    This is deliberately narrow: two similarly sized, distinct, tall and
+    horizontally separated foreground components must be visible. An
+    overlapping double person or a disconnected machine is not recoverable.
+    """
+rgb=raw.convert("RGB")
+⋮----
+pairs=_components(isolated.getchannel("A"))
+⋮----
+width=box[2]-box[0]
+height=box[3]-box[1]
+⋮----
+# Avoid cropping a second worker or important overlapping object.
+⋮----
+# Keep only the dominant full-height connected figure (ties go to the
+# leftmost subject). Preserve its painterly pixels with no new synthesis.
+chosen=first if first_n>second_n else min(first,second,key=lambda b:b[0])
+scale=4
+pad=12
+left=max(0,chosen[0]*scale-pad)
+top=max(0,chosen[1]*scale-pad)
+right=min(1024,chosen[2]*scale+pad)
+bottom=min(1024,chosen[3]*scale+pad)
+⋮----
+region=rgb.crop((left,top,right,bottom))
+⋮----
+# Median-of-corners neutral background approximates the original source
+# without adding a second actor, halo, or painted prop.
+corners=(rgb.getpixel((0,0)),rgb.getpixel((1023,0)),
+bg=tuple(sorted(pixel[k] for pixel in corners)[1:3][0] for k in range(3))
+canvas=Image.new("RGB",(1024,1024),bg)
+x=(1024-region.width)//2
+y=(1024-region.height)//2
+```
+
 ## File: tools/sprites/character_cargo_identity_lock.py
 ```python
 """Conservative 256px sprite cargo/hand-region lock for CARRY actions.
@@ -31215,7 +31322,7 @@ hints=POSE_HINT[i['action']][:ACTION[i['action']][1]]
 ⋮----
 variants={}
 ⋮----
-del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();report=[];role_anchor={};role_reference_cell={};anchor_failures={}
+del t,enc;gc.collect();torch.cuda.empty_cache();tr,base,img=load_render();report=[];role_anchor={};role_reference_cell={};anchor_failures={};role_anchor_salvage={}
 # When the strict-completion batch includes an IDLE identity anchor, every
 # sibling action must share the SAME successfully validated anchor. If the
 # IDLE atlas is rejected, rendering unrelated actions would burn GPU time
@@ -31232,6 +31339,15 @@ gen_anchor=torch.Generator(device='cuda').manual_seed(args.seed+700000+ri*50000+
 ⋮----
 raw=base(height=1024,width=1024,num_inference_steps=6,guidance_scale=0,prompt_embeds=pe.cuda(),pooled_prompt_embeds=ppe.cuda(),output_type='pil',generator=gen_anchor).images[0]
 candidate=raw.convert('RGB')
+⋮----
+reason=str(anchor_error).lower()
+⋮----
+# FLUX can yield two side-by-side workers even with a "one person"
+# prompt. When two independently tall figures have no overlap, retain
+# one original foreground without repainting faces or inventing limbs.
+# Ambiguous duplicates still fail rather than contaminating all actions.
+⋮----
+candidate=single
 ⋮----
 why='required-role-idle-candidate-rejected'
 ⋮----
@@ -34099,6 +34215,33 @@ last = worker()
 def test_static_walk_is_rejected(self)
 ⋮----
 same = worker()
+```
+
+## File: tools/sprites/test_character_anchor_pair_salvage.py
+```python
+"""Synthetic multi-person role-anchor recovery tests; no semantic approval."""
+⋮----
+def pair(second=True, overlapping=False, second_short=False)
+⋮----
+bg=(219,219,219)
+image=Image.new('RGB',(1024,1024),bg)
+alpha=Image.new('L',(1024,1024))
+draw=ImageDraw.Draw(image)
+mask=ImageDraw.Draw(alpha)
+left=(120,90,315,800)
+right=(270 if overlapping else 670,100,480 if overlapping else 850,
+⋮----
+isolated=image.convert('RGBA')
+⋮----
+class PairAnchorRecoveryTests(unittest.TestCase)
+⋮----
+def test_one_person_is_kept_from_two_separate_full_bodies(self)
+⋮----
+def test_single_person_is_not_falsely_salvaged(self)
+⋮----
+def test_overlap_is_left_for_manual_rejection(self)
+⋮----
+def test_short_detached_panel_is_not_treated_as_another_worker(self)
 ```
 
 ## File: tools/sprites/test_character_ground_shadow_cleanup.py
