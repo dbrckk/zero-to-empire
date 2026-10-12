@@ -633,7 +633,7 @@ def main():
   if not action_ok:
    print(f"KAGGLE_CHR_REJECTED={i['id']} reason={action_why}",flush=True)
    report.append({'id':i['id'],'status':'REJECT','reason':action_why,'frames':len(frames),'retry_reasons':retry_reasons});continue
-  visual_risk=clip_risk(frames)
+  visual_risk=clip_risk(frames,i['action'])
   if visual_risk.get('risk_level')=='BLOCKING':
    risk_reason='image-risk:'+','.join(visual_risk.get('flags') or ['UNKNOWN'])
    print(f"KAGGLE_CHR_REJECTED={i['id']} reason={risk_reason}",flush=True)
