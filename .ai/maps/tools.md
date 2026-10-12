@@ -4940,6 +4940,11 @@ if not ok:fail=f'frame-{fi}-failed';break
 ⋮----
 visual_risk=clip_risk(frames,i['action'])
 ⋮----
+# One bizarre empty head/hand crop must not abort a 12-sheet GPU kernel,
+# dropping valid siblings and their producer report. Explicitly reject
+# this candidate and preserve exact diagnostics for the next attempt.
+reason=f'candidate-visual-qa-error:{type(exc).__name__}:{str(exc)[:180]}'
+⋮----
 risk_reason='image-risk:'+','.join(visual_risk.get('flags') or ['UNKNOWN'])
 ⋮----
 why=why+' '+action_why

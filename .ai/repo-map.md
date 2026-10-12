@@ -27435,6 +27435,10 @@ def test_idle_animation_gate_accepts_blinks_without_fake_locomotion(self)
 ⋮----
 def test_same_run_idle_identity_is_required_before_sibling_render(self)
 ⋮----
+def test_malformed_character_visual_qa_does_not_abort_valid_gpu_siblings(self)
+⋮----
+code = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(
+⋮----
 def test_kaggle_character_generator_rejects_blocking_visual_risks(self)
 ⋮----
 generator = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
@@ -31080,6 +31084,11 @@ last_reason=str(e);retry_reasons.append(last_reason);print(f"KAGGLE_CHR_RETRY={i
 if not ok:fail=f'frame-{fi}-failed';break
 ⋮----
 visual_risk=clip_risk(frames,i['action'])
+⋮----
+# One bizarre empty head/hand crop must not abort a 12-sheet GPU kernel,
+# dropping valid siblings and their producer report. Explicitly reject
+# this candidate and preserve exact diagnostics for the next attempt.
+reason=f'candidate-visual-qa-error:{type(exc).__name__}:{str(exc)[:180]}'
 ⋮----
 risk_reason='image-risk:'+','.join(visual_risk.get('flags') or ['UNKNOWN'])
 ⋮----

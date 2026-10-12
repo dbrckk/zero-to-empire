@@ -31,23 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T08:17:44Z
+Generated: 2026-10-12T08:19:40Z
 
 ### Git
 - Branch: `main`
-- Head: `bcf1322dae02`
-- Commit date: 2026-10-12T10:17:12+02:00
-- Commit: ci(art): run actual character action QA unit checks on each pipeline update
+- Head: `202775da9ca1`
+- Commit date: 2026-10-12T10:19:22+02:00
+- Commit: ci(art): verify active OP ENG GPU batch and preserve review evidence
 - Tracked files: 1535
 
 ### Recently changed files
+- `ops/kaggle-collector-trigger.txt`
+- `tools/assets/test_workflow_policy.py`
+- `tools/sprites/kaggle_character_sheet_factory_v1.py`
 - `.github/workflows/asset-pipeline-ci.yml`
 - `tools/sprites/test_character_action_gate.py`
-- `tools/sprites/character_cargo_identity_lock.py`
-- `art/production/autofactory-state.json`
-- `art/production/autofactory-summary.md`
-- `art/production/character-strict-review-backlog.md`
-- `art/production/master-asset-queue.json`
 
 ### Project signals
 - `build.gradle.kts`
