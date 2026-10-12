@@ -169,6 +169,13 @@ def clip_risk(frames:list[Image.Image],action:str|None=None)->dict:
     if biggest>.31:
         flags.append('PALETTE_IDENTITY_DISCONTINUITY_RISK')
     sizes=[f['bbox_height_fraction'] for f in dims]
+    # A single mysteriously shortened frame was accepted in LOG-WORK even
+    # though its neighbors retained normal full-body framing. Reject per-frame
+    # collapses instead of waiting for >=2 portrait fragments or a 2x jump.
+    min_relative_height=min(sizes)/max(statistics.median(sizes),.01)
+    if (str(action or '').upper() in {'WALK','WORK','CARRY','REPAIR','CELEB'}
+        and min_relative_height<.82):
+        flags.append('FRAME_SCALE_COLLAPSE_RISK')
     if max(sizes)/max(min(sizes),.01)>2:
         flags.append('CHARACTER_SCALE_DISCONTINUITY_RISK')
     areas=[f['visible_alpha_area'] for f in dims]
@@ -179,6 +186,7 @@ def clip_risk(frames:list[Image.Image],action:str|None=None)->dict:
               'MEDIAN_SILHOUETTE_NOT_FULL_BODY',
               'PALETTE_IDENTITY_DISCONTINUITY_RISK',
               'CHARACTER_SCALE_DISCONTINUITY_RISK',
+              'FRAME_SCALE_COLLAPSE_RISK',
               'SILHOUETTE_MASS_DISCONTINUITY_RISK',
               'HEAD_FACE_HEADGEAR_COLOR_DISCONTINUITY_RISK',
               'TOOL_CRATE_TORSO_COLOR_DISCONTINUITY_RISK'}
@@ -192,6 +200,7 @@ def clip_risk(frames:list[Image.Image],action:str|None=None)->dict:
             'median_palette_adjacent_distance':round(statistics.median(adjacent),4),
             'median_aspect_ratio':round(median_aspect,4),
             'median_height_fraction':round(median_height,4),
+            'min_relative_frame_height':round(min_relative_height,4),
             'max_silhouette_mass_ratio':round(mass_ratio,3),
             'non_full_body_frames':flat,
             'foot_profile_ambiguous_frames':no_feet,
