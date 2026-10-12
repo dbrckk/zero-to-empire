@@ -1,7 +1,7 @@
 """Synthetic visual failure tests, no external models and no automatic approval."""
 import unittest
 from PIL import Image,ImageDraw
-from character_semantic_gate import clip_risk,frame_geometry,palette_distance,color_signature,idle_visual_activity,lower_ground_band_ratio,celebration_arm_reach_counts,head_structure_drift
+from character_semantic_gate import clip_risk,frame_geometry,palette_distance,color_signature,idle_visual_activity,idle_distinct_head_clusters,lower_ground_band_ratio,celebration_arm_reach_counts,head_structure_drift
 
 
 def person(i=0,color=(80,144,187,255)):
@@ -43,6 +43,27 @@ class SemanticGateTests(unittest.TestCase):
                 person(0,(12,185,210,255)) for i in range(8)]
         result=clip_risk(frames)
         self.assertIn('PALETTE_IDENTITY_DISCONTINUITY_RISK',result['flags'])
+
+    def test_conjoined_double_workers_are_detected_even_with_one_body_component(self):
+        frame=Image.new('RGBA',(256,256))
+        draw=ImageDraw.Draw(frame)
+        # Two separate helmet/head shapes, shoulders and torsos fused into a
+        # single continuous shape: the old component/width check passed it.
+        draw.ellipse((76,20,108,63),fill=(231,163,58,255))
+        draw.ellipse((144,20,176,63),fill=(231,163,58,255))
+        draw.rectangle((75,65,180,162),fill=(210,122,40,255))
+        draw.line((91,156,84,232),fill=(65,69,77,255),width=18)
+        draw.line((161,156,170,232),fill=(65,69,77,255),width=18)
+        self.assertEqual(idle_distinct_head_clusters(frame),2)
+        result=clip_risk([frame.copy() for _ in range(6)],'IDLE')
+        self.assertEqual(result['risk_level'],'BLOCKING')
+        self.assertIn('MULTIPLE_IDLE_HEADS_RISK',result['flags'])
+        self.assertEqual(result['two_head_idle_frames'],6)
+
+    def test_one_realistic_idle_head_does_not_trigger_multi_head_gate(self):
+        frames=[person(i%2) for i in range(6)]
+        self.assertTrue(all(idle_distinct_head_clusters(frame)<=1 for frame in frames))
+        self.assertNotIn('MULTIPLE_IDLE_HEADS_RISK',clip_risk(frames,'IDLE')['flags'])
 
     def test_two_people_in_one_cell_cause_visible_mass_jump(self):
         pair=Image.new('RGBA',(256,256))
