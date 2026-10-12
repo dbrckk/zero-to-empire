@@ -31,16 +31,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T17:41:49Z
+Generated: 2026-10-12T18:00:26Z
 
 ### Git
 - Branch: `main`
-- Head: `912957c582bf`
-- Commit date: 2026-10-12T19:41:22+02:00
-- Commit: test(ci): trace action-motion failure metrics into guided Kaggle retries
+- Head: `74a862d6ec07`
+- Commit date: 2026-10-12T20:00:01+02:00
+- Commit: ci(art): check latest OP LOG GPU queue and collect completed output
 - Tracked files: 1558
 
 ### Recently changed files
+- `ops/kaggle-collector-trigger.txt`
 - `tools/assets/test_workflow_policy.py`
 - `.github/workflows/kaggle-async-character-collector.yml`
 - `tools/sprites/kaggle_character_sheet_factory_v1.py`
