@@ -23,6 +23,8 @@ on:
       - 'tools/sprites/test_character_head_identity_lock.py'
       - 'tools/sprites/character_semantic_gate.py'
       - 'tools/sprites/test_character_semantic_gate.py'
+      - 'tools/sprites/verify_character_idle_candidates.py'
+      - 'tools/sprites/test_verify_character_idle_candidates.py'
       - 'tools/sprites/test_character_action_gate.py'
       - 'tools/sprites/test_animation_batch_planner.py'
       - 'tools/sprites/kaggle_*factory*.py'
@@ -58,6 +60,8 @@ on:
       - 'tools/sprites/test_character_head_identity_lock.py'
       - 'tools/sprites/character_semantic_gate.py'
       - 'tools/sprites/test_character_semantic_gate.py'
+      - 'tools/sprites/verify_character_idle_candidates.py'
+      - 'tools/sprites/test_verify_character_idle_candidates.py'
       - 'tools/sprites/test_character_action_gate.py'
       - 'tools/sprites/test_animation_batch_planner.py'
       - 'tools/sprites/kaggle_*factory*.py'
@@ -104,6 +108,7 @@ jobs:
             tools/sprites/asset_wave_orchestrator.py \
             tools/sprites/build_character_review_panels.py \
             tools/sprites/character_head_identity_lock.py \
+            tools/sprites/verify_character_idle_candidates.py \
             tools/sprites/character_approved_idle_fallback.py \
             tools/sprites/character_ground_shadow_cleanup.py \
             tools/sprites/character_anchor_pair_salvage.py \
@@ -236,6 +241,7 @@ jobs:
         run: |
           python -m unittest discover -s tools/assets -p 'test_*.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_semantic_gate.py' -v
+          python -m unittest discover -s tools/sprites -p 'test_verify_character_idle_candidates.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_head_identity_lock.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_approved_idle_fallback.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_ground_shadow_cleanup.py' -v
