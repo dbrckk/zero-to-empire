@@ -137,6 +137,10 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("if details[\"risk_level\"] == \"BLOCKING\":", verifier)
         self.assertNotIn("strict_status", verifier)
         self.assertNotIn("app/src/main/res/", verifier)
+        generator = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
+        self.assertIn("action_translation_dominates_pose_risk", generator)
+        self.assertIn("head-excursion-px=", collector)
+        self.assertIn("retained-pose-motion-ratio=", collector)
 
     def test_async_collector_keeps_valid_candidates_when_other_qa_rows_fail(self):
         text = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
