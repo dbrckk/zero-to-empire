@@ -9,7 +9,7 @@ from __future__ import annotations
 import argparse,gc,json,re
 from collections import deque
 from pathlib import Path
-print('KAGGLE_STARTUP=character-sheet-flux-v1.19-pose-aware-head-and-prop-stability',flush=True)
+print('KAGGLE_STARTUP=character-sheet-flux-v1.20-stable-idle-breathing-rescue',flush=True)
 import torch
 from PIL import Image,ImageDraw,ImageFilter
 from diffusers import FluxPipeline,FluxImg2ImgPipeline,FluxTransformer2DModel
