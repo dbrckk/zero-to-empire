@@ -1,7 +1,7 @@
 """Synthetic visual failure tests, no external models and no automatic approval."""
 import unittest
 from PIL import Image,ImageDraw
-from character_semantic_gate import clip_risk,frame_geometry,palette_distance,color_signature,idle_visual_activity,celebration_arm_reach_counts
+from character_semantic_gate import clip_risk,frame_geometry,palette_distance,color_signature,idle_visual_activity,celebration_arm_reach_counts,head_structure_drift
 
 
 def person(i=0,color=(80,144,187,255)):
@@ -98,6 +98,20 @@ class SemanticGateTests(unittest.TestCase):
         # non-prop action should be blocked on mid-body content alone.
         self.assertNotIn('TOOL_CRATE_TORSO_COLOR_DISCONTINUITY_RISK',
                          clip_risk(frames,'IDLE')['flags'])
+
+    def test_face_helmet_morph_blocks_work_even_when_color_palette_matches(self):
+        reference=person()
+        altered=person()
+        draw=ImageDraw.Draw(altered)
+        draw.rectangle((100,8,164,70),fill=(0,0,0,0))
+        draw.ellipse((92,18,165,68),fill=(80,144,187,255))
+        frames=[reference.copy() for _ in range(10)]
+        frames[4]=altered
+        result=clip_risk(frames,'WORK')
+        self.assertEqual(result['risk_level'],'BLOCKING')
+        self.assertIn('FACE_HEADGEAR_STRUCTURE_DRIFT_RISK',result['flags'])
+        self.assertGreater(result['max_face_headgear_structural_drift'],.19)
+        self.assertGreater(head_structure_drift(frames),.19)
 
     def test_celebration_counts_actual_raised_arm_frames_not_final_sparkle(self):
         def simple(raised=False):
