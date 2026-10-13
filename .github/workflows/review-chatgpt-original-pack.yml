@@ -1,0 +1,70 @@
+name: Review ChatGPT Original Character Pack
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'ops/chatgpt-original-handoff-trigger.txt'
+      - 'tools/sprites/package_chatgpt_originals.py'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: review-chatgpt-original-character-pack
+  cancel-in-progress: false
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install technical review dependencies
+        run: python -m pip install --disable-pip-version-check Pillow==11.3.0
+      - name: Package committed first-party sprite candidates
+        run: |
+          python tools/sprites/package_chatgpt_originals.py \
+            --source art/incoming/chatgpt-original \
+            --output /tmp/chatgpt-original-character-candidates.zip
+      - name: Verify exact 18 atlas / 150 SVG contract
+        run: |
+          python tools/sprites/verify_local_character_bundle.py \
+            /tmp/chatgpt-original-character-candidates.zip \
+            --report /tmp/chatgpt-original-technical-review.json
+      - name: Generate human visual review panels without promoting assets
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/chatgpt-local-review/candidates
+          python - <<'PY'
+          import zipfile
+          from pathlib import Path
+          source=Path('/tmp/chatgpt-original-character-candidates.zip')
+          target=Path('/tmp/chatgpt-local-review/candidates')
+          with zipfile.ZipFile(source) as package:
+              atlases=[name for name in package.namelist()
+                       if name.startswith('atlases/zte_chr_') and name.endswith('_final.png')]
+              assert len(atlases)==18,len(atlases)
+              for item in atlases:
+                  (target/Path(item).name).write_bytes(package.read(item))
+          PY
+          python tools/sprites/build_character_review_panels.py \
+            --candidates /tmp/chatgpt-local-review/candidates \
+            --output-dir /tmp/chatgpt-local-review/panels
+          cp /tmp/chatgpt-original-technical-review.json \
+            /tmp/chatgpt-local-review/technical-review.json
+          printf '%s\n' \
+            '18 ORIGINAL CHATGPT ROLE ATLASES: REVIEW-ONLY EVIDENCE' \
+            'No automatic strict approval, Android promotion or runtime overwrite.' \
+            'Source: art/incoming/chatgpt-original. 150 editable SVGs.' \
+            > /tmp/chatgpt-local-review/NO_AUTOMATIC_APPROVAL.txt
+      - name: Publish original pack and review evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: chatgpt-original-local-review-only
+          path: |
+            /tmp/chatgpt-original-character-candidates.zip
+            /tmp/chatgpt-local-review/
+          if-no-files-found: error
+          retention-days: 90
