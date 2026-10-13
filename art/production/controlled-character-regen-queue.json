@@ -2,86 +2,59 @@
   "mode": "kaggle-character-burst-v1.20-strict-completion",
   "reason": "Autofactory 235: high-throughput identity-locked character production. Each role is kept in one producer wave when capacity allows; a strict-DONE IDLE sheet may be regenerated as context-only identity evidence so review and promotion can replace a legacy anchor with the same generated family.",
   "groups": [
-    "CHR-LOG",
-    "CHR-ENG"
+    "CHR-OP",
+    "CHR-LOG"
   ],
   "targets": [
     {
+      "id": "CHR-OP-IDLE",
+      "status": "PENDING_KAGGLE",
+      "autofactory_context_only": true
+    },
+    {
+      "id": "CHR-OP-WALK",
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Kaggle generator rejected candidate: walk-too-static lower-motion=0.176"
+    },
+    {
+      "id": "CHR-OP-CARRY",
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Kaggle generator rejected candidate: carry-too-static mean-change=0.095<0.120"
+    },
+    {
+      "id": "CHR-OP-CELEB",
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Visual frame-by-frame review of collector 38296422676: all eight poses keep both hands at waist/hip height; no raised-arm celebration despite technical arm-frames=8/8. Clothes, boot and cargo strap change between frames; gray cast ground shadow persists. REJECTED_SEMANTIC: false positive in old shoulder-wide mask reach detector."
+    },
+    {
       "id": "CHR-LOG-IDLE",
-      "status": "AWAITING_REVIEW",
-      "autofactory_context_only": true,
-      "kaggle_run_id": 38309441378,
-      "review_artifact_run_id": 38337667460
+      "status": "PENDING_KAGGLE",
+      "autofactory_context_only": true
     },
     {
       "id": "CHR-LOG-WALK",
-      "status": "REJECTED",
-      "review_reason": "Kaggle generator rejected candidate: walk-too-static lower-motion=0.194",
-      "kaggle_run_id": 38309441378,
-      "review_artifact_run_id": 38337667460
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Kaggle generator rejected candidate: walk-too-static lower-motion=0.194"
     },
     {
       "id": "CHR-LOG-WORK",
-      "status": "REJECTED",
-      "review_reason": "Kaggle generator rejected candidate: image-risk:ACTION_TRANSLATION_DOMINATES_POSE_RISK,LOWER_LIMB_STRUCTURE_UNVERIFIED",
-      "kaggle_run_id": 38309441378,
-      "review_artifact_run_id": 38337667460
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Kaggle generator rejected candidate: image-risk:ACTION_TRANSLATION_DOMINATES_POSE_RISK,LOWER_LIMB_STRUCTURE_UNVERIFIED"
     },
     {
       "id": "CHR-LOG-CARRY",
-      "status": "REJECTED",
-      "review_reason": "Kaggle generator rejected candidate: carry-too-static mean-change=0.070<0.120",
-      "kaggle_run_id": 38309441378,
-      "review_artifact_run_id": 38337667460
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Kaggle generator rejected candidate: carry-too-static mean-change=0.070<0.120"
     },
     {
       "id": "CHR-LOG-REPAIR",
-      "status": "REJECTED",
-      "review_reason": "Kaggle generator rejected candidate: image-risk:ACTION_TRANSLATION_DOMINATES_POSE_RISK,LOWER_LIMB_STRUCTURE_UNVERIFIED; retry-details=edge contact",
-      "kaggle_run_id": 38309441378,
-      "review_artifact_run_id": 38337667460
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Kaggle generator rejected candidate: image-risk:ACTION_TRANSLATION_DOMINATES_POSE_RISK,LOWER_LIMB_STRUCTURE_UNVERIFIED; retry-details=edge contact"
     },
     {
       "id": "CHR-LOG-CELEB",
-      "status": "REJECTED",
-      "review_reason": "Kaggle generator rejected candidate: identity/silhouette jump=0.25",
-      "kaggle_run_id": 38309441378,
-      "review_artifact_run_id": 38337667460
-    },
-    {
-      "id": "CHR-ENG-IDLE",
-      "status": "AWAITING_REVIEW",
-      "autofactory_context_only": true,
-      "kaggle_run_id": 38309441378,
-      "review_artifact_run_id": 38337667460
-    },
-    {
-      "id": "CHR-ENG-WALK",
-      "status": "REJECTED",
-      "review_reason": "Kaggle generator rejected candidate: walk-too-static lower-motion=0.160; retry-details=detached-artifact component=742/9992 | detached-artifact component=906/9838 | detached-artifact component=770/10485 | detached-artifact component=853/10351",
-      "kaggle_run_id": 38309441378,
-      "review_artifact_run_id": 38337667460
-    },
-    {
-      "id": "CHR-ENG-WORK",
-      "status": "REJECTED",
-      "review_reason": "Kaggle generator rejected candidate: image-risk:HEAD_FACE_HEADGEAR_COLOR_DISCONTINUITY_RISK,FACE_HEADGEAR_STRUCTURE_DRIFT_RISK,LOWER_LIMB_STRUCTURE_UNVERIFIED; retry-details=detached-artifact component=792/8793 | detached-artifact component=1043/9864 | detached-artifact component=1207/10230",
-      "kaggle_run_id": 38309441378,
-      "review_artifact_run_id": 38337667460
-    },
-    {
-      "id": "CHR-ENG-REPAIR",
-      "status": "REJECTED",
-      "review_reason": "Kaggle generator rejected candidate: frame-1-failed; retry-details=detached-artifact component=757/8638 | detached-artifact component=682/10176 | detached-artifact component=1029/8813",
-      "kaggle_run_id": 38309441378,
-      "review_artifact_run_id": 38337667460
-    },
-    {
-      "id": "CHR-ENG-CELEB",
-      "status": "REJECTED",
-      "review_reason": "Kaggle generator rejected candidate: celeb-upper-silhouette-jump=0.702>0.450",
-      "kaggle_run_id": 38309441378,
-      "review_artifact_run_id": 38337667460
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Kaggle generator rejected candidate: identity/silhouette jump=0.25"
     }
   ]
 }
