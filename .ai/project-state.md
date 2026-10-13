@@ -31,20 +31,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-13T07:27:13Z
+Generated: 2026-10-13T07:28:22Z
 
 ### Git
 - Branch: `main`
-- Head: `6f54045aaa0c`
-- Commit date: 2026-10-13T09:26:43+02:00
-- Commit: ci(art): compile and monitor read-only local character asset validation
+- Head: `36e4942092c0`
+- Commit date: 2026-10-13T09:28:08+02:00
+- Commit: docs(art): record final offline phone review player and local candidate ZIP checksum
 - Tracked files: 1563
 
 ### Recently changed files
-- `.github/workflows/asset-pipeline-ci.yml`
 - `art/production/LOCAL_FIRST_CHARACTER_HANDOFF.md`
+- `.github/workflows/asset-pipeline-ci.yml`
 - `.github/workflows/local-character-review.yml`
-- `tools/sprites/verify_local_character_bundle.py`
 
 ### Project signals
 - `build.gradle.kts`

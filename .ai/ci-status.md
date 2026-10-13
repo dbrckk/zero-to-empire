@@ -1,8 +1,9 @@
 # CI status
 
-Summary: 2 success / 1 failure / 1 active
+Summary: 3 success / 1 failure / 1 active
 
-- Asset Pipeline CI: in_progress / pending (6f54045a)
+- Asset Pipeline CI: in_progress / pending (36e49420)
+- Asset Pipeline CI: completed / success (6f54045a)
 - Review Local Character Atlases: completed / failure (6dc9dce5)
 - Pollinations Building Candidate: completed / success (130a8a3f)
 - Asset Pipeline CI: completed / success (e214f690)
