@@ -1,10 +1,10 @@
 # Change impact
 
-Base: ca77ddf5ae921fe172286b9e2fa221b4cc989746
-Head: cc5306a9c847a8aff001bd8d07e5a920bceb059b
+Base: 345541642c888683e5c28741d6ca9c70ab634865
+Head: 4c5e7d7e0ce5f1a72f5f99d484b6c7e6bcf7de8b
 
 ## Changed files
-- A art/production/op-log-2026-10-13-semantic-review.md
+- M art/production/character-strict-review-backlog.md
 
 ## Affected areas
 - art

@@ -2461,6 +2461,111 @@
       },
       "task": "game engine"
     },
+    "336e7676f11435965ef2f759d421da8bba3fb986823462087674260542b42c78": {
+      "route": {
+        "budget": {
+          "confidence": "high",
+          "expand_to": 12,
+          "max_files": 3,
+          "requested_max_files": 12,
+          "score_margin": 0,
+          "tier": "narrow",
+          "top_score": 43
+        },
+        "candidate_count": 33,
+        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
+        "files": [
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "billing",
+              "purchase"
+            ],
+            "path": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 43,
+            "symbols": [
+              "DeferredPurchase",
+              "PlayBillingGateway",
+              "acknowledge",
+              "billingFailure",
+              "clearPending",
+              "completeDeferred",
+              "completePending",
+              "connect",
+              "consume",
+              "consumeDeferred",
+              "consumeRecovered",
+              "disconnect",
+              "failAllRestores",
+              "finishPending",
+              "finishRestore",
+              "launch",
+              "onBillingServiceDisconnected",
+              "onBillingSetupFinished",
+              "processPurchase",
+              "purchase"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "billing",
+              "purchase"
+            ],
+            "path": "app/src/test/java/com/zerotoempire/game/PlayBillingGatewayInvariantTest.kt",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 43,
+            "symbols": [
+              "PlayBillingGatewayInvariantTest",
+              "assertOrdered",
+              "deferredCompletionIsDeliveredAtMostOnce",
+              "disconnectDropsAllUiCallbacksAndAlwaysClosesBillingClient",
+              "gatewaySource",
+              "latePurchaseUpdateCannotHijackNewActivePurchase",
+              "pendingPurchaseReleasesActiveSlotOnlyAfterCallbackIsDeferred"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "billing",
+              "purchase"
+            ],
+            "path": "app/src/main/java/com/zerotoempire/game/BillingDiagnostics.kt",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 39,
+            "symbols": [
+              "BillingDiagnostic",
+              "BillingDiagnosticCount",
+              "BillingDiagnosticSummary",
+              "BillingOperation",
+              "InMemoryBillingDiagnostics",
+              "LocalBillingDiagnostics",
+              "NoOpBillingDiagnostics",
+              "record",
+              "snapshot",
+              "toLogLine",
+              "toSupportText"
+            ]
+          }
+        ],
+        "generated_by": "dbrckk/repo-brain-v8",
+        "schema_version": 1,
+        "task": "purchase billing",
+        "terms": [
+          "purchase",
+          "billing"
+        ]
+      },
+      "task": "purchase billing"
+    },
     "36b256208b8b8eca52e444a9d21993076695fa9865a48955ebdff957f3cac4d8": {
       "route": {
         "budget": {
@@ -4303,111 +4408,6 @@
       },
       "task": "purchase billing"
     },
-    "5a09d59ad43e669192e4ff9bf3c111f8a1e66b95fc216cc5a511c4a12b2d5234": {
-      "route": {
-        "budget": {
-          "confidence": "high",
-          "expand_to": 12,
-          "max_files": 3,
-          "requested_max_files": 12,
-          "score_margin": 0,
-          "tier": "narrow",
-          "top_score": 43
-        },
-        "candidate_count": 37,
-        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
-        "files": [
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "billing",
-              "purchase"
-            ],
-            "path": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 43,
-            "symbols": [
-              "DeferredPurchase",
-              "PlayBillingGateway",
-              "acknowledge",
-              "billingFailure",
-              "clearPending",
-              "completeDeferred",
-              "completePending",
-              "connect",
-              "consume",
-              "consumeDeferred",
-              "consumeRecovered",
-              "disconnect",
-              "failAllRestores",
-              "finishPending",
-              "finishRestore",
-              "launch",
-              "onBillingServiceDisconnected",
-              "onBillingSetupFinished",
-              "processPurchase",
-              "purchase"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "billing",
-              "purchase"
-            ],
-            "path": "app/src/test/java/com/zerotoempire/game/PlayBillingGatewayInvariantTest.kt",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 43,
-            "symbols": [
-              "PlayBillingGatewayInvariantTest",
-              "assertOrdered",
-              "deferredCompletionIsDeliveredAtMostOnce",
-              "disconnectDropsAllUiCallbacksAndAlwaysClosesBillingClient",
-              "gatewaySource",
-              "latePurchaseUpdateCannotHijackNewActivePurchase",
-              "pendingPurchaseReleasesActiveSlotOnlyAfterCallbackIsDeferred"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "billing",
-              "purchase"
-            ],
-            "path": "app/src/main/java/com/zerotoempire/game/BillingDiagnostics.kt",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 39,
-            "symbols": [
-              "BillingDiagnostic",
-              "BillingDiagnosticCount",
-              "BillingDiagnosticSummary",
-              "BillingOperation",
-              "InMemoryBillingDiagnostics",
-              "LocalBillingDiagnostics",
-              "NoOpBillingDiagnostics",
-              "record",
-              "snapshot",
-              "toLogLine",
-              "toSupportText"
-            ]
-          }
-        ],
-        "generated_by": "dbrckk/repo-brain-v8",
-        "schema_version": 1,
-        "task": "purchase billing",
-        "terms": [
-          "purchase",
-          "billing"
-        ]
-      },
-      "task": "purchase billing"
-    },
     "5b83ea91a560b0ae5a0390d3805bc6e1f7afbfe9d52401ec81670508679a8dcd": {
       "route": {
         "budget": {
@@ -5240,6 +5240,91 @@
       },
       "task": "game engine"
     },
+    "6d912a1b18900425260feb606194d30f0464cdc8b24a4ebf15d6ae05af6acbf3": {
+      "route": {
+        "budget": {
+          "confidence": "high",
+          "expand_to": 12,
+          "max_files": 3,
+          "requested_max_files": 12,
+          "score_margin": 6,
+          "tier": "narrow",
+          "top_score": 39
+        },
+        "candidate_count": 41,
+        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
+        "files": [
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "income",
+              "progression"
+            ],
+            "path": "app/src/test/java/com/zerotoempire/game/ProgressionCycleTest.kt",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 39,
+            "symbols": [
+              "ProgressionCycleTest",
+              "repeatedPrestigeOfflineCyclePreservesOnlyPermanentProgress"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "income",
+              "progression"
+            ],
+            "path": "app/src/test/java/com/zerotoempire/game/PlayableFlowTest.kt",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 33,
+            "symbols": [
+              "PlayableFlowTest",
+              "bulkMilestonePurchaseTargetsNextPowerSpike",
+              "endgameContentRemainsEconomicallyFiniteAtUnlockScale",
+              "freshPlayerCanBuyFirstAssetAndStartPassiveIncome",
+              "managerHireActuallyImprovesAssociatedProduction",
+              "offlineProgressPaysPositiveCappedIncomeForAutomatedEmpire",
+              "playerCanCompleteMultiplePrestigeCycles",
+              "prestigeBecomesAvailableAndCreatesPermanentPower"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "income",
+              "progression"
+            ],
+            "path": "app/src/test/java/com/zerotoempire/game/EconomySafetyTest.kt",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 29,
+            "symbols": [
+              "EconomySafetyTest",
+              "extremeGameStateNeverProducesNaNOrInfinity",
+              "finiteClampsNanInfinityAndOverflow",
+              "growthCostRemainsFiniteAtExtremeLevel",
+              "prestigeCannotRepeatWithoutNewRunProgress",
+              "prestigeResetPreservesPermanentResourcesAndBoost",
+              "prestigeRewardHandlesNonFiniteInputs",
+              "safeAddSaturatesInsteadOfOverflowing"
+            ]
+          }
+        ],
+        "generated_by": "dbrckk/repo-brain-v8",
+        "schema_version": 1,
+        "task": "income progression",
+        "terms": [
+          "income",
+          "progression"
+        ]
+      },
+      "task": "income progression"
+    },
     "6e94426d17873956efaae6fc61bb742ba5b886d3063f30fde26da05ba3f97865": {
       "route": {
         "budget": {
@@ -5523,6 +5608,83 @@
         ]
       },
       "task": "purchase billing"
+    },
+    "730944c27c065e7030a38c763e8bc1964df516186e47fcf2f723a426d33b05da": {
+      "route": {
+        "budget": {
+          "confidence": "high",
+          "expand_to": 12,
+          "max_files": 3,
+          "requested_max_files": 12,
+          "score_margin": 2,
+          "tier": "narrow",
+          "top_score": 39
+        },
+        "candidate_count": 6,
+        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
+        "files": [
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "consent",
+              "privacy"
+            ],
+            "path": "app/src/main/java/com/zerotoempire/game/PrivacyPolicy.kt",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 39,
+            "symbols": [
+              "PrivacyPolicyDialog"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "consent",
+              "privacy"
+            ],
+            "path": "app/src/main/java/com/zerotoempire/game/PrivacyConsentManager.kt",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 37,
+            "symbols": [
+              "PrivacyConsentManager",
+              "canRequestAds",
+              "gather",
+              "isPrivacyOptionsRequired",
+              "publish",
+              "showPrivacyOptions"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "consent",
+              "privacy"
+            ],
+            "path": "app/src/main/java/com/zerotoempire/game/CommerceUi.kt",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 29,
+            "symbols": [
+              "CommerceRoot",
+              "StoreDialog",
+              "StoreRow"
+            ]
+          }
+        ],
+        "generated_by": "dbrckk/repo-brain-v8",
+        "schema_version": 1,
+        "task": "privacy consent",
+        "terms": [
+          "privacy",
+          "consent"
+        ]
+      },
+      "task": "privacy consent"
     },
     "774612e54055d4a90d2c9dbb6e1ea61c69754d02c9261811788b495e77e898b6": {
       "route": {
@@ -6890,83 +7052,6 @@
       },
       "task": "income progression"
     },
-    "8f61e7e7f1feeb7370d281a3dc90b51e0b568986ec010987311a2f6f628fa2ef": {
-      "route": {
-        "budget": {
-          "confidence": "high",
-          "expand_to": 12,
-          "max_files": 3,
-          "requested_max_files": 12,
-          "score_margin": 2,
-          "tier": "narrow",
-          "top_score": 39
-        },
-        "candidate_count": 7,
-        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
-        "files": [
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "consent",
-              "privacy"
-            ],
-            "path": "app/src/main/java/com/zerotoempire/game/PrivacyPolicy.kt",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 39,
-            "symbols": [
-              "PrivacyPolicyDialog"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "consent",
-              "privacy"
-            ],
-            "path": "app/src/main/java/com/zerotoempire/game/PrivacyConsentManager.kt",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 37,
-            "symbols": [
-              "PrivacyConsentManager",
-              "canRequestAds",
-              "gather",
-              "isPrivacyOptionsRequired",
-              "publish",
-              "showPrivacyOptions"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "consent",
-              "privacy"
-            ],
-            "path": "app/src/main/java/com/zerotoempire/game/CommerceUi.kt",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 29,
-            "symbols": [
-              "CommerceRoot",
-              "StoreDialog",
-              "StoreRow"
-            ]
-          }
-        ],
-        "generated_by": "dbrckk/repo-brain-v8",
-        "schema_version": 1,
-        "task": "privacy consent",
-        "terms": [
-          "privacy",
-          "consent"
-        ]
-      },
-      "task": "privacy consent"
-    },
     "8f8e0fcefde10d7672383ae406923c8ef41eeed03e688302758afaef3f434a45": {
       "route": {
         "budget": {
@@ -7242,105 +7327,6 @@
       },
       "task": "game engine"
     },
-    "9866215b5c8bf91a7de51cff4e2b95847e68038ce20db50a37439d23c9b5603e": {
-      "route": {
-        "budget": {
-          "confidence": "high",
-          "expand_to": 12,
-          "max_files": 3,
-          "requested_max_files": 12,
-          "score_margin": 6,
-          "tier": "narrow",
-          "top_score": 49
-        },
-        "candidate_count": 168,
-        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
-        "files": [
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "engine",
-              "game"
-            ],
-            "path": "app/src/main/java/com/zerotoempire/game/GameEngine.kt",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 49,
-            "symbols": [
-              "Business",
-              "GameState",
-              "businessIncome",
-              "defaultBusinesses"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "engine",
-              "game"
-            ],
-            "path": "app/src/main/java/com/zerotoempire/game/AdaptiveMusic.kt",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 43,
-            "symbols": [
-              "AdaptiveMusicEngine",
-              "GameMusicBus",
-              "attach",
-              "detach",
-              "pause",
-              "pausePlayback",
-              "release",
-              "renderLoop",
-              "requestAudioFocusAndPlay",
-              "resume",
-              "resumePlayback",
-              "setEmpireLevel",
-              "setVolume",
-              "start"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "engine",
-              "game"
-            ],
-            "path": "app/src/main/java/com/zerotoempire/game/IdentitySystems.kt",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 43,
-            "symbols": [
-              "Celebrations",
-              "EmpireEra",
-              "EmpireEras",
-              "GameAudioEngine",
-              "MajorCelebration",
-              "current",
-              "era",
-              "milestone",
-              "next",
-              "prestige",
-              "purchase",
-              "release",
-              "reward",
-              "tap"
-            ]
-          }
-        ],
-        "generated_by": "dbrckk/repo-brain-v8",
-        "schema_version": 1,
-        "task": "game engine",
-        "terms": [
-          "game",
-          "engine"
-        ]
-      },
-      "task": "game engine"
-    },
     "9c31186d83c637a25114c19f26695d1d45c905664fc7954d620942c8cf7b6bea": {
       "route": {
         "budget": {
@@ -7445,6 +7431,179 @@
         ]
       },
       "task": "purchase billing"
+    },
+    "9d4d7ea9ba3a585b487099ca6649e722e157ecbff49ff39ee7d6ce0fac27596e": {
+      "route": {
+        "budget": {
+          "confidence": "high",
+          "expand_to": 12,
+          "max_files": 3,
+          "requested_max_files": 12,
+          "score_margin": 6,
+          "tier": "narrow",
+          "top_score": 37
+        },
+        "candidate_count": 56,
+        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
+        "files": [
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "offline",
+              "progress"
+            ],
+            "path": "app/src/main/java/com/zerotoempire/game/OfflineProgress.kt",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 37,
+            "symbols": [
+              "OfflineProgress",
+              "OfflineReward",
+              "calculate"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "offline",
+              "progress"
+            ],
+            "path": "app/src/test/java/com/zerotoempire/game/ProgressionCycleTest.kt",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 31,
+            "symbols": [
+              "ProgressionCycleTest",
+              "repeatedPrestigeOfflineCyclePreservesOnlyPermanentProgress"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "offline",
+              "progress"
+            ],
+            "path": "app/src/main/java/com/zerotoempire/game/GameEconomy.kt",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 29,
+            "symbols": [
+              "GameEconomy",
+              "milestoneMultiplier"
+            ]
+          }
+        ],
+        "generated_by": "dbrckk/repo-brain-v8",
+        "schema_version": 1,
+        "task": "offline progress",
+        "terms": [
+          "offline",
+          "progress"
+        ]
+      },
+      "task": "offline progress"
+    },
+    "a2329953c1ae91d82fb20ee574e377030c1f04fce722a0d6f820e201a3efe1e0": {
+      "route": {
+        "budget": {
+          "confidence": "high",
+          "expand_to": 12,
+          "max_files": 3,
+          "requested_max_files": 12,
+          "score_margin": 6,
+          "tier": "narrow",
+          "top_score": 49
+        },
+        "candidate_count": 167,
+        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
+        "files": [
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "engine",
+              "game"
+            ],
+            "path": "app/src/main/java/com/zerotoempire/game/GameEngine.kt",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 49,
+            "symbols": [
+              "Business",
+              "GameState",
+              "businessIncome",
+              "defaultBusinesses"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "engine",
+              "game"
+            ],
+            "path": "app/src/main/java/com/zerotoempire/game/AdaptiveMusic.kt",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 43,
+            "symbols": [
+              "AdaptiveMusicEngine",
+              "GameMusicBus",
+              "attach",
+              "detach",
+              "pause",
+              "pausePlayback",
+              "release",
+              "renderLoop",
+              "requestAudioFocusAndPlay",
+              "resume",
+              "resumePlayback",
+              "setEmpireLevel",
+              "setVolume",
+              "start"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "engine",
+              "game"
+            ],
+            "path": "app/src/main/java/com/zerotoempire/game/IdentitySystems.kt",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 43,
+            "symbols": [
+              "Celebrations",
+              "EmpireEra",
+              "EmpireEras",
+              "GameAudioEngine",
+              "MajorCelebration",
+              "current",
+              "era",
+              "milestone",
+              "next",
+              "prestige",
+              "purchase",
+              "release",
+              "reward",
+              "tap"
+            ]
+          }
+        ],
+        "generated_by": "dbrckk/repo-brain-v8",
+        "schema_version": 1,
+        "task": "game engine",
+        "terms": [
+          "game",
+          "engine"
+        ]
+      },
+      "task": "game engine"
     },
     "a27a93ac9985635b51b49f029fde65113ffb3fde0a30f1f6c6e7e7fff25ad992": {
       "route": {
@@ -9622,165 +9781,6 @@
       },
       "task": "income progression"
     },
-    "de67f42218f94870bd360fba5c73d948e02c9469a24e1a03a55133ae1ff1138a": {
-      "route": {
-        "budget": {
-          "confidence": "high",
-          "expand_to": 12,
-          "max_files": 3,
-          "requested_max_files": 12,
-          "score_margin": 6,
-          "tier": "narrow",
-          "top_score": 37
-        },
-        "candidate_count": 56,
-        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
-        "files": [
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "offline",
-              "progress"
-            ],
-            "path": "app/src/main/java/com/zerotoempire/game/OfflineProgress.kt",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 37,
-            "symbols": [
-              "OfflineProgress",
-              "OfflineReward",
-              "calculate"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "offline",
-              "progress"
-            ],
-            "path": "app/src/test/java/com/zerotoempire/game/ProgressionCycleTest.kt",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 31,
-            "symbols": [
-              "ProgressionCycleTest",
-              "repeatedPrestigeOfflineCyclePreservesOnlyPermanentProgress"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "offline",
-              "progress"
-            ],
-            "path": "app/src/main/java/com/zerotoempire/game/GameEconomy.kt",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 29,
-            "symbols": [
-              "GameEconomy",
-              "milestoneMultiplier"
-            ]
-          }
-        ],
-        "generated_by": "dbrckk/repo-brain-v8",
-        "schema_version": 1,
-        "task": "offline progress",
-        "terms": [
-          "offline",
-          "progress"
-        ]
-      },
-      "task": "offline progress"
-    },
-    "e075286c7c824f5aef89c963bc04b4ab5743cb022c891e2567fe6ffbbe3e8f04": {
-      "route": {
-        "budget": {
-          "confidence": "high",
-          "expand_to": 12,
-          "max_files": 3,
-          "requested_max_files": 12,
-          "score_margin": 6,
-          "tier": "narrow",
-          "top_score": 39
-        },
-        "candidate_count": 45,
-        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
-        "files": [
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "income",
-              "progression"
-            ],
-            "path": "app/src/test/java/com/zerotoempire/game/ProgressionCycleTest.kt",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 39,
-            "symbols": [
-              "ProgressionCycleTest",
-              "repeatedPrestigeOfflineCyclePreservesOnlyPermanentProgress"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "income",
-              "progression"
-            ],
-            "path": "app/src/test/java/com/zerotoempire/game/PlayableFlowTest.kt",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 33,
-            "symbols": [
-              "PlayableFlowTest",
-              "bulkMilestonePurchaseTargetsNextPowerSpike",
-              "endgameContentRemainsEconomicallyFiniteAtUnlockScale",
-              "freshPlayerCanBuyFirstAssetAndStartPassiveIncome",
-              "managerHireActuallyImprovesAssociatedProduction",
-              "offlineProgressPaysPositiveCappedIncomeForAutomatedEmpire",
-              "playerCanCompleteMultiplePrestigeCycles",
-              "prestigeBecomesAvailableAndCreatesPermanentPower"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "income",
-              "progression"
-            ],
-            "path": "app/src/test/java/com/zerotoempire/game/EconomySafetyTest.kt",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 29,
-            "symbols": [
-              "EconomySafetyTest",
-              "extremeGameStateNeverProducesNaNOrInfinity",
-              "finiteClampsNanInfinityAndOverflow",
-              "growthCostRemainsFiniteAtExtremeLevel",
-              "prestigeCannotRepeatWithoutNewRunProgress",
-              "prestigeResetPreservesPermanentResourcesAndBoost",
-              "prestigeRewardHandlesNonFiniteInputs",
-              "safeAddSaturatesInsteadOfOverflowing"
-            ]
-          }
-        ],
-        "generated_by": "dbrckk/repo-brain-v8",
-        "schema_version": 1,
-        "task": "income progression",
-        "terms": [
-          "income",
-          "progression"
-        ]
-      },
-      "task": "income progression"
-    },
     "e1c5f663d16264fbd86a41a7587b3c1852192401e0242fde87976c0e2f93b8e2": {
       "route": {
         "budget": {
@@ -11253,11 +11253,6 @@
   },
   "generated_by": "dbrckk/repo-brain-query-cache-v2",
   "order": [
-    "8f61e7e7f1feeb7370d281a3dc90b51e0b568986ec010987311a2f6f628fa2ef",
-    "de67f42218f94870bd360fba5c73d948e02c9469a24e1a03a55133ae1ff1138a",
-    "9866215b5c8bf91a7de51cff4e2b95847e68038ce20db50a37439d23c9b5603e",
-    "5a09d59ad43e669192e4ff9bf3c111f8a1e66b95fc216cc5a511c4a12b2d5234",
-    "e075286c7c824f5aef89c963bc04b4ab5743cb022c891e2567fe6ffbbe3e8f04",
     "5b83ea91a560b0ae5a0390d3805bc6e1f7afbfe9d52401ec81670508679a8dcd",
     "21feb227ee7cd40a8781a682a67f4e18d2cfeb597b02279524a724be1b167c1f",
     "f8703906af4cf30997579d643b95de24c2347a9dcf4a3be88a3968270dbb269c",
@@ -11380,7 +11375,12 @@
     "18921d75589aa5db97ce0f9fa55572a48cb1eab42382b0f5e73a2d268e85911a",
     "d761c2a22e02456959083e939d7b79a144092431f51d5becc5f47d4752e22bd6",
     "c273847506c004089400169f314bc035d10efb47b2e1f55f5baaea3d2b61bc11",
-    "1130161508493730714c62d014b28a1dcf6f8fe79f535f79e8e3a5b0b22e0b91"
+    "1130161508493730714c62d014b28a1dcf6f8fe79f535f79e8e3a5b0b22e0b91",
+    "336e7676f11435965ef2f759d421da8bba3fb986823462087674260542b42c78",
+    "6d912a1b18900425260feb606194d30f0464cdc8b24a4ebf15d6ae05af6acbf3",
+    "730944c27c065e7030a38c763e8bc1964df516186e47fcf2f723a426d33b05da",
+    "9d4d7ea9ba3a585b487099ca6649e722e157ecbff49ff39ee7d6ce0fac27596e",
+    "a2329953c1ae91d82fb20ee574e377030c1f04fce722a0d6f820e201a3efe1e0"
   ],
   "schema_version": 1
 }

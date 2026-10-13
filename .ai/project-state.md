@@ -31,24 +31,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-13T08:16:28Z
+Generated: 2026-10-13T11:22:18Z
 
 ### Git
 - Branch: `main`
-- Head: `cc5306a9c847`
-- Commit date: 2026-10-13T10:16:00+02:00
-- Commit: docs(art): retain OP LOG GPU candidate evidence and enforce in-repo asset ownership
+- Head: `4c5e7d7e0ce5`
+- Commit date: 2026-10-13T13:22:03+02:00
+- Commit: fix(ci): regenerate strict review backlog from canonical 235-asset queue
 - Tracked files: 1564
 
 ### Recently changed files
+- `art/production/character-strict-review-backlog.md`
 - `art/production/op-log-2026-10-13-semantic-review.md`
 - `art/production/master-asset-queue.json`
 - `art/production/kaggle-async-state.json`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
-- `art/production/character-strict-review-backlog.md`
 - `art/production/controlled-character-regen-queue.json`
-- `tools/assets/test_workflow_policy.py`
 
 ### Project signals
 - `build.gradle.kts`
