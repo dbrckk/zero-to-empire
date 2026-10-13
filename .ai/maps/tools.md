@@ -111,6 +111,7 @@ sprites/
   process_final_sprites.py
   promote_ter07_v3.py
   reconcile_strict_approvals.py
+  render_chatgpt_originals.py
   repair_shadowed_character_atlas.py
   rigged_tech_actions_v3.py
   rigged_tech_walk_v2.py
@@ -7232,6 +7233,136 @@ asset = by_id[aid]
 runtime = runtime_for(asset)
 ⋮----
 strict_done = sum(a.get("strict_status") == "DONE" for a in queue["assets"])
+```
+
+## File: sprites/render_chatgpt_originals.py
+```python
+#!/usr/bin/env python3
+"""Original role-consistent 2.5D character sprite atlases, authored in ChatGPT.
+
+All art is generated locally, with one fixed vector rig and no network model calls.
+The output is review-only and NEVER grants strict DONE. Frames: 256x256,
+4-column RGBA atlas: 1024x1024, no ground shadow. Role IDLE can accompany
+unresolved sibling actions as a continuity anchor without replacing strict DONE.
+"""
+⋮----
+FRAME=256
+ACTIONS={'IDLE':6,'WALK':8,'WORK':10,'CARRY':8,'REPAIR':10,'CELEB':8}
+ROLES={
+⋮----
+# SVG drawn in painter's order: back arm and legs -> torso -> head -> front hands.
+def svg_frame(role:str, action:str, index:int, count:int)->str
+⋮----
+p=ROLES[role]; phase=2*math.pi*index/count; motion=math.sin(phase); bounce=0.0
+⋮----
+stride=24*motion; bounce=3.5*(1-math.cos(phase*2))/2
+elif action=='IDLE':stride=0; bounce=1.8*math.sin(phase)
+else:stride=0;bounce=1.6*math.sin(phase)
+# Always keep same facial shape, helmet model, costume palette and 3/4 view.
+s=[]
+def add(v):s.append(v)
+def line(x1,y1,x2,y2,color,width,outline=3)
+def hand(x,y)
+def joint_arm(side, pose)
+⋮----
+# x shoulder, elbow, hand; design ergonomic positions for each action.
+shoulder=(95 if side=='L' else 154,106+bounce)
+⋮----
+lift=(1-math.cos(phase))/2
+handpos=((75-4*lift,140-109*lift+bounce) if side=='L' else (174+5*lift,140-109*lift+bounce))
+elbow=((76,126-53*lift+bounce) if side=='L' else (171,126-53*lift+bounce))
+⋮----
+handpos=((89,132+bounce) if side=='L' else (166,132+bounce))
+elbow=((78,125+bounce) if side=='L' else (172,122+bounce))
+⋮----
+reach=math.sin(phase*2); pump=math.cos(phase*2)
+handpos=((80+3*reach,150-4*pump+bounce) if side=='L'
+elbow=((82,132+bounce) if side=='L'
+⋮----
+swing=motion*(-1 if side=='L' else 1)
+handpos=((84+8*swing,147+10*swing+bounce) if side=='L' else (170+8*swing,148-10*swing+bounce))
+elbow=((83+4*swing,124+5*swing+bounce) if side=='L' else (171+4*swing,127-5*swing+bounce))
+⋮----
+elbow=((81,129+bounce) if side=='L' else (170,126+bounce))
+handpos=((79,149+bounce) if side=='L' else (176,144+bounce))
+⋮----
+sleeve=line(shoulder_x,shoulder_y,ex,ey,'url(#jacket)',17,3)
+⋮----
+# highlighted overarm and stitched safety cuff
+⋮----
+# legs behind torso: anti-phase step, readable ankle separation
+leg_poses=[]
+⋮----
+signed=(1 if side=='L' else -1)
+hipx=108 if side=='L' else 144
+swing=signed*stride
+yhip=155+bounce
+knee_x=hipx+0.62*swing + (2 if side=='L' else -2)
+knee_y=190+bounce-2*max(0,signed*motion)
+ankle_x=hipx + swing*1.15
+lift=max(0,signed*motion)*9 if action in ('WALK','CARRY') else 0
+ankle_y=226+bounce-lift
+⋮----
+# no floor shadow; transparency is exact outside figure
+# back ponytail / hair only LOG
+⋮----
+# boots and 2 articulated segments per leg
+⋮----
+# knee armor pad and seam
+⋮----
+if side=='L': toe=ax-9
+else:toe=ax+9
+⋮----
+# BACK arm
+⋮----
+# main torso, premium tapered silhouette, safety accents
+⋮----
+# belt buckles and pockets
+⋮----
+# neck + head, same exact proportions across all actions
+⋮----
+# ear, cheek and neck shading
+⋮----
+# unique helmet per role (seams, raised ridge and front peak)
+⋮----
+# ACTION EQUIPMENT, and foreground hands actually touching it.
+⋮----
+# crate rigid body: no frame-specific changing geometry; subtle 1px bob only
+by=121+bounce
+⋮----
+# hands over handles, always same positions
+⋮----
+tool_x=174+22*math.sin(phase*2)
+tool_y=120+24*math.cos(phase*2)+bounce
+⋮----
+# foreground right arm and hand over equipment, never floating
+⋮----
+# Both arms raised over ~half a cycle; no detached particle VFX.
+⋮----
+# reflective micro-detail texture, unique per role but invariant per frame
+⋮----
+def render_atlas(role,action,outdir,save_svgs=False)
+⋮----
+count=ACTIONS[action]; atlas=Image.new('RGBA',(1024,1024),(0,0,0,0))
+⋮----
+svg=svg_frame(role,action,i,count)
+png=cairosvg.svg2png(bytestring=svg.encode('utf8'),output_width=768,output_height=768)
+rgba=Image.open(io.BytesIO(png)).convert('RGBA').resize((FRAME,FRAME),Image.Resampling.LANCZOS)
+x=(i%4)*FRAME;y=(i//4)*FRAME;atlas.alpha_composite(rgba,(x,y))
+⋮----
+src=outdir/'src_svg'/role/action;src.mkdir(parents=True,exist_ok=True)
+⋮----
+name=f'zte_chr_{role.lower()}_{action.lower()}_final.png'
+path=outdir/'candidates'/name;path.parent.mkdir(parents=True,exist_ok=True);atlas.save(path,optimize=True)
+⋮----
+def main()
+⋮----
+parser=argparse.ArgumentParser()
+⋮----
+args=parser.parse_args();outdir=pathlib.Path(args.output_dir);outdir.mkdir(parents=True,exist_ok=True)
+results=[]
+⋮----
+report={'version':'chatgpt-original-character-rig-v1','strict_done_added':0,'review_only':True,
 ```
 
 ## File: sprites/repair_shadowed_character_atlas.py

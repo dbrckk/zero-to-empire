@@ -1,13 +1,13 @@
 # Change impact
 
-Base: d7387d305fcc8ebb57ab512f86440ee104e1ac60
-Head: 7ed1d230acd1589bc4c1d1528d4b38e44e9c4713
+Base: db57e8d69a58b6599d0172148366d38c84fb52a4
+Head: 0972b657f2e498d10b629b834441de9a2e8d5a48
 
 ## Changed files
-- A ops/chatgpt-original-renderer.zlib.b64
+- M .github/workflows/asset-pipeline-ci.yml
 
 ## Affected areas
-- ops
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

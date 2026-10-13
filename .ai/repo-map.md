@@ -45,6 +45,7 @@ The content is organized as follows:
     ai-repo-map.yml
     android-emulator-smoke.yml
     android.yml
+    art-chatgpt-original-candidates.yml
     asset-autofactory-ci.yml
     asset-autofactory.yml
     asset-pipeline-ci.yml
@@ -399,6 +400,7 @@ tools/
     process_final_sprites.py
     promote_ter07_v3.py
     reconcile_strict_approvals.py
+    render_chatgpt_originals.py
     repair_shadowed_character_atlas.py
     rigged_tech_actions_v3.py
     rigged_tech_walk_v2.py
@@ -892,6 +894,115 @@ jobs:
           retention-days: 14
 ```
 
+## File: .github/workflows/art-chatgpt-original-candidates.yml
+```yaml
+name: ChatGPT Original Character Candidates
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'ops/chatgpt-original-trigger.txt'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chatgpt-original-character-candidates
+  cancel-in-progress: false
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+      - name: Install reproducible local renderer
+        run: |
+          python -m pip install --disable-pip-version-check 'Pillow==11.3.0' 'CairoSVG==2.7.1'
+      - name: Restore readable source authored inside ChatGPT
+        run: |
+          python - <<'PY'
+          import base64, hashlib, itertools, pathlib, string, zlib
+          staged=pathlib.Path('ops/chatgpt-original-renderer.zlib.b64')
+          encoded=''.join(staged.read_text().split())
+          expected='4e4a175b75f987cecc728a17595de052e466c973ab154d32b0ef658511bb197a'
+          def unpack(data):
+              try:
+                  raw=zlib.decompress(base64.b64decode(data,validate=True))
+                  return raw if hashlib.sha256(raw).hexdigest()==expected else None
+              except (ValueError,zlib.error):
+                  return None
+          source=unpack(encoded)
+          if source is None:
+              # Repair a transport-only dropped Base64 character, protected by
+              # the exact pinned SHA256 of the original source authored here.
+              alphabet=string.ascii_uppercase+string.ascii_lowercase+string.digits+'+/'
+              for pos in range(len(encoded)+1):
+                  prefix=encoded[:pos]; suffix=encoded[pos:]
+                  for char in alphabet:
+                      source=unpack(prefix+char+suffix)
+                      if source is not None:
+                          print('SOURCE_TRANSPORT_SINGLE_CHARACTER_REPAIRED=1 position='+str(pos))
+                          break
+                  if source is not None:
+                      break
+          if source is None:
+              raise SystemExit('Source digest mismatch. Refusing unverified art generation.')
+          out=pathlib.Path('tools/sprites/render_chatgpt_originals.py')
+          out.parent.mkdir(parents=True,exist_ok=True)
+          out.write_bytes(source)
+          print('CHATGPT_RENDERER_SHA256='+hashlib.sha256(source).hexdigest())
+          PY
+      - name: Render all remaining role families from committed source
+        run: |
+          python tools/sprites/render_chatgpt_originals.py \
+            --output-dir art/incoming/chatgpt-original
+      - name: Check each candidate atlas without strict promotion
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from PIL import Image
+          base=Path('art/incoming/chatgpt-original')
+          report=json.loads((base/'creation-manifest.json').read_text())
+          required={f'CHR-{r}-{a}' for r in ('OP','LOG','ENG')
+                    for a in ('IDLE','WALK','WORK','CARRY','REPAIR','CELEB')}
+          assert report['review_only'] and report['strict_done_added']==0
+          assert {a['id'] for a in report['assets']}==required
+          assert report['asset_count']==18 and report['unresolved_target_count']==16
+          proof=[]
+          for a in report['assets']:
+              p=base/'candidates'/a['file']
+              with Image.open(p) as im:
+                  assert im.size==(1024,1024) and im.mode=='RGBA',a['id']
+                  for f in range(a['frames']):
+                      cell=im.crop(((f%4)*256,(f//4)*256,(f%4+1)*256,(f//4+1)*256))
+                      box=cell.getchannel('A').getbbox()
+                      assert box is not None, (a['id'],'empty',f)
+                      assert box[0]>=10 and box[1]>=10 and box[2]<=246 and box[3]<=246,(a['id'],'cropped',f,box)
+              proof.append({'id':a['id'],'frames':a['frames'],'technical_geometry_pass':True,
+                            'semantic_approved':False,'android_validated':False,'strict_done_added':0})
+          (base/'candidate-qa.json').write_text(json.dumps({'review_only':True,'assets':proof},indent=2)+'\n')
+          print('CHATGPT_ORIGINAL_ASSET_QA_PASS='+str(len(proof)))
+          PY
+      - name: Commit original atlas candidates and readable source to repository
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -f tools/sprites/render_chatgpt_originals.py
+          git add -f art/incoming/chatgpt-original/
+          git rm -f ops/chatgpt-original-renderer.zlib.b64
+          git commit -m 'art(candidate): add 18 original character atlas sheets made in ChatGPT'
+          git pull --rebase origin main
+          git push origin HEAD:main
+```
+
 ## File: .github/workflows/asset-autofactory-ci.yml
 ```yaml
 name: Asset Autofactory CI
@@ -1138,6 +1249,8 @@ on:
       - 'tools/sprites/asset_wave_orchestrator.py'
       - 'tools/sprites/animation_batch_planner.py'
       - 'tools/sprites/build_character_review_panels.py'
+      - 'tools/sprites/render_chatgpt_originals.py'
+      - 'art/incoming/chatgpt-original/**'
       - 'tools/sprites/verify_local_character_bundle.py'
       - 'tools/sprites/character_head_identity_lock.py'
       - 'tools/sprites/character_approved_idle_fallback.py'
@@ -1180,6 +1293,8 @@ on:
       - 'tools/sprites/asset_wave_orchestrator.py'
       - 'tools/sprites/animation_batch_planner.py'
       - 'tools/sprites/build_character_review_panels.py'
+      - 'tools/sprites/render_chatgpt_originals.py'
+      - 'art/incoming/chatgpt-original/**'
       - 'tools/sprites/verify_local_character_bundle.py'
       - 'tools/sprites/character_head_identity_lock.py'
       - 'tools/sprites/character_approved_idle_fallback.py'
@@ -1245,6 +1360,7 @@ jobs:
             tools/sprites/asset_queue_utils.py \
             tools/sprites/asset_wave_orchestrator.py \
             tools/sprites/build_character_review_panels.py \
+            tools/sprites/render_chatgpt_originals.py \
             tools/sprites/verify_local_character_bundle.py \
             tools/sprites/character_head_identity_lock.py \
             tools/sprites/verify_character_action_candidates.py \
@@ -1397,6 +1513,40 @@ jobs:
           seed,reason=load_approved_idle_anchor('ENG',manifest,source)
           assert seed is None
           print('KAGGLE_ENG_REVIEW_ONLY_REFERENCE_ENFORCED=1')
+          PY
+
+      - name: Validate locally created character candidates without strict promotion
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          from PIL import Image
+          root=Path('art/incoming/chatgpt-original')
+          d=json.loads((root/'creation-manifest.json').read_text())
+          q=json.loads(Path('art/production/master-asset-queue.json').read_text())
+          ids={a['id'] for a in d['assets']}
+          outstanding={a['id'] for a in q['assets'] if a['strict_status']!='DONE' and a['id'].startswith('CHR-')}
+          assert outstanding.issubset(ids), sorted(outstanding-ids)
+          assert len(ids)==18
+          assert d['review_only'] and d['strict_done_added']==0
+          assert not any(a.get('strict_approved', False) for a in d['assets'])
+          for a in d['assets']:
+              with Image.open(root/'candidates'/a['file']) as image:
+                  assert image.size==(1024,1024) and image.mode=='RGBA'
+                  for idx in range(a['frames']):
+                      alpha=image.crop(((idx%4)*256,(idx//4)*256,((idx%4)+1)*256,((idx//4)+1)*256)).getchannel('A')
+                      assert alpha.getbbox() is not None
+          import sys
+          sys.path.insert(0,'tools/sprites')
+          from validate_runtime_asset import validate
+          issues=[]
+          for a in d['assets']:
+              result=validate(a['id'],root/'candidates'/a['file'])
+              if not result['pass']:
+                  issues.append((a['id'],result['issues']))
+          assert not issues,issues
+          print('CHATGPT_CANDIDATE_RUNTIME_GEOMETRY_QA_PASS=18')
+          print('CHATGPT_ORIGINAL_CANDIDATES_VALID=18 UNRESOLVED_COVERED='+str(len(outstanding)))
           PY
 
       - name: Validate rejection-memory schema
@@ -34167,6 +34317,136 @@ asset = by_id[aid]
 runtime = runtime_for(asset)
 ⋮----
 strict_done = sum(a.get("strict_status") == "DONE" for a in queue["assets"])
+```
+
+## File: tools/sprites/render_chatgpt_originals.py
+```python
+#!/usr/bin/env python3
+"""Original role-consistent 2.5D character sprite atlases, authored in ChatGPT.
+
+All art is generated locally, with one fixed vector rig and no network model calls.
+The output is review-only and NEVER grants strict DONE. Frames: 256x256,
+4-column RGBA atlas: 1024x1024, no ground shadow. Role IDLE can accompany
+unresolved sibling actions as a continuity anchor without replacing strict DONE.
+"""
+⋮----
+FRAME=256
+ACTIONS={'IDLE':6,'WALK':8,'WORK':10,'CARRY':8,'REPAIR':10,'CELEB':8}
+ROLES={
+⋮----
+# SVG drawn in painter's order: back arm and legs -> torso -> head -> front hands.
+def svg_frame(role:str, action:str, index:int, count:int)->str
+⋮----
+p=ROLES[role]; phase=2*math.pi*index/count; motion=math.sin(phase); bounce=0.0
+⋮----
+stride=24*motion; bounce=3.5*(1-math.cos(phase*2))/2
+elif action=='IDLE':stride=0; bounce=1.8*math.sin(phase)
+else:stride=0;bounce=1.6*math.sin(phase)
+# Always keep same facial shape, helmet model, costume palette and 3/4 view.
+s=[]
+def add(v):s.append(v)
+def line(x1,y1,x2,y2,color,width,outline=3)
+def hand(x,y)
+def joint_arm(side, pose)
+⋮----
+# x shoulder, elbow, hand; design ergonomic positions for each action.
+shoulder=(95 if side=='L' else 154,106+bounce)
+⋮----
+lift=(1-math.cos(phase))/2
+handpos=((75-4*lift,140-109*lift+bounce) if side=='L' else (174+5*lift,140-109*lift+bounce))
+elbow=((76,126-53*lift+bounce) if side=='L' else (171,126-53*lift+bounce))
+⋮----
+handpos=((89,132+bounce) if side=='L' else (166,132+bounce))
+elbow=((78,125+bounce) if side=='L' else (172,122+bounce))
+⋮----
+reach=math.sin(phase*2); pump=math.cos(phase*2)
+handpos=((80+3*reach,150-4*pump+bounce) if side=='L'
+elbow=((82,132+bounce) if side=='L'
+⋮----
+swing=motion*(-1 if side=='L' else 1)
+handpos=((84+8*swing,147+10*swing+bounce) if side=='L' else (170+8*swing,148-10*swing+bounce))
+elbow=((83+4*swing,124+5*swing+bounce) if side=='L' else (171+4*swing,127-5*swing+bounce))
+⋮----
+elbow=((81,129+bounce) if side=='L' else (170,126+bounce))
+handpos=((79,149+bounce) if side=='L' else (176,144+bounce))
+⋮----
+sleeve=line(shoulder_x,shoulder_y,ex,ey,'url(#jacket)',17,3)
+⋮----
+# highlighted overarm and stitched safety cuff
+⋮----
+# legs behind torso: anti-phase step, readable ankle separation
+leg_poses=[]
+⋮----
+signed=(1 if side=='L' else -1)
+hipx=108 if side=='L' else 144
+swing=signed*stride
+yhip=155+bounce
+knee_x=hipx+0.62*swing + (2 if side=='L' else -2)
+knee_y=190+bounce-2*max(0,signed*motion)
+ankle_x=hipx + swing*1.15
+lift=max(0,signed*motion)*9 if action in ('WALK','CARRY') else 0
+ankle_y=226+bounce-lift
+⋮----
+# no floor shadow; transparency is exact outside figure
+# back ponytail / hair only LOG
+⋮----
+# boots and 2 articulated segments per leg
+⋮----
+# knee armor pad and seam
+⋮----
+if side=='L': toe=ax-9
+else:toe=ax+9
+⋮----
+# BACK arm
+⋮----
+# main torso, premium tapered silhouette, safety accents
+⋮----
+# belt buckles and pockets
+⋮----
+# neck + head, same exact proportions across all actions
+⋮----
+# ear, cheek and neck shading
+⋮----
+# unique helmet per role (seams, raised ridge and front peak)
+⋮----
+# ACTION EQUIPMENT, and foreground hands actually touching it.
+⋮----
+# crate rigid body: no frame-specific changing geometry; subtle 1px bob only
+by=121+bounce
+⋮----
+# hands over handles, always same positions
+⋮----
+tool_x=174+22*math.sin(phase*2)
+tool_y=120+24*math.cos(phase*2)+bounce
+⋮----
+# foreground right arm and hand over equipment, never floating
+⋮----
+# Both arms raised over ~half a cycle; no detached particle VFX.
+⋮----
+# reflective micro-detail texture, unique per role but invariant per frame
+⋮----
+def render_atlas(role,action,outdir,save_svgs=False)
+⋮----
+count=ACTIONS[action]; atlas=Image.new('RGBA',(1024,1024),(0,0,0,0))
+⋮----
+svg=svg_frame(role,action,i,count)
+png=cairosvg.svg2png(bytestring=svg.encode('utf8'),output_width=768,output_height=768)
+rgba=Image.open(io.BytesIO(png)).convert('RGBA').resize((FRAME,FRAME),Image.Resampling.LANCZOS)
+x=(i%4)*FRAME;y=(i//4)*FRAME;atlas.alpha_composite(rgba,(x,y))
+⋮----
+src=outdir/'src_svg'/role/action;src.mkdir(parents=True,exist_ok=True)
+⋮----
+name=f'zte_chr_{role.lower()}_{action.lower()}_final.png'
+path=outdir/'candidates'/name;path.parent.mkdir(parents=True,exist_ok=True);atlas.save(path,optimize=True)
+⋮----
+def main()
+⋮----
+parser=argparse.ArgumentParser()
+⋮----
+args=parser.parse_args();outdir=pathlib.Path(args.output_dir);outdir.mkdir(parents=True,exist_ok=True)
+results=[]
+⋮----
+report={'version':'chatgpt-original-character-rig-v1','strict_done_added':0,'review_only':True,
 ```
 
 ## File: tools/sprites/repair_shadowed_character_atlas.py
