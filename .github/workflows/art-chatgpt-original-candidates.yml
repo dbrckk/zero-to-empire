@@ -82,6 +82,29 @@ jobs:
           print('CHATGPT_ORIGINAL_EDITABLE_SVG_FRAMES='+str(editable_svg_count))
           print('CHATGPT_ORIGINAL_ASSET_QA_PASS='+str(len(proof)))
           PY
+      - name: Render animated previews and technical motion evidence
+        run: |
+          python tools/sprites/render_original_character_previews.py \
+            --output-dir art/incoming/chatgpt-original
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from PIL import Image
+          p=Path('art/incoming/chatgpt-original')
+          d=json.loads((p/'animation-review.json').read_text())
+          assert d['review_only'] is True and d['strict_done_added']==0
+          assert d['generated_local_preview_count']==18
+          assert d['editable_source_frame_count']==150
+          assert len(d['assets'])==18
+          for item in d['assets']:
+              assert item['distinct_frame_hashes']>1,item['id']
+              assert item['min_alpha_margin']>=10,item['id']
+              with Image.open(p/item['animation_preview']) as preview:
+                  assert preview.format=='GIF'
+                  assert preview.n_frames==item['frames'],item['id']
+          assert (p/'original-review-contact-sheet.png').is_file()
+          print('CHATGPT_ANIMATED_MOBILE_PREVIEWS_PASS=18')
+          PY
       - name: Publish original candidate review evidence
         uses: actions/upload-artifact@v4
         with:
@@ -89,6 +112,9 @@ jobs:
           path: |
             art/incoming/chatgpt-original/candidates/*.png
             art/incoming/chatgpt-original/src_svg/**/*.svg
+            art/incoming/chatgpt-original/previews/*.gif
+            art/incoming/chatgpt-original/original-review-contact-sheet.png
+            art/incoming/chatgpt-original/animation-review.json
             art/incoming/chatgpt-original/creation-manifest.json
             art/incoming/chatgpt-original/candidate-qa.json
           if-no-files-found: error
