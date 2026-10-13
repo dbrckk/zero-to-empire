@@ -88,6 +88,13 @@ def produce(source: Path) -> dict:
             distinct = len({fingerprint(f) for f in cells})
             if distinct < 2:
                 raise ValueError(f"Frozen animation: {asset_id}")
+            # WALK/CARRY need eight physically different stride phases, not
+            # a repeated sinusoidal snapshot with fake foot movement.
+            if action in {"WALK", "CARRY"} and distinct != FRAMES[action]:
+                raise ValueError(
+                    f"Repeated motion pose: {asset_id} "
+                    f"unique={distinct}/{FRAMES[action]}"
+                )
             rendered = [compose(f, background) for f in cells]
             gif_path = preview/f"{role.lower()}-{action.lower()}.gif"
             rendered[0].save(gif_path, "GIF", save_all=True, append_images=rendered[1:],
