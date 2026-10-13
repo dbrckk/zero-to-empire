@@ -124,7 +124,8 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("character-sheet-report.json", text)
         self.assertIn("candidate_dir=Path('/tmp/kaggle-output/output/candidates')", text)
         self.assertIn("candidate_dir.glob('*_final.png')", text)
-        self.assertIn("ops/kaggle-collector-trigger.txt", text)
+        self.assertIn("workflow_dispatch:", text)
+        self.assertNotIn("ops/kaggle-collector-trigger.txt", text)
 
     def test_action_translation_reviewer_precedes_candidate_promotion(self):
         collector = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
@@ -254,7 +255,10 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("kaggle-async-state.json", mass)
         self.assertIn("-f async_submit=true", autof)
         self.assertIn("kaggle-async-state.json", autof)
-        self.assertIn("cron: '*/5 * * * *'", collector)
+        self.assertNotIn("cron: '*/5 * * * *'", collector)
+        self.assertIn("workflow_dispatch:", collector)
+        self.assertNotIn("  schedule:", autof)
+        self.assertNotIn("  workflow_run:", autof)
         self.assertIn("Callback autofactory success", collector)
 
     def test_kaggle_character_all_reject_batch_is_not_infrastructure_failure(self):
