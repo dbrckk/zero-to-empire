@@ -31,24 +31,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-13T06:52:51Z
+Generated: 2026-10-13T07:27:13Z
 
 ### Git
 - Branch: `main`
-- Head: `9f950ce92939`
-- Commit date: 2026-10-13T08:52:16+02:00
-- Commit: docs(art): switch unresolved characters to local-first authored atlas workflow
-- Tracked files: 1561
+- Head: `6f54045aaa0c`
+- Commit date: 2026-10-13T09:26:43+02:00
+- Commit: ci(art): compile and monitor read-only local character asset validation
+- Tracked files: 1563
 
 ### Recently changed files
+- `.github/workflows/asset-pipeline-ci.yml`
 - `art/production/LOCAL_FIRST_CHARACTER_HANDOFF.md`
-- `.github/workflows/kaggle-async-character-collector.yml`
-- `.github/workflows/asset-autofactory.yml`
-- `art/production/autofactory-state.json`
-- `art/production/autofactory-summary.md`
-- `art/production/character-strict-review-backlog.md`
-- `art/production/master-asset-queue.json`
-- `art/production/kaggle-async-state.json`
+- `.github/workflows/local-character-review.yml`
+- `tools/sprites/verify_local_character_bundle.py`
 
 ### Project signals
 - `build.gradle.kts`

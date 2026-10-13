@@ -71,6 +71,7 @@ The content is organized as follows:
     kaggle-superseded-character-evidence.yml
     lightning-sprite-factory.yml
     lightning-ssh-bootstrap.yml
+    local-character-review.yml
     manifest-static-gpu-batch.yml
     manual-kaggle-go-77.yml
     modular-tech-actions.yml
@@ -434,6 +435,7 @@ tools/
     validate_runtime_asset.py
     verify_character_action_candidates.py
     verify_character_idle_candidates.py
+    verify_local_character_bundle.py
     weight_transfer.py
   process_final_assets.py
   validate_isolated_sprite.py
@@ -1136,6 +1138,7 @@ on:
       - 'tools/sprites/asset_wave_orchestrator.py'
       - 'tools/sprites/animation_batch_planner.py'
       - 'tools/sprites/build_character_review_panels.py'
+      - 'tools/sprites/verify_local_character_bundle.py'
       - 'tools/sprites/character_head_identity_lock.py'
       - 'tools/sprites/character_approved_idle_fallback.py'
       - 'tools/sprites/test_character_approved_idle_fallback.py'
@@ -1160,10 +1163,12 @@ on:
       - 'art/production/generation-rejection-ledger.json'
       - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
       - 'docs/art/UNIFIED_ASSET_PIPELINE.md'
+      - 'art/production/LOCAL_FIRST_CHARACTER_HANDOFF.md'
       - '.github/workflows/asset-pipeline-ci.yml'
       - '.github/workflows/asset-autofactory.yml'
       - '.github/workflows/kaggle-mass-sprite-factory.yml'
       - '.github/workflows/kaggle-async-character-collector.yml'
+      - '.github/workflows/local-character-review.yml'
       - '.github/workflows/kaggle-superseded-character-evidence.yml'
       - '.github/workflows/promote-approved-kaggle-characters.yml'
   push:
@@ -1175,6 +1180,7 @@ on:
       - 'tools/sprites/asset_wave_orchestrator.py'
       - 'tools/sprites/animation_batch_planner.py'
       - 'tools/sprites/build_character_review_panels.py'
+      - 'tools/sprites/verify_local_character_bundle.py'
       - 'tools/sprites/character_head_identity_lock.py'
       - 'tools/sprites/character_approved_idle_fallback.py'
       - 'tools/sprites/test_character_approved_idle_fallback.py'
@@ -1199,10 +1205,12 @@ on:
       - 'art/production/generation-rejection-ledger.json'
       - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
       - 'docs/art/UNIFIED_ASSET_PIPELINE.md'
+      - 'art/production/LOCAL_FIRST_CHARACTER_HANDOFF.md'
       - '.github/workflows/asset-pipeline-ci.yml'
       - '.github/workflows/asset-autofactory.yml'
       - '.github/workflows/kaggle-mass-sprite-factory.yml'
       - '.github/workflows/kaggle-async-character-collector.yml'
+      - '.github/workflows/local-character-review.yml'
       - '.github/workflows/kaggle-superseded-character-evidence.yml'
       - '.github/workflows/promote-approved-kaggle-characters.yml'
   workflow_dispatch:
@@ -1237,6 +1245,7 @@ jobs:
             tools/sprites/asset_queue_utils.py \
             tools/sprites/asset_wave_orchestrator.py \
             tools/sprites/build_character_review_panels.py \
+            tools/sprites/verify_local_character_bundle.py \
             tools/sprites/character_head_identity_lock.py \
             tools/sprites/verify_character_action_candidates.py \
             tools/sprites/verify_character_idle_candidates.py \
@@ -4367,6 +4376,108 @@ jobs:
             lightning-ssh/LIGHTNING_PUBLIC_KEY.txt
           retention-days: 1
           if-no-files-found: error
+```
+
+## File: .github/workflows/local-character-review.yml
+```yaml
+name: Review Local Character Atlases
+
+on:
+  workflow_dispatch:
+    inputs:
+      bundle_path:
+        description: Repository-relative ZIP path under art/production/local-candidates/
+        required: true
+        type: string
+  push:
+    branches: [main]
+    paths:
+      - 'art/production/local-candidates/*.zip'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: local-character-review-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install local-only image tooling
+        run: python -m pip install --disable-pip-version-check Pillow==11.3.0
+      - name: Resolve and verify local candidate bundle
+        env:
+          BUNDLE_PATH: ${{ inputs.bundle_path || '' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          selected=os.environ.get('BUNDLE_PATH','').strip()
+          if selected:
+              p=Path(selected)
+              if p.parent != Path('art/production/local-candidates') or p.suffix!='.zip':
+                  raise SystemExit('ZIP must live directly under art/production/local-candidates/')
+              if not p.is_file():raise SystemExit('Specified local candidate ZIP not found')
+          else:
+              options=sorted(Path('art/production/local-candidates').glob('*.zip'),
+                             key=lambda p:p.stat().st_mtime,reverse=True)
+              if not options:raise SystemExit('No local candidate ZIP in repository')
+              p=options[0]
+          Path('/tmp/local-atlas-path.txt').write_text(str(p))
+          print('LOCAL_CHARACTER_INPUT='+str(p))
+          PY
+          python tools/sprites/verify_local_character_bundle.py \
+            "$(cat /tmp/local-atlas-path.txt)" \
+            --report /tmp/local-character-technical-review.json
+      - name: Build full-resolution visual review evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/local-character-review/atlases
+          cp /tmp/local-character-technical-review.json /tmp/local-character-review/technical-preflight.json
+          python - <<'PY'
+          import zipfile
+          from pathlib import Path
+          path=Path('/tmp/local-atlas-path.txt').read_text().strip()
+          root=Path('/tmp/local-character-review/atlases')
+          with zipfile.ZipFile(path) as z:
+              for name in z.namelist():
+                  if name.startswith('atlases/zte_chr_') and name.endswith('_final.png'):
+                      dest=root/Path(name).name
+                      dest.write_bytes(z.read(name))
+          atlas=list(root.glob('*.png'))
+          if len(atlas)!=18:raise SystemExit('Expected 18 local character atlas candidates')
+          print('LOCAL_ATLAS_REVIEW_INPUTS='+str(len(atlas)))
+          PY
+          python tools/sprites/build_character_review_panels.py \
+            --candidates /tmp/local-character-review/atlases \
+            --output-dir /tmp/local-character-review/panels
+      - name: Mark result as review-only
+        run: |
+          printf '%s\n' \
+            'ZERO TO EMPIRE - LOCAL CHARACTER CANDIDATES' \
+            'No Kaggle or remote image generator has run in this job.' \
+            'Technical PNG preflight is not artistic approval.' \
+            'Visual review of anatomy, action loops, character identity and hands/props is required.' \
+            'Android runtime audit, debug build and release validation have NOT been performed.' \
+            'STRICT DONE: UNCHANGED BY THIS WORKFLOW.' \
+            > /tmp/local-character-review/REVIEW_ONLY.txt
+      - name: Upload non-promotable review evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: local-character-review-only-${{ github.run_id }}
+          path: |
+            /tmp/local-character-technical-review.json
+            /tmp/local-character-review/
+          if-no-files-found: warn
+          retention-days: 30
 ```
 
 ## File: .github/workflows/manifest-static-gpu-batch.yml
@@ -36354,6 +36465,67 @@ qa = json.loads(args.qa_report.read_text(encoding="utf-8"))
 qa = annotate_report(args.candidates, qa)
 ⋮----
 details = row.get("idle_identity_risk")
+```
+
+## File: tools/sprites/verify_local_character_bundle.py
+```python
+#!/usr/bin/env python3
+"""Technical verification of locally authored character atlases.
+
+Image/format checks cannot approve artistic semantics or mark strict DONE.
+No network, GPU, image generation, repository mutation, or zip extraction.
+"""
+⋮----
+FRAME_COUNTS = {"IDLE": 6, "WALK": 8, "WORK": 10, "CARRY": 8, "REPAIR": 10, "CELEB": 8}
+IDS = {f"CHR-{role}-{action}" for role in ("OP", "LOG", "ENG") for action in FRAME_COUNTS}
+ARCHIVE_LIMIT = 80 * 1024 * 1024
+ENTRY_LIMIT = 12 * 1024 * 1024
+TOTAL_LIMIT = 240 * 1024 * 1024
+⋮----
+def verify(path: Path) -> dict
+⋮----
+problems: list[str] = []
+detail: list[dict] = []
+⋮----
+files: dict[str, zipfile.ZipInfo] = {}
+total = 0
+⋮----
+name = info.filename
+posix = PurePosixPath(name)
+⋮----
+manifest = json.loads(archive.read("manifest.json"))
+entries = manifest.get("entries", [])
+actual_ids = [item.get("id") for item in entries]
+⋮----
+aid = item.get("id", "")
+⋮----
+frame_count = FRAME_COUNTS[action]
+name = f"zte_chr_{role.lower()}_{action.lower()}_final.png"
+errors = []
+⋮----
+data = archive.read("atlases/" + name)
+sha = hashlib.sha256(data).hexdigest()
+⋮----
+rgba = image.convert("RGBA")
+frames = []
+margin = 256
+⋮----
+tile = rgba.crop((x, y, x + 256, y + 256))
+box = tile.getchannel("A").getbbox()
+⋮----
+margin = min(margin, box[0], box[1], 256 - box[2], 256 - box[3])
+⋮----
+svg_name = f"svg_source/{role}/{action}/{index:02}.svg"
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser()
+⋮----
+args = parser.parse_args()
+⋮----
+result = verify(args.pack)
+⋮----
+result = {"technical_preflight_pass": False, "errors": [str(err)],
 ```
 
 ## File: tools/sprites/weight_transfer.py

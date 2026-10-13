@@ -147,6 +147,7 @@ sprites/
   validate_runtime_asset.py
   verify_character_action_candidates.py
   verify_character_idle_candidates.py
+  verify_local_character_bundle.py
   weight_transfer.py
 process_final_assets.py
 validate_isolated_sprite.py
@@ -9546,6 +9547,67 @@ qa = json.loads(args.qa_report.read_text(encoding="utf-8"))
 qa = annotate_report(args.candidates, qa)
 ⋮----
 details = row.get("idle_identity_risk")
+```
+
+## File: sprites/verify_local_character_bundle.py
+```python
+#!/usr/bin/env python3
+"""Technical verification of locally authored character atlases.
+
+Image/format checks cannot approve artistic semantics or mark strict DONE.
+No network, GPU, image generation, repository mutation, or zip extraction.
+"""
+⋮----
+FRAME_COUNTS = {"IDLE": 6, "WALK": 8, "WORK": 10, "CARRY": 8, "REPAIR": 10, "CELEB": 8}
+IDS = {f"CHR-{role}-{action}" for role in ("OP", "LOG", "ENG") for action in FRAME_COUNTS}
+ARCHIVE_LIMIT = 80 * 1024 * 1024
+ENTRY_LIMIT = 12 * 1024 * 1024
+TOTAL_LIMIT = 240 * 1024 * 1024
+⋮----
+def verify(path: Path) -> dict
+⋮----
+problems: list[str] = []
+detail: list[dict] = []
+⋮----
+files: dict[str, zipfile.ZipInfo] = {}
+total = 0
+⋮----
+name = info.filename
+posix = PurePosixPath(name)
+⋮----
+manifest = json.loads(archive.read("manifest.json"))
+entries = manifest.get("entries", [])
+actual_ids = [item.get("id") for item in entries]
+⋮----
+aid = item.get("id", "")
+⋮----
+frame_count = FRAME_COUNTS[action]
+name = f"zte_chr_{role.lower()}_{action.lower()}_final.png"
+errors = []
+⋮----
+data = archive.read("atlases/" + name)
+sha = hashlib.sha256(data).hexdigest()
+⋮----
+rgba = image.convert("RGBA")
+frames = []
+margin = 256
+⋮----
+tile = rgba.crop((x, y, x + 256, y + 256))
+box = tile.getchannel("A").getbbox()
+⋮----
+margin = min(margin, box[0], box[1], 256 - box[2], 256 - box[3])
+⋮----
+svg_name = f"svg_source/{role}/{action}/{index:02}.svg"
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser()
+⋮----
+args = parser.parse_args()
+⋮----
+result = verify(args.pack)
+⋮----
+result = {"technical_preflight_pass": False, "errors": [str(err)],
 ```
 
 ## File: sprites/weight_transfer.py
