@@ -31,21 +31,24 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T19:51:55Z
+Generated: 2026-10-13T06:52:51Z
 
 ### Git
 - Branch: `main`
-- Head: `c4e44a9a430f`
-- Commit date: 2026-10-12T21:51:39+02:00
-- Commit: docs(art): document mobile GIF review evidence and non-promotable raster gait limitations
-- Tracked files: 1560
+- Head: `9f950ce92939`
+- Commit date: 2026-10-13T08:52:16+02:00
+- Commit: docs(art): switch unresolved characters to local-first authored atlas workflow
+- Tracked files: 1561
 
 ### Recently changed files
-- `docs/art/UNIFIED_ASSET_PIPELINE.md`
-- `.github/workflows/retroactive-character-motion-qa.yml`
-- `.github/workflows/asset-pipeline-ci.yml`
-- `tools/sprites/build_character_review_panels.py`
-- `tools/assets/test_workflow_policy.py`
+- `art/production/LOCAL_FIRST_CHARACTER_HANDOFF.md`
+- `.github/workflows/kaggle-async-character-collector.yml`
+- `.github/workflows/asset-autofactory.yml`
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
+- `art/production/character-strict-review-backlog.md`
+- `art/production/master-asset-queue.json`
+- `art/production/kaggle-async-state.json`
 
 ### Project signals
 - `build.gradle.kts`

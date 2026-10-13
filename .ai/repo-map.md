@@ -990,18 +990,6 @@ on:
         description: Producer dispatch ownership token
         required: false
         default: ''
-  push:
-    paths:
-      - 'ops/autofactory-kick.txt'
-  schedule:
-    - cron: '*/15 * * * *'
-  workflow_run:
-    workflows:
-      - 'Kaggle Mass Sprite Factory'
-      - 'Pollinations Character Atlas'
-      - 'Pollinations Building Candidate'
-      - 'FX Historical Review Evidence'
-    types: [completed]
 
 permissions:
   contents: write
@@ -2788,13 +2776,7 @@ jobs:
 name: Kaggle Async Character Collector
 
 on:
-  schedule:
-    - cron: '*/5 * * * *'
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - 'ops/kaggle-collector-trigger.txt'
 
 permissions:
   contents: write
