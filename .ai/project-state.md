@@ -31,16 +31,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-13T12:12:05Z
+Generated: 2026-10-13T12:13:13Z
 
 ### Git
 - Branch: `main`
-- Head: `a6b4cb8f42fa`
-- Commit date: 2026-10-13T14:11:35+02:00
-- Commit: ci(art): run canonical local review on all first-party character atlases
+- Head: `8825690a0d08`
+- Commit date: 2026-10-13T14:12:58+02:00
+- Commit: docs(art): link 150 editable original SVG frames, 18 GIFs and local-only technical review
 - Tracked files: 1763
 
 ### Recently changed files
+- `art/incoming/chatgpt-original/README.md`
 - `ops/chatgpt-original-handoff-trigger.txt`
 - `.github/workflows/review-chatgpt-original-pack.yml`
 - `tools/sprites/package_chatgpt_originals.py`
@@ -60,7 +61,6 @@ Generated: 2026-10-13T12:12:05Z
 - `art/incoming/chatgpt-original/candidates/zte_chr_op_carry_final.png`
 - `art/incoming/chatgpt-original/candidates/zte_chr_op_celeb_final.png`
 - `art/incoming/chatgpt-original/candidates/zte_chr_op_idle_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_op_repair_final.png`
 
 ### Project signals
 - `build.gradle.kts`

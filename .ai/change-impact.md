@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 6618843c30a88a33d3dd8b005d47244d66c44bc7
-Head: a6b4cb8f42fa3fe45e7d7e9526b0720623e2dd45
+Base: f068370261eaf7ad1b61f82ee12d9dc5f09e158c
+Head: 8825690a0d081d8265d8ba6a63d84716efa920cf
 
 ## Changed files
-- A ops/chatgpt-original-handoff-trigger.txt
+- M art/incoming/chatgpt-original/README.md
 
 ## Affected areas
-- ops
+- art
 
 ## Related test candidates
 - No direct filename-based test match detected.

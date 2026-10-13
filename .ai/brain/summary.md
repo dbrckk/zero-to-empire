@@ -1,8 +1,8 @@
 # Repo Brain
 
-- Index mode: full
+- Index mode: incremental
 - Files indexed: 270
-- Files reparsed this run: 270
+- Files reparsed this run: 0
 - Symbols: 1420
 - Internal import edges: 65
 - Impacted files: 0
@@ -42,8 +42,8 @@
 
 ## ast-grep enrichment
 - ast-grep outline: available
-- AST index mode: full
-- AST files reparsed this run: 279
+- AST index mode: incremental
+- AST files reparsed this run: 0
 - outline files retained: 279
 - top-level items retained: 3753
 - direct members retained: 951
