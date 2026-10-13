@@ -125,7 +125,10 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("candidate_dir=Path('/tmp/kaggle-output/output/candidates')", text)
         self.assertIn("candidate_dir.glob('*_final.png')", text)
         self.assertIn("workflow_dispatch:", text)
-        self.assertNotIn("ops/kaggle-collector-trigger.txt", text)
+        self.assertIn("ops/kaggle-collector-trigger.txt", text)
+        self.assertIn("schedule:", text)
+        self.assertIn("*/15 * * * *", text)
+        self.assertIn("cancel-in-progress: false", text)
 
     def test_action_translation_reviewer_precedes_candidate_promotion(self):
         collector = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
