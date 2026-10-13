@@ -297,6 +297,16 @@ jobs:
                   for idx in range(a['frames']):
                       alpha=image.crop(((idx%4)*256,(idx//4)*256,((idx%4)+1)*256,((idx//4)+1)*256)).getchannel('A')
                       assert alpha.getbbox() is not None
+          import sys
+          sys.path.insert(0,'tools/sprites')
+          from validate_runtime_asset import validate
+          issues=[]
+          for a in d['assets']:
+              result=validate(a['id'],root/'candidates'/a['file'])
+              if not result['pass']:
+                  issues.append((a['id'],result['issues']))
+          assert not issues,issues
+          print('CHATGPT_CANDIDATE_RUNTIME_GEOMETRY_QA_PASS=18')
           print('CHATGPT_ORIGINAL_CANDIDATES_VALID=18 UNRESOLVED_COVERED='+str(len(outstanding)))
           PY
 
