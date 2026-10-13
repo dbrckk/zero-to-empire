@@ -19,18 +19,6 @@ on:
         description: Producer dispatch ownership token
         required: false
         default: ''
-  push:
-    paths:
-      - 'ops/autofactory-kick.txt'
-  schedule:
-    - cron: '*/15 * * * *'
-  workflow_run:
-    workflows:
-      - 'Kaggle Mass Sprite Factory'
-      - 'Pollinations Character Atlas'
-      - 'Pollinations Building Candidate'
-      - 'FX Historical Review Evidence'
-    types: [completed]
 
 permissions:
   contents: write
