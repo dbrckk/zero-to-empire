@@ -1,0 +1,105 @@
+name: ChatGPT Original Character Candidates
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'ops/chatgpt-original-trigger.txt'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chatgpt-original-character-candidates
+  cancel-in-progress: false
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+      - name: Install reproducible local renderer
+        run: |
+          python -m pip install --disable-pip-version-check 'Pillow==11.3.0' 'CairoSVG==2.7.1'
+      - name: Restore readable source authored inside ChatGPT
+        run: |
+          python - <<'PY'
+          import base64, hashlib, itertools, pathlib, string, zlib
+          staged=pathlib.Path('ops/chatgpt-original-renderer.zlib.b64')
+          encoded=''.join(staged.read_text().split())
+          expected='4e4a175b75f987cecc728a17595de052e466c973ab154d32b0ef658511bb197a'
+          def unpack(data):
+              try:
+                  raw=zlib.decompress(base64.b64decode(data,validate=True))
+                  return raw if hashlib.sha256(raw).hexdigest()==expected else None
+              except (ValueError,zlib.error):
+                  return None
+          source=unpack(encoded)
+          if source is None:
+              # Repair a transport-only dropped Base64 character, protected by
+              # the exact pinned SHA256 of the original source authored here.
+              alphabet=string.ascii_uppercase+string.ascii_lowercase+string.digits+'+/'
+              for pos in range(len(encoded)+1):
+                  prefix=encoded[:pos]; suffix=encoded[pos:]
+                  for char in alphabet:
+                      source=unpack(prefix+char+suffix)
+                      if source is not None:
+                          print('SOURCE_TRANSPORT_SINGLE_CHARACTER_REPAIRED=1 position='+str(pos))
+                          break
+                  if source is not None:
+                      break
+          if source is None:
+              raise SystemExit('Source digest mismatch. Refusing unverified art generation.')
+          out=pathlib.Path('tools/sprites/render_chatgpt_originals.py')
+          out.parent.mkdir(parents=True,exist_ok=True)
+          out.write_bytes(source)
+          print('CHATGPT_RENDERER_SHA256='+hashlib.sha256(source).hexdigest())
+          PY
+      - name: Render all remaining role families from committed source
+        run: |
+          python tools/sprites/render_chatgpt_originals.py \
+            --output-dir art/incoming/chatgpt-original
+      - name: Check each candidate atlas without strict promotion
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from PIL import Image
+          base=Path('art/incoming/chatgpt-original')
+          report=json.loads((base/'creation-manifest.json').read_text())
+          required={f'CHR-{r}-{a}' for r in ('OP','LOG','ENG')
+                    for a in ('IDLE','WALK','WORK','CARRY','REPAIR','CELEB')}
+          assert report['review_only'] and report['strict_done_added']==0
+          assert {a['id'] for a in report['assets']}==required
+          assert report['asset_count']==18 and report['unresolved_target_count']==16
+          proof=[]
+          for a in report['assets']:
+              p=base/'candidates'/a['file']
+              with Image.open(p) as im:
+                  assert im.size==(1024,1024) and im.mode=='RGBA',a['id']
+                  for f in range(a['frames']):
+                      cell=im.crop(((f%4)*256,(f//4)*256,(f%4+1)*256,(f//4+1)*256))
+                      box=cell.getchannel('A').getbbox()
+                      assert box is not None, (a['id'],'empty',f)
+                      assert box[0]>=10 and box[1]>=10 and box[2]<=246 and box[3]<=246,(a['id'],'cropped',f,box)
+              proof.append({'id':a['id'],'frames':a['frames'],'technical_geometry_pass':True,
+                            'semantic_approved':False,'android_validated':False,'strict_done_added':0})
+          (base/'candidate-qa.json').write_text(json.dumps({'review_only':True,'assets':proof},indent=2)+'\n')
+          print('CHATGPT_ORIGINAL_ASSET_QA_PASS='+str(len(proof)))
+          PY
+      - name: Commit original atlas candidates and readable source to repository
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -f tools/sprites/render_chatgpt_originals.py
+          git add -f art/incoming/chatgpt-original/
+          git rm -f ops/chatgpt-original-renderer.zlib.b64
+          git commit -m 'art(candidate): add 18 original character atlas sheets made in ChatGPT'
+          git pull --rebase origin main
+          git push origin HEAD:main
