@@ -1,8 +1,9 @@
 # CI status
 
-Summary: 2 success / 0 failure / 1 active
+Summary: 4 success / 0 failure / 0 active
 
-- Asset Pipeline CI: in_progress / pending (0972b657)
+- ChatGPT Original Character Candidates: completed / success (cc309220)
+- Asset Pipeline CI: completed / success (0972b657)
 - Asset Pipeline CI: completed / success (db57e8d6)
 - Asset Pipeline CI: completed / cancelled (14515193)
 - ChatGPT Original Character Candidates: completed / success (39771f3c)

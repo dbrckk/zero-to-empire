@@ -924,39 +924,18 @@ jobs:
       - name: Install reproducible local renderer
         run: |
           python -m pip install --disable-pip-version-check 'Pillow==11.3.0' 'CairoSVG==2.7.1'
-      - name: Restore readable source authored inside ChatGPT
+      - name: Verify editable original art source
         run: |
           python - <<'PY'
-          import base64, hashlib, itertools, pathlib, string, zlib
-          staged=pathlib.Path('ops/chatgpt-original-renderer.zlib.b64')
-          encoded=''.join(staged.read_text().split())
-          expected='4e4a175b75f987cecc728a17595de052e466c973ab154d32b0ef658511bb197a'
-          def unpack(data):
-              try:
-                  raw=zlib.decompress(base64.b64decode(data,validate=True))
-                  return raw if hashlib.sha256(raw).hexdigest()==expected else None
-              except (ValueError,zlib.error):
-                  return None
-          source=unpack(encoded)
-          if source is None:
-              # Repair a transport-only dropped Base64 character, protected by
-              # the exact pinned SHA256 of the original source authored here.
-              alphabet=string.ascii_uppercase+string.ascii_lowercase+string.digits+'+/'
-              for pos in range(len(encoded)+1):
-                  prefix=encoded[:pos]; suffix=encoded[pos:]
-                  for char in alphabet:
-                      source=unpack(prefix+char+suffix)
-                      if source is not None:
-                          print('SOURCE_TRANSPORT_SINGLE_CHARACTER_REPAIRED=1 position='+str(pos))
-                          break
-                  if source is not None:
-                      break
-          if source is None:
-              raise SystemExit('Source digest mismatch. Refusing unverified art generation.')
-          out=pathlib.Path('tools/sprites/render_chatgpt_originals.py')
-          out.parent.mkdir(parents=True,exist_ok=True)
-          out.write_bytes(source)
-          print('CHATGPT_RENDERER_SHA256='+hashlib.sha256(source).hexdigest())
+          import hashlib
+          from pathlib import Path
+          source=Path('tools/sprites/render_chatgpt_originals.py')
+          if not source.is_file():
+              raise SystemExit('Editable original character renderer is missing from main')
+          data=source.read_bytes()
+          compile(data,str(source),'exec')
+          print('CHATGPT_ORIGINAL_RENDERER_SHA256='+hashlib.sha256(data).hexdigest())
+          print('CHATGPT_ORIGINAL_SOURCE_VERSIONED=1')
           PY
       - name: Render all remaining role families from committed source
         run: |
@@ -990,6 +969,16 @@ jobs:
           (base/'candidate-qa.json').write_text(json.dumps({'review_only':True,'assets':proof},indent=2)+'\n')
           print('CHATGPT_ORIGINAL_ASSET_QA_PASS='+str(len(proof)))
           PY
+      - name: Publish original candidate review evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: chatgpt-original-character-atlases
+          path: |
+            art/incoming/chatgpt-original/candidates/*.png
+            art/incoming/chatgpt-original/creation-manifest.json
+            art/incoming/chatgpt-original/candidate-qa.json
+          if-no-files-found: error
+          retention-days: 90
       - name: Commit original atlas candidates and readable source to repository
         run: |
           set -euo pipefail
@@ -997,8 +986,12 @@ jobs:
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add -f tools/sprites/render_chatgpt_originals.py
           git add -f art/incoming/chatgpt-original/
-          git rm -f ops/chatgpt-original-renderer.zlib.b64
-          git commit -m 'art(candidate): add 18 original character atlas sheets made in ChatGPT'
+          git rm -f --ignore-unmatch ops/chatgpt-original-renderer.zlib.b64
+          if git diff --cached --quiet; then
+            echo 'CHATGPT_ORIGINAL_ATLASES_UNCHANGED=1'
+            exit 0
+          fi
+          git commit -m 'art(candidate): update 18 original character atlases made in ChatGPT'
           git pull --rebase origin main
           git push origin HEAD:main
 ```

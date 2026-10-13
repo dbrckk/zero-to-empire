@@ -1,13 +1,13 @@
 # Change impact
 
-Base: db57e8d69a58b6599d0172148366d38c84fb52a4
-Head: 0972b657f2e498d10b629b834441de9a2e8d5a48
+Base: ecfc8ef96f15f7eb61159da8b0ef09e482383e73
+Head: cc309220350018d73d5c604ba4b55e484aa2be44
 
 ## Changed files
-- M .github/workflows/asset-pipeline-ci.yml
+- M ops/chatgpt-original-trigger.txt
 
 ## Affected areas
-- .github
+- ops
 
 ## Related test candidates
 - No direct filename-based test match detected.

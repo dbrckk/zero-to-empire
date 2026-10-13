@@ -31,36 +31,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-13T11:35:23Z
+Generated: 2026-10-13T11:59:41Z
 
 ### Git
 - Branch: `main`
-- Head: `0972b657f2e4`
-- Commit date: 2026-10-13T13:34:57+02:00
-- Commit: ci(art): run canonical runtime-sprite validator over all ChatGPT-created atlas candidates
+- Head: `cc3092203500`
+- Commit date: 2026-10-13T13:58:58+02:00
+- Commit: art: regenerate local original character images and publish review evidence
 - Tracked files: 1588
 
 ### Recently changed files
+- `ops/chatgpt-original-trigger.txt`
+- `.github/workflows/art-chatgpt-original-candidates.yml`
 - `.github/workflows/asset-pipeline-ci.yml`
 - `art/incoming/chatgpt-original/README.md`
-- `art/incoming/chatgpt-original/candidate-qa.json`
-- `art/incoming/chatgpt-original/candidates/zte_chr_eng_carry_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_eng_celeb_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_eng_idle_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_eng_repair_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_eng_walk_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_eng_work_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_log_carry_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_log_celeb_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_log_idle_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_log_repair_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_log_walk_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_log_work_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_op_carry_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_op_celeb_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_op_idle_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_op_repair_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_op_walk_final.png`
 
 ### Project signals
 - `build.gradle.kts`
