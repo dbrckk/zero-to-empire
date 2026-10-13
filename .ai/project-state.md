@@ -31,23 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-13T11:22:18Z
+Generated: 2026-10-13T11:31:13Z
 
 ### Git
 - Branch: `main`
-- Head: `4c5e7d7e0ce5`
-- Commit date: 2026-10-13T13:22:03+02:00
-- Commit: fix(ci): regenerate strict review backlog from canonical 235-asset queue
-- Tracked files: 1564
+- Head: `7ed1d230acd1`
+- Commit date: 2026-10-13T13:31:00+02:00
+- Commit: art(source): stage locally authored deterministic character rig for in-repo rendering
+- Tracked files: 1565
 
 ### Recently changed files
+- `ops/chatgpt-original-renderer.zlib.b64`
 - `art/production/character-strict-review-backlog.md`
 - `art/production/op-log-2026-10-13-semantic-review.md`
 - `art/production/master-asset-queue.json`
 - `art/production/kaggle-async-state.json`
-- `art/production/autofactory-state.json`
-- `art/production/autofactory-summary.md`
-- `art/production/controlled-character-regen-queue.json`
 
 ### Project signals
 - `build.gradle.kts`
