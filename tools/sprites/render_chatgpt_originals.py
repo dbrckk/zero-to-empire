@@ -76,9 +76,14 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
   swing=signed*stride
   yhip=155+bounce
   knee_x=hipx+0.45*swing + (2 if side=='L' else -2)
-  knee_y=190+bounce-2*max(0,signed*motion)
+  # A gait has both position and velocity. A sinusoidal X position
+  # alone repeats the same pose twice per loop (phase 45° and 135°).
+  # Use the signed cosine for stance-vs-swing foot lift: eight real poses,
+  # one grounded support foot per half-cycle and smooth loop closure.
+  swing_velocity=signed*math.cos(phase) if action in ('WALK','CARRY') else 0
+  knee_y=190+bounce-3*max(0,swing_velocity)
   ankle_x=hipx + swing*0.66
-  lift=max(0,signed*motion)*9 if action in ('WALK','CARRY') else 0
+  lift=max(0,swing_velocity)*10 if action in ('WALK','CARRY') else 0
   ankle_y=226+bounce-lift
   leg_poses.append((side,hipx,yhip,knee_x,knee_y,ankle_x,ankle_y))
  add('<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">')
