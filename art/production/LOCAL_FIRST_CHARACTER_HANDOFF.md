@@ -26,13 +26,17 @@ A new **candidate-only** pack was generated entirely in the ChatGPT local workin
 environment, with no Kaggle, remote models, paid API, or GPU dependency.
 
 - Artifact: `zero_to_empire_local_characters_v2.zip`; SHA-256
-  `5a10cd25cbc815c2f3d06f62988effdd5360d25894bce7cc88f975f9513ea575`.
+  `96c9b2c1bb8a0ce4034f94df7e16fb0a2362d284692c723bf269a09c6bfc2b24`.
 - Source in the same chat: `zte_local_rig_v2.py`; SHA-256
   `f56da2955936c49b75dd8913c96e351a4ea94791c06428fe89645ab24ee69622`.
 - Contents: **18 transparent 1024x1024 PNG atlas candidates / 150 frames**,
   covering the **16 unresolved assets** plus OP-IDLE and LOG-IDLE reference
   atlases. All 256x256 frames and their SVG drawings are included as editable
   source, with GIF motion loops, JSON SHA-256 manifest and review poster.
+- The bundled `review.html` is an **offline, mobile-friendly animation player**:
+  choose role/action, pause, adjust playback speed, scrub exact frames, compare
+  against the same-role IDLE, and check actual 42px game readability. After
+  unzipping, preserve the `atlases/` directory beside `review.html`.
 - The local preflight completed with **zero file/geometry/alpha/padding errors**.
   This is a technical check, not a claim of animation or AAA artistic quality.
 - This ZIP has **not been committed to GitHub** and has **not replaced Android
