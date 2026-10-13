@@ -1,10 +1,10 @@
 # Change impact
 
-Base: ecfc8ef96f15f7eb61159da8b0ef09e482383e73
-Head: cc309220350018d73d5c604ba4b55e484aa2be44
+Base: 6618843c30a88a33d3dd8b005d47244d66c44bc7
+Head: a6b4cb8f42fa3fe45e7d7e9526b0720623e2dd45
 
 ## Changed files
-- M ops/chatgpt-original-trigger.txt
+- A ops/chatgpt-original-handoff-trigger.txt
 
 ## Affected areas
 - ops

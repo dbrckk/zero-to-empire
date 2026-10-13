@@ -100,6 +100,7 @@ sprites/
   lightning_studio_factory.py
   manifest_batch_planner.py
   multi_provider_static_manifest_factory.py
+  package_chatgpt_originals.py
   package_tech_actions_runtime.py
   patch_final_character_motion.py
   plan_sprite_batches.py
@@ -112,6 +113,7 @@ sprites/
   promote_ter07_v3.py
   reconcile_strict_approvals.py
   render_chatgpt_originals.py
+  render_original_character_previews.py
   repair_shadowed_character_atlas.py
   rigged_tech_actions_v3.py
   rigged_tech_walk_v2.py
@@ -5977,6 +5979,44 @@ final = factory.normalize(factory.isolate(raw), factory.TARGET_SIDE[kind])
 out = factory.INCOMING / (Path(runtime).stem + ".png")
 ```
 
+## File: sprites/package_chatgpt_originals.py
+```python
+#!/usr/bin/env python3
+"""Package first-party editable role sprites for *read-only* Android review.
+
+Only the 18 already-committed original candidate atlases are consumed. No new
+images or external model calls, no copies to Android res/, no strict promotion.
+"""
+⋮----
+ROLES = ("OP", "LOG", "ENG")
+ACTIONS = {"IDLE": 6, "WALK": 8, "WORK": 10, "CARRY": 8, "REPAIR": 10, "CELEB": 8}
+⋮----
+def make_bundle(source: Path, output: Path) -> dict
+⋮----
+original=json.loads((source/"creation-manifest.json").read_text(encoding="utf8"))
+expected={f"CHR-{role}-{action}" for role in ROLES for action in ACTIONS}
+⋮----
+rows=[]
+svg_count=0
+⋮----
+ident=f"CHR-{role}-{action}"
+name=f"zte_chr_{role.lower()}_{action.lower()}_final.png"
+p=source/"candidates"/name
+data=p.read_bytes()
+⋮----
+svg=source/"src_svg"/role/action/f"{frame:02d}.svg"
+payload=svg.read_bytes()
+⋮----
+report={"schema_version":1,"review_only":True,"strict_done_increased":False,
+⋮----
+def main() -> int
+⋮----
+parser=argparse.ArgumentParser()
+⋮----
+a=parser.parse_args()
+result=make_bundle(a.source,a.output)
+```
+
 ## File: sprites/package_tech_actions_runtime.py
 ```python
 #!/usr/bin/env python3
@@ -7294,13 +7334,21 @@ sleeve=line(shoulder_x,shoulder_y,ex,ey,'url(#jacket)',17,3)
 leg_poses=[]
 ⋮----
 signed=(1 if side=='L' else -1)
-hipx=108 if side=='L' else 144
+# Wider hip spacing and a damped ankle arc avoid the crossed ankles
+# seen in the original WALK/CARRY frames. Articulation remains readable
+# without stepping through the opposite shin.
+hipx=106 if side=='L' else 146
 swing=signed*stride
 yhip=155+bounce
-knee_x=hipx+0.62*swing + (2 if side=='L' else -2)
-knee_y=190+bounce-2*max(0,signed*motion)
-ankle_x=hipx + swing*1.15
-lift=max(0,signed*motion)*9 if action in ('WALK','CARRY') else 0
+knee_x=hipx+0.45*swing + (2 if side=='L' else -2)
+# A gait has both position and velocity. A sinusoidal X position
+# alone repeats the same pose twice per loop (phase 45° and 135°).
+# Use the signed cosine for stance-vs-swing foot lift: eight real poses,
+# one grounded support foot per half-cycle and smooth loop closure.
+swing_velocity=signed*math.cos(phase) if action in ('WALK','CARRY') else 0
+knee_y=190+bounce-3*max(0,swing_velocity)
+ankle_x=hipx + swing*0.66
+lift=max(0,swing_velocity)*10 if action in ('WALK','CARRY') else 0
 ankle_y=226+bounce-lift
 ⋮----
 # no floor shadow; transparency is exact outside figure
@@ -7363,6 +7411,85 @@ args=parser.parse_args();outdir=pathlib.Path(args.output_dir);outdir.mkdir(paren
 results=[]
 ⋮----
 report={'version':'chatgpt-original-character-rig-v1','strict_done_added':0,'review_only':True,
+```
+
+## File: sprites/render_original_character_previews.py
+```python
+#!/usr/bin/env python3
+"""Android-friendly animated previews for original ChatGPT-authored sprites.
+
+All evidence is review-only. This never reads or changes the canonical
+235-row master queue or Android runtime assets, and never promotes PNGs.
+"""
+⋮----
+FRAMES = {"IDLE": 6, "WALK": 8, "WORK": 10, "CARRY": 8, "REPAIR": 10, "CELEB": 8}
+ROLES = ("OP", "LOG", "ENG")
+DURATION_MS = {"IDLE": 185, "WALK": 105, "WORK": 125, "CARRY": 115,
+⋮----
+def frames_from_atlas(path: Path, count: int) -> list[Image.Image]
+⋮----
+result = [source.crop(((i % 4)*256, (i // 4)*256,
+⋮----
+def checker() -> Image.Image
+⋮----
+im = Image.new("RGB", (256, 256), "#b0b6c1")
+d = ImageDraw.Draw(im)
+⋮----
+def compose(frame: Image.Image, backdrop: Image.Image) -> Image.Image
+⋮----
+cell = backdrop.copy()
+⋮----
+def fingerprint(frame: Image.Image) -> str
+⋮----
+def change_ratio(a: Image.Image, b: Image.Image) -> float
+⋮----
+# RGB plus silhouette activity, computed over the occupied image region
+# to distinguish a blink from identical idle frames.
+aa = a.resize((64, 64), Image.Resampling.BILINEAR).convert("RGBA")
+bb = b.resize((64, 64), Image.Resampling.BILINEAR).convert("RGBA")
+⋮----
+activity = 0
+count = 0
+⋮----
+def produce(source: Path) -> dict
+⋮----
+manifest = json.loads((source/"creation-manifest.json").read_text(encoding="utf8"))
+expected = {f"CHR-{role}-{action}" for role in ROLES for action in FRAMES}
+⋮----
+preview = source/"previews"
+⋮----
+atlas = Image.new("RGB", (6*190, 3*223), "#202732")
+draw = ImageDraw.Draw(atlas)
+background = checker()
+analysis = []
+⋮----
+asset_id = f"CHR-{role}-{action}"
+filename = f"zte_chr_{role.lower()}_{action.lower()}_final.png"
+cells = frames_from_atlas(source/"candidates"/filename, FRAMES[action])
+distinct = len({fingerprint(f) for f in cells})
+⋮----
+# WALK/CARRY need eight physically different stride phases, not
+# a repeated sinusoidal snapshot with fake foot movement.
+⋮----
+rendered = [compose(f, background) for f in cells]
+gif_path = preview/f"{role.lower()}-{action.lower()}.gif"
+⋮----
+small = rendered[0].resize((186, 186), Image.Resampling.LANCZOS)
+pos = (col*190+2, row*223+30)
+⋮----
+all_frames = cells[1:] + cells[:1]
+ratios = [change_ratio(a, b) for a, b in zip(cells, all_frames)]
+boxes = [f.getchannel("A").getbbox() for f in cells]
+min_margin = min(min(x, y, 256-x2, 256-y2)
+⋮----
+result = {
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser()
+⋮----
+args = parser.parse_args()
+result = produce(args.output_dir)
 ```
 
 ## File: sprites/repair_shadowed_character_atlas.py

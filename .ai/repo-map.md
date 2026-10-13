@@ -124,6 +124,7 @@ The content is organized as follows:
     repair-bld13-runtime.yml
     repair-promote-bld03-run75.yml
     retroactive-character-motion-qa.yml
+    review-chatgpt-original-pack.yml
     semantic-refresh.yml
     sprite-completion-gate.yml
     sprite-production-plan.yml
@@ -389,6 +390,7 @@ tools/
     lightning_studio_factory.py
     manifest_batch_planner.py
     multi_provider_static_manifest_factory.py
+    package_chatgpt_originals.py
     package_tech_actions_runtime.py
     patch_final_character_motion.py
     plan_sprite_batches.py
@@ -401,6 +403,7 @@ tools/
     promote_ter07_v3.py
     reconcile_strict_approvals.py
     render_chatgpt_originals.py
+    render_original_character_previews.py
     repair_shadowed_character_atlas.py
     rigged_tech_actions_v3.py
     rigged_tech_walk_v2.py
@@ -940,7 +943,8 @@ jobs:
       - name: Render all remaining role families from committed source
         run: |
           python tools/sprites/render_chatgpt_originals.py \
-            --output-dir art/incoming/chatgpt-original
+            --output-dir art/incoming/chatgpt-original \
+            --save-svg
       - name: Check each candidate atlas without strict promotion
         run: |
           python - <<'PY'
@@ -955,6 +959,7 @@ jobs:
           assert {a['id'] for a in report['assets']}==required
           assert report['asset_count']==18 and report['unresolved_target_count']==16
           proof=[]
+          editable_svg_count=0
           for a in report['assets']:
               p=base/'candidates'/a['file']
               with Image.open(p) as im:
@@ -964,10 +969,45 @@ jobs:
                       box=cell.getchannel('A').getbbox()
                       assert box is not None, (a['id'],'empty',f)
                       assert box[0]>=10 and box[1]>=10 and box[2]<=246 and box[3]<=246,(a['id'],'cropped',f,box)
+              for f in range(a['frames']):
+                  editable=base/'src_svg'/a['role']/a['action']/f'{f:02d}.svg'
+                  assert editable.is_file(),(a['id'],'missing-editable-frame-svg',f)
+                  import xml.etree.ElementTree as ET
+                  root=ET.parse(editable).getroot()
+                  assert root.tag=='{http://www.w3.org/2000/svg}svg',editable
+                  editable_svg_count+=1
               proof.append({'id':a['id'],'frames':a['frames'],'technical_geometry_pass':True,
                             'semantic_approved':False,'android_validated':False,'strict_done_added':0})
           (base/'candidate-qa.json').write_text(json.dumps({'review_only':True,'assets':proof},indent=2)+'\n')
+          assert editable_svg_count==150,editable_svg_count
+          print('CHATGPT_ORIGINAL_EDITABLE_SVG_FRAMES='+str(editable_svg_count))
           print('CHATGPT_ORIGINAL_ASSET_QA_PASS='+str(len(proof)))
+          PY
+      - name: Render animated previews and technical motion evidence
+        run: |
+          python tools/sprites/render_original_character_previews.py \
+            --output-dir art/incoming/chatgpt-original
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from PIL import Image
+          p=Path('art/incoming/chatgpt-original')
+          d=json.loads((p/'animation-review.json').read_text())
+          assert d['review_only'] is True and d['strict_done_added']==0
+          assert d['generated_local_preview_count']==18
+          assert d['editable_source_frame_count']==150
+          assert len(d['assets'])==18
+          for item in d['assets']:
+              assert item['distinct_frame_hashes']>1,item['id']
+              assert item['min_alpha_margin']>=10,item['id']
+              with Image.open(p/item['animation_preview']) as preview:
+                  assert preview.format=='GIF'
+                  # GIF encoders coalesce identical consecutive poses and
+                  # retain their total duration. The 1024px RGBA source atlas
+                  # still owns the exact canonical frame count.
+                  assert 2<=preview.n_frames<=item['frames'],(item['id'],preview.n_frames)
+          assert (p/'original-review-contact-sheet.png').is_file()
+          print('CHATGPT_ANIMATED_MOBILE_PREVIEWS_PASS=18')
           PY
       - name: Publish original candidate review evidence
         uses: actions/upload-artifact@v4
@@ -975,6 +1015,10 @@ jobs:
           name: chatgpt-original-character-atlases
           path: |
             art/incoming/chatgpt-original/candidates/*.png
+            art/incoming/chatgpt-original/src_svg/**/*.svg
+            art/incoming/chatgpt-original/previews/*.gif
+            art/incoming/chatgpt-original/original-review-contact-sheet.png
+            art/incoming/chatgpt-original/animation-review.json
             art/incoming/chatgpt-original/creation-manifest.json
             art/incoming/chatgpt-original/candidate-qa.json
           if-no-files-found: error
@@ -1243,6 +1287,7 @@ on:
       - 'tools/sprites/animation_batch_planner.py'
       - 'tools/sprites/build_character_review_panels.py'
       - 'tools/sprites/render_chatgpt_originals.py'
+      - 'tools/sprites/render_original_character_previews.py'
       - 'art/incoming/chatgpt-original/**'
       - 'tools/sprites/verify_local_character_bundle.py'
       - 'tools/sprites/character_head_identity_lock.py'
@@ -1287,6 +1332,7 @@ on:
       - 'tools/sprites/animation_batch_planner.py'
       - 'tools/sprites/build_character_review_panels.py'
       - 'tools/sprites/render_chatgpt_originals.py'
+      - 'tools/sprites/render_original_character_previews.py'
       - 'art/incoming/chatgpt-original/**'
       - 'tools/sprites/verify_local_character_bundle.py'
       - 'tools/sprites/character_head_identity_lock.py'
@@ -1354,6 +1400,7 @@ jobs:
             tools/sprites/asset_wave_orchestrator.py \
             tools/sprites/build_character_review_panels.py \
             tools/sprites/render_chatgpt_originals.py \
+            tools/sprites/render_original_character_previews.py \
             tools/sprites/verify_local_character_bundle.py \
             tools/sprites/character_head_identity_lock.py \
             tools/sprites/verify_character_action_candidates.py \
@@ -9652,6 +9699,80 @@ jobs:
             /tmp/zte-motion-forensics/current-review-playback/**
           retention-days: 90
           if-no-files-found: error
+```
+
+## File: .github/workflows/review-chatgpt-original-pack.yml
+```yaml
+name: Review ChatGPT Original Character Pack
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'ops/chatgpt-original-handoff-trigger.txt'
+      - 'tools/sprites/package_chatgpt_originals.py'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: review-chatgpt-original-character-pack
+  cancel-in-progress: false
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install technical review dependencies
+        run: python -m pip install --disable-pip-version-check Pillow==11.3.0
+      - name: Package committed first-party sprite candidates
+        run: |
+          python tools/sprites/package_chatgpt_originals.py \
+            --source art/incoming/chatgpt-original \
+            --output /tmp/chatgpt-original-character-candidates.zip
+      - name: Verify exact 18 atlas / 150 SVG contract
+        run: |
+          python tools/sprites/verify_local_character_bundle.py \
+            /tmp/chatgpt-original-character-candidates.zip \
+            --report /tmp/chatgpt-original-technical-review.json
+      - name: Generate human visual review panels without promoting assets
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/chatgpt-local-review/candidates
+          python - <<'PY'
+          import zipfile
+          from pathlib import Path
+          source=Path('/tmp/chatgpt-original-character-candidates.zip')
+          target=Path('/tmp/chatgpt-local-review/candidates')
+          with zipfile.ZipFile(source) as package:
+              atlases=[name for name in package.namelist()
+                       if name.startswith('atlases/zte_chr_') and name.endswith('_final.png')]
+              assert len(atlases)==18,len(atlases)
+              for item in atlases:
+                  (target/Path(item).name).write_bytes(package.read(item))
+          PY
+          python tools/sprites/build_character_review_panels.py \
+            --candidates /tmp/chatgpt-local-review/candidates \
+            --output-dir /tmp/chatgpt-local-review/panels
+          cp /tmp/chatgpt-original-technical-review.json \
+            /tmp/chatgpt-local-review/technical-review.json
+          printf '%s\n' \
+            '18 ORIGINAL CHATGPT ROLE ATLASES: REVIEW-ONLY EVIDENCE' \
+            'No automatic strict approval, Android promotion or runtime overwrite.' \
+            'Source: art/incoming/chatgpt-original. 150 editable SVGs.' \
+            > /tmp/chatgpt-local-review/NO_AUTOMATIC_APPROVAL.txt
+      - name: Publish original pack and review evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: chatgpt-original-local-review-only
+          path: |
+            /tmp/chatgpt-original-character-candidates.zip
+            /tmp/chatgpt-local-review/
+          if-no-files-found: error
+          retention-days: 90
 ```
 
 ## File: .github/workflows/semantic-refresh.yml
@@ -33054,6 +33175,44 @@ final = factory.normalize(factory.isolate(raw), factory.TARGET_SIDE[kind])
 out = factory.INCOMING / (Path(runtime).stem + ".png")
 ```
 
+## File: tools/sprites/package_chatgpt_originals.py
+```python
+#!/usr/bin/env python3
+"""Package first-party editable role sprites for *read-only* Android review.
+
+Only the 18 already-committed original candidate atlases are consumed. No new
+images or external model calls, no copies to Android res/, no strict promotion.
+"""
+⋮----
+ROLES = ("OP", "LOG", "ENG")
+ACTIONS = {"IDLE": 6, "WALK": 8, "WORK": 10, "CARRY": 8, "REPAIR": 10, "CELEB": 8}
+⋮----
+def make_bundle(source: Path, output: Path) -> dict
+⋮----
+original=json.loads((source/"creation-manifest.json").read_text(encoding="utf8"))
+expected={f"CHR-{role}-{action}" for role in ROLES for action in ACTIONS}
+⋮----
+rows=[]
+svg_count=0
+⋮----
+ident=f"CHR-{role}-{action}"
+name=f"zte_chr_{role.lower()}_{action.lower()}_final.png"
+p=source/"candidates"/name
+data=p.read_bytes()
+⋮----
+svg=source/"src_svg"/role/action/f"{frame:02d}.svg"
+payload=svg.read_bytes()
+⋮----
+report={"schema_version":1,"review_only":True,"strict_done_increased":False,
+⋮----
+def main() -> int
+⋮----
+parser=argparse.ArgumentParser()
+⋮----
+a=parser.parse_args()
+result=make_bundle(a.source,a.output)
+```
+
 ## File: tools/sprites/package_tech_actions_runtime.py
 ```python
 #!/usr/bin/env python3
@@ -34371,13 +34530,21 @@ sleeve=line(shoulder_x,shoulder_y,ex,ey,'url(#jacket)',17,3)
 leg_poses=[]
 ⋮----
 signed=(1 if side=='L' else -1)
-hipx=108 if side=='L' else 144
+# Wider hip spacing and a damped ankle arc avoid the crossed ankles
+# seen in the original WALK/CARRY frames. Articulation remains readable
+# without stepping through the opposite shin.
+hipx=106 if side=='L' else 146
 swing=signed*stride
 yhip=155+bounce
-knee_x=hipx+0.62*swing + (2 if side=='L' else -2)
-knee_y=190+bounce-2*max(0,signed*motion)
-ankle_x=hipx + swing*1.15
-lift=max(0,signed*motion)*9 if action in ('WALK','CARRY') else 0
+knee_x=hipx+0.45*swing + (2 if side=='L' else -2)
+# A gait has both position and velocity. A sinusoidal X position
+# alone repeats the same pose twice per loop (phase 45° and 135°).
+# Use the signed cosine for stance-vs-swing foot lift: eight real poses,
+# one grounded support foot per half-cycle and smooth loop closure.
+swing_velocity=signed*math.cos(phase) if action in ('WALK','CARRY') else 0
+knee_y=190+bounce-3*max(0,swing_velocity)
+ankle_x=hipx + swing*0.66
+lift=max(0,swing_velocity)*10 if action in ('WALK','CARRY') else 0
 ankle_y=226+bounce-lift
 ⋮----
 # no floor shadow; transparency is exact outside figure
@@ -34440,6 +34607,85 @@ args=parser.parse_args();outdir=pathlib.Path(args.output_dir);outdir.mkdir(paren
 results=[]
 ⋮----
 report={'version':'chatgpt-original-character-rig-v1','strict_done_added':0,'review_only':True,
+```
+
+## File: tools/sprites/render_original_character_previews.py
+```python
+#!/usr/bin/env python3
+"""Android-friendly animated previews for original ChatGPT-authored sprites.
+
+All evidence is review-only. This never reads or changes the canonical
+235-row master queue or Android runtime assets, and never promotes PNGs.
+"""
+⋮----
+FRAMES = {"IDLE": 6, "WALK": 8, "WORK": 10, "CARRY": 8, "REPAIR": 10, "CELEB": 8}
+ROLES = ("OP", "LOG", "ENG")
+DURATION_MS = {"IDLE": 185, "WALK": 105, "WORK": 125, "CARRY": 115,
+⋮----
+def frames_from_atlas(path: Path, count: int) -> list[Image.Image]
+⋮----
+result = [source.crop(((i % 4)*256, (i // 4)*256,
+⋮----
+def checker() -> Image.Image
+⋮----
+im = Image.new("RGB", (256, 256), "#b0b6c1")
+d = ImageDraw.Draw(im)
+⋮----
+def compose(frame: Image.Image, backdrop: Image.Image) -> Image.Image
+⋮----
+cell = backdrop.copy()
+⋮----
+def fingerprint(frame: Image.Image) -> str
+⋮----
+def change_ratio(a: Image.Image, b: Image.Image) -> float
+⋮----
+# RGB plus silhouette activity, computed over the occupied image region
+# to distinguish a blink from identical idle frames.
+aa = a.resize((64, 64), Image.Resampling.BILINEAR).convert("RGBA")
+bb = b.resize((64, 64), Image.Resampling.BILINEAR).convert("RGBA")
+⋮----
+activity = 0
+count = 0
+⋮----
+def produce(source: Path) -> dict
+⋮----
+manifest = json.loads((source/"creation-manifest.json").read_text(encoding="utf8"))
+expected = {f"CHR-{role}-{action}" for role in ROLES for action in FRAMES}
+⋮----
+preview = source/"previews"
+⋮----
+atlas = Image.new("RGB", (6*190, 3*223), "#202732")
+draw = ImageDraw.Draw(atlas)
+background = checker()
+analysis = []
+⋮----
+asset_id = f"CHR-{role}-{action}"
+filename = f"zte_chr_{role.lower()}_{action.lower()}_final.png"
+cells = frames_from_atlas(source/"candidates"/filename, FRAMES[action])
+distinct = len({fingerprint(f) for f in cells})
+⋮----
+# WALK/CARRY need eight physically different stride phases, not
+# a repeated sinusoidal snapshot with fake foot movement.
+⋮----
+rendered = [compose(f, background) for f in cells]
+gif_path = preview/f"{role.lower()}-{action.lower()}.gif"
+⋮----
+small = rendered[0].resize((186, 186), Image.Resampling.LANCZOS)
+pos = (col*190+2, row*223+30)
+⋮----
+all_frames = cells[1:] + cells[:1]
+ratios = [change_ratio(a, b) for a, b in zip(cells, all_frames)]
+boxes = [f.getchannel("A").getbbox() for f in cells]
+min_margin = min(min(x, y, 256-x2, 256-y2)
+⋮----
+result = {
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser()
+⋮----
+args = parser.parse_args()
+result = produce(args.output_dir)
 ```
 
 ## File: tools/sprites/repair_shadowed_character_atlas.py
