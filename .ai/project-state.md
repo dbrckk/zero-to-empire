@@ -31,19 +31,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-13T07:28:22Z
+Generated: 2026-10-13T08:11:50Z
 
 ### Git
 - Branch: `main`
-- Head: `36e4942092c0`
-- Commit date: 2026-10-13T09:28:08+02:00
-- Commit: docs(art): record final offline phone review player and local candidate ZIP checksum
+- Head: `544393f06d55`
+- Commit date: 2026-10-13T10:11:26+02:00
+- Commit: docs(art): enforce zero-to-empire as destination for all remaining asset production
 - Tracked files: 1563
 
 ### Recently changed files
+- `docs/art/UNIFIED_ASSET_PIPELINE.md`
+- `.github/workflows/local-character-review.yml`
 - `art/production/LOCAL_FIRST_CHARACTER_HANDOFF.md`
 - `.github/workflows/asset-pipeline-ci.yml`
-- `.github/workflows/local-character-review.yml`
 
 ### Project signals
 - `build.gradle.kts`

@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 43abab226c4f6828e9f5d5753a6fbaedd5f7de81
-Head: 36e4942092c01e55c7dacaa1ebc9a2e6fbf9fe57
+Base: 234372917bb262be494f657695d2cadd2af16ca5
+Head: 544393f06d55235801fdd925c62434f1f40006f8
 
 ## Changed files
-- M art/production/LOCAL_FIRST_CHARACTER_HANDOFF.md
+- M docs/art/UNIFIED_ASSET_PIPELINE.md
 
 ## Affected areas
-- art
+- docs
 
 ## Related test candidates
 - No direct filename-based test match detected.

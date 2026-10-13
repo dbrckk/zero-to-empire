@@ -4409,7 +4409,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install local-only image tooling
         run: python -m pip install --disable-pip-version-check Pillow==11.3.0
-      - name: Resolve and verify local candidate bundle
+      - id: bundle
+        name: Resolve and verify local candidate bundle
         env:
           BUNDLE_PATH: ${{ inputs.bundle_path || '' }}
         shell: bash
@@ -4427,15 +4428,24 @@ jobs:
           else:
               options=sorted(Path('art/production/local-candidates').glob('*.zip'),
                              key=lambda p:p.stat().st_mtime,reverse=True)
-              if not options:raise SystemExit('No local candidate ZIP in repository')
+              if not options:
+                  Path('/tmp/local-atlas-missing.txt').write_text('No candidate ZIP has been committed to art/production/local-candidates/; no assets were reviewed or promoted.\\n')
+                  print('LOCAL_CHARACTER_INPUT=NONE')
+                  raise SystemExit(0)
               p=options[0]
           Path('/tmp/local-atlas-path.txt').write_text(str(p))
           print('LOCAL_CHARACTER_INPUT='+str(p))
           PY
+          if [ ! -f /tmp/local-atlas-path.txt ]; then
+            echo 'available=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo 'available=true' >> "$GITHUB_OUTPUT"
           python tools/sprites/verify_local_character_bundle.py \
             "$(cat /tmp/local-atlas-path.txt)" \
             --report /tmp/local-character-technical-review.json
       - name: Build full-resolution visual review evidence
+        if: steps.bundle.outputs.available == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -4459,6 +4469,7 @@ jobs:
             --candidates /tmp/local-character-review/atlases \
             --output-dir /tmp/local-character-review/panels
       - name: Mark result as review-only
+        if: steps.bundle.outputs.available == 'true'
         run: |
           printf '%s\n' \
             'ZERO TO EMPIRE - LOCAL CHARACTER CANDIDATES' \
@@ -4476,6 +4487,7 @@ jobs:
           path: |
             /tmp/local-character-technical-review.json
             /tmp/local-character-review/
+            /tmp/local-atlas-missing.txt
           if-no-files-found: warn
           retention-days: 30
 ```
