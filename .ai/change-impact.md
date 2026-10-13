@@ -1,13 +1,13 @@
 # Change impact
 
-Base: f068370261eaf7ad1b61f82ee12d9dc5f09e158c
-Head: 8825690a0d081d8265d8ba6a63d84716efa920cf
+Base: 7ae19f9280dd573ed83b515b6f97ceaf89f4c20d
+Head: 37f8e39972cef9bbff1b71ecc5dfa2f640db3bcd
 
 ## Changed files
-- M art/incoming/chatgpt-original/README.md
+- M .github/workflows/art-chatgpt-original-candidates.yml
 
 ## Affected areas
-- art
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

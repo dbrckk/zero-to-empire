@@ -958,6 +958,16 @@ jobs:
           assert report['review_only'] and report['strict_done_added']==0
           assert {a['id'] for a in report['assets']}==required
           assert report['asset_count']==18 and report['unresolved_target_count']==16
+          # Every unfinished character must have an original, reproducible
+          # candidate authored in this repository, not only a remote GPU file.
+          master=json.loads(Path('art/production/master-asset-queue.json').read_text())
+          unfinished={a['id'] for a in master['assets']
+                      if a.get('strict_status')!='DONE' and a['id'].startswith('CHR-')}
+          if not unfinished.issubset(required):
+              raise SystemExit('Unfinished characters without local-first art: '
+                               +str(sorted(unfinished-required)))
+          if not unfinished.issubset({a['id'] for a in report['assets']}):
+              raise SystemExit('Unfinished characters missing from local creation manifest')
           proof=[]
           editable_svg_count=0
           for a in report['assets']:
@@ -34566,6 +34576,9 @@ else:toe=ax+9
 # neck + head, same exact proportions across all actions
 ⋮----
 # ear, cheek and neck shading
+⋮----
+# A blink must replace the open eyes, not paint a horizontal stroke over
+# still-visible pupils. This is an actual facial expression transition.
 ⋮----
 # unique helmet per role (seams, raised ridge and front peak)
 ⋮----

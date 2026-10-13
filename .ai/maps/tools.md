@@ -7371,6 +7371,9 @@ else:toe=ax+9
 ⋮----
 # ear, cheek and neck shading
 ⋮----
+# A blink must replace the open eyes, not paint a horizontal stroke over
+# still-visible pupils. This is an actual facial expression transition.
+⋮----
 # unique helmet per role (seams, raised ridge and front peak)
 ⋮----
 # ACTION EQUIPMENT, and foreground hands actually touching it.
