@@ -352,3 +352,38 @@ independently authored foot-contact poses, preserved wardrobe/texture,
 smooth weight transfer, stable ground pivot, visual review at actual Android
 playback size and the usual release validation. Keep all warped candidates
 strict `NEEDS_REVIEW` until those requirements are met.
+
+## Mandatory in-repository creation and delivery of all remaining assets
+
+**Scope:** every asset whose canonical `strict_status` is not `DONE`, including
+character animations, their identity-reference IDLE frames, and any subsequent
+failed/regenerated candidates. `dbrckk/zero-to-empire` is the single source
+of truth and permanent destination. External GPU services are *compute workers*,
+not alternate asset repositories.
+
+1. Define the exact asset ID and expected output filename in
+   `art/production/master-asset-queue.json`. Never silently substitute a
+   different ID or omit an unresolved action.
+2. Generate candidate frames in the repository's documented generator
+   (`tools/sprites/`) or via its GitHub Actions workflow. External workers
+   must return their output as GitHub Actions artifacts tied to a recorded
+   producer and collector run; ephemeral URLs alone do not count as delivery.
+3. Keep candidate images, complete frame/contact sheets, generator QA reports,
+   visual review and rejection evidence in this repository's documented
+   `art/production/` workflow and/or GitHub Actions run artifacts. Record
+   `review_artifact_run_id` for every candidate; do not treat an unreviewed
+   PNG or an artifact on an external service as a finished game asset.
+4. A candidate that passes manual semantic review must still pass sprite
+   technical checks, runtime integration and Android build/validation before
+   it can be promoted into the repository's canonical game assets and marked
+   `strict_status: DONE`.
+5. When the GPU/provider is unavailable, preserve the queue as pending and
+   record the blocker. Do **not** replace requested art with placeholders,
+   unrelated stock images, generated status text, or invented success counts.
+6. For an absent local ZIP in `art/production/local-candidates/`, the optional
+   local review workflow must report *no candidates*, not an asset failure or
+   promotion. A missing ZIP never implies that the requested art was created.
+
+This rule applies to all **16 remaining strict-pending items as of the
+2026-10-13 morning checkpoint (219/235)** and to every later regeneration.
+Recompute counts from the master queue on every status report.
