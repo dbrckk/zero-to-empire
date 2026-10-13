@@ -10,6 +10,7 @@ on:
       - 'tools/sprites/asset_wave_orchestrator.py'
       - 'tools/sprites/animation_batch_planner.py'
       - 'tools/sprites/build_character_review_panels.py'
+      - 'tools/sprites/verify_local_character_bundle.py'
       - 'tools/sprites/character_head_identity_lock.py'
       - 'tools/sprites/character_approved_idle_fallback.py'
       - 'tools/sprites/test_character_approved_idle_fallback.py'
@@ -34,10 +35,12 @@ on:
       - 'art/production/generation-rejection-ledger.json'
       - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
       - 'docs/art/UNIFIED_ASSET_PIPELINE.md'
+      - 'art/production/LOCAL_FIRST_CHARACTER_HANDOFF.md'
       - '.github/workflows/asset-pipeline-ci.yml'
       - '.github/workflows/asset-autofactory.yml'
       - '.github/workflows/kaggle-mass-sprite-factory.yml'
       - '.github/workflows/kaggle-async-character-collector.yml'
+      - '.github/workflows/local-character-review.yml'
       - '.github/workflows/kaggle-superseded-character-evidence.yml'
       - '.github/workflows/promote-approved-kaggle-characters.yml'
   push:
@@ -49,6 +52,7 @@ on:
       - 'tools/sprites/asset_wave_orchestrator.py'
       - 'tools/sprites/animation_batch_planner.py'
       - 'tools/sprites/build_character_review_panels.py'
+      - 'tools/sprites/verify_local_character_bundle.py'
       - 'tools/sprites/character_head_identity_lock.py'
       - 'tools/sprites/character_approved_idle_fallback.py'
       - 'tools/sprites/test_character_approved_idle_fallback.py'
@@ -73,10 +77,12 @@ on:
       - 'art/production/generation-rejection-ledger.json'
       - 'docs/art/FINAL_AAA_SPRITE_MANIFEST.md'
       - 'docs/art/UNIFIED_ASSET_PIPELINE.md'
+      - 'art/production/LOCAL_FIRST_CHARACTER_HANDOFF.md'
       - '.github/workflows/asset-pipeline-ci.yml'
       - '.github/workflows/asset-autofactory.yml'
       - '.github/workflows/kaggle-mass-sprite-factory.yml'
       - '.github/workflows/kaggle-async-character-collector.yml'
+      - '.github/workflows/local-character-review.yml'
       - '.github/workflows/kaggle-superseded-character-evidence.yml'
       - '.github/workflows/promote-approved-kaggle-characters.yml'
   workflow_dispatch:
@@ -111,6 +117,7 @@ jobs:
             tools/sprites/asset_queue_utils.py \
             tools/sprites/asset_wave_orchestrator.py \
             tools/sprites/build_character_review_panels.py \
+            tools/sprites/verify_local_character_bundle.py \
             tools/sprites/character_head_identity_lock.py \
             tools/sprites/verify_character_action_candidates.py \
             tools/sprites/verify_character_idle_candidates.py \
