@@ -7,10 +7,10 @@ creation with strict visual approval, Android runtime integration, or release.
 ## Location and provenance
 
 - Source: [render_chatgpt_originals.py](../../../tools/sprites/render_chatgpt_originals.py)
-- Candidate atlases: [candidates/](candidates/)
+- Candidate atlases: [candidates/](candidates/)\n- Per-frame editable original SVG art: [src_svg/](src_svg/) — **150 SVG files**\n- Animated phone previews: [previews/](previews/) — **18 GIFs**\n- First-frame comparison: [original-review-contact-sheet.png](original-review-contact-sheet.png)\n- Per-action motion evidence: [animation-review.json](animation-review.json)
 - Machine-readable list: [creation-manifest.json](creation-manifest.json)
 - Technical geometry report: [candidate-qa.json](candidate-qa.json)
-- Initial import workflow: [ChatGPT Original Character Candidates](../../../.github/workflows/art-chatgpt-original-candidates.yml)
+- Creation workflow: [ChatGPT Original Character Candidates](../../../.github/workflows/art-chatgpt-original-candidates.yml)\n- Read-only canonical technical review: [Review ChatGPT Original Character Pack](../../../.github/workflows/review-chatgpt-original-pack.yml)\n- Full first-party workflow: [Documentation](../../../docs/art/CHATGPT_ORIGINAL_CHARACTER_PIPELINE.md)
 
 There are **18 atlas sheets (1024×1024 RGBA)**, one sheet per action and role
 (OP, LOG, ENG). Each contains **6–10 frames at 256×256**, on a 4-column atlas.
@@ -28,7 +28,7 @@ From repository root with Python 3.12:
 
 ```bash
 python -m pip install Pillow==11.3.0 CairoSVG==2.7.1
-python tools/sprites/render_chatgpt_originals.py --output-dir art/incoming/chatgpt-original
+python tools/sprites/render_chatgpt_originals.py --output-dir art/incoming/chatgpt-original --save-svg\npython tools/sprites/render_original_character_previews.py --output-dir art/incoming/chatgpt-original
 ```
 
 The CI checks that every currently unresolved character manifest ID has an
