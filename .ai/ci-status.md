@@ -1,12 +1,17 @@
 # CI status
 
-Summary: 4 success / 0 failure / 1 active
+Summary: 6 success / 1 failure / 0 active
 
-- Asset Pipeline CI: in_progress / pending (544393f0)
-- Asset Pipeline CI: completed / cancelled (23437291)
-- Manifest Static GPU Batch: completed / success (186bf151)
-- Pollinations Character Atlas: completed / success (186bf151)
-- Asset Pipeline CI: completed / success (36e49420)
-- Asset Pipeline CI: completed / success (6f54045a)
+- Sprite Completion Gate: completed / success (ca77ddf5)
+- Character strict review matrix: completed / success (ca77ddf5)
+- Kaggle Mass Sprite Factory: completed / success (f92e85cf)
+- Asset Pipeline CI: completed / success (f7a53dd8)
+- Asset Autofactory 235: completed / success (232305ee)
+- Kaggle Async Character Collector: completed / success (b435b551)
+- Asset Pipeline CI: completed / failure (591c03e1)
+
+## Latest failed run structure
+- Job: validate
+  - Failed step: Run unified asset pipeline and visual-semantic gate checks
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

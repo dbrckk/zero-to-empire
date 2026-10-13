@@ -2786,6 +2786,11 @@ name: Kaggle Async Character Collector
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - 'ops/kaggle-collector-trigger.txt'
+  schedule:
+    - cron: '*/15 * * * *'
 
 permissions:
   contents: write

@@ -31,20 +31,24 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-13T08:11:50Z
+Generated: 2026-10-13T08:16:28Z
 
 ### Git
 - Branch: `main`
-- Head: `544393f06d55`
-- Commit date: 2026-10-13T10:11:26+02:00
-- Commit: docs(art): enforce zero-to-empire as destination for all remaining asset production
-- Tracked files: 1563
+- Head: `cc5306a9c847`
+- Commit date: 2026-10-13T10:16:00+02:00
+- Commit: docs(art): retain OP LOG GPU candidate evidence and enforce in-repo asset ownership
+- Tracked files: 1564
 
 ### Recently changed files
-- `docs/art/UNIFIED_ASSET_PIPELINE.md`
-- `.github/workflows/local-character-review.yml`
-- `art/production/LOCAL_FIRST_CHARACTER_HANDOFF.md`
-- `.github/workflows/asset-pipeline-ci.yml`
+- `art/production/op-log-2026-10-13-semantic-review.md`
+- `art/production/master-asset-queue.json`
+- `art/production/kaggle-async-state.json`
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
+- `art/production/character-strict-review-backlog.md`
+- `art/production/controlled-character-regen-queue.json`
+- `tools/assets/test_workflow_policy.py`
 
 ### Project signals
 - `build.gradle.kts`

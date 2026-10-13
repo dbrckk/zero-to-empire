@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 234372917bb262be494f657695d2cadd2af16ca5
-Head: 544393f06d55235801fdd925c62434f1f40006f8
+Base: ca77ddf5ae921fe172286b9e2fa221b4cc989746
+Head: cc5306a9c847a8aff001bd8d07e5a920bceb059b
 
 ## Changed files
-- M docs/art/UNIFIED_ASSET_PIPELINE.md
+- A art/production/op-log-2026-10-13-semantic-review.md
 
 ## Affected areas
-- docs
+- art
 
 ## Related test candidates
 - No direct filename-based test match detected.
