@@ -69,12 +69,15 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
  leg_poses=[]
  for side in ('L','R'):
   signed=(1 if side=='L' else -1)
-  hipx=108 if side=='L' else 144
+  # Wider hip spacing and a damped ankle arc avoid the crossed ankles
+  # seen in the original WALK/CARRY frames. Articulation remains readable
+  # without stepping through the opposite shin.
+  hipx=106 if side=='L' else 146
   swing=signed*stride
   yhip=155+bounce
-  knee_x=hipx+0.62*swing + (2 if side=='L' else -2)
+  knee_x=hipx+0.45*swing + (2 if side=='L' else -2)
   knee_y=190+bounce-2*max(0,signed*motion)
-  ankle_x=hipx + swing*1.15
+  ankle_x=hipx + swing*0.66
   lift=max(0,signed*motion)*9 if action in ('WALK','CARRY') else 0
   ankle_y=226+bounce-lift
   leg_poses.append((side,hipx,yhip,knee_x,knee_y,ankle_x,ankle_y))
