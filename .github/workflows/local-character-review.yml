@@ -1,0 +1,99 @@
+name: Review Local Character Atlases
+
+on:
+  workflow_dispatch:
+    inputs:
+      bundle_path:
+        description: Repository-relative ZIP path under art/production/local-candidates/
+        required: true
+        type: string
+  push:
+    branches: [main]
+    paths:
+      - 'art/production/local-candidates/*.zip'
+      - '.github/workflows/local-character-review.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: local-character-review-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install local-only image tooling
+        run: python -m pip install --disable-pip-version-check Pillow==11.3.0
+      - name: Resolve and verify local candidate bundle
+        env:
+          BUNDLE_PATH: ${{ inputs.bundle_path || '' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          selected=os.environ.get('BUNDLE_PATH','').strip()
+          if selected:
+              p=Path(selected)
+              if p.parent != Path('art/production/local-candidates') or p.suffix!='.zip':
+                  raise SystemExit('ZIP must live directly under art/production/local-candidates/')
+              if not p.is_file():raise SystemExit('Specified local candidate ZIP not found')
+          else:
+              options=sorted(Path('art/production/local-candidates').glob('*.zip'),
+                             key=lambda p:p.stat().st_mtime,reverse=True)
+              if not options:raise SystemExit('No local candidate ZIP in repository')
+              p=options[0]
+          Path('/tmp/local-atlas-path.txt').write_text(str(p))
+          print('LOCAL_CHARACTER_INPUT='+str(p))
+          PY
+          python tools/sprites/verify_local_character_bundle.py \
+            "$(cat /tmp/local-atlas-path.txt)" \
+            --report /tmp/local-character-technical-review.json
+      - name: Build full-resolution visual review evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/local-character-review/atlases
+          cp /tmp/local-character-technical-review.json /tmp/local-character-review/technical-preflight.json
+          python - <<'PY'
+          import zipfile
+          from pathlib import Path
+          path=Path('/tmp/local-atlas-path.txt').read_text().strip()
+          root=Path('/tmp/local-character-review/atlases')
+          with zipfile.ZipFile(path) as z:
+              for name in z.namelist():
+                  if name.startswith('atlases/zte_chr_') and name.endswith('_final.png'):
+                      dest=root/Path(name).name
+                      dest.write_bytes(z.read(name))
+          atlas=list(root.glob('*.png'))
+          if len(atlas)!=18:raise SystemExit('Expected 18 local character atlas candidates')
+          print('LOCAL_ATLAS_REVIEW_INPUTS='+str(len(atlas)))
+          PY
+          python tools/sprites/build_character_review_panels.py \
+            --candidates /tmp/local-character-review/atlases \
+            --output-dir /tmp/local-character-review/panels
+      - name: Mark result as review-only
+        run: |
+          printf '%s\n' \
+            'ZERO TO EMPIRE - LOCAL CHARACTER CANDIDATES' \
+            'No Kaggle or remote image generator has run in this job.' \
+            'Technical PNG preflight is not artistic approval.' \
+            'Visual review of anatomy, action loops, character identity and hands/props is required.' \
+            'Android runtime audit, debug build and release validation have NOT been performed.' \
+            'STRICT DONE: UNCHANGED BY THIS WORKFLOW.' \
+            > /tmp/local-character-review/REVIEW_ONLY.txt
+      - name: Upload non-promotable review evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: local-character-review-only-${{ github.run_id }}
+          path: |
+            /tmp/local-character-technical-review.json
+            /tmp/local-character-review/
+          if-no-files-found: warn
+          retention-days: 30
