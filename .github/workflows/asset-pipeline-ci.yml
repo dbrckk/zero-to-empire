@@ -10,6 +10,8 @@ on:
       - 'tools/sprites/asset_wave_orchestrator.py'
       - 'tools/sprites/animation_batch_planner.py'
       - 'tools/sprites/build_character_review_panels.py'
+      - 'tools/sprites/render_chatgpt_originals.py'
+      - 'art/incoming/chatgpt-original/**'
       - 'tools/sprites/verify_local_character_bundle.py'
       - 'tools/sprites/character_head_identity_lock.py'
       - 'tools/sprites/character_approved_idle_fallback.py'
@@ -52,6 +54,8 @@ on:
       - 'tools/sprites/asset_wave_orchestrator.py'
       - 'tools/sprites/animation_batch_planner.py'
       - 'tools/sprites/build_character_review_panels.py'
+      - 'tools/sprites/render_chatgpt_originals.py'
+      - 'art/incoming/chatgpt-original/**'
       - 'tools/sprites/verify_local_character_bundle.py'
       - 'tools/sprites/character_head_identity_lock.py'
       - 'tools/sprites/character_approved_idle_fallback.py'
@@ -117,6 +121,7 @@ jobs:
             tools/sprites/asset_queue_utils.py \
             tools/sprites/asset_wave_orchestrator.py \
             tools/sprites/build_character_review_panels.py \
+            tools/sprites/render_chatgpt_originals.py \
             tools/sprites/verify_local_character_bundle.py \
             tools/sprites/character_head_identity_lock.py \
             tools/sprites/verify_character_action_candidates.py \
@@ -269,6 +274,30 @@ jobs:
           seed,reason=load_approved_idle_anchor('ENG',manifest,source)
           assert seed is None
           print('KAGGLE_ENG_REVIEW_ONLY_REFERENCE_ENFORCED=1')
+          PY
+
+      - name: Validate locally created character candidates without strict promotion
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          from PIL import Image
+          root=Path('art/incoming/chatgpt-original')
+          d=json.loads((root/'creation-manifest.json').read_text())
+          q=json.loads(Path('art/production/master-asset-queue.json').read_text())
+          ids={a['id'] for a in d['assets']}
+          outstanding={a['id'] for a in q['assets'] if a['strict_status']!='DONE' and a['id'].startswith('CHR-')}
+          assert outstanding.issubset(ids), sorted(outstanding-ids)
+          assert len(ids)==18
+          assert d['review_only'] and d['strict_done_added']==0
+          assert not any(a.get('strict_approved', False) for a in d['assets'])
+          for a in d['assets']:
+              with Image.open(root/'candidates'/a['file']) as image:
+                  assert image.size==(1024,1024) and image.mode=='RGBA'
+                  for idx in range(a['frames']):
+                      alpha=image.crop(((idx%4)*256,(idx//4)*256,((idx%4)+1)*256,((idx//4)+1)*256)).getchannel('A')
+                      assert alpha.getbbox() is not None
+          print('CHATGPT_ORIGINAL_CANDIDATES_VALID=18 UNRESOLVED_COVERED='+str(len(outstanding)))
           PY
 
       - name: Validate rejection-memory schema
