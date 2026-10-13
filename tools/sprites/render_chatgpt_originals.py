@@ -128,8 +128,12 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
   add(f'<path d="M 109 {66+bounce:.1f} h 39" stroke="#1c2e40" stroke-width="5" stroke-linecap="round"/>')
   add(f'<rect x="109" y="{68+bounce:.1f}" width="17" height="9" rx="3" fill="#1a3445" stroke="#7cbbc8" stroke-width="2"/><rect x="130" y="{68+bounce:.1f}" width="17" height="9" rx="3" fill="#1a3445" stroke="#7cbbc8" stroke-width="2"/>')
  else:
-  add(f'<ellipse cx="120" cy="{71+bounce:.1f}" rx="2.5" ry="3" fill="{p["eye"]}"/><ellipse cx="141" cy="{71+bounce:.1f}" rx="2.5" ry="3" fill="{p["eye"]}"/>')
-  if action=='IDLE' and index in (2,3):add(f'<path d="M 114 {70+bounce:.1f}h10 M 135 {70+bounce:.1f}h10" stroke="#263746" stroke-width="2.8"/>')
+  # A blink must replace the open eyes, not paint a horizontal stroke over
+  # still-visible pupils. This is an actual facial expression transition.
+  if action=='IDLE' and index in (2,3):
+   add(f'<path d="M 114 {71+bounce:.1f} q 6 3 12 0 M 135 {71+bounce:.1f} q 6 3 12 0" fill="none" stroke="{p["eye"]}" stroke-width="2.8" stroke-linecap="round"/>')
+  else:
+   add(f'<ellipse cx="120" cy="{71+bounce:.1f}" rx="2.5" ry="3" fill="{p["eye"]}"/><ellipse cx="141" cy="{71+bounce:.1f}" rx="2.5" ry="3" fill="{p["eye"]}"/>')
  add(f'<path d="M 127 {84+bounce:.1f} q 5 4 11 0" fill="none" stroke="#8e4e49" stroke-width="1.7" stroke-linecap="round"/>')
  # unique helmet per role (seams, raised ridge and front peak)
  add(f'<path d="M 101 {55+bounce:.1f} Q 100 {25+bounce:.1f} 121 {22+bounce:.1f} Q 153 {19+bounce:.1f} 157 {54+bounce:.1f}Z" fill="url(#helmet)" stroke="#202f3e" stroke-width="3"/>')
