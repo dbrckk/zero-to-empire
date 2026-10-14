@@ -1,12 +1,9 @@
+# Local-first artwork policy: remote art production is retired from automatic scheduling.
+# Historical workflow_dispatch remains available only by an explicit human decision.
 name: Kaggle Async Character Collector
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - 'ops/kaggle-collector-trigger.txt'
-  schedule:
-    - cron: '*/15 * * * *'
 
 permissions:
   contents: write
