@@ -1,13 +1,9 @@
+# Local-first artwork policy: remote art production is retired from automatic scheduling.
+# Historical workflow_dispatch remains available only by an explicit human decision.
 name: Kaggle Superseded Character Evidence
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '*/30 * * * *'
-  push:
-    branches: [main]
-    paths:
-      - 'ops/kaggle-orphan-trigger.txt'
 
 permissions:
   contents: write
