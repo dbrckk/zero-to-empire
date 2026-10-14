@@ -31,19 +31,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-14T08:23:11Z
+Generated: 2026-10-14T13:24:17Z
 
 ### Git
 - Branch: `main`
-- Head: `a9e3b7faf80f`
-- Commit date: 2026-10-14T10:22:39+02:00
-- Commit: ci(android): rebuild original QA APK and validate emulator with persistent bash script
+- Head: `290889d8b941`
+- Commit date: 2026-10-14T15:24:01+02:00
+- Commit: fix(android): validate real PNG signature instead of literal escaped bytes
 - Tracked files: 1772
 
 ### Recently changed files
+- `tools/android/local_original_character_emulator_smoke.sh`
 - `ops/local-original-android-review-trigger.txt`
 - `.github/workflows/local-original-character-android-emulator.yml`
-- `tools/android/local_original_character_emulator_smoke.sh`
 
 ### Project signals
 - `build.gradle.kts`

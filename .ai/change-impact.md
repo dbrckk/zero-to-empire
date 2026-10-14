@@ -1,13 +1,13 @@
 # Change impact
 
-Base: e7ed9cc900cc63a15a6f943f4f4cd6e9fc4689d5
-Head: a9e3b7faf80f1dc709f078d9dd84c311a94127b4
+Base: 95bd23458d78cd32bfed691dab59f5c213253726
+Head: 290889d8b941f45732920ae09157b6e2115cae88
 
 ## Changed files
-- M ops/local-original-android-review-trigger.txt
+- M tools/android/local_original_character_emulator_smoke.sh
 
 ## Affected areas
-- ops
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.
