@@ -49,9 +49,9 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
    # vertical pumping made the tool look like it floated and clipped the face.
    reach=math.sin(phase); pump=math.cos(phase)
    handpos=((80+2*reach,146-3*pump+bounce) if side=='L'
-            else (176+11*reach,123+9*pump+bounce))
+            else (176+15*reach,123+12*pump+bounce))
    elbow=((82,132+bounce) if side=='L'
-          else (168+6*reach,115+5*pump+bounce))
+          else (168+7*reach,115+7*pump+bounce))
   elif pose=='WALK':
    swing=motion*(-1 if side=='L' else 1)
    handpos=((84+8*swing,147+10*swing+bounce) if side=='L' else (170+8*swing,148-10*swing+bounce))
@@ -94,6 +94,17 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
  <linearGradient id="helmet" x1="0" x2="1" y1="0" y2=".5"><stop offset="0" stop-color="{p['helmet_hi']}"/><stop offset=".5" stop-color="{p['helmet']}"/><stop offset="1" stop-color="#96633c"/></linearGradient>
  <linearGradient id="skin" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#ffe4bb"/><stop offset=".65" stop-color="{p['skin']}"/><stop offset="1" stop-color="#af745b"/></linearGradient>
  <linearGradient id="pant" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="{p['jacket_hi']}"/><stop offset=".5" stop-color="{p['pant']}"/><stop offset="1" stop-color="#1f3040"/></linearGradient>
+ <linearGradient id="reinforced" x1="0" x2=".95" y1="0" y2="1">
+  <stop offset="0" stop-color="#81949e"/><stop offset=".20" stop-color="#475b6b"/>
+  <stop offset=".68" stop-color="#263b49"/><stop offset="1" stop-color="#172834"/>
+ </linearGradient>
+ <linearGradient id="metalEdge" x1="0" x2="1" y1="0" y2="0">
+  <stop offset="0" stop-color="#263946"/><stop offset=".33" stop-color="#a9bac0"/>
+  <stop offset=".51" stop-color="#566b78"/><stop offset=".90" stop-color="#1f3542"/>
+ </linearGradient>
+ <pattern id="workwearWeave" width="6" height="6" patternUnits="userSpaceOnUse">
+  <path d="M 0 6 L 6 0 M -1 2 L 2 -1" fill="none" stroke="#d4e1e2" stroke-opacity=".105" stroke-width=".6"/>
+ </pattern>
  </defs>''')
  # no floor shadow; transparency is exact outside figure
  # back ponytail / hair only LOG
@@ -105,14 +116,33 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
   # knee armor pad and seam
   add(f'<ellipse cx="{kx:.1f}" cy="{ky:.1f}" rx="11" ry="8" fill="#647687" stroke="#253645" stroke-width="2" opacity=".85"/>')
   add(f'<path d="M {kx-7:.1f} {ky-2:.1f} l 12 0" stroke="{p["seam"]}" stroke-width="1.5" opacity=".65"/>')
+  add(f'<path d="M {kx-9:.1f} {ky+3:.1f} l 17 0" stroke="#b7cbd0" stroke-width="1.7" opacity=".7"/>')
+  add(f'<circle cx="{kx-7:.1f}" cy="{ky-3:.1f}" r="1.6" fill="{p["accessory"]}"/><circle cx="{kx+7:.1f}" cy="{ky-3:.1f}" r="1.6" fill="{p["accessory"]}"/>')
   if side=='L': toe=ax-9
   else:toe=ax+9
   add(f'<path d="M {ax-10:.1f} {ay-8:.1f} Q {ax+11:.1f} {ay-11:.1f} {ax+13:.1f} {ay+2:.1f} L {toe+9:.1f} {ay+9:.1f} L {toe-12:.1f} {ay+7:.1f}Z" fill="#37434f" stroke="#1b2633" stroke-width="3"/>')
   add(f'<path d="M {toe-9:.1f} {ay+4:.1f} l 24 0" stroke="{p["seam"]}" stroke-width="2" opacity=".7"/>')
+  add(f'<path d="M {toe-11:.1f} {ay+7:.1f} q 12 3 26 0" stroke="#16232d" stroke-width="3.8" fill="none"/>')
+  add(f'<path d="M {toe-5:.1f} {ay-1:.1f} l 12 -2" stroke="#9cb2bd" stroke-width="1.9" opacity=".7"/>')
  # BACK arm
  add(joint_arm('L',action))
  # main torso, premium tapered silhouette, safety accents
  add(f'<path d="M 104 {93+bounce:.1f} Q 124 {85+bounce:.1f} 149 {93+bounce:.1f} L 164 {124+bounce:.1f} L 154 {157+bounce:.1f} Q 125 {170+bounce:.1f} 99 {158+bounce:.1f} L 88 {123+bounce:.1f}Z" fill="url(#jacket)" stroke="#172632" stroke-width="3.6"/>')
+ # Original workwear material pass: cropped shoulder armor, woven fabric,
+ # laminated vest segments and two retention fasteners. All follow the same
+ # torso/bounce transform and remain invariant across the six actions.
+ add(f'<path d="M 104 {93+bounce:.1f} Q 124 {85+bounce:.1f} 149 {93+bounce:.1f} L 164 {124+bounce:.1f} L 154 {157+bounce:.1f} Q 125 {170+bounce:.1f} 99 {158+bounce:.1f} L 88 {123+bounce:.1f}Z" fill="url(#workwearWeave)" opacity=".74"/>')
+ for side in ('L','R'):
+  dx=0 if side=='L' else 59
+  add(f'<path d="M {89+dx} {106+bounce:.1f} L {99+dx} {96+bounce:.1f} Q {107+dx} {95+bounce:.1f} {116+dx} {105+bounce:.1f} L {112+dx} {118+bounce:.1f} Q {100+dx} {119+bounce:.1f} {89+dx} {115+bounce:.1f}Z" fill="url(#reinforced)" stroke="#1b303c" stroke-width="2.7"/>')
+  add(f'<path d="M {94+dx} {105+bounce:.1f} q 7 -5 14 0" stroke="#b8ccd2" stroke-width="2.2" stroke-opacity=".72" fill="none"/>')
+  add(f'<circle cx="{102+dx}" cy="{113+bounce:.1f}" r="2.3" fill="{p["accessory"]}" stroke="#213645" stroke-width="1.1"/>')
+ # A subtle chest-harness fits inside the jacket; it is neither a text logo
+ # nor a detached floating decoration and stays attached while the arms move.
+ add(f'<path d="M 111 {103+bounce:.1f} L 119 {119+bounce:.1f} L 117 {150+bounce:.1f} M 144 {103+bounce:.1f} L 135 {119+bounce:.1f} L 136 {150+bounce:.1f}" stroke="#162c3a" stroke-width="7" opacity=".78" fill="none"/>')
+ add(f'<path d="M 111 {103+bounce:.1f} L 119 {119+bounce:.1f} L 117 {148+bounce:.1f} M 144 {103+bounce:.1f} L 135 {119+bounce:.1f} L 136 {148+bounce:.1f}" stroke="{p["seam"]}" stroke-width="2.2" opacity=".9" fill="none"/>')
+ add(f'<rect x="120" y="{125+bounce:.1f}" width="15" height="13" rx="2.5" fill="#233847" stroke="url(#metalEdge)" stroke-width="2"/>')
+ add(f'<path d="M 124 {128+bounce:.1f} h 6 m -3 -3 v 7" stroke="{p["accessory"]}" stroke-width="1.5" opacity=".9"/>')
  add(f'<path d="M 109 {95+bounce:.1f} Q 124 {101+bounce:.1f} 140 {95+bounce:.1f} L 126 {115+bounce:.1f}Z" fill="#223344" stroke="{p["seam"]}" stroke-width="1.6"/>')
  add(f'<path d="M 123 {111+bounce:.1f} L 125 {155+bounce:.1f}" stroke="{p["seam"]}" stroke-width="2.6" opacity=".9"/>')
  add(f'<path d="M 92 {115+bounce:.1f} L 106 {120+bounce:.1f} M 151 {118+bounce:.1f} L 162 {116+bounce:.1f}" stroke="{p["seam"]}" stroke-width="4" opacity=".9"/>')
@@ -140,6 +170,10 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
  # unique helmet per role (seams, raised ridge and front peak)
  add(f'<path d="M 101 {55+bounce:.1f} Q 100 {25+bounce:.1f} 121 {22+bounce:.1f} Q 153 {19+bounce:.1f} 157 {54+bounce:.1f}Z" fill="url(#helmet)" stroke="#202f3e" stroke-width="3"/>')
  add(f'<path d="M 121 {25+bounce:.1f} L 123 {49+bounce:.1f}" stroke="{p["helmet_hi"]}" stroke-width="4" opacity=".83"/>')
+ add(f'<path d="M 110 {37+bounce:.1f} Q 114 {28+bounce:.1f} 120 {27+bounce:.1f}" stroke="#fff4d6" stroke-width="2.2" opacity=".63" fill="none"/>')
+ add(f'<path d="M 145 {31+bounce:.1f} q 8 8 7 19" stroke="#1a3040" stroke-width="2.3" opacity=".45" fill="none"/>')
+ for xx in (106,155):
+  add(f'<circle cx="{xx}" cy="{55+bounce:.1f}" r="2.4" fill="#304353" stroke="{p["accessory"]}" stroke-width="1.2"/>')
  add(f'<path d="M 100 {52+bounce:.1f} Q 132 {46+bounce:.1f} 165 {53+bounce:.1f} L 164 {60+bounce:.1f} Q 128 {57+bounce:.1f} 95 {62+bounce:.1f}Z" fill="{p["helmet"]}" stroke="#223340" stroke-width="2.8"/>')
  if role=='ENG':
   add(f'<path d="M 147 {33+bounce:.1f} l 5 17" stroke="#3bd3dc" stroke-width="5"/>')
@@ -180,8 +214,8 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
  elif action in ('WORK','REPAIR'):
   # The exact same right-hand joint drives the held equipment. One cycle
   # and stable local geometry prevent fake floating tools and prop morphing.
-  tool_x=176+11*math.sin(phase)
-  tool_y=123+9*math.cos(phase)+bounce
+  tool_x=176+15*math.sin(phase)
+  tool_y=123+12*math.cos(phase)+bounce
   add(f'<g transform="translate({tool_x:.1f},{tool_y:.1f}) rotate({-4+3*math.sin(phase):.1f})">')
   if action=='WORK':
    if role=='OP':
