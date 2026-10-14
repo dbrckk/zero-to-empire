@@ -1,8 +1,8 @@
+# Local-first artwork policy: remote art production is retired from automatic scheduling.
+# Historical workflow_dispatch remains available only by an explicit human decision.
 name: Pollinations Character Atlas
 
 on:
-  schedule:
-    - cron: '2,17,32,47 * * * *'
   workflow_dispatch:
     inputs:
       batch_count:
@@ -17,13 +17,6 @@ on:
         description: Optional comma-separated character asset IDs
         required: false
         default: ''
-  push:
-    branches: [main]
-    paths:
-      - 'tools/sprites/pollinations_character_sheet_factory.py'
-      - 'art/production/controlled-character-regen-queue.json'
-      - '.github/workflows/pollinations-character-atlas.yml'
-      - 'ops/pollinations-character-trigger.txt'
 
 permissions:
   contents: write
