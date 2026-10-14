@@ -31,16 +31,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-14T07:59:25Z
+Generated: 2026-10-14T08:01:41Z
 
 ### Git
 - Branch: `main`
-- Head: `62ac36dbe7fa`
-- Commit date: 2026-10-14T09:59:10+02:00
-- Commit: ci(android): build installable review-only APK using 18 locally created original character atlases
+- Head: `7d43ff048cc4`
+- Commit date: 2026-10-14T10:01:25+02:00
+- Commit: feat(android): inspect every original role and action at true gameplay scale in debug QA gallery
 - Tracked files: 1764
 
 ### Recently changed files
+- `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
 - `.github/workflows/local-original-character-android-preview.yml`
 - `art/incoming/chatgpt-original/animation-review.json`
 - `art/incoming/chatgpt-original/candidates/zte_chr_eng_carry_final.png`
@@ -60,7 +61,6 @@ Generated: 2026-10-14T07:59:25Z
 - `art/incoming/chatgpt-original/previews/log-repair.gif`
 - `art/incoming/chatgpt-original/previews/log-work.gif`
 - `art/incoming/chatgpt-original/previews/op-carry.gif`
-- `art/incoming/chatgpt-original/previews/op-repair.gif`
 
 ### Project signals
 - `build.gradle.kts`

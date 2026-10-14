@@ -1,13 +1,13 @@
 # Change impact
 
-Base: bb8b0380165fa3ce332f51028c15f8b4c6f2289a
-Head: 62ac36dbe7fa3c531d6aa58afc4f448cbf6d23a9
+Base: 8fd39a2b7a692adf920f924cf2177075319a3f47
+Head: 7d43ff048cc41be3c0b65e1a122e897bc12c5632
 
 ## Changed files
-- A .github/workflows/local-original-character-android-preview.yml
+- M app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt
 
 ## Affected areas
-- .github
+- app
 
 ## Related test candidates
 - No direct filename-based test match detected.
