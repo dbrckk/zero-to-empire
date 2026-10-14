@@ -321,6 +321,7 @@ tools/
     character_preview_pixel_audit.py
     emulator_functional_smoke.sh
     local_original_character_emulator_smoke.sh
+    local_review_ui_target.py
     test_ui_click_target.py
     test_ui_dump_retry.py
     test_ui_economy_probe.py
@@ -27976,6 +27977,46 @@ PY
 printf '%s\n' 'LOCAL_ORIGINAL_ANDROID_GALLERY_LAUNCHED=1'   'STRICT_DONE_UNCHANGED_BY_EMULATOR=1'   'EMULATOR_REVIEW_IS_NOT_SEMANTIC_APPROVAL=1'   > "$OUT/ANDROID_REVIEW_ONLY.txt"
 ```
 
+## File: tools/android/local_review_ui_target.py
+```python
+#!/usr/bin/env python3
+"""Locate actual Android Compose accessibility controls in uiautomator XML.
+
+Only a review helper; never touches production assets or grants approval.
+Usage: python tools/android/local_review_ui_target.py hierarchy.xml "ENGINEER"
+Prints: "x y" for adb shell input tap, exiting 1 if not visible/clickable.
+"""
+⋮----
+BOUNDS = re.compile(r"^\[(\d+),(\d+)\]\[(\d+),(\d+)\]$")
+⋮----
+def find(xml_path: Path, label: str, clickable_only: bool = True) -> tuple[int, int] | None
+⋮----
+root = ET.parse(xml_path).getroot()
+# A label may also appear in a static header. Only target real controls.
+⋮----
+actual = (node.attrib.get("text") or node.attrib.get("content-desc") or "").strip()
+⋮----
+parents = []
+# uiautomator sometimes puts "clickable" on a parent Button/View.
+direct = node.attrib.get("clickable") == "true"
+⋮----
+# A bound of a nested label is still actionable only if a parent
+# Compose semantics node encloses it and is clickable.
+⋮----
+pb = BOUNDS.fullmatch(candidate.attrib.get("bounds", ""))
+nb = BOUNDS.fullmatch(node.attrib.get("bounds", ""))
+⋮----
+match = BOUNDS.fullmatch(node.attrib.get("bounds", ""))
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser()
+⋮----
+args = parser.parse_args()
+⋮----
+coord = find(args.xml, args.label, not args.allow_static_label)
+```
+
 ## File: tools/android/test_ui_click_target.py
 ```python
 MODULE_PATH = pathlib.Path(__file__).with_name("ui_click_target.py")
@@ -34938,6 +34979,15 @@ else:toe=ax+9
 ⋮----
 # main torso, premium tapered silhouette, safety accents
 ⋮----
+# Original workwear material pass: cropped shoulder armor, woven fabric,
+# laminated vest segments and two retention fasteners. All follow the same
+# torso/bounce transform and remain invariant across the six actions.
+⋮----
+dx=0 if side=='L' else 59
+⋮----
+# A subtle chest-harness fits inside the jacket; it is neither a text logo
+# nor a detached floating decoration and stays attached while the arms move.
+⋮----
 # belt buckles and pockets
 ⋮----
 # neck + head, same exact proportions across all actions
@@ -34964,8 +35014,8 @@ by=121+bounce
 ⋮----
 # The exact same right-hand joint drives the held equipment. One cycle
 # and stable local geometry prevent fake floating tools and prop morphing.
-tool_x=176+11*math.sin(phase)
-tool_y=123+9*math.cos(phase)+bounce
+tool_x=176+15*math.sin(phase)
+tool_y=123+12*math.cos(phase)+bounce
 ⋮----
 # foreground right arm and hand over equipment, never floating
 ⋮----

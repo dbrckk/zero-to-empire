@@ -1,13 +1,13 @@
 # Change impact
 
-Base: f7260c844e60f65432dc166c81dc4d960f05f300
-Head: 5ed2a386f5aaa740a48379bffbc60ef68076f801
+Base: 4671272b99f5eb407a06d9497c08ca3a1a2b5ad4
+Head: 823b24b9d89e48e3f2715587250e226597e225eb
 
 ## Changed files
-- M ops/local-original-android-review-trigger.txt
+- A tools/android/local_review_ui_target.py
 
 ## Affected areas
-- ops
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

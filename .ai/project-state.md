@@ -31,19 +31,36 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-14T13:26:59Z
+Generated: 2026-10-14T13:33:03Z
 
 ### Git
 - Branch: `main`
-- Head: `5ed2a386f5aa`
-- Commit date: 2026-10-14T15:26:40+02:00
-- Commit: ci(android): rerun original character gallery on emulator after PNG signature fix
-- Tracked files: 1772
+- Head: `823b24b9d89e`
+- Commit date: 2026-10-14T15:32:41+02:00
+- Commit: feat(android): locate real review-gallery buttons via Compose accessibility XML
+- Tracked files: 1773
 
 ### Recently changed files
-- `ops/local-original-android-review-trigger.txt`
-- `tools/android/local_original_character_emulator_smoke.sh`
-- `.github/workflows/local-original-character-android-emulator.yml`
+- `tools/android/local_review_ui_target.py`
+- `art/incoming/chatgpt-original/animation-review.json`
+- `art/incoming/chatgpt-original/candidates/zte_chr_eng_carry_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_eng_celeb_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_eng_idle_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_eng_repair_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_eng_walk_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_eng_work_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_log_carry_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_log_celeb_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_log_idle_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_log_repair_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_log_walk_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_log_work_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_op_carry_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_op_celeb_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_op_idle_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_op_repair_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_op_walk_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_op_work_final.png`
 
 ### Project signals
 - `build.gradle.kts`
