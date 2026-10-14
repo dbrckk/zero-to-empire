@@ -13,6 +13,11 @@ val productionAdMobAppId = providers.gradleProperty("ADMOB_APP_ID").orElse(sampl
 val productionRewardedId = providers.gradleProperty("REWARDED_AD_UNIT_ID").orElse("")
 val productionInterstitialId = providers.gradleProperty("INTERSTITIAL_AD_UNIT_ID").orElse("")
 
+// The original-character review APK is a separate installable app so a
+// reviewer cannot overwrite the normal game's DataStore/save files.
+val isolatedOriginalArtReview = providers.gradleProperty("LOCAL_ORIGINAL_CHARACTER_REVIEW")
+    .orElse("false").map { it.equals("true", ignoreCase = true) }.get()
+
 val versionCodeProperty = providers.gradleProperty("VERSION_CODE").orNull?.trim()
 val versionNameProperty = providers.gradleProperty("VERSION_NAME").orNull?.trim()
 val releaseVersionCode = when {
@@ -134,6 +139,10 @@ android {
 
     buildTypes {
         debug {
+            if (isolatedOriginalArtReview) {
+                applicationIdSuffix = ".originalreview"
+                versionNameSuffix = "-original-art-review"
+            }
             buildConfigField("String", "REWARDED_AD_UNIT_ID", "\"$sampleRewardedId\"")
             buildConfigField("String", "INTERSTITIAL_AD_UNIT_ID", "\"$sampleInterstitialId\"")
         }
