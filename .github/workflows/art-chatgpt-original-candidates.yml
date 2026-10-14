@@ -7,6 +7,7 @@ on:
     paths:
       - 'ops/chatgpt-original-trigger.txt'
       - 'tools/sprites/render_chatgpt_originals.py'
+      - 'tools/sprites/local_character_material_finish.py'
       - 'tools/sprites/render_original_character_previews.py'
       - 'tools/sprites/audit_chatgpt_originals.py'
 
@@ -41,6 +42,25 @@ jobs:
           compile(data,str(source),'exec')
           print('CHATGPT_ORIGINAL_RENDERER_SHA256='+hashlib.sha256(data).hexdigest())
           print('CHATGPT_ORIGINAL_SOURCE_VERSIONED=1')
+          PY
+      - name: Verify material finish preserves transparency and exact sprite bounds
+        run: |
+          python - <<'PY'
+          import sys,hashlib
+          from PIL import Image,ImageDraw
+          sys.path.insert(0,'tools/sprites')
+          from local_character_material_finish import finish_frame
+          original=Image.new('RGBA',(256,256))
+          d=ImageDraw.Draw(original)
+          d.ellipse((70,20,181,240),fill=(112,130,146,220))
+          first=finish_frame(original)
+          second=finish_frame(original)
+          assert first.getchannel('A').tobytes()==original.getchannel('A').tobytes()
+          assert first.tobytes()==second.tobytes()
+          assert first.getbbox()==original.getbbox()
+          assert first.getpixel((0,0))[3]==0
+          assert first.getpixel((120,100))[:3]!=original.getpixel((120,100))[:3]
+          print('LOCAL_MATERIAL_FINISH_ALPHA_AND_DETERMINISM_PASS=1')
           PY
       - name: Render all remaining role families from committed source
         run: |
