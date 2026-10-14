@@ -31,16 +31,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-14T19:34:03Z
+Generated: 2026-10-14T19:36:07Z
 
 ### Git
 - Branch: `main`
-- Head: `3a7b1fb25308`
-- Commit date: 2026-10-14T21:33:48+02:00
-- Commit: ci(android): preview local original v3 material-finished character atlas pack at gameplay scale
+- Head: `bd749adb9e91`
+- Commit date: 2026-10-14T21:35:51+02:00
+- Commit: docs(art): document v3 locally authored RGBA character material pass and review status
 - Tracked files: 1776
 
 ### Recently changed files
+- `art/production/LOCAL_FIRST_CHARACTER_HANDOFF.md`
 - `ops/local-original-android-review-trigger.txt`
 - `art/incoming/chatgpt-original/animation-review.json`
 - `art/incoming/chatgpt-original/candidates/zte_chr_eng_carry_final.png`
@@ -60,7 +61,6 @@ Generated: 2026-10-14T19:34:03Z
 - `art/incoming/chatgpt-original/candidates/zte_chr_op_idle_final.png`
 - `art/incoming/chatgpt-original/candidates/zte_chr_op_repair_final.png`
 - `art/incoming/chatgpt-original/candidates/zte_chr_op_walk_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_op_work_final.png`
 
 ### Project signals
 - `build.gradle.kts`

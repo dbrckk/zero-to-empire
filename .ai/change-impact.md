@@ -1,13 +1,13 @@
 # Change impact
 
-Base: c9e30685b9955a99b01161930cca45d20c846e75
-Head: 3a7b1fb25308f8f7a0a45a5fb5dacc88b6a9fde6
+Base: 82675a25ab75a8aa308358ced7e6d54256ae476f
+Head: bd749adb9e91da526143e4d504b891e12672aaaa
 
 ## Changed files
-- M ops/local-original-android-review-trigger.txt
+- M art/production/LOCAL_FIRST_CHARACTER_HANDOFF.md
 
 ## Affected areas
-- ops
+- art
 
 ## Related test candidates
 - No direct filename-based test match detected.
