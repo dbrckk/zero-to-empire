@@ -1,0 +1,105 @@
+name: Local Original Characters Android Emulator Review
+
+on:
+  workflow_run:
+    workflows:
+      - Local Original Characters Android Review APK
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: local-original-art-emulator-review
+  cancel-in-progress: false
+
+jobs:
+  actual-android-preview:
+    if: \${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_repository.full_name == github.repository }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout runtime review tooling
+        uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Fetch the exact completed review APK and provenance
+        uses: actions/download-artifact@v4
+        with:
+          name: zero-to-empire-local-original-review-debug-apk-not-approved
+          run-id: \${{ github.event.workflow_run.id }}
+          github-token: \${{ github.token }}
+          path: /tmp/zte-original-review
+      - name: Refuse production-package or unreconciled review APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('/tmp/zte-original-review')
+          manifests=list(root.rglob('provenance.json'))
+          apks=list(root.rglob('app-debug.apk'))
+          assert len(manifests)==1 and len(apks)==1,(manifests,apks)
+          p=json.loads(manifests[0].read_text())
+          assert p['application_id']=='com.zerotoempire.game.originalreview'
+          assert p['asset_count']==18 and p['runtime_preview_only'] is True
+          assert p['separate_from_production_saves'] is True
+          assert p['released_to_production'] is False
+          assert p['debug_apk_built'] is True
+          assert apks[0].stat().st_size>100000
+          Path('/tmp/zte-review-apk-path.txt').write_text(str(apks[0]))
+          print('LOCAL_REVIEW_EMULATOR_PROVENANCE_VERIFIED=1')
+          PY
+      - name: Enable KVM access
+        run: |
+          test -c /dev/kvm
+          sudo chmod a+rw /dev/kvm
+          test -r /dev/kvm && test -w /dev/kvm
+      - name: Exercise review gallery on a real Android emulator
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
+        with:
+          api-level: 33
+          target: default
+          arch: x86_64
+          profile: pixel_2
+          cores: 2
+          ram-size: 4096M
+          emulator-boot-timeout: 900
+          disable-linux-hw-accel: false
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -no-snapshot -no-metrics
+          script: |
+            set -euo pipefail
+            mkdir -p /tmp/zte-original-review-evidence
+            APK="$(cat /tmp/zte-review-apk-path.txt)"
+            adb install -r "$APK"
+            adb shell pm list packages | grep -F 'com.zerotoempire.game.originalreview'
+            adb shell am start -W -n 'com.zerotoempire.game.originalreview/com.zerotoempire.game.CharacterReviewActivity' \
+              | tee /tmp/zte-original-review-evidence/launch.txt
+            sleep 6
+            adb shell pidof com.zerotoempire.game.originalreview
+            adb exec-out screencap -p > /tmp/zte-original-review-evidence/01-role-grid.png
+            for n in 2 3 4 5; do
+              adb shell input swipe 290 690 290 220 380
+              sleep 1
+              adb exec-out screencap -p > "/tmp/zte-original-review-evidence/0$n-stage-scroll.png"
+              adb shell pidof com.zerotoempire.game.originalreview
+            done
+            adb shell uiautomator dump /sdcard/local-original-qa.xml
+            adb pull /sdcard/local-original-qa.xml \
+              /tmp/zte-original-review-evidence/ui-hierarchy.xml
+            test -s /tmp/zte-original-review-evidence/01-role-grid.png
+            test -s /tmp/zte-original-review-evidence/05-stage-scroll.png
+            echo 'LOCAL_ORIGINAL_ANDROID_GALLERY_LAUNCHED=1' \
+              > /tmp/zte-original-review-evidence/ANDROID_REVIEW_ONLY.txt
+      - name: Upload device screenshots and launch proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: local-original-android-emulator-visual-evidence
+          path: /tmp/zte-original-review-evidence/**
+          if-no-files-found: warn
+          retention-days: 30
