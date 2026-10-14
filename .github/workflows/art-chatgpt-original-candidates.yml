@@ -6,6 +6,8 @@ on:
     branches: [main]
     paths:
       - 'ops/chatgpt-original-trigger.txt'
+      - 'tools/sprites/render_chatgpt_originals.py'
+      - 'tools/sprites/render_original_character_previews.py'
 
 permissions:
   contents: write
@@ -104,6 +106,10 @@ jobs:
           d=json.loads((p/'animation-review.json').read_text())
           assert d['review_only'] is True and d['strict_done_added']==0
           assert d['generated_local_preview_count']==18
+          assert d['mobile_role_review_board_count']==3
+          for role in ('op','log','eng'):
+              with Image.open(p/'previews'/f'mobile-{role}.png') as board:
+                  assert board.size==(430,6*132),(role,board.size)
           assert d['editable_source_frame_count']==150
           assert len(d['assets'])==18
           for item in d['assets']:
@@ -126,6 +132,7 @@ jobs:
             art/incoming/chatgpt-original/candidates/*.png
             art/incoming/chatgpt-original/src_svg/**/*.svg
             art/incoming/chatgpt-original/previews/*.gif
+            art/incoming/chatgpt-original/previews/mobile-*.png
             art/incoming/chatgpt-original/original-review-contact-sheet.png
             art/incoming/chatgpt-original/animation-review.json
             art/incoming/chatgpt-original/creation-manifest.json
