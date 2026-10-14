@@ -31,21 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-14T13:50:29Z
+Generated: 2026-10-14T13:52:04Z
 
 ### Git
 - Branch: `main`
-- Head: `533ce04d7917`
-- Commit date: 2026-10-14T15:49:08+02:00
-- Commit: docs(art): record local 18-atlas authorship and verified 42dp emulator proof without false DONE
+- Head: `b8ec03509cad`
+- Commit date: 2026-10-14T15:51:47+02:00
+- Commit: test(ci): protect remaining locally authored art from automatic remote synthesis
 - Tracked files: 1775
 
 ### Recently changed files
-- `art/production/LOCAL_FIRST_CHARACTER_HANDOFF.md`
-- `art/incoming/chatgpt-original/visual-risk-qa.json`
-- `ops/local-original-android-review-trigger.txt`
-- `ops/chatgpt-original-trigger.txt`
-- `tools/android/local_original_character_emulator_smoke.sh`
+- `tools/assets/test_workflow_policy.py`
+- `.github/workflows/pollinations-character-smoke.yml`
+- `.github/workflows/kaggle-mass-sprite-factory.yml`
+- `.github/workflows/kaggle-superseded-character-evidence.yml`
+- `.github/workflows/kaggle-async-character-collector.yml`
 
 ### Project signals
 - `build.gradle.kts`

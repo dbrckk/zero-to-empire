@@ -1,12 +1,10 @@
 # CI status
 
-Summary: 4 success / 0 failure / 1 active
+Summary: 0 success / 0 failure / 1 active
 
-- Asset Pipeline CI: in_progress / pending (533ce04d)
-- Reconcile reviewed run 25: completed / skipped (84e5b7ee)
-- Local Original Characters Android Emulator Review: completed / success (84e5b7ee)
-- Local Original Characters Android Review APK: completed / success (d9658789)
-- ChatGPT Original Character Candidates: completed / success (5f846b89)
-- Android CI: completed / success (3aeed16e)
+- Asset Pipeline CI: queued / pending (b8ec0350)
+- Asset Pipeline CI: completed / cancelled (170759a2)
+- Asset Pipeline CI: completed / cancelled (40f5d7a9)
+- Asset Pipeline CI: completed / cancelled (e1e744c4)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

@@ -44,9 +44,9 @@
 - ast-grep outline: available
 - AST index mode: incremental
 - AST files reparsed this run: 0
-- outline files retained: 281
-- top-level items retained: 3773
-- direct members retained: 951
+- outline files retained: 280
+- top-level items retained: 3768
+- direct members retained: 893
 - symbol shards: 26
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard
 

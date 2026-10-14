@@ -3011,15 +3011,12 @@ jobs:
 
 ## File: .github/workflows/kaggle-async-character-collector.yml
 ```yaml
+# Local-first artwork policy: remote art production is retired from automatic scheduling.
+# Historical workflow_dispatch remains available only by an explicit human decision.
 name: Kaggle Async Character Collector
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - 'ops/kaggle-collector-trigger.txt'
-  schedule:
-    - cron: '*/15 * * * *'
 
 permissions:
   contents: write
@@ -3611,6 +3608,8 @@ jobs:
 
 ## File: .github/workflows/kaggle-mass-sprite-factory.yml
 ```yaml
+# Local-first artwork policy: remote art production is retired from automatic scheduling.
+# Historical workflow_dispatch remains available only by an explicit human decision.
 name: Kaggle Mass Sprite Factory
 
 on:
@@ -3628,14 +3627,6 @@ on:
         description: Submit character GPU work and let the scheduled collector reconcile it
         required: false
         default: 'false'
-  push:
-    branches:
-      - main
-    # Starting another GPU kernel merely because its source code changed
-    # can overwrite the active wave ledger and strand a long-running batch.
-    # Only an explicit dispatch marker is allowed to trigger push production.
-    paths:
-      - 'ops/sprite-wave-trigger.txt'
 
 permissions:
   contents: write
@@ -4384,16 +4375,12 @@ jobs:
 
 ## File: .github/workflows/kaggle-superseded-character-evidence.yml
 ```yaml
+# Local-first artwork policy: remote art production is retired from automatic scheduling.
+# Historical workflow_dispatch remains available only by an explicit human decision.
 name: Kaggle Superseded Character Evidence
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '*/30 * * * *'
-  push:
-    branches: [main]
-    paths:
-      - 'ops/kaggle-orphan-trigger.txt'
 
 permissions:
   contents: write
@@ -4978,20 +4965,12 @@ jobs:
 
 ## File: .github/workflows/manifest-static-gpu-batch.yml
 ```yaml
+# Local-first artwork policy: remote art production is retired from automatic scheduling.
+# Historical workflow_dispatch remains available only by an explicit human decision.
 name: Manifest Static GPU Batch
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/manifest-static-gpu-batch.yml'
-      - 'tools/sprites/manifest_batch_planner.py'
-      - 'tools/sprites/hf_static_manifest_factory.py'
-      - 'tools/sprites/multi_provider_static_manifest_factory.py'
-      - 'tools/sprites/build_sprite_contact_sheet.py'
-  schedule:
-    - cron: '23 * * * *'
 
 permissions:
   contents: read
@@ -5302,26 +5281,17 @@ jobs:
 
 ## File: .github/workflows/pollinations-building-candidate.yml
 ```yaml
+# Local-first artwork policy: remote art production is retired from automatic scheduling.
+# Historical workflow_dispatch remains available only by an explicit human decision.
 name: Pollinations Building Candidate
 
 on:
-  schedule:
-    - cron: '*/5 * * * *'
   workflow_dispatch:
     inputs:
       batch_count:
         description: Building candidates to attempt in this run
         required: false
         default: '8'
-  push:
-    branches: [main]
-    paths:
-      - 'tools/sprites/pollinations_building_factory.py'
-      - 'tools/sprites/pollinations_building_batch.py'
-      - 'tools/sprites/validate_runtime_asset.py'
-      - 'art/production/controlled-building-regen-queue.json'
-      - '.github/workflows/pollinations-building-candidate.yml'
-      - 'ops/pollinations-building-trigger.txt'
 
 permissions:
   contents: write
@@ -5459,11 +5429,11 @@ jobs:
 
 ## File: .github/workflows/pollinations-character-atlas.yml
 ```yaml
+# Local-first artwork policy: remote art production is retired from automatic scheduling.
+# Historical workflow_dispatch remains available only by an explicit human decision.
 name: Pollinations Character Atlas
 
 on:
-  schedule:
-    - cron: '2,17,32,47 * * * *'
   workflow_dispatch:
     inputs:
       batch_count:
@@ -5478,13 +5448,6 @@ on:
         description: Optional comma-separated character asset IDs
         required: false
         default: ''
-  push:
-    branches: [main]
-    paths:
-      - 'tools/sprites/pollinations_character_sheet_factory.py'
-      - 'art/production/controlled-character-regen-queue.json'
-      - '.github/workflows/pollinations-character-atlas.yml'
-      - 'ops/pollinations-character-trigger.txt'
 
 permissions:
   contents: write
@@ -5630,14 +5593,11 @@ jobs:
 
 ## File: .github/workflows/pollinations-character-smoke.yml
 ```yaml
+# Local-first artwork policy: remote art production is retired from automatic scheduling.
+# Historical workflow_dispatch remains available only by an explicit human decision.
 name: Pollinations Character Smoke
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'tools/sprites/pollinations_character_sheet_factory.py'
-      - '.github/workflows/pollinations-character-smoke.yml'
   workflow_dispatch:
 
 permissions:
@@ -28939,6 +28899,15 @@ def test_async_collector_persists_kernel_observation_even_before_completion(self
 def test_superseded_kaggle_wave_evidence_is_review_only(self)
 ⋮----
 text = Path(".github/workflows/kaggle-superseded-character-evidence.yml").read_text(encoding="utf-8")
+⋮----
+def test_local_first_art_has_no_automatic_external_generator_schedule(self)
+⋮----
+# The user requires the remaining original sprites to be authored in
+# ChatGPT, not regenerated remotely by periodic GitHub Actions.
+workflows = [
+⋮----
+text = Path(path).read_text(encoding="utf-8")
+header = text.split("\npermissions:", 1)[0]
 ⋮----
 def test_mass_gpu_preflight_blocks_duplicate_active_waves(self)
 ⋮----
