@@ -31,29 +31,36 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-13T13:18:06Z
+Generated: 2026-10-14T07:59:25Z
 
 ### Git
 - Branch: `main`
-- Head: `37f8e39972ce`
-- Commit date: 2026-10-13T15:17:23+02:00
-- Commit: ci(art): enforce local source coverage for every unfinished character manifest ID
-- Tracked files: 1763
+- Head: `62ac36dbe7fa`
+- Commit date: 2026-10-14T09:59:10+02:00
+- Commit: ci(android): build installable review-only APK using 18 locally created original character atlases
+- Tracked files: 1764
 
 ### Recently changed files
-- `.github/workflows/art-chatgpt-original-candidates.yml`
-- `art/incoming/chatgpt-original/README.md`
+- `.github/workflows/local-original-character-android-preview.yml`
 - `art/incoming/chatgpt-original/animation-review.json`
-- `art/incoming/chatgpt-original/candidates/zte_chr_eng_idle_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_log_idle_final.png`
-- `art/incoming/chatgpt-original/previews/eng-idle.gif`
-- `art/incoming/chatgpt-original/previews/log-idle.gif`
-- `art/incoming/chatgpt-original/src_svg/ENG/IDLE/02.svg`
-- `art/incoming/chatgpt-original/src_svg/ENG/IDLE/03.svg`
-- `art/incoming/chatgpt-original/src_svg/LOG/IDLE/02.svg`
-- `art/incoming/chatgpt-original/src_svg/LOG/IDLE/03.svg`
-- `ops/chatgpt-original-trigger.txt`
-- `tools/sprites/render_chatgpt_originals.py`
+- `art/incoming/chatgpt-original/candidates/zte_chr_eng_carry_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_eng_repair_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_eng_work_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_log_carry_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_log_repair_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_log_work_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_op_carry_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_op_repair_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_op_work_final.png`
+- `art/incoming/chatgpt-original/original-review-contact-sheet.png`
+- `art/incoming/chatgpt-original/previews/eng-carry.gif`
+- `art/incoming/chatgpt-original/previews/eng-repair.gif`
+- `art/incoming/chatgpt-original/previews/eng-work.gif`
+- `art/incoming/chatgpt-original/previews/log-carry.gif`
+- `art/incoming/chatgpt-original/previews/log-repair.gif`
+- `art/incoming/chatgpt-original/previews/log-work.gif`
+- `art/incoming/chatgpt-original/previews/op-carry.gif`
+- `art/incoming/chatgpt-original/previews/op-repair.gif`
 
 ### Project signals
 - `build.gradle.kts`

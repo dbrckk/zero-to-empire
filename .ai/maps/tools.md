@@ -7315,8 +7315,10 @@ elbow=((76,126-53*lift+bounce) if side=='L' else (171,126-53*lift+bounce))
 handpos=((89,132+bounce) if side=='L' else (166,132+bounce))
 elbow=((78,125+bounce) if side=='L' else (172,122+bounce))
 ⋮----
-reach=math.sin(phase*2); pump=math.cos(phase*2)
-handpos=((80+3*reach,150-4*pump+bounce) if side=='L'
+# One slow, physically connected tool cycle. Earlier 22px reach/24px
+# vertical pumping made the tool look like it floated and clipped the face.
+reach=math.sin(phase); pump=math.cos(phase)
+handpos=((80+2*reach,146-3*pump+bounce) if side=='L'
 elbow=((82,132+bounce) if side=='L'
 ⋮----
 swing=motion*(-1 if side=='L' else 1)
@@ -7376,15 +7378,23 @@ else:toe=ax+9
 ⋮----
 # unique helmet per role (seams, raised ridge and front peak)
 ⋮----
-# ACTION EQUIPMENT, and foreground hands actually touching it.
+# ACTION EQUIPMENT. All objects are authored here as editable SVG
+# geometry, with invariant shape within each animation and hand contact.
 ⋮----
-# crate rigid body: no frame-specific changing geometry; subtle 1px bob only
 by=121+bounce
 ⋮----
-# hands over handles, always same positions
+# A bolted cast-metal ore bin (not a generic cardboard package).
 ⋮----
-tool_x=174+22*math.sin(phase*2)
-tool_y=120+24*math.cos(phase*2)+bounce
+# Warehouse parcel with tape and readable strapped corners.
+⋮----
+# Engineer's sealed field-instrument case, cyan latch lights.
+⋮----
+# Two hand grips overlap the left/right handle in every phase.
+⋮----
+# The exact same right-hand joint drives the held equipment. One cycle
+# and stable local geometry prevent fake floating tools and prop morphing.
+tool_x=176+11*math.sin(phase)
+tool_y=123+9*math.cos(phase)+bounce
 ⋮----
 # foreground right arm and hand over equipment, never floating
 ⋮----

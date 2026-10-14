@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 7ae19f9280dd573ed83b515b6f97ceaf89f4c20d
-Head: 37f8e39972cef9bbff1b71ecc5dfa2f640db3bcd
+Base: bb8b0380165fa3ce332f51028c15f8b4c6f2289a
+Head: 62ac36dbe7fa3c531d6aa58afc4f448cbf6d23a9
 
 ## Changed files
-- M .github/workflows/art-chatgpt-original-candidates.yml
+- A .github/workflows/local-original-character-android-preview.yml
 
 ## Affected areas
 - .github

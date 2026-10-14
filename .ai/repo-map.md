@@ -73,6 +73,7 @@ The content is organized as follows:
     lightning-sprite-factory.yml
     lightning-ssh-bootstrap.yml
     local-character-review.yml
+    local-original-character-android-preview.yml
     manifest-static-gpu-batch.yml
     manual-kaggle-go-77.yml
     modular-tech-actions.yml
@@ -4693,6 +4694,154 @@ jobs:
             /tmp/local-character-technical-review.json
             /tmp/local-character-review/
             /tmp/local-atlas-missing.txt
+          if-no-files-found: warn
+          retention-days: 30
+```
+
+## File: .github/workflows/local-original-character-android-preview.yml
+```yaml
+name: Local Original Characters Android Review APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/local-original-character-android-preview.yml'
+      - 'ops/local-original-android-review-trigger.txt'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: local-original-android-review
+  cancel-in-progress: false
+
+jobs:
+  build-review-only-apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - name: Checkout main with original authored assets
+        uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Set up Gradle 8.13
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.13'
+      - name: Install reproducible bitmap converter
+        run: python -m pip install --disable-pip-version-check Pillow==11.3.0
+      - name: Stage precisely 18 first-party role atlases in this ephemeral runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/local-original-android-review
+          python - <<'PY'
+          import hashlib,json,subprocess
+          from pathlib import Path
+          from PIL import Image
+
+          original=Path('art/incoming/chatgpt-original')
+          manifest=json.loads((original/'creation-manifest.json').read_text())
+          master=Path('art/production/master-asset-queue.json')
+          snapshot=hashlib.sha256(master.read_bytes()).hexdigest()
+          q=json.loads(master.read_text())
+          unfinished={a['id'] for a in q['assets'] if a['id'].startswith('CHR-')
+                      and a.get('strict_status')!='DONE'}
+          expected={f'CHR-{r}-{a}' for r in ('OP','LOG','ENG')
+                    for a in ('IDLE','WALK','WORK','CARRY','REPAIR','CELEB')}
+          assert manifest.get('review_only') is True
+          assert manifest.get('strict_done_added') == 0
+          assert len(manifest['assets']) == 18
+          assert {a['id'] for a in manifest['assets']} == expected
+          assert unfinished.issubset(expected)
+          assert len(unfinished) == 16, f'Strict backlog changed: {len(unfinished)}'
+          dest=Path('app/src/main/res/drawable-nodpi')
+          entries=[]
+          for row in manifest['assets']:
+              candidate=original/'candidates'/row['file']
+              runtime=dest/candidate.with_suffix('.webp').name
+              if runtime.with_suffix('.png').is_file():
+                  raise SystemExit('Duplicate Android resource variant: '+str(runtime))
+              with Image.open(candidate) as im:
+                  if im.size!=(1024,1024) or im.mode!='RGBA':
+                      raise SystemExit(f'Bad authored atlas: {row["id"]}')
+                  im.save(runtime,'WEBP',lossless=True,method=4,exact=True)
+              subprocess.run([
+                  'python','tools/sprites/validate_runtime_asset.py',
+                  '--asset-id',row['id'],'--path',str(runtime)
+              ],check=True,stdout=subprocess.DEVNULL)
+              entries.append({
+                  'id':row['id'],'review_only':True,
+                  'context_only':row.get('context_only',False),
+                  'original_sha256':hashlib.sha256(candidate.read_bytes()).hexdigest(),
+                  'runtime_sha256':hashlib.sha256(runtime.read_bytes()).hexdigest(),
+                  'runtime_path':str(runtime),
+                  'semantic_approved':False,'strict_done_added':0
+              })
+          result={
+              'schema_version':1,'lane':'CHATGPT_ORIGINAL_REVIEW_ONLY',
+              'source_commit':subprocess.check_output(['git','rev-parse','HEAD']).decode().strip(),
+              'asset_count':18,'strict_done_before':sum(
+                  a.get('strict_status')=='DONE' for a in q['assets']),
+              'production_master_sha256_before':snapshot,
+              'isolated_checkout':True,
+              'source_committed_locally':True,
+              'released_to_production':False,
+              'runtime_preview_only':True,
+              'actual_playability_on_device':'NOT_YET_TESTED',
+              'assets':entries
+          }
+          Path('build/local-original-android-review/provenance.json').write_text(
+              json.dumps(result,indent=2)+'\n')
+          assert hashlib.sha256(master.read_bytes()).hexdigest()==snapshot
+          print('LOCAL_ORIGINAL_ANDROID_STAGED=18, STRICT_DONE_UNCHANGED=1')
+          PY
+          git diff --exit-code -- art/production/master-asset-queue.json docs/art/FINAL_AAA_SPRITE_MANIFEST.md
+          python tools/android/audit_character_runtime.py
+      - name: Validate Android privacy and debug manifest
+        run: |
+          python tools/android/validate_manifest_policy.py
+          python tools/android/validate_release_privacy.py
+          test -f app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt
+          grep -q 'CharacterReviewActivity' app/src/debug/AndroidManifest.xml
+      - name: Build installable Android review APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          gradle assembleDebug --stacktrace
+          test -s app/build/outputs/apk/debug/app-debug.apk
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          p=Path('build/local-original-android-review/provenance.json')
+          d=json.loads(p.read_text())
+          apk=Path('app/build/outputs/apk/debug/app-debug.apk')
+          assert apk.stat().st_size > 100000
+          d['apk_sha256']=hashlib.sha256(apk.read_bytes()).hexdigest()
+          d['apk_bytes']=apk.stat().st_size
+          d['debug_apk_built']=True
+          p.write_text(json.dumps(d,indent=2)+'\n')
+          print('LOCAL_ORIGINAL_INSTALLABLE_DEBUG_APK_BUILT=1')
+          PY
+      - name: Run Android debug lint and existing checks
+        run: |
+          gradle testDebugUnitTest --stacktrace
+          gradle lintDebug --stacktrace
+      - name: Publish installable APK and exact candidate provenance
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zero-to-empire-local-original-review-debug-apk-not-approved
+          path: |
+            app/build/outputs/apk/debug/app-debug.apk
+            build/local-original-android-review/provenance.json
           if-no-files-found: warn
           retention-days: 30
 ```
@@ -34521,8 +34670,10 @@ elbow=((76,126-53*lift+bounce) if side=='L' else (171,126-53*lift+bounce))
 handpos=((89,132+bounce) if side=='L' else (166,132+bounce))
 elbow=((78,125+bounce) if side=='L' else (172,122+bounce))
 ⋮----
-reach=math.sin(phase*2); pump=math.cos(phase*2)
-handpos=((80+3*reach,150-4*pump+bounce) if side=='L'
+# One slow, physically connected tool cycle. Earlier 22px reach/24px
+# vertical pumping made the tool look like it floated and clipped the face.
+reach=math.sin(phase); pump=math.cos(phase)
+handpos=((80+2*reach,146-3*pump+bounce) if side=='L'
 elbow=((82,132+bounce) if side=='L'
 ⋮----
 swing=motion*(-1 if side=='L' else 1)
@@ -34582,15 +34733,23 @@ else:toe=ax+9
 ⋮----
 # unique helmet per role (seams, raised ridge and front peak)
 ⋮----
-# ACTION EQUIPMENT, and foreground hands actually touching it.
+# ACTION EQUIPMENT. All objects are authored here as editable SVG
+# geometry, with invariant shape within each animation and hand contact.
 ⋮----
-# crate rigid body: no frame-specific changing geometry; subtle 1px bob only
 by=121+bounce
 ⋮----
-# hands over handles, always same positions
+# A bolted cast-metal ore bin (not a generic cardboard package).
 ⋮----
-tool_x=174+22*math.sin(phase*2)
-tool_y=120+24*math.cos(phase*2)+bounce
+# Warehouse parcel with tape and readable strapped corners.
+⋮----
+# Engineer's sealed field-instrument case, cyan latch lights.
+⋮----
+# Two hand grips overlap the left/right handle in every phase.
+⋮----
+# The exact same right-hand joint drives the held equipment. One cycle
+# and stable local geometry prevent fake floating tools and prop morphing.
+tool_x=176+11*math.sin(phase)
+tool_y=123+9*math.cos(phase)+bounce
 ⋮----
 # foreground right arm and hand over equipment, never floating
 ⋮----
