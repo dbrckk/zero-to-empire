@@ -1,17 +1,9 @@
+# Local-first artwork policy: remote art production is retired from automatic scheduling.
+# Historical workflow_dispatch remains available only by an explicit human decision.
 name: Manifest Static GPU Batch
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/manifest-static-gpu-batch.yml'
-      - 'tools/sprites/manifest_batch_planner.py'
-      - 'tools/sprites/hf_static_manifest_factory.py'
-      - 'tools/sprites/multi_provider_static_manifest_factory.py'
-      - 'tools/sprites/build_sprite_contact_sheet.py'
-  schedule:
-    - cron: '23 * * * *'
 
 permissions:
   contents: read
