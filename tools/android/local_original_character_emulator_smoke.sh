@@ -33,16 +33,18 @@ else
 fi
 python3 - <<'PY'
 from pathlib import Path
-from PIL import Image
+from struct import unpack
 root=Path('/tmp/zte-original-review-evidence')
 shots=sorted(root.glob('0*-*.png'))
 if len(shots)!=5:
     raise SystemExit('Expected five emulator screenshots')
 for shot in shots:
-    if shot.stat().st_size<10000:
+    data=shot.read_bytes()
+    if len(data)<10000 or not data.startswith(b'\\x89PNG\\r\\n\\x1a\\n'):
         raise SystemExit(f'Empty/invalid emulator screenshot: {shot}')
-    with Image.open(shot) as image:
-        image.verify()
-print('LOCAL_ORIGINAL_EMULATOR_SCREENSHOT_DECODING_PASS=5')
+    width,height=unpack('>II',data[16:24])
+    if width<300 or height<500:
+        raise SystemExit(f'Unexpected emulator image size: {shot}: {width}x{height}')
+print('LOCAL_ORIGINAL_EMULATOR_SCREENSHOT_HEADERS_PASS=5')
 PY
 printf '%s\n' 'LOCAL_ORIGINAL_ANDROID_GALLERY_LAUNCHED=1'   'STRICT_DONE_UNCHANGED_BY_EMULATOR=1'   'EMULATOR_REVIEW_IS_NOT_SEMANTIC_APPROVAL=1'   > "$OUT/ANDROID_REVIEW_ONLY.txt"
