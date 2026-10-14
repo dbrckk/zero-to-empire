@@ -1,13 +1,13 @@
 # Change impact
 
-Base: b2bc45a6215e78320b71970fc40a0fcddc3f0f2c
-Head: 84cecdf887d98923e68e3f77b2a92505b48ebc63
+Base: 5e70a77cfb8e4761248bf64bf0afbf6e30074dba
+Head: 51eef1f681280cbbeda5423ddbf5f52aada035c3
 
 ## Changed files
-- M .github/workflows/local-original-character-android-emulator.yml
+- M ops/local-original-android-review-trigger.txt
 
 ## Affected areas
-- .github
+- ops
 
 ## Related test candidates
 - No direct filename-based test match detected.

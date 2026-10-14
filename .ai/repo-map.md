@@ -909,6 +909,8 @@ on:
     branches: [main]
     paths:
       - 'ops/chatgpt-original-trigger.txt'
+      - 'tools/sprites/render_chatgpt_originals.py'
+      - 'tools/sprites/render_original_character_previews.py'
 
 permissions:
   contents: write
@@ -1007,6 +1009,10 @@ jobs:
           d=json.loads((p/'animation-review.json').read_text())
           assert d['review_only'] is True and d['strict_done_added']==0
           assert d['generated_local_preview_count']==18
+          assert d['mobile_role_review_board_count']==3
+          for role in ('op','log','eng'):
+              with Image.open(p/'previews'/f'mobile-{role}.png') as board:
+                  assert board.size==(430,6*132),(role,board.size)
           assert d['editable_source_frame_count']==150
           assert len(d['assets'])==18
           for item in d['assets']:
@@ -1029,6 +1035,7 @@ jobs:
             art/incoming/chatgpt-original/candidates/*.png
             art/incoming/chatgpt-original/src_svg/**/*.svg
             art/incoming/chatgpt-original/previews/*.gif
+            art/incoming/chatgpt-original/previews/mobile-*.png
             art/incoming/chatgpt-original/original-review-contact-sheet.png
             art/incoming/chatgpt-original/animation-review.json
             art/incoming/chatgpt-original/creation-manifest.json
@@ -4775,7 +4782,7 @@ jobs:
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -no-snapshot -no-metrics
           script: |
-            set -euo pipefail
+            set -eu
             mkdir -p /tmp/zte-original-review-evidence
             APK="$(cat /tmp/zte-review-apk-path.txt)"
             adb install -r "$APK"
@@ -35006,6 +35013,10 @@ preview = source/"previews"
 atlas = Image.new("RGB", (6*190, 3*223), "#202732")
 draw = ImageDraw.Draw(atlas)
 background = checker()
+# Portrait boards remain legible on 320dp Android phones. The actual
+# rendered figure stays 42/39 pixels, matching city-stage gameplay scale.
+# These are review references, never automated approval decisions.
+mobile_boards = {
 analysis = []
 ⋮----
 asset_id = f"CHR-{role}-{action}"
@@ -35017,6 +35028,12 @@ distinct = len({fingerprint(f) for f in cells})
 # a repeated sinusoidal snapshot with fake foot movement.
 ⋮----
 rendered = [compose(f, background) for f in cells]
+board = mobile_boards[role]
+marker = ImageDraw.Draw(board)
+top = col * 132
+⋮----
+tiny = cells[0].resize((side, side), Image.Resampling.LANCZOS)
+⋮----
 gif_path = preview/f"{role.lower()}-{action.lower()}.gif"
 ⋮----
 small = rendered[0].resize((186, 186), Image.Resampling.LANCZOS)

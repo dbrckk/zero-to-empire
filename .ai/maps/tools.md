@@ -7474,6 +7474,10 @@ preview = source/"previews"
 atlas = Image.new("RGB", (6*190, 3*223), "#202732")
 draw = ImageDraw.Draw(atlas)
 background = checker()
+# Portrait boards remain legible on 320dp Android phones. The actual
+# rendered figure stays 42/39 pixels, matching city-stage gameplay scale.
+# These are review references, never automated approval decisions.
+mobile_boards = {
 analysis = []
 ⋮----
 asset_id = f"CHR-{role}-{action}"
@@ -7485,6 +7489,12 @@ distinct = len({fingerprint(f) for f in cells})
 # a repeated sinusoidal snapshot with fake foot movement.
 ⋮----
 rendered = [compose(f, background) for f in cells]
+board = mobile_boards[role]
+marker = ImageDraw.Draw(board)
+top = col * 132
+⋮----
+tiny = cells[0].resize((side, side), Image.Resampling.LANCZOS)
+⋮----
 gif_path = preview/f"{role.lower()}-{action.lower()}.gif"
 ⋮----
 small = rendered[0].resize((186, 186), Image.Resampling.LANCZOS)

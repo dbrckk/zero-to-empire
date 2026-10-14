@@ -31,20 +31,24 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-14T08:08:09Z
+Generated: 2026-10-14T08:15:30Z
 
 ### Git
 - Branch: `main`
-- Head: `84cecdf887d9`
-- Commit date: 2026-10-14T10:07:35+02:00
-- Commit: fix(ci): use valid GitHub workflow_run expressions in emulator evidence workflow
-- Tracked files: 1768
+- Head: `51eef1f68128`
+- Commit date: 2026-10-14T10:15:00+02:00
+- Commit: ci(android): retrigger isolated 18-atlas Android review and emulator after shell fix
+- Tracked files: 1771
 
 ### Recently changed files
+- `ops/local-original-android-review-trigger.txt`
 - `.github/workflows/local-original-character-android-emulator.yml`
-- `docs/art/LOCAL_ORIGINAL_ANDROID_REVIEW.md`
-- `.github/workflows/local-original-character-android-preview.yml`
-- `app/build.gradle.kts`
+- `art/incoming/chatgpt-original/animation-review.json`
+- `art/incoming/chatgpt-original/previews/mobile-eng.png`
+- `art/incoming/chatgpt-original/previews/mobile-log.png`
+- `art/incoming/chatgpt-original/previews/mobile-op.png`
+- `ops/chatgpt-original-trigger.txt`
+- `art/incoming/chatgpt-original/README.md`
 
 ### Project signals
 - `build.gradle.kts`
