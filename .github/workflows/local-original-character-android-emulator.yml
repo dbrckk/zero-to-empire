@@ -71,30 +71,7 @@ jobs:
           disable-linux-hw-accel: false
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -no-snapshot -no-metrics
-          script: |
-            set -eu
-            mkdir -p /tmp/zte-original-review-evidence
-            APK="$(cat /tmp/zte-review-apk-path.txt)"
-            adb install -r "$APK"
-            adb shell pm list packages | grep -F 'com.zerotoempire.game.originalreview'
-            adb shell am start -W -n 'com.zerotoempire.game.originalreview/com.zerotoempire.game.CharacterReviewActivity' \
-              | tee /tmp/zte-original-review-evidence/launch.txt
-            sleep 6
-            adb shell pidof com.zerotoempire.game.originalreview
-            adb exec-out screencap -p > /tmp/zte-original-review-evidence/01-role-grid.png
-            for n in 2 3 4 5; do
-              adb shell input swipe 290 690 290 220 380
-              sleep 1
-              adb exec-out screencap -p > "/tmp/zte-original-review-evidence/0$n-stage-scroll.png"
-              adb shell pidof com.zerotoempire.game.originalreview
-            done
-            adb shell uiautomator dump /sdcard/local-original-qa.xml
-            adb pull /sdcard/local-original-qa.xml \
-              /tmp/zte-original-review-evidence/ui-hierarchy.xml
-            test -s /tmp/zte-original-review-evidence/01-role-grid.png
-            test -s /tmp/zte-original-review-evidence/05-stage-scroll.png
-            echo 'LOCAL_ORIGINAL_ANDROID_GALLERY_LAUNCHED=1' \
-              > /tmp/zte-original-review-evidence/ANDROID_REVIEW_ONLY.txt
+          script: bash tools/android/local_original_character_emulator_smoke.sh
       - name: Upload device screenshots and launch proof
         if: always()
         uses: actions/upload-artifact@v4
