@@ -64,3 +64,57 @@ the canonical queue, grant strict DONE, or trigger Kaggle.
 
 The current progress remains **219/235 strict DONE**. Do not count the 18
 candidate PNG files or merely successful preflight checks as production art.
+
+## Checkpoint 14 October 2026 — local originals and Android
+
+The first-party vector rig and its 18 RGBA atlases were revised directly in the
+ChatGPT work, then reproduced from source in GitHub. The local generator
+[`render_chatgpt_originals.py`](../../tools/sprites/render_chatgpt_originals.py)
+commits **150 editable SVG animation frames** and 18 1024×1024 RGBA atlases
+to `art/incoming/chatgpt-original`. The authored changes include reinforced
+workwear, helmet/boot details, equipment consistency and larger physically
+connected WORK/REPAIR motion. Generation workflow
+[38572255542](https://github.com/dbrckk/zero-to-empire/actions/runs/38572255542)
+and Asset Pipeline CI [38572255480](https://github.com/dbrckk/zero-to-empire/actions/runs/38572255480)
+both succeeded.
+
+The later reject-only visual audit produced
+[`visual-risk-qa.json`](../incoming/chatgpt-original/visual-risk-qa.json)
+in workflow [38573935196](https://github.com/dbrckk/zero-to-empire/actions/runs/38573935196):
+**18 atlas checked, 150 frames checked, 0 automatically detected blocking risks,
+0 semantic approvals and 0 strict DONE changes.** Machine thresholds detect
+only specific silhouette/motion/color risks, not premium/AAA visual fidelity.
+
+The isolated Android review APK is built using all 18 current original atlases
+with `applicationId=com.zerotoempire.game.originalreview` and a strict
+`released_to_production=false` provenance report. Build
+[38573961240](https://github.com/dbrckk/zero-to-empire/actions/runs/38573961240)
+succeeded. The emulator workflow
+[38574480192](https://github.com/dbrckk/zero-to-empire/actions/runs/38574480192)
+then succeeded while installing the APK, launching the app, scrolling the
+four-role gallery, selecting ENGINEER and capturing the **actual full-body
+39dp/42dp night/day game-size character**, not merely its heading. The PNG and
+UI hierarchy are contained in artifact `local-original-android-emulator-visual-evidence`
+for that run.
+
+**Important visual shortfall:** although local sprites are original,
+reproducible, motion-tested and runtime-renderable, their 2.5D vector/flat
+rendering does not yet match the more realistically rendered canonical TECH
+role. Reviewers must compare face, anatomy, material detail, movement and
+gameplay readability across all roles before granting any strict approval.
+The exact production master remains **219/235 strict DONE** with **16 unresolved**;
+the original candidates must not be promoted by CI merely because all PNGs
+pass automatic gates.
+
+For users who only have Android, the current workflow supplies both an
+installable **review-only APK** and a compact, fully offline HTML player for
+the authored atlas candidates. The HTML player can choose role/action, pause,
+scrub, change FPS and compare day/night 39px/42px presentation. The ZIP and
+APK are provided in the corresponding ChatGPT session; they are not production
+releases.
+
+Next gate: explicit visual review of each of the 16 outstanding IDs, any
+required art revisions to match TECH style, then approved-only Android runtime
+integration, release validation and a manifest/queue update based on real
+evidence. Do not resume remote Kaggle-based art creation by default; all
+remaining artwork is to be authored directly in the ChatGPT working environment.
