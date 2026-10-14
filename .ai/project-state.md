@@ -31,18 +31,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-14T13:24:17Z
+Generated: 2026-10-14T13:26:59Z
 
 ### Git
 - Branch: `main`
-- Head: `290889d8b941`
-- Commit date: 2026-10-14T15:24:01+02:00
-- Commit: fix(android): validate real PNG signature instead of literal escaped bytes
+- Head: `5ed2a386f5aa`
+- Commit date: 2026-10-14T15:26:40+02:00
+- Commit: ci(android): rerun original character gallery on emulator after PNG signature fix
 - Tracked files: 1772
 
 ### Recently changed files
-- `tools/android/local_original_character_emulator_smoke.sh`
 - `ops/local-original-android-review-trigger.txt`
+- `tools/android/local_original_character_emulator_smoke.sh`
 - `.github/workflows/local-original-character-android-emulator.yml`
 
 ### Project signals
