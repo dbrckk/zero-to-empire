@@ -136,6 +136,11 @@ jobs:
           for item in d['assets']:
               assert item['distinct_frame_hashes']>1,item['id']
               assert item['min_alpha_margin']>=10,item['id']
+              assert item['last_to_first_loop_activity']>=0,item['id']
+              assert item['loop_seam_to_median_ratio']>=0,item['id']
+              assert item['abrupt_loop_reset_risk'] is False,(
+                  item['id'],'abrupt-animation-loop-reset',
+                  item['loop_seam_to_median_ratio'])
               with Image.open(p/item['animation_preview']) as preview:
                   assert preview.format=='GIF'
                   # GIF encoders coalesce identical consecutive poses and
