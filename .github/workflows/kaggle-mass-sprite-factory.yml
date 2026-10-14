@@ -1,3 +1,5 @@
+# Local-first artwork policy: remote art production is retired from automatic scheduling.
+# Historical workflow_dispatch remains available only by an explicit human decision.
 name: Kaggle Mass Sprite Factory
 
 on:
@@ -15,14 +17,6 @@ on:
         description: Submit character GPU work and let the scheduled collector reconcile it
         required: false
         default: 'false'
-  push:
-    branches:
-      - main
-    # Starting another GPU kernel merely because its source code changed
-    # can overwrite the active wave ledger and strand a long-running batch.
-    # Only an explicit dispatch marker is allowed to trigger push production.
-    paths:
-      - 'ops/sprite-wave-trigger.txt'
 
 permissions:
   contents: write
