@@ -1,23 +1,14 @@
+# Local-first artwork policy: remote art production is retired from automatic scheduling.
+# Historical workflow_dispatch remains available only by an explicit human decision.
 name: Pollinations Building Candidate
 
 on:
-  schedule:
-    - cron: '*/5 * * * *'
   workflow_dispatch:
     inputs:
       batch_count:
         description: Building candidates to attempt in this run
         required: false
         default: '8'
-  push:
-    branches: [main]
-    paths:
-      - 'tools/sprites/pollinations_building_factory.py'
-      - 'tools/sprites/pollinations_building_batch.py'
-      - 'tools/sprites/validate_runtime_asset.py'
-      - 'art/production/controlled-building-regen-queue.json'
-      - '.github/workflows/pollinations-building-candidate.yml'
-      - 'ops/pollinations-building-trigger.txt'
 
 permissions:
   contents: write
