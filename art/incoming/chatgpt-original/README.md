@@ -9,7 +9,7 @@ creation with strict visual approval, Android runtime integration, or release.
 - Source: [render_chatgpt_originals.py](../../../tools/sprites/render_chatgpt_originals.py)
 - Candidate atlases: [candidates/](candidates/)
 - Per-frame editable original SVG art: [src_svg/](src_svg/) — **150 SVG files**
-- Animated phone previews: [previews/](previews/) — **18 GIFs**
+- Animated phone previews: [previews/](previews/) — **18 GIFs**, plus [OP](previews/mobile-op.png), [LOG](previews/mobile-log.png), and [ENG](previews/mobile-eng.png) day/night comparison boards at true 39–42dp gameplay size
 - First-frame comparison: [original-review-contact-sheet.png](original-review-contact-sheet.png)
 - Per-action motion evidence: [animation-review.json](animation-review.json)
 - Machine-readable list: [creation-manifest.json](creation-manifest.json)
