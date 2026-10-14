@@ -1,11 +1,8 @@
+# Local-first artwork policy: remote art production is retired from automatic scheduling.
+# Historical workflow_dispatch remains available only by an explicit human decision.
 name: Pollinations Character Smoke
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'tools/sprites/pollinations_character_sheet_factory.py'
-      - '.github/workflows/pollinations-character-smoke.yml'
   workflow_dispatch:
 
 permissions:
