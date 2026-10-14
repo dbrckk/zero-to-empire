@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 8fd39a2b7a692adf920f924cf2177075319a3f47
-Head: 7d43ff048cc41be3c0b65e1a122e897bc12c5632
+Base: 3e91954e11b1e3a9ae9b1a823e1a2c2671635420
+Head: 993abeab3bef31237818c42d0fda1b32a29de3dc
 
 ## Changed files
-- M app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt
+- A ops/local-original-android-review-trigger.txt
 
 ## Affected areas
-- app
+- ops
 
 ## Related test candidates
 - No direct filename-based test match detected.
