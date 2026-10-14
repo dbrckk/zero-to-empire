@@ -35,13 +35,17 @@ read_ui() {
 }
 scroll_to_button() {
   local label="$1" coords="" x="" y=""
-  for attempt in $(seq 1 12); do
+  for attempt in $(seq 1 20); do
     read_ui
     if coords="$(python3 tools/android/local_review_ui_target.py "$OUT/ui-stage.xml" "$label")"; then
       printf '%s\n' "$coords"
       return 0
     fi
-    adb shell input swipe 290 690 290 220 320
+    if [ "$attempt" -le 4 ]; then
+      adb shell input swipe 290 690 290 220 320
+    else
+      adb shell input swipe 290 260 290 810 320
+    fi
     sleep 1
   done
   echo "Android stage control not visible: $label" >&2
@@ -54,7 +58,19 @@ read -r tap_x tap_y <<< "$coords"
 adb shell input tap "$tap_x" "$tap_y"
 sleep 2
 adb shell pidof com.zerotoempire.game.originalreview >/dev/null
-# The selected role renders side-by-side NIGHT 42dp / DAY 39dp game sprites.
+# After role selection the panel may expand below the visible fold; demand
+# that the REAL GAME SIZE preview is on-screen before taking screen evidence.
+stage_visible=false
+for attempt in $(seq 1 12); do
+  read_ui
+  if python3 tools/android/local_review_ui_target.py "$OUT/ui-stage.xml" 'NIGHT · 42 dp' --allow-static-label >/dev/null; then
+    stage_visible=true
+    break
+  fi
+  adb shell input swipe 290 700 290 280 340
+  sleep 1
+done
+test "$stage_visible" = true || { echo 'ENGINEER 42dp preview never visible' >&2; exit 1; }
 adb exec-out screencap -p > "$OUT/11-engineer-game-scale.png"
 # UI XML improves diagnosis; screenshots and active process are hard gates.
 if adb shell uiautomator dump /sdcard/local-original-qa.xml; then
