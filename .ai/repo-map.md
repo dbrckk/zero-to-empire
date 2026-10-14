@@ -393,6 +393,7 @@ tools/
     lightning_install_autopilot.sh
     lightning_remote_runner.py
     lightning_studio_factory.py
+    local_character_material_finish.py
     manifest_batch_planner.py
     multi_provider_static_manifest_factory.py
     package_chatgpt_originals.py
@@ -913,6 +914,7 @@ on:
     paths:
       - 'ops/chatgpt-original-trigger.txt'
       - 'tools/sprites/render_chatgpt_originals.py'
+      - 'tools/sprites/local_character_material_finish.py'
       - 'tools/sprites/render_original_character_previews.py'
       - 'tools/sprites/audit_chatgpt_originals.py'
 
@@ -947,6 +949,25 @@ jobs:
           compile(data,str(source),'exec')
           print('CHATGPT_ORIGINAL_RENDERER_SHA256='+hashlib.sha256(data).hexdigest())
           print('CHATGPT_ORIGINAL_SOURCE_VERSIONED=1')
+          PY
+      - name: Verify material finish preserves transparency and exact sprite bounds
+        run: |
+          python - <<'PY'
+          import sys,hashlib
+          from PIL import Image,ImageDraw
+          sys.path.insert(0,'tools/sprites')
+          from local_character_material_finish import finish_frame
+          original=Image.new('RGBA',(256,256))
+          d=ImageDraw.Draw(original)
+          d.ellipse((70,20,181,240),fill=(112,130,146,220))
+          first=finish_frame(original)
+          second=finish_frame(original)
+          assert first.getchannel('A').tobytes()==original.getchannel('A').tobytes()
+          assert first.tobytes()==second.tobytes()
+          assert first.getbbox()==original.getbbox()
+          assert first.getpixel((0,0))[3]==0
+          assert first.getpixel((120,100))[:3]!=original.getpixel((120,100))[:3]
+          print('LOCAL_MATERIAL_FINISH_ALPHA_AND_DETERMINISM_PASS=1')
           PY
       - name: Render all remaining role families from committed source
         run: |
@@ -1326,6 +1347,7 @@ on:
       - 'tools/sprites/animation_batch_planner.py'
       - 'tools/sprites/build_character_review_panels.py'
       - 'tools/sprites/render_chatgpt_originals.py'
+      - 'tools/sprites/local_character_material_finish.py'
       - 'tools/sprites/render_original_character_previews.py'
       - 'art/incoming/chatgpt-original/**'
       - 'tools/sprites/verify_local_character_bundle.py'
@@ -1371,6 +1393,7 @@ on:
       - 'tools/sprites/animation_batch_planner.py'
       - 'tools/sprites/build_character_review_panels.py'
       - 'tools/sprites/render_chatgpt_originals.py'
+      - 'tools/sprites/local_character_material_finish.py'
       - 'tools/sprites/render_original_character_previews.py'
       - 'art/incoming/chatgpt-original/**'
       - 'tools/sprites/verify_local_character_bundle.py'
@@ -1439,6 +1462,7 @@ jobs:
             tools/sprites/asset_wave_orchestrator.py \
             tools/sprites/build_character_review_panels.py \
             tools/sprites/render_chatgpt_originals.py \
+            tools/sprites/local_character_material_finish.py \
             tools/sprites/render_original_character_previews.py \
             tools/sprites/verify_local_character_bundle.py \
             tools/sprites/character_head_identity_lock.py \
@@ -33605,6 +33629,48 @@ targets = []
 dst = cdir / src.name
 ```
 
+## File: tools/sprites/local_character_material_finish.py
+```python
+"""Deterministic alpha-safe material lighting for ChatGPT original sprite rig.
+
+All work is local, editable and repeatable. The operation does not change
+pixel alpha, silhouette, timing, frame pivots or candidate review status.
+"""
+⋮----
+CELL=256
+⋮----
+@lru_cache(maxsize=1)
+def _lighting_fields()
+⋮----
+warm=Image.new("RGB",(CELL,CELL))
+cool=Image.new("RGB",(CELL,CELL))
+top=Image.new("L",(CELL,CELL))
+wp=[];cp=[];tp=[]
+⋮----
+lx=(CELL-1-x)/(CELL-1)
+ly=(CELL-1-y)/(CELL-1)
+w=max(0.0,1.0-((x-63)**2/(210**2)+(y-31)**2/(276**2)))
+c=max(0.0,(x-124)/150)*.7
+⋮----
+def finish_frame(frame:Image.Image)->Image.Image
+⋮----
+"""Apply restrained warm key, cool bounce and alpha-edge rim to RGBA frame."""
+⋮----
+src=frame.convert("RGBA")
+alpha=src.getchannel("A")
+⋮----
+rgb=src.convert("RGB")
+light=ImageChops.multiply(rgb,Image.merge("RGB",(top,top,top)))
+light=ImageChops.add(light,warm,scale=1.0,offset=0)
+light=ImageChops.add(light,cool,scale=1.0,offset=0)
+displaced=ImageChops.offset(alpha,2,1)
+rim=ImageChops.subtract(alpha,displaced).filter(ImageFilter.GaussianBlur(.75))
+rim=rim.point(lambda px:min(255,round(px*.23)))
+rim_color=Image.new("RGB",(CELL,CELL),(246,210,169))
+light=Image.composite(rim_color,light,rim)
+out=light.convert("RGBA")
+```
+
 ## File: tools/sprites/manifest_batch_planner.py
 ```python
 #!/usr/bin/env python3
@@ -35133,6 +35199,9 @@ count=ACTIONS[action]; atlas=Image.new('RGBA',(1024,1024),(0,0,0,0))
 svg=svg_frame(role,action,i,count)
 png=cairosvg.svg2png(bytestring=svg.encode('utf8'),output_width=768,output_height=768)
 rgba=Image.open(io.BytesIO(png)).convert('RGBA').resize((FRAME,FRAME),Image.Resampling.LANCZOS)
+# Final material illumination is deterministic and preserves exact alpha;
+# editable SVG geometry remains the authoritative rig/source for all frames.
+rgba=finish_frame(rgba)
 x=(i%4)*FRAME;y=(i//4)*FRAME;atlas.alpha_composite(rgba,(x,y))
 ⋮----
 src=outdir/'src_svg'/role/action;src.mkdir(parents=True,exist_ok=True)
@@ -35147,7 +35216,7 @@ parser=argparse.ArgumentParser()
 args=parser.parse_args();outdir=pathlib.Path(args.output_dir);outdir.mkdir(parents=True,exist_ok=True)
 results=[]
 ⋮----
-report={'version':'chatgpt-original-character-rig-v1','strict_done_added':0,'review_only':True,
+report={'version':'chatgpt-original-character-rig-v3-material-finish','strict_done_added':0,'review_only':True,
 ```
 
 ## File: tools/sprites/render_original_character_previews.py

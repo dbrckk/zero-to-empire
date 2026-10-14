@@ -1,15 +1,11 @@
 # CI status
 
-Summary: 0 success / 1 failure / 1 active
+Summary: 3 success / 0 failure / 1 active
 
-- Asset Pipeline CI: in_progress / pending (1fd5b6d0)
-- Asset Pipeline CI: completed / failure (b8ec0350)
-- Asset Pipeline CI: completed / cancelled (170759a2)
-- Asset Pipeline CI: completed / cancelled (40f5d7a9)
-- Asset Pipeline CI: completed / cancelled (e1e744c4)
-
-## Latest failed run structure
-- Job: validate
-  - Failed step: Run unified asset pipeline and visual-semantic gate checks
+- Local Original Characters Android Review APK: in_progress / pending (3a7b1fb2)
+- Asset Pipeline CI: completed / success (97e83127)
+- ChatGPT Original Character Candidates: completed / success (12f0271d)
+- Asset Pipeline CI: completed / cancelled (12f0271d)
+- Asset Pipeline CI: completed / success (1fd5b6d0)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

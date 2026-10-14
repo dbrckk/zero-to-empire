@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 42da9bafc7cb6788af8fde3e474475143c0b9a8f
-Head: 1fd5b6d0e5004b45cbf989342b4549713b545925
+Base: c9e30685b9955a99b01161930cca45d20c846e75
+Head: 3a7b1fb25308f8f7a0a45a5fb5dacc88b6a9fde6
 
 ## Changed files
-- M tools/assets/test_workflow_policy.py
+- M ops/local-original-android-review-trigger.txt
 
 ## Affected areas
-- tools
+- ops
 
 ## Related test candidates
 - No direct filename-based test match detected.
