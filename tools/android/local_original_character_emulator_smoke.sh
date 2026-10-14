@@ -40,7 +40,7 @@ if len(shots)!=5:
     raise SystemExit('Expected five emulator screenshots')
 for shot in shots:
     data=shot.read_bytes()
-    if len(data)<10000 or not data.startswith(b'\\x89PNG\\r\\n\\x1a\\n'):
+    if len(data)<10000 or not data.startswith(bytes.fromhex('89504e470d0a1a0a')):
         raise SystemExit(f'Empty/invalid emulator screenshot: {shot}')
     width,height=unpack('>II',data[16:24])
     if width<300 or height<500:
