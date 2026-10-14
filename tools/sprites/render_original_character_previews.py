@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import statistics
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
@@ -131,6 +132,13 @@ def produce(source: Path) -> dict:
             draw.text((col*190+6, row*223+8), f"{role}  {action}", fill="#ffffff")
             all_frames = cells[1:] + cells[:1]
             ratios = [change_ratio(a, b) for a, b in zip(cells, all_frames)]
+            # A smooth animation needs an equally smooth last-to-first loop.
+            # Previously only distinct hashes were checked: a sudden reset
+            # could still pass every geometry and motion test.
+            internal_median = statistics.median(ratios[:-1])
+            seam = ratios[-1]
+            seam_ratio = round(seam / max(internal_median, .0001), 4)
+            abrupt_loop_reset = seam > .045 and seam_ratio > 1.9
             boxes = [f.getchannel("A").getbbox() for f in cells]
             min_margin = min(min(x, y, 256-x2, 256-y2)
                              for x, y, x2, y2 in boxes)
@@ -143,6 +151,10 @@ def produce(source: Path) -> dict:
                 "min_alpha_margin": min_margin,
                 "mean_adjacent_pixel_activity": round(sum(ratios)/len(ratios), 6),
                 "max_adjacent_pixel_activity": max(ratios),
+                "last_to_first_loop_activity": seam,
+                "loop_seam_to_median_ratio": seam_ratio,
+                "abrupt_loop_reset_risk": abrupt_loop_reset,
+                "explicit_loop_review_required": abrupt_loop_reset,
                 "technical_geometry_pass": min_margin >= 10,
                 "visual_semantic_approved": False,
                 "android_runtime_approved": False,
