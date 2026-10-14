@@ -31,16 +31,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-14T13:33:03Z
+Generated: 2026-10-14T13:34:27Z
 
 ### Git
 - Branch: `main`
-- Head: `823b24b9d89e`
-- Commit date: 2026-10-14T15:32:41+02:00
-- Commit: feat(android): locate real review-gallery buttons via Compose accessibility XML
+- Head: `1fdc72b956e5`
+- Commit date: 2026-10-14T15:34:05+02:00
+- Commit: ci(android): validate refined original 18-atlas art and actual 42dp role stage
 - Tracked files: 1773
 
 ### Recently changed files
+- `ops/local-original-android-review-trigger.txt`
+- `tools/android/local_original_character_emulator_smoke.sh`
 - `tools/android/local_review_ui_target.py`
 - `art/incoming/chatgpt-original/animation-review.json`
 - `art/incoming/chatgpt-original/candidates/zte_chr_eng_carry_final.png`
@@ -59,8 +61,6 @@ Generated: 2026-10-14T13:33:03Z
 - `art/incoming/chatgpt-original/candidates/zte_chr_op_celeb_final.png`
 - `art/incoming/chatgpt-original/candidates/zte_chr_op_idle_final.png`
 - `art/incoming/chatgpt-original/candidates/zte_chr_op_repair_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_op_walk_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_op_work_final.png`
 
 ### Project signals
 - `build.gradle.kts`

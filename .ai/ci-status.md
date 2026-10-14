@@ -1,14 +1,13 @@
 # CI status
 
-Summary: 6 success / 0 failure / 1 active
+Summary: 1 success / 0 failure / 2 active
 
-- Android CI: in_progress / pending (823b24b9)
+- Reconcile reviewed run 25: completed / skipped (1fdc72b9)
+- Local Original Characters Android Review APK: in_progress / pending (1fdc72b9)
+- Reconcile reviewed run 25: completed / skipped (5946a5d6)
+- Android CI: in_progress / pending (5946a5d6)
+- Android CI: completed / cancelled (eff94f83)
+- Android CI: completed / cancelled (823b24b9)
 - ChatGPT Original Character Candidates: completed / success (b90476dc)
-- Asset Pipeline CI: completed / success (b90476dc)
-- Local Original Characters Android Emulator Review: completed / success (3f534b31)
-- Reconcile reviewed run 25: completed / skipped (3f534b31)
-- Local Original Characters Android Review APK: completed / success (5ed2a386)
-- Android CI: completed / success (290889d8)
-- Manifest Static GPU Batch: completed / success (95bd2345)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.
