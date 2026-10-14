@@ -231,6 +231,26 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertNotIn("master-asset-queue.json", text)
         self.assertNotIn("strict_status", text)
 
+    def test_local_first_art_has_no_automatic_external_generator_schedule(self):
+        # The user requires the remaining original sprites to be authored in
+        # ChatGPT, not regenerated remotely by periodic GitHub Actions.
+        workflows = [
+            ".github/workflows/pollinations-character-atlas.yml",
+            ".github/workflows/pollinations-building-candidate.yml",
+            ".github/workflows/manifest-static-gpu-batch.yml",
+            ".github/workflows/kaggle-async-character-collector.yml",
+            ".github/workflows/kaggle-superseded-character-evidence.yml",
+            ".github/workflows/kaggle-mass-sprite-factory.yml",
+            ".github/workflows/pollinations-character-smoke.yml",
+        ]
+        for path in workflows:
+            with self.subTest(workflow=path):
+                text = Path(path).read_text(encoding="utf-8")
+                header = text.split("\npermissions:", 1)[0]
+                self.assertIn("  workflow_dispatch:", header)
+                self.assertNotIn("\n  schedule:", header)
+                self.assertNotIn("\n  push:", header)
+
     def test_mass_gpu_preflight_blocks_duplicate_active_waves(self):
         text = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
         self.assertIn("jobs:\n  preflight:", text)
