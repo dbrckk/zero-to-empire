@@ -31,13 +31,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-14T13:52:04Z
+Generated: 2026-10-14T13:53:18Z
 
 ### Git
 - Branch: `main`
-- Head: `b8ec03509cad`
-- Commit date: 2026-10-14T15:51:47+02:00
-- Commit: test(ci): protect remaining locally authored art from automatic remote synthesis
+- Head: `1fd5b6d0e500`
+- Commit date: 2026-10-14T15:52:58+02:00
+- Commit: test(ci): update historical collector assertions to manual-only local-art policy
 - Tracked files: 1775
 
 ### Recently changed files
@@ -45,7 +45,6 @@ Generated: 2026-10-14T13:52:04Z
 - `.github/workflows/pollinations-character-smoke.yml`
 - `.github/workflows/kaggle-mass-sprite-factory.yml`
 - `.github/workflows/kaggle-superseded-character-evidence.yml`
-- `.github/workflows/kaggle-async-character-collector.yml`
 
 ### Project signals
 - `build.gradle.kts`

@@ -28859,6 +28859,10 @@ def test_async_collector_recovers_candidates_when_generated_targets_is_empty(sel
 ⋮----
 text = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
 ⋮----
+# Historical collector can be manually dispatched only. The user's
+# remaining sprites are now original, authored locally in ChatGPT.
+header=text.split("\npermissions:",1)[0]
+⋮----
 def test_action_translation_reviewer_precedes_candidate_promotion(self)
 ⋮----
 collector = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
