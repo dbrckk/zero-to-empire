@@ -31,24 +31,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-14T08:15:30Z
+Generated: 2026-10-14T08:23:11Z
 
 ### Git
 - Branch: `main`
-- Head: `51eef1f68128`
-- Commit date: 2026-10-14T10:15:00+02:00
-- Commit: ci(android): retrigger isolated 18-atlas Android review and emulator after shell fix
-- Tracked files: 1771
+- Head: `a9e3b7faf80f`
+- Commit date: 2026-10-14T10:22:39+02:00
+- Commit: ci(android): rebuild original QA APK and validate emulator with persistent bash script
+- Tracked files: 1772
 
 ### Recently changed files
 - `ops/local-original-android-review-trigger.txt`
 - `.github/workflows/local-original-character-android-emulator.yml`
-- `art/incoming/chatgpt-original/animation-review.json`
-- `art/incoming/chatgpt-original/previews/mobile-eng.png`
-- `art/incoming/chatgpt-original/previews/mobile-log.png`
-- `art/incoming/chatgpt-original/previews/mobile-op.png`
-- `ops/chatgpt-original-trigger.txt`
-- `art/incoming/chatgpt-original/README.md`
+- `tools/android/local_original_character_emulator_smoke.sh`
 
 ### Project signals
 - `build.gradle.kts`

@@ -1,13 +1,12 @@
 # CI status
 
-Summary: 3 success / 1 failure / 1 active
+Summary: 1 success / 1 failure / 3 active
 
-- Local Original Characters Android Review APK: in_progress / pending (51eef1f6)
-- ChatGPT Original Character Candidates: completed / success (e112cc8d)
-- Asset Pipeline CI: completed / success (86b14808)
-- Asset Pipeline CI: completed / success (a7d23424)
-- Reconcile reviewed run 25: completed / skipped (dda5f638)
-- Local Original Characters Android Emulator Review: completed / failure (dda5f638)
+- Local Original Characters Android Review APK: in_progress / pending (a9e3b7fa)
+- Android CI: pending / pending (58252741)
+- Android CI: in_progress / pending (0c3b1cdb)
+- Local Original Characters Android Emulator Review: completed / failure (b00f9564)
+- Local Original Characters Android Review APK: completed / success (51eef1f6)
 
 ## Latest failed run structure
 - Job: actual-android-preview
