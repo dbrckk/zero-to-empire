@@ -4,5 +4,84 @@
   "scope": "symbols defined in changed source files",
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
-  "symbols": {}
+  "symbols": {
+    "inspect": {
+      "source": {
+        "file": "tools/sprites/audit_chatgpt_originals.py",
+        "start": 22,
+        "end": 71
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "celebration_arm_reach_counts",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 84,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "clip_risk",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 388,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "audit": {
+      "source": {
+        "file": "tools/sprites/audit_chatgpt_originals.py",
+        "start": 74,
+        "end": 98
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "inspect",
+          "definitions": [
+            {
+              "file": "tools/sprites/audit_chatgpt_originals.py",
+              "line": 22,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "main": {
+      "source": {
+        "file": "tools/sprites/audit_chatgpt_originals.py",
+        "start": 101,
+        "end": 221
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "audit",
+          "definitions": [
+            {
+              "file": "tools/sprites/audit_chatgpt_originals.py",
+              "line": 74,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    }
+  }
 }

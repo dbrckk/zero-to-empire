@@ -31,36 +31,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-14T13:34:27Z
+Generated: 2026-10-14T13:40:17Z
 
 ### Git
 - Branch: `main`
-- Head: `1fdc72b956e5`
-- Commit date: 2026-10-14T15:34:05+02:00
-- Commit: ci(android): validate refined original 18-atlas art and actual 42dp role stage
-- Tracked files: 1773
+- Head: `960e1a7309c9`
+- Commit date: 2026-10-14T15:39:45+02:00
+- Commit: ci(art): attach full-frame risk audit to all 18 original authored animations
+- Tracked files: 1774
 
 ### Recently changed files
+- `.github/workflows/art-chatgpt-original-candidates.yml`
+- `tools/sprites/audit_chatgpt_originals.py`
 - `ops/local-original-android-review-trigger.txt`
 - `tools/android/local_original_character_emulator_smoke.sh`
-- `tools/android/local_review_ui_target.py`
-- `art/incoming/chatgpt-original/animation-review.json`
-- `art/incoming/chatgpt-original/candidates/zte_chr_eng_carry_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_eng_celeb_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_eng_idle_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_eng_repair_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_eng_walk_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_eng_work_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_log_carry_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_log_celeb_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_log_idle_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_log_repair_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_log_walk_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_log_work_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_op_carry_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_op_celeb_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_op_idle_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_op_repair_final.png`
 
 ### Project signals
 - `build.gradle.kts`

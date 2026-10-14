@@ -351,6 +351,7 @@ tools/
     asset_queue_utils.py
     asset_wave_orchestrator.py
     audit_character_candidates.py
+    audit_chatgpt_originals.py
     audit_complete_sprite_manifest.py
     autonomous_walk.py
     build_character_review_panels.py
@@ -913,6 +914,7 @@ on:
       - 'ops/chatgpt-original-trigger.txt'
       - 'tools/sprites/render_chatgpt_originals.py'
       - 'tools/sprites/render_original_character_previews.py'
+      - 'tools/sprites/audit_chatgpt_originals.py'
 
 permissions:
   contents: write
@@ -1029,6 +1031,21 @@ jobs:
           assert (p/'original-review-contact-sheet.png').is_file()
           print('CHATGPT_ANIMATED_MOBILE_PREVIEWS_PASS=18')
           PY
+      - name: Report all remaining character motion and identity risks without approval
+        run: |
+          python tools/sprites/audit_chatgpt_originals.py \
+            --base art/incoming/chatgpt-original
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('art/incoming/chatgpt-original/visual-risk-qa.json')
+          d=json.loads(p.read_text())
+          assert d['review_only'] is True and d['automatic_strict_done']==0
+          assert d['asset_count']==18 and d['frames_checked']==150
+          assert len(d['assets'])==18
+          assert all(not r['image_only_semantic_approval'] for r in d['assets'])
+          print('CHATGPT_ORIGINAL_REJECT_ONLY_VISUAL_QA_PASS=18')
+          PY
       - name: Publish original candidate review evidence
         uses: actions/upload-artifact@v4
         with:
@@ -1042,6 +1059,7 @@ jobs:
             art/incoming/chatgpt-original/animation-review.json
             art/incoming/chatgpt-original/creation-manifest.json
             art/incoming/chatgpt-original/candidate-qa.json
+            art/incoming/chatgpt-original/visual-risk-qa.json
           if-no-files-found: error
           retention-days: 90
       - name: Commit original atlas candidates and readable source to repository
@@ -29561,6 +29579,58 @@ source=ROOT/"art/incoming/final-sprites"/stem
 audit=inspect(source,asset_id)
 ⋮----
 result={"format":"zte-canonical-character-visual-audit-v1",
+```
+
+## File: tools/sprites/audit_chatgpt_originals.py
+```python
+#!/usr/bin/env python3
+"""Risk-only visual QA for the 18 locally authored Zero to Empire atlases.
+
+Designed to report and reproduce defects without modifying any sprites or
+promoting manifest progress. Passing never means premium/semantic approval.
+"""
+⋮----
+ROOT = Path(__file__).resolve().parents[2]
+⋮----
+FRAME_COUNTS = {"IDLE":6,"WALK":8,"WORK":10,"CARRY":8,"REPAIR":10,"CELEB":8}
+ROLES = ("OP","LOG","ENG")
+⋮----
+def inspect(atlas: Path, role: str, action: str) -> dict
+⋮----
+image = source.convert("RGBA")
+count = FRAME_COUNTS[action]
+frames = [
+flagged = clip_risk(frames, action)
+evidence = {
+⋮----
+raised = celebration_arm_reach_counts(frames)
+⋮----
+# The sprite can shift limbs even while its sprite bounding box stays
+# fixed. Record a lower-body alpha-change proxy as rejection evidence.
+lower = [
+scores = []
+⋮----
+aa=list(a.getdata());bb=list(b.getdata())
+inter=sum(x and y for x,y in zip(aa,bb))
+union=sum(x or y for x,y in zip(aa,bb))
+⋮----
+def audit(base: Path) -> dict
+⋮----
+candidates=base/"candidates"
+results=[]
+⋮----
+name=f"zte_chr_{role.lower()}_{action.lower()}_final.png"
+result=inspect(candidates/name,role,action)
+⋮----
+blocked=sum(row["risk_level"]=="BLOCKING" for row in results)
+⋮----
+def main() -> int
+⋮----
+parser=argparse.ArgumentParser()
+⋮----
+args=parser.parse_args()
+report=audit(args.base)
+dest=args.base/"visual-risk-qa.json"
 ```
 
 ## File: tools/sprites/audit_complete_sprite_manifest.py

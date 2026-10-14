@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 5946a5d6913fedd355c526ce424498aa6b4dde00
-Head: 1fdc72b956e5d43d26aa3b49d72d15c0f797a8ae
+Base: d8c1d4b86641b3978457c7e18688dc447070d8f5
+Head: 960e1a7309c9396cb9e8637b2484dda2bf800ac5
 
 ## Changed files
-- M ops/local-original-android-review-trigger.txt
+- M .github/workflows/art-chatgpt-original-candidates.yml
 
 ## Affected areas
-- ops
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

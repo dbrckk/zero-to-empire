@@ -59,6 +59,7 @@ sprites/
   asset_queue_utils.py
   asset_wave_orchestrator.py
   audit_character_candidates.py
+  audit_chatgpt_originals.py
   audit_complete_sprite_manifest.py
   autonomous_walk.py
   build_character_review_panels.py
@@ -2045,6 +2046,58 @@ source=ROOT/"art/incoming/final-sprites"/stem
 audit=inspect(source,asset_id)
 ⋮----
 result={"format":"zte-canonical-character-visual-audit-v1",
+```
+
+## File: sprites/audit_chatgpt_originals.py
+```python
+#!/usr/bin/env python3
+"""Risk-only visual QA for the 18 locally authored Zero to Empire atlases.
+
+Designed to report and reproduce defects without modifying any sprites or
+promoting manifest progress. Passing never means premium/semantic approval.
+"""
+⋮----
+ROOT = Path(__file__).resolve().parents[2]
+⋮----
+FRAME_COUNTS = {"IDLE":6,"WALK":8,"WORK":10,"CARRY":8,"REPAIR":10,"CELEB":8}
+ROLES = ("OP","LOG","ENG")
+⋮----
+def inspect(atlas: Path, role: str, action: str) -> dict
+⋮----
+image = source.convert("RGBA")
+count = FRAME_COUNTS[action]
+frames = [
+flagged = clip_risk(frames, action)
+evidence = {
+⋮----
+raised = celebration_arm_reach_counts(frames)
+⋮----
+# The sprite can shift limbs even while its sprite bounding box stays
+# fixed. Record a lower-body alpha-change proxy as rejection evidence.
+lower = [
+scores = []
+⋮----
+aa=list(a.getdata());bb=list(b.getdata())
+inter=sum(x and y for x,y in zip(aa,bb))
+union=sum(x or y for x,y in zip(aa,bb))
+⋮----
+def audit(base: Path) -> dict
+⋮----
+candidates=base/"candidates"
+results=[]
+⋮----
+name=f"zte_chr_{role.lower()}_{action.lower()}_final.png"
+result=inspect(candidates/name,role,action)
+⋮----
+blocked=sum(row["risk_level"]=="BLOCKING" for row in results)
+⋮----
+def main() -> int
+⋮----
+parser=argparse.ArgumentParser()
+⋮----
+args=parser.parse_args()
+report=audit(args.base)
+dest=args.base/"visual-risk-qa.json"
 ```
 
 ## File: sprites/audit_complete_sprite_manifest.py
