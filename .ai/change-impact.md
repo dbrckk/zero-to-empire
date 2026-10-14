@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 30e55b50f4feec836da7d164580a852f177de2ab
-Head: 0da425ec2facd52293fe639878a00aab85657945
+Base: e700217532c6c12fc629c64d5952057535f7477a
+Head: bbfc5fe32f4c41b7761d445caae821f6390cf62b
 
 ## Changed files
-- M .github/workflows/tech-candidate-android-preview.yml
+- M .github/workflows/local-original-character-android-preview.yml
 
 ## Affected areas
 - .github

@@ -31,36 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-14T08:03:46Z
+Generated: 2026-10-14T08:05:47Z
 
 ### Git
 - Branch: `main`
-- Head: `0da425ec2fac`
-- Commit date: 2026-10-14T10:03:32+02:00
-- Commit: fix(ci): skip obsolete TECH preview checks after all six sprites reached strict DONE
+- Head: `bbfc5fe32f4c`
+- Commit date: 2026-10-14T10:05:15+02:00
+- Commit: ci(android): prove original art APK installs beside real game without replacing saves
 - Tracked files: 1765
 
 ### Recently changed files
+- `.github/workflows/local-original-character-android-preview.yml`
+- `app/build.gradle.kts`
 - `.github/workflows/tech-candidate-android-preview.yml`
 - `ops/local-original-android-review-trigger.txt`
 - `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
-- `.github/workflows/local-original-character-android-preview.yml`
-- `art/incoming/chatgpt-original/animation-review.json`
-- `art/incoming/chatgpt-original/candidates/zte_chr_eng_carry_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_eng_repair_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_eng_work_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_log_carry_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_log_repair_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_log_work_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_op_carry_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_op_repair_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_op_work_final.png`
-- `art/incoming/chatgpt-original/original-review-contact-sheet.png`
-- `art/incoming/chatgpt-original/previews/eng-carry.gif`
-- `art/incoming/chatgpt-original/previews/eng-repair.gif`
-- `art/incoming/chatgpt-original/previews/eng-work.gif`
-- `art/incoming/chatgpt-original/previews/log-carry.gif`
-- `art/incoming/chatgpt-original/previews/log-repair.gif`
 
 ### Project signals
 - `build.gradle.kts`

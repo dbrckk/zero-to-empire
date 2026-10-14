@@ -4815,7 +4815,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          gradle assembleDebug --stacktrace
+          gradle assembleDebug -PLOCAL_ORIGINAL_CHARACTER_REVIEW=true --stacktrace
           test -s app/build/outputs/apk/debug/app-debug.apk
           python - <<'PY'
           import hashlib,json
@@ -4827,13 +4827,29 @@ jobs:
           d['apk_sha256']=hashlib.sha256(apk.read_bytes()).hexdigest()
           d['apk_bytes']=apk.stat().st_size
           d['debug_apk_built']=True
+          d['application_id']='com.zerotoempire.game.originalreview'
+          d['separate_from_production_saves']=True
           p.write_text(json.dumps(d,indent=2)+'\n')
           print('LOCAL_ORIGINAL_INSTALLABLE_DEBUG_APK_BUILT=1')
           PY
+      - name: Verify the review APK cannot replace production save data
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK=app/build/outputs/apk/debug/app-debug.apk
+          AAPT="$(find "${ANDROID_HOME:-/opt/android-sdk}" -type f -path '*/build-tools/*/aapt' | sort -V | tail -n 1)"
+          test -n "$AAPT" && test -x "$AAPT"
+          "$AAPT" dump badging "$APK" > /tmp/original-review-badging.txt
+          grep -F "package: name='com.zerotoempire.game.originalreview'" /tmp/original-review-badging.txt
+          if grep -F "package: name='com.zerotoempire.game'" /tmp/original-review-badging.txt; then
+            echo "::error::Preview must not use the production app ID"
+            exit 1
+          fi
+          echo 'LOCAL_PREVIEW_ISOLATED_APP_ID_VERIFIED=1'
       - name: Run Android debug lint and existing checks
         run: |
-          gradle testDebugUnitTest --stacktrace
-          gradle lintDebug --stacktrace
+          gradle testDebugUnitTest -PLOCAL_ORIGINAL_CHARACTER_REVIEW=true --stacktrace
+          gradle lintDebug -PLOCAL_ORIGINAL_CHARACTER_REVIEW=true --stacktrace
       - name: Publish installable APK and exact candidate provenance
         if: always()
         uses: actions/upload-artifact@v4
@@ -26562,6 +26578,11 @@ val productionAdMobAppId = providers.gradleProperty("ADMOB_APP_ID").orElse(sampl
 val productionRewardedId = providers.gradleProperty("REWARDED_AD_UNIT_ID").orElse("")
 val productionInterstitialId = providers.gradleProperty("INTERSTITIAL_AD_UNIT_ID").orElse("")
 
+// The original-character review APK is a separate installable app so a
+// reviewer cannot overwrite the normal game's DataStore/save files.
+val isolatedOriginalArtReview = providers.gradleProperty("LOCAL_ORIGINAL_CHARACTER_REVIEW")
+    .orElse("false").map { it.equals("true", ignoreCase = true) }.get()
+
 val versionCodeProperty = providers.gradleProperty("VERSION_CODE").orNull?.trim()
 val versionNameProperty = providers.gradleProperty("VERSION_NAME").orNull?.trim()
 val releaseVersionCode = when {
@@ -26683,6 +26704,10 @@ android {
 
     buildTypes {
         debug {
+            if (isolatedOriginalArtReview) {
+                applicationIdSuffix = ".originalreview"
+                versionNameSuffix = "-original-art-review"
+            }
             buildConfigField("String", "REWARDED_AD_UNIT_ID", "\"$sampleRewardedId\"")
             buildConfigField("String", "INTERSTITIAL_AD_UNIT_ID", "\"$sampleInterstitialId\"")
         }
