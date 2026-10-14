@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 3e91954e11b1e3a9ae9b1a823e1a2c2671635420
-Head: 993abeab3bef31237818c42d0fda1b32a29de3dc
+Base: 30e55b50f4feec836da7d164580a852f177de2ab
+Head: 0da425ec2facd52293fe639878a00aab85657945
 
 ## Changed files
-- A ops/local-original-android-review-trigger.txt
+- M .github/workflows/tech-candidate-android-preview.yml
 
 ## Affected areas
-- ops
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

@@ -10207,9 +10207,34 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  inspect_tech_review_need:
+    runs-on: ubuntu-latest
+    outputs:
+      pending: ${{ steps.check.outputs.pending }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Skip obsolete TECH candidate reviews after strict promotion
+        id: check
+        shell: bash
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+          q=json.loads(Path('art/production/master-asset-queue.json').read_text())
+          tech=[x for x in q['assets'] if x['id'].startswith('CHR-TECH-')]
+          if len(tech)!=6:
+              raise SystemExit('Missing canonical TECH assets')
+          pending=any(x.get('strict_status')!='DONE' for x in tech)
+          print('pending='+str(pending).lower())
+          if not pending:
+              print('TECH_ALREADY_STRICT_DONE_SKIP_OUTDATED_REVIEW=1',flush=True)
+          PY
+
   debug-candidate-preview:
-    # A failed/stale staging run must not validate an older batch of sprites.
-    if: ${{ github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_repository.full_name == github.repository) }}
+    needs: inspect_tech_review_need
+    # Never assert NEEDS_REVIEW for six TECH assets that are already strict
+    # DONE. A failed/stale staging run must not validate older candidates.
+    if: ${{ needs.inspect_tech_review_need.outputs.pending == 'true' && (github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_repository.full_name == github.repository)) }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:

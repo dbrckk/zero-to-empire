@@ -31,16 +31,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-14T08:02:37Z
+Generated: 2026-10-14T08:03:46Z
 
 ### Git
 - Branch: `main`
-- Head: `993abeab3bef`
-- Commit date: 2026-10-14T10:02:22+02:00
-- Commit: ci(android): rebuild complete local original character review APK for Android phones
+- Head: `0da425ec2fac`
+- Commit date: 2026-10-14T10:03:32+02:00
+- Commit: fix(ci): skip obsolete TECH preview checks after all six sprites reached strict DONE
 - Tracked files: 1765
 
 ### Recently changed files
+- `.github/workflows/tech-candidate-android-preview.yml`
 - `ops/local-original-android-review-trigger.txt`
 - `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
 - `.github/workflows/local-original-character-android-preview.yml`
@@ -60,7 +61,6 @@ Generated: 2026-10-14T08:02:37Z
 - `art/incoming/chatgpt-original/previews/eng-work.gif`
 - `art/incoming/chatgpt-original/previews/log-carry.gif`
 - `art/incoming/chatgpt-original/previews/log-repair.gif`
-- `art/incoming/chatgpt-original/previews/log-work.gif`
 
 ### Project signals
 - `build.gradle.kts`
