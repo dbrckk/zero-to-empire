@@ -1,10 +1,10 @@
 # Change impact
 
-Base: e700217532c6c12fc629c64d5952057535f7477a
-Head: bbfc5fe32f4c41b7761d445caae821f6390cf62b
+Base: b2bc45a6215e78320b71970fc40a0fcddc3f0f2c
+Head: 84cecdf887d98923e68e3f77b2a92505b48ebc63
 
 ## Changed files
-- M .github/workflows/local-original-character-android-preview.yml
+- M .github/workflows/local-original-character-android-emulator.yml
 
 ## Affected areas
 - .github

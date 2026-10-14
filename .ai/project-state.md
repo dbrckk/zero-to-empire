@@ -31,21 +31,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-14T08:05:47Z
+Generated: 2026-10-14T08:08:09Z
 
 ### Git
 - Branch: `main`
-- Head: `bbfc5fe32f4c`
-- Commit date: 2026-10-14T10:05:15+02:00
-- Commit: ci(android): prove original art APK installs beside real game without replacing saves
-- Tracked files: 1765
+- Head: `84cecdf887d9`
+- Commit date: 2026-10-14T10:07:35+02:00
+- Commit: fix(ci): use valid GitHub workflow_run expressions in emulator evidence workflow
+- Tracked files: 1768
 
 ### Recently changed files
+- `.github/workflows/local-original-character-android-emulator.yml`
+- `docs/art/LOCAL_ORIGINAL_ANDROID_REVIEW.md`
 - `.github/workflows/local-original-character-android-preview.yml`
 - `app/build.gradle.kts`
-- `.github/workflows/tech-candidate-android-preview.yml`
-- `ops/local-original-android-review-trigger.txt`
-- `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
 
 ### Project signals
 - `build.gradle.kts`
