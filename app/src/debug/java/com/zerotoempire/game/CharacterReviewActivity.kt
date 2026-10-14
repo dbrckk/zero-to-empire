@@ -54,8 +54,8 @@ private fun CharacterReviewGallery() {
     var worldFrame by remember { mutableIntStateOf(0) }
     var playing by remember { mutableStateOf(true) }
     var daylightStage by remember { mutableStateOf(false) }
-    var technicianOnly by remember { mutableStateOf(false) }
-    var inspectedTechAction by remember { mutableStateOf(ReviewedCharacterAction.WALK) }
+    var inspectedRole by remember { mutableStateOf<ReviewedCharacterRole?>(null) }
+    var inspectedAction by remember { mutableStateOf(ReviewedCharacterAction.WALK) }
     LaunchedEffect(playing) {
         while (playing) {
             delay(100L)
@@ -135,12 +135,33 @@ private fun CharacterReviewGallery() {
                             if (daylightStage) "DAYLIGHT CONTRAST REVIEW" else "NIGHT CONTRAST REVIEW",
                             style = MaterialTheme.typography.labelMedium,
                         )
-                        OutlinedButton(onClick = { technicianOnly = !technicianOnly }) {
-                            Text(if (technicianOnly) "Show all roles" else "TECH only")
+                        Text(
+                            "Choisissez un métier et une animation pour vérifier les 18 atlas " +
+                                "à la taille réelle dans les éclairages du jeu.",
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                        OutlinedButton(onClick = { inspectedRole = null }) {
+                            Text("Tous les métiers")
                         }
-                        if (technicianOnly) {
+                        ReviewedCharacterRole.entries.chunked(2).forEach { roleRow ->
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                roleRow.forEach { role ->
+                                    OutlinedButton(
+                                        modifier = Modifier.weight(1f),
+                                        onClick = { inspectedRole = role },
+                                    ) {
+                                        Text(
+                                            role.name,
+                                            style = MaterialTheme.typography.labelSmall,
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                        if (inspectedRole != null) {
+                            val selectedRole = requireNotNull(inspectedRole)
                             Text(
-                                "TECH ACTION: ${inspectedTechAction.name}",
+                                "${selectedRole.name} · ${inspectedAction.name}",
                                 style = MaterialTheme.typography.labelMedium,
                             )
                             Text(
@@ -160,21 +181,21 @@ private fun CharacterReviewGallery() {
                             // buttons. On narrow Android viewports the former
                             // bottom placement clipped both actors at the waist.
                             Text(
-                                "TECH · REAL GAME SIZE · NIGHT / DAY",
+                                "${selectedRole.name} · REAL GAME SIZE · NIGHT / DAY",
                                 style = MaterialTheme.typography.labelMedium,
                             )
                             val context = LocalContext.current
-                            val actionAtlas = remember(inspectedTechAction) {
+                            val actionAtlas = remember(selectedRole, inspectedAction) {
                                 ImageBitmap.imageResource(
                                     context.resources,
                                     reviewedCharacterRasterRes(
-                                        ReviewedCharacterRole.TECHNICIAN,
-                                        inspectedTechAction,
+                                        selectedRole,
+                                        inspectedAction,
                                     ),
                                 )
                             }
                             val actionFrame = worldFrame % reviewedCharacterFrameCount(
-                                inspectedTechAction,
+                                inspectedAction,
                             )
                             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                 listOf(
@@ -214,7 +235,7 @@ private fun CharacterReviewGallery() {
                                     rowActions.forEach { action ->
                                         OutlinedButton(
                                             modifier = Modifier.weight(1f),
-                                            onClick = { inspectedTechAction = action },
+                                            onClick = { inspectedAction = action },
                                         ) {
                                             Text(
                                                 action.name,
@@ -247,12 +268,8 @@ private fun CharacterReviewGallery() {
                                 worldFrame = worldFrame,
                                 reducedMotion = false,
                                 modifier = Modifier.fillMaxSize(),
-                                roleFilter = if (technicianOnly) {
-                                    ReviewedCharacterRole.TECHNICIAN
-                                } else {
-                                    null
-                                },
-                                actionOverride = if (technicianOnly) inspectedTechAction else null,
+                                roleFilter = inspectedRole,
+                                actionOverride = if (inspectedRole != null) inspectedAction else null,
                             )
                         }
                     }
