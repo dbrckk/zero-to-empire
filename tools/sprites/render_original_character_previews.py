@@ -79,6 +79,13 @@ def produce(source: Path) -> dict:
     atlas = Image.new("RGB", (6*190, 3*223), "#202732")
     draw = ImageDraw.Draw(atlas)
     background = checker()
+    # Portrait boards remain legible on 320dp Android phones. The actual
+    # rendered figure stays 42/39 pixels, matching city-stage gameplay scale.
+    # These are review references, never automated approval decisions.
+    mobile_boards = {
+        role: Image.new("RGB", (430, 6 * 132), "#1d2733")
+        for role in ROLES
+    }
     analysis = []
     for row, role in enumerate(ROLES):
         for col, action in enumerate(FRAMES):
@@ -96,6 +103,24 @@ def produce(source: Path) -> dict:
                     f"unique={distinct}/{FRAMES[action]}"
                 )
             rendered = [compose(f, background) for f in cells]
+            board = mobile_boards[role]
+            marker = ImageDraw.Draw(board)
+            top = col * 132
+            marker.text((12, top + 18), action, fill="#f3f6fa")
+            for x, ground, side, label in (
+                (102, "#14202e", 42, "NIGHT · 42dp"),
+                (264, "#c5d5e1", 39, "DAY · 39dp"),
+            ):
+                marker.rounded_rectangle(
+                    (x, top + 5, x + 155, top + 120),
+                    radius=9, fill=ground,
+                )
+                tiny = cells[0].resize((side, side), Image.Resampling.LANCZOS)
+                board.paste(tiny, (x + (155-side)//2, top + 27), tiny)
+                marker.text(
+                    (x + 19, top + 89), label,
+                    fill="#ebf2f9" if x == 102 else "#283b4c",
+                )
             gif_path = preview/f"{role.lower()}-{action.lower()}.gif"
             rendered[0].save(gif_path, "GIF", save_all=True, append_images=rendered[1:],
                              duration=DURATION_MS[action], loop=0,
@@ -124,11 +149,14 @@ def produce(source: Path) -> dict:
                 "strict_done_added": 0,
             })
     atlas.save(source/"original-review-contact-sheet.png", optimize=True)
+    for role, board in mobile_boards.items():
+        board.save(preview/f"mobile-{role.lower()}.png", optimize=True)
     result = {
         "schema_version": 1,
         "review_only": True,
         "strict_done_added": 0,
         "generated_local_preview_count": len(analysis),
+        "mobile_role_review_board_count": len(mobile_boards),
         "editable_source_frame_count": sum(FRAMES.values())*len(ROLES),
         "assets": analysis,
     }
