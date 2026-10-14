@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse, io, json, math, pathlib
 from PIL import Image
 import cairosvg
+from local_character_material_finish import finish_frame
 
 FRAME=256
 ACTIONS={'IDLE':6,'WALK':8,'WORK':10,'CARRY':8,'REPAIR':10,'CELEB':8}
@@ -263,6 +264,9 @@ def render_atlas(role,action,outdir,save_svgs=False):
   svg=svg_frame(role,action,i,count)
   png=cairosvg.svg2png(bytestring=svg.encode('utf8'),output_width=768,output_height=768)
   rgba=Image.open(io.BytesIO(png)).convert('RGBA').resize((FRAME,FRAME),Image.Resampling.LANCZOS)
+  # Final material illumination is deterministic and preserves exact alpha;
+  # editable SVG geometry remains the authoritative rig/source for all frames.
+  rgba=finish_frame(rgba)
   x=(i%4)*FRAME;y=(i//4)*FRAME;atlas.alpha_composite(rgba,(x,y))
   if save_svgs:
    src=outdir/'src_svg'/role/action;src.mkdir(parents=True,exist_ok=True)
@@ -280,7 +284,8 @@ def main():
  for role in ROLES:
   for action in ACTIONS:
    results.append(render_atlas(role,action,outdir,args.save_svg))
- report={'version':'chatgpt-original-character-rig-v1','strict_done_added':0,'review_only':True,
+ report={'version':'chatgpt-original-character-rig-v3-material-finish','strict_done_added':0,'review_only':True,
+         'material_finish':'local-alpha-safe-directional-light-v1',
          'asset_count':len(results),'unresolved_target_count':16,'assets':results}
  (outdir/'creation-manifest.json').write_text(json.dumps(report,indent=2)+'\n')
  print(f'CHATGPT_CHARACTER_ATLASES_CREATED={len(results)} ASSETS_UNRESOLVED=16 STRICT_DONE_ADDED=0')
