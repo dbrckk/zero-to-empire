@@ -1,13 +1,13 @@
 # Change impact
 
-Base: d8c1d4b86641b3978457c7e18688dc447070d8f5
-Head: 960e1a7309c9396cb9e8637b2484dda2bf800ac5
+Base: 84e5b7eeb96729c2bad4a1e947a913213eac96e1
+Head: 533ce04d791793f50e0403cd51659ff649f331e9
 
 ## Changed files
-- M .github/workflows/art-chatgpt-original-candidates.yml
+- M art/production/LOCAL_FIRST_CHARACTER_HANDOFF.md
 
 ## Affected areas
-- .github
+- art
 
 ## Related test candidates
 - No direct filename-based test match detected.

@@ -28016,6 +28016,18 @@ for attempt in $(seq 1 12); do
   sleep 1
 done
 test "$stage_visible" = true || { echo 'ENGINEER 42dp preview never visible' >&2; exit 1; }
+# A label alone can appear on screen while the 42dp rendered sprite is still
+# clipped below the Android navigation bar. Advance the LazyColumn so the
+# complete character actually occupies the visible screenshot.
+adb shell input swipe 290 1040 290 530 360
+sleep 2
+read_ui
+stage_coords="$(python3 tools/android/local_review_ui_target.py "$OUT/ui-stage.xml" 'NIGHT · 42 dp' --allow-static-label)"
+read -r stage_x stage_y <<< "$stage_coords"
+if [ "$stage_y" -ge 1280 ]; then
+  echo "42dp sprite may still be clipped beneath the navigation bar: y=$stage_y" >&2
+  exit 1
+fi
 adb exec-out screencap -p > "$OUT/11-engineer-game-scale.png"
 # UI XML improves diagnosis; screenshots and active process are hard gates.
 if adb shell uiautomator dump /sdcard/local-original-qa.xml; then

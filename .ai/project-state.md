@@ -31,19 +31,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-14T13:40:17Z
+Generated: 2026-10-14T13:50:29Z
 
 ### Git
 - Branch: `main`
-- Head: `960e1a7309c9`
-- Commit date: 2026-10-14T15:39:45+02:00
-- Commit: ci(art): attach full-frame risk audit to all 18 original authored animations
-- Tracked files: 1774
+- Head: `533ce04d7917`
+- Commit date: 2026-10-14T15:49:08+02:00
+- Commit: docs(art): record local 18-atlas authorship and verified 42dp emulator proof without false DONE
+- Tracked files: 1775
 
 ### Recently changed files
-- `.github/workflows/art-chatgpt-original-candidates.yml`
-- `tools/sprites/audit_chatgpt_originals.py`
+- `art/production/LOCAL_FIRST_CHARACTER_HANDOFF.md`
+- `art/incoming/chatgpt-original/visual-risk-qa.json`
 - `ops/local-original-android-review-trigger.txt`
+- `ops/chatgpt-original-trigger.txt`
 - `tools/android/local_original_character_emulator_smoke.sh`
 
 ### Project signals
