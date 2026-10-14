@@ -118,3 +118,50 @@ required art revisions to match TECH style, then approved-only Android runtime
 integration, release validation and a manifest/queue update based on real
 evidence. Do not resume remote Kaggle-based art creation by default; all
 remaining artwork is to be authored directly in the ChatGPT working environment.
+
+
+## 14 October 2026 evening — v3 local material finish
+
+This iteration produces **all 18 role/action candidate atlases directly in the
+ChatGPT-authored local pipeline**, covering 16 unresolved character IDs plus
+two OP/LOG reference-IDLE sheets. It is fully separate from the old Kaggle
+producer. The source now includes
+[`local_character_material_finish.py`](../../tools/sprites/local_character_material_finish.py):
+a deterministic warm/cool directional-light and alpha-edge material pass
+applied after CairoSVG rasterization to each of 150 original editable SVG
+frames, before composing the fixed 1024×1024 atlas. The code restores each
+source alpha plane exactly and preserves the same coordinates, action frame
+count, pose identity, pivots and 256×256 cells.
+
+The generator records
+`chatgpt-original-character-rig-v3-material-finish` and
+`local-alpha-safe-directional-light-v1` in
+`art/incoming/chatgpt-original/creation-manifest.json`.
+The local creation workflow
+[38624450028](https://github.com/dbrckk/zero-to-empire/actions/runs/38624450028)
+succeeded, uploaded reviewed-candidate evidence and committed the 18 v3
+atlas files and 150 frame SVGs into `art/incoming/chatgpt-original`.
+The repository's
+[Asset Pipeline CI 38624512306](https://github.com/dbrckk/zero-to-empire/actions/runs/38624512306)
+passed after introducing the material module.
+
+The corresponding ChatGPT-generated ZIP
+`zero_to_empire_local_characters_v3.zip` contains the 18 atlas PNGs,
+150 SVG frames, 18 animation GIFs, offline Android-friendly `review.html`,
+`local_character_material_finish.py`, `rebuild_from_svg.py`, the review
+poster and a SHA-256 creation manifest. The standalone viewer is *not*
+evidence of native Android runtime approval. Gameplay-size 42px visual
+comparison reveals that small tools, expressions and material details
+remain difficult to discern. **This material polish does not bring flat
+2.5D illustrations to the desired AAA quality by itself.**
+
+A new isolated Android review build was requested using
+`ops/local-original-android-review-trigger.txt` (run
+[38624730867](https://github.com/dbrckk/zero-to-empire/actions/runs/38624730867)).
+Its compilation, emulator screenshots and any approval outcomes must be
+verified independently; no results are presumed here.
+
+As before, all original v3 sprites remain `review_only`; the authoritative
+ledger stays **219/235 strict DONE, 16 unresolved** until explicit semantic
+review and production-grade Android validation. Keep all future art
+creation in this first-party ChatGPT/local workflow, not remote Kaggle.
