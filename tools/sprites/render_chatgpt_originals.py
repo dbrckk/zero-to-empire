@@ -45,11 +45,13 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
    handpos=((89,132+bounce) if side=='L' else (166,132+bounce))
    elbow=((78,125+bounce) if side=='L' else (172,122+bounce))
   elif pose in ('WORK','REPAIR'):
-   reach=math.sin(phase*2); pump=math.cos(phase*2)
-   handpos=((80+3*reach,150-4*pump+bounce) if side=='L'
-            else (174+22*reach,120+24*pump+bounce))
+   # One slow, physically connected tool cycle. Earlier 22px reach/24px
+   # vertical pumping made the tool look like it floated and clipped the face.
+   reach=math.sin(phase); pump=math.cos(phase)
+   handpos=((80+2*reach,146-3*pump+bounce) if side=='L'
+            else (176+11*reach,123+9*pump+bounce))
    elbow=((82,132+bounce) if side=='L'
-          else (169+12*reach,108+12*pump+bounce))
+          else (168+6*reach,115+5*pump+bounce))
   elif pose=='WALK':
    swing=motion*(-1 if side=='L' else 1)
    handpos=((84+8*swing,147+10*swing+bounce) if side=='L' else (170+8*swing,148-10*swing+bounce))
@@ -144,25 +146,71 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
  elif role=='LOG':
   add(f'<path d="M 139 {30+bounce:.1f} l 8 14" stroke="#d29b4e" stroke-width="3"/>')
  else:add(f'<path d="M 147 {32+bounce:.1f} l 6 16" stroke="#fdd18b" stroke-width="4"/>')
- # ACTION EQUIPMENT, and foreground hands actually touching it.
+ # ACTION EQUIPMENT. All objects are authored here as editable SVG
+ # geometry, with invariant shape within each animation and hand contact.
  if action=='CARRY':
-  # crate rigid body: no frame-specific changing geometry; subtle 1px bob only
   by=121+bounce
-  add(f'<path d="M 91 {by:.1f} L 164 {by:.1f} L 164 {by+47:.1f} L 91 {by+47:.1f}Z" fill="#9b7142" stroke="#2c333c" stroke-width="4"/>')
-  add(f'<rect x="96" y="{by+4:.1f}" width="63" height="38" fill="#b98b50" stroke="#6e4d2f" stroke-width="1.6"/>')
-  add(f'<path d="M 96 {by+7:.1f} L 156 {by+40:.1f} M 157 {by+7:.1f}L96 {by+40:.1f}" stroke="#704c31" stroke-width="4" opacity=".9"/>')
-  add(f'<path d="M 109 {by:.1f} L 109 {by+47:.1f} M 147 {by:.1f} L 147 {by+47:.1f}" stroke="#dcb879" stroke-width="3"/>')
-  # hands over handles, always same positions
-  add(f'<rect x="82" y="{by+9:.1f}" width="16" height="11" rx="4" fill="{p["skin"]}" stroke="#23313e" stroke-width="2.2"/>')
-  add(f'<rect x="158" y="{by+9:.1f}" width="16" height="11" rx="4" fill="{p["skin"]}" stroke="#23313e" stroke-width="2.2"/>')
- elif action in ('WORK','REPAIR'):
-  tool_x=174+22*math.sin(phase*2)
-  tool_y=120+24*math.cos(phase*2)+bounce
-  add(f'<g transform="translate({tool_x:.1f},{tool_y:.1f}) rotate({-6+4*math.sin(phase):.1f})">')
-  if action=='WORK':
-   add('<rect x="-12" y="-8" width="31" height="16" rx="5" fill="#40525d" stroke="#172633" stroke-width="2.6"/><rect x="11" y="-4" width="20" height="8" rx="2" fill="#7b9e9b" stroke="#273746" stroke-width="2"/><circle cx="-5" cy="0" r="4" fill="#64cbd0"/>')
+  if role=='OP':
+   # A bolted cast-metal ore bin (not a generic cardboard package).
+   add(f'<path d="M 90 {by:.1f} L 166 {by:.1f} L 163 {by+47:.1f} L 94 {by+47:.1f}Z" fill="#50616b" stroke="#182b38" stroke-width="3.5"/>')
+   add(f'<path d="M 96 {by+5:.1f} L 159 {by+5:.1f} L 157 {by+42:.1f} L 98 {by+42:.1f}Z" fill="#748995" stroke="#243743" stroke-width="2"/>')
+   add(f'<path d="M 98 {by+10:.1f} L 154 {by+37:.1f} M 153 {by+10:.1f} L 99 {by+37:.1f}" stroke="#304956" stroke-width="5"/>')
+   for xx in (100,154):
+    for yy in (by+9,by+38):
+     add(f'<circle cx="{xx}" cy="{yy:.1f}" r="2.6" fill="#e6b365" stroke="#263a46" stroke-width="1"/>')
+   add(f'<rect x="111" y="{by+2:.1f}" width="34" height="5" rx="2" fill="#e5b46f"/>')
+  elif role=='LOG':
+   # Warehouse parcel with tape and readable strapped corners.
+   add(f'<path d="M 91 {by:.1f} L 164 {by:.1f} L 164 {by+47:.1f} L 91 {by+47:.1f}Z" fill="#a87542" stroke="#332e33" stroke-width="3.5"/>')
+   add(f'<rect x="96" y="{by+4:.1f}" width="63" height="38" rx="2" fill="#ce985f" stroke="#754827" stroke-width="1.8"/>')
+   add(f'<path d="M 96 {by+7:.1f} L 156 {by+40:.1f} M 157 {by+7:.1f} L 96 {by+40:.1f}" stroke="#80502e" stroke-width="3.5"/>')
+   add(f'<rect x="120" y="{by+4:.1f}" width="12" height="38" fill="#ebca8c" opacity=".85"/>')
+   add(f'<path d="M 104 {by+13:.1f} h 13 M 104 {by+17:.1f} h 12 M 104 {by+21:.1f} h 10" stroke="#725137" stroke-width="1.6"/>')
   else:
-   add('<path d="M -8 9 L 14 -11 L 20 -9 L 17 -2 L 11 -3 L -2 13Z" fill="#869ba7" stroke="#263442" stroke-width="2.6"/><circle cx="-8" cy="12" r="4" fill="#263847"/><path d="M 16 -13l12 -8" stroke="#d2aa69" stroke-width="4" stroke-linecap="round"/>')
+   # Engineer's sealed field-instrument case, cyan latch lights.
+   add(f'<rect x="91" y="{by:.1f}" width="74" height="47" rx="7" fill="#314d5d" stroke="#172d3b" stroke-width="4"/>')
+   add(f'<rect x="97" y="{by+5:.1f}" width="62" height="37" rx="4" fill="#466a7a" stroke="#668e9d" stroke-width="2"/>')
+   add(f'<path d="M 106 {by+8:.1f} v 29 M 150 {by+8:.1f} v 29" stroke="#254555" stroke-width="5"/>')
+   add(f'<rect x="119" y="{by+5:.1f}" width="18" height="10" rx="3" fill="#72cdd3" stroke="#163e4b" stroke-width="1.5"/>')
+   add(f'<circle cx="124" cy="{by+32:.1f}" r="3" fill="#9deff0"/><circle cx="136" cy="{by+32:.1f}" r="3" fill="#80bec9"/>')
+  # Two hand grips overlap the left/right handle in every phase.
+  for hx in (90,164):
+   add(f'<rect x="{hx-7}" y="{by+8:.1f}" width="14" height="13" rx="5" fill="{p["skin"]}" stroke="#23313e" stroke-width="2.2"/>')
+   add(f'<path d="M {hx-4} {by+10:.1f} v 6" stroke="#f9d5b4" stroke-width="1.5"/>')
+ elif action in ('WORK','REPAIR'):
+  # The exact same right-hand joint drives the held equipment. One cycle
+  # and stable local geometry prevent fake floating tools and prop morphing.
+  tool_x=176+11*math.sin(phase)
+  tool_y=123+9*math.cos(phase)+bounce
+  add(f'<g transform="translate({tool_x:.1f},{tool_y:.1f}) rotate({-4+3*math.sin(phase):.1f})">')
+  if action=='WORK':
+   if role=='OP':
+    add('<rect x="-12" y="-9" width="37" height="19" rx="5" fill="#435964" stroke="#182c3b" stroke-width="3"/>')
+    add('<path d="M 16 -6 L 35 -5 L 35 4 L 16 5Z" fill="#7babb5" stroke="#263d4b" stroke-width="2"/>')
+    add('<path d="M -2 10 V 20 M 3 10 V 19" stroke="#344654" stroke-width="4" stroke-linecap="round"/>')
+    add('<circle cx="-2" cy="-1" r="4" fill="#f0b35d"/><path d="M 25 -3 h 10" stroke="#b9dce1" stroke-width="1.6"/>')
+   elif role=='LOG':
+    add('<path d="M -11 -9 h 31 l 5 7 l -5 11 h -31 Z" fill="#3c505d" stroke="#1a303d" stroke-width="3"/>')
+    add('<rect x="13" y="-5" width="13" height="11" rx="2" fill="#ae2636" stroke="#f8aa9d" stroke-width="1.5"/>')
+    add('<rect x="-3" y="7" width="8" height="14" rx="2" fill="#314353"/>')
+    add('<path d="M 25 0 h 12" stroke="#f2aa7d" stroke-width="2.5" opacity=".8"/>')
+   else:
+    add('<rect x="-12" y="-12" width="45" height="30" rx="4" fill="#1d3545" stroke="#71d1d7" stroke-width="2.6"/>')
+    add('<rect x="-7" y="-7" width="35" height="19" rx="2" fill="#294e61" stroke="#8ce1e2" stroke-width="1"/>')
+    add('<path d="M -1 4 l 6 -8 l 7 5 l 5 -7" fill="none" stroke="#7de7e8" stroke-width="2"/>')
+    add('<circle cx="26" cy="14" r="2" fill="#f9bc6b"/>')
+  else:
+   if role=='OP':
+    add('<path d="M -10 8 L 12 -14 L 19 -13 L 16 -6 L 10 -7 L -2 13Z" fill="#8aa0a9" stroke="#253b48" stroke-width="2.8"/>')
+    add('<circle cx="-7" cy="11" r="3.5" fill="#e4a45b"/><path d="M 16 -13 L 25 -19" stroke="#e0be82" stroke-width="3"/>')
+   elif role=='LOG':
+    add('<rect x="-11" y="-7" width="30" height="14" rx="5" fill="#4c6071" stroke="#253949" stroke-width="2.5"/>')
+    add('<path d="M 17 -3 l 21 -14 l 3 5 l -20 17" fill="#a7b6bd" stroke="#26394a" stroke-width="2"/>')
+    add('<circle cx="-4" cy="0" r="3.5" fill="#f0bb69"/>')
+   else:
+    add('<path d="M -10 -7 h 32 v 15 h -32Z" fill="#304d5c" stroke="#6bd5de" stroke-width="2.6"/>')
+    add('<path d="M 22 -1 L 43 -13" stroke="#b1c5c7" stroke-width="4" stroke-linecap="round"/>')
+    add('<circle cx="43" cy="-13" r="3" fill="#87ecdf"/><circle cx="-2" cy="0" r="3" fill="#efc977"/>')
   add('</g>')
  # foreground right arm and hand over equipment, never floating
  add(joint_arm('R',action))
