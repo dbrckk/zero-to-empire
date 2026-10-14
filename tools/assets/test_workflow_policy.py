@@ -125,9 +125,11 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("candidate_dir=Path('/tmp/kaggle-output/output/candidates')", text)
         self.assertIn("candidate_dir.glob('*_final.png')", text)
         self.assertIn("workflow_dispatch:", text)
-        self.assertIn("ops/kaggle-collector-trigger.txt", text)
-        self.assertIn("schedule:", text)
-        self.assertIn("*/15 * * * *", text)
+        # Historical collector can be manually dispatched only. The user's
+        # remaining sprites are now original, authored locally in ChatGPT.
+        header=text.split("\npermissions:",1)[0]
+        self.assertNotIn("\n  schedule:",header)
+        self.assertNotIn("\n  push:",header)
         self.assertIn("cancel-in-progress: false", text)
 
     def test_action_translation_reviewer_precedes_candidate_promotion(self):
