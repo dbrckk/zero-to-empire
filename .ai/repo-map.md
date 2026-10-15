@@ -354,12 +354,14 @@ tools/
       test_archive_character_candidates.py
       test_asset_production_policy.py
       test_character_bank_mobile_review.py
+      test_character_bank_motion_audit.py
       test_character_candidate_bank.py
     action_contact.py
     animation_batch_planner.py
     archive_character_candidates.py
     asset_queue_utils.py
     asset_wave_orchestrator.py
+    audit_character_bank_motion.py
     audit_character_candidates.py
     audit_chatgpt_originals.py
     audit_complete_sprite_manifest.py
@@ -1648,6 +1650,8 @@ on:
       - 'tools/sprites/archive_character_candidates.py'
       - 'tools/sprites/build_character_candidate_bank.py'
       - 'tools/sprites/build_character_bank_mobile_review.py'
+      - 'tools/sprites/audit_character_bank_motion.py'
+      - 'tools/sprites/tests/test_character_bank_motion_audit.py'
       - 'tools/sprites/tests/test_character_bank_mobile_review.py'
       - 'tools/sprites/tests/test_character_candidate_bank.py'
       - 'tools/sprites/tests/test_archive_character_candidates.py'
@@ -1708,6 +1712,8 @@ on:
       - 'tools/sprites/archive_character_candidates.py'
       - 'tools/sprites/build_character_candidate_bank.py'
       - 'tools/sprites/build_character_bank_mobile_review.py'
+      - 'tools/sprites/audit_character_bank_motion.py'
+      - 'tools/sprites/tests/test_character_bank_motion_audit.py'
       - 'tools/sprites/tests/test_character_bank_mobile_review.py'
       - 'tools/sprites/tests/test_character_candidate_bank.py'
       - 'tools/sprites/tests/test_archive_character_candidates.py'
@@ -1792,6 +1798,7 @@ jobs:
             tools/sprites/archive_character_candidates.py \
             tools/sprites/build_character_candidate_bank.py \
             tools/sprites/build_character_bank_mobile_review.py \
+            tools/sprites/audit_character_bank_motion.py \
             tools/sprites/asset_wave_orchestrator.py \
             tools/sprites/build_character_review_panels.py \
             tools/sprites/build_original_offline_review.py \
@@ -2032,6 +2039,7 @@ jobs:
           python -m unittest discover -s tools/sprites/tests -p 'test_archive_character_candidates.py' -v
           python -m unittest discover -s tools/sprites/tests -p 'test_character_candidate_bank.py' -v
           python -m unittest discover -s tools/sprites/tests -p 'test_character_bank_mobile_review.py' -v
+          python -m unittest discover -s tools/sprites/tests -p 'test_character_bank_motion_audit.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_semantic_gate.py' -v
           python -m unittest discover -s tools/sprites -p 'test_verify_character_idle_candidates.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_head_identity_lock.py' -v
@@ -2263,7 +2271,8 @@ jobs:
           python -m pip install --disable-pip-version-check Pillow==11.3.0
           python -m unittest discover -s tools/sprites/tests -p test_character_candidate_bank.py -v
           python -m unittest discover -s tools/sprites/tests -p test_character_bank_mobile_review.py -v
-          python -m py_compile tools/sprites/build_character_candidate_bank.py tools/sprites/build_character_bank_mobile_review.py
+          python -m unittest discover -s tools/sprites/tests -p test_character_bank_motion_audit.py -v
+          python -m py_compile tools/sprites/build_character_candidate_bank.py tools/sprites/build_character_bank_mobile_review.py tools/sprites/audit_character_bank_motion.py
 
       - name: Download current permanent candidate archives
         shell: bash
@@ -2301,6 +2310,25 @@ jobs:
           print('- These are review-only source sprites, not approved Android resources.')
           PY
 
+      - name: Audit animation readability at actual 42px gameplay size
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/sprites/audit_character_bank_motion.py \
+            --bank /tmp/zte-character-bank-current.zip \
+            --output /tmp/zte-character-bank-motion-audit.json
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          data=json.load(open('/tmp/zte-character-bank-motion-audit.json'))
+          print('## Motion readability review (heuristic only)')
+          print(f"- Screen size: **{data['mobile_render_px']} px**")
+          print(f"- Candidate actions flagged: **{data['motion_attention_count']} / {data['candidate_count']}**")
+          for row in data['assets']:
+              if row['new_motion_flags']:
+                  print(f"- {row['id']}: {', '.join(row['new_motion_flags'])}")
+          print('- No flags represent automatic semantic approval.')
+          PY
+
       - name: Create self-contained mobile animation comparison
         shell: bash
         run: |
@@ -2308,6 +2336,7 @@ jobs:
           python tools/sprites/build_character_bank_mobile_review.py \
             --bank /tmp/zte-character-bank-current.zip \
             --local-original art/incoming/chatgpt-original \
+            --motion-audit /tmp/zte-character-bank-motion-audit.json \
             --output /tmp/zte-character-bank-mobile-review.html
           test -s /tmp/zte-character-bank-mobile-review.html
           echo "MOBILE_CANDIDATE_REVIEW=offline/16-candidate-compare" >> "$GITHUB_STEP_SUMMARY"
@@ -2319,6 +2348,7 @@ jobs:
           gh release upload "$TAG" \
             /tmp/zte-character-bank-current.zip \
             /tmp/zte-character-bank-current.json \
+            /tmp/zte-character-bank-motion-audit.json \
             /tmp/zte-character-bank-mobile-review.html \
             --repo "$GITHUB_REPOSITORY" --clobber
           sha256sum /tmp/zte-character-bank-current.zip >> "$GITHUB_STEP_SUMMARY"
@@ -2331,6 +2361,7 @@ jobs:
           path: |
             /tmp/zte-character-bank-current.zip
             /tmp/zte-character-bank-current.json
+            /tmp/zte-character-bank-motion-audit.json
             /tmp/zte-character-bank-mobile-review.html
           retention-days: 30
 ```
@@ -29530,6 +29561,11 @@ source = Path("tools/sprites/build_character_candidate_bank.py").read_text()
 # Either the archive or the canonical queue can become ready first.
 # Trigger on both to prevent a stale incomplete bank indefinitely.
 ⋮----
+def test_motion_audit_in_release_preserves_review_only_policy(self)
+⋮----
+script = Path("tools/sprites/audit_character_bank_motion.py").read_text()
+gallery = Path("tools/sprites/build_character_bank_mobile_review.py").read_text()
+⋮----
 def test_mobile_review_publish_is_offline_and_explicitly_review_only(self)
 ⋮----
 source = Path("tools/sprites/build_character_bank_mobile_review.py").read_text()
@@ -30111,6 +30147,16 @@ d=build(self.bank,self.original,self.html)
 ⋮----
 html=self.html.read_text()
 ⋮----
+def test_mobile_review_includes_verified_motion_flags(self)
+⋮----
+audit = self.root / "motion-audit.json"
+⋮----
+html = self.html.read_text()
+⋮----
+def test_stale_motion_audit_must_not_be_misattached_to_new_png(self)
+⋮----
+audit = self.root / "stale-audit.json"
+⋮----
 def test_hash_tampering_fails_closed(self)
 ⋮----
 def test_invalid_local_frame_geometry_fails_closed(self)
@@ -30118,6 +30164,49 @@ def test_invalid_local_frame_geometry_fails_closed(self)
 def test_script_closing_in_review_flags_is_html_escaped(self)
 ⋮----
 def test_unapproved_bank_is_required(self)
+```
+
+## File: tools/sprites/tests/test_character_bank_motion_audit.py
+```python
+"""Regression tests: mobile motion warnings must never approve candidate artwork."""
+⋮----
+class MobileMotionAuditTests(unittest.TestCase)
+⋮----
+def setUp(self)
+⋮----
+def png(self, *, moving=False)
+⋮----
+atlas = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
+brush = ImageDraw.Draw(atlas)
+⋮----
+move = (i % 2) * 45 if moving else 0
+⋮----
+buffer = io.BytesIO()
+⋮----
+def write_bank(self, *, moving=False, digest=None, approve=False)
+⋮----
+blob = self.png(moving=moving)
+entry = {
+data = dict(self.metadata, bank_entries=[entry])
+⋮----
+def test_still_work_requires_attention_but_is_not_automatically_approved(self)
+⋮----
+result = analyze(self.bank, self.report)
+⋮----
+item = result["assets"][0]
+⋮----
+def test_distinct_poses_have_higher_observable_motion(self)
+⋮----
+moved = analyze(self.bank, self.report)
+⋮----
+def test_sha_mismatch_fails_closed(self)
+⋮----
+def test_strict_approved_metadata_fails_closed(self)
+⋮----
+def test_report_requires_review_only_bank(self)
+⋮----
+data = {name: existing.read(name) for name in existing.namelist()}
+meta = json.loads(data["candidate-bank-index.json"])
 ```
 
 ## File: tools/sprites/tests/test_character_candidate_bank.py
@@ -30732,6 +30821,62 @@ queue = ensure_master()
 decision = make_decision(queue)
 ```
 
+## File: tools/sprites/audit_character_bank_motion.py
+```python
+#!/usr/bin/env python3
+"""Heuristic 42px character motion audit, never a semantic approval gate.
+
+Rank review effort using actual rendered animation changes rather than file
+existence. Source atlas bytes, hashes and review-only provenance are verified.
+"""
+⋮----
+FRAMES = {"IDLE": 6, "WALK": 8, "WORK": 10, "CARRY": 8, "REPAIR": 10, "CELEB": 8}
+MOBILE_SIZE = 42
+DAY = (189, 203, 211, 255)
+NIGHT = (16, 27, 41, 255)
+⋮----
+def composite(tile: Image.Image, color: tuple[int, ...]) -> Image.Image
+⋮----
+surface = Image.new("RGBA", tile.size, color)
+⋮----
+def change(first: Image.Image, second: Image.Image) -> float
+⋮----
+means = ImageStat.Stat(ImageChops.difference(first, second)).mean
+⋮----
+def motion_stats(blob: bytes, count: int) -> dict
+⋮----
+tiles = [
+⋮----
+images = [composite(tile, background) for tile in tiles]
+⋮----
+def analyze(bank_path: Path, output_path: Path) -> dict
+⋮----
+metadata = json.loads(bank.read("candidate-bank-index.json"))
+entries = metadata.get("bank_entries")
+⋮----
+asset_id = str(row.get("id") or "")
+parts = asset_id.split("-")
+⋮----
+filename = "zte_chr_" + parts[1].lower() + "_" + parts[2].lower() + "_final.png"
+⋮----
+blob = bank.read("candidates/" + filename)
+⋮----
+metrics = motion_stats(blob, FRAMES[parts[2]])
+flags = []
+⋮----
+prior_flags = [str(x) for x in row.get("deferred_art_warnings") or []]
+⋮----
+ranked = sorted(
+audit = {
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser()
+⋮----
+args = parser.parse_args()
+data = analyze(args.bank, args.output)
+```
+
 ## File: tools/sprites/audit_character_candidates.py
 ```python
 #!/usr/bin/env python3
@@ -31097,9 +31242,13 @@ COUNTS = {"idle": 6, "walk": 8, "work": 10, "carry": 8, "repair": 10, "celeb": 8
 ⋮----
 HTML = r'''<!doctype html><html lang="fr"><head><meta charset="utf-8">
 ⋮----
-def build(bank_path: Path, local_path: Path, destination: Path) -> dict
-⋮----
 originals = load_local_originals(local_path)
+audit_by_id = None
+⋮----
+audit = json.loads(audit_path.read_text(encoding="utf-8"))
+records = audit.get("assets")
+⋮----
+audit_by_id = {str(row.get("id")): row for row in records}
 ⋮----
 meta = json.loads(bank.read("candidate-bank-index.json"))
 rows = meta.get("bank_entries")
@@ -31113,6 +31262,12 @@ filename = str(row.get("filename") or "")
 match = PNG_NAME.fullmatch(filename)
 ⋮----
 source = bank.read("candidates/"+filename)
+⋮----
+motion_flags = []
+⋮----
+audit_record = audit_by_id.get(aid)
+⋮----
+motion_flags = [str(flag) for flag in (audit_record.get("new_motion_flags") or [])]
 ⋮----
 payload = {
 serialized = json.dumps(payload, ensure_ascii=False, separators=(",",":"))

@@ -5,11 +5,107 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
+    "composite": {
+      "source": {
+        "file": "tools/sprites/audit_character_bank_motion.py",
+        "start": 25,
+        "end": 30
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "change": {
+      "source": {
+        "file": "tools/sprites/audit_character_bank_motion.py",
+        "start": 33,
+        "end": 35
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "motion_stats": {
+      "source": {
+        "file": "tools/sprites/audit_character_bank_motion.py",
+        "start": 38,
+        "end": 67
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "change",
+          "definitions": [
+            {
+              "file": "tools/sprites/audit_character_bank_motion.py",
+              "line": 33,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "composite",
+          "definitions": [
+            {
+              "file": "tools/sprites/audit_character_bank_motion.py",
+              "line": 25,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "analyze": {
+      "source": {
+        "file": "tools/sprites/audit_character_bank_motion.py",
+        "start": 70,
+        "end": 151
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "motion_stats",
+          "definitions": [
+            {
+              "file": "tools/sprites/audit_character_bank_motion.py",
+              "line": 38,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "main": {
+      "source": {
+        "file": "tools/sprites/audit_character_bank_motion.py",
+        "start": 154,
+        "end": 274
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "analyze",
+          "definitions": [
+            {
+              "file": "tools/sprites/audit_character_bank_motion.py",
+              "line": 70,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
     "build": {
       "source": {
         "file": "tools/sprites/build_character_bank_mobile_review.py",
-        "start": 173,
-        "end": 232
+        "start": 177,
+        "end": 262
       },
       "symbol_dependencies": [
         {
@@ -39,33 +135,11 @@
       ],
       "dependency_count": 2
     },
-    "main": {
-      "source": {
-        "file": "tools/sprites/build_character_bank_mobile_review.py",
-        "start": 235,
-        "end": 355
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "build",
-          "definitions": [
-            {
-              "file": "tools/sprites/build_character_bank_mobile_review.py",
-              "line": 173,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
     "MobileCandidateReviewTests": {
       "source": {
         "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
         "start": 19,
-        "end": 132
+        "end": 162
       },
       "symbol_dependencies": [
         {
@@ -73,7 +147,7 @@
           "definitions": [
             {
               "file": "tools/sprites/build_character_bank_mobile_review.py",
-              "line": 173,
+              "line": 177,
               "kind": "function",
               "language": "python"
             }
@@ -85,7 +159,7 @@
           "definitions": [
             {
               "file": "tools/sprites/build_character_bank_mobile_review.py",
-              "line": 235,
+              "line": 265,
               "kind": "function",
               "language": "python"
             }
@@ -121,7 +195,7 @@
           "definitions": [
             {
               "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
-              "line": 103,
+              "line": 133,
               "kind": "function",
               "language": "python"
             }
@@ -133,7 +207,7 @@
           "definitions": [
             {
               "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
-              "line": 110,
+              "line": 140,
               "kind": "function",
               "language": "python"
             }
@@ -153,11 +227,35 @@
           "relation": "same_file"
         },
         {
+          "symbol": "test_mobile_review_includes_verified_motion_flags",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
+              "line": 103,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
           "symbol": "test_script_closing_in_review_flags_is_html_escaped",
           "definitions": [
             {
               "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
-              "line": 116,
+              "line": 146,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_stale_motion_audit_must_not_be_misattached_to_new_png",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
+              "line": 119,
               "kind": "function",
               "language": "python"
             }
@@ -169,7 +267,7 @@
           "definitions": [
             {
               "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
-              "line": 124,
+              "line": 154,
               "kind": "function",
               "language": "python"
             }
@@ -177,7 +275,7 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 9
+      "dependency_count": 11
     },
     "setUp": {
       "source": {
@@ -191,7 +289,7 @@
           "definitions": [
             {
               "file": "tools/sprites/build_character_bank_mobile_review.py",
-              "line": 235,
+              "line": 265,
               "kind": "function",
               "language": "python"
             }
@@ -234,7 +332,51 @@
           "definitions": [
             {
               "file": "tools/sprites/build_character_bank_mobile_review.py",
-              "line": 173,
+              "line": 177,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_mobile_review_includes_verified_motion_flags": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
+        "start": 103,
+        "end": 117
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "build",
+          "definitions": [
+            {
+              "file": "tools/sprites/build_character_bank_mobile_review.py",
+              "line": 177,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_stale_motion_audit_must_not_be_misattached_to_new_png": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
+        "start": 119,
+        "end": 131
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "build",
+          "definitions": [
+            {
+              "file": "tools/sprites/build_character_bank_mobile_review.py",
+              "line": 177,
               "kind": "function",
               "language": "python"
             }
@@ -247,8 +389,8 @@
     "test_hash_tampering_fails_closed": {
       "source": {
         "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
-        "start": 103,
-        "end": 108
+        "start": 133,
+        "end": 138
       },
       "symbol_dependencies": [
         {
@@ -256,7 +398,7 @@
           "definitions": [
             {
               "file": "tools/sprites/build_character_bank_mobile_review.py",
-              "line": 173,
+              "line": 177,
               "kind": "function",
               "language": "python"
             }
@@ -281,8 +423,8 @@
     "test_invalid_local_frame_geometry_fails_closed": {
       "source": {
         "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
-        "start": 110,
-        "end": 114
+        "start": 140,
+        "end": 144
       },
       "symbol_dependencies": [
         {
@@ -290,7 +432,7 @@
           "definitions": [
             {
               "file": "tools/sprites/build_character_bank_mobile_review.py",
-              "line": 173,
+              "line": 177,
               "kind": "function",
               "language": "python"
             }
@@ -303,8 +445,8 @@
     "test_script_closing_in_review_flags_is_html_escaped": {
       "source": {
         "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
-        "start": 116,
-        "end": 122
+        "start": 146,
+        "end": 152
       },
       "symbol_dependencies": [
         {
@@ -312,7 +454,7 @@
           "definitions": [
             {
               "file": "tools/sprites/build_character_bank_mobile_review.py",
-              "line": 173,
+              "line": 177,
               "kind": "function",
               "language": "python"
             }
@@ -337,8 +479,8 @@
     "test_unapproved_bank_is_required": {
       "source": {
         "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
-        "start": 124,
-        "end": 132
+        "start": 154,
+        "end": 162
       },
       "symbol_dependencies": [
         {
@@ -346,7 +488,7 @@
           "definitions": [
             {
               "file": "tools/sprites/build_character_bank_mobile_review.py",
-              "line": 173,
+              "line": 177,
               "kind": "function",
               "language": "python"
             }
@@ -355,6 +497,325 @@
         }
       ],
       "dependency_count": 1
+    },
+    "MobileMotionAuditTests": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
+        "start": 19,
+        "end": 109
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "analyze",
+          "definitions": [
+            {
+              "file": "tools/sprites/audit_character_bank_motion.py",
+              "line": 70,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "png",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
+              "line": 36,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "setUp",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
+              "line": 20,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_distinct_poses_have_higher_observable_motion",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
+              "line": 80,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_report_requires_review_only_bank",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
+              "line": 98,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_sha_mismatch_fails_closed",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
+              "line": 87,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_still_work_requires_attention_but_is_not_automatically_approved",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
+              "line": 66,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_strict_approved_metadata_fails_closed",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
+              "line": 93,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "write_bank",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
+              "line": 50,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 9
+    },
+    "png": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
+        "start": 36,
+        "end": 48
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "write_bank": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
+        "start": 50,
+        "end": 64
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "png",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
+              "line": 36,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_still_work_requires_attention_but_is_not_automatically_approved": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
+        "start": 66,
+        "end": 78
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "analyze",
+          "definitions": [
+            {
+              "file": "tools/sprites/audit_character_bank_motion.py",
+              "line": 70,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "write_bank",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
+              "line": 50,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_distinct_poses_have_higher_observable_motion": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
+        "start": 80,
+        "end": 85
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "analyze",
+          "definitions": [
+            {
+              "file": "tools/sprites/audit_character_bank_motion.py",
+              "line": 70,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "write_bank",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
+              "line": 50,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_sha_mismatch_fails_closed": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
+        "start": 87,
+        "end": 91
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "analyze",
+          "definitions": [
+            {
+              "file": "tools/sprites/audit_character_bank_motion.py",
+              "line": 70,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "write_bank",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
+              "line": 50,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_strict_approved_metadata_fails_closed": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
+        "start": 93,
+        "end": 96
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "analyze",
+          "definitions": [
+            {
+              "file": "tools/sprites/audit_character_bank_motion.py",
+              "line": 70,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "write_bank",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
+              "line": 50,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_report_requires_review_only_bank": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
+        "start": 98,
+        "end": 109
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "analyze",
+          "definitions": [
+            {
+              "file": "tools/sprites/audit_character_bank_motion.py",
+              "line": 70,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "write_bank",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
+              "line": 50,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
     }
   }
 }

@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "cc02815676625c13f7ecc56c7b8468075effdac1",
-  "head": "15c021f73528e2536c53d31e463abc7c89e5c8d2",
+  "base": "15c021f73528e2536c53d31e463abc7c89e5c8d2",
+  "head": "ab0f3b9447872cbab09b89aa383bf79a2a8dd059",
   "index_mode": "incremental",
   "changed_files": [
     {
@@ -14,42 +14,80 @@
       "status": "M"
     },
     {
-      "path": "docs/art/MOBILE_CANDIDATE_REVIEW.md",
-      "status": "A"
-    },
-    {
       "path": "tools/assets/test_candidate_archive_workflow.py",
       "status": "M"
     },
     {
-      "path": "tools/sprites/build_character_bank_mobile_review.py",
+      "path": "tools/sprites/audit_character_bank_motion.py",
       "status": "A"
     },
     {
+      "path": "tools/sprites/build_character_bank_mobile_review.py",
+      "status": "M"
+    },
+    {
       "path": "tools/sprites/tests/test_character_bank_mobile_review.py",
+      "status": "M"
+    },
+    {
+      "path": "tools/sprites/tests/test_character_bank_motion_audit.py",
       "status": "A"
     }
   ],
   "changed_source_files": [
+    "tools/sprites/audit_character_bank_motion.py",
     "tools/sprites/build_character_bank_mobile_review.py",
-    "tools/sprites/tests/test_character_bank_mobile_review.py"
+    "tools/sprites/tests/test_character_bank_mobile_review.py",
+    "tools/sprites/tests/test_character_bank_motion_audit.py"
   ],
   "impacted_files": [
+    "tools/sprites/audit_character_bank_motion.py",
     "tools/sprites/build_character_bank_mobile_review.py",
-    "tools/sprites/tests/test_character_bank_mobile_review.py"
+    "tools/sprites/tests/test_character_bank_mobile_review.py",
+    "tools/sprites/tests/test_character_bank_motion_audit.py"
   ],
   "impacted_symbols": [
+    {
+      "name": "composite",
+      "kind": "function",
+      "file": "tools/sprites/audit_character_bank_motion.py",
+      "line": 25
+    },
+    {
+      "name": "change",
+      "kind": "function",
+      "file": "tools/sprites/audit_character_bank_motion.py",
+      "line": 33
+    },
+    {
+      "name": "motion_stats",
+      "kind": "function",
+      "file": "tools/sprites/audit_character_bank_motion.py",
+      "line": 38
+    },
+    {
+      "name": "analyze",
+      "kind": "function",
+      "file": "tools/sprites/audit_character_bank_motion.py",
+      "line": 70
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "tools/sprites/audit_character_bank_motion.py",
+      "line": 154
+    },
     {
       "name": "build",
       "kind": "function",
       "file": "tools/sprites/build_character_bank_mobile_review.py",
-      "line": 173
+      "line": 177
     },
     {
       "name": "main",
       "kind": "function",
       "file": "tools/sprites/build_character_bank_mobile_review.py",
-      "line": 235
+      "line": 265
     },
     {
       "name": "MobileCandidateReviewTests",
@@ -76,31 +114,98 @@
       "line": 87
     },
     {
-      "name": "test_hash_tampering_fails_closed",
+      "name": "test_mobile_review_includes_verified_motion_flags",
       "kind": "function",
       "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
       "line": 103
     },
     {
+      "name": "test_stale_motion_audit_must_not_be_misattached_to_new_png",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
+      "line": 119
+    },
+    {
+      "name": "test_hash_tampering_fails_closed",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
+      "line": 133
+    },
+    {
       "name": "test_invalid_local_frame_geometry_fails_closed",
       "kind": "function",
       "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
-      "line": 110
+      "line": 140
     },
     {
       "name": "test_script_closing_in_review_flags_is_html_escaped",
       "kind": "function",
       "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
-      "line": 116
+      "line": 146
     },
     {
       "name": "test_unapproved_bank_is_required",
       "kind": "function",
       "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
-      "line": 124
+      "line": 154
+    },
+    {
+      "name": "MobileMotionAuditTests",
+      "kind": "class",
+      "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
+      "line": 19
+    },
+    {
+      "name": "setUp",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
+      "line": 20
+    },
+    {
+      "name": "png",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
+      "line": 36
+    },
+    {
+      "name": "write_bank",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
+      "line": 50
+    },
+    {
+      "name": "test_still_work_requires_attention_but_is_not_automatically_approved",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
+      "line": 66
+    },
+    {
+      "name": "test_distinct_poses_have_higher_observable_motion",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
+      "line": 80
+    },
+    {
+      "name": "test_sha_mismatch_fails_closed",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
+      "line": 87
+    },
+    {
+      "name": "test_strict_approved_metadata_fails_closed",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
+      "line": 93
+    },
+    {
+      "name": "test_report_requires_review_only_bank",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
+      "line": 98
     }
   ],
   "selected_tests": [
-    "tools/sprites/tests/test_character_bank_mobile_review.py"
+    "tools/sprites/tests/test_character_bank_mobile_review.py",
+    "tools/sprites/tests/test_character_bank_motion_audit.py"
   ]
 }

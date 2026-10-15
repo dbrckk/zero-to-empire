@@ -29,25 +29,26 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-15T23:00:13Z
+Generated: 2026-10-15T23:47:33Z
 
 ### Git
 - Branch: `main`
-- Head: `15c021f73528`
-- Commit date: 2026-10-16T00:59:58+02:00
-- Commit: art: mobile offline review gallery for 16 verified character atlases (#168)
-- Tracked files: 1797
+- Head: `ab0f3b944787`
+- Commit date: 2026-10-16T01:47:18+02:00
+- Commit: art: audit 42px candidate animation readability and publish review warnings (#169)
+- Tracked files: 1799
 
 ### Recently changed files
 - `.github/workflows/asset-pipeline-ci.yml`
 - `.github/workflows/character-candidate-bank.yml`
-- `docs/art/MOBILE_CANDIDATE_REVIEW.md`
 - `tools/assets/test_candidate_archive_workflow.py`
+- `tools/sprites/audit_character_bank_motion.py`
 - `tools/sprites/build_character_bank_mobile_review.py`
 - `tools/sprites/tests/test_character_bank_mobile_review.py`
+- `tools/sprites/tests/test_character_bank_motion_audit.py`
+- `docs/art/MOBILE_CANDIDATE_REVIEW.md`
 - `tools/sprites/build_character_candidate_bank.py`
 - `tools/sprites/tests/test_character_candidate_bank.py`
-- `.github/workflows/backfill-character-candidate-archives.yml`
 
 ### Project signals
 - `build.gradle.kts`
