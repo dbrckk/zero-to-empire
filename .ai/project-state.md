@@ -34,16 +34,17 @@ Status: active — Android runtime works; final character quality not yet approv
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-15T13:15:09Z
+Generated: 2026-10-15T13:22:50Z
 
 ### Git
 - Branch: `main`
-- Head: `9b05d8725858`
-- Commit date: 2026-10-15T15:14:50+02:00
-- Commit: ci(android): build isolated visual review of locked ENG repair candidate
+- Head: `2e7d22ed3a4e`
+- Commit date: 2026-10-15T15:22:34+02:00
+- Commit: docs(continuity): preserve ENG repair source, 10-pose audit and Android review status
 - Tracked files: 1782
 
 ### Recently changed files
+- `PROJECT_CONTINUITY.md`
 - `ops/local-original-android-review-trigger.txt`
 - `art/incoming/chatgpt-original/animation-review.json`
 - `art/incoming/chatgpt-original/candidates/zte_chr_eng_repair_final.png`
@@ -63,7 +64,6 @@ Generated: 2026-10-15T13:15:09Z
 - `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/08.svg`
 - `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/09.svg`
 - `art/incoming/chatgpt-original/visual-risk-qa.json`
-- `.github/workflows/art-chatgpt-original-candidates.yml`
 
 ### Project signals
 - `build.gradle.kts`

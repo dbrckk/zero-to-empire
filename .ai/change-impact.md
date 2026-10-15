@@ -1,13 +1,13 @@
 # Change impact
 
-Base: c7920bb97987d124e3801e1a133e7d700770bc05
-Head: 9b05d87258583f9871ba6ff1e0487d67d0adba1c
+Base: d079016f314780a11cb4e71425dcb1efd7f6ec8a
+Head: 2e7d22ed3a4e88c27730a58ad334e9a30e4d5045
 
 ## Changed files
-- M ops/local-original-android-review-trigger.txt
+- M PROJECT_CONTINUITY.md
 
 ## Affected areas
-- ops
+- (root)
 
 ## Related test candidates
 - No direct filename-based test match detected.
