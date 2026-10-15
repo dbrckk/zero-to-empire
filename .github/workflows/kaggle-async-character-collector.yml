@@ -4,10 +4,16 @@ name: Kaggle Async Character Collector
 
 on:
   workflow_dispatch:
+  # Observe new producer submissions immediately; Kaggle completion is still
+  # polled by the existing hourly schedule. This event only reads the kernel.
+  workflow_run:
+    workflows: [Kaggle Mass Sprite Factory]
+    types: [completed]
   push:
     branches: [main]
     paths:
       - '.github/workflows/kaggle-async-character-collector.yml'
+      - 'art/production/kaggle-async-state.json'
   schedule:
     - cron: '43 * * * *'
 
@@ -23,6 +29,9 @@ concurrency:
 
 jobs:
   collect:
+    # workflow_run grants writable permissions. Never trust PR/fork or
+    # unsuccessful producer runs as a reason to observe privileged state.
+    if: ${{ github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository) }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     env:
