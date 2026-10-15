@@ -107,3 +107,59 @@ not proof of premium AAA output. WORK/REPAIR, carry contact, foot planting and
 small-screen game feel still require frame-by-frame human judgement. The
 canonical count stays **219/235 strict DONE** until those artistic and
 runtime gates actually pass.
+
+## v6 — authored planted-foot WALK/CARRY rig (15 October 2026)
+
+The six role/actions OP/LOG/ENG × WALK/CARRY have been **redrawn
+in this repository** with a deterministic contact-aware foot rig
+(`tools/sprites/local_character_contact_gait.py`); all 18 role/action
+atlases are rebuilt from first-party editable SVG source. No Kaggle,
+remote image service, outside stock illustration, or paid API is used.
+
+- Each foot has an explicit 60% stance / 40% aerial recovery cycle;
+  planted ankle height remains at 226 pixels while the upper body moves.
+- The two legs run half a cycle apart, with smoothstep horizontal
+  translation and sinusoidal swing clearance. Loaded CARRY uses smaller
+  steps, lower foot clearance and less upper-body sway than WALK.
+- The projected knee now bends forward in the swing phase rather than
+  splaying sideways; boots roll about the ankle during heel strike and
+  toe-off.
+- Every torso element, head, arm, held tool and carried crate shares a
+  single subtle weight-shift group, so this extra movement cannot detach
+  hand-held equipment.
+- `tools/sprites/test_local_character_contact_gait.py` protects foot
+  contact, alternating feet, leg ranges, loop closure and controlled
+  forward knee swing in the local renderer and CI.
+
+The first revision was generated in
+[workflow 38709967873](https://github.com/dbrckk/zero-to-empire/actions/runs/38709967873);
+its bow-leg swing issue was inspected visually and revised. The revised
+atlases, SVG frames and GIFs were generated successfully in
+[workflow 38710288088](https://github.com/dbrckk/zero-to-empire/actions/runs/38710288088).
+[Asset Pipeline CI 38710307817](https://github.com/dbrckk/zero-to-empire/actions/runs/38710307817)
+passed the revised independent stance and gait checks.
+
+The animation review evidence permits an objective, limited comparison.
+The metric below is **last→first pixel activity divided by median
+adjacent-frame pixel activity** (closer to 1 means a smoother loop seam,
+not better artistic quality):
+
+| Original atlas | Before | Contact-rig revision |
+|---|---:|---:|
+| OP-WALK | 1.6895 | 1.1309 |
+| OP-CARRY | 1.5150 | 1.0092 |
+| LOG-WALK | 1.7141 | 1.1480 |
+| LOG-CARRY | 1.5468 | 1.0400 |
+| ENG-WALK | 1.7099 | 1.1530 |
+| ENG-CARRY | 1.5584 | 1.0449 |
+
+All six have eight distinct authored poses and remain candidate-only. The
+improved seam and transparent margins **do not prove** heel-to-toe ground
+contact in actual scrolling gameplay, biomechanical realism, native
+Android readability or premium AAA visual acceptance. The vector style
+is still flatter than the existing canonical TECH visual standard.
+
+An isolated Android review APK build and emulator capture must be
+validated independently before any proposal to replace production
+resources. **The canonical strict count is still 219/235**, with 16
+assets unapproved pending visual acceptance and native runtime proof.
