@@ -174,6 +174,13 @@ PY_FRAME
     stage_count=$((stage_count + 1))
   done
 done
+# A previous emulator artifact (run 38788683514) proved that actor 0 could
+# be completely frozen while scenery and traffic kept moving. The debug-only
+# control is idempotent: resuming it here is mandatory before motion evidence.
+resume_coords="$(scroll_to_button 'Resume city clock')"
+read -r resume_x resume_y <<< "$resume_coords"
+adb shell input tap "$resume_x" "$resume_y"
+sleep .25
 # The game-sized thumbnail is not the 620dp city layer. Physically scroll
 # to the real city canvas and capture two *unpaused* frames inside its bounds.
 # The debug-only semantic label makes this a reliable viewport check instead
@@ -218,10 +225,37 @@ if [ -z "$stage_bounds" ]; then
   exit 1
 fi
 printf '%s\n' "$stage_bounds" > "$OUT/op-walk-city-stage-bounds.txt"
+# Observe Android Compose state, not the movement of unrelated scenery.
+# Uiautomator is intentionally required to read PLAY (not PAUSE) and the
+# exact active worldFrame at both ends of the screenshot interval.
+read_city_clock() {
+  read_ui
+  python3 - "$OUT/ui-stage.xml" <<'PY_CLOCK'
+import re,sys,xml.etree.ElementTree as ET
+root=ET.parse(sys.argv[1]).getroot()
+matches=[]
+for node in root.iter('node'):
+    label=(node.get('text') or node.get('content-desc') or '').strip()
+    m=re.fullmatch(r'CITY CLOCK: (\d+) · (PLAY|PAUSE)',label)
+    if m: matches.append((int(m.group(1)),m.group(2)))
+if len(matches)!=1 or matches[0][1]!='PLAY':
+    raise SystemExit(f'City review clock is paused, obscured or ambiguous: {matches}')
+print(matches[0][0])
+PY_CLOCK
+}
+clock_before="$(read_city_clock)"
 adb shell pidof com.zerotoempire.game.originalreview >/dev/null
 adb exec-out screencap -p > "$OUT/op-walk-city-stage-night-00.png"
 sleep .7
 adb exec-out screencap -p > "$OUT/op-walk-city-stage-night-01.png"
+clock_after="$(read_city_clock)"
+clock_delta=$(((clock_after - clock_before + 1680) % 1680))
+if [ "$clock_delta" -lt 1 ] || [ "$clock_delta" -ge 200 ]; then
+  echo "City clock did not advance while OP WALK was captured: $clock_before -> $clock_after" >&2
+  exit 1
+fi
+printf 'PLAY %s %s %s\n' "$clock_before" "$clock_after" "$clock_delta" > "$OUT/op-walk-city-clock-proof.txt"
+echo "LOCAL_ORIGINAL_CITY_REVIEW_CLOCK_ADVANCED=$clock_delta"
 # The uiautomator stage bounds are CLIPPED when the LazyColumn is scrolled.
 # Never use fractions of those bounds to locate an actor. Instead, locate
 # the precise Compose semantics of each real CharacterAtlasFrame after
@@ -243,7 +277,7 @@ m=re.fullmatch(r'\[(\d+),(\d+)\]\[(\d+),(\d+)\]',bounds)
 if not m:
     raise SystemExit(1)
 left,top,right,bottom=map(int,m.groups())
-if right-left<32 or bottom-top<32 or top<85 or bottom>1800:
+if right-left<75 or bottom-top<75 or top<85 or bottom>1800:
     raise SystemExit(1)
 print(left,top,right,bottom)
 PY_ACTOR
@@ -259,9 +293,15 @@ PY_ACTOR
   fi
   printf '%s\n' "$actor_bounds" > "$OUT/op-walk-city-actor-$actor-bounds.txt"
   adb shell pidof com.zerotoempire.game.originalreview >/dev/null
-  adb exec-out screencap -p > "$OUT/op-walk-city-actor-$actor-00.png"
-  sleep .7
-  adb exec-out screencap -p > "$OUT/op-walk-city-actor-$actor-01.png"
+  # The WALK source loops every 8 frames at 10fps. A single 0.7s
+  # gap plus screenshot overhead can accidentally sample the *same* pose
+  # on both sides of the 0.8s loop. Three staggered samples make this
+  # geometric aliasing observable rather than blaming a healthy renderer.
+  for pose in 0 1 2; do
+    printf -v shot 'op-walk-city-actor-%s-%02d.png' "$actor" "$pose"
+    adb exec-out screencap -p > "$OUT/$shot"
+    if [ "$pose" -lt 2 ]; then sleep .29; fi
+  done
 done
 test "$stage_count" -eq 24
 echo "LOCAL_ORIGINAL_ANDROID_ALL_24_ROLE_ACTIONS_RENDERED=$stage_count" \
@@ -316,22 +356,28 @@ for index in range(2):
     rect=[int(v) for v in bounds_path.read_text().split()]
     if len(rect)!=4:
         raise SystemExit(f'Invalid bounds for city actor {index}: {rect}')
-    pair=[Image.open(root/f'op-walk-city-actor-{index}-{n:02d}.png').convert('RGB')
-          for n in range(2)]
-    if any(image.size!=pair[0].size for image in pair):
+    shots=[Image.open(root/f'op-walk-city-actor-{index}-{n:02d}.png').convert('RGB')
+           for n in range(3)]
+    if any(image.size!=shots[0].size for image in shots):
         raise SystemExit(f'Inconsistent screenshots of actor {index}')
     l,t,r,b=rect
-    if r-l<32 or b-t<32 or l<0 or t<85 or r>pair[0].width or b>pair[0].height-80:
+    if r-l<75 or b-t<75 or l<0 or t<85 or r>shots[0].width or b>shots[0].height-80:
         raise SystemExit(f'Actor {index} clipped or invalid: {rect}')
-    # Allow the moving actor up to 32 device pixels of travel over .7sec.
-    roi=(max(0,l-32),max(80,t-32),min(pair[0].width,r+32),
-         min(pair[0].height-80,b+32))
-    local=ImageChops.difference(pair[0].crop(roi),pair[1].crop(roi))
-    detected=local.convert('L').point(lambda value: 255 if value>14 else 0)
-    changed=sum(count for value,count in enumerate(detected.histogram()) if value>0)
-    if changed<50:
-        raise SystemExit(f'No actual pixels moving inside OP WALK actor {index}: {changed}')
-    print(f'LOCAL_ORIGINAL_OP_WALK_ACTOR_{index}_MOTION_PASS={changed}_CHANGED_PIXELS')
+    # Evaluate two staggered frame intervals within the true actor bounds.
+    # A fixed 0.7s interval could coincide with the exact 0.8s WALK loop,
+    # creating a false static-actor verdict; the city clock must also pass
+    # its explicit PLAY + frame-progression gate earlier in this script.
+    roi=(max(0,l-14),max(80,t-14),min(shots[0].width,r+14),
+         min(shots[0].height-80,b+14))
+    differences=[]
+    for previous,current in zip(shots,shots[1:]):
+        delta=ImageChops.difference(previous.crop(roi),current.crop(roi))
+        thresholded=delta.convert('L').point(lambda value: 255 if value>14 else 0)
+        differences.append(sum(count for value,count in enumerate(thresholded.histogram())
+                               if value>0))
+    if max(differences)<50:
+        raise SystemExit(f'No pixels moving inside OP WALK actor {index}: {differences}')
+    print(f'LOCAL_ORIGINAL_OP_WALK_ACTOR_{index}_MOTION_PASS={differences}_CHANGED_PIXELS')
 print(f'LOCAL_ORIGINAL_ANDROID_CITY_STAGE_REAL_ACTOR_MOTION_PASS={active}_CHANGED_PIXELS')
 # The independent OP WALK capture must exercise eight distinct UI frame indices.
 poses=sorted(root.glob('op-walk-frame-*.png'))
