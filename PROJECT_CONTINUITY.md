@@ -2,7 +2,15 @@
 
 > Persistent handoff file. Read before work and update at every material intervention. Never rely on chat history alone.
 
-## Verified current state — 2026-10-09 (authoritative)
+## Verified current state — 2026-10-15 (authoritative; supersedes historical snapshot below)
+
+- Canonical master queue: **219/235 strict DONE** and **16 CHR actions NEEDS_REVIEW** (12 REJECTED_SEMANTIC; 4 AWAITING_REVIEW). This is counted directly from `art/production/master-asset-queue.json` on main `fda91ff481b9f3af130c6c561b5cf45273e4dfc8`.
+- The 18 locally authored original character atlas candidates are **review-only**; their existence is not semantic approval. Do not promote any CHR or claim 235/235 until exact art, live runtime/Android and CI evidence all pass.
+- 2026-10-15 GitHub Actions Asset Pipeline CI run **38720992796** and ChatGPT Original Character Candidates run **38720992762** both failed at `test_renderer_invokes_attached_effects_after_hand`: a test pinned obsolete `local-attached-tool-and-wrist-highlights-v1`, while the renderer advertises versioned `action_vfx` metadata for a v2 ratcheting tool/wrist rig. Existing geometry and draw-order checks were otherwise present.
+- Pull request **#147** on `fix/character-vfx-ci-metadata-20261015` updates that stale assertion while preserving VFX and tool/wrist ordering verification. **CI status is pending at this checkpoint**; do not claim the regression is resolved until a green complete run is observed. No Android/runtime sprite changes are included.
+- Next: validate PR CI, merge only after green, then check the next original candidate workflow and inspect remaining 16 CHR atlases visually at game scale. The dated historical snapshot below is retained only for provenance.
+
+## Historical state — 2026-10-09 (superseded)
 
 - **Canonical strict DONE: 216/235**, production processed: **233/235**. The source of truth is `art/production/master-asset-queue.json`. Do not raise the number for production, technical QA, or mere manifest presence.
 - **Remaining 19 (all CHR)**: OP WALK/WORK/CARRY/REPAIR/CELEB (5); TECH WALK/WORK/CARRY (3); LOG WALK/WORK/CARRY/REPAIR/CELEB (5); ENG IDLE/WALK/WORK/CARRY/REPAIR/CELEB (6). Technical states: 17 AWAITING_REVIEW, 1 REJECTED_SEMANTIC (TECH-WALK), 1 BLOCKED (LOG-CARRY).

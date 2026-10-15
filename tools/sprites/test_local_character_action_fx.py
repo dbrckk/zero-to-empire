@@ -72,7 +72,10 @@ class LocalActionFxTests(unittest.TestCase):
     def test_renderer_invokes_attached_effects_after_hand(self):
         text=(ROOT/'tools/sprites/render_chatgpt_originals.py').read_text(encoding='utf8')
         self.assertIn('from local_character_action_fx import action_fx',text)
-        self.assertIn('local-attached-tool-and-wrist-highlights-v1',text)
+        # The renderer's VFX metadata is versioned independently of its
+        # physically attached tool/wrist geometry. Keep metadata validation,
+        # without pinning the obsolete v1 implementation label.
+        self.assertRegex(text, r"'action_vfx'\s*:\s*'local-[a-z0-9-]+'")
         self.assertLess(text.index("add(joint_arm('R',action))"),
                         text.index('add(action_fx(role,action,phase'))
 

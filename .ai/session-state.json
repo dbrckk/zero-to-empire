@@ -1,26 +1,22 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-09",
-  "task": "Finish canonical 235/235 strict DONE with genuine semantic character animation, runtime integration and green Android CI",
-  "branch": "main",
-  "last_observed_head": "750cebd02ac3e9bfa93fea48a363ec05b549c121",
+  "updated_at": "2026-10-15",
+  "task": "Restore green asset CI after character VFX rig v2, then verify 16 missing canonical character actions without automatic strict promotion",
+  "branch": "fix/character-vfx-ci-metadata-20261015",
+  "last_observed_head": "fda91ff481b9f3af130c6c561b5cf45273e4dfc8",
   "state": {
-    "strict_done": 216,
+    "strict_done": 219,
     "target_total": 235,
-    "strict_remaining": 19,
-    "production_processed": 233,
-    "awaiting_review": 17,
-    "rejected_semantic": 1,
-    "blocked": 1,
+    "strict_remaining": 16,
+    "awaiting_review": 4,
+    "rejected_semantic": 12,
+    "blocked": 0,
     "remaining_asset_ids": [
       "CHR-OP-WALK",
       "CHR-OP-WORK",
       "CHR-OP-CARRY",
       "CHR-OP-REPAIR",
       "CHR-OP-CELEB",
-      "CHR-TECH-WALK",
-      "CHR-TECH-WORK",
-      "CHR-TECH-CARRY",
       "CHR-LOG-WALK",
       "CHR-LOG-WORK",
       "CHR-LOG-CARRY",
@@ -70,13 +66,24 @@
       "visual_review": "Single TECH identity stable; CARRY amber box improved with anchored dual grips; WALK leg separation and WORK hand contact still need in-game visual review.",
       "evidence_document": "docs/art/TECH_RIG_STAGED_VISUAL_REVIEW_2026-10-09.md",
       "android_preview_apk_sha256": "c8c878e662b9950256f1a29a414120f3c50224c9bb7314f25b67e6ea11667eca"
+    },
+    "ci_vfx_failure": {
+      "affected_workflows": [
+        "Asset Pipeline CI",
+        "ChatGPT Original Character Candidates"
+      ],
+      "failing_check": "test_renderer_invokes_attached_effects_after_hand",
+      "cause": "v1 metadata version assertion stale after original renderer v2 tool-tip ratchet evolution",
+      "fix_branch": "fix/character-vfx-ci-metadata-20261015",
+      "pull_request": 147,
+      "verification": "Asset Pipeline CI PR run 38736369265 passed on code fix commit 7083fd9; docs reconciler subsequently authored manifest/progress-only c8c8d20 and triggered action_required under github-actions[bot], not a failing test; validating latest human-authored commit next"
     }
   },
-  "last_completed": "Built and verified an offline textured TECH canonical 3-action review pipeline (WALK 8, WORK 10, CARRY 8) with identity and provenance checks, 96px visual QA and no automatic promotion. Replaced floating CARRY dashboard with an anchored dual-handle amber industrial crate. TECH canonical review staging 37983528623 was green and stored actual preview PNG/GIF; Android preview 37983740983 still running at this checkpoint. Strict 216/235 unchanged. Android preview 37983740983 PASSED build, unit tests and lint; preview APK SHA256 c8c878e662b9950256f1a29a414120f3c50224c9bb7314f25b67e6ea11667eca was verified; actual Android game visual review still needed.",
+  "last_completed": "Diagnosed 2026-10-15 failed Asset Pipeline CI and original character-candidate CI: the test required outdated v1 action FX metadata while the renderer truthfully declares v2. PR #147 replaces version pin with versioned metadata assertion; existing effect contact/ordering checks remain. Correct current strict state is 219/235, with 16 unapproved CHR actions. Waiting for PR CI; no new semantic approval.",
   "next_actions": [
-    "Check TECH Android preview run 37983740983; if green, obtain and inspect APK on Android with gameplay-visible three characters before any strict promotion.",
-    "Review TECH WALK foot sliding / projection and TECH WORK bilateral device contact at game scale, TECH CARRY bilateral crate grip, and preserve per-frame evidence.",
-    "Once each candidate passes image/gameplay review, promote only that asset's exact PNG/WebP with matching sha, CI and manifest status; do not promote all 3 automatically.",
-    "Continue rebuilding OP/LOG/ENG 16 remaining characters with single-identity animation and QA; master strict counter remains 216/235 until defensibly validated."
+    "Verify latest human-authored PR #147 run is green on exact head (bot-generated manifest reconciliation requires fresh reviewable CI); merge only after green.",
+    "Check that original candidate pipeline can pass the same corrected assertion on next eligible main render, without auto-approving generated art.",
+    "Visually inspect and validate 16 unresolved character actions at original and Android game size; repair any failed contact/identity/frame motion.",
+    "Promote only manually approved exact runtime atlases after Android CI; update canonical queue and progress ledger from evidence."
   ]
 }

@@ -2,7 +2,7 @@
 
 Live companion ledger for `FINAL_AAA_SPRITE_MANIFEST.md`. The manifest remains the canonical 236-item scope. Candidate art is never confused with DONE runtime assets.
 
-## Official progress — canonical reconciliation (2026-10-11)
+## Official progress — canonical reconciliation (2026-10-15)
 
 - Canonical strict DONE: **219 / 235** (source: master-asset-queue.json).
 - Manifest DONE: **220 / 236**, including ONB-00 outside the 235-target scope.
