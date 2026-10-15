@@ -16,6 +16,8 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
@@ -155,7 +157,7 @@ internal fun ReviewedCharacterLayer(
     BoxWithConstraints(modifier.fillMaxSize()) {
         val scale = minOf(maxWidth.value / 360f, maxHeight.value / 620f)
             .coerceIn(.75f, 1.20f) * lateEraScale
-        visiblePlacements.forEach { placement ->
+        visiblePlacements.forEachIndexed { index, placement ->
             val sample = ambientCharacterMotion(
                 action = placement.action,
                 worldFrame = worldFrame,
@@ -169,6 +171,21 @@ internal fun ReviewedCharacterLayer(
                 .coerceIn(0.dp, (maxWidth - dimension).coerceAtLeast(0.dp))
             val y = (maxHeight * placement.yFraction)
                 .coerceIn(0.dp, (maxHeight - dimension).coerceAtLeast(0.dp))
+            val actorModifier = Modifier
+                .offset(x = x, y = y)
+                .size(dimension)
+                .graphicsLayer { scaleX = if (sample.facingLeft) -1f else 1f }
+            // Only the explicit isolated review path exposes individual
+            // characters to uiautomator. Production uses the original
+            // modifier and still has no debug-only accessibility labels.
+            val reviewActorModifier = if (roleFilter != null && actionOverride != null) {
+                actorModifier.semantics {
+                    contentDescription =
+                        "REVIEW ${placement.role.name} ${placement.action.name} ACTOR ${index}"
+                }
+            } else {
+                actorModifier
+            }
             CharacterAtlasFrame(
                 atlas = atlases.getValue(placement.role to placement.action),
                 frame = sample.spriteFrame,
@@ -177,10 +194,7 @@ internal fun ReviewedCharacterLayer(
                 } else {
                     null
                 },
-                modifier = Modifier
-                    .offset(x = x, y = y)
-                    .size(dimension)
-                    .graphicsLayer { scaleX = if (sample.facingLeft) -1f else 1f },
+                modifier = reviewActorModifier,
             )
         }
     }
