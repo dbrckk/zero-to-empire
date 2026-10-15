@@ -119,6 +119,21 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("Mark approved characters strict DONE", text)
         self.assertLess(text.index("Validate promoted Android runtime"), text.index("Mark approved characters strict DONE"))
         self.assertIn("Continue autofactory after promotion", text)
+    def test_async_collector_observes_only_trusted_successful_producer_submissions(self):
+        text = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
+        header = text.split("\npermissions:", 1)[0]
+        self.assertIn("  workflow_run:", header)
+        self.assertIn("workflows: [Kaggle Mass Sprite Factory]", header)
+        self.assertIn("types: [completed]", header)
+        self.assertIn("art/production/kaggle-async-state.json", header)
+        self.assertIn("cron: '43 * * * *'", header)
+        self.assertIn("github.event.workflow_run.conclusion == 'success'", text)
+        self.assertIn("github.event.workflow_run.head_branch == 'main'", text)
+        self.assertIn("github.event.workflow_run.head_repository.full_name == github.repository", text)
+        self.assertIn("cancel-in-progress: false", text)
+        # The collector must not submit a new paid GPU batch on its own.
+        self.assertNotIn("kaggle kernels push", text)
+
     def test_async_collector_recovers_candidates_when_generated_targets_is_empty(self):
         text = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
         self.assertIn("character-sheet-report.json", text)
