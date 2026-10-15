@@ -121,6 +121,100 @@ class CharacterBankTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "dimensions"):
             assemble(self.master, self.archives, self.output)
 
+    def authored_original(self):
+        original = self.root / "original"
+        (original / "candidates").mkdir(parents=True)
+        (original / "src_svg" / "ENG" / "WALK").mkdir(parents=True)
+        manifest = []
+        qa = []
+        counts = {"IDLE": 6, "WALK": 8, "WORK": 10,
+                  "CARRY": 8, "REPAIR": 10, "CELEB": 8}
+        for role in ("OP", "LOG", "ENG"):
+            for action, frames in counts.items():
+                asset_id = f"CHR-{role}-{action}"
+                manifest.append({
+                    "id": asset_id, "file": f"zte_chr_{role.lower()}_{action.lower()}_final.png",
+                    "frames": frames, "role": role, "action": action,
+                    "strict_approved": False, "context_only": False,
+                })
+                qa.append({
+                    "id": asset_id, "frames": frames,
+                    "technical_geometry_pass": True, "semantic_approved": False,
+                    "android_validated": False, "strict_done_added": 0,
+                })
+        (original / "creation-manifest.json").write_text(
+            json.dumps({"review_only": True, "strict_done_added": 0,
+                        "assets": manifest}))
+        (original / "candidate-qa.json").write_text(
+            json.dumps({"review_only": True, "assets": qa}))
+        picture = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
+        from PIL import ImageDraw
+        for i in range(8):
+            x = (i % 4) * 256
+            y = (i // 4) * 256
+            ImageDraw.Draw(picture).rounded_rectangle(
+                (x + 78 + i % 3, y + 34, x + 186 + i % 3, y + 218),
+                radius=10, fill=(40, 95, 120, 255))
+            (original / "src_svg" / "ENG" / "WALK" / f"{i:02d}.svg").write_text(
+                '<svg xmlns="http://www.w3.org/2000/svg"></svg>')
+        picture.save(original / "candidates" / self.filename, "PNG")
+        return original
+
+    def test_local_original_completes_candidate_scope_while_remote_is_dispatched(self):
+        local = self.authored_original()
+        self.rows[-1]["pipeline_status"] = "DISPATCHED"
+        self.save_master()
+        master_before = self.master.read_bytes()
+        report = assemble(self.master, self.archives, self.output, local_original=local)
+        self.assertTrue(report["candidate_production_complete"])
+        self.assertEqual(report["production_processed"], 235)
+        self.assertEqual(report["canonical_queue_production_processed"], 234)
+        self.assertEqual(report["local_original_fallback_ids"], [self.missing])
+        entry = report["bank_entries"][0]
+        self.assertEqual(entry["source_type"], "repo-local-original")
+        self.assertEqual(entry["editable_pose_count"], 8)
+        self.assertTrue(entry["editable_source"].endswith("/ENG/WALK"))
+        self.assertNotIn("source_collector_run_id", entry)
+        self.assertFalse(entry["strict_approved"])
+        self.assertFalse(entry["runtime_promoted"])
+        self.assertEqual(self.master.read_bytes(), master_before)
+        with zipfile.ZipFile(self.output) as archive:
+            self.assertEqual(archive.read("candidates/" + self.filename),
+                             (local / "candidates" / self.filename).read_bytes())
+
+    def test_prefer_real_collected_candidate_to_local_original(self):
+        local = self.authored_original()
+        self.source()
+        report = assemble(self.master, self.archives, self.output, local_original=local)
+        entry = report["bank_entries"][0]
+        self.assertEqual(entry["source_type"], "collected-kaggle")
+        self.assertEqual(entry["source_collector_run_id"], 123)
+        self.assertEqual(report["local_original_fallback_ids"], [])
+
+    def test_local_manifest_claims_do_not_waive_technical_frame_QA(self):
+        local = self.authored_original()
+        Image.new("RGBA", (1024, 1024), (0, 0, 0, 0)).save(
+            local / "candidates" / self.filename)
+        with self.assertRaisesRegex(ValueError, "independent frame/alpha QA"):
+            assemble(self.master, self.archives, self.output, local_original=local)
+
+    def test_local_original_requires_all_editable_svg_frames(self):
+        local = self.authored_original()
+        (local / "src_svg" / "ENG" / "WALK" / "01.svg").unlink()
+        with self.assertRaisesRegex(ValueError, "Missing editable authored SVG"):
+            assemble(self.master, self.archives, self.output, local_original=local)
+
+    def test_local_original_fails_closed_when_qa_claims_artistic_approval(self):
+        local = self.authored_original()
+        qa_file = local / "candidate-qa.json"
+        data = json.loads(qa_file.read_text())
+        for item in data["assets"]:
+            if item["id"] == self.missing:
+                item["semantic_approved"] = True
+        qa_file.write_text(json.dumps(data))
+        with self.assertRaisesRegex(ValueError, "Untrusted local manifest/QA"):
+            assemble(self.master, self.archives, self.output, local_original=local)
+
 
 if __name__ == "__main__":
     unittest.main()
