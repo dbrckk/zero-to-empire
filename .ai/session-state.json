@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "updated_at": "2026-10-15",
-  "task": "Review the remaining 16 original character actions at Android game scale, prioritizing actual WALK stride, cargo grip and REPAIR contact; only promote after semantic+runtime approval",
-  "branch": "main",
-  "last_observed_head": "cbd35665d59a5586bed2ff325eda6446746a959a",
+  "task": "Lock CHR-ENG-REPAIR physical tool to a stable grounded machine socket; preserve strict queue and validate exact authored renders",
+  "branch": "art/eng-repair-contact-locked-20261015",
+  "last_observed_head": "6bc317413dd576406a420fae8427e95ca650c71a",
   "state": {
     "strict_done": 219,
     "target_total": 235,
@@ -101,13 +101,26 @@
         "ENG REPAIR: tool stays near the right wrist but the frame lacks a distinct fixed repair target; action semantics not approved."
       ],
       "strict_approvals": 0
+    },
+    "engineer_repair_fixed_socket": {
+      "status": "CANDIDATE_PENDING_CI",
+      "target_asset": "CHR-ENG-REPAIR",
+      "source": "tools/sprites/render_chatgpt_originals.py",
+      "socket_in_atlas": [
+        218,
+        129
+      ],
+      "design": "grounded diagnostic column, rigid bolt contact, wrist and VFX inverse-transformed to fixed socket throughout ten-frame ratchet",
+      "integration_audit": ".github/workflows/art-chatgpt-original-candidates.yml",
+      "review_only": true,
+      "strict_done_added": 0
     }
   },
-  "last_completed": "PR #148 merged to main 6194c1b3; offline reviewer now freezes 256px + 42px night + 39px day on the same exact frame, restores GIFs on playback/role change. Smoke scenarios and PR/main asset CI green; regeneration run 38739530573 succeeded and changed generated HTML blob on main. Inspected OP WALK, LOG CARRY, ENG REPAIR atlas frames without approving them. Canonical remains 219/235.",
+  "last_completed": "Authored isolated candidate ENG REPAIR repair station and exact constant-position tool tip with inverse rigid transform. Added GitHub workflow image/pose integration audit for all ten authored SVG frames. CI, regenerated PNG/GIF and human visual review remain pending; canonical still 219/235.",
   "next_actions": [
-    "Inspect each of the 16 first-party original GIF atlases and 39/42px game-size previews, log semantic review of identity/motion/contact before any runtime promotion.",
-    "Focus next art work on one coherent action at a time: OP WALK foot strike and weight transfer or ENG REPAIR fixed contact target; reproduce PNG/SVG and review at Android game size.",
-    "For a candidate accepted on semantic grounds, stage exact runtime WebP into isolated Android preview and run the Android emulator plus real APK checks; do not update canonical strictly DONE before verification.",
-    "Reconcile ledger only after reviewed/approved runtime evidence; keep 219/235 until then."
+    "Verify changed renderer via PR Asset Pipeline CI on exact head; fix any test/build issues before merge.",
+    "Merge after green and observe original character candidate workflow regeneration, 10-pose fixed socket integration audit and exact changed PNG/GIF.",
+    "Inspect new ENG REPAIR atlas and in-game sized preview visually, compare with prior version, perform Android review APK/emulator before semantic/strict approval.",
+    "Only then consider strict promotion of CHR-ENG-REPAIR, leaving other 15 unresolved untouched."
   ]
 }
