@@ -75,6 +75,39 @@ jobs:
           python tools/sprites/render_chatgpt_originals.py \
             --output-dir art/incoming/chatgpt-original \
             --save-svg
+      - name: Audit actual OP WALK heel lift and planted support in authored SVG
+        run: |
+          python - <<'PY'
+          import re, xml.etree.ElementTree as ET
+          from pathlib import Path
+          directory=Path('art/incoming/chatgpt-original/src_svg/OP/WALK')
+          airborne=[];grounded=0
+          for frame in range(8):
+              root=ET.parse(directory/f'{frame:02d}.svg').getroot()
+              feet={e.get('data-op-walk-side'):e for e in root.iter()
+                    if e.get('data-op-walk-side') in ('L','R')}
+              assert set(feet)=={'L','R'},('missing-boot',frame)
+              xpoints={}
+              for side,foot in feet.items():
+                  x=float(foot.get('data-op-walk-ankle-x'))
+                  y=float(foot.get('data-op-walk-ankle-y'))
+                  match=re.fullmatch(r'rotate\((-?[0-9.]+) (-?[0-9.]+) (-?[0-9.]+)\)',foot.get('transform',''))
+                  assert match,('boot-transform',frame,side)
+                  angle,rx,ry=map(float,match.groups())
+                  assert abs(rx-x)<.005 and abs(ry-y)<.005,('rendered-coordinates',frame,side)
+                  assert -10<=angle<=10,('invalid-foot-flex',frame,side)
+                  if foot.get('data-op-walk-planted')=='true':
+                      grounded+=1
+                      assert abs(y-226)<.005,('ground-contact-failed',frame,side,y)
+                  else:
+                      airborne.append(226-y)
+                  xpoints[side]=x
+              assert xpoints['R']-xpoints['L']>=5,('crossed-feet',frame)
+          assert grounded>=8 and len(airborne)>=4,(grounded,airborne)
+          assert min(airborne)>0 and max(airborne)>=20,('insufficient-foot-lift',airborne)
+          print(f'OP_WALK_AUTHORED_SVG_GAIT_PASS=8_FRAMES MAX_LIFT={max(airborne):.1f}px')
+          print('STRICT_DONE_ADDED=0')
+          PY
       - name: Audit actual ENG repair tool/socket contact in every SVG pose
         run: |
           python - <<'PY'
