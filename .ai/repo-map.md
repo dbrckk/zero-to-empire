@@ -2219,6 +2219,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/character-candidate-bank.yml'
+      - 'art/production/master-asset-queue.json'
 
 permissions:
   contents: write
@@ -29495,6 +29496,9 @@ def test_candidate_bank_is_assembled_only_from_trusted_release_and_queue(self)
 ⋮----
 flow = Path(".github/workflows/character-candidate-bank.yml").read_text()
 source = Path("tools/sprites/build_character_candidate_bank.py").read_text()
+⋮----
+# Either the archive or the canonical queue can become ready first.
+# Trigger on both to prevent a stale incomplete bank indefinitely.
 ⋮----
 def test_release_uses_only_qa_passed_candidates_and_never_promotes(self)
 ⋮----

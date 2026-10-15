@@ -29,19 +29,19 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-15T22:31:40Z
+Generated: 2026-10-15T22:33:50Z
 
 ### Git
 - Branch: `main`
-- Head: `26a062382466`
-- Commit date: 2026-10-16T00:31:25+02:00
-- Commit: art: publish live 235-target candidate bank with exact source provenance (#165)
+- Head: `cfd7a559458a`
+- Commit date: 2026-10-16T00:33:34+02:00
+- Commit: fix(art): update candidate bank regardless of collector and archive callback order (#166)
 - Tracked files: 1794
 
 ### Recently changed files
-- `.github/workflows/asset-pipeline-ci.yml`
 - `.github/workflows/character-candidate-bank.yml`
 - `tools/assets/test_candidate_archive_workflow.py`
+- `.github/workflows/asset-pipeline-ci.yml`
 - `tools/sprites/build_character_candidate_bank.py`
 - `tools/sprites/tests/test_character_candidate_bank.py`
 - `.github/workflows/backfill-character-candidate-archives.yml`
@@ -49,11 +49,6 @@ Generated: 2026-10-15T22:31:40Z
 - `tools/sprites/archive_character_candidates.py`
 - `tools/sprites/tests/test_archive_character_candidates.py`
 - `art/production/kaggle-async-state.json`
-- `art/production/autofactory-state.json`
-- `art/production/autofactory-summary.md`
-- `art/production/character-strict-review-backlog.md`
-- `art/production/controlled-character-regen-queue.json`
-- `art/production/master-asset-queue.json`
 
 ### Project signals
 - `build.gradle.kts`
