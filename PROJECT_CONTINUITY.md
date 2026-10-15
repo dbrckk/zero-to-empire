@@ -1,5 +1,13 @@
 # PROJECT CONTINUITY — Zero → Empire
 
+## Current verified action — 2026-10-15 (ENG REPAIR fixed socket)
+
+- **PR #149** merged as `7dadb8b9`: locally authored `CHR-ENG-REPAIR` now includes a stationary, ground-mounted service console with a defined bolt contact at **(218,129)** in its 256px cell. Wrist, prop, and VFX share an inverse-rotated rigid tool tip so the ratchet stays on the same bolt through all 10 frames.
+- **GitHub Actions 38740750108** (PR asset CI), **38740866078** (main asset CI), and **38740866046** (original character renderer) all **SUCCESS**. The renderer's actual ten generated SVG frames passed the new workflow integration audit, checking identical fixed console geometry and tool-endpoint error below 0.08px. The production candidate atlas, SVGs and previews regenerated on main in `c7920bb`; direct inspection confirms a full-body stable ENG model and visible service console.
+- **Android isolated visual-review APK run 38741077306 SUCCESS**, with debug build, existing Android checks, lint, isolated non-production package ID, and a downloadable QA artifact; automated real-device/emulator run **38741556309** still **in progress** when this note was written. Do not claim that 39/42dp screenshots were verified yet.
+- **Strict DONE remains 219/235 (16 outstanding)**. Original art is only a candidate; no production Android drawable, economy engine, save data, master queue or strict-status approval was changed. Follow the emulator, inspect gameplay-size visuals and obtain explicit semantic approval + exact runtime CI before promoting even this one asset.
+- After ENG REPAIR is individually finished, prioritize OP WALK foot contact/weight transfer. Do not restart legacy remote provider batches blindly.
+
 ## Verified latest — 2026-10-15 (PR #148 completed)
 
 - **PR #148 merged** at `6194c1b3`: the local, self-contained original-art reviewer now renders a single selected atlas frame simultaneously in its large canvas and true game-size **42px night / 39px day** previews. Animated GIFs are shown only while playback mode is active; switching roles/actions resets playback consistently.
