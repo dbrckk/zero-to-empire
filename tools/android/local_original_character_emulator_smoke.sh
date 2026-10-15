@@ -277,7 +277,7 @@ m=re.fullmatch(r'\[(\d+),(\d+)\]\[(\d+),(\d+)\]',bounds)
 if not m:
     raise SystemExit(1)
 left,top,right,bottom=map(int,m.groups())
-if right-left<32 or bottom-top<32 or top<85 or bottom>1800:
+if right-left<75 or bottom-top<75 or top<85 or bottom>1800:
     raise SystemExit(1)
 print(left,top,right,bottom)
 PY_ACTOR
@@ -293,9 +293,15 @@ PY_ACTOR
   fi
   printf '%s\n' "$actor_bounds" > "$OUT/op-walk-city-actor-$actor-bounds.txt"
   adb shell pidof com.zerotoempire.game.originalreview >/dev/null
-  adb exec-out screencap -p > "$OUT/op-walk-city-actor-$actor-00.png"
-  sleep .7
-  adb exec-out screencap -p > "$OUT/op-walk-city-actor-$actor-01.png"
+  # The WALK source loops every 8 frames at 10fps. A single 0.7s
+  # gap plus screenshot overhead can accidentally sample the *same* pose
+  # on both sides of the 0.8s loop. Three staggered samples make this
+  # geometric aliasing observable rather than blaming a healthy renderer.
+  for pose in 0 1 2; do
+    printf -v shot 'op-walk-city-actor-%s-%02d.png' "$actor" "$pose"
+    adb exec-out screencap -p > "$OUT/$shot"
+    if [ "$pose" -lt 2 ]; then sleep .29; fi
+  done
 done
 test "$stage_count" -eq 24
 echo "LOCAL_ORIGINAL_ANDROID_ALL_24_ROLE_ACTIONS_RENDERED=$stage_count" \
@@ -350,22 +356,28 @@ for index in range(2):
     rect=[int(v) for v in bounds_path.read_text().split()]
     if len(rect)!=4:
         raise SystemExit(f'Invalid bounds for city actor {index}: {rect}')
-    pair=[Image.open(root/f'op-walk-city-actor-{index}-{n:02d}.png').convert('RGB')
-          for n in range(2)]
-    if any(image.size!=pair[0].size for image in pair):
+    shots=[Image.open(root/f'op-walk-city-actor-{index}-{n:02d}.png').convert('RGB')
+           for n in range(3)]
+    if any(image.size!=shots[0].size for image in shots):
         raise SystemExit(f'Inconsistent screenshots of actor {index}')
     l,t,r,b=rect
-    if r-l<32 or b-t<32 or l<0 or t<85 or r>pair[0].width or b>pair[0].height-80:
+    if r-l<75 or b-t<75 or l<0 or t<85 or r>shots[0].width or b>shots[0].height-80:
         raise SystemExit(f'Actor {index} clipped or invalid: {rect}')
-    # Allow the moving actor up to 32 device pixels of travel over .7sec.
-    roi=(max(0,l-32),max(80,t-32),min(pair[0].width,r+32),
-         min(pair[0].height-80,b+32))
-    local=ImageChops.difference(pair[0].crop(roi),pair[1].crop(roi))
-    detected=local.convert('L').point(lambda value: 255 if value>14 else 0)
-    changed=sum(count for value,count in enumerate(detected.histogram()) if value>0)
-    if changed<50:
-        raise SystemExit(f'No actual pixels moving inside OP WALK actor {index}: {changed}')
-    print(f'LOCAL_ORIGINAL_OP_WALK_ACTOR_{index}_MOTION_PASS={changed}_CHANGED_PIXELS')
+    # Evaluate two staggered frame intervals within the true actor bounds.
+    # A fixed 0.7s interval could coincide with the exact 0.8s WALK loop,
+    # creating a false static-actor verdict; the city clock must also pass
+    # its explicit PLAY + frame-progression gate earlier in this script.
+    roi=(max(0,l-14),max(80,t-14),min(shots[0].width,r+14),
+         min(shots[0].height-80,b+14))
+    differences=[]
+    for previous,current in zip(shots,shots[1:]):
+        delta=ImageChops.difference(previous.crop(roi),current.crop(roi))
+        thresholded=delta.convert('L').point(lambda value: 255 if value>14 else 0)
+        differences.append(sum(count for value,count in enumerate(thresholded.histogram())
+                               if value>0))
+    if max(differences)<50:
+        raise SystemExit(f'No pixels moving inside OP WALK actor {index}: {differences}')
+    print(f'LOCAL_ORIGINAL_OP_WALK_ACTOR_{index}_MOTION_PASS={differences}_CHANGED_PIXELS')
 print(f'LOCAL_ORIGINAL_ANDROID_CITY_STAGE_REAL_ACTOR_MOTION_PASS={active}_CHANGED_PIXELS')
 # The independent OP WALK capture must exercise eight distinct UI frame indices.
 poses=sorted(root.glob('op-walk-frame-*.png'))
