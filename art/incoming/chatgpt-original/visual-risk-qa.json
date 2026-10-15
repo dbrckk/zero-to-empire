@@ -8,7 +8,7 @@
   "android_runtime_approved": false,
   "asset_count": 18,
   "frames_checked": 150,
-  "blocking_risk_count": 0,
+  "blocking_risk_count": 1,
   "requires_human_visual_review": 18,
   "limitations": [
     "Image-only thresholds can reject candidates but cannot prove art quality",
@@ -393,20 +393,23 @@
     {
       "id": "CHR-ENG-REPAIR",
       "frame_count": 10,
-      "risk_level": "NOT_DETECTED",
-      "flags": [],
+      "risk_level": "BLOCKING",
+      "flags": [
+        "MULTIPLE_NON_FULL_BODY_FRAMES",
+        "MEDIAN_SILHOUETTE_NOT_FULL_BODY"
+      ],
       "image_only_semantic_approval": false,
       "explicit_visual_review_required": true,
       "runtime_approved": false,
       "strict_done_granted": false,
       "headgear_color_drift": 0.0188,
-      "body_prop_color_drift": 0.0257,
+      "body_prop_color_drift": 0.0163,
       "head_shape_drift": null,
       "min_relative_frame_height": 1.0,
       "action_pose_metrics": {
-        "mean_raw_alpha_motion": 0.0492,
-        "mean_registered_alpha_motion": 0.0543,
-        "retained_pose_motion_ratio": 1.1044,
+        "mean_raw_alpha_motion": 0.0245,
+        "mean_registered_alpha_motion": 0.0376,
+        "retained_pose_motion_ratio": 1.5378,
         "head_horizontal_excursion_px": 1,
         "translation_dominated": false,
         "insufficient_registration_evidence": false
