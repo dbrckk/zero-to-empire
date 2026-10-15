@@ -29,22 +29,21 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-15T18:45:16Z
+Generated: 2026-10-15T19:35:00Z
 
 ### Git
 - Branch: `main`
-- Head: `af67c7d853b0`
-- Commit date: 2026-10-15T20:44:51+02:00
-- Commit: qa(android): locate real OP WALK actor motion by exact Compose bounds
+- Head: `122a9289a4e5`
+- Commit date: 2026-10-15T21:34:41+02:00
+- Commit: fix(review): require advancing city clock and unaliased OP WALK actor evidence
 - Tracked files: 1783
 
 ### Recently changed files
-- `app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt`
+- `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
 - `ops/local-original-android-review-trigger.txt`
 - `tools/android/local_original_character_emulator_smoke.sh`
-- `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
+- `app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt`
 - `app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt`
-- `PROJECT_CONTINUITY.md`
 
 ### Project signals
 - `build.gradle.kts`

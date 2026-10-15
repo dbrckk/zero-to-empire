@@ -5,13 +5,105 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "CharacterPlacement": {
+    "CharacterReviewActivity": {
       "source": {
-        "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
-        "start": 36,
-        "end": 46
+        "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
+        "start": 48,
+        "end": 53
       },
       "symbol_dependencies": [
+        {
+          "symbol": "CharacterReviewGallery",
+          "definitions": [
+            {
+              "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
+              "line": 56,
+              "kind": "symbol",
+              "language": "kotlin"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "onCreate",
+          "definitions": [
+            {
+              "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
+              "line": 49,
+              "kind": "symbol",
+              "language": "kotlin"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "onCreate": {
+      "source": {
+        "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
+        "start": 49,
+        "end": 52
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "CharacterReviewGallery",
+          "definitions": [
+            {
+              "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
+              "line": 56,
+              "kind": "symbol",
+              "language": "kotlin"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "CharacterReviewGallery": {
+      "source": {
+        "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
+        "start": 55,
+        "end": 325
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "AscendantCityStage",
+          "definitions": [
+            {
+              "file": "app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt",
+              "line": 99,
+              "kind": "symbol",
+              "language": "kotlin"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "CharacterAtlasFrame",
+          "definitions": [
+            {
+              "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
+              "line": 204,
+              "kind": "symbol",
+              "language": "kotlin"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "ReviewCell",
+          "definitions": [
+            {
+              "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
+              "line": 328,
+              "kind": "symbol",
+              "language": "kotlin"
+            }
+          ],
+          "relation": "same_file"
+        },
         {
           "symbol": "ReviewedCharacterAction",
           "definitions": [
@@ -37,56 +129,13 @@
           "relation": "class_like"
         }
       ],
-      "dependency_count": 2
+      "dependency_count": 5
     },
-    "AmbientCharacterMotion": {
+    "ReviewCell": {
       "source": {
-        "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
-        "start": 48,
-        "end": 52
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "ambientCharacterMotion": {
-      "source": {
-        "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
-        "start": 63,
-        "end": 95
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "AmbientCharacterMotion",
-          "definitions": [
-            {
-              "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
-              "line": 47,
-              "kind": "class",
-              "language": "kotlin"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "ReviewedCharacterAction",
-          "definitions": [
-            {
-              "file": "app/src/main/java/com/zerotoempire/game/CanonicalCharacterRaster.kt",
-              "line": 16,
-              "kind": "class",
-              "language": "kotlin"
-            }
-          ],
-          "relation": "class_like"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "ReviewedCharacterLayer": {
-      "source": {
-        "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
-        "start": 102,
-        "end": 201
+        "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
+        "start": 327,
+        "end": 351
       },
       "symbol_dependencies": [
         {
@@ -99,19 +148,7 @@
               "language": "kotlin"
             }
           ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "CharacterPlacement",
-          "definitions": [
-            {
-              "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
-              "line": 35,
-              "kind": "class",
-              "language": "kotlin"
-            }
-          ],
-          "relation": "same_file"
+          "relation": "class_like"
         },
         {
           "symbol": "ReviewedCharacterAction",
@@ -136,30 +173,9 @@
             }
           ],
           "relation": "class_like"
-        },
-        {
-          "symbol": "ambientCharacterMotion",
-          "definitions": [
-            {
-              "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
-              "line": 63,
-              "kind": "symbol",
-              "language": "kotlin"
-            }
-          ],
-          "relation": "same_file"
         }
       ],
-      "dependency_count": 5
-    },
-    "CharacterAtlasFrame": {
-      "source": {
-        "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
-        "start": 203,
-        "end": 248
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
+      "dependency_count": 3
     }
   }
 }

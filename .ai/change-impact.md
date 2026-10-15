@@ -1,10 +1,10 @@
 # Change impact
 
-Base: af13b8ad0057ab3776ee368c8fb1d09362b99b58
-Head: af67c7d853b0c4912963f8776cd45436982ae0d0
+Base: 934468dc02dd0ba5aef8e74a512b54ca47d950c2
+Head: 122a9289a4e54441cf256155eba1ee2360af8e89
 
 ## Changed files
-- M app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt
+- M app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt
 - M ops/local-original-android-review-trigger.txt
 - M tools/android/local_original_character_emulator_smoke.sh
 

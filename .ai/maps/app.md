@@ -515,6 +515,27 @@ private fun CharacterReviewGallery() {
                                         .background(Color(0x44DBEAF2)),
                                 )
                             }
+                            // This idempotent control belongs ONLY to the isolated
+                            // review APK. Earlier screenshots proved scenery motion
+                            // while an OP WALK actor was pixel-identical across frames:
+                            // a paused gallery clock must never masquerade as gait QA.
+                            Row(
+                                modifier = Modifier
+                                    .align(Alignment.TopStart)
+                                    .background(Color(0xDD08121C))
+                                    .padding(horizontal = 6.dp, vertical = 3.dp),
+                                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Text(
+                                    "CITY CLOCK: $worldFrame · ${if (playing) "PLAY" else "PAUSE"}",
+                                    color = Color.White,
+                                    style = MaterialTheme.typography.labelSmall,
+                                )
+                                OutlinedButton(onClick = { playing = true }) {
+                                    Text("Resume city clock")
+                                }
+                            }
                         }
                     }
                 }
