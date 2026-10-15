@@ -63,6 +63,7 @@ sprites/
   audit_complete_sprite_manifest.py
   autonomous_walk.py
   build_character_review_panels.py
+  build_original_offline_review.py
   build_sprite_contact_sheet.py
   build_tech_review_board.py
   character_anchor_pair_salvage.py
@@ -1166,6 +1167,46 @@ if [ "$stage_y" -ge 1280 ]; then
   exit 1
 fi
 adb exec-out screencap -p > "$OUT/11-engineer-game-scale.png"
+# Every authored role/action must be selectable and render at gameplay size
+# on the actual emulator. Gallery thumbnails alone cannot prove this.
+# Capture all 24 combinations, not merely the default ENGINEER/WALK.
+stage_count=0
+for role in OPERATOR TECHNICIAN LOGISTICS ENGINEER; do
+  role_coords="$(scroll_to_button "$role")"
+  read -r role_x role_y <<< "$role_coords"
+  adb shell input tap "$role_x" "$role_y"
+  sleep 1
+  for action in IDLE WALK WORK CARRY REPAIR CELEBRATE; do
+    action_coords="$(scroll_to_button "$action")"
+    read -r action_x action_y <<< "$action_coords"
+    adb shell input tap "$action_x" "$action_y"
+    sleep 1
+    # The selected label is above the six action buttons. On compact
+    # phones it can be offscreen after tapping REPAIR/CELEBRATE; scroll back
+    # to the stage rather than misreporting a valid selection as a failure.
+    selected_visible=false
+    for attempt in $(seq 1 8); do
+      read_ui
+      if python3 tools/android/local_review_ui_target.py "$OUT/ui-stage.xml" \
+          "$role · $action" --allow-static-label >/dev/null; then
+        selected_visible=true
+        break
+      fi
+      adb shell input swipe 290 270 290 590 300
+      sleep 1
+    done
+    if [ "$selected_visible" != true ]; then
+      echo "Android role/action selection failed: $role $action" >&2
+      exit 1
+    fi
+    adb shell pidof com.zerotoempire.game.originalreview >/dev/null
+    adb exec-out screencap -p > "$OUT/atlas-$role-$action.png"
+    stage_count=$((stage_count + 1))
+  done
+done
+test "$stage_count" -eq 24
+echo "LOCAL_ORIGINAL_ANDROID_ALL_24_ROLE_ACTIONS_RENDERED=$stage_count" \
+  > "$OUT/24-stage-coverage.txt"
 # UI XML improves diagnosis; screenshots and active process are hard gates.
 if adb shell uiautomator dump /sdcard/local-original-qa.xml; then
   adb pull /sdcard/local-original-qa.xml "$OUT/ui-hierarchy.xml" || true
@@ -1176,7 +1217,7 @@ python3 - <<'PY'
 from pathlib import Path
 from struct import unpack
 root=Path('/tmp/zte-original-review-evidence')
-shots=sorted(root.glob('*-*.png'))
+shots=sorted(p for p in root.glob('*.png') if p.name[:2].isdigit())
 if len(shots)!=11:
     raise SystemExit(f'Expected ten role gallery screenshots and one Android game-scale screenshot; got {len(shots)}')
 for shot in shots:
@@ -1186,7 +1227,14 @@ for shot in shots:
     width,height=unpack('>II',data[16:24])
     if width<300 or height<500:
         raise SystemExit(f'Unexpected emulator image size: {shot}: {width}x{height}')
-print('LOCAL_ORIGINAL_EMULATOR_SCREENSHOT_HEADERS_PASS=11')
+extra=sorted(root.glob('atlas-*.png'))
+if len(extra)!=24:
+    raise SystemExit(f'Expected 24 gameplay-size role/action screenshots, got {len(extra)}')
+for shot in extra:
+    data=shot.read_bytes()
+    if len(data)<10000 or not data.startswith(bytes.fromhex('89504e470d0a1a0a')):
+        raise SystemExit(f'Invalid Android role/action screenshot: {shot}')
+print('LOCAL_ORIGINAL_EMULATOR_SCREENSHOT_HEADERS_PASS=35')
 print('LOCAL_ORIGINAL_ROLE_ENGINEER_STAGE_OPENED=1')
 PY
 printf '%s\n' 'LOCAL_ORIGINAL_ANDROID_GALLERY_LAUNCHED=1'   'STRICT_DONE_UNCHANGED_BY_EMULATOR=1'   'EMULATOR_REVIEW_IS_NOT_SEMANTIC_APPROVAL=1'   > "$OUT/ANDROID_REVIEW_ONLY.txt"
@@ -2528,6 +2576,32 @@ filename = f"review-mobile-{role}-{action}.png"
 preview = f"review-motion-{role}-{action}.gif"
 ⋮----
 summary = {"schema_version": 1, "review_only": True, "roles": results}
+```
+
+## File: sprites/build_original_offline_review.py
+```python
+#!/usr/bin/env python3
+"""Offline Android-first sprite inspection; never changes strict DONE."""
+⋮----
+ROLES=("OP","LOG","ENG")
+FRAMES={"IDLE":6,"WALK":8,"WORK":10,"CARRY":8,"REPAIR":10,"CELEB":8}
+⋮----
+HTML=r'''<!doctype html><html lang="fr"><head><meta charset="utf-8">
+⋮----
+def build(source:Path,destination:Path)->dict
+⋮----
+manifest=json.loads((source/'creation-manifest.json').read_text(encoding='utf-8'))
+expected={f'CHR-{role}-{action}' for role in ROLES for action in FRAMES}
+⋮----
+media={}
+⋮----
+name=f'zte_chr_{role.lower()}_{action.lower()}_final.png'
+src=source/'candidates'/name
+gif=source/'previews'/f'{role.lower()}-{action.lower()}.gif'
+⋮----
+a=argparse.ArgumentParser()
+⋮----
+p=a.parse_args()
 ```
 
 ## File: sprites/build_sprite_contact_sheet.py

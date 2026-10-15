@@ -31,36 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-15T09:15:42Z
+Generated: 2026-10-15T09:39:32Z
 
 ### Git
 - Branch: `main`
-- Head: `44cd4381ce14`
-- Commit date: 2026-10-15T11:15:27+02:00
-- Commit: docs(android): record verified local character gait APK and emulator screenshot evidence
-- Tracked files: 1780
+- Head: `a83a9386e900`
+- Commit date: 2026-10-15T11:39:16+02:00
+- Commit: docs(art): document Android offline reviewer for all locally created character assets
+- Tracked files: 1782
 
 ### Recently changed files
 - `docs/art/CHATGPT_ORIGINAL_CHARACTER_PIPELINE.md`
-- `ops/local-original-android-review-trigger.txt`
-- `art/incoming/chatgpt-original/animation-review.json`
-- `art/incoming/chatgpt-original/candidates/zte_chr_eng_carry_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_eng_walk_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_log_carry_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_log_walk_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_op_carry_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_op_walk_final.png`
-- `art/incoming/chatgpt-original/original-review-contact-sheet.png`
-- `art/incoming/chatgpt-original/previews/eng-carry.gif`
-- `art/incoming/chatgpt-original/previews/eng-walk.gif`
-- `art/incoming/chatgpt-original/previews/log-carry.gif`
-- `art/incoming/chatgpt-original/previews/log-walk.gif`
-- `art/incoming/chatgpt-original/previews/mobile-eng.png`
-- `art/incoming/chatgpt-original/previews/mobile-log.png`
-- `art/incoming/chatgpt-original/previews/mobile-op.png`
-- `art/incoming/chatgpt-original/previews/op-carry.gif`
-- `art/incoming/chatgpt-original/previews/op-walk.gif`
-- `art/incoming/chatgpt-original/src_svg/ENG/CARRY/00.svg`
+- `art/incoming/chatgpt-original/original-offline-review.html`
+- `ops/chatgpt-original-trigger.txt`
+- `.github/workflows/art-chatgpt-original-candidates.yml`
+- `.github/workflows/asset-pipeline-ci.yml`
 
 ### Project signals
 - `build.gradle.kts`

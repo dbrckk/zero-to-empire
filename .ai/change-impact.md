@@ -1,7 +1,7 @@
 # Change impact
 
-Base: db57c08ccf8c414d6a14f73d54ac13804e85828b
-Head: 44cd4381ce145525ca7dfb5da569e0a3ea5a781f
+Base: 04ed0d678fe71d3922f62c32030a91a72a785211
+Head: a83a9386e90000810f75cccf6a82d69ce9aafe8b
 
 ## Changed files
 - M docs/art/CHATGPT_ORIGINAL_CHARACTER_PIPELINE.md
