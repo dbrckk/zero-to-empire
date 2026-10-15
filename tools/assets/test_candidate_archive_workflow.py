@@ -52,6 +52,20 @@ class CandidateArchiveWorkflowTests(unittest.TestCase):
         self.assertNotIn("app/src/main/res/", flow)
         self.assertNotIn("git push", flow)
 
+    def test_mobile_review_publish_is_offline_and_explicitly_review_only(self):
+        flow = Path(".github/workflows/character-candidate-bank.yml").read_text()
+        source = Path("tools/sprites/build_character_bank_mobile_review.py").read_text()
+        self.assertIn("build_character_bank_mobile_review.py", flow)
+        self.assertIn("--bank /tmp/zte-character-bank-current.zip", flow)
+        self.assertIn("--local-original art/incoming/chatgpt-original", flow)
+        self.assertIn("/tmp/zte-character-bank-mobile-review.html", flow)
+        self.assertIn("hashlib.sha256", source)
+        self.assertIn("validated_local_candidate", source)
+        self.assertIn("42 px", source)
+        self.assertIn("review_only", source)
+        self.assertNotIn("git push", flow)
+        self.assertNotIn("app/src/main/res/", flow)
+
     def test_release_uses_only_qa_passed_candidates_and_never_promotes(self):
         flow = Path(".github/workflows/archive-character-candidates.yml").read_text()
         script = Path("tools/sprites/archive_character_candidates.py").read_text()
