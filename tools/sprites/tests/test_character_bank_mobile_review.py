@@ -100,6 +100,36 @@ class MobileCandidateReviewTests(unittest.TestCase):
         self.assertNotIn("https://",html)
         self.assertNotIn("http://",html)
 
+    def test_mobile_review_includes_verified_motion_flags(self):
+        audit = self.root / "motion-audit.json"
+        audit.write_text(json.dumps({
+            "review_only": True, "automatic_semantic_approval": False,
+            "automatic_runtime_promotion": False, "candidate_count": 1,
+            "assets": [{
+                "id": self.asset_id, "sha256": self.record["sha256"],
+                "new_motion_flags": ["LOW_MOBILE_FRAME_CHANGE_REVIEW"],
+                "strict_approved": False, "runtime_promoted": False,
+            }],
+        }))
+        build(self.bank, self.original, self.html, audit)
+        html = self.html.read_text()
+        self.assertIn("LOW_MOBILE_FRAME_CHANGE_REVIEW", html)
+        self.assertIn("Animation trop peu visible", html)
+
+    def test_stale_motion_audit_must_not_be_misattached_to_new_png(self):
+        audit = self.root / "stale-audit.json"
+        audit.write_text(json.dumps({
+            "review_only": True, "automatic_semantic_approval": False,
+            "automatic_runtime_promotion": False, "candidate_count": 1,
+            "assets": [{
+                "id": self.asset_id, "sha256": "0" * 64,
+                "new_motion_flags": ["LOW_MOBILE_FRAME_CHANGE_REVIEW"],
+                "strict_approved": False, "runtime_promoted": False,
+            }],
+        }))
+        with self.assertRaisesRegex(ValueError, "Stale/untrusted motion audit"):
+            build(self.bank, self.original, self.html, audit)
+
     def test_hash_tampering_fails_closed(self):
         self.record["sha256"]="0"*64
         self.save_bank()
