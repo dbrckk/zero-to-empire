@@ -192,6 +192,13 @@ jobs:
           assert d['asset_count']==18 and d['frames_checked']==150
           assert len(d['assets'])==18
           assert all(not r['image_only_semantic_approval'] for r in d['assets'])
+          # Reject-only cross-action reference evidence: every local action
+          # must be compared to the same role's authored IDLE headgear.
+          assert all(isinstance(r['same_role_idle_head_color_distance'],(float,int))
+                     for r in d['assets'])
+          assert all(r['same_role_idle_head_color_distance']==0
+                     for r in d['assets'] if r['id'].endswith('-IDLE'))
+          print('CHATGPT_ORIGINAL_CROSS_ACTION_IDENTITY_EVIDENCE=18')
           print('CHATGPT_ORIGINAL_REJECT_ONLY_VISUAL_QA_PASS=18')
           PY
       - name: Publish original candidate review evidence
