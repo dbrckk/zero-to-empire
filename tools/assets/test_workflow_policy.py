@@ -125,11 +125,13 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("candidate_dir=Path('/tmp/kaggle-output/output/candidates')", text)
         self.assertIn("candidate_dir.glob('*_final.png')", text)
         self.assertIn("workflow_dispatch:", text)
-        # Historical collector can be manually dispatched only. The user's
-        # remaining sprites are now original, authored locally in ChatGPT.
+        # The collector may poll existing GPU jobs but may not start them.
+        # An hourly check ensures an ACTIVE state cannot remain uncollected.
         header=text.split("\npermissions:",1)[0]
-        self.assertNotIn("\n  schedule:",header)
-        self.assertNotIn("\n  push:",header)
+        self.assertIn("\n  schedule:",header)
+        self.assertIn("cron: '43 * * * *'",header)
+        self.assertIn("\n  push:",header)
+        self.assertIn("branches: [main]",header)
         self.assertIn("cancel-in-progress: false", text)
 
     def test_action_translation_reviewer_precedes_candidate_promotion(self):
@@ -233,14 +235,13 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertNotIn("master-asset-queue.json", text)
         self.assertNotIn("strict_status", text)
 
-    def test_local_first_art_has_no_automatic_external_generator_schedule(self):
-        # The user requires the remaining original sprites to be authored in
-        # ChatGPT, not regenerated remotely by periodic GitHub Actions.
+    def test_other_external_generator_workflows_stay_manual(self):
+        # The collector is observational; the other workflows must not gain
+        # a cron or push trigger to bypass the bounded asset autofactory.
         workflows = [
             ".github/workflows/pollinations-character-atlas.yml",
             ".github/workflows/pollinations-building-candidate.yml",
             ".github/workflows/manifest-static-gpu-batch.yml",
-            ".github/workflows/kaggle-async-character-collector.yml",
             ".github/workflows/kaggle-superseded-character-evidence.yml",
             ".github/workflows/kaggle-mass-sprite-factory.yml",
             ".github/workflows/pollinations-character-smoke.yml",
