@@ -1,5 +1,12 @@
 # PROJECT CONTINUITY — Zero → Empire
 
+## Verified latest — 2026-10-15 (PR #148 completed)
+
+- **PR #148 merged** at `6194c1b3`: the local, self-contained original-art reviewer now renders a single selected atlas frame simultaneously in its large canvas and true game-size **42px night / 39px day** previews. Animated GIFs are shown only while playback mode is active; switching roles/actions resets playback consistently.
+- Exact inline-JavaScript interaction smoke check **PASS (7 cases)**. PR Asset Pipeline CI run **38739375267**, main Asset Pipeline CI run **38739530704**, Original Character Candidates generator run **38739530573**, and Repository standards run **38739532721** all **SUCCESS**. The generator committed regenerated `original-offline-review.html` to main on `cbd35665`, preserving independent, non-production art status.
+- Directly inspected original atlas candidate frames for `CHR-OP-WALK` (gait amplitude still limited), `CHR-LOG-CARRY` (crate aligned with both grips, locomotion still requires review), and `CHR-ENG-REPAIR` (right-hand equipment visible, no convincing fixed repair target). These observations do **not** constitute an Android animation semantic approval or a strict promotion.
+- Master queue re-counted on main: **219/235 strict DONE; 16 outstanding CHR actions**. Next work: finish meaningful action/contact/identity polish on one role at a time, visually inspect at Android gameplay size, then run runtime and CI verification before any promotion. 
+
 ## Current intervention — 2026-10-15 (after PR #147 merge)
 
 - PR **#147** merged on `main` (`edbdfb76`); exact-main Asset Pipeline CI **38737302273** and Android CI **38737302024** both completed **SUCCESS**. Subsequent reconciliation advanced `main` to `4fbd8c34` without changing the strict backlog.
