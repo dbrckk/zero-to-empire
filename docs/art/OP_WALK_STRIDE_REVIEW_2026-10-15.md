@@ -14,7 +14,9 @@ An independently prepared parallel alternative (PR #151) was **closed without me
 - Current original atlas at `art/incoming/chatgpt-original/candidates/zte_chr_op_walk_final.png` was inspected at the native 256px frame resolution and 39/42px presentation; it shows eight different full-body poses, consistent uniform/helmet, a visible airborne foot and reciprocal arms.
 - Asset Pipeline CI [38744789050](https://github.com/dbrckk/zero-to-empire/actions/runs/38744789050) **SUCCESS**.
 - Original character candidate run [38744789685](https://github.com/dbrckk/zero-to-empire/actions/runs/38744789685) **SUCCESS**, including explicit live-SVG `Validate actual OP walking contacts and reciprocal leg travel`.
-- Android review build [38744963714](https://github.com/dbrckk/zero-to-empire/actions/runs/38744963714) was still processing existing debug checks/lint when this report was authored; [38745033106](https://github.com/dbrckk/zero-to-empire/actions/runs/38745033106) was queued. **Do not claim completion or Android screenshot evidence until these are actually observed.**
+- Isolated Android review APK runs [38744963714](https://github.com/dbrckk/zero-to-empire/actions/runs/38744963714) and [38745033106](https://github.com/dbrckk/zero-to-empire/actions/runs/38745033106) both **SUCCESS**: debug package compilation, existing Android unit checks, lint and production-save-package isolation.
+- Android emulator run [38745543878](https://github.com/dbrckk/zero-to-empire/actions/runs/38745543878) **SUCCESS**, with GitHub artifact `11979140579` (`local-original-android-emulator-visual-evidence`). The downloaded `24-stage-coverage.txt` confirms **24/24 actual role/action captures**; screenshot `atlas-OPERATOR-WALK.png` was inspected and shows the complete operator on **42dp night / 39dp day** backgrounds.
+- These prove the **isolated QA UI renders the proposed asset**, not that its animation meets premium art standards in the shipping game. One screenshot does not prove the 8-frame loop is free of sliding at real speed.
 
 ## Acceptance gate before strict DONE
 
