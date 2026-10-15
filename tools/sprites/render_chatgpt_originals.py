@@ -161,6 +161,11 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
  if role=='OP':
   add(f'<path d="M 109 {66+bounce:.1f} h 39" stroke="#1c2e40" stroke-width="5" stroke-linecap="round"/>')
   add(f'<rect x="109" y="{68+bounce:.1f}" width="17" height="9" rx="3" fill="#1a3445" stroke="#7cbbc8" stroke-width="2"/><rect x="130" y="{68+bounce:.1f}" width="17" height="9" rx="3" fill="#1a3445" stroke="#7cbbc8" stroke-width="2"/>')
+  # OP goggles conceal the eyelids, so an IDLE blink is expressed by a
+  # brief lens reflection shift, never by a floating eye outside the visor.
+  # Lens geometry remains identical across all other action families.
+  lens_shift=(1.5 if action=='IDLE' and index in (2,3) else 0.0)
+  add(f'<path d="M {112+lens_shift:.1f} {70+bounce:.1f} l 5 0 M {133+lens_shift:.1f} {70+bounce:.1f} l 5 0" stroke="#c7eff1" stroke-width="1.5" opacity=".76"/>')
  else:
   # A blink must replace the open eyes, not paint a horizontal stroke over
   # still-visible pupils. This is an actual facial expression transition.
@@ -292,7 +297,7 @@ def main():
  for role in ROLES:
   for action in ACTIONS:
    results.append(render_atlas(role,action,outdir,args.save_svg))
- report={'version':'chatgpt-original-character-rig-v4-contact-attached-action-vfx','strict_done_added':0,'review_only':True,
+ report={'version':'chatgpt-original-character-rig-v5-operator-goggle-idle-expression','strict_done_added':0,'review_only':True,
          'material_finish':'local-alpha-safe-directional-light-v1',
          'action_vfx':'local-attached-tool-and-wrist-highlights-v1',
          'asset_count':len(results),'unresolved_target_count':16,'assets':results}
