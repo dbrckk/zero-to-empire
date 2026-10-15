@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "updated_at": "2026-10-15",
-  "task": "Fix offline original character preview frame-by-frame mismatch on mobile; retain strict 219/235 and review the 16 pending action atlases",
-  "branch": "fix/offline-frame-scale-sync-20261015",
-  "last_observed_head": "4fbd8c34a3e8c889a065aea55d61f4a3559158b2",
+  "task": "Review the remaining 16 original character actions at Android game scale, prioritizing actual WALK stride, cargo grip and REPAIR contact; only promote after semantic+runtime approval",
+  "branch": "main",
+  "last_observed_head": "cbd35665d59a5586bed2ff325eda6446746a959a",
   "state": {
     "strict_done": 219,
     "target_total": 235,
@@ -47,7 +47,9 @@
       "excluded_item": "ONB-00",
       "historical_semantic_review": "OPEN",
       "alignment": "RECONCILED",
-      "discrepancy": false
+      "discrepancy": false,
+      "historical_snapshot_only": true,
+      "current_canonical_strict_done": 219
     },
     "tech_rig_review": {
       "candidates": [
@@ -76,22 +78,36 @@
       "cause": "v1 metadata version assertion stale after original renderer v2 tool-tip ratchet evolution",
       "fix_branch": "fix/character-vfx-ci-metadata-20261015",
       "pull_request": 147,
-      "verification": "PR #147 merged on main as edbdfb76; Asset Pipeline CI 38737302273 and Android CI 38737302024 both completed success. Main later updated to 4fbd8c34 by review-ledger automation."
+      "verification": "PR #147 merged; exact main Asset Pipeline CI 38737302273 and Android CI 38737302024 success."
     },
     "offline_review_frame_sync": {
-      "source_file": "tools/sprites/build_original_offline_review.py",
-      "branch": "fix/offline-frame-scale-sync-20261015",
-      "issue": "Static-frame mode previously froze only large canvas; night/day 42px/39px preview GIFs continued independently.",
-      "change": "Night/day now use same exact atlas cell as central still-frame canvas, with all GIFs hidden only during still-frame inspection.",
-      "verification": "Exact extracted JavaScript exercised in isolated DOM interaction harness: 7 scenarios PASS. CI and real-device review still required.",
-      "strict_done_added": 0
+      "status": "MERGED_VERIFIED",
+      "pr": 148,
+      "merge_commit": "6194c1b38f7e8c6622ce2a0882ac485990bc555a",
+      "source": "tools/sprites/build_original_offline_review.py",
+      "validation": "seven exact-script interactive JS scenarios passed; PR Asset Pipeline CI 38739375267 success; main Asset Pipeline CI 38739530704 success; original character candidate regeneration 38739530573 success; repository standards 38739532721 success",
+      "generated_html_sha": "0e2e07ed31439b873e9bedf70dcd9bba35dc2d7d",
+      "semantic_approvals": 0
+    },
+    "visual_sampling_2026_10_15": {
+      "assets": [
+        "CHR-OP-WALK",
+        "CHR-LOG-CARRY",
+        "CHR-ENG-REPAIR"
+      ],
+      "observations": [
+        "OP WALK: consistent OP identity, but stride and foot-lift movement look weak at full atlas size; assess gameplay-size animation.",
+        "LOG CARRY: both hands touch the crate consistently in inspected poses; gait quality remains unapproved.",
+        "ENG REPAIR: tool stays near the right wrist but the frame lacks a distinct fixed repair target; action semantics not approved."
+      ],
+      "strict_approvals": 0
     }
   },
-  "last_completed": "Merged and CI-verified PR #147 on main; in current branch updated offline character reviewer to synchronize paused and scrubbed frame across 256px, 42px/night and 39px/day views. Interactive JavaScript smoke checks PASS; no production art changed.",
+  "last_completed": "PR #148 merged to main 6194c1b3; offline reviewer now freezes 256px + 42px night + 39px day on the same exact frame, restores GIFs on playback/role change. Smoke scenarios and PR/main asset CI green; regeneration run 38739530573 succeeded and changed generated HTML blob on main. Inspected OP WALK, LOG CARRY, ENG REPAIR atlas frames without approving them. Canonical remains 219/235.",
   "next_actions": [
-    "Run Asset Pipeline CI on the exact reviewer branch revision and fix any regression; merge only after green.",
-    "Regenerate the standalone self-contained HTML from the updated renderer in the existing original-character workflow on main and verify all 18 atlas records are preserved.",
-    "Inspect 16 remaining local candidate CHR actions visually at Android game scale and validate exact semantics before any strict promotion.",
-    "Promote only reviewed runtime atlases with Android CI evidence; canonical strict remains 219/235 until then."
+    "Inspect each of the 16 first-party original GIF atlases and 39/42px game-size previews, log semantic review of identity/motion/contact before any runtime promotion.",
+    "Focus next art work on one coherent action at a time: OP WALK foot strike and weight transfer or ENG REPAIR fixed contact target; reproduce PNG/SVG and review at Android game size.",
+    "For a candidate accepted on semantic grounds, stage exact runtime WebP into isolated Android preview and run the Android emulator plus real APK checks; do not update canonical strictly DONE before verification.",
+    "Reconcile ledger only after reviewed/approved runtime evidence; keep 219/235 until then."
   ]
 }
