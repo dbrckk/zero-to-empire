@@ -1,13 +1,13 @@
 # Change impact
 
-Base: da717fd786249fb7bfec17597568bea6f664a5bf
-Head: cba6bc91794c312ed39a9d8a6e244765f9e4190b
+Base: e5a18ae91702b2f9b58b28a875ec451de10d6d46
+Head: 781d82fbe1e7f64151e32c67d7ea299c46285928
 
 ## Changed files
-- M ops/local-original-android-review-trigger.txt
+- M docs/art/OP_WALK_STRIDE_REVIEW_2026-10-15.md
 
 ## Affected areas
-- ops
+- docs
 
 ## Related test candidates
 - No direct filename-based test match detected.

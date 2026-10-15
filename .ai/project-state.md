@@ -30,16 +30,17 @@ Status: active — original character art requires semantic approval before prod
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-15T15:40:57Z
+Generated: 2026-10-15T15:43:03Z
 
 ### Git
 - Branch: `main`
-- Head: `cba6bc91794c`
-- Commit date: 2026-10-15T17:40:41+02:00
-- Commit: ci(android): review new constant-speed OP WALK on emulator
+- Head: `781d82fbe1e7`
+- Commit date: 2026-10-15T17:42:45+02:00
+- Commit: docs(art): record fixed OP WALK stance-speed candidate and validation evidence
 - Tracked files: 1783
 
 ### Recently changed files
+- `docs/art/OP_WALK_STRIDE_REVIEW_2026-10-15.md`
 - `ops/local-original-android-review-trigger.txt`
 - `art/incoming/chatgpt-original/animation-review.json`
 - `art/incoming/chatgpt-original/candidates/zte_chr_op_walk_final.png`
@@ -58,7 +59,6 @@ Generated: 2026-10-15T15:40:57Z
 - `art/incoming/chatgpt-original/visual-risk-qa.json`
 - `tools/sprites/local_character_contact_gait.py`
 - `PROJECT_CONTINUITY.md`
-- `docs/art/OP_WALK_STRIDE_REVIEW_2026-10-15.md`
 
 ### Project signals
 - `build.gradle.kts`
