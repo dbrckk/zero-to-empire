@@ -176,7 +176,7 @@ jobs:
           assert all(item['atlas'].startswith('data:image/png;base64,')
                      and item['animation'].startswith('data:image/gif;base64,')
                      for item in d.values())
-          assert 'strict_done_added' not in html or True
+          assert 'Aucun changement automatique du compteur strict' in html
           print('OFFLINE_ORIGINAL_REVIEW_PASS=18')
           PY
       - name: Report all remaining character motion and identity risks without approval
