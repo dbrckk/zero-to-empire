@@ -72,10 +72,15 @@ def foot_pose(phase: float, side: str, action: str, bounce: float = 0.0) -> Foot
 
     along = (UPPER_LEG**2-LOWER_LEG**2+length**2)/(2.0*length)
     perpendicular = math.sqrt(max(0.0,UPPER_LEG**2-along**2))
-    # Outer knee contour, compressed by perspective, not a sideways kick.
+    # In the airborne recovery the knee bends predominantly forward
+    # (into depth), not sideways. A fully planar hinge previously pushed the
+    # knee pads 20px outside the shin and looked like an exaggerated bow-leg.
+    # This blend is periodic and smoothly returns to outward stance contour
+    # at toe-off and heel-strike.
     contour = 1.0 if side == "L" else -1.0
-    knee_x = hip_x+dx*along/length+contour*(-dy/length)*perpendicular*.55
-    knee_y = hip_y+dy*along/length+contour*(dx/length)*perpendicular*.55
+    perspective_bend = .48 if planted else .48-.75*math.sin(math.pi*progress)
+    knee_x = hip_x+dx*along/length+contour*(-dy/length)*perpendicular*perspective_bend
+    knee_y = hip_y+dy*along/length+contour*(dx/length)*perpendicular*perspective_bend
     return FootPose(
         hip_x,hip_y,knee_x,knee_y,ankle_x,ankle_y,
         angle,planted,cycle
