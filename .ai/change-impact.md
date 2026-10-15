@@ -1,13 +1,13 @@
 # Change impact
 
-Base: d1be50002eb6bd4baa9020bdd59a3ef08a52d242
-Head: 92823d713d29de8d55a4f1a5bc041c2b60ac1b03
+Base: 4f2449de4e7bacfce139230e6f9148d76d8e1da4
+Head: 0465cd5d2be7f9f271b62c7b8e995dc7ae58397f
 
 ## Changed files
-- M tools/sprites/render_chatgpt_originals.py
+- M .github/workflows/asset-pipeline-ci.yml
 
 ## Affected areas
-- tools
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

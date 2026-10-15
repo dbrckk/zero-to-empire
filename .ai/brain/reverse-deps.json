@@ -2287,6 +2287,15 @@
       "in_degree": 2,
       "out_degree": 1
     },
+    "tools/sprites/local_character_contact_gait.py": {
+      "dependencies": [],
+      "dependents": [
+        "tools/sprites/render_chatgpt_originals.py",
+        "tools/sprites/test_local_character_contact_gait.py"
+      ],
+      "in_degree": 2,
+      "out_degree": 0
+    },
     "tools/sprites/local_character_material_finish.py": {
       "dependencies": [],
       "dependents": [
@@ -2444,11 +2453,12 @@
       "dependencies": [
         "app/src/main/java/com/zerotoempire/game/GameRepository.kt",
         "tools/sprites/local_character_action_fx.py",
+        "tools/sprites/local_character_contact_gait.py",
         "tools/sprites/local_character_material_finish.py"
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 3
+      "out_degree": 4
     },
     "tools/sprites/render_original_character_previews.py": {
       "dependencies": [
@@ -2669,6 +2679,14 @@
     "tools/sprites/test_local_character_action_fx.py": {
       "dependencies": [
         "tools/sprites/local_character_action_fx.py"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 1
+    },
+    "tools/sprites/test_local_character_contact_gait.py": {
+      "dependencies": [
+        "tools/sprites/local_character_contact_gait.py"
       ],
       "dependents": [],
       "in_degree": 0,

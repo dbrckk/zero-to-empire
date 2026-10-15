@@ -394,6 +394,7 @@ tools/
     lightning_remote_runner.py
     lightning_studio_factory.py
     local_character_action_fx.py
+    local_character_contact_gait.py
     local_character_material_finish.py
     manifest_batch_planner.py
     multi_provider_static_manifest_factory.py
@@ -434,6 +435,7 @@ tools/
     test_focused_sprite_atlas.py
     test_identity_locked_walk_candidate.py
     test_local_character_action_fx.py
+    test_local_character_contact_gait.py
     test_package_tech_actions_runtime.py
     test_pollinations_character_sheet_factory.py
     test_rigged_tech_actions_v3.py
@@ -918,6 +920,7 @@ on:
       - 'tools/sprites/render_chatgpt_originals.py'
       - 'tools/sprites/local_character_material_finish.py'
       - 'tools/sprites/local_character_action_fx.py'
+      - 'tools/sprites/local_character_contact_gait.py'
       - 'tools/sprites/render_original_character_previews.py'
       - 'tools/sprites/audit_chatgpt_originals.py'
 
@@ -975,6 +978,8 @@ jobs:
       - name: Validate contact-attached action effects before rasterization
         run: |
           python -m unittest discover -s tools/sprites -p 'test_local_character_action_fx.py' -v
+      - name: Verify planted-foot motion and phase-continuous boot geometry
+        run: python -m unittest discover -s tools/sprites -p 'test_local_character_contact_gait.py' -v
       - name: Render all remaining role families from committed source
         run: |
           python tools/sprites/render_chatgpt_originals.py \
@@ -1360,6 +1365,8 @@ on:
       - 'tools/sprites/render_chatgpt_originals.py'
       - 'tools/sprites/local_character_material_finish.py'
       - 'tools/sprites/local_character_action_fx.py'
+      - 'tools/sprites/local_character_contact_gait.py'
+      - 'tools/sprites/test_local_character_contact_gait.py'
       - 'tools/sprites/test_local_character_action_fx.py'
       - 'tools/sprites/render_original_character_previews.py'
       - 'art/incoming/chatgpt-original/**'
@@ -1408,6 +1415,8 @@ on:
       - 'tools/sprites/render_chatgpt_originals.py'
       - 'tools/sprites/local_character_material_finish.py'
       - 'tools/sprites/local_character_action_fx.py'
+      - 'tools/sprites/local_character_contact_gait.py'
+      - 'tools/sprites/test_local_character_contact_gait.py'
       - 'tools/sprites/test_local_character_action_fx.py'
       - 'tools/sprites/render_original_character_previews.py'
       - 'art/incoming/chatgpt-original/**'
@@ -1479,6 +1488,7 @@ jobs:
             tools/sprites/render_chatgpt_originals.py \
             tools/sprites/local_character_material_finish.py \
             tools/sprites/local_character_action_fx.py \
+            tools/sprites/local_character_contact_gait.py \
             tools/sprites/render_original_character_previews.py \
             tools/sprites/verify_local_character_bundle.py \
             tools/sprites/character_head_identity_lock.py \
@@ -1692,6 +1702,7 @@ jobs:
           python -m unittest discover -s tools/sprites -p 'test_verify_character_idle_candidates.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_head_identity_lock.py' -v
           python -m unittest discover -s tools/sprites -p 'test_local_character_action_fx.py' -v
+          python -m unittest discover -s tools/sprites -p 'test_local_character_contact_gait.py' -v
           python -m unittest discover -s tools/sprites -p 'test_verify_character_action_candidates.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_approved_idle_fallback.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_ground_shadow_cleanup.py' -v
@@ -33682,6 +33693,82 @@ lx=75-4*lift
 rx=174+5*lift
 ```
 
+## File: tools/sprites/local_character_contact_gait.py
+```python
+"""Locally authored 2.5D contact-aware locomotion rig for OP / LOG / ENG.
+
+No remote art generation. This is an editable candidate pose source and does
+not approve sprites or replace Android resources.
+"""
+⋮----
+STANCE_FRACTION = .60
+FLOOR_ANKLE_Y = 226.0
+UPPER_LEG = 37.5
+LOWER_LEG = 38.5
+⋮----
+@dataclass(frozen=True)
+class FootPose
+⋮----
+hip_x: float
+hip_y: float
+knee_x: float
+knee_y: float
+ankle_x: float
+ankle_y: float
+boot_angle: float
+planted: bool
+cycle: float
+⋮----
+def _ease(t: float) -> float
+⋮----
+t = max(0.0, min(1.0, t))
+⋮----
+def foot_pose(phase: float, side: str, action: str, bounce: float = 0.0) -> FootPose
+⋮----
+"""Cyclic stance/swing path with locked stance Y and projected knee IK.
+
+    Frame coordinates: 256x256, +Y downward. During the support fraction,
+    the sole stays on a constant ground-height line; during recovery it lifts
+    smoothly and advances. Feet alternate exactly half a stride apart. Knee
+    lateral excursion is attenuated for a 3/4 projection, avoiding the bowed
+    2D hinge produced by naïve screen-space IK.
+    """
+⋮----
+cycle = (phase/(2*math.pi)+(0 if side == "L" else .5)) % 1.0
+reach = 14.0 if action == "WALK" else 12.0
+clearance = 16.0 if action == "WALK" else 12.0
+⋮----
+progress = _ease(cycle/STANCE_FRACTION)
+foot_dx = reach*(1.0-2.0*progress)
+lift = 0.0
+angle = -4.0 + 8.0*progress
+planted = True
+⋮----
+progress = (cycle-STANCE_FRACTION)/(1.0-STANCE_FRACTION)
+foot_dx = reach*(-1.0+2.0*_ease(progress))
+lift = clearance*math.sin(math.pi*progress)**1.4
+angle = 4.0-8.0*_ease(progress)
+planted = False
+⋮----
+hip_x = 106.0 if side == "L" else 146.0
+hip_y = 155.0+bounce
+ankle_x = hip_x+foot_dx
+ankle_y = FLOOR_ANKLE_Y-lift
+⋮----
+length = math.hypot(dx,dy)
+⋮----
+along = (UPPER_LEG**2-LOWER_LEG**2+length**2)/(2.0*length)
+perpendicular = math.sqrt(max(0.0,UPPER_LEG**2-along**2))
+# Outer knee contour, compressed by perspective, not a sideways kick.
+contour = 1.0 if side == "L" else -1.0
+knee_x = hip_x+dx*along/length+contour*(-dy/length)*perpendicular*.55
+knee_y = hip_y+dy*along/length+contour*(dx/length)*perpendicular*.55
+⋮----
+def torso_weight_shift(phase: float, action: str) -> float
+⋮----
+"""Counter-sway toward the grounded stance foot, scaled for cargo."""
+```
+
 ## File: tools/sprites/local_character_material_finish.py
 ```python
 """Deterministic alpha-safe material lighting for ChatGPT original sprite rig.
@@ -35129,9 +35216,9 @@ def svg_frame(role:str, action:str, index:int, count:int)->str
 ⋮----
 p=ROLES[role]; phase=2*math.pi*index/count; motion=math.sin(phase); bounce=0.0
 ⋮----
-stride=24*motion; bounce=3.5*(1-math.cos(phase*2))/2
-elif action=='IDLE':stride=0; bounce=1.8*math.sin(phase)
-else:stride=0;bounce=1.6*math.sin(phase)
+bounce=2.8*(1-math.cos(phase*2))/2
+elif action=='IDLE':bounce=1.8*math.sin(phase)
+else:bounce=1.6*math.sin(phase)
 # Always keep same facial shape, helmet model, costume palette and 3/4 view.
 s=[]
 def add(v):s.append(v)
@@ -35166,26 +35253,22 @@ sleeve=line(shoulder_x,shoulder_y,ex,ey,'url(#jacket)',17,3)
 ⋮----
 # highlighted overarm and stitched safety cuff
 ⋮----
-# legs behind torso: anti-phase step, readable ankle separation
+# Locally authored planted-foot gait: 60% support, 40% lifted
+# recovery, damped 3/4-view two-bone knees, and reciprocal L/R steps.
+# Grounded ankles keep exactly the same Y even as pelvis bob changes.
 leg_poses=[]
 ⋮----
-signed=(1 if side=='L' else -1)
-# Wider hip spacing and a damped ankle arc avoid the crossed ankles
-# seen in the original WALK/CARRY frames. Articulation remains readable
-# without stepping through the opposite shin.
+leg=foot_pose(phase,side,action,bounce)
+⋮----
+boot_angle=leg.boot_angle
+⋮----
 hipx=106 if side=='L' else 146
-swing=signed*stride
 yhip=155+bounce
-knee_x=hipx+0.45*swing + (2 if side=='L' else -2)
-# A gait has both position and velocity. A sinusoidal X position
-# alone repeats the same pose twice per loop (phase 45° and 135°).
-# Use the signed cosine for stance-vs-swing foot lift: eight real poses,
-# one grounded support foot per half-cycle and smooth loop closure.
-swing_velocity=signed*math.cos(phase) if action in ('WALK','CARRY') else 0
-knee_y=190+bounce-3*max(0,swing_velocity)
-ankle_x=hipx + swing*0.66
-lift=max(0,swing_velocity)*10 if action in ('WALK','CARRY') else 0
-ankle_y=226+bounce-lift
+knee_x=hipx+(2 if side=='L' else -2)
+knee_y=190+bounce
+ankle_x=hipx
+ankle_y=226+bounce
+boot_angle=0.0
 ⋮----
 # no floor shadow; transparency is exact outside figure
 # back ponytail / hair only LOG
@@ -35196,6 +35279,11 @@ ankle_y=226+bounce-lift
 ⋮----
 if side=='L': toe=ax-9
 else:toe=ax+9
+# Heel-strike and toe-off flex the same boot art around its ankle.
+⋮----
+# Weight shifts toward stance foot; cargo carry sway remains restrained.
+# The hands, equipment, torso, helmet and face all receive the exact same
+# transform, avoiding drift in object contact or character identity.
 ⋮----
 # BACK arm
 ⋮----
@@ -35254,6 +35342,8 @@ tool_y=123+12*math.cos(phase)+bounce
 ⋮----
 # reflective micro-detail texture, unique per role but invariant per frame
 ⋮----
+add('</g>')  # balanced upper-body weight-transfer group
+⋮----
 def render_atlas(role,action,outdir,save_svgs=False)
 ⋮----
 count=ACTIONS[action]; atlas=Image.new('RGBA',(1024,1024),(0,0,0,0))
@@ -35278,7 +35368,7 @@ parser=argparse.ArgumentParser()
 args=parser.parse_args();outdir=pathlib.Path(args.output_dir);outdir.mkdir(parents=True,exist_ok=True)
 results=[]
 ⋮----
-report={'version':'chatgpt-original-character-rig-v5-operator-goggle-idle-expression','strict_done_added':0,'review_only':True,
+report={'version':'chatgpt-original-character-rig-v6-contact-aware-leg-rig','strict_done_added':0,'review_only':True,
 ```
 
 ## File: tools/sprites/render_original_character_previews.py
@@ -36921,6 +37011,40 @@ def test_bad_role_action_rejected(self)
 def test_renderer_invokes_attached_effects_after_hand(self)
 ⋮----
 text=(ROOT/'tools/sprites/render_chatgpt_originals.py').read_text(encoding='utf8')
+```
+
+## File: tools/sprites/test_local_character_contact_gait.py
+```python
+"""Pixel-independent gait contract for locally authored WALK/CARRY candidates."""
+⋮----
+class ContactGaitTests(unittest.TestCase)
+⋮----
+def test_stance_feet_are_anchored_vertically_even_while_torso_bobs(self)
+⋮----
+phase=2*math.pi*i/80
+bounce=1.4*(1-math.cos(phase*2))
+leg=foot_pose(phase,side,action,bounce)
+⋮----
+def test_exact_half_cycle_leg_antiphase(self)
+⋮----
+phase=i*2*math.pi/24
+l=foot_pose(phase,"L",action)
+r=foot_pose(phase+math.pi,"R",action)
+⋮----
+def test_swing_clears_ground_without_crossed_legs(self)
+⋮----
+raised=0
+⋮----
+phase=2*math.pi*i/48
+left=foot_pose(phase,"L",action)
+right=foot_pose(phase,"R",action)
+⋮----
+def test_loop_is_periodic_without_coordinate_jumps(self)
+⋮----
+first=foot_pose(0,side,action)
+last=foot_pose(2*math.pi,side,action)
+⋮----
+def test_loaded_carry_has_less_sway_than_unladen_walk(self)
 ```
 
 ## File: tools/sprites/test_package_tech_actions_runtime.py

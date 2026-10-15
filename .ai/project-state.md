@@ -31,21 +31,36 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-15T08:49:33Z
+Generated: 2026-10-15T09:03:27Z
 
 ### Git
 - Branch: `main`
-- Head: `92823d713d29`
-- Commit date: 2026-10-15T10:49:17+02:00
-- Commit: art(original): author operator goggle blink reflection in deterministic IDLE rig
-- Tracked files: 1778
+- Head: `0465cd5d2be7`
+- Commit date: 2026-10-15T11:03:01+02:00
+- Commit: ci(art): enforce local weighted gait pose and support-foot invariants
+- Tracked files: 1780
 
 ### Recently changed files
-- `tools/sprites/render_chatgpt_originals.py`
-- `docs/art/CHATGPT_ORIGINAL_CHARACTER_PIPELINE.md`
-- `ops/local-original-android-review-trigger.txt`
-- `tools/sprites/test_local_character_action_fx.py`
 - `.github/workflows/asset-pipeline-ci.yml`
+- `art/incoming/chatgpt-original/animation-review.json`
+- `art/incoming/chatgpt-original/candidates/zte_chr_eng_carry_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_eng_walk_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_log_carry_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_log_walk_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_op_carry_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_op_walk_final.png`
+- `art/incoming/chatgpt-original/creation-manifest.json`
+- `art/incoming/chatgpt-original/original-review-contact-sheet.png`
+- `art/incoming/chatgpt-original/previews/eng-carry.gif`
+- `art/incoming/chatgpt-original/previews/eng-walk.gif`
+- `art/incoming/chatgpt-original/previews/log-carry.gif`
+- `art/incoming/chatgpt-original/previews/log-walk.gif`
+- `art/incoming/chatgpt-original/previews/mobile-eng.png`
+- `art/incoming/chatgpt-original/previews/mobile-log.png`
+- `art/incoming/chatgpt-original/previews/mobile-op.png`
+- `art/incoming/chatgpt-original/previews/op-carry.gif`
+- `art/incoming/chatgpt-original/previews/op-walk.gif`
+- `art/incoming/chatgpt-original/src_svg/ENG/CARRY/00.svg`
 
 ### Project signals
 - `build.gradle.kts`
