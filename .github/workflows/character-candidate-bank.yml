@@ -1,0 +1,94 @@
+name: Assemble Character Candidate Bank
+
+on:
+  workflow_run:
+    workflows: [Archive Character Candidates]
+    types: [completed]
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/character-candidate-bank.yml'
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: zte-character-candidate-bank
+  cancel-in-progress: false
+
+jobs:
+  assemble:
+    if: ${{ github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TAG: zte-character-candidates
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: main
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+
+      - name: Test exact-source candidate selection
+        run: |
+          python -m pip install --disable-pip-version-check Pillow==11.3.0
+          python -m unittest discover -s tools/sprites/tests -p test_character_candidate_bank.py -v
+          python -m py_compile tools/sprites/build_character_candidate_bank.py
+
+      - name: Download current permanent candidate archives
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/zte-review-archives
+          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" \
+            --pattern 'zte-characters-*.zip' \
+            --dir /tmp/zte-review-archives
+          ls -lh /tmp/zte-review-archives/zte-characters-*.zip
+
+      - name: Assemble canonical character bank
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/sprites/build_character_candidate_bank.py \
+            --master art/production/master-asset-queue.json \
+            --archives /tmp/zte-review-archives \
+            --output /tmp/zte-character-bank-current.zip \
+            --report /tmp/zte-character-bank-current.json
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          d=json.load(open('/tmp/zte-character-bank-current.json'))
+          print('## Character candidate bank')
+          print(f"- Verified production coverage: **{d['production_processed']} / {d['target_total']}**")
+          print(f"- Strict DONE: **{d['strict_done']} / {d['target_total']}** (unchanged)")
+          print(f"- Archived provisional character sprites: **{d['candidate_count']}**")
+          print(f"- Production candidate complete: **{d['candidate_production_complete']}**")
+          if d['missing_character_candidates']:
+              print("- Remaining: "+", ".join(x['id'] for x in d['missing_character_candidates']))
+          print('- These are review-only source sprites, not approved Android resources.')
+          PY
+
+      - name: Publish persistent source bank
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh release upload "$TAG" \
+            /tmp/zte-character-bank-current.zip \
+            /tmp/zte-character-bank-current.json \
+            --repo "$GITHUB_REPOSITORY" --clobber
+          sha256sum /tmp/zte-character-bank-current.zip >> "$GITHUB_STEP_SUMMARY"
+          echo "CHARACTER_CANDIDATE_BANK_RELEASE=$TAG" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Retain workflow output
+        uses: actions/upload-artifact@v4
+        with:
+          name: current-character-candidate-bank
+          path: |
+            /tmp/zte-character-bank-current.zip
+            /tmp/zte-character-bank-current.json
+          retention-days: 30
