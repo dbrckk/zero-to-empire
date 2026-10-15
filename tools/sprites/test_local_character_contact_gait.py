@@ -1,0 +1,56 @@
+"""Pixel-independent gait contract for locally authored WALK/CARRY candidates."""
+from __future__ import annotations
+import math
+import unittest
+from local_character_contact_gait import foot_pose,torso_weight_shift,STANCE_FRACTION,FLOOR_ANKLE_Y
+
+class ContactGaitTests(unittest.TestCase):
+    def test_stance_feet_are_anchored_vertically_even_while_torso_bobs(self):
+        for action in ("WALK","CARRY"):
+            for side in ("L","R"):
+                for i in range(80):
+                    phase=2*math.pi*i/80
+                    bounce=1.4*(1-math.cos(phase*2))
+                    leg=foot_pose(phase,side,action,bounce)
+                    if leg.planted:
+                        self.assertAlmostEqual(leg.ankle_y,FLOOR_ANKLE_Y,places=6)
+
+    def test_exact_half_cycle_leg_antiphase(self):
+        for action in ("WALK","CARRY"):
+            for i in range(24):
+                phase=i*2*math.pi/24
+                l=foot_pose(phase,"L",action)
+                r=foot_pose(phase+math.pi,"R",action)
+                self.assertAlmostEqual(l.cycle,r.cycle,places=8)
+                self.assertAlmostEqual(l.ankle_x-l.hip_x,r.ankle_x-r.hip_x,places=8)
+                self.assertAlmostEqual(l.ankle_y,r.ankle_y,places=8)
+
+    def test_swing_clears_ground_without_crossed_legs(self):
+        for action in ("WALK","CARRY"):
+            raised=0
+            for i in range(48):
+                phase=2*math.pi*i/48
+                left=foot_pose(phase,"L",action)
+                right=foot_pose(phase,"R",action)
+                self.assertLess(left.ankle_x,right.ankle_x)
+                self.assertGreater(left.ankle_y,197)
+                self.assertGreater(right.ankle_y,197)
+                self.assertLess(max(left.ankle_x,right.ankle_x),179)
+                raised+=int(not left.planted)+int(not right.planted)
+            self.assertGreater(raised,20)
+
+    def test_loop_is_periodic_without_coordinate_jumps(self):
+        for action in ("WALK","CARRY"):
+            for side in ("L","R"):
+                first=foot_pose(0,side,action)
+                last=foot_pose(2*math.pi,side,action)
+                for coord in ("knee_x","knee_y","ankle_x","ankle_y","boot_angle"):
+                    self.assertAlmostEqual(getattr(first,coord),getattr(last,coord),places=7)
+
+    def test_loaded_carry_has_less_sway_than_unladen_walk(self):
+        self.assertGreater(abs(torso_weight_shift(math.pi/2,"WALK")),
+                           abs(torso_weight_shift(math.pi/2,"CARRY")))
+        self.assertEqual(torso_weight_shift(math.pi/2,"IDLE"),0.0)
+
+if __name__=="__main__":
+    unittest.main()
