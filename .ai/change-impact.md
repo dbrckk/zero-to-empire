@@ -1,16 +1,19 @@
 # Change impact
 
-Base: 0baf57af70e078f389b8eee9f0b9acf25268fbc1
-Head: cc02815676625c13f7ecc56c7b8468075effdac1
+Base: e16a007365c9c91aa09993281c7d2e2fe4832d5c
+Head: 15c021f73528e2536c53d31e463abc7c89e5c8d2
 
 ## Changed files
+- M .github/workflows/asset-pipeline-ci.yml
 - M .github/workflows/character-candidate-bank.yml
+- A docs/art/MOBILE_CANDIDATE_REVIEW.md
 - M tools/assets/test_candidate_archive_workflow.py
-- M tools/sprites/build_character_candidate_bank.py
-- M tools/sprites/tests/test_character_candidate_bank.py
+- A tools/sprites/build_character_bank_mobile_review.py
+- A tools/sprites/tests/test_character_bank_mobile_review.py
 
 ## Affected areas
 - .github
+- docs
 - tools
 
 ## Related test candidates

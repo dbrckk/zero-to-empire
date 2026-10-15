@@ -1,170 +1,106 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "cfd7a559458ad0e89d0433040f68677148b561c0",
-  "head": "cc02815676625c13f7ecc56c7b8468075effdac1",
+  "base": "cc02815676625c13f7ecc56c7b8468075effdac1",
+  "head": "15c021f73528e2536c53d31e463abc7c89e5c8d2",
   "index_mode": "incremental",
   "changed_files": [
     {
+      "path": ".github/workflows/asset-pipeline-ci.yml",
+      "status": "M"
+    },
+    {
       "path": ".github/workflows/character-candidate-bank.yml",
       "status": "M"
+    },
+    {
+      "path": "docs/art/MOBILE_CANDIDATE_REVIEW.md",
+      "status": "A"
     },
     {
       "path": "tools/assets/test_candidate_archive_workflow.py",
       "status": "M"
     },
     {
-      "path": "tools/sprites/build_character_candidate_bank.py",
-      "status": "M"
+      "path": "tools/sprites/build_character_bank_mobile_review.py",
+      "status": "A"
     },
     {
-      "path": "tools/sprites/tests/test_character_candidate_bank.py",
-      "status": "M"
+      "path": "tools/sprites/tests/test_character_bank_mobile_review.py",
+      "status": "A"
     }
   ],
   "changed_source_files": [
-    "tools/sprites/build_character_candidate_bank.py",
-    "tools/sprites/tests/test_character_candidate_bank.py"
+    "tools/sprites/build_character_bank_mobile_review.py",
+    "tools/sprites/tests/test_character_bank_mobile_review.py"
   ],
   "impacted_files": [
-    "tools/sprites/build_character_candidate_bank.py",
-    "tools/sprites/tests/test_character_candidate_bank.py"
+    "tools/sprites/build_character_bank_mobile_review.py",
+    "tools/sprites/tests/test_character_bank_mobile_review.py"
   ],
   "impacted_symbols": [
     {
-      "name": "load_local_originals",
+      "name": "build",
       "kind": "function",
-      "file": "tools/sprites/build_character_candidate_bank.py",
-      "line": 33
-    },
-    {
-      "name": "validated_local_candidate",
-      "kind": "function",
-      "file": "tools/sprites/build_character_candidate_bank.py",
-      "line": 67
-    },
-    {
-      "name": "open_archives",
-      "kind": "function",
-      "file": "tools/sprites/build_character_candidate_bank.py",
-      "line": 108
-    },
-    {
-      "name": "assemble",
-      "kind": "function",
-      "file": "tools/sprites/build_character_candidate_bank.py",
-      "line": 140
+      "file": "tools/sprites/build_character_bank_mobile_review.py",
+      "line": 173
     },
     {
       "name": "main",
       "kind": "function",
-      "file": "tools/sprites/build_character_candidate_bank.py",
-      "line": 267
+      "file": "tools/sprites/build_character_bank_mobile_review.py",
+      "line": 235
     },
     {
-      "name": "CharacterBankTests",
+      "name": "MobileCandidateReviewTests",
       "kind": "class",
-      "file": "tools/sprites/tests/test_character_candidate_bank.py",
+      "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
       "line": 19
     },
     {
       "name": "setUp",
       "kind": "function",
-      "file": "tools/sprites/tests/test_character_candidate_bank.py",
+      "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
       "line": 20
     },
     {
-      "name": "save_master",
+      "name": "save_bank",
       "kind": "function",
-      "file": "tools/sprites/tests/test_character_candidate_bank.py",
-      "line": 43
+      "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
+      "line": 76
     },
     {
-      "name": "png",
+      "name": "test_mobile_review_embeds_verified_selected_and_original",
       "kind": "function",
-      "file": "tools/sprites/tests/test_character_candidate_bank.py",
-      "line": 48
+      "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
+      "line": 87
     },
     {
-      "name": "source",
+      "name": "test_hash_tampering_fails_closed",
       "kind": "function",
-      "file": "tools/sprites/tests/test_character_candidate_bank.py",
-      "line": 55
+      "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
+      "line": 103
     },
     {
-      "name": "test_complete_pack_contains_exact_verified_candidate_and_deferred_warnings",
+      "name": "test_invalid_local_frame_geometry_fails_closed",
       "kind": "function",
-      "file": "tools/sprites/tests/test_character_candidate_bank.py",
-      "line": 73
+      "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
+      "line": 110
     },
     {
-      "name": "test_missing_source_does_not_inflate_progress",
+      "name": "test_script_closing_in_review_flags_is_html_escaped",
       "kind": "function",
-      "file": "tools/sprites/tests/test_character_candidate_bank.py",
-      "line": 91
+      "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
+      "line": 116
     },
     {
-      "name": "test_dispatched_asset_not_counted_even_with_old_artifact",
+      "name": "test_unapproved_bank_is_required",
       "kind": "function",
-      "file": "tools/sprites/tests/test_character_candidate_bank.py",
-      "line": 97
-    },
-    {
-      "name": "test_wrong_source_id_is_never_accepted",
-      "kind": "function",
-      "file": "tools/sprites/tests/test_character_candidate_bank.py",
-      "line": 105
-    },
-    {
-      "name": "test_mismatched_sha_fails_closed",
-      "kind": "function",
-      "file": "tools/sprites/tests/test_character_candidate_bank.py",
-      "line": 112
-    },
-    {
-      "name": "test_wrong_dimensions_fail_closed",
-      "kind": "function",
-      "file": "tools/sprites/tests/test_character_candidate_bank.py",
-      "line": 117
-    },
-    {
-      "name": "authored_original",
-      "kind": "function",
-      "file": "tools/sprites/tests/test_character_candidate_bank.py",
+      "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
       "line": 124
-    },
-    {
-      "name": "test_local_original_completes_candidate_scope_while_remote_is_dispatched",
-      "kind": "function",
-      "file": "tools/sprites/tests/test_character_candidate_bank.py",
-      "line": 163
-    },
-    {
-      "name": "test_prefer_real_collected_candidate_to_local_original",
-      "kind": "function",
-      "file": "tools/sprites/tests/test_character_candidate_bank.py",
-      "line": 185
-    },
-    {
-      "name": "test_local_manifest_claims_do_not_waive_technical_frame_QA",
-      "kind": "function",
-      "file": "tools/sprites/tests/test_character_candidate_bank.py",
-      "line": 194
-    },
-    {
-      "name": "test_local_original_requires_all_editable_svg_frames",
-      "kind": "function",
-      "file": "tools/sprites/tests/test_character_candidate_bank.py",
-      "line": 201
-    },
-    {
-      "name": "test_local_original_fails_closed_when_qa_claims_artistic_approval",
-      "kind": "function",
-      "file": "tools/sprites/tests/test_character_candidate_bank.py",
-      "line": 207
     }
   ],
   "selected_tests": [
-    "tools/sprites/tests/test_character_candidate_bank.py"
+    "tools/sprites/tests/test_character_bank_mobile_review.py"
   ]
 }

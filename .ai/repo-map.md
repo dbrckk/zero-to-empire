@@ -353,6 +353,7 @@ tools/
     tests/
       test_archive_character_candidates.py
       test_asset_production_policy.py
+      test_character_bank_mobile_review.py
       test_character_candidate_bank.py
     action_contact.py
     animation_batch_planner.py
@@ -363,6 +364,7 @@ tools/
     audit_chatgpt_originals.py
     audit_complete_sprite_manifest.py
     autonomous_walk.py
+    build_character_bank_mobile_review.py
     build_character_candidate_bank.py
     build_character_review_panels.py
     build_original_offline_review.py
@@ -1645,6 +1647,8 @@ on:
       - 'tools/sprites/asset_queue_utils.py'
       - 'tools/sprites/archive_character_candidates.py'
       - 'tools/sprites/build_character_candidate_bank.py'
+      - 'tools/sprites/build_character_bank_mobile_review.py'
+      - 'tools/sprites/tests/test_character_bank_mobile_review.py'
       - 'tools/sprites/tests/test_character_candidate_bank.py'
       - 'tools/sprites/tests/test_archive_character_candidates.py'
       - 'tools/sprites/asset_wave_orchestrator.py'
@@ -1703,6 +1707,8 @@ on:
       - 'tools/sprites/asset_queue_utils.py'
       - 'tools/sprites/archive_character_candidates.py'
       - 'tools/sprites/build_character_candidate_bank.py'
+      - 'tools/sprites/build_character_bank_mobile_review.py'
+      - 'tools/sprites/tests/test_character_bank_mobile_review.py'
       - 'tools/sprites/tests/test_character_candidate_bank.py'
       - 'tools/sprites/tests/test_archive_character_candidates.py'
       - 'tools/sprites/asset_wave_orchestrator.py'
@@ -1785,6 +1791,7 @@ jobs:
             tools/sprites/asset_queue_utils.py \
             tools/sprites/archive_character_candidates.py \
             tools/sprites/build_character_candidate_bank.py \
+            tools/sprites/build_character_bank_mobile_review.py \
             tools/sprites/asset_wave_orchestrator.py \
             tools/sprites/build_character_review_panels.py \
             tools/sprites/build_original_offline_review.py \
@@ -2024,6 +2031,7 @@ jobs:
           python -m unittest discover -s tools/assets -p 'test_*.py' -v
           python -m unittest discover -s tools/sprites/tests -p 'test_archive_character_candidates.py' -v
           python -m unittest discover -s tools/sprites/tests -p 'test_character_candidate_bank.py' -v
+          python -m unittest discover -s tools/sprites/tests -p 'test_character_bank_mobile_review.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_semantic_gate.py' -v
           python -m unittest discover -s tools/sprites -p 'test_verify_character_idle_candidates.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_head_identity_lock.py' -v
@@ -2254,7 +2262,8 @@ jobs:
         run: |
           python -m pip install --disable-pip-version-check Pillow==11.3.0
           python -m unittest discover -s tools/sprites/tests -p test_character_candidate_bank.py -v
-          python -m py_compile tools/sprites/build_character_candidate_bank.py
+          python -m unittest discover -s tools/sprites/tests -p test_character_bank_mobile_review.py -v
+          python -m py_compile tools/sprites/build_character_candidate_bank.py tools/sprites/build_character_bank_mobile_review.py
 
       - name: Download current permanent candidate archives
         shell: bash
@@ -2292,6 +2301,17 @@ jobs:
           print('- These are review-only source sprites, not approved Android resources.')
           PY
 
+      - name: Create self-contained mobile animation comparison
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/sprites/build_character_bank_mobile_review.py \
+            --bank /tmp/zte-character-bank-current.zip \
+            --local-original art/incoming/chatgpt-original \
+            --output /tmp/zte-character-bank-mobile-review.html
+          test -s /tmp/zte-character-bank-mobile-review.html
+          echo "MOBILE_CANDIDATE_REVIEW=offline/16-candidate-compare" >> "$GITHUB_STEP_SUMMARY"
+
       - name: Publish persistent source bank
         shell: bash
         run: |
@@ -2299,6 +2319,7 @@ jobs:
           gh release upload "$TAG" \
             /tmp/zte-character-bank-current.zip \
             /tmp/zte-character-bank-current.json \
+            /tmp/zte-character-bank-mobile-review.html \
             --repo "$GITHUB_REPOSITORY" --clobber
           sha256sum /tmp/zte-character-bank-current.zip >> "$GITHUB_STEP_SUMMARY"
           echo "CHARACTER_CANDIDATE_BANK_RELEASE=$TAG" >> "$GITHUB_STEP_SUMMARY"
@@ -2310,6 +2331,7 @@ jobs:
           path: |
             /tmp/zte-character-bank-current.zip
             /tmp/zte-character-bank-current.json
+            /tmp/zte-character-bank-mobile-review.html
           retention-days: 30
 ```
 
@@ -29508,6 +29530,10 @@ source = Path("tools/sprites/build_character_candidate_bank.py").read_text()
 # Either the archive or the canonical queue can become ready first.
 # Trigger on both to prevent a stale incomplete bank indefinitely.
 ⋮----
+def test_mobile_review_publish_is_offline_and_explicitly_review_only(self)
+⋮----
+source = Path("tools/sprites/build_character_bank_mobile_review.py").read_text()
+⋮----
 def test_release_uses_only_qa_passed_candidates_and_never_promotes(self)
 ⋮----
 flow = Path(".github/workflows/archive-character-candidates.yml").read_text()
@@ -30056,6 +30082,42 @@ def test_structural_risks_remain_blocking(self)
 def test_unknown_risk_is_not_silently_waived(self)
 ⋮----
 risk = {"risk_level": "BLOCKING", "flags": ["NEW_TECHNICAL_RISK"]}
+```
+
+## File: tools/sprites/tests/test_character_bank_mobile_review.py
+```python
+"""Offline visual review generator regressions, no Android/GPU/network needed."""
+⋮----
+class MobileCandidateReviewTests(unittest.TestCase)
+⋮----
+def setUp(self)
+⋮----
+rows = []
+qa = []
+counts = {"IDLE": 6, "WALK": 8, "WORK": 10,
+⋮----
+aid = f"CHR-{role}-{action}"
+⋮----
+frame = Image.new("RGBA",(1024,1024),(0,0,0,0))
+painter = ImageDraw.Draw(frame)
+⋮----
+output = io.BytesIO()
+⋮----
+def save_bank(self)
+⋮----
+def test_mobile_review_embeds_verified_selected_and_original(self)
+⋮----
+d=build(self.bank,self.original,self.html)
+⋮----
+html=self.html.read_text()
+⋮----
+def test_hash_tampering_fails_closed(self)
+⋮----
+def test_invalid_local_frame_geometry_fails_closed(self)
+⋮----
+def test_script_closing_in_review_flags_is_html_escaped(self)
+⋮----
+def test_unapproved_bank_is_required(self)
 ```
 
 ## File: tools/sprites/tests/test_character_candidate_bank.py
@@ -31019,6 +31081,49 @@ args=parser.parse_args()
 settings=WalkSettings(asset_id=args.asset_id,frames=args.frames,fps=args.fps,stride=args.stride,clearance=args.clearance,stance_fraction=args.stance,palette=args.palette)
 manifest=export(args.output, settings, args.studio)
 qa=manifest['qa']
+```
+
+## File: tools/sprites/build_character_bank_mobile_review.py
+```python
+#!/usr/bin/env python3
+"""Generate a complete offline mobile comparison of the 16 review-only sprites.
+
+Data sources: the published SHA-256 checked candidate-bank ZIP and the
+reproducible in-repository 18 original SVG/PNG atlases. Never promotes assets.
+"""
+⋮----
+PNG_NAME = re.compile(r"^zte_chr_(op|log|eng|tech)_(idle|walk|work|carry|repair|celeb)_final\.png$")
+COUNTS = {"idle": 6, "walk": 8, "work": 10, "carry": 8, "repair": 10, "celeb": 8}
+⋮----
+HTML = r'''<!doctype html><html lang="fr"><head><meta charset="utf-8">
+⋮----
+def build(bank_path: Path, local_path: Path, destination: Path) -> dict
+⋮----
+originals = load_local_originals(local_path)
+⋮----
+meta = json.loads(bank.read("candidate-bank-index.json"))
+rows = meta.get("bank_entries")
+⋮----
+bank_names = bank.namelist()
+seen = set()
+embedded = []
+⋮----
+aid = str(row.get("id") or "")
+filename = str(row.get("filename") or "")
+match = PNG_NAME.fullmatch(filename)
+⋮----
+source = bank.read("candidates/"+filename)
+⋮----
+payload = {
+serialized = json.dumps(payload, ensure_ascii=False, separators=(",",":"))
+# Avoid closing <script> from tainted machine-written warning text.
+serialized = serialized.replace("<","\\u003c").replace(">","\\u003e").replace("&","\\u0026")
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser()
+⋮----
+args = parser.parse_args()
 ```
 
 ## File: tools/sprites/build_character_candidate_bank.py

@@ -29,25 +29,25 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-15T22:55:15Z
+Generated: 2026-10-15T23:00:13Z
 
 ### Git
 - Branch: `main`
-- Head: `cc0281567662`
-- Commit date: 2026-10-16T00:54:59+02:00
-- Commit: art: cover last four engineer candidate assets from audited editable in-repo originals (#167)
-- Tracked files: 1794
+- Head: `15c021f73528`
+- Commit date: 2026-10-16T00:59:58+02:00
+- Commit: art: mobile offline review gallery for 16 verified character atlases (#168)
+- Tracked files: 1797
 
 ### Recently changed files
+- `.github/workflows/asset-pipeline-ci.yml`
 - `.github/workflows/character-candidate-bank.yml`
+- `docs/art/MOBILE_CANDIDATE_REVIEW.md`
 - `tools/assets/test_candidate_archive_workflow.py`
+- `tools/sprites/build_character_bank_mobile_review.py`
+- `tools/sprites/tests/test_character_bank_mobile_review.py`
 - `tools/sprites/build_character_candidate_bank.py`
 - `tools/sprites/tests/test_character_candidate_bank.py`
-- `.github/workflows/asset-pipeline-ci.yml`
 - `.github/workflows/backfill-character-candidate-archives.yml`
-- `.github/workflows/archive-character-candidates.yml`
-- `tools/sprites/archive_character_candidates.py`
-- `tools/sprites/tests/test_archive_character_candidates.py`
 
 ### Project signals
 - `build.gradle.kts`
