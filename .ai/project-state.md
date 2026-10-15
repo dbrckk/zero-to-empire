@@ -34,16 +34,17 @@ Status: active — Android runtime works; final character quality not yet approv
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-15T13:43:50Z
+Generated: 2026-10-15T13:46:35Z
 
 ### Git
 - Branch: `main`
-- Head: `663c27b78a77`
-- Commit date: 2026-10-15T15:42:42+02:00
-- Commit: ci(android): validate OP WALK weighted contact gait in isolated review APK
-- Tracked files: 1782
+- Head: `a160abe968e4`
+- Commit date: 2026-10-15T15:46:16+02:00
+- Commit: docs(art): record observed OP WALK v2 stride evidence and approval gate
+- Tracked files: 1783
 
 ### Recently changed files
+- `docs/art/OP_WALK_STRIDE_REVIEW_2026-10-15.md`
 - `ops/local-original-android-review-trigger.txt`
 - `art/incoming/chatgpt-original/animation-review.json`
 - `art/incoming/chatgpt-original/candidates/zte_chr_op_walk_final.png`
@@ -63,7 +64,6 @@ Generated: 2026-10-15T13:43:50Z
 - `art/incoming/chatgpt-original/visual-risk-qa.json`
 - `.github/workflows/art-chatgpt-original-candidates.yml`
 - `tools/sprites/local_character_contact_gait.py`
-- `tools/sprites/render_chatgpt_originals.py`
 
 ### Project signals
 - `build.gradle.kts`
