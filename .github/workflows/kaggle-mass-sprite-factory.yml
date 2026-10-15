@@ -1,5 +1,5 @@
-# Local-first artwork policy: remote art production is retired from automatic scheduling.
-# Historical workflow_dispatch remains available only by an explicit human decision.
+# Kaggle remains workflow_dispatch-only; the production-first autofactory may
+# explicitly dispatch controlled character waves without bypassing technical QA.
 name: Kaggle Mass Sprite Factory
 
 on:
@@ -125,7 +125,7 @@ jobs:
           fi
 
       - name: Compile sprite generators
-        run: python -m py_compile tools/sprites/kaggle_building_family_factory_v16.py tools/sprites/kaggle_character_sheet_factory_v1.py tools/sprites/character_head_identity_lock.py tools/sprites/character_ground_shadow_cleanup.py tools/sprites/character_anchor_pair_salvage.py tools/sprites/character_approved_idle_fallback.py tools/sprites/character_rejection_evidence.py tools/sprites/character_idle_breathing_fallback.py kaggle/github_mass_factory.py
+        run: python -m py_compile tools/sprites/kaggle_building_family_factory_v16.py tools/sprites/kaggle_character_sheet_factory_v1.py tools/sprites/character_acceptance_policy.py tools/sprites/character_head_identity_lock.py tools/sprites/character_ground_shadow_cleanup.py tools/sprites/character_anchor_pair_salvage.py tools/sprites/character_approved_idle_fallback.py tools/sprites/character_rejection_evidence.py tools/sprites/character_idle_breathing_fallback.py kaggle/github_mass_factory.py
       - name: Recover async preflight failure
         if: ${{ failure() && env.ASYNC_SUBMIT == 'true' }}
         env:
@@ -279,6 +279,7 @@ jobs:
              tools/sprites/kaggle_building_family_factory_v14.py \
              tools/sprites/kaggle_character_sheet_factory_v1.py \
              tools/sprites/character_semantic_gate.py \
+             tools/sprites/character_acceptance_policy.py \
              tools/sprites/character_head_identity_lock.py \
              tools/sprites/character_ground_shadow_cleanup.py \
              tools/sprites/character_anchor_pair_salvage.py \
@@ -312,6 +313,7 @@ jobs:
               'kaggle_building_family_factory_v14.py',
               'kaggle_character_sheet_factory_v1.py',
               'character_semantic_gate.py',
+              'character_acceptance_policy.py',
               'character_head_identity_lock.py',
               'character_ground_shadow_cleanup.py',
               'character_anchor_pair_salvage.py',
