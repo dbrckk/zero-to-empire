@@ -168,18 +168,21 @@
       "original_art_generation_success": 38762242160,
       "android_review_apk_success": 38762436053,
       "android_emulator_run": 38762944605,
-      "android_emulator_status": "IN_PROGRESS on last observed check; must confirm",
+      "android_emulator_status": "SUCCESS (24 role-action views captured, isolated debug review)",
       "geometry": "Constant-speed ground-relative OP WALK stance; other gait profiles unaffected",
       "source_atlas": "art/incoming/chatgpt-original/candidates/zte_chr_op_walk_final.png",
       "review_only": true,
-      "strict_done_added": 0
+      "strict_done_added": 0,
+      "emulator_evidence_artifact_id": 11987210646,
+      "emulator_capture": "atlas-OPERATOR-WALK.png",
+      "emulator_coverage": "24-stage-coverage.txt reports 24/24",
+      "visual_review": "Screenshot inspected at NIGHT 42dp and DAY 39dp: full body fits both review panes; walking loop at live production gameplay speed and exact shipping WebP are NOT validated."
     }
   },
-  "last_completed": "PR #152 merged after syntax fix; PR/main Asset Pipeline CI, full 18 original candidate regeneration, isolated Android APK build/tests/lint all SUCCESS. New 8-frame OP WALK atlas inspected. Emulator run 38762944605 still IN_PROGRESS; no strict promotion. Current canonical 219/235.",
+  "last_completed": "PR #152 merged after correcting syntax. PR and main asset CI green, original eight OP WALK poses regenerated and technically verified, isolated Android QA APK build/tests/lint green, Android emulator run 38762944605 SUCCESS with 24/24 combinations. Screenshot atlas-OPERATOR-WALK.png inspected (42dp night /39dp day). Still review-only, strict 219/235.",
   "next_actions": [
-    "Verify final conclusion and download 24-action evidence from emulator run 38762944605; inspect OPERATOR-WALK actual app-scale screenshot.",
-    "Check animated loop at gameplay speed in production context; isolated screenshot and frame hashes do not constitute semantic approval.",
-    "If accepted, integrate exact reviewed source as production runtime WebP, build/lint/check gameplay before strict promotion.",
-    "Keep other 15 unresolved character actions separate; canonical strict remains 219/235 until approvals."
+    "Review continuous 8-frame OP WALK animation at real gameplay speed and compare with approved art style; a screenshot proves display only, not animation quality.",
+    "If explicitly approved, stage exact candidate as production WebP with references and verify actual gameplay, Android build/lint and release, then update canonical strict status.",
+    "Finish a single remaining high-priority CHR action before proceeding to others."
   ]
 }
