@@ -6,7 +6,7 @@ is text-to-image; later frames are conservative img2img pose variations to keep
 identity/clothing/camera stable. Output remains candidate-only until semantic QA.
 """
 from __future__ import annotations
-import argparse,gc,json,re
+import argparse,gc,json,re,os
 from collections import deque
 from pathlib import Path
 print('KAGGLE_STARTUP=character-sheet-flux-v1.20-stable-idle-breathing-rescue',flush=True)
@@ -15,6 +15,7 @@ from PIL import Image,ImageDraw,ImageFilter
 from diffusers import FluxPipeline,FluxImg2ImgPipeline,FluxTransformer2DModel
 from transformers import T5EncoderModel
 from character_semantic_gate import clip_risk,idle_visual_activity,celebration_arm_reach_counts,idle_distinct_head_clusters
+from character_acceptance_policy import motion_floor,visual_risk_decision
 from character_head_identity_lock import lock_head_to_idle
 from character_ground_shadow_cleanup import remove_baked_ground_shadow
 from character_rejection_evidence import save_rejected_idle_preview
@@ -28,6 +29,18 @@ INCOMING=ROOT/'art/incoming/final-sprites'
 REPORT=Path('/kaggle/working/output/character-sheet-report.json')
 QUEUE=ROOT/'art/production/controlled-character-regen-queue.json'
 REJECTION_LEDGER=ROOT/'art/production/generation-rejection-ledger.json'
+
+def production_first_enabled():
+ """Use relaxed *candidate* admission only for explicitly designated waves."""
+ forced=os.environ.get('ZTE_ASSET_ACCEPTANCE_MODE','').strip().lower()
+ if forced:
+  return forced=='production-first'
+ try:
+  queue=json.loads(QUEUE.read_text(encoding='utf-8'))
+  return str(queue.get('acceptance_mode','')).lower()=='production-first'
+ except (OSError,ValueError):
+  return False
+
 FLUX='aniketppanchal/flux.1-schnell-nf4-pkg'
 ROW=re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$")
 CHR=re.compile(r'^CHR-(OP|TECH|LOG|ENG)-(IDLE|WALK|WORK|CARRY|REPAIR|CELEB)$')
@@ -439,16 +452,17 @@ def alpha_iou(a,b):
  return inter/union if union else 0
 
 def sheet_qa(frames,action=None):
+ production_first=production_first_enabled()
  if len(frames)<4:return False,'too-few-frames'
  ious=[alpha_iou(frames[n-1],frames[n]) for n in range(1,len(frames))]
  if min(ious)<.28:return False,f'identity/silhouette jump={min(ious):.2f}'
- if action!='IDLE' and max(ious)>.985:return False,'duplicate-adjacent-frame'
+ if action!='IDLE' and max(ious)>(.998 if production_first else .985):return False,'duplicate-adjacent-frame'
  bottoms=[];centers=[]
  for f in frames:
   bb=f.getchannel('A').getbbox()
   bottoms.append(bb[3] if bb else 0);centers.append((bb[0]+bb[2])/2 if bb else 0)
- if max(bottoms)-min(bottoms)>5:return False,'feet-pivot-drift'
- if max(centers)-min(centers)>34:return False,'horizontal-drift'
+ if max(bottoms)-min(bottoms)>(9 if production_first else 5):return False,'feet-pivot-drift'
+ if max(centers)-min(centers)>(40 if production_first else 34):return False,'horizontal-drift'
  return True,f'min-iou={min(ious):.2f} pivot-drift={max(bottoms)-min(bottoms)}'
 
 def lower_body_motion(frames):
@@ -501,6 +515,7 @@ def walk_consistency_qa(frames):
  return True,f'walk-consistency appearance={max(distances) if distances else 0:.1f} min-iou={min(adj) if adj else 1:.2f}'
 
 def action_qa(frames,action):
+ production_first=production_first_enabled()
  # Per-action motion floor prevents technically valid but visually frozen atlases
  # from reaching manual semantic review.
  ious=[alpha_iou(frames[n-1],frames[n]) for n in range(1,len(frames))]
@@ -509,8 +524,8 @@ def action_qa(frames,action):
   consistent,why=walk_consistency_qa(frames)
   if not consistent:return False,why
   motion=lower_body_motion(frames)
-  if motion<.22:return False,f'walk-too-static lower-motion={motion:.3f}'
-  if mean_change<.12:return False,f'walk-too-static mean-change={mean_change:.3f}'
+  if motion<motion_floor('WALK',production_first=production_first,lower_body=True):return False,f'walk-too-static lower-motion={motion:.3f}'
+  if mean_change<motion_floor('WALK',production_first=production_first):return False,f'walk-too-static mean-change={mean_change:.3f}'
   return True,f'walk-motion={motion:.3f} mean-change={mean_change:.3f}'
  if action=='IDLE':
   # Visible facial blinking or breathing can be excellent idle animation with
@@ -520,15 +535,17 @@ def action_qa(frames,action):
   if mean_change<.008 and activity<.00035:
    return False,f'idle-frozen alpha-motion={mean_change:.4f} pixel-activity={activity:.5f}'
   return True,f'idle-subtle-alpha-motion={mean_change:.4f} pixel-activity={activity:.5f}'
- floors={'WORK':.10,'CARRY':.12,'REPAIR':.09,'CELEB':.10}
- floor=floors.get(action,.05)
+ floor=motion_floor(action,production_first=production_first) if action in {'WORK','CARRY','REPAIR','CELEB'} else .05
  if mean_change<floor:
   return False,f'{action.lower()}-too-static mean-change={mean_change:.3f}<{floor:.3f}'
  if action=='CARRY':
   motion=lower_body_motion(frames)
-  if motion<.19:return False,f'carry-lacks-stride lower-motion={motion:.3f}<0.190'
+  carry_floor=motion_floor('CARRY',production_first=production_first,lower_body=True)
+  if motion<carry_floor:return False,f'carry-lacks-stride lower-motion={motion:.3f}<{carry_floor:.3f}'
   return True,f'carry-motion={mean_change:.3f} lower-stride-motion={motion:.3f}'
  if action=='CELEB':
+  if production_first:
+   return True,f'celeb-production-preview mean-change={mean_change:.3f}; arm gesture requires later review'
   changes=upper_body_transition_changes(frames)
   # Arm movement should progress across multiple frames, not originate from
   # one terminal animation jump or from isolated lower-body changes.
@@ -683,7 +700,8 @@ def main():
    sheet_ok,sheet_reason=sheet_qa(recovered,'IDLE')
    action_ok,action_reason=action_qa(recovered,'IDLE')
    risk=clip_risk(recovered,'IDLE')
-   if not sheet_ok or not action_ok or risk.get('risk_level')=='BLOCKING':
+   blocked,_=visual_risk_decision(risk,production_first=production_first_enabled())
+   if not sheet_ok or not action_ok or blocked:
     print(f"KAGGLE_CHR_IDLE_FALLBACK_REJECTED={item['id']} cause={failed_reason} sheet={sheet_reason} action={action_reason} visual={risk.get('flags')}",flush=True)
     return False
    sheet=make_sheet(recovered)
@@ -837,8 +855,10 @@ def main():
    report.append({'id':i['id'],'status':'REJECT','reason':reason,
                   'frames':len(frames),'retry_reasons':retry_reasons,
                   'rejection_preview_file':preview});continue
-  if visual_risk.get('risk_level')=='BLOCKING':
-   risk_reason='image-risk:'+','.join(visual_risk.get('flags') or ['UNKNOWN'])
+  blocking_visual_flags,advisory_visual_flags=visual_risk_decision(
+   visual_risk,production_first=production_first_enabled())
+  if blocking_visual_flags:
+   risk_reason='image-risk:'+','.join(blocking_visual_flags)
    print(f"KAGGLE_CHR_REJECTED={i['id']} reason={risk_reason}",flush=True)
    if try_role_seed_idle_fallback(i,risk_reason,frames):continue
    preview=keep_rejected_idle_for_review(i,frames,risk_reason)
@@ -863,7 +883,7 @@ def main():
   if i['action']=='IDLE':
    verified_idle_roles.add(i['role'])
    print(f"KAGGLE_CHR_IDLE_IDENTITY_VALIDATED={i['role']}",flush=True)
-  print(f"KAGGLE_CHR_VALIDATED={p.relative_to(ROOT)} {why} atlas=1024x1024",flush=True);report.append({'id':i['id'],'status':'CANDIDATE','reason':why,'frames':len(frames),'atlas':'1024x1024','cell':'256x256','file':p.name,'cross_animation_appearance_distance':round(identity_distance,2),'visual_risk':visual_risk,'retry_reasons':retry_reasons,'same_run_idle_head_locked_frames':head_lock_frames,'anchor_pair_salvage':role_anchor_salvage.get(i['role']) if isinstance(role_anchor_salvage.get(i['role']),dict) else None,'anchor_source':role_anchor_salvage.get(i['role']) if isinstance(role_anchor_salvage.get(i['role']),str) else 'fresh-generated'})
+  print(f"KAGGLE_CHR_VALIDATED={p.relative_to(ROOT)} {why} atlas=1024x1024",flush=True);report.append({'id':i['id'],'status':'CANDIDATE','reason':why,'frames':len(frames),'atlas':'1024x1024','cell':'256x256','file':p.name,'cross_animation_appearance_distance':round(identity_distance,2),'visual_risk':visual_risk,'deferred_art_warnings':advisory_visual_flags,'acceptance_mode':'production-first' if production_first_enabled() else 'strict','automatic_semantic_approval':False,'retry_reasons':retry_reasons,'same_run_idle_head_locked_frames':head_lock_frames,'anchor_pair_salvage':role_anchor_salvage.get(i['role']) if isinstance(role_anchor_salvage.get(i['role']),dict) else None,'anchor_source':role_anchor_salvage.get(i['role']) if isinstance(role_anchor_salvage.get(i['role']),str) else 'fresh-generated'})
  REPORT.write_text(json.dumps(report,indent=2),encoding='utf-8')
  print(f"KAGGLE_CHARACTER_CANDIDATES={sum(r['status']=='CANDIDATE' for r in report)} ATTEMPTED={len(items)}",flush=True)
 if __name__=='__main__':main()

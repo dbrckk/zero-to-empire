@@ -5,6 +5,8 @@ on:
     paths:
       - 'tools/sprites/asset_queue_utils.py'
       - 'tools/sprites/asset_wave_orchestrator.py'
+      - 'tools/sprites/character_acceptance_policy.py'
+      - 'tools/sprites/tests/test_asset_production_policy.py'
       - 'art/production/master-asset-queue.json'
       - '.github/workflows/asset-autofactory.yml'
       - '.github/workflows/asset-autofactory-ci.yml'
@@ -25,6 +27,9 @@ jobs:
 
       - name: Compile autofactory Python
         run: python -m py_compile tools/sprites/asset_queue_utils.py tools/sprites/asset_wave_orchestrator.py
+
+      - name: Test relaxed candidate selection and structural blockers
+        run: python -m unittest discover -s tools/sprites/tests -p test_asset_production_policy.py
 
       - name: Exercise queue reconciliation without dispatch
         env:

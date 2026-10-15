@@ -20,6 +20,18 @@ on:
         required: false
         default: ''
 
+  push:
+    branches: [main]
+    paths:
+      - 'tools/sprites/character_acceptance_policy.py'
+      - 'tools/sprites/kaggle_character_sheet_factory_v1.py'
+      - 'tools/sprites/asset_wave_orchestrator.py'
+      - '.github/workflows/asset-autofactory.yml'
+  schedule:
+    - cron: '17 */6 * * *'
+
+# Explicitly re-enabled for the requested production-first completion pass.
+# Do not watch autofactory state files: the job itself updates them.
 permissions:
   contents: write
   actions: write
@@ -53,6 +65,11 @@ jobs:
       - name: Sync canonical main
         shell: bash
         run: git pull --ff-only origin main
+
+      - name: Verify production-first policy and compile generator
+        run: |
+          python -m unittest discover -s tools/sprites/tests -p test_asset_production_policy.py
+          python -m py_compile tools/sprites/character_acceptance_policy.py tools/sprites/kaggle_character_sheet_factory_v1.py tools/sprites/asset_wave_orchestrator.py tools/sprites/asset_queue_utils.py
 
       - name: Detect producer activity
         shell: bash

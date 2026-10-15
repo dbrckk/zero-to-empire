@@ -282,7 +282,9 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("kaggle-async-state.json", autof)
         self.assertNotIn("cron: '*/5 * * * *'", collector)
         self.assertIn("workflow_dispatch:", collector)
-        self.assertNotIn("  schedule:", autof)
+        self.assertIn("  schedule:", autof)
+        self.assertIn("cron: '17 */6 * * *'", autof)
+        self.assertIn("  push:", autof)
         self.assertNotIn("  workflow_run:", autof)
         self.assertIn("Callback autofactory success", collector)
 
@@ -388,14 +390,16 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("candidate-visual-qa-error:", code)
         self.assertIn("'status':'REJECT','reason':reason", code)
         self.assertLess(code.index("except (ValueError, IndexError, OSError) as exc:"),
-                        code.index("if visual_risk.get('risk_level')=='BLOCKING':"))
+                        code.index("if blocking_visual_flags:"))
 
     def test_kaggle_character_generator_rejects_blocking_visual_risks(self):
         generator = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
         workflow = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
         self.assertIn("from character_semantic_gate import clip_risk", generator)
         self.assertIn("visual_risk=clip_risk(frames,i['action'])", generator)
-        self.assertIn("risk_level')=='BLOCKING", generator)
+        self.assertIn("visual_risk_decision(", generator)
+        self.assertIn("if blocking_visual_flags:", generator)
+        self.assertIn("character_acceptance_policy.py", workflow)
         self.assertIn("character_semantic_gate.py", workflow)
 
     def test_rejected_idle_images_are_isolated_from_promotable_candidates(self):
