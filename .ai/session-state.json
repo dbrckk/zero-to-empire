@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "updated_at": "2026-10-15",
-  "task": "Complete OP WALK first-party stride review, including actual Android emulator screenshots, before any strict promotion",
+  "task": "Verify OP WALK mainline original character animation on the isolated Android emulator; preserve all strict approvals",
   "branch": "main",
-  "last_observed_head": "77c4849dd9fd823ed4c1ea42851804662f3583c4",
+  "last_observed_head": "3c459336fba1194db6e38f5b8356090ba1ce1d73",
   "state": {
     "strict_done": 219,
     "target_total": 235,
@@ -128,50 +128,38 @@
       "emulator_review_limit": "Proof of functional isolated review APK and visible scaled candidate, not proof of production gameplay integration or AAA semantic approval."
     },
     "op_walk_candidate": {
-      "status": "MERGED_ART_GENERATION_AND_ANDROID_DEBUG_GREEN_EMULATOR_PENDING",
-      "baseline": "existing OP eight frames show limited walking silhouette despite technical motion checks",
+      "status": "MERGED_ASSET_AND_APK_GREEN_EMULATOR_IN_PROGRESS",
+      "pr": 150,
+      "merge_commit": "7383a38dbd813861674f7b6cea17639ec79bf535",
+      "rig": "op-walk",
       "profile": {
         "stance_fraction": 0.58,
         "phase_offset": 0.1,
         "reach_px": 19,
         "clearance_px": 21,
         "hip_l": 103,
-        "hip_r": 150,
-        "planted_boot_rotation_deg": 0
+        "hip_r": 150
       },
-      "reciprocal_op_arm_motion": true,
-      "affected_action": "CHR-OP-WALK",
-      "other_actions": "standard profile unchanged",
-      "renderer": "tools/sprites/render_chatgpt_originals.py",
-      "pose_source": "tools/sprites/local_character_contact_gait.py",
-      "production_promotion": false,
-      "strict_done_added": 0,
-      "generated_art_and_android": "pending CI and review",
-      "merge_commit": "7383a38dbd813861674f7b6cea17639ec79bf535",
-      "original_atlas_commit": "33602e4e8fe8dc7525d9a9b16e29c9064a3b6bdd",
-      "asset_ci_run": 38744789050,
-      "original_generation_run": 38744789685,
-      "android_debug_run": 38744963714,
+      "source": "tools/sprites/local_character_contact_gait.py + tools/sprites/render_chatgpt_originals.py",
+      "asset": "CHR-OP-WALK",
+      "art_ci_run": 38744789050,
+      "original_render_run": 38744789685,
+      "android_review_run": 38744963714,
       "android_emulator_run": 38745543878,
-      "observed_android_debug": "SUCCESS: isolated APK built, existing tests/lint passed, saved data protected",
-      "observed_art": "SUCCESS: original SVG eight-frame contact audit; all 18 original candidates regenerated",
-      "visual_review": "8-frame original PNG inspected at 256px and 39/42px preview; same OP identity and a legible swing. Still not production AAA semantic approval.",
-      "comparison": {
-        "mean_adjacent_pixel_activity_before": 0.075364,
-        "after": 0.5769,
-        "gain_percent": 15.2,
-        "loop_seam_ratio_before": 1.1309
-      },
-      "semantic_approval": false,
-      "doc": "docs/art/OP_WALK_STRIDE_REVIEW_2026-10-15.md",
-      "parallel_pr_151": "closed without merge to avoid overwriting already merged OP WALK branch"
+      "validation": "Asset Pipeline, actual eight-frame SVG foot/boot audit, original PNG/GIF generation, Android QA APK build+existing tests+lint passed",
+      "visual": "Reviewed exact 8-frame PNG and 39/42px OP role board: gait more legible, continuous operator identity. Moving Android UI screenshot QA still pending.",
+      "mean_pixel_activity_before": 0.075364,
+      "mean_pixel_activity_after": 0.086847,
+      "semantic_approved": false,
+      "android_production_approved": false,
+      "strict_done_added": 0
     }
   },
-  "last_completed": "Main already independently merged OP WALK grounded stride as 7383a38d; parallel PR #151 was closed unmerged. Source and true SVG QA passed Asset CI 38744789050 plus original generation 38744789685. Visually inspected 8-frame atlas and 39/42px board, mean adjacent pixel activity increased 15.2%. Android isolated APK 38744963714 passed build/lint/tests. Emulator 38745543878 still running. Canonical 219/235 unchanged.",
+  "last_completed": "PR #150 merged main, OP-specific gait and reciprocal arms generated locally and validated with real 8-SVG foot/boot contact gate. Original renderer, main asset CI, isolated Android QA APK/test/lint green. New OP atlas and mobile board inspected. Android emulator workflow 38745543878 still in progress; no strict promotion (219/235).",
   "next_actions": [
-    "Confirm Android emulator 38745543878 completes success; inspect exact OPERATOR-WALK screenshot and 24 role/action coverage.",
-    "If screenshot/playback visually acceptable in game context, record semantic review; remember isolated review APK is not shipping gameplay integration.",
-    "For strict CHR-OP-WALK promotion, use exact runtime asset, verify production game reference, Android CI and release packaging, then update canonical queue only with evidence.",
-    "Advance to next most blocking one of 15 remaining characters only after this approval decision."
+    "Confirm Android emulator run 38745543878 reaches success and includes real OPERATOR WALK game-size screenshot among 24 combinations; inspect screenshot proof.",
+    "Judge walking loop speed, foot contact and identity fidelity against shipped world art; only explicit semantic review can approve candidate.",
+    "If approved, stage exact WebP and verify actual production game Android runtime, build/lint/release before marking canonical DONE.",
+    "Leave other unresolved characters and all 219 current strict approvals untouched."
   ]
 }
