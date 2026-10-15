@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "updated_at": "2026-10-15",
-  "task": "Lock CHR-ENG-REPAIR physical tool to a stable grounded machine socket; preserve strict queue and validate exact authored renders",
-  "branch": "art/eng-repair-contact-locked-20261015",
-  "last_observed_head": "6bc317413dd576406a420fae8427e95ca650c71a",
+  "task": "Validate original first-party ENG REPAIR fixed socket at Android game scale before any canonical strict promotion",
+  "branch": "main",
+  "last_observed_head": "a66e7281bf4a77a43da57fe9a592ae2af4756309",
   "state": {
     "strict_done": 219,
     "target_total": 235,
@@ -103,24 +103,34 @@
       "strict_approvals": 0
     },
     "engineer_repair_fixed_socket": {
-      "status": "CANDIDATE_PENDING_CI",
+      "status": "MERGED_CANDIDATE_AND_APK_CI_GREEN_EMULATOR_PENDING",
+      "pr": 149,
+      "merge_commit": "7dadb8b9b19690c5b68c9bbe5ea8fdc5157c02fe",
       "target_asset": "CHR-ENG-REPAIR",
       "source": "tools/sprites/render_chatgpt_originals.py",
       "socket_in_atlas": [
         218,
         129
       ],
-      "design": "grounded diagnostic column, rigid bolt contact, wrist and VFX inverse-transformed to fixed socket throughout ten-frame ratchet",
       "integration_audit": ".github/workflows/art-chatgpt-original-candidates.yml",
-      "review_only": true,
-      "strict_done_added": 0
+      "run_pr_asset_ci": 38740750108,
+      "run_main_asset_ci": 38740866078,
+      "run_generated_art": 38740866046,
+      "run_android_review_apk": 38741077306,
+      "run_android_emulator": 38741556309,
+      "art_ci": "SUCCESS (including ten actual emitted SVG poses with fixed bolt/socket and <0.08px tool contact)",
+      "preview_apk": "SUCCESS (18 staged art atlases, build, existing tests, lint and safe separate app ID)",
+      "emulator": "IN_PROGRESS, do not assert screenshot/render coverage yet",
+      "manual_source_atlas_review": "Visible: rigid stable service column with multiple consistent hand-tool poses. Real on-device quality evaluation not complete.",
+      "strict_done_added": 0,
+      "review_only": true
     }
   },
-  "last_completed": "Authored isolated candidate ENG REPAIR repair station and exact constant-position tool tip with inverse rigid transform. Added GitHub workflow image/pose integration audit for all ten authored SVG frames. CI, regenerated PNG/GIF and human visual review remain pending; canonical still 219/235.",
+  "last_completed": "PR #149 merged. Generated and visually inspected exact ENG REPAIR ten-pose original atlas with grounded service column; production SVG contact integration audit, main asset CI, isolated Android review APK/test/lint/provenance all succeeded. Emulator full 24-combination QA run 38741556309 remains in progress. Canonical 219/235 strict DONE.",
   "next_actions": [
-    "Verify changed renderer via PR Asset Pipeline CI on exact head; fix any test/build issues before merge.",
-    "Merge after green and observe original character candidate workflow regeneration, 10-pose fixed socket integration audit and exact changed PNG/GIF.",
-    "Inspect new ENG REPAIR atlas and in-game sized preview visually, compare with prior version, perform Android review APK/emulator before semantic/strict approval.",
-    "Only then consider strict promotion of CHR-ENG-REPAIR, leaving other 15 unresolved untouched."
+    "Collect and verify Android emulator 38741556309 completion, including ENGINEER REPAIR 39/42dp screenshot evidence; if failure, fix before claiming runtime visual success.",
+    "Visually judge ENG REPAIR in real game context and ensure 39/42dp clarity and cyclic tool motion before semantic approval. Current candidate review-only.",
+    "Only after approval and actual runtime integration + Android CI, promote CHR-ENG-REPAIR; do not automatically increase strict count.",
+    "Continue remaining CHR animations one coherent action at a time, starting OP WALK if ENG REPAIR validated."
   ]
 }
