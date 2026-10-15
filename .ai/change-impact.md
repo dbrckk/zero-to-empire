@@ -1,13 +1,15 @@
 # Change impact
 
-Base: abeed79254b5a0d9c2883e37e37f79a2aa3d99a0
-Head: 2eb60baa0a4b865146b77ed8b3756583a9611fe7
+Base: 6bc317413dd576406a420fae8427e95ca650c71a
+Head: 7dadb8b9b19690c5b68c9bbe5ea8fdc5157c02fe
 
 ## Changed files
-- M PROJECT_CONTINUITY.md
+- M .github/workflows/art-chatgpt-original-candidates.yml
+- M tools/sprites/render_chatgpt_originals.py
 
 ## Affected areas
-- (root)
+- .github
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

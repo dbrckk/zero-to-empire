@@ -31,16 +31,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-15T13:06:21Z
+Generated: 2026-10-15T13:13:37Z
 
 ### Git
 - Branch: `main`
-- Head: `2eb60baa0a4b`
-- Commit date: 2026-10-15T15:06:04+02:00
-- Commit: docs(continuity): confirm merged review fix, generated HTML and 16-action backlog
+- Head: `7dadb8b9b196`
+- Commit date: 2026-10-15T15:13:19+02:00
+- Commit: art(candidate): keep ENG repair ratchet on a stationary machine socket
 - Tracked files: 1782
 
 ### Recently changed files
+- `.github/workflows/art-chatgpt-original-candidates.yml`
+- `tools/sprites/render_chatgpt_originals.py`
 - `PROJECT_CONTINUITY.md`
 - `art/incoming/chatgpt-original/animation-review.json`
 - `art/incoming/chatgpt-original/candidates/zte_chr_eng_repair_final.png`
@@ -59,8 +61,6 @@ Generated: 2026-10-15T13:06:21Z
 - `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/07.svg`
 - `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/08.svg`
 - `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/09.svg`
-- `art/incoming/chatgpt-original/src_svg/LOG/REPAIR/01.svg`
-- `art/incoming/chatgpt-original/src_svg/LOG/REPAIR/02.svg`
 
 ### Project signals
 - `build.gradle.kts`

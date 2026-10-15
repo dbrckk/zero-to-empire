@@ -7766,6 +7766,17 @@ FRAME=256
 ACTIONS={'IDLE':6,'WALK':8,'WORK':10,'CARRY':8,'REPAIR':10,'CELEB':8}
 ROLES={
 ⋮----
+# A physical repair socket is fixed in world/frame space, rather than glued to
+# the wrist. Invert the same rigid endpoint transform used by action_fx so the
+# engineered tool contacts the actual bolt throughout its ratcheting cycle.
+ENG_REPAIR_TARGET=(218.0,129.0)
+⋮----
+def engineer_repair_wrist(phase:float)->tuple[float,float]
+⋮----
+theta=math.radians(tool_angle('REPAIR',phase))
+rotated_x=dx*math.cos(theta)-dy*math.sin(theta)
+rotated_y=dx*math.sin(theta)+dy*math.cos(theta)
+⋮----
 # SVG drawn in painter's order: back arm and legs -> torso -> head -> front hands.
 def svg_frame(role:str, action:str, index:int, count:int)->str
 ⋮----
@@ -7802,6 +7813,9 @@ pump_px=12 if pose=='WORK' else 7
 handpos=((80+2*reach,146-3*pump+bounce) if side=='L'
 elbow=((82,132+bounce) if side=='L'
 ⋮----
+handpos=engineer_repair_wrist(phase)
+elbow=(168+.45*(handpos[0]-176),115+.58*(handpos[1]-123))
+⋮----
 swing=motion*(-1 if side=='L' else 1)
 handpos=((84+8*swing,147+10*swing+bounce) if side=='L' else (170+8*swing,148-10*swing+bounce))
 elbow=((83+4*swing,124+5*swing+bounce) if side=='L' else (171+4*swing,127-5*swing+bounce))
@@ -7832,6 +7846,10 @@ boot_angle=0.0
 ⋮----
 # no floor shadow; transparency is exact outside figure
 # back ponytail / hair only LOG
+⋮----
+# Engineer-only free-standing diagnostics column. It has a fixed ground
+# support, a real repairable fastener, and stays independent of torso bounce.
+# The wrist/tool/VFX endpoint locks to the highlighted fastener below.
 ⋮----
 # boots and 2 articulated segments per leg
 ⋮----
@@ -7892,11 +7910,16 @@ by=121+bounce
 tool_x=176+(15 if action=='WORK' else 8)*math.sin(phase)
 tool_y=123+(12 if action=='WORK' else 7)*math.cos(phase)+bounce
 ⋮----
+repair_marker=' data-repair-tool="ENG"' if role=='ENG' and action=='REPAIR' else ''
+⋮----
 # foreground right arm and hand over equipment, never floating
 ⋮----
 # Physically attached local vector action lighting. Equipment highlights are
 # driven by the very same right-wrist tool transform as the authored prop.
 # No detached generated particles or external model are introduced.
+# The rigid light must use the same wrist coordinates as the actual tool.
+fx_tool_x=176+(15 if action=='WORK' else 8)*math.sin(phase)
+fx_tool_y=123+(12 if action=='WORK' else 7)*math.cos(phase)+bounce
 ⋮----
 # Both arms raised over ~half a cycle; no detached particle VFX.
 ⋮----
@@ -7928,7 +7951,7 @@ parser=argparse.ArgumentParser()
 args=parser.parse_args();outdir=pathlib.Path(args.output_dir);outdir.mkdir(parents=True,exist_ok=True)
 results=[]
 ⋮----
-report={'version':'chatgpt-original-character-rig-v8-ratcheting-repair-aligned-vfx','strict_done_added':0,'review_only':True,
+report={'version':'chatgpt-original-character-rig-v9-fixed-eng-repair-socket','strict_done_added':0,'review_only':True,
 ```
 
 ## File: sprites/render_original_character_previews.py
