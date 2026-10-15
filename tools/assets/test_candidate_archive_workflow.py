@@ -24,6 +24,24 @@ class CandidateArchiveWorkflowTests(unittest.TestCase):
         self.assertNotIn("git push", flow)
         self.assertNotIn("app/src/main/res/", flow)
 
+    def test_candidate_bank_is_assembled_only_from_trusted_release_and_queue(self):
+        flow = Path(".github/workflows/character-candidate-bank.yml").read_text()
+        source = Path("tools/sprites/build_character_candidate_bank.py").read_text()
+        self.assertIn("workflows: [Archive Character Candidates]", flow)
+        self.assertIn("github.event.workflow_run.conclusion == 'success'", flow)
+        self.assertIn("github.event.workflow_run.head_branch == 'main'", flow)
+        self.assertIn("github.event.workflow_run.head_repository.full_name == github.repository", flow)
+        self.assertIn("gh release download", flow)
+        self.assertIn("gh release upload", flow)
+        self.assertIn("candidate-bank-index.json", source)
+        self.assertIn("review_artifact_run_id", source)
+        self.assertIn("sha256", source)
+        self.assertIn("candidate_production_complete", source)
+        self.assertIn('"automatic_runtime_promotion": False', source)
+        self.assertIn('"strict_approved": False', source)
+        self.assertNotIn("app/src/main/res/\"", flow)
+        self.assertNotIn("git push", flow)
+
     def test_release_uses_only_qa_passed_candidates_and_never_promotes(self):
         flow = Path(".github/workflows/archive-character-candidates.yml").read_text()
         script = Path("tools/sprites/archive_character_candidates.py").read_text()
