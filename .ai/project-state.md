@@ -31,16 +31,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-15T07:48:51Z
+Generated: 2026-10-15T07:50:33Z
 
 ### Git
 - Branch: `main`
-- Head: `b3123d777ad3`
-- Commit date: 2026-10-15T09:48:11+02:00
-- Commit: ci(art): regression-check locally authored tool effects on each pipeline change
+- Head: `feb3825ad7b4`
+- Commit date: 2026-10-15T09:50:14+02:00
+- Commit: ci(android): render locally authored v4 action effects at real Android gameplay scale
 - Tracked files: 1778
 
 ### Recently changed files
+- `ops/local-original-android-review-trigger.txt`
+- `tools/sprites/test_local_character_action_fx.py`
 - `.github/workflows/asset-pipeline-ci.yml`
 - `art/incoming/chatgpt-original/animation-review.json`
 - `art/incoming/chatgpt-original/candidates/zte_chr_eng_carry_final.png`
@@ -59,8 +61,6 @@ Generated: 2026-10-15T07:48:51Z
 - `art/incoming/chatgpt-original/original-review-contact-sheet.png`
 - `art/incoming/chatgpt-original/previews/eng-carry.gif`
 - `art/incoming/chatgpt-original/previews/eng-celeb.gif`
-- `art/incoming/chatgpt-original/previews/eng-repair.gif`
-- `art/incoming/chatgpt-original/previews/eng-work.gif`
 
 ### Project signals
 - `build.gradle.kts`

@@ -1,13 +1,13 @@
 # Change impact
 
-Base: c26e3accc95d5e99ff3f6da68eac54f39f7d4487
-Head: b3123d777ad3fbf5a2f0f452f355ae52e11e771a
+Base: f34584535b6b4eb7870efe3ce254b842649f3f82
+Head: feb3825ad7b466a01532ca28d05a05b24b3bbf23
 
 ## Changed files
-- M .github/workflows/asset-pipeline-ci.yml
+- M ops/local-original-android-review-trigger.txt
 
 ## Affected areas
-- .github
+- ops
 
 ## Related test candidates
 - No direct filename-based test match detected.
