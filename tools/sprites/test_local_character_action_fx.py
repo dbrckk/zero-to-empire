@@ -60,7 +60,7 @@ class LocalActionFxTests(unittest.TestCase):
         self.assertIn('from local_character_action_fx import action_fx',text)
         self.assertIn('local-attached-tool-and-wrist-highlights-v1',text)
         self.assertLess(text.index("add(joint_arm('R',action))"),
-                        text.index('add(action_fx(role,action,phase')))
+                        text.index('add(action_fx(role,action,phase'))
 
 
 if __name__=='__main__':
