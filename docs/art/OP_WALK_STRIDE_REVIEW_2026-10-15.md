@@ -1,0 +1,35 @@
+# OP WALK — planted-foot stride review (15 October 2026)
+
+## Scope and source
+
+Canonical item: `CHR-OP-WALK`, still **NEEDS_REVIEW**. The existing mainline update `7383a38d` introduces the `op-walk` gait profile only for the operator. Local first-party assets are regenerated through `tools/sprites/render_chatgpt_originals.py` and the `ChatGPT Original Character Candidates` workflow. Default LOG/ENG walking and loaded carrying retain their former profile; shipping Android drawables and economy/save logic are untouched.
+
+An independently prepared parallel alternative (PR #151) was **closed without merge** after main acquired this overlapping, already-CI-verified improvement. Do not resurrect or merge its divergent `op-walk-v2` profile.
+
+## Actual evidence
+
+- Before the update, at main `c603ee41`, the eight-frame OP walk mean adjacent pixel activity was **0.075364**, last-to-first loop seam / median ratio **1.1309**.
+- After regeneration, the authoritative `art/incoming/chatgpt-original/animation-review.json` reports mean activity **0.086847** (**+15.2%**) and loop seam / median ratio **0.5769**. Both are diagnostic technical metrics, not a subjective AAA rating.
+- `op-walk` configuration uses **19px reach / 21px clearance** instead of **14px / 16px**. It deliberately offsets the stride phase for more readable sampled poses while retaining planted Y=226 support and anti-phase left/right legs.
+- Current original atlas at `art/incoming/chatgpt-original/candidates/zte_chr_op_walk_final.png` was inspected at the native 256px frame resolution and 39/42px presentation; it shows eight different full-body poses, consistent uniform/helmet, a visible airborne foot and reciprocal arms.
+- Asset Pipeline CI [38744789050](https://github.com/dbrckk/zero-to-empire/actions/runs/38744789050) **SUCCESS**.
+- Original character candidate run [38744789685](https://github.com/dbrckk/zero-to-empire/actions/runs/38744789685) **SUCCESS**, including explicit live-SVG `Validate actual OP walking contacts and reciprocal leg travel`.
+- Android review build [38744963714](https://github.com/dbrckk/zero-to-empire/actions/runs/38744963714) was still processing existing debug checks/lint when this report was authored; [38745033106](https://github.com/dbrckk/zero-to-empire/actions/runs/38745033106) was queued. **Do not claim completion or Android screenshot evidence until these are actually observed.**
+
+## Acceptance gate before strict DONE
+
+1. Confirm one isolated review APK and its 24-role/action Android emulator captures completed successfully on the exact new original atlas, with OPERATOR/WALK visible at 39/42dp.
+2. Review the actual 8-frame GIF at loop speed for planted contacts, foot recovery, torso counter-sway and absence of silhouette pops or sliding. At real scale movement must be legible, not just different frame hashes.
+3. Compare art quality to the approved runtime style; obtain an explicit semantic review. The reviewed candidate is **not** the shipping sprite merely because QA and the review app passed.
+4. Convert approved exact source to runtime WebP, show actual production gameplay reference/visibility and green Android build/lint/release checks before touching `master-asset-queue.json`.
+5. Keep canonical **219/235 strict DONE** until all evidence above is observed and attached. Do not batch-promote the other 15 unresolved assets.
+
+## Reproduce
+
+```bash
+python -m pip install Pillow==11.3.0 CairoSVG==2.7.1
+python tools/sprites/render_chatgpt_originals.py --output-dir art/incoming/chatgpt-original --save-svg
+python tools/sprites/render_original_character_previews.py --output-dir art/incoming/chatgpt-original
+```
+
+The original authored source, PNG, SVG, GIF, review HTML and independent APK artifact are kept in this repository/Actions pipeline for reproducibility. No new unit tests were added.
