@@ -57,6 +57,16 @@ class CollectorSingleSubjectQA(unittest.TestCase):
             self.assertEqual(again["assets"][0]["issues"].count(
                 "idle-visual-risk:MULTIPLE_IDLE_HEADS_RISK"), 1)
 
+    def test_production_first_does_not_waive_multiple_workers(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            name = "zte_chr_log_idle_final.png"
+            atlas(True).save(Path(tmp) / name)
+            report = {"assets": [{"file": name, "pass": True, "issues": []}]}
+            row = annotate_report(Path(tmp), report, production_first=True)["assets"][0]
+            self.assertFalse(row["pass"])
+            self.assertIn("MULTIPLE_IDLE_HEADS_RISK", row["idle_identity_risk"]["blocking_flags"])
+            self.assertFalse(row["idle_identity_risk"]["image_only_semantic_approval"])
+
     def test_missing_idle_candidate_fails_closed(self):
         with tempfile.TemporaryDirectory() as tmp:
             report = {"assets": [
