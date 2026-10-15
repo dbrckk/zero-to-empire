@@ -51,10 +51,15 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
    # One slow, physically connected tool cycle. Earlier 22px reach/24px
    # vertical pumping made the tool look like it floated and clipped the face.
    reach=math.sin(phase); pump=math.cos(phase)
+   # WORK: broad horizontal fabrication stroke. REPAIR: compact diagonal
+   # inspection/twist. Both use exactly the same wrist coordinates as the
+   # physical tool and attached light below; no disconnected props.
+   reach_px=15 if pose=='WORK' else 8
+   pump_px=12 if pose=='WORK' else 7
    handpos=((80+2*reach,146-3*pump+bounce) if side=='L'
-            else (176+15*reach,123+12*pump+bounce))
+            else (176+reach_px*reach,123+pump_px*pump+bounce))
    elbow=((82,132+bounce) if side=='L'
-          else (168+7*reach,115+7*pump+bounce))
+          else (168+reach_px*.47*reach,115+pump_px*.58*pump+bounce))
   elif pose=='WALK':
    swing=motion*(-1 if side=='L' else 1)
    handpos=((84+8*swing,147+10*swing+bounce) if side=='L' else (170+8*swing,148-10*swing+bounce))
@@ -228,8 +233,8 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
  elif action in ('WORK','REPAIR'):
   # The exact same right-hand joint drives the held equipment. One cycle
   # and stable local geometry prevent fake floating tools and prop morphing.
-  tool_x=176+15*math.sin(phase)
-  tool_y=123+12*math.cos(phase)+bounce
+  tool_x=176+(15 if action=='WORK' else 8)*math.sin(phase)
+  tool_y=123+(12 if action=='WORK' else 7)*math.cos(phase)+bounce
   add(f'<g transform="translate({tool_x:.1f},{tool_y:.1f}) rotate({-4+3*math.sin(phase):.1f})">')
   if action=='WORK':
    if role=='OP':
@@ -266,8 +271,8 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
  # driven by the very same right-wrist tool transform as the authored prop.
  # No detached generated particles or external model are introduced.
  add(action_fx(role,action,phase,
-               tool_x=176+15*math.sin(phase),
-               tool_y=123+12*math.cos(phase)+bounce,
+               tool_x=176+(15 if action=='WORK' else 8)*math.sin(phase),
+               tool_y=123+(12 if action=='WORK' else 7)*math.cos(phase)+bounce,
                bounce=bounce))
  if action=='CELEB':
   # Both arms raised over ~half a cycle; no detached particle VFX.
@@ -305,7 +310,7 @@ def main():
  for role in ROLES:
   for action in ACTIONS:
    results.append(render_atlas(role,action,outdir,args.save_svg))
- report={'version':'chatgpt-original-character-rig-v6-contact-aware-leg-rig','strict_done_added':0,'review_only':True,
+ report={'version':'chatgpt-original-character-rig-v7-action-specific-repair-contact','strict_done_added':0,'review_only':True,
          'material_finish':'local-alpha-safe-directional-light-v1',
          'action_vfx':'local-attached-tool-and-wrist-highlights-v1',
          'asset_count':len(results),'unresolved_target_count':16,'assets':results}
