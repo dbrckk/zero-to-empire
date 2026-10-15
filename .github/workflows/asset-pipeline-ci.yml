@@ -10,6 +10,7 @@ on:
       - 'tools/sprites/asset_wave_orchestrator.py'
       - 'tools/sprites/animation_batch_planner.py'
       - 'tools/sprites/build_character_review_panels.py'
+      - 'tools/sprites/build_original_offline_review.py'
       - 'tools/sprites/render_chatgpt_originals.py'
       - 'tools/sprites/local_character_material_finish.py'
       - 'tools/sprites/local_character_action_fx.py'
@@ -60,6 +61,7 @@ on:
       - 'tools/sprites/asset_wave_orchestrator.py'
       - 'tools/sprites/animation_batch_planner.py'
       - 'tools/sprites/build_character_review_panels.py'
+      - 'tools/sprites/build_original_offline_review.py'
       - 'tools/sprites/render_chatgpt_originals.py'
       - 'tools/sprites/local_character_material_finish.py'
       - 'tools/sprites/local_character_action_fx.py'
@@ -133,6 +135,7 @@ jobs:
             tools/sprites/asset_queue_utils.py \
             tools/sprites/asset_wave_orchestrator.py \
             tools/sprites/build_character_review_panels.py \
+            tools/sprites/build_original_offline_review.py \
             tools/sprites/render_chatgpt_originals.py \
             tools/sprites/local_character_material_finish.py \
             tools/sprites/local_character_action_fx.py \
@@ -324,6 +327,27 @@ jobs:
           assert not issues,issues
           print('CHATGPT_CANDIDATE_RUNTIME_GEOMETRY_QA_PASS=18')
           print('CHATGPT_ORIGINAL_CANDIDATES_VALID=18 UNRESOLVED_COVERED='+str(len(outstanding)))
+          PY
+
+      - name: Verify offline mobile original-character viewer
+        run: |
+          python tools/sprites/build_original_offline_review.py \
+            --source art/incoming/chatgpt-original \
+            --output /tmp/original-offline-review.html
+          python - <<'PY'
+          import json,re
+          from pathlib import Path
+          p=Path('/tmp/original-offline-review.html')
+          s=p.read_text()
+          m=re.search(r'<script type="application/json" id="embedded">(.*?)</script>',s,re.S)
+          assert m
+          data=json.loads(m.group(1))
+          assert len(data)==18
+          assert sum(item['count'] for item in data.values())==150
+          assert all(item['atlas'].startswith('data:image/png;base64,') for item in data.values())
+          assert all(item['animation'].startswith('data:image/gif;base64,') for item in data.values())
+          assert p.stat().st_size > 100_000
+          print('MOBILE_ORIGINAL_OFFLINE_REVIEW_SMOKE_PASS=18')
           PY
 
       - name: Validate rejection-memory schema
