@@ -98,11 +98,21 @@ for role in OPERATOR TECHNICIAN LOGISTICS ENGINEER; do
     read -r action_x action_y <<< "$action_coords"
     adb shell input tap "$action_x" "$action_y"
     sleep 1
-    read_ui
-    # The current selected action must appear as a real Compose text label,
-    # not only as the action button's clickable accessibility name.
-    if ! python3 tools/android/local_review_ui_target.py "$OUT/ui-stage.xml" \
-        "$role · $action" --allow-static-label >/dev/null; then
+    # The selected label is above the six action buttons. On compact
+    # phones it can be offscreen after tapping REPAIR/CELEBRATE; scroll back
+    # to the stage rather than misreporting a valid selection as a failure.
+    selected_visible=false
+    for attempt in $(seq 1 8); do
+      read_ui
+      if python3 tools/android/local_review_ui_target.py "$OUT/ui-stage.xml" \
+          "$role · $action" --allow-static-label >/dev/null; then
+        selected_visible=true
+        break
+      fi
+      adb shell input swipe 290 270 290 590 300
+      sleep 1
+    done
+    if [ "$selected_visible" != true ]; then
       echo "Android role/action selection failed: $role $action" >&2
       exit 1
     fi
