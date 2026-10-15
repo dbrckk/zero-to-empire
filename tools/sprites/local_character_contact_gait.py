@@ -31,8 +31,12 @@ def _ease(t: float) -> float:
     return t*t*(3.0-2.0*t)
 
 
-def foot_pose(phase: float, side: str, action: str, bounce: float = 0.0) -> FootPose:
+def foot_pose(phase: float, side: str, action: str, bounce: float = 0.0, *,
+              profile: str = 'standard') -> FootPose:
     """Cyclic stance/swing path with locked stance Y and projected knee IK.
+
+    Opt-in OP WALK geometry increases airborne clearance and stride only;
+    other roles and all CARRY assets retain their existing contact cycle.
 
     Frame coordinates: 256x256, +Y downward. During the support fraction,
     the sole stays on a constant ground-height line; during recovery it lifts
@@ -44,21 +48,25 @@ def foot_pose(phase: float, side: str, action: str, bounce: float = 0.0) -> Foot
         raise ValueError("side must be L or R")
     if action not in ("WALK","CARRY"):
         raise ValueError("contact gait is only for WALK/CARRY")
+    if profile not in ("standard","op-walk-v2") or (profile=="op-walk-v2" and action!="WALK"):
+        raise ValueError("Invalid gait profile for action")
 
     cycle = (phase/(2*math.pi)+(0 if side == "L" else .5)) % 1.0
-    reach = 14.0 if action == "WALK" else 12.0
-    clearance = 16.0 if action == "WALK" else 12.0
+    # Unloaded OP strides are designed to remain readable at 39/42dp.
+    op_walk = profile == "op-walk-v2"
+    reach = 18.0 if op_walk else (14.0 if action == "WALK" else 12.0)
+    clearance = 24.0 if op_walk else (16.0 if action == "WALK" else 12.0)
     if cycle < STANCE_FRACTION:
         progress = _ease(cycle/STANCE_FRACTION)
         foot_dx = reach*(1.0-2.0*progress)
         lift = 0.0
-        angle = -4.0 + 8.0*progress
+        angle = (-6.0+12.0*progress) if op_walk else (-4.0+8.0*progress)
         planted = True
     else:
         progress = (cycle-STANCE_FRACTION)/(1.0-STANCE_FRACTION)
         foot_dx = reach*(-1.0+2.0*_ease(progress))
         lift = clearance*math.sin(math.pi*progress)**1.4
-        angle = 4.0-8.0*_ease(progress)
+        angle = (8.0-16.0*_ease(progress)) if op_walk else (4.0-8.0*_ease(progress))
         planted = False
 
     hip_x = 106.0 if side == "L" else 146.0
