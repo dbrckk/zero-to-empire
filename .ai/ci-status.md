@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 1 success / 0 failure / 6 active
+Summary: 1 success / 0 failure / 5 active
 
-- Android CI: in_progress / pending (f94617f0)
-- TECH candidate Android preview (no promotion): in_progress / pending (f94617f0)
-- Android Emulator Smoke: pending / pending (f94617f0)
-- Local Original Characters Android Review APK: in_progress / pending (f94617f0)
-- Reconcile reviewed run 25: completed / skipped (ce94e1d9)
-- Android Emulator Smoke: in_progress / pending (d7122e93)
-- Android CI: in_progress / pending (d7122e93)
-- Android CI: completed / success (d23cc880)
+- Reconcile reviewed run 25: in_progress / pending (b684d342)
+- Local Original Characters Android Review APK: in_progress / pending (b684d342)
+- Android CI: in_progress / pending (4fd41165)
+- Android Emulator Smoke: pending / pending (4fd41165)
+- TECH candidate Android preview (no promotion): completed / success (4fd41165)
+- Reconcile reviewed run 25: completed / skipped (7038bad2)
+- Local Original Characters Android Emulator Review: in_progress / pending (7038bad2)
+- Android CI: completed / cancelled (f94617f0)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.
