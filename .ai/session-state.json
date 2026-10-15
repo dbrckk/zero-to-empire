@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "updated_at": "2026-10-15",
-  "task": "Restore green asset CI after character VFX rig v2, then verify 16 missing canonical character actions without automatic strict promotion",
-  "branch": "fix/character-vfx-ci-metadata-20261015",
-  "last_observed_head": "fda91ff481b9f3af130c6c561b5cf45273e4dfc8",
+  "task": "Fix offline original character preview frame-by-frame mismatch on mobile; retain strict 219/235 and review the 16 pending action atlases",
+  "branch": "fix/offline-frame-scale-sync-20261015",
+  "last_observed_head": "4fbd8c34a3e8c889a065aea55d61f4a3559158b2",
   "state": {
     "strict_done": 219,
     "target_total": 235,
@@ -76,14 +76,22 @@
       "cause": "v1 metadata version assertion stale after original renderer v2 tool-tip ratchet evolution",
       "fix_branch": "fix/character-vfx-ci-metadata-20261015",
       "pull_request": 147,
-      "verification": "Asset Pipeline CI PR run 38736369265 passed on code fix commit 7083fd9; docs reconciler subsequently authored manifest/progress-only c8c8d20 and triggered action_required under github-actions[bot], not a failing test; validating latest human-authored commit next"
+      "verification": "PR #147 merged on main as edbdfb76; Asset Pipeline CI 38737302273 and Android CI 38737302024 both completed success. Main later updated to 4fbd8c34 by review-ledger automation."
+    },
+    "offline_review_frame_sync": {
+      "source_file": "tools/sprites/build_original_offline_review.py",
+      "branch": "fix/offline-frame-scale-sync-20261015",
+      "issue": "Static-frame mode previously froze only large canvas; night/day 42px/39px preview GIFs continued independently.",
+      "change": "Night/day now use same exact atlas cell as central still-frame canvas, with all GIFs hidden only during still-frame inspection.",
+      "verification": "Exact extracted JavaScript exercised in isolated DOM interaction harness: 7 scenarios PASS. CI and real-device review still required.",
+      "strict_done_added": 0
     }
   },
-  "last_completed": "Diagnosed 2026-10-15 failed Asset Pipeline CI and original character-candidate CI: the test required outdated v1 action FX metadata while the renderer truthfully declares v2. PR #147 replaces version pin with versioned metadata assertion; existing effect contact/ordering checks remain. Correct current strict state is 219/235, with 16 unapproved CHR actions. Waiting for PR CI; no new semantic approval.",
+  "last_completed": "Merged and CI-verified PR #147 on main; in current branch updated offline character reviewer to synchronize paused and scrubbed frame across 256px, 42px/night and 39px/day views. Interactive JavaScript smoke checks PASS; no production art changed.",
   "next_actions": [
-    "Verify latest human-authored PR #147 run is green on exact head (bot-generated manifest reconciliation requires fresh reviewable CI); merge only after green.",
-    "Check that original candidate pipeline can pass the same corrected assertion on next eligible main render, without auto-approving generated art.",
-    "Visually inspect and validate 16 unresolved character actions at original and Android game size; repair any failed contact/identity/frame motion.",
-    "Promote only manually approved exact runtime atlases after Android CI; update canonical queue and progress ledger from evidence."
+    "Run Asset Pipeline CI on the exact reviewer branch revision and fix any regression; merge only after green.",
+    "Regenerate the standalone self-contained HTML from the updated renderer in the existing original-character workflow on main and verify all 18 atlas records are preserved.",
+    "Inspect 16 remaining local candidate CHR actions visually at Android game scale and validate exact semantics before any strict promotion.",
+    "Promote only reviewed runtime atlases with Android CI evidence; canonical strict remains 219/235 until then."
   ]
 }

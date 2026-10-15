@@ -1,5 +1,12 @@
 # PROJECT CONTINUITY — Zero → Empire
 
+## Current intervention — 2026-10-15 (after PR #147 merge)
+
+- PR **#147** merged on `main` (`edbdfb76`); exact-main Asset Pipeline CI **38737302273** and Android CI **38737302024** both completed **SUCCESS**. Subsequent reconciliation advanced `main` to `4fbd8c34` without changing the strict backlog.
+- Canonical strict remains **219/235**; **16 CHR actions** are unresolved. Original first-party SVG/PNG/GIF art is *review-only* and must not be promoted without exact semantic and Android evidence.
+- The self-contained Android-friendly reviewer previously paused only its 256px atlas canvas: night/day game-size GIF previews kept moving out of sync. Branch `fix/offline-frame-scale-sync-20261015` changes still mode to draw the **same selected atlas frame** on all three canvases (256px, 42px night, 39px day), then restores all animated previews on exit.
+- An interactive JavaScript DOM smoke exercise of the exact updated inline script passed seven scenarios, including manual frame stepping, scrubbing frame seven, role switching and restoration of GIF playback. **Asset Pipeline CI and device visual inspection for this fix remain to be confirmed.** No shipping runtime code, sprites or canonical approvals were changed.
+
 > Persistent handoff file. Read before work and update at every material intervention. Never rely on chat history alone.
 
 ## Verified current state — 2026-10-15 (authoritative; supersedes historical snapshot below)
