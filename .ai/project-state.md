@@ -1,32 +1,35 @@
 # Project state
 
-Status: active
+Status: active — Android runtime works; final character quality not yet approved.
 
 ## Working
-- Android game/runtime and canonical 235-asset ledger are active on `main`.
-- Strict asset count is currently 219/235; TECH is promoted and release-validated.
-- Asset Pipeline CI and character review-matrix checks are green on the current v1.18 character pipeline.
-- Async Kaggle character collection is observable through per-run kernel-status artifacts.
+- Canonical queue on `main`: **219/235 strict DONE**, with 16 pending character actions (OP × 5, LOG × 5, ENG × 6).
+- Original OP/LOG/ENG rigs are fully editable, generated locally, and reviewed without automatic strict promotion.
+- PR #149 merged (`7dadb8b9`): ENG REPAIR now interacts with a freestanding physical repair station, with the tool tip rigidly anchored to a fixed bolt and matching attached VFX.
+- Art generation workflow **38740866046** passed, including 10/10 actual SVG socket/tool-contact checks (<0.08 px), full regeneration and candidate QA; Asset Pipeline CI **38740866078** passed.
+- Isolated Android art-review APK build **38741077306** passed build, existing checks, lint, app-identity isolation and artifact publication; it cannot overwrite production game saves.
 
-## Broken / blockers
-- Final strict completion is blocked only by 16 character assets: OP x5, LOG x5, ENG x6.
-- ENG v1.17 async Kaggle run 38160357834 is still RUNNING; it must finish or reject before its candidates can be semantically reviewed.
-- OP/LOG legacy runtime sheets were visually rejected for identity/framing inconsistency and are queued for coherent v1.18 regeneration.
-- No unresolved asset may be promoted only to raise the counter; semantic review plus runtime/Android validation remains mandatory.
+## Blockers
+- All 16 unresolved CHR actions remain review-only, including the new ENG REPAIR. Technical geometry and local art production do not prove high-grade visual semantics.
+- Android emulator visual coverage job **38741556309** was still in progress at the time of this manual update. Confirm its conclusion before claiming actual screenshot/runtime evidence.
+- A candidate must receive explicit human semantic review, exact runtime reference/visibility and approved Android integration before changing canonical strict status.
+- Earlier ENG Kaggle v1.17 status is historical; current first-party local authored candidate is the active review lane, not a speculative pending external producer.
 
 ## Current priority
-- Collect and inspect the active ENG artifact immediately when Kaggle completes.
-- Approve and promote only coherent ENG candidates; rejected actions move to v1.18.
-- Then generate OP+LOG as intact role families with context-only IDLE anchors in the same producer wave.
-- Reach 235/235 strict DONE with provenance, runtime QA, Android build/lint/tests and release bundle validation.
+1. Confirm emulator ENGINEER REPAIR screenshots at real 39/42 dp and all 24 role/action QA combinations.
+2. Refine the ENG action if its tool or module reads poorly at game scale; maintain fixed physical contact.
+3. Only if explicit semantic approval and real Android production references pass, promote the exact asset; otherwise keep it unapproved.
+4. After this feature is closed, tackle OP WALK planted-foot movement before starting several unrelated improvements.
 
 ## Validation
-- Asset Pipeline CI: green after v1.18 orchestration/generator changes.
-- Character strict review matrix: green and review-only.
-- Strict-review backlog is generated from the canonical master queue and now carries review artifact provenance.
+- Original art candidate: generated on main and visual atlas inspected; full end-to-end mobile visual judgment still pending.
+- Asset Pipeline CI: SUCCESS (on exact merged renderer and workflow).
+- Android review APK + lint + existing checks: SUCCESS (isolated review package, not production release).
+- Emulator UI/screenshots: pending.
+- Strict progress: 219/235, unchanged.
 
-## Last verified
-- 2026-10-11
+## Last manually verified
+- 2026-10-15
 
 <!-- AUTO:START -->
 ## Automatic repository state
