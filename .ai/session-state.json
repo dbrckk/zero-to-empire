@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "updated_at": "2026-10-15",
-  "task": "Validate original first-party ENG REPAIR fixed socket at Android game scale before any canonical strict promotion",
-  "branch": "main",
-  "last_observed_head": "a66e7281bf4a77a43da57fe9a592ae2af4756309",
+  "task": "Improve OP WALK action readability with real planted-foot stride and counter-swing while preserving shipped sprites",
+  "branch": "art/op-walk-contact-stride-20261015",
+  "last_observed_head": "c603ee41d1447e9bde18e4281f16e46e179c6744",
   "state": {
     "strict_done": 219,
     "target_total": 235,
@@ -126,13 +126,34 @@
       "review_only": true,
       "emulator_evidence_artifact_id": 11975429234,
       "emulator_review_limit": "Proof of functional isolated review APK and visible scaled candidate, not proof of production gameplay integration or AAA semantic approval."
+    },
+    "op_walk_candidate": {
+      "status": "SOURCE_UPDATED_PR_PENDING",
+      "baseline": "existing OP eight frames show limited walking silhouette despite technical motion checks",
+      "profile": {
+        "stance_fraction": 0.58,
+        "phase_offset": 0.1,
+        "reach_px": 19,
+        "clearance_px": 21,
+        "hip_l": 103,
+        "hip_r": 150,
+        "planted_boot_rotation_deg": 0
+      },
+      "reciprocal_op_arm_motion": true,
+      "affected_action": "CHR-OP-WALK",
+      "other_actions": "standard profile unchanged",
+      "renderer": "tools/sprites/render_chatgpt_originals.py",
+      "pose_source": "tools/sprites/local_character_contact_gait.py",
+      "production_promotion": false,
+      "strict_done_added": 0,
+      "generated_art_and_android": "pending CI and review"
     }
   },
-  "last_completed": "PR #149 merged, fixed ENG socket across ten original SVGs verified in workflow; original PNG/GIF art regenerated; Asset CI and isolated Android APK build/lint succeeded; Android emulator run 38741556309 SUCCESS. Actual emulator screenshot atlas-ENGINEER-REPAIR.png inspected and shows engineer and repair module at 42dp night / 39dp day. Canonical remains 219/235, no strict art promotion.",
+  "last_completed": "Authored OP-only WALK contact profile and corrected previously synchronized wrist-bobbing on OP arms. Added integration smoke check over the exact eight generated SVGs in original candidate workflow; pending actual rendered PNG/GIF, CI and Android device evidence. Strict count unchanged 219/235.",
   "next_actions": [
-    "Assess final ENG REPAIR artistic quality in production game scene and animate at real speed; module/tool visible in review APK but no production promotion yet.",
-    "If artistically accepted, promote exact regenerated ENG atlas via existing gated runtime pipeline and verify shipping build/Android CI. Do not equate isolated preview with production integration.",
-    "Next tackle OP WALK stride/heel-to-toe foot motion as first substantive remaining CHR blocker.",
-    "Preserve exact candidate source, SVG contact QA, main generation & emulator screenshots as provenance."
+    "Verify PR Asset Pipeline CI, then merge only on success.",
+    "Wait for main original character candidate generation: confirm 8 actual OP WALK SVGs pass contact audit, and new PNG/GIF generated on exact main code.",
+    "Inspect 8-frame OP WALK PNG/GIF at 256px and 39/42dp mobile scale; only then trigger isolated Android review APK and full emulator.",
+    "Do not promote canonical CHR-OP-WALK without semantic, exact runtime and production Android CI evidence."
   ]
 }
