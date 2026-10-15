@@ -15,6 +15,7 @@ from pathlib import Path
 from PIL import Image
 
 from character_semantic_gate import clip_risk, celebration_arm_reach_counts
+from character_acceptance_policy import visual_risk_decision
 
 ACTION_FILENAME = re.compile(r"^zte_chr_(op|log|eng|tech)_(work|repair|celeb)_final\.png$")
 ATLAS_SIZE = (1024, 1024)
@@ -22,7 +23,7 @@ CELL_SIZE = 256
 ACTION_FRAME_COUNTS = {"work": 10, "repair": 10, "celeb": 8}
 
 
-def check_action_atlas(path: Path, action: str) -> dict:
+def check_action_atlas(path: Path, action: str, *, production_first: bool = False) -> dict:
     with Image.open(path) as file:
         if file.size != ATLAS_SIZE:
             raise ValueError(f"wrong-action-atlas-shape={file.size}")
@@ -45,17 +46,25 @@ def check_action_atlas(path: Path, action: str) -> dict:
         evidence["raised_arm_frames"] = active
         if active < 3:
             flags.append("CELEBRATION_NO_OVERHEAD_ARM_GESTURE_RISK")
+    raw_risk = "BLOCKING" if (
+        risk["risk_level"] == "BLOCKING"
+        or "CELEBRATION_NO_OVERHEAD_ARM_GESTURE_RISK" in flags
+    ) else risk["risk_level"]
+    blocking, advisory = visual_risk_decision(
+        {"risk_level": raw_risk, "flags": flags},
+        production_first=production_first,
+    )
     return {
-        "risk_level": "BLOCKING" if (
-            risk["risk_level"] == "BLOCKING"
-            or "CELEBRATION_NO_OVERHEAD_ARM_GESTURE_RISK" in flags
-        ) else risk["risk_level"],
+        "risk_level": "BLOCKING" if blocking else ("REVIEW" if flags else "NOT_DETECTED"),
         "flags": flags,
+        "blocking_flags": blocking,
+        "deferred_art_warnings": advisory,
+        "candidate_acceptance_mode": "production-first" if production_first else "strict",
         **evidence,
         "image_only_semantic_approval": False,
     }
 
-def annotate_report(candidates_dir: Path, report: dict) -> dict:
+def annotate_report(candidates_dir: Path, report: dict, *, production_first: bool = False) -> dict:
     if not isinstance(report, dict) or not isinstance(report.get("assets"), list):
         raise ValueError("Expected build_sprite_contact_sheet assets report")
     for row in report["assets"]:
@@ -64,7 +73,7 @@ def annotate_report(candidates_dir: Path, report: dict) -> dict:
         if match is None:
             continue
         try:
-            details = check_action_atlas(candidates_dir / name, match.group(2))
+            details = check_action_atlas(candidates_dir / name, match.group(2), production_first=production_first)
         except (OSError, ValueError, IndexError) as exc:
             details = {
                 "risk_level": "BLOCKING",
@@ -73,6 +82,10 @@ def annotate_report(candidates_dir: Path, report: dict) -> dict:
                 "image_only_semantic_approval": False,
             }
         row["action_visual_risk"] = details
+        if details.get("deferred_art_warnings"):
+            row["deferred_art_warnings"] = list(dict.fromkeys(
+                (row.get("deferred_art_warnings") or []) + details["deferred_art_warnings"]
+            ))
         if details["risk_level"] == "BLOCKING":
             row["pass"] = False
             issues = [str(v) for v in row.get("issues", [])]
@@ -90,9 +103,11 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--candidates", type=Path, required=True)
     parser.add_argument("--qa-report", type=Path, required=True)
+    parser.add_argument("--production-first", action="store_true",
+                        help="Defer artistic risks, never structural or file QA failures")
     args = parser.parse_args()
     qa = json.loads(args.qa_report.read_text(encoding="utf-8"))
-    qa = annotate_report(args.candidates, qa)
+    qa = annotate_report(args.candidates, qa, production_first=args.production_first)
     args.qa_report.write_text(json.dumps(qa, indent=2) + "\n", encoding="utf-8")
     for row in qa["assets"]:
         if "action_visual_risk" not in row:

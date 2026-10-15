@@ -32,6 +32,7 @@ PERSISTED_ASSET_STATE_FIELDS = (
     "strict_status", "pipeline_status", "attempts", "last_run_id",
     "last_generator", "last_error", "review_reason", "generation_epoch",
     "epoch_attempts", "infra_failures", "dispatch_token", "review_artifact_run_id",
+    "deferred_art_warnings", "candidate_acceptance_mode",
 )
 
 BUILDING_PRIORITY = ["BLD-10", "BLD-05", "BLD-08",
@@ -213,6 +214,14 @@ def sync_controlled_queues(queue: dict[str, Any]) -> None:
                     asset["review_reason"] = "Fresh identity-locked candidate produced; semantic review is still required."
         if item.get("review_artifact_run_id"):
             asset["review_artifact_run_id"] = int(item["review_artifact_run_id"])
+        if "deferred_art_warnings" in item:
+            asset["deferred_art_warnings"] = list(item.get("deferred_art_warnings") or [])
+        elif status in {"REJECTED", "REJECTED_SEMANTIC"}:
+            asset.pop("deferred_art_warnings", None)
+        if item.get("candidate_acceptance_mode"):
+            asset["candidate_acceptance_mode"] = str(item["candidate_acceptance_mode"])
+        elif status in {"REJECTED", "REJECTED_SEMANTIC"}:
+            asset.pop("candidate_acceptance_mode", None)
         if item.get("review_reason"):
             asset["review_reason"] = item["review_reason"]
 

@@ -88,6 +88,31 @@ class CharacterActionCollectorTests(unittest.TestCase):
             self.assertNotIn("CELEBRATION_NO_OVERHEAD_ARM_GESTURE_RISK",
                              evidence["flags"])
 
+    def test_production_first_defers_missing_celebration_gesture(self):
+        # Production candidates may be visually weak, but must remain explicitly
+        # unapproved and retain the missing-gesture evidence for future polish.
+        with tempfile.TemporaryDirectory() as temp:
+            name = "zte_chr_op_celeb_final.png"
+            atlas([figure() for _ in range(8)]).save(Path(temp) / name)
+            qa = {"assets": [{"file": name, "pass": True, "issues": []}]}
+            result = annotate_report(Path(temp), qa, production_first=True)
+            row = result["assets"][0]
+            self.assertTrue(row["pass"])
+            self.assertIn("CELEBRATION_NO_OVERHEAD_ARM_GESTURE_RISK",
+                          row["deferred_art_warnings"])
+            self.assertEqual(row["action_visual_risk"]["risk_level"], "REVIEW")
+            self.assertFalse(row["action_visual_risk"]["image_only_semantic_approval"])
+
+    def test_production_first_still_rejects_invalid_atlas_dimensions(self):
+        with tempfile.TemporaryDirectory() as temp:
+            name = "zte_chr_op_work_final.png"
+            Image.new("RGBA", (256, 256)).save(Path(temp) / name)
+            qa = {"assets": [{"file": name, "pass": True, "issues": []}]}
+            row = annotate_report(Path(temp), qa, production_first=True)["assets"][0]
+            self.assertFalse(row["pass"])
+            self.assertIn("ACTION_VISUAL_QA_ERROR",
+                          row["action_visual_risk"]["flags"])
+
     def test_bad_work_atlas_is_rejected_without_aborting_sibling_candidates(self):
         with tempfile.TemporaryDirectory() as temp:
             target = Path(temp) / "zte_chr_eng_repair_final.png"

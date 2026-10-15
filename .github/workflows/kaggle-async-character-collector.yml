@@ -1,9 +1,15 @@
-# Local-first artwork policy: remote art production is retired from automatic scheduling.
-# Historical workflow_dispatch remains available only by an explicit human decision.
+# The collector only observes a previously submitted GPU wave.
+# Hourly checks do not submit new generations or approve artwork.
 name: Kaggle Async Character Collector
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/kaggle-async-character-collector.yml'
+  schedule:
+    - cron: '43 * * * *'
 
 permissions:
   contents: write
@@ -18,7 +24,7 @@ concurrency:
 jobs:
   collect:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 25
     env:
       KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
       KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
@@ -59,6 +65,15 @@ jobs:
                   queued_stale=elapsed > queued_stale_limit_minutes*60
               except (ValueError, TypeError):
                   stale=False
+          controlled=Path('art/production/controlled-character-regen-queue.json')
+          queue=json.loads(controlled.read_text()) if controlled.is_file() else {}
+          expected={str(x).upper() for x in d.get('target_ids') or []}
+          controlled_ids={str(x.get('id','')).upper() for x in queue.get('targets',[])}
+          production_first=(
+              active and bool(expected) and expected.issubset(controlled_ids)
+              and str(queue.get('acceptance_mode','')).lower()=='production-first'
+          )
+          print('acceptance_mode='+('production-first' if production_first else 'strict'))
           print('stale_limit_minutes='+str(stale_limit_minutes))
           print('queued_stale='+str(queued_stale).lower())
           print('active='+str(active).lower())
@@ -147,15 +162,20 @@ jobs:
         run: |
           set -euo pipefail
           shopt -s nullglob
+          mode_args=()
+          if [ "${{ steps.gate.outputs.acceptance_mode }}" = 'production-first' ]; then
+            mode_args+=(--production-first)
+          fi
+          echo "COLLECTOR_ACCEPTANCE_MODE=${{ steps.gate.outputs.acceptance_mode }}"
           files=(/tmp/kaggle-output/output/candidates/*_final.png)
           if (( ${#files[@]} > 0 )); then
             python tools/sprites/build_sprite_contact_sheet.py               --output /tmp/kaggle-output/output/github-contact-sheet.png               --report /tmp/kaggle-output/output/github-qa-report.json               --files "${files[@]}"
             python tools/sprites/verify_character_idle_candidates.py \
               --candidates /tmp/kaggle-output/output/candidates \
-              --qa-report /tmp/kaggle-output/output/github-qa-report.json
+              --qa-report /tmp/kaggle-output/output/github-qa-report.json "${mode_args[@]}"
             python tools/sprites/verify_character_action_candidates.py \
               --candidates /tmp/kaggle-output/output/candidates \
-              --qa-report /tmp/kaggle-output/output/github-qa-report.json
+              --qa-report /tmp/kaggle-output/output/github-qa-report.json "${mode_args[@]}"
             python - <<'PY'
           import json
           from pathlib import Path
@@ -210,17 +230,25 @@ jobs:
               if not line.startswith('|') or 'CHR-' not in line or 'app/src/main/res/' not in line: continue
               cols=[x.strip() for x in line.split('|')[1:-1]]
               if len(cols)==5: stem_to_id[Path(cols[3].replace(chr(96),'')).stem]=cols[0]
-          produced={stem_to_id.get(Path(x['file']).stem) for x in generated.get('targets',[]) if x.get('file')}
+          # A filename in generated-targets.json is not evidence that a file
+          # actually exists. Only real, nonempty candidate PNG files qualify.
+          produced=set()
           candidate_dir=Path('/tmp/kaggle-output/output/candidates')
           if candidate_dir.is_dir():
-              produced.update(stem_to_id.get(p.stem) for p in candidate_dir.glob('*_final.png'))
+              produced.update(stem_to_id.get(p.stem) for p in candidate_dir.glob('*_final.png') if p.stat().st_size>0)
           produced.discard(None)
           rejected={}
+          art_warnings={}
           qa_path=Path('/tmp/kaggle-output/output/github-qa-report.json')
           if qa_path.exists():
               qa=json.loads(qa_path.read_text())
               qa_rows=qa if isinstance(qa,list) else qa.get('assets',qa.get('sprites',qa.get('results',[])))
               for row in qa_rows:
+                  aid=stem_to_id.get(Path(str(row.get('file') or '')).stem)
+                  if aid and row.get('pass') is True:
+                      warnings=[str(w) for w in row.get('deferred_art_warnings',[]) if str(w)]
+                      if warnings:
+                          art_warnings[aid]=list(dict.fromkeys(warnings))
                   if row.get('pass') is True:
                       continue
                   aid=stem_to_id.get(Path(str(row.get('file') or '')).stem)
@@ -254,12 +282,17 @@ jobs:
                   item['status']='AWAITING_REVIEW'
                   item['kaggle_run_id']=run_id
                   item['review_artifact_run_id']=int(os.environ['GITHUB_RUN_ID'])
+                  item['candidate_acceptance_mode']=str(q.get('acceptance_mode') or 'strict')
+                  item['deferred_art_warnings']=art_warnings.get(aid,[])
                   item.pop('review_reason',None)
-              elif aid in rejected:
+              else:
                   item['status']='REJECTED'
                   item['kaggle_run_id']=run_id
                   item['review_artifact_run_id']=int(os.environ['GITHUB_RUN_ID'])
-                  item['review_reason']='Kaggle generator rejected candidate: '+rejected[aid]
+                  item['review_reason']='Kaggle candidate failed or missing: '+rejected.get(
+                      aid, 'missing-validated-candidate-output')
+                  item.pop('deferred_art_warnings',None)
+                  item.pop('candidate_acceptance_mode',None)
           p.write_text(json.dumps(q,indent=2)+'\n')
           state=Path('art/production/kaggle-async-state.json')
           d=json.loads(state.read_text()); d['status']='COLLECTED'; d['collector_run_id']=int(os.environ['GITHUB_RUN_ID'])

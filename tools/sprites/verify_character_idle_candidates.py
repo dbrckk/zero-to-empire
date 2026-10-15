@@ -15,13 +15,14 @@ from pathlib import Path
 from PIL import Image
 
 from character_semantic_gate import clip_risk, idle_distinct_head_clusters
+from character_acceptance_policy import visual_risk_decision
 
 IDLE_FILENAME = re.compile(r"^zte_chr_(op|log|eng|tech)_idle_final\.png$")
 FRAME = 256
 ATLAS = (1024, 1024)
 
 
-def check_idle_atlas(path: Path) -> dict:
+def check_idle_atlas(path: Path, *, production_first: bool = False) -> dict:
     with Image.open(path) as file:
         if file.size != ATLAS:
             raise ValueError(f"wrong-idle-atlas-shape={file.size}")
@@ -32,15 +33,19 @@ def check_idle_atlas(path: Path) -> dict:
         for index in range(6)
     ]
     risk = clip_risk(frames, "IDLE")
+    blocking, advisory = visual_risk_decision(risk, production_first=production_first)
     return {
-        "risk_level": risk["risk_level"],
+        "risk_level": "BLOCKING" if blocking else ("REVIEW" if risk["flags"] else "NOT_DETECTED"),
         "flags": risk["flags"],
+        "blocking_flags": blocking,
+        "deferred_art_warnings": advisory,
+        "candidate_acceptance_mode": "production-first" if production_first else "strict",
         "head_counts": [idle_distinct_head_clusters(frame) for frame in frames],
         "image_only_semantic_approval": False,
     }
 
 
-def annotate_report(candidates_dir: Path, report: dict) -> dict:
+def annotate_report(candidates_dir: Path, report: dict, *, production_first: bool = False) -> dict:
     if not isinstance(report, dict) or not isinstance(report.get("assets"), list):
         raise ValueError("Expected build_sprite_contact_sheet assets report")
     for row in report["assets"]:
@@ -48,7 +53,7 @@ def annotate_report(candidates_dir: Path, report: dict) -> dict:
         if not IDLE_FILENAME.fullmatch(name):
             continue
         try:
-            details = check_idle_atlas(candidates_dir / name)
+            details = check_idle_atlas(candidates_dir / name, production_first=production_first)
         except (OSError, ValueError, IndexError) as exc:
             details = {
                 "risk_level": "BLOCKING",
@@ -58,6 +63,10 @@ def annotate_report(candidates_dir: Path, report: dict) -> dict:
                 "image_only_semantic_approval": False,
             }
         row["idle_identity_risk"] = details
+        if details.get("deferred_art_warnings"):
+            row["deferred_art_warnings"] = list(dict.fromkeys(
+                (row.get("deferred_art_warnings") or []) + details["deferred_art_warnings"]
+            ))
         if details["risk_level"] == "BLOCKING":
             row["pass"] = False
             issues = [str(x) for x in row.get("issues", [])]
@@ -75,9 +84,11 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--candidates", type=Path, required=True)
     parser.add_argument("--qa-report", type=Path, required=True)
+    parser.add_argument("--production-first", action="store_true",
+                        help="Defer artistic risks without waiving structural QA")
     args = parser.parse_args()
     qa = json.loads(args.qa_report.read_text(encoding="utf-8"))
-    qa = annotate_report(args.candidates, qa)
+    qa = annotate_report(args.candidates, qa, production_first=args.production_first)
     args.qa_report.write_text(json.dumps(qa, indent=2) + "\n", encoding="utf-8")
     for row in qa["assets"]:
         details = row.get("idle_identity_risk")
