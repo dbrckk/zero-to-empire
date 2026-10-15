@@ -54,8 +54,12 @@ android/
   validate_manifest_policy.py
   validate_release_privacy.py
 sprites/
+  tests/
+    test_archive_character_candidates.py
+    test_asset_production_policy.py
   action_contact.py
   animation_batch_planner.py
+  archive_character_candidates.py
   asset_queue_utils.py
   asset_wave_orchestrator.py
   audit_character_candidates.py
@@ -66,6 +70,7 @@ sprites/
   build_original_offline_review.py
   build_sprite_contact_sheet.py
   build_tech_review_board.py
+  character_acceptance_policy.py
   character_anchor_pair_salvage.py
   character_approved_idle_fallback.py
   character_cargo_identity_lock.py
@@ -1790,6 +1795,63 @@ required_public_headings = (
 required_in_app_terms = (
 ```
 
+## File: sprites/tests/test_archive_character_candidates.py
+```python
+#!/usr/bin/env python3
+"""Offline candidate archive tests; no cloud/GPU credentials required."""
+⋮----
+class CandidateArchiveTests(unittest.TestCase)
+⋮----
+def setUp(self)
+⋮----
+def write_file(self, name, payload=None)
+⋮----
+target = self.root / "output" / "candidates" / name
+⋮----
+def write_qa(self, rows)
+⋮----
+def test_saves_only_real_qa_passing_candidates_with_hashes(self)
+⋮----
+passing = "zte_chr_op_celeb_final.png"
+failing = "zte_chr_log_work_final.png"
+⋮----
+manifest = archive_candidates(self.root, self.bundle, 38815707999)
+⋮----
+def test_missing_passing_image_fails_closed(self)
+⋮----
+def test_invalid_signature_fails_closed(self)
+⋮----
+def test_duplicate_qa_rows_fail_closed(self)
+⋮----
+name = "zte_chr_op_walk_final.png"
+⋮----
+def test_rejected_only_writes_no_release_asset(self)
+⋮----
+manifest = archive_candidates(self.root, self.bundle, 123)
+```
+
+## File: sprites/tests/test_asset_production_policy.py
+```python
+#!/usr/bin/env python3
+"""Fast, dependency-free regression checks for asset production admission."""
+⋮----
+class ProductionFirstTests(unittest.TestCase)
+⋮----
+def test_relaxed_motion_admits_previous_static_rejections(self)
+⋮----
+def test_strict_floors_unchanged(self)
+⋮----
+def test_art_warnings_do_not_block_candidate(self)
+⋮----
+risk = {"risk_level": "BLOCKING", "flags": [
+⋮----
+def test_structural_risks_remain_blocking(self)
+⋮----
+def test_unknown_risk_is_not_silently_waived(self)
+⋮----
+risk = {"risk_level": "BLOCKING", "flags": ["NEW_TECHNICAL_RISK"]}
+```
+
 ## File: sprites/action_contact.py
 ```python
 """Deterministic 512px rig-space interaction targets for TECH WORK and REPAIR.
@@ -1907,6 +1969,49 @@ args = parser.parse_args()
 ⋮----
 all_items = items(args.kind)
 selected = all_items[:args.count]
+```
+
+## File: sprites/archive_character_candidates.py
+```python
+#!/usr/bin/env python3
+"""Archive QA-passing character *candidates*, never strict runtime assets.
+
+Input must be an artifact downloaded from a trusted completed collector run.
+Only the actual PNG bytes present on disk and marked pass by the technical QA
+are copied. Art warnings and exact SHA-256 hashes survive beyond artifact TTL.
+"""
+⋮----
+NAME = re.compile(r"zte_chr_(?:op|tech|log|eng)_(?:idle|walk|work|carry|repair|celeb)_final\.png")
+PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
+MAX_PNG_BYTES = 100 * 1024 * 1024
+MAX_ARCHIVE_BYTES = 500 * 1024 * 1024
+⋮----
+def archive_candidates(source: Path, destination: Path, source_run_id: int) -> dict
+⋮----
+qa_files = list(source.rglob("github-qa-report.json"))
+⋮----
+qa = json.loads(qa_files[0].read_text(encoding="utf-8"))
+rows = qa.get("assets") if isinstance(qa, dict) else None
+⋮----
+accepted: list[tuple[Path, dict]] = []
+seen: set[str] = set()
+total_bytes = 0
+⋮----
+name = Path(str(row.get("file") or "")).name
+⋮----
+found = [p for p in source.rglob(name) if p.parent.name == "candidates" and p.is_file()]
+⋮----
+path = found[0]
+size = path.stat().st_size
+⋮----
+manifest = {
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser()
+⋮----
+args = parser.parse_args()
+manifest = archive_candidates(args.source, args.output, args.source_run_id)
 ```
 
 ## File: sprites/asset_queue_utils.py
@@ -2029,8 +2134,8 @@ TRIGGER_DISPATCH_TOKEN = os.getenv("AUTOF_TRIGGER_DISPATCH_TOKEN", "")
 CURRENT_DISPATCH_TOKEN = os.getenv("GITHUB_RUN_ID", "")
 KAGGLE_BUSY = os.getenv("AUTOF_KAGGLE_BUSY", "0") == "1"
 FX_BUSY = os.getenv("AUTOF_FX_BUSY", "0") == "1"
-CHARACTER_GENERATION_EPOCH = "identity-lock-v1.20-stable-idle-breathing-rescue"
-CHARACTER_EPOCH_ATTEMPT_LIMIT = 3
+CHARACTER_GENERATION_EPOCH = "production-first-v1.21-art-deferred"
+CHARACTER_EPOCH_ATTEMPT_LIMIT = 4
 CHARACTER_BATCH_SIZE = 12
 INFRA_FAILURE_LIMIT = 3
 ⋮----
@@ -3081,6 +3186,42 @@ ap=argparse.ArgumentParser()
 args=ap.parse_args()
 ⋮----
 rec=tiles(args.source)
+```
+
+## File: sprites/character_acceptance_policy.py
+```python
+#!/usr/bin/env python3
+"""Production-first admission policy for character *candidates*, not strict DONE.
+
+Keep structural/technical defects blocking while recording artistic concerns as
+advisories. A candidate accepted here is NOT approved for runtime promotion.
+"""
+⋮----
+PRODUCTION_FIRST_MODE = "production-first"
+⋮----
+# Strict floors remain unchanged for the established review process. In the
+# production-first lane an action must still have measurable nonzero motion.
+STRICT_MEAN_FLOORS = {"WALK": 0.12, "WORK": 0.10, "CARRY": 0.12,
+PRODUCTION_MEAN_FLOORS = {"WALK": 0.04, "WORK": 0.04, "CARRY": 0.04,
+STRICT_LOWER_FLOORS = {"WALK": 0.22, "CARRY": 0.19}
+PRODUCTION_LOWER_FLOORS = {"WALK": 0.05, "CARRY": 0.04}
+⋮----
+# These are visual-quality warnings, not evidence of invalid files or missing
+# actors. Unknown/new blocking flags are intentionally NOT waived.
+DEFERRED_ART_FLAGS = frozenset({
+⋮----
+def motion_floor(action: str, *, production_first: bool, lower_body: bool = False) -> float
+⋮----
+action = action.upper()
+strict = STRICT_LOWER_FLOORS if lower_body else STRICT_MEAN_FLOORS
+relaxed = PRODUCTION_LOWER_FLOORS if lower_body else PRODUCTION_MEAN_FLOORS
+⋮----
+def visual_risk_decision(risk: dict, *, production_first: bool) -> tuple[list[str], list[str]]
+⋮----
+"""Return (blocking_flags, deferred_review_flags) without approving art."""
+flags = list(dict.fromkeys(risk.get("flags") or []))
+⋮----
+if not flags:  # Fail closed for an unknown blocking assessment.
 ```
 
 ## File: sprites/character_anchor_pair_salvage.py
@@ -5564,6 +5705,14 @@ INCOMING=ROOT/'art/incoming/final-sprites'
 REPORT=Path('/kaggle/working/output/character-sheet-report.json')
 QUEUE=ROOT/'art/production/controlled-character-regen-queue.json'
 REJECTION_LEDGER=ROOT/'art/production/generation-rejection-ledger.json'
+⋮----
+def production_first_enabled()
+⋮----
+"""Use relaxed *candidate* admission only for explicitly designated waves."""
+forced=os.environ.get('ZTE_ASSET_ACCEPTANCE_MODE','').strip().lower()
+⋮----
+queue=json.loads(QUEUE.read_text(encoding='utf-8'))
+⋮----
 FLUX='aniketppanchal/flux.1-schnell-nf4-pkg'
 ROW=re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$")
 CHR=re.compile(r'^CHR-(OP|TECH|LOG|ENG)-(IDLE|WALK|WORK|CARRY|REPAIR|CELEB)$')
@@ -5781,6 +5930,8 @@ aa=pa[x,y]>0;bb=pb[x,y]>0;inter+=aa and bb;union+=aa or bb
 ⋮----
 def sheet_qa(frames,action=None)
 ⋮----
+production_first=production_first_enabled()
+⋮----
 ious=[alpha_iou(frames[n-1],frames[n]) for n in range(1,len(frames))]
 ⋮----
 bottoms=[];centers=[]
@@ -5842,8 +5993,9 @@ motion=lower_body_motion(frames)
 # a usable ENG reference (.010) and needlessly skipped its three actions.
 activity=idle_visual_activity(frames)
 ⋮----
-floors={'WORK':.10,'CARRY':.12,'REPAIR':.09,'CELEB':.10}
-floor=floors.get(action,.05)
+floor=motion_floor(action,production_first=production_first) if action in {'WORK','CARRY','REPAIR','CELEB'} else .05
+⋮----
+carry_floor=motion_floor('CARRY',production_first=production_first,lower_body=True)
 ⋮----
 changes=upper_body_transition_changes(frames)
 # Arm movement should progress across multiple frames, not originate from
@@ -6020,7 +6172,7 @@ reason=f'candidate-visual-qa-error:{type(exc).__name__}:{str(exc)[:180]}'
 ⋮----
 preview=keep_rejected_idle_for_review(i,frames,reason)
 ⋮----
-risk_reason='image-risk:'+','.join(visual_risk.get('flags') or ['UNKNOWN'])
+risk_reason='image-risk:'+','.join(blocking_visual_flags)
 ⋮----
 preview=keep_rejected_idle_for_review(i,frames,risk_reason)
 ⋮----
@@ -9326,6 +9478,8 @@ selected = [
 module = ast.fix_missing_locations(ast.Module(body=selected, type_ignores=[]))
 namespace = {
 ⋮----
+"production_first_enabled": lambda: False,  # Legacy strict regression suite
+⋮----
 def worker()
 ⋮----
 im = Image.new("RGBA", (256, 256))
@@ -10451,6 +10605,19 @@ path = Path(temp) / "zte_chr_log_celeb_final.png"
 ⋮----
 evidence = check_action_atlas(path, "celeb")
 ⋮----
+def test_production_first_defers_missing_celebration_gesture(self)
+⋮----
+# Production candidates may be visually weak, but must remain explicitly
+# unapproved and retain the missing-gesture evidence for future polish.
+⋮----
+result = annotate_report(Path(temp), qa, production_first=True)
+⋮----
+def test_production_first_still_rejects_invalid_atlas_dimensions(self)
+⋮----
+name = "zte_chr_op_work_final.png"
+⋮----
+row = annotate_report(Path(temp), qa, production_first=True)["assets"][0]
+⋮----
 def test_bad_work_atlas_is_rejected_without_aborting_sibling_candidates(self)
 ⋮----
 target = Path(temp) / "zte_chr_eng_repair_final.png"
@@ -10479,6 +10646,13 @@ report = {"assets": [
 output = annotate_report(directory, report)
 ⋮----
 again = annotate_report(directory, output)
+⋮----
+def test_production_first_does_not_waive_multiple_workers(self)
+⋮----
+name = "zte_chr_log_idle_final.png"
+⋮----
+report = {"assets": [{"file": name, "pass": True, "issues": []}]}
+row = annotate_report(Path(tmp), report, production_first=True)["assets"][0]
 ⋮----
 def test_missing_idle_candidate_fails_closed(self)
 ⋮----
@@ -10644,7 +10818,7 @@ ATLAS_SIZE = (1024, 1024)
 CELL_SIZE = 256
 ACTION_FRAME_COUNTS = {"work": 10, "repair": 10, "celeb": 8}
 ⋮----
-def check_action_atlas(path: Path, action: str) -> dict
+def check_action_atlas(path: Path, action: str, *, production_first: bool = False) -> dict
 ⋮----
 rgba = file.convert("RGBA")
 frames = [
@@ -10658,12 +10832,14 @@ evidence = {"action_pose_metrics": risk.get("action_pose_metrics", {})}
 scores = celebration_arm_reach_counts(frames)
 active = sum(n >= 28 for n in scores)
 ⋮----
-def annotate_report(candidates_dir: Path, report: dict) -> dict
+raw_risk = "BLOCKING" if (
+⋮----
+def annotate_report(candidates_dir: Path, report: dict, *, production_first: bool = False) -> dict
 ⋮----
 name = Path(str(row.get("file") or "")).name
 match = ACTION_FILENAME.fullmatch(name)
 ⋮----
-details = check_action_atlas(candidates_dir / name, match.group(2))
+details = check_action_atlas(candidates_dir / name, match.group(2), production_first=production_first)
 ⋮----
 details = {
 ⋮----
@@ -10677,7 +10853,7 @@ parser = argparse.ArgumentParser()
 ⋮----
 args = parser.parse_args()
 qa = json.loads(args.qa_report.read_text(encoding="utf-8"))
-qa = annotate_report(args.candidates, qa)
+qa = annotate_report(args.candidates, qa, production_first=args.production_first)
 ```
 
 ## File: sprites/verify_character_idle_candidates.py
@@ -10694,17 +10870,17 @@ IDLE_FILENAME = re.compile(r"^zte_chr_(op|log|eng|tech)_idle_final\.png$")
 FRAME = 256
 ATLAS = (1024, 1024)
 ⋮----
-def check_idle_atlas(path: Path) -> dict
+def check_idle_atlas(path: Path, *, production_first: bool = False) -> dict
 ⋮----
 atlas = file.convert("RGBA")
 frames = [
 risk = clip_risk(frames, "IDLE")
 ⋮----
-def annotate_report(candidates_dir: Path, report: dict) -> dict
+def annotate_report(candidates_dir: Path, report: dict, *, production_first: bool = False) -> dict
 ⋮----
 name = Path(str(row.get("file") or "")).name
 ⋮----
-details = check_idle_atlas(candidates_dir / name)
+details = check_idle_atlas(candidates_dir / name, production_first=production_first)
 ⋮----
 details = {
 ⋮----
@@ -10718,7 +10894,7 @@ parser = argparse.ArgumentParser()
 ⋮----
 args = parser.parse_args()
 qa = json.loads(args.qa_report.read_text(encoding="utf-8"))
-qa = annotate_report(args.candidates, qa)
+qa = annotate_report(args.candidates, qa, production_first=args.production_first)
 ⋮----
 details = row.get("idle_identity_risk")
 ```

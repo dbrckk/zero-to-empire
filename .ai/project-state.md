@@ -29,21 +29,27 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-15T19:35:00Z
+Generated: 2026-10-15T22:19:08Z
 
 ### Git
 - Branch: `main`
-- Head: `122a9289a4e5`
-- Commit date: 2026-10-15T21:34:41+02:00
-- Commit: fix(review): require advancing city clock and unaliased OP WALK actor evidence
-- Tracked files: 1783
+- Head: `2f34e5f0a8d5`
+- Commit date: 2026-10-16T00:18:53+02:00
+- Commit: art: persist verified candidate atlases in permanent Release archive (#163)
+- Tracked files: 1790
 
 ### Recently changed files
-- `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
-- `ops/local-original-android-review-trigger.txt`
-- `tools/android/local_original_character_emulator_smoke.sh`
-- `app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt`
-- `app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt`
+- `.github/workflows/archive-character-candidates.yml`
+- `.github/workflows/asset-pipeline-ci.yml`
+- `tools/assets/test_candidate_archive_workflow.py`
+- `tools/sprites/archive_character_candidates.py`
+- `tools/sprites/tests/test_archive_character_candidates.py`
+- `art/production/kaggle-async-state.json`
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
+- `art/production/character-strict-review-backlog.md`
+- `art/production/controlled-character-regen-queue.json`
+- `art/production/master-asset-queue.json`
 
 ### Project signals
 - `build.gradle.kts`

@@ -45,6 +45,7 @@ The content is organized as follows:
     ai-repo-map.yml
     android-emulator-smoke.yml
     android.yml
+    archive-character-candidates.yml
     art-chatgpt-original-candidates.yml
     asset-autofactory-ci.yml
     asset-autofactory.yml
@@ -337,6 +338,7 @@ tools/
     pipeline.py
     qa_report.py
     static_processing.py
+    test_candidate_archive_workflow.py
     test_manifest.py
     test_metadata.py
     test_pipeline.py
@@ -346,8 +348,12 @@ tools/
     test_static_processing.py
     test_workflow_policy.py
   sprites/
+    tests/
+      test_archive_character_candidates.py
+      test_asset_production_policy.py
     action_contact.py
     animation_batch_planner.py
+    archive_character_candidates.py
     asset_queue_utils.py
     asset_wave_orchestrator.py
     audit_character_candidates.py
@@ -358,6 +364,7 @@ tools/
     build_original_offline_review.py
     build_sprite_contact_sheet.py
     build_tech_review_board.py
+    character_acceptance_policy.py
     character_anchor_pair_salvage.py
     character_approved_idle_fallback.py
     character_cargo_identity_lock.py
@@ -908,6 +915,133 @@ jobs:
           retention-days: 14
 ```
 
+## File: .github/workflows/archive-character-candidates.yml
+```yaml
+name: Archive Character Candidates
+
+on:
+  workflow_run:
+    workflows: [Kaggle Async Character Collector]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      source_run_id:
+        description: Successful collector workflow run whose candidate artifact should be archived
+        required: true
+        type: string
+  # Bootstrap archive of the latest completed collector wave on initial merge.
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/archive-character-candidates.yml'
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: character-candidate-release-archive
+  cancel-in-progress: false
+
+jobs:
+  archive:
+    if: ${{ github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TAG: zte-character-candidates
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: main
+
+      - name: Resolve trusted collector run
+        id: source
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$GITHUB_EVENT_NAME" = workflow_run ]; then
+            source_id='${{ github.event.workflow_run.id }}'
+          elif [ "$GITHUB_EVENT_NAME" = workflow_dispatch ]; then
+            source_id='${{ inputs.source_run_id }}'
+          else
+            source_id="$(gh run list --repo "$GITHUB_REPOSITORY" \
+              --workflow 'Kaggle Async Character Collector' --limit 20 \
+              --json databaseId,conclusion \
+              --jq '[.[] | select(.conclusion=="success")][0].databaseId')"
+          fi
+          [[ "$source_id" =~ ^[1-9][0-9]*$ ]] || { echo "::error::Invalid collector run id"; exit 2; }
+          source_info="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$source_id")"
+          SRC_INFO="$source_info" python - <<'PY'
+          import json,os
+          d=json.loads(os.environ['SRC_INFO'])
+          repo=os.environ['GITHUB_REPOSITORY']
+          if (d.get('name') != 'Kaggle Async Character Collector'
+              or d.get('conclusion') != 'success'
+              or d.get('head_branch') != 'main'
+              or (d.get('head_repository') or {}).get('full_name') != repo):
+              raise SystemExit('Refusing non-successful/non-main/non-repository collector run')
+          print('COLLECTOR_ARCHIVE_SOURCE_VERIFIED='+str(d['id']))
+          PY
+          echo "run_id=$source_id" >> "$GITHUB_OUTPUT"
+
+      - name: Check source artifact
+        id: artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          count="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/${{ steps.source.outputs.run_id }}/artifacts" \
+            --jq '[.artifacts[] | select(.name == "kaggle-async-character-batch" and .expired == false)] | length')"
+          test "$count" -le 1
+          if [ "$count" = 1 ]; then echo 'found=true' >> "$GITHUB_OUTPUT"; else echo 'found=false' >> "$GITHUB_OUTPUT"; fi
+          echo "COLLECTOR_CANDIDATE_ARTIFACTS=$count"
+
+      - name: Download collector candidate artifact
+        if: steps.artifact.outputs.found == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/zte-collected-candidates
+          gh run download '${{ steps.source.outputs.run_id }}' \
+            --repo "$GITHUB_REPOSITORY" \
+            --name kaggle-async-character-batch \
+            --dir /tmp/zte-collected-candidates
+
+      - name: Build candidate-only archive with provenance
+        if: steps.artifact.outputs.found == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tools/sprites/tests -p test_archive_character_candidates.py
+          python tools/sprites/archive_character_candidates.py \
+            --source /tmp/zte-collected-candidates \
+            --output "/tmp/zte-characters-${{ steps.source.outputs.run_id }}.zip" \
+            --source-run-id '${{ steps.source.outputs.run_id }}'
+
+      - name: Permanently store on GitHub Release
+        if: steps.artifact.outputs.found == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          source_id='${{ steps.source.outputs.run_id }}'
+          bundle="/tmp/zte-characters-${source_id}.zip"
+          if [ ! -s "$bundle" ]; then
+            echo 'No passing candidate PNGs to archive.'
+            exit 0
+          fi
+          if ! gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release create "$TAG" --repo "$GITHUB_REPOSITORY" \
+              --target main --title 'Zero to Empire — character candidate bank' \
+              --notes 'Persistent review-only asset candidates with checksums. These files are NOT automatically approved for Android runtime.' \
+              --prerelease
+          fi
+          gh release upload "$TAG" "$bundle" \
+            --repo "$GITHUB_REPOSITORY" --clobber
+          echo "PERSISTENT_CHARACTER_ARCHIVE=$TAG/$(basename "$bundle")" >> "$GITHUB_STEP_SUMMARY"
+          sha256sum "$bundle" >> "$GITHUB_STEP_SUMMARY"
+```
+
 ## File: .github/workflows/art-chatgpt-original-candidates.yml
 ```yaml
 name: ChatGPT Original Character Candidates
@@ -1249,6 +1383,8 @@ on:
     paths:
       - 'tools/sprites/asset_queue_utils.py'
       - 'tools/sprites/asset_wave_orchestrator.py'
+      - 'tools/sprites/character_acceptance_policy.py'
+      - 'tools/sprites/tests/test_asset_production_policy.py'
       - 'art/production/master-asset-queue.json'
       - '.github/workflows/asset-autofactory.yml'
       - '.github/workflows/asset-autofactory-ci.yml'
@@ -1269,6 +1405,9 @@ jobs:
 
       - name: Compile autofactory Python
         run: python -m py_compile tools/sprites/asset_queue_utils.py tools/sprites/asset_wave_orchestrator.py
+
+      - name: Test relaxed candidate selection and structural blockers
+        run: python -m unittest discover -s tools/sprites/tests -p test_asset_production_policy.py
 
       - name: Exercise queue reconciliation without dispatch
         env:
@@ -1341,6 +1480,18 @@ on:
         required: false
         default: ''
 
+  push:
+    branches: [main]
+    paths:
+      - 'tools/sprites/character_acceptance_policy.py'
+      - 'tools/sprites/kaggle_character_sheet_factory_v1.py'
+      - 'tools/sprites/asset_wave_orchestrator.py'
+      - '.github/workflows/asset-autofactory.yml'
+  schedule:
+    - cron: '17 */6 * * *'
+
+# Explicitly re-enabled for the requested production-first completion pass.
+# Do not watch autofactory state files: the job itself updates them.
 permissions:
   contents: write
   actions: write
@@ -1374,6 +1525,11 @@ jobs:
       - name: Sync canonical main
         shell: bash
         run: git pull --ff-only origin main
+
+      - name: Verify production-first policy and compile generator
+        run: |
+          python -m unittest discover -s tools/sprites/tests -p test_asset_production_policy.py
+          python -m py_compile tools/sprites/character_acceptance_policy.py tools/sprites/kaggle_character_sheet_factory_v1.py tools/sprites/asset_wave_orchestrator.py tools/sprites/asset_queue_utils.py
 
       - name: Detect producer activity
         shell: bash
@@ -1483,6 +1639,8 @@ on:
       - 'tools/assets/**'
       - 'tools/sprites/audit_complete_sprite_manifest.py'
       - 'tools/sprites/asset_queue_utils.py'
+      - 'tools/sprites/archive_character_candidates.py'
+      - 'tools/sprites/tests/test_archive_character_candidates.py'
       - 'tools/sprites/asset_wave_orchestrator.py'
       - 'tools/sprites/animation_batch_planner.py'
       - 'tools/sprites/build_character_review_panels.py'
@@ -1525,6 +1683,7 @@ on:
       - '.github/workflows/asset-autofactory.yml'
       - '.github/workflows/kaggle-mass-sprite-factory.yml'
       - '.github/workflows/kaggle-async-character-collector.yml'
+      - '.github/workflows/archive-character-candidates.yml'
       - '.github/workflows/local-character-review.yml'
       - '.github/workflows/kaggle-superseded-character-evidence.yml'
       - '.github/workflows/promote-approved-kaggle-characters.yml'
@@ -1534,6 +1693,8 @@ on:
       - 'tools/assets/**'
       - 'tools/sprites/audit_complete_sprite_manifest.py'
       - 'tools/sprites/asset_queue_utils.py'
+      - 'tools/sprites/archive_character_candidates.py'
+      - 'tools/sprites/tests/test_archive_character_candidates.py'
       - 'tools/sprites/asset_wave_orchestrator.py'
       - 'tools/sprites/animation_batch_planner.py'
       - 'tools/sprites/build_character_review_panels.py'
@@ -1576,6 +1737,7 @@ on:
       - '.github/workflows/asset-autofactory.yml'
       - '.github/workflows/kaggle-mass-sprite-factory.yml'
       - '.github/workflows/kaggle-async-character-collector.yml'
+      - '.github/workflows/archive-character-candidates.yml'
       - '.github/workflows/local-character-review.yml'
       - '.github/workflows/kaggle-superseded-character-evidence.yml'
       - '.github/workflows/promote-approved-kaggle-characters.yml'
@@ -1609,6 +1771,7 @@ jobs:
           python -m py_compile \
             kaggle/github_mass_factory.py \
             tools/sprites/asset_queue_utils.py \
+            tools/sprites/archive_character_candidates.py \
             tools/sprites/asset_wave_orchestrator.py \
             tools/sprites/build_character_review_panels.py \
             tools/sprites/build_original_offline_review.py \
@@ -1846,6 +2009,7 @@ jobs:
       - name: Run unified asset pipeline and visual-semantic gate checks
         run: |
           python -m unittest discover -s tools/assets -p 'test_*.py' -v
+          python -m unittest discover -s tools/sprites/tests -p 'test_archive_character_candidates.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_semantic_gate.py' -v
           python -m unittest discover -s tools/sprites -p 'test_verify_character_idle_candidates.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_head_identity_lock.py' -v
@@ -3211,12 +3375,18 @@ jobs:
 
 ## File: .github/workflows/kaggle-async-character-collector.yml
 ```yaml
-# Local-first artwork policy: remote art production is retired from automatic scheduling.
-# Historical workflow_dispatch remains available only by an explicit human decision.
+# The collector only observes a previously submitted GPU wave.
+# Hourly checks do not submit new generations or approve artwork.
 name: Kaggle Async Character Collector
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/kaggle-async-character-collector.yml'
+  schedule:
+    - cron: '43 * * * *'
 
 permissions:
   contents: write
@@ -3231,7 +3401,7 @@ concurrency:
 jobs:
   collect:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 25
     env:
       KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
       KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
@@ -3272,6 +3442,15 @@ jobs:
                   queued_stale=elapsed > queued_stale_limit_minutes*60
               except (ValueError, TypeError):
                   stale=False
+          controlled=Path('art/production/controlled-character-regen-queue.json')
+          queue=json.loads(controlled.read_text()) if controlled.is_file() else {}
+          expected={str(x).upper() for x in d.get('target_ids') or []}
+          controlled_ids={str(x.get('id','')).upper() for x in queue.get('targets',[])}
+          production_first=(
+              active and bool(expected) and expected.issubset(controlled_ids)
+              and str(queue.get('acceptance_mode','')).lower()=='production-first'
+          )
+          print('acceptance_mode='+('production-first' if production_first else 'strict'))
           print('stale_limit_minutes='+str(stale_limit_minutes))
           print('queued_stale='+str(queued_stale).lower())
           print('active='+str(active).lower())
@@ -3360,15 +3539,20 @@ jobs:
         run: |
           set -euo pipefail
           shopt -s nullglob
+          mode_args=()
+          if [ "${{ steps.gate.outputs.acceptance_mode }}" = 'production-first' ]; then
+            mode_args+=(--production-first)
+          fi
+          echo "COLLECTOR_ACCEPTANCE_MODE=${{ steps.gate.outputs.acceptance_mode }}"
           files=(/tmp/kaggle-output/output/candidates/*_final.png)
           if (( ${#files[@]} > 0 )); then
             python tools/sprites/build_sprite_contact_sheet.py               --output /tmp/kaggle-output/output/github-contact-sheet.png               --report /tmp/kaggle-output/output/github-qa-report.json               --files "${files[@]}"
             python tools/sprites/verify_character_idle_candidates.py \
               --candidates /tmp/kaggle-output/output/candidates \
-              --qa-report /tmp/kaggle-output/output/github-qa-report.json
+              --qa-report /tmp/kaggle-output/output/github-qa-report.json "${mode_args[@]}"
             python tools/sprites/verify_character_action_candidates.py \
               --candidates /tmp/kaggle-output/output/candidates \
-              --qa-report /tmp/kaggle-output/output/github-qa-report.json
+              --qa-report /tmp/kaggle-output/output/github-qa-report.json "${mode_args[@]}"
             python - <<'PY'
           import json
           from pathlib import Path
@@ -3423,17 +3607,25 @@ jobs:
               if not line.startswith('|') or 'CHR-' not in line or 'app/src/main/res/' not in line: continue
               cols=[x.strip() for x in line.split('|')[1:-1]]
               if len(cols)==5: stem_to_id[Path(cols[3].replace(chr(96),'')).stem]=cols[0]
-          produced={stem_to_id.get(Path(x['file']).stem) for x in generated.get('targets',[]) if x.get('file')}
+          # A filename in generated-targets.json is not evidence that a file
+          # actually exists. Only real, nonempty candidate PNG files qualify.
+          produced=set()
           candidate_dir=Path('/tmp/kaggle-output/output/candidates')
           if candidate_dir.is_dir():
-              produced.update(stem_to_id.get(p.stem) for p in candidate_dir.glob('*_final.png'))
+              produced.update(stem_to_id.get(p.stem) for p in candidate_dir.glob('*_final.png') if p.stat().st_size>0)
           produced.discard(None)
           rejected={}
+          art_warnings={}
           qa_path=Path('/tmp/kaggle-output/output/github-qa-report.json')
           if qa_path.exists():
               qa=json.loads(qa_path.read_text())
               qa_rows=qa if isinstance(qa,list) else qa.get('assets',qa.get('sprites',qa.get('results',[])))
               for row in qa_rows:
+                  aid=stem_to_id.get(Path(str(row.get('file') or '')).stem)
+                  if aid and row.get('pass') is True:
+                      warnings=[str(w) for w in row.get('deferred_art_warnings',[]) if str(w)]
+                      if warnings:
+                          art_warnings[aid]=list(dict.fromkeys(warnings))
                   if row.get('pass') is True:
                       continue
                   aid=stem_to_id.get(Path(str(row.get('file') or '')).stem)
@@ -3467,12 +3659,17 @@ jobs:
                   item['status']='AWAITING_REVIEW'
                   item['kaggle_run_id']=run_id
                   item['review_artifact_run_id']=int(os.environ['GITHUB_RUN_ID'])
+                  item['candidate_acceptance_mode']=str(q.get('acceptance_mode') or 'strict')
+                  item['deferred_art_warnings']=art_warnings.get(aid,[])
                   item.pop('review_reason',None)
-              elif aid in rejected:
+              else:
                   item['status']='REJECTED'
                   item['kaggle_run_id']=run_id
                   item['review_artifact_run_id']=int(os.environ['GITHUB_RUN_ID'])
-                  item['review_reason']='Kaggle generator rejected candidate: '+rejected[aid]
+                  item['review_reason']='Kaggle candidate failed or missing: '+rejected.get(
+                      aid, 'missing-validated-candidate-output')
+                  item.pop('deferred_art_warnings',None)
+                  item.pop('candidate_acceptance_mode',None)
           p.write_text(json.dumps(q,indent=2)+'\n')
           state=Path('art/production/kaggle-async-state.json')
           d=json.loads(state.read_text()); d['status']='COLLECTED'; d['collector_run_id']=int(os.environ['GITHUB_RUN_ID'])
@@ -3808,8 +4005,8 @@ jobs:
 
 ## File: .github/workflows/kaggle-mass-sprite-factory.yml
 ```yaml
-# Local-first artwork policy: remote art production is retired from automatic scheduling.
-# Historical workflow_dispatch remains available only by an explicit human decision.
+# Kaggle remains workflow_dispatch-only; the production-first autofactory may
+# explicitly dispatch controlled character waves without bypassing technical QA.
 name: Kaggle Mass Sprite Factory
 
 on:
@@ -3935,7 +4132,7 @@ jobs:
           fi
 
       - name: Compile sprite generators
-        run: python -m py_compile tools/sprites/kaggle_building_family_factory_v16.py tools/sprites/kaggle_character_sheet_factory_v1.py tools/sprites/character_head_identity_lock.py tools/sprites/character_ground_shadow_cleanup.py tools/sprites/character_anchor_pair_salvage.py tools/sprites/character_approved_idle_fallback.py tools/sprites/character_rejection_evidence.py tools/sprites/character_idle_breathing_fallback.py kaggle/github_mass_factory.py
+        run: python -m py_compile tools/sprites/kaggle_building_family_factory_v16.py tools/sprites/kaggle_character_sheet_factory_v1.py tools/sprites/character_acceptance_policy.py tools/sprites/character_head_identity_lock.py tools/sprites/character_ground_shadow_cleanup.py tools/sprites/character_anchor_pair_salvage.py tools/sprites/character_approved_idle_fallback.py tools/sprites/character_rejection_evidence.py tools/sprites/character_idle_breathing_fallback.py kaggle/github_mass_factory.py
       - name: Recover async preflight failure
         if: ${{ failure() && env.ASYNC_SUBMIT == 'true' }}
         env:
@@ -4089,6 +4286,7 @@ jobs:
              tools/sprites/kaggle_building_family_factory_v14.py \
              tools/sprites/kaggle_character_sheet_factory_v1.py \
              tools/sprites/character_semantic_gate.py \
+             tools/sprites/character_acceptance_policy.py \
              tools/sprites/character_head_identity_lock.py \
              tools/sprites/character_ground_shadow_cleanup.py \
              tools/sprites/character_anchor_pair_salvage.py \
@@ -4122,6 +4320,7 @@ jobs:
               'kaggle_building_family_factory_v14.py',
               'kaggle_character_sheet_factory_v1.py',
               'character_semantic_gate.py',
+              'character_acceptance_policy.py',
               'character_head_identity_lock.py',
               'character_ground_shadow_cleanup.py',
               'character_anchor_pair_salvage.py',
@@ -29089,6 +29288,22 @@ pad = int(im.width*.04)
 edges=(a.crop((0,0,im.width,pad)),a.crop((0,im.height-pad,im.width,im.height)),a.crop((0,0,pad,im.height)),a.crop((im.width-pad,0,im.width,im.height)))
 ```
 
+## File: tools/assets/test_candidate_archive_workflow.py
+```python
+"""Ensure privileged release archival never elevates unreviewed assets to DONE."""
+⋮----
+class CandidateArchiveWorkflowTests(unittest.TestCase)
+⋮----
+def test_trigger_is_trusted_collector_completion_or_manual_bootstrap(self)
+⋮----
+text = Path(".github/workflows/archive-character-candidates.yml").read_text()
+⋮----
+def test_release_uses_only_qa_passed_candidates_and_never_promotes(self)
+⋮----
+flow = Path(".github/workflows/archive-character-candidates.yml").read_text()
+script = Path("tools/sprites/archive_character_candidates.py").read_text()
+```
+
 ## File: tools/assets/test_manifest.py
 ```python
 class ManifestTest(unittest.TestCase)
@@ -29344,9 +29559,9 @@ produced = [x["id"] for x in store["controlled"]["targets"][:12]]
 ⋮----
 op_walk = next(x for x in store["controlled"]["targets"] if x["id"] == "CHR-OP-WALK")
 ⋮----
-def test_character_epoch_allows_three_informed_attempts(self) -> None
+def test_character_epoch_allows_four_bounded_attempts(self) -> None
 ⋮----
-def test_character_epoch_is_v118_carry_identity_lock(self) -> None
+def test_character_epoch_is_v121_production_first(self) -> None
 ⋮----
 def test_new_epoch_reopens_semantic_reject_even_with_high_legacy_attempts(self) -> None
 ⋮----
@@ -29442,8 +29657,8 @@ def test_async_collector_recovers_candidates_when_generated_targets_is_empty(sel
 ⋮----
 text = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
 ⋮----
-# Historical collector can be manually dispatched only. The user's
-# remaining sprites are now original, authored locally in ChatGPT.
+# The collector may poll existing GPU jobs but may not start them.
+# An hourly check ensures an ACTIVE state cannot remain uncollected.
 header=text.split("\npermissions:",1)[0]
 ⋮----
 def test_action_translation_reviewer_precedes_candidate_promotion(self)
@@ -29487,10 +29702,10 @@ def test_superseded_kaggle_wave_evidence_is_review_only(self)
 ⋮----
 text = Path(".github/workflows/kaggle-superseded-character-evidence.yml").read_text(encoding="utf-8")
 ⋮----
-def test_local_first_art_has_no_automatic_external_generator_schedule(self)
+def test_other_external_generator_workflows_stay_manual(self)
 ⋮----
-# The user requires the remaining original sprites to be authored in
-# ChatGPT, not regenerated remotely by periodic GitHub Actions.
+# The collector is observational; the other workflows must not gain
+# a cron or push trigger to bypass the bounded asset autofactory.
 workflows = [
 ⋮----
 text = Path(path).read_text(encoding="utf-8")
@@ -29574,6 +29789,63 @@ def test_kaggle_rejection_memory_prefers_exact_asset_over_role_fallback(self)
 def test_kaggle_character_retry_uses_controlled_queue_rejection_risks(self)
 ⋮----
 def test_kaggle_character_retry_routes_detached_subject_to_single_mode(self)
+```
+
+## File: tools/sprites/tests/test_archive_character_candidates.py
+```python
+#!/usr/bin/env python3
+"""Offline candidate archive tests; no cloud/GPU credentials required."""
+⋮----
+class CandidateArchiveTests(unittest.TestCase)
+⋮----
+def setUp(self)
+⋮----
+def write_file(self, name, payload=None)
+⋮----
+target = self.root / "output" / "candidates" / name
+⋮----
+def write_qa(self, rows)
+⋮----
+def test_saves_only_real_qa_passing_candidates_with_hashes(self)
+⋮----
+passing = "zte_chr_op_celeb_final.png"
+failing = "zte_chr_log_work_final.png"
+⋮----
+manifest = archive_candidates(self.root, self.bundle, 38815707999)
+⋮----
+def test_missing_passing_image_fails_closed(self)
+⋮----
+def test_invalid_signature_fails_closed(self)
+⋮----
+def test_duplicate_qa_rows_fail_closed(self)
+⋮----
+name = "zte_chr_op_walk_final.png"
+⋮----
+def test_rejected_only_writes_no_release_asset(self)
+⋮----
+manifest = archive_candidates(self.root, self.bundle, 123)
+```
+
+## File: tools/sprites/tests/test_asset_production_policy.py
+```python
+#!/usr/bin/env python3
+"""Fast, dependency-free regression checks for asset production admission."""
+⋮----
+class ProductionFirstTests(unittest.TestCase)
+⋮----
+def test_relaxed_motion_admits_previous_static_rejections(self)
+⋮----
+def test_strict_floors_unchanged(self)
+⋮----
+def test_art_warnings_do_not_block_candidate(self)
+⋮----
+risk = {"risk_level": "BLOCKING", "flags": [
+⋮----
+def test_structural_risks_remain_blocking(self)
+⋮----
+def test_unknown_risk_is_not_silently_waived(self)
+⋮----
+risk = {"risk_level": "BLOCKING", "flags": ["NEW_TECHNICAL_RISK"]}
 ```
 
 ## File: tools/sprites/action_contact.py
@@ -29693,6 +29965,49 @@ args = parser.parse_args()
 ⋮----
 all_items = items(args.kind)
 selected = all_items[:args.count]
+```
+
+## File: tools/sprites/archive_character_candidates.py
+```python
+#!/usr/bin/env python3
+"""Archive QA-passing character *candidates*, never strict runtime assets.
+
+Input must be an artifact downloaded from a trusted completed collector run.
+Only the actual PNG bytes present on disk and marked pass by the technical QA
+are copied. Art warnings and exact SHA-256 hashes survive beyond artifact TTL.
+"""
+⋮----
+NAME = re.compile(r"zte_chr_(?:op|tech|log|eng)_(?:idle|walk|work|carry|repair|celeb)_final\.png")
+PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
+MAX_PNG_BYTES = 100 * 1024 * 1024
+MAX_ARCHIVE_BYTES = 500 * 1024 * 1024
+⋮----
+def archive_candidates(source: Path, destination: Path, source_run_id: int) -> dict
+⋮----
+qa_files = list(source.rglob("github-qa-report.json"))
+⋮----
+qa = json.loads(qa_files[0].read_text(encoding="utf-8"))
+rows = qa.get("assets") if isinstance(qa, dict) else None
+⋮----
+accepted: list[tuple[Path, dict]] = []
+seen: set[str] = set()
+total_bytes = 0
+⋮----
+name = Path(str(row.get("file") or "")).name
+⋮----
+found = [p for p in source.rglob(name) if p.parent.name == "candidates" and p.is_file()]
+⋮----
+path = found[0]
+size = path.stat().st_size
+⋮----
+manifest = {
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser()
+⋮----
+args = parser.parse_args()
+manifest = archive_candidates(args.source, args.output, args.source_run_id)
 ```
 
 ## File: tools/sprites/asset_queue_utils.py
@@ -29815,8 +30130,8 @@ TRIGGER_DISPATCH_TOKEN = os.getenv("AUTOF_TRIGGER_DISPATCH_TOKEN", "")
 CURRENT_DISPATCH_TOKEN = os.getenv("GITHUB_RUN_ID", "")
 KAGGLE_BUSY = os.getenv("AUTOF_KAGGLE_BUSY", "0") == "1"
 FX_BUSY = os.getenv("AUTOF_FX_BUSY", "0") == "1"
-CHARACTER_GENERATION_EPOCH = "identity-lock-v1.20-stable-idle-breathing-rescue"
-CHARACTER_EPOCH_ATTEMPT_LIMIT = 3
+CHARACTER_GENERATION_EPOCH = "production-first-v1.21-art-deferred"
+CHARACTER_EPOCH_ATTEMPT_LIMIT = 4
 CHARACTER_BATCH_SIZE = 12
 INFRA_FAILURE_LIMIT = 3
 ⋮----
@@ -30867,6 +31182,42 @@ ap=argparse.ArgumentParser()
 args=ap.parse_args()
 ⋮----
 rec=tiles(args.source)
+```
+
+## File: tools/sprites/character_acceptance_policy.py
+```python
+#!/usr/bin/env python3
+"""Production-first admission policy for character *candidates*, not strict DONE.
+
+Keep structural/technical defects blocking while recording artistic concerns as
+advisories. A candidate accepted here is NOT approved for runtime promotion.
+"""
+⋮----
+PRODUCTION_FIRST_MODE = "production-first"
+⋮----
+# Strict floors remain unchanged for the established review process. In the
+# production-first lane an action must still have measurable nonzero motion.
+STRICT_MEAN_FLOORS = {"WALK": 0.12, "WORK": 0.10, "CARRY": 0.12,
+PRODUCTION_MEAN_FLOORS = {"WALK": 0.04, "WORK": 0.04, "CARRY": 0.04,
+STRICT_LOWER_FLOORS = {"WALK": 0.22, "CARRY": 0.19}
+PRODUCTION_LOWER_FLOORS = {"WALK": 0.05, "CARRY": 0.04}
+⋮----
+# These are visual-quality warnings, not evidence of invalid files or missing
+# actors. Unknown/new blocking flags are intentionally NOT waived.
+DEFERRED_ART_FLAGS = frozenset({
+⋮----
+def motion_floor(action: str, *, production_first: bool, lower_body: bool = False) -> float
+⋮----
+action = action.upper()
+strict = STRICT_LOWER_FLOORS if lower_body else STRICT_MEAN_FLOORS
+relaxed = PRODUCTION_LOWER_FLOORS if lower_body else PRODUCTION_MEAN_FLOORS
+⋮----
+def visual_risk_decision(risk: dict, *, production_first: bool) -> tuple[list[str], list[str]]
+⋮----
+"""Return (blocking_flags, deferred_review_flags) without approving art."""
+flags = list(dict.fromkeys(risk.get("flags") or []))
+⋮----
+if not flags:  # Fail closed for an unknown blocking assessment.
 ```
 
 ## File: tools/sprites/character_anchor_pair_salvage.py
@@ -33350,6 +33701,14 @@ INCOMING=ROOT/'art/incoming/final-sprites'
 REPORT=Path('/kaggle/working/output/character-sheet-report.json')
 QUEUE=ROOT/'art/production/controlled-character-regen-queue.json'
 REJECTION_LEDGER=ROOT/'art/production/generation-rejection-ledger.json'
+⋮----
+def production_first_enabled()
+⋮----
+"""Use relaxed *candidate* admission only for explicitly designated waves."""
+forced=os.environ.get('ZTE_ASSET_ACCEPTANCE_MODE','').strip().lower()
+⋮----
+queue=json.loads(QUEUE.read_text(encoding='utf-8'))
+⋮----
 FLUX='aniketppanchal/flux.1-schnell-nf4-pkg'
 ROW=re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*`([^`]+)`\s*\|\s*([^|]+?)\s*\|$")
 CHR=re.compile(r'^CHR-(OP|TECH|LOG|ENG)-(IDLE|WALK|WORK|CARRY|REPAIR|CELEB)$')
@@ -33567,6 +33926,8 @@ aa=pa[x,y]>0;bb=pb[x,y]>0;inter+=aa and bb;union+=aa or bb
 ⋮----
 def sheet_qa(frames,action=None)
 ⋮----
+production_first=production_first_enabled()
+⋮----
 ious=[alpha_iou(frames[n-1],frames[n]) for n in range(1,len(frames))]
 ⋮----
 bottoms=[];centers=[]
@@ -33628,8 +33989,9 @@ motion=lower_body_motion(frames)
 # a usable ENG reference (.010) and needlessly skipped its three actions.
 activity=idle_visual_activity(frames)
 ⋮----
-floors={'WORK':.10,'CARRY':.12,'REPAIR':.09,'CELEB':.10}
-floor=floors.get(action,.05)
+floor=motion_floor(action,production_first=production_first) if action in {'WORK','CARRY','REPAIR','CELEB'} else .05
+⋮----
+carry_floor=motion_floor('CARRY',production_first=production_first,lower_body=True)
 ⋮----
 changes=upper_body_transition_changes(frames)
 # Arm movement should progress across multiple frames, not originate from
@@ -33806,7 +34168,7 @@ reason=f'candidate-visual-qa-error:{type(exc).__name__}:{str(exc)[:180]}'
 ⋮----
 preview=keep_rejected_idle_for_review(i,frames,reason)
 ⋮----
-risk_reason='image-risk:'+','.join(visual_risk.get('flags') or ['UNKNOWN'])
+risk_reason='image-risk:'+','.join(blocking_visual_flags)
 ⋮----
 preview=keep_rejected_idle_for_review(i,frames,risk_reason)
 ⋮----
@@ -37112,6 +37474,8 @@ selected = [
 module = ast.fix_missing_locations(ast.Module(body=selected, type_ignores=[]))
 namespace = {
 ⋮----
+"production_first_enabled": lambda: False,  # Legacy strict regression suite
+⋮----
 def worker()
 ⋮----
 im = Image.new("RGBA", (256, 256))
@@ -38237,6 +38601,19 @@ path = Path(temp) / "zte_chr_log_celeb_final.png"
 ⋮----
 evidence = check_action_atlas(path, "celeb")
 ⋮----
+def test_production_first_defers_missing_celebration_gesture(self)
+⋮----
+# Production candidates may be visually weak, but must remain explicitly
+# unapproved and retain the missing-gesture evidence for future polish.
+⋮----
+result = annotate_report(Path(temp), qa, production_first=True)
+⋮----
+def test_production_first_still_rejects_invalid_atlas_dimensions(self)
+⋮----
+name = "zte_chr_op_work_final.png"
+⋮----
+row = annotate_report(Path(temp), qa, production_first=True)["assets"][0]
+⋮----
 def test_bad_work_atlas_is_rejected_without_aborting_sibling_candidates(self)
 ⋮----
 target = Path(temp) / "zte_chr_eng_repair_final.png"
@@ -38265,6 +38642,13 @@ report = {"assets": [
 output = annotate_report(directory, report)
 ⋮----
 again = annotate_report(directory, output)
+⋮----
+def test_production_first_does_not_waive_multiple_workers(self)
+⋮----
+name = "zte_chr_log_idle_final.png"
+⋮----
+report = {"assets": [{"file": name, "pass": True, "issues": []}]}
+row = annotate_report(Path(tmp), report, production_first=True)["assets"][0]
 ⋮----
 def test_missing_idle_candidate_fails_closed(self)
 ⋮----
@@ -38430,7 +38814,7 @@ ATLAS_SIZE = (1024, 1024)
 CELL_SIZE = 256
 ACTION_FRAME_COUNTS = {"work": 10, "repair": 10, "celeb": 8}
 ⋮----
-def check_action_atlas(path: Path, action: str) -> dict
+def check_action_atlas(path: Path, action: str, *, production_first: bool = False) -> dict
 ⋮----
 rgba = file.convert("RGBA")
 frames = [
@@ -38444,12 +38828,14 @@ evidence = {"action_pose_metrics": risk.get("action_pose_metrics", {})}
 scores = celebration_arm_reach_counts(frames)
 active = sum(n >= 28 for n in scores)
 ⋮----
-def annotate_report(candidates_dir: Path, report: dict) -> dict
+raw_risk = "BLOCKING" if (
+⋮----
+def annotate_report(candidates_dir: Path, report: dict, *, production_first: bool = False) -> dict
 ⋮----
 name = Path(str(row.get("file") or "")).name
 match = ACTION_FILENAME.fullmatch(name)
 ⋮----
-details = check_action_atlas(candidates_dir / name, match.group(2))
+details = check_action_atlas(candidates_dir / name, match.group(2), production_first=production_first)
 ⋮----
 details = {
 ⋮----
@@ -38463,7 +38849,7 @@ parser = argparse.ArgumentParser()
 ⋮----
 args = parser.parse_args()
 qa = json.loads(args.qa_report.read_text(encoding="utf-8"))
-qa = annotate_report(args.candidates, qa)
+qa = annotate_report(args.candidates, qa, production_first=args.production_first)
 ```
 
 ## File: tools/sprites/verify_character_idle_candidates.py
@@ -38480,17 +38866,17 @@ IDLE_FILENAME = re.compile(r"^zte_chr_(op|log|eng|tech)_idle_final\.png$")
 FRAME = 256
 ATLAS = (1024, 1024)
 ⋮----
-def check_idle_atlas(path: Path) -> dict
+def check_idle_atlas(path: Path, *, production_first: bool = False) -> dict
 ⋮----
 atlas = file.convert("RGBA")
 frames = [
 risk = clip_risk(frames, "IDLE")
 ⋮----
-def annotate_report(candidates_dir: Path, report: dict) -> dict
+def annotate_report(candidates_dir: Path, report: dict, *, production_first: bool = False) -> dict
 ⋮----
 name = Path(str(row.get("file") or "")).name
 ⋮----
-details = check_idle_atlas(candidates_dir / name)
+details = check_idle_atlas(candidates_dir / name, production_first=production_first)
 ⋮----
 details = {
 ⋮----
@@ -38504,7 +38890,7 @@ parser = argparse.ArgumentParser()
 ⋮----
 args = parser.parse_args()
 qa = json.loads(args.qa_report.read_text(encoding="utf-8"))
-qa = annotate_report(args.candidates, qa)
+qa = annotate_report(args.candidates, qa, production_first=args.production_first)
 ⋮----
 details = row.get("idle_identity_risk")
 ```

@@ -1,16 +1,17 @@
 # Change impact
 
-Base: 934468dc02dd0ba5aef8e74a512b54ca47d950c2
-Head: 122a9289a4e54441cf256155eba1ee2360af8e89
+Base: 95d96196c08f58db3cb65b7801deeb7b43cd5588
+Head: 2f34e5f0a8d54c3ad823abd7e5924a8854d99c8b
 
 ## Changed files
-- M app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt
-- M ops/local-original-android-review-trigger.txt
-- M tools/android/local_original_character_emulator_smoke.sh
+- A .github/workflows/archive-character-candidates.yml
+- M .github/workflows/asset-pipeline-ci.yml
+- A tools/assets/test_candidate_archive_workflow.py
+- A tools/sprites/archive_character_candidates.py
+- A tools/sprites/tests/test_archive_character_candidates.py
 
 ## Affected areas
-- app
-- ops
+- .github
 - tools
 
 ## Related test candidates

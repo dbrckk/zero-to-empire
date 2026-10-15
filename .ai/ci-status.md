@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 2 success / 0 failure / 4 active
+Summary: 6 success / 0 failure / 2 active
 
-- Android Emulator Smoke: pending / pending (122a9289)
-- TECH candidate Android preview (no promotion): completed / success (122a9289)
-- Android CI: in_progress / pending (122a9289)
-- Local Original Characters Android Review APK: in_progress / pending (122a9289)
-- Reconcile reviewed run 25: completed / skipped (934468dc)
-- Reconcile reviewed run 25: completed / skipped (934468dc)
-- Android Emulator Smoke: in_progress / pending (9437c286)
-- Android CI: completed / success (9437c286)
+- Archive Character Candidates: in_progress / pending (2f34e5f0)
+- Asset Pipeline CI: in_progress / pending (2f34e5f0)
+- Asset Pipeline CI: completed / success (e0499fff)
+- Kaggle Mass Sprite Factory: completed / success (26bdac48)
+- Asset Autofactory 235: completed / success (e6086e0b)
+- Kaggle Async Character Collector: completed / success (770fb45b)
+- Asset Pipeline CI: completed / success (770fb45b)
+- Asset Autofactory 235: completed / success (770fb45b)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

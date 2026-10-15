@@ -280,10 +280,11 @@
         "tools/sprites/ter07_energy_conduit_candidate.py",
         "tools/sprites/test_animation_batch_planner.py",
         "tools/sprites/test_character_review_matrix.py",
+        "tools/sprites/tests/test_asset_production_policy.py",
         "tools/sprites/validate_runtime_asset.py",
         "tools/validate_isolated_sprite.py"
       ],
-      "in_degree": 35,
+      "in_degree": 36,
       "out_degree": 1,
       "path": "tools/sprites/plan_sprite_batches.py"
     },
@@ -717,6 +718,7 @@
     {
       "dependencies": [
         "app/src/main/java/com/zerotoempire/game/GameRepository.kt",
+        "tools/sprites/character_acceptance_policy.py",
         "tools/sprites/character_anchor_pair_salvage.py",
         "tools/sprites/character_approved_idle_fallback.py",
         "tools/sprites/character_ground_shadow_cleanup.py",
@@ -727,7 +729,7 @@
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 8,
+      "out_degree": 9,
       "path": "tools/sprites/kaggle_character_sheet_factory_v1.py"
     },
     {
@@ -955,6 +957,19 @@
       "in_degree": 5,
       "out_degree": 0,
       "path": "app/src/main/java/com/zerotoempire/game/CanonicalCharacterRaster.kt"
+    },
+    {
+      "dependencies": [],
+      "dependents": [
+        "tools/sprites/kaggle_character_sheet_factory_v1.py",
+        "tools/sprites/test_character_action_gate.py",
+        "tools/sprites/tests/test_asset_production_policy.py",
+        "tools/sprites/verify_character_action_candidates.py",
+        "tools/sprites/verify_character_idle_candidates.py"
+      ],
+      "in_degree": 5,
+      "out_degree": 0,
+      "path": "tools/sprites/character_acceptance_policy.py"
     },
     {
       "dependencies": [
@@ -1270,23 +1285,10 @@
       "in_degree": 1,
       "out_degree": 3,
       "path": "tools/sprites/asset_wave_orchestrator.py"
-    },
-    {
-      "dependencies": [
-        "app/src/main/java/com/zerotoempire/game/GameRepository.kt",
-        "tools/sprites/audit_character_candidates.py",
-        "tools/sprites/package_tech_actions_runtime.py"
-      ],
-      "dependents": [
-        "tools/sprites/test_export_tech_canonical_review.py"
-      ],
-      "in_degree": 1,
-      "out_degree": 3,
-      "path": "tools/sprites/export_tech_canonical_review.py"
     }
   ],
-  "edge_count": 545,
+  "edge_count": 552,
   "generated_by": "dbrckk/repo-brain-v7-graph",
-  "node_count": 242,
+  "node_count": 246,
   "schema_version": 1
 }

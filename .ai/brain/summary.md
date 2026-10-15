@@ -1,20 +1,20 @@
 # Repo Brain
 
 - Index mode: incremental
-- Files indexed: 278
-- Files reparsed this run: 1
-- Symbols: 1451
-- Internal import edges: 71
-- Impacted files: 1
-- Selected tests: 0
+- Files indexed: 282
+- Files reparsed this run: 12
+- Symbols: 1474
+- Internal import edges: 77
+- Impacted files: 13
+- Selected tests: 6
 
 ## Languages
 - kotlin: 160 files
-- python: 118 files
+- python: 122 files
 
 ## Highest-density symbol files
 - app/src/main/java/com/zerotoempire/game/GameViewModel.kt: 40 symbols
-- tools/sprites/kaggle_character_sheet_factory_v1.py: 28 symbols
+- tools/sprites/kaggle_character_sheet_factory_v1.py: 29 symbols
 - app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt: 25 symbols
 - app/src/main/java/com/zerotoempire/game/Monetization.kt: 23 symbols
 - tools/sprites/pollinations_character_sheet_factory.py: 23 symbols
@@ -43,10 +43,10 @@
 ## ast-grep enrichment
 - ast-grep outline: available
 - AST index mode: incremental
-- AST files reparsed this run: 1
-- outline files retained: 287
-- top-level items retained: 3825
-- direct members retained: 974
+- AST files reparsed this run: 12
+- outline files retained: 289
+- top-level items retained: 3848
+- direct members retained: 905
 - symbol shards: 26
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard
 
