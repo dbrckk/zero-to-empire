@@ -31,6 +31,10 @@ class CandidateArchiveWorkflowTests(unittest.TestCase):
         self.assertIn("github.event.workflow_run.conclusion == 'success'", flow)
         self.assertIn("github.event.workflow_run.head_branch == 'main'", flow)
         self.assertIn("github.event.workflow_run.head_repository.full_name == github.repository", flow)
+        # Either the archive or the canonical queue can become ready first.
+        # Trigger on both to prevent a stale incomplete bank indefinitely.
+        self.assertIn("  push:", flow)
+        self.assertIn("'art/production/master-asset-queue.json'", flow)
         self.assertIn("gh release download", flow)
         self.assertIn("gh release upload", flow)
         self.assertIn("candidate-bank-index.json", source)
