@@ -69,3 +69,41 @@ explicit-approval promotion workflow.
 The master queue in `art/production/master-asset-queue.json` is the only
 source of truth for strict progress. A technically verified PNG/GIF/SVG
 does not change that count.
+
+
+## v4 — locally authored contact-light animation details (15 October 2026)
+
+The complete source for **all 16 unresolved canonical character actions** is
+still authored and versioned inside this repository; the 18 original role
+atlases include the two OP/LOG context IDLE references. No GPU/Kaggle,
+third-party image model or remote provider is needed to rebuild these assets.
+
+- `tools/sprites/local_character_action_fx.py` is an editable original SVG
+  effect module. WORK/REPAIR now emit short role-colored light at the
+  hand-held tool tip, with brightness synchronized to the wrist cycle.
+  CARRY lights stay attached to case rivets. CELEB lights follow both
+  wrists rather than adding floating/confetti sprites.
+- `render_chatgpt_originals.py` assembles each effect into the original
+  action SVG **after the physically attached hand**; the same source still
+  creates all 18 1024px RGBA atlases and 150 editable SVG frames.
+- The 15 October candidate build
+  [38701107514](https://github.com/dbrckk/zero-to-empire/actions/runs/38701107514)
+  succeeded and committed the v4 source and raster results.
+- The corresponding pipeline regression checks passed in
+  [38701390311](https://github.com/dbrckk/zero-to-empire/actions/runs/38701390311).
+  Technical PNG QA found **18 complete atlases, 150 frames, zero automatic
+  blocking visual-risk flags and no abrupt last-to-first loop resets**.
+- The user-facing offline viewer can compare the same role/action/animation
+  before and after this localized lighting pass at both 256px and 39–42px
+  mobile presentation size. The source of truth remains this repository.
+- The separate Android-only review build was requested in
+  [38701447773](https://github.com/dbrckk/zero-to-empire/actions/runs/38701447773).
+  Inspect its run and the downstream emulator evidence independently;
+  compilation, screen captures, production authorization and art acceptance
+  are distinct checks.
+
+**Limit:** these are restrained refinements to original stylized 2.5D vectors,
+not proof of premium AAA output. WORK/REPAIR, carry contact, foot planting and
+small-screen game feel still require frame-by-frame human judgement. The
+canonical count stays **219/235 strict DONE** until those artistic and
+runtime gates actually pass.
