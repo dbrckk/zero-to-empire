@@ -1,7 +1,7 @@
 # Change impact
 
-Base: d079016f314780a11cb4e71425dcb1efd7f6ec8a
-Head: 2e7d22ed3a4e88c27730a58ad334e9a30e4d5045
+Base: 1ef11a85cd83a3e2fbba06f35602d98adb1cea8b
+Head: 56e492740db34f736a285d4ca0fbc26671654ac3
 
 ## Changed files
 - M PROJECT_CONTINUITY.md
