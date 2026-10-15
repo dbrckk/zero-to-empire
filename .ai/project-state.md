@@ -30,19 +30,20 @@ Status: active — original character art requires semantic approval before prod
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-15T15:50:44Z
+Generated: 2026-10-15T16:34:14Z
 
 ### Git
 - Branch: `main`
-- Head: `93e1b2faf326`
-- Commit date: 2026-10-15T17:50:26+02:00
-- Commit: docs(continuity): reconcile final OP WALK emulator 24/24 visual evidence
+- Head: `a0664b996ab4`
+- Commit date: 2026-10-15T18:33:55+02:00
+- Commit: qa(android): verify all eight OP WALK frames in isolated emulator
 - Tracked files: 1783
 
 ### Recently changed files
+- `ops/local-original-android-review-trigger.txt`
+- `tools/android/local_original_character_emulator_smoke.sh`
 - `PROJECT_CONTINUITY.md`
 - `docs/art/OP_WALK_STRIDE_REVIEW_2026-10-15.md`
-- `ops/local-original-android-review-trigger.txt`
 
 ### Project signals
 - `build.gradle.kts`

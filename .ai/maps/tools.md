@@ -1201,6 +1201,59 @@ for role in OPERATOR TECHNICIAN LOGISTICS ENGINEER; do
     fi
     adb shell pidof com.zerotoempire.game.originalreview >/dev/null
     adb exec-out screencap -p > "$OUT/atlas-$role-$action.png"
+    # A single animated screenshot cannot establish stride continuity. Capture
+    # each of OP WALK's eight *actual Android-rendered* atlas frames via Compose
+    # pause/step controls at the real 39/42dp game scales. This is a functional
+    # emulator interaction, never a new unit test or semantic approval.
+    if [ "$role" = OPERATOR ] && [ "$action" = WALK ]; then
+      pause_coords="$(scroll_to_button 'Pause stage')"
+      read -r pause_x pause_y <<< "$pause_coords"
+      adb shell input tap "$pause_x" "$pause_y"
+      sleep 1
+      step_coords="$(scroll_to_button 'Stage +1')"
+      read -r step_x step_y <<< "$step_coords"
+      previous_frame=""
+      : > "$OUT/op-walk-eight-frame-sequence.txt"
+      for pose in 0 1 2 3 4 5 6 7; do
+        read_ui
+        # Require both real-size preview labels in the exact image viewport.
+        python3 tools/android/local_review_ui_target.py "$OUT/ui-stage.xml" \
+          'NIGHT · 42 dp' --allow-static-label >/dev/null
+        python3 tools/android/local_review_ui_target.py "$OUT/ui-stage.xml" \
+          'DAY · 39 dp' --allow-static-label >/dev/null
+        frame="$(python3 - "$OUT/ui-stage.xml" <<'PY_FRAME'
+import re,sys,xml.etree.ElementTree as ET
+root=ET.parse(sys.argv[1]).getroot()
+matches=[]
+for node in root.iter('node'):
+    label=(node.get('text') or node.get('content-desc') or '').strip()
+    m=re.fullmatch(r'STAGE FRAME: (\d+)',label)
+    if m: matches.append(int(m.group(1)))
+if len(matches)!=1:
+    raise SystemExit(f'Expected exactly one on-screen STAGE FRAME label: {matches}')
+print(matches[0])
+PY_FRAME
+)"
+        if [ -n "$previous_frame" ] && [ "$frame" -ne $(((previous_frame + 1) % 1680)) ]; then
+          echo "OP WALK frame step failed: $previous_frame -> $frame" >&2
+          exit 1
+        fi
+        printf '%s %s\n' "$pose" "$frame" >> "$OUT/op-walk-eight-frame-sequence.txt"
+        printf -v image_name 'op-walk-frame-%02d.png' "$pose"
+        adb exec-out screencap -p > "$OUT/$image_name"
+        previous_frame="$frame"
+        if [ "$pose" -lt 7 ]; then
+          adb shell input tap "$step_x" "$step_y"
+          sleep .35
+        fi
+      done
+      # The next roles must keep animating; reset the original gallery state.
+      play_coords="$(scroll_to_button 'Play stage')"
+      read -r play_x play_y <<< "$play_coords"
+      adb shell input tap "$play_x" "$play_y"
+      echo 'LOCAL_ORIGINAL_OP_WALK_ALL_8_ANDROID_POSES_CAPTURED=1' \
+        > "$OUT/op-walk-eight-frame-pass.txt"
+    fi
     stage_count=$((stage_count + 1))
   done
 done
@@ -1227,6 +1280,21 @@ for shot in shots:
     width,height=unpack('>II',data[16:24])
     if width<300 or height<500:
         raise SystemExit(f'Unexpected emulator image size: {shot}: {width}x{height}')
+# The independent OP WALK capture must exercise eight distinct UI frame indices.
+poses=sorted(root.glob('op-walk-frame-*.png'))
+if len(poses)!=8:
+    raise SystemExit(f'Expected eight stepped OP WALK screenshots, got {len(poses)}')
+for shot in poses:
+    data=shot.read_bytes()
+    if len(data)<10000 or not data.startswith(bytes.fromhex('89504e470d0a1a0a')):
+        raise SystemExit(f'Invalid frame-by-frame Android screenshot: {shot}')
+proof=(root/'op-walk-eight-frame-sequence.txt').read_text().splitlines()
+if len(proof)!=8:
+    raise SystemExit(f'Expected eight OP WALK frame indexes: {proof}')
+indexes=[int(row.split()[1])%8 for row in proof]
+if len(set(indexes))!=8 or any((indexes[i]-indexes[i-1])%8!=1 for i in range(1,8)):
+    raise SystemExit(f'OP WALK frames were skipped/duplicated: {indexes}')
+print('OP_WALK_ANDROID_8_FRAME_REAL_SCALE_PROOF_PASS=1')
 extra=sorted(root.glob('atlas-*.png'))
 if len(extra)!=24:
     raise SystemExit(f'Expected 24 gameplay-size role/action screenshots, got {len(extra)}')
