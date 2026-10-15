@@ -7,6 +7,8 @@ on:
       - 'tools/assets/**'
       - 'tools/sprites/audit_complete_sprite_manifest.py'
       - 'tools/sprites/asset_queue_utils.py'
+      - 'tools/sprites/archive_character_candidates.py'
+      - 'tools/sprites/tests/test_archive_character_candidates.py'
       - 'tools/sprites/asset_wave_orchestrator.py'
       - 'tools/sprites/animation_batch_planner.py'
       - 'tools/sprites/build_character_review_panels.py'
@@ -49,6 +51,7 @@ on:
       - '.github/workflows/asset-autofactory.yml'
       - '.github/workflows/kaggle-mass-sprite-factory.yml'
       - '.github/workflows/kaggle-async-character-collector.yml'
+      - '.github/workflows/archive-character-candidates.yml'
       - '.github/workflows/local-character-review.yml'
       - '.github/workflows/kaggle-superseded-character-evidence.yml'
       - '.github/workflows/promote-approved-kaggle-characters.yml'
@@ -58,6 +61,8 @@ on:
       - 'tools/assets/**'
       - 'tools/sprites/audit_complete_sprite_manifest.py'
       - 'tools/sprites/asset_queue_utils.py'
+      - 'tools/sprites/archive_character_candidates.py'
+      - 'tools/sprites/tests/test_archive_character_candidates.py'
       - 'tools/sprites/asset_wave_orchestrator.py'
       - 'tools/sprites/animation_batch_planner.py'
       - 'tools/sprites/build_character_review_panels.py'
@@ -100,6 +105,7 @@ on:
       - '.github/workflows/asset-autofactory.yml'
       - '.github/workflows/kaggle-mass-sprite-factory.yml'
       - '.github/workflows/kaggle-async-character-collector.yml'
+      - '.github/workflows/archive-character-candidates.yml'
       - '.github/workflows/local-character-review.yml'
       - '.github/workflows/kaggle-superseded-character-evidence.yml'
       - '.github/workflows/promote-approved-kaggle-characters.yml'
@@ -133,6 +139,7 @@ jobs:
           python -m py_compile \
             kaggle/github_mass_factory.py \
             tools/sprites/asset_queue_utils.py \
+            tools/sprites/archive_character_candidates.py \
             tools/sprites/asset_wave_orchestrator.py \
             tools/sprites/build_character_review_panels.py \
             tools/sprites/build_original_offline_review.py \
@@ -370,6 +377,7 @@ jobs:
       - name: Run unified asset pipeline and visual-semantic gate checks
         run: |
           python -m unittest discover -s tools/assets -p 'test_*.py' -v
+          python -m unittest discover -s tools/sprites/tests -p 'test_archive_character_candidates.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_semantic_gate.py' -v
           python -m unittest discover -s tools/sprites -p 'test_verify_character_idle_candidates.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_head_identity_lock.py' -v

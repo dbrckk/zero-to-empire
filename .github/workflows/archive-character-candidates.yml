@@ -1,0 +1,123 @@
+name: Archive Character Candidates
+
+on:
+  workflow_run:
+    workflows: [Kaggle Async Character Collector]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      source_run_id:
+        description: Successful collector workflow run whose candidate artifact should be archived
+        required: true
+        type: string
+  # Bootstrap archive of the latest completed collector wave on initial merge.
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/archive-character-candidates.yml'
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: character-candidate-release-archive
+  cancel-in-progress: false
+
+jobs:
+  archive:
+    if: ${{ github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TAG: zte-character-candidates
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: main
+
+      - name: Resolve trusted collector run
+        id: source
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$GITHUB_EVENT_NAME" = workflow_run ]; then
+            source_id='${{ github.event.workflow_run.id }}'
+          elif [ "$GITHUB_EVENT_NAME" = workflow_dispatch ]; then
+            source_id='${{ inputs.source_run_id }}'
+          else
+            source_id="$(gh run list --repo "$GITHUB_REPOSITORY" \
+              --workflow 'Kaggle Async Character Collector' --limit 20 \
+              --json databaseId,conclusion \
+              --jq '[.[] | select(.conclusion=="success")][0].databaseId')"
+          fi
+          [[ "$source_id" =~ ^[1-9][0-9]*$ ]] || { echo "::error::Invalid collector run id"; exit 2; }
+          source_info="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$source_id")"
+          SRC_INFO="$source_info" python - <<'PY'
+          import json,os
+          d=json.loads(os.environ['SRC_INFO'])
+          repo=os.environ['GITHUB_REPOSITORY']
+          if (d.get('name') != 'Kaggle Async Character Collector'
+              or d.get('conclusion') != 'success'
+              or d.get('head_branch') != 'main'
+              or (d.get('head_repository') or {}).get('full_name') != repo):
+              raise SystemExit('Refusing non-successful/non-main/non-repository collector run')
+          print('COLLECTOR_ARCHIVE_SOURCE_VERIFIED='+str(d['id']))
+          PY
+          echo "run_id=$source_id" >> "$GITHUB_OUTPUT"
+
+      - name: Check source artifact
+        id: artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          count="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/${{ steps.source.outputs.run_id }}/artifacts" \
+            --jq '[.artifacts[] | select(.name == "kaggle-async-character-batch" and .expired == false)] | length')"
+          test "$count" -le 1
+          if [ "$count" = 1 ]; then echo 'found=true' >> "$GITHUB_OUTPUT"; else echo 'found=false' >> "$GITHUB_OUTPUT"; fi
+          echo "COLLECTOR_CANDIDATE_ARTIFACTS=$count"
+
+      - name: Download collector candidate artifact
+        if: steps.artifact.outputs.found == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/zte-collected-candidates
+          gh run download '${{ steps.source.outputs.run_id }}' \
+            --repo "$GITHUB_REPOSITORY" \
+            --name kaggle-async-character-batch \
+            --dir /tmp/zte-collected-candidates
+
+      - name: Build candidate-only archive with provenance
+        if: steps.artifact.outputs.found == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tools/sprites/tests -p test_archive_character_candidates.py
+          python tools/sprites/archive_character_candidates.py \
+            --source /tmp/zte-collected-candidates \
+            --output "/tmp/zte-characters-${{ steps.source.outputs.run_id }}.zip" \
+            --source-run-id '${{ steps.source.outputs.run_id }}'
+
+      - name: Permanently store on GitHub Release
+        if: steps.artifact.outputs.found == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          source_id='${{ steps.source.outputs.run_id }}'
+          bundle="/tmp/zte-characters-${source_id}.zip"
+          if [ ! -s "$bundle" ]; then
+            echo 'No passing candidate PNGs to archive.'
+            exit 0
+          fi
+          if ! gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release create "$TAG" --repo "$GITHUB_REPOSITORY" \
+              --target main --title 'Zero to Empire — character candidate bank' \
+              --notes 'Persistent review-only asset candidates with checksums. These files are NOT automatically approved for Android runtime.' \
+              --prerelease
+          fi
+          gh release upload "$TAG" "$bundle" \
+            --repo "$GITHUB_REPOSITORY" --clobber
+          echo "PERSISTENT_CHARACTER_ARCHIVE=$TAG/$(basename "$bundle")" >> "$GITHUB_STEP_SUMMARY"
+          sha256sum "$bundle" >> "$GITHUB_STEP_SUMMARY"
