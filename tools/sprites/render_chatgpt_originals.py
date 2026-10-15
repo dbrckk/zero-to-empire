@@ -11,6 +11,7 @@ import argparse, io, json, math, pathlib
 from PIL import Image
 import cairosvg
 from local_character_material_finish import finish_frame
+from local_character_action_fx import action_fx
 
 FRAME=256
 ACTIONS={'IDLE':6,'WALK':8,'WORK':10,'CARRY':8,'REPAIR':10,'CELEB':8}
@@ -249,6 +250,13 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
   add('</g>')
  # foreground right arm and hand over equipment, never floating
  add(joint_arm('R',action))
+ # Physically attached local vector action lighting. Equipment highlights are
+ # driven by the very same right-wrist tool transform as the authored prop.
+ # No detached generated particles or external model are introduced.
+ add(action_fx(role,action,phase,
+               tool_x=176+15*math.sin(phase),
+               tool_y=123+12*math.cos(phase)+bounce,
+               bounce=bounce))
  if action=='CELEB':
   # Both arms raised over ~half a cycle; no detached particle VFX.
   add(f'<path d="M 108 {95+bounce:.1f} Q 126 {93+bounce:.1f} 143 {97+bounce:.1f}" stroke="{p["seam"]}" stroke-width="3" opacity=".7"/>')
@@ -284,8 +292,9 @@ def main():
  for role in ROLES:
   for action in ACTIONS:
    results.append(render_atlas(role,action,outdir,args.save_svg))
- report={'version':'chatgpt-original-character-rig-v3-material-finish','strict_done_added':0,'review_only':True,
+ report={'version':'chatgpt-original-character-rig-v4-contact-attached-action-vfx','strict_done_added':0,'review_only':True,
          'material_finish':'local-alpha-safe-directional-light-v1',
+         'action_vfx':'local-attached-tool-and-wrist-highlights-v1',
          'asset_count':len(results),'unresolved_target_count':16,'assets':results}
  (outdir/'creation-manifest.json').write_text(json.dumps(report,indent=2)+'\n')
  print(f'CHATGPT_CHARACTER_ATLASES_CREATED={len(results)} ASSETS_UNRESOLVED=16 STRICT_DONE_ADDED=0')
