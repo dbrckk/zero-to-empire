@@ -188,3 +188,35 @@ proof that the animation has AAA visual quality or realistic weight
 transfer in a scrolling level. No canonical production drawable,
 master status or existing game install/save was modified by these
 review-only workflows. The strict queue remains **219/235 DONE**.
+
+## Revue interactive hors ligne — version mobile (15 octobre 2026)
+
+Les **18 assets originaux** (les 16 actions strictement non terminées ainsi que
+les IDLE de référence OP/LOG) peuvent désormais être examinés **directement
+sur smartphone**, sans serveur, compte, ordinateur ou GPU. La page est construite
+à partir des fichiers originaux versionnés dans ce dépôt :
+
+- Générateur modifiable : `tools/sprites/build_original_offline_review.py`.
+- Page autonome : `art/incoming/chatgpt-original/original-offline-review.html`.
+- Reproduction automatique : workflow **ChatGPT Original Character Candidates**.
+- Dernier contrôle initial confirmé :
+  [workflow 38714346187](https://github.com/dbrckk/zero-to-empire/actions/runs/38714346187)
+  — génération de 18 atlas, création du visualiseur et publication de l'artefact réussies.
+
+Le HTML contient ses **18 GIF et 18 PNG** en données embarquées ; il permet de
+sélectionner chaque rôle et chaque animation, d'examiner individuellement les
+6/8/10 poses de la planche et de voir le rendu sur fonds jour et nuit à une
+taille voisine de celle du jeu (**39 et 42 pixels CSS**). Après enregistrement,
+la page reste autonome hors ligne sur Android ; elle ne charge aucune
+bibliothèque JavaScript ou image distante.
+
+**Limites :** les pixels CSS du navigateur ne correspondent pas toujours aux
+dp Android, et l'essai d'une page hors ligne n'est pas une preuve d'intégration
+au jeu. L'HTML n'est ni un éditeur SVG, ni une approbation, ni un mécanisme de
+promotion. Les GIF IDLE peuvent fusionner deux poses consécutives identiques
+alors que les atlas conservent les six frames canoniques.
+
+Le fichier est marqué **review only**, ne modifie aucun drawable du jeu et
+n'augmente pas le compteur strict ; les 16 assets sont toujours soumis aux
+critères d'identité, animations, contact des mains et des pieds, intégration
+Android et qualité artistique avant leur éventuelle promotion.
