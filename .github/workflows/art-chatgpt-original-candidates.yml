@@ -8,6 +8,7 @@ on:
       - 'ops/chatgpt-original-trigger.txt'
       - 'tools/sprites/render_chatgpt_originals.py'
       - 'tools/sprites/local_character_material_finish.py'
+      - 'tools/sprites/local_character_action_fx.py'
       - 'tools/sprites/render_original_character_previews.py'
       - 'tools/sprites/audit_chatgpt_originals.py'
 
@@ -62,6 +63,9 @@ jobs:
           assert first.getpixel((120,100))[:3]!=original.getpixel((120,100))[:3]
           print('LOCAL_MATERIAL_FINISH_ALPHA_AND_DETERMINISM_PASS=1')
           PY
+      - name: Validate contact-attached action effects before rasterization
+        run: |
+          python -m unittest discover -s tools/sprites -p 'test_local_character_action_fx.py' -v
       - name: Render all remaining role families from committed source
         run: |
           python tools/sprites/render_chatgpt_originals.py \
