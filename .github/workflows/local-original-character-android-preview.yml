@@ -135,7 +135,9 @@ jobs:
         run: |
           set -euo pipefail
           APK=app/build/outputs/apk/debug/app-debug.apk
-          AAPT="$(find "${ANDROID_HOME:-/opt/android-sdk}" -type f -path '*/build-tools/*/aapt' | sort -V | tail -n 1)"
+          # Search only build-tools; scanning the entire Android SDK here
+          # can stall a successful review build for several minutes.
+          AAPT="$(find "${ANDROID_HOME:-/opt/android-sdk}/build-tools" -mindepth 2 -maxdepth 2 -type f -name aapt | sort -V | tail -n 1)"
           test -n "$AAPT" && test -x "$AAPT"
           "$AAPT" dump badging "$APK" > /tmp/original-review-badging.txt
           grep -F "package: name='com.zerotoempire.game.originalreview'" /tmp/original-review-badging.txt
