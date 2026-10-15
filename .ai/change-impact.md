@@ -1,14 +1,12 @@
 # Change impact
 
-Base: 95d96196c08f58db3cb65b7801deeb7b43cd5588
-Head: 2f34e5f0a8d54c3ad823abd7e5924a8854d99c8b
+Base: 31b4d5c0e7f6b1a284c2941e9482753c46b21d88
+Head: 059024da1cda5ada1544c7fc2f4e9d052d3e003c
 
 ## Changed files
-- A .github/workflows/archive-character-candidates.yml
 - M .github/workflows/asset-pipeline-ci.yml
-- A tools/assets/test_candidate_archive_workflow.py
-- A tools/sprites/archive_character_candidates.py
-- A tools/sprites/tests/test_archive_character_candidates.py
+- A .github/workflows/backfill-character-candidate-archives.yml
+- M tools/assets/test_candidate_archive_workflow.py
 
 ## Affected areas
 - .github

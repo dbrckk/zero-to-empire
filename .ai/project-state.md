@@ -29,19 +29,20 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-15T22:19:08Z
+Generated: 2026-10-15T22:22:00Z
 
 ### Git
 - Branch: `main`
-- Head: `2f34e5f0a8d5`
-- Commit date: 2026-10-16T00:18:53+02:00
-- Commit: art: persist verified candidate atlases in permanent Release archive (#163)
-- Tracked files: 1790
+- Head: `059024da1cda`
+- Commit date: 2026-10-16T00:21:45+02:00
+- Commit: art: backfill historical pending-review character source archives (#164)
+- Tracked files: 1791
 
 ### Recently changed files
-- `.github/workflows/archive-character-candidates.yml`
 - `.github/workflows/asset-pipeline-ci.yml`
+- `.github/workflows/backfill-character-candidate-archives.yml`
 - `tools/assets/test_candidate_archive_workflow.py`
+- `.github/workflows/archive-character-candidates.yml`
 - `tools/sprites/archive_character_candidates.py`
 - `tools/sprites/tests/test_archive_character_candidates.py`
 - `art/production/kaggle-async-state.json`
