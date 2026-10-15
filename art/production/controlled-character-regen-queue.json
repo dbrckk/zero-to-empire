@@ -1,59 +1,61 @@
 {
-  "mode": "kaggle-character-burst-v1.20-strict-completion",
+  "mode": "kaggle-character-burst-v1.21-production-first-strict-completion",
+  "acceptance_mode": "production-first",
   "reason": "Autofactory 235: high-throughput identity-locked character production. Each role is kept in one producer wave when capacity allows; a strict-DONE IDLE sheet may be regenerated as context-only identity evidence so review and promotion can replace a legacy anchor with the same generated family.",
   "groups": [
     "CHR-OP",
-    "CHR-ENG"
+    "CHR-LOG"
   ],
   "targets": [
     {
       "id": "CHR-OP-IDLE",
-      "status": "AWAITING_REVIEW",
-      "autofactory_context_only": true,
-      "kaggle_run_id": 38367943017,
-      "review_artifact_run_id": 38427591142
+      "status": "PENDING_KAGGLE",
+      "autofactory_context_only": true
+    },
+    {
+      "id": "CHR-OP-WALK",
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Manual full-frame review of collector 38367845734 REJECTED: eight poses preserve almost identical standing legs, mostly lateral pixel wobble and changed trousers/gloves; no convincing heel-to-toe gait or foot lift despite technical walk-motion=0.236."
+    },
+    {
+      "id": "CHR-OP-CARRY",
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Kaggle generator rejected candidate: carry-too-static mean-change=0.062<0.120"
     },
     {
       "id": "CHR-OP-CELEB",
-      "status": "REJECTED",
-      "review_reason": "Kaggle generator rejected candidate: celeb-too-static mean-change=0.081<0.100",
-      "kaggle_run_id": 38367943017,
-      "review_artifact_run_id": 38427591142
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Kaggle generator rejected candidate: celeb-too-static mean-change=0.081<0.100"
     },
     {
-      "id": "CHR-ENG-IDLE",
-      "status": "AWAITING_REVIEW",
-      "autofactory_context_only": true,
-      "kaggle_run_id": 38367943017,
-      "review_artifact_run_id": 38427591142
+      "id": "CHR-LOG-IDLE",
+      "status": "PENDING_KAGGLE",
+      "autofactory_context_only": true
     },
     {
-      "id": "CHR-ENG-WALK",
-      "status": "REJECTED",
-      "review_reason": "Kaggle generator rejected candidate: walk-too-static lower-motion=0.087",
-      "kaggle_run_id": 38367943017,
-      "review_artifact_run_id": 38427591142
+      "id": "CHR-LOG-WALK",
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Kaggle generator rejected candidate: walk-too-static lower-motion=0.166"
     },
     {
-      "id": "CHR-ENG-WORK",
-      "status": "REJECTED",
-      "review_reason": "Kaggle generator rejected candidate: work-too-static mean-change=0.083<0.100; retry-details=edge contact",
-      "kaggle_run_id": 38367943017,
-      "review_artifact_run_id": 38427591142
+      "id": "CHR-LOG-WORK",
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Kaggle generator rejected candidate: image-risk:FACE_HEADGEAR_STRUCTURE_DRIFT_RISK,TOOL_CRATE_TORSO_COLOR_DISCONTINUITY_RISK"
     },
     {
-      "id": "CHR-ENG-REPAIR",
-      "status": "REJECTED",
-      "review_reason": "Kaggle generator rejected candidate: image-risk:FACE_HEADGEAR_STRUCTURE_DRIFT_RISK",
-      "kaggle_run_id": 38367943017,
-      "review_artifact_run_id": 38427591142
+      "id": "CHR-LOG-CARRY",
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Kaggle generator rejected candidate: carry-too-static mean-change=0.062<0.120"
     },
     {
-      "id": "CHR-ENG-CELEB",
-      "status": "REJECTED",
-      "review_reason": "Kaggle generator rejected candidate: celeb-too-static mean-change=0.096<0.100",
-      "kaggle_run_id": 38367943017,
-      "review_artifact_run_id": 38427591142
+      "id": "CHR-LOG-REPAIR",
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Manual full-frame review of collector 38367845734 REJECTED: tool changes from flat blue console to gloves and gold rings; no fixed repair contact point, lower legs and boots morph, helmet/face varies. Technical repair-motion=0.219 does not establish action semantics."
+    },
+    {
+      "id": "CHR-LOG-CELEB",
+      "status": "PENDING_KAGGLE",
+      "review_reason": "Kaggle generator rejected candidate: celeb-upper-silhouette-jump=0.641>0.450; retry-details=edge contact"
     }
   ]
 }
