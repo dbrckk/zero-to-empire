@@ -39,6 +39,17 @@ class ContactGaitTests(unittest.TestCase):
                 raised+=int(not left.planted)+int(not right.planted)
             self.assertGreater(raised,20)
 
+    def test_swing_knees_turn_forward_instead_of_overshooting_silhouette(self):
+        for action in ("WALK","CARRY"):
+            for phase in (math.pi/2,3*math.pi/2):
+                for side in ("L","R"):
+                    pose=foot_pose(phase,side,action)
+                    if not pose.planted:
+                        # The lifted knee should remain within one compact
+                        # 3/4-view shin offset, not splay outside the worker.
+                        self.assertLess(abs(pose.knee_x-pose.ankle_x),20)
+                        self.assertLess(pose.ankle_y,FLOOR_ANKLE_Y)
+
     def test_loop_is_periodic_without_coordinate_jumps(self):
         for action in ("WALK","CARRY"):
             for side in ("L","R"):
