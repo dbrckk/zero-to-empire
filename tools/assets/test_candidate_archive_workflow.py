@@ -13,6 +13,17 @@ class CandidateArchiveWorkflowTests(unittest.TestCase):
         self.assertIn("github.event.workflow_run.head_repository.full_name == github.repository", text)
         self.assertIn("Refusing non-successful/non-main/non-repository collector run", text)
 
+    def test_backfill_uses_only_canonical_pending_review_provenance(self):
+        flow = Path(".github/workflows/backfill-character-candidate-archives.yml").read_text()
+        self.assertIn("review_artifact_run_id", flow)
+        self.assertIn("pipeline_status')=='AWAITING_REVIEW'", flow)
+        self.assertIn("strict_status')!='DONE'", flow)
+        self.assertIn("zt e".replace(" ", "") + "-characters-", flow)
+        self.assertIn("gh workflow run 'Archive Character Candidates'", flow)
+        self.assertIn("ALREADY_ARCHIVED=", flow)
+        self.assertNotIn("git push", flow)
+        self.assertNotIn("app/src/main/res/", flow)
+
     def test_release_uses_only_qa_passed_candidates_and_never_promotes(self):
         flow = Path(".github/workflows/archive-character-candidates.yml").read_text()
         script = Path("tools/sprites/archive_character_candidates.py").read_text()
