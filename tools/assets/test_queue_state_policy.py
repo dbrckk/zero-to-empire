@@ -75,8 +75,8 @@ class QueueStatePolicyTests(unittest.TestCase):
 
     def test_canonical_queue_policy_matches_current_character_epoch(self) -> None:
         text = MODULE_PATH.read_text(encoding="utf-8")
-        self.assertIn('"character_generation_epoch": "identity-lock-v1.20-stable-idle-breathing-rescue"', text)
-        self.assertIn('"max_attempts_per_character_epoch": 3', text)
+        self.assertIn('"character_generation_epoch": "production-first-v1.21-art-deferred"', text)
+        self.assertIn('"max_attempts_per_character_epoch": 4', text)
 
 
 class DispatchCorrelationTests(unittest.TestCase):
@@ -372,14 +372,14 @@ class DispatchCorrelationTests(unittest.TestCase):
         self.assertEqual(op_walk["review_reason"], "detached-artifact component=10000/11000")
 
 
-    def test_character_epoch_allows_three_informed_attempts(self) -> None:
+    def test_character_epoch_allows_four_bounded_attempts(self) -> None:
         orchestrator = self._load_orchestrator("")
-        self.assertEqual(orchestrator.CHARACTER_EPOCH_ATTEMPT_LIMIT, 3)
+        self.assertEqual(orchestrator.CHARACTER_EPOCH_ATTEMPT_LIMIT, 4)
 
-    def test_character_epoch_is_v118_carry_identity_lock(self) -> None:
+    def test_character_epoch_is_v121_production_first(self) -> None:
         orchestrator = self._load_orchestrator("")
         self.assertEqual(orchestrator.CHARACTER_GENERATION_EPOCH,
-                         "identity-lock-v1.20-stable-idle-breathing-rescue")
+                         "production-first-v1.21-art-deferred")
 
     def test_new_epoch_reopens_semantic_reject_even_with_high_legacy_attempts(self) -> None:
         orchestrator = self._load_orchestrator("")
