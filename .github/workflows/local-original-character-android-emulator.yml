@@ -58,6 +58,8 @@ jobs:
           test -c /dev/kvm
           sudo chmod a+rw /dev/kvm
           test -r /dev/kvm && test -w /dev/kvm
+      - name: Install pinned image comparison dependency for on-device visual proof
+        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
       - name: Exercise review gallery on a real Android emulator
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
         with:
