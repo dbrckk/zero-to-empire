@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "updated_at": "2026-10-15",
-  "task": "Validate original first-party ENG REPAIR fixed socket at Android game scale before any canonical strict promotion",
-  "branch": "main",
-  "last_observed_head": "a66e7281bf4a77a43da57fe9a592ae2af4756309",
+  "task": "Strengthen CHR-OP-WALK foot lift/heel-to-toe stance and body weight at Android game size without changing shipping assets",
+  "branch": "art/op-walk-planted-stride-20261015",
+  "last_observed_head": "c603ee41d1447e9bde18e4281f16e46e179c6744",
   "state": {
     "strict_done": 219,
     "target_total": 235,
@@ -126,13 +126,31 @@
       "review_only": true,
       "emulator_evidence_artifact_id": 11975429234,
       "emulator_review_limit": "Proof of functional isolated review APK and visible scaled candidate, not proof of production gameplay integration or AAA semantic approval."
+    },
+    "op_walk_contact_profile": {
+      "status": "SOURCE_IMPLEMENTED_PENDING_PR_CI",
+      "target_asset": "CHR-OP-WALK",
+      "profile": "op-walk-v2",
+      "reach_px": 18,
+      "clearance_px": 24,
+      "baseline_reach_px": 14,
+      "baseline_clearance_px": 16,
+      "change_scope": "Opt-in OP WALK only; all other role and action foot trajectories remain standard",
+      "source_files": [
+        "tools/sprites/local_character_contact_gait.py",
+        "tools/sprites/render_chatgpt_originals.py"
+      ],
+      "ci_gate": ".github/workflows/art-chatgpt-original-candidates.yml",
+      "verification": "New workflow step checks true SVG boot transforms, planted Y=226, non-crossing legs, maximum lift>=20 px in eight authored poses. Await actual run.",
+      "strict_done_added": 0,
+      "review_only": true
     }
   },
-  "last_completed": "PR #149 merged, fixed ENG socket across ten original SVGs verified in workflow; original PNG/GIF art regenerated; Asset CI and isolated Android APK build/lint succeeded; Android emulator run 38741556309 SUCCESS. Actual emulator screenshot atlas-ENGINEER-REPAIR.png inspected and shows engineer and repair module at 42dp night / 39dp day. Canonical remains 219/235, no strict art promotion.",
+  "last_completed": "Authored isolated OP WALK stride v2 source: increased candidate gait reach 14→18px, max airborne clearance 16→24px, stronger reciprocal arm motion and planted-foot torso sway. Added real rendered eight-SVG check in original candidate workflow; PR CI and Android preview still pending. Strict remains 219/235.",
   "next_actions": [
-    "Assess final ENG REPAIR artistic quality in production game scene and animate at real speed; module/tool visible in review APK but no production promotion yet.",
-    "If artistically accepted, promote exact regenerated ENG atlas via existing gated runtime pipeline and verify shipping build/Android CI. Do not equate isolated preview with production integration.",
-    "Next tackle OP WALK stride/heel-to-toe foot motion as first substantive remaining CHR blocker.",
-    "Preserve exact candidate source, SVG contact QA, main generation & emulator screenshots as provenance."
+    "Check PR Asset Pipeline CI green on exact source, verify no known gait regressions, then merge after green.",
+    "Observe original candidate SVG/PNG/GIF pipeline; ensure authored eight-frame OP WALK step gate passes, 18 original atlases stay review-only and ENG repair station remains intact.",
+    "Compare old/new OP WALK sheets and screenshot frames at true mobile size. Trigger isolated Android review APK and emulator test.",
+    "Only consider semantic promotion following actual gameplay integration with Android CI; keep strict queue unchanged in this wave."
   ]
 }
