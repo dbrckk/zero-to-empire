@@ -13,7 +13,7 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools/sprites"))
-from character_semantic_gate import clip_risk, celebration_arm_reach_counts
+from character_semantic_gate import clip_risk, celebration_arm_reach_counts, palette_distance, _body_region_color_signature
 
 FRAME_COUNTS = {"IDLE":6,"WALK":8,"WORK":10,"CARRY":8,"REPAIR":10,"CELEB":8}
 ROLES = ("OP","LOG","ENG")
@@ -79,6 +79,30 @@ def audit(base: Path) -> dict:
             name=f"zte_chr_{role.lower()}_{action.lower()}_final.png"
             result=inspect(candidates/name,role,action)
             results.append(result)
+    # Same-role cross-action identity must be audited, not just adjacent
+    # frames within an action. All unfinished character art is authored here
+    # with one fixed role rig, so compare every action against its local IDLE.
+    # The comparison is reject-only and never grants strict approval.
+    for role in ROLES:
+        idle_path=candidates/f"zte_chr_{role.lower()}_idle_final.png"
+        with Image.open(idle_path) as image:
+            idle=image.convert("RGBA").crop((0,0,256,256))
+        anchor=_body_region_color_signature(idle,0,.28)
+        for row in results:
+            if row["id"]==f"CHR-{role}-IDLE":
+                row["same_role_idle_head_color_distance"]=0.0
+                continue
+            if not row["id"].startswith(f"CHR-{role}-"):
+                continue
+            action=row["id"].split("-")[-1]
+            with Image.open(candidates/f"zte_chr_{role.lower()}_{action.lower()}_final.png") as image:
+                atlas=image.convert("RGBA")
+            frame=atlas.crop((0,0,256,256))
+            delta=palette_distance(anchor,_body_region_color_signature(frame,0,.28))
+            row["same_role_idle_head_color_distance"]=round(delta,4)
+            if delta>.28:
+                row["flags"].append("CROSS_ACTION_ROLE_HEAD_IDENTITY_RISK")
+                row["risk_level"]="BLOCKING"
     blocked=sum(row["risk_level"]=="BLOCKING" for row in results)
     return {
         "schema_version": 1,
@@ -92,6 +116,7 @@ def audit(base: Path) -> dict:
         "limitations": [
             "Image-only thresholds can reject candidates but cannot prove art quality",
             "Stable palettes and silhouettes do not prove physical tool contact",
+            "Cross-action head palette similarity is not proof of the same character",
             "Mobile readability, animation fluidity and AAA visual style require review",
         ],
         "assets": results,
