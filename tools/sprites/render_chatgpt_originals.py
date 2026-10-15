@@ -11,7 +11,7 @@ import argparse, io, json, math, pathlib
 from PIL import Image
 import cairosvg
 from local_character_material_finish import finish_frame
-from local_character_action_fx import action_fx,tool_angle
+from local_character_action_fx import action_fx,tool_angle,TOOL_TIP_OFFSETS
 from local_character_contact_gait import foot_pose,torso_weight_shift
 
 FRAME=256
@@ -21,6 +21,20 @@ ROLES={
  'LOG':{'helmet':'#ebedf0','helmet_hi':'#ffffff','jacket':'#9c5d32','jacket_hi':'#e49e4f','seam':'#ffe1a1','pant':'#3b4959','hair':'#422a2d','skin':'#dca888','eye':'#283449','accessory':'#f1c66b'},
  'ENG':{'helmet':'#eef2f2','helmet_hi':'#ffffff','jacket':'#294859','jacket_hi':'#4b6b79','seam':'#56c0c9','pant':'#354a58','hair':'#443327','skin':'#d3a178','eye':'#273342','accessory':'#64cbda'},
 }
+
+# A physical repair socket is fixed in world/frame space, rather than glued to
+# the wrist. Invert the same rigid endpoint transform used by action_fx so the
+# engineered tool contacts the actual bolt throughout its ratcheting cycle.
+ENG_REPAIR_TARGET=(218.0,129.0)
+
+def engineer_repair_wrist(phase:float)->tuple[float,float]:
+ dx,dy=TOOL_TIP_OFFSETS['REPAIR']['ENG']
+ theta=math.radians(tool_angle('REPAIR',phase))
+ rotated_x=dx*math.cos(theta)-dy*math.sin(theta)
+ rotated_y=dx*math.sin(theta)+dy*math.cos(theta)
+ return (ENG_REPAIR_TARGET[0]-rotated_x,
+         ENG_REPAIR_TARGET[1]-rotated_y)
+
 
 # SVG drawn in painter's order: back arm and legs -> torso -> head -> front hands.
 def svg_frame(role:str, action:str, index:int, count:int)->str:
@@ -60,6 +74,9 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
             else (176+reach_px*reach,123+pump_px*pump+bounce))
    elbow=((82,132+bounce) if side=='L'
           else (168+reach_px*.47*reach,115+pump_px*.58*pump+bounce))
+   if role=='ENG' and pose=='REPAIR' and side=='R':
+    handpos=engineer_repair_wrist(phase)
+    elbow=(168+.45*(handpos[0]-176),115+.58*(handpos[1]-123))
   elif pose=='WALK':
    swing=motion*(-1 if side=='L' else 1)
    handpos=((84+8*swing,147+10*swing+bounce) if side=='L' else (170+8*swing,148-10*swing+bounce))
@@ -117,6 +134,24 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
  # back ponytail / hair only LOG
  if role=='LOG':
   add(f'<path d="M 151 {62+bounce:.1f} Q 184 {64+bounce:.1f} 172 {106+bounce:.1f} Q 161 {119+bounce:.1f} 152 {94+bounce:.1f}Z" fill="{p["hair"]}" stroke="#1b2330" stroke-width="3"/>')
+ # Engineer-only free-standing diagnostics column. It has a fixed ground
+ # support, a real repairable fastener, and stays independent of torso bounce.
+ # The wrist/tool/VFX endpoint locks to the highlighted fastener below.
+ if role=='ENG' and action=='REPAIR':
+  tx,ty=ENG_REPAIR_TARGET
+  add('<g data-repair-station="ENG" data-fixed-socket="true">')
+  add('<path d="M 220 149 L 238 146 L 240 226 L 219 226Z" fill="#253e4b" stroke="#152a38" stroke-width="3"/>')
+  add('<path d="M 223 163 L 234 163 L 235 220 L 221 220Z" fill="#395969" stroke="#6e929e" stroke-width="1.4"/>')
+  add('<path d="M 216 224 L 241 224 L 241 233 L 212 233Z" fill="#334957" stroke="#142936" stroke-width="2.5"/>')
+  add('<path d="M 208 111 L 232 109 L 240 118 L 239 154 L 213 158 L 205 148Z" fill="#304c5b" stroke="#122b39" stroke-width="3"/>')
+  add('<path d="M 212 116 L 230 115 L 234 122 L 232 149 L 214 151 L 210 143Z" fill="#456777" stroke="#91b5be" stroke-width="1.3"/>')
+  add('<path d="M 214 144 H 232" stroke="#173745" stroke-width="3"/>')
+  add('<rect x="214" y="118" width="6" height="3" rx="1" fill="#75dce2"/>')
+  add('<rect x="222" y="118" width="7" height="3" rx="1" fill="#ecb76e"/>')
+  add(f'<circle cx="{tx:.1f}" cy="{ty:.1f}" r="6.7" fill="#142d3b" stroke="#d6b879" stroke-width="2.5"/>')
+  add(f'<circle cx="{tx:.1f}" cy="{ty:.1f}" r="3.5" fill="#648b99" stroke="#253d49" stroke-width="1.5"/>')
+  add(f'<path d="M {tx-2:.1f} {ty:.1f} h 4 M {tx:.1f} {ty-2:.1f} v 4" stroke="#d1e8e8" stroke-width="1.2"/>')
+  add('</g>')
  # boots and 2 articulated segments per leg
  for side,hipx,yhip,kx,ky,ax,ay,boot_angle in leg_poses:
   add(line(hipx,yhip,kx,ky,'url(#pant)',23,3));add(line(kx,ky,ax,ay,'url(#pant)',20,3))
@@ -235,7 +270,10 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
   # and stable local geometry prevent fake floating tools and prop morphing.
   tool_x=176+(15 if action=='WORK' else 8)*math.sin(phase)
   tool_y=123+(12 if action=='WORK' else 7)*math.cos(phase)+bounce
-  add(f'<g transform="translate({tool_x:.1f},{tool_y:.1f}) rotate({tool_angle(action,phase):.1f})">')
+  if role=='ENG' and action=='REPAIR':
+   tool_x,tool_y=engineer_repair_wrist(phase)
+  repair_marker=' data-repair-tool="ENG"' if role=='ENG' and action=='REPAIR' else ''
+  add(f'<g{repair_marker} transform="translate({tool_x:.1f},{tool_y:.1f}) rotate({tool_angle(action,phase):.1f})">')
   if action=='WORK':
    if role=='OP':
     add('<rect x="-12" y="-9" width="37" height="19" rx="5" fill="#435964" stroke="#182c3b" stroke-width="3"/>')
@@ -270,9 +308,13 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
  # Physically attached local vector action lighting. Equipment highlights are
  # driven by the very same right-wrist tool transform as the authored prop.
  # No detached generated particles or external model are introduced.
+ # The rigid light must use the same wrist coordinates as the actual tool.
+ fx_tool_x=176+(15 if action=='WORK' else 8)*math.sin(phase)
+ fx_tool_y=123+(12 if action=='WORK' else 7)*math.cos(phase)+bounce
+ if role=='ENG' and action=='REPAIR':
+  fx_tool_x,fx_tool_y=engineer_repair_wrist(phase)
  add(action_fx(role,action,phase,
-               tool_x=176+(15 if action=='WORK' else 8)*math.sin(phase),
-               tool_y=123+(12 if action=='WORK' else 7)*math.cos(phase)+bounce,
+               tool_x=fx_tool_x,tool_y=fx_tool_y,
                bounce=bounce))
  if action=='CELEB':
   # Both arms raised over ~half a cycle; no detached particle VFX.
@@ -310,7 +352,7 @@ def main():
  for role in ROLES:
   for action in ACTIONS:
    results.append(render_atlas(role,action,outdir,args.save_svg))
- report={'version':'chatgpt-original-character-rig-v8-ratcheting-repair-aligned-vfx','strict_done_added':0,'review_only':True,
+ report={'version':'chatgpt-original-character-rig-v9-fixed-eng-repair-socket','strict_done_added':0,'review_only':True,
          'material_finish':'local-alpha-safe-directional-light-v1',
          'action_vfx':'local-rigid-tool-tip-lights-and-repair-ratchet-v2',
          'asset_count':len(results),'unresolved_target_count':16,'assets':results}
