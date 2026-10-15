@@ -1,19 +1,13 @@
 # Change impact
 
-Base: f9c5c9225307e979daafab11bff754a763c0a130
-Head: 1b339da3075e3ed3e342e22be6d5f0098a038668
+Base: bcba6bd9d42a03cb7dcc0346c9eba5ed053ada12
+Head: d900e5878949e23accd22305de48ed768dcb840f
 
 ## Changed files
-- M .github/workflows/local-original-character-android-emulator.yml
-- M app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt
-- M ops/local-original-android-review-trigger.txt
-- M tools/android/local_original_character_emulator_smoke.sh
+- M PROJECT_CONTINUITY.md
 
 ## Affected areas
-- .github
-- app
-- ops
-- tools
+- (root)
 
 ## Related test candidates
 - No direct filename-based test match detected.

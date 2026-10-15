@@ -29,22 +29,22 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-15T16:59:30Z
+Generated: 2026-10-15T17:11:00Z
 
 ### Git
 - Branch: `main`
-- Head: `1b339da3075e`
-- Commit date: 2026-10-15T18:58:59+02:00
-- Commit: qa(android): verify OP WALK motion inside the real city stage
+- Head: `d900e5878949`
+- Commit date: 2026-10-15T19:10:35+02:00
+- Commit: docs(continuity): preserve verified OP WALK city-stage Android QA and remaining gates
 - Tracked files: 1783
 
 ### Recently changed files
+- `PROJECT_CONTINUITY.md`
+- `docs/art/OP_WALK_STRIDE_REVIEW_2026-10-15.md`
 - `.github/workflows/local-original-character-android-emulator.yml`
 - `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
 - `ops/local-original-android-review-trigger.txt`
 - `tools/android/local_original_character_emulator_smoke.sh`
-- `PROJECT_CONTINUITY.md`
-- `docs/art/OP_WALK_STRIDE_REVIEW_2026-10-15.md`
 
 ### Project signals
 - `build.gradle.kts`
