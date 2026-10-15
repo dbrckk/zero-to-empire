@@ -1,35 +1,31 @@
 # Project state
 
-Status: active — Android runtime works; final character quality not yet approved.
+Status: active — original character art requires semantic approval before production.
 
 ## Working
-- Canonical queue on `main`: **219/235 strict DONE**, with 16 pending character actions (OP × 5, LOG × 5, ENG × 6).
-- Original OP/LOG/ENG rigs are fully editable, generated locally, and reviewed without automatic strict promotion.
-- PR #149 merged (`7dadb8b9`): ENG REPAIR now interacts with a freestanding physical repair station, with the tool tip rigidly anchored to a fixed bolt and matching attached VFX.
-- Art generation workflow **38740866046** passed, including 10/10 actual SVG socket/tool-contact checks (<0.08 px), full regeneration and candidate QA; Asset Pipeline CI **38740866078** passed.
-- Isolated Android art-review APK build **38741077306** passed build, existing checks, lint, app-identity isolation and artifact publication; it cannot overwrite production game saves.
+- Canonical master queue: **219/235 strict DONE**, 16 outstanding CHR actions (OP ×5, LOG ×5, ENG ×6).
+- Android Kotlin game and strict approval ledger remain intact. First-party art has editable SVG sources, PNG atlases, GIF loops and isolated Android review build.
+- ENG REPAIR fixed-socket art candidate merged in PR #149; ten physical tool-contact poses verified by workflow 38740866046 and isolated Android QA/emulator 38741556309 **SUCCESS**.
+- OP WALK original gait candidate merged in PR #150: operator-specific planted-foot stride (19px reach, 21px lift) and reciprocal arms, leaving all other roles/actions on their existing profiles.
+- Asset Pipeline CI 38744789050, generated OP art workflow 38744789685 and exact eight-pose SVG stance/boot check **SUCCESS**.
+- Isolated Android review APK jobs 38744963714 and 38745033106 passed debug compilation, existing Android checks, lint and separation from production saves.
+- Emulator 38745543878 **SUCCESS**: 24/24 role/action captures. `atlas-OPERATOR-WALK.png` was inspected at 42dp night / 39dp day, with the operator entirely visible.
 
 ## Blockers
-- All 16 unresolved CHR actions remain review-only, including the new ENG REPAIR. Technical geometry and local art production do not prove high-grade visual semantics.
-- Isolated Android emulator visual coverage **38741556309 SUCCESS**: the workflow captured all 24 role/action combinations. The downloaded real screenshot `atlas-ENGINEER-REPAIR.png` was inspected and visibly shows both the ENG service console and full-body character on 42 dp night / 39 dp day backgrounds. This is preview evidence only, not proof of a shipped production level.
-- A candidate must receive explicit human semantic review, exact runtime reference/visibility and approved Android integration before changing canonical strict status.
-- Earlier ENG Kaggle v1.17 status is historical; current first-party local authored candidate is the active review lane, not a speculative pending external producer.
+- The 16 unresolved characters are **review-only candidates**, not AAA-approved production art. An emulator frame proves UI visibility but does not prove the full animation loop plays well in production gameplay.
+- OP WALK requires visual loop-speed judgment (foot slide, gait weight, arm timing), explicit semantic approval, exact final WebP runtime integration, and production Android build/CI before strict promotion.
+- Do not infer strict approvals from technical frame hashes or passing QA workflows. Legacy remote Kaggle/Pollinations provider states are historical; local source is currently reproducible.
 
-## Current priority
-1. Inspect and refine ENG REPAIR gameplay aesthetics at animation speed using now-verified 39/42 dp isolated Android screenshots; avoid promoting the preview simply for being renderable.
-2. Refine the ENG action if its tool or module reads poorly at game scale; maintain fixed physical contact.
-3. Only if explicit semantic approval and real Android production references pass, promote the exact asset; otherwise keep it unapproved.
-4. After this feature is closed, tackle OP WALK planted-foot movement before starting several unrelated improvements.
+## Priority
+1. Inspect OP WALK animated loop in context, improve any visible slide or overly wide front-facing stride before considering strict approval.
+2. Verify exact approved atlas is referenced by the actual release/runtime and passes Android release checks; **no automatic promotion**.
+3. Then review remaining OP/LOG/ENG actions one at a time, prioritizing convincing semantic contact and stable identity.
 
-## Validation
-- Original art candidate: generated on main and visual atlas inspected; full end-to-end mobile visual judgment still pending.
-- Asset Pipeline CI: SUCCESS (on exact merged renderer and workflow).
-- Android review APK + lint + existing checks: SUCCESS (isolated review package, not production release).
-- Emulator UI/screenshots: SUCCESS, 24 role/action screenshots saved as artifact 11975429234. Full production-game rendering/semantic approval: not yet established.
-- Strict progress: 219/235, unchanged.
-
-## Last manually verified
+## Last manual verification
 - 2026-10-15
+- Strict status: **219/235**, unchanged.
+- Android emulator QA evidence: workflow 38745543878, artifact 11979140579.
+- No new unit tests were added.
 
 <!-- AUTO:START -->
 ## Automatic repository state
