@@ -1,13 +1,18 @@
 # Change impact
 
-Base: 777e4e02c4f198225241306b0b761cd2cbb00b6b
-Head: c4b36284293136cd5030d2a7959142ba41597427
+Base: fda91ff481b9f3af130c6c561b5cf45273e4dfc8
+Head: edbdfb76d03c8fe169c51b22ea9d974b05b795fc
 
 ## Changed files
-- M .github/workflows/local-original-character-android-preview.yml
+- M PROJECT_CONTINUITY.md
+- M docs/art/FINAL_AAA_SPRITE_MANIFEST.md
+- M docs/art/FINAL_AAA_SPRITE_PROGRESS.md
+- M tools/sprites/test_local_character_action_fx.py
 
 ## Affected areas
-- .github
+- (root)
+- docs
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

@@ -31,21 +31,36 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-15T09:44:10Z
+Generated: 2026-10-15T12:47:20Z
 
 ### Git
 - Branch: `main`
-- Head: `c4b362842931`
-- Commit date: 2026-10-15T11:43:56+02:00
-- Commit: fix(ci): restrict Android preview aapt lookup to build-tools for fast provenance check
+- Head: `edbdfb76d03c`
+- Commit date: 2026-10-15T14:47:04+02:00
+- Commit: fix(ci): keep character VFX checks compatible with versioned renderer metadata
 - Tracked files: 1782
 
 ### Recently changed files
-- `.github/workflows/local-original-character-android-preview.yml`
-- `ops/local-original-android-review-trigger.txt`
-- `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
-- `docs/art/CHATGPT_ORIGINAL_CHARACTER_PIPELINE.md`
+- `PROJECT_CONTINUITY.md`
+- `docs/art/FINAL_AAA_SPRITE_MANIFEST.md`
+- `docs/art/FINAL_AAA_SPRITE_PROGRESS.md`
+- `tools/sprites/test_local_character_action_fx.py`
+- `art/incoming/chatgpt-original/animation-review.json`
+- `art/incoming/chatgpt-original/candidates/zte_chr_eng_repair_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_eng_work_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_log_repair_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_log_work_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_op_repair_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_op_work_final.png`
 - `art/incoming/chatgpt-original/original-offline-review.html`
+- `art/incoming/chatgpt-original/original-review-contact-sheet.png`
+- `art/incoming/chatgpt-original/previews/eng-repair.gif`
+- `art/incoming/chatgpt-original/previews/eng-work.gif`
+- `art/incoming/chatgpt-original/previews/log-repair.gif`
+- `art/incoming/chatgpt-original/previews/log-work.gif`
+- `art/incoming/chatgpt-original/previews/mobile-eng.png`
+- `art/incoming/chatgpt-original/previews/mobile-log.png`
+- `art/incoming/chatgpt-original/previews/mobile-op.png`
 
 ### Project signals
 - `build.gradle.kts`

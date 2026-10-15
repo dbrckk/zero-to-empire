@@ -1104,6 +1104,13 @@ jobs:
           assert d['asset_count']==18 and d['frames_checked']==150
           assert len(d['assets'])==18
           assert all(not r['image_only_semantic_approval'] for r in d['assets'])
+          # Reject-only cross-action reference evidence: every local action
+          # must be compared to the same role's authored IDLE headgear.
+          assert all(isinstance(r['same_role_idle_head_color_distance'],(float,int))
+                     for r in d['assets'])
+          assert all(r['same_role_idle_head_color_distance']==0
+                     for r in d['assets'] if r['id'].endswith('-IDLE'))
+          print('CHATGPT_ORIGINAL_CROSS_ACTION_IDENTITY_EVIDENCE=18')
           print('CHATGPT_ORIGINAL_REJECT_ONLY_VISUAL_QA_PASS=18')
           PY
       - name: Publish original candidate review evidence
@@ -29775,6 +29782,22 @@ results=[]
 name=f"zte_chr_{role.lower()}_{action.lower()}_final.png"
 result=inspect(candidates/name,role,action)
 ⋮----
+# Same-role cross-action identity must be audited, not just adjacent
+# frames within an action. All unfinished character art is authored here
+# with one fixed role rig, so compare every action against its local IDLE.
+# The comparison is reject-only and never grants strict approval.
+⋮----
+idle_path=candidates/f"zte_chr_{role.lower()}_idle_final.png"
+⋮----
+idle=image.convert("RGBA").crop((0,0,256,256))
+anchor=_body_region_color_signature(idle,0,.28)
+⋮----
+action=row["id"].split("-")[-1]
+⋮----
+atlas=image.convert("RGBA")
+frame=atlas.crop((0,0,256,256))
+delta=palette_distance(anchor,_body_region_color_signature(frame,0,.28))
+⋮----
 blocked=sum(row["risk_level"]=="BLOCKING" for row in results)
 ⋮----
 def main() -> int
@@ -33810,6 +33833,20 @@ Review-only visuals; never marks an asset strict DONE.
 ⋮----
 ROLE_LIGHT={
 ⋮----
+# Endpoints are defined in wrist-local sprite coordinates, matching the
+# ACTUAL authored props in render_chatgpt_originals.py. Both SVG geometry
+# and lighting use one rigid rotation; there are no free-floating effects.
+TOOL_TIP_OFFSETS={
+⋮----
+def tool_angle(action:str,phase:float)->float
+⋮----
+# Repair is a genuine oscillating ratchet/twist. WORK remains a broad
+# positional sweep with minimal prop rotation.
+⋮----
+def tool_tip(role:str,action:str,phase:float,*,tool_x:float,tool_y:float)->tuple[float,float]
+⋮----
+angle=math.radians(tool_angle(action,phase))
+⋮----
 """Return an SVG group for a 256px sprite; empty for unsupported actions.
 
     WORK/REPAIR emissions are integrated with the tool's existing shaft;
@@ -33820,9 +33857,8 @@ ROLE_LIGHT={
 envelope=.5+.5*math.cos(phase)
 glow=f'<defs><radialGradient id="fx-{role.lower()}"><stop offset="0" stop-color="{highlight}" stop-opacity=".86"/><stop offset=".45" stop-color="{accent}" stop-opacity=".46"/><stop offset="1" stop-color="{accent}" stop-opacity="0"/></radialGradient></defs>'
 ⋮----
-reach={'OP':(30,24),'LOG':(31,37),'ENG':(28,39)}[role][0 if action=='WORK' else 1]
-x=min(234.0,tool_x+reach)
-y=tool_y-4 if action=='WORK' else tool_y-11
+x=max(12.0,min(233.0,x))
+y=max(12.0,min(233.0,y))
 pulse=round(.61+.39*envelope,3)
 radius=round(8+2.2*envelope,2)
 core=(f'<circle cx="{x:.2f}" cy="{y:.2f}" r="{radius}" fill="url(#fx-{role.lower()})"/>'
@@ -35386,6 +35422,11 @@ elbow=((78,125+bounce) if side=='L' else (172,122+bounce))
 # One slow, physically connected tool cycle. Earlier 22px reach/24px
 # vertical pumping made the tool look like it floated and clipped the face.
 reach=math.sin(phase); pump=math.cos(phase)
+# WORK: broad horizontal fabrication stroke. REPAIR: compact diagonal
+# inspection/twist. Both use exactly the same wrist coordinates as the
+# physical tool and attached light below; no disconnected props.
+reach_px=15 if pose=='WORK' else 8
+pump_px=12 if pose=='WORK' else 7
 handpos=((80+2*reach,146-3*pump+bounce) if side=='L'
 elbow=((82,132+bounce) if side=='L'
 ⋮----
@@ -35476,8 +35517,8 @@ by=121+bounce
 ⋮----
 # The exact same right-hand joint drives the held equipment. One cycle
 # and stable local geometry prevent fake floating tools and prop morphing.
-tool_x=176+15*math.sin(phase)
-tool_y=123+12*math.cos(phase)+bounce
+tool_x=176+(15 if action=='WORK' else 8)*math.sin(phase)
+tool_y=123+(12 if action=='WORK' else 7)*math.cos(phase)+bounce
 ⋮----
 # foreground right arm and hand over equipment, never floating
 ⋮----
@@ -35515,7 +35556,7 @@ parser=argparse.ArgumentParser()
 args=parser.parse_args();outdir=pathlib.Path(args.output_dir);outdir.mkdir(parents=True,exist_ok=True)
 results=[]
 ⋮----
-report={'version':'chatgpt-original-character-rig-v6-contact-aware-leg-rig','strict_done_added':0,'review_only':True,
+report={'version':'chatgpt-original-character-rig-v8-ratcheting-repair-aligned-vfx','strict_done_added':0,'review_only':True,
 ```
 
 ## File: tools/sprites/render_original_character_previews.py
@@ -37151,6 +37192,15 @@ markup=action_fx(role,action,1.9,tool_x=191,tool_y=125)
 ⋮----
 # Explicit clamp prevents highlights crossing right side.
 ⋮----
+def test_repair_is_a_distinct_compact_hand_tool_cycle(self)
+⋮----
+# WORK and REPAIR used to have identical 15px x 12px hand strokes,
+# which made the two actions indistinguishable at gameplay size.
+source=(ROOT/'tools/sprites/render_chatgpt_originals.py').read_text(encoding='utf8')
+⋮----
+wrist="176+(15 if action=='WORK' else 8)*math.sin(phase)"
+vertical="123+(12 if action=='WORK' else 7)*math.cos(phase)+bounce"
+⋮----
 def test_idle_and_walk_have_no_unattached_decorations(self)
 ⋮----
 def test_bad_role_action_rejected(self)
@@ -37158,6 +37208,10 @@ def test_bad_role_action_rejected(self)
 def test_renderer_invokes_attached_effects_after_hand(self)
 ⋮----
 text=(ROOT/'tools/sprites/render_chatgpt_originals.py').read_text(encoding='utf8')
+⋮----
+# The renderer's VFX metadata is versioned independently of its
+# physically attached tool/wrist geometry. Keep metadata validation,
+# without pinning the obsolete v1 implementation label.
 ```
 
 ## File: tools/sprites/test_local_character_contact_gait.py
@@ -38399,7 +38453,15 @@ plugins {
 
 > Persistent handoff file. Read before work and update at every material intervention. Never rely on chat history alone.
 
-## Verified current state — 2026-10-09 (authoritative)
+## Verified current state — 2026-10-15 (authoritative; supersedes historical snapshot below)
+
+- Canonical master queue: **219/235 strict DONE** and **16 CHR actions NEEDS_REVIEW** (12 REJECTED_SEMANTIC; 4 AWAITING_REVIEW). This is counted directly from `art/production/master-asset-queue.json` on main `fda91ff481b9f3af130c6c561b5cf45273e4dfc8`.
+- The 18 locally authored original character atlas candidates are **review-only**; their existence is not semantic approval. Do not promote any CHR or claim 235/235 until exact art, live runtime/Android and CI evidence all pass.
+- 2026-10-15 GitHub Actions Asset Pipeline CI run **38720992796** and ChatGPT Original Character Candidates run **38720992762** both failed at `test_renderer_invokes_attached_effects_after_hand`: a test pinned obsolete `local-attached-tool-and-wrist-highlights-v1`, while the renderer advertises versioned `action_vfx` metadata for a v2 ratcheting tool/wrist rig. Existing geometry and draw-order checks were otherwise present.
+- Pull request **#147** on `fix/character-vfx-ci-metadata-20261015` updates that stale assertion while preserving VFX and tool/wrist ordering verification. **CI status is pending at this checkpoint**; do not claim the regression is resolved until a green complete run is observed. No Android/runtime sprite changes are included.
+- Next: validate PR CI, merge only after green, then check the next original candidate workflow and inspect remaining 16 CHR atlases visually at game scale. The dated historical snapshot below is retained only for provenance.
+
+## Historical state — 2026-10-09 (superseded)
 
 - **Canonical strict DONE: 216/235**, production processed: **233/235**. The source of truth is `art/production/master-asset-queue.json`. Do not raise the number for production, technical QA, or mere manifest presence.
 - **Remaining 19 (all CHR)**: OP WALK/WORK/CARRY/REPAIR/CELEB (5); TECH WALK/WORK/CARRY (3); LOG WALK/WORK/CARRY/REPAIR/CELEB (5); ENG IDLE/WALK/WORK/CARRY/REPAIR/CELEB (6). Technical states: 17 AWAITING_REVIEW, 1 REJECTED_SEMANTIC (TECH-WALK), 1 BLOCKED (LOG-CARRY).

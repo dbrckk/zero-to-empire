@@ -1,12 +1,14 @@
 # CI status
 
-Summary: 2 success / 0 failure / 4 active
+Summary: 2 success / 0 failure / 5 active
 
-- Local Original Characters Android Review APK: pending / pending (c4b36284)
-- Local Original Characters Android Review APK: in_progress / pending (b9d51afa)
-- TECH candidate Android preview (no promotion): completed / success (25fbce98)
-- Android CI: in_progress / pending (25fbce98)
-- Android Emulator Smoke: in_progress / pending (25fbce98)
-- ChatGPT Original Character Candidates: completed / success (26d5fb12)
+- Asset Pipeline CI: in_progress / pending (edbdfb76)
+- Android CI: in_progress / pending (edbdfb76)
+- Reconcile Sprite Progress Ledger: in_progress / pending (edbdfb76)
+- Sprite Completion Gate: in_progress / pending (edbdfb76)
+- Sprite Production Plan: in_progress / pending (edbdfb76)
+- Reconcile reviewed run 25: completed / skipped (fda91ff4)
+- Asset Pipeline CI: completed / success (2d07455d)
+- Android CI: completed / success (2d07455d)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

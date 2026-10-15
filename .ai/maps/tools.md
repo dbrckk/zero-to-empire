@@ -2154,6 +2154,22 @@ results=[]
 name=f"zte_chr_{role.lower()}_{action.lower()}_final.png"
 result=inspect(candidates/name,role,action)
 ⋮----
+# Same-role cross-action identity must be audited, not just adjacent
+# frames within an action. All unfinished character art is authored here
+# with one fixed role rig, so compare every action against its local IDLE.
+# The comparison is reject-only and never grants strict approval.
+⋮----
+idle_path=candidates/f"zte_chr_{role.lower()}_idle_final.png"
+⋮----
+idle=image.convert("RGBA").crop((0,0,256,256))
+anchor=_body_region_color_signature(idle,0,.28)
+⋮----
+action=row["id"].split("-")[-1]
+⋮----
+atlas=image.convert("RGBA")
+frame=atlas.crop((0,0,256,256))
+delta=palette_distance(anchor,_body_region_color_signature(frame,0,.28))
+⋮----
 blocked=sum(row["risk_level"]=="BLOCKING" for row in results)
 ⋮----
 def main() -> int
@@ -6189,6 +6205,20 @@ Review-only visuals; never marks an asset strict DONE.
 ⋮----
 ROLE_LIGHT={
 ⋮----
+# Endpoints are defined in wrist-local sprite coordinates, matching the
+# ACTUAL authored props in render_chatgpt_originals.py. Both SVG geometry
+# and lighting use one rigid rotation; there are no free-floating effects.
+TOOL_TIP_OFFSETS={
+⋮----
+def tool_angle(action:str,phase:float)->float
+⋮----
+# Repair is a genuine oscillating ratchet/twist. WORK remains a broad
+# positional sweep with minimal prop rotation.
+⋮----
+def tool_tip(role:str,action:str,phase:float,*,tool_x:float,tool_y:float)->tuple[float,float]
+⋮----
+angle=math.radians(tool_angle(action,phase))
+⋮----
 """Return an SVG group for a 256px sprite; empty for unsupported actions.
 
     WORK/REPAIR emissions are integrated with the tool's existing shaft;
@@ -6199,9 +6229,8 @@ ROLE_LIGHT={
 envelope=.5+.5*math.cos(phase)
 glow=f'<defs><radialGradient id="fx-{role.lower()}"><stop offset="0" stop-color="{highlight}" stop-opacity=".86"/><stop offset=".45" stop-color="{accent}" stop-opacity=".46"/><stop offset="1" stop-color="{accent}" stop-opacity="0"/></radialGradient></defs>'
 ⋮----
-reach={'OP':(30,24),'LOG':(31,37),'ENG':(28,39)}[role][0 if action=='WORK' else 1]
-x=min(234.0,tool_x+reach)
-y=tool_y-4 if action=='WORK' else tool_y-11
+x=max(12.0,min(233.0,x))
+y=max(12.0,min(233.0,y))
 pulse=round(.61+.39*envelope,3)
 radius=round(8+2.2*envelope,2)
 core=(f'<circle cx="{x:.2f}" cy="{y:.2f}" r="{radius}" fill="url(#fx-{role.lower()})"/>'
@@ -7765,6 +7794,11 @@ elbow=((78,125+bounce) if side=='L' else (172,122+bounce))
 # One slow, physically connected tool cycle. Earlier 22px reach/24px
 # vertical pumping made the tool look like it floated and clipped the face.
 reach=math.sin(phase); pump=math.cos(phase)
+# WORK: broad horizontal fabrication stroke. REPAIR: compact diagonal
+# inspection/twist. Both use exactly the same wrist coordinates as the
+# physical tool and attached light below; no disconnected props.
+reach_px=15 if pose=='WORK' else 8
+pump_px=12 if pose=='WORK' else 7
 handpos=((80+2*reach,146-3*pump+bounce) if side=='L'
 elbow=((82,132+bounce) if side=='L'
 ⋮----
@@ -7855,8 +7889,8 @@ by=121+bounce
 ⋮----
 # The exact same right-hand joint drives the held equipment. One cycle
 # and stable local geometry prevent fake floating tools and prop morphing.
-tool_x=176+15*math.sin(phase)
-tool_y=123+12*math.cos(phase)+bounce
+tool_x=176+(15 if action=='WORK' else 8)*math.sin(phase)
+tool_y=123+(12 if action=='WORK' else 7)*math.cos(phase)+bounce
 ⋮----
 # foreground right arm and hand over equipment, never floating
 ⋮----
@@ -7894,7 +7928,7 @@ parser=argparse.ArgumentParser()
 args=parser.parse_args();outdir=pathlib.Path(args.output_dir);outdir.mkdir(parents=True,exist_ok=True)
 results=[]
 ⋮----
-report={'version':'chatgpt-original-character-rig-v6-contact-aware-leg-rig','strict_done_added':0,'review_only':True,
+report={'version':'chatgpt-original-character-rig-v8-ratcheting-repair-aligned-vfx','strict_done_added':0,'review_only':True,
 ```
 
 ## File: sprites/render_original_character_previews.py
@@ -9530,6 +9564,15 @@ markup=action_fx(role,action,1.9,tool_x=191,tool_y=125)
 ⋮----
 # Explicit clamp prevents highlights crossing right side.
 ⋮----
+def test_repair_is_a_distinct_compact_hand_tool_cycle(self)
+⋮----
+# WORK and REPAIR used to have identical 15px x 12px hand strokes,
+# which made the two actions indistinguishable at gameplay size.
+source=(ROOT/'tools/sprites/render_chatgpt_originals.py').read_text(encoding='utf8')
+⋮----
+wrist="176+(15 if action=='WORK' else 8)*math.sin(phase)"
+vertical="123+(12 if action=='WORK' else 7)*math.cos(phase)+bounce"
+⋮----
 def test_idle_and_walk_have_no_unattached_decorations(self)
 ⋮----
 def test_bad_role_action_rejected(self)
@@ -9537,6 +9580,10 @@ def test_bad_role_action_rejected(self)
 def test_renderer_invokes_attached_effects_after_hand(self)
 ⋮----
 text=(ROOT/'tools/sprites/render_chatgpt_originals.py').read_text(encoding='utf8')
+⋮----
+# The renderer's VFX metadata is versioned independently of its
+# physically attached tool/wrist geometry. Keep metadata validation,
+# without pinning the obsolete v1 implementation label.
 ```
 
 ## File: sprites/test_local_character_contact_gait.py
