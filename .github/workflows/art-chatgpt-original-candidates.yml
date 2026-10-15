@@ -9,6 +9,7 @@ on:
       - 'tools/sprites/render_chatgpt_originals.py'
       - 'tools/sprites/local_character_material_finish.py'
       - 'tools/sprites/local_character_action_fx.py'
+      - 'tools/sprites/local_character_contact_gait.py'
       - 'tools/sprites/render_original_character_previews.py'
       - 'tools/sprites/audit_chatgpt_originals.py'
 
@@ -66,6 +67,8 @@ jobs:
       - name: Validate contact-attached action effects before rasterization
         run: |
           python -m unittest discover -s tools/sprites -p 'test_local_character_action_fx.py' -v
+      - name: Verify planted-foot motion and phase-continuous boot geometry
+        run: python -m unittest discover -s tools/sprites -p 'test_local_character_contact_gait.py' -v
       - name: Render all remaining role families from committed source
         run: |
           python tools/sprites/render_chatgpt_originals.py \
