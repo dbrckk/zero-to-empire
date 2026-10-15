@@ -174,6 +174,13 @@ PY_FRAME
     stage_count=$((stage_count + 1))
   done
 done
+# A previous emulator artifact (run 38788683514) proved that actor 0 could
+# be completely frozen while scenery and traffic kept moving. The debug-only
+# control is idempotent: resuming it here is mandatory before motion evidence.
+resume_coords="$(scroll_to_button 'Resume city clock')"
+read -r resume_x resume_y <<< "$resume_coords"
+adb shell input tap "$resume_x" "$resume_y"
+sleep .25
 # The game-sized thumbnail is not the 620dp city layer. Physically scroll
 # to the real city canvas and capture two *unpaused* frames inside its bounds.
 # The debug-only semantic label makes this a reliable viewport check instead
@@ -218,10 +225,37 @@ if [ -z "$stage_bounds" ]; then
   exit 1
 fi
 printf '%s\n' "$stage_bounds" > "$OUT/op-walk-city-stage-bounds.txt"
+# Observe Android Compose state, not the movement of unrelated scenery.
+# Uiautomator is intentionally required to read PLAY (not PAUSE) and the
+# exact active worldFrame at both ends of the screenshot interval.
+read_city_clock() {
+  read_ui
+  python3 - "$OUT/ui-stage.xml" <<'PY_CLOCK'
+import re,sys,xml.etree.ElementTree as ET
+root=ET.parse(sys.argv[1]).getroot()
+matches=[]
+for node in root.iter('node'):
+    label=(node.get('text') or node.get('content-desc') or '').strip()
+    m=re.fullmatch(r'CITY CLOCK: (\d+) · (PLAY|PAUSE)',label)
+    if m: matches.append((int(m.group(1)),m.group(2)))
+if len(matches)!=1 or matches[0][1]!='PLAY':
+    raise SystemExit(f'City review clock is paused, obscured or ambiguous: {matches}')
+print(matches[0][0])
+PY_CLOCK
+}
+clock_before="$(read_city_clock)"
 adb shell pidof com.zerotoempire.game.originalreview >/dev/null
 adb exec-out screencap -p > "$OUT/op-walk-city-stage-night-00.png"
 sleep .7
 adb exec-out screencap -p > "$OUT/op-walk-city-stage-night-01.png"
+clock_after="$(read_city_clock)"
+clock_delta=$(((clock_after - clock_before + 1680) % 1680))
+if [ "$clock_delta" -lt 1 ] || [ "$clock_delta" -ge 200 ]; then
+  echo "City clock did not advance while OP WALK was captured: $clock_before -> $clock_after" >&2
+  exit 1
+fi
+printf 'PLAY %s %s %s\n' "$clock_before" "$clock_after" "$clock_delta" > "$OUT/op-walk-city-clock-proof.txt"
+echo "LOCAL_ORIGINAL_CITY_REVIEW_CLOCK_ADVANCED=$clock_delta"
 # The uiautomator stage bounds are CLIPPED when the LazyColumn is scrolled.
 # Never use fractions of those bounds to locate an actor. Instead, locate
 # the precise Compose semantics of each real CharacterAtlasFrame after
