@@ -163,3 +163,28 @@ An isolated Android review APK build and emulator capture must be
 validated independently before any proposal to replace production
 resources. **The canonical strict count is still 219/235**, with 16
 assets unapproved pending visual acceptance and native runtime proof.
+
+### Verified native Android review of local contact gait
+
+The exact checked-in v6 planted-foot revision was compiled as an isolated
+installable review APK, not as a production promotion:
+
+- [Review APK build 38710545814](https://github.com/dbrckk/zero-to-empire/actions/runs/38710545814):
+  **SUCCESS**; imports all 18 locally authored atlases, validates the
+  lossless Android runtime raster output, builds the debug APK, runs
+  the existing debug tests and Android lint, and checks its
+  `com.zerotoempire.game.originalreview` package identity.
+- [Android emulator review 38711070775](https://github.com/dbrckk/zero-to-empire/actions/runs/38711070775):
+  **SUCCESS**; installs the isolated APK, launches the Compose
+  gallery, selects ENGINEER and captures the actual 39/42 dp
+  nighttime/daytime character preview. Its screenshot and UI hierarchy
+  are available in `local-original-android-emulator-visual-evidence`.
+- Candidate bundle:
+  [ChatGPT Original Character Candidates 38710288088](https://github.com/dbrckk/zero-to-empire/actions/runs/38710288088),
+  containing 18 atlases, 150 editable SVG poses and 18 animation GIFs.
+
+A successful Android launch is real runtime-rendering evidence, **not**
+proof that the animation has AAA visual quality or realistic weight
+transfer in a scrolling level. No canonical production drawable,
+master status or existing game install/save was modified by these
+review-only workflows. The strict queue remains **219/235 DONE**.
