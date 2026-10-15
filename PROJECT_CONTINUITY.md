@@ -1,5 +1,13 @@
 # PROJECT CONTINUITY — Zero → Empire
 
+## 2026-10-15 verified — OP WALK city-stage Android motion
+
+- **PR #154** merged as `a0664b99`: functional Android stepping proof of eight OP WALK frames; emulator run **38770555377 SUCCESS**, artifact **11991227425**, recorded consecutive frames **531–538** in real 39/42dp QA preview. Those earlier screenshots did not show the full city stage, which was below the fold.
+- **PR #155** merged as `1b339da3`: debug-only Compose semantic marker and isolated emulator visual-integrity gate. It scrolls to the actual 620dp city character renderer, requires a useful viewport and compares two live screenshots *inside that stage*. PR Android CI **38772335910**, main Android CI **38773512852**, review APK **38773513009**, and actual emulator **38774032853** all **SUCCESS**.
+- Actual isolated Android output verified: **24/24** role/action captures; eight successive OP WALK UI frames **480–487**; city stage bounds **[32,129][1048,1757]**; **5,251** pixels changed by more than 14 on at least one RGB channel in 0.7 seconds. Both OP actors are visible in the actual character layer. Emulator evidence artifact: **11992229467**. Screenshots were downloaded and visually inspected.
+- Scope: this is a genuine runtime-character-layer check in a **debug-only gradient stage**, not proof of art quality in the complete shipping city. No new unit tests were added: PR #153 was closed for conflict with the 88-rule standard. No automatic sprite approval or production resource replacement. Strict queue **219/235**, 16 unresolved, unchanged.
+- Next priority: OP WALK full-speed foot-slide/weight and style review in a realistically composed city scene, followed by exact approved WebP production references and Android release evidence before any strict promotion. Then continue other CHR action reviews one by one.
+
 ## OP WALK planted stance — PR #152 (2026-10-15)
 
 - PR **#152** merged on `main` as `808f29a4`, after resolving an initial **Python indentation failure** (`38753268106`). The corrected PR Asset Pipeline run **38762145864** succeeded, as did main Asset Pipeline **38762241985** and original character candidate regeneration **38762242160**.
