@@ -79,8 +79,13 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
     elbow=(168+.45*(handpos[0]-176),115+.58*(handpos[1]-123))
   elif pose=='WALK':
    swing=motion*(-1 if side=='L' else 1)
-   handpos=((84+8*swing,147+10*swing+bounce) if side=='L' else (170+8*swing,148-10*swing+bounce))
-   elbow=((83+4*swing,124+5*swing+bounce) if side=='L' else (171+4*swing,127-5*swing+bounce))
+   arm_reach=14 if role=='OP' else 8
+   arm_lift=15 if role=='OP' else 10
+   elbow_reach=6 if role=='OP' else 4
+   handpos=((84+arm_reach*swing,147+arm_lift*swing+bounce) if side=='L'
+            else (170+arm_reach*swing,148-arm_lift*swing+bounce))
+   elbow=((83+elbow_reach*swing,124+5*swing+bounce) if side=='L'
+          else (171+elbow_reach*swing,127-5*swing+bounce))
   else:
    elbow=((81,129+bounce) if side=='L' else (170,126+bounce))
    handpos=((79,149+bounce) if side=='L' else (176,144+bounce))
@@ -98,11 +103,13 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
  leg_poses=[]
  for side in ('L','R'):
   if action in ('WALK','CARRY'):
-   leg=foot_pose(phase,side,action,bounce)
+   leg=foot_pose(phase,side,action,bounce,
+                 profile="op-walk-v2" if role=="OP" and action=="WALK" else "standard")
    hipx,yhip=leg.hip_x,leg.hip_y
    knee_x,knee_y=leg.knee_x,leg.knee_y
    ankle_x,ankle_y=leg.ankle_x,leg.ankle_y
    boot_angle=leg.boot_angle
+   planted=leg.planted
   else:
    hipx=106 if side=='L' else 146
    yhip=155+bounce
@@ -111,7 +118,8 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
    ankle_x=hipx
    ankle_y=226+bounce
    boot_angle=0.0
-  leg_poses.append((side,hipx,yhip,knee_x,knee_y,ankle_x,ankle_y,boot_angle))
+   planted=True
+  leg_poses.append((side,hipx,yhip,knee_x,knee_y,ankle_x,ankle_y,boot_angle,planted))
  add('<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">')
  add(f'''<defs>
  <linearGradient id="jacket" x1=".1" x2=".9" y1="0" y2="1"><stop offset="0" stop-color="{p['jacket_hi']}"/><stop offset=".43" stop-color="{p['jacket']}"/><stop offset="1" stop-color="#1b2c3a"/></linearGradient>
@@ -153,7 +161,7 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
   add(f'<path d="M {tx-2:.1f} {ty:.1f} h 4 M {tx:.1f} {ty-2:.1f} v 4" stroke="#d1e8e8" stroke-width="1.2"/>')
   add('</g>')
  # boots and 2 articulated segments per leg
- for side,hipx,yhip,kx,ky,ax,ay,boot_angle in leg_poses:
+ for side,hipx,yhip,kx,ky,ax,ay,boot_angle,planted in leg_poses:
   add(line(hipx,yhip,kx,ky,'url(#pant)',23,3));add(line(kx,ky,ax,ay,'url(#pant)',20,3))
   # knee armor pad and seam
   add(f'<ellipse cx="{kx:.1f}" cy="{ky:.1f}" rx="11" ry="8" fill="#647687" stroke="#253645" stroke-width="2" opacity=".85"/>')
@@ -163,7 +171,13 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
   if side=='L': toe=ax-9
   else:toe=ax+9
   # Heel-strike and toe-off flex the same boot art around its ankle.
-  add(f'<g transform="rotate({boot_angle:.2f} {ax:.2f} {ay:.2f})">')
+  # Embed true boot-space coordinates directly on authored SVG pose groups.
+  # The generation workflow audits the rendered groups, not a model-only mock.
+  gait_attrs=(f' data-op-walk-side="{side}" '
+              f'data-op-walk-planted="{str(planted).lower()}" '
+              f'data-op-walk-ankle-x="{ax:.2f}" '
+              f'data-op-walk-ankle-y="{ay:.2f}"') if role=='OP' and action=='WALK' else ''
+  add(f'<g{gait_attrs} transform="rotate({boot_angle:.2f} {ax:.2f} {ay:.2f})">')
   add(f'<path d="M {ax-10:.1f} {ay-8:.1f} Q {ax+11:.1f} {ay-11:.1f} {ax+13:.1f} {ay+2:.1f} L {toe+9:.1f} {ay+9:.1f} L {toe-12:.1f} {ay+7:.1f}Z" fill="#37434f" stroke="#1b2633" stroke-width="3"/>')
   add(f'<path d="M {toe-9:.1f} {ay+4:.1f} l 24 0" stroke="{p["seam"]}" stroke-width="2" opacity=".7"/>')
   add(f'<path d="M {toe-11:.1f} {ay+7:.1f} q 12 3 26 0" stroke="#16232d" stroke-width="3.8" fill="none"/>')
@@ -172,7 +186,10 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
  # Weight shifts toward stance foot; cargo carry sway remains restrained.
  # The hands, equipment, torso, helmet and face all receive the exact same
  # transform, avoiding drift in object contact or character identity.
- add(f'<g transform="translate({torso_weight_shift(phase,action):.2f},0)">')
+ sway=torso_weight_shift(phase,action)
+ if role=='OP' and action=='WALK':
+  sway*=1.55
+ add(f'<g transform="translate({sway:.2f},0)">')
  # BACK arm
  add(joint_arm('L',action))
  # main torso, premium tapered silhouette, safety accents
@@ -352,7 +369,7 @@ def main():
  for role in ROLES:
   for action in ACTIONS:
    results.append(render_atlas(role,action,outdir,args.save_svg))
- report={'version':'chatgpt-original-character-rig-v9-fixed-eng-repair-socket','strict_done_added':0,'review_only':True,
+ report={'version':'chatgpt-original-character-rig-v10-op-walk-weighted-stride','strict_done_added':0,'review_only':True,
          'material_finish':'local-alpha-safe-directional-light-v1',
          'action_vfx':'local-rigid-tool-tip-lights-and-repair-ratchet-v2',
          'asset_count':len(results),'unresolved_target_count':16,'assets':results}
