@@ -31,36 +31,36 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-15T13:13:37Z
+Generated: 2026-10-15T13:15:09Z
 
 ### Git
 - Branch: `main`
-- Head: `7dadb8b9b196`
-- Commit date: 2026-10-15T15:13:19+02:00
-- Commit: art(candidate): keep ENG repair ratchet on a stationary machine socket
+- Head: `9b05d8725858`
+- Commit date: 2026-10-15T15:14:50+02:00
+- Commit: ci(android): build isolated visual review of locked ENG repair candidate
 - Tracked files: 1782
 
 ### Recently changed files
-- `.github/workflows/art-chatgpt-original-candidates.yml`
-- `tools/sprites/render_chatgpt_originals.py`
-- `PROJECT_CONTINUITY.md`
+- `ops/local-original-android-review-trigger.txt`
 - `art/incoming/chatgpt-original/animation-review.json`
 - `art/incoming/chatgpt-original/candidates/zte_chr_eng_repair_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_log_repair_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_op_repair_final.png`
 - `art/incoming/chatgpt-original/creation-manifest.json`
 - `art/incoming/chatgpt-original/original-offline-review.html`
+- `art/incoming/chatgpt-original/original-review-contact-sheet.png`
 - `art/incoming/chatgpt-original/previews/eng-repair.gif`
-- `art/incoming/chatgpt-original/previews/log-repair.gif`
-- `art/incoming/chatgpt-original/previews/op-repair.gif`
+- `art/incoming/chatgpt-original/previews/mobile-eng.png`
+- `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/00.svg`
 - `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/01.svg`
 - `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/02.svg`
 - `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/03.svg`
 - `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/04.svg`
+- `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/05.svg`
 - `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/06.svg`
 - `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/07.svg`
 - `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/08.svg`
 - `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/09.svg`
+- `art/incoming/chatgpt-original/visual-risk-qa.json`
+- `.github/workflows/art-chatgpt-original-candidates.yml`
 
 ### Project signals
 - `build.gradle.kts`
