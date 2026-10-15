@@ -31,21 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-15T09:39:32Z
+Generated: 2026-10-15T09:41:28Z
 
 ### Git
 - Branch: `main`
-- Head: `a83a9386e900`
-- Commit date: 2026-10-15T11:39:16+02:00
-- Commit: docs(art): document Android offline reviewer for all locally created character assets
+- Head: `b9d51afa5a5a`
+- Commit date: 2026-10-15T11:40:56+02:00
+- Commit: ci(android): build dark original-character review gallery for emulator inspection
 - Tracked files: 1782
 
 ### Recently changed files
+- `ops/local-original-android-review-trigger.txt`
+- `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
 - `docs/art/CHATGPT_ORIGINAL_CHARACTER_PIPELINE.md`
 - `art/incoming/chatgpt-original/original-offline-review.html`
 - `ops/chatgpt-original-trigger.txt`
-- `.github/workflows/art-chatgpt-original-candidates.yml`
-- `.github/workflows/asset-pipeline-ci.yml`
 
 ### Project signals
 - `build.gradle.kts`

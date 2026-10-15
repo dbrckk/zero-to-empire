@@ -5,430 +5,103 @@
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
   "symbols": {
-    "build": {
+    "CharacterReviewActivity": {
       "definition": {
-        "file": "tools/sprites/build_original_offline_review.py",
-        "line": 67,
-        "kind": "function",
-        "language": "python"
+        "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
+        "line": 46,
+        "kind": "class",
+        "language": "kotlin"
       },
       "occurrences": [
         {
-          "file": "app/build.gradle.kts",
-          "line": 211,
-          "preview": "// release artifact while a real store build has one explicit, fail-closed entry point.",
+          "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
+          "line": 46,
+          "preview": "class CharacterReviewActivity : ComponentActivity() {",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "onCreate": {
+      "definition": {
+        "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
+        "line": 47,
+        "kind": "symbol",
+        "language": "kotlin"
+      },
+      "occurrences": [
+        {
+          "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
+          "line": 47,
+          "preview": "override fun onCreate(savedInstanceState: Bundle?) {",
+          "definition_candidate": true
+        },
+        {
+          "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
+          "line": 48,
+          "preview": "super.onCreate(savedInstanceState)",
           "definition_candidate": false
         },
         {
-          "file": "app/build.gradle.kts",
-          "line": 213,
-          "preview": "group = \"build\"",
+          "file": "app/src/main/java/com/zerotoempire/game/MainActivity.kt",
+          "line": 26,
+          "preview": "override fun onCreate(savedInstanceState: Bundle?) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/MainActivity.kt",
+          "line": 27,
+          "preview": "super.onCreate(savedInstanceState)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "CharacterReviewGallery": {
+      "definition": {
+        "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
+        "line": 54,
+        "kind": "symbol",
+        "language": "kotlin"
+      },
+      "occurrences": [
+        {
+          "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
+          "line": 49,
+          "preview": "setContent { CharacterReviewGallery() }",
           "definition_candidate": false
         },
         {
           "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
-          "line": 42,
-          "preview": "* The debug build exposes this surface as a separate launcher icon. It is",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/AdMobInterstitialGateway.kt",
-          "line": 35,
-          "preview": "AdRequest.Builder().build(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/AdMobRewardedGateway.kt",
-          "line": 57,
-          "preview": "AdRequest.Builder().build(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/AdaptiveMusic.kt",
-          "line": 27,
-          "preview": ".build()",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/AdaptiveMusic.kt",
-          "line": 59,
-          "preview": ".build()",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/AdaptiveMusic.kt",
-          "line": 75,
-          "preview": ".build()",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/AdaptiveMusic.kt",
-          "line": 79,
-          "preview": ".build()",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
-          "line": 63,
-          "preview": ".enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
-          "line": 65,
-          "preview": ".build()",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
-          "line": 116,
-          "preview": ".setProductList(listOf(QueryProductDetailsParams.Product.newBuilder().setProductId(product.productId).setProductType(BillingClient.ProductType.INAPP).build()))",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
-          "line": 117,
-          "preview": ".build()",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
-          "line": 135,
-          "preview": "val productParams = BillingFlowParams.ProductDetailsParams.newBuilder().setProductDetails(details).build()",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
-          "line": 136,
-          "preview": "val flowParams = BillingFlowParams.newBuilder().setProductDetailsParamsList(listOf(productParams)).build()",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
-          "line": 161,
-          "preview": "val params = QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.INAPP).build()",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
-          "line": 345,
-          "preview": "onResult(BillingResult.newBuilder().setResponseCode(BillingClient.BillingResponseCode.OK).build())",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
-          "line": 348,
-          "preview": "val params = AcknowledgePurchaseParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
-          "line": 356,
-          "preview": "val params = ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
-          "line": 368,
-          "preview": "val params = ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
-          "line": 380,
-          "preview": "val params = ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PremiumSfx.kt",
-          "line": 28,
-          "preview": ".build()",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PremiumSfx.kt",
-          "line": 29,
-          "preview": ").build()",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PrivacyConsentManager.kt",
-          "line": 16,
-          "preview": "val params = ConsentRequestParameters.Builder().build()",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PrivacyPolicy.kt",
-          "line": 26,
-          "preview": "\"The current build uses local Android logging and local preferences for development and gameplay diagnostics. It does not include a third-party developer analytics SDK.\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
-          "line": 98,
-          "preview": "* outside canonical runtime until the art approval and Android build gates.",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/android/validate_release_privacy.py",
-          "line": 8,
-          "preview": "BUILD = ROOT / \"app/build.gradle.kts\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/android/validate_release_privacy.py",
-          "line": 20,
-          "preview": "build = BUILD.read_text(encoding=\"utf-8\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/android/validate_release_privacy.py",
-          "line": 33,
-          "preview": "dependencies = re.findall(r'implementation\\(\"([^\"]+)\"\\)', build)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/audit_character_candidates.py",
-          "line": 14,
-          "preview": "from character_review_matrix import build",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/audit_character_candidates.py",
-          "line": 137,
-          "preview": "report=build(json.loads(args.queue.read_text(encoding=\"utf-8\")))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/autonomous_walk.py",
-          "line": 274,
-          "preview": "'build':'pose-studio-autonomous-v2','config':asdict(settings),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/autonomous_walk.py",
-          "line": 299,
-          "preview": "parser.add_argument('--output',type=Path,default=Path('build/character-tech-walk'))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_original_offline_review.py",
-          "line": 67,
-          "preview": "def build(source:Path,destination:Path)->dict:",
+          "line": 54,
+          "preview": "private fun CharacterReviewGallery() {",
           "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/build_original_offline_review.py",
-          "line": 100,
-          "preview": "print(json.dumps(build(p.source,p.output),sort_keys=True))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/character_review_matrix.py",
-          "line": 30,
-          "preview": "def build(queue:dict)->dict:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/character_review_matrix.py",
-          "line": 136,
-          "preview": "report=build(json.loads(args.queue.read_text(encoding=\"utf-8\")))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/export_tech_canonical_review.py",
-          "line": 170,
-          "preview": "parser.add_argument(\"--source\", type=Path, default=Path(\"build/tech-actions-v3\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/identity_locked_walk_candidate.py",
-          "line": 7,
-          "preview": "All output goes to build/; never overwrite the canonical sprite or runtime.",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/identity_locked_walk_candidate.py",
-          "line": 138,
-          "preview": "parser.add_argument(\"--out\",type=Path,default=Path(\"build/identity-locked-walk-review\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_sprite_factory.py",
-          "line": 33,
-          "preview": "'phase-matter fabricator with luminous cyan containment ring and central build cradle',",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 428,
-          "preview": "parser.add_argument('--source',type=Path,default=Path('build/tech-actions-v3'))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 429,
-          "preview": "parser.add_argument('--output',type=Path,default=Path('build/tech-actions-runtime-review'))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/procedural_fx_factory.py",
-          "line": 148,
-          "preview": "def build(target: str) -> Image.Image:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/procedural_fx_factory.py",
-          "line": 186,
-          "preview": "build(target).save(out, \"PNG\", optimize=True)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/rigged_tech_actions_v3.py",
-          "line": 503,
-          "preview": "\"asset_id\": asset_id, \"action\": action, \"build\": \"modular-tech-actions-v3\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/rigged_tech_actions_v3.py",
-          "line": 545,
-          "preview": "parser.add_argument(\"--output\", type=Path, default=Path(\"build/tech-actions-v3\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/rigged_tech_walk_v2.py",
-          "line": 319,
-          "preview": "def build(atlas:Path,out:Path,frames=24,fps=12):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/rigged_tech_walk_v2.py",
-          "line": 346,
-          "preview": "manifest={'asset_id':'CHR-TECH-WALK','build':'modular-skin-v2-IK-joint-guards',",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/rigged_tech_walk_v2.py",
-          "line": 368,
-          "preview": "parser.add_argument('--output',type=Path,default=Path('build/tech-walk-modular-v2'))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/rigged_tech_walk_v2.py",
-          "line": 372,
-          "preview": "manifest,path=build(args.skin,args.output,args.frames,args.fps)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/temporal_sprite_audit.py",
-          "line": 212,
-          "preview": "parser.add_argument('--source',type=Path,default=Path('build/tech-actions-v3'))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/temporal_sprite_audit.py",
-          "line": 213,
-          "preview": "parser.add_argument('--output',type=Path,default=Path('build/tech-temporal-review'))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_autonomous_walk.py",
-          "line": 74,
-          "preview": "root=Path(work)/'build'",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_character_review_matrix.py",
-          "line": 2,
-          "preview": "from character_review_matrix import build,markdown",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_character_review_matrix.py",
-          "line": 23,
-          "preview": "report=build(fake_queue())",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_character_review_matrix.py",
-          "line": 32,
-          "preview": "report=build(fake_queue())",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_character_review_matrix.py",
-          "line": 48,
-          "preview": "report=build(q)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_character_review_matrix.py",
-          "line": 58,
-          "preview": "with self.assertRaises(ValueError):build(q)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_character_review_matrix.py",
-          "line": 61,
-          "preview": "with self.assertRaises(ValueError):build(q)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_character_review_matrix.py",
-          "line": 64,
-          "preview": "with self.assertRaises(ValueError):build(q)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_character_review_matrix.py",
-          "line": 68,
-          "preview": "first=build(q)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_character_review_matrix.py",
-          "line": 69,
-          "preview": "second=build(q)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_focused_sprite_atlas.py",
-          "line": 1,
-          "preview": "\"\"\"Offline framing tests: no build artifacts or user review necessary.\"\"\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 15,
-          "preview": "FIXTURE=Path('build/tech-actions-v3').resolve()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 20,
-          "preview": "self.assertTrue(FIXTURE.is_dir(),f'Six-action build missing: {FIXTURE}')",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
-          "line": 10,
-          "preview": "CANVAS, GROUND, PART_NAMES, build, draw_frame, foot_local, foot_roll,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
-          "line": 113,
-          "preview": "manifest,bundle=build(KIT,out,frames=8,fps=8)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
-          "line": 136,
-          "preview": "with self.assertRaises(ValueError):build(KIT,Path(tmp),frames=n,fps=fps)",
-          "definition_candidate": false
         }
       ],
-      "occurrence_count": 69
+      "occurrence_count": 2
+    },
+    "ReviewCell": {
+      "definition": {
+        "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
+        "line": 302,
+        "kind": "symbol",
+        "language": "kotlin"
+      },
+      "occurrences": [
+        {
+          "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
+          "line": 130,
+          "preview": "ReviewCell(role, action, worldFrame)",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
+          "line": 302,
+          "preview": "private fun ReviewCell(",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 2
     }
   }
 }
