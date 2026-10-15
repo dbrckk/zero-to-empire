@@ -12,6 +12,7 @@ from PIL import Image
 import cairosvg
 from local_character_material_finish import finish_frame
 from local_character_action_fx import action_fx
+from local_character_contact_gait import foot_pose,torso_weight_shift
 
 FRAME=256
 ACTIONS={'IDLE':6,'WALK':8,'WORK':10,'CARRY':8,'REPAIR':10,'CELEB':8}
@@ -25,9 +26,9 @@ ROLES={
 def svg_frame(role:str, action:str, index:int, count:int)->str:
  p=ROLES[role]; phase=2*math.pi*index/count; motion=math.sin(phase); bounce=0.0
  if action in ('WALK','CARRY'):
-  stride=24*motion; bounce=3.5*(1-math.cos(phase*2))/2
- elif action=='IDLE':stride=0; bounce=1.8*math.sin(phase)
- else:stride=0;bounce=1.6*math.sin(phase)
+  bounce=2.8*(1-math.cos(phase*2))/2
+ elif action=='IDLE':bounce=1.8*math.sin(phase)
+ else:bounce=1.6*math.sin(phase)
  # Always keep same facial shape, helmet model, costume palette and 3/4 view.
  s=[]
  def add(v):s.append(v)
@@ -69,27 +70,26 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
   sleeve+=f'<circle cx="{ex}" cy="{ey}" r="3.5" fill="{p["seam"]}" opacity=".75"/>'
   return sleeve+hand(hx,hy)
 
- # legs behind torso: anti-phase step, readable ankle separation
+ # Locally authored planted-foot gait: 60% support, 40% lifted
+ # recovery, damped 3/4-view two-bone knees, and reciprocal L/R steps.
+ # Grounded ankles keep exactly the same Y even as pelvis bob changes.
  leg_poses=[]
  for side in ('L','R'):
-  signed=(1 if side=='L' else -1)
-  # Wider hip spacing and a damped ankle arc avoid the crossed ankles
-  # seen in the original WALK/CARRY frames. Articulation remains readable
-  # without stepping through the opposite shin.
-  hipx=106 if side=='L' else 146
-  swing=signed*stride
-  yhip=155+bounce
-  knee_x=hipx+0.45*swing + (2 if side=='L' else -2)
-  # A gait has both position and velocity. A sinusoidal X position
-  # alone repeats the same pose twice per loop (phase 45° and 135°).
-  # Use the signed cosine for stance-vs-swing foot lift: eight real poses,
-  # one grounded support foot per half-cycle and smooth loop closure.
-  swing_velocity=signed*math.cos(phase) if action in ('WALK','CARRY') else 0
-  knee_y=190+bounce-3*max(0,swing_velocity)
-  ankle_x=hipx + swing*0.66
-  lift=max(0,swing_velocity)*10 if action in ('WALK','CARRY') else 0
-  ankle_y=226+bounce-lift
-  leg_poses.append((side,hipx,yhip,knee_x,knee_y,ankle_x,ankle_y))
+  if action in ('WALK','CARRY'):
+   leg=foot_pose(phase,side,action,bounce)
+   hipx,yhip=leg.hip_x,leg.hip_y
+   knee_x,knee_y=leg.knee_x,leg.knee_y
+   ankle_x,ankle_y=leg.ankle_x,leg.ankle_y
+   boot_angle=leg.boot_angle
+  else:
+   hipx=106 if side=='L' else 146
+   yhip=155+bounce
+   knee_x=hipx+(2 if side=='L' else -2)
+   knee_y=190+bounce
+   ankle_x=hipx
+   ankle_y=226+bounce
+   boot_angle=0.0
+  leg_poses.append((side,hipx,yhip,knee_x,knee_y,ankle_x,ankle_y,boot_angle))
  add('<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">')
  add(f'''<defs>
  <linearGradient id="jacket" x1=".1" x2=".9" y1="0" y2="1"><stop offset="0" stop-color="{p['jacket_hi']}"/><stop offset=".43" stop-color="{p['jacket']}"/><stop offset="1" stop-color="#1b2c3a"/></linearGradient>
@@ -113,7 +113,7 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
  if role=='LOG':
   add(f'<path d="M 151 {62+bounce:.1f} Q 184 {64+bounce:.1f} 172 {106+bounce:.1f} Q 161 {119+bounce:.1f} 152 {94+bounce:.1f}Z" fill="{p["hair"]}" stroke="#1b2330" stroke-width="3"/>')
  # boots and 2 articulated segments per leg
- for side,hipx,yhip,kx,ky,ax,ay in leg_poses:
+ for side,hipx,yhip,kx,ky,ax,ay,boot_angle in leg_poses:
   add(line(hipx,yhip,kx,ky,'url(#pant)',23,3));add(line(kx,ky,ax,ay,'url(#pant)',20,3))
   # knee armor pad and seam
   add(f'<ellipse cx="{kx:.1f}" cy="{ky:.1f}" rx="11" ry="8" fill="#647687" stroke="#253645" stroke-width="2" opacity=".85"/>')
@@ -122,10 +122,17 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
   add(f'<circle cx="{kx-7:.1f}" cy="{ky-3:.1f}" r="1.6" fill="{p["accessory"]}"/><circle cx="{kx+7:.1f}" cy="{ky-3:.1f}" r="1.6" fill="{p["accessory"]}"/>')
   if side=='L': toe=ax-9
   else:toe=ax+9
+  # Heel-strike and toe-off flex the same boot art around its ankle.
+  add(f'<g transform="rotate({boot_angle:.2f} {ax:.2f} {ay:.2f})">')
   add(f'<path d="M {ax-10:.1f} {ay-8:.1f} Q {ax+11:.1f} {ay-11:.1f} {ax+13:.1f} {ay+2:.1f} L {toe+9:.1f} {ay+9:.1f} L {toe-12:.1f} {ay+7:.1f}Z" fill="#37434f" stroke="#1b2633" stroke-width="3"/>')
   add(f'<path d="M {toe-9:.1f} {ay+4:.1f} l 24 0" stroke="{p["seam"]}" stroke-width="2" opacity=".7"/>')
   add(f'<path d="M {toe-11:.1f} {ay+7:.1f} q 12 3 26 0" stroke="#16232d" stroke-width="3.8" fill="none"/>')
   add(f'<path d="M {toe-5:.1f} {ay-1:.1f} l 12 -2" stroke="#9cb2bd" stroke-width="1.9" opacity=".7"/>')
+  add('</g>')
+ # Weight shifts toward stance foot; cargo carry sway remains restrained.
+ # The hands, equipment, torso, helmet and face all receive the exact same
+ # transform, avoiding drift in object contact or character identity.
+ add(f'<g transform="translate({torso_weight_shift(phase,action):.2f},0)">')
  # BACK arm
  add(joint_arm('L',action))
  # main torso, premium tapered silhouette, safety accents
@@ -267,6 +274,7 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
   add(f'<path d="M 108 {95+bounce:.1f} Q 126 {93+bounce:.1f} 143 {97+bounce:.1f}" stroke="{p["seam"]}" stroke-width="3" opacity=".7"/>')
  # reflective micro-detail texture, unique per role but invariant per frame
  add(f'<path d="M 111 {111+bounce:.1f} l 7 4 M 139 {112+bounce:.1f} l 8 -4" stroke="#b8d7db" stroke-width="1.7" opacity=".7"/>')
+ add('</g>')  # balanced upper-body weight-transfer group
  add('</svg>')
  return '\n'.join(s)
 
@@ -297,7 +305,7 @@ def main():
  for role in ROLES:
   for action in ACTIONS:
    results.append(render_atlas(role,action,outdir,args.save_svg))
- report={'version':'chatgpt-original-character-rig-v5-operator-goggle-idle-expression','strict_done_added':0,'review_only':True,
+ report={'version':'chatgpt-original-character-rig-v6-contact-aware-leg-rig','strict_done_added':0,'review_only':True,
          'material_finish':'local-alpha-safe-directional-light-v1',
          'action_vfx':'local-attached-tool-and-wrist-highlights-v1',
          'asset_count':len(results),'unresolved_target_count':16,'assets':results}
