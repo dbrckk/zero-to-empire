@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 25fbce984ac216dfb8a4eb23705ab2148295027e
-Head: b9d51afa5a5a6052c2c9c151b3137dd0150c7773
+Base: 777e4e02c4f198225241306b0b761cd2cbb00b6b
+Head: c4b36284293136cd5030d2a7959142ba41597427
 
 ## Changed files
-- M ops/local-original-android-review-trigger.txt
+- M .github/workflows/local-original-character-android-preview.yml
 
 ## Affected areas
-- ops
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.
