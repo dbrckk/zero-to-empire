@@ -1,31 +1,30 @@
 # Project state
 
-Status: active — original character art requires semantic approval before production.
+Status: active — Android pipelines functional; original character art still requires premium visual-semantic and production approval.
 
 ## Working
-- Canonical master queue: **219/235 strict DONE**, 16 outstanding CHR actions (OP ×5, LOG ×5, ENG ×6).
-- Android Kotlin game and strict approval ledger remain intact. First-party art has editable SVG sources, PNG atlases, GIF loops and isolated Android review build.
-- ENG REPAIR fixed-socket art candidate merged in PR #149; ten physical tool-contact poses verified by workflow 38740866046 and isolated Android QA/emulator 38741556309 **SUCCESS**.
-- OP WALK original gait candidate merged in PR #150: operator-specific planted-foot stride (19px reach, 21px lift) and reciprocal arms, leaving all other roles/actions on their existing profiles.
-- Asset Pipeline CI 38744789050, generated OP art workflow 38744789685 and exact eight-pose SVG stance/boot check **SUCCESS**.
-- Isolated Android review APK jobs 38744963714 and 38745033106 passed debug compilation, existing Android checks, lint and separation from production saves.
-- Emulator 38745543878 **SUCCESS**: 24/24 role/action captures. `atlas-OPERATOR-WALK.png` was inspected at 42dp night / 39dp day, with the operator entirely visible.
+- Canonical master queue: **219/235 strict DONE**, with 16 pending CHR actions (OP ×5, LOG ×5, ENG ×6).
+- ENG REPAIR source candidate includes physically anchored repair fastener (PR #149); actual SVG contact QA and isolated Android emulator review passed. Not approved.
+- OP WALK has an original locally authored eight-frame walk rig with anti-phase legs, operator-specific support and constant-speed planted foot (PRs #150 and #152). Source atlas, SVGs and GIFs reproduce; **no production drawable has been promoted**.
+- OP WALK **eight real Android frames** verified by isolated emulator [38770555377](https://github.com/dbrckk/zero-to-empire/actions/runs/38770555377), PR #154.
+- Actual **city character layer motion** verified by isolated emulator [38774032853](https://github.com/dbrckk/zero-to-empire/actions/runs/38774032853), PR #155: 24/24 role/action captures, OP WALK frames 480–487, two real-stage screenshots 0.7s apart with 5,251 thresholded changed stage pixels in [32,129][1048,1757].
+- Android CI on [PR #155](https://github.com/dbrckk/zero-to-empire/pull/155) run 38772335910 **SUCCESS** and [main](https://github.com/dbrckk/zero-to-empire/actions/runs/38773512852) run 38773512852 **SUCCESS**. Isolated review APK run 38773513009 **SUCCESS**.
 
 ## Blockers
-- The 16 unresolved characters are **review-only candidates**, not AAA-approved production art. An emulator frame proves UI visibility but does not prove the full animation loop plays well in production gameplay.
-- OP WALK requires visual loop-speed judgment (foot slide, gait weight, arm timing), explicit semantic approval, exact final WebP runtime integration, and production Android build/CI before strict promotion.
-- Do not infer strict approvals from technical frame hashes or passing QA workflows. Legacy remote Kaggle/Pollinations provider states are historical; local source is currently reproducible.
+- The 16 unfinished CHR actions are still original-art QA candidates, **not AAA-approved runtime sprites**. The isolated stage is a simplified dark gradient containing the real character renderer, not the final decorated city scene.
+- OP WALK's moving body is confirmed onscreen, but full-speed slide/weight evaluation in the actual shipping city, explicit semantic approval, exact production WebP staging and release resource verification remain outstanding.
+- Never infer strict DONE from frame hashes, code tests, screenshots or debug-only presentation alone.
 
 ## Priority
-1. Inspect OP WALK animated loop in context, improve any visible slide or overly wide front-facing stride before considering strict approval.
-2. Verify exact approved atlas is referenced by the actual release/runtime and passes Android release checks; **no automatic promotion**.
-3. Then review remaining OP/LOG/ENG actions one at a time, prioritizing convincing semantic contact and stable identity.
+1. Review OP WALK movement/art against real production city context and approved visual identity. Fix meaningful visual defects one at a time.
+2. Only after explicit semantic approval, stage the exact resource into production and verify Android release/runtime; then update the strict master ledger.
+3. Continue LOG/ENG/OP remaining actions one by one, prioritizing real material/tool/body interaction and consistent role silhouettes.
+4. Preserve all existing progress, privacy and separate production save data.
 
 ## Last manual verification
-- 2026-10-15
-- Strict status: **219/235**, unchanged.
-- Android emulator QA evidence: workflow 38745543878, artifact 11979140579.
-- No new unit tests were added.
+- **2026-10-15**: strict **219/235**, 16 pending. Source-of-truth `art/production/master-asset-queue.json`.
+- Android screenshot evidence artifact: **11992229467** from run **38774032853**.
+- No new unit tests added; PR #153 was closed without merge.
 
 <!-- AUTO:START -->
 ## Automatic repository state
