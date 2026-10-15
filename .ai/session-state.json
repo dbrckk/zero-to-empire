@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "updated_at": "2026-10-15",
-  "task": "Improve OP WALK action readability with real planted-foot stride and counter-swing while preserving shipped sprites",
-  "branch": "art/op-walk-contact-stride-20261015",
-  "last_observed_head": "c603ee41d1447e9bde18e4281f16e46e179c6744",
+  "task": "Complete OP WALK first-party stride review, including actual Android emulator screenshots, before any strict promotion",
+  "branch": "main",
+  "last_observed_head": "77c4849dd9fd823ed4c1ea42851804662f3583c4",
   "state": {
     "strict_done": 219,
     "target_total": 235,
@@ -128,7 +128,7 @@
       "emulator_review_limit": "Proof of functional isolated review APK and visible scaled candidate, not proof of production gameplay integration or AAA semantic approval."
     },
     "op_walk_candidate": {
-      "status": "SOURCE_UPDATED_PR_PENDING",
+      "status": "MERGED_ART_GENERATION_AND_ANDROID_DEBUG_GREEN_EMULATOR_PENDING",
       "baseline": "existing OP eight frames show limited walking silhouette despite technical motion checks",
       "profile": {
         "stance_fraction": 0.58,
@@ -146,14 +146,32 @@
       "pose_source": "tools/sprites/local_character_contact_gait.py",
       "production_promotion": false,
       "strict_done_added": 0,
-      "generated_art_and_android": "pending CI and review"
+      "generated_art_and_android": "pending CI and review",
+      "merge_commit": "7383a38dbd813861674f7b6cea17639ec79bf535",
+      "original_atlas_commit": "33602e4e8fe8dc7525d9a9b16e29c9064a3b6bdd",
+      "asset_ci_run": 38744789050,
+      "original_generation_run": 38744789685,
+      "android_debug_run": 38744963714,
+      "android_emulator_run": 38745543878,
+      "observed_android_debug": "SUCCESS: isolated APK built, existing tests/lint passed, saved data protected",
+      "observed_art": "SUCCESS: original SVG eight-frame contact audit; all 18 original candidates regenerated",
+      "visual_review": "8-frame original PNG inspected at 256px and 39/42px preview; same OP identity and a legible swing. Still not production AAA semantic approval.",
+      "comparison": {
+        "mean_adjacent_pixel_activity_before": 0.075364,
+        "after": 0.5769,
+        "gain_percent": 15.2,
+        "loop_seam_ratio_before": 1.1309
+      },
+      "semantic_approval": false,
+      "doc": "docs/art/OP_WALK_STRIDE_REVIEW_2026-10-15.md",
+      "parallel_pr_151": "closed without merge to avoid overwriting already merged OP WALK branch"
     }
   },
-  "last_completed": "Authored OP-only WALK contact profile and corrected previously synchronized wrist-bobbing on OP arms. Added integration smoke check over the exact eight generated SVGs in original candidate workflow; pending actual rendered PNG/GIF, CI and Android device evidence. Strict count unchanged 219/235.",
+  "last_completed": "Main already independently merged OP WALK grounded stride as 7383a38d; parallel PR #151 was closed unmerged. Source and true SVG QA passed Asset CI 38744789050 plus original generation 38744789685. Visually inspected 8-frame atlas and 39/42px board, mean adjacent pixel activity increased 15.2%. Android isolated APK 38744963714 passed build/lint/tests. Emulator 38745543878 still running. Canonical 219/235 unchanged.",
   "next_actions": [
-    "Verify PR Asset Pipeline CI, then merge only on success.",
-    "Wait for main original character candidate generation: confirm 8 actual OP WALK SVGs pass contact audit, and new PNG/GIF generated on exact main code.",
-    "Inspect 8-frame OP WALK PNG/GIF at 256px and 39/42dp mobile scale; only then trigger isolated Android review APK and full emulator.",
-    "Do not promote canonical CHR-OP-WALK without semantic, exact runtime and production Android CI evidence."
+    "Confirm Android emulator 38745543878 completes success; inspect exact OPERATOR-WALK screenshot and 24 role/action coverage.",
+    "If screenshot/playback visually acceptable in game context, record semantic review; remember isolated review APK is not shipping gameplay integration.",
+    "For strict CHR-OP-WALK promotion, use exact runtime asset, verify production game reference, Android CI and release packaging, then update canonical queue only with evidence.",
+    "Advance to next most blocking one of 15 remaining characters only after this approval decision."
   ]
 }
