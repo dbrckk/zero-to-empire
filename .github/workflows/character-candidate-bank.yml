@@ -10,6 +10,10 @@ on:
     paths:
       - '.github/workflows/character-candidate-bank.yml'
       - 'art/production/master-asset-queue.json'
+      - 'art/incoming/chatgpt-original/candidates/**'
+      - 'art/incoming/chatgpt-original/src_svg/**'
+      - 'art/incoming/chatgpt-original/creation-manifest.json'
+      - 'art/incoming/chatgpt-original/candidate-qa.json'
 
 permissions:
   contents: write
@@ -59,15 +63,19 @@ jobs:
           python tools/sprites/build_character_candidate_bank.py \
             --master art/production/master-asset-queue.json \
             --archives /tmp/zte-review-archives \
+            --local-original art/incoming/chatgpt-original \
             --output /tmp/zte-character-bank-current.zip \
             --report /tmp/zte-character-bank-current.json
           python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
           import json
           d=json.load(open('/tmp/zte-character-bank-current.json'))
           print('## Character candidate bank')
-          print(f"- Verified production coverage: **{d['production_processed']} / {d['target_total']}**")
+          print(f"- Verified candidate coverage (including local originals): **{d['production_processed']} / {d['target_total']}**")
+          print(f"- Canonical production queue processed: **{d['canonical_queue_production_processed']} / {d['target_total']}**")
           print(f"- Strict DONE: **{d['strict_done']} / {d['target_total']}** (unchanged)")
-          print(f"- Archived provisional character sprites: **{d['candidate_count']}**")
+          print(f"- Provisional character sprites in bank: **{d['candidate_count']}**")
+          print(f"- Original in-repository fallbacks: **{len(d['local_original_fallback_ids'])}**")
+          print(f"- Local fallback IDs: {', '.join(d['local_original_fallback_ids']) or 'none'}")
           print(f"- Production candidate complete: **{d['candidate_production_complete']}**")
           if d['missing_character_candidates']:
               print("- Remaining: "+", ".join(x['id'] for x in d['missing_character_candidates']))
