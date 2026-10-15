@@ -1,5 +1,12 @@
 # PROJECT CONTINUITY — Zero → Empire
 
+## Current intervention — 2026-10-15 (OP WALK gait v2 candidate)
+
+- Based on previous actual Android 39/42dp OP WALK capture, in-place foot clearance and upper-body gait were insufficiently readable.
+- Source branch `art/op-walk-planted-stride-20261015` opts into **OP WALK only**: full-width stride reach 14→18px, foot recovery clearance 16→24px, toe/heel flex, reciprocal arms and torso counter-sway. Default WALK for LOG/ENG and all CARRY remain untouched.
+- An added existing-workflow integration check reads all **8 actual authored SVG boot transforms** to verify planted ankles on Y=226, visible swing >=20px, two legs non-crossing and rotation coordinates matching the physical SVG. This creates **no new unit-test file** and **does not imply art approval**.
+- PR CI, actual atlas regeneration and Android game-size visual QA are still pending at this checkpoint. Canonical count remains **219/235 strict DONE (16 review)**.
+
 ## Current verified action — 2026-10-15 (ENG REPAIR fixed socket)
 
 - **PR #149** merged as `7dadb8b9`: locally authored `CHR-ENG-REPAIR` now includes a stationary, ground-mounted service console with a defined bolt contact at **(218,129)** in its 256px cell. Wrist, prop, and VFX share an inverse-rotated rigid tool tip so the ratchet stays on the same bolt through all 10 frames.
