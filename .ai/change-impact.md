@@ -1,13 +1,16 @@
 # Change impact
 
-Base: 1ef11a85cd83a3e2fbba06f35602d98adb1cea8b
-Head: 56e492740db34f736a285d4ca0fbc26671654ac3
+Base: c603ee41d1447e9bde18e4281f16e46e179c6744
+Head: 7383a38dbd813861674f7b6cea17639ec79bf535
 
 ## Changed files
-- M PROJECT_CONTINUITY.md
+- M .github/workflows/art-chatgpt-original-candidates.yml
+- M tools/sprites/local_character_contact_gait.py
+- M tools/sprites/render_chatgpt_originals.py
 
 ## Affected areas
-- (root)
+- .github
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

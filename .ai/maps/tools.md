@@ -6273,7 +6273,7 @@ def _ease(t: float) -> float
 ⋮----
 t = max(0.0, min(1.0, t))
 ⋮----
-def foot_pose(phase: float, side: str, action: str, bounce: float = 0.0) -> FootPose
+def foot_pose(phase: float, side: str, action: str, bounce: float = 0.0, *, profile: str = "standard") -> FootPose
 ⋮----
 """Cyclic stance/swing path with locked stance Y and projected knee IK.
 
@@ -6284,23 +6284,29 @@ def foot_pose(phase: float, side: str, action: str, bounce: float = 0.0) -> Foot
     2D hinge produced by naïve screen-space IK.
     """
 ⋮----
-cycle = (phase/(2*math.pi)+(0 if side == "L" else .5)) % 1.0
-reach = 14.0 if action == "WALK" else 12.0
-clearance = 16.0 if action == "WALK" else 12.0
+# OP-specific stance/swing profile. A small phase offset prevents eight
+# source frames from hiding heel lift behind a pair of flat planted boots.
+# Standard WALK and all CARRY geometry remain byte-for-byte equivalent.
+operator = profile == "op-walk"
+stance_fraction = .58 if operator else STANCE_FRACTION
+phase_offset = .10 if operator else 0.0
+cycle = (phase/(2*math.pi)+(0 if side == "L" else .5)+phase_offset) % 1.0
+reach = 19.0 if operator else (14.0 if action == "WALK" else 12.0)
+clearance = 21.0 if operator else (16.0 if action == "WALK" else 12.0)
 ⋮----
-progress = _ease(cycle/STANCE_FRACTION)
+progress = _ease(cycle/stance_fraction)
 foot_dx = reach*(1.0-2.0*progress)
 lift = 0.0
-angle = -4.0 + 8.0*progress
+angle = 0.0 if operator else -4.0 + 8.0*progress
 planted = True
 ⋮----
-progress = (cycle-STANCE_FRACTION)/(1.0-STANCE_FRACTION)
+progress = (cycle-stance_fraction)/(1.0-stance_fraction)
 foot_dx = reach*(-1.0+2.0*_ease(progress))
 lift = clearance*math.sin(math.pi*progress)**1.4
 angle = 4.0-8.0*_ease(progress)
 planted = False
 ⋮----
-hip_x = 106.0 if side == "L" else 146.0
+hip_x = (103.0 if side == "L" else 150.0) if operator else (106.0 if side == "L" else 146.0)
 hip_y = 155.0+bounce
 ankle_x = hip_x+foot_dx
 ankle_y = FLOOR_ANKLE_Y-lift
@@ -7817,6 +7823,13 @@ handpos=engineer_repair_wrist(phase)
 elbow=(168+.45*(handpos[0]-176),115+.58*(handpos[1]-123))
 ⋮----
 swing=motion*(-1 if side=='L' else 1)
+⋮----
+# Reciprocal opposing arm motion: front arm rises as opposite boot leads.
+# Earlier both wrists bobbed in the same vertical direction.
+opposite=math.cos(phase)
+handpos=((84-10*opposite,147+11*opposite+bounce) if side=='L'
+elbow=((83-5*opposite,124+5*opposite+bounce) if side=='L'
+⋮----
 handpos=((84+8*swing,147+10*swing+bounce) if side=='L' else (170+8*swing,148-10*swing+bounce))
 elbow=((83+4*swing,124+5*swing+bounce) if side=='L' else (171+4*swing,127-5*swing+bounce))
 ⋮----
@@ -7832,7 +7845,7 @@ sleeve=line(shoulder_x,shoulder_y,ex,ey,'url(#jacket)',17,3)
 # Grounded ankles keep exactly the same Y even as pelvis bob changes.
 leg_poses=[]
 ⋮----
-leg=foot_pose(phase,side,action,bounce)
+leg=foot_pose(phase,side,action,bounce,profile='op-walk' if role=='OP' and action=='WALK' else 'standard')
 ⋮----
 boot_angle=leg.boot_angle
 ⋮----
@@ -7853,12 +7866,16 @@ boot_angle=0.0
 ⋮----
 # boots and 2 articulated segments per leg
 ⋮----
+# Actual rig data for generated SVG/CI movement proof, not approval.
+foot=foot_pose(phase,side,action,bounce,profile='op-walk')
+⋮----
 # knee armor pad and seam
 ⋮----
 if side=='L': toe=ax-9
 else:toe=ax+9
 # Heel-strike and toe-off flex the same boot art around its ankle.
 ⋮----
+add('</g>')  # close the per-leg pose-evidence group
 # Weight shifts toward stance foot; cargo carry sway remains restrained.
 # The hands, equipment, torso, helmet and face all receive the exact same
 # transform, avoiding drift in object contact or character identity.
@@ -7951,7 +7968,7 @@ parser=argparse.ArgumentParser()
 args=parser.parse_args();outdir=pathlib.Path(args.output_dir);outdir.mkdir(parents=True,exist_ok=True)
 results=[]
 ⋮----
-report={'version':'chatgpt-original-character-rig-v9-fixed-eng-repair-socket','strict_done_added':0,'review_only':True,
+report={'version':'chatgpt-original-character-rig-v10-op-contact-stride','strict_done_added':0,'review_only':True,
 ```
 
 ## File: sprites/render_original_character_previews.py

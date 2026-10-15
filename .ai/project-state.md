@@ -34,16 +34,19 @@ Status: active — Android runtime works; final character quality not yet approv
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-15T13:24:52Z
+Generated: 2026-10-15T13:41:15Z
 
 ### Git
 - Branch: `main`
-- Head: `56e492740db3`
-- Commit date: 2026-10-15T15:24:35+02:00
-- Commit: docs(review): replace pending emulator status with observed 24-screenshot success
+- Head: `7383a38dbd81`
+- Commit date: 2026-10-15T15:40:59+02:00
+- Commit: art(candidate): improve OP walk stance and counter-swing without changing other roles
 - Tracked files: 1782
 
 ### Recently changed files
+- `.github/workflows/art-chatgpt-original-candidates.yml`
+- `tools/sprites/local_character_contact_gait.py`
+- `tools/sprites/render_chatgpt_originals.py`
 - `PROJECT_CONTINUITY.md`
 - `ops/local-original-android-review-trigger.txt`
 - `art/incoming/chatgpt-original/animation-review.json`
@@ -61,9 +64,6 @@ Generated: 2026-10-15T13:24:52Z
 - `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/05.svg`
 - `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/06.svg`
 - `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/07.svg`
-- `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/08.svg`
-- `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/09.svg`
-- `art/incoming/chatgpt-original/visual-risk-qa.json`
 
 ### Project signals
 - `build.gradle.kts`
