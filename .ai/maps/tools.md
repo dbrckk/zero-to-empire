@@ -1305,6 +1305,47 @@ adb shell pidof com.zerotoempire.game.originalreview >/dev/null
 adb exec-out screencap -p > "$OUT/op-walk-city-stage-night-00.png"
 sleep .7
 adb exec-out screencap -p > "$OUT/op-walk-city-stage-night-01.png"
+# The uiautomator stage bounds are CLIPPED when the LazyColumn is scrolled.
+# Never use fractions of those bounds to locate an actor. Instead, locate
+# the precise Compose semantics of each real CharacterAtlasFrame after
+# selecting OPERATOR/WALK, scrolling further to find the lower actor.
+for actor in 0 1; do
+  actor_bounds=""
+  for attempt in $(seq 1 12); do
+    read_ui
+    if actor_bounds="$(python3 - "$OUT/ui-stage.xml" "$actor" <<'PY_ACTOR'
+import re,sys,xml.etree.ElementTree as ET
+root=ET.parse(sys.argv[1]).getroot()
+name=f'REVIEW OPERATOR WALK ACTOR {sys.argv[2]}'
+matching=[n for n in root.iter('node')
+          if (n.get('content-desc') or n.get('text') or '').strip()==name]
+if len(matching)!=1:
+    raise SystemExit(1)
+bounds=matching[0].get('bounds','')
+m=re.fullmatch(r'\[(\d+),(\d+)\]\[(\d+),(\d+)\]',bounds)
+if not m:
+    raise SystemExit(1)
+left,top,right,bottom=map(int,m.groups())
+if right-left<32 or bottom-top<32 or top<85 or bottom>1800:
+    raise SystemExit(1)
+print(left,top,right,bottom)
+PY_ACTOR
+)"; then
+      break
+    fi
+    adb shell input swipe 290 1490 290 810 385
+    sleep 1
+  done
+  if [ -z "$actor_bounds" ]; then
+    echo "OP WALK actor $actor was not fully visible in the city stage" >&2
+    exit 1
+  fi
+  printf '%s\n' "$actor_bounds" > "$OUT/op-walk-city-actor-$actor-bounds.txt"
+  adb shell pidof com.zerotoempire.game.originalreview >/dev/null
+  adb exec-out screencap -p > "$OUT/op-walk-city-actor-$actor-00.png"
+  sleep .7
+  adb exec-out screencap -p > "$OUT/op-walk-city-actor-$actor-01.png"
+done
 test "$stage_count" -eq 24
 echo "LOCAL_ORIGINAL_ANDROID_ALL_24_ROLE_ACTIONS_RENDERED=$stage_count" \
   > "$OUT/24-stage-coverage.txt"
@@ -1350,28 +1391,30 @@ change=ImageChops.difference(first,second).convert('L').point(
 active=sum(count for level,count in enumerate(change.histogram()) if level>0)
 if active<60:
     raise SystemExit(f'City game-size OP WALK sprites did not visibly animate: {active} changed pixels')
-# The genuine city also has independently moving traffic and scenery.
-# The full-stage difference alone is insufficient: require visible change at
-# both known OPERATOR placement corridors (upper-left and lower-right).
-width=stage_bounds[2]-stage_bounds[0]
-height=stage_bounds[3]-stage_bounds[1]
-corridors={
-    'upper-left':(.035,.44,.27,.66),
-    'lower-right':(.53,.76,.91,.98),
-}
-for name,(x0,y0,x1,y1) in corridors.items():
-    roi=(int(stage_bounds[0]+x0*width),
-         int(stage_bounds[1]+y0*height),
-         int(stage_bounds[0]+x1*width),
-         int(stage_bounds[1]+y1*height))
-    if roi[3]>images[0].height-80 or roi[1]<80:
-        raise SystemExit(f'OP WALK actor corridor is clipped off-screen: {name} {roi}')
-    local=ImageChops.difference(images[0].crop(roi),images[1].crop(roi))
+# The full-stage difference could come entirely from moving traffic.
+# Inspect each actual actor's accessible, pixel-exact measured bounds instead.
+# The second operator can be below the fold and is captured after scrolling.
+for index in range(2):
+    bounds_path=root/f'op-walk-city-actor-{index}-bounds.txt'
+    rect=[int(v) for v in bounds_path.read_text().split()]
+    if len(rect)!=4:
+        raise SystemExit(f'Invalid bounds for city actor {index}: {rect}')
+    pair=[Image.open(root/f'op-walk-city-actor-{index}-{n:02d}.png').convert('RGB')
+          for n in range(2)]
+    if any(image.size!=pair[0].size for image in pair):
+        raise SystemExit(f'Inconsistent screenshots of actor {index}')
+    l,t,r,b=rect
+    if r-l<32 or b-t<32 or l<0 or t<85 or r>pair[0].width or b>pair[0].height-80:
+        raise SystemExit(f'Actor {index} clipped or invalid: {rect}')
+    # Allow the moving actor up to 32 device pixels of travel over .7sec.
+    roi=(max(0,l-32),max(80,t-32),min(pair[0].width,r+32),
+         min(pair[0].height-80,b+32))
+    local=ImageChops.difference(pair[0].crop(roi),pair[1].crop(roi))
     detected=local.convert('L').point(lambda value: 255 if value>14 else 0)
-    changed=sum(count for level,count in enumerate(detected.histogram()) if level>0)
+    changed=sum(count for value,count in enumerate(detected.histogram()) if value>0)
     if changed<50:
-        raise SystemExit(f'No distinct motion near {name} OP WALK actor: {changed} pixels')
-    print(f'LOCAL_ORIGINAL_OP_WALK_CITY_{name.upper().replace("-","_")}_MOTION={changed}')
+        raise SystemExit(f'No actual pixels moving inside OP WALK actor {index}: {changed}')
+    print(f'LOCAL_ORIGINAL_OP_WALK_ACTOR_{index}_MOTION_PASS={changed}_CHANGED_PIXELS')
 print(f'LOCAL_ORIGINAL_ANDROID_CITY_STAGE_REAL_ACTOR_MOTION_PASS={active}_CHANGED_PIXELS')
 # The independent OP WALK capture must exercise eight distinct UI frame indices.
 poses=sorted(root.glob('op-walk-frame-*.png'))

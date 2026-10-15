@@ -29,23 +29,22 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-15T18:28:41Z
+Generated: 2026-10-15T18:45:16Z
 
 ### Git
 - Branch: `main`
-- Head: `b684d3429449`
-- Commit date: 2026-10-15T20:28:07+02:00
-- Commit: ci(android): verify combined authentic city scenery and corrected OP walking speed
+- Head: `af67c7d853b0`
+- Commit date: 2026-10-15T20:44:51+02:00
+- Commit: qa(android): locate real OP WALK actor motion by exact Compose bounds
 - Tracked files: 1783
 
 ### Recently changed files
-- `ops/local-original-android-review-trigger.txt`
 - `app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt`
+- `ops/local-original-android-review-trigger.txt`
+- `tools/android/local_original_character_emulator_smoke.sh`
 - `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
 - `app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt`
-- `tools/android/local_original_character_emulator_smoke.sh`
 - `PROJECT_CONTINUITY.md`
-- `docs/art/OP_WALK_STRIDE_REVIEW_2026-10-15.md`
 
 ### Project signals
 - `build.gradle.kts`
