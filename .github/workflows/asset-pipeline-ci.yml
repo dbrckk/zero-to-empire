@@ -13,6 +13,8 @@ on:
       - 'tools/sprites/render_chatgpt_originals.py'
       - 'tools/sprites/local_character_material_finish.py'
       - 'tools/sprites/local_character_action_fx.py'
+      - 'tools/sprites/local_character_contact_gait.py'
+      - 'tools/sprites/test_local_character_contact_gait.py'
       - 'tools/sprites/test_local_character_action_fx.py'
       - 'tools/sprites/render_original_character_previews.py'
       - 'art/incoming/chatgpt-original/**'
@@ -61,6 +63,8 @@ on:
       - 'tools/sprites/render_chatgpt_originals.py'
       - 'tools/sprites/local_character_material_finish.py'
       - 'tools/sprites/local_character_action_fx.py'
+      - 'tools/sprites/local_character_contact_gait.py'
+      - 'tools/sprites/test_local_character_contact_gait.py'
       - 'tools/sprites/test_local_character_action_fx.py'
       - 'tools/sprites/render_original_character_previews.py'
       - 'art/incoming/chatgpt-original/**'
@@ -132,6 +136,7 @@ jobs:
             tools/sprites/render_chatgpt_originals.py \
             tools/sprites/local_character_material_finish.py \
             tools/sprites/local_character_action_fx.py \
+            tools/sprites/local_character_contact_gait.py \
             tools/sprites/render_original_character_previews.py \
             tools/sprites/verify_local_character_bundle.py \
             tools/sprites/character_head_identity_lock.py \
@@ -345,6 +350,7 @@ jobs:
           python -m unittest discover -s tools/sprites -p 'test_verify_character_idle_candidates.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_head_identity_lock.py' -v
           python -m unittest discover -s tools/sprites -p 'test_local_character_action_fx.py' -v
+          python -m unittest discover -s tools/sprites -p 'test_local_character_contact_gait.py' -v
           python -m unittest discover -s tools/sprites -p 'test_verify_character_action_candidates.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_approved_idle_fallback.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_ground_shadow_cleanup.py' -v
