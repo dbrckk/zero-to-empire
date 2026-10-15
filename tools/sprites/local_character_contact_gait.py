@@ -1,0 +1,91 @@
+"""Locally authored 2.5D contact-aware locomotion rig for OP / LOG / ENG.
+
+No remote art generation. This is an editable candidate pose source and does
+not approve sprites or replace Android resources.
+"""
+from __future__ import annotations
+
+from dataclasses import dataclass
+import math
+
+STANCE_FRACTION = .60
+FLOOR_ANKLE_Y = 226.0
+UPPER_LEG = 37.5
+LOWER_LEG = 38.5
+
+@dataclass(frozen=True)
+class FootPose:
+    hip_x: float
+    hip_y: float
+    knee_x: float
+    knee_y: float
+    ankle_x: float
+    ankle_y: float
+    boot_angle: float
+    planted: bool
+    cycle: float
+
+
+def _ease(t: float) -> float:
+    t = max(0.0, min(1.0, t))
+    return t*t*(3.0-2.0*t)
+
+
+def foot_pose(phase: float, side: str, action: str, bounce: float = 0.0) -> FootPose:
+    """Cyclic stance/swing path with locked stance Y and projected knee IK.
+
+    Frame coordinates: 256x256, +Y downward. During the support fraction,
+    the sole stays on a constant ground-height line; during recovery it lifts
+    smoothly and advances. Feet alternate exactly half a stride apart. Knee
+    lateral excursion is attenuated for a 3/4 projection, avoiding the bowed
+    2D hinge produced by naïve screen-space IK.
+    """
+    if side not in ("L","R"):
+        raise ValueError("side must be L or R")
+    if action not in ("WALK","CARRY"):
+        raise ValueError("contact gait is only for WALK/CARRY")
+
+    cycle = (phase/(2*math.pi)+(0 if side == "L" else .5)) % 1.0
+    reach = 14.0 if action == "WALK" else 12.0
+    clearance = 16.0 if action == "WALK" else 12.0
+    if cycle < STANCE_FRACTION:
+        progress = _ease(cycle/STANCE_FRACTION)
+        foot_dx = reach*(1.0-2.0*progress)
+        lift = 0.0
+        angle = -4.0 + 8.0*progress
+        planted = True
+    else:
+        progress = (cycle-STANCE_FRACTION)/(1.0-STANCE_FRACTION)
+        foot_dx = reach*(-1.0+2.0*_ease(progress))
+        lift = clearance*math.sin(math.pi*progress)**1.4
+        angle = 4.0-8.0*_ease(progress)
+        planted = False
+
+    hip_x = 106.0 if side == "L" else 146.0
+    hip_y = 155.0+bounce
+    ankle_x = hip_x+foot_dx
+    ankle_y = FLOOR_ANKLE_Y-lift
+    dx,dy = ankle_x-hip_x,ankle_y-hip_y
+    length = math.hypot(dx,dy)
+    if not 1.0 < length < UPPER_LEG+LOWER_LEG:
+        raise ValueError("Unreachable projected two-bone leg pose")
+
+    along = (UPPER_LEG**2-LOWER_LEG**2+length**2)/(2.0*length)
+    perpendicular = math.sqrt(max(0.0,UPPER_LEG**2-along**2))
+    # Outer knee contour, compressed by perspective, not a sideways kick.
+    contour = 1.0 if side == "L" else -1.0
+    knee_x = hip_x+dx*along/length+contour*(-dy/length)*perpendicular*.55
+    knee_y = hip_y+dy*along/length+contour*(dx/length)*perpendicular*.55
+    return FootPose(
+        hip_x,hip_y,knee_x,knee_y,ankle_x,ankle_y,
+        angle,planted,cycle
+    )
+
+
+def torso_weight_shift(phase: float, action: str) -> float:
+    """Counter-sway toward the grounded stance foot, scaled for cargo."""
+    if action == "WALK":
+        return -2.6*math.sin(phase)
+    if action == "CARRY":
+        return -1.6*math.sin(phase)
+    return 0.0
