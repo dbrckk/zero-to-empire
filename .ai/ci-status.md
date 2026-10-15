@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 2 success / 0 failure / 5 active
+Summary: 6 success / 0 failure / 1 active
 
-- Asset Pipeline CI: in_progress / pending (edbdfb76)
-- Android CI: in_progress / pending (edbdfb76)
-- Reconcile Sprite Progress Ledger: in_progress / pending (edbdfb76)
-- Sprite Completion Gate: in_progress / pending (edbdfb76)
-- Sprite Production Plan: in_progress / pending (edbdfb76)
-- Reconcile reviewed run 25: completed / skipped (fda91ff4)
-- Asset Pipeline CI: completed / success (2d07455d)
-- Android CI: completed / success (2d07455d)
+- Reconcile Sprite Progress Ledger: in_progress / pending (2eb60baa)
+- Reconcile Sprite Progress Ledger: completed / success (6194c1b3)
+- Asset Pipeline CI: completed / success (6194c1b3)
+- ChatGPT Original Character Candidates: completed / success (6194c1b3)
+- Asset Pipeline CI: completed / success (7ed396e2)
+- Reconcile Sprite Progress Ledger: completed / success (7ed396e2)
+- Reconcile reviewed run 25: completed / skipped (4fbd8c34)
+- Asset Pipeline CI: completed / success (edbdfb76)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

@@ -38451,6 +38451,20 @@ plugins {
 ```markdown
 # PROJECT CONTINUITY — Zero → Empire
 
+## Verified latest — 2026-10-15 (PR #148 completed)
+
+- **PR #148 merged** at `6194c1b3`: the local, self-contained original-art reviewer now renders a single selected atlas frame simultaneously in its large canvas and true game-size **42px night / 39px day** previews. Animated GIFs are shown only while playback mode is active; switching roles/actions resets playback consistently.
+- Exact inline-JavaScript interaction smoke check **PASS (7 cases)**. PR Asset Pipeline CI run **38739375267**, main Asset Pipeline CI run **38739530704**, Original Character Candidates generator run **38739530573**, and Repository standards run **38739532721** all **SUCCESS**. The generator committed regenerated `original-offline-review.html` to main on `cbd35665`, preserving independent, non-production art status.
+- Directly inspected original atlas candidate frames for `CHR-OP-WALK` (gait amplitude still limited), `CHR-LOG-CARRY` (crate aligned with both grips, locomotion still requires review), and `CHR-ENG-REPAIR` (right-hand equipment visible, no convincing fixed repair target). These observations do **not** constitute an Android animation semantic approval or a strict promotion.
+- Master queue re-counted on main: **219/235 strict DONE; 16 outstanding CHR actions**. Next work: finish meaningful action/contact/identity polish on one role at a time, visually inspect at Android gameplay size, then run runtime and CI verification before any promotion. 
+
+## Current intervention — 2026-10-15 (after PR #147 merge)
+
+- PR **#147** merged on `main` (`edbdfb76`); exact-main Asset Pipeline CI **38737302273** and Android CI **38737302024** both completed **SUCCESS**. Subsequent reconciliation advanced `main` to `4fbd8c34` without changing the strict backlog.
+- Canonical strict remains **219/235**; **16 CHR actions** are unresolved. Original first-party SVG/PNG/GIF art is *review-only* and must not be promoted without exact semantic and Android evidence.
+- The self-contained Android-friendly reviewer previously paused only its 256px atlas canvas: night/day game-size GIF previews kept moving out of sync. Branch `fix/offline-frame-scale-sync-20261015` changes still mode to draw the **same selected atlas frame** on all three canvases (256px, 42px night, 39px day), then restores all animated previews on exit.
+- An interactive JavaScript DOM smoke exercise of the exact updated inline script passed seven scenarios, including manual frame stepping, scrubbing frame seven, role switching and restoration of GIF playback. **Asset Pipeline CI and device visual inspection for this fix remain to be confirmed.** No shipping runtime code, sprites or canonical approvals were changed.
+
 > Persistent handoff file. Read before work and update at every material intervention. Never rely on chat history alone.
 
 ## Verified current state — 2026-10-15 (authoritative; supersedes historical snapshot below)

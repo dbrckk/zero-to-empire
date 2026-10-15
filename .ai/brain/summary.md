@@ -1,12 +1,12 @@
 # Repo Brain
 
-- Index mode: full
+- Index mode: incremental
 - Files indexed: 278
-- Files reparsed this run: 278
+- Files reparsed this run: 1
 - Symbols: 1450
 - Internal import edges: 71
 - Impacted files: 1
-- Selected tests: 1
+- Selected tests: 0
 
 ## Languages
 - kotlin: 160 files
@@ -42,8 +42,8 @@
 
 ## ast-grep enrichment
 - ast-grep outline: available
-- AST index mode: full
-- AST files reparsed this run: 287
+- AST index mode: incremental
+- AST files reparsed this run: 1
 - outline files retained: 287
 - top-level items retained: 3819
 - direct members retained: 974

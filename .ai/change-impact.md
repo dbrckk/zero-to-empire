@@ -1,18 +1,13 @@
 # Change impact
 
-Base: fda91ff481b9f3af130c6c561b5cf45273e4dfc8
-Head: edbdfb76d03c8fe169c51b22ea9d974b05b795fc
+Base: abeed79254b5a0d9c2883e37e37f79a2aa3d99a0
+Head: 2eb60baa0a4b865146b77ed8b3756583a9611fe7
 
 ## Changed files
 - M PROJECT_CONTINUITY.md
-- M docs/art/FINAL_AAA_SPRITE_MANIFEST.md
-- M docs/art/FINAL_AAA_SPRITE_PROGRESS.md
-- M tools/sprites/test_local_character_action_fx.py
 
 ## Affected areas
 - (root)
-- docs
-- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.
