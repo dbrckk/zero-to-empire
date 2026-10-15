@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "updated_at": "2026-10-15",
-  "task": "Verify OP WALK mainline original character animation on the isolated Android emulator; preserve all strict approvals",
+  "task": "Finish semantic and production-runtime review for new OP WALK candidate after successful Android emulator QA",
   "branch": "main",
   "last_observed_head": "3c459336fba1194db6e38f5b8356090ba1ce1d73",
   "state": {
@@ -128,7 +128,7 @@
       "emulator_review_limit": "Proof of functional isolated review APK and visible scaled candidate, not proof of production gameplay integration or AAA semantic approval."
     },
     "op_walk_candidate": {
-      "status": "MERGED_ASSET_AND_APK_GREEN_EMULATOR_IN_PROGRESS",
+      "status": "MERGED_AND_ISOLATED_EMULATOR_QA_SUCCESS_NOT_STRICT_APPROVED",
       "pr": 150,
       "merge_commit": "7383a38dbd813861674f7b6cea17639ec79bf535",
       "rig": "op-walk",
@@ -147,19 +147,24 @@
       "android_review_run": 38744963714,
       "android_emulator_run": 38745543878,
       "validation": "Asset Pipeline, actual eight-frame SVG foot/boot audit, original PNG/GIF generation, Android QA APK build+existing tests+lint passed",
-      "visual": "Reviewed exact 8-frame PNG and 39/42px OP role board: gait more legible, continuous operator identity. Moving Android UI screenshot QA still pending.",
+      "visual": "Exact original 8-frame OP atlas inspected: clearly wider stride and opposite arm motion, consistent helmet/silhouette. Isolated Android screenshot OPERATOR/WALK inspected: whole OP worker visible on 42dp night and 39dp day backgrounds, without cropping. A single screenshot cannot prove moving loop premium AAA quality or production scene integration.",
       "mean_pixel_activity_before": 0.075364,
       "mean_pixel_activity_after": 0.086847,
       "semantic_approved": false,
       "android_production_approved": false,
-      "strict_done_added": 0
+      "strict_done_added": 0,
+      "emulator": "SUCCESS on run 38745543878, 24/24 role/action screenshots",
+      "emulator_artifact_id": 11979140579,
+      "emulator_file": "atlas-OPERATOR-WALK.png",
+      "second_android_review_run": 38745033106,
+      "emulator_proof": "Downloaded ZIP artifact 11979140579; actual OPERATOR-WALK screenshot inspected and 24-stage-coverage.txt verifies 24 combinations. Script and emulator workflow concluded SUCCESS."
     }
   },
-  "last_completed": "PR #150 merged main, OP-specific gait and reciprocal arms generated locally and validated with real 8-SVG foot/boot contact gate. Original renderer, main asset CI, isolated Android QA APK/test/lint green. New OP atlas and mobile board inspected. Android emulator workflow 38745543878 still in progress; no strict promotion (219/235).",
+  "last_completed": "PR #150 merged. OP WALK 8 original SVGs checked for foot contact/lift, Asset Pipeline + original candidate CI success; QA APK 38744963714 and redundant QA APK 38745033106 successful; emulator 38745543878 completed SUCCESS and screenshot OPERATOR-WALK visually inspected at night 42dp/day 39dp. Still an original art candidate; 219/235 strict DONE unchanged.",
   "next_actions": [
-    "Confirm Android emulator run 38745543878 reaches success and includes real OPERATOR WALK game-size screenshot among 24 combinations; inspect screenshot proof.",
-    "Judge walking loop speed, foot contact and identity fidelity against shipped world art; only explicit semantic review can approve candidate.",
-    "If approved, stage exact WebP and verify actual production game Android runtime, build/lint/release before marking canonical DONE.",
-    "Leave other unresolved characters and all 219 current strict approvals untouched."
+    "Assess OP WALK actual running loop at gameplay speed for foot slide and body/arm coherence; single emulator frame confirms rendering but not moving quality.",
+    "Before strict approval, compare to the game art direction, require explicit human semantic acceptance, then integrate exact runtime WebP into production source and verify live gameplay, release build/lint/tests.",
+    "Do not promote CHR-OP-WALK or other 15 unresolved assets just because review-only emulator CI succeeded.",
+    "Next isolated action after OP WALK closure: review remaining rejected walking and contact animation candidates."
   ]
 }
