@@ -199,7 +199,9 @@ for node in tree.iter('node'):
     if not match:
         continue
     left,top,right,bottom=map(int,match.groups())
-    if (right-left)>=500 and min(bottom,1800)-max(top,80)>=650:
+    # Require the upper part of the stage inside the viewport; otherwise
+    # its first 650 pixels may be empty space above the actual actors.
+    if (right-left)>=500 and top<=600 and min(bottom,1800)-max(top,80)>=650:
         print(left,top,right,bottom)
         break
 else:
