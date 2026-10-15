@@ -364,21 +364,23 @@ private fun CharacterReviewGallery() {
                             style = MaterialTheme.typography.titleMedium,
                         )
                         Text(
-                            "Exact city character renderer and positions at gameplay sizes " +
-                                "(35–46 dp). This debug comparison does not approve any sprite. " +
-                                "Pause and single-step above also control this layer.",
+                            "Production city stage: real vista, roads, terrain, machines, traffic " +
+                                "and character layer (35–46 dp), without interactive businesses. " +
+                                "Only this isolated APK substitutes candidate atlases. " +
+                                "Pause and step control the entire scene; this is not approval.",
                             style = MaterialTheme.typography.bodySmall,
                         )
                         OutlinedButton(onClick = { daylightStage = !daylightStage }) {
-                            Text(if (daylightStage) "Night stage" else "Daylight stage")
+                            Text(if (daylightStage) "Normal city lighting" else "Daylight contrast wash")
                         }
                         Text(
-                            if (daylightStage) "DAYLIGHT CONTRAST REVIEW" else "NIGHT CONTRAST REVIEW",
+                            if (daylightStage) "DAYLIGHT WASH · QA SIMULATION" else "PRODUCTION CITY LIGHTING",
                             style = MaterialTheme.typography.labelMedium,
                         )
                         Text(
-                            "Choisissez un métier et une animation pour vérifier les 18 atlas " +
-                                "à la taille réelle dans les éclairages du jeu.",
+                            "Choisissez un métier et une animation : la scène emploie les vrais " +
+                                "calques de la ville, mais sans les panneaux économiques interactifs. " +
+                                "Le mode clair est une simulation QA, pas une météo du jeu.",
                             style = MaterialTheme.typography.bodySmall,
                         )
                         OutlinedButton(onClick = { inspectedRole = null }) {
@@ -487,32 +489,32 @@ private fun CharacterReviewGallery() {
                                 }
                             }
                         }
-                        // Only the real city character composable is used here.
-                        // CI injects review-only textures into the isolated APK,
-                        // never the shipped production masters.
+                        // Reuse the actual production city stage: its skyline,
+                        // road, terrain, machines, traffic and character renderer
+                        // are identical. Only its clock and role selection are
+                        // overridden inside this isolated preview. No shipping
+                        // runtime drawable or save file is modified.
                         Box(
                             Modifier
                                 .fillMaxWidth()
                                 .height(620.dp)
-                                .semantics { contentDescription = "REVIEW GAMEPLAY STAGE" }
-                                .background(
-                                    Brush.verticalGradient(
-                                        if (daylightStage) {
-                                            listOf(Color(0xFFD7E4EB), Color(0xFFBACCD6), Color(0xFF91ABB8))
-                                        } else {
-                                            listOf(Color(0xFF07101C), Color(0xFF101B24), Color(0xFF080D13))
-                                        }
-                                    )
-                                ),
+                                .semantics { contentDescription = "REVIEW GAMEPLAY STAGE" },
                         ) {
-                            ReviewedCharacterLayer(
+                            AscendantCityStage(
                                 eraIndex = 0,
-                                worldFrame = worldFrame,
-                                reducedMotion = false,
                                 modifier = Modifier.fillMaxSize(),
-                                roleFilter = inspectedRole,
-                                actionOverride = if (inspectedRole != null) inspectedAction else null,
+                                reviewWorldFrame = worldFrame,
+                                reviewRoleFilter = inspectedRole,
+                                reviewActionOverride = if (inspectedRole != null) inspectedAction else null,
                             )
+                            if (daylightStage) {
+                                // Contrast stress test, not a claim that the
+                                // production city currently supports day/night.
+                                Box(
+                                    Modifier.fillMaxSize()
+                                        .background(Color(0x44DBEAF2)),
+                                )
+                            }
                         }
                     }
                 }
@@ -1126,12 +1128,25 @@ private fun AscendantCompactHud(state: GameState) {
 @Composable private fun EraChip(number: Int, name: String) { Surface(color = EmpireColors.DeepSpace.copy(alpha = .88f), shape = RoundedCornerShape(15.dp), modifier = Modifier.border(1.dp, EmpireColors.Gold.copy(alpha = .25f), RoundedCornerShape(15.dp))) { Column(Modifier.padding(horizontal = 11.dp, vertical = 7.dp)) { Text("ERA $number", color = EmpireColors.Gold, fontSize = 8.sp, fontWeight = FontWeight.Black, letterSpacing = 1.2.sp); Text(name.uppercase(), color = EmpireColors.TextPrimary, fontSize = 11.sp, fontWeight = FontWeight.Black) } } }
 
 @Composable
-private fun AscendantCityStage(eraIndex: Int, modifier: Modifier = Modifier) {
+internal fun AscendantCityStage(
+    eraIndex: Int,
+    modifier: Modifier = Modifier,
+    // Only the isolated debug QA caller sets these. Null preserves the
+    // shipping city's existing clock, actors and motion accessibility policy.
+    reviewWorldFrame: Int? = null,
+    reviewRoleFilter: ReviewedCharacterRole? = null,
+    reviewActionOverride: ReviewedCharacterAction? = null,
+) {
     val context = LocalContext.current
     val reducedMotion = remember(context) { MotionQuality.reducedMotion(context) }
     var ambientFrame by remember { mutableIntStateOf(0) }
 
-    LaunchedEffect(reducedMotion) {
+    LaunchedEffect(reducedMotion, reviewWorldFrame != null) {
+        if (reviewWorldFrame != null) {
+            // One common manually controllable clock in the review APK.
+            // Never launch a second ticker that could desync city and atlas.
+            return@LaunchedEffect
+        }
         if (reducedMotion) {
             ambientFrame = 0
         } else {
@@ -1141,6 +1156,9 @@ private fun AscendantCityStage(eraIndex: Int, modifier: Modifier = Modifier) {
             }
         }
     }
+
+    val displayedFrame = reviewWorldFrame ?: ambientFrame
+    val displayedReducedMotion = if (reviewWorldFrame == null) reducedMotion else false
 
     Box(modifier.background(Brush.verticalGradient(listOf(Color(0xFF07101C), Color(0xFF101B24), Color(0xFF080D13))))) {
         EraVistaAAA(eraIndex, Modifier.fillMaxSize())
@@ -1158,13 +1176,15 @@ private fun AscendantCityStage(eraIndex: Int, modifier: Modifier = Modifier) {
         ReviewedMachineLayer(eraIndex, Modifier.fillMaxSize())
         ReviewedCharacterLayer(
             eraIndex = eraIndex,
-            worldFrame = ambientFrame,
-            reducedMotion = reducedMotion,
+            worldFrame = displayedFrame,
+            reducedMotion = displayedReducedMotion,
             modifier = Modifier.fillMaxSize(),
+            roleFilter = reviewRoleFilter,
+            actionOverride = reviewActionOverride,
         )
         ReviewedWorldTraffic(
-            worldFrame = ambientFrame,
-            reducedMotion = reducedMotion,
+            worldFrame = displayedFrame,
+            reducedMotion = displayedReducedMotion,
             modifier = Modifier.fillMaxSize(),
         )
         Box(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color.Transparent,Color.Transparent,EmpireColors.Void.copy(alpha=.24f)))))

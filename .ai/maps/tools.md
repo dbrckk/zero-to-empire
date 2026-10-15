@@ -1350,6 +1350,28 @@ change=ImageChops.difference(first,second).convert('L').point(
 active=sum(count for level,count in enumerate(change.histogram()) if level>0)
 if active<60:
     raise SystemExit(f'City game-size OP WALK sprites did not visibly animate: {active} changed pixels')
+# The genuine city also has independently moving traffic and scenery.
+# The full-stage difference alone is insufficient: require visible change at
+# both known OPERATOR placement corridors (upper-left and lower-right).
+width=stage_bounds[2]-stage_bounds[0]
+height=stage_bounds[3]-stage_bounds[1]
+corridors={
+    'upper-left':(.035,.44,.27,.66),
+    'lower-right':(.53,.76,.91,.98),
+}
+for name,(x0,y0,x1,y1) in corridors.items():
+    roi=(int(stage_bounds[0]+x0*width),
+         int(stage_bounds[1]+y0*height),
+         int(stage_bounds[0]+x1*width),
+         int(stage_bounds[1]+y1*height))
+    if roi[3]>images[0].height-80 or roi[1]<80:
+        raise SystemExit(f'OP WALK actor corridor is clipped off-screen: {name} {roi}')
+    local=ImageChops.difference(images[0].crop(roi),images[1].crop(roi))
+    detected=local.convert('L').point(lambda value: 255 if value>14 else 0)
+    changed=sum(count for level,count in enumerate(detected.histogram()) if level>0)
+    if changed<50:
+        raise SystemExit(f'No distinct motion near {name} OP WALK actor: {changed} pixels')
+    print(f'LOCAL_ORIGINAL_OP_WALK_CITY_{name.upper().replace("-","_")}_MOTION={changed}')
 print(f'LOCAL_ORIGINAL_ANDROID_CITY_STAGE_REAL_ACTOR_MOTION_PASS={active}_CHANGED_PIXELS')
 # The independent OP WALK capture must exercise eight distinct UI frame indices.
 poses=sorted(root.glob('op-walk-frame-*.png'))

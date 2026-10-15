@@ -29,22 +29,23 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-15T17:11:00Z
+Generated: 2026-10-15T18:22:39Z
 
 ### Git
 - Branch: `main`
-- Head: `d900e5878949`
-- Commit date: 2026-10-15T19:10:35+02:00
-- Commit: docs(continuity): preserve verified OP WALK city-stage Android QA and remaining gates
+- Head: `f94617f0f84d`
+- Commit date: 2026-10-15T20:22:24+02:00
+- Commit: qa(android): reuse authentic city scenery for original character review
 - Tracked files: 1783
 
 ### Recently changed files
+- `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
+- `app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt`
+- `ops/local-original-android-review-trigger.txt`
+- `tools/android/local_original_character_emulator_smoke.sh`
 - `PROJECT_CONTINUITY.md`
 - `docs/art/OP_WALK_STRIDE_REVIEW_2026-10-15.md`
 - `.github/workflows/local-original-character-android-emulator.yml`
-- `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
-- `ops/local-original-android-review-trigger.txt`
-- `tools/android/local_original_character_emulator_smoke.sh`
 
 ### Project signals
 - `build.gradle.kts`
