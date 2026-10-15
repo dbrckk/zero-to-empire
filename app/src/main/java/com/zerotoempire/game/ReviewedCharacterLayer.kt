@@ -118,7 +118,12 @@ internal fun ReviewedCharacterLayer(
             CharacterPlacement(ReviewedCharacterRole.LOGISTICS, ReviewedCharacterAction.WALK, .564f, .734f, 43.dp, 5, .16f),
             CharacterPlacement(ReviewedCharacterRole.ENGINEER, ReviewedCharacterAction.WORK, .794f, .535f, 46.dp, 7),
             CharacterPlacement(ReviewedCharacterRole.LOGISTICS, ReviewedCharacterAction.IDLE, .200f, .803f, 36.dp, 2),
-            CharacterPlacement(ReviewedCharacterRole.OPERATOR, ReviewedCharacterAction.WALK, .681f, .839f, 37.dp, 6, .18f),
+            // Match the 37dp OP boot's authored planted speed (38 atlas pixels
+            // over 0.58 × 8 frames): 1.18dp/tick on a 360dp city stage.
+            // The old 0.18f journey moved only 0.81dp/tick and visibly skated
+            // the planted heel. 0.26f travels ~1.17dp/tick; other roles stay
+            // unchanged. No sprite IDs or approval/ledger state are changed.
+            CharacterPlacement(ReviewedCharacterRole.OPERATOR, ReviewedCharacterAction.WALK, .681f, .839f, 37.dp, 6, .26f),
             CharacterPlacement(ReviewedCharacterRole.TECHNICIAN, ReviewedCharacterAction.WORK, .883f, .697f, 39.dp, 4),
             CharacterPlacement(ReviewedCharacterRole.ENGINEER, ReviewedCharacterAction.IDLE, .433f, .863f, 35.dp, 1),
         )
