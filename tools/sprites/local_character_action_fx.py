@@ -14,6 +14,33 @@ ROLE_LIGHT={
 }
 
 
+# Endpoints are defined in wrist-local sprite coordinates, matching the
+# ACTUAL authored props in render_chatgpt_originals.py. Both SVG geometry
+# and lighting use one rigid rotation; there are no free-floating effects.
+TOOL_TIP_OFFSETS={
+    'WORK':{'OP':(35.0,-5.0),'LOG':(37.0,0.0),'ENG':(33.0,0.0)},
+    'REPAIR':{'OP':(25.0,-19.0),'LOG':(41.0,-12.0),'ENG':(43.0,-13.0)},
+}
+
+
+def tool_angle(action:str,phase:float)->float:
+    if action not in TOOL_TIP_OFFSETS:
+        raise ValueError("Tool angle applies only to WORK and REPAIR")
+    # Repair is a genuine oscillating ratchet/twist. WORK remains a broad
+    # positional sweep with minimal prop rotation.
+    return -4.0+(3.0 if action=='WORK' else 18.0)*math.sin(phase)
+
+
+def tool_tip(role:str,action:str,phase:float,*,tool_x:float,tool_y:float)->tuple[float,float]:
+    try:
+        dx,dy=TOOL_TIP_OFFSETS[action][role]
+    except KeyError as exc:
+        raise ValueError("No tool endpoint for role/action") from exc
+    angle=math.radians(tool_angle(action,phase))
+    return (tool_x+dx*math.cos(angle)-dy*math.sin(angle),
+            tool_y+dx*math.sin(angle)+dy*math.cos(angle))
+
+
 def action_fx(role:str, action:str, phase:float, *,
               tool_x:float=176.0, tool_y:float=123.0,
               bounce:float=0.0)->str:
@@ -31,9 +58,9 @@ def action_fx(role:str, action:str, phase:float, *,
     envelope=.5+.5*math.cos(phase)
     glow=f'<defs><radialGradient id="fx-{role.lower()}"><stop offset="0" stop-color="{highlight}" stop-opacity=".86"/><stop offset=".45" stop-color="{accent}" stop-opacity=".46"/><stop offset="1" stop-color="{accent}" stop-opacity="0"/></radialGradient></defs>'
     if action in {'WORK','REPAIR'}:
-        reach={'OP':(30,24),'LOG':(31,37),'ENG':(28,39)}[role][0 if action=='WORK' else 1]
-        x=min(234.0,tool_x+reach)
-        y=tool_y-4 if action=='WORK' else tool_y-11
+        x,y=tool_tip(role,action,phase,tool_x=tool_x,tool_y=tool_y)
+        x=max(12.0,min(233.0,x))
+        y=max(12.0,min(233.0,y))
         pulse=round(.61+.39*envelope,3)
         radius=round(8+2.2*envelope,2)
         core=(f'<circle cx="{x:.2f}" cy="{y:.2f}" r="{radius}" fill="url(#fx-{role.lower()})"/>'
