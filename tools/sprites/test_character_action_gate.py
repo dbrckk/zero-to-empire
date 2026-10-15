@@ -16,6 +16,7 @@ from PIL import Image, ImageDraw
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools" / "sprites"))
 from character_semantic_gate import idle_visual_activity, celebration_arm_reach_counts
+from character_acceptance_policy import motion_floor
 
 FUNCTIONS = {
     "alpha_iou",
@@ -44,6 +45,8 @@ def load_shipping_action_gate():
         "Image": Image,
         "idle_visual_activity": idle_visual_activity,
         "celebration_arm_reach_counts": celebration_arm_reach_counts,
+        "motion_floor": motion_floor,
+        "production_first_enabled": lambda: False,  # Legacy strict regression suite
     }
     exec(compile(module, str(ROOT / "tools" / "sprites" / "kaggle_character_sheet_factory_v1.py"), "exec"), namespace)
     return namespace["action_qa"]
