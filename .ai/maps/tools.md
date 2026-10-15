@@ -6206,10 +6206,15 @@ length = math.hypot(dx,dy)
 ⋮----
 along = (UPPER_LEG**2-LOWER_LEG**2+length**2)/(2.0*length)
 perpendicular = math.sqrt(max(0.0,UPPER_LEG**2-along**2))
-# Outer knee contour, compressed by perspective, not a sideways kick.
+# In the airborne recovery the knee bends predominantly forward
+# (into depth), not sideways. A fully planar hinge previously pushed the
+# knee pads 20px outside the shin and looked like an exaggerated bow-leg.
+# This blend is periodic and smoothly returns to outward stance contour
+# at toe-off and heel-strike.
 contour = 1.0 if side == "L" else -1.0
-knee_x = hip_x+dx*along/length+contour*(-dy/length)*perpendicular*.55
-knee_y = hip_y+dy*along/length+contour*(dx/length)*perpendicular*.55
+perspective_bend = .48 if planted else .48-.75*math.sin(math.pi*progress)
+knee_x = hip_x+dx*along/length+contour*(-dy/length)*perpendicular*perspective_bend
+knee_y = hip_y+dy*along/length+contour*(dx/length)*perpendicular*perspective_bend
 ⋮----
 def torso_weight_shift(phase: float, action: str) -> float
 ⋮----
@@ -9485,6 +9490,13 @@ raised=0
 phase=2*math.pi*i/48
 left=foot_pose(phase,"L",action)
 right=foot_pose(phase,"R",action)
+⋮----
+def test_swing_knees_turn_forward_instead_of_overshooting_silhouette(self)
+⋮----
+pose=foot_pose(phase,side,action)
+⋮----
+# The lifted knee should remain within one compact
+# 3/4-view shin offset, not splay outside the worker.
 ⋮----
 def test_loop_is_periodic_without_coordinate_jumps(self)
 ⋮----

@@ -4,5 +4,305 @@
   "scope": "symbols defined in changed source files",
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
-  "symbols": {}
+  "symbols": {
+    "FootPose": {
+      "source": {
+        "file": "tools/sprites/local_character_contact_gait.py",
+        "start": 17,
+        "end": 26
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "_ease": {
+      "source": {
+        "file": "tools/sprites/local_character_contact_gait.py",
+        "start": 29,
+        "end": 31
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "foot_pose": {
+      "source": {
+        "file": "tools/sprites/local_character_contact_gait.py",
+        "start": 34,
+        "end": 87
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "FootPose",
+          "definitions": [
+            {
+              "file": "tools/sprites/local_character_contact_gait.py",
+              "line": 17,
+              "kind": "class",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_ease",
+          "definitions": [
+            {
+              "file": "tools/sprites/local_character_contact_gait.py",
+              "line": 29,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "torso_weight_shift": {
+      "source": {
+        "file": "tools/sprites/local_character_contact_gait.py",
+        "start": 90,
+        "end": 96
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "ContactGaitTests": {
+      "source": {
+        "file": "tools/sprites/test_local_character_contact_gait.py",
+        "start": 7,
+        "end": 64
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "foot_pose",
+          "definitions": [
+            {
+              "file": "tools/sprites/local_character_contact_gait.py",
+              "line": 34,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "test_exact_half_cycle_leg_antiphase",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_local_character_contact_gait.py",
+              "line": 18,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_loaded_carry_has_less_sway_than_unladen_walk",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_local_character_contact_gait.py",
+              "line": 61,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_loop_is_periodic_without_coordinate_jumps",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_local_character_contact_gait.py",
+              "line": 53,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_stance_feet_are_anchored_vertically_even_while_torso_bobs",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_local_character_contact_gait.py",
+              "line": 8,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_swing_clears_ground_without_crossed_legs",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_local_character_contact_gait.py",
+              "line": 28,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_swing_knees_turn_forward_instead_of_overshooting_silhouette",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_local_character_contact_gait.py",
+              "line": 42,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "torso_weight_shift",
+          "definitions": [
+            {
+              "file": "tools/sprites/local_character_contact_gait.py",
+              "line": 90,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 8
+    },
+    "test_stance_feet_are_anchored_vertically_even_while_torso_bobs": {
+      "source": {
+        "file": "tools/sprites/test_local_character_contact_gait.py",
+        "start": 8,
+        "end": 16
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "foot_pose",
+          "definitions": [
+            {
+              "file": "tools/sprites/local_character_contact_gait.py",
+              "line": 34,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_exact_half_cycle_leg_antiphase": {
+      "source": {
+        "file": "tools/sprites/test_local_character_contact_gait.py",
+        "start": 18,
+        "end": 26
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "foot_pose",
+          "definitions": [
+            {
+              "file": "tools/sprites/local_character_contact_gait.py",
+              "line": 34,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_swing_clears_ground_without_crossed_legs": {
+      "source": {
+        "file": "tools/sprites/test_local_character_contact_gait.py",
+        "start": 28,
+        "end": 40
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "foot_pose",
+          "definitions": [
+            {
+              "file": "tools/sprites/local_character_contact_gait.py",
+              "line": 34,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_swing_knees_turn_forward_instead_of_overshooting_silhouette": {
+      "source": {
+        "file": "tools/sprites/test_local_character_contact_gait.py",
+        "start": 42,
+        "end": 51
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "foot_pose",
+          "definitions": [
+            {
+              "file": "tools/sprites/local_character_contact_gait.py",
+              "line": 34,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_loop_is_periodic_without_coordinate_jumps": {
+      "source": {
+        "file": "tools/sprites/test_local_character_contact_gait.py",
+        "start": 53,
+        "end": 59
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "foot_pose",
+          "definitions": [
+            {
+              "file": "tools/sprites/local_character_contact_gait.py",
+              "line": 34,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_loaded_carry_has_less_sway_than_unladen_walk": {
+      "source": {
+        "file": "tools/sprites/test_local_character_contact_gait.py",
+        "start": 61,
+        "end": 64
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "torso_weight_shift",
+          "definitions": [
+            {
+              "file": "tools/sprites/local_character_contact_gait.py",
+              "line": 90,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    }
+  }
 }

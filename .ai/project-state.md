@@ -31,17 +31,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-15T09:03:27Z
+Generated: 2026-10-15T09:07:05Z
 
 ### Git
 - Branch: `main`
-- Head: `0465cd5d2be7`
-- Commit date: 2026-10-15T11:03:01+02:00
-- Commit: ci(art): enforce local weighted gait pose and support-foot invariants
+- Head: `069b5ca4298a`
+- Commit date: 2026-10-15T11:06:50+02:00
+- Commit: ci(android): validate all 18 locally authored planted-foot sprite candidates in isolated APK
 - Tracked files: 1780
 
 ### Recently changed files
-- `.github/workflows/asset-pipeline-ci.yml`
+- `ops/local-original-android-review-trigger.txt`
 - `art/incoming/chatgpt-original/animation-review.json`
 - `art/incoming/chatgpt-original/candidates/zte_chr_eng_carry_final.png`
 - `art/incoming/chatgpt-original/candidates/zte_chr_eng_walk_final.png`
@@ -49,7 +49,6 @@ Generated: 2026-10-15T09:03:27Z
 - `art/incoming/chatgpt-original/candidates/zte_chr_log_walk_final.png`
 - `art/incoming/chatgpt-original/candidates/zte_chr_op_carry_final.png`
 - `art/incoming/chatgpt-original/candidates/zte_chr_op_walk_final.png`
-- `art/incoming/chatgpt-original/creation-manifest.json`
 - `art/incoming/chatgpt-original/original-review-contact-sheet.png`
 - `art/incoming/chatgpt-original/previews/eng-carry.gif`
 - `art/incoming/chatgpt-original/previews/eng-walk.gif`
@@ -61,6 +60,7 @@ Generated: 2026-10-15T09:03:27Z
 - `art/incoming/chatgpt-original/previews/op-carry.gif`
 - `art/incoming/chatgpt-original/previews/op-walk.gif`
 - `art/incoming/chatgpt-original/src_svg/ENG/CARRY/00.svg`
+- `art/incoming/chatgpt-original/src_svg/ENG/CARRY/01.svg`
 
 ### Project signals
 - `build.gradle.kts`

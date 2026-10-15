@@ -4,5 +4,325 @@
   "scope": "symbols defined in changed source files",
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
-  "symbols": {}
+  "symbols": {
+    "FootPose": {
+      "definition": {
+        "file": "tools/sprites/local_character_contact_gait.py",
+        "line": 17,
+        "kind": "class",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/local_character_contact_gait.py",
+          "line": 17,
+          "preview": "class FootPose:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/local_character_contact_gait.py",
+          "line": 34,
+          "preview": "def foot_pose(phase: float, side: str, action: str, bounce: float = 0.0) -> FootPose:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/local_character_contact_gait.py",
+          "line": 84,
+          "preview": "return FootPose(",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_ease": {
+      "definition": {
+        "file": "tools/sprites/local_character_contact_gait.py",
+        "line": 29,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/local_character_contact_gait.py",
+          "line": 29,
+          "preview": "def _ease(t: float) -> float:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/local_character_contact_gait.py",
+          "line": 52,
+          "preview": "progress = _ease(cycle/STANCE_FRACTION)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/local_character_contact_gait.py",
+          "line": 59,
+          "preview": "foot_dx = reach*(-1.0+2.0*_ease(progress))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/local_character_contact_gait.py",
+          "line": 61,
+          "preview": "angle = 4.0-8.0*_ease(progress)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "foot_pose": {
+      "definition": {
+        "file": "tools/sprites/local_character_contact_gait.py",
+        "line": 34,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/local_character_contact_gait.py",
+          "line": 34,
+          "preview": "def foot_pose(phase: float, side: str, action: str, bounce: float = 0.0) -> FootPose:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 15,
+          "preview": "from local_character_contact_gait import foot_pose,torso_weight_shift",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 79,
+          "preview": "leg=foot_pose(phase,side,action,bounce)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_contact_gait.py",
+          "line": 5,
+          "preview": "from local_character_contact_gait import foot_pose,torso_weight_shift,STANCE_FRACTION,FLOOR_ANKLE_Y",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_contact_gait.py",
+          "line": 14,
+          "preview": "leg=foot_pose(phase,side,action,bounce)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_contact_gait.py",
+          "line": 22,
+          "preview": "l=foot_pose(phase,\"L\",action)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_contact_gait.py",
+          "line": 23,
+          "preview": "r=foot_pose(phase+math.pi,\"R\",action)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_contact_gait.py",
+          "line": 33,
+          "preview": "left=foot_pose(phase,\"L\",action)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_contact_gait.py",
+          "line": 34,
+          "preview": "right=foot_pose(phase,\"R\",action)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_contact_gait.py",
+          "line": 46,
+          "preview": "pose=foot_pose(phase,side,action)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_contact_gait.py",
+          "line": 56,
+          "preview": "first=foot_pose(0,side,action)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_contact_gait.py",
+          "line": 57,
+          "preview": "last=foot_pose(2*math.pi,side,action)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 12
+    },
+    "torso_weight_shift": {
+      "definition": {
+        "file": "tools/sprites/local_character_contact_gait.py",
+        "line": 90,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/local_character_contact_gait.py",
+          "line": 90,
+          "preview": "def torso_weight_shift(phase: float, action: str) -> float:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 15,
+          "preview": "from local_character_contact_gait import foot_pose,torso_weight_shift",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 135,
+          "preview": "add(f'<g transform=\"translate({torso_weight_shift(phase,action):.2f},0)\">')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_contact_gait.py",
+          "line": 5,
+          "preview": "from local_character_contact_gait import foot_pose,torso_weight_shift,STANCE_FRACTION,FLOOR_ANKLE_Y",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_contact_gait.py",
+          "line": 62,
+          "preview": "self.assertGreater(abs(torso_weight_shift(math.pi/2,\"WALK\")),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_contact_gait.py",
+          "line": 63,
+          "preview": "abs(torso_weight_shift(math.pi/2,\"CARRY\")))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_contact_gait.py",
+          "line": 64,
+          "preview": "self.assertEqual(torso_weight_shift(math.pi/2,\"IDLE\"),0.0)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 7
+    },
+    "ContactGaitTests": {
+      "definition": {
+        "file": "tools/sprites/test_local_character_contact_gait.py",
+        "line": 7,
+        "kind": "class",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_local_character_contact_gait.py",
+          "line": 7,
+          "preview": "class ContactGaitTests(unittest.TestCase):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_stance_feet_are_anchored_vertically_even_while_torso_bobs": {
+      "definition": {
+        "file": "tools/sprites/test_local_character_contact_gait.py",
+        "line": 8,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_local_character_contact_gait.py",
+          "line": 8,
+          "preview": "def test_stance_feet_are_anchored_vertically_even_while_torso_bobs(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_exact_half_cycle_leg_antiphase": {
+      "definition": {
+        "file": "tools/sprites/test_local_character_contact_gait.py",
+        "line": 18,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_local_character_contact_gait.py",
+          "line": 18,
+          "preview": "def test_exact_half_cycle_leg_antiphase(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_swing_clears_ground_without_crossed_legs": {
+      "definition": {
+        "file": "tools/sprites/test_local_character_contact_gait.py",
+        "line": 28,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_local_character_contact_gait.py",
+          "line": 28,
+          "preview": "def test_swing_clears_ground_without_crossed_legs(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_swing_knees_turn_forward_instead_of_overshooting_silhouette": {
+      "definition": {
+        "file": "tools/sprites/test_local_character_contact_gait.py",
+        "line": 42,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_local_character_contact_gait.py",
+          "line": 42,
+          "preview": "def test_swing_knees_turn_forward_instead_of_overshooting_silhouette(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_loop_is_periodic_without_coordinate_jumps": {
+      "definition": {
+        "file": "tools/sprites/test_local_character_contact_gait.py",
+        "line": 53,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_local_character_contact_gait.py",
+          "line": 53,
+          "preview": "def test_loop_is_periodic_without_coordinate_jumps(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_loaded_carry_has_less_sway_than_unladen_walk": {
+      "definition": {
+        "file": "tools/sprites/test_local_character_contact_gait.py",
+        "line": 61,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_local_character_contact_gait.py",
+          "line": 61,
+          "preview": "def test_loaded_carry_has_less_sway_than_unladen_walk(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    }
+  }
 }
