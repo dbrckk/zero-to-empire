@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "updated_at": "2026-10-15",
-  "task": "Complete OP WALK contact-speed source and isolated Android animation review without automatic strict promotion",
+  "task": "Finish OP WALK strict visual-semantic review after successful eight-frame Android and moving real-stage proof; only promote via exact production runtime integration",
   "branch": "main",
-  "last_observed_head": "3c459336fba1194db6e38f5b8356090ba1ce1d73",
+  "last_observed_head": "3713db1ddb2977614c6c978da439db9ef963b70f",
   "state": {
     "strict_done": 219,
     "target_total": 235,
@@ -177,12 +177,46 @@
       "emulator_capture": "atlas-OPERATOR-WALK.png",
       "emulator_coverage": "24-stage-coverage.txt reports 24/24",
       "visual_review": "Screenshot inspected at NIGHT 42dp and DAY 39dp: full body fits both review panes; walking loop at live production gameplay speed and exact shipping WebP are NOT validated."
+    },
+    "op_walk_full_emulator_proof": {
+      "status": "MERGED_VERIFIED_NOT_STRICT_APPROVED",
+      "pr_preview_frames": 154,
+      "pr_real_stage": 155,
+      "merge_real_stage": "1b339da3075e3ed3e342e22be6d5f0098a038668",
+      "android_ci_pr_success": 38772335910,
+      "android_ci_main_success": 38773512852,
+      "isolated_review_apk_success": 38773513009,
+      "android_emulator_success": 38774032853,
+      "evidence_artifact_id": 11992229467,
+      "stage_bounds_device_px": [
+        32,
+        129,
+        1048,
+        1757
+      ],
+      "stage_capture_files": [
+        "op-walk-city-stage-night-00.png",
+        "op-walk-city-stage-night-01.png"
+      ],
+      "stage_capture_interval_seconds": 0.7,
+      "stage_changed_pixels_max_rgb_over_14": 5251,
+      "original_eight_ui_frames": "480–487 (continuous modulo eight)",
+      "role_action_coverage": "24/24",
+      "true_city_character_layer": "Rendered using ReviewedCharacterLayer on isolated dark-gradient review stage, not complete commercial city environment",
+      "limitations": [
+        "Real production resource and scenes were not changed",
+        "Night/day 39/42dp previews and scene motion are demonstrated on isolated QA APK; full AAA art quality and final production rendering are not established"
+      ],
+      "semantic_approved": false,
+      "production_approved": false,
+      "strict_done_added": 0
     }
   },
-  "last_completed": "PR #152 merged after correcting syntax. PR and main asset CI green, original eight OP WALK poses regenerated and technically verified, isolated Android QA APK build/tests/lint green, Android emulator run 38762944605 SUCCESS with 24/24 combinations. Screenshot atlas-OPERATOR-WALK.png inspected (42dp night /39dp day). Still review-only, strict 219/235.",
+  "last_completed": "PR #155 merged. Exact PR/main Android CI and isolated review APK passed. Emulator 38774032853 successfully captured 24/24 role/action views, eight consecutive OP WALK frames (480–487), and two actual city-layer Android screenshots (0.7 s apart; 5,251 thresholded changed pixels in bounds [32,129,1048,1757]). Visually inspected screenshots: two animated OP actors on a simplified dark stage, not complete gameplay city. Strict remains 219/235.",
   "next_actions": [
-    "Review continuous 8-frame OP WALK animation at real gameplay speed and compare with approved art style; a screenshot proves display only, not animation quality.",
-    "If explicitly approved, stage exact candidate as production WebP with references and verify actual gameplay, Android build/lint and release, then update canonical strict status.",
-    "Finish a single remaining high-priority CHR action before proceeding to others."
+    "Evaluate exact OP WALK loop with environment, movement velocity and art-style quality against approved production characters, not only debug gradient stage.",
+    "If art is explicitly semantically approved, reference its exact source WebP in production runtime and verify Android/release/debug and on-device gameplay before promoting CHR-OP-WALK.",
+    "Continue remaining 15 unresolved animation actions, prioritizing a visually convincing identifiable interaction, without batch promotions.",
+    "Keep canonical strict at 219/235 until per-item semantic and production evidence exists."
   ]
 }
