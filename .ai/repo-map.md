@@ -4975,6 +4975,8 @@ jobs:
           test -c /dev/kvm
           sudo chmod a+rw /dev/kvm
           test -r /dev/kvm && test -w /dev/kvm
+      - name: Install pinned image comparison dependency for on-device visual proof
+        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
       - name: Exercise review gallery on a real Android emulator
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
         with:
@@ -11133,6 +11135,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 
@@ -11369,6 +11373,7 @@ private fun CharacterReviewGallery() {
                             Modifier
                                 .fillMaxWidth()
                                 .height(620.dp)
+                                .semantics { contentDescription = "REVIEW GAMEPLAY STAGE" }
                                 .background(
                                     Brush.verticalGradient(
                                         if (daylightStage) {
@@ -28300,6 +28305,54 @@ PY_FRAME
     stage_count=$((stage_count + 1))
   done
 done
+# The game-sized thumbnail is not the 620dp city layer. Physically scroll
+# to the real city canvas and capture two *unpaused* frames inside its bounds.
+# The debug-only semantic label makes this a reliable viewport check instead
+# of treating a screenshot of an off-screen, empty stage as positive evidence.
+role_coords="$(scroll_to_button OPERATOR)"
+read -r role_x role_y <<< "$role_coords"
+adb shell input tap "$role_x" "$role_y"
+action_coords="$(scroll_to_button WALK)"
+read -r action_x action_y <<< "$action_coords"
+adb shell input tap "$action_x" "$action_y"
+sleep 1
+stage_bounds=""
+for attempt in $(seq 1 8); do
+  read_ui
+  if stage_bounds="$(python3 - "$OUT/ui-stage.xml" <<'PY_STAGE'
+import re,sys,xml.etree.ElementTree as ET
+tree=ET.parse(sys.argv[1]).getroot()
+for node in tree.iter('node'):
+    name=(node.get('content-desc') or node.get('text') or '').strip()
+    if name!='REVIEW GAMEPLAY STAGE':
+        continue
+    match=re.fullmatch(r'\[(\d+),(\d+)\]\[(\d+),(\d+)\]',node.get('bounds',''))
+    if not match:
+        continue
+    left,top,right,bottom=map(int,match.groups())
+    # Require the upper part of the stage inside the viewport; otherwise
+    # its first 650 pixels may be empty space above the actual actors.
+    if (right-left)>=500 and top<=600 and min(bottom,1800)-max(top,80)>=650:
+        print(left,top,right,bottom)
+        break
+else:
+    raise SystemExit(1)
+PY_STAGE
+)"; then
+    break
+  fi
+  adb shell input swipe 290 1460 290 400 400
+  sleep 1
+done
+if [ -z "$stage_bounds" ]; then
+  echo "Actual city character layer never entered the Android viewport" >&2
+  exit 1
+fi
+printf '%s\n' "$stage_bounds" > "$OUT/op-walk-city-stage-bounds.txt"
+adb shell pidof com.zerotoempire.game.originalreview >/dev/null
+adb exec-out screencap -p > "$OUT/op-walk-city-stage-night-00.png"
+sleep .7
+adb exec-out screencap -p > "$OUT/op-walk-city-stage-night-01.png"
 test "$stage_count" -eq 24
 echo "LOCAL_ORIGINAL_ANDROID_ALL_24_ROLE_ACTIONS_RENDERED=$stage_count" \
   > "$OUT/24-stage-coverage.txt"
@@ -28323,6 +28376,29 @@ for shot in shots:
     width,height=unpack('>II',data[16:24])
     if width<300 or height<500:
         raise SystemExit(f'Unexpected emulator image size: {shot}: {width}x{height}')
+# Decode exact screenshot pixels only inside the real city stage bounds.
+# A valid PNG header alone cannot demonstrate a visibly animating actor.
+from PIL import Image,ImageChops
+stage_bounds=[int(v) for v in (root/'op-walk-city-stage-bounds.txt').read_text().split()]
+if len(stage_bounds)!=4:
+    raise SystemExit(f'Invalid Android city stage bounding rectangle: {stage_bounds}')
+stage_shots=[root/f'op-walk-city-stage-night-{n:02d}.png' for n in range(2)]
+if not all(s.is_file() for s in stage_shots):
+    raise SystemExit('Missing actual OP WALK city stage animation captures')
+images=[Image.open(s).convert('RGB') for s in stage_shots]
+viewport=(stage_bounds[0],max(stage_bounds[1],80),stage_bounds[2],
+          min(stage_bounds[3],images[0].height-80))
+if viewport[3]-viewport[1]<650 or viewport[2]-viewport[0]<500:
+    raise SystemExit(f'Clipped city stage viewport: {viewport}')
+first=images[0].crop(viewport)
+second=images[1].crop(viewport)
+change=ImageChops.difference(first,second).convert('L').point(
+    lambda value: 255 if value>14 else 0
+)
+active=sum(count for level,count in enumerate(change.histogram()) if level>0)
+if active<60:
+    raise SystemExit(f'City game-size OP WALK sprites did not visibly animate: {active} changed pixels')
+print(f'LOCAL_ORIGINAL_ANDROID_CITY_STAGE_REAL_ACTOR_MOTION_PASS={active}_CHANGED_PIXELS')
 # The independent OP WALK capture must exercise eight distinct UI frame indices.
 poses=sorted(root.glob('op-walk-frame-*.png'))
 if len(poses)!=8:

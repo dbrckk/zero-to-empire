@@ -30,16 +30,18 @@ Status: active — original character art requires semantic approval before prod
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-15T16:34:14Z
+Generated: 2026-10-15T16:59:30Z
 
 ### Git
 - Branch: `main`
-- Head: `a0664b996ab4`
-- Commit date: 2026-10-15T18:33:55+02:00
-- Commit: qa(android): verify all eight OP WALK frames in isolated emulator
+- Head: `1b339da3075e`
+- Commit date: 2026-10-15T18:58:59+02:00
+- Commit: qa(android): verify OP WALK motion inside the real city stage
 - Tracked files: 1783
 
 ### Recently changed files
+- `.github/workflows/local-original-character-android-emulator.yml`
+- `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
 - `ops/local-original-android-review-trigger.txt`
 - `tools/android/local_original_character_emulator_smoke.sh`
 - `PROJECT_CONTINUITY.md`

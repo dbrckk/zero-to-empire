@@ -256,6 +256,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 
@@ -492,6 +494,7 @@ private fun CharacterReviewGallery() {
                             Modifier
                                 .fillMaxWidth()
                                 .height(620.dp)
+                                .semantics { contentDescription = "REVIEW GAMEPLAY STAGE" }
                                 .background(
                                     Brush.verticalGradient(
                                         if (daylightStage) {
