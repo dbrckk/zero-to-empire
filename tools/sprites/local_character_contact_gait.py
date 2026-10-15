@@ -58,7 +58,9 @@ def foot_pose(phase: float, side: str, action: str, bounce: float = 0.0, *, prof
     clearance = 21.0 if operator else (16.0 if action == "WALK" else 12.0)
     if cycle < stance_fraction:
         progress = _ease(cycle/stance_fraction)
-        foot_dx = reach*(1.0-2.0*progress)
+        # Linear ground-relative travel during support avoids the unintended
+    # speed-up and slow-down produced by smoothstep at each planted contact.
+    foot_dx = reach*(1.0-2.0*cycle/stance_fraction) if operator else reach*(1.0-2.0*progress)
         lift = 0.0
         angle = 0.0 if operator else -4.0 + 8.0*progress
         planted = True
