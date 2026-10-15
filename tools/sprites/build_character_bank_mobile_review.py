@@ -108,6 +108,10 @@ const byId=Object.fromEntries(bank.assets.map(x=>[x.id,x]));
 const roleLabels={OP:'Opérateur',LOG:'Logistique',ENG:'Ingénieur'};
 const actionLabels={IDLE:'Repos',WALK:'Marche',WORK:'Travail',CARRY:'Transport',REPAIR:'Réparer',CELEB:'Célébrer'};
 const explain={
+LOW_MOBILE_FRAME_CHANGE_REVIEW:'Animation trop peu visible à la taille du jeu (42 px) : examiner les poses',
+WALK_LOWER_BODY_MOTION_REVIEW:'Mouvement du bas du corps peu perceptible : contrôler la marche',
+NEAR_STATIC_TRANSITIONS_REVIEW:'Plusieurs transitions d’images presque immobiles à 42 px',
+VISIBLE_LOOP_SEAM_REVIEW:'Possible saut visuel entre la fin et le début de l’animation',
 CELEBRATION_NO_OVERHEAD_ARM_GESTURE_RISK:'Célébration peu lisible : bras insuffisamment levés',
 ACTION_TRANSLATION_DOMINATES_POSE_RISK:'Glissement latéral dominant plutôt que variation des poses',
 FACE_HEADGEAR_STRUCTURE_DRIFT_RISK:'Visage ou casque irrégulier entre les images',
@@ -170,8 +174,22 @@ select(bank.assets[0].id);requestAnimationFrame(tick);
 })();</script></body></html>'''
 
 
-def build(bank_path: Path, local_path: Path, destination: Path) -> dict:
+def build(bank_path: Path, local_path: Path, destination: Path,
+          audit_path: Path | None = None) -> dict:
     originals = load_local_originals(local_path)
+    audit_by_id = None
+    if audit_path is not None:
+        audit = json.loads(audit_path.read_text(encoding="utf-8"))
+        records = audit.get("assets")
+        if (audit.get("review_only") is not True
+                or audit.get("automatic_semantic_approval") is not False
+                or audit.get("automatic_runtime_promotion") is not False
+                or not isinstance(records, list)
+                or len(records) != audit.get("candidate_count")):
+            raise ValueError("Untrusted motion audit")
+        audit_by_id = {str(row.get("id")): row for row in records}
+        if len(audit_by_id) != len(records):
+            raise ValueError("Duplicate motion audit IDs")
     with zipfile.ZipFile(bank_path) as bank:
         if bank.namelist().count("candidate-bank-index.json") != 1:
             raise ValueError("Missing or duplicate source candidate bank index")
@@ -201,6 +219,14 @@ def build(bank_path: Path, local_path: Path, destination: Path) -> dict:
                 atlas.load()
                 if atlas.size != (1024,1024) or atlas.mode != "RGBA":
                     raise ValueError("Invalid selected atlas: " + aid)
+            motion_flags = []
+            if audit_by_id is not None:
+                audit_record = audit_by_id.get(aid)
+                if (not audit_record or audit_record.get("sha256") != row.get("sha256")
+                        or audit_record.get("strict_approved") is not False
+                        or audit_record.get("runtime_promoted") is not False):
+                    raise ValueError("Stale/untrusted motion audit for " + aid)
+                motion_flags = [str(flag) for flag in (audit_record.get("new_motion_flags") or [])]
             if aid not in originals:
                 raise ValueError("Missing original reference: " + aid)
             original, _ = validated_local_candidate(
@@ -212,9 +238,13 @@ def build(bank_path: Path, local_path: Path, destination: Path) -> dict:
                 "originalAtlas": "data:image/png;base64," + base64.b64encode(original).decode("ascii"),
                 "sourceType": row.get("source_type"),
                 "sourceRun": row.get("source_collector_run_id"),
-                "warnings": [str(x) for x in row.get("deferred_art_warnings") or []],
+                "warnings": sorted(set(
+                    [str(x) for x in row.get("deferred_art_warnings") or []] + motion_flags
+                )),
                 "sha256": row["sha256"],
             })
+    if audit_by_id is not None and set(audit_by_id) != seen:
+        raise ValueError("Motion audit coverage does not match bank")
     payload = {
         "schemaVersion": 1, "reviewOnly": True,
         "targetTotal": meta["target_total"],
@@ -237,8 +267,9 @@ def main() -> int:
     parser.add_argument("--bank", type=Path, required=True)
     parser.add_argument("--local-original", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--motion-audit", type=Path)
     args = parser.parse_args()
-    print(json.dumps(build(args.bank,args.local_original,args.output),sort_keys=True))
+    print(json.dumps(build(args.bank,args.local_original,args.output,args.motion_audit),sort_keys=True))
     return 0
 
 

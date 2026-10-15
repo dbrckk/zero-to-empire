@@ -45,7 +45,8 @@ jobs:
           python -m pip install --disable-pip-version-check Pillow==11.3.0
           python -m unittest discover -s tools/sprites/tests -p test_character_candidate_bank.py -v
           python -m unittest discover -s tools/sprites/tests -p test_character_bank_mobile_review.py -v
-          python -m py_compile tools/sprites/build_character_candidate_bank.py tools/sprites/build_character_bank_mobile_review.py
+          python -m unittest discover -s tools/sprites/tests -p test_character_bank_motion_audit.py -v
+          python -m py_compile tools/sprites/build_character_candidate_bank.py tools/sprites/build_character_bank_mobile_review.py tools/sprites/audit_character_bank_motion.py
 
       - name: Download current permanent candidate archives
         shell: bash
@@ -83,6 +84,25 @@ jobs:
           print('- These are review-only source sprites, not approved Android resources.')
           PY
 
+      - name: Audit animation readability at actual 42px gameplay size
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/sprites/audit_character_bank_motion.py \
+            --bank /tmp/zte-character-bank-current.zip \
+            --output /tmp/zte-character-bank-motion-audit.json
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          data=json.load(open('/tmp/zte-character-bank-motion-audit.json'))
+          print('## Motion readability review (heuristic only)')
+          print(f"- Screen size: **{data['mobile_render_px']} px**")
+          print(f"- Candidate actions flagged: **{data['motion_attention_count']} / {data['candidate_count']}**")
+          for row in data['assets']:
+              if row['new_motion_flags']:
+                  print(f"- {row['id']}: {', '.join(row['new_motion_flags'])}")
+          print('- No flags represent automatic semantic approval.')
+          PY
+
       - name: Create self-contained mobile animation comparison
         shell: bash
         run: |
@@ -90,6 +110,7 @@ jobs:
           python tools/sprites/build_character_bank_mobile_review.py \
             --bank /tmp/zte-character-bank-current.zip \
             --local-original art/incoming/chatgpt-original \
+            --motion-audit /tmp/zte-character-bank-motion-audit.json \
             --output /tmp/zte-character-bank-mobile-review.html
           test -s /tmp/zte-character-bank-mobile-review.html
           echo "MOBILE_CANDIDATE_REVIEW=offline/16-candidate-compare" >> "$GITHUB_STEP_SUMMARY"
@@ -101,6 +122,7 @@ jobs:
           gh release upload "$TAG" \
             /tmp/zte-character-bank-current.zip \
             /tmp/zte-character-bank-current.json \
+            /tmp/zte-character-bank-motion-audit.json \
             /tmp/zte-character-bank-mobile-review.html \
             --repo "$GITHUB_REPOSITORY" --clobber
           sha256sum /tmp/zte-character-bank-current.zip >> "$GITHUB_STEP_SUMMARY"
@@ -113,5 +135,6 @@ jobs:
           path: |
             /tmp/zte-character-bank-current.zip
             /tmp/zte-character-bank-current.json
+            /tmp/zte-character-bank-motion-audit.json
             /tmp/zte-character-bank-mobile-review.html
           retention-days: 30

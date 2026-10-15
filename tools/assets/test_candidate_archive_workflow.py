@@ -52,6 +52,21 @@ class CandidateArchiveWorkflowTests(unittest.TestCase):
         self.assertNotIn("app/src/main/res/", flow)
         self.assertNotIn("git push", flow)
 
+    def test_motion_audit_in_release_preserves_review_only_policy(self):
+        flow = Path(".github/workflows/character-candidate-bank.yml").read_text()
+        script = Path("tools/sprites/audit_character_bank_motion.py").read_text()
+        gallery = Path("tools/sprites/build_character_bank_mobile_review.py").read_text()
+        self.assertIn("audit_character_bank_motion.py", flow)
+        self.assertIn("test_character_bank_motion_audit.py", flow)
+        self.assertIn("--motion-audit /tmp/zte-character-bank-motion-audit.json", flow)
+        self.assertIn("/tmp/zte-character-bank-motion-audit.json", flow)
+        self.assertIn("hashlib.sha256", script)
+        self.assertIn('"automatic_semantic_approval": False', script)
+        self.assertIn('"automatic_runtime_promotion": False', script)
+        self.assertIn('audit_record.get("sha256") != row.get("sha256")', gallery)
+        self.assertNotIn("git push", flow)
+        self.assertNotIn("app/src/main/res/", flow)
+
     def test_mobile_review_publish_is_offline_and_explicitly_review_only(self):
         flow = Path(".github/workflows/character-candidate-bank.yml").read_text()
         source = Path("tools/sprites/build_character_bank_mobile_review.py").read_text()
