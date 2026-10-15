@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 82675a25ab75a8aa308358ced7e6d54256ae476f
-Head: bd749adb9e91da526143e4d504b891e12672aaaa
+Base: c26e3accc95d5e99ff3f6da68eac54f39f7d4487
+Head: b3123d777ad3fbf5a2f0f452f355ae52e11e771a
 
 ## Changed files
-- M art/production/LOCAL_FIRST_CHARACTER_HANDOFF.md
+- M .github/workflows/asset-pipeline-ci.yml
 
 ## Affected areas
-- art
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

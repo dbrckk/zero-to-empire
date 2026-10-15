@@ -393,6 +393,7 @@ tools/
     lightning_install_autopilot.sh
     lightning_remote_runner.py
     lightning_studio_factory.py
+    local_character_action_fx.py
     local_character_material_finish.py
     manifest_batch_planner.py
     multi_provider_static_manifest_factory.py
@@ -432,6 +433,7 @@ tools/
     test_export_tech_canonical_review.py
     test_focused_sprite_atlas.py
     test_identity_locked_walk_candidate.py
+    test_local_character_action_fx.py
     test_package_tech_actions_runtime.py
     test_pollinations_character_sheet_factory.py
     test_rigged_tech_actions_v3.py
@@ -915,6 +917,7 @@ on:
       - 'ops/chatgpt-original-trigger.txt'
       - 'tools/sprites/render_chatgpt_originals.py'
       - 'tools/sprites/local_character_material_finish.py'
+      - 'tools/sprites/local_character_action_fx.py'
       - 'tools/sprites/render_original_character_previews.py'
       - 'tools/sprites/audit_chatgpt_originals.py'
 
@@ -969,6 +972,9 @@ jobs:
           assert first.getpixel((120,100))[:3]!=original.getpixel((120,100))[:3]
           print('LOCAL_MATERIAL_FINISH_ALPHA_AND_DETERMINISM_PASS=1')
           PY
+      - name: Validate contact-attached action effects before rasterization
+        run: |
+          python -m unittest discover -s tools/sprites -p 'test_local_character_action_fx.py' -v
       - name: Render all remaining role families from committed source
         run: |
           python tools/sprites/render_chatgpt_originals.py \
@@ -1043,6 +1049,11 @@ jobs:
           for item in d['assets']:
               assert item['distinct_frame_hashes']>1,item['id']
               assert item['min_alpha_margin']>=10,item['id']
+              assert item['last_to_first_loop_activity']>=0,item['id']
+              assert item['loop_seam_to_median_ratio']>=0,item['id']
+              assert item['abrupt_loop_reset_risk'] is False,(
+                  item['id'],'abrupt-animation-loop-reset',
+                  item['loop_seam_to_median_ratio'])
               with Image.open(p/item['animation_preview']) as preview:
                   assert preview.format=='GIF'
                   # GIF encoders coalesce identical consecutive poses and
@@ -1348,6 +1359,8 @@ on:
       - 'tools/sprites/build_character_review_panels.py'
       - 'tools/sprites/render_chatgpt_originals.py'
       - 'tools/sprites/local_character_material_finish.py'
+      - 'tools/sprites/local_character_action_fx.py'
+      - 'tools/sprites/test_local_character_action_fx.py'
       - 'tools/sprites/render_original_character_previews.py'
       - 'art/incoming/chatgpt-original/**'
       - 'tools/sprites/verify_local_character_bundle.py'
@@ -1394,6 +1407,8 @@ on:
       - 'tools/sprites/build_character_review_panels.py'
       - 'tools/sprites/render_chatgpt_originals.py'
       - 'tools/sprites/local_character_material_finish.py'
+      - 'tools/sprites/local_character_action_fx.py'
+      - 'tools/sprites/test_local_character_action_fx.py'
       - 'tools/sprites/render_original_character_previews.py'
       - 'art/incoming/chatgpt-original/**'
       - 'tools/sprites/verify_local_character_bundle.py'
@@ -1463,6 +1478,7 @@ jobs:
             tools/sprites/build_character_review_panels.py \
             tools/sprites/render_chatgpt_originals.py \
             tools/sprites/local_character_material_finish.py \
+            tools/sprites/local_character_action_fx.py \
             tools/sprites/render_original_character_previews.py \
             tools/sprites/verify_local_character_bundle.py \
             tools/sprites/character_head_identity_lock.py \
@@ -1675,6 +1691,7 @@ jobs:
           python -m unittest discover -s tools/sprites -p 'test_character_semantic_gate.py' -v
           python -m unittest discover -s tools/sprites -p 'test_verify_character_idle_candidates.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_head_identity_lock.py' -v
+          python -m unittest discover -s tools/sprites -p 'test_local_character_action_fx.py' -v
           python -m unittest discover -s tools/sprites -p 'test_verify_character_action_candidates.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_approved_idle_fallback.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_ground_shadow_cleanup.py' -v
@@ -33629,6 +33646,42 @@ targets = []
 dst = cdir / src.name
 ```
 
+## File: tools/sprites/local_character_action_fx.py
+```python
+"""Hand-authored action lighting and physically attached VFX for original sprites.
+
+Pure SVG geometry: no text, logos, detached effects or external image models.
+Every glow is attached to an invariant tool tip, wrist or cargo fastener.
+Review-only visuals; never marks an asset strict DONE.
+"""
+⋮----
+ROLE_LIGHT={
+⋮----
+"""Return an SVG group for a 256px sprite; empty for unsupported actions.
+
+    WORK/REPAIR emissions are integrated with the tool's existing shaft;
+    CELEB lights are on suit cuffs, never confetti; CARRY lights are rivets.
+    The sinusoidal envelope closes exactly at the loop boundary.
+    """
+⋮----
+envelope=.5+.5*math.cos(phase)
+glow=f'<defs><radialGradient id="fx-{role.lower()}"><stop offset="0" stop-color="{highlight}" stop-opacity=".86"/><stop offset=".45" stop-color="{accent}" stop-opacity=".46"/><stop offset="1" stop-color="{accent}" stop-opacity="0"/></radialGradient></defs>'
+⋮----
+reach={'OP':(30,24),'LOG':(31,37),'ENG':(28,39)}[role][0 if action=='WORK' else 1]
+x=min(234.0,tool_x+reach)
+y=tool_y-4 if action=='WORK' else tool_y-11
+pulse=round(.61+.39*envelope,3)
+radius=round(8+2.2*envelope,2)
+core=(f'<circle cx="{x:.2f}" cy="{y:.2f}" r="{radius}" fill="url(#fx-{role.lower()})"/>'
+⋮----
+y=129+bounce
+⋮----
+lift=(1-math.cos(phase))/2
+y=140-109*lift+bounce
+lx=75-4*lift
+rx=174+5*lift
+```
+
 ## File: tools/sprites/local_character_material_finish.py
 ```python
 """Deterministic alpha-safe material lighting for ChatGPT original sprite rig.
@@ -35188,6 +35241,10 @@ tool_y=123+12*math.cos(phase)+bounce
 ⋮----
 # foreground right arm and hand over equipment, never floating
 ⋮----
+# Physically attached local vector action lighting. Equipment highlights are
+# driven by the very same right-wrist tool transform as the authored prop.
+# No detached generated particles or external model are introduced.
+⋮----
 # Both arms raised over ~half a cycle; no detached particle VFX.
 ⋮----
 # reflective micro-detail texture, unique per role but invariant per frame
@@ -35216,7 +35273,7 @@ parser=argparse.ArgumentParser()
 args=parser.parse_args();outdir=pathlib.Path(args.output_dir);outdir.mkdir(parents=True,exist_ok=True)
 results=[]
 ⋮----
-report={'version':'chatgpt-original-character-rig-v3-material-finish','strict_done_added':0,'review_only':True,
+report={'version':'chatgpt-original-character-rig-v4-contact-attached-action-vfx','strict_done_added':0,'review_only':True,
 ```
 
 ## File: tools/sprites/render_original_character_previews.py
@@ -35295,6 +35352,13 @@ pos = (col*190+2, row*223+30)
 ⋮----
 all_frames = cells[1:] + cells[:1]
 ratios = [change_ratio(a, b) for a, b in zip(cells, all_frames)]
+# A smooth animation needs an equally smooth last-to-first loop.
+# Previously only distinct hashes were checked: a sudden reset
+# could still pass every geometry and motion test.
+internal_median = statistics.median(ratios[:-1])
+seam = ratios[-1]
+seam_ratio = round(seam / max(internal_median, .0001), 4)
+abrupt_loop_reset = seam > .045 and seam_ratio > 1.9
 boxes = [f.getchannel("A").getbbox() for f in cells]
 min_margin = min(min(x, y, 256-x2, 256-y2)
 ⋮----
@@ -36817,6 +36881,41 @@ one=warp(first,t)
 two=warp(first,t)
 ⋮----
 def test_refuses_bad_inputs(self)
+```
+
+## File: tools/sprites/test_local_character_action_fx.py
+```python
+"""Regressions for editable first-party sprite effects: no semantic approval."""
+⋮----
+ROOT=Path(__file__).resolve().parents[2]
+⋮----
+class LocalActionFxTests(unittest.TestCase)
+⋮----
+def test_every_role_has_distinct_integrated_action_effects(self)
+⋮----
+fx=action_fx(role,action,.9,tool_x=182,tool_y=132,bounce=2)
+root=ET.fromstring('<svg xmlns="http://www.w3.org/2000/svg">'+fx+'</svg>')
+namespaces={'svg':'http://www.w3.org/2000/svg'}
+nodes=root.findall('.//svg:g',namespaces)
+⋮----
+def test_action_highlights_close_the_loop(self)
+⋮----
+a=action_fx(role,action,0,tool_x=180,tool_y=123)
+b=action_fx(role,action,2*math.pi,tool_x=180,tool_y=123)
+⋮----
+def test_raster_effects_do_not_escape_frame_or_create_fake_labels(self)
+⋮----
+markup=action_fx(role,action,1.9,tool_x=191,tool_y=125)
+⋮----
+# Explicit clamp prevents highlights crossing right side.
+⋮----
+def test_idle_and_walk_have_no_unattached_decorations(self)
+⋮----
+def test_bad_role_action_rejected(self)
+⋮----
+def test_renderer_invokes_attached_effects_after_hand(self)
+⋮----
+text=(ROOT/'tools/sprites/render_chatgpt_originals.py').read_text(encoding='utf8')
 ```
 
 ## File: tools/sprites/test_package_tech_actions_runtime.py
