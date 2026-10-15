@@ -29,26 +29,25 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-15T22:33:50Z
+Generated: 2026-10-15T22:55:15Z
 
 ### Git
 - Branch: `main`
-- Head: `cfd7a559458a`
-- Commit date: 2026-10-16T00:33:34+02:00
-- Commit: fix(art): update candidate bank regardless of collector and archive callback order (#166)
+- Head: `cc0281567662`
+- Commit date: 2026-10-16T00:54:59+02:00
+- Commit: art: cover last four engineer candidate assets from audited editable in-repo originals (#167)
 - Tracked files: 1794
 
 ### Recently changed files
 - `.github/workflows/character-candidate-bank.yml`
 - `tools/assets/test_candidate_archive_workflow.py`
-- `.github/workflows/asset-pipeline-ci.yml`
 - `tools/sprites/build_character_candidate_bank.py`
 - `tools/sprites/tests/test_character_candidate_bank.py`
+- `.github/workflows/asset-pipeline-ci.yml`
 - `.github/workflows/backfill-character-candidate-archives.yml`
 - `.github/workflows/archive-character-candidates.yml`
 - `tools/sprites/archive_character_candidates.py`
 - `tools/sprites/tests/test_archive_character_candidates.py`
-- `art/production/kaggle-async-state.json`
 
 ### Project signals
 - `build.gradle.kts`

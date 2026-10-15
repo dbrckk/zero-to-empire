@@ -2220,6 +2220,10 @@ on:
     paths:
       - '.github/workflows/character-candidate-bank.yml'
       - 'art/production/master-asset-queue.json'
+      - 'art/incoming/chatgpt-original/candidates/**'
+      - 'art/incoming/chatgpt-original/src_svg/**'
+      - 'art/incoming/chatgpt-original/creation-manifest.json'
+      - 'art/incoming/chatgpt-original/candidate-qa.json'
 
 permissions:
   contents: write
@@ -2269,15 +2273,19 @@ jobs:
           python tools/sprites/build_character_candidate_bank.py \
             --master art/production/master-asset-queue.json \
             --archives /tmp/zte-review-archives \
+            --local-original art/incoming/chatgpt-original \
             --output /tmp/zte-character-bank-current.zip \
             --report /tmp/zte-character-bank-current.json
           python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
           import json
           d=json.load(open('/tmp/zte-character-bank-current.json'))
           print('## Character candidate bank')
-          print(f"- Verified production coverage: **{d['production_processed']} / {d['target_total']}**")
+          print(f"- Verified candidate coverage (including local originals): **{d['production_processed']} / {d['target_total']}**")
+          print(f"- Canonical production queue processed: **{d['canonical_queue_production_processed']} / {d['target_total']}**")
           print(f"- Strict DONE: **{d['strict_done']} / {d['target_total']}** (unchanged)")
-          print(f"- Archived provisional character sprites: **{d['candidate_count']}**")
+          print(f"- Provisional character sprites in bank: **{d['candidate_count']}**")
+          print(f"- Original in-repository fallbacks: **{len(d['local_original_fallback_ids'])}**")
+          print(f"- Local fallback IDs: {', '.join(d['local_original_fallback_ids']) or 'none'}")
           print(f"- Production candidate complete: **{d['candidate_production_complete']}**")
           if d['missing_character_candidates']:
               print("- Remaining: "+", ".join(x['id'] for x in d['missing_character_candidates']))
@@ -30094,6 +30102,39 @@ def test_mismatched_sha_fails_closed(self)
 def test_wrong_dimensions_fail_closed(self)
 ⋮----
 buf = io.BytesIO()
+⋮----
+def authored_original(self)
+⋮----
+original = self.root / "original"
+⋮----
+manifest = []
+qa = []
+counts = {"IDLE": 6, "WALK": 8, "WORK": 10,
+⋮----
+asset_id = f"CHR-{role}-{action}"
+⋮----
+x = (i % 4) * 256
+y = (i // 4) * 256
+⋮----
+def test_local_original_completes_candidate_scope_while_remote_is_dispatched(self)
+⋮----
+local = self.authored_original()
+⋮----
+master_before = self.master.read_bytes()
+report = assemble(self.master, self.archives, self.output, local_original=local)
+⋮----
+entry = report["bank_entries"][0]
+⋮----
+def test_prefer_real_collected_candidate_to_local_original(self)
+⋮----
+def test_local_manifest_claims_do_not_waive_technical_frame_QA(self)
+⋮----
+def test_local_original_requires_all_editable_svg_frames(self)
+⋮----
+def test_local_original_fails_closed_when_qa_claims_artistic_approval(self)
+⋮----
+qa_file = local / "candidate-qa.json"
+data = json.loads(qa_file.read_text())
 ```
 
 ## File: tools/sprites/action_contact.py
@@ -30995,6 +31036,46 @@ ARCHIVE_NAME = re.compile(r"^zte-characters-([1-9][0-9]*)\.zip$")
 PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
 PRODUCED_STATES = frozenset({
 MAX_ATLAS_BYTES = 100 * 1024 * 1024
+FRAME_COUNTS = {"IDLE": 6, "WALK": 8, "WORK": 10,
+CANONICAL_PRODUCED_STATES = PRODUCED_STATES
+⋮----
+def load_local_originals(source: Path | None) -> dict[str, dict]
+⋮----
+"""Validate 18 local authored originals, including per-frame editable SVG.
+
+    This independent source is explicitly labelled as provisional. It is not
+    used to mutate Kaggle/controlled queues or advance strict DONE.
+    """
+⋮----
+manifest = json.loads((source / "creation-manifest.json").read_text(encoding="utf-8"))
+qa = json.loads((source / "candidate-qa.json").read_text(encoding="utf-8"))
+⋮----
+original_rows = manifest.get("assets")
+qa_rows = qa.get("assets")
+⋮----
+by_id = {row["id"]: row for row in original_rows}
+by_qa = {row["id"]: row for row in qa_rows}
+expected = {
+⋮----
+def validated_local_candidate(asset: dict, record: dict) -> tuple[bytes, dict]
+⋮----
+"""Verify actual raster geometry, manifest claims and editable SVG count."""
+asset_id = asset["id"]
+row = record["manifest"]
+qa = record["qa"]
+⋮----
+frame_count = FRAME_COUNTS[action]
+name = Path(asset["runtime"]).with_suffix(".png").name
+⋮----
+source = record["source"]
+path = source / "candidates" / name
+⋮----
+results = inspect_sprite(path)
+⋮----
+svg_folder = source / "src_svg" / role / action
+svgs = sorted(svg_folder.glob("*.svg"))
+⋮----
+blob = path.read_bytes()
 ⋮----
 def open_archives(folder: Path) -> dict[int, dict]
 ⋮----
@@ -31016,24 +31097,35 @@ assets = data["assets"]
 target_total = data["target_total"]
 ⋮----
 sources = open_archives(archive_folder)
+originals = load_local_originals(local_original)
 strict_done = sum(x["strict_status"] == "DONE" for x in assets)
 review_targets = [
 remaining_noncharacters = [
+canonical_queue_produced = sum(
 included: list[tuple[str, bytes]] = []
 entries = []
 missing = []
 ⋮----
-asset_id = asset["id"]
 status = str(asset.get("pipeline_status") or "").upper()
 run_id = int(asset.get("review_artifact_run_id") or 0)
-name = Path(asset["runtime"]).with_suffix(".png").name
+⋮----
 source = sources.get(run_id)
+source_details: dict
 ⋮----
 recorded = source["index"][name]
 ⋮----
 blob = container.read("candidates/" + name)
 ⋮----
 digest = hashlib.sha256(blob).hexdigest()
+⋮----
+source_details = {
+source_warnings = recorded.get("deferred_art_warnings") or []
+⋮----
+# A real on-repo, authored 1024px/4-column/transparent source
+# is preferable to an uncollected async GPU job. It is clearly
+# identified as a local review candidate, not as Kaggle output.
+⋮----
+source_warnings = []
 ⋮----
 warnings = sorted(set(
 ⋮----
@@ -31046,7 +31138,7 @@ def main() -> int
 parser = argparse.ArgumentParser()
 ⋮----
 args = parser.parse_args()
-d = assemble(args.master, args.archives, args.output, args.report)
+d = assemble(args.master, args.archives, args.output, args.report, args.local_original)
 ```
 
 ## File: tools/sprites/build_character_review_panels.py
