@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "updated_at": "2026-10-15",
-  "task": "Finish semantic and production-runtime review for new OP WALK candidate after successful Android emulator QA",
+  "task": "Complete OP WALK contact-speed source and isolated Android animation review without automatic strict promotion",
   "branch": "main",
   "last_observed_head": "3c459336fba1194db6e38f5b8356090ba1ce1d73",
   "state": {
@@ -158,13 +158,28 @@
       "emulator_file": "atlas-OPERATOR-WALK.png",
       "second_android_review_run": 38745033106,
       "emulator_proof": "Downloaded ZIP artifact 11979140579; actual OPERATOR-WALK screenshot inspected and 24-stage-coverage.txt verifies 24 combinations. Script and emulator workflow concluded SUCCESS."
+    },
+    "op_walk_constant_stance": {
+      "pull_request": 152,
+      "merge_commit": "808f29a496accd10a48b3c77ba7232ce99e18dfd",
+      "ci_failed_initial": 38753268106,
+      "ci_fixed_success": 38762145864,
+      "main_asset_ci_success": 38762241985,
+      "original_art_generation_success": 38762242160,
+      "android_review_apk_success": 38762436053,
+      "android_emulator_run": 38762944605,
+      "android_emulator_status": "IN_PROGRESS on last observed check; must confirm",
+      "geometry": "Constant-speed ground-relative OP WALK stance; other gait profiles unaffected",
+      "source_atlas": "art/incoming/chatgpt-original/candidates/zte_chr_op_walk_final.png",
+      "review_only": true,
+      "strict_done_added": 0
     }
   },
-  "last_completed": "PR #150 merged. OP WALK 8 original SVGs checked for foot contact/lift, Asset Pipeline + original candidate CI success; QA APK 38744963714 and redundant QA APK 38745033106 successful; emulator 38745543878 completed SUCCESS and screenshot OPERATOR-WALK visually inspected at night 42dp/day 39dp. Still an original art candidate; 219/235 strict DONE unchanged.",
+  "last_completed": "PR #152 merged after syntax fix; PR/main Asset Pipeline CI, full 18 original candidate regeneration, isolated Android APK build/tests/lint all SUCCESS. New 8-frame OP WALK atlas inspected. Emulator run 38762944605 still IN_PROGRESS; no strict promotion. Current canonical 219/235.",
   "next_actions": [
-    "Assess OP WALK actual running loop at gameplay speed for foot slide and body/arm coherence; single emulator frame confirms rendering but not moving quality.",
-    "Before strict approval, compare to the game art direction, require explicit human semantic acceptance, then integrate exact runtime WebP into production source and verify live gameplay, release build/lint/tests.",
-    "Do not promote CHR-OP-WALK or other 15 unresolved assets just because review-only emulator CI succeeded.",
-    "Next isolated action after OP WALK closure: review remaining rejected walking and contact animation candidates."
+    "Verify final conclusion and download 24-action evidence from emulator run 38762944605; inspect OPERATOR-WALK actual app-scale screenshot.",
+    "Check animated loop at gameplay speed in production context; isolated screenshot and frame hashes do not constitute semantic approval.",
+    "If accepted, integrate exact reviewed source as production runtime WebP, build/lint/check gameplay before strict promotion.",
+    "Keep other 15 unresolved character actions separate; canonical strict remains 219/235 until approvals."
   ]
 }
