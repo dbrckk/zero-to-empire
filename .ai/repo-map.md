@@ -52,6 +52,7 @@ The content is organized as follows:
     asset-pipeline-ci.yml
     backfill-character-candidate-archives.yml
     build-test-apk.yml
+    character-candidate-bank.yml
     character-review-matrix.yml
     character-single-subject-gpu-evidence.yml
     final-aaa-assets.yml
@@ -352,6 +353,7 @@ tools/
     tests/
       test_archive_character_candidates.py
       test_asset_production_policy.py
+      test_character_candidate_bank.py
     action_contact.py
     animation_batch_planner.py
     archive_character_candidates.py
@@ -361,6 +363,7 @@ tools/
     audit_chatgpt_originals.py
     audit_complete_sprite_manifest.py
     autonomous_walk.py
+    build_character_candidate_bank.py
     build_character_review_panels.py
     build_original_offline_review.py
     build_sprite_contact_sheet.py
@@ -1641,6 +1644,8 @@ on:
       - 'tools/sprites/audit_complete_sprite_manifest.py'
       - 'tools/sprites/asset_queue_utils.py'
       - 'tools/sprites/archive_character_candidates.py'
+      - 'tools/sprites/build_character_candidate_bank.py'
+      - 'tools/sprites/tests/test_character_candidate_bank.py'
       - 'tools/sprites/tests/test_archive_character_candidates.py'
       - 'tools/sprites/asset_wave_orchestrator.py'
       - 'tools/sprites/animation_batch_planner.py'
@@ -1685,6 +1690,7 @@ on:
       - '.github/workflows/kaggle-mass-sprite-factory.yml'
       - '.github/workflows/kaggle-async-character-collector.yml'
       - '.github/workflows/archive-character-candidates.yml'
+      - '.github/workflows/character-candidate-bank.yml'
       - '.github/workflows/backfill-character-candidate-archives.yml'
       - '.github/workflows/local-character-review.yml'
       - '.github/workflows/kaggle-superseded-character-evidence.yml'
@@ -1696,6 +1702,8 @@ on:
       - 'tools/sprites/audit_complete_sprite_manifest.py'
       - 'tools/sprites/asset_queue_utils.py'
       - 'tools/sprites/archive_character_candidates.py'
+      - 'tools/sprites/build_character_candidate_bank.py'
+      - 'tools/sprites/tests/test_character_candidate_bank.py'
       - 'tools/sprites/tests/test_archive_character_candidates.py'
       - 'tools/sprites/asset_wave_orchestrator.py'
       - 'tools/sprites/animation_batch_planner.py'
@@ -1740,6 +1748,7 @@ on:
       - '.github/workflows/kaggle-mass-sprite-factory.yml'
       - '.github/workflows/kaggle-async-character-collector.yml'
       - '.github/workflows/archive-character-candidates.yml'
+      - '.github/workflows/character-candidate-bank.yml'
       - '.github/workflows/backfill-character-candidate-archives.yml'
       - '.github/workflows/local-character-review.yml'
       - '.github/workflows/kaggle-superseded-character-evidence.yml'
@@ -1775,6 +1784,7 @@ jobs:
             kaggle/github_mass_factory.py \
             tools/sprites/asset_queue_utils.py \
             tools/sprites/archive_character_candidates.py \
+            tools/sprites/build_character_candidate_bank.py \
             tools/sprites/asset_wave_orchestrator.py \
             tools/sprites/build_character_review_panels.py \
             tools/sprites/build_original_offline_review.py \
@@ -2013,6 +2023,7 @@ jobs:
         run: |
           python -m unittest discover -s tools/assets -p 'test_*.py' -v
           python -m unittest discover -s tools/sprites/tests -p 'test_archive_character_candidates.py' -v
+          python -m unittest discover -s tools/sprites/tests -p 'test_character_candidate_bank.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_semantic_gate.py' -v
           python -m unittest discover -s tools/sprites -p 'test_verify_character_idle_candidates.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_head_identity_lock.py' -v
@@ -2193,6 +2204,104 @@ jobs:
             --target "$GITHUB_SHA" \
             --title "Zero → Empire Android Test #${GITHUB_RUN_NUMBER}" \
             --notes "Installable Android test APK generated from commit ${GITHUB_SHA}. This is a debug test build for direct device testing, not a Play Store production release."
+```
+
+## File: .github/workflows/character-candidate-bank.yml
+```yaml
+name: Assemble Character Candidate Bank
+
+on:
+  workflow_run:
+    workflows: [Archive Character Candidates]
+    types: [completed]
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/character-candidate-bank.yml'
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: zte-character-candidate-bank
+  cancel-in-progress: false
+
+jobs:
+  assemble:
+    if: ${{ github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TAG: zte-character-candidates
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: main
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+
+      - name: Test exact-source candidate selection
+        run: |
+          python -m pip install --disable-pip-version-check Pillow==11.3.0
+          python -m unittest discover -s tools/sprites/tests -p test_character_candidate_bank.py -v
+          python -m py_compile tools/sprites/build_character_candidate_bank.py
+
+      - name: Download current permanent candidate archives
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/zte-review-archives
+          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" \
+            --pattern 'zte-characters-*.zip' \
+            --dir /tmp/zte-review-archives
+          ls -lh /tmp/zte-review-archives/zte-characters-*.zip
+
+      - name: Assemble canonical character bank
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/sprites/build_character_candidate_bank.py \
+            --master art/production/master-asset-queue.json \
+            --archives /tmp/zte-review-archives \
+            --output /tmp/zte-character-bank-current.zip \
+            --report /tmp/zte-character-bank-current.json
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          d=json.load(open('/tmp/zte-character-bank-current.json'))
+          print('## Character candidate bank')
+          print(f"- Verified production coverage: **{d['production_processed']} / {d['target_total']}**")
+          print(f"- Strict DONE: **{d['strict_done']} / {d['target_total']}** (unchanged)")
+          print(f"- Archived provisional character sprites: **{d['candidate_count']}**")
+          print(f"- Production candidate complete: **{d['candidate_production_complete']}**")
+          if d['missing_character_candidates']:
+              print("- Remaining: "+", ".join(x['id'] for x in d['missing_character_candidates']))
+          print('- These are review-only source sprites, not approved Android resources.')
+          PY
+
+      - name: Publish persistent source bank
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh release upload "$TAG" \
+            /tmp/zte-character-bank-current.zip \
+            /tmp/zte-character-bank-current.json \
+            --repo "$GITHUB_REPOSITORY" --clobber
+          sha256sum /tmp/zte-character-bank-current.zip >> "$GITHUB_STEP_SUMMARY"
+          echo "CHARACTER_CANDIDATE_BANK_RELEASE=$TAG" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Retain workflow output
+        uses: actions/upload-artifact@v4
+        with:
+          name: current-character-candidate-bank
+          path: |
+            /tmp/zte-character-bank-current.zip
+            /tmp/zte-character-bank-current.json
+          retention-days: 30
 ```
 
 ## File: .github/workflows/character-review-matrix.yml
@@ -29382,6 +29491,11 @@ def test_backfill_uses_only_canonical_pending_review_provenance(self)
 ⋮----
 flow = Path(".github/workflows/backfill-character-candidate-archives.yml").read_text()
 ⋮----
+def test_candidate_bank_is_assembled_only_from_trusted_release_and_queue(self)
+⋮----
+flow = Path(".github/workflows/character-candidate-bank.yml").read_text()
+source = Path("tools/sprites/build_character_candidate_bank.py").read_text()
+⋮----
 def test_release_uses_only_qa_passed_candidates_and_never_promotes(self)
 ⋮----
 flow = Path(".github/workflows/archive-character-candidates.yml").read_text()
@@ -29930,6 +30044,52 @@ def test_structural_risks_remain_blocking(self)
 def test_unknown_risk_is_not_silently_waived(self)
 ⋮----
 risk = {"risk_level": "BLOCKING", "flags": ["NEW_TECHNICAL_RISK"]}
+```
+
+## File: tools/sprites/tests/test_character_candidate_bank.py
+```python
+"""Offline regressions for durable character bank; no GPU/network required."""
+⋮----
+class CharacterBankTests(unittest.TestCase)
+⋮----
+def setUp(self)
+⋮----
+def save_master(self)
+⋮----
+def png(self)
+⋮----
+picture = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
+⋮----
+buffer = io.BytesIO()
+⋮----
+def source(self, content=None, run_id=123, name=None, sha=None)
+⋮----
+content = content if content is not None else self.png()
+name = name or self.filename
+sha = sha if sha is not None else hashlib.sha256(content).hexdigest()
+path = self.archives / f"zte-characters-{run_id}.zip"
+index = {
+⋮----
+def test_complete_pack_contains_exact_verified_candidate_and_deferred_warnings(self)
+⋮----
+report = assemble(self.master, self.archives, self.output)
+⋮----
+saved = json.loads(z.read("candidate-bank-index.json"))
+entry = saved["bank_entries"][0]
+⋮----
+def test_missing_source_does_not_inflate_progress(self)
+⋮----
+def test_dispatched_asset_not_counted_even_with_old_artifact(self)
+⋮----
+result = assemble(self.master, self.archives, self.output)
+⋮----
+def test_wrong_source_id_is_never_accepted(self)
+⋮----
+def test_mismatched_sha_fails_closed(self)
+⋮----
+def test_wrong_dimensions_fail_closed(self)
+⋮----
+buf = io.BytesIO()
 ```
 
 ## File: tools/sprites/action_contact.py
@@ -30814,6 +30974,75 @@ args=parser.parse_args()
 settings=WalkSettings(asset_id=args.asset_id,frames=args.frames,fps=args.fps,stride=args.stride,clearance=args.clearance,stance_fraction=args.stance,palette=args.palette)
 manifest=export(args.output, settings, args.studio)
 qa=manifest['qa']
+```
+
+## File: tools/sprites/build_character_candidate_bank.py
+```python
+#!/usr/bin/env python3
+"""Assemble a traceable, review-only character bank from persistent Releases.
+
+Every selected atlas must have the *same collector run* recorded on the
+canonical queue and in the candidate archive, with matching SHA-256 bytes.
+This is NOT automatic Android promotion or strict semantic approval.
+"""
+⋮----
+ASSET_NAME = re.compile(r"^zte_chr_(?:op|tech|log|eng)_(?:idle|walk|work|carry|repair|celeb)_final\.png$")
+ARCHIVE_NAME = re.compile(r"^zte-characters-([1-9][0-9]*)\.zip$")
+PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
+PRODUCED_STATES = frozenset({
+MAX_ATLAS_BYTES = 100 * 1024 * 1024
+⋮----
+def open_archives(folder: Path) -> dict[int, dict]
+⋮----
+"""Read indexes only; candidate bytes are verified when actually selected."""
+sources = {}
+⋮----
+match = ARCHIVE_NAME.fullmatch(path.name)
+⋮----
+run_id = int(match.group(1))
+⋮----
+index = json.loads(container.read("candidate-index.json"))
+⋮----
+by_name = {}
+⋮----
+name = str(record.get("filename") or "")
+⋮----
+data = json.loads(master.read_text(encoding="utf-8"))
+assets = data["assets"]
+target_total = data["target_total"]
+⋮----
+sources = open_archives(archive_folder)
+strict_done = sum(x["strict_status"] == "DONE" for x in assets)
+review_targets = [
+remaining_noncharacters = [
+included: list[tuple[str, bytes]] = []
+entries = []
+missing = []
+⋮----
+asset_id = asset["id"]
+status = str(asset.get("pipeline_status") or "").upper()
+run_id = int(asset.get("review_artifact_run_id") or 0)
+name = Path(asset["runtime"]).with_suffix(".png").name
+source = sources.get(run_id)
+⋮----
+recorded = source["index"][name]
+⋮----
+blob = container.read("candidates/" + name)
+⋮----
+digest = hashlib.sha256(blob).hexdigest()
+⋮----
+warnings = sorted(set(
+⋮----
+production_processed = strict_done + len(entries)
+complete = not missing and not remaining_noncharacters and production_processed == target_total
+report = {
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser()
+⋮----
+args = parser.parse_args()
+d = assemble(args.master, args.archives, args.output, args.report)
 ```
 
 ## File: tools/sprites/build_character_review_panels.py

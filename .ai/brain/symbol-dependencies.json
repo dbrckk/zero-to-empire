@@ -4,5 +4,515 @@
   "scope": "symbols defined in changed source files",
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
-  "symbols": {}
+  "symbols": {
+    "open_archives": {
+      "source": {
+        "file": "tools/sprites/build_character_candidate_bank.py",
+        "start": 28,
+        "end": 57
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "assemble": {
+      "source": {
+        "file": "tools/sprites/build_character_candidate_bank.py",
+        "start": 60,
+        "end": 157
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "open_archives",
+          "definitions": [
+            {
+              "file": "tools/sprites/build_character_candidate_bank.py",
+              "line": 28,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "main": {
+      "source": {
+        "file": "tools/sprites/build_character_candidate_bank.py",
+        "start": 160,
+        "end": 280
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "assemble",
+          "definitions": [
+            {
+              "file": "tools/sprites/build_character_candidate_bank.py",
+              "line": 60,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "CharacterBankTests": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_candidate_bank.py",
+        "start": 19,
+        "end": 122
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "assemble",
+          "definitions": [
+            {
+              "file": "tools/sprites/build_character_candidate_bank.py",
+              "line": 60,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "main",
+          "definitions": [
+            {
+              "file": "tools/sprites/build_character_candidate_bank.py",
+              "line": 160,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "png",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_candidate_bank.py",
+              "line": 48,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "save_master",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_candidate_bank.py",
+              "line": 43,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "setUp",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_candidate_bank.py",
+              "line": 20,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "source",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_candidate_bank.py",
+              "line": 55,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_complete_pack_contains_exact_verified_candidate_and_deferred_warnings",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_candidate_bank.py",
+              "line": 73,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_dispatched_asset_not_counted_even_with_old_artifact",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_candidate_bank.py",
+              "line": 97,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_mismatched_sha_fails_closed",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_candidate_bank.py",
+              "line": 112,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_missing_source_does_not_inflate_progress",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_candidate_bank.py",
+              "line": 91,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_wrong_dimensions_fail_closed",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_candidate_bank.py",
+              "line": 117,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_wrong_source_id_is_never_accepted",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_candidate_bank.py",
+              "line": 105,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 12
+    },
+    "setUp": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_candidate_bank.py",
+        "start": 20,
+        "end": 41
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "main",
+          "definitions": [
+            {
+              "file": "tools/sprites/build_character_candidate_bank.py",
+              "line": 160,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "png",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_candidate_bank.py",
+              "line": 48,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "save_master",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_candidate_bank.py",
+              "line": 43,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "save_master": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_candidate_bank.py",
+        "start": 43,
+        "end": 46
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "png": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_candidate_bank.py",
+        "start": 48,
+        "end": 53
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "source": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_candidate_bank.py",
+        "start": 55,
+        "end": 71
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "png",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_candidate_bank.py",
+              "line": 48,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_complete_pack_contains_exact_verified_candidate_and_deferred_warnings": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_candidate_bank.py",
+        "start": 73,
+        "end": 89
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "assemble",
+          "definitions": [
+            {
+              "file": "tools/sprites/build_character_candidate_bank.py",
+              "line": 60,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "png",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_candidate_bank.py",
+              "line": 48,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "source",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_candidate_bank.py",
+              "line": 55,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "test_missing_source_does_not_inflate_progress": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_candidate_bank.py",
+        "start": 91,
+        "end": 95
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "assemble",
+          "definitions": [
+            {
+              "file": "tools/sprites/build_character_candidate_bank.py",
+              "line": 60,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_dispatched_asset_not_counted_even_with_old_artifact": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_candidate_bank.py",
+        "start": 97,
+        "end": 103
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "assemble",
+          "definitions": [
+            {
+              "file": "tools/sprites/build_character_candidate_bank.py",
+              "line": 60,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "save_master",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_candidate_bank.py",
+              "line": 43,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "source",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_candidate_bank.py",
+              "line": 55,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "test_wrong_source_id_is_never_accepted": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_candidate_bank.py",
+        "start": 105,
+        "end": 110
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "assemble",
+          "definitions": [
+            {
+              "file": "tools/sprites/build_character_candidate_bank.py",
+              "line": 60,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "source",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_candidate_bank.py",
+              "line": 55,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_mismatched_sha_fails_closed": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_candidate_bank.py",
+        "start": 112,
+        "end": 115
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "assemble",
+          "definitions": [
+            {
+              "file": "tools/sprites/build_character_candidate_bank.py",
+              "line": 60,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "source",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_candidate_bank.py",
+              "line": 55,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_wrong_dimensions_fail_closed": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_candidate_bank.py",
+        "start": 117,
+        "end": 122
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "assemble",
+          "definitions": [
+            {
+              "file": "tools/sprites/build_character_candidate_bank.py",
+              "line": 60,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "source",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_candidate_bank.py",
+              "line": 55,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    }
+  }
 }

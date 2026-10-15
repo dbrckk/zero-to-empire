@@ -57,6 +57,7 @@ sprites/
   tests/
     test_archive_character_candidates.py
     test_asset_production_policy.py
+    test_character_candidate_bank.py
   action_contact.py
   animation_batch_planner.py
   archive_character_candidates.py
@@ -66,6 +67,7 @@ sprites/
   audit_chatgpt_originals.py
   audit_complete_sprite_manifest.py
   autonomous_walk.py
+  build_character_candidate_bank.py
   build_character_review_panels.py
   build_original_offline_review.py
   build_sprite_contact_sheet.py
@@ -1852,6 +1854,52 @@ def test_unknown_risk_is_not_silently_waived(self)
 risk = {"risk_level": "BLOCKING", "flags": ["NEW_TECHNICAL_RISK"]}
 ```
 
+## File: sprites/tests/test_character_candidate_bank.py
+```python
+"""Offline regressions for durable character bank; no GPU/network required."""
+⋮----
+class CharacterBankTests(unittest.TestCase)
+⋮----
+def setUp(self)
+⋮----
+def save_master(self)
+⋮----
+def png(self)
+⋮----
+picture = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
+⋮----
+buffer = io.BytesIO()
+⋮----
+def source(self, content=None, run_id=123, name=None, sha=None)
+⋮----
+content = content if content is not None else self.png()
+name = name or self.filename
+sha = sha if sha is not None else hashlib.sha256(content).hexdigest()
+path = self.archives / f"zte-characters-{run_id}.zip"
+index = {
+⋮----
+def test_complete_pack_contains_exact_verified_candidate_and_deferred_warnings(self)
+⋮----
+report = assemble(self.master, self.archives, self.output)
+⋮----
+saved = json.loads(z.read("candidate-bank-index.json"))
+entry = saved["bank_entries"][0]
+⋮----
+def test_missing_source_does_not_inflate_progress(self)
+⋮----
+def test_dispatched_asset_not_counted_even_with_old_artifact(self)
+⋮----
+result = assemble(self.master, self.archives, self.output)
+⋮----
+def test_wrong_source_id_is_never_accepted(self)
+⋮----
+def test_mismatched_sha_fails_closed(self)
+⋮----
+def test_wrong_dimensions_fail_closed(self)
+⋮----
+buf = io.BytesIO()
+```
+
 ## File: sprites/action_contact.py
 ```python
 """Deterministic 512px rig-space interaction targets for TECH WORK and REPAIR.
@@ -2734,6 +2782,75 @@ args=parser.parse_args()
 settings=WalkSettings(asset_id=args.asset_id,frames=args.frames,fps=args.fps,stride=args.stride,clearance=args.clearance,stance_fraction=args.stance,palette=args.palette)
 manifest=export(args.output, settings, args.studio)
 qa=manifest['qa']
+```
+
+## File: sprites/build_character_candidate_bank.py
+```python
+#!/usr/bin/env python3
+"""Assemble a traceable, review-only character bank from persistent Releases.
+
+Every selected atlas must have the *same collector run* recorded on the
+canonical queue and in the candidate archive, with matching SHA-256 bytes.
+This is NOT automatic Android promotion or strict semantic approval.
+"""
+⋮----
+ASSET_NAME = re.compile(r"^zte_chr_(?:op|tech|log|eng)_(?:idle|walk|work|carry|repair|celeb)_final\.png$")
+ARCHIVE_NAME = re.compile(r"^zte-characters-([1-9][0-9]*)\.zip$")
+PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
+PRODUCED_STATES = frozenset({
+MAX_ATLAS_BYTES = 100 * 1024 * 1024
+⋮----
+def open_archives(folder: Path) -> dict[int, dict]
+⋮----
+"""Read indexes only; candidate bytes are verified when actually selected."""
+sources = {}
+⋮----
+match = ARCHIVE_NAME.fullmatch(path.name)
+⋮----
+run_id = int(match.group(1))
+⋮----
+index = json.loads(container.read("candidate-index.json"))
+⋮----
+by_name = {}
+⋮----
+name = str(record.get("filename") or "")
+⋮----
+data = json.loads(master.read_text(encoding="utf-8"))
+assets = data["assets"]
+target_total = data["target_total"]
+⋮----
+sources = open_archives(archive_folder)
+strict_done = sum(x["strict_status"] == "DONE" for x in assets)
+review_targets = [
+remaining_noncharacters = [
+included: list[tuple[str, bytes]] = []
+entries = []
+missing = []
+⋮----
+asset_id = asset["id"]
+status = str(asset.get("pipeline_status") or "").upper()
+run_id = int(asset.get("review_artifact_run_id") or 0)
+name = Path(asset["runtime"]).with_suffix(".png").name
+source = sources.get(run_id)
+⋮----
+recorded = source["index"][name]
+⋮----
+blob = container.read("candidates/" + name)
+⋮----
+digest = hashlib.sha256(blob).hexdigest()
+⋮----
+warnings = sorted(set(
+⋮----
+production_processed = strict_done + len(entries)
+complete = not missing and not remaining_noncharacters and production_processed == target_total
+report = {
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser()
+⋮----
+args = parser.parse_args()
+d = assemble(args.master, args.archives, args.output, args.report)
 ```
 
 ## File: sprites/build_character_review_panels.py

@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "2f34e5f0a8d54c3ad823abd7e5924a8854d99c8b",
-  "head": "059024da1cda5ada1544c7fc2f4e9d052d3e003c",
+  "base": "059024da1cda5ada1544c7fc2f4e9d052d3e003c",
+  "head": "26a0623824667b8ea5929c69edc7e024183ce302",
   "index_mode": "incremental",
   "changed_files": [
     {
@@ -10,16 +10,117 @@
       "status": "M"
     },
     {
-      "path": ".github/workflows/backfill-character-candidate-archives.yml",
+      "path": ".github/workflows/character-candidate-bank.yml",
       "status": "A"
     },
     {
       "path": "tools/assets/test_candidate_archive_workflow.py",
       "status": "M"
+    },
+    {
+      "path": "tools/sprites/build_character_candidate_bank.py",
+      "status": "A"
+    },
+    {
+      "path": "tools/sprites/tests/test_character_candidate_bank.py",
+      "status": "A"
     }
   ],
-  "changed_source_files": [],
-  "impacted_files": [],
-  "impacted_symbols": [],
-  "selected_tests": []
+  "changed_source_files": [
+    "tools/sprites/build_character_candidate_bank.py",
+    "tools/sprites/tests/test_character_candidate_bank.py"
+  ],
+  "impacted_files": [
+    "tools/sprites/build_character_candidate_bank.py",
+    "tools/sprites/tests/test_character_candidate_bank.py"
+  ],
+  "impacted_symbols": [
+    {
+      "name": "open_archives",
+      "kind": "function",
+      "file": "tools/sprites/build_character_candidate_bank.py",
+      "line": 28
+    },
+    {
+      "name": "assemble",
+      "kind": "function",
+      "file": "tools/sprites/build_character_candidate_bank.py",
+      "line": 60
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "tools/sprites/build_character_candidate_bank.py",
+      "line": 160
+    },
+    {
+      "name": "CharacterBankTests",
+      "kind": "class",
+      "file": "tools/sprites/tests/test_character_candidate_bank.py",
+      "line": 19
+    },
+    {
+      "name": "setUp",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_candidate_bank.py",
+      "line": 20
+    },
+    {
+      "name": "save_master",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_candidate_bank.py",
+      "line": 43
+    },
+    {
+      "name": "png",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_candidate_bank.py",
+      "line": 48
+    },
+    {
+      "name": "source",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_candidate_bank.py",
+      "line": 55
+    },
+    {
+      "name": "test_complete_pack_contains_exact_verified_candidate_and_deferred_warnings",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_candidate_bank.py",
+      "line": 73
+    },
+    {
+      "name": "test_missing_source_does_not_inflate_progress",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_candidate_bank.py",
+      "line": 91
+    },
+    {
+      "name": "test_dispatched_asset_not_counted_even_with_old_artifact",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_candidate_bank.py",
+      "line": 97
+    },
+    {
+      "name": "test_wrong_source_id_is_never_accepted",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_candidate_bank.py",
+      "line": 105
+    },
+    {
+      "name": "test_mismatched_sha_fails_closed",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_candidate_bank.py",
+      "line": 112
+    },
+    {
+      "name": "test_wrong_dimensions_fail_closed",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_candidate_bank.py",
+      "line": 117
+    }
+  ],
+  "selected_tests": [
+    "tools/sprites/tests/test_character_candidate_bank.py"
+  ]
 }
