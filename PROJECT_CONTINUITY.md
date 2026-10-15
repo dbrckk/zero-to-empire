@@ -4,7 +4,7 @@
 
 - PR **#152** merged on `main` as `808f29a4`, after resolving an initial **Python indentation failure** (`38753268106`). The corrected PR Asset Pipeline run **38762145864** succeeded, as did main Asset Pipeline **38762241985** and original character candidate regeneration **38762242160**.
 - Isolated OP WALK stance now uses a *linear ground-relative foot speed* while planted; existing eased swing recovery and all LOG/ENG/CARRY gait profiles remain unchanged. Regenerated eight-frame first-party atlas visually inspected, technical loop diagnostics show **0.086641** mean pixel activity and **0.7428** seam/median with no abrupt-reset flag. This is candidate evidence, not final artistic acceptance.
-- Android isolated debug QA APK **38762436053** passed build/lint/existing checks. Android emulator visual run **38762944605** was **still running** at this recorded checkpoint; review its final result and `atlas-OPERATOR-WALK.png` screenshot before claiming actual app-scale QA success on this revision.
+- Android isolated debug QA APK **38762436053 SUCCESS** (build/lint/existing checks). Android emulator **38762944605 SUCCESS**, artifact **11987210646** with `24-stage-coverage.txt` (24/24 views) and `atlas-OPERATOR-WALK.png` directly inspected at **42dp night / 39dp day**. This proves isolated app-scale rendering, not shipping gameplay or animation-loop semantic approval.
 - Strict queue still **219/235** with **16 character actions pending**; no production asset or save/economy changes. Details: `docs/art/OP_WALK_STRIDE_REVIEW_2026-10-15.md` and `.ai/session-state.json`.
 
 ## Verified OP WALK intervention — 2026-10-15
