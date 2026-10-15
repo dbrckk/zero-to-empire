@@ -30,36 +30,19 @@ Status: active — original character art requires semantic approval before prod
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-15T13:46:35Z
+Generated: 2026-10-15T13:53:35Z
 
 ### Git
 - Branch: `main`
-- Head: `a160abe968e4`
-- Commit date: 2026-10-15T15:46:16+02:00
-- Commit: docs(art): record observed OP WALK v2 stride evidence and approval gate
+- Head: `06886b96547f`
+- Commit date: 2026-10-15T15:53:12+02:00
+- Commit: docs(continuity): preserve OP WALK 24-view emulator evidence and strict gates
 - Tracked files: 1783
 
 ### Recently changed files
+- `PROJECT_CONTINUITY.md`
 - `docs/art/OP_WALK_STRIDE_REVIEW_2026-10-15.md`
 - `ops/local-original-android-review-trigger.txt`
-- `art/incoming/chatgpt-original/animation-review.json`
-- `art/incoming/chatgpt-original/candidates/zte_chr_op_walk_final.png`
-- `art/incoming/chatgpt-original/creation-manifest.json`
-- `art/incoming/chatgpt-original/original-offline-review.html`
-- `art/incoming/chatgpt-original/original-review-contact-sheet.png`
-- `art/incoming/chatgpt-original/previews/mobile-op.png`
-- `art/incoming/chatgpt-original/previews/op-walk.gif`
-- `art/incoming/chatgpt-original/src_svg/OP/WALK/00.svg`
-- `art/incoming/chatgpt-original/src_svg/OP/WALK/01.svg`
-- `art/incoming/chatgpt-original/src_svg/OP/WALK/02.svg`
-- `art/incoming/chatgpt-original/src_svg/OP/WALK/03.svg`
-- `art/incoming/chatgpt-original/src_svg/OP/WALK/04.svg`
-- `art/incoming/chatgpt-original/src_svg/OP/WALK/05.svg`
-- `art/incoming/chatgpt-original/src_svg/OP/WALK/06.svg`
-- `art/incoming/chatgpt-original/src_svg/OP/WALK/07.svg`
-- `art/incoming/chatgpt-original/visual-risk-qa.json`
-- `.github/workflows/art-chatgpt-original-candidates.yml`
-- `tools/sprites/local_character_contact_gait.py`
 
 ### Project signals
 - `build.gradle.kts`

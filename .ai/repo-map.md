@@ -38584,6 +38584,14 @@ plugins {
 ```markdown
 # PROJECT CONTINUITY — Zero → Empire
 
+## Verified OP WALK intervention — 2026-10-15
+
+- **PR #150** merged at `7383a38d`, isolating an `op-walk` contact gait to the operator and correcting previously simultaneous arm swing. No release character asset was promoted.
+- **GitHub Actions green**: Asset Pipeline CI `38744789050`; original candidate generation `38744789685` (including all eight actual SVG foot/boot pose integration checks); isolated Android review APK runs `38744963714` and `38745033106`; 24-role/action Android emulator verification `38745543878`.
+- Review artifact `11979140579` contains `atlas-OPERATOR-WALK.png` screenshot and `24-stage-coverage.txt`, both downloaded and inspected. The **OPERATOR/WALK** candidate displays full-body on **42dp night / 39dp day** emulator backgrounds. Technical mean adjacent motion increased `0.075364 -> 0.086847` (+15.2%); this remains motion evidence, not artistic approval.
+- Next unresolved gate: visual quality at animation speed within the *production* world, semantic approval, exact final runtime WebP linkage and release build checks. All 16 original character actions, including this improved one, remain **NEEDS_REVIEW** until those conditions pass.
+- **Canonical strict count remains 219/235**. No game economy, saves, released runtime atlas or production manifest was altered. See `docs/art/OP_WALK_STRIDE_REVIEW_2026-10-15.md` and `.ai/session-state.json` for exact run IDs and follow-up.
+
 ## Current verified action — 2026-10-15 (ENG REPAIR fixed socket)
 
 - **PR #149** merged as `7dadb8b9`: locally authored `CHR-ENG-REPAIR` now includes a stationary, ground-mounted service console with a defined bolt contact at **(218,129)** in its 256px cell. Wrist, prop, and VFX share an inverse-rotated rigid tool tip so the ratchet stays on the same bolt through all 10 frames.

@@ -1,13 +1,13 @@
 # Change impact
 
-Base: e6aa313c28d296cb5f69a4f72b0ff7e6d9da8385
-Head: a160abe968e41a993dfbec3c9cd664ebee8e75f3
+Base: 19a13c0763d620f2be44fed6e8b5709db188887f
+Head: 06886b96547f03c77543e24389f8a93fe4cb74cb
 
 ## Changed files
-- A docs/art/OP_WALK_STRIDE_REVIEW_2026-10-15.md
+- M PROJECT_CONTINUITY.md
 
 ## Affected areas
-- docs
+- (root)
 
 ## Related test candidates
 - No direct filename-based test match detected.
