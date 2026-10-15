@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 6901a48f9ba6bb499f82343c93f1f34b87fa6e2b
-Head: 1488b8967a294178e887760717269d5807fb4a8f
+Base: d1be50002eb6bd4baa9020bdd59a3ef08a52d242
+Head: 92823d713d29de8d55a4f1a5bc041c2b60ac1b03
 
 ## Changed files
-- M docs/art/CHATGPT_ORIGINAL_CHARACTER_PIPELINE.md
+- M tools/sprites/render_chatgpt_originals.py
 
 ## Affected areas
-- docs
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

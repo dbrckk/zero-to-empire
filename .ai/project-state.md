@@ -31,36 +31,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-15T07:53:55Z
+Generated: 2026-10-15T08:49:33Z
 
 ### Git
 - Branch: `main`
-- Head: `1488b8967a29`
-- Commit date: 2026-10-15T09:53:41+02:00
-- Commit: docs(art): record first-party v4 action lighting provenance and remaining AAA review limits
+- Head: `92823d713d29`
+- Commit date: 2026-10-15T10:49:17+02:00
+- Commit: art(original): author operator goggle blink reflection in deterministic IDLE rig
 - Tracked files: 1778
 
 ### Recently changed files
+- `tools/sprites/render_chatgpt_originals.py`
 - `docs/art/CHATGPT_ORIGINAL_CHARACTER_PIPELINE.md`
 - `ops/local-original-android-review-trigger.txt`
 - `tools/sprites/test_local_character_action_fx.py`
 - `.github/workflows/asset-pipeline-ci.yml`
-- `art/incoming/chatgpt-original/animation-review.json`
-- `art/incoming/chatgpt-original/candidates/zte_chr_eng_carry_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_eng_celeb_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_eng_repair_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_eng_work_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_log_carry_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_log_celeb_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_log_repair_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_log_work_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_op_carry_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_op_celeb_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_op_repair_final.png`
-- `art/incoming/chatgpt-original/candidates/zte_chr_op_work_final.png`
-- `art/incoming/chatgpt-original/creation-manifest.json`
-- `art/incoming/chatgpt-original/original-review-contact-sheet.png`
-- `art/incoming/chatgpt-original/previews/eng-carry.gif`
 
 ### Project signals
 - `build.gradle.kts`

@@ -7672,6 +7672,11 @@ dx=0 if side=='L' else 59
 ⋮----
 # ear, cheek and neck shading
 ⋮----
+# OP goggles conceal the eyelids, so an IDLE blink is expressed by a
+# brief lens reflection shift, never by a floating eye outside the visor.
+# Lens geometry remains identical across all other action families.
+lens_shift=(1.5 if action=='IDLE' and index in (2,3) else 0.0)
+⋮----
 # A blink must replace the open eyes, not paint a horizontal stroke over
 # still-visible pupils. This is an actual facial expression transition.
 ⋮----
@@ -7729,7 +7734,7 @@ parser=argparse.ArgumentParser()
 args=parser.parse_args();outdir=pathlib.Path(args.output_dir);outdir.mkdir(parents=True,exist_ok=True)
 results=[]
 ⋮----
-report={'version':'chatgpt-original-character-rig-v4-contact-attached-action-vfx','strict_done_added':0,'review_only':True,
+report={'version':'chatgpt-original-character-rig-v5-operator-goggle-idle-expression','strict_done_added':0,'review_only':True,
 ```
 
 ## File: sprites/render_original_character_previews.py

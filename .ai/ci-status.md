@@ -1,12 +1,13 @@
 # CI status
 
-Summary: 3 success / 1 failure / 1 active
+Summary: 3 success / 1 failure / 2 active
 
-- Local Original Characters Android Review APK: in_progress / pending (feb3825a)
+- ChatGPT Original Character Candidates: in_progress / pending (92823d71)
+- Asset Pipeline CI: in_progress / pending (92823d71)
+- Local Original Characters Android Emulator Review: completed / success (1488b896)
+- Local Original Characters Android Review APK: completed / success (feb3825a)
 - Asset Pipeline CI: completed / success (f3458453)
 - Asset Pipeline CI: completed / failure (b3123d77)
-- ChatGPT Original Character Candidates: completed / success (312ce818)
-- Asset Pipeline CI: completed / success (312ce818)
 
 ## Latest failed run structure
 - Job: validate
