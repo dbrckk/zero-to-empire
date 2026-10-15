@@ -272,7 +272,8 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
   tool_y=123+(12 if action=='WORK' else 7)*math.cos(phase)+bounce
   if role=='ENG' and action=='REPAIR':
    tool_x,tool_y=engineer_repair_wrist(phase)
-  add(f'<g transform="translate({tool_x:.1f},{tool_y:.1f}) rotate({tool_angle(action,phase):.1f})">')
+  repair_marker=' data-repair-tool="ENG"' if role=='ENG' and action=='REPAIR' else ''
+  add(f'<g{repair_marker} transform="translate({tool_x:.1f},{tool_y:.1f}) rotate({tool_angle(action,phase):.1f})">')
   if action=='WORK':
    if role=='OP':
     add('<rect x="-12" y="-9" width="37" height="19" rx="5" fill="#435964" stroke="#182c3b" stroke-width="3"/>')
