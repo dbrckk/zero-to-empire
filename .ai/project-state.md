@@ -30,16 +30,17 @@ Status: active — original character art requires semantic approval before prod
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-15T13:53:35Z
+Generated: 2026-10-15T15:39:40Z
 
 ### Git
 - Branch: `main`
-- Head: `06886b96547f`
-- Commit date: 2026-10-15T15:53:12+02:00
-- Commit: docs(continuity): preserve OP WALK 24-view emulator evidence and strict gates
+- Head: `808f29a496ac`
+- Commit date: 2026-10-15T17:39:20+02:00
+- Commit: art(candidate): stabilize OP WALK ground-contact speed
 - Tracked files: 1783
 
 ### Recently changed files
+- `tools/sprites/local_character_contact_gait.py`
 - `PROJECT_CONTINUITY.md`
 - `docs/art/OP_WALK_STRIDE_REVIEW_2026-10-15.md`
 - `ops/local-original-android-review-trigger.txt`

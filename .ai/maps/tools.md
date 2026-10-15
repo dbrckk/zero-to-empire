@@ -6295,7 +6295,9 @@ reach = 19.0 if operator else (14.0 if action == "WALK" else 12.0)
 clearance = 21.0 if operator else (16.0 if action == "WALK" else 12.0)
 ⋮----
 progress = _ease(cycle/stance_fraction)
-foot_dx = reach*(1.0-2.0*progress)
+# OP's planted ankle travels at a uniform ground-relative speed
+# during support; keep the original eased gait for all other profiles.
+foot_dx = (reach*(1.0-2.0*cycle/stance_fraction)
 lift = 0.0
 angle = 0.0 if operator else -4.0 + 8.0*progress
 planted = True

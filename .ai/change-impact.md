@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 19a13c0763d620f2be44fed6e8b5709db188887f
-Head: 06886b96547f03c77543e24389f8a93fe4cb74cb
+Base: 38a266ddc5f3c25ed7bff5252b98cdbb5726baf6
+Head: 808f29a496accd10a48b3c77ba7232ce99e18dfd
 
 ## Changed files
-- M PROJECT_CONTINUITY.md
+- M tools/sprites/local_character_contact_gait.py
 
 ## Affected areas
-- (root)
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.
