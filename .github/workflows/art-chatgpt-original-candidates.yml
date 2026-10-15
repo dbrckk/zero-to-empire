@@ -114,6 +114,60 @@ jobs:
           print('ENG_REPAIR_FIXED_SOCKET_CONTACT_PASS=10_POSES,ERROR_LT_0.08PX')
           print('STRICT_DONE_ADDED=0')
           PY
+      - name: Validate actual OP walking contacts and reciprocal leg travel
+        run: |
+          python - <<'PY'
+          import math
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+          from sys import path
+          path.insert(0,'tools/sprites')
+          from local_character_contact_gait import foot_pose,FLOOR_ANKLE_Y
+          frame_dir=Path('art/incoming/chatgpt-original/src_svg/OP/WALK')
+          ground={'L':0,'R':0}
+          air={'L':0,'R':0}
+          clearances={'L':[],'R':[]}
+          positions={'L':[],'R':[]}
+          for index in range(8):
+              svg=ET.parse(frame_dir/f'{index:02d}.svg').getroot()
+              legs={n.get('data-op-walk-foot'):n for n in svg.iter()
+                    if n.get('data-op-walk-foot') is not None}
+              assert set(legs)=={'L','R'},('leg-groups',index)
+              for side,node in legs.items():
+                  measured=(float(node.get('data-ankle-x')),
+                            float(node.get('data-ankle-y')))
+                  phase=2*math.pi*index/8
+                  bob=2.8*(1-math.cos(phase*2))/2
+                  pose=foot_pose(phase,side,'WALK',bob,profile='op-walk')
+                  assert math.dist(measured,(pose.ankle_x,pose.ankle_y)) < .015,('pose',index,side)
+                  planted=node.get('data-planted')=='true'
+                  assert planted==pose.planted,('stance',index,side)
+                  boots=[child for child in node if child.tag.endswith('g') and
+                         child.get('transform','').startswith('rotate(')]
+                  assert len(boots)==1,('boot-render',index,side)
+                  pivot=boots[0].get('transform').split()
+                  assert len(pivot)==3 and abs(float(pivot[1])-measured[0]) < .02,('boot-pivot-x',index,side)
+                  assert abs(float(pivot[2][:-1])-measured[1]) < .02,('boot-pivot-y',index,side)
+                  if planted:
+                      assert measured[1]==FLOOR_ANKLE_Y,('ground-slip',index,side)
+                      ground[side]+=1
+                  else:
+                      assert measured[1]<FLOOR_ANKLE_Y,('swing-not-lifted',index,side)
+                      air[side]+=1
+                      clearances[side].append(FLOOR_ANKLE_Y-measured[1])
+                  positions[side].append(measured[0])
+              assert float(legs['L'].get('data-ankle-x')) < float(legs['R'].get('data-ankle-x')),('crossed-legs',index)
+          assert all(ground[x]>=4 and air[x]>=2 for x in ('L','R')),(ground,air)
+          assert all(max(clearances[x])>=16.0 for x in ('L','R')),clearances
+          assert all(max(positions[x])-min(positions[x])>=30.0 for x in ('L','R')),positions
+          # The existing CARRY and other role WALK poses retain their standard
+          # profile and must not silently inherit the OP gait geometry.
+          for action in ('WALK','CARRY'):
+              for side in ('L','R'):
+                  assert foot_pose(0,side,action).hip_x in (106.0,146.0)
+          print('OP_WALK_REAL_SVG_STRIDE_AND_PLANTED_FOOT_PASS=8_FRAMES')
+          print('STRICT_DONE_ADDED=0')
+          PY
       - name: Check each candidate atlas without strict promotion
         run: |
           python - <<'PY'

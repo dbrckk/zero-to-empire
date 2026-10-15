@@ -79,8 +79,17 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
     elbow=(168+.45*(handpos[0]-176),115+.58*(handpos[1]-123))
   elif pose=='WALK':
    swing=motion*(-1 if side=='L' else 1)
-   handpos=((84+8*swing,147+10*swing+bounce) if side=='L' else (170+8*swing,148-10*swing+bounce))
-   elbow=((83+4*swing,124+5*swing+bounce) if side=='L' else (171+4*swing,127-5*swing+bounce))
+   if role=='OP':
+    # Reciprocal opposing arm motion: front arm rises as opposite boot leads.
+    # Earlier both wrists bobbed in the same vertical direction.
+    opposite=math.cos(phase)
+    handpos=((84-10*opposite,147+11*opposite+bounce) if side=='L'
+             else (170+10*opposite,148-11*opposite+bounce))
+    elbow=((83-5*opposite,124+5*opposite+bounce) if side=='L'
+           else (171+5*opposite,127-5*opposite+bounce))
+   else:
+    handpos=((84+8*swing,147+10*swing+bounce) if side=='L' else (170+8*swing,148-10*swing+bounce))
+    elbow=((83+4*swing,124+5*swing+bounce) if side=='L' else (171+4*swing,127-5*swing+bounce))
   else:
    elbow=((81,129+bounce) if side=='L' else (170,126+bounce))
    handpos=((79,149+bounce) if side=='L' else (176,144+bounce))
@@ -98,7 +107,7 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
  leg_poses=[]
  for side in ('L','R'):
   if action in ('WALK','CARRY'):
-   leg=foot_pose(phase,side,action,bounce)
+   leg=foot_pose(phase,side,action,bounce,profile='op-walk' if role=='OP' and action=='WALK' else 'standard')
    hipx,yhip=leg.hip_x,leg.hip_y
    knee_x,knee_y=leg.knee_x,leg.knee_y
    ankle_x,ankle_y=leg.ankle_x,leg.ankle_y
@@ -154,6 +163,10 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
   add('</g>')
  # boots and 2 articulated segments per leg
  for side,hipx,yhip,kx,ky,ax,ay,boot_angle in leg_poses:
+  if role=='OP' and action=='WALK':
+   # Actual rig data for generated SVG/CI movement proof, not approval.
+   foot=foot_pose(phase,side,action,bounce,profile='op-walk')
+   add(f'<g data-op-walk-foot="{side}" data-planted="{str(foot.planted).lower()}" data-ankle-x="{ax:.2f}" data-ankle-y="{ay:.2f}">')
   add(line(hipx,yhip,kx,ky,'url(#pant)',23,3));add(line(kx,ky,ax,ay,'url(#pant)',20,3))
   # knee armor pad and seam
   add(f'<ellipse cx="{kx:.1f}" cy="{ky:.1f}" rx="11" ry="8" fill="#647687" stroke="#253645" stroke-width="2" opacity=".85"/>')
@@ -169,6 +182,8 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
   add(f'<path d="M {toe-11:.1f} {ay+7:.1f} q 12 3 26 0" stroke="#16232d" stroke-width="3.8" fill="none"/>')
   add(f'<path d="M {toe-5:.1f} {ay-1:.1f} l 12 -2" stroke="#9cb2bd" stroke-width="1.9" opacity=".7"/>')
   add('</g>')
+  if role=='OP' and action=='WALK':
+   add('</g>')  # close the per-leg pose-evidence group
  # Weight shifts toward stance foot; cargo carry sway remains restrained.
  # The hands, equipment, torso, helmet and face all receive the exact same
  # transform, avoiding drift in object contact or character identity.
@@ -352,7 +367,7 @@ def main():
  for role in ROLES:
   for action in ACTIONS:
    results.append(render_atlas(role,action,outdir,args.save_svg))
- report={'version':'chatgpt-original-character-rig-v9-fixed-eng-repair-socket','strict_done_added':0,'review_only':True,
+ report={'version':'chatgpt-original-character-rig-v10-op-contact-stride','strict_done_added':0,'review_only':True,
          'material_finish':'local-alpha-safe-directional-light-v1',
          'action_vfx':'local-rigid-tool-tip-lights-and-repair-ratchet-v2',
          'asset_count':len(results),'unresolved_target_count':16,'assets':results}
