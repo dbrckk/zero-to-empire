@@ -58,6 +58,33 @@ class ContactGaitTests(unittest.TestCase):
                 for coord in ("knee_x","knee_y","ankle_x","ankle_y","boot_angle"):
                     self.assertAlmostEqual(getattr(first,coord),getattr(last,coord),places=7)
 
+    def test_operator_support_travel_has_constant_speed(self):
+        # Dense phase sampling avoids judging only the eight rendered frames.
+        for side in ("L", "R"):
+            support = []
+            for i in range(2000):
+                phase = 2*math.pi*i/2000
+                p = foot_pose(phase,side,"WALK",profile="op-walk")
+                if p.planted:
+                    support.append((p.cycle,p.ankle_x-p.hip_x,p.ankle_y))
+            support.sort()
+            self.assertGreater(len(support),500)
+            self.assertTrue(all(abs(y-FLOOR_ANKLE_Y)<1e-8 for _,_,y in support))
+            for (c0,x0,_),(c1,x1,_) in zip(support,support[1:]):
+                speed=(x1-x0)/(c1-c0)
+                self.assertAlmostEqual(speed,-38.0/.58,places=6)
+
+    def test_operator_recovery_is_raised_and_loop_is_closed(self):
+        for side in ("L","R"):
+            poses=[foot_pose(2*math.pi*i/256,side,"WALK",profile="op-walk")
+                   for i in range(256)]
+            self.assertTrue(any(not p.planted and p.ankle_y < FLOOR_ANKLE_Y-19
+                                for p in poses))
+            start=foot_pose(0,side,"WALK",profile="op-walk")
+            end=foot_pose(2*math.pi,side,"WALK",profile="op-walk")
+            for name in ("ankle_x","ankle_y","knee_x","knee_y","boot_angle"):
+                self.assertAlmostEqual(getattr(start,name),getattr(end,name),places=7)
+
     def test_loaded_carry_has_less_sway_than_unladen_walk(self):
         self.assertGreater(abs(torso_weight_shift(math.pi/2,"WALK")),
                            abs(torso_weight_shift(math.pi/2,"CARRY")))
