@@ -11,7 +11,7 @@ import argparse, io, json, math, pathlib
 from PIL import Image
 import cairosvg
 from local_character_material_finish import finish_frame
-from local_character_action_fx import action_fx
+from local_character_action_fx import action_fx,tool_angle
 from local_character_contact_gait import foot_pose,torso_weight_shift
 
 FRAME=256
@@ -235,7 +235,7 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
   # and stable local geometry prevent fake floating tools and prop morphing.
   tool_x=176+(15 if action=='WORK' else 8)*math.sin(phase)
   tool_y=123+(12 if action=='WORK' else 7)*math.cos(phase)+bounce
-  add(f'<g transform="translate({tool_x:.1f},{tool_y:.1f}) rotate({-4+3*math.sin(phase):.1f})">')
+  add(f'<g transform="translate({tool_x:.1f},{tool_y:.1f}) rotate({tool_angle(action,phase):.1f})">')
   if action=='WORK':
    if role=='OP':
     add('<rect x="-12" y="-9" width="37" height="19" rx="5" fill="#435964" stroke="#182c3b" stroke-width="3"/>')
@@ -310,9 +310,9 @@ def main():
  for role in ROLES:
   for action in ACTIONS:
    results.append(render_atlas(role,action,outdir,args.save_svg))
- report={'version':'chatgpt-original-character-rig-v7-action-specific-repair-contact','strict_done_added':0,'review_only':True,
+ report={'version':'chatgpt-original-character-rig-v8-ratcheting-repair-aligned-vfx','strict_done_added':0,'review_only':True,
          'material_finish':'local-alpha-safe-directional-light-v1',
-         'action_vfx':'local-attached-tool-and-wrist-highlights-v1',
+         'action_vfx':'local-rigid-tool-tip-lights-and-repair-ratchet-v2',
          'asset_count':len(results),'unresolved_target_count':16,'assets':results}
  (outdir/'creation-manifest.json').write_text(json.dumps(report,indent=2)+'\n')
  print(f'CHATGPT_CHARACTER_ATLASES_CREATED={len(results)} ASSETS_UNRESOLVED=16 STRICT_DONE_ADDED=0')
