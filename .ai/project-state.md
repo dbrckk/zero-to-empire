@@ -31,16 +31,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-15T09:07:05Z
+Generated: 2026-10-15T09:08:16Z
 
 ### Git
 - Branch: `main`
-- Head: `069b5ca4298a`
-- Commit date: 2026-10-15T11:06:50+02:00
-- Commit: ci(android): validate all 18 locally authored planted-foot sprite candidates in isolated APK
+- Head: `cbd05adb85aa`
+- Commit date: 2026-10-15T11:07:59+02:00
+- Commit: docs(art): record local 3-role planted-foot sprite creation, quantified loop improvement and limits
 - Tracked files: 1780
 
 ### Recently changed files
+- `docs/art/CHATGPT_ORIGINAL_CHARACTER_PIPELINE.md`
 - `ops/local-original-android-review-trigger.txt`
 - `art/incoming/chatgpt-original/animation-review.json`
 - `art/incoming/chatgpt-original/candidates/zte_chr_eng_carry_final.png`
@@ -60,7 +61,6 @@ Generated: 2026-10-15T09:07:05Z
 - `art/incoming/chatgpt-original/previews/op-carry.gif`
 - `art/incoming/chatgpt-original/previews/op-walk.gif`
 - `art/incoming/chatgpt-original/src_svg/ENG/CARRY/00.svg`
-- `art/incoming/chatgpt-original/src_svg/ENG/CARRY/01.svg`
 
 ### Project signals
 - `build.gradle.kts`
