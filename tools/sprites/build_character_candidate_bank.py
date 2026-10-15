@@ -98,8 +98,8 @@ def validated_local_candidate(asset: dict, record: dict) -> tuple[bytes, dict]:
         raise ValueError(f"Incorrect local PNG size: {asset_id}")
     return blob, {
         "source_type": "repo-local-original",
-        "source_file": str(path.as_posix()),
-        "editable_source": str(svg_folder.as_posix()),
+        "source_file": "art/incoming/chatgpt-original/candidates/" + name,
+        "editable_source": "art/incoming/chatgpt-original/src_svg/" + role + "/" + action,
         "editable_pose_count": len(svgs),
         "source_validation": "original-manifest+original-qa+independent-atlas-geometry",
     }
