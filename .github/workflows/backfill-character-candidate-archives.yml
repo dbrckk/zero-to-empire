@@ -1,0 +1,73 @@
+name: Backfill Character Candidate Archives
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/backfill-character-candidate-archives.yml'
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: backfill-character-candidate-archives
+  cancel-in-progress: false
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: main
+
+      - name: Derive source collector runs from real pending-review assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY' > /tmp/candidate-review-sources.txt
+          import json
+          from pathlib import Path
+          data=json.loads(Path('art/production/master-asset-queue.json').read_text())
+          ids={
+              int(item['review_artifact_run_id'])
+              for item in data['assets']
+              if item.get('id','').startswith('CHR-')
+              and item.get('strict_status')!='DONE'
+              and item.get('pipeline_status')=='AWAITING_REVIEW'
+              and item.get('review_artifact_run_id')
+          }
+          if len(ids)>30:
+              raise SystemExit('Unexpectedly many review source runs')
+          print(*sorted(ids),sep='\n')
+          PY
+          echo 'CANDIDATE_BACKFILL_SOURCE_IDS:'
+          cat /tmp/candidate-review-sources.txt
+
+      - name: Schedule missing permanent source archives
+        shell: bash
+        run: |
+          set -euo pipefail
+          archived="$(gh release view zte-character-candidates --repo "$GITHUB_REPOSITORY" \
+            --json assets --jq '.assets[].name')"
+          submitted=0
+          while IFS= read -r source_id; do
+            [ -n "$source_id" ] || continue
+            [[ "$source_id" =~ ^[1-9][0-9]*$ ]] || exit 2
+            filename="zte-characters-${source_id}.zip"
+            if printf '%s\n' "$archived" | grep -Fxq "$filename"; then
+              echo "ALREADY_ARCHIVED=$source_id"
+              continue
+            fi
+            gh workflow run 'Archive Character Candidates' --repo "$GITHUB_REPOSITORY" \
+              --ref main -f source_run_id="$source_id"
+            echo "BACKFILL_DISPATCHED=$source_id"
+            echo "- Dispatched archive for collector run $source_id" >> "$GITHUB_STEP_SUMMARY"
+            submitted=$((submitted+1))
+          done < /tmp/candidate-review-sources.txt
+          echo "BACKFILL_ARCHIVE_WAVES_DISPATCHED=$submitted"
