@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -63,8 +64,26 @@ private fun CharacterReviewGallery() {
         }
     }
 
-    MaterialTheme {
-        Surface(Modifier.fillMaxSize()) {
+    // The review gallery must show the authored colors against a calibrated
+    // dark game-like backdrop, not generic light Material defaults. This lives
+    // only in the isolated debug review activity, never the shipped game UI.
+    MaterialTheme(
+        colorScheme = darkColorScheme(
+            primary = Color(0xFF79D8E9),
+            onPrimary = Color(0xFF102430),
+            secondary = Color(0xFFFFC081),
+            surface = Color(0xFF142333),
+            onSurface = Color(0xFFF0F6FA),
+            surfaceVariant = Color(0xFF1E3142),
+            onSurfaceVariant = Color(0xFFC5D5E1),
+            background = Color(0xFF0B1520),
+            onBackground = Color(0xFFE9F3F9),
+        ),
+    ) {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background,
+        ) {
             LazyColumn(
                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 14.dp),
                 verticalArrangement = Arrangement.spacedBy(14.dp),
