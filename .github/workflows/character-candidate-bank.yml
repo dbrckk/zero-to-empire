@@ -44,7 +44,8 @@ jobs:
         run: |
           python -m pip install --disable-pip-version-check Pillow==11.3.0
           python -m unittest discover -s tools/sprites/tests -p test_character_candidate_bank.py -v
-          python -m py_compile tools/sprites/build_character_candidate_bank.py
+          python -m unittest discover -s tools/sprites/tests -p test_character_bank_mobile_review.py -v
+          python -m py_compile tools/sprites/build_character_candidate_bank.py tools/sprites/build_character_bank_mobile_review.py
 
       - name: Download current permanent candidate archives
         shell: bash
@@ -82,14 +83,21 @@ jobs:
           print('- These are review-only source sprites, not approved Android resources.')
           PY
 
+      - name: Create self-contained mobile animation comparison
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/sprites/build_character_bank_mobile_review.py             --bank /tmp/zte-character-bank-current.zip             --local-original art/incoming/chatgpt-original             --output /tmp/zte-character-bank-mobile-review.html
+          test -s /tmp/zte-character-bank-mobile-review.html
+          echo "MOBILE_CANDIDATE_REVIEW=offline/16-candidate-compare" >> "$GITHUB_STEP_SUMMARY"
+
       - name: Publish persistent source bank
         shell: bash
         run: |
           set -euo pipefail
           gh release upload "$TAG" \
             /tmp/zte-character-bank-current.zip \
-            /tmp/zte-character-bank-current.json \
-            --repo "$GITHUB_REPOSITORY" --clobber
+            /tmp/zte-character-bank-current.json             /tmp/zte-character-bank-mobile-review.html             --repo "$GITHUB_REPOSITORY" --clobber
           sha256sum /tmp/zte-character-bank-current.zip >> "$GITHUB_STEP_SUMMARY"
           echo "CHARACTER_CANDIDATE_BANK_RELEASE=$TAG" >> "$GITHUB_STEP_SUMMARY"
 
@@ -100,4 +108,5 @@ jobs:
           path: |
             /tmp/zte-character-bank-current.zip
             /tmp/zte-character-bank-current.json
+            /tmp/zte-character-bank-mobile-review.html
           retention-days: 30
