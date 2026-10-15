@@ -39,7 +39,7 @@ class CandidateArchiveWorkflowTests(unittest.TestCase):
         self.assertIn("candidate_production_complete", source)
         self.assertIn('"automatic_runtime_promotion": False', source)
         self.assertIn('"strict_approved": False', source)
-        self.assertNotIn("app/src/main/res/\"", flow)
+        self.assertNotIn("app/src/main/res/", flow)
         self.assertNotIn("git push", flow)
 
     def test_release_uses_only_qa_passed_candidates_and_never_promotes(self):
