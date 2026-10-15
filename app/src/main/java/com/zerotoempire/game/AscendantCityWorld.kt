@@ -96,12 +96,25 @@ private fun AscendantCompactHud(state: GameState) {
 @Composable private fun EraChip(number: Int, name: String) { Surface(color = EmpireColors.DeepSpace.copy(alpha = .88f), shape = RoundedCornerShape(15.dp), modifier = Modifier.border(1.dp, EmpireColors.Gold.copy(alpha = .25f), RoundedCornerShape(15.dp))) { Column(Modifier.padding(horizontal = 11.dp, vertical = 7.dp)) { Text("ERA $number", color = EmpireColors.Gold, fontSize = 8.sp, fontWeight = FontWeight.Black, letterSpacing = 1.2.sp); Text(name.uppercase(), color = EmpireColors.TextPrimary, fontSize = 11.sp, fontWeight = FontWeight.Black) } } }
 
 @Composable
-private fun AscendantCityStage(eraIndex: Int, modifier: Modifier = Modifier) {
+internal fun AscendantCityStage(
+    eraIndex: Int,
+    modifier: Modifier = Modifier,
+    // Only the isolated debug QA caller sets these. Null preserves the
+    // shipping city's existing clock, actors and motion accessibility policy.
+    reviewWorldFrame: Int? = null,
+    reviewRoleFilter: ReviewedCharacterRole? = null,
+    reviewActionOverride: ReviewedCharacterAction? = null,
+) {
     val context = LocalContext.current
     val reducedMotion = remember(context) { MotionQuality.reducedMotion(context) }
     var ambientFrame by remember { mutableIntStateOf(0) }
 
-    LaunchedEffect(reducedMotion) {
+    LaunchedEffect(reducedMotion, reviewWorldFrame != null) {
+        if (reviewWorldFrame != null) {
+            // One common manually controllable clock in the review APK.
+            // Never launch a second ticker that could desync city and atlas.
+            return@LaunchedEffect
+        }
         if (reducedMotion) {
             ambientFrame = 0
         } else {
@@ -111,6 +124,9 @@ private fun AscendantCityStage(eraIndex: Int, modifier: Modifier = Modifier) {
             }
         }
     }
+
+    val displayedFrame = reviewWorldFrame ?: ambientFrame
+    val displayedReducedMotion = if (reviewWorldFrame == null) reducedMotion else false
 
     Box(modifier.background(Brush.verticalGradient(listOf(Color(0xFF07101C), Color(0xFF101B24), Color(0xFF080D13))))) {
         EraVistaAAA(eraIndex, Modifier.fillMaxSize())
@@ -128,13 +144,15 @@ private fun AscendantCityStage(eraIndex: Int, modifier: Modifier = Modifier) {
         ReviewedMachineLayer(eraIndex, Modifier.fillMaxSize())
         ReviewedCharacterLayer(
             eraIndex = eraIndex,
-            worldFrame = ambientFrame,
-            reducedMotion = reducedMotion,
+            worldFrame = displayedFrame,
+            reducedMotion = displayedReducedMotion,
             modifier = Modifier.fillMaxSize(),
+            roleFilter = reviewRoleFilter,
+            actionOverride = reviewActionOverride,
         )
         ReviewedWorldTraffic(
-            worldFrame = ambientFrame,
-            reducedMotion = reducedMotion,
+            worldFrame = displayedFrame,
+            reducedMotion = displayedReducedMotion,
             modifier = Modifier.fillMaxSize(),
         )
         Box(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color.Transparent,Color.Transparent,EmpireColors.Void.copy(alpha=.24f)))))
