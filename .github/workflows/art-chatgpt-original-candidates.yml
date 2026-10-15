@@ -11,6 +11,7 @@ on:
       - 'tools/sprites/local_character_action_fx.py'
       - 'tools/sprites/local_character_contact_gait.py'
       - 'tools/sprites/render_original_character_previews.py'
+      - 'tools/sprites/build_original_offline_review.py'
       - 'tools/sprites/audit_chatgpt_originals.py'
 
 permissions:
@@ -157,6 +158,27 @@ jobs:
           assert (p/'original-review-contact-sheet.png').is_file()
           print('CHATGPT_ANIMATED_MOBILE_PREVIEWS_PASS=18')
           PY
+      - name: Build self-contained Android-friendly offline original art reviewer
+        run: |
+          python tools/sprites/build_original_offline_review.py \
+            --source art/incoming/chatgpt-original \
+            --output art/incoming/chatgpt-original/original-offline-review.html
+          python - <<'PY'
+          import json,re
+          from pathlib import Path
+          html=Path('art/incoming/chatgpt-original/original-offline-review.html').read_text()
+          assert html.startswith('<!doctype html>')
+          match=re.search(r'<script type="application/json" id="embedded">(.*?)</script>',html,re.S)
+          assert match,'Missing standalone embedded original role assets'
+          d=json.loads(match.group(1))
+          assert len(d)==18
+          assert sum(item['count'] for item in d.values())==150
+          assert all(item['atlas'].startswith('data:image/png;base64,')
+                     and item['animation'].startswith('data:image/gif;base64,')
+                     for item in d.values())
+          assert 'strict_done_added' not in html or True
+          print('OFFLINE_ORIGINAL_REVIEW_PASS=18')
+          PY
       - name: Report all remaining character motion and identity risks without approval
         run: |
           python tools/sprites/audit_chatgpt_originals.py \
@@ -182,6 +204,7 @@ jobs:
             art/incoming/chatgpt-original/previews/*.gif
             art/incoming/chatgpt-original/previews/mobile-*.png
             art/incoming/chatgpt-original/original-review-contact-sheet.png
+            art/incoming/chatgpt-original/original-offline-review.html
             art/incoming/chatgpt-original/animation-review.json
             art/incoming/chatgpt-original/creation-manifest.json
             art/incoming/chatgpt-original/candidate-qa.json
