@@ -1,10 +1,10 @@
 # Asset Autofactory — 235 target
 
 - Strict DONE: **219 / 235**
-- Production processed to DONE/review: **223 / 235**
-- Awaiting semantic review: **4**
+- Production processed to DONE/review: **231 / 235**
+- Awaiting semantic review: **12**
 - Automation-blocked: **0**
-- Current action: **WAIT_KAGGLE_BUSY**
+- Current action: **DISPATCH_KAGGLE_CHARACTER**
 - Current group: **CHR-ENG**
 
 The autofactory may generate and technically validate candidates automatically,
