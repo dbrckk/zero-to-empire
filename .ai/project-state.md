@@ -31,16 +31,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-15T07:50:33Z
+Generated: 2026-10-15T07:53:55Z
 
 ### Git
 - Branch: `main`
-- Head: `feb3825ad7b4`
-- Commit date: 2026-10-15T09:50:14+02:00
-- Commit: ci(android): render locally authored v4 action effects at real Android gameplay scale
+- Head: `1488b8967a29`
+- Commit date: 2026-10-15T09:53:41+02:00
+- Commit: docs(art): record first-party v4 action lighting provenance and remaining AAA review limits
 - Tracked files: 1778
 
 ### Recently changed files
+- `docs/art/CHATGPT_ORIGINAL_CHARACTER_PIPELINE.md`
 - `ops/local-original-android-review-trigger.txt`
 - `tools/sprites/test_local_character_action_fx.py`
 - `.github/workflows/asset-pipeline-ci.yml`
@@ -60,7 +61,6 @@ Generated: 2026-10-15T07:50:33Z
 - `art/incoming/chatgpt-original/creation-manifest.json`
 - `art/incoming/chatgpt-original/original-review-contact-sheet.png`
 - `art/incoming/chatgpt-original/previews/eng-carry.gif`
-- `art/incoming/chatgpt-original/previews/eng-celeb.gif`
 
 ### Project signals
 - `build.gradle.kts`

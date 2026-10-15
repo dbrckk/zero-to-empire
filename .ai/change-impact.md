@@ -1,13 +1,13 @@
 # Change impact
 
-Base: f34584535b6b4eb7870efe3ce254b842649f3f82
-Head: feb3825ad7b466a01532ca28d05a05b24b3bbf23
+Base: 6901a48f9ba6bb499f82343c93f1f34b87fa6e2b
+Head: 1488b8967a294178e887760717269d5807fb4a8f
 
 ## Changed files
-- M ops/local-original-android-review-trigger.txt
+- M docs/art/CHATGPT_ORIGINAL_CHARACTER_PIPELINE.md
 
 ## Affected areas
-- ops
+- docs
 
 ## Related test candidates
 - No direct filename-based test match detected.
