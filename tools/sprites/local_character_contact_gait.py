@@ -31,7 +31,7 @@ def _ease(t: float) -> float:
     return t*t*(3.0-2.0*t)
 
 
-def foot_pose(phase: float, side: str, action: str, bounce: float = 0.0) -> FootPose:
+def foot_pose(phase: float, side: str, action: str, bounce: float = 0.0, *, profile: str = "standard") -> FootPose:
     """Cyclic stance/swing path with locked stance Y and projected knee IK.
 
     Frame coordinates: 256x256, +Y downward. During the support fraction,
@@ -44,24 +44,32 @@ def foot_pose(phase: float, side: str, action: str, bounce: float = 0.0) -> Foot
         raise ValueError("side must be L or R")
     if action not in ("WALK","CARRY"):
         raise ValueError("contact gait is only for WALK/CARRY")
+    if profile not in ("standard", "op-walk") or (profile == "op-walk" and action != "WALK"):
+        raise ValueError("operator stride profile requires WALK")
 
-    cycle = (phase/(2*math.pi)+(0 if side == "L" else .5)) % 1.0
-    reach = 14.0 if action == "WALK" else 12.0
-    clearance = 16.0 if action == "WALK" else 12.0
-    if cycle < STANCE_FRACTION:
-        progress = _ease(cycle/STANCE_FRACTION)
+    # OP-specific stance/swing profile. A small phase offset prevents eight
+    # source frames from hiding heel lift behind a pair of flat planted boots.
+    # Standard WALK and all CARRY geometry remain byte-for-byte equivalent.
+    operator = profile == "op-walk"
+    stance_fraction = .58 if operator else STANCE_FRACTION
+    phase_offset = .10 if operator else 0.0
+    cycle = (phase/(2*math.pi)+(0 if side == "L" else .5)+phase_offset) % 1.0
+    reach = 19.0 if operator else (14.0 if action == "WALK" else 12.0)
+    clearance = 21.0 if operator else (16.0 if action == "WALK" else 12.0)
+    if cycle < stance_fraction:
+        progress = _ease(cycle/stance_fraction)
         foot_dx = reach*(1.0-2.0*progress)
         lift = 0.0
-        angle = -4.0 + 8.0*progress
+        angle = 0.0 if operator else -4.0 + 8.0*progress
         planted = True
     else:
-        progress = (cycle-STANCE_FRACTION)/(1.0-STANCE_FRACTION)
+        progress = (cycle-stance_fraction)/(1.0-stance_fraction)
         foot_dx = reach*(-1.0+2.0*_ease(progress))
         lift = clearance*math.sin(math.pi*progress)**1.4
         angle = 4.0-8.0*_ease(progress)
         planted = False
 
-    hip_x = 106.0 if side == "L" else 146.0
+    hip_x = (103.0 if side == "L" else 150.0) if operator else (106.0 if side == "L" else 146.0)
     hip_y = 155.0+bounce
     ankle_x = hip_x+foot_dx
     ankle_y = FLOOR_ANKLE_Y-lift
