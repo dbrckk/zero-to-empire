@@ -75,6 +75,45 @@ jobs:
           python tools/sprites/render_chatgpt_originals.py \
             --output-dir art/incoming/chatgpt-original \
             --save-svg
+      - name: Audit actual ENG repair tool/socket contact in every SVG pose
+        run: |
+          python - <<'PY'
+          import math, re, xml.etree.ElementTree as ET
+          from pathlib import Path
+          from sys import path
+          path.insert(0,'tools/sprites')
+          from local_character_action_fx import TOOL_TIP_OFFSETS
+          from render_chatgpt_originals import ENG_REPAIR_TARGET
+          source=Path('art/incoming/chatgpt-original/src_svg/ENG/REPAIR')
+          namespace='{http://www.w3.org/2000/svg}'
+          station_reference=None
+          for frame in range(10):
+              root=ET.parse(source/f'{frame:02d}.svg').getroot()
+              stations=[e for e in root.iter() if e.get('data-fixed-socket')=='true']
+              tools=[e for e in root.iter() if e.get('data-repair-tool')=='ENG']
+              assert len(stations)==1 and len(tools)==1,frame
+              station_markup=ET.tostring(stations[0])
+              if station_reference is None: station_reference=station_markup
+              assert station_markup==station_reference,('moving-station',frame)
+              socket=next(e for e in stations[0].iter()
+                          if e.tag==namespace+'circle')
+              target=(float(socket.get('cx')),float(socket.get('cy')))
+              assert target==ENG_REPAIR_TARGET,(frame,target)
+              match=re.fullmatch(
+                  r'translate\((-?[0-9.]+),(-?[0-9.]+)\) rotate\((-?[0-9.]+)\)',
+                  tools[0].get('transform',''))
+              assert match,('tool-transform',frame)
+              x,y,angle=map(float,match.groups())
+              dx,dy=TOOL_TIP_OFFSETS['REPAIR']['ENG']
+              rad=math.radians(angle)
+              end=(x+dx*math.cos(rad)-dy*math.sin(rad),
+                   y+dx*math.sin(rad)+dy*math.cos(rad))
+              error=math.dist(end,target)
+              assert error < .08,('detached-repair-tip',frame,error)
+              assert 'data-action-fx="REPAIR"' in (source/f'{frame:02d}.svg').read_text(),frame
+          print('ENG_REPAIR_FIXED_SOCKET_CONTACT_PASS=10_POSES,ERROR_LT_0.08PX')
+          print('STRICT_DONE_ADDED=0')
+          PY
       - name: Check each candidate atlas without strict promotion
         run: |
           python - <<'PY'
