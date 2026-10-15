@@ -1,5 +1,14 @@
 # OP WALK — planted-foot stride review (15 October 2026)
 
+## Latest contact-speed intervention (PR #152)
+
+- **Cause of first CI failure:** the initial `art/op-walk-stance-drift-20261015` patch introduced a malformed Python indent in `local_character_contact_gait.py`. Workflow `38753268106` failed while compiling generators. This was fixed on the same branch before merge; do not treat initial code as passing.
+- **Merged source:** PR [#152](https://github.com/dbrckk/zero-to-empire/pull/152) on `main`, squash commit `808f29a4`. OP WALK's stance-only ankle translation is now linear in the relative stride cycle (constant apparent ground speed), instead of applying smoothstep throughout support. The original swing/recovery easing is retained. LOG/ENG normal gait and every CARRY use the prior implementation.
+- **Validation:** corrected PR Asset Pipeline CI [38762145864](https://github.com/dbrckk/zero-to-empire/actions/runs/38762145864) **SUCCESS**; mainline Asset Pipeline CI [38762241985](https://github.com/dbrckk/zero-to-empire/actions/runs/38762241985) **SUCCESS**; 18 candidate atlas and SVG/GIF generation [38762242160](https://github.com/dbrckk/zero-to-empire/actions/runs/38762242160) **SUCCESS** including the OP WALK emitted-frame geometry gate. Inspected the new 8-frame `zte_chr_op_walk_final.png` atlas: consistent face/costume and alternating footwear, but artistic quality at gameplay animation speed still needs review.
+- **After regeneration:** eight distinct poses, mean adjacent pixel activity **0.086641** (previous **0.086847**), loop seam / median **0.7428** (previous **0.5769**), `abrupt_loop_reset_risk=false`; these numerical diagnostics do not prove the animation improved semantically. The objective of this patch is steadier *stance velocity*, not maximized frame-to-frame activity.
+- **Review-only Android build:** new workflow [38762436053](https://github.com/dbrckk/zero-to-empire/actions/runs/38762436053) was started after generated candidates were committed. Confirm successful APK and subsequent emulator run before citing Android device screenshots for this exact revision.
+- **Strict status:** unmodified at **219/235**. This update does not constitute acceptance of `CHR-OP-WALK` for production, and does not change release drawables.
+
 ## Scope and source
 
 Canonical item: `CHR-OP-WALK`, still **NEEDS_REVIEW**. The existing mainline update `7383a38d` introduces the `op-walk` gait profile only for the operator. Local first-party assets are regenerated through `tools/sprites/render_chatgpt_originals.py` and the `ChatGPT Original Character Candidates` workflow. Default LOG/ENG walking and loaded carrying retain their former profile; shipping Android drawables and economy/save logic are untouched.
