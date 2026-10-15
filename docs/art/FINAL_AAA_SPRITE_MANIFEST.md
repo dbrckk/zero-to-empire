@@ -298,7 +298,7 @@ If a new runtime sprite is later required, it must be added here first and the d
 | FX-16 | singularity lens pulse | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_16_final.webp` |DONE |
 | FX-17 | mastery crown shimmer | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_17_final.webp` | DONE |
 
-## Progress ledger — reconciled from canonical queue 2026-10-11
+## Progress ledger — reconciled from canonical queue 2026-10-15
 
 - Canonical strict DONE: **219 / 235**.
 - Manifest DONE: **220 / 236** (including ONB-00 outside the strict target).
