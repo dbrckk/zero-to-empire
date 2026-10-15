@@ -76,12 +76,12 @@
       "cause": "v1 metadata version assertion stale after original renderer v2 tool-tip ratchet evolution",
       "fix_branch": "fix/character-vfx-ci-metadata-20261015",
       "pull_request": 147,
-      "verification": "Asset Pipeline CI pending on PR; no strict sprite advancement"
+      "verification": "Asset Pipeline CI PR run 38736369265 passed on code fix commit 7083fd9; docs reconciler subsequently authored manifest/progress-only c8c8d20 and triggered action_required under github-actions[bot], not a failing test; validating latest human-authored commit next"
     }
   },
   "last_completed": "Diagnosed 2026-10-15 failed Asset Pipeline CI and original character-candidate CI: the test required outdated v1 action FX metadata while the renderer truthfully declares v2. PR #147 replaces version pin with versioned metadata assertion; existing effect contact/ordering checks remain. Correct current strict state is 219/235, with 16 unapproved CHR actions. Waiting for PR CI; no new semantic approval.",
   "next_actions": [
-    "Check PR #147 Asset Pipeline CI end to end; only merge after green validation.",
+    "Verify latest human-authored PR #147 run is green on exact head (bot-generated manifest reconciliation requires fresh reviewable CI); merge only after green.",
     "Check that original candidate pipeline can pass the same corrected assertion on next eligible main render, without auto-approving generated art.",
     "Visually inspect and validate 16 unresolved character actions at original and Android game size; repair any failed contact/identity/frame motion.",
     "Promote only manually approved exact runtime atlases after Android CI; update canonical queue and progress ledger from evidence."
