@@ -11,12 +11,12 @@ Status: active — Android runtime works; final character quality not yet approv
 
 ## Blockers
 - All 16 unresolved CHR actions remain review-only, including the new ENG REPAIR. Technical geometry and local art production do not prove high-grade visual semantics.
-- Android emulator visual coverage job **38741556309** was still in progress at the time of this manual update. Confirm its conclusion before claiming actual screenshot/runtime evidence.
+- Isolated Android emulator visual coverage **38741556309 SUCCESS**: the workflow captured all 24 role/action combinations. The downloaded real screenshot `atlas-ENGINEER-REPAIR.png` was inspected and visibly shows both the ENG service console and full-body character on 42 dp night / 39 dp day backgrounds. This is preview evidence only, not proof of a shipped production level.
 - A candidate must receive explicit human semantic review, exact runtime reference/visibility and approved Android integration before changing canonical strict status.
 - Earlier ENG Kaggle v1.17 status is historical; current first-party local authored candidate is the active review lane, not a speculative pending external producer.
 
 ## Current priority
-1. Confirm emulator ENGINEER REPAIR screenshots at real 39/42 dp and all 24 role/action QA combinations.
+1. Inspect and refine ENG REPAIR gameplay aesthetics at animation speed using now-verified 39/42 dp isolated Android screenshots; avoid promoting the preview simply for being renderable.
 2. Refine the ENG action if its tool or module reads poorly at game scale; maintain fixed physical contact.
 3. Only if explicit semantic approval and real Android production references pass, promote the exact asset; otherwise keep it unapproved.
 4. After this feature is closed, tackle OP WALK planted-foot movement before starting several unrelated improvements.
@@ -25,7 +25,7 @@ Status: active — Android runtime works; final character quality not yet approv
 - Original art candidate: generated on main and visual atlas inspected; full end-to-end mobile visual judgment still pending.
 - Asset Pipeline CI: SUCCESS (on exact merged renderer and workflow).
 - Android review APK + lint + existing checks: SUCCESS (isolated review package, not production release).
-- Emulator UI/screenshots: pending.
+- Emulator UI/screenshots: SUCCESS, 24 role/action screenshots saved as artifact 11975429234. Full production-game rendering/semantic approval: not yet established.
 - Strict progress: 219/235, unchanged.
 
 ## Last manually verified
