@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 38a266ddc5f3c25ed7bff5252b98cdbb5726baf6
-Head: 808f29a496accd10a48b3c77ba7232ce99e18dfd
+Base: da717fd786249fb7bfec17597568bea6f664a5bf
+Head: cba6bc91794c312ed39a9d8a6e244765f9e4190b
 
 ## Changed files
-- M tools/sprites/local_character_contact_gait.py
+- M ops/local-original-android-review-trigger.txt
 
 ## Affected areas
-- tools
+- ops
 
 ## Related test candidates
 - No direct filename-based test match detected.
