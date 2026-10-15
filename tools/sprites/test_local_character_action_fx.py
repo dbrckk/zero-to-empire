@@ -44,6 +44,20 @@ class LocalActionFxTests(unittest.TestCase):
                     self.assertNotIn('cx="235.',markup)
                     self.assertNotIn('cx="240.',markup)
 
+    def test_repair_is_a_distinct_compact_hand_tool_cycle(self):
+        # WORK and REPAIR used to have identical 15px x 12px hand strokes,
+        # which made the two actions indistinguishable at gameplay size.
+        source=(ROOT/'tools/sprites/render_chatgpt_originals.py').read_text(encoding='utf8')
+        self.assertIn("reach_px=15 if pose=='WORK' else 8",source)
+        self.assertIn("pump_px=12 if pose=='WORK' else 7",source)
+        wrist="176+(15 if action=='WORK' else 8)*math.sin(phase)"
+        vertical="123+(12 if action=='WORK' else 7)*math.cos(phase)+bounce"
+        self.assertEqual(source.count(wrist),2)
+        self.assertEqual(source.count(vertical),2)
+        self.assertIn("handpos=((80+2*reach",source)
+        self.assertIn("else (176+reach_px*reach,123+pump_px*pump+bounce)",source)
+        self.assertIn("add(action_fx(role,action,phase",source)
+
     def test_idle_and_walk_have_no_unattached_decorations(self):
         for role in ROLE_LIGHT:
             self.assertEqual(action_fx(role,'IDLE',0),'')
