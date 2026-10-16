@@ -1,6 +1,5 @@
 package com.zerotoempire.game
 
-import android.provider.Settings
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -106,7 +105,8 @@ internal fun AscendantCityStage(
     reviewActionOverride: ReviewedCharacterAction? = null,
 ) {
     val context = LocalContext.current
-    val reducedMotion = remember(context) { MotionQuality.reducedMotion(context) }
+    // Read Compose-backed policy on recomposition: Battery Saver can change while the game is open.
+    val reducedMotion = MotionQuality.reducedMotion(context)
     var ambientFrame by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(reducedMotion, reviewWorldFrame != null) {
@@ -120,7 +120,11 @@ internal fun AscendantCityStage(
         } else {
             while (true) {
                 delay(100)
-                ambientFrame = (ambientFrame + 1) % 10_000
+                // Seamless shared-clock reset: 10_080 is divisible by the 168-frame
+                // pedestrian route, the 180-frame vehicle route and the 6/8/10
+                // character atlas loops. The previous 10_000 reset teleported
+                // moving actors partway through their journeys.
+                ambientFrame = (ambientFrame + 1) % 10_080
             }
         }
     }
@@ -183,7 +187,8 @@ private fun AscendantCorePlaza(state:GameState,tap:()->Unit,modifier:Modifier=Mo
  )}
  val coreIndex=EmpireEras.current(state.lifetimeCash).index.coerceIn(0,6)
  val coreSprite=coreSprites[coreIndex]
- val motionEnabled=remember(context){Settings.Global.getFloat(context.contentResolver,Settings.Global.ANIMATOR_DURATION_SCALE,1f)>0f}
+ // Core VFX shares the live system animation and Battery Saver policy.
+ val motionEnabled = !MotionQuality.reducedMotion(context)
  var cyanFrame by remember{mutableIntStateOf(0)};var pulseToken by remember{mutableIntStateOf(0)};var pulseFrame by remember{mutableIntStateOf(-1)}
  LaunchedEffect(motionEnabled){if(!motionEnabled){cyanFrame=3}else{while(true){for(frame in 0 until 8){cyanFrame=frame;delay(110)};delay(440)}}}
  LaunchedEffect(pulseToken){if(pulseToken==0)return@LaunchedEffect;if(!motionEnabled){pulseFrame=3;delay(80)}else{for(frame in 0 until 8){pulseFrame=frame;delay(42)}};pulseFrame=-1}
