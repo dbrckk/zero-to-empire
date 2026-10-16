@@ -55,6 +55,7 @@ The content is organized as follows:
     character-candidate-bank.yml
     character-review-matrix.yml
     character-single-subject-gpu-evidence.yml
+    engineer-motion-candidate-review.yml
     final-aaa-assets.yml
     final-character-motion-patch.yml
     final-sprite-pipeline.yml
@@ -1234,6 +1235,49 @@ jobs:
           print('OP_WALK_REAL_SVG_STRIDE_AND_PLANTED_FOOT_PASS=8_FRAMES')
           print('STRICT_DONE_ADDED=0')
           PY
+      - name: Prove engineer WALK foot contact and mechanical REPAIR readability
+        run: |
+          python - <<'PY'
+          import math, xml.etree.ElementTree as ET
+          from pathlib import Path
+          root=Path('art/incoming/chatgpt-original/src_svg/ENG/WALK')
+          x_positions={'L':[], 'R':[]}
+          clearances={'L':[], 'R':[]}
+          support={'L':0, 'R':0}
+          for i in range(8):
+              svg=ET.parse(root/f'{i:02d}.svg').getroot()
+              legs={n.get('data-eng-walk-foot'):n for n in svg.iter()
+                    if n.get('data-eng-walk-foot') is not None}
+              assert set(legs)=={'L','R'},('missing-engineer-leg',i)
+              for side,node in legs.items():
+                  x=float(node.get('data-ankle-x'))
+                  y=float(node.get('data-ankle-y'))
+                  x_positions[side].append(x)
+                  clearances[side].append(226.0-y)
+                  planted=node.get('data-planted')=='true'
+                  if planted:
+                      assert y==226.0,('foot-slide',i,side)
+                      support[side]+=1
+                  else:
+                      assert y<226.0,('missing-swing-clearance',i,side)
+              assert x_positions['L'][-1]<x_positions['R'][-1],('crossed-boots',i)
+          for side in ('L','R'):
+              assert max(x_positions[side])-min(x_positions[side])>36,(side,'short-stride')
+              assert max(clearances[side])>20,(side,'low-foot-clearance')
+              assert support[side]>=4,(side,'insufficient-support')
+          repair=Path('art/incoming/chatgpt-original/src_svg/ENG/REPAIR')
+          angles=[]
+          for i in range(10):
+              svg=ET.parse(repair/f'{i:02d}.svg').getroot()
+              wrench=[e for e in svg.iter() if e.get('data-repair-tool')=='ENG']
+              assert len(wrench)==1,('repair-wrench',i)
+              angle=float(wrench[0].get('transform').split('rotate(')[1][:-1])
+              angles.append(angle)
+          assert max(angles)-min(angles)>48,'Weak mechanical ratchet action'
+          print('ENG_WALK_BOOT_TRAVEL_GT_36PX_AND_LIFT_GT_20PX=1')
+          print('ENG_REPAIR_RATCHET_TORQUE_GT_48_DEGREES=1')
+          print('STRICT_DONE_ADDED=0')
+          PY
       - name: Check each candidate atlas without strict promotion
         run: |
           python - <<'PY'
@@ -2272,7 +2316,7 @@ name: Assemble Character Candidate Bank
 
 on:
   workflow_run:
-    workflows: [Archive Character Candidates]
+    workflows: [Archive Character Candidates, ChatGPT Original Character Candidates]
     types: [completed]
   workflow_dispatch:
   push:
@@ -2742,6 +2786,117 @@ jobs:
             /tmp/zte-single-subject/retroactive-action-qa.json
           retention-days: 90
           if-no-files-found: error
+```
+
+## File: .github/workflows/engineer-motion-candidate-review.yml
+```yaml
+name: Engineer Motion Candidate Visual Review
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/sprites/render_chatgpt_originals.py'
+      - 'tools/sprites/local_character_contact_gait.py'
+      - 'tools/sprites/local_character_action_fx.py'
+      - 'tools/sprites/test_local_character_contact_gait.py'
+      - 'tools/sprites/test_local_character_action_fx.py'
+      - '.github/workflows/engineer-motion-candidate-review.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  render-and-compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install free local vector tooling
+        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0' 'CairoSVG==2.7.1'
+      - name: Exercise actual gait, ratchet and fixed-socket tests
+        run: |
+          python -m unittest discover -s tools/sprites -p 'test_local_character_contact_gait.py' -v
+          python -m unittest discover -s tools/sprites -p 'test_local_character_action_fx.py' -v
+      - name: Render ENGINEER WALK and REPAIR from changed editable vector rig
+        run: |
+          python - <<'PY'
+          import sys
+          from pathlib import Path
+          sys.path.insert(0, 'tools/sprites')
+          from render_chatgpt_originals import render_atlas
+          out=Path('build/engineer-motion-review')
+          for action in ('WALK','REPAIR'):
+              item=render_atlas('ENG',action,out,save_svgs=True)
+              assert item['strict_approved'] is False
+              print('RENDERED_ENGINEER_'+action+'='+str(item['frames']))
+          PY
+      - name: Compare original/current 42px action on night and daylight stages
+        run: |
+          python - <<'PY'
+          import json, sys
+          from pathlib import Path
+          from PIL import Image,ImageDraw,ImageFont
+          sys.path.insert(0,'tools/sprites')
+          from audit_character_bank_motion import motion_stats,composite,DAY,NIGHT
+          out=Path('build/engineer-motion-review')
+          original=Path('art/incoming/chatgpt-original/candidates')
+          w=1000
+          board=Image.new('RGB',(w,16*69+64),(19,30,44))
+          pen=ImageDraw.Draw(board)
+          pen.text((15,12),'ZERO TO EMPIRE — engineer motion at real 42px',fill=(241,248,255))
+          pen.text((15,32),'REVIEW ONLY. No automatic approval or Android promotion.',fill=(174,197,216))
+          metrics={'review_only':True,'semantic_approved':False,
+                   'runtime_promoted':False,'strict_done_added':0,
+                   'mobile_render_px':42,'actions':{}}
+          for action_index,(action,count) in enumerate((('WALK',8),('REPAIR',10))):
+              filename='zte_chr_eng_'+action.lower()+'_final.png'
+              old=original/filename
+              new=out/'candidates'/filename
+              before=old.read_bytes()
+              after=new.read_bytes()
+              assert before!=after,('Unchanged motion candidate',action)
+              before_m=motion_stats(before,count)
+              after_m=motion_stats(after,count)
+              metrics['actions'][action]={
+                  'old':before_m,'candidate':after_m,
+                  'motion_change_delta':round(after_m['mean_frame_change']-before_m['mean_frame_change'],5),
+                  'lower_body_change_delta':round(after_m['mean_lower_body_change']-before_m['mean_lower_body_change'],5),
+                  'requires_visual_review':True,
+              }
+              with Image.open(old) as a,Image.open(new) as b:
+                  for candidate_index,atlas in enumerate((a,b)):
+                      frames=[atlas.crop(((i%4)*256,(i//4)*256,(i%4+1)*256,(i//4+1)*256)) for i in range(count)]
+                      assert all(fr.getchannel('A').getbbox() is not None for fr in frames)
+                      for lighting_index,(bg,caption) in enumerate(((NIGHT,'night'),(DAY,'day'))):
+                          row=action_index*8+candidate_index*4+lighting_index*2
+                          yy=row*69+70
+                          pen.text((15,yy+8),action+' / '+('CURRENT' if candidate_index==0 else 'NEW')+' / '+caption,fill=(216,234,248))
+                          for i,fr in enumerate(frames):
+                              tiny=composite(fr,bg)
+                              xx=250+i*70
+                              board.paste(tiny,(xx,yy))
+                              pen.text((xx+14,yy+43),str(i+1),fill=(166,187,208))
+                          # Two duplicate rows intentionally show stage size and a
+                          # transparent-cell alignment baseline without resampling.
+                          if row%2==0:
+                              pen.text((15,yy+27),'exact 42 px',fill=(157,180,202))
+              print(action,'42px baseline',before_m,'42px candidate',after_m)
+          (out/'review-metrics.json').write_text(json.dumps(metrics,indent=2)+'\n')
+          board.save(out/'engineer-walk-repair-real-42px.png',optimize=True)
+          print('ENGINEER_COMPARISON_REVIEW_ONLY=1')
+          PY
+      - name: Publish original and proposed sprite sheets for inspection
+        uses: actions/upload-artifact@v4
+        with:
+          name: engineer-walk-repair-review-only
+          path: |
+            build/engineer-motion-review/candidates/*.png
+            build/engineer-motion-review/src_svg/ENG/**/*.svg
+            build/engineer-motion-review/review-metrics.json
+            build/engineer-motion-review/engineer-walk-repair-real-42px.png
+          if-no-files-found: error
+          retention-days: 30
 ```
 
 ## File: .github/workflows/final-aaa-assets.yml
@@ -36278,14 +36433,21 @@ ROLE_LIGHT={
 # and lighting use one rigid rotation; there are no free-floating effects.
 TOOL_TIP_OFFSETS={
 ⋮----
-def tool_angle(action:str,phase:float)->float
+def tool_angle(action:str,phase:float,*,role:str|None=None)->float
 ⋮----
-# Repair is a genuine oscillating ratchet/twist. WORK remains a broad
-# positional sweep with minimal prop rotation.
+# Engineer's long mechanical ratchet needs an unmistakable torque arc
+# at the 42px Android gameplay scale; preserve other roles' timings.
+⋮----
+# A continuous forward/back ratchet cycle with ten meaningful
+# intermediate turns. A sine parked the wrist near two extrema and
+# produced consecutive near-identical frames on the 42px display.
+cycle=(phase/(2.0*math.pi)) % 1.0
+⋮----
+sweep = 18.0 if action=='REPAIR' else 3.0
 ⋮----
 def tool_tip(role:str,action:str,phase:float,*,tool_x:float,tool_y:float)->tuple[float,float]
 ⋮----
-angle=math.radians(tool_angle(action,phase))
+angle=math.radians(tool_angle(action,phase,role=role))
 ⋮----
 """Return an SVG group for a 256px sprite; empty for unsupported actions.
 
@@ -36356,18 +36518,20 @@ def foot_pose(phase: float, side: str, action: str, bounce: float = 0.0, *, prof
 # source frames from hiding heel lift behind a pair of flat planted boots.
 # Standard WALK and all CARRY geometry remain byte-for-byte equivalent.
 operator = profile == "op-walk"
-stance_fraction = .58 if operator else STANCE_FRACTION
-phase_offset = .10 if operator else 0.0
+engineer = profile == "eng-walk"
+specialized = operator or engineer
+stance_fraction = .58 if specialized else STANCE_FRACTION
+phase_offset = .10 if operator else (.075 if engineer else 0.0)
 cycle = (phase/(2*math.pi)+(0 if side == "L" else .5)+phase_offset) % 1.0
-reach = 19.0 if operator else (14.0 if action == "WALK" else 12.0)
-clearance = 21.0 if operator else (16.0 if action == "WALK" else 12.0)
+reach = 19.0 if operator else (20.0 if engineer else (14.0 if action == "WALK" else 12.0))
+clearance = 21.0 if operator else (22.0 if engineer else (16.0 if action == "WALK" else 12.0))
 ⋮----
 progress = _ease(cycle/stance_fraction)
 # OP's planted ankle travels at a uniform ground-relative speed
 # during support; keep the original eased gait for all other profiles.
 foot_dx = (reach*(1.0-2.0*cycle/stance_fraction)
 lift = 0.0
-angle = 0.0 if operator else -4.0 + 8.0*progress
+angle = 0.0 if specialized else -4.0 + 8.0*progress
 planted = True
 ⋮----
 progress = (cycle-stance_fraction)/(1.0-stance_fraction)
@@ -36376,7 +36540,7 @@ lift = clearance*math.sin(math.pi*progress)**1.4
 angle = 4.0-8.0*_ease(progress)
 planted = False
 ⋮----
-hip_x = (103.0 if side == "L" else 150.0) if operator else (106.0 if side == "L" else 146.0)
+hip_x = (103.0 if side == "L" else 150.0) if specialized else (106.0 if side == "L" else 146.0)
 hip_y = 155.0+bounce
 ankle_x = hip_x+foot_dx
 ankle_y = FLOOR_ANKLE_Y-lift
@@ -37849,7 +38013,7 @@ ENG_REPAIR_TARGET=(218.0,129.0)
 ⋮----
 def engineer_repair_wrist(phase:float)->tuple[float,float]
 ⋮----
-theta=math.radians(tool_angle('REPAIR',phase))
+theta=math.radians(tool_angle('REPAIR',phase,role='ENG'))
 rotated_x=dx*math.cos(theta)-dy*math.sin(theta)
 rotated_y=dx*math.sin(theta)+dy*math.cos(theta)
 ⋮----
@@ -37894,6 +38058,12 @@ elbow=(168+.45*(handpos[0]-176),115+.58*(handpos[1]-123))
 ⋮----
 swing=motion*(-1 if side=='L' else 1)
 ⋮----
+# A visibly reciprocal arm drive balances the stronger planted-foot
+# engineer gait; it remains distinct from tool/carry arm poses.
+opposite=math.cos(phase+.45)
+handpos=((84-12*opposite,147+14*opposite+bounce) if side=='L'
+elbow=((83-6*opposite,124+7*opposite+bounce) if side=='L'
+⋮----
 # Reciprocal opposing arm motion: front arm rises as opposite boot leads.
 # Earlier both wrists bobbed in the same vertical direction.
 opposite=math.cos(phase)
@@ -37915,7 +38085,7 @@ sleeve=line(shoulder_x,shoulder_y,ex,ey,'url(#jacket)',17,3)
 # Grounded ankles keep exactly the same Y even as pelvis bob changes.
 leg_poses=[]
 ⋮----
-leg=foot_pose(phase,side,action,bounce,profile='op-walk' if role=='OP' and action=='WALK' else 'standard')
+leg=foot_pose(phase,side,action,bounce,profile=('op-walk' if role=='OP' and action=='WALK' else
 ⋮----
 boot_angle=leg.boot_angle
 ⋮----
@@ -37934,10 +38104,14 @@ boot_angle=0.0
 # support, a real repairable fastener, and stays independent of torso bounce.
 # The wrist/tool/VFX endpoint locks to the highlighted fastener below.
 ⋮----
+# Readable bolted service hatch and warning strip at phone scale.
+⋮----
 # boots and 2 articulated segments per leg
 ⋮----
-# Actual rig data for generated SVG/CI movement proof, not approval.
-foot=foot_pose(phase,side,action,bounce,profile='op-walk')
+# Real editable ankle/boot contact telemetry; no automatic art approval.
+gait_profile='op-walk' if role=='OP' else 'eng-walk'
+gait_attr='data-op-walk-foot' if role=='OP' else 'data-eng-walk-foot'
+foot=foot_pose(phase,side,action,bounce,profile=gait_profile)
 ⋮----
 # knee armor pad and seam
 ⋮----
@@ -37999,6 +38173,9 @@ tool_y=123+(12 if action=='WORK' else 7)*math.cos(phase)+bounce
 ⋮----
 repair_marker=' data-repair-tool="ENG"' if role=='ENG' and action=='REPAIR' else ''
 ⋮----
+# Physical articulated torque wrench, not an electronic scanner.
+# Tip geometry is centred on the *exact* fixed socket offset (43,-13).
+⋮----
 # foreground right arm and hand over equipment, never floating
 ⋮----
 # Physically attached local vector action lighting. Equipment highlights are
@@ -38015,6 +38192,8 @@ fx_tool_y=123+(12 if action=='WORK' else 7)*math.cos(phase)+bounce
 add('</g>')  # balanced upper-body weight-transfer group
 ⋮----
 def render_atlas(role,action,outdir,save_svgs=False)
+⋮----
+# Pure SVG pose/unit tests need no Cairo dependency; only pixel rendering does.
 ⋮----
 count=ACTIONS[action]; atlas=Image.new('RGBA',(1024,1024),(0,0,0,0))
 ⋮----
@@ -38038,7 +38217,7 @@ parser=argparse.ArgumentParser()
 args=parser.parse_args();outdir=pathlib.Path(args.output_dir);outdir.mkdir(parents=True,exist_ok=True)
 results=[]
 ⋮----
-report={'version':'chatgpt-original-character-rig-v10-op-contact-stride','strict_done_added':0,'review_only':True,
+report={'version':'chatgpt-original-character-rig-v11-engineer-mechanical-motion','strict_done_added':0,'review_only':True,
 ```
 
 ## File: tools/sprites/render_original_character_previews.py
@@ -39685,6 +39864,22 @@ source=(ROOT/'tools/sprites/render_chatgpt_originals.py').read_text(encoding='ut
 wrist="176+(15 if action=='WORK' else 8)*math.sin(phase)"
 vertical="123+(12 if action=='WORK' else 7)*math.cos(phase)+bounce"
 ⋮----
+def test_engineer_repair_wrench_rotates_about_fixed_real_socket(self)
+⋮----
+swings = []
+stations = []
+ns = "{http://www.w3.org/2000/svg}"
+⋮----
+phase = 2 * math.pi * index / 10
+wrist = engineer_repair_wrist(phase)
+tip = tool_tip("ENG", "REPAIR", phase,
+⋮----
+angle = tool_angle("REPAIR", phase, role="ENG")
+⋮----
+svg = ET.fromstring(svg_frame("ENG", "REPAIR", index, 10))
+station = [e for e in svg.iter()
+wrench = [e for e in svg.iter()
+⋮----
 def test_idle_and_walk_have_no_unattached_decorations(self)
 ⋮----
 def test_bad_role_action_rejected(self)
@@ -39735,6 +39930,20 @@ def test_loop_is_periodic_without_coordinate_jumps(self)
 ⋮----
 first=foot_pose(0,side,action)
 last=foot_pose(2*math.pi,side,action)
+⋮----
+def test_engineer_gait_exaggerates_readable_steps_without_crossed_legs(self)
+⋮----
+ankles = {"L": [], "R": []}
+lift = {"L": [], "R": []}
+stance_counts = {"L": 0, "R": 0}
+⋮----
+phase = 2 * math.pi * index / 8
+poses = {}
+⋮----
+pose = foot_pose(phase, side, "WALK", profile="eng-walk")
+⋮----
+start = foot_pose(0, side, "WALK", profile="eng-walk")
+end = foot_pose(2 * math.pi, side, "WALK", profile="eng-walk")
 ⋮----
 def test_loaded_carry_has_less_sway_than_unladen_walk(self)
 ```

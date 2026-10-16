@@ -29,21 +29,27 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-16T11:09:23Z
+Generated: 2026-10-16T11:45:56Z
 
 ### Git
 - Branch: `main`
-- Head: `67ab7eeb11f6`
-- Commit date: 2026-10-16T13:09:08+02:00
-- Commit: fix(ci): rebuild Android character review artifacts on QA tool changes (#185)
-- Tracked files: 1811
+- Head: `6c9275b1c82e`
+- Commit date: 2026-10-16T13:45:35+02:00
+- Commit: art: new engineer walk and mechanical repair motion, with 42px visual review (#186)
+- Tracked files: 1812
 
 ### Recently changed files
+- `.github/workflows/art-chatgpt-original-candidates.yml`
 - `.github/workflows/character-candidate-bank.yml`
+- `.github/workflows/engineer-motion-candidate-review.yml`
+- `tools/assets/test_candidate_archive_workflow.py`
+- `tools/sprites/local_character_action_fx.py`
+- `tools/sprites/local_character_contact_gait.py`
+- `tools/sprites/render_chatgpt_originals.py`
+- `tools/sprites/test_local_character_action_fx.py`
+- `tools/sprites/test_local_character_contact_gait.py`
 - `tools/sprites/build_character_identity_polish.py`
 - `tools/sprites/tests/test_character_identity_polish.py`
-- `tools/sprites/build_character_role_contact_sheet.py`
-- `tools/sprites/tests/test_character_role_contact_sheet.py`
 
 ### Project signals
 - `build.gradle.kts`

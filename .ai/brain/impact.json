@@ -1,17 +1,257 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "e210a49055038983063f421e4c0eef3d02e5eaea",
-  "head": "67ab7eeb11f6885044365505527ceb4c212df196",
+  "base": "67ab7eeb11f6885044365505527ceb4c212df196",
+  "head": "6c9275b1c82e83a9654866c2a6b249eabb0b13d7",
   "index_mode": "incremental",
   "changed_files": [
     {
+      "path": ".github/workflows/art-chatgpt-original-candidates.yml",
+      "status": "M"
+    },
+    {
       "path": ".github/workflows/character-candidate-bank.yml",
+      "status": "M"
+    },
+    {
+      "path": ".github/workflows/engineer-motion-candidate-review.yml",
+      "status": "A"
+    },
+    {
+      "path": "tools/assets/test_candidate_archive_workflow.py",
+      "status": "M"
+    },
+    {
+      "path": "tools/sprites/local_character_action_fx.py",
+      "status": "M"
+    },
+    {
+      "path": "tools/sprites/local_character_contact_gait.py",
+      "status": "M"
+    },
+    {
+      "path": "tools/sprites/render_chatgpt_originals.py",
+      "status": "M"
+    },
+    {
+      "path": "tools/sprites/test_local_character_action_fx.py",
+      "status": "M"
+    },
+    {
+      "path": "tools/sprites/test_local_character_contact_gait.py",
       "status": "M"
     }
   ],
-  "changed_source_files": [],
-  "impacted_files": [],
-  "impacted_symbols": [],
-  "selected_tests": []
+  "changed_source_files": [
+    "tools/sprites/local_character_action_fx.py",
+    "tools/sprites/local_character_contact_gait.py",
+    "tools/sprites/render_chatgpt_originals.py",
+    "tools/sprites/test_local_character_action_fx.py",
+    "tools/sprites/test_local_character_contact_gait.py"
+  ],
+  "impacted_files": [
+    "tools/sprites/local_character_action_fx.py",
+    "tools/sprites/local_character_contact_gait.py",
+    "tools/sprites/render_chatgpt_originals.py",
+    "tools/sprites/test_local_character_action_fx.py",
+    "tools/sprites/test_local_character_contact_gait.py"
+  ],
+  "impacted_symbols": [
+    {
+      "name": "tool_angle",
+      "kind": "function",
+      "file": "tools/sprites/local_character_action_fx.py",
+      "line": 26
+    },
+    {
+      "name": "tool_tip",
+      "kind": "function",
+      "file": "tools/sprites/local_character_action_fx.py",
+      "line": 43
+    },
+    {
+      "name": "action_fx",
+      "kind": "function",
+      "file": "tools/sprites/local_character_action_fx.py",
+      "line": 53
+    },
+    {
+      "name": "FootPose",
+      "kind": "class",
+      "file": "tools/sprites/local_character_contact_gait.py",
+      "line": 17
+    },
+    {
+      "name": "_ease",
+      "kind": "function",
+      "file": "tools/sprites/local_character_contact_gait.py",
+      "line": 29
+    },
+    {
+      "name": "foot_pose",
+      "kind": "function",
+      "file": "tools/sprites/local_character_contact_gait.py",
+      "line": 34
+    },
+    {
+      "name": "torso_weight_shift",
+      "kind": "function",
+      "file": "tools/sprites/local_character_contact_gait.py",
+      "line": 103
+    },
+    {
+      "name": "engineer_repair_wrist",
+      "kind": "function",
+      "file": "tools/sprites/render_chatgpt_originals.py",
+      "line": 29
+    },
+    {
+      "name": "svg_frame",
+      "kind": "function",
+      "file": "tools/sprites/render_chatgpt_originals.py",
+      "line": 39
+    },
+    {
+      "name": "add",
+      "kind": "function",
+      "file": "tools/sprites/render_chatgpt_originals.py",
+      "line": 47
+    },
+    {
+      "name": "line",
+      "kind": "function",
+      "file": "tools/sprites/render_chatgpt_originals.py",
+      "line": 48
+    },
+    {
+      "name": "hand",
+      "kind": "function",
+      "file": "tools/sprites/render_chatgpt_originals.py",
+      "line": 51
+    },
+    {
+      "name": "joint_arm",
+      "kind": "function",
+      "file": "tools/sprites/render_chatgpt_originals.py",
+      "line": 53
+    },
+    {
+      "name": "render_atlas",
+      "kind": "function",
+      "file": "tools/sprites/render_chatgpt_originals.py",
+      "line": 364
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "tools/sprites/render_chatgpt_originals.py",
+      "line": 383
+    },
+    {
+      "name": "LocalActionFxTests",
+      "kind": "class",
+      "file": "tools/sprites/test_local_character_action_fx.py",
+      "line": 12
+    },
+    {
+      "name": "test_every_role_has_distinct_integrated_action_effects",
+      "kind": "function",
+      "file": "tools/sprites/test_local_character_action_fx.py",
+      "line": 13
+    },
+    {
+      "name": "test_action_highlights_close_the_loop",
+      "kind": "function",
+      "file": "tools/sprites/test_local_character_action_fx.py",
+      "line": 27
+    },
+    {
+      "name": "test_raster_effects_do_not_escape_frame_or_create_fake_labels",
+      "kind": "function",
+      "file": "tools/sprites/test_local_character_action_fx.py",
+      "line": 35
+    },
+    {
+      "name": "test_repair_is_a_distinct_compact_hand_tool_cycle",
+      "kind": "function",
+      "file": "tools/sprites/test_local_character_action_fx.py",
+      "line": 47
+    },
+    {
+      "name": "test_engineer_repair_wrench_rotates_about_fixed_real_socket",
+      "kind": "function",
+      "file": "tools/sprites/test_local_character_action_fx.py",
+      "line": 61
+    },
+    {
+      "name": "test_idle_and_walk_have_no_unattached_decorations",
+      "kind": "function",
+      "file": "tools/sprites/test_local_character_action_fx.py",
+      "line": 90
+    },
+    {
+      "name": "test_bad_role_action_rejected",
+      "kind": "function",
+      "file": "tools/sprites/test_local_character_action_fx.py",
+      "line": 95
+    },
+    {
+      "name": "test_renderer_invokes_attached_effects_after_hand",
+      "kind": "function",
+      "file": "tools/sprites/test_local_character_action_fx.py",
+      "line": 101
+    },
+    {
+      "name": "ContactGaitTests",
+      "kind": "class",
+      "file": "tools/sprites/test_local_character_contact_gait.py",
+      "line": 7
+    },
+    {
+      "name": "test_stance_feet_are_anchored_vertically_even_while_torso_bobs",
+      "kind": "function",
+      "file": "tools/sprites/test_local_character_contact_gait.py",
+      "line": 8
+    },
+    {
+      "name": "test_exact_half_cycle_leg_antiphase",
+      "kind": "function",
+      "file": "tools/sprites/test_local_character_contact_gait.py",
+      "line": 18
+    },
+    {
+      "name": "test_swing_clears_ground_without_crossed_legs",
+      "kind": "function",
+      "file": "tools/sprites/test_local_character_contact_gait.py",
+      "line": 28
+    },
+    {
+      "name": "test_swing_knees_turn_forward_instead_of_overshooting_silhouette",
+      "kind": "function",
+      "file": "tools/sprites/test_local_character_contact_gait.py",
+      "line": 42
+    },
+    {
+      "name": "test_loop_is_periodic_without_coordinate_jumps",
+      "kind": "function",
+      "file": "tools/sprites/test_local_character_contact_gait.py",
+      "line": 53
+    },
+    {
+      "name": "test_engineer_gait_exaggerates_readable_steps_without_crossed_legs",
+      "kind": "function",
+      "file": "tools/sprites/test_local_character_contact_gait.py",
+      "line": 61
+    },
+    {
+      "name": "test_loaded_carry_has_less_sway_than_unladen_walk",
+      "kind": "function",
+      "file": "tools/sprites/test_local_character_contact_gait.py",
+      "line": 89
+    }
+  ],
+  "selected_tests": [
+    "tools/sprites/test_local_character_action_fx.py",
+    "tools/sprites/test_local_character_contact_gait.py"
+  ]
 }
