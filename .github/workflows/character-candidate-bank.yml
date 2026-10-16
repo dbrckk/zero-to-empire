@@ -48,7 +48,8 @@ jobs:
           python -m unittest discover -s tools/sprites/tests -p test_character_bank_motion_audit.py -v
           python -m unittest discover -s tools/sprites/tests -p test_character_role_contact_sheet.py -v
           python -m unittest discover -s tools/sprites/tests -p test_character_identity_polish.py -v
-          python -m py_compile tools/sprites/build_character_candidate_bank.py tools/sprites/build_character_bank_mobile_review.py tools/sprites/audit_character_bank_motion.py tools/sprites/build_character_role_contact_sheet.py tools/sprites/build_character_identity_polish.py
+          python -m unittest discover -s tools/sprites/tests -p test_character_identity_polish_mobile_review.py -v
+          python -m py_compile tools/sprites/build_character_candidate_bank.py tools/sprites/build_character_bank_mobile_review.py tools/sprites/audit_character_bank_motion.py tools/sprites/build_character_role_contact_sheet.py tools/sprites/build_character_identity_polish.py tools/sprites/character_identity_polish_mobile_review.py
 
       - name: Download current permanent candidate archives
         shell: bash
@@ -119,7 +120,8 @@ jobs:
             --audit /tmp/zte-character-bank-motion-audit.json \
             --output /tmp/zte-character-identity-polish-current.zip \
             --report /tmp/zte-character-identity-polish-current.json \
-            --comparison /tmp/zte-character-identity-polish-preview.png
+            --comparison /tmp/zte-character-identity-polish-preview.png \
+            --mobile-review /tmp/zte-character-identity-polish-mobile-review.html
           python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
           import json
           d=json.load(open('/tmp/zte-character-identity-polish-current.json'))
@@ -167,6 +169,7 @@ jobs:
             /tmp/zte-character-identity-polish-current.zip \
             /tmp/zte-character-identity-polish-current.json \
             /tmp/zte-character-identity-polish-preview.png \
+            /tmp/zte-character-identity-polish-mobile-review.html \
             /tmp/zte-character-bank-role-consistency.png \
             /tmp/zte-character-bank-mobile-review.html \
             --repo "$GITHUB_REPOSITORY" --clobber
@@ -184,6 +187,7 @@ jobs:
             /tmp/zte-character-identity-polish-current.zip
             /tmp/zte-character-identity-polish-current.json
             /tmp/zte-character-identity-polish-preview.png
+            /tmp/zte-character-identity-polish-mobile-review.html
             /tmp/zte-character-bank-role-consistency.png
             /tmp/zte-character-bank-mobile-review.html
           retention-days: 30
