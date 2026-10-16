@@ -78,6 +78,25 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("'strict-completion' in mode", text)
         self.assertNotIn("startswith('kaggle-character-burst-v1.16')", text)
 
+    def test_provisional_engineer_idle_gpu_seed_is_sha_locked_and_review_only(self):
+        mass = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
+        driver = Path("kaggle/github_mass_factory.py").read_text(encoding="utf-8")
+        factory = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
+        seed = Path("tools/sprites/character_provisional_idle_seed.py").read_text(encoding="utf-8")
+        self.assertIn("gh release download zte-character-candidates", mass)
+        self.assertIn("character_provisional_idle_seed.py", mass)
+        self.assertIn("kaggle-provisional-idle-seed", mass)
+        self.assertIn("character_provisional_idle_seed.py", driver)
+        self.assertIn("load_provisional_idle_seed(role,ROOT)", factory)
+        self.assertIn("validated_single_role_anchor(provisional)", factory)
+        self.assertIn("KAGGLE_CHR_PROVISIONAL_IDENTITY_SOURCE=", factory)
+        self.assertIn("hashlib.sha256(blob)", seed)
+        self.assertIn('"automatic_semantic_approval": False', seed)
+        self.assertIn('"strict_approved": False', seed)
+        self.assertIn('"runtime_promoted": False', seed)
+        self.assertNotIn("git push", seed)
+        self.assertNotIn("app/src/main/res/", seed)
+
     def test_character_promotion_accepts_async_collector_artifact_and_can_continue_factory(self):
         text = Path(".github/workflows/promote-approved-kaggle-characters.yml").read_text(encoding="utf-8")
         self.assertIn("actions: write", text)
