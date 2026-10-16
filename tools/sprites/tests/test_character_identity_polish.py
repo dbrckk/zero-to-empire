@@ -176,6 +176,25 @@ class CharacterIdentityPolishTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "head difference metrics"):
             build(self.bank, self.audit, self.output, self.report)
 
+    def test_forged_same_role_anchor_is_rejected(self):
+        data = json.loads(self.audit.read_text())
+        data["head_identity_reference"]["OP"] = "CHR-OP-WORK"
+        row = next(x for x in data["assets"] if x["id"] == "CHR-OP-WORK")
+        row["head_identity_metrics"]["reference_id"] = "CHR-OP-WORK"
+        self.audit.write_text(json.dumps(data))
+        with self.assertRaisesRegex(ValueError, "Invalid canonical role identity anchor"):
+            build(self.bank, self.audit, self.output, self.report)
+        self.assertFalse(self.output.exists())
+
+    def test_self_anchor_cannot_claim_identity_warning(self):
+        data = json.loads(self.audit.read_text())
+        row = next(x for x in data["assets"] if x["id"] == "CHR-OP-WALK")
+        row["new_identity_flags"] = ["CROSS_ACTION_HEAD_IDENTITY_REVIEW"]
+        self.audit.write_text(json.dumps(data))
+        with self.assertRaisesRegex(ValueError, "Invalid anchor self-comparison"):
+            build(self.bank, self.audit, self.output, self.report)
+        self.assertFalse(self.output.exists())
+
     def test_no_auto_promotion_even_when_source_falsely_claims_approval(self):
         self.entries[1]["strict_approved"] = True
         self.save()
