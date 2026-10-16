@@ -5653,7 +5653,7 @@ frames=[item[0] for item in cleaned]
 removed_frame_shadow=sum(item[1] for item in cleaned)
 risk=clip_risk(frames,'WALK')
 ⋮----
-sheet=Image.new("RGBA",(1024,512))
+sheet=Image.new("RGBA",(1024,1024))
 ⋮----
 dest=out/f"CHR-{role}-WALK-identity-locked-REVIEW.png"
 ⋮----

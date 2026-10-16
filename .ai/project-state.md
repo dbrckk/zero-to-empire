@@ -29,28 +29,36 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-16T11:51:20Z
+Generated: 2026-10-16T12:46:16Z
 
 ### Git
 - Branch: `main`
-- Head: `1d62b7e9316d`
-- Commit date: 2026-10-16T13:51:03+02:00
-- Commit: fix(ci): trigger original character rendering after workflow changes (#188)
+- Head: `d2195a1a0fd0`
+- Commit date: 2026-10-16T14:46:00+02:00
+- Commit: fix(art): align identity-locked walk review with square atlas and PR validation (#189)
 - Tracked files: 1812
 
 ### Recently changed files
-- `.github/workflows/art-chatgpt-original-candidates.yml`
-- `.github/workflows/asset-pipeline-ci.yml`
-- `.github/workflows/character-candidate-bank.yml`
-- `.github/workflows/engineer-motion-candidate-review.yml`
-- `tools/assets/test_candidate_archive_workflow.py`
-- `tools/sprites/local_character_action_fx.py`
-- `tools/sprites/local_character_contact_gait.py`
-- `tools/sprites/render_chatgpt_originals.py`
-- `tools/sprites/test_local_character_action_fx.py`
-- `tools/sprites/test_local_character_contact_gait.py`
-- `tools/sprites/build_character_identity_polish.py`
-- `tools/sprites/tests/test_character_identity_polish.py`
+- `.github/workflows/identity-locked-walk-review.yml`
+- `tools/sprites/identity_locked_walk_candidate.py`
+- `tools/sprites/test_identity_locked_walk_candidate.py`
+- `art/incoming/chatgpt-original/animation-review.json`
+- `art/incoming/chatgpt-original/candidates/zte_chr_eng_repair_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_eng_walk_final.png`
+- `art/incoming/chatgpt-original/creation-manifest.json`
+- `art/incoming/chatgpt-original/original-offline-review.html`
+- `art/incoming/chatgpt-original/original-review-contact-sheet.png`
+- `art/incoming/chatgpt-original/previews/eng-repair.gif`
+- `art/incoming/chatgpt-original/previews/eng-walk.gif`
+- `art/incoming/chatgpt-original/previews/mobile-eng.png`
+- `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/00.svg`
+- `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/01.svg`
+- `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/02.svg`
+- `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/03.svg`
+- `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/04.svg`
+- `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/05.svg`
+- `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/06.svg`
+- `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/07.svg`
 
 ### Project signals
 - `build.gradle.kts`

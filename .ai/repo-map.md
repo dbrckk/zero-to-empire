@@ -3590,6 +3590,12 @@ jobs:
 ```yaml
 name: Identity-locked WALK alternatives (review only)
 on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/sprites/identity_locked_walk_candidate.py'
+      - 'tools/sprites/test_identity_locked_walk_candidate.py'
+      - '.github/workflows/identity-locked-walk-review.yml'
   push:
     branches: [main]
     paths:
@@ -3657,10 +3663,10 @@ jobs:
               src=root/f'CHR-{role}-WALK-identity-locked-REVIEW.png'
               if not src.is_file():continue
               with Image.open(src) as old:
-                  if old.size!=(1024,512):raise SystemExit('unexpected review source size')
-                  image=Image.new('RGBA',(1024,1024),(0,0,0,0))
-                  image.alpha_composite(old.convert('RGBA'),(0,0))
-                  image.save(comparison/f'zte_chr_{role.lower()}_walk_final.png',optimize=True)
+                  if old.size!=(1024,1024):raise SystemExit('unexpected review source size')
+                  if old.getchannel('A').crop((0,512,1024,1024)).getbbox():
+                      raise SystemExit('unexpected pixels in unused atlas rows')
+                  old.save(comparison/f'zte_chr_{role.lower()}_walk_final.png',optimize=True)
           if not list(comparison.glob('*.png')):
               raise SystemExit('No independent WALK review candidates survived')
           PY
@@ -34272,7 +34278,7 @@ frames=[item[0] for item in cleaned]
 removed_frame_shadow=sum(item[1] for item in cleaned)
 risk=clip_risk(frames,'WALK')
 ⋮----
-sheet=Image.new("RGBA",(1024,512))
+sheet=Image.new("RGBA",(1024,1024))
 ⋮----
 dest=out/f"CHR-{role}-WALK-identity-locked-REVIEW.png"
 ⋮----

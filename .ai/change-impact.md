@@ -1,13 +1,16 @@
 # Change impact
 
-Base: 3a6994f98c49ba164f95235e60eff5f4ceccc5a6
-Head: 1d62b7e9316d44de5f1f008ca6a10de9fe605675
+Base: ae16ccc9693552c9c38b4d3c038a0f8d9aeebfff
+Head: d2195a1a0fd003a92cd539c82c11bddb20b0e6e0
 
 ## Changed files
-- M .github/workflows/art-chatgpt-original-candidates.yml
+- M .github/workflows/identity-locked-walk-review.yml
+- M tools/sprites/identity_locked_walk_candidate.py
+- M tools/sprites/test_identity_locked_walk_candidate.py
 
 ## Affected areas
 - .github
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

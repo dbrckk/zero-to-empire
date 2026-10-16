@@ -4,5 +4,310 @@
   "scope": "symbols defined in changed source files",
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
-  "symbols": {}
+  "symbols": {
+    "sample_premultiplied": {
+      "source": {
+        "file": "tools/sprites/identity_locked_walk_candidate.py",
+        "start": 27,
+        "end": 42
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "warp": {
+      "source": {
+        "file": "tools/sprites/identity_locked_walk_candidate.py",
+        "start": 45,
+        "end": 70
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "sample_premultiplied",
+          "definitions": [
+            {
+              "file": "tools/sprites/identity_locked_walk_candidate.py",
+              "line": 27,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "source_frame": {
+      "source": {
+        "file": "tools/sprites/identity_locked_walk_candidate.py",
+        "start": 73,
+        "end": 84
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "render": {
+      "source": {
+        "file": "tools/sprites/identity_locked_walk_candidate.py",
+        "start": 87,
+        "end": 131
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "clip_risk",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_semantic_gate.py",
+              "line": 388,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "remove_baked_ground_shadow",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_ground_shadow_cleanup.py",
+              "line": 87,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "source_frame",
+          "definitions": [
+            {
+              "file": "tools/sprites/identity_locked_walk_candidate.py",
+              "line": 73,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "warp",
+          "definitions": [
+            {
+              "file": "tools/sprites/identity_locked_walk_candidate.py",
+              "line": 45,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 4
+    },
+    "main": {
+      "source": {
+        "file": "tools/sprites/identity_locked_walk_candidate.py",
+        "start": 134,
+        "end": 141
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "render",
+          "definitions": [
+            {
+              "file": "tools/sprites/identity_locked_walk_candidate.py",
+              "line": 87,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "IdentityLockedWalkTests": {
+      "source": {
+        "file": "tools/sprites/test_identity_locked_walk_candidate.py",
+        "start": 15,
+        "end": 66
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "render",
+          "definitions": [
+            {
+              "file": "tools/sprites/identity_locked_walk_candidate.py",
+              "line": 87,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "source_frame",
+          "definitions": [
+            {
+              "file": "tools/sprites/identity_locked_walk_candidate.py",
+              "line": 73,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "test_cycle_deterministic_and_source_identity_immutable",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_identity_locked_walk_candidate.py",
+              "line": 49,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_four_real_assets_are_not_overwritten_and_only_staged",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_identity_locked_walk_candidate.py",
+              "line": 16,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_refuses_bad_inputs",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_identity_locked_walk_candidate.py",
+              "line": 61,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "warp",
+          "definitions": [
+            {
+              "file": "tools/sprites/identity_locked_walk_candidate.py",
+              "line": 45,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 6
+    },
+    "test_four_real_assets_are_not_overwritten_and_only_staged": {
+      "source": {
+        "file": "tools/sprites/test_identity_locked_walk_candidate.py",
+        "start": 16,
+        "end": 47
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "render",
+          "definitions": [
+            {
+              "file": "tools/sprites/identity_locked_walk_candidate.py",
+              "line": 87,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "source_frame",
+          "definitions": [
+            {
+              "file": "tools/sprites/identity_locked_walk_candidate.py",
+              "line": 73,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_cycle_deterministic_and_source_identity_immutable": {
+      "source": {
+        "file": "tools/sprites/test_identity_locked_walk_candidate.py",
+        "start": 49,
+        "end": 59
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "source_frame",
+          "definitions": [
+            {
+              "file": "tools/sprites/identity_locked_walk_candidate.py",
+              "line": 73,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "warp",
+          "definitions": [
+            {
+              "file": "tools/sprites/identity_locked_walk_candidate.py",
+              "line": 45,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_refuses_bad_inputs": {
+      "source": {
+        "file": "tools/sprites/test_identity_locked_walk_candidate.py",
+        "start": 61,
+        "end": 66
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "render",
+          "definitions": [
+            {
+              "file": "tools/sprites/identity_locked_walk_candidate.py",
+              "line": 87,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "warp",
+          "definitions": [
+            {
+              "file": "tools/sprites/identity_locked_walk_candidate.py",
+              "line": 45,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    }
+  }
 }
