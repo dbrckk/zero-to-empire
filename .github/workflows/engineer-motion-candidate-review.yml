@@ -29,6 +29,8 @@ permissions:
 # Keep in-flight QA intact; each review run finishes before the next starts.
 concurrency:
   group: zte-engineer-motion-review-release
+  # Preserve queued review runs instead of replacing an older pending run.
+  queue: max
   cancel-in-progress: false
 
 jobs:
