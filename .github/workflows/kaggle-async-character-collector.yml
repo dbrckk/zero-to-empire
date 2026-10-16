@@ -7,7 +7,9 @@ on:
   # Observe new producer submissions immediately; Kaggle completion is still
   # polled by the existing hourly schedule. This event only reads the kernel.
   workflow_run:
-    workflows: [Kaggle Mass Sprite Factory]
+    # Also observe after the reliable 6-hour autofactory schedule when the
+    # collector hourly cron has been delayed by GitHub Actions.
+    workflows: [Kaggle Mass Sprite Factory, Asset Autofactory 235]
     types: [completed]
   push:
     branches: [main]
