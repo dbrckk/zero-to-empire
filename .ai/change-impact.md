@@ -1,17 +1,19 @@
 # Change impact
 
-Base: 313bfd1e19e2da3868f5819549c4028b5d994799
-Head: 9d72c1bd59903458fb47c3bea963aef8c754a3af
+Base: d67bd6033e44ac3f00a3f5eb26ef5af0e4997e8e
+Head: 2add0abb96c5379cb7e04f02eca8d8183610baf6
 
 ## Changed files
-- M .github/workflows/character-candidate-bank.yml
-- M tools/sprites/audit_character_bank_motion.py
-- M tools/sprites/build_character_bank_mobile_review.py
-- M tools/sprites/tests/test_character_bank_mobile_review.py
-- M tools/sprites/tests/test_character_bank_motion_audit.py
+- M .github/workflows/asset-pipeline-ci.yml
+- M .github/workflows/kaggle-mass-sprite-factory.yml
+- M kaggle/github_mass_factory.py
+- A tools/sprites/character_repair_pose_plan.py
+- M tools/sprites/kaggle_character_sheet_factory_v1.py
+- A tools/sprites/tests/test_character_repair_pose_plan.py
 
 ## Affected areas
 - .github
+- kaggle
 - tools
 
 ## Related test candidates

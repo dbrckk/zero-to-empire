@@ -29,16 +29,22 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-16T07:57:11Z
+Generated: 2026-10-16T08:00:44Z
 
 ### Git
 - Branch: `main`
-- Head: `9d72c1bd5990`
-- Commit date: 2026-10-16T09:56:56+02:00
-- Commit: art: add cross-action character face and helmet continuity review (#174)
-- Tracked files: 1801
+- Head: `2add0abb96c5`
+- Commit date: 2026-10-16T10:00:27+02:00
+- Commit: art: stabilize planted-foot repair action and bound GPU redrawing (#175)
+- Tracked files: 1803
 
 ### Recently changed files
+- `.github/workflows/asset-pipeline-ci.yml`
+- `.github/workflows/kaggle-mass-sprite-factory.yml`
+- `kaggle/github_mass_factory.py`
+- `tools/sprites/character_repair_pose_plan.py`
+- `tools/sprites/kaggle_character_sheet_factory_v1.py`
+- `tools/sprites/tests/test_character_repair_pose_plan.py`
 - `.github/workflows/character-candidate-bank.yml`
 - `tools/sprites/audit_character_bank_motion.py`
 - `tools/sprites/build_character_bank_mobile_review.py`

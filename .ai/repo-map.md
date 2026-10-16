@@ -357,6 +357,7 @@ tools/
       test_character_bank_motion_audit.py
       test_character_candidate_bank.py
       test_character_provisional_idle_seed.py
+      test_character_repair_pose_plan.py
     action_contact.py
     animation_batch_planner.py
     archive_character_candidates.py
@@ -382,6 +383,7 @@ tools/
     character_idle_breathing_fallback.py
     character_provisional_idle_seed.py
     character_rejection_evidence.py
+    character_repair_pose_plan.py
     character_review_matrix.py
     character_semantic_gate.py
     colab_mass_factory.py
@@ -1653,6 +1655,8 @@ on:
       - 'tools/sprites/build_character_candidate_bank.py'
       - 'tools/sprites/build_character_bank_mobile_review.py'
       - 'tools/sprites/character_provisional_idle_seed.py'
+      - 'tools/sprites/character_repair_pose_plan.py'
+      - 'tools/sprites/tests/test_character_repair_pose_plan.py'
       - 'tools/sprites/tests/test_character_provisional_idle_seed.py'
       - 'tools/sprites/audit_character_bank_motion.py'
       - 'tools/sprites/tests/test_character_bank_motion_audit.py'
@@ -1717,6 +1721,8 @@ on:
       - 'tools/sprites/build_character_candidate_bank.py'
       - 'tools/sprites/build_character_bank_mobile_review.py'
       - 'tools/sprites/character_provisional_idle_seed.py'
+      - 'tools/sprites/character_repair_pose_plan.py'
+      - 'tools/sprites/tests/test_character_repair_pose_plan.py'
       - 'tools/sprites/tests/test_character_provisional_idle_seed.py'
       - 'tools/sprites/audit_character_bank_motion.py'
       - 'tools/sprites/tests/test_character_bank_motion_audit.py'
@@ -1824,6 +1830,7 @@ jobs:
             tools/sprites/character_rejection_evidence.py \
             tools/sprites/character_idle_breathing_fallback.py \
             tools/sprites/kaggle_character_sheet_factory_v1.py \
+            tools/sprites/character_repair_pose_plan.py \
             tools/sprites/kaggle_building_family_factory_v14.py \
             tools/sprites/kaggle_building_family_factory_v15.py \
             tools/sprites/kaggle_building_family_factory_v16.py \
@@ -2047,6 +2054,7 @@ jobs:
           python -m unittest discover -s tools/sprites/tests -p 'test_character_candidate_bank.py' -v
           python -m unittest discover -s tools/sprites/tests -p 'test_character_bank_mobile_review.py' -v
           python -m unittest discover -s tools/sprites/tests -p 'test_character_provisional_idle_seed.py' -v
+          python -m unittest discover -s tools/sprites/tests -p 'test_character_repair_pose_plan.py' -v
           python -m unittest discover -s tools/sprites/tests -p 'test_character_bank_motion_audit.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_semantic_gate.py' -v
           python -m unittest discover -s tools/sprites -p 'test_verify_character_idle_candidates.py' -v
@@ -4407,7 +4415,7 @@ jobs:
           fi
 
       - name: Compile sprite generators
-        run: python -m py_compile tools/sprites/kaggle_building_family_factory_v16.py tools/sprites/kaggle_character_sheet_factory_v1.py tools/sprites/character_acceptance_policy.py tools/sprites/character_head_identity_lock.py tools/sprites/character_ground_shadow_cleanup.py tools/sprites/character_anchor_pair_salvage.py tools/sprites/character_approved_idle_fallback.py tools/sprites/character_provisional_idle_seed.py tools/sprites/character_rejection_evidence.py tools/sprites/character_idle_breathing_fallback.py kaggle/github_mass_factory.py
+        run: python -m py_compile tools/sprites/kaggle_building_family_factory_v16.py tools/sprites/kaggle_character_sheet_factory_v1.py tools/sprites/character_acceptance_policy.py tools/sprites/character_head_identity_lock.py tools/sprites/character_ground_shadow_cleanup.py tools/sprites/character_anchor_pair_salvage.py tools/sprites/character_approved_idle_fallback.py tools/sprites/character_provisional_idle_seed.py tools/sprites/character_repair_pose_plan.py tools/sprites/character_rejection_evidence.py tools/sprites/character_idle_breathing_fallback.py kaggle/github_mass_factory.py
       - name: Recover async preflight failure
         if: ${{ failure() && env.ASYNC_SUBMIT == 'true' }}
         env:
@@ -4612,6 +4620,7 @@ jobs:
              tools/sprites/character_anchor_pair_salvage.py \
              tools/sprites/character_approved_idle_fallback.py \
              tools/sprites/character_provisional_idle_seed.py \
+             tools/sprites/character_repair_pose_plan.py \
              tools/sprites/character_rejection_evidence.py \
              tools/sprites/character_idle_breathing_fallback.py \
              /tmp/zte-kaggle/tools/sprites/
@@ -4647,6 +4656,7 @@ jobs:
               'character_anchor_pair_salvage.py',
               'character_approved_idle_fallback.py',
               'character_provisional_idle_seed.py',
+              'character_repair_pose_plan.py',
               'character_rejection_evidence.py',
               'character_idle_breathing_fallback.py',
           ]
@@ -30473,6 +30483,29 @@ def test_missing_provisional_overlay_returns_no_seed_not_approval(self)
 def test_never_accept_unrequested_engineer_seed(self)
 ```
 
+## File: tools/sprites/tests/test_character_repair_pose_plan.py
+```python
+"""Repair animation should move the hands, not teleport the whole subject."""
+⋮----
+class RepairRigContinuityTests(unittest.TestCase)
+⋮----
+def test_full_ten_frame_cycle_retains_one_planted_foot_pivot(self)
+⋮----
+def test_strengths_are_bounded_and_allow_articulation(self)
+⋮----
+values = []
+⋮----
+strength = repair_strength(i, attempt, mode)
+⋮----
+def test_invalid_attempts_cannot_bypass_bounded_policy(self)
+⋮----
+def test_generator_uses_plan_and_preserves_original_qa_gates(self)
+⋮----
+generator = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text()
+mass = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text()
+kernel = Path("kaggle/github_mass_factory.py").read_text()
+```
+
 ## File: tools/sprites/action_contact.py
 ```python
 """Deterministic 512px rig-space interaction targets for TECH WORK and REPAIR.
@@ -32549,6 +32582,33 @@ atlas = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
 stem = asset_id.lower().replace("-", "_")
 image_path = root / f"{stem}_rejected_review_only.png"
 report_path = root / f"{stem}_rejected_review_only.json"
+```
+
+## File: tools/sprites/character_repair_pose_plan.py
+```python
+"""Same-person ten-frame mechanical repair cycle: bounded poses, fixed stance.
+
+This describes GPU *candidate generation* only, never QA approval or runtime.
+The previous deep-kneel-to-standing pose sequence produced extreme silhouette
+changes, failing the unchanged adjacent-alpha-IoU >= 0.28 structural gate.
+The new poses focus action on arms/tool/torso while preserving scale, feet,
+identity and the connected repair point throughout the animation.
+"""
+⋮----
+REPAIR_POSES = (
+⋮----
+def repair_strength(frame_index: int, attempt: int, mode: str) -> float
+⋮----
+"""Bounded img2img denoising; preserve one subject across adjacent frames.
+
+    The hand/tool scaffold supplies much of the pose, so reducing FLUX
+    redraw strength should preserve consistent face/body silhouette. This
+    does not waive the source, action, sheet or semantic review QA gates.
+    """
+⋮----
+strength = .49 + attempt * .018
+⋮----
+strength = .48 + frame_index * .012 + attempt * .017
 ```
 
 ## File: tools/sprites/character_review_matrix.py
@@ -35111,7 +35171,8 @@ first_strength={
 ⋮----
 strength=min(first_strength[2],first_strength[0]+attempt*first_strength[1])
 ⋮----
-if mode=='identity' and i['action']!='WALK':strength=max(.26,strength-.035)
+strength=repair_strength(fi,attempt,mode)
+elif mode=='identity' and i['action']!='WALK':strength=max(.26,strength-.035)
 ⋮----
 # The role anchor already passed full-body validation. On an
 # edge-contact retry, favor preserving its intact shape rather than
@@ -35132,12 +35193,11 @@ strength=min(.72,.54+fi*.018+attempt*.025)
 # and oversized/duplicated luggage.
 strength=min(.54,.41+fi*.012+attempt*.018)
 ⋮----
-strength=min(.76,.58+fi*.018+attempt*.03)
-⋮----
 strength=min(.76,.56+fi*.018+attempt*.03)
 ⋮----
 strength=min(.38,.24+fi*.012+attempt*.02)
-if mode in {'single','identity'} and i['action']!='WALK':strength=max(.24,strength-.035)
+⋮----
+strength=max(.24,strength-.035)
 ⋮----
 strength=min(strength,.21)
 source=semantic_scaffold(anchor_raw,i['action'],fi)
