@@ -146,7 +146,7 @@ def ensure_master() -> dict[str, Any]:
             "automatic_runtime_promotion": False,
             "preserve_manual_review_gate": True,
             "max_attempts_per_asset": MAX_ATTEMPTS,
-            "character_generation_epoch": "production-first-v1.21-art-deferred",
+            "character_generation_epoch": "production-first-v1.22-planted-repair-poses",
             "max_attempts_per_character_epoch": 4,
             "max_infra_failures_per_asset": 3,
         },
