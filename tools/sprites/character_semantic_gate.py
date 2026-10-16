@@ -385,10 +385,18 @@ def action_translation_metrics(frames:list[Image.Image])->dict:
             'insufficient_registration_evidence':False}
 
 
-def clip_risk(frames:list[Image.Image],action:str|None=None)->dict:
+def clip_risk(frames:list[Image.Image],action:str|None=None,*,geometry_frames:list[Image.Image]|None=None)->dict:
+    """Check full-frame action/palette risk, optionally isolating actor silhouette.
+
+    Geometry-only overrides are for documented static-prop composites; all
+    temporal, palette, head, ground and action checks still use full frames.
+    This never grants visual or production approval.
+    """
     if len(frames)<4:
         raise ValueError('At least four images needed')
-    dims=[frame_geometry(f) for f in frames]
+    if geometry_frames is not None and len(geometry_frames)!=len(frames):
+        raise ValueError('Actor geometry frame count does not match the atlas')
+    dims=[frame_geometry(f) for f in (geometry_frames if geometry_frames is not None else frames)]
     if any(not item['valid'] for item in dims):
         return {'risk_level':'BLOCKING','flags':['EMPTY_FRAME'],
                 'image_only_semantic_approval':False,'frames':dims}

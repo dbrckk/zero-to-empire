@@ -32,5 +32,22 @@ jobs:
         run: python -m unittest discover -s tools/sprites -p 'test_audit_chatgpt_originals.py' -v
       - name: Check audit syntax
         run: python -m py_compile tools/sprites/audit_chatgpt_originals.py tools/sprites/character_semantic_gate.py
+      - name: Recheck actual ENG repair atlas and all local candidates
+        run: |
+          python tools/sprites/audit_chatgpt_originals.py --base art/incoming/chatgpt-original
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report=json.loads(Path('art/incoming/chatgpt-original/visual-risk-qa.json').read_text())
+          eng=next(asset for asset in report['assets'] if asset['id']=='CHR-ENG-REPAIR')
+          assert eng['fixed_service_station_svg_verified'] is True
+          assert eng['actor_only_geometry_assessment'] is True
+          assert not ({'MULTIPLE_NON_FULL_BODY_FRAMES',
+                       'MEDIAN_SILHOUETTE_NOT_FULL_BODY'} & set(eng['flags'])),eng['flags']
+          assert report['asset_count']==18
+          assert report['semantically_approved'] is False
+          assert report['automatic_strict_done']==0
+          print('STATIC_SERVICE_STATION_GEOMETRY_RECHECK=PASS; STRICT_DONE_ADDED=0')
+          PY
 
 # Reject-only automated audit. Passing is not semantic approval or runtime promotion.
