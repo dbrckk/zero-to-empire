@@ -2399,6 +2399,10 @@ jobs:
           print('## Same-role face/helmet polish proposals (review-only)')
           print(f"- Identity warnings: **{d['identity_flags_to_review']}**")
           print(f"- Fully safe multi-frame alternatives: **{d['alternatives_created']}**")
+          print(f"- 42px motion regression warnings after retouch: **{d['mobile_motion_regression_review_count']}**")
+          for row in d['alternatives']:
+              if row['mobile_motion_regression_review']:
+                  print(f"- Motion review: {row['id']}: {row['mobile_motion_before']['mean_frame_change']:.5f} → {row['mobile_motion_after']['mean_frame_change']:.5f}")
           for row in d['alternatives']:
               print(f"- {row['id']}: {row['head_rgb_before']:.2f} → {row['head_rgb_after']:.2f} mean head RGB change; {row['frames_head_locked']}/{row['frames']} frames corrected")
           for row in d['not_safe_to_polish']:
@@ -32067,6 +32071,12 @@ skip_reason = f"frame-{number}: lower-body-mutated"
 blob = _pack(fixed)
 after = head_difference(head_thumbnail(anchor["blob"]), head_thumbnail(blob))
 ⋮----
+# Recheck real 42px animation readability after head retouch. A
+# head-color improvement cannot justify a newly static animation.
+# The motion audit is a conservative warning, not semantic approval.
+original_motion = motion_stats(record["blob"], len(original))
+polished_motion = motion_stats(blob, len(fixed))
+motion_warning = (
 filename = asset_id.lower().replace("-", "_") + "_head-polish.png"
 destination_name = "review-alternatives/" + filename
 ⋮----

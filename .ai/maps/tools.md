@@ -3623,6 +3623,12 @@ skip_reason = f"frame-{number}: lower-body-mutated"
 blob = _pack(fixed)
 after = head_difference(head_thumbnail(anchor["blob"]), head_thumbnail(blob))
 ⋮----
+# Recheck real 42px animation readability after head retouch. A
+# head-color improvement cannot justify a newly static animation.
+# The motion audit is a conservative warning, not semantic approval.
+original_motion = motion_stats(record["blob"], len(original))
+polished_motion = motion_stats(blob, len(fixed))
+motion_warning = (
 filename = asset_id.lower().replace("-", "_") + "_head-polish.png"
 destination_name = "review-alternatives/" + filename
 ⋮----
