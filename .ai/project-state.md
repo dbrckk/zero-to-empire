@@ -29,36 +29,36 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-16T12:57:51Z
+Generated: 2026-10-16T13:15:54Z
 
 ### Git
 - Branch: `main`
-- Head: `4d02a04e7779`
-- Commit date: 2026-10-16T14:57:35+02:00
-- Commit: art(eng): grounded diagnostic scan with shared tool and 42px motion gain (#192)
+- Head: `aa9e1b9dd9c6`
+- Commit date: 2026-10-16T15:15:36+02:00
+- Commit: fix(ci): publish merged engineer motion comparisons (#193)
 - Tracked files: 1812
 
 ### Recently changed files
 - `.github/workflows/engineer-motion-candidate-review.yml`
-- `tools/sprites/local_character_action_fx.py`
-- `tools/sprites/render_chatgpt_originals.py`
-- `tools/sprites/test_local_character_action_fx.py`
 - `art/incoming/chatgpt-original/animation-review.json`
-- `art/incoming/chatgpt-original/candidates/zte_chr_eng_repair_final.png`
+- `art/incoming/chatgpt-original/candidates/zte_chr_eng_work_final.png`
 - `art/incoming/chatgpt-original/creation-manifest.json`
 - `art/incoming/chatgpt-original/original-offline-review.html`
 - `art/incoming/chatgpt-original/original-review-contact-sheet.png`
-- `art/incoming/chatgpt-original/previews/eng-repair.gif`
+- `art/incoming/chatgpt-original/previews/eng-work.gif`
 - `art/incoming/chatgpt-original/previews/mobile-eng.png`
-- `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/00.svg`
-- `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/01.svg`
-- `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/02.svg`
-- `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/03.svg`
-- `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/04.svg`
-- `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/05.svg`
-- `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/06.svg`
-- `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/07.svg`
-- `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/08.svg`
+- `art/incoming/chatgpt-original/src_svg/ENG/WORK/00.svg`
+- `art/incoming/chatgpt-original/src_svg/ENG/WORK/01.svg`
+- `art/incoming/chatgpt-original/src_svg/ENG/WORK/02.svg`
+- `art/incoming/chatgpt-original/src_svg/ENG/WORK/03.svg`
+- `art/incoming/chatgpt-original/src_svg/ENG/WORK/04.svg`
+- `art/incoming/chatgpt-original/src_svg/ENG/WORK/05.svg`
+- `art/incoming/chatgpt-original/src_svg/ENG/WORK/06.svg`
+- `art/incoming/chatgpt-original/src_svg/ENG/WORK/07.svg`
+- `art/incoming/chatgpt-original/src_svg/ENG/WORK/08.svg`
+- `art/incoming/chatgpt-original/src_svg/ENG/WORK/09.svg`
+- `art/incoming/chatgpt-original/visual-risk-qa.json`
+- `tools/sprites/local_character_action_fx.py`
 
 ### Project signals
 - `build.gradle.kts`
