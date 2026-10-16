@@ -29,13 +29,13 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-16T11:49:29Z
+Generated: 2026-10-16T11:51:20Z
 
 ### Git
 - Branch: `main`
-- Head: `35265761a659`
-- Commit date: 2026-10-16T13:49:12+02:00
-- Commit: fix(ci): validate engineer repair socket by geometry and test original art workflows (#187)
+- Head: `1d62b7e9316d`
+- Commit date: 2026-10-16T13:51:03+02:00
+- Commit: fix(ci): trigger original character rendering after workflow changes (#188)
 - Tracked files: 1812
 
 ### Recently changed files

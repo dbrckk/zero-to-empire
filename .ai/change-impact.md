@@ -1,11 +1,10 @@
 # Change impact
 
-Base: ed744d4f80a319c2ff90baae209b3e1f23967fa4
-Head: 35265761a659ae671719201b0bb2412ebf52f771
+Base: 3a6994f98c49ba164f95235e60eff5f4ceccc5a6
+Head: 1d62b7e9316d44de5f1f008ca6a10de9fe605675
 
 ## Changed files
 - M .github/workflows/art-chatgpt-original-candidates.yml
-- M .github/workflows/asset-pipeline-ci.yml
 
 ## Affected areas
 - .github
