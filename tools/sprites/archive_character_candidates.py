@@ -26,6 +26,43 @@ def archive_candidates(source: Path, destination: Path, source_run_id: int) -> d
     if not source.is_dir():
         raise ValueError("missing downloaded collector artifact")
     qa_files = list(source.rglob("github-qa-report.json"))
+    if len(qa_files) == 0:
+        # A successful collector can observe a genuinely clean, all-rejected
+        # Kaggle batch. In that case it deliberately never ran frame QA:
+        # there were no candidate PNGs to inspect. Reject this exception
+        # unless the actual producer report proves every attempted target was
+        # rejected AND the output manifest confirms zero produced sprites.
+        # Never silently treat a missing QA report with real PNGs as success.
+        if list(source.rglob("*_final.png")):
+            raise ValueError("missing technical QA report for present candidate PNGs")
+        producer_reports = list(source.rglob("character-sheet-report.json"))
+        generated_manifests = list(source.rglob("generated-targets.json"))
+        if len(producer_reports) != 1 or len(generated_manifests) != 1:
+            raise ValueError("missing technical QA without complete rejection evidence")
+        producer_rows = json.loads(producer_reports[0].read_text(encoding="utf-8"))
+        generated = json.loads(generated_manifests[0].read_text(encoding="utf-8"))
+        if not isinstance(producer_rows, list) or not producer_rows:
+            raise ValueError("missing all-rejected producer target records")
+        names = [str(r.get("id") or "") for r in producer_rows if isinstance(r, dict)]
+        if (len(names) != len(producer_rows) or len(set(names)) != len(names)
+                or any(not re.fullmatch(r"CHR-(?:OP|TECH|LOG|ENG)-(?:IDLE|WALK|WORK|CARRY|REPAIR|CELEB)", name)
+                       for name in names)
+                or any(str(row.get("status") or "").upper() != "REJECT" for row in producer_rows)
+                or not isinstance(generated, dict)
+                or generated.get("lane") != "CONTROLLED_CHARACTER_SHEETS"
+                or generated.get("count") != 0
+                or generated.get("targets") != []):
+            raise ValueError("missing QA report but batch was not cleanly rejected")
+        return {
+            "schema_version": 1,
+            "source_collector_run_id": source_run_id,
+            "candidate_count": 0,
+            "technical_qa_report": "not-generated:clean-all-rejected-batch",
+            "rejected_target_ids": names,
+            "automatic_semantic_approval": False,
+            "automatic_runtime_promotion": False,
+            "assets": [],
+        }
     if len(qa_files) != 1:
         raise ValueError(f"expected one technical QA report, got {len(qa_files)}")
     qa = json.loads(qa_files[0].read_text(encoding="utf-8"))
