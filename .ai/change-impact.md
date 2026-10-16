@@ -1,13 +1,13 @@
 # Change impact
 
-Base: ce49c67d56e32d4c41af90e8ac829908acd17ec4
-Head: f20ec67ce3bd913cb587c6feb0498a7b42c1f0a2
+Base: 76c750b31a0b4176019d4bb5064412f5633e2331
+Head: 23a83b7805247796ffaa57b6a3363343c6362c0b
 
 ## Changed files
-- M .github/workflows/engineer-motion-candidate-review.yml
+- M tools/sprites/test_local_character_contact_gait.py
 
 ## Affected areas
-- .github
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

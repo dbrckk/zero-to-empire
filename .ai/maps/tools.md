@@ -11424,6 +11424,20 @@ pose = foot_pose(phase, side, "WALK", profile="eng-walk")
 start = foot_pose(0, side, "WALK", profile="eng-walk")
 end = foot_pose(2 * math.pi, side, "WALK", profile="eng-walk")
 ⋮----
+def test_engineer_stride_has_stable_ground_contact_across_dense_cycle(self)
+⋮----
+# Catch contact glitches between the eight exported sprite samples.
+# The planted sole must never rise or rotate; the recovering boot
+# must clear the ground without crossing the opposite ankle.
+⋮----
+phase = 2 * math.pi * i / 240
+left = foot_pose(phase, "L", "WALK", profile="eng-walk")
+right = foot_pose(phase, "R", "WALK", profile="eng-walk")
+⋮----
+# Cyclic geometry, including knee and boot, must close cleanly.
+a = foot_pose(0, side, "WALK", profile="eng-walk")
+b = foot_pose(2 * math.pi, side, "WALK", profile="eng-walk")
+⋮----
 def test_loaded_carry_has_less_sway_than_unladen_walk(self)
 ```
 
