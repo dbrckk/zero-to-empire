@@ -30,7 +30,13 @@ def tool_angle(action:str,phase:float,*,role:str|None=None)->float:
         raise ValueError("Unknown role for action tool")
     # Engineer's long mechanical ratchet needs an unmistakable torque arc
     # at the 42px Android gameplay scale; preserve other roles' timings.
-    sweep = 26.0 if action=='REPAIR' and role=='ENG' else (18.0 if action=='REPAIR' else 3.0)
+    if action=='REPAIR' and role=='ENG':
+        # A continuous forward/back ratchet cycle with ten meaningful
+        # intermediate turns. A sine parked the wrist near two extrema and
+        # produced consecutive near-identical frames on the 42px display.
+        cycle=(phase/(2.0*math.pi)) % 1.0
+        return -4.0+26.0*(1.0-4.0*abs(cycle-.5))
+    sweep = 18.0 if action=='REPAIR' else 3.0
     return -4.0+sweep*math.sin(phase)
 
 
