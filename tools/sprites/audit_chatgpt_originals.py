@@ -68,6 +68,13 @@ def inspect(atlas: Path, role: str, action: str) -> dict:
         evidence["lower_body_adjacent_changes"] = scores
         evidence["lower_body_loop_seam_change"] = scores[-1]
         evidence["lower_body_mean_change"] = round(sum(scores)/len(scores),4)
+        # Reject a large wraparound jump relative to ordinary frame motion.
+        internal = sorted(scores[:-1])
+        typical = internal[len(internal)//2]
+        evidence["lower_body_typical_internal_change"] = typical
+        if scores[-1] > max(.30, 2.5 * typical):
+            evidence["flags"].append("LOCOMOTION_LOOP_SEAM_SNAP_RISK")
+            evidence["risk_level"] = "BLOCKING"
         if evidence["lower_body_mean_change"] < .075:
             evidence["flags"].append("LOCOMOTION_LOWER_BODY_TOO_STATIC_RISK")
             evidence["risk_level"]="BLOCKING"
