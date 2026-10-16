@@ -165,7 +165,7 @@ class CharacterIdentityPolishTests(unittest.TestCase):
         row = next(x for x in data["assets"] if x["id"] == "CHR-OP-WORK")
         row["head_identity_metrics"]["reference_id"] = "CHR-ENG-IDLE"
         self.audit.write_text(json.dumps(data))
-        with self.assertRaisesRegex(ValueError, "same-role visual reference"):
+        with self.assertRaisesRegex(ValueError, "Invalid canonical role identity anchor"):
             build(self.bank, self.audit, self.output, self.report)
 
     def test_audit_metric_cannot_be_forged_to_force_proposal(self):
