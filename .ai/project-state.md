@@ -29,21 +29,21 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-16T15:01:46Z
+Generated: 2026-10-16T15:24:16Z
 
 ### Git
 - Branch: `main`
-- Head: `e166825da476`
-- Commit date: 2026-10-16T17:01:27+02:00
-- Commit: fix(art): restore active loop seam measurements (#199)
+- Head: `8d787580ace8`
+- Commit date: 2026-10-16T17:24:01+02:00
+- Commit: fix(art): reject snapping character animation loop seams (#200)
 - Tracked files: 1813
 
 ### Recently changed files
 - `tools/sprites/audit_chatgpt_originals.py`
-- `.github/workflows/art-chatgpt-original-candidates.yml`
 - `tools/sprites/test_audit_chatgpt_originals.py`
+- `art/incoming/chatgpt-original/visual-risk-qa.json`
+- `.github/workflows/art-chatgpt-original-candidates.yml`
 - `tools/sprites/test_local_character_contact_gait.py`
-- `.github/workflows/engineer-motion-candidate-review.yml`
 
 ### Project signals
 - `build.gradle.kts`

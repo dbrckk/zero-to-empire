@@ -32023,6 +32023,10 @@ union=sum(x or y for x,y in zip(aa,bb))
 # Include last-to-first transition: a sprite loop can be smooth
 # internally but visibly snap at its playback boundary.
 ⋮----
+# Reject a large wraparound jump relative to ordinary frame motion.
+internal = sorted(scores[:-1])
+typical = internal[len(internal)//2]
+⋮----
 def audit(base: Path) -> dict
 ⋮----
 candidates=base/"candidates"
@@ -39595,6 +39599,13 @@ offset = 0 if index in (0, 7) else 10 + index * 5
 path = Path(temp) / "walk.png"
 ⋮----
 result = inspect(path, "ENG", "WALK")
+⋮----
+def test_walk_flags_disproportionate_loop_snap(self)
+⋮----
+# Seven nearby poses followed by a distant final pose.
+offset = index * 2 if index < 7 else 95
+⋮----
+path = Path(temp) / "walk-snap.png"
 ⋮----
 def test_carry_reports_wraparound_too(self)
 ⋮----

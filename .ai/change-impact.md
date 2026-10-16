@@ -1,10 +1,11 @@
 # Change impact
 
-Base: bbc77ebecf7aba0075cf189a99c4b72c659d59d4
-Head: e166825da47623358aedac48748b47b7990b055d
+Base: 22b02bf00cfc0fd01cc28ab67a27e2a91f90d0b3
+Head: 8d787580ace8d5d0f6ec14e0bfcc12d080d2b7c5
 
 ## Changed files
 - M tools/sprites/audit_chatgpt_originals.py
+- M tools/sprites/test_audit_chatgpt_originals.py
 
 ## Affected areas
 - tools
