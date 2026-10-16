@@ -139,7 +139,8 @@ def open_archives(folder: Path) -> dict[int, dict]:
 
 def assemble(master: Path, archive_folder: Path, output: Path,
              report_file: Path | None = None,
-             local_original: Path | None = None) -> dict:
+             local_original: Path | None = None,
+             engineer_role_coherent_review: bool = False) -> dict:
     data = json.loads(master.read_text(encoding="utf-8"))
     assets = data["assets"]
     target_total = data["target_total"]
@@ -149,11 +150,22 @@ def assemble(master: Path, archive_folder: Path, output: Path,
         raise ValueError("Duplicate canonical asset IDs")
     sources = open_archives(archive_folder)
     originals = load_local_originals(local_original)
+    if engineer_role_coherent_review and not originals:
+        raise ValueError("Engineer role review requires verified local originals")
     strict_done = sum(x["strict_status"] == "DONE" for x in assets)
     review_targets = [
         item for item in assets
         if item["strict_status"] != "DONE" and item["id"].startswith("CHR-")
     ]
+    if engineer_role_coherent_review:
+        # Do not compose a character from two incompatible visual identities.
+        # The currently unfinished ENG role must be available as a complete
+        # six-action set before its entire bank cohort can be replaced.
+        actual_eng = {x["id"] for x in review_targets
+                      if x["id"].startswith("CHR-ENG-")}
+        expected_eng = {"CHR-ENG-" + action for action in FRAME_COUNTS}
+        if actual_eng != expected_eng or not expected_eng <= originals.keys():
+            raise ValueError("Engineer coherent review requires six pending local ENG actions")
     remaining_noncharacters = [
         x["id"] for x in assets
         if x["strict_status"] != "DONE" and not x["id"].startswith("CHR-")
@@ -173,7 +185,14 @@ def assemble(master: Path, archive_folder: Path, output: Path,
         name = Path(asset["runtime"]).with_suffix(".png").name
         source = sources.get(run_id)
         source_details: dict
-        if status in PRODUCED_STATES and source and name in source["index"]:
+        if engineer_role_coherent_review and asset_id.startswith("CHR-ENG-"):
+            # Separate, explicitly named review bank only: never change the
+            # canonical collector-first selection or the Android runtime.
+            blob, source_details = validated_local_candidate(asset, originals[asset_id])
+            source_details["source_selection_reason"] = "complete-engineer-local-role-review"
+            digest = hashlib.sha256(blob).hexdigest()
+            source_warnings = []
+        elif status in PRODUCED_STATES and source and name in source["index"]:
             recorded = source["index"][name]
             with zipfile.ZipFile(source["path"]) as container:
                 blob = container.read("candidates/" + name)
@@ -241,9 +260,16 @@ def assemble(master: Path, archive_folder: Path, output: Path,
         "missing_character_candidates": missing,
         "missing_noncharacter_ids": remaining_noncharacters,
         "candidate_production_complete": complete,
+        "source_selection_profile": ("engineer-local-role-review"
+                                     if engineer_role_coherent_review else "collector-first"),
+        "local_original_preferred_ids": [
+            entry["id"] for entry in entries
+            if entry.get("source_selection_reason") == "complete-engineer-local-role-review"
+        ],
         "local_original_fallback_ids": [
             entry["id"] for entry in entries
             if entry["source_type"] == "repo-local-original"
+            and entry.get("source_selection_reason") != "complete-engineer-local-role-review"
         ],
         "automatic_semantic_approval": False,
         "automatic_runtime_promotion": False,
@@ -272,12 +298,17 @@ def main() -> int:
     parser.add_argument("--report", type=Path)
     parser.add_argument("--local-original", type=Path,
                         help="Optional 18-atlas in-repository original SVG/PNG review source")
+    parser.add_argument("--engineer-role-coherent-review", action="store_true",
+                        help="Build a separate review-only bank with all six ENG actions from local vectors")
     args = parser.parse_args()
-    d = assemble(args.master, args.archives, args.output, args.report, args.local_original)
+    d = assemble(args.master, args.archives, args.output, args.report,
+                 args.local_original, args.engineer_role_coherent_review)
     print("CHARACTER_BANK_CANDIDATES=" + str(d["candidate_count"]))
     print("CHARACTER_BANK_PRODUCTION=" + str(d["production_processed"]) + "/235")
     print("CHARACTER_BANK_CANONICAL_QUEUE=" +
           str(d["canonical_queue_production_processed"]) + "/235")
+    print("CHARACTER_BANK_LOCAL_PREFERRED=" +
+          ",".join(d["local_original_preferred_ids"]))
     print("CHARACTER_BANK_LOCAL_FALLBACK=" +
           ",".join(d["local_original_fallback_ids"]))
     print("CHARACTER_BANK_MISSING=" +

@@ -191,6 +191,85 @@ class CharacterBankTests(unittest.TestCase):
         self.assertEqual(entry["source_collector_run_id"], 123)
         self.assertEqual(report["local_original_fallback_ids"], [])
 
+    def complete_eng_original(self):
+        original = self.authored_original()
+        counts = {"IDLE": 6, "WORK": 10, "CARRY": 8,
+                  "REPAIR": 10, "CELEB": 8}
+        from PIL import ImageDraw
+        for action, frames in counts.items():
+            atlas = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
+            folder = original / "src_svg" / "ENG" / action
+            folder.mkdir(parents=True)
+            for i in range(frames):
+                x = (i % 4) * 256
+                y = (i // 4) * 256
+                ImageDraw.Draw(atlas).rounded_rectangle(
+                    (x + 78 + i % 3, y + 34, x + 186 + i % 3, y + 218),
+                    radius=10, fill=(40, 95, 120, 255))
+                (folder / f"{i:02d}.svg").write_text(
+                    '<svg xmlns="http://www.w3.org/2000/svg"></svg>')
+            atlas.save(original / "candidates" /
+                       f"zte_chr_eng_{action.lower()}_final.png", "PNG")
+        return original
+
+    def test_explicit_engineer_cohort_creates_separate_six_action_review_bank(self):
+        local = self.complete_eng_original()
+        self.rows = [
+            {"id": f"ASSET-{n}", "strict_status": "DONE", "pipeline_status": "DONE"}
+            for n in range(229)
+        ]
+        for action in ("IDLE", "WALK", "WORK", "CARRY", "REPAIR", "CELEB"):
+            self.rows.append({
+                "id": "CHR-ENG-" + action,
+                "strict_status": "NEEDS_REVIEW",
+                "pipeline_status": "AWAITING_REVIEW",
+                "review_artifact_run_id": 123,
+                "runtime": "app/src/main/res/drawable-nodpi/"
+                           f"zte_chr_eng_{action.lower()}_final.webp",
+            })
+        self.save_master()
+        self.source()
+        normal_path = self.root / "canonical.zip"
+        normal = assemble(self.master, self.archives, normal_path,
+                          local_original=local)
+        self.assertEqual(
+            next(x for x in normal["bank_entries"] if x["id"] == self.missing)["source_type"],
+            "collected-kaggle")
+        original_master = self.master.read_bytes()
+        preferred = assemble(
+            self.master, self.archives, self.output,
+            local_original=local, engineer_role_coherent_review=True)
+        self.assertEqual(preferred["source_selection_profile"], "engineer-local-role-review")
+        self.assertEqual(len(preferred["local_original_preferred_ids"]), 6)
+        self.assertEqual(preferred["local_original_fallback_ids"], [ ])
+        self.assertEqual(preferred["strict_done"], 229)
+        self.assertTrue(preferred["candidate_production_complete"])
+        self.assertEqual(preferred["production_processed"], 235)
+        self.assertEqual(self.master.read_bytes(), original_master)
+        with zipfile.ZipFile(normal_path) as unchanged:
+            self.assertEqual(unchanged.read("candidates/" + self.filename), self.png())
+        self.assertTrue(all(x["source_type"] == "repo-local-original"
+                            for x in preferred["bank_entries"]))
+        self.assertTrue(all(x["strict_approved"] is False and
+                            x["runtime_promoted"] is False
+                            for x in preferred["bank_entries"]))
+        with zipfile.ZipFile(self.output) as alternative:
+            for action in ("IDLE", "WALK", "WORK", "CARRY", "REPAIR", "CELEB"):
+                name = f"zte_chr_eng_{action.lower()}_final.png"
+                self.assertEqual(
+                    alternative.read("candidates/" + name),
+                    (local / "candidates" / name).read_bytes())
+
+    def test_engineer_coherent_option_rejects_incomplete_role_or_missing_source(self):
+        with self.assertRaisesRegex(ValueError, "requires verified local originals"):
+            assemble(self.master, self.archives, self.output,
+                     engineer_role_coherent_review=True)
+        local = self.complete_eng_original()
+        with self.assertRaisesRegex(ValueError, "six pending local ENG actions"):
+            assemble(self.master, self.archives, self.output,
+                     local_original=local, engineer_role_coherent_review=True)
+        self.assertFalse(self.output.exists())
+
     def test_local_manifest_claims_do_not_waive_technical_frame_QA(self):
         local = self.authored_original()
         Image.new("RGBA", (1024, 1024), (0, 0, 0, 0)).save(
