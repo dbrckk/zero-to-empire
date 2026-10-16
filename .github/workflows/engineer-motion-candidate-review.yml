@@ -25,6 +25,12 @@ on:
 permissions:
   contents: write
 
+# Multiple merged renderer changes can otherwise upload stale review files
+# after newer runs. Serialize release publishing without canceling in-flight QA.
+concurrency:
+  group: zte-engineer-motion-review-release
+  cancel-in-progress: false
+
 jobs:
   render-and-compare:
     runs-on: ubuntu-latest
