@@ -29,26 +29,24 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-15T23:47:33Z
+Generated: 2026-10-16T06:12:56Z
 
 ### Git
 - Branch: `main`
-- Head: `ab0f3b944787`
-- Commit date: 2026-10-16T01:47:18+02:00
-- Commit: art: audit 42px candidate animation readability and publish review warnings (#169)
+- Head: `7f81c1134a67`
+- Commit date: 2026-10-16T08:12:39+02:00
+- Commit: fix(art): handle zero-PNG rejected Kaggle waves without false archive failure (#171)
 - Tracked files: 1799
 
 ### Recently changed files
-- `.github/workflows/asset-pipeline-ci.yml`
-- `.github/workflows/character-candidate-bank.yml`
-- `tools/assets/test_candidate_archive_workflow.py`
-- `tools/sprites/audit_character_bank_motion.py`
-- `tools/sprites/build_character_bank_mobile_review.py`
-- `tools/sprites/tests/test_character_bank_mobile_review.py`
-- `tools/sprites/tests/test_character_bank_motion_audit.py`
-- `docs/art/MOBILE_CANDIDATE_REVIEW.md`
-- `tools/sprites/build_character_candidate_bank.py`
-- `tools/sprites/tests/test_character_candidate_bank.py`
+- `tools/sprites/archive_character_candidates.py`
+- `tools/sprites/tests/test_archive_character_candidates.py`
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
+- `art/production/character-strict-review-backlog.md`
+- `art/production/master-asset-queue.json`
+- `art/production/kaggle-async-state.json`
+- `art/production/controlled-character-regen-queue.json`
 
 ### Project signals
 - `build.gradle.kts`

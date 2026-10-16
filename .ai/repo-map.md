@@ -3632,10 +3632,16 @@ name: Kaggle Async Character Collector
 
 on:
   workflow_dispatch:
+  # Observe new producer submissions immediately; Kaggle completion is still
+  # polled by the existing hourly schedule. This event only reads the kernel.
+  workflow_run:
+    workflows: [Kaggle Mass Sprite Factory]
+    types: [completed]
   push:
     branches: [main]
     paths:
       - '.github/workflows/kaggle-async-character-collector.yml'
+      - 'art/production/kaggle-async-state.json'
   schedule:
     - cron: '43 * * * *'
 
@@ -3651,6 +3657,9 @@ concurrency:
 
 jobs:
   collect:
+    # workflow_run grants writable permissions. Never trust PR/fork or
+    # unsuccessful producer runs as a reason to observe privileged state.
+    if: ${{ github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository) }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     env:
@@ -29925,9 +29934,14 @@ def test_character_promotion_requires_pending_review_and_coherent_anchor(self)
 def test_character_promotion_rejects_wrong_artifact_provenance(self)
 ⋮----
 def test_character_promotion_requires_android_runtime_validation_before_done(self)
-def test_async_collector_recovers_candidates_when_generated_targets_is_empty(self)
+def test_async_collector_observes_only_trusted_successful_producer_submissions(self)
 ⋮----
 text = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
+header = text.split("\npermissions:", 1)[0]
+⋮----
+# The collector must not submit a new paid GPU batch on its own.
+⋮----
+def test_async_collector_recovers_candidates_when_generated_targets_is_empty(self)
 ⋮----
 # The collector may poll existing GPU jobs but may not start them.
 # An hourly check ensures an ACTIVE state cannot remain uncollected.
@@ -29981,7 +29995,6 @@ def test_other_external_generator_workflows_stay_manual(self)
 workflows = [
 ⋮----
 text = Path(path).read_text(encoding="utf-8")
-header = text.split("\npermissions:", 1)[0]
 ⋮----
 def test_mass_gpu_preflight_blocks_duplicate_active_waves(self)
 ⋮----
@@ -30092,6 +30105,27 @@ def test_invalid_signature_fails_closed(self)
 def test_duplicate_qa_rows_fail_closed(self)
 ⋮----
 name = "zte_chr_op_walk_final.png"
+⋮----
+def write_clean_reject_evidence(self, statuses=None, generated=None)
+⋮----
+rows = statuses if statuses is not None else [
+⋮----
+def test_real_all_reject_collector_without_frame_qa_is_not_workflow_failure(self)
+⋮----
+# 38831389791: generated-targets.json count=0, three rejected
+# character-sheet-report.json entries and NO github-qa-report.json.
+⋮----
+manifest = archive_candidates(self.root, self.bundle, 38831389791)
+⋮----
+def test_missing_frame_qa_with_png_fails_closed_even_if_rejects_claimed(self)
+⋮----
+def test_missing_frame_qa_without_rejection_proof_fails_closed(self)
+⋮----
+def test_malformed_all_rejected_proof_cannot_silently_skip_archive(self)
+⋮----
+invalid = [
+⋮----
+def test_missing_qa_reject_requires_zero_produced_target_manifest(self)
 ⋮----
 def test_rejected_only_writes_no_release_asset(self)
 ⋮----
@@ -30425,6 +30459,21 @@ MAX_ARCHIVE_BYTES = 500 * 1024 * 1024
 def archive_candidates(source: Path, destination: Path, source_run_id: int) -> dict
 ⋮----
 qa_files = list(source.rglob("github-qa-report.json"))
+⋮----
+# A successful collector can observe a genuinely clean, all-rejected
+# Kaggle batch. In that case it deliberately never ran frame QA:
+# there were no candidate PNGs to inspect. Reject this exception
+# unless the actual producer report proves every attempted target was
+# rejected AND the output manifest confirms zero produced sprites.
+# Never silently treat a missing QA report with real PNGs as success.
+⋮----
+producer_reports = list(source.rglob("character-sheet-report.json"))
+generated_manifests = list(source.rglob("generated-targets.json"))
+⋮----
+producer_rows = json.loads(producer_reports[0].read_text(encoding="utf-8"))
+generated = json.loads(generated_manifests[0].read_text(encoding="utf-8"))
+⋮----
+names = [str(r.get("id") or "") for r in producer_rows if isinstance(r, dict)]
 ⋮----
 qa = json.loads(qa_files[0].read_text(encoding="utf-8"))
 rows = qa.get("assets") if isinstance(qa, dict) else None

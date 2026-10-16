@@ -1,211 +1,164 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "15c021f73528e2536c53d31e463abc7c89e5c8d2",
-  "head": "ab0f3b9447872cbab09b89aa383bf79a2a8dd059",
+  "base": "ab0f3b9447872cbab09b89aa383bf79a2a8dd059",
+  "head": "7f81c1134a67d7cc96cb7188da7bc0725f51b145",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": ".github/workflows/asset-pipeline-ci.yml",
+      "path": ".github/workflows/kaggle-async-character-collector.yml",
       "status": "M"
     },
     {
-      "path": ".github/workflows/character-candidate-bank.yml",
+      "path": "art/production/autofactory-state.json",
       "status": "M"
     },
     {
-      "path": "tools/assets/test_candidate_archive_workflow.py",
+      "path": "art/production/autofactory-summary.md",
       "status": "M"
     },
     {
-      "path": "tools/sprites/audit_character_bank_motion.py",
-      "status": "A"
-    },
-    {
-      "path": "tools/sprites/build_character_bank_mobile_review.py",
+      "path": "art/production/character-strict-review-backlog.md",
       "status": "M"
     },
     {
-      "path": "tools/sprites/tests/test_character_bank_mobile_review.py",
+      "path": "art/production/controlled-character-regen-queue.json",
       "status": "M"
     },
     {
-      "path": "tools/sprites/tests/test_character_bank_motion_audit.py",
-      "status": "A"
+      "path": "art/production/kaggle-async-state.json",
+      "status": "M"
+    },
+    {
+      "path": "art/production/master-asset-queue.json",
+      "status": "M"
+    },
+    {
+      "path": "tools/assets/test_workflow_policy.py",
+      "status": "M"
+    },
+    {
+      "path": "tools/sprites/archive_character_candidates.py",
+      "status": "M"
+    },
+    {
+      "path": "tools/sprites/tests/test_archive_character_candidates.py",
+      "status": "M"
     }
   ],
   "changed_source_files": [
-    "tools/sprites/audit_character_bank_motion.py",
-    "tools/sprites/build_character_bank_mobile_review.py",
-    "tools/sprites/tests/test_character_bank_mobile_review.py",
-    "tools/sprites/tests/test_character_bank_motion_audit.py"
+    "tools/sprites/archive_character_candidates.py",
+    "tools/sprites/tests/test_archive_character_candidates.py"
   ],
   "impacted_files": [
-    "tools/sprites/audit_character_bank_motion.py",
-    "tools/sprites/build_character_bank_mobile_review.py",
-    "tools/sprites/tests/test_character_bank_mobile_review.py",
-    "tools/sprites/tests/test_character_bank_motion_audit.py"
+    "tools/sprites/archive_character_candidates.py",
+    "tools/sprites/tests/test_archive_character_candidates.py"
   ],
   "impacted_symbols": [
     {
-      "name": "composite",
+      "name": "archive_candidates",
       "kind": "function",
-      "file": "tools/sprites/audit_character_bank_motion.py",
-      "line": 25
-    },
-    {
-      "name": "change",
-      "kind": "function",
-      "file": "tools/sprites/audit_character_bank_motion.py",
-      "line": 33
-    },
-    {
-      "name": "motion_stats",
-      "kind": "function",
-      "file": "tools/sprites/audit_character_bank_motion.py",
-      "line": 38
-    },
-    {
-      "name": "analyze",
-      "kind": "function",
-      "file": "tools/sprites/audit_character_bank_motion.py",
-      "line": 70
+      "file": "tools/sprites/archive_character_candidates.py",
+      "line": 23
     },
     {
       "name": "main",
       "kind": "function",
-      "file": "tools/sprites/audit_character_bank_motion.py",
-      "line": 154
+      "file": "tools/sprites/archive_character_candidates.py",
+      "line": 123
     },
     {
-      "name": "build",
-      "kind": "function",
-      "file": "tools/sprites/build_character_bank_mobile_review.py",
-      "line": 177
-    },
-    {
-      "name": "main",
-      "kind": "function",
-      "file": "tools/sprites/build_character_bank_mobile_review.py",
-      "line": 265
-    },
-    {
-      "name": "MobileCandidateReviewTests",
+      "name": "CandidateArchiveTests",
       "kind": "class",
-      "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
-      "line": 19
+      "file": "tools/sprites/tests/test_archive_character_candidates.py",
+      "line": 15
     },
     {
       "name": "setUp",
       "kind": "function",
-      "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
-      "line": 20
+      "file": "tools/sprites/tests/test_archive_character_candidates.py",
+      "line": 16
     },
     {
-      "name": "save_bank",
+      "name": "write_file",
       "kind": "function",
-      "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
-      "line": 76
+      "file": "tools/sprites/tests/test_archive_character_candidates.py",
+      "line": 24
     },
     {
-      "name": "test_mobile_review_embeds_verified_selected_and_original",
+      "name": "write_qa",
       "kind": "function",
-      "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
-      "line": 87
+      "file": "tools/sprites/tests/test_archive_character_candidates.py",
+      "line": 29
     },
     {
-      "name": "test_mobile_review_includes_verified_motion_flags",
+      "name": "test_saves_only_real_qa_passing_candidates_with_hashes",
       "kind": "function",
-      "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
-      "line": 103
+      "file": "tools/sprites/tests/test_archive_character_candidates.py",
+      "line": 32
     },
     {
-      "name": "test_stale_motion_audit_must_not_be_misattached_to_new_png",
+      "name": "test_missing_passing_image_fails_closed",
       "kind": "function",
-      "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
-      "line": 119
+      "file": "tools/sprites/tests/test_archive_character_candidates.py",
+      "line": 54
     },
     {
-      "name": "test_hash_tampering_fails_closed",
+      "name": "test_invalid_signature_fails_closed",
       "kind": "function",
-      "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
-      "line": 133
+      "file": "tools/sprites/tests/test_archive_character_candidates.py",
+      "line": 59
     },
     {
-      "name": "test_invalid_local_frame_geometry_fails_closed",
+      "name": "test_duplicate_qa_rows_fail_closed",
       "kind": "function",
-      "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
-      "line": 140
+      "file": "tools/sprites/tests/test_archive_character_candidates.py",
+      "line": 65
     },
     {
-      "name": "test_script_closing_in_review_flags_is_html_escaped",
+      "name": "write_clean_reject_evidence",
       "kind": "function",
-      "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
-      "line": 146
+      "file": "tools/sprites/tests/test_archive_character_candidates.py",
+      "line": 72
     },
     {
-      "name": "test_unapproved_bank_is_required",
+      "name": "test_real_all_reject_collector_without_frame_qa_is_not_workflow_failure",
       "kind": "function",
-      "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
-      "line": 154
+      "file": "tools/sprites/tests/test_archive_character_candidates.py",
+      "line": 89
     },
     {
-      "name": "MobileMotionAuditTests",
-      "kind": "class",
-      "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
-      "line": 19
-    },
-    {
-      "name": "setUp",
+      "name": "test_missing_frame_qa_with_png_fails_closed_even_if_rejects_claimed",
       "kind": "function",
-      "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
-      "line": 20
+      "file": "tools/sprites/tests/test_archive_character_candidates.py",
+      "line": 101
     },
     {
-      "name": "png",
+      "name": "test_missing_frame_qa_without_rejection_proof_fails_closed",
       "kind": "function",
-      "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
-      "line": 36
+      "file": "tools/sprites/tests/test_archive_character_candidates.py",
+      "line": 107
     },
     {
-      "name": "write_bank",
+      "name": "test_malformed_all_rejected_proof_cannot_silently_skip_archive",
       "kind": "function",
-      "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
-      "line": 50
+      "file": "tools/sprites/tests/test_archive_character_candidates.py",
+      "line": 111
     },
     {
-      "name": "test_still_work_requires_attention_but_is_not_automatically_approved",
+      "name": "test_missing_qa_reject_requires_zero_produced_target_manifest",
       "kind": "function",
-      "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
-      "line": 66
+      "file": "tools/sprites/tests/test_archive_character_candidates.py",
+      "line": 126
     },
     {
-      "name": "test_distinct_poses_have_higher_observable_motion",
+      "name": "test_rejected_only_writes_no_release_asset",
       "kind": "function",
-      "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
-      "line": 80
-    },
-    {
-      "name": "test_sha_mismatch_fails_closed",
-      "kind": "function",
-      "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
-      "line": 87
-    },
-    {
-      "name": "test_strict_approved_metadata_fails_closed",
-      "kind": "function",
-      "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
-      "line": 93
-    },
-    {
-      "name": "test_report_requires_review_only_bank",
-      "kind": "function",
-      "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
-      "line": 98
+      "file": "tools/sprites/tests/test_archive_character_candidates.py",
+      "line": 134
     }
   ],
   "selected_tests": [
-    "tools/sprites/tests/test_character_bank_mobile_review.py",
-    "tools/sprites/tests/test_character_bank_motion_audit.py"
+    "tools/sprites/tests/test_archive_character_candidates.py"
   ]
 }

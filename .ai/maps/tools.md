@@ -1831,6 +1831,27 @@ def test_duplicate_qa_rows_fail_closed(self)
 ⋮----
 name = "zte_chr_op_walk_final.png"
 ⋮----
+def write_clean_reject_evidence(self, statuses=None, generated=None)
+⋮----
+rows = statuses if statuses is not None else [
+⋮----
+def test_real_all_reject_collector_without_frame_qa_is_not_workflow_failure(self)
+⋮----
+# 38831389791: generated-targets.json count=0, three rejected
+# character-sheet-report.json entries and NO github-qa-report.json.
+⋮----
+manifest = archive_candidates(self.root, self.bundle, 38831389791)
+⋮----
+def test_missing_frame_qa_with_png_fails_closed_even_if_rejects_claimed(self)
+⋮----
+def test_missing_frame_qa_without_rejection_proof_fails_closed(self)
+⋮----
+def test_malformed_all_rejected_proof_cannot_silently_skip_archive(self)
+⋮----
+invalid = [
+⋮----
+def test_missing_qa_reject_requires_zero_produced_target_manifest(self)
+⋮----
 def test_rejected_only_writes_no_release_asset(self)
 ⋮----
 manifest = archive_candidates(self.root, self.bundle, 123)
@@ -2163,6 +2184,21 @@ MAX_ARCHIVE_BYTES = 500 * 1024 * 1024
 def archive_candidates(source: Path, destination: Path, source_run_id: int) -> dict
 ⋮----
 qa_files = list(source.rglob("github-qa-report.json"))
+⋮----
+# A successful collector can observe a genuinely clean, all-rejected
+# Kaggle batch. In that case it deliberately never ran frame QA:
+# there were no candidate PNGs to inspect. Reject this exception
+# unless the actual producer report proves every attempted target was
+# rejected AND the output manifest confirms zero produced sprites.
+# Never silently treat a missing QA report with real PNGs as success.
+⋮----
+producer_reports = list(source.rglob("character-sheet-report.json"))
+generated_manifests = list(source.rglob("generated-targets.json"))
+⋮----
+producer_rows = json.loads(producer_reports[0].read_text(encoding="utf-8"))
+generated = json.loads(generated_manifests[0].read_text(encoding="utf-8"))
+⋮----
+names = [str(r.get("id") or "") for r in producer_rows if isinstance(r, dict)]
 ⋮----
 qa = json.loads(qa_files[0].read_text(encoding="utf-8"))
 rows = qa.get("assets") if isinstance(qa, dict) else None

@@ -1,14 +1,18 @@
 # CI status
 
-Summary: 6 success / 0 failure / 2 active
+Summary: 5 success / 1 failure / 1 active
 
-- Assemble Character Candidate Bank: in_progress / pending (ab0f3b94)
-- Asset Pipeline CI: in_progress / pending (ab0f3b94)
-- Asset Pipeline CI: completed / success (088906a2)
-- Asset Pipeline CI: completed / success (15c021f7)
-- Assemble Character Candidate Bank: completed / success (15c021f7)
-- Asset Pipeline CI: completed / success (bb593acd)
-- Asset Pipeline CI: completed / success (cc028156)
-- Assemble Character Candidate Bank: completed / success (cc028156)
+- Asset Pipeline CI: in_progress / pending (7f81c113)
+- Asset Pipeline CI: completed / success (c68fddab)
+- Asset Autofactory 235: completed / success (881e42ca)
+- Kaggle Mass Sprite Factory: completed / success (784d0474)
+- Assemble Character Candidate Bank: completed / skipped (f5653f45)
+- Archive Character Candidates: completed / failure (f5653f45)
+- Asset Autofactory 235: completed / success (f5653f45)
+- Kaggle Async Character Collector: completed / success (7a505306)
+
+## Latest failed run structure
+- Job: archive
+  - Failed step: Build candidate-only archive with provenance
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.
