@@ -23,12 +23,15 @@ TOOL_TIP_OFFSETS={
 }
 
 
-def tool_angle(action:str,phase:float)->float:
+def tool_angle(action:str,phase:float,*,role:str|None=None)->float:
     if action not in TOOL_TIP_OFFSETS:
         raise ValueError("Tool angle applies only to WORK and REPAIR")
-    # Repair is a genuine oscillating ratchet/twist. WORK remains a broad
-    # positional sweep with minimal prop rotation.
-    return -4.0+(3.0 if action=='WORK' else 18.0)*math.sin(phase)
+    if role is not None and role not in ROLE_LIGHT:
+        raise ValueError("Unknown role for action tool")
+    # Engineer's long mechanical ratchet needs an unmistakable torque arc
+    # at the 42px Android gameplay scale; preserve other roles' timings.
+    sweep = 26.0 if action=='REPAIR' and role=='ENG' else (18.0 if action=='REPAIR' else 3.0)
+    return -4.0+sweep*math.sin(phase)
 
 
 def tool_tip(role:str,action:str,phase:float,*,tool_x:float,tool_y:float)->tuple[float,float]:
@@ -36,7 +39,7 @@ def tool_tip(role:str,action:str,phase:float,*,tool_x:float,tool_y:float)->tuple
         dx,dy=TOOL_TIP_OFFSETS[action][role]
     except KeyError as exc:
         raise ValueError("No tool endpoint for role/action") from exc
-    angle=math.radians(tool_angle(action,phase))
+    angle=math.radians(tool_angle(action,phase,role=role))
     return (tool_x+dx*math.cos(angle)-dy*math.sin(angle),
             tool_y+dx*math.sin(angle)+dy*math.cos(angle))
 
