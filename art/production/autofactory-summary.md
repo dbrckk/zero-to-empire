@@ -1,11 +1,11 @@
 # Asset Autofactory — 235 target
 
 - Strict DONE: **219 / 235**
-- Production processed to DONE/review: **234 / 235**
-- Awaiting semantic review: **15**
+- Production processed to DONE/review: **235 / 235**
+- Awaiting semantic review: **16**
 - Automation-blocked: **0**
-- Current action: **DISPATCH_KAGGLE_CHARACTER**
-- Current group: **CHR-ENG**
+- Current action: **PRODUCTION_235_COMPLETE_REVIEW_BACKLOG**
+- Current group: **none**
 
 The autofactory may generate and technically validate candidates automatically,
 but it never promotes a visually unreviewed candidate to strict DONE.
