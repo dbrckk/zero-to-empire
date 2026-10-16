@@ -29,27 +29,20 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-16T08:00:44Z
+Generated: 2026-10-16T08:21:59Z
 
 ### Git
 - Branch: `main`
-- Head: `2add0abb96c5`
-- Commit date: 2026-10-16T10:00:27+02:00
-- Commit: art: stabilize planted-foot repair action and bound GPU redrawing (#175)
-- Tracked files: 1803
+- Head: `4fa652f9cab2`
+- Commit date: 2026-10-16T10:21:44+02:00
+- Commit: art: publish verified mobile role identity contact sheet with candidate bank (#177)
+- Tracked files: 1805
 
 ### Recently changed files
 - `.github/workflows/asset-pipeline-ci.yml`
-- `.github/workflows/kaggle-mass-sprite-factory.yml`
-- `kaggle/github_mass_factory.py`
-- `tools/sprites/character_repair_pose_plan.py`
-- `tools/sprites/kaggle_character_sheet_factory_v1.py`
-- `tools/sprites/tests/test_character_repair_pose_plan.py`
 - `.github/workflows/character-candidate-bank.yml`
-- `tools/sprites/audit_character_bank_motion.py`
-- `tools/sprites/build_character_bank_mobile_review.py`
-- `tools/sprites/tests/test_character_bank_mobile_review.py`
-- `tools/sprites/tests/test_character_bank_motion_audit.py`
+- `tools/sprites/build_character_role_contact_sheet.py`
+- `tools/sprites/tests/test_character_role_contact_sheet.py`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
 - `art/production/character-strict-review-backlog.md`

@@ -1,19 +1,16 @@
 # Change impact
 
-Base: d67bd6033e44ac3f00a3f5eb26ef5af0e4997e8e
-Head: 2add0abb96c5379cb7e04f02eca8d8183610baf6
+Base: e2302769dcfb90b77175bc2f33be94eb487b2299
+Head: 4fa652f9cab2f0449a2941e2a63430f62649caa3
 
 ## Changed files
 - M .github/workflows/asset-pipeline-ci.yml
-- M .github/workflows/kaggle-mass-sprite-factory.yml
-- M kaggle/github_mass_factory.py
-- A tools/sprites/character_repair_pose_plan.py
-- M tools/sprites/kaggle_character_sheet_factory_v1.py
-- A tools/sprites/tests/test_character_repair_pose_plan.py
+- M .github/workflows/character-candidate-bank.yml
+- A tools/sprites/build_character_role_contact_sheet.py
+- A tools/sprites/tests/test_character_role_contact_sheet.py
 
 ## Affected areas
 - .github
-- kaggle
 - tools
 
 ## Related test candidates

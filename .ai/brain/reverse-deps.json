@@ -638,6 +638,7 @@
         "tools/sprites/audit_character_candidates.py",
         "tools/sprites/autonomous_walk.py",
         "tools/sprites/build_character_review_panels.py",
+        "tools/sprites/build_character_role_contact_sheet.py",
         "tools/sprites/build_sprite_contact_sheet.py",
         "tools/sprites/build_tech_review_board.py",
         "tools/sprites/character_rejection_evidence.py",
@@ -678,9 +679,10 @@
         "tools/sprites/tests/test_character_bank_mobile_review.py",
         "tools/sprites/tests/test_character_bank_motion_audit.py",
         "tools/sprites/tests/test_character_candidate_bank.py",
-        "tools/sprites/tests/test_character_provisional_idle_seed.py"
+        "tools/sprites/tests/test_character_provisional_idle_seed.py",
+        "tools/sprites/tests/test_character_role_contact_sheet.py"
       ],
-      "in_degree": 54,
+      "in_degree": 56,
       "out_degree": 7
     },
     "app/src/main/java/com/zerotoempire/game/GameTheme.kt": {
@@ -1023,9 +1025,10 @@
         "tools/sprites/test_animation_batch_planner.py",
         "tools/sprites/test_character_review_matrix.py",
         "tools/sprites/test_pollinations_character_sheet_factory.py",
+        "tools/sprites/tests/test_asset_production_policy.py",
         "tools/sprites/tests/test_character_provisional_idle_seed.py"
       ],
-      "in_degree": 25,
+      "in_degree": 26,
       "out_degree": 1
     },
     "app/src/main/java/com/zerotoempire/game/MotionQuality.kt": {
@@ -1964,9 +1967,10 @@
         "tools/sprites/plan_sprite_batches.py"
       ],
       "dependents": [
-        "tools/sprites/test_character_provider_reservation.py"
+        "tools/sprites/test_character_provider_reservation.py",
+        "tools/sprites/tests/test_asset_production_policy.py"
       ],
-      "in_degree": 1,
+      "in_degree": 2,
       "out_degree": 3
     },
     "tools/sprites/audit_character_bank_motion.py": {
@@ -2052,6 +2056,16 @@
       "dependents": [],
       "in_degree": 0,
       "out_degree": 3
+    },
+    "tools/sprites/build_character_role_contact_sheet.py": {
+      "dependencies": [
+        "app/src/main/java/com/zerotoempire/game/GameRepository.kt"
+      ],
+      "dependents": [
+        "tools/sprites/tests/test_character_role_contact_sheet.py"
+      ],
+      "in_degree": 1,
+      "out_degree": 1
     },
     "tools/sprites/build_sprite_contact_sheet.py": {
       "dependencies": [
@@ -2882,12 +2896,14 @@
     },
     "tools/sprites/tests/test_asset_production_policy.py": {
       "dependencies": [
+        "app/src/main/java/com/zerotoempire/game/Monetization.kt",
+        "tools/sprites/asset_wave_orchestrator.py",
         "tools/sprites/character_acceptance_policy.py",
         "tools/sprites/plan_sprite_batches.py"
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 2
+      "out_degree": 4
     },
     "tools/sprites/tests/test_character_bank_mobile_review.py": {
       "dependencies": [
@@ -2935,6 +2951,15 @@
       "dependents": [],
       "in_degree": 0,
       "out_degree": 1
+    },
+    "tools/sprites/tests/test_character_role_contact_sheet.py": {
+      "dependencies": [
+        "app/src/main/java/com/zerotoempire/game/GameRepository.kt",
+        "tools/sprites/build_character_role_contact_sheet.py"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 2
     },
     "tools/sprites/validate_runtime_asset.py": {
       "dependencies": [

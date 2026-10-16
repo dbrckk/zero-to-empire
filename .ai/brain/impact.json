@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "9d72c1bd59903458fb47c3bea963aef8c754a3af",
-  "head": "2add0abb96c5379cb7e04f02eca8d8183610baf6",
+  "base": "2add0abb96c5379cb7e04f02eca8d8183610baf6",
+  "head": "4fa652f9cab2f0449a2941e2a63430f62649caa3",
   "index_mode": "incremental",
   "changed_files": [
     {
@@ -10,323 +10,378 @@
       "status": "M"
     },
     {
-      "path": ".github/workflows/kaggle-mass-sprite-factory.yml",
+      "path": ".github/workflows/character-candidate-bank.yml",
       "status": "M"
     },
     {
-      "path": "kaggle/github_mass_factory.py",
+      "path": "art/production/autofactory-state.json",
       "status": "M"
     },
     {
-      "path": "tools/sprites/character_repair_pose_plan.py",
+      "path": "art/production/autofactory-summary.md",
+      "status": "M"
+    },
+    {
+      "path": "art/production/character-strict-review-backlog.md",
+      "status": "M"
+    },
+    {
+      "path": "art/production/controlled-character-regen-queue.json",
+      "status": "M"
+    },
+    {
+      "path": "art/production/kaggle-async-state.json",
+      "status": "M"
+    },
+    {
+      "path": "art/production/master-asset-queue.json",
+      "status": "M"
+    },
+    {
+      "path": "tools/assets/test_queue_state_policy.py",
+      "status": "M"
+    },
+    {
+      "path": "tools/sprites/asset_queue_utils.py",
+      "status": "M"
+    },
+    {
+      "path": "tools/sprites/asset_wave_orchestrator.py",
+      "status": "M"
+    },
+    {
+      "path": "tools/sprites/build_character_role_contact_sheet.py",
       "status": "A"
     },
     {
-      "path": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "path": "tools/sprites/tests/test_asset_production_policy.py",
       "status": "M"
     },
     {
-      "path": "tools/sprites/tests/test_character_repair_pose_plan.py",
+      "path": "tools/sprites/tests/test_character_role_contact_sheet.py",
       "status": "A"
     }
   ],
   "changed_source_files": [
-    "kaggle/github_mass_factory.py",
-    "tools/sprites/character_repair_pose_plan.py",
-    "tools/sprites/kaggle_character_sheet_factory_v1.py",
-    "tools/sprites/tests/test_character_repair_pose_plan.py"
+    "tools/sprites/asset_queue_utils.py",
+    "tools/sprites/asset_wave_orchestrator.py",
+    "tools/sprites/build_character_role_contact_sheet.py",
+    "tools/sprites/tests/test_asset_production_policy.py",
+    "tools/sprites/tests/test_character_role_contact_sheet.py"
   ],
   "impacted_files": [
-    "kaggle/github_mass_factory.py",
-    "tools/sprites/character_repair_pose_plan.py",
-    "tools/sprites/kaggle_character_sheet_factory_v1.py",
-    "tools/sprites/tests/test_character_repair_pose_plan.py"
+    "tools/sprites/asset_queue_utils.py",
+    "tools/sprites/asset_wave_orchestrator.py",
+    "tools/sprites/build_character_role_contact_sheet.py",
+    "tools/sprites/test_character_provider_reservation.py",
+    "tools/sprites/tests/test_asset_production_policy.py",
+    "tools/sprites/tests/test_character_role_contact_sheet.py"
   ],
   "impacted_symbols": [
     {
-      "name": "digest",
+      "name": "load_json",
       "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 13
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 44
     },
     {
-      "name": "ensure_gpu",
+      "name": "save_json",
       "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 18
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 50
     },
     {
-      "name": "ensure_flux",
+      "name": "manifest_rows",
       "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 29
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 55
     },
     {
-      "name": "runtime_exists",
+      "name": "unresolved_ids",
       "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 38
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 78
     },
     {
-      "name": "controlled_queue_backlog",
+      "name": "default_asset",
       "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 39
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 85
     },
     {
-      "name": "controlled_character_backlog",
+      "name": "ensure_master",
       "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 45
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 117
     },
     {
-      "name": "controlled_building_backlog",
+      "name": "sync_controlled_queues",
       "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 46
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 159
     },
     {
-      "name": "backlog",
+      "name": "stats",
       "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 47
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 231
     },
     {
-      "name": "valid_tree",
+      "name": "write_summary",
       "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
+      "file": "tools/sprites/asset_queue_utils.py",
+      "line": 258
+    },
+    {
+      "name": "by_id",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
       "line": 59
     },
     {
-      "name": "resolve_source",
+      "name": "mirror_character_outcomes_from_controlled",
       "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 61
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 63
     },
     {
-      "name": "current_fresh",
+      "name": "update_from_trigger",
       "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 88
+    },
+    {
+      "name": "active_pending",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 158
+    },
+    {
+      "name": "character_retry_available",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 163
+    },
+    {
+      "name": "mark_dispatch",
+      "kind": "function",
+      "file": "tools/sprites/asset_wave_orchestrator.py",
       "line": 186
     },
     {
-      "name": "checkpoint_fresh",
+      "name": "prioritize_controlled_character_targets",
       "kind": "function",
-      "file": "kaggle/github_mass_factory.py",
-      "line": 187
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 225
     },
     {
-      "name": "repair_strength",
+      "name": "building_family_ids",
       "kind": "function",
-      "file": "tools/sprites/character_repair_pose_plan.py",
-      "line": 25
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 291
     },
     {
-      "name": "production_first_enabled",
+      "name": "prepare_building_group",
       "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 35
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 295
     },
     {
-      "name": "rows",
+      "name": "prepare_character_burst",
       "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 80
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 306
     },
     {
-      "name": "queue_rejection_hint",
+      "name": "next_group",
       "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 116
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 395
     },
     {
-      "name": "compact_rejection_hints",
+      "name": "close_exhausted_character_dispatches",
       "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 160
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 414
     },
     {
-      "name": "rejection_hints",
+      "name": "active_pollinations_repair",
       "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 179
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 469
     },
     {
-      "name": "anchor_prompt_pair",
+      "name": "pending_ids_from_controlled",
       "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 203
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 494
     },
     {
-      "name": "semantic_scaffold",
+      "name": "order_character_groups_by_retry",
       "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 220
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 511
     },
     {
-      "name": "prompt_pair",
+      "name": "current_epoch_attempts",
       "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 304
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 517
     },
     {
-      "name": "retry_mode",
+      "name": "make_decision",
       "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 341
-    },
-    {
-      "name": "load_encode",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 348
-    },
-    {
-      "name": "load_render",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 353
-    },
-    {
-      "name": "border_bg",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 360
-    },
-    {
-      "name": "isolate",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 369
-    },
-    {
-      "name": "dist",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 373
-    },
-    {
-      "name": "validate_source_full_body",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 388
-    },
-    {
-      "name": "finish_frame",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 398
-    },
-    {
-      "name": "validated_single_role_anchor",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 438
-    },
-    {
-      "name": "alpha_iou",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 447
-    },
-    {
-      "name": "sheet_qa",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 456
-    },
-    {
-      "name": "lower_body_motion",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 470
-    },
-    {
-      "name": "upper_body_transition_changes",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 487
-    },
-    {
-      "name": "walk_consistency_qa",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 504
-    },
-    {
-      "name": "action_qa",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 519
-    },
-    {
-      "name": "appearance_signature",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 567
-    },
-    {
-      "name": "appearance_distance",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 581
-    },
-    {
-      "name": "make_sheet",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 584
-    },
-    {
-      "name": "keep_rejected_idle_for_review",
-      "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 592
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 541
     },
     {
       "name": "main",
       "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 607
+      "file": "tools/sprites/asset_wave_orchestrator.py",
+      "line": 611
     },
     {
-      "name": "try_role_seed_idle_fallback",
+      "name": "_font",
       "kind": "function",
-      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-      "line": 710
+      "file": "tools/sprites/build_character_role_contact_sheet.py",
+      "line": 40
     },
     {
-      "name": "RepairRigContinuityTests",
+      "name": "_load",
+      "kind": "function",
+      "file": "tools/sprites/build_character_role_contact_sheet.py",
+      "line": 49
+    },
+    {
+      "name": "build",
+      "kind": "function",
+      "file": "tools/sprites/build_character_role_contact_sheet.py",
+      "line": 118
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "tools/sprites/build_character_role_contact_sheet.py",
+      "line": 173
+    },
+    {
+      "name": "ReservationTests",
       "kind": "class",
-      "file": "tools/sprites/tests/test_character_repair_pose_plan.py",
-      "line": 10
-    },
-    {
-      "name": "test_full_ten_frame_cycle_retains_one_planted_foot_pivot",
-      "kind": "function",
-      "file": "tools/sprites/tests/test_character_repair_pose_plan.py",
+      "file": "tools/sprites/test_character_provider_reservation.py",
       "line": 11
     },
     {
-      "name": "test_strengths_are_bounded_and_allow_articulation",
+      "name": "test_external_repair_excludes_concurrent_kaggle_character_dispatch",
       "kind": "function",
-      "file": "tools/sprites/tests/test_character_repair_pose_plan.py",
+      "file": "tools/sprites/test_character_provider_reservation.py",
+      "line": 12
+    },
+    {
+      "name": "test_expired_or_other_provider_has_no_lock",
+      "kind": "function",
+      "file": "tools/sprites/test_character_provider_reservation.py",
+      "line": 30
+    },
+    {
+      "name": "test_injected_invalid_or_missing_reservation_does_not_block",
+      "kind": "function",
+      "file": "tools/sprites/test_character_provider_reservation.py",
+      "line": 43
+    },
+    {
+      "name": "ProductionFirstTests",
+      "kind": "class",
+      "file": "tools/sprites/tests/test_asset_production_policy.py",
+      "line": 14
+    },
+    {
+      "name": "test_relaxed_motion_admits_previous_static_rejections",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_asset_production_policy.py",
+      "line": 15
+    },
+    {
+      "name": "test_strict_floors_unchanged",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_asset_production_policy.py",
+      "line": 21
+    },
+    {
+      "name": "test_art_warnings_do_not_block_candidate",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_asset_production_policy.py",
       "line": 25
     },
     {
-      "name": "test_invalid_attempts_cannot_bypass_bounded_policy",
+      "name": "test_new_repair_algorithm_reopens_only_a_bounded_epoch",
       "kind": "function",
-      "file": "tools/sprites/tests/test_character_repair_pose_plan.py",
-      "line": 39
+      "file": "tools/sprites/tests/test_asset_production_policy.py",
+      "line": 33
     },
     {
-      "name": "test_generator_uses_plan_and_preserves_original_qa_gates",
+      "name": "test_structural_risks_remain_blocking",
       "kind": "function",
-      "file": "tools/sprites/tests/test_character_repair_pose_plan.py",
-      "line": 46
+      "file": "tools/sprites/tests/test_asset_production_policy.py",
+      "line": 67
+    },
+    {
+      "name": "test_unknown_risk_is_not_silently_waived",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_asset_production_policy.py",
+      "line": 76
+    },
+    {
+      "name": "RoleConsistencySheetTests",
+      "kind": "class",
+      "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+      "line": 19
+    },
+    {
+      "name": "setUp",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+      "line": 20
+    },
+    {
+      "name": "save",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+      "line": 61
+    },
+    {
+      "name": "test_role_sheet_is_readable_png_and_does_not_approve_candidates",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+      "line": 78
+    },
+    {
+      "name": "test_sha_tampering_of_png_or_audit_fails_closed",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+      "line": 90
+    },
+    {
+      "name": "test_missing_audit_coverage_is_not_silently_ignored",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+      "line": 103
+    },
+    {
+      "name": "test_semantically_approved_candidate_or_audit_must_be_rejected",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+      "line": 109
+    },
+    {
+      "name": "test_empty_first_frame_is_blocking_even_with_valid_hash",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+      "line": 120
     }
   ],
   "selected_tests": [
-    "tools/sprites/tests/test_character_repair_pose_plan.py"
+    "tools/sprites/test_character_provider_reservation.py",
+    "tools/sprites/tests/test_asset_production_policy.py",
+    "tools/sprites/tests/test_character_role_contact_sheet.py"
   ]
 }

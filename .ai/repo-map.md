@@ -358,6 +358,7 @@ tools/
       test_character_candidate_bank.py
       test_character_provisional_idle_seed.py
       test_character_repair_pose_plan.py
+      test_character_role_contact_sheet.py
     action_contact.py
     animation_batch_planner.py
     archive_character_candidates.py
@@ -371,6 +372,7 @@ tools/
     build_character_bank_mobile_review.py
     build_character_candidate_bank.py
     build_character_review_panels.py
+    build_character_role_contact_sheet.py
     build_original_offline_review.py
     build_sprite_contact_sheet.py
     build_tech_review_board.py
@@ -1661,6 +1663,8 @@ on:
       - 'tools/sprites/audit_character_bank_motion.py'
       - 'tools/sprites/tests/test_character_bank_motion_audit.py'
       - 'tools/sprites/tests/test_character_bank_mobile_review.py'
+      - 'tools/sprites/build_character_role_contact_sheet.py'
+      - 'tools/sprites/tests/test_character_role_contact_sheet.py'
       - 'tools/sprites/tests/test_character_candidate_bank.py'
       - 'tools/sprites/tests/test_archive_character_candidates.py'
       - 'tools/sprites/asset_wave_orchestrator.py'
@@ -1727,6 +1731,8 @@ on:
       - 'tools/sprites/audit_character_bank_motion.py'
       - 'tools/sprites/tests/test_character_bank_motion_audit.py'
       - 'tools/sprites/tests/test_character_bank_mobile_review.py'
+      - 'tools/sprites/build_character_role_contact_sheet.py'
+      - 'tools/sprites/tests/test_character_role_contact_sheet.py'
       - 'tools/sprites/tests/test_character_candidate_bank.py'
       - 'tools/sprites/tests/test_archive_character_candidates.py'
       - 'tools/sprites/asset_wave_orchestrator.py'
@@ -2056,6 +2062,7 @@ jobs:
           python -m unittest discover -s tools/sprites/tests -p 'test_character_provisional_idle_seed.py' -v
           python -m unittest discover -s tools/sprites/tests -p 'test_character_repair_pose_plan.py' -v
           python -m unittest discover -s tools/sprites/tests -p 'test_character_bank_motion_audit.py' -v
+          python -m unittest discover -s tools/sprites/tests -p 'test_character_role_contact_sheet.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_semantic_gate.py' -v
           python -m unittest discover -s tools/sprites -p 'test_verify_character_idle_candidates.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_head_identity_lock.py' -v
@@ -2288,7 +2295,8 @@ jobs:
           python -m unittest discover -s tools/sprites/tests -p test_character_candidate_bank.py -v
           python -m unittest discover -s tools/sprites/tests -p test_character_bank_mobile_review.py -v
           python -m unittest discover -s tools/sprites/tests -p test_character_bank_motion_audit.py -v
-          python -m py_compile tools/sprites/build_character_candidate_bank.py tools/sprites/build_character_bank_mobile_review.py tools/sprites/audit_character_bank_motion.py
+          python -m unittest discover -s tools/sprites/tests -p test_character_role_contact_sheet.py -v
+          python -m py_compile tools/sprites/build_character_candidate_bank.py tools/sprites/build_character_bank_mobile_review.py tools/sprites/audit_character_bank_motion.py tools/sprites/build_character_role_contact_sheet.py
 
       - name: Download current permanent candidate archives
         shell: bash
@@ -2350,6 +2358,17 @@ jobs:
           print('- No flags represent automatic semantic approval.')
           PY
 
+      - name: Build one-page character identity contact sheet for Android
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/sprites/build_character_role_contact_sheet.py \
+            --bank /tmp/zte-character-bank-current.zip \
+            --audit /tmp/zte-character-bank-motion-audit.json \
+            --output /tmp/zte-character-bank-role-consistency.png
+          test -s /tmp/zte-character-bank-role-consistency.png
+          echo "MOBILE_IDENTITY_CONTACT_SHEET=review-only/OP-LOG-ENG" >> "$GITHUB_STEP_SUMMARY"
+
       - name: Create self-contained mobile animation comparison
         shell: bash
         run: |
@@ -2370,6 +2389,7 @@ jobs:
             /tmp/zte-character-bank-current.zip \
             /tmp/zte-character-bank-current.json \
             /tmp/zte-character-bank-motion-audit.json \
+            /tmp/zte-character-bank-role-consistency.png \
             /tmp/zte-character-bank-mobile-review.html \
             --repo "$GITHUB_REPOSITORY" --clobber
           sha256sum /tmp/zte-character-bank-current.zip >> "$GITHUB_STEP_SUMMARY"
@@ -2383,6 +2403,7 @@ jobs:
             /tmp/zte-character-bank-current.zip
             /tmp/zte-character-bank-current.json
             /tmp/zte-character-bank-motion-audit.json
+            /tmp/zte-character-bank-role-consistency.png
             /tmp/zte-character-bank-mobile-review.html
           retention-days: 30
 ```
@@ -29924,7 +29945,7 @@ op_walk = next(x for x in store["controlled"]["targets"] if x["id"] == "CHR-OP-W
 ⋮----
 def test_character_epoch_allows_four_bounded_attempts(self) -> None
 ⋮----
-def test_character_epoch_is_v121_production_first(self) -> None
+def test_character_epoch_matches_corrected_repair_rig(self) -> None
 ⋮----
 def test_new_epoch_reopens_semantic_reject_even_with_high_legacy_attempts(self) -> None
 ⋮----
@@ -30238,6 +30259,18 @@ def test_art_warnings_do_not_block_candidate(self)
 ⋮----
 risk = {"risk_level": "BLOCKING", "flags": [
 ⋮----
+def test_new_repair_algorithm_reopens_only_a_bounded_epoch(self)
+⋮----
+# The actual CHR-ENG-REPAIR master record had four rejected attempts
+# in v1.21; an explicit new repair rig can receive another bounded
+# attempt without deleting the old rejection/evidence history.
+candidate = {
+⋮----
+dispatched = mark_dispatch({"assets": [candidate]},
+⋮----
+# A produced candidate must not be regenerated just because
+# strict semantic review is still pending.
+⋮----
 def test_structural_risks_remain_blocking(self)
 ⋮----
 def test_unknown_risk_is_not_silently_waived(self)
@@ -30504,6 +30537,45 @@ def test_generator_uses_plan_and_preserves_original_qa_gates(self)
 generator = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text()
 mass = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text()
 kernel = Path("kaggle/github_mass_factory.py").read_text()
+```
+
+## File: tools/sprites/tests/test_character_role_contact_sheet.py
+```python
+"""PNG contact sheet is an SHA-verified manual review aid, never promotion."""
+⋮----
+class RoleConsistencySheetTests(unittest.TestCase)
+⋮----
+def setUp(self)
+⋮----
+action = "WALK" if role != "ENG" else "IDLE"
+asset_id = f"CHR-{role}-{action}"
+filename = f"zte_chr_{role.lower()}_{action.lower()}_final.png"
+atlas = Image.new("RGBA", (1024, 1024))
+artist = ImageDraw.Draw(atlas)
+⋮----
+memory = io.BytesIO()
+⋮----
+blob = memory.getvalue()
+⋮----
+checksum = hashlib.sha256(blob).hexdigest()
+⋮----
+def save(self)
+⋮----
+def test_role_sheet_is_readable_png_and_does_not_approve_candidates(self)
+⋮----
+report = build(self.bank, self.audit, self.output)
+⋮----
+def test_sha_tampering_of_png_or_audit_fails_closed(self)
+⋮----
+def test_missing_audit_coverage_is_not_silently_ignored(self)
+⋮----
+def test_semantically_approved_candidate_or_audit_must_be_rejected(self)
+⋮----
+def test_empty_first_frame_is_blocking_even_with_valid_hash(self)
+⋮----
+filename = self.entries[0]["filename"]
+⋮----
+digest = hashlib.sha256(self.blobs[filename]).hexdigest()
 ```
 
 ## File: tools/sprites/action_contact.py
@@ -30803,7 +30875,11 @@ TRIGGER_DISPATCH_TOKEN = os.getenv("AUTOF_TRIGGER_DISPATCH_TOKEN", "")
 CURRENT_DISPATCH_TOKEN = os.getenv("GITHUB_RUN_ID", "")
 KAGGLE_BUSY = os.getenv("AUTOF_KAGGLE_BUSY", "0") == "1"
 FX_BUSY = os.getenv("AUTOF_FX_BUSY", "0") == "1"
-CHARACTER_GENERATION_EPOCH = "production-first-v1.21-art-deferred"
+# New, mechanically coherent planted-foot REPAIR trajectory in PR #175:
+# prior four attempts used deep-kneel/standing poses and high denoise.
+# This is an algorithm change, so reopen a bounded four-attempt budget;
+# never erase historical attempts, rejected evidence, or strict review.
+CHARACTER_GENERATION_EPOCH = "production-first-v1.22-planted-repair-poses"
 CHARACTER_EPOCH_ATTEMPT_LIMIT = 4
 CHARACTER_BATCH_SIZE = 12
 INFRA_FAILURE_LIMIT = 3
@@ -31895,6 +31971,93 @@ filename = f"review-mobile-{role}-{action}.png"
 preview = f"review-motion-{role}-{action}.gif"
 ⋮----
 summary = {"schema_version": 1, "review_only": True, "roles": results}
+```
+
+## File: tools/sprites/build_character_role_contact_sheet.py
+```python
+#!/usr/bin/env python3
+"""Offline role-by-role contact sheet for *candidate review*, not art approval.
+
+Read the complete verified source bank and exact SHA-matching head/motion audit.
+Compose one Android-friendly PNG of first frames to expose visually inconsistent
+faces, helmets and palettes. No artifact is moved to the Android app/runtime.
+"""
+⋮----
+COLUMNS = 6
+ROLES = ("OP", "LOG", "ENG")
+ACTIONS = ("IDLE", "WALK", "WORK", "CARRY", "REPAIR", "CELEB")
+CELL_WIDTH = 216
+CELL_HEIGHT = 242
+PAD = 24
+HEADER_HEIGHT = 90
+ROLE_HEADER = 42
+ROLE_GAP = 22
+BG = (11, 20, 32)
+CARD = (25, 39, 57)
+PREVIEW_BG = (186, 200, 212)
+TEXT = (239, 247, 255)
+MUTED = (182, 200, 221)
+ALERT = (255, 178, 118)
+NORMAL = (92, 155, 169)
+ROLE_LABELS = {"OP": "OPERATEUR", "LOG": "LOGISTIQUE", "ENG": "INGENIEUR"}
+NAME_RE = re.compile(r"^CHR-(OP|LOG|ENG)-(IDLE|WALK|WORK|CARRY|REPAIR|CELEB)$")
+⋮----
+def _font(size: int) -> ImageFont.ImageFont
+⋮----
+def _load(bank_path: Path, audit_path: Path) -> tuple[dict, list[dict]]
+⋮----
+audit = json.loads(audit_path.read_text(encoding="utf-8"))
+⋮----
+records = {r.get("id"): r for r in audit["assets"] if isinstance(r, dict)}
+⋮----
+names = packed.namelist()
+⋮----
+meta = json.loads(packed.read("candidate-bank-index.json"))
+entries = meta.get("bank_entries")
+⋮----
+aid = str(entry.get("id") or "")
+match = NAME_RE.fullmatch(aid)
+⋮----
+expected_name = f"zte_chr_{match.group(1).lower()}_{match.group(2).lower()}_final.png"
+name = "candidates/" + expected_name
+⋮----
+blob = packed.read(name)
+⋮----
+record = records.get(aid)
+⋮----
+frame = atlas.crop((0, 0, 256, 256))
+⋮----
+def build(bank_path: Path, audit_path: Path, output_path: Path) -> dict
+⋮----
+row_groups = [sorted((r for r in rows if r["role"] == role),
+⋮----
+height = HEADER_HEIGHT + len(ROLES) * (ROLE_HEADER + CELL_HEIGHT + ROLE_GAP) + PAD
+width = PAD * 2 + COLUMNS * CELL_WIDTH
+result = Image.new("RGB", (width, height), BG)
+draw = ImageDraw.Draw(result)
+⋮----
+alert_count = 0
+⋮----
+section_y = HEADER_HEIGHT + rindex * (ROLE_HEADER + CELL_HEIGHT + ROLE_GAP)
+⋮----
+warnings = item["identity_flags"]
+⋮----
+outline = ALERT if warnings else NORMAL
+⋮----
+actor = Image.new("RGBA", (192, 186), (*PREVIEW_BG, 255))
+frame = item["frame"].resize((186, 186), Image.Resampling.LANCZOS)
+⋮----
+notice = "IDENTITE A REVOIR"
+⋮----
+notice = "MOUVEMENT A REVOIR"
+⋮----
+notice = "REVUE ARTISTIQUE"
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser()
+⋮----
+args = parser.parse_args()
 ```
 
 ## File: tools/sprites/build_original_offline_review.py
