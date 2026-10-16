@@ -47,9 +47,10 @@ jobs:
           python -m unittest discover -s tools/sprites/tests -p test_character_bank_mobile_review.py -v
           python -m unittest discover -s tools/sprites/tests -p test_character_bank_motion_audit.py -v
           python -m unittest discover -s tools/sprites/tests -p test_character_role_contact_sheet.py -v
+          python -m unittest discover -s tools/sprites/tests -p test_character_mobile_motion_storyboard.py -v
           python -m unittest discover -s tools/sprites/tests -p test_character_identity_polish.py -v
           python -m unittest discover -s tools/sprites/tests -p test_character_identity_polish_mobile_review.py -v
-          python -m py_compile tools/sprites/build_character_candidate_bank.py tools/sprites/build_character_bank_mobile_review.py tools/sprites/audit_character_bank_motion.py tools/sprites/build_character_role_contact_sheet.py tools/sprites/build_character_identity_polish.py tools/sprites/character_identity_polish_mobile_review.py
+          python -m py_compile tools/sprites/build_character_candidate_bank.py tools/sprites/build_character_bank_mobile_review.py tools/sprites/audit_character_bank_motion.py tools/sprites/build_character_role_contact_sheet.py tools/sprites/build_character_mobile_motion_storyboard.py tools/sprites/build_character_identity_polish.py tools/sprites/character_identity_polish_mobile_review.py
 
       - name: Download current permanent candidate archives
         shell: bash
@@ -146,6 +147,17 @@ jobs:
           test -s /tmp/zte-character-bank-role-consistency.png
           echo "MOBILE_IDENTITY_CONTACT_SHEET=review-only/OP-LOG-ENG" >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Render actual 42px animation storyboard for day and night
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/sprites/build_character_mobile_motion_storyboard.py \
+            --bank /tmp/zte-character-bank-current.zip \
+            --audit /tmp/zte-character-bank-motion-audit.json \
+            --output /tmp/zte-character-bank-motion-storyboard.png
+          test -s /tmp/zte-character-bank-motion-storyboard.png
+          echo "MOBILE_GAMEPLAY_STORYBOARD=42px-day-night/review-only" >> "$GITHUB_STEP_SUMMARY"
+
       - name: Create self-contained mobile animation comparison
         shell: bash
         run: |
@@ -171,6 +183,7 @@ jobs:
             /tmp/zte-character-identity-polish-preview.png \
             /tmp/zte-character-identity-polish-mobile-review.html \
             /tmp/zte-character-bank-role-consistency.png \
+            /tmp/zte-character-bank-motion-storyboard.png \
             /tmp/zte-character-bank-mobile-review.html \
             --repo "$GITHUB_REPOSITORY" --clobber
           sha256sum /tmp/zte-character-bank-current.zip >> "$GITHUB_STEP_SUMMARY"
@@ -189,5 +202,6 @@ jobs:
             /tmp/zte-character-identity-polish-preview.png
             /tmp/zte-character-identity-polish-mobile-review.html
             /tmp/zte-character-bank-role-consistency.png
+            /tmp/zte-character-bank-motion-storyboard.png
             /tmp/zte-character-bank-mobile-review.html
           retention-days: 30
