@@ -132,6 +132,7 @@ overlay_names=(
  'character_ground_shadow_cleanup.py',
  'character_anchor_pair_salvage.py',
  'character_approved_idle_fallback.py',
+ 'character_provisional_idle_seed.py',
  'character_rejection_evidence.py',
  'character_idle_breathing_fallback.py',
 )
