@@ -29,7 +29,7 @@ ENG_REPAIR_TARGET=(218.0,129.0)
 
 def engineer_repair_wrist(phase:float)->tuple[float,float]:
  dx,dy=TOOL_TIP_OFFSETS['REPAIR']['ENG']
- theta=math.radians(tool_angle('REPAIR',phase))
+ theta=math.radians(tool_angle('REPAIR',phase,role='ENG'))
  rotated_x=dx*math.cos(theta)-dy*math.sin(theta)
  rotated_y=dx*math.sin(theta)+dy*math.cos(theta)
  return (ENG_REPAIR_TARGET[0]-rotated_x,
@@ -79,7 +79,15 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
     elbow=(168+.45*(handpos[0]-176),115+.58*(handpos[1]-123))
   elif pose=='WALK':
    swing=motion*(-1 if side=='L' else 1)
-   if role=='OP':
+   if role=='ENG':
+    # A visibly reciprocal arm drive balances the stronger planted-foot
+    # engineer gait; it remains distinct from tool/carry arm poses.
+    opposite=math.cos(phase+.45)
+    handpos=((84-12*opposite,147+14*opposite+bounce) if side=='L'
+             else (170+12*opposite,148-14*opposite+bounce))
+    elbow=((83-6*opposite,124+7*opposite+bounce) if side=='L'
+           else (171+6*opposite,127-7*opposite+bounce))
+   elif role=='OP':
     # Reciprocal opposing arm motion: front arm rises as opposite boot leads.
     # Earlier both wrists bobbed in the same vertical direction.
     opposite=math.cos(phase)
@@ -107,7 +115,8 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
  leg_poses=[]
  for side in ('L','R'):
   if action in ('WALK','CARRY'):
-   leg=foot_pose(phase,side,action,bounce,profile='op-walk' if role=='OP' and action=='WALK' else 'standard')
+   leg=foot_pose(phase,side,action,bounce,profile=('op-walk' if role=='OP' and action=='WALK' else
+                                'eng-walk' if role=='ENG' and action=='WALK' else 'standard'))
    hipx,yhip=leg.hip_x,leg.hip_y
    knee_x,knee_y=leg.knee_x,leg.knee_y
    ankle_x,ankle_y=leg.ankle_x,leg.ankle_y
@@ -155,6 +164,11 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
   add('<path d="M 208 111 L 232 109 L 240 118 L 239 154 L 213 158 L 205 148Z" fill="#304c5b" stroke="#122b39" stroke-width="3"/>')
   add('<path d="M 212 116 L 230 115 L 234 122 L 232 149 L 214 151 L 210 143Z" fill="#456777" stroke="#91b5be" stroke-width="1.3"/>')
   add('<path d="M 214 144 H 232" stroke="#173745" stroke-width="3"/>')
+  # Readable bolted service hatch and warning strip at phone scale.
+  add('<path d="M 222 168 h 11 v 33 h -11 Z" fill="#2b4958" stroke="#7394a0" stroke-width="1.8"/>')
+  add('<path d="M 223 177 l 9 -7 M 223 187 l 9 -7 M 223 197 l 9 -7" stroke="#e4b66d" stroke-width="2.8"/>')
+  for xx,yy in ((216,115),(234,148)):
+   add(f'<circle cx="{xx}" cy="{yy}" r="2.5" fill="#a5bec5" stroke="#142b38" stroke-width="1.3"/>')
   add('<rect x="214" y="118" width="6" height="3" rx="1" fill="#75dce2"/>')
   add('<rect x="222" y="118" width="7" height="3" rx="1" fill="#ecb76e"/>')
   add(f'<circle cx="{tx:.1f}" cy="{ty:.1f}" r="6.7" fill="#142d3b" stroke="#d6b879" stroke-width="2.5"/>')
@@ -163,10 +177,12 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
   add('</g>')
  # boots and 2 articulated segments per leg
  for side,hipx,yhip,kx,ky,ax,ay,boot_angle in leg_poses:
-  if role=='OP' and action=='WALK':
-   # Actual rig data for generated SVG/CI movement proof, not approval.
-   foot=foot_pose(phase,side,action,bounce,profile='op-walk')
-   add(f'<g data-op-walk-foot="{side}" data-planted="{str(foot.planted).lower()}" data-ankle-x="{ax:.2f}" data-ankle-y="{ay:.2f}">')
+  if role in ('OP','ENG') and action=='WALK':
+   # Real editable ankle/boot contact telemetry; no automatic art approval.
+   gait_profile='op-walk' if role=='OP' else 'eng-walk'
+   gait_attr='data-op-walk-foot' if role=='OP' else 'data-eng-walk-foot'
+   foot=foot_pose(phase,side,action,bounce,profile=gait_profile)
+   add(f'<g {gait_attr}="{side}" data-planted="{str(foot.planted).lower()}" data-ankle-x="{ax:.2f}" data-ankle-y="{ay:.2f}">')
   add(line(hipx,yhip,kx,ky,'url(#pant)',23,3));add(line(kx,ky,ax,ay,'url(#pant)',20,3))
   # knee armor pad and seam
   add(f'<ellipse cx="{kx:.1f}" cy="{ky:.1f}" rx="11" ry="8" fill="#647687" stroke="#253645" stroke-width="2" opacity=".85"/>')
@@ -182,7 +198,7 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
   add(f'<path d="M {toe-11:.1f} {ay+7:.1f} q 12 3 26 0" stroke="#16232d" stroke-width="3.8" fill="none"/>')
   add(f'<path d="M {toe-5:.1f} {ay-1:.1f} l 12 -2" stroke="#9cb2bd" stroke-width="1.9" opacity=".7"/>')
   add('</g>')
-  if role=='OP' and action=='WALK':
+  if role in ('OP','ENG') and action=='WALK':
    add('</g>')  # close the per-leg pose-evidence group
  # Weight shifts toward stance foot; cargo carry sway remains restrained.
  # The hands, equipment, torso, helmet and face all receive the exact same
@@ -288,7 +304,7 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
   if role=='ENG' and action=='REPAIR':
    tool_x,tool_y=engineer_repair_wrist(phase)
   repair_marker=' data-repair-tool="ENG"' if role=='ENG' and action=='REPAIR' else ''
-  add(f'<g{repair_marker} transform="translate({tool_x:.1f},{tool_y:.1f}) rotate({tool_angle(action,phase):.1f})">')
+  add(f'<g{repair_marker} transform="translate({tool_x:.1f},{tool_y:.1f}) rotate({tool_angle(action,phase,role=role):.1f})">')
   if action=='WORK':
    if role=='OP':
     add('<rect x="-12" y="-9" width="37" height="19" rx="5" fill="#435964" stroke="#182c3b" stroke-width="3"/>')
@@ -314,9 +330,14 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
     add('<path d="M 17 -3 l 21 -14 l 3 5 l -20 17" fill="#a7b6bd" stroke="#26394a" stroke-width="2"/>')
     add('<circle cx="-4" cy="0" r="3.5" fill="#f0bb69"/>')
    else:
-    add('<path d="M -10 -7 h 32 v 15 h -32Z" fill="#304d5c" stroke="#6bd5de" stroke-width="2.6"/>')
-    add('<path d="M 22 -1 L 43 -13" stroke="#b1c5c7" stroke-width="4" stroke-linecap="round"/>')
-    add('<circle cx="43" cy="-13" r="3" fill="#87ecdf"/><circle cx="-2" cy="0" r="3" fill="#efc977"/>')
+    # Physical articulated torque wrench, not an electronic scanner.
+    # Tip geometry is centred on the *exact* fixed socket offset (43,-13).
+    add('<path d="M -12 -9 L 10 -10 L 27 -12 L 39 -16 L 44 -16 L 44 -10 L 28 -4 L 11 9 L -12 9 Z" fill="url(#metalEdge)" stroke="#172b38" stroke-width="3"/>')
+    add('<path d="M -12 -7 L 10 -8 L 12 7 L -12 7 Z" fill="#294b5b" stroke="#7cd4dc" stroke-width="2"/>')
+    add('<path d="M -9 -4 h 3 M -2 -4 h 3 M 5 -4 h 3 M -9 3 h 3 M -2 3 h 3 M 5 3 h 3" stroke="#9fe6e7" stroke-width="1.6"/>')
+    add('<path d="M 11 -3 L 31 -7" stroke="#d3e0df" stroke-width="2.8" stroke-linecap="round"/>')
+    add('<path d="M 36 -17 L 42 -20 L 48 -16 L 43 -13 L 46 -9 L 39 -6" fill="none" stroke="#e3d09d" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>')
+    add('<circle cx="19" cy="-4" r="2" fill="#eac479"/>')
   add('</g>')
  # foreground right arm and hand over equipment, never floating
  add(joint_arm('R',action))
@@ -367,9 +388,9 @@ def main():
  for role in ROLES:
   for action in ACTIONS:
    results.append(render_atlas(role,action,outdir,args.save_svg))
- report={'version':'chatgpt-original-character-rig-v10-op-contact-stride','strict_done_added':0,'review_only':True,
+ report={'version':'chatgpt-original-character-rig-v11-engineer-mechanical-motion','strict_done_added':0,'review_only':True,
          'material_finish':'local-alpha-safe-directional-light-v1',
-         'action_vfx':'local-rigid-tool-tip-lights-and-repair-ratchet-v2',
+         'action_vfx':'local-rigid-tool-tip-lights-and-engineer-torque-v3',
          'asset_count':len(results),'unresolved_target_count':16,'assets':results}
  (outdir/'creation-manifest.json').write_text(json.dumps(report,indent=2)+'\n')
  print(f'CHATGPT_CHARACTER_ATLASES_CREATED={len(results)} ASSETS_UNRESOLVED=16 STRICT_DONE_ADDED=0')
