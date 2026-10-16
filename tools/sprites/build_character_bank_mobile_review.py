@@ -108,6 +108,8 @@ const byId=Object.fromEntries(bank.assets.map(x=>[x.id,x]));
 const roleLabels={OP:'Opérateur',LOG:'Logistique',ENG:'Ingénieur'};
 const actionLabels={IDLE:'Repos',WALK:'Marche',WORK:'Travail',CARRY:'Transport',REPAIR:'Réparer',CELEB:'Célébrer'};
 const explain={
+CROSS_ACTION_HEAD_IDENTITY_REVIEW:'Visage ou casque potentiellement différent de la référence du même métier : comparer côte à côte',
+CROSS_ACTION_VISUAL_STYLE_REVIEW:'Écart visuel très marqué avec le rôle de référence : style et identité à revoir',
 LOW_MOBILE_FRAME_CHANGE_REVIEW:'Animation trop peu visible à la taille du jeu (42 px) : examiner les poses',
 WALK_LOWER_BODY_MOTION_REVIEW:'Mouvement du bas du corps peu perceptible : contrôler la marche',
 NEAR_STATIC_TRANSITIONS_REVIEW:'Plusieurs transitions d’images presque immobiles à 42 px',
@@ -129,6 +131,7 @@ chosen.onload=render;original.onload=render;chosen.src=row.selectedAtlas;origina
 $('progress').textContent=row.id+' · '+row.frames+' images · '+(bank.assets.indexOf(row)+1)+' / '+bank.assets.length;
 $('chosenSource').textContent=row.sourceType==='repo-local-original'?'Source : SVG/PNG original local':'Source : collecte GPU '+row.sourceRun;
 const warnings=row.warnings.map(w=>explain[w]||w);
+if(row.identityReference&&row.identityReference!==row.id){warnings.push('Référence du rôle : '+row.identityReference)}
 $('warnings').textContent=warnings.length?warnings.join(' · '):'Aucun avertissement automatique enregistré. Vérification visuelle toujours nécessaire.';
 $('warnings').className='warnlist '+(warnings.length?'warning':'good');
 $('scrub').max=String(row.frames-1);
@@ -220,6 +223,8 @@ def build(bank_path: Path, local_path: Path, destination: Path,
                 if atlas.size != (1024,1024) or atlas.mode != "RGBA":
                     raise ValueError("Invalid selected atlas: " + aid)
             motion_flags = []
+            identity_flags = []
+            identity_reference = None
             if audit_by_id is not None:
                 audit_record = audit_by_id.get(aid)
                 if (not audit_record or audit_record.get("sha256") != row.get("sha256")
@@ -227,6 +232,8 @@ def build(bank_path: Path, local_path: Path, destination: Path,
                         or audit_record.get("runtime_promoted") is not False):
                     raise ValueError("Stale/untrusted motion audit for " + aid)
                 motion_flags = [str(flag) for flag in (audit_record.get("new_motion_flags") or [])]
+                identity_flags = [str(flag) for flag in (audit_record.get("new_identity_flags") or [])]
+                identity_reference = (audit_record.get("head_identity_metrics") or {}).get("reference_id")
             if aid not in originals:
                 raise ValueError("Missing original reference: " + aid)
             original, _ = validated_local_candidate(
@@ -239,9 +246,10 @@ def build(bank_path: Path, local_path: Path, destination: Path,
                 "sourceType": row.get("source_type"),
                 "sourceRun": row.get("source_collector_run_id"),
                 "warnings": sorted(set(
-                    [str(x) for x in row.get("deferred_art_warnings") or []] + motion_flags
+                    [str(x) for x in row.get("deferred_art_warnings") or []] + motion_flags + identity_flags
                 )),
                 "sha256": row["sha256"],
+                "identityReference": identity_reference,
             })
     if audit_by_id is not None and set(audit_by_id) != seen:
         raise ValueError("Motion audit coverage does not match bank")
