@@ -148,6 +148,21 @@ dismiss_launcher_anr_if_present() {
       return 0
     fi
     echo "SYSTEM_FLAKE_DETECTED=pixel-launcher-anr attempt=$attempt"
+    # 'Wait' repeatedly leaves this known *system launcher* ANR on top of the
+    # healthy game in API-35 emulator evidence. Close only the Pixel Launcher
+    # process from its own verified ANR dialog; never force-stop the game.
+    # Do not resolve this button on any non-launcher ANR.
+    coords=$(python3 "$SCRIPT_DIR/ui_click_target.py" "$probe" "Close app" 2>/dev/null || true)
+    if [[ -n "$coords" ]]; then
+      read -r x y <<<"$coords"
+      if [[ "$x" =~ ^[0-9]+$ && "$y" =~ ^[0-9]+$ ]]; then
+        echo "SYSTEM_FLAKE_RECOVERY=close-stalled-pixel-launcher-only"
+        adb shell input tap "$x" "$y"
+        sleep 3
+        continue
+      fi
+    fi
+    # If the system dialog has no Close app action, use its Wait control.
     coords=$(python3 "$SCRIPT_DIR/ui_click_target.py" "$probe" "Wait" 2>/dev/null || true)
     if [[ -n "$coords" ]]; then
       read -r x y <<<"$coords"
@@ -157,8 +172,6 @@ dismiss_launcher_anr_if_present() {
         continue
       fi
     fi
-    # Android's standard ANR dialog uses KEYCODE_ENTER on the focused action
-    # only as a last resort. Never force-stop the app under test here.
     adb shell input keyevent KEYCODE_BACK || true
     sleep 2
   done
