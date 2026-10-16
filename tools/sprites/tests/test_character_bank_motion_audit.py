@@ -84,6 +84,85 @@ class MobileMotionAuditTests(unittest.TestCase):
                          moved["assets"][0]["new_motion_flags"])
         self.assertGreater(moved["assets"][0]["motion_metrics"]["mean_frame_change"], 0.012)
 
+    def write_pair(self, *, alternate_color=(8, 100, 160)):
+        def sprite(role, action, count, color):
+            atlas = Image.new("RGBA", (1024, 1024))
+            pen = ImageDraw.Draw(atlas)
+            for index in range(count):
+                x, y = index % 4 * 256, index // 4 * 256
+                pen.rectangle((x + 72, y + 35, x + 150, y + 230),
+                              fill=(*color, 255))
+            out = io.BytesIO()
+            atlas.save(out, "PNG")
+            return out.getvalue()
+        entries, pngs = [], {}
+        for action, count, color in (
+            ("IDLE", 6, (8, 100, 160)),
+            ("WORK", 10, alternate_color),
+        ):
+            filename = f"zte_chr_eng_{action.lower()}_final.png"
+            blob = sprite("ENG", action, count, color)
+            pngs[filename] = blob
+            entries.append({
+                "id": "CHR-ENG-" + action,
+                "filename": filename,
+                "bytes": len(blob),
+                "sha256": hashlib.sha256(blob).hexdigest(),
+                "strict_approved": False,
+                "runtime_promoted": False,
+                "deferred_art_warnings": [],
+            })
+        data = dict(self.metadata, candidate_count=2, bank_entries=entries)
+        with zipfile.ZipFile(self.bank, "w") as packed:
+            packed.writestr("candidate-bank-index.json", json.dumps(data))
+            for filename, blob in pngs.items():
+                packed.writestr("candidates/" + filename, blob)
+
+    def test_different_engineer_helmet_style_is_flagged_without_promotion(self):
+        self.write_pair(alternate_color=(200, 20, 10))
+        report = analyze(self.bank, self.report)
+        self.assertEqual(report["candidate_count"], 2)
+        self.assertEqual(report["head_identity_reference"]["ENG"], "CHR-ENG-IDLE")
+        self.assertEqual(report["identity_attention_count"], 1)
+        work = next(row for row in report["assets"]
+                    if row["id"] == "CHR-ENG-WORK")
+        self.assertIn("CROSS_ACTION_HEAD_IDENTITY_REVIEW", work["new_identity_flags"])
+        self.assertIn("CROSS_ACTION_VISUAL_STYLE_REVIEW", work["review_flags"])
+        self.assertEqual(work["head_identity_metrics"]["reference_id"], "CHR-ENG-IDLE")
+        self.assertTrue(work["needs_identity_attention"])
+        self.assertFalse(work["strict_approved"])
+        self.assertFalse(work["runtime_promoted"])
+
+    def test_matching_engineer_head_is_not_falsely_flagged(self):
+        self.write_pair(alternate_color=(8, 100, 160))
+        report = analyze(self.bank, self.report)
+        self.assertEqual(report["identity_attention_count"], 0)
+        self.assertEqual(
+            next(row for row in report["assets"]
+                 if row["id"] == "CHR-ENG-WORK")["new_identity_flags"], []
+        )
+
+    def test_missing_or_empty_head_cannot_silently_pass_audit(self):
+        self.write_pair()
+        with zipfile.ZipFile(self.bank, "r") as archive:
+            index = json.loads(archive.read("candidate-bank-index.json"))
+            sprites = {row["filename"]: archive.read("candidates/" + row["filename"])
+                       for row in index["bank_entries"]}
+        buffer = io.BytesIO()
+        Image.new("RGBA", (1024, 1024)).save(buffer, "PNG")
+        empty = buffer.getvalue()
+        name = "zte_chr_eng_idle_final.png"
+        sprites[name] = empty
+        index["bank_entries"][0]["bytes"] = len(empty)
+        index["bank_entries"][0]["sha256"] = hashlib.sha256(empty).hexdigest()
+        with zipfile.ZipFile(self.bank, "w") as archive:
+            archive.writestr("candidate-bank-index.json", json.dumps(index))
+            for filename, blob in sprites.items():
+                archive.writestr("candidates/" + filename, blob)
+        with self.assertRaisesRegex(ValueError, "Empty first frame"):
+            analyze(self.bank, self.report)
+        self.assertFalse(self.report.exists())
+
     def test_sha_mismatch_fails_closed(self):
         self.write_bank(digest="0" * 64)
         with self.assertRaisesRegex(ValueError, "SHA-256"):
