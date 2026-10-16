@@ -342,6 +342,24 @@ if viewport[3]-viewport[1]<650 or viewport[2]-viewport[0]<500:
     raise SystemExit(f'Clipped city stage viewport: {viewport}')
 first=images[0].crop(viewport)
 second=images[1].crop(viewport)
+# A city-context review must actually contain scenery. Earlier evidence
+# proved walking actors over a flat gradient, which is NOT sufficient to
+# claim real city/ground contact. Sample background stripes away from the
+# OP actors; a plain vertical gradient stays horizontally uniform.
+scenery_rows=(.25,.34,.42,.62,.69,.75)
+scenery_columns=(.07,.18,.29,.40,.51,.62,.73,.84,.95)
+scenery_spread=[]
+for row in scenery_rows:
+    colors=[first.getpixel((int(first.width * column), int(first.height * row)))
+            for column in scenery_columns]
+    scenery_spread.append(max(max(channel)-min(channel) for channel in zip(*colors)))
+if max(scenery_spread)<10:
+    raise SystemExit(
+        'Missing actual city scenery in OP WALK review; background is nearly '
+        f'flat across all non-actor rows: {scenery_spread}. '
+        'Do not accept actor-only or gradient stage captures as city QA.'
+    )
+print(f'LOCAL_ORIGINAL_ANDROID_CITY_SCENERY_VISIBLE_PASS={scenery_spread}')
 change=ImageChops.difference(first,second).convert('L').point(
     lambda value: 255 if value>14 else 0
 )

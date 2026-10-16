@@ -17,8 +17,20 @@ fail() {
 }
 
 dump_ui() {
-  local name="$1"
-  ui_dump_with_retry "$EVIDENCE/$name.xml" || fail "ui-hierarchy-unavailable:$name"
+  local name="$1" attempt
+  # Pixel Launcher ANRs can recur after the initial boot recovery. Do not
+  # misclassify the ANR dialog as a finished onboarding page or missing tab.
+  # Bound all recovery attempts and fail closed if the launcher stays blocked.
+  for attempt in 1 2 3 4; do
+    ui_dump_with_retry "$EVIDENCE/$name.xml" || fail "ui-hierarchy-unavailable:$name"
+    if ! grep -Fq "Pixel Launcher isn't responding" "$EVIDENCE/$name.xml"; then
+      return 0
+    fi
+    echo "SYSTEM_FLAKE_DETECTED=pixel-launcher-anr during=$name attempt=$attempt"
+    dismiss_launcher_anr_if_present
+    sleep 2
+  done
+  fail "pixel-launcher-anr-unresolved:$name"
 }
 
 click_node() {
@@ -136,6 +148,21 @@ dismiss_launcher_anr_if_present() {
       return 0
     fi
     echo "SYSTEM_FLAKE_DETECTED=pixel-launcher-anr attempt=$attempt"
+    # 'Wait' repeatedly leaves this known *system launcher* ANR on top of the
+    # healthy game in API-35 emulator evidence. Close only the Pixel Launcher
+    # process from its own verified ANR dialog; never force-stop the game.
+    # Do not resolve this button on any non-launcher ANR.
+    coords=$(python3 "$SCRIPT_DIR/ui_click_target.py" "$probe" "Close app" 2>/dev/null || true)
+    if [[ -n "$coords" ]]; then
+      read -r x y <<<"$coords"
+      if [[ "$x" =~ ^[0-9]+$ && "$y" =~ ^[0-9]+$ ]]; then
+        echo "SYSTEM_FLAKE_RECOVERY=close-stalled-pixel-launcher-only"
+        adb shell input tap "$x" "$y"
+        sleep 3
+        continue
+      fi
+    fi
+    # If the system dialog has no Close app action, use its Wait control.
     coords=$(python3 "$SCRIPT_DIR/ui_click_target.py" "$probe" "Wait" 2>/dev/null || true)
     if [[ -n "$coords" ]]; then
       read -r x y <<<"$coords"
@@ -145,15 +172,28 @@ dismiss_launcher_anr_if_present() {
         continue
       fi
     fi
-    # Android's standard ANR dialog uses KEYCODE_ENTER on the focused action
-    # only as a last resort. Never force-stop the app under test here.
     adb shell input keyevent KEYCODE_BACK || true
     sleep 2
   done
 }
 
 check_no_fatal() {
-  adb logcat -d > "$EVIDENCE/logcat.txt"
+  local attempt collected=false
+  # A CI emulator can reset its adb logcat stream while dumping a large
+  # 10 MB ring buffer (exit 255), even after every game interaction passed.
+  # Retry boundedly; fail closed if logs still cannot be obtained. Keep the
+  # Android crash/events buffers to catch prior process deaths and ANRs.
+  for attempt in 1 2 3; do
+    if adb logcat -d -b main -b system -b crash -b events -t 10000 > "$EVIDENCE/logcat.txt" 2>"$EVIDENCE/logcat-stderr.txt"; then
+      collected=true
+      break
+    fi
+    echo "LOGCAT_RETRY=attempt-$attempt"
+    sleep 2
+  done
+  if [ "$collected" != true ]; then
+    fail "logcat-collection-failed"
+  fi
   if grep -E "FATAL EXCEPTION|AndroidRuntime.*FATAL|Process: $PKG.*has died" "$EVIDENCE/logcat.txt"; then
     fail "fatal-runtime-crash"
   fi
@@ -364,9 +404,15 @@ click_node "+1" "character-qa-before-step"
 assert_ui_contains "Lecture" "character-qa-stepped"
 adb exec-out screencap -p > "$EVIDENCE/character-qa-stepped.png"
 echo "CHARACTER_QA_EMULATOR_PASS=1"
-adb shell am start -W -n "$ACT" > "$EVIDENCE/character-qa-return-to-game.txt"
+# Re-launching MainActivity via am start while the same-task debug gallery is
+# on top can simply deliver the intent to that gallery (Status: ok, but the
+# activity never changes). Android's Back stack contains MainActivity beneath
+# CharacterReviewActivity; navigate back and verify actual shipping game UI.
+adb shell input keyevent KEYCODE_BACK || fail "character-qa-back-navigation-failed"
 sleep 2
 check_alive
+assert_ui_contains "CAPITAL" "character-qa-return-to-game"
+assert_ui_contains "MANAGERS" "character-qa-return-tabs"
 
 adb shell dumpsys meminfo "$PKG" > "$EVIDENCE/meminfo.txt"
 adb exec-out screencap -p > "$EVIDENCE/final.png"
