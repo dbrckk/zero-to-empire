@@ -46,6 +46,24 @@ class CharacterLoopSeamTests(unittest.TestCase):
             self.assertIn("LOCOMOTION_LOOP_SEAM_SNAP_RISK", result["flags"])
             self.assertEqual(result["risk_level"], "BLOCKING")
 
+    def test_repair_detects_tool_snap_even_with_stationary_legs(self):
+        with tempfile.TemporaryDirectory() as temp:
+            atlas = Image.new("RGBA", (1024, 1024))
+            for index in range(10):
+                frame = Image.new("RGBA", (256, 256))
+                draw = ImageDraw.Draw(frame)
+                draw.rectangle((95, 170, 130, 230), fill=(190, 150, 110, 255))
+                x = 40 + index if index < 9 else 170
+                draw.rectangle((x, 30, x + 25, 65), fill=(255, 230, 140, 255))
+                atlas.alpha_composite(frame, ((index % 4) * 256,
+                                              (index // 4) * 256))
+            path = Path(temp) / "repair-tool-snap.png"
+            atlas.save(path)
+            result = inspect(path, "ENG", "REPAIR")
+            self.assertIn("UPPER_BODY_LOOP_SEAM_SNAP_RISK", result["flags"])
+            self.assertEqual(result["risk_level"], "BLOCKING")
+            self.assertGreater(result["upper_body_loop_seam_change"], .30)
+
     def test_carry_reports_wraparound_too(self):
         with tempfile.TemporaryDirectory() as temp:
             atlas = Image.new("RGBA", (1024, 1024))

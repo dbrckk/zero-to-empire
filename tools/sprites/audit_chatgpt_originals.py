@@ -78,6 +78,27 @@ def inspect(atlas: Path, role: str, action: str) -> dict:
         if evidence["lower_body_mean_change"] < .075:
             evidence["flags"].append("LOCOMOTION_LOWER_BODY_TOO_STATIC_RISK")
             evidence["risk_level"]="BLOCKING"
+    if action in {"WORK", "REPAIR", "CARRY", "CELEB"}:
+        # Detect a tool, raised arm or cargo handle popping at the wrap.
+        # This is a rejection signal, not semantic or visual approval.
+        upper = [
+            f.getchannel("A").crop((0, 0, 256, 145)).point(
+                lambda value: 255 if value >= 80 else 0
+            ) for f in frames
+        ]
+        upper_changes = []
+        for a, b in zip(upper, upper[1:] + upper[:1]):
+            aa = list(a.getdata())
+            bb = list(b.getdata())
+            intersection = sum(x and y for x, y in zip(aa, bb))
+            union = sum(x or y for x, y in zip(aa, bb))
+            upper_changes.append(round(1 - intersection / union, 4) if union else 0.0)
+        typical = sorted(upper_changes[:-1])[len(upper_changes[:-1]) // 2]
+        evidence["upper_body_loop_seam_change"] = upper_changes[-1]
+        evidence["upper_body_typical_internal_change"] = typical
+        if upper_changes[-1] > max(.30, 3.0 * typical):
+            evidence["flags"].append("UPPER_BODY_LOOP_SEAM_SNAP_RISK")
+            evidence["risk_level"] = "BLOCKING"
     return evidence
 
 
