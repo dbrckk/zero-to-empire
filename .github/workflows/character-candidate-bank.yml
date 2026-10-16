@@ -46,7 +46,8 @@ jobs:
           python -m unittest discover -s tools/sprites/tests -p test_character_candidate_bank.py -v
           python -m unittest discover -s tools/sprites/tests -p test_character_bank_mobile_review.py -v
           python -m unittest discover -s tools/sprites/tests -p test_character_bank_motion_audit.py -v
-          python -m py_compile tools/sprites/build_character_candidate_bank.py tools/sprites/build_character_bank_mobile_review.py tools/sprites/audit_character_bank_motion.py
+          python -m unittest discover -s tools/sprites/tests -p test_character_role_contact_sheet.py -v
+          python -m py_compile tools/sprites/build_character_candidate_bank.py tools/sprites/build_character_bank_mobile_review.py tools/sprites/audit_character_bank_motion.py tools/sprites/build_character_role_contact_sheet.py
 
       - name: Download current permanent candidate archives
         shell: bash
@@ -108,6 +109,17 @@ jobs:
           print('- No flags represent automatic semantic approval.')
           PY
 
+      - name: Build one-page character identity contact sheet for Android
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/sprites/build_character_role_contact_sheet.py \
+            --bank /tmp/zte-character-bank-current.zip \
+            --audit /tmp/zte-character-bank-motion-audit.json \
+            --output /tmp/zte-character-bank-role-consistency.png
+          test -s /tmp/zte-character-bank-role-consistency.png
+          echo "MOBILE_IDENTITY_CONTACT_SHEET=review-only/OP-LOG-ENG" >> "$GITHUB_STEP_SUMMARY"
+
       - name: Create self-contained mobile animation comparison
         shell: bash
         run: |
@@ -128,6 +140,7 @@ jobs:
             /tmp/zte-character-bank-current.zip \
             /tmp/zte-character-bank-current.json \
             /tmp/zte-character-bank-motion-audit.json \
+            /tmp/zte-character-bank-role-consistency.png \
             /tmp/zte-character-bank-mobile-review.html \
             --repo "$GITHUB_REPOSITORY" --clobber
           sha256sum /tmp/zte-character-bank-current.zip >> "$GITHUB_STEP_SUMMARY"
@@ -141,5 +154,6 @@ jobs:
             /tmp/zte-character-bank-current.zip
             /tmp/zte-character-bank-current.json
             /tmp/zte-character-bank-motion-audit.json
+            /tmp/zte-character-bank-role-consistency.png
             /tmp/zte-character-bank-mobile-review.html
           retention-days: 30
