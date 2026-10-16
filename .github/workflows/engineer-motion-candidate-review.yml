@@ -26,7 +26,7 @@ jobs:
         run: |
           python -m unittest discover -s tools/sprites -p 'test_local_character_contact_gait.py' -v
           python -m unittest discover -s tools/sprites -p 'test_local_character_action_fx.py' -v
-      - name: Render ENGINEER WALK and REPAIR from changed editable vector rig
+      - name: Render ENGINEER WALK, WORK and REPAIR from editable vector rig
         run: |
           python - <<'PY'
           import sys
@@ -34,7 +34,7 @@ jobs:
           sys.path.insert(0, 'tools/sprites')
           from render_chatgpt_originals import render_atlas
           out=Path('build/engineer-motion-review')
-          for action in ('WALK','REPAIR'):
+          for action in ('WALK','WORK','REPAIR'):
               item=render_atlas('ENG',action,out,save_svgs=True)
               assert item['strict_approved'] is False
               print('RENDERED_ENGINEER_'+action+'='+str(item['frames']))
@@ -50,14 +50,14 @@ jobs:
           out=Path('build/engineer-motion-review')
           original=Path('art/incoming/chatgpt-original/candidates')
           w=1000
-          board=Image.new('RGB',(w,16*69+64),(19,30,44))
+          board=Image.new('RGB',(w,24*69+64),(19,30,44))
           pen=ImageDraw.Draw(board)
           pen.text((15,12),'ZERO TO EMPIRE — engineer motion at real 42px',fill=(241,248,255))
           pen.text((15,32),'REVIEW ONLY. No automatic approval or Android promotion.',fill=(174,197,216))
           metrics={'review_only':True,'semantic_approved':False,
                    'runtime_promoted':False,'strict_done_added':0,
                    'mobile_render_px':42,'actions':{}}
-          for action_index,(action,count) in enumerate((('WALK',8),('REPAIR',10))):
+          for action_index,(action,count) in enumerate((('WALK',8),('WORK',10),('REPAIR',10))):
               filename='zte_chr_eng_'+action.lower()+'_final.png'
               old=original/filename
               new=out/'candidates'/filename
@@ -69,6 +69,9 @@ jobs:
               print('ENGINEER_'+action+'_CHANGED='+str(changed))
               before_m=motion_stats(before,count)
               after_m=motion_stats(after,count)
+              if action=='WORK' and changed:
+                  assert after_m['mean_frame_change']>=.012, 'ENG WORK still too static at 42px'
+                  assert after_m['mean_frame_change']>=before_m['mean_frame_change']*1.15, 'ENG WORK not meaningfully improved'
               metrics['actions'][action]={
                   'old':before_m,'candidate':after_m,
                   'motion_change_delta':round(after_m['mean_frame_change']-before_m['mean_frame_change'],5),
