@@ -142,7 +142,7 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         text = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
         header = text.split("\npermissions:", 1)[0]
         self.assertIn("  workflow_run:", header)
-        self.assertIn("workflows: [Kaggle Mass Sprite Factory]", header)
+        self.assertIn("workflows: [Kaggle Mass Sprite Factory, Asset Autofactory 235]", header)
         self.assertIn("types: [completed]", header)
         self.assertIn("art/production/kaggle-async-state.json", header)
         self.assertIn("cron: '43 * * * *'", header)
@@ -152,6 +152,10 @@ class AutofactoryWorkflowPolicyTest(unittest.TestCase):
         self.assertIn("cancel-in-progress: false", text)
         # The collector must not submit a new paid GPU batch on its own.
         self.assertNotIn("kaggle kernels push", text)
+        # The 6-hour autofactory schedule is an independent, trusted fallback
+        # if hourly scheduled collector runs are dropped by the provider.
+        self.assertIn("Asset Autofactory 235", header)
+        self.assertIn("github.event.workflow_run.head_branch == 'main'", text)
 
     def test_async_collector_recovers_candidates_when_generated_targets_is_empty(self):
         text = Path(".github/workflows/kaggle-async-character-collector.yml").read_text(encoding="utf-8")
