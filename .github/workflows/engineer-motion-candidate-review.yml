@@ -50,67 +50,207 @@ jobs:
               assert item['strict_approved'] is False
               print('RENDERED_ENGINEER_'+action+'='+str(item['frames']))
           PY
-      - name: Compare original/current 42px action on night and daylight stages
+      - name: Download canonical collector-first character bank
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p build/engineer-motion-review
+          gh release download zte-character-candidates --repo "$GITHUB_REPOSITORY" \
+            --pattern 'zte-character-bank-current.zip' \
+            --dir build/engineer-motion-review
+      - name: Compare independent Kaggle collector and local vector rig at 42px
         run: |
           python - <<'PY'
-          import json, sys
+          import hashlib,io,json,zipfile,sys
           from pathlib import Path
-          from PIL import Image,ImageDraw,ImageFont
+          from PIL import Image,ImageDraw
           sys.path.insert(0,'tools/sprites')
           from audit_character_bank_motion import motion_stats,composite,DAY,NIGHT
           out=Path('build/engineer-motion-review')
-          original=Path('art/incoming/chatgpt-original/candidates')
-          w=1000
-          board=Image.new('RGB',(w,24*69+64),(19,30,44))
+          board=Image.new('RGB',(1000,12*69+64),(19,30,44))
           pen=ImageDraw.Draw(board)
-          pen.text((15,12),'ZERO TO EMPIRE — engineer motion at real 42px',fill=(241,248,255))
-          pen.text((15,32),'REVIEW ONLY. No automatic approval or Android promotion.',fill=(174,197,216))
+          pen.text((15,12),'ZERO TO EMPIRE / ENGINEER / real independent 42px comparison',fill=(241,248,255))
+          pen.text((15,32),'Kaggle collector bank vs local vector alternative. REVIEW ONLY; no automatic approval.',fill=(174,197,216))
           metrics={'review_only':True,'semantic_approved':False,
                    'runtime_promoted':False,'strict_done_added':0,
-                   'mobile_render_px':42,'actions':{}}
-          for action_index,(action,count) in enumerate((('WALK',8),('WORK',10),('REPAIR',10))):
-              filename='zte_chr_eng_'+action.lower()+'_final.png'
-              old=original/filename
-              new=out/'candidates'/filename
-              before=old.read_bytes()
-              after=new.read_bytes()
-              # This workflow also runs for REPAIR-only changes. The untouched
-              # WALK is an identity/control baseline, not a test failure.
-              changed=before!=after
-              print('ENGINEER_'+action+'_CHANGED='+str(changed))
-              before_m=motion_stats(before,count)
-              after_m=motion_stats(after,count)
-              if action=='WORK' and changed:
-                  assert after_m['mean_frame_change']>=.012, 'ENG WORK still too static at 42px'
-                  assert after_m['mean_frame_change']>=before_m['mean_frame_change']*1.15, 'ENG WORK not meaningfully improved'
-              metrics['actions'][action]={
-                  'old':before_m,'candidate':after_m,
-                  'motion_change_delta':round(after_m['mean_frame_change']-before_m['mean_frame_change'],5),
-                  'lower_body_change_delta':round(after_m['mean_lower_body_change']-before_m['mean_lower_body_change'],5),
-                  'changed_from_committed':changed,
-                  'requires_visual_review':True,
-              }
-              with Image.open(old) as a,Image.open(new) as b:
-                  for candidate_index,atlas in enumerate((a,b)):
-                      frames=[atlas.crop(((i%4)*256,(i//4)*256,(i%4+1)*256,(i//4+1)*256)) for i in range(count)]
-                      assert all(fr.getchannel('A').getbbox() is not None for fr in frames)
-                      for lighting_index,(bg,caption) in enumerate(((NIGHT,'night'),(DAY,'day'))):
-                          row=action_index*8+candidate_index*4+lighting_index*2
-                          yy=row*69+70
-                          pen.text((15,yy+8),action+' / '+('CURRENT' if candidate_index==0 else 'NEW')+' / '+caption,fill=(216,234,248))
-                          for i,fr in enumerate(frames):
-                              tiny=composite(fr,bg)
-                              xx=250+i*70
-                              board.paste(tiny,(xx,yy))
-                              pen.text((xx+14,yy+43),str(i+1),fill=(166,187,208))
-                          # Two duplicate rows intentionally show stage size and a
-                          # transparent-cell alignment baseline without resampling.
-                          if row%2==0:
+                   'mobile_render_px':42,'comparison_independent':True,
+                   'canonical_bank_profile':'collector-first','actions':{}}
+          with zipfile.ZipFile(out/'zte-character-bank-current.zip') as bank:
+              assert bank.namelist().count('candidate-bank-index.json') == 1
+              bank_index=json.loads(bank.read('candidate-bank-index.json'))
+              assert bank_index['source_selection_profile']=='collector-first'
+              assert bank_index['automatic_semantic_approval'] is False
+              assert bank_index['automatic_runtime_promotion'] is False
+              entries=bank_index['bank_entries']
+              assert len(entries)==bank_index['candidate_count']
+              assert len({row['id'] for row in entries})==len(entries)
+              by_id={row['id']:row for row in entries}
+              for action_index,(action,count) in enumerate((('WALK',8),('WORK',10),('REPAIR',10))):
+                  asset_id='CHR-ENG-'+action
+                  name='zte_chr_eng_'+action.lower()+'_final.png'
+                  entry=by_id[asset_id]
+                  assert entry['filename']==name and entry['source_type']=='collected-kaggle', asset_id
+                  assert entry['strict_approved'] is False and entry['runtime_promoted'] is False
+                  member='candidates/'+name
+                  assert bank.namelist().count(member)==1
+                  before=bank.read(member)
+                  assert len(before)==entry['bytes']
+                  before_sha=hashlib.sha256(before).hexdigest()
+                  assert before_sha==entry['sha256'], 'Untrusted Kaggle source: '+asset_id
+                  after=(out/'candidates'/name).read_bytes()
+                  after_sha=hashlib.sha256(after).hexdigest()
+                  assert after_sha!=before_sha, 'False comparison: identical input sprites '+asset_id
+                  for blob in (before,after):
+                      with Image.open(io.BytesIO(blob)) as check:
+                          check.load()
+                          assert check.size==(1024,1024) and check.mode=='RGBA'
+                          assert all(check.crop(((i%4)*256,(i//4)*256,(i%4+1)*256,(i//4+1)*256)).getchannel('A').getbbox() is not None for i in range(count))
+                  bm=motion_stats(before,count)
+                  am=motion_stats(after,count)
+                  metrics['actions'][action]={
+                      'collector':bm,'vector':am,
+                      'collector_source_type':'collected-kaggle',
+                      'collector_run_id':entry['source_collector_run_id'],
+                      'collector_sha256':before_sha,'vector_sha256':after_sha,
+                      'mean_frame_change_delta':round(am['mean_frame_change']-bm['mean_frame_change'],5),
+                      'lower_body_change_delta':round(am['mean_lower_body_change']-bm['mean_lower_body_change'],5),
+                      'requires_visual_review':True,'runtime_promoted':False}
+                  for candidate_index,blob in enumerate((before,after)):
+                      with Image.open(io.BytesIO(blob)) as atlas:
+                          frames=[atlas.crop(((i%4)*256,(i//4)*256,(i%4+1)*256,(i//4+1)*256)) for i in range(count)]
+                          for lighting_index,(bg,caption) in enumerate(((NIGHT,'night'),(DAY,'day'))):
+                              row=action_index*4+candidate_index*2+lighting_index
+                              yy=row*69+70
+                              kind='COLLECTOR' if candidate_index==0 else 'VECTOR'
+                              pen.text((15,yy+8),action+' / '+kind+' / '+caption,fill=(216,234,248))
                               pen.text((15,yy+27),'exact 42 px',fill=(157,180,202))
-              print(action,'42px baseline',before_m,'42px candidate',after_m)
+                              for i,fr in enumerate(frames):
+                                  tiny=composite(fr,bg)
+                                  xx=250+i*70
+                                  board.paste(tiny,(xx,yy))
+                                  pen.text((xx+14,yy+43),str(i+1),fill=(166,187,208))
+                  print('ENGINEER_'+action+'_COLLECTOR_SHA256='+before_sha)
+                  print('ENGINEER_'+action+'_VECTOR_SHA256='+after_sha)
+                  print('ENGINEER_'+action+'_MOTION_DELTA='+str(metrics['actions'][action]['mean_frame_change_delta']))
           (out/'review-metrics.json').write_text(json.dumps(metrics,indent=2)+'\n')
           board.save(out/'engineer-walk-repair-real-42px.png',optimize=True)
+          print('ENGINEER_COMPARISON_INDEPENDENT=1')
           print('ENGINEER_COMPARISON_REVIEW_ONLY=1')
+          PY
+      - name: Package Android offline animated side-by-side comparison
+        run: |
+          python - <<'PY'
+          import base64,hashlib,json,zipfile
+          from pathlib import Path
+          out=Path('build/engineer-motion-review')
+          report=json.loads((out/'review-metrics.json').read_text())
+          assert report['comparison_independent'] is True
+          payload={}
+          with zipfile.ZipFile(out/'zte-character-bank-current.zip') as bank:
+              for action,count in (('WALK',8),('WORK',10),('REPAIR',10)):
+                  name='zte_chr_eng_'+action.lower()+'_final.png'
+                  collector=bank.read('candidates/'+name)
+                  alternative=(out/'candidates'/name).read_bytes()
+                  row=report['actions'][action]
+                  assert hashlib.sha256(collector).hexdigest()==row['collector_sha256']
+                  assert hashlib.sha256(alternative).hexdigest()==row['vector_sha256']
+                  assert collector!=alternative
+                  payload[action]={
+                      'frames':count,
+                      'collector':'data:image/png;base64,'+base64.b64encode(collector).decode(),
+                      'vector':'data:image/png;base64,'+base64.b64encode(alternative).decode(),
+                  }
+          html=r'''<!doctype html><html lang="en"><head><meta charset="utf-8">
+          <meta name="viewport" content="width=device-width,initial-scale=1">
+          <title>Zero to Empire — Engineer animation review</title>
+          <style>
+          :root{color-scheme:dark;font-family:system-ui,Arial,sans-serif}
+          body{margin:0 auto;padding:16px;max-width:760px;background:#101b29;color:#f1f7ff}
+          h1{font-size:1.3em}p{color:#c1d2e1;line-height:1.45}
+          .controls{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin:18px 0}
+          button,select,input{background:#233a4d;color:white;border:1px solid #6a8a9d;border-radius:8px;padding:8px;font-size:16px}
+          input[type=range]{padding:3px;max-width:150px;accent-color:#6dd6df}
+          .compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+          section{border:1px solid #446276;border-radius:12px;padding:8px;min-width:0;background:#1b2c3b}
+          h2{font-size:1em}canvas{display:block;margin:10px auto}
+          .tiny{width:42px;height:42px}.zoom{width:min(100%,168px);aspect-ratio:1;image-rendering:pixelated}
+          .notice{border-left:3px solid #e3bb7f;padding-left:10px}
+          small{color:#a5bed0}pre{white-space:pre-wrap;color:#cadeeb;font-size:12px}
+          </style></head><body>
+          <h1>Engineer · animation at real gameplay size</h1>
+          <p class="notice">Review only, not approved for runtime. Collector-first Kaggle source and independently rendered local vector alternative. Neither has been promoted to Android.</p>
+          <div class="controls"><label>Action <select id="action"><option>WALK</option><option>WORK</option><option>REPAIR</option></select></label>
+          <button id="play" type="button">Pause</button>
+          <label>Lighting <select id="light"><option value="night">Night</option><option value="day">Day</option></select></label>
+          <label>FPS <input type="range" min="3" max="16" value="8" id="fps"><output id="fpsLabel">8</output></label>
+          <label>Frame <input type="range" min="1" max="8" value="1" id="frame"><output id="frameLabel">1/8</output></label></div>
+          <div class="compare">
+            <section><h2>Kaggle / collector reference</h2>
+              <canvas class="tiny" id="collectorTiny" width="42" height="42"></canvas>
+              <canvas class="zoom" id="collectorZoom" width="42" height="42"></canvas>
+              <small>Source SHA-256 validated against canonical release index</small>
+            </section>
+            <section><h2>Vector / alternative</h2>
+              <canvas class="tiny" id="vectorTiny" width="42" height="42"></canvas>
+              <canvas class="zoom" id="vectorZoom" width="42" height="42"></canvas>
+              <small>Editable role-consistent alternative, review-only</small>
+            </section>
+          </div>
+          <h2>Motion statistics (not quality scores)</h2><pre id="stats"></pre>
+          <script id="sources" type="application/json">__PAYLOAD__</script>
+          <script id="metrics" type="application/json">__METRICS__</script>
+          <script>
+          const src=JSON.parse(document.getElementById('sources').textContent);
+          const metrics=JSON.parse(document.getElementById('metrics').textContent);
+          const imgs={};
+          for(const action of Object.keys(src)){
+            imgs[action]={};
+            for(const type of ['collector','vector']){
+              const im=new Image(); im.src=src[action][type]; imgs[action][type]=im;
+            }
+          }
+          const actionEl=document.getElementById('action'),lightEl=document.getElementById('light');
+          const speed=document.getElementById('fps'),frameEl=document.getElementById('frame');
+          const btn=document.getElementById('play'); let current=0,playing=true,last=0;
+          function draw(type,id,color){
+            const ctx=document.getElementById(id).getContext('2d'),im=imgs[actionEl.value][type];
+            ctx.fillStyle=color;ctx.fillRect(0,0,42,42);
+            if(im.complete && im.naturalWidth===1024 && im.naturalHeight===1024){
+              ctx.drawImage(im,(current%4)*256,Math.floor(current/4)*256,256,256,0,0,42,42);
+            }
+          }
+          function render(){
+            const count=src[actionEl.value].frames;
+            current=current%count;frameEl.max=count;frameEl.value=current+1;
+            document.getElementById('frameLabel').textContent=(current+1)+'/'+count;
+            document.getElementById('fpsLabel').textContent=speed.value;
+            const bg=lightEl.value==='day'?'#bdcbd3':'#101b29';
+            for(const type of ['collector','vector']){draw(type,type+'Tiny',bg);draw(type,type+'Zoom',bg);}
+            const row=metrics[actionEl.value];
+            document.getElementById('stats').textContent='Collector mean frame change: '+row.collector.mean_frame_change+
+            '\nVector mean frame change: '+row.vector.mean_frame_change+
+            '\nCollector lower-body motion: '+row.collector.mean_lower_body_change+
+            '\nVector lower-body motion: '+row.vector.mean_lower_body_change+
+            '\nDifferent, source-verified atlases. Visual interpretation required.';
+          }
+          actionEl.addEventListener('change',()=>{current=0;render()});
+          lightEl.addEventListener('change',render);speed.addEventListener('input',render);
+          frameEl.addEventListener('input',()=>{playing=false;btn.textContent='Play';current=+frameEl.value-1;render()});
+          btn.addEventListener('click',()=>{playing=!playing;btn.textContent=playing?'Pause':'Play';last=0});
+          for(const row of Object.values(imgs))for(const im of Object.values(row))im.addEventListener('load',render);
+          function animate(time){
+            if(playing && (!last||time-last>=1000/(+speed.value))){current++;last=time;render()}
+            requestAnimationFrame(animate);
+          }
+          render();requestAnimationFrame(animate);
+          </script></body></html>'''
+          html=html.replace('__PAYLOAD__',json.dumps(payload,separators=(',',':')))
+          html=html.replace('__METRICS__',json.dumps(report['actions'],separators=(',',':')))
+          assert html.count('data:image/png;base64,')==6
+          assert 'requestAnimationFrame(animate)' in html
+          assert 'https://' not in html
+          (out/'engineer-motion-mobile-review.html').write_text(html,encoding='utf-8')
+          print('ENGINEER_OFFLINE_MOBILE_ANIMATION_REVIEW=1')
           PY
       - name: Publish original and proposed sprite sheets for inspection
         uses: actions/upload-artifact@v4
@@ -121,5 +261,6 @@ jobs:
             build/engineer-motion-review/src_svg/ENG/**/*.svg
             build/engineer-motion-review/review-metrics.json
             build/engineer-motion-review/engineer-walk-repair-real-42px.png
+            build/engineer-motion-review/engineer-motion-mobile-review.html
           if-no-files-found: error
           retention-days: 30
