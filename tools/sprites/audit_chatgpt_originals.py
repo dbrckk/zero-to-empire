@@ -9,6 +9,7 @@ import argparse
 import json
 import sys
 from pathlib import Path
+from xml.etree import ElementTree as ET
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -17,6 +18,44 @@ from character_semantic_gate import clip_risk, celebration_arm_reach_counts, pal
 
 FRAME_COUNTS = {"IDLE":6,"WALK":8,"WORK":10,"CARRY":8,"REPAIR":10,"CELEB":8}
 ROLES = ("OP","LOG","ENG")
+# In this authored atlas the fixed service console starts to the right of
+# the worker. Its large horizontal footprint must not masquerade as a cropped
+# portrait. The main actor (head, torso, legs) occupies the left 202px.
+ENG_REPAIR_ACTOR_GEOMETRY_RIGHT = 202
+
+
+def _verified_fixed_engineer_station(base: Path, count: int) -> bool:
+    """Require every editable SVG to contain the identical fixed station.
+
+    Without this provenance evidence we use the strict full-composite
+    geometry assessment; imported or mismatched atlases get no exception.
+    """
+    reference = None
+    for i in range(count):
+        source = base / "src_svg" / "ENG" / "REPAIR" / f"{i:02d}.svg"
+        try:
+            root = ET.parse(source).getroot()
+        except (OSError, ET.ParseError):
+            return False
+        stations = [
+            element for element in root.iter()
+            if element.get("data-repair-station") == "ENG"
+            and element.get("data-fixed-socket") == "true"
+        ]
+        if len(stations) != 1:
+            return False
+        socket = [
+            element for element in stations[0].iter()
+            if element.tag.endswith("circle")
+            and float(element.get("r", "0")) >= 6
+        ]
+        if len(socket) != 1 or not (216 <= float(socket[0].get("cx", "0")) <= 222):
+            return False
+        markup = ET.tostring(stations[0], encoding="utf-8")
+        if reference is not None and markup != reference:
+            return False
+        reference = markup
+    return reference is not None
 
 
 def inspect(atlas: Path, role: str, action: str) -> dict:
@@ -29,7 +68,26 @@ def inspect(atlas: Path, role: str, action: str) -> dict:
         image.crop(((i%4)*256,(i//4)*256,(i%4+1)*256,(i//4+1)*256))
         for i in range(count)
     ]
-    flagged = clip_risk(frames, action)
+    # ENG REPAIR is a deliberately composite *scene*: a separately authored
+    # fixed service console extends the overall width without clipping the
+    # engineer. Only its full-body silhouette/feet geometry is isolated; the
+    # entire atlas remains subject to palette, tool-motion and loop QA.
+    # This exception requires the matching, stationary editable SVG fixture.
+    station_verified = (
+        role == "ENG" and action == "REPAIR"
+        and _verified_fixed_engineer_station(atlas.parent.parent, count)
+    )
+    actor_frames = None
+    if station_verified:
+        actor_frames = []
+        for frame in frames:
+            isolated = Image.new("RGBA", frame.size, (0, 0, 0, 0))
+            isolated.paste(
+                frame.crop((0, 0, ENG_REPAIR_ACTOR_GEOMETRY_RIGHT, 256)),
+                (0, 0),
+            )
+            actor_frames.append(isolated)
+    flagged = clip_risk(frames, action, geometry_frames=actor_frames)
     evidence = {
         "id": f"CHR-{role}-{action}", "frame_count": count,
         "risk_level": flagged["risk_level"], "flags": flagged.get("flags", []),
@@ -42,6 +100,12 @@ def inspect(atlas: Path, role: str, action: str) -> dict:
         "min_relative_frame_height": flagged.get("min_relative_frame_height"),
         "action_pose_metrics": flagged.get("action_pose_metrics", {}),
     }
+    if role == "ENG" and action == "REPAIR":
+        evidence["fixed_service_station_svg_verified"] = station_verified
+        evidence["actor_only_geometry_assessment"] = station_verified
+        evidence["actor_geometry_right_px"] = (
+            ENG_REPAIR_ACTOR_GEOMETRY_RIGHT if station_verified else None
+        )
     if action == "CELEB":
         raised = celebration_arm_reach_counts(frames)
         evidence["raised_arm_frame_scores"] = raised
