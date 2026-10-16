@@ -3,6 +3,7 @@
 Status: active — Android pipelines functional; original character art still requires premium visual-semantic and production approval.
 
 ## Working
+- **2026-10-16**: [PR #205](https://github.com/dbrckk/zero-to-empire/pull/205) corrected ENG REPAIR composite station/actor geometry; source-verified static console in all 10 SVG poses. PR targeted [38937726736](https://github.com/dbrckk/zero-to-empire/actions/runs/38937726736) and Asset Pipeline [38937727160](https://github.com/dbrckk/zero-to-empire/actions/runs/38937727160), main targeted [38937862782](https://github.com/dbrckk/zero-to-empire/actions/runs/38937862782), main Asset Pipeline [38937862630](https://github.com/dbrckk/zero-to-empire/actions/runs/38937862630) and original candidate regen [38937862598](https://github.com/dbrckk/zero-to-empire/actions/runs/38937862598) **SUCCESS**. Updated report now **0/18 technical blockers**. Strict remains **219/235**; 16 candidates not semantically or production-approved.
 - Canonical master queue: **219/235 strict DONE**, with 16 pending CHR actions (OP ×5, LOG ×5, ENG ×6).
 - ENG REPAIR source candidate includes physically anchored repair fastener (PR #149); actual SVG contact QA and isolated Android emulator review passed. Not approved.
 - OP WALK has an original locally authored eight-frame walk rig with anti-phase legs, operator-specific support and constant-speed planted foot (PRs #150 and #152). Source atlas, SVGs and GIFs reproduce; **no production drawable has been promoted**.
@@ -22,6 +23,7 @@ Status: active — Android pipelines functional; original character art still re
 4. Preserve all existing progress, privacy and separate production save data.
 
 ## Last manual verification
+- **2026-10-16**: master queue re-counted: **219 DONE / 235**, 16 `NEEDS_REVIEW`. Local candidate risk report: **18 assets, 0 blocking**, no automatic promotion. PR #205 merged as `1c9693b6`; exact production and semantic review still pending.
 - **2026-10-15**: strict **219/235**, 16 pending. Source-of-truth `art/production/master-asset-queue.json`.
 - Android screenshot evidence artifact: **11992229467** from run **38774032853**.
 - No new unit tests added; PR #153 was closed without merge.
