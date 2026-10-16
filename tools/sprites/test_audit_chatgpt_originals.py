@@ -28,6 +28,24 @@ class CharacterLoopSeamTests(unittest.TestCase):
             self.assertEqual(result["lower_body_loop_seam_change"], 0.0)
             self.assertGreater(max(result["lower_body_adjacent_changes"]), 0)
 
+    def test_walk_flags_disproportionate_loop_snap(self):
+        with tempfile.TemporaryDirectory() as temp:
+            atlas = Image.new("RGBA", (1024, 1024))
+            for index in range(8):
+                frame = Image.new("RGBA", (256, 256))
+                draw = ImageDraw.Draw(frame)
+                # Seven nearby poses followed by a distant final pose.
+                offset = index * 2 if index < 7 else 95
+                draw.rectangle((40 + offset, 175, 65 + offset, 225),
+                               fill=(220, 170, 120, 255))
+                atlas.alpha_composite(frame, ((index % 4) * 256,
+                                              (index // 4) * 256))
+            path = Path(temp) / "walk-snap.png"
+            atlas.save(path)
+            result = inspect(path, "ENG", "WALK")
+            self.assertIn("LOCOMOTION_LOOP_SEAM_SNAP_RISK", result["flags"])
+            self.assertEqual(result["risk_level"], "BLOCKING")
+
     def test_carry_reports_wraparound_too(self):
         with tempfile.TemporaryDirectory() as temp:
             atlas = Image.new("RGBA", (1024, 1024))
