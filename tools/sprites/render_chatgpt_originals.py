@@ -9,7 +9,6 @@ unresolved sibling actions as a continuity anchor without replacing strict DONE.
 from __future__ import annotations
 import argparse, io, json, math, pathlib
 from PIL import Image
-import cairosvg
 from local_character_material_finish import finish_frame
 from local_character_action_fx import action_fx,tool_angle,TOOL_TIP_OFFSETS
 from local_character_contact_gait import foot_pose,torso_weight_shift
@@ -363,6 +362,8 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
 
 
 def render_atlas(role,action,outdir,save_svgs=False):
+ # Pure SVG pose/unit tests need no Cairo dependency; only pixel rendering does.
+ import cairosvg
  count=ACTIONS[action]; atlas=Image.new('RGBA',(1024,1024),(0,0,0,0))
  for i in range(count):
   svg=svg_frame(role,action,i,count)
