@@ -20,6 +20,11 @@ FRAMES = {"IDLE": 6, "WALK": 8, "WORK": 10, "CARRY": 8, "REPAIR": 10, "CELEB": 8
 MOBILE_SIZE = 42
 DAY = (189, 203, 211, 255)
 NIGHT = (16, 27, 41, 255)
+HEAD_ANCHOR_ACTION = {"OP": "WALK", "LOG": "WALK", "ENG": "IDLE", "TECH": "IDLE"}
+# Conservative pre-screening: a distance is not proof that two faces differ.
+HEAD_REVIEW_THRESHOLD = 11.0
+HEAD_EXTREME_THRESHOLD = 30.0
+
 
 
 def composite(tile: Image.Image, color: tuple[int, ...]) -> Image.Image:
@@ -67,6 +72,52 @@ def motion_stats(blob: bytes, count: int) -> dict:
     }
 
 
+def head_thumbnail(blob: bytes) -> Image.Image:
+    """Normalized first-frame helmet/face crop for review, not recognition.
+
+    Foreground-based head positioning avoids treating a large handheld crate as
+    the person's face. A fixed neutral composite makes alpha-crop edges
+    comparable. A 64px color difference is merely a triage signal.
+    """
+    with Image.open(io.BytesIO(blob)) as source:
+        source.load()
+        if source.mode != "RGBA" or source.size != (1024, 1024):
+            raise ValueError("Expected a decoded RGBA 1024x1024 atlas")
+        frame = source.crop((0, 0, 256, 256))
+    alpha = frame.getchannel("A")
+    bounds = alpha.getbbox()
+    if bounds is None:
+        raise ValueError("Empty first frame has no head to review")
+    _, top, _, bottom = bounds
+    span = bottom - top
+    if span < 70:
+        raise ValueError("First-frame subject too small for a head comparison")
+    upper = alpha.crop((0, top, 256, min(256, top + max(1, round(span * .28)))))
+    width, height = upper.size
+    pixels = upper.load()
+    weighted_x, total = 0, 0
+    for y in range(height):
+        for x in range(width):
+            if pixels[x, y] >= 80:
+                weighted_x += x
+                total += 1
+    if total < 30:
+        raise ValueError("First-frame head has insufficient visible pixels")
+    xmid = round(weighted_x / total)
+    cropped = frame.crop((xmid - 47, max(0, top - 5),
+                          xmid + 47, min(256, top + max(1, round(span * .33)))))
+    canvas = Image.new("RGBA", cropped.size, (170, 181, 193, 255))
+    canvas.alpha_composite(cropped)
+    return canvas.convert("RGB").resize((64, 64), Image.Resampling.BILINEAR)
+
+
+def head_difference(first: Image.Image, second: Image.Image) -> float:
+    """RGB mean absolute difference of centered head thumbnails (0..255)."""
+    return round(statistics.mean(
+        ImageStat.Stat(ImageChops.difference(first, second)).mean
+    ), 2)
+
+
 def analyze(bank_path: Path, output_path: Path) -> dict:
     with zipfile.ZipFile(bank_path) as bank:
         if bank.namelist().count("candidate-bank-index.json") != 1:
@@ -78,7 +129,7 @@ def analyze(bank_path: Path, output_path: Path) -> dict:
                 or metadata.get("automatic_semantic_approval") is not False
                 or metadata.get("automatic_runtime_promotion") is not False):
             raise ValueError("Untrusted candidate bank review state")
-        results, seen = [], set()
+        results, seen, first_heads = [], set(), {}
         for row in entries:
             asset_id = str(row.get("id") or "")
             parts = asset_id.split("-")
@@ -98,6 +149,7 @@ def analyze(bank_path: Path, output_path: Path) -> dict:
                     or hashlib.sha256(blob).hexdigest() != row.get("sha256")):
                 raise ValueError("Candidate PNG SHA-256 mismatch: " + asset_id)
             metrics = motion_stats(blob, FRAMES[parts[2]])
+            first_heads[asset_id] = head_thumbnail(blob)
             flags = []
             if parts[2] != "IDLE" and metrics["mean_frame_change"] < 0.012:
                 flags.append("LOW_MOBILE_FRAME_CHANGE_REVIEW")
@@ -122,9 +174,37 @@ def analyze(bank_path: Path, output_path: Path) -> dict:
                 "strict_approved": False,
                 "runtime_promoted": False,
             })
+    # Compare each role with its coherent visual reference. OP/LOG usually
+    # have no unfinished IDLE in the bank; their WALK is the review reference.
+    # A technically accepted engineer IDLE is a baseline, not an approval.
+    role_anchor = {}
+    for role, preferred_action in HEAD_ANCHOR_ACTION.items():
+        candidates = sorted(asset_id for asset_id in first_heads
+                            if asset_id.startswith("CHR-" + role + "-"))
+        if candidates:
+            preferred = "CHR-" + role + "-" + preferred_action
+            role_anchor[role] = preferred if preferred in first_heads else candidates[0]
+    for row in results:
+        role = row["id"].split("-")[1]
+        reference_id = role_anchor[role]
+        distance = head_difference(first_heads[reference_id], first_heads[row["id"]])
+        identity_flags = []
+        if reference_id != row["id"] and distance >= HEAD_REVIEW_THRESHOLD:
+            identity_flags.append("CROSS_ACTION_HEAD_IDENTITY_REVIEW")
+        if reference_id != row["id"] and distance >= HEAD_EXTREME_THRESHOLD:
+            identity_flags.append("CROSS_ACTION_VISUAL_STYLE_REVIEW")
+        row["head_identity_metrics"] = {
+            "reference_id": reference_id,
+            "mean_head_rgb_change": distance,
+            "heuristic_only": True,
+        }
+        row["new_identity_flags"] = identity_flags
+        row["needs_identity_attention"] = bool(identity_flags)
+        row["review_flags"] = sorted(set(row["review_flags"] + identity_flags))
     ranked = sorted(
         results, key=lambda row: (
-            not row["needs_motion_attention"],
+            not (row["needs_motion_attention"] or row["needs_identity_attention"]),
+            -len(row["new_identity_flags"]),
             row["motion_metrics"]["mean_frame_change"],
             row["id"],
         )
@@ -143,6 +223,8 @@ def analyze(bank_path: Path, output_path: Path) -> dict:
             "Visual review and gameplay validation are still required."
         ),
         "motion_attention_count": sum(bool(row["new_motion_flags"]) for row in results),
+        "identity_attention_count": sum(bool(row["new_identity_flags"]) for row in results),
+        "head_identity_reference": role_anchor,
         "assets": ranked,
     }
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -159,10 +241,14 @@ def main() -> int:
     data = analyze(args.bank, args.output)
     print("MOBILE_AUDIT_CANDIDATES=" + str(data["candidate_count"]))
     print("MOBILE_AUDIT_NEED_MOTION_REVIEW=" + str(data["motion_attention_count"]))
+    print("MOBILE_AUDIT_NEED_IDENTITY_REVIEW=" + str(data["identity_attention_count"]))
     for item in data["assets"]:
         if item["new_motion_flags"]:
             print("MOBILE_AUDIT_RISK=" + item["id"] + ":" +
                   ",".join(item["new_motion_flags"]))
+        if item["new_identity_flags"]:
+            print("MOBILE_AUDIT_IDENTITY_RISK=" + item["id"] + ":" +
+                  ",".join(item["new_identity_flags"]))
     return 0
 
 
