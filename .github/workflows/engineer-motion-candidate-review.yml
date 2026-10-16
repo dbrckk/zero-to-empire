@@ -23,7 +23,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   render-and-compare:
@@ -264,3 +264,35 @@ jobs:
             build/engineer-motion-review/engineer-motion-mobile-review.html
           if-no-files-found: error
           retention-days: 30
+      - name: Publish persistent Android engineer preview to review-only Release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('build/engineer-motion-review/review-metrics.json').read_text())
+          assert d['review_only'] is True and d['runtime_promoted'] is False
+          assert d['semantic_approved'] is False and d['comparison_independent'] is True
+          assert len(d['actions'])==3
+          for row in d['actions'].values():
+              assert row['collector_sha256']!=row['vector_sha256']
+              assert row['collector_source_type']=='collected-kaggle'
+          print('ENGINEER_PERMANENT_RELEASE_REVIEW_ONLY=1')
+          PY
+          cp build/engineer-motion-review/engineer-motion-mobile-review.html /tmp/zte-engineer-motion-mobile-review.html
+          cp build/engineer-motion-review/engineer-walk-repair-real-42px.png /tmp/zte-engineer-motion-comparison-42px.png
+          cp build/engineer-motion-review/review-metrics.json /tmp/zte-engineer-motion-review-metrics.json
+          gh release upload zte-character-candidates \
+            /tmp/zte-engineer-motion-mobile-review.html \
+            /tmp/zte-engineer-motion-comparison-42px.png \
+            /tmp/zte-engineer-motion-review-metrics.json \
+            --repo "$GITHUB_REPOSITORY" --clobber
+          {
+            echo "## Permanent offline Android engineer review"
+            echo "- [42px animation player](https://github.com/$GITHUB_REPOSITORY/releases/download/zte-character-candidates/zte-engineer-motion-mobile-review.html)"
+            echo "- [Independent 42px day/night storyboard](https://github.com/$GITHUB_REPOSITORY/releases/download/zte-character-candidates/zte-engineer-motion-comparison-42px.png)"
+            echo "- Review-only; never promotes candidate sprites to runtime."
+          } >> "$GITHUB_STEP_SUMMARY"
