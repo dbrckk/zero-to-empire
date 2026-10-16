@@ -3143,6 +3143,18 @@ union=sum(x or y for x,y in zip(aa,bb))
 internal = sorted(scores[:-1])
 typical = internal[len(internal)//2]
 ⋮----
+# Detect a tool, raised arm or cargo handle popping at the wrap.
+# This is a rejection signal, not semantic or visual approval.
+upper = [
+upper_changes = []
+⋮----
+aa = list(a.getdata())
+bb = list(b.getdata())
+intersection = sum(x and y for x, y in zip(aa, bb))
+union = sum(x or y for x, y in zip(aa, bb))
+⋮----
+typical = sorted(upper_changes[:-1])[len(upper_changes[:-1]) // 2]
+⋮----
 def audit(base: Path) -> dict
 ⋮----
 candidates=base/"candidates"
@@ -10722,6 +10734,14 @@ def test_walk_flags_disproportionate_loop_snap(self)
 offset = index * 2 if index < 7 else 95
 ⋮----
 path = Path(temp) / "walk-snap.png"
+⋮----
+def test_repair_detects_tool_snap_even_with_stationary_legs(self)
+⋮----
+x = 40 + index if index < 9 else 170
+⋮----
+path = Path(temp) / "repair-tool-snap.png"
+⋮----
+result = inspect(path, "ENG", "REPAIR")
 ⋮----
 def test_carry_reports_wraparound_too(self)
 ⋮----

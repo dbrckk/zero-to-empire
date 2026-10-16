@@ -1,17 +1,82 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "030b26b0c298832d475406a3759c3be57dc4f5d1",
-  "head": "0c58fd0e4d244c841ed33606a301b2e2541b5310",
+  "base": "0c58fd0e4d244c841ed33606a301b2e2541b5310",
+  "head": "f9cce7bfd8eb213047e9b59e4f597437131975a3",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": ".github/workflows/engineer-motion-candidate-review.yml",
+      "path": ".github/workflows/character-motion-audit-pr-gate.yml",
+      "status": "M"
+    },
+    {
+      "path": "tools/sprites/audit_chatgpt_originals.py",
+      "status": "M"
+    },
+    {
+      "path": "tools/sprites/test_audit_chatgpt_originals.py",
       "status": "M"
     }
   ],
-  "changed_source_files": [],
-  "impacted_files": [],
-  "impacted_symbols": [],
-  "selected_tests": []
+  "changed_source_files": [
+    "tools/sprites/audit_chatgpt_originals.py",
+    "tools/sprites/test_audit_chatgpt_originals.py"
+  ],
+  "impacted_files": [
+    "tools/sprites/audit_chatgpt_originals.py",
+    "tools/sprites/test_audit_chatgpt_originals.py"
+  ],
+  "impacted_symbols": [
+    {
+      "name": "inspect",
+      "kind": "function",
+      "file": "tools/sprites/audit_chatgpt_originals.py",
+      "line": 22
+    },
+    {
+      "name": "audit",
+      "kind": "function",
+      "file": "tools/sprites/audit_chatgpt_originals.py",
+      "line": 105
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "tools/sprites/audit_chatgpt_originals.py",
+      "line": 157
+    },
+    {
+      "name": "CharacterLoopSeamTests",
+      "kind": "class",
+      "file": "tools/sprites/test_audit_chatgpt_originals.py",
+      "line": 10
+    },
+    {
+      "name": "test_walk_reports_last_to_first_change",
+      "kind": "function",
+      "file": "tools/sprites/test_audit_chatgpt_originals.py",
+      "line": 11
+    },
+    {
+      "name": "test_walk_flags_disproportionate_loop_snap",
+      "kind": "function",
+      "file": "tools/sprites/test_audit_chatgpt_originals.py",
+      "line": 31
+    },
+    {
+      "name": "test_repair_detects_tool_snap_even_with_stationary_legs",
+      "kind": "function",
+      "file": "tools/sprites/test_audit_chatgpt_originals.py",
+      "line": 49
+    },
+    {
+      "name": "test_carry_reports_wraparound_too",
+      "kind": "function",
+      "file": "tools/sprites/test_audit_chatgpt_originals.py",
+      "line": 67
+    }
+  ],
+  "selected_tests": [
+    "tools/sprites/test_audit_chatgpt_originals.py"
+  ]
 }

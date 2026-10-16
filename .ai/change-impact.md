@@ -1,13 +1,14 @@
 # Change impact
 
-Base: 9a2baf8298f26e37da93ec9c85d91ae14cdb66a8
-Head: 0c58fd0e4d244c841ed33606a301b2e2541b5310
+Base: bc20dd979103667620533872fc0cf1ff35ba3965
+Head: f9cce7bfd8eb213047e9b59e4f597437131975a3
 
 ## Changed files
-- M .github/workflows/engineer-motion-candidate-review.yml
+- M tools/sprites/audit_chatgpt_originals.py
+- M tools/sprites/test_audit_chatgpt_originals.py
 
 ## Affected areas
-- .github
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

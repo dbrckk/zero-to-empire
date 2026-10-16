@@ -29,21 +29,21 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-16T17:00:37Z
+Generated: 2026-10-16T17:06:20Z
 
 ### Git
 - Branch: `main`
-- Head: `0c58fd0e4d24`
-- Commit date: 2026-10-16T19:00:16+02:00
-- Commit: fix(ci): retain queued engineer animation reviews (#202)
+- Head: `f9cce7bfd8eb`
+- Commit date: 2026-10-16T19:06:05+02:00
+- Commit: art(qa): detect upper-body and tool animation loop snaps (#204)
 - Tracked files: 1814
 
 ### Recently changed files
-- `.github/workflows/engineer-motion-candidate-review.yml`
-- `.github/workflows/character-motion-audit-pr-gate.yml`
-- `art/incoming/chatgpt-original/visual-risk-qa.json`
 - `tools/sprites/audit_chatgpt_originals.py`
 - `tools/sprites/test_audit_chatgpt_originals.py`
+- `.github/workflows/character-motion-audit-pr-gate.yml`
+- `.github/workflows/engineer-motion-candidate-review.yml`
+- `art/incoming/chatgpt-original/visual-risk-qa.json`
 
 ### Project signals
 - `build.gradle.kts`
