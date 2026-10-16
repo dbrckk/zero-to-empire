@@ -125,7 +125,7 @@ jobs:
           fi
 
       - name: Compile sprite generators
-        run: python -m py_compile tools/sprites/kaggle_building_family_factory_v16.py tools/sprites/kaggle_character_sheet_factory_v1.py tools/sprites/character_acceptance_policy.py tools/sprites/character_head_identity_lock.py tools/sprites/character_ground_shadow_cleanup.py tools/sprites/character_anchor_pair_salvage.py tools/sprites/character_approved_idle_fallback.py tools/sprites/character_provisional_idle_seed.py tools/sprites/character_rejection_evidence.py tools/sprites/character_idle_breathing_fallback.py kaggle/github_mass_factory.py
+        run: python -m py_compile tools/sprites/kaggle_building_family_factory_v16.py tools/sprites/kaggle_character_sheet_factory_v1.py tools/sprites/character_acceptance_policy.py tools/sprites/character_head_identity_lock.py tools/sprites/character_ground_shadow_cleanup.py tools/sprites/character_anchor_pair_salvage.py tools/sprites/character_approved_idle_fallback.py tools/sprites/character_provisional_idle_seed.py tools/sprites/character_repair_pose_plan.py tools/sprites/character_rejection_evidence.py tools/sprites/character_idle_breathing_fallback.py kaggle/github_mass_factory.py
       - name: Recover async preflight failure
         if: ${{ failure() && env.ASYNC_SUBMIT == 'true' }}
         env:
@@ -330,6 +330,7 @@ jobs:
              tools/sprites/character_anchor_pair_salvage.py \
              tools/sprites/character_approved_idle_fallback.py \
              tools/sprites/character_provisional_idle_seed.py \
+             tools/sprites/character_repair_pose_plan.py \
              tools/sprites/character_rejection_evidence.py \
              tools/sprites/character_idle_breathing_fallback.py \
              /tmp/zte-kaggle/tools/sprites/
@@ -365,6 +366,7 @@ jobs:
               'character_anchor_pair_salvage.py',
               'character_approved_idle_fallback.py',
               'character_provisional_idle_seed.py',
+              'character_repair_pose_plan.py',
               'character_rejection_evidence.py',
               'character_idle_breathing_fallback.py',
           ]

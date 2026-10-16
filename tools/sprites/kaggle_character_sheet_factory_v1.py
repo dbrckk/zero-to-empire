@@ -22,6 +22,7 @@ from character_rejection_evidence import save_rejected_idle_preview
 from character_anchor_pair_salvage import salvage_two_full_body_subjects
 from character_approved_idle_fallback import load_approved_idle_anchor
 from character_provisional_idle_seed import load_seed as load_provisional_idle_seed
+from character_repair_pose_plan import REPAIR_POSES, repair_strength
 from character_idle_breathing_fallback import build_idle_breathing_frames
 
 ROOT=Path(__file__).resolve().parents[2]
@@ -72,7 +73,7 @@ POSE_HINT={
  'WALK':['left foot far forward, right foot far back, arms counter-swing','left knee bent under body, right leg extended back','legs crossing in mid-stride, opposite arm forward','right foot far forward, left foot far back, arms counter-swing','right knee bent under body, left leg extended back','legs crossing in opposite mid-stride, opposite arm forward','left foot forward recovery stride, right heel raised','right foot forward recovery stride, left heel raised'],
  'WORK':['tool held at chest, neutral stance','left arm reaches tool forward, torso leans slightly','tool contacting waist-height machine point','knees bent, tool working low near knee height','tool centered with both hands, torso forward','tool raised toward shoulder-height work point','upper body pulls tool back from contact','lean in and inspect repaired point','tool lowered beside thigh','return to neutral work stance'],
  'CARRY':['crate held with both hands at waist, feet apart','left foot forward carrying stride, crate stable','legs passing under body, crate stable at waist','right foot forward carrying stride, crate stable','short recovery stance with crate centered','left foot forward longer carrying stride','opposite passing step, elbows fixed around crate','right foot forward recovery, crate centered'],
- 'REPAIR':['deep half-kneel, torso leaned far forward, right arm fully extended with tool toward low repair point','tool pressed low, free hand bracing wide, shoulders rotated toward repair','tool sweeps clearly left across low repair point, torso follows, no sparks','pull tool back to chest and lean close to inspect, elbow strongly bent','rise to wide crouch, tool reaches diagonally to mid-height repair point','free hand reaches high to adjust component while tool hand stays low','pull both arms back, torso upright and weight shifted onto rear leg','second strong tool contact at mid height with opposite shoulder forward','rise from crouch while lowering tool beside thigh, free arm extended for balance','standing repair-ready stance, both arms lowered and feet apart'],
+ 'REPAIR':list(REPAIR_POSES),
  'CELEB':['neutral stance both arms down, feet apart','right arm lifts outward to forty-five degrees, elbow bent, left arm stays down','right fist at shoulder height, left arm swings outward, torso rotates right','right fist fully overhead, left arm bent across chest, weight shifts strongly to left leg','both arms clearly raised, right fist high and left fist at shoulder, torso leaning left','right arm drops to shoulder height while left arm extends outward, weight shifts right','right arm lowers diagonally while left arm returns down, torso recenters','return to neutral stance with both arms fully down and feet apart'],
 }
 
@@ -783,7 +784,7 @@ def main():
 
         'CARRY':(.48,.018,.55),
 
-        'REPAIR':(.62,.03,.72),
+        'REPAIR':(.49,.018,.526),
 
         'CELEB':(.60,.03,.72),
 
@@ -791,7 +792,9 @@ def main():
 
        strength=min(first_strength[2],first_strength[0]+attempt*first_strength[1])
 
-       if mode=='identity' and i['action']!='WALK':strength=max(.26,strength-.035)
+       if i['action']=='REPAIR':
+        strength=repair_strength(fi,attempt,mode)
+       elif mode=='identity' and i['action']!='WALK':strength=max(.26,strength-.035)
        if i['action']=='IDLE' and mode=='framing':
         # The role anchor already passed full-body validation. On an
         # edge-contact retry, favor preserving its intact shape rather than
@@ -815,12 +818,13 @@ def main():
         # and oversized/duplicated luggage.
         strength=min(.54,.41+fi*.012+attempt*.018)
        elif i['action']=='REPAIR':
-        strength=min(.76,.58+fi*.018+attempt*.03)
+        strength=repair_strength(fi,attempt,mode)
        elif i['action']=='CELEB':
         strength=min(.76,.56+fi*.018+attempt*.03)
        else:
         strength=min(.38,.24+fi*.012+attempt*.02)
-       if mode in {'single','identity'} and i['action']!='WALK':strength=max(.24,strength-.035)
+       if mode in {'single','identity'} and i['action'] not in {'WALK','REPAIR'}:
+        strength=max(.24,strength-.035)
        if i['action']=='IDLE' and mode=='framing':
         strength=min(strength,.21)
        source=semantic_scaffold(anchor_raw,i['action'],fi)
