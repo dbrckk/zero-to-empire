@@ -165,7 +165,22 @@ dismiss_launcher_anr_if_present() {
 }
 
 check_no_fatal() {
-  adb logcat -d > "$EVIDENCE/logcat.txt"
+  local attempt collected=false
+  # A CI emulator can reset its adb logcat stream while dumping a large
+  # 10 MB ring buffer (exit 255), even after every game interaction passed.
+  # Retry boundedly; fail closed if logs still cannot be obtained. Keep the
+  # Android crash/events buffers to catch prior process deaths and ANRs.
+  for attempt in 1 2 3; do
+    if adb logcat -d -b main -b system -b crash -b events -t 10000 > "$EVIDENCE/logcat.txt" 2>"$EVIDENCE/logcat-stderr.txt"; then
+      collected=true
+      break
+    fi
+    echo "LOGCAT_RETRY=attempt-$attempt"
+    sleep 2
+  done
+  if [ "$collected" != true ]; then
+    fail "logcat-collection-failed"
+  fi
   if grep -E "FATAL EXCEPTION|AndroidRuntime.*FATAL|Process: $PKG.*has died" "$EVIDENCE/logcat.txt"; then
     fail "fatal-runtime-crash"
   fi
@@ -376,9 +391,15 @@ click_node "+1" "character-qa-before-step"
 assert_ui_contains "Lecture" "character-qa-stepped"
 adb exec-out screencap -p > "$EVIDENCE/character-qa-stepped.png"
 echo "CHARACTER_QA_EMULATOR_PASS=1"
-adb shell am start -W -n "$ACT" > "$EVIDENCE/character-qa-return-to-game.txt"
+# Re-launching MainActivity via am start while the same-task debug gallery is
+# on top can simply deliver the intent to that gallery (Status: ok, but the
+# activity never changes). Android's Back stack contains MainActivity beneath
+# CharacterReviewActivity; navigate back and verify actual shipping game UI.
+adb shell input keyevent KEYCODE_BACK || fail "character-qa-back-navigation-failed"
 sleep 2
 check_alive
+assert_ui_contains "CAPITAL" "character-qa-return-to-game"
+assert_ui_contains "MANAGERS" "character-qa-return-tabs"
 
 adb shell dumpsys meminfo "$PKG" > "$EVIDENCE/meminfo.txt"
 adb exec-out screencap -p > "$EVIDENCE/final.png"
