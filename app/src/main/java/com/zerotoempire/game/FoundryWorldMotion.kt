@@ -28,7 +28,8 @@ internal fun FoundryWorkerTraffic(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val reducedMotion = remember(context) { MotionQuality.reducedMotion(context) }
+    // Battery Saver and system animator changes must update this active ticker.
+    val reducedMotion = MotionQuality.reducedMotion(context)
     val phase = remember { Animatable(.18f) }
 
     LaunchedEffect(reducedMotion) {
