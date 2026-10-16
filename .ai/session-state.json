@@ -250,8 +250,8 @@
     "terrain_visibility_and_real_city_qa": {
       "pr": 207,
       "branch": "fix/terrain-visibility-and-authentic-city-qa-20261016",
-      "latest_head_sha": "c79ecb81dd00213573310a73b00cff1bcd5a65d4",
-      "status": "PR_OPEN_THIRD_ANDROID_CI_AND_EMULATOR_IN_PROGRESS",
+      "latest_head_sha": "1821e2f7bb5f53041308f4f55e0efae58dfe3bcd",
+      "status": "PR_OPEN_FOURTH_CI_AND_EMULATOR_IN_PROGRESS",
       "initial_ci_run": 38940605309,
       "initial_emulator_run": 38940605779,
       "initial_emulator_failure": "Pixel Launcher ANR recurred after initial dialog recovery, hiding MANAGERS; downloaded XML shows actual game tabs on system-dialog-2.xml. This is a CI emulator/system issue rather than proven runtime regression.",
@@ -269,13 +269,21 @@
       "third_fix_commit": "c79ecb81dd00213573310a73b00cff1bcd5a65d4",
       "third_fix": "Android BACK from Character Review and assert CAPITAL/MANAGERS; bounded 10k-line Android logcat retry preserving crash/events buffers and fail-closed if unavailable",
       "third_ci_run": 38943038488,
-      "third_emulator_run": 38943038475
+      "third_emulator_run": 38943038475,
+      "third_emulator_conclusion": "FAILURE Pixel Launcher ANR persisted under four bounded Wait retries during initial UI, not a game assertion",
+      "third_emulator_artifact_id": 12064770023,
+      "fourth_fix_commit": "1821e2f7bb5f53041308f4f55e0efae58dfe3bcd",
+      "fourth_fix": "Close app only in verified Pixel Launcher ANR system dialog instead of repeated Wait; never close or skip verification of the game itself",
+      "fourth_ci_run": 38943833429,
+      "fourth_emulator_run": 38943833467,
+      "manual_artfinding": "Shipping-debug character QA screenshots show inconsistent OPERATOR silhouettes across IDLE, WALK, WORK, CARRY, REPAIR, CELEBRATE; candidate identities require independent semantic review. No promotion."
     }
   },
-  "last_completed": "PR #206 merged and verified. PR #207 open: responsive ground tiles and authentic city visual QA guard. Fixed recurrent Pixel Launcher ANR; second emulator 38941335829 progressed through 5 onboarding steps, every economy/navigation/persistence assertion and CHARACTER_QA_EMULATOR_PASS=1, then adb logcat stream failed with exit255 and exact file showed gallery never navigated back to MainActivity. Latest commit c79ecb8 fixes bounded logcat capture and asserts real BACK navigation to CAPITAL and MANAGERS. Third Android CI 38943038488 and emulator 38943038475 pending. Strict 219/235 unchanged.",
+  "last_completed": "PR #206 merged 8adbd25d with PR Android CI+smoke success and main Android CI success. PR #207 code staged, canonical terrain previously mostly offscreen fixed with stage-bounded layout; original character isolated city review rejects gradient-only background; CI emulator helper hardened for recurring Android Pixel Launcher ANR, real gallery-to-game return and bounded logcat. Third PR emulator 38943038475 blocked by persistent Pixel Launcher ANR. Latest PR commit 1821e2f7 selects Close app only for Pixel Launcher ANR; Android CI 38943833429 and emulator 38943833467 in progress. No merge of #207 until green. Strict remains 219/235.",
   "next_actions": [
-    "Check Android CI run 38943038488 and Android Emulator Smoke 38943038475 for latest PR #207 commit c79ecb8. If both succeed, merge PR #207; if not, retrieve exact new emulator logs/artifact and fix root cause.",
-    "Verify after merge main Android CI and the isolated original character review APK plus subsequent emulator authentic-city scenery/OP gait proof. The latter should reject flat gradient and may need significant visual content repair.",
-    "Do not approve original animation candidate atlases automatically; confirm exact production visuals, performance and semantics. Strict canonical DONE remains 219/235."
+    "Check exact CI result 38943833429 and full emulator smoke 38943833467 at PR #207 head 1821e2f7. If both pass, squash merge #207 with expected head SHA and inspect fresh postmerge main CI.",
+    "If emulator fails, retrieve the exact run's job log/artifact. Distinguish persistent Pixel Launcher ANR/system hiccups from app process errors; do not bypass core economy/persistence assertions.",
+    "Following merge, isolated original-character review builds from updated main and emulator verifies non-gradient city scene; inspect city screenshot, terrain visibility, OP WALK planted foot and role identity before semantics and production promotion.",
+    "OP WALK travel speed is currently normalized to stage width; verify foot slide on tablet/wide stages. Original QA screenshot shows inconsistent OP identity, so retain 16 review-only asset backlog, strict 219/235."
   ]
 }
