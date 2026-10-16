@@ -78,6 +78,7 @@ class CharacterIdentityPolishTests(unittest.TestCase):
             packed.writestr("candidate-bank-index.json", json.dumps({
                 "candidate_count": len(self.entries),
                 "bank_entries": self.entries, "strict_done": 219,
+                "target_total": 235,
                 "automatic_semantic_approval": False,
                 "automatic_runtime_promotion": False,
             }))
