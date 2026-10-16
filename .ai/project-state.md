@@ -29,13 +29,13 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-16T13:38:31Z
+Generated: 2026-10-16T13:40:50Z
 
 ### Git
 - Branch: `main`
-- Head: `43f8acd7047d`
-- Commit date: 2026-10-16T15:38:13+02:00
-- Commit: fix(art): audit independent engineer frames and publish Android animated review (#194)
+- Head: `afdc65a111db`
+- Commit date: 2026-10-16T15:40:35+02:00
+- Commit: feat(ci): publish persistent engineer Android motion player (#195)
 - Tracked files: 1812
 
 ### Recently changed files
