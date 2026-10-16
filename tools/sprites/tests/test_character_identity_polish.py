@@ -10,7 +10,7 @@ import unittest
 import zipfile
 from pathlib import Path
 
-from PIL import Image, ImageDraw
+from PIL import Image, ImageChops, ImageDraw
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from audit_character_bank_motion import analyze
