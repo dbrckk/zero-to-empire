@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-15",
+  "updated_at": "2026-10-16",
   "task": "Finish OP WALK strict visual-semantic review after successful eight-frame Android and moving real-stage proof; only promote via exact production runtime integration",
   "branch": "main",
-  "last_observed_head": "3713db1ddb2977614c6c978da439db9ef963b70f",
+  "last_observed_head": "04925f8a1d5711cf4560a5601936cf1721b8bd66",
   "state": {
     "strict_done": 219,
     "target_total": 235,
@@ -210,13 +210,32 @@
       "semantic_approved": false,
       "production_approved": false,
       "strict_done_added": 0
+    },
+    "eng_repair_fixed_station_qa": {
+      "status": "MERGED_AND_REGENERATED_TECHNICAL_AUDIT_SUCCESS_NOT_STRICT_APPROVED",
+      "pull_request": 205,
+      "merge_commit": "1c9693b682741cf74578d21cff4c88646cdff6b0",
+      "source_regeneration_commit": "04925f8a1d5711cf4560a5601936cf1721b8bd66",
+      "pr_character_motion_audit_run": 38937726736,
+      "pr_asset_pipeline_run": 38937727160,
+      "main_character_motion_audit_run": 38937862782,
+      "main_asset_pipeline_run": 38937862630,
+      "main_character_review_matrix_run": 38937862662,
+      "main_original_character_renderer_run": 38937862598,
+      "authored_atlas_count": 18,
+      "blocked_technical_risks_after": 0,
+      "engineer_station_svg_verified": true,
+      "engineer_geometry_isolated": true,
+      "actual_production_art_approved": false,
+      "android_runtime_approved": false,
+      "strict_done_added": 0
     }
   },
-  "last_completed": "PR #155 merged. Exact PR/main Android CI and isolated review APK passed. Emulator 38774032853 successfully captured 24/24 role/action views, eight consecutive OP WALK frames (480–487), and two actual city-layer Android screenshots (0.7 s apart; 5,251 thresholded changed pixels in bounds [32,129,1048,1757]). Visually inspected screenshots: two animated OP actors on a simplified dark stage, not complete gameplay city. Strict remains 219/235.",
+  "last_completed": "PR #205 merged to main (1c9693b6). Verified fixed ENG REPAIR station-aware silhouette review on actual 18 candidate atlases. PR and main Character Motion Audit and Asset Pipeline all SUCCESS; main original candidate generator 38937862598 SUCCESS and committed refreshed visual-risk-qa.json (18 assets, 0 blocking risks). Manual semantic, shipping city and Android release checks are still needed. Canonical 219/235 strict DONE.",
   "next_actions": [
-    "Evaluate exact OP WALK loop with environment, movement velocity and art-style quality against approved production characters, not only debug gradient stage.",
-    "If art is explicitly semantically approved, reference its exact source WebP in production runtime and verify Android/release/debug and on-device gameplay before promoting CHR-OP-WALK.",
-    "Continue remaining 15 unresolved animation actions, prioritizing a visually convincing identifiable interaction, without batch promotions.",
-    "Keep canonical strict at 219/235 until per-item semantic and production evidence exists."
+    "Inspect CHR-OP-WALK moving in the actual realistically composed shipping city and assess foot slide, contact, weight, role identity and small-screen readability (existing isolated debug gradient proof is insufficient).",
+    "Fix any verified OP WALK motion/style defects, review semantic quality explicitly, then link the exact approved WebP to production and verify Android debug/release and on-device gameplay before any strict promotion.",
+    "Continue the remaining 15 character animation actions individually, preserving both actual source provenance and approved identity.",
+    "Keep the canonical strict 219/235 target and no automatic semantic/runtime promotion until all per-asset gates have evidence."
   ]
 }
