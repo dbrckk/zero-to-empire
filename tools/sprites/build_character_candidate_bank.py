@@ -269,6 +269,7 @@ def assemble(master: Path, archive_folder: Path, output: Path,
         "local_original_fallback_ids": [
             entry["id"] for entry in entries
             if entry["source_type"] == "repo-local-original"
+            and entry.get("source_selection_reason") != "complete-engineer-local-role-review"
         ],
         "automatic_semantic_approval": False,
         "automatic_runtime_promotion": False,
