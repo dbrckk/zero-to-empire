@@ -27,7 +27,7 @@ class CandidateArchiveWorkflowTests(unittest.TestCase):
     def test_candidate_bank_is_assembled_only_from_trusted_release_and_queue(self):
         flow = Path(".github/workflows/character-candidate-bank.yml").read_text()
         source = Path("tools/sprites/build_character_candidate_bank.py").read_text()
-        self.assertIn("workflows: [Archive Character Candidates]", flow)
+        self.assertIn("workflows: [Archive Character Candidates, ChatGPT Original Character Candidates]", flow)
         self.assertIn("github.event.workflow_run.conclusion == 'success'", flow)
         self.assertIn("github.event.workflow_run.head_branch == 'main'", flow)
         self.assertIn("github.event.workflow_run.head_repository.full_name == github.repository", flow)
