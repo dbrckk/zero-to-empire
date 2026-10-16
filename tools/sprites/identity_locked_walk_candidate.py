@@ -100,7 +100,7 @@ def render(source:Path,role:str,out:Path,amplitude:float=14)->dict:
                          ",".join(risk["flags"]))
     if len({hashlib.sha256(im.tobytes()).digest() for im in frames})<6:
         raise ValueError("Insufficient gait motion")
-    sheet=Image.new("RGBA",(1024,512))
+    sheet=Image.new("RGBA",(1024,1024))
     for n,im in enumerate(frames):
         sheet.alpha_composite(im,((n%4)*SIZE,(n//4)*SIZE))
     out.mkdir(parents=True,exist_ok=True)

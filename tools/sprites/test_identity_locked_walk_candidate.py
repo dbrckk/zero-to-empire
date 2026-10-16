@@ -32,8 +32,9 @@ class IdentityLockedWalkTests(unittest.TestCase):
                 self.assertEqual(report['frame_count'],N_FRAMES)
                 self.assertEqual(report['visual_risk_screen']['risk_level']!='BLOCKING',True)
                 atlas=Image.open(report['candidate_path'])
-                self.assertEqual(atlas.size,(1024,512))
+                self.assertEqual(atlas.size,(1024,1024))
                 self.assertEqual(atlas.mode,'RGBA')
+                self.assertIsNone(atlas.crop((0,512,1024,1024)).getchannel("A").getbbox())
                 cells=[atlas.crop((i%4*256,i//4*256,i%4*256+256,i//4*256+256))
                        for i in range(N_FRAMES)]
                 self.assertEqual(len({hashlib.sha256(c.tobytes()).hexdigest() for c in cells}),N_FRAMES)
