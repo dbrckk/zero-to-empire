@@ -356,6 +356,7 @@ tools/
       test_character_bank_mobile_review.py
       test_character_bank_motion_audit.py
       test_character_candidate_bank.py
+      test_character_provisional_idle_seed.py
     action_contact.py
     animation_batch_planner.py
     archive_character_candidates.py
@@ -379,6 +380,7 @@ tools/
     character_ground_shadow_cleanup.py
     character_head_identity_lock.py
     character_idle_breathing_fallback.py
+    character_provisional_idle_seed.py
     character_rejection_evidence.py
     character_review_matrix.py
     character_semantic_gate.py
@@ -1650,6 +1652,8 @@ on:
       - 'tools/sprites/archive_character_candidates.py'
       - 'tools/sprites/build_character_candidate_bank.py'
       - 'tools/sprites/build_character_bank_mobile_review.py'
+      - 'tools/sprites/character_provisional_idle_seed.py'
+      - 'tools/sprites/tests/test_character_provisional_idle_seed.py'
       - 'tools/sprites/audit_character_bank_motion.py'
       - 'tools/sprites/tests/test_character_bank_motion_audit.py'
       - 'tools/sprites/tests/test_character_bank_mobile_review.py'
@@ -1712,6 +1716,8 @@ on:
       - 'tools/sprites/archive_character_candidates.py'
       - 'tools/sprites/build_character_candidate_bank.py'
       - 'tools/sprites/build_character_bank_mobile_review.py'
+      - 'tools/sprites/character_provisional_idle_seed.py'
+      - 'tools/sprites/tests/test_character_provisional_idle_seed.py'
       - 'tools/sprites/audit_character_bank_motion.py'
       - 'tools/sprites/tests/test_character_bank_motion_audit.py'
       - 'tools/sprites/tests/test_character_bank_mobile_review.py'
@@ -1812,6 +1818,7 @@ jobs:
             tools/sprites/verify_character_action_candidates.py \
             tools/sprites/verify_character_idle_candidates.py \
             tools/sprites/character_approved_idle_fallback.py \
+            tools/sprites/character_provisional_idle_seed.py \
             tools/sprites/character_ground_shadow_cleanup.py \
             tools/sprites/character_anchor_pair_salvage.py \
             tools/sprites/character_rejection_evidence.py \
@@ -2039,6 +2046,7 @@ jobs:
           python -m unittest discover -s tools/sprites/tests -p 'test_archive_character_candidates.py' -v
           python -m unittest discover -s tools/sprites/tests -p 'test_character_candidate_bank.py' -v
           python -m unittest discover -s tools/sprites/tests -p 'test_character_bank_mobile_review.py' -v
+          python -m unittest discover -s tools/sprites/tests -p 'test_character_provisional_idle_seed.py' -v
           python -m unittest discover -s tools/sprites/tests -p 'test_character_bank_motion_audit.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_semantic_gate.py' -v
           python -m unittest discover -s tools/sprites -p 'test_verify_character_idle_candidates.py' -v
@@ -4392,7 +4400,7 @@ jobs:
           fi
 
       - name: Compile sprite generators
-        run: python -m py_compile tools/sprites/kaggle_building_family_factory_v16.py tools/sprites/kaggle_character_sheet_factory_v1.py tools/sprites/character_acceptance_policy.py tools/sprites/character_head_identity_lock.py tools/sprites/character_ground_shadow_cleanup.py tools/sprites/character_anchor_pair_salvage.py tools/sprites/character_approved_idle_fallback.py tools/sprites/character_rejection_evidence.py tools/sprites/character_idle_breathing_fallback.py kaggle/github_mass_factory.py
+        run: python -m py_compile tools/sprites/kaggle_building_family_factory_v16.py tools/sprites/kaggle_character_sheet_factory_v1.py tools/sprites/character_acceptance_policy.py tools/sprites/character_head_identity_lock.py tools/sprites/character_ground_shadow_cleanup.py tools/sprites/character_anchor_pair_salvage.py tools/sprites/character_approved_idle_fallback.py tools/sprites/character_provisional_idle_seed.py tools/sprites/character_rejection_evidence.py tools/sprites/character_idle_breathing_fallback.py kaggle/github_mass_factory.py
       - name: Recover async preflight failure
         if: ${{ failure() && env.ASYNC_SUBMIT == 'true' }}
         env:
@@ -4532,6 +4540,51 @@ jobs:
             echo 'KAGGLE_REUSE_ACTIVE_KERNEL=0'
           fi
 
+      - name: Prepare immutable, review-only engineer IDLE identity source
+        if: steps.kernel-state.outputs.reuse != 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          # Only a canonical, technically-collected engineer IDLE may supply
+          # GPU source pixels. No semantic approval or strict DONE is implied.
+          source_run="$(python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('art/production/controlled-character-regen-queue.json').read_text())
+          ids={str(x.get('id') or '') for x in c.get('targets',[])
+               if str(x.get('status') or '').upper()=='PENDING_KAGGLE'}
+          if not {'CHR-ENG-WORK','CHR-ENG-REPAIR'}.intersection(ids) or 'CHR-ENG-IDLE' not in ids:
+              print('')
+          else:
+              q=json.loads(Path('art/production/master-asset-queue.json').read_text())
+              eng=[x for x in q['assets'] if x['id']=='CHR-ENG-IDLE']
+              if len(eng)!=1: raise SystemExit('Canonical engineer IDLE not unique')
+              row=eng[0]
+              if (row.get('strict_status')=='DONE' or
+                  row.get('pipeline_status')!='AWAITING_REVIEW' or
+                  not isinstance(row.get('review_artifact_run_id'),int)):
+                  raise SystemExit('Engineer IDLE does not have exact provisional QA provenance')
+              print(row['review_artifact_run_id'])
+          PY
+          )"
+          if [ -z "$source_run" ]; then
+            echo 'KAGGLE_ENG_PROVISIONAL_SOURCE=not-applicable'
+            exit 0
+          fi
+          mkdir -p /tmp/zte-engineer-source-archive /tmp/zte-provisional-seed-overlay
+          gh release download zte-character-candidates \
+            --repo "$GITHUB_REPOSITORY" \
+            --pattern "zte-characters-${source_run}.zip" \
+            --dir /tmp/zte-engineer-source-archive
+          python tools/sprites/character_provisional_idle_seed.py \
+            --master art/production/master-asset-queue.json \
+            --queue art/production/controlled-character-regen-queue.json \
+            --archive "/tmp/zte-engineer-source-archive/zte-characters-${source_run}.zip" \
+            --output-directory /tmp/zte-provisional-seed-overlay \
+            --source-run-id "$source_run"
+
       - name: Prepare Kaggle kernel
         if: steps.kernel-state.outputs.reuse != 'true'
         shell: bash
@@ -4551,6 +4604,7 @@ jobs:
              tools/sprites/character_ground_shadow_cleanup.py \
              tools/sprites/character_anchor_pair_salvage.py \
              tools/sprites/character_approved_idle_fallback.py \
+             tools/sprites/character_provisional_idle_seed.py \
              tools/sprites/character_rejection_evidence.py \
              tools/sprites/character_idle_breathing_fallback.py \
              /tmp/zte-kaggle/tools/sprites/
@@ -4585,6 +4639,7 @@ jobs:
               'character_ground_shadow_cleanup.py',
               'character_anchor_pair_salvage.py',
               'character_approved_idle_fallback.py',
+              'character_provisional_idle_seed.py',
               'character_rejection_evidence.py',
               'character_idle_breathing_fallback.py',
           ]
@@ -4603,6 +4658,16 @@ jobs:
                   'art/production/generation-rejection-ledger.json',
               ):
                   z.write(Path(rel),arcname=rel)
+              # Bundle the provenance-pinned PNG and index only when both
+              # exist. They are a source identity seed, never a runtime asset.
+              seeded=Path('/tmp/zte-provisional-seed-overlay')
+              if seeded.is_dir():
+                  for name in ('zte_chr_eng_idle_final.png','provenance.json'):
+                      rel=Path('art/production/kaggle-provisional-idle-seed')/name
+                      file=seeded/rel
+                      if not file.is_file():
+                          raise SystemExit('Partial engineer IDLE seed overlay')
+                      z.write(file,arcname=str(rel))
           qpayload=base64.b64encode(qbuf.getvalue()).decode('ascii')
           s,n=re.subn(r"QUEUE_OVERLAY_B64=''",f"QUEUE_OVERLAY_B64='{qpayload}'",s,count=1)
           if n != 1: raise SystemExit('Failed to inject QUEUE_OVERLAY_B64 into Kaggle kernel')
@@ -29921,6 +29986,13 @@ def test_push_triggered_kaggle_wave_is_async_and_preserves_dispatch_owner(self)
 ⋮----
 def test_strict_completion_mode_is_not_pinned_to_one_generator_version(self)
 ⋮----
+def test_provisional_engineer_idle_gpu_seed_is_sha_locked_and_review_only(self)
+⋮----
+mass = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
+driver = Path("kaggle/github_mass_factory.py").read_text(encoding="utf-8")
+factory = Path("tools/sprites/kaggle_character_sheet_factory_v1.py").read_text(encoding="utf-8")
+seed = Path("tools/sprites/character_provisional_idle_seed.py").read_text(encoding="utf-8")
+⋮----
 def test_character_promotion_accepts_async_collector_artifact_and_can_continue_factory(self)
 ⋮----
 text = Path(".github/workflows/promote-approved-kaggle-characters.yml").read_text(encoding="utf-8")
@@ -29976,7 +30048,6 @@ text = Path("kaggle/github_mass_factory.py").read_text(encoding="utf-8")
 ⋮----
 def test_async_character_wave_reuses_dataset_with_inline_queue_overlay(self)
 ⋮----
-mass = Path(".github/workflows/kaggle-mass-sprite-factory.yml").read_text(encoding="utf-8")
 factory = Path("kaggle/github_mass_factory.py").read_text(encoding="utf-8")
 ⋮----
 def test_async_kernel_slug_changes_when_character_generator_changes(self)
@@ -30320,6 +30391,46 @@ def test_local_original_fails_closed_when_qa_claims_artistic_approval(self)
 ⋮----
 qa_file = local / "candidate-qa.json"
 data = json.loads(qa_file.read_text())
+```
+
+## File: tools/sprites/tests/test_character_provisional_idle_seed.py
+```python
+"""Engineer IDLE anchoring: provenance/technical-pass ONLY, never strict DONE."""
+⋮----
+class ProvisionalEngineerSeedTests(unittest.TestCase)
+⋮----
+def setUp(self)
+⋮----
+atlas = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
+draw = ImageDraw.Draw(atlas)
+⋮----
+buffer = io.BytesIO()
+⋮----
+def save_state(self)
+⋮----
+def write_archive(self, *, run=38825860064, rows=None, approved=False)
+⋮----
+index = {
+⋮----
+def test_actual_review_only_seed_is_pinned_and_usable_as_visual_reference(self)
+⋮----
+meta = prepare(self.master, self.queue, self.archive, self.shipped, 38825860064)
+⋮----
+def test_prevent_wrong_collector_provenance_even_if_name_is_correct(self)
+⋮----
+def test_review_status_may_not_be_strict_done(self)
+⋮----
+def test_tampered_archived_bytes_cannot_supply_identity(self)
+⋮----
+def test_source_cannot_claim_semantic_approval(self)
+⋮----
+def test_no_identity_reference_if_source_image_is_corrupt(self)
+⋮----
+def test_modified_seed_is_rejected_at_kaggle_runtime(self)
+⋮----
+def test_missing_provisional_overlay_returns_no_seed_not_approval(self)
+⋮----
+def test_never_accept_unrequested_engineer_seed(self)
 ```
 
 ## File: tools/sprites/action_contact.py
@@ -32255,6 +32366,77 @@ frames=[]
 # protects the helmet, face, boots, and the fixed Android foot pivot.
 scale=1.0+.017*phase
 warped=base.transform(
+```
+
+## File: tools/sprites/character_provisional_idle_seed.py
+```python
+#!/usr/bin/env python3
+"""Traceable *review-only* ENG IDLE reference for later GPU regeneration.
+
+A technically QA-passing ENG-IDLE from the exact collector run in the current
+canonical queue is a visual source, NOT a strict-DONE or runtime asset.
+Preparing a seed never updates queue status or the application. The generator
+independently runs its full subject/atlas checks before using these pixels.
+"""
+⋮----
+SEED_DIR = Path("art/production/kaggle-provisional-idle-seed")
+PNG_NAME = "zte_chr_eng_idle_final.png"
+PROVENANCE = "provenance.json"
+SOURCE_ID = "CHR-ENG-IDLE"
+MAX_PNG_BYTES = 15 * 1024 * 1024
+SINGLE_PERSON_MAX_RATIO = 0.90
+⋮----
+def _single_person_source(blob: bytes) -> Image.Image
+⋮----
+cell = source.crop((0, 0, 256, 256))
+bbox = cell.getchannel("A").point(lambda alpha: 255 if alpha >= 64 else 0).getbbox()
+⋮----
+"""Pin a prior collector's technically passed PNG to its *current* queue ID."""
+⋮----
+queue = json.loads(queue_path.read_text(encoding="utf-8"))
+pending = {str(row.get("id") or "") for row in queue.get("targets", [])
+⋮----
+master = json.loads(master_path.read_text(encoding="utf-8"))
+rows = [row for row in master["assets"] if row.get("id") == SOURCE_ID]
+⋮----
+row = rows[0]
+⋮----
+names = archive.namelist()
+⋮----
+manifest = json.loads(archive.read("candidate-index.json"))
+items = [item for item in manifest.get("assets", [])
+⋮----
+blob = archive.read("candidates/" + PNG_NAME)
+digest = hashlib.sha256(blob).hexdigest()
+⋮----
+provenance = {
+destination = target_directory / SEED_DIR
+⋮----
+def load_seed(role: str, root: Path) -> tuple[Image.Image | None, str]
+⋮----
+"""Load the original reviewed pixels into a neutral canvas, never approve."""
+⋮----
+folder = root / SEED_DIR
+atlas_path = folder / PNG_NAME
+evidence_path = folder / PROVENANCE
+⋮----
+evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+⋮----
+blob = atlas_path.read_bytes()
+⋮----
+crop = _single_person_source(blob)
+desired_height = 770
+width = round(crop.width * desired_height / crop.height)
+⋮----
+resized = crop.resize((width, desired_height), Image.Resampling.LANCZOS)
+image = Image.new("RGB", (1024, 1024), (139, 139, 139))
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser()
+⋮----
+args = parser.parse_args()
+result = prepare(args.master, args.queue, args.archive,
 ```
 
 ## File: tools/sprites/character_rejection_evidence.py
@@ -34770,6 +34952,14 @@ required_idle_roles={item['role'] for item in items if item['action']=='IDLE'}
 verified_idle_roles=set()
 ⋮----
 failures=[]
+# If a technically passed, exact-run engineer IDLE was already collected,
+# use its reviewed *pixels* as the same-role visual identity source instead
+# of spending four text-to-image anchors that often yield two workers.
+# The overlay is SHA-256/provenance locked and explicitly review-only; it
+# still must pass the generator's full single-subject safety checks.
+⋮----
+coverage=validated_single_role_anchor(provisional)
+⋮----
 # A single malformed text-to-image role anchor previously poisoned all six
 # character actions. Reject multi-subject/cropped source images before any
 # action frame is generated, and try independent deterministic seeds.

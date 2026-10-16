@@ -60,6 +60,7 @@ sprites/
     test_character_bank_mobile_review.py
     test_character_bank_motion_audit.py
     test_character_candidate_bank.py
+    test_character_provisional_idle_seed.py
   action_contact.py
   animation_batch_planner.py
   archive_character_candidates.py
@@ -83,6 +84,7 @@ sprites/
   character_ground_shadow_cleanup.py
   character_head_identity_lock.py
   character_idle_breathing_fallback.py
+  character_provisional_idle_seed.py
   character_rejection_evidence.py
   character_review_matrix.py
   character_semantic_gate.py
@@ -2047,6 +2049,46 @@ qa_file = local / "candidate-qa.json"
 data = json.loads(qa_file.read_text())
 ```
 
+## File: sprites/tests/test_character_provisional_idle_seed.py
+```python
+"""Engineer IDLE anchoring: provenance/technical-pass ONLY, never strict DONE."""
+⋮----
+class ProvisionalEngineerSeedTests(unittest.TestCase)
+⋮----
+def setUp(self)
+⋮----
+atlas = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
+draw = ImageDraw.Draw(atlas)
+⋮----
+buffer = io.BytesIO()
+⋮----
+def save_state(self)
+⋮----
+def write_archive(self, *, run=38825860064, rows=None, approved=False)
+⋮----
+index = {
+⋮----
+def test_actual_review_only_seed_is_pinned_and_usable_as_visual_reference(self)
+⋮----
+meta = prepare(self.master, self.queue, self.archive, self.shipped, 38825860064)
+⋮----
+def test_prevent_wrong_collector_provenance_even_if_name_is_correct(self)
+⋮----
+def test_review_status_may_not_be_strict_done(self)
+⋮----
+def test_tampered_archived_bytes_cannot_supply_identity(self)
+⋮----
+def test_source_cannot_claim_semantic_approval(self)
+⋮----
+def test_no_identity_reference_if_source_image_is_corrupt(self)
+⋮----
+def test_modified_seed_is_rejected_at_kaggle_runtime(self)
+⋮----
+def test_missing_provisional_overlay_returns_no_seed_not_approval(self)
+⋮----
+def test_never_accept_unrequested_engineer_seed(self)
+```
+
 ## File: sprites/action_contact.py
 ```python
 """Deterministic 512px rig-space interaction targets for TECH WORK and REPAIR.
@@ -3980,6 +4022,77 @@ frames=[]
 # protects the helmet, face, boots, and the fixed Android foot pivot.
 scale=1.0+.017*phase
 warped=base.transform(
+```
+
+## File: sprites/character_provisional_idle_seed.py
+```python
+#!/usr/bin/env python3
+"""Traceable *review-only* ENG IDLE reference for later GPU regeneration.
+
+A technically QA-passing ENG-IDLE from the exact collector run in the current
+canonical queue is a visual source, NOT a strict-DONE or runtime asset.
+Preparing a seed never updates queue status or the application. The generator
+independently runs its full subject/atlas checks before using these pixels.
+"""
+⋮----
+SEED_DIR = Path("art/production/kaggle-provisional-idle-seed")
+PNG_NAME = "zte_chr_eng_idle_final.png"
+PROVENANCE = "provenance.json"
+SOURCE_ID = "CHR-ENG-IDLE"
+MAX_PNG_BYTES = 15 * 1024 * 1024
+SINGLE_PERSON_MAX_RATIO = 0.90
+⋮----
+def _single_person_source(blob: bytes) -> Image.Image
+⋮----
+cell = source.crop((0, 0, 256, 256))
+bbox = cell.getchannel("A").point(lambda alpha: 255 if alpha >= 64 else 0).getbbox()
+⋮----
+"""Pin a prior collector's technically passed PNG to its *current* queue ID."""
+⋮----
+queue = json.loads(queue_path.read_text(encoding="utf-8"))
+pending = {str(row.get("id") or "") for row in queue.get("targets", [])
+⋮----
+master = json.loads(master_path.read_text(encoding="utf-8"))
+rows = [row for row in master["assets"] if row.get("id") == SOURCE_ID]
+⋮----
+row = rows[0]
+⋮----
+names = archive.namelist()
+⋮----
+manifest = json.loads(archive.read("candidate-index.json"))
+items = [item for item in manifest.get("assets", [])
+⋮----
+blob = archive.read("candidates/" + PNG_NAME)
+digest = hashlib.sha256(blob).hexdigest()
+⋮----
+provenance = {
+destination = target_directory / SEED_DIR
+⋮----
+def load_seed(role: str, root: Path) -> tuple[Image.Image | None, str]
+⋮----
+"""Load the original reviewed pixels into a neutral canvas, never approve."""
+⋮----
+folder = root / SEED_DIR
+atlas_path = folder / PNG_NAME
+evidence_path = folder / PROVENANCE
+⋮----
+evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+⋮----
+blob = atlas_path.read_bytes()
+⋮----
+crop = _single_person_source(blob)
+desired_height = 770
+width = round(crop.width * desired_height / crop.height)
+⋮----
+resized = crop.resize((width, desired_height), Image.Resampling.LANCZOS)
+image = Image.new("RGB", (1024, 1024), (139, 139, 139))
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser()
+⋮----
+args = parser.parse_args()
+result = prepare(args.master, args.queue, args.archive,
 ```
 
 ## File: sprites/character_rejection_evidence.py
@@ -6495,6 +6608,14 @@ required_idle_roles={item['role'] for item in items if item['action']=='IDLE'}
 verified_idle_roles=set()
 ⋮----
 failures=[]
+# If a technically passed, exact-run engineer IDLE was already collected,
+# use its reviewed *pixels* as the same-role visual identity source instead
+# of spending four text-to-image anchors that often yield two workers.
+# The overlay is SHA-256/provenance locked and explicitly review-only; it
+# still must pass the generator's full single-subject safety checks.
+⋮----
+coverage=validated_single_role_anchor(provisional)
+⋮----
 # A single malformed text-to-image role anchor previously poisoned all six
 # character actions. Reject multi-subject/cropped source images before any
 # action frame is generated, and try independent deterministic seeds.

@@ -29,16 +29,23 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-16T06:12:56Z
+Generated: 2026-10-16T06:18:11Z
 
 ### Git
 - Branch: `main`
-- Head: `7f81c1134a67`
-- Commit date: 2026-10-16T08:12:39+02:00
-- Commit: fix(art): handle zero-PNG rejected Kaggle waves without false archive failure (#171)
-- Tracked files: 1799
+- Head: `0fb62358eb1d`
+- Commit date: 2026-10-16T08:17:56+02:00
+- Commit: art: provenance-verified engineer IDLE source for future Kaggle GPU recovery (#172)
+- Tracked files: 1801
 
 ### Recently changed files
+- `.github/workflows/asset-pipeline-ci.yml`
+- `.github/workflows/kaggle-mass-sprite-factory.yml`
+- `kaggle/github_mass_factory.py`
+- `tools/assets/test_workflow_policy.py`
+- `tools/sprites/character_provisional_idle_seed.py`
+- `tools/sprites/kaggle_character_sheet_factory_v1.py`
+- `tools/sprites/tests/test_character_provisional_idle_seed.py`
 - `tools/sprites/archive_character_candidates.py`
 - `tools/sprites/tests/test_archive_character_candidates.py`
 - `art/production/autofactory-state.json`

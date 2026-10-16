@@ -1,36 +1,20 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "ab0f3b9447872cbab09b89aa383bf79a2a8dd059",
-  "head": "7f81c1134a67d7cc96cb7188da7bc0725f51b145",
+  "base": "7f81c1134a67d7cc96cb7188da7bc0725f51b145",
+  "head": "0fb62358eb1db89c2a3de2edf2cf676dcb489588",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": ".github/workflows/kaggle-async-character-collector.yml",
+      "path": ".github/workflows/asset-pipeline-ci.yml",
       "status": "M"
     },
     {
-      "path": "art/production/autofactory-state.json",
+      "path": ".github/workflows/kaggle-mass-sprite-factory.yml",
       "status": "M"
     },
     {
-      "path": "art/production/autofactory-summary.md",
-      "status": "M"
-    },
-    {
-      "path": "art/production/character-strict-review-backlog.md",
-      "status": "M"
-    },
-    {
-      "path": "art/production/controlled-character-regen-queue.json",
-      "status": "M"
-    },
-    {
-      "path": "art/production/kaggle-async-state.json",
-      "status": "M"
-    },
-    {
-      "path": "art/production/master-asset-queue.json",
+      "path": "kaggle/github_mass_factory.py",
       "status": "M"
     },
     {
@@ -38,127 +22,381 @@
       "status": "M"
     },
     {
-      "path": "tools/sprites/archive_character_candidates.py",
+      "path": "tools/sprites/character_provisional_idle_seed.py",
+      "status": "A"
+    },
+    {
+      "path": "tools/sprites/kaggle_character_sheet_factory_v1.py",
       "status": "M"
     },
     {
-      "path": "tools/sprites/tests/test_archive_character_candidates.py",
-      "status": "M"
+      "path": "tools/sprites/tests/test_character_provisional_idle_seed.py",
+      "status": "A"
     }
   ],
   "changed_source_files": [
-    "tools/sprites/archive_character_candidates.py",
-    "tools/sprites/tests/test_archive_character_candidates.py"
+    "kaggle/github_mass_factory.py",
+    "tools/sprites/character_provisional_idle_seed.py",
+    "tools/sprites/kaggle_character_sheet_factory_v1.py",
+    "tools/sprites/tests/test_character_provisional_idle_seed.py"
   ],
   "impacted_files": [
-    "tools/sprites/archive_character_candidates.py",
-    "tools/sprites/tests/test_archive_character_candidates.py"
+    "kaggle/github_mass_factory.py",
+    "tools/sprites/character_provisional_idle_seed.py",
+    "tools/sprites/kaggle_character_sheet_factory_v1.py",
+    "tools/sprites/tests/test_character_provisional_idle_seed.py"
   ],
   "impacted_symbols": [
     {
-      "name": "archive_candidates",
+      "name": "digest",
       "kind": "function",
-      "file": "tools/sprites/archive_character_candidates.py",
-      "line": 23
+      "file": "kaggle/github_mass_factory.py",
+      "line": 13
+    },
+    {
+      "name": "ensure_gpu",
+      "kind": "function",
+      "file": "kaggle/github_mass_factory.py",
+      "line": 18
+    },
+    {
+      "name": "ensure_flux",
+      "kind": "function",
+      "file": "kaggle/github_mass_factory.py",
+      "line": 29
+    },
+    {
+      "name": "runtime_exists",
+      "kind": "function",
+      "file": "kaggle/github_mass_factory.py",
+      "line": 38
+    },
+    {
+      "name": "controlled_queue_backlog",
+      "kind": "function",
+      "file": "kaggle/github_mass_factory.py",
+      "line": 39
+    },
+    {
+      "name": "controlled_character_backlog",
+      "kind": "function",
+      "file": "kaggle/github_mass_factory.py",
+      "line": 45
+    },
+    {
+      "name": "controlled_building_backlog",
+      "kind": "function",
+      "file": "kaggle/github_mass_factory.py",
+      "line": 46
+    },
+    {
+      "name": "backlog",
+      "kind": "function",
+      "file": "kaggle/github_mass_factory.py",
+      "line": 47
+    },
+    {
+      "name": "valid_tree",
+      "kind": "function",
+      "file": "kaggle/github_mass_factory.py",
+      "line": 59
+    },
+    {
+      "name": "resolve_source",
+      "kind": "function",
+      "file": "kaggle/github_mass_factory.py",
+      "line": 61
+    },
+    {
+      "name": "current_fresh",
+      "kind": "function",
+      "file": "kaggle/github_mass_factory.py",
+      "line": 185
+    },
+    {
+      "name": "checkpoint_fresh",
+      "kind": "function",
+      "file": "kaggle/github_mass_factory.py",
+      "line": 186
+    },
+    {
+      "name": "_single_person_source",
+      "kind": "function",
+      "file": "tools/sprites/character_provisional_idle_seed.py",
+      "line": 29
+    },
+    {
+      "name": "prepare",
+      "kind": "function",
+      "file": "tools/sprites/character_provisional_idle_seed.py",
+      "line": 48
+    },
+    {
+      "name": "load_seed",
+      "kind": "function",
+      "file": "tools/sprites/character_provisional_idle_seed.py",
+      "line": 114
     },
     {
       "name": "main",
       "kind": "function",
-      "file": "tools/sprites/archive_character_candidates.py",
-      "line": 123
+      "file": "tools/sprites/character_provisional_idle_seed.py",
+      "line": 153
     },
     {
-      "name": "CandidateArchiveTests",
+      "name": "production_first_enabled",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 34
+    },
+    {
+      "name": "rows",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 79
+    },
+    {
+      "name": "queue_rejection_hint",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 115
+    },
+    {
+      "name": "compact_rejection_hints",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 159
+    },
+    {
+      "name": "rejection_hints",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 178
+    },
+    {
+      "name": "anchor_prompt_pair",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 202
+    },
+    {
+      "name": "semantic_scaffold",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 219
+    },
+    {
+      "name": "prompt_pair",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 303
+    },
+    {
+      "name": "retry_mode",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 340
+    },
+    {
+      "name": "load_encode",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 347
+    },
+    {
+      "name": "load_render",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 352
+    },
+    {
+      "name": "border_bg",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 359
+    },
+    {
+      "name": "isolate",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 368
+    },
+    {
+      "name": "dist",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 372
+    },
+    {
+      "name": "validate_source_full_body",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 387
+    },
+    {
+      "name": "finish_frame",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 397
+    },
+    {
+      "name": "validated_single_role_anchor",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 437
+    },
+    {
+      "name": "alpha_iou",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 446
+    },
+    {
+      "name": "sheet_qa",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 455
+    },
+    {
+      "name": "lower_body_motion",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 469
+    },
+    {
+      "name": "upper_body_transition_changes",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 486
+    },
+    {
+      "name": "walk_consistency_qa",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 503
+    },
+    {
+      "name": "action_qa",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 518
+    },
+    {
+      "name": "appearance_signature",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 566
+    },
+    {
+      "name": "appearance_distance",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 580
+    },
+    {
+      "name": "make_sheet",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 583
+    },
+    {
+      "name": "keep_rejected_idle_for_review",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 591
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 606
+    },
+    {
+      "name": "try_role_seed_idle_fallback",
+      "kind": "function",
+      "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+      "line": 709
+    },
+    {
+      "name": "ProvisionalEngineerSeedTests",
       "kind": "class",
-      "file": "tools/sprites/tests/test_archive_character_candidates.py",
-      "line": 15
+      "file": "tools/sprites/tests/test_character_provisional_idle_seed.py",
+      "line": 19
     },
     {
       "name": "setUp",
       "kind": "function",
-      "file": "tools/sprites/tests/test_archive_character_candidates.py",
-      "line": 16
+      "file": "tools/sprites/tests/test_character_provisional_idle_seed.py",
+      "line": 20
     },
     {
-      "name": "write_file",
+      "name": "save_state",
       "kind": "function",
-      "file": "tools/sprites/tests/test_archive_character_candidates.py",
-      "line": 24
+      "file": "tools/sprites/tests/test_character_provisional_idle_seed.py",
+      "line": 55
     },
     {
-      "name": "write_qa",
+      "name": "write_archive",
       "kind": "function",
-      "file": "tools/sprites/tests/test_archive_character_candidates.py",
-      "line": 29
+      "file": "tools/sprites/tests/test_character_provisional_idle_seed.py",
+      "line": 63
     },
     {
-      "name": "test_saves_only_real_qa_passing_candidates_with_hashes",
+      "name": "test_actual_review_only_seed_is_pinned_and_usable_as_visual_reference",
       "kind": "function",
-      "file": "tools/sprites/tests/test_archive_character_candidates.py",
-      "line": 32
+      "file": "tools/sprites/tests/test_character_provisional_idle_seed.py",
+      "line": 75
     },
     {
-      "name": "test_missing_passing_image_fails_closed",
+      "name": "test_prevent_wrong_collector_provenance_even_if_name_is_correct",
       "kind": "function",
-      "file": "tools/sprites/tests/test_archive_character_candidates.py",
-      "line": 54
+      "file": "tools/sprites/tests/test_character_provisional_idle_seed.py",
+      "line": 90
     },
     {
-      "name": "test_invalid_signature_fails_closed",
+      "name": "test_review_status_may_not_be_strict_done",
       "kind": "function",
-      "file": "tools/sprites/tests/test_archive_character_candidates.py",
-      "line": 59
+      "file": "tools/sprites/tests/test_character_provisional_idle_seed.py",
+      "line": 96
     },
     {
-      "name": "test_duplicate_qa_rows_fail_closed",
+      "name": "test_tampered_archived_bytes_cannot_supply_identity",
       "kind": "function",
-      "file": "tools/sprites/tests/test_archive_character_candidates.py",
-      "line": 65
+      "file": "tools/sprites/tests/test_character_provisional_idle_seed.py",
+      "line": 102
     },
     {
-      "name": "write_clean_reject_evidence",
+      "name": "test_source_cannot_claim_semantic_approval",
       "kind": "function",
-      "file": "tools/sprites/tests/test_archive_character_candidates.py",
-      "line": 72
+      "file": "tools/sprites/tests/test_character_provisional_idle_seed.py",
+      "line": 108
     },
     {
-      "name": "test_real_all_reject_collector_without_frame_qa_is_not_workflow_failure",
+      "name": "test_no_identity_reference_if_source_image_is_corrupt",
       "kind": "function",
-      "file": "tools/sprites/tests/test_archive_character_candidates.py",
-      "line": 89
+      "file": "tools/sprites/tests/test_character_provisional_idle_seed.py",
+      "line": 113
     },
     {
-      "name": "test_missing_frame_qa_with_png_fails_closed_even_if_rejects_claimed",
+      "name": "test_modified_seed_is_rejected_at_kaggle_runtime",
       "kind": "function",
-      "file": "tools/sprites/tests/test_archive_character_candidates.py",
-      "line": 101
+      "file": "tools/sprites/tests/test_character_provisional_idle_seed.py",
+      "line": 121
     },
     {
-      "name": "test_missing_frame_qa_without_rejection_proof_fails_closed",
+      "name": "test_missing_provisional_overlay_returns_no_seed_not_approval",
       "kind": "function",
-      "file": "tools/sprites/tests/test_archive_character_candidates.py",
-      "line": 107
+      "file": "tools/sprites/tests/test_character_provisional_idle_seed.py",
+      "line": 128
     },
     {
-      "name": "test_malformed_all_rejected_proof_cannot_silently_skip_archive",
+      "name": "test_never_accept_unrequested_engineer_seed",
       "kind": "function",
-      "file": "tools/sprites/tests/test_archive_character_candidates.py",
-      "line": 111
-    },
-    {
-      "name": "test_missing_qa_reject_requires_zero_produced_target_manifest",
-      "kind": "function",
-      "file": "tools/sprites/tests/test_archive_character_candidates.py",
-      "line": 126
-    },
-    {
-      "name": "test_rejected_only_writes_no_release_asset",
-      "kind": "function",
-      "file": "tools/sprites/tests/test_archive_character_candidates.py",
-      "line": 134
+      "file": "tools/sprites/tests/test_character_provisional_idle_seed.py",
+      "line": 133
     }
   ],
   "selected_tests": [
-    "tools/sprites/tests/test_archive_character_candidates.py"
+    "tools/sprites/tests/test_character_provisional_idle_seed.py"
   ]
 }

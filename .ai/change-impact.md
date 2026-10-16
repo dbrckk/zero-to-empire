@@ -1,13 +1,20 @@
 # Change impact
 
-Base: f990dad8ef84444872f5df9255b72f7bb2af5036
-Head: 7f81c1134a67d7cc96cb7188da7bc0725f51b145
+Base: a0318c888717dd5fbfd0049f2c2781f08106b20c
+Head: 0fb62358eb1db89c2a3de2edf2cf676dcb489588
 
 ## Changed files
-- M tools/sprites/archive_character_candidates.py
-- M tools/sprites/tests/test_archive_character_candidates.py
+- M .github/workflows/asset-pipeline-ci.yml
+- M .github/workflows/kaggle-mass-sprite-factory.yml
+- M kaggle/github_mass_factory.py
+- M tools/assets/test_workflow_policy.py
+- A tools/sprites/character_provisional_idle_seed.py
+- M tools/sprites/kaggle_character_sheet_factory_v1.py
+- A tools/sprites/tests/test_character_provisional_idle_seed.py
 
 ## Affected areas
+- .github
+- kaggle
 - tools
 
 ## Related test candidates
