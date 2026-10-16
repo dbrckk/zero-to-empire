@@ -27,6 +27,7 @@ class CharacterIdentityPolishTests(unittest.TestCase):
         self.output = self.root / "polish.zip"
         self.report = self.root / "polish.json"
         self.comparison = self.root / "polish.png"
+        self.mobile = self.root / "polish-mobile.html"
         self.entries = []
         self.blobs = {}
         self.write_atlases()
@@ -86,7 +87,8 @@ class CharacterIdentityPolishTests(unittest.TestCase):
                 packed.writestr("candidates/" + name, blob)
 
     def test_proposes_complete_review_only_identity_retouch(self):
-        result = build(self.bank, self.audit, self.output, self.report, self.comparison)
+        result = build(self.bank, self.audit, self.output, self.report, self.comparison,
+                       self.mobile)
         self.assertEqual(result["identity_flags_to_review"], 1)
         self.assertEqual(result["alternatives_created"], 1)
         self.assertEqual(result["not_safe_to_polish"], [])
@@ -121,10 +123,21 @@ class CharacterIdentityPolishTests(unittest.TestCase):
         self.assertEqual(json.loads(self.report.read_text()), result)
         with Image.open(self.comparison) as png:
             self.assertEqual(png.size, (786, 352))
+        html = self.mobile.read_text(encoding="utf-8")
+        self.assertIn("CHR-OP-WORK", html)
+        self.assertIn(row["source_sha256"], html)
+        self.assertIn(row["alternative_sha256"], html)
+        self.assertIn("data:image/png;base64,", html)
+        self.assertIn("Exporter les observations", html)
+        self.assertIn("42 px", html)
+        self.assertNotIn("__DATA__", html)
+        self.assertNotIn("http://", html)
+        self.assertNotIn("https://", html)
 
     def test_one_unsafe_pose_rejects_entire_proposal_not_just_one_frame(self):
         self.write_atlases(bad_frame=4)
-        result = build(self.bank, self.audit, self.output, self.report)
+        result = build(self.bank, self.audit, self.output, self.report,
+                       mobile_review_path=self.mobile)
         self.assertEqual(result["alternatives_created"], 0)
         self.assertEqual(result["identity_flags_to_review"], 1)
         self.assertEqual(result["not_safe_to_polish"][0]["id"], "CHR-OP-WORK")
@@ -132,6 +145,7 @@ class CharacterIdentityPolishTests(unittest.TestCase):
         with zipfile.ZipFile(self.output) as packed:
             self.assertFalse(any(name.startswith("review-alternatives/")
                                  for name in packed.namelist()))
+        self.assertNotIn("data:image/png;base64,", self.mobile.read_text())
 
     def test_consistent_actions_are_not_needlessly_modified(self):
         self.write_atlases(same_head=True)

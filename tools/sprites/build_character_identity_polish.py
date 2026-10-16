@@ -21,6 +21,7 @@ from PIL import Image, ImageChops, ImageDraw, ImageFont
 
 from audit_character_bank_motion import FRAMES, head_difference, head_thumbnail
 from character_head_identity_lock import lock_head_to_idle
+from character_identity_polish_mobile_review import write_mobile_review
 
 NAME = re.compile(r"^CHR-(OP|LOG|ENG|TECH)-(IDLE|WALK|WORK|CARRY|REPAIR|CELEB)$")
 MAX_BLOB = 20 * 1024 * 1024
@@ -97,7 +98,8 @@ def _comparison(rows: list[dict], destination: Path) -> None:
 
 
 def build(bank_path: Path, audit_path: Path, destination: Path,
-          report_path: Path, comparison_path: Path | None = None) -> dict:
+          report_path: Path, comparison_path: Path | None = None,
+          mobile_review_path: Path | None = None) -> dict:
     """An all-or-nothing alternative per action, fail-closed on provenance."""
     audit = json.loads(audit_path.read_text(encoding="utf-8"))
     audit_rows = audit.get("assets")
@@ -156,7 +158,7 @@ def build(bank_path: Path, audit_path: Path, destination: Path,
     if not verified:
         raise ValueError("Empty candidate bank")
 
-    alternatives, skipped, previews = [], [], []
+    alternatives, skipped, previews, gallery_rows = [], [], [], []
     members: list[tuple[str, bytes]] = []
     for asset_id, record in sorted(verified.items()):
         flags = record["audit"]["new_identity_flags"]
@@ -231,6 +233,13 @@ def build(bank_path: Path, audit_path: Path, destination: Path,
         })
         previews.append({"id": asset_id, "reference_frame": reference_frame,
                          "original_frame": original[0], "polished_frame": fixed[0]})
+        gallery_rows.append({
+            "id": asset_id, "frames": len(fixed), "reference_id": reference_id,
+            "source_sha256": record["sha256"],
+            "alternative_sha256": hashlib.sha256(blob).hexdigest(),
+            "head_rgb_before": before, "head_rgb_after": after,
+            "original_png": record["blob"], "alternative_png": blob,
+        })
 
     report = {
         "schema_version": 1, "review_only": True,
@@ -262,6 +271,10 @@ def build(bank_path: Path, audit_path: Path, destination: Path,
     report_path.write_text(destination_index, encoding="utf-8")
     if comparison_path is not None:
         _comparison(previews, comparison_path)
+    if mobile_review_path is not None:
+        mobile = write_mobile_review(gallery_rows, mobile_review_path, meta["strict_done"])
+        if mobile["assets"] != len(alternatives) or mobile["strict_done_added"] != 0:
+            raise ValueError("Mobile polish review count or strict boundary drifted")
     return report
 
 
@@ -272,8 +285,10 @@ def main() -> int:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--report", type=Path, required=True)
     parser.add_argument("--comparison", type=Path)
+    parser.add_argument("--mobile-review", type=Path)
     args = parser.parse_args()
-    report = build(args.bank, args.audit, args.output, args.report, args.comparison)
+    report = build(args.bank, args.audit, args.output, args.report, args.comparison,
+                   args.mobile_review)
     print("IDENTITY_POLISH_FLAGGED=" + str(report["identity_flags_to_review"]))
     print("IDENTITY_POLISH_REVIEW_ALTERNATIVES=" + str(report["alternatives_created"]))
     for row in report["not_safe_to_polish"]:
