@@ -36,6 +36,10 @@ def tool_angle(action:str,phase:float,*,role:str|None=None)->float:
         # produced consecutive near-identical frames on the 42px display.
         cycle=(phase/(2.0*math.pi)) % 1.0
         return -4.0+26.0*(1.0-4.0*abs(cycle-.5))
+    if action=='WORK' and role=='ENG':
+        # Deliberate pitch while the right hand sweeps the diagnostic tablet;
+        # visible against either stage background at mobile 42px scale.
+        return -4.0+13.0*math.sin(phase+.55)
     sweep = 18.0 if action=='REPAIR' else 3.0
     return -4.0+sweep*math.sin(phase)
 
