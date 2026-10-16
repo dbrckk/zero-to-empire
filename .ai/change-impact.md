@@ -1,10 +1,11 @@
 # Change impact
 
-Base: 8a7dae4cd8d0e982bcb9361a10d2877f65636aa8
-Head: 004f9a782cd975353185ab7e907330f8d454be8b
+Base: 238029a59b3977a0da49cb684ba3333cac0d3cbf
+Head: 4d02a04e7779f908400bce805f13d220536b823e
 
 ## Changed files
 - M .github/workflows/engineer-motion-candidate-review.yml
+- M tools/sprites/local_character_action_fx.py
 - M tools/sprites/render_chatgpt_originals.py
 - M tools/sprites/test_local_character_action_fx.py
 

@@ -7863,6 +7863,9 @@ def tool_angle(action:str,phase:float,*,role:str|None=None)->float
 # produced consecutive near-identical frames on the 42px display.
 cycle=(phase/(2.0*math.pi)) % 1.0
 ⋮----
+# Deliberate pitch while the right hand sweeps the diagnostic tablet;
+# visible against either stage background at mobile 42px scale.
+⋮----
 sweep = 18.0 if action=='REPAIR' else 3.0
 ⋮----
 def tool_tip(role:str,action:str,phase:float,*,tool_x:float,tool_y:float)->tuple[float,float]
@@ -9437,6 +9440,11 @@ theta=math.radians(tool_angle('REPAIR',phase,role='ENG'))
 rotated_x=dx*math.cos(theta)-dy*math.sin(theta)
 rotated_y=dx*math.sin(theta)+dy*math.cos(theta)
 ⋮----
+def engineer_work_wrist(phase:float,bounce:float)->tuple[float,float]
+⋮----
+# Separate wide diagnostic scan sweep. The held tablet, right hand and
+# illuminated sensor share exactly one trajectory, not three approximations.
+⋮----
 # SVG drawn in painter's order: back arm and legs -> torso -> head -> front hands.
 def svg_frame(role:str, action:str, index:int, count:int)->str
 ⋮----
@@ -9444,6 +9452,8 @@ p=ROLES[role]; phase=2*math.pi*index/count; motion=math.sin(phase); bounce=0.0
 ⋮----
 bounce=2.8*(1-math.cos(phase*2))/2
 elif action=='IDLE':bounce=1.8*math.sin(phase)
+⋮----
+bounce=3.6*math.sin(phase)
 ⋮----
 # Torque transfers through the knees and shoulders while BOTH boots stay
 # planted. The socket/tool remain locked to world space, not to this bob.
@@ -9476,6 +9486,9 @@ reach_px=15 if pose=='WORK' else 8
 pump_px=12 if pose=='WORK' else 7
 handpos=((80+2*reach,146-3*pump+bounce) if side=='L'
 elbow=((82,132+bounce) if side=='L'
+⋮----
+handpos=engineer_work_wrist(phase,bounce)
+elbow=(165+11*math.sin(phase-.18),115+7*math.cos(phase-.18)+.30*bounce)
 ⋮----
 handpos=engineer_repair_wrist(phase)
 # Braced elbow drives the ratchet against a world-fixed socket instead
@@ -9518,9 +9531,9 @@ boot_angle=leg.boot_angle
 hipx=106 if side=='L' else 146
 yhip=155+bounce
 knee_x=hipx+(2 if side=='L' else -2)
-knee_y=190+(.48*bounce if role=='ENG' and action=='REPAIR' else bounce)
+knee_y=190+(.48*bounce if role=='ENG' and action in ('WORK','REPAIR') else bounce)
 ankle_x=hipx
-ankle_y=(226 if role=='ENG' and action=='REPAIR' else 226+bounce)
+ankle_y=(226 if role=='ENG' and action in ('WORK','REPAIR') else 226+bounce)
 boot_angle=0.0
 ⋮----
 # no floor shadow; transparency is exact outside figure
@@ -9548,6 +9561,8 @@ else:toe=ax+9
 add('</g>')  # close the per-leg pose-evidence group
 ⋮----
 add('</g>')  # close world-planted repair boot evidence group
+⋮----
+add('</g>')  # close world-planted diagnostic work boots
 # Weight shifts toward stance foot; cargo carry sway remains restrained.
 # The hands, equipment, torso, helmet and face all receive the exact same
 # transform, avoiding drift in object contact or character identity.
@@ -9601,6 +9616,7 @@ tool_x=176+(15 if action=='WORK' else 8)*math.sin(phase)
 tool_y=123+(12 if action=='WORK' else 7)*math.cos(phase)+bounce
 ⋮----
 repair_marker=' data-repair-tool="ENG"' if role=='ENG' and action=='REPAIR' else ''
+work_marker=' data-work-tool="ENG"' if role=='ENG' and action=='WORK' else ''
 ⋮----
 # Physical articulated torque wrench, not an electronic scanner.
 # Tip geometry is centred on the *exact* fixed socket offset (43,-13).
@@ -9646,7 +9662,7 @@ parser=argparse.ArgumentParser()
 args=parser.parse_args();outdir=pathlib.Path(args.output_dir);outdir.mkdir(parents=True,exist_ok=True)
 results=[]
 ⋮----
-report={'version':'chatgpt-original-character-rig-v12-engineer-planted-torque','strict_done_added':0,'review_only':True,
+report={'version':'chatgpt-original-character-rig-v13-engineer-diagnostic-sweep','strict_done_added':0,'review_only':True,
 ```
 
 ## File: sprites/render_original_character_previews.py
@@ -11308,6 +11324,28 @@ angle = tool_angle("REPAIR", phase, role="ENG")
 svg = ET.fromstring(svg_frame("ENG", "REPAIR", index, 10))
 station = [e for e in svg.iter()
 wrench = [e for e in svg.iter()
+⋮----
+def test_engineer_work_scans_with_shared_tool_light_and_planted_boots(self)
+⋮----
+points = []
+angles = []
+⋮----
+bounce = 3.6 * math.sin(phase)
+⋮----
+tree = ET.fromstring(svg_frame("ENG", "WORK", index, 10))
+tools = [node for node in tree.iter()
+⋮----
+transform = tools[0].get("transform")
+coords = transform.split("translate(")[1].split(")")[0].split(",")
+⋮----
+angle = tool_angle("WORK", phase, role="ENG")
+⋮----
+# The real work light travels with the physical sensor tip.
+tip = tool_tip("ENG", "WORK", phase,
+⋮----
+feet = [node for node in tree.iter()
+⋮----
+markup = svg_frame(role, "WORK", 3, 10)
 ⋮----
 def test_engineer_repair_torso_loads_but_both_feet_stay_planted(self)
 ⋮----

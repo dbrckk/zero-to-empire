@@ -5,6 +5,225 @@
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
   "symbols": {
+    "tool_angle": {
+      "definition": {
+        "file": "tools/sprites/local_character_action_fx.py",
+        "line": 26,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/local_character_action_fx.py",
+          "line": 26,
+          "preview": "def tool_angle(action:str,phase:float,*,role:str|None=None)->float:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/local_character_action_fx.py",
+          "line": 52,
+          "preview": "angle=math.radians(tool_angle(action,phase,role=role))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 13,
+          "preview": "from local_character_action_fx import action_fx,tool_angle,TOOL_TIP_OFFSETS",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 31,
+          "preview": "theta=math.radians(tool_angle('REPAIR',phase,role='ENG'))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 337,
+          "preview": "add(f'<g{repair_marker}{work_marker} transform=\"translate({tool_x:.1f},{tool_y:.1f}) rotate({tool_angle(action,phase,role=role):.1f})\">')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 7,
+          "preview": "from local_character_action_fx import action_fx, ROLE_LIGHT, tool_angle, tool_tip",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 72,
+          "preview": "angle = tool_angle(\"REPAIR\", phase, role=\"ENG\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 85,
+          "preview": "self.assertLess(max(tool_angle(\"REPAIR\", p) for p in",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 87,
+          "preview": "min(tool_angle(\"REPAIR\", p) for p in",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 106,
+          "preview": "angle = tool_angle(\"WORK\", phase, role=\"ENG\")",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 10
+    },
+    "tool_tip": {
+      "definition": {
+        "file": "tools/sprites/local_character_action_fx.py",
+        "line": 47,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/local_character_action_fx.py",
+          "line": 47,
+          "preview": "def tool_tip(role:str,action:str,phase:float,*,tool_x:float,tool_y:float)->tuple[float,float]:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/local_character_action_fx.py",
+          "line": 74,
+          "preview": "x,y=tool_tip(role,action,phase,tool_x=tool_x,tool_y=tool_y)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 7,
+          "preview": "from local_character_action_fx import action_fx, ROLE_LIGHT, tool_angle, tool_tip",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 69,
+          "preview": "tip = tool_tip(\"ENG\", \"REPAIR\", phase,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 109,
+          "preview": "tip = tool_tip(\"ENG\", \"WORK\", phase,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 5
+    },
+    "action_fx": {
+      "definition": {
+        "file": "tools/sprites/local_character_action_fx.py",
+        "line": 57,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/local_character_action_fx.py",
+          "line": 57,
+          "preview": "def action_fx(role:str, action:str, phase:float, *,",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 13,
+          "preview": "from local_character_action_fx import action_fx,tool_angle,TOOL_TIP_OFFSETS",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 25,
+          "preview": "# the wrist. Invert the same rigid endpoint transform used by action_fx so the",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 384,
+          "preview": "add(action_fx(role,action,phase,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 7,
+          "preview": "from local_character_action_fx import action_fx, ROLE_LIGHT, tool_angle, tool_tip",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 17,
+          "preview": "fx=action_fx(role,action,.9,tool_x=182,tool_y=132,bounce=2)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 31,
+          "preview": "a=action_fx(role,action,0,tool_x=180,tool_y=123)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 32,
+          "preview": "b=action_fx(role,action,2*math.pi,tool_x=180,tool_y=123)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 38,
+          "preview": "markup=action_fx(role,action,1.9,tool_x=191,tool_y=125)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 59,
+          "preview": "self.assertIn(\"add(action_fx(role,action,phase\",source)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 156,
+          "preview": "self.assertEqual(action_fx(role,'IDLE',0),'')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 157,
+          "preview": "self.assertEqual(action_fx(role,'WALK',0),'')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 161,
+          "preview": "action_fx('UNKNOWN','WORK',0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 163,
+          "preview": "action_fx('ENG','DANCE',0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 167,
+          "preview": "self.assertIn('from local_character_action_fx import action_fx',text)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 173,
+          "preview": "text.index('add(action_fx(role,action,phase'))",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 16
+    },
     "engineer_repair_wrist": {
       "definition": {
         "file": "tools/sprites/render_chatgpt_originals.py",
@@ -21,19 +240,19 @@
         },
         {
           "file": "tools/sprites/render_chatgpt_originals.py",
-          "line": 81,
+          "line": 92,
           "preview": "handpos=engineer_repair_wrist(phase)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/render_chatgpt_originals.py",
-          "line": 317,
+          "line": 332,
           "preview": "tool_x,tool_y=engineer_repair_wrist(phase)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/render_chatgpt_originals.py",
-          "line": 363,
+          "line": 381,
           "preview": "fx_tool_x,fx_tool_y=engineer_repair_wrist(phase)",
           "definition_candidate": false
         },
@@ -52,23 +271,70 @@
       ],
       "occurrence_count": 6
     },
-    "svg_frame": {
+    "engineer_work_wrist": {
       "definition": {
         "file": "tools/sprites/render_chatgpt_originals.py",
-        "line": 39,
+        "line": 38,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/render_chatgpt_originals.py",
-          "line": 39,
+          "line": 38,
+          "preview": "def engineer_work_wrist(phase:float,bounce:float)->tuple[float,float]:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 89,
+          "preview": "handpos=engineer_work_wrist(phase,bounce)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 334,
+          "preview": "tool_x,tool_y=engineer_work_wrist(phase,bounce)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 383,
+          "preview": "fx_tool_x,fx_tool_y=engineer_work_wrist(phase,bounce)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 91,
+          "preview": "from render_chatgpt_originals import svg_frame, engineer_work_wrist",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 97,
+          "preview": "expected_x, expected_y = engineer_work_wrist(phase, bounce)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 6
+    },
+    "svg_frame": {
+      "definition": {
+        "file": "tools/sprites/render_chatgpt_originals.py",
+        "line": 45,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 45,
           "preview": "def svg_frame(role:str, action:str, index:int, count:int)->str:",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/render_chatgpt_originals.py",
-          "line": 382,
+          "line": 402,
           "preview": "svg=svg_frame(role,action,i,count)",
           "definition_candidate": false
         },
@@ -87,28 +353,46 @@
         {
           "file": "tools/sprites/test_local_character_action_fx.py",
           "line": 91,
+          "preview": "from render_chatgpt_originals import svg_frame, engineer_work_wrist",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 98,
+          "preview": "tree = ET.fromstring(svg_frame(\"ENG\", \"WORK\", index, 10))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 123,
+          "preview": "markup = svg_frame(role, \"WORK\", 3, 10)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 128,
           "preview": "from render_chatgpt_originals import svg_frame",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/test_local_character_action_fx.py",
-          "line": 95,
+          "line": 132,
           "preview": "svg = ET.fromstring(svg_frame(\"ENG\", \"REPAIR\", index, 10))",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/test_local_character_action_fx.py",
-          "line": 113,
+          "line": 150,
           "preview": "svg = svg_frame(role, \"REPAIR\", 3, 10)",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 7
+      "occurrence_count": 10
     },
     "add": {
       "definition": {
         "file": "tools/sprites/render_chatgpt_originals.py",
-        "line": 51,
+        "line": 59,
         "kind": "function",
         "language": "python"
       },
@@ -839,7 +1123,7 @@
     "line": {
       "definition": {
         "file": "tools/sprites/render_chatgpt_originals.py",
-        "line": 52,
+        "line": 60,
         "kind": "function",
         "language": "python"
       },
@@ -1368,31 +1652,31 @@
         },
         {
           "file": "tools/sprites/render_chatgpt_originals.py",
-          "line": 52,
+          "line": 60,
           "preview": "def line(x1,y1,x2,y2,color,width,outline=3):",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/render_chatgpt_originals.py",
-          "line": 111,
+          "line": 122,
           "preview": "sleeve=line(shoulder_x,shoulder_y,ex,ey,'url(#jacket)',17,3)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/render_chatgpt_originals.py",
-          "line": 112,
+          "line": 123,
           "preview": "sleeve+=line(ex,ey,hx,hy,'url(#jacket)',14,3)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/render_chatgpt_originals.py",
-          "line": 114,
+          "line": 125,
           "preview": "sleeve+=line(ex+(1 if side=='R' else -1)*2,ey,hx,hy,p['jacket_hi'],4,1)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/render_chatgpt_originals.py",
-          "line": 194,
+          "line": 207,
           "preview": "add(line(hipx,yhip,kx,ky,'url(#pant)',23,3));add(line(kx,ky,ax,ay,'url(#pant)',20,3))",
           "definition_candidate": false
         },
@@ -1570,7 +1854,7 @@
     "hand": {
       "definition": {
         "file": "tools/sprites/render_chatgpt_originals.py",
-        "line": 55,
+        "line": 63,
         "kind": "function",
         "language": "python"
       },
@@ -1672,6 +1956,12 @@
           "definition_candidate": false
         },
         {
+          "file": "tools/sprites/local_character_action_fx.py",
+          "line": 40,
+          "preview": "# Deliberate pitch while the right hand sweeps the diagnostic tablet;",
+          "definition_candidate": false
+        },
+        {
           "file": "tools/sprites/patch_final_character_motion.py",
           "line": 10,
           "preview": "old_repair=\"'REPAIR':['half-kneel and reach tool toward low repair point','tool pressed to low repair point, free hand bracing','tool moves horizontally across repair point, no spa",
@@ -1697,43 +1987,49 @@
         },
         {
           "file": "tools/sprites/render_chatgpt_originals.py",
-          "line": 55,
+          "line": 39,
+          "preview": "# Separate wide diagnostic scan sweep. The held tablet, right hand and",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 63,
           "preview": "def hand(x,y):",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/render_chatgpt_originals.py",
-          "line": 58,
+          "line": 66,
           "preview": "# x shoulder, elbow, hand; design ergonomic positions for each action.",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/render_chatgpt_originals.py",
-          "line": 116,
+          "line": 127,
           "preview": "return sleeve+hand(hx,hy)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/render_chatgpt_originals.py",
-          "line": 281,
+          "line": 296,
           "preview": "# geometry, with invariant shape within each animation and hand contact.",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/render_chatgpt_originals.py",
-          "line": 307,
+          "line": 322,
           "preview": "# Two hand grips overlap the left/right handle in every phase.",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/render_chatgpt_originals.py",
-          "line": 312,
+          "line": 327,
           "preview": "# The exact same right-hand joint drives the held equipment. One cycle",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/render_chatgpt_originals.py",
-          "line": 354,
+          "line": 372,
           "preview": "# foreground right arm and hand over equipment, never floating",
           "definition_candidate": false
         },
@@ -1906,37 +2202,37 @@
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 55
+      "occurrence_count": 57
     },
     "joint_arm": {
       "definition": {
         "file": "tools/sprites/render_chatgpt_originals.py",
-        "line": 57,
+        "line": 65,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/render_chatgpt_originals.py",
-          "line": 57,
+          "line": 65,
           "preview": "def joint_arm(side, pose):",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/render_chatgpt_originals.py",
-          "line": 220,
+          "line": 235,
           "preview": "add(joint_arm('L',action))",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/render_chatgpt_originals.py",
-          "line": 355,
+          "line": 373,
           "preview": "add(joint_arm('R',action))",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/test_local_character_action_fx.py",
-          "line": 135,
+          "line": 172,
           "preview": "self.assertLess(text.index(\"add(joint_arm('R',action))\"),",
           "definition_candidate": false
         }
@@ -1946,20 +2242,20 @@
     "render_atlas": {
       "definition": {
         "file": "tools/sprites/render_chatgpt_originals.py",
-        "line": 377,
+        "line": 397,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/render_chatgpt_originals.py",
-          "line": 377,
+          "line": 397,
           "preview": "def render_atlas(role,action,outdir,save_svgs=False):",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/render_chatgpt_originals.py",
-          "line": 404,
+          "line": 424,
           "preview": "results.append(render_atlas(role,action,outdir,args.save_svg))",
           "definition_candidate": false
         }
@@ -1969,7 +2265,7 @@
     "main": {
       "definition": {
         "file": "tools/sprites/render_chatgpt_originals.py",
-        "line": 396,
+        "line": 416,
         "kind": "function",
         "language": "python"
       },
@@ -2799,7 +3095,7 @@
       ],
       "occurrence_count": 1
     },
-    "test_engineer_repair_torso_loads_but_both_feet_stay_planted": {
+    "test_engineer_work_scans_with_shared_tool_light_and_planted_boots": {
       "definition": {
         "file": "tools/sprites/test_local_character_action_fx.py",
         "line": 90,
@@ -2810,6 +3106,23 @@
         {
           "file": "tools/sprites/test_local_character_action_fx.py",
           "line": 90,
+          "preview": "def test_engineer_work_scans_with_shared_tool_light_and_planted_boots(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_engineer_repair_torso_loads_but_both_feet_stay_planted": {
+      "definition": {
+        "file": "tools/sprites/test_local_character_action_fx.py",
+        "line": 127,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 127,
           "preview": "def test_engineer_repair_torso_loads_but_both_feet_stay_planted(self):",
           "definition_candidate": true
         }
@@ -2819,14 +3132,14 @@
     "test_idle_and_walk_have_no_unattached_decorations": {
       "definition": {
         "file": "tools/sprites/test_local_character_action_fx.py",
-        "line": 117,
+        "line": 154,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/test_local_character_action_fx.py",
-          "line": 117,
+          "line": 154,
           "preview": "def test_idle_and_walk_have_no_unattached_decorations(self):",
           "definition_candidate": true
         }
@@ -2836,14 +3149,14 @@
     "test_bad_role_action_rejected": {
       "definition": {
         "file": "tools/sprites/test_local_character_action_fx.py",
-        "line": 122,
+        "line": 159,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/test_local_character_action_fx.py",
-          "line": 122,
+          "line": 159,
           "preview": "def test_bad_role_action_rejected(self):",
           "definition_candidate": true
         }
@@ -2853,14 +3166,14 @@
     "test_renderer_invokes_attached_effects_after_hand": {
       "definition": {
         "file": "tools/sprites/test_local_character_action_fx.py",
-        "line": 128,
+        "line": 165,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/test_local_character_action_fx.py",
-          "line": 128,
+          "line": 165,
           "preview": "def test_renderer_invokes_attached_effects_after_hand(self):",
           "definition_candidate": true
         }
