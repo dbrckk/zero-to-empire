@@ -5,1442 +5,754 @@
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
   "symbols": {
-    "load_json": {
+    "_atlas": {
       "definition": {
-        "file": "tools/sprites/asset_queue_utils.py",
-        "line": 44,
+        "file": "tools/sprites/build_character_identity_polish.py",
+        "line": 32,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 55,
-          "preview": "original_load, original_save = queue_utils.load_json, queue_utils.save_json",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 57,
-          "preview": "queue_utils.load_json = lambda path, default=None: (",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 74,
-          "preview": "queue_utils.load_json, queue_utils.save_json = original_load, original_save",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 118,
-          "preview": "original = orchestrator.load_json",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 126,
-          "preview": "orchestrator.load_json = fake_load",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 140,
-          "preview": "orchestrator.load_json = original",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 150,
-          "preview": "original = orchestrator.load_json",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 158,
-          "preview": "orchestrator.load_json = fake_load",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 172,
-          "preview": "orchestrator.load_json = original",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 260,
-          "preview": "original_load = orchestrator.load_json",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 263,
-          "preview": "orchestrator.load_json = lambda path, default=None: controlled",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 269,
-          "preview": "orchestrator.load_json = original_load",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 302,
-          "preview": "old_load, old_save = orchestrator.load_json, orchestrator.save_json",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 304,
-          "preview": "orchestrator.load_json = lambda path, default=None: saved.get(\"value\", default)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 310,
-          "preview": "orchestrator.load_json, orchestrator.save_json = old_load, old_save",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 345,
-          "preview": "original_load = orchestrator.load_json",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 356,
-          "preview": "orchestrator.load_json = fake_load",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 361,
-          "preview": "orchestrator.load_json = original_load",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 447,
-          "preview": "original = orchestrator.load_json",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 449,
-          "preview": "orchestrator.load_json = lambda path, default=None: {",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 457,
-          "preview": "orchestrator.load_json = original",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_queue_utils.py",
-          "line": 44,
-          "preview": "def load_json(path: Path, default: Any = None) -> Any:",
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 32,
+          "preview": "def _atlas(blob: bytes, asset_id: str) -> Image.Image:",
           "definition_candidate": true
         },
         {
-          "file": "tools/sprites/asset_queue_utils.py",
-          "line": 118,
-          "preview": "existing = load_json(MASTER, {}) or {}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_queue_utils.py",
-          "line": 162,
-          "preview": "bq = load_json(BUILDING_QUEUE, {}) or {}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_queue_utils.py",
-          "line": 180,
-          "preview": "cq = load_json(CHARACTER_QUEUE, {}) or {}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 24,
-          "preview": "load_json,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 64,
-          "preview": "controlled = load_json(CHARACTER_QUEUE, {}) or {}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 125,
-          "preview": "controlled = load_json(path, {}) or {}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 159,
-          "preview": "q = load_json(path, {}) or {}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 239,
-          "preview": "controlled = load_json(CHARACTER_QUEUE, {}) or {}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 416,
-          "preview": "controlled = load_json(CHARACTER_QUEUE, {}) or {}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 426,
-          "preview": "async_state = load_json(Path(\"art/production/kaggle-async-state.json\"), {}) or {}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 475,
-          "preview": "controlled=load_json(CHARACTER_QUEUE,{}) or {}",
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 141,
+          "preview": "image = _atlas(blob, asset_id)",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 33
+      "occurrence_count": 2
     },
-    "save_json": {
+    "_frames": {
       "definition": {
-        "file": "tools/sprites/asset_queue_utils.py",
+        "file": "tools/sprites/build_character_identity_polish.py",
+        "line": 42,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 42,
+          "preview": "def _frames(atlas: Image.Image, count: int) -> list[Image.Image]:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 170,
+          "preview": "original = _frames(record[\"atlas\"], FRAMES[record[\"action\"]])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 171,
+          "preview": "reference_frame = _frames(anchor[\"atlas\"], FRAMES[anchor[\"action\"]])[0]",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_pack": {
+      "definition": {
+        "file": "tools/sprites/build_character_identity_polish.py",
         "line": 50,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 55,
-          "preview": "original_load, original_save = queue_utils.load_json, queue_utils.save_json",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 60,
-          "preview": "queue_utils.save_json = lambda path, value: None",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 74,
-          "preview": "queue_utils.load_json, queue_utils.save_json = original_load, original_save",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 261,
-          "preview": "original_save = orchestrator.save_json",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 264,
-          "preview": "orchestrator.save_json = lambda path, value: saved.update({\"value\": value})",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 270,
-          "preview": "orchestrator.save_json = original_save",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 302,
-          "preview": "old_load, old_save = orchestrator.load_json, orchestrator.save_json",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 305,
-          "preview": "orchestrator.save_json = lambda path, value: saved.update(value=value)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 310,
-          "preview": "orchestrator.load_json, orchestrator.save_json = old_load, old_save",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 346,
-          "preview": "original_save = orchestrator.save_json",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 355,
-          "preview": "orchestrator.save_json = fake_save",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 362,
-          "preview": "orchestrator.save_json = original_save",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_queue_utils.py",
+          "file": "tools/sprites/build_character_identity_polish.py",
           "line": 50,
-          "preview": "def save_json(path: Path, value: Any) -> None:",
+          "preview": "def _pack(frames: list[Image.Image]) -> bytes:",
           "definition_candidate": true
         },
         {
-          "file": "tools/sprites/asset_queue_utils.py",
-          "line": 155,
-          "preview": "save_json(MASTER, queue)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_queue_utils.py",
-          "line": 228,
-          "preview": "save_json(MASTER, queue)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 25,
-          "preview": "save_json,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 138,
-          "preview": "save_json(path, controlled)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 287,
-          "preview": "save_json(CHARACTER_QUEUE, controlled)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 301,
-          "preview": "save_json(BUILDING_QUEUE, {\"mode\": \"kaggle-candidate-only\", \"family\": group, \"reason\": f\"Autofactory 235: generate coherent {group} family candidate set; strict promotion remains m",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 374,
-          "preview": "save_json(CHARACTER_QUEUE, {",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 619,
-          "preview": "save_json(MASTER, queue)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 621,
-          "preview": "save_json(STATE, decision)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 22
-    },
-    "manifest_rows": {
-      "definition": {
-        "file": "tools/sprites/asset_queue_utils.py",
-        "line": 55,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/asset_queue_utils.py",
-          "line": 55,
-          "preview": "def manifest_rows() -> list[dict[str, str]]:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/asset_queue_utils.py",
-          "line": 79,
-          "preview": "ids = {r[\"id\"] for r in manifest_rows() if r[\"id\"].startswith(\"CHR-\")}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_queue_utils.py",
-          "line": 122,
-          "preview": "for row in manifest_rows():",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_sprite_factory.py",
-          "line": 65,
-          "preview": "def manifest_rows():",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_sprite_factory.py",
-          "line": 146,
-          "preview": "ap=argparse.ArgumentParser();ap.add_argument('--kind',choices=['ALL','MCH','TER','PRP','VEH','CORE'],default='ALL');ap.add_argument('--count',type=int,default=30);ap.add_argument('",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/pollinations_building_batch.py",
-          "line": 16,
-          "preview": "def manifest_rows():",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/pollinations_building_batch.py",
-          "line": 27,
-          "preview": "rows=manifest_rows()",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 7
-    },
-    "unresolved_ids": {
-      "definition": {
-        "file": "tools/sprites/asset_queue_utils.py",
-        "line": 78,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/asset_queue_utils.py",
-          "line": 78,
-          "preview": "def unresolved_ids() -> set[str]:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/asset_queue_utils.py",
-          "line": 120,
-          "preview": "unresolved = unresolved_ids()",
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 205,
+          "preview": "blob = _pack(fixed)",
           "definition_candidate": false
         }
       ],
       "occurrence_count": 2
     },
-    "default_asset": {
+    "_font": {
       "definition": {
-        "file": "tools/sprites/asset_queue_utils.py",
-        "line": 85,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/asset_queue_utils.py",
-          "line": 85,
-          "preview": "def default_asset(row: dict[str, str], unresolved: set[str]) -> dict[str, Any]:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/asset_queue_utils.py",
-          "line": 123,
-          "preview": "base = default_asset(row, unresolved)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 2
-    },
-    "ensure_master": {
-      "definition": {
-        "file": "tools/sprites/asset_queue_utils.py",
-        "line": 117,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/asset_queue_utils.py",
-          "line": 117,
-          "preview": "def ensure_master() -> dict[str, Any]:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 23,
-          "preview": "ensure_master,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 612,
-          "preview": "queue = ensure_master()",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 3
-    },
-    "sync_controlled_queues": {
-      "definition": {
-        "file": "tools/sprites/asset_queue_utils.py",
-        "line": 159,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 61,
-          "preview": "queue_utils.sync_controlled_queues(queue)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 65,
-          "preview": "queue_utils.sync_controlled_queues(queue)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 70,
-          "preview": "queue_utils.sync_controlled_queues(queue)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 428,
-          "preview": "sync = text.index(\"    sync_controlled_queues(queue)\", trigger)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_queue_utils.py",
-          "line": 159,
-          "preview": "def sync_controlled_queues(queue: dict[str, Any]) -> None:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 27,
-          "preview": "sync_controlled_queues,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 617,
-          "preview": "sync_controlled_queues(queue)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 7
-    },
-    "stats": {
-      "definition": {
-        "file": "tools/sprites/asset_queue_utils.py",
-        "line": 231,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/asset_queue_utils.py",
-          "line": 231,
-          "preview": "def stats(queue: dict[str, Any]) -> dict[str, Any]:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/asset_queue_utils.py",
-          "line": 259,
-          "preview": "s = stats(queue)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 26,
-          "preview": "stats,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 543,
-          "preview": "s = stats(queue)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 545,
-          "preview": "return {\"action\": \"STOP_STRICT_TARGET_REACHED\", \"group\": None, \"stats\": s}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 549,
-          "preview": "return {\"action\": \"WAIT_KAGGLE_BUSY\", \"group\": \"controlled-building\", \"stats\": s}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 552,
-          "preview": "return {\"action\": \"DISPATCH_KAGGLE_BUILDING\", \"group\": \"controlled-building\", \"ids\": ids, \"count\": len(ids), \"stats\": s}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 556,
-          "preview": "return {\"action\": \"WAIT_KAGGLE_BUSY\", \"group\": group, \"stats\": s}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 558,
-          "preview": "return {\"action\": \"DISPATCH_KAGGLE_BUILDING\", **prepared, \"stats\": s}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 564,
-          "preview": "\"group\":\"+\".join(repair_ids),\"ids\":repair_ids,\"stats\":s}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 568,
-          "preview": "return {\"action\": \"WAIT_KAGGLE_BUSY\", \"group\": \"controlled-character\", \"stats\": s}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 572,
-          "preview": "return {\"action\": \"DISPATCH_KAGGLE_CHARACTER\", \"group\": \"controlled-character\", \"ids\": ids, \"count\": producer_count, \"stats\": s}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 592,
-          "preview": "return {\"action\": \"WAIT_KAGGLE_BUSY\", \"group\": \"+\".join(burst_groups), \"stats\": s}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 595,
-          "preview": "return {\"action\": \"DISPATCH_KAGGLE_CHARACTER\", **prepared, \"stats\": s}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 599,
-          "preview": "return {\"action\": \"WAIT_FX_BUSY\", \"group\": \"FX-HISTORICAL\", \"stats\": s}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 604,
-          "preview": "return {\"action\": \"DISPATCH_FX_EVIDENCE\", \"group\": \"FX-HISTORICAL\", \"ids\": [x[\"id\"] for x in fx], \"count\": len(fx), \"stats\": s}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 605,
-          "preview": "refreshed = stats(queue)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 607,
-          "preview": "return {\"action\": \"PRODUCTION_235_COMPLETE_REVIEW_BACKLOG\", \"group\": None, \"stats\": refreshed}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 608,
-          "preview": "return {\"action\": \"NO_AUTOMATIC_WORK_AVAILABLE\", \"group\": None, \"stats\": refreshed}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 620,
-          "preview": "decision[\"stats_after\"] = stats(queue)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_character_provider_reservation.py",
-          "line": 22,
-          "preview": "with patch.object(worker,'stats',return_value={'strict_done':216}), \\",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 21
-    },
-    "write_summary": {
-      "definition": {
-        "file": "tools/sprites/asset_queue_utils.py",
-        "line": 258,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/asset_queue_utils.py",
-          "line": 258,
-          "preview": "def write_summary(queue: dict[str, Any], decision: dict[str, Any]) -> None:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 28,
-          "preview": "write_summary,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 622,
-          "preview": "write_summary(queue, decision)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 3
-    },
-    "by_id": {
-      "definition": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
+        "file": "tools/sprites/build_character_identity_polish.py",
         "line": 59,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/animation_batch_planner.py",
+          "file": "tools/sprites/build_character_identity_polish.py",
           "line": 59,
-          "preview": "by_id = {a[\"id\"]: a for a in assets}",
+          "preview": "def _font(size: int) -> ImageFont.ImageFont:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 75,
+          "preview": "font = _font(17)",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/animation_batch_planner.py",
-          "line": 60,
-          "preview": "if len(by_id) != 235:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/animation_batch_planner.py",
+          "file": "tools/sprites/build_character_identity_polish.py",
           "line": 76,
-          "preview": "record = by_id.get(asset_id)",
+          "preview": "small = _font(12)",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/asset_queue_utils.py",
-          "line": 160,
-          "preview": "by_id = {x[\"id\"]: x for x in queue[\"assets\"]}",
+          "file": "tools/sprites/build_character_role_contact_sheet.py",
+          "line": 40,
+          "preview": "def _font(size: int) -> ImageFont.ImageFont:",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/asset_queue_utils.py",
-          "line": 165,
-          "preview": "asset = by_id.get(aid)",
+          "file": "tools/sprites/build_character_role_contact_sheet.py",
+          "line": 129,
+          "preview": "hfont, font, small = _font(23), _font(16), _font(12)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 5
+    },
+    "_comparison": {
+      "definition": {
+        "file": "tools/sprites/build_character_identity_polish.py",
+        "line": 69,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 69,
+          "preview": "def _comparison(rows: list[dict], destination: Path) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 264,
+          "preview": "_comparison(previews, comparison_path)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "build": {
+      "definition": {
+        "file": "tools/sprites/build_character_identity_polish.py",
+        "line": 99,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "app/build.gradle.kts",
+          "line": 211,
+          "preview": "// release artifact while a real store build has one explicit, fail-closed entry point.",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/asset_queue_utils.py",
-          "line": 183,
-          "preview": "asset = by_id.get(aid)",
+          "file": "app/build.gradle.kts",
+          "line": 213,
+          "preview": "group = \"build\"",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
+          "line": 45,
+          "preview": "* The debug build exposes this surface as a separate launcher icon. It is",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/AdMobInterstitialGateway.kt",
+          "line": 35,
+          "preview": "AdRequest.Builder().build(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/AdMobRewardedGateway.kt",
+          "line": 57,
+          "preview": "AdRequest.Builder().build(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/AdaptiveMusic.kt",
+          "line": 27,
+          "preview": ".build()",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/AdaptiveMusic.kt",
           "line": 59,
-          "preview": "def by_id(queue: dict[str, Any]) -> dict[str, dict[str, Any]]:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 187,
-          "preview": "assets = by_id(queue)",
+          "preview": ".build()",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 296,
-          "preview": "assets = by_id(queue)",
+          "file": "app/src/main/java/com/zerotoempire/game/AdaptiveMusic.kt",
+          "line": 75,
+          "preview": ".build()",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 311,
-          "preview": "assets = by_id(queue)",
+          "file": "app/src/main/java/com/zerotoempire/game/AdaptiveMusic.kt",
+          "line": 79,
+          "preview": ".build()",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 415,
-          "preview": "master = by_id(queue)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 496,
-          "preview": "master = by_id(queue)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_candidate_bank.py",
-          "line": 51,
-          "preview": "by_id = {row[\"id\"]: row for row in original_rows}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_candidate_bank.py",
-          "line": 58,
-          "preview": "or set(by_id) != expected or set(by_qa) != expected):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_candidate_bank.py",
-          "line": 61,
-          "preview": "asset_id: {\"source\": source, \"manifest\": by_id[asset_id],",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/reconcile_strict_approvals.py",
-          "line": 43,
-          "preview": "by_id = {a[\"id\"]: a for a in queue[\"assets\"]}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/reconcile_strict_approvals.py",
-          "line": 48,
-          "preview": "missing = [aid for aid in expected if aid not in by_id]",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/reconcile_strict_approvals.py",
-          "line": 52,
-          "preview": "asset = by_id[aid]",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 18
-    },
-    "mirror_character_outcomes_from_controlled": {
-      "definition": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "line": 63,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 455,
-          "preview": "orchestrator.mirror_character_outcomes_from_controlled(queue, active)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
           "line": 63,
-          "preview": "def mirror_character_outcomes_from_controlled(queue: dict[str, Any], active: list[dict[str, Any]]) -> None:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 100,
-          "preview": "mirror_character_outcomes_from_controlled(queue, active)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 3
-    },
-    "update_from_trigger": {
-      "definition": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "line": 88,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 108,
-          "preview": "orchestrator.update_from_trigger(queue)",
+          "preview": ".enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())",
           "definition_candidate": false
         },
         {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 427,
-          "preview": "trigger = text.index(\"    update_from_trigger(queue)\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 88,
-          "preview": "def update_from_trigger(queue: dict[str, Any]) -> None:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 616,
-          "preview": "update_from_trigger(queue)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 4
-    },
-    "active_pending": {
-      "definition": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "line": 158,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 158,
-          "preview": "def active_pending(path: Path) -> list[dict[str, Any]]:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 495,
-          "preview": "ids = [str(x.get(\"id\", \"\")).upper() for x in active_pending(path)]",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 2
-    },
-    "character_retry_available": {
-      "definition": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "line": 163,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 190,
-          "preview": "self.assertFalse(orchestrator.character_retry_available(asset))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 203,
-          "preview": "self.assertTrue(orchestrator.character_retry_available(asset))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 394,
-          "preview": "self.assertTrue(orchestrator.character_retry_available(asset))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 406,
-          "preview": "self.assertTrue(orchestrator.character_retry_available(asset))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 418,
-          "preview": "self.assertFalse(orchestrator.character_retry_available(asset))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 163,
-          "preview": "def character_retry_available(asset: dict[str, Any]) -> bool:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 195,
-          "preview": "if not character_retry_available(x):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 320,
-          "preview": "and character_retry_available(x)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 403,
-          "preview": "character_retry_available(x)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 460,
-          "preview": "if not character_retry_available(asset):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 504,
-          "preview": "character_retry_available(master[aid])",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 522,
-          "preview": "and character_retry_available(x)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 585,
-          "preview": "and character_retry_available(x)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_asset_production_policy.py",
-          "line": 11,
-          "preview": "character_retry_available, mark_dispatch)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_asset_production_policy.py",
-          "line": 49,
-          "preview": "self.assertTrue(character_retry_available(candidate))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_asset_production_policy.py",
-          "line": 60,
-          "preview": "self.assertFalse(character_retry_available(candidate))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_asset_production_policy.py",
+          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
           "line": 65,
-          "preview": "self.assertFalse(character_retry_available(candidate))",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 17
-    },
-    "mark_dispatch": {
-      "definition": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "line": 186,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 243,
-          "preview": "dispatched = orchestrator.mark_dispatch(queue, [\"CHR-OP-WALK\"], \"kaggle-character-sheet\")",
+          "preview": ".build()",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 186,
-          "preview": "def mark_dispatch(queue: dict[str, Any], ids: list[str], generator: str) -> list[str]:",
+          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
+          "line": 116,
+          "preview": ".setProductList(listOf(QueryProductDetailsParams.Product.newBuilder().setProductId(product.productId).setProductType(BillingClient.ProductType.INAPP).build()))",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
+          "line": 117,
+          "preview": ".build()",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
+          "line": 135,
+          "preview": "val productParams = BillingFlowParams.ProductDetailsParams.newBuilder().setProductDetails(details).build()",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
+          "line": 136,
+          "preview": "val flowParams = BillingFlowParams.newBuilder().setProductDetailsParamsList(listOf(productParams)).build()",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
+          "line": 161,
+          "preview": "val params = QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.INAPP).build()",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
+          "line": 345,
+          "preview": "onResult(BillingResult.newBuilder().setResponseCode(BillingClient.BillingResponseCode.OK).build())",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
+          "line": 348,
+          "preview": "val params = AcknowledgePurchaseParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
+          "line": 356,
+          "preview": "val params = ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
+          "line": 368,
+          "preview": "val params = ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
+          "line": 380,
+          "preview": "val params = ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/PremiumSfx.kt",
+          "line": 28,
+          "preview": ".build()",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/PremiumSfx.kt",
+          "line": 29,
+          "preview": ").build()",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/PrivacyConsentManager.kt",
+          "line": 16,
+          "preview": "val params = ConsentRequestParameters.Builder().build()",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/PrivacyPolicy.kt",
+          "line": 26,
+          "preview": "\"The current build uses local Android logging and local preferences for development and gameplay diagnostics. It does not include a third-party developer analytics SDK.\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
+          "line": 100,
+          "preview": "* outside canonical runtime until the art approval and Android build gates.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/validate_release_privacy.py",
+          "line": 8,
+          "preview": "BUILD = ROOT / \"app/build.gradle.kts\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/validate_release_privacy.py",
+          "line": 20,
+          "preview": "build = BUILD.read_text(encoding=\"utf-8\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/validate_release_privacy.py",
+          "line": 33,
+          "preview": "dependencies = re.findall(r'implementation\\(\"([^\"]+)\"\\)', build)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 14,
+          "preview": "from character_review_matrix import build",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 137,
+          "preview": "report=build(json.loads(args.queue.read_text(encoding=\"utf-8\")))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/autonomous_walk.py",
+          "line": 274,
+          "preview": "'build':'pose-studio-autonomous-v2','config':asdict(settings),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/autonomous_walk.py",
+          "line": 299,
+          "preview": "parser.add_argument('--output',type=Path,default=Path('build/character-tech-walk'))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_bank_mobile_review.py",
+          "line": 180,
+          "preview": "def build(bank_path: Path, local_path: Path, destination: Path,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_bank_mobile_review.py",
+          "line": 280,
+          "preview": "print(json.dumps(build(args.bank,args.local_original,args.output,args.motion_audit),sort_keys=True))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 99,
+          "preview": "def build(bank_path: Path, audit_path: Path, destination: Path,",
           "definition_candidate": true
         },
         {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 302,
-          "preview": "dispatched = mark_dispatch(queue, unresolved, \"kaggle-building-family\")",
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 276,
+          "preview": "report = build(args.bank, args.audit, args.output, args.report, args.comparison)",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 386,
-          "preview": "dispatched = mark_dispatch(queue, [x[\"id\"] for x in targets], \"kaggle-character-sheet\")",
+          "file": "tools/sprites/build_character_role_contact_sheet.py",
+          "line": 118,
+          "preview": "def build(bank_path: Path, audit_path: Path, output_path: Path) -> dict:",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 550,
-          "preview": "ids = mark_dispatch(queue, building_pending, \"kaggle-building-family\")",
+          "file": "tools/sprites/build_character_role_contact_sheet.py",
+          "line": 179,
+          "preview": "print(json.dumps(build(args.bank, args.audit, args.output), sort_keys=True))",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 569,
-          "preview": "ids = mark_dispatch(queue, character_pending[:CHARACTER_BATCH_SIZE], \"kaggle-character-sheet\")",
+          "file": "tools/sprites/build_original_offline_review.py",
+          "line": 73,
+          "preview": "def build(source:Path,destination:Path)->dict:",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/tests/test_asset_production_policy.py",
-          "line": 11,
-          "preview": "character_retry_available, mark_dispatch)",
+          "file": "tools/sprites/build_original_offline_review.py",
+          "line": 106,
+          "preview": "print(json.dumps(build(p.source,p.output),sort_keys=True))",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/tests/test_asset_production_policy.py",
-          "line": 50,
-          "preview": "dispatched = mark_dispatch({\"assets\": [candidate]},",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 8
-    },
-    "prioritize_controlled_character_targets": {
-      "definition": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "line": 225,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 265,
-          "preview": "count = orchestrator.prioritize_controlled_character_targets(",
+          "file": "tools/sprites/character_review_matrix.py",
+          "line": 30,
+          "preview": "def build(queue:dict)->dict:",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 225,
-          "preview": "def prioritize_controlled_character_targets(ids: list[str]) -> int:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 387,
-          "preview": "producer_count = prioritize_controlled_character_targets(dispatched)",
+          "file": "tools/sprites/character_review_matrix.py",
+          "line": 136,
+          "preview": "report=build(json.loads(args.queue.read_text(encoding=\"utf-8\")))",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 571,
-          "preview": "producer_count = prioritize_controlled_character_targets(ids)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 4
-    },
-    "building_family_ids": {
-      "definition": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "line": 291,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 291,
-          "preview": "def building_family_ids(group: str) -> list[str]:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 297,
-          "preview": "unresolved = [aid for aid in building_family_ids(group) if aid in assets and assets[aid][\"strict_status\"] != \"DONE\"]",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 300,
-          "preview": "targets = [{\"id\": aid, \"status\": \"PENDING_KAGGLE\", \"autofactory_context_only\": aid not in unresolved} for aid in building_family_ids(group)]",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 3
-    },
-    "prepare_building_group": {
-      "definition": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "line": 295,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 295,
-          "preview": "def prepare_building_group(queue: dict[str, Any], group: str) -> dict[str, Any]:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 557,
-          "preview": "prepared = prepare_building_group(queue, group)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 2
-    },
-    "prepare_character_burst": {
-      "definition": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "line": 306,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 306,
-          "preview": "result = orchestrator.prepare_character_burst(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 357,
-          "preview": "result = orchestrator.prepare_character_burst(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 437,
-          "preview": "self.assertTrue(hasattr(orchestrator, \"prepare_character_burst\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 306,
-          "preview": "def prepare_character_burst(queue: dict[str, Any], groups: list[str]) -> dict[str, Any]:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 593,
-          "preview": "prepared = prepare_character_burst(queue, burst_groups)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 5
-    },
-    "next_group": {
-      "definition": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "line": 395,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 395,
-          "preview": "def next_group(queue: dict[str, Any], lane: str, priority: list[str]) -> str | None:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 553,
-          "preview": "group = next_group(queue, \"kaggle-building-family\", BUILDING_PRIORITY)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 573,
-          "preview": "first_group = next_group(queue, \"kaggle-character-sheet\", CHARACTER_PRIORITY)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_character_provider_reservation.py",
-          "line": 24,
-          "preview": "patch.object(worker,'next_group',return_value=None):",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 4
-    },
-    "close_exhausted_character_dispatches": {
-      "definition": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "line": 414,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 138,
-          "preview": "orchestrator.close_exhausted_character_dispatches(queue)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
+          "file": "tools/sprites/export_tech_canonical_review.py",
           "line": 170,
-          "preview": "orchestrator.close_exhausted_character_dispatches(queue)",
+          "preview": "parser.add_argument(\"--source\", type=Path, default=Path(\"build/tech-actions-v3\"))",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 414,
-          "preview": "def close_exhausted_character_dispatches(queue: dict[str, Any]) -> None:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 542,
-          "preview": "close_exhausted_character_dispatches(queue)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 4
-    },
-    "active_pollinations_repair": {
-      "definition": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "line": 469,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 469,
-          "preview": "def active_pollinations_repair() -> list[str]:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 561,
-          "preview": "repair_ids=active_pollinations_repair()",
+          "file": "tools/sprites/identity_locked_walk_candidate.py",
+          "line": 7,
+          "preview": "All output goes to build/; never overwrite the canonical sprite or runtime.",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/test_character_provider_reservation.py",
-          "line": 21,
-          "preview": "self.assertEqual(worker.active_pollinations_repair(),['CHR-LOG-CARRY'])",
+          "file": "tools/sprites/identity_locked_walk_candidate.py",
+          "line": 138,
+          "preview": "parser.add_argument(\"--out\",type=Path,default=Path(\"build/identity-locked-walk-review\"))",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/test_character_provider_reservation.py",
-          "line": 41,
-          "preview": "self.assertEqual(worker.active_pollinations_repair(),expected)",
+          "file": "tools/sprites/kaggle_sprite_factory.py",
+          "line": 33,
+          "preview": "'phase-matter fabricator with luminous cyan containment ring and central build cradle',",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/test_character_provider_reservation.py",
-          "line": 51,
-          "preview": "self.assertEqual(worker.active_pollinations_repair(),[])",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 5
-    },
-    "pending_ids_from_controlled": {
-      "definition": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "line": 494,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 494,
-          "preview": "def pending_ids_from_controlled(path: Path, queue: dict[str, Any]) -> list[str]:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 546,
-          "preview": "building_pending = pending_ids_from_controlled(BUILDING_QUEUE, queue)",
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 428,
+          "preview": "parser.add_argument('--source',type=Path,default=Path('build/tech-actions-v3'))",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 565,
-          "preview": "character_pending = pending_ids_from_controlled(CHARACTER_QUEUE, queue)",
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 429,
+          "preview": "parser.add_argument('--output',type=Path,default=Path('build/tech-actions-runtime-review'))",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/test_character_provider_reservation.py",
+          "file": "tools/sprites/procedural_fx_factory.py",
+          "line": 148,
+          "preview": "def build(target: str) -> Image.Image:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/procedural_fx_factory.py",
+          "line": 186,
+          "preview": "build(target).save(out, \"PNG\", optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 503,
+          "preview": "\"asset_id\": asset_id, \"action\": action, \"build\": \"modular-tech-actions-v3\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 545,
+          "preview": "parser.add_argument(\"--output\", type=Path, default=Path(\"build/tech-actions-v3\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_walk_v2.py",
+          "line": 319,
+          "preview": "def build(atlas:Path,out:Path,frames=24,fps=12):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_walk_v2.py",
+          "line": 346,
+          "preview": "manifest={'asset_id':'CHR-TECH-WALK','build':'modular-skin-v2-IK-joint-guards',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_walk_v2.py",
+          "line": 368,
+          "preview": "parser.add_argument('--output',type=Path,default=Path('build/tech-walk-modular-v2'))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_walk_v2.py",
+          "line": 372,
+          "preview": "manifest,path=build(args.skin,args.output,args.frames,args.fps)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/temporal_sprite_audit.py",
+          "line": 212,
+          "preview": "parser.add_argument('--source',type=Path,default=Path('build/tech-actions-v3'))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/temporal_sprite_audit.py",
+          "line": 213,
+          "preview": "parser.add_argument('--output',type=Path,default=Path('build/tech-temporal-review'))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_autonomous_walk.py",
+          "line": 74,
+          "preview": "root=Path(work)/'build'",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_review_matrix.py",
+          "line": 2,
+          "preview": "from character_review_matrix import build,markdown",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_review_matrix.py",
           "line": 23,
-          "preview": "patch.object(worker,'pending_ids_from_controlled',return_value=[]), \\",
+          "preview": "report=build(fake_queue())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_review_matrix.py",
+          "line": 32,
+          "preview": "report=build(fake_queue())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_review_matrix.py",
+          "line": 48,
+          "preview": "report=build(q)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_review_matrix.py",
+          "line": 58,
+          "preview": "with self.assertRaises(ValueError):build(q)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_review_matrix.py",
+          "line": 61,
+          "preview": "with self.assertRaises(ValueError):build(q)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_review_matrix.py",
+          "line": 64,
+          "preview": "with self.assertRaises(ValueError):build(q)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_review_matrix.py",
+          "line": 68,
+          "preview": "first=build(q)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_review_matrix.py",
+          "line": 69,
+          "preview": "second=build(q)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_focused_sprite_atlas.py",
+          "line": 1,
+          "preview": "\"\"\"Offline framing tests: no build artifacts or user review necessary.\"\"\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_package_tech_actions_runtime.py",
+          "line": 15,
+          "preview": "FIXTURE=Path('build/tech-actions-v3').resolve()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_package_tech_actions_runtime.py",
+          "line": 20,
+          "preview": "self.assertTrue(FIXTURE.is_dir(),f'Six-action build missing: {FIXTURE}')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
+          "line": 10,
+          "preview": "CANVAS, GROUND, PART_NAMES, build, draw_frame, foot_local, foot_roll,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
+          "line": 113,
+          "preview": "manifest,bundle=build(KIT,out,frames=8,fps=8)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
+          "line": 136,
+          "preview": "with self.assertRaises(ValueError):build(KIT,Path(tmp),frames=n,fps=fps)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
+          "line": 16,
+          "preview": "from build_character_bank_mobile_review import build",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
+          "line": 88,
+          "preview": "d=build(self.bank,self.original,self.html)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
+          "line": 116,
+          "preview": "build(self.bank, self.original, self.html, audit)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
+          "line": 136,
+          "preview": "build(self.bank, self.original, self.html, audit)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
+          "line": 142,
+          "preview": "build(self.bank,self.original,self.html)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
+          "line": 149,
+          "preview": "build(self.bank,self.original,self.html)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
+          "line": 154,
+          "preview": "build(self.bank,self.original,self.html)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
+          "line": 167,
+          "preview": "build(self.bank,self.original,self.html)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 17,
+          "preview": "from build_character_identity_polish import build",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 89,
+          "preview": "result = build(self.bank, self.audit, self.output, self.report, self.comparison)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 127,
+          "preview": "result = build(self.bank, self.audit, self.output, self.report)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 138,
+          "preview": "result = build(self.bank, self.audit, self.output, self.report)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 146,
+          "preview": "build(self.bank, self.audit, self.output, self.report)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 155,
+          "preview": "build(self.bank, self.audit, self.output, self.report)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 163,
+          "preview": "build(self.bank, self.audit, self.output, self.report)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 169,
+          "preview": "build(self.bank, self.audit, self.output, self.report)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+          "line": 16,
+          "preview": "from build_character_role_contact_sheet import build",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+          "line": 79,
+          "preview": "report = build(self.bank, self.audit, self.output)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+          "line": 94,
+          "preview": "build(self.bank, self.audit, self.output)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+          "line": 101,
+          "preview": "build(self.bank, self.audit, self.output)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+          "line": 107,
+          "preview": "build(self.bank, self.audit, self.output)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+          "line": 113,
+          "preview": "build(self.bank, self.audit, self.output)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+          "line": 118,
+          "preview": "build(self.bank, self.audit, self.output)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+          "line": 131,
+          "preview": "build(self.bank, self.audit, self.output)",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 4
-    },
-    "order_character_groups_by_retry": {
-      "definition": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "line": 511,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/assets/test_queue_state_policy.py",
-          "line": 219,
-          "preview": "ordered = orchestrator.order_character_groups_by_retry(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 511,
-          "preview": "def order_character_groups_by_retry(queue: dict[str, Any], groups: list[str]) -> list[str]:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 589,
-          "preview": "ordered = order_character_groups_by_retry(queue, candidate_groups)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 3
-    },
-    "current_epoch_attempts": {
-      "definition": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "line": 517,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 517,
-          "preview": "def current_epoch_attempts(group: str) -> float:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 537,
-          "preview": "key=lambda group: (current_epoch_attempts(group), priority.get(group, len(priority)), group),",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 2
-    },
-    "make_decision": {
-      "definition": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "line": 541,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 541,
-          "preview": "def make_decision(queue: dict[str, Any]) -> dict[str, Any]:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 618,
-          "preview": "decision = make_decision(queue)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_character_provider_reservation.py",
-          "line": 25,
-          "preview": "answer=worker.make_decision({",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 3
+      "occurrence_count": 99
     },
     "main": {
       "definition": {
-        "file": "tools/sprites/asset_wave_orchestrator.py",
-        "line": 611,
+        "file": "tools/sprites/build_character_identity_polish.py",
+        "line": 268,
         "kind": "function",
         "language": "python"
       },
@@ -1845,7 +1157,7 @@
           "file": "tools/sprites/asset_wave_orchestrator.py",
           "line": 611,
           "preview": "def main() -> int:",
-          "definition_candidate": true
+          "definition_candidate": false
         },
         {
           "file": "tools/sprites/asset_wave_orchestrator.py",
@@ -1940,6 +1252,18 @@
         {
           "file": "tools/sprites/build_character_candidate_bank.py",
           "line": 290,
+          "preview": "raise SystemExit(main())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 268,
+          "preview": "def main() -> int:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 285,
           "preview": "raise SystemExit(main())",
           "definition_candidate": false
         },
@@ -2152,744 +1476,22 @@
           "line": 124,
           "preview": "def main() -> None:",
           "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/integrate_fx06_runtime.py",
-          "line": 139,
-          "preview": "main()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/integrate_fx07_runtime.py",
-          "line": 6,
-          "preview": "PATH = ROOT / \"app/src/main/java/com/zerotoempire/game/PurchaseImpactVfx.kt\"",
-          "definition_candidate": false
         }
       ],
       "occurrence_count": 120
     },
-    "_font": {
+    "CharacterIdentityPolishTests": {
       "definition": {
-        "file": "tools/sprites/build_character_role_contact_sheet.py",
-        "line": 40,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/build_character_role_contact_sheet.py",
-          "line": 40,
-          "preview": "def _font(size: int) -> ImageFont.ImageFont:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/build_character_role_contact_sheet.py",
-          "line": 129,
-          "preview": "hfont, font, small = _font(23), _font(16), _font(12)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 2
-    },
-    "_load": {
-      "definition": {
-        "file": "tools/sprites/build_character_role_contact_sheet.py",
-        "line": 49,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/build_character_role_contact_sheet.py",
-          "line": 49,
-          "preview": "def _load(bank_path: Path, audit_path: Path) -> tuple[dict, list[dict]]:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/build_character_role_contact_sheet.py",
-          "line": 119,
-          "preview": "meta, rows = _load(bank_path, audit_path)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 2
-    },
-    "build": {
-      "definition": {
-        "file": "tools/sprites/build_character_role_contact_sheet.py",
-        "line": 118,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "app/build.gradle.kts",
-          "line": 211,
-          "preview": "// release artifact while a real store build has one explicit, fail-closed entry point.",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/build.gradle.kts",
-          "line": 213,
-          "preview": "group = \"build\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
-          "line": 45,
-          "preview": "* The debug build exposes this surface as a separate launcher icon. It is",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/AdMobInterstitialGateway.kt",
-          "line": 35,
-          "preview": "AdRequest.Builder().build(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/AdMobRewardedGateway.kt",
-          "line": 57,
-          "preview": "AdRequest.Builder().build(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/AdaptiveMusic.kt",
-          "line": 27,
-          "preview": ".build()",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/AdaptiveMusic.kt",
-          "line": 59,
-          "preview": ".build()",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/AdaptiveMusic.kt",
-          "line": 75,
-          "preview": ".build()",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/AdaptiveMusic.kt",
-          "line": 79,
-          "preview": ".build()",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
-          "line": 63,
-          "preview": ".enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
-          "line": 65,
-          "preview": ".build()",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
-          "line": 116,
-          "preview": ".setProductList(listOf(QueryProductDetailsParams.Product.newBuilder().setProductId(product.productId).setProductType(BillingClient.ProductType.INAPP).build()))",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
-          "line": 117,
-          "preview": ".build()",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
-          "line": 135,
-          "preview": "val productParams = BillingFlowParams.ProductDetailsParams.newBuilder().setProductDetails(details).build()",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
-          "line": 136,
-          "preview": "val flowParams = BillingFlowParams.newBuilder().setProductDetailsParamsList(listOf(productParams)).build()",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
-          "line": 161,
-          "preview": "val params = QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.INAPP).build()",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
-          "line": 345,
-          "preview": "onResult(BillingResult.newBuilder().setResponseCode(BillingClient.BillingResponseCode.OK).build())",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
-          "line": 348,
-          "preview": "val params = AcknowledgePurchaseParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
-          "line": 356,
-          "preview": "val params = ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
-          "line": 368,
-          "preview": "val params = ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
-          "line": 380,
-          "preview": "val params = ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PremiumSfx.kt",
-          "line": 28,
-          "preview": ".build()",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PremiumSfx.kt",
-          "line": 29,
-          "preview": ").build()",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PrivacyConsentManager.kt",
-          "line": 16,
-          "preview": "val params = ConsentRequestParameters.Builder().build()",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PrivacyPolicy.kt",
-          "line": 26,
-          "preview": "\"The current build uses local Android logging and local preferences for development and gameplay diagnostics. It does not include a third-party developer analytics SDK.\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
-          "line": 100,
-          "preview": "* outside canonical runtime until the art approval and Android build gates.",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/android/validate_release_privacy.py",
-          "line": 8,
-          "preview": "BUILD = ROOT / \"app/build.gradle.kts\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/android/validate_release_privacy.py",
-          "line": 20,
-          "preview": "build = BUILD.read_text(encoding=\"utf-8\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/android/validate_release_privacy.py",
-          "line": 33,
-          "preview": "dependencies = re.findall(r'implementation\\(\"([^\"]+)\"\\)', build)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/audit_character_candidates.py",
-          "line": 14,
-          "preview": "from character_review_matrix import build",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/audit_character_candidates.py",
-          "line": 137,
-          "preview": "report=build(json.loads(args.queue.read_text(encoding=\"utf-8\")))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/autonomous_walk.py",
-          "line": 274,
-          "preview": "'build':'pose-studio-autonomous-v2','config':asdict(settings),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/autonomous_walk.py",
-          "line": 299,
-          "preview": "parser.add_argument('--output',type=Path,default=Path('build/character-tech-walk'))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_bank_mobile_review.py",
-          "line": 180,
-          "preview": "def build(bank_path: Path, local_path: Path, destination: Path,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_bank_mobile_review.py",
-          "line": 280,
-          "preview": "print(json.dumps(build(args.bank,args.local_original,args.output,args.motion_audit),sort_keys=True))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_role_contact_sheet.py",
-          "line": 118,
-          "preview": "def build(bank_path: Path, audit_path: Path, output_path: Path) -> dict:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/build_character_role_contact_sheet.py",
-          "line": 179,
-          "preview": "print(json.dumps(build(args.bank, args.audit, args.output), sort_keys=True))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_original_offline_review.py",
-          "line": 73,
-          "preview": "def build(source:Path,destination:Path)->dict:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_original_offline_review.py",
-          "line": 106,
-          "preview": "print(json.dumps(build(p.source,p.output),sort_keys=True))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/character_review_matrix.py",
-          "line": 30,
-          "preview": "def build(queue:dict)->dict:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/character_review_matrix.py",
-          "line": 136,
-          "preview": "report=build(json.loads(args.queue.read_text(encoding=\"utf-8\")))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/export_tech_canonical_review.py",
-          "line": 170,
-          "preview": "parser.add_argument(\"--source\", type=Path, default=Path(\"build/tech-actions-v3\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/identity_locked_walk_candidate.py",
-          "line": 7,
-          "preview": "All output goes to build/; never overwrite the canonical sprite or runtime.",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/identity_locked_walk_candidate.py",
-          "line": 138,
-          "preview": "parser.add_argument(\"--out\",type=Path,default=Path(\"build/identity-locked-walk-review\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_sprite_factory.py",
-          "line": 33,
-          "preview": "'phase-matter fabricator with luminous cyan containment ring and central build cradle',",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 428,
-          "preview": "parser.add_argument('--source',type=Path,default=Path('build/tech-actions-v3'))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 429,
-          "preview": "parser.add_argument('--output',type=Path,default=Path('build/tech-actions-runtime-review'))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/procedural_fx_factory.py",
-          "line": 148,
-          "preview": "def build(target: str) -> Image.Image:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/procedural_fx_factory.py",
-          "line": 186,
-          "preview": "build(target).save(out, \"PNG\", optimize=True)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/rigged_tech_actions_v3.py",
-          "line": 503,
-          "preview": "\"asset_id\": asset_id, \"action\": action, \"build\": \"modular-tech-actions-v3\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/rigged_tech_actions_v3.py",
-          "line": 545,
-          "preview": "parser.add_argument(\"--output\", type=Path, default=Path(\"build/tech-actions-v3\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/rigged_tech_walk_v2.py",
-          "line": 319,
-          "preview": "def build(atlas:Path,out:Path,frames=24,fps=12):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/rigged_tech_walk_v2.py",
-          "line": 346,
-          "preview": "manifest={'asset_id':'CHR-TECH-WALK','build':'modular-skin-v2-IK-joint-guards',",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/rigged_tech_walk_v2.py",
-          "line": 368,
-          "preview": "parser.add_argument('--output',type=Path,default=Path('build/tech-walk-modular-v2'))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/rigged_tech_walk_v2.py",
-          "line": 372,
-          "preview": "manifest,path=build(args.skin,args.output,args.frames,args.fps)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/temporal_sprite_audit.py",
-          "line": 212,
-          "preview": "parser.add_argument('--source',type=Path,default=Path('build/tech-actions-v3'))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/temporal_sprite_audit.py",
-          "line": 213,
-          "preview": "parser.add_argument('--output',type=Path,default=Path('build/tech-temporal-review'))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_autonomous_walk.py",
-          "line": 74,
-          "preview": "root=Path(work)/'build'",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_character_review_matrix.py",
-          "line": 2,
-          "preview": "from character_review_matrix import build,markdown",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_character_review_matrix.py",
-          "line": 23,
-          "preview": "report=build(fake_queue())",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_character_review_matrix.py",
-          "line": 32,
-          "preview": "report=build(fake_queue())",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_character_review_matrix.py",
-          "line": 48,
-          "preview": "report=build(q)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_character_review_matrix.py",
-          "line": 58,
-          "preview": "with self.assertRaises(ValueError):build(q)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_character_review_matrix.py",
-          "line": 61,
-          "preview": "with self.assertRaises(ValueError):build(q)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_character_review_matrix.py",
-          "line": 64,
-          "preview": "with self.assertRaises(ValueError):build(q)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_character_review_matrix.py",
-          "line": 68,
-          "preview": "first=build(q)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_character_review_matrix.py",
-          "line": 69,
-          "preview": "second=build(q)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_focused_sprite_atlas.py",
-          "line": 1,
-          "preview": "\"\"\"Offline framing tests: no build artifacts or user review necessary.\"\"\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 15,
-          "preview": "FIXTURE=Path('build/tech-actions-v3').resolve()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 20,
-          "preview": "self.assertTrue(FIXTURE.is_dir(),f'Six-action build missing: {FIXTURE}')",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
-          "line": 10,
-          "preview": "CANVAS, GROUND, PART_NAMES, build, draw_frame, foot_local, foot_roll,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
-          "line": 113,
-          "preview": "manifest,bundle=build(KIT,out,frames=8,fps=8)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
-          "line": 136,
-          "preview": "with self.assertRaises(ValueError):build(KIT,Path(tmp),frames=n,fps=fps)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
-          "line": 16,
-          "preview": "from build_character_bank_mobile_review import build",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
-          "line": 88,
-          "preview": "d=build(self.bank,self.original,self.html)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
-          "line": 116,
-          "preview": "build(self.bank, self.original, self.html, audit)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
-          "line": 136,
-          "preview": "build(self.bank, self.original, self.html, audit)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
-          "line": 142,
-          "preview": "build(self.bank,self.original,self.html)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
-          "line": 149,
-          "preview": "build(self.bank,self.original,self.html)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
-          "line": 154,
-          "preview": "build(self.bank,self.original,self.html)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
-          "line": 167,
-          "preview": "build(self.bank,self.original,self.html)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-          "line": 16,
-          "preview": "from build_character_role_contact_sheet import build",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-          "line": 79,
-          "preview": "report = build(self.bank, self.audit, self.output)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-          "line": 94,
-          "preview": "build(self.bank, self.audit, self.output)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-          "line": 101,
-          "preview": "build(self.bank, self.audit, self.output)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-          "line": 107,
-          "preview": "build(self.bank, self.audit, self.output)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-          "line": 113,
-          "preview": "build(self.bank, self.audit, self.output)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-          "line": 118,
-          "preview": "build(self.bank, self.audit, self.output)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-          "line": 131,
-          "preview": "build(self.bank, self.audit, self.output)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 89
-    },
-    "ProductionFirstTests": {
-      "definition": {
-        "file": "tools/sprites/tests/test_asset_production_policy.py",
-        "line": 14,
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "line": 20,
         "kind": "class",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/tests/test_asset_production_policy.py",
-          "line": 14,
-          "preview": "class ProductionFirstTests(unittest.TestCase):",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_relaxed_motion_admits_previous_static_rejections": {
-      "definition": {
-        "file": "tools/sprites/tests/test_asset_production_policy.py",
-        "line": 15,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/tests/test_asset_production_policy.py",
-          "line": 15,
-          "preview": "def test_relaxed_motion_admits_previous_static_rejections(self):",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_strict_floors_unchanged": {
-      "definition": {
-        "file": "tools/sprites/tests/test_asset_production_policy.py",
-        "line": 21,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/tests/test_asset_production_policy.py",
-          "line": 21,
-          "preview": "def test_strict_floors_unchanged(self):",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_art_warnings_do_not_block_candidate": {
-      "definition": {
-        "file": "tools/sprites/tests/test_asset_production_policy.py",
-        "line": 25,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/tests/test_asset_production_policy.py",
-          "line": 25,
-          "preview": "def test_art_warnings_do_not_block_candidate(self):",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_new_repair_algorithm_reopens_only_a_bounded_epoch": {
-      "definition": {
-        "file": "tools/sprites/tests/test_asset_production_policy.py",
-        "line": 33,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/tests/test_asset_production_policy.py",
-          "line": 33,
-          "preview": "def test_new_repair_algorithm_reopens_only_a_bounded_epoch(self):",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_structural_risks_remain_blocking": {
-      "definition": {
-        "file": "tools/sprites/tests/test_asset_production_policy.py",
-        "line": 67,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/tests/test_asset_production_policy.py",
-          "line": 67,
-          "preview": "def test_structural_risks_remain_blocking(self):",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_unknown_risk_is_not_silently_waived": {
-      "definition": {
-        "file": "tools/sprites/tests/test_asset_production_policy.py",
-        "line": 76,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/tests/test_asset_production_policy.py",
-          "line": 76,
-          "preview": "def test_unknown_risk_is_not_silently_waived(self):",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "RoleConsistencySheetTests": {
-      "definition": {
-        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-        "line": 19,
-        "kind": "class",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-          "line": 19,
-          "preview": "class RoleConsistencySheetTests(unittest.TestCase):",
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 20,
+          "preview": "class CharacterIdentityPolishTests(unittest.TestCase):",
           "definition_candidate": true
         }
       ],
@@ -2897,8 +1499,8 @@
     },
     "setUp": {
       "definition": {
-        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-        "line": 20,
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "line": 21,
         "kind": "function",
         "language": "python"
       },
@@ -2946,6 +1548,12 @@
           "definition_candidate": false
         },
         {
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 21,
+          "preview": "def setUp(self):",
+          "definition_candidate": true
+        },
+        {
           "file": "tools/sprites/tests/test_character_provisional_idle_seed.py",
           "line": 20,
           "preview": "def setUp(self):",
@@ -2955,15 +1563,781 @@
           "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
           "line": 20,
           "preview": "def setUp(self):",
-          "definition_candidate": true
+          "definition_candidate": false
         }
       ],
-      "occurrence_count": 9
+      "occurrence_count": 10
+    },
+    "atlas": {
+      "definition": {
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "line": 35,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
+          "line": 246,
+          "preview": "atlas = actionAtlas,",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
+          "line": 334,
+          "preview": "val atlas = remember(role, action) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
+          "line": 344,
+          "preview": "atlas = atlas,",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt",
+          "line": 115,
+          "preview": "// Never launch a second ticker that could desync city and atlas.",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/CanonicalCharacterRaster.kt",
+          "line": 6,
+          "preview": "* Every authored sheet uses the same 4x4 atlas contract (256px cells on a",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/CanonicalCharacterRaster.kt",
+          "line": 8,
+          "preview": "* displaying the whole atlas as a static image.",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
+          "line": 99,
+          "preview": "* Only reviewed atlas frames are rendered; all speculative candidates remain",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
+          "line": 123,
+          "preview": "// Match the 37dp OP boot's authored planted speed (38 atlas pixels",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
+          "line": 142,
+          "preview": "// An override must load the *new* action atlas, not reuse cached WALK",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
+          "line": 190,
+          "preview": "atlas = atlases.getValue(placement.role to placement.action),",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
+          "line": 205,
+          "preview": "atlas: ImageBitmap,",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
+          "line": 225,
+          "preview": "image = atlas,",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
+          "line": 241,
+          "preview": "image = atlas,",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/AmbientCharacterMotionTest.kt",
+          "line": 56,
+          "preview": "fun `reduced motion freezes travel and source atlas pose`() {",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/CanonicalCharacterRasterTest.kt",
+          "line": 61,
+          "preview": "fun `character atlas contract matches production sheets`() {",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/audit_character_runtime.py",
+          "line": 2,
+          "preview": "\"\"\"Audit canonical character atlas registration and runtime exercise coverage.\"\"\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 280,
+          "preview": "\".github/workflows/pollinations-character-atlas.yml\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_bank_motion.py",
+          "line": 5,
+          "preview": "existence. Source atlas bytes, hashes and review-only provenance are verified.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_bank_motion.py",
+          "line": 47,
+          "preview": "raise ValueError(\"Expected a decoded 1024x1024 RGBA atlas\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_bank_motion.py",
+          "line": 85,
+          "preview": "raise ValueError(\"Expected a decoded RGBA 1024x1024 atlas\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 60,
+          "preview": "# Blank atlas cells are intentional padding, not extra animation",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_chatgpt_originals.py",
+          "line": 22,
+          "preview": "def inspect(atlas: Path, role: str, action: str) -> dict:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_chatgpt_originals.py",
+          "line": 23,
+          "preview": "with Image.open(atlas) as source:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_chatgpt_originals.py",
+          "line": 25,
+          "preview": "raise ValueError(f\"Wrong 1024 atlas: {atlas}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_chatgpt_originals.py",
+          "line": 99,
+          "preview": "atlas=image.convert(\"RGBA\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_chatgpt_originals.py",
+          "line": 100,
+          "preview": "frame=atlas.crop((0,0,256,256))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/autonomous_walk.py",
+          "line": 233,
+          "preview": "atlas=Image.new('RGBA',(CANVAS*4,CANVAS*math.ceil(settings.frames/4)))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/autonomous_walk.py",
+          "line": 238,
+          "preview": "atlas.alpha_composite(im,((i%4)*CANVAS,(i//4)*CANVAS))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/autonomous_walk.py",
+          "line": 239,
+          "preview": "atlas.save(output/'atlas.png', optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_bank_mobile_review.py",
+          "line": 221,
+          "preview": "with Image.open(io.BytesIO(source)) as atlas:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_bank_mobile_review.py",
+          "line": 222,
+          "preview": "atlas.load()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_bank_mobile_review.py",
+          "line": 223,
+          "preview": "if atlas.size != (1024,1024) or atlas.mode != \"RGBA\":",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_bank_mobile_review.py",
+          "line": 224,
+          "preview": "raise ValueError(\"Invalid selected atlas: \" + aid)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_candidate_bank.py",
+          "line": 4,
+          "preview": "Every selected atlas must have the *same collector run* recorded on the",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_candidate_bank.py",
+          "line": 104,
+          "preview": "\"source_validation\": \"original-manifest+original-qa+independent-atlas-geometry\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_candidate_bank.py",
+          "line": 130,
+          "preview": "raise ValueError(f\"Duplicate or unrecognized source atlas {name!r}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_candidate_bank.py",
+          "line": 134,
+          "preview": "raise ValueError(f\"Missing or ambiguous archive atlas {name!r}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_candidate_bank.py",
+          "line": 185,
+          "preview": "raise ValueError(f\"Wrong character atlas dimensions: {name}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_candidate_bank.py",
+          "line": 256,
+          "preview": "\"Zero to Empire - review-only character atlas bank.\\n\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_candidate_bank.py",
+          "line": 274,
+          "preview": "help=\"Optional 18-atlas in-repository original SVG/PNG review source\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 34,
+          "preview": "raise ValueError(\"Invalid atlas byte size: \" + asset_id)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 38,
+          "preview": "raise ValueError(\"Invalid 1024x1024 RGBA atlas: \" + asset_id)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 42,
+          "preview": "def _frames(atlas: Image.Image, count: int) -> list[Image.Image]:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 44,
+          "preview": "atlas.crop(((i % 4) * 256, (i // 4) * 256,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 150,
+          "preview": "\"atlas\": image, \"blob\": blob, \"sha256\": sha, \"entry\": entry,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 170,
+          "preview": "original = _frames(record[\"atlas\"], FRAMES[record[\"action\"]])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 171,
+          "preview": "reference_frame = _frames(anchor[\"atlas\"], FRAMES[anchor[\"action\"]])[0]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 95,
+          "preview": "raise ValueError(\"Expected a 1024x1024 character atlas\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 96,
+          "preview": "atlas = src.convert(\"RGBA\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 98,
+          "preview": "f = atlas.crop(((index % 4) * CELL, (index // 4) * CELL,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 146,
+          "preview": "raise ValueError(f\"Invalid mobile review atlas: {path}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 147,
+          "preview": "atlas = src.convert(\"RGBA\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 152,
+          "preview": "tile = atlas.crop(((index % 4) * CELL, (index // 4) * CELL,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 237,
+          "preview": "raise ValueError(f\"Expected atlas 1024x1024, got {src.size}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 294,
+          "preview": "review exact costume and pixels in the separately preserved full PNG atlas.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 300,
+          "preview": "raise ValueError(\"Expected complete 1024x1024 RGBA character atlas\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 301,
+          "preview": "atlas = image.convert(\"RGBA\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 309,
+          "preview": "sprite = atlas.crop((x, y, x + CELL, y + CELL))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_role_contact_sheet.py",
+          "line": 86,
+          "preview": "raise ValueError(\"Excessive candidate atlas size\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_role_contact_sheet.py",
+          "line": 98,
+          "preview": "with Image.open(io.BytesIO(blob)) as atlas:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_role_contact_sheet.py",
+          "line": 99,
+          "preview": "atlas.load()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_role_contact_sheet.py",
+          "line": 100,
+          "preview": "if atlas.size != (1024, 1024) or atlas.mode != \"RGBA\":",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_role_contact_sheet.py",
+          "line": 101,
+          "preview": "raise ValueError(\"Invalid candidate atlas dimensions \" + aid)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_role_contact_sheet.py",
+          "line": 102,
+          "preview": "frame = atlas.crop((0, 0, 256, 256))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_original_offline_review.py",
+          "line": 30,
+          "preview": "<h1>Zero to Empire \u00b7 Personnages</h1><p>18 atlas \u00b7 150 poses SVG \u00b7 cr\u00e9\u00e9s dans le projet \u00b7 lecture hors ligne</p>",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_original_offline_review.py",
+          "line": 47,
+          "preview": "let role='OP',action='WALK',frame=0,still=false,atlas=new Image();",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_original_offline_review.py",
+          "line": 54,
+          "preview": "if(still&&atlas.complete&&atlas.naturalWidth){",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_original_offline_review.py",
+          "line": 55,
+          "preview": "// Use exactly the same atlas cell for all three canvases. Animated GIFs",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_original_offline_review.py",
+          "line": 59,
+          "preview": "ctx.drawImage(atlas,(frame%4)*256,Math.floor(frame/4)*256,256,256,0,0,256,256)}}}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_original_offline_review.py",
+          "line": 64,
+          "preview": "function render(){const item=current();frame=0;still=false;atlas=new Image();atlas.onload=paint;atlas.src=item.atlas;",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_original_offline_review.py",
+          "line": 88,
+          "preview": "raise ValueError('Incorrect original atlas '+name)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_original_offline_review.py",
+          "line": 94,
+          "preview": "'atlas':'data:image/png;base64,'+base64.b64encode(src.read_bytes()).decode(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_sprite_contact_sheet.py",
+          "line": 44,
+          "preview": "issues.append(\"bad-fx-atlas-size\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_sprite_contact_sheet.py",
+          "line": 57,
+          "preview": "issues.append(\"bad-character-atlas-size\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_tech_review_board.py",
+          "line": 54,
+          "preview": "raise ValueError(f'{action}: invalid atlas geometry')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_tech_review_board.py",
+          "line": 57,
+          "preview": "raise ValueError(f'{action}: atlas must be directly inside review directory')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_approved_idle_fallback.py",
+          "line": 41,
+          "preview": "return None, \"strict-done-idle-invalid-atlas-size\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_provisional_idle_seed.py",
+          "line": 7,
+          "preview": "independently runs its full subject/atlas checks before using these pixels.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_provisional_idle_seed.py",
+          "line": 74,
+          "preview": "raise ValueError(\"Missing or ambiguous archived engineer idle atlas\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_rejection_evidence.py",
+          "line": 30,
+          "preview": "atlas = Image.new(\"RGBA\", (1024, 1024), (0, 0, 0, 0))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_rejection_evidence.py",
+          "line": 32,
+          "preview": "atlas.alpha_composite(frame.convert(\"RGBA\"),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_rejection_evidence.py",
+          "line": 37,
+          "preview": "atlas.save(image_path, \"PNG\", optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 354,
+          "preview": "A 256px WORK/REPAIR atlas can exceed the alpha-change threshold if the",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/export_tech_canonical_review.py",
+          "line": 80,
+          "preview": "atlas = Image.new(\"RGBA\", (1024, 1024), (0, 0, 0, 0))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/export_tech_canonical_review.py",
+          "line": 95,
+          "preview": "atlas.alpha_composite(scaled, ((cell_index % 4) * CELL,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/export_tech_canonical_review.py",
+          "line": 104,
+          "preview": "atlas.save(png, optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/export_tech_canonical_review.py",
+          "line": 108,
+          "preview": "raise ValueError(f\"Canonical atlas structural QA rejected {action}: \"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/identity_locked_walk_candidate.py",
+          "line": 74,
+          "preview": "with Image.open(path) as atlas:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/identity_locked_walk_candidate.py",
+          "line": 75,
+          "preview": "if atlas.size!=(1024,1024) or atlas.mode!='RGBA':",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/identity_locked_walk_candidate.py",
+          "line": 80,
+          "preview": "frame=atlas.crop((x,y,x+SIZE,y+SIZE))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 585,
+          "preview": "# Canonical character deliverable: fixed 1024x1024 transparent atlas.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 587,
+          "preview": "if len(frames)>16:raise RuntimeError('character atlas supports at most 16 frames')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 633,
+          "preview": "# IDLE atlas is rejected, rendering unrelated actions would burn GPU time",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 737,
+          "preview": "'frames':len(recovered),'atlas':'1024x1024','cell':'256x256',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 905,
+          "preview": "if sheet.size!=(1024,1024):raise RuntimeError(f'bad atlas size {sheet.size}')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 910,
+          "preview": "print(f\"KAGGLE_CHR_VALIDATED={p.relative_to(ROOT)} {why} atlas=1024x1024\",flush=True);report.append({'id':i['id'],'status':'CANDIDATE','reason':why,'frames':len(frames),'atlas':'10",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_fx_sheet_factory_v1.py",
+          "line": 113,
+          "preview": "if sheet.size!=(512,256): raise RuntimeError(f'bad-runtime-atlas-size={sheet.size}')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_fx_sheet_factory_v1.py",
+          "line": 114,
+          "preview": "return sheet,{'frames':FRAMES,'render_cell':'256x256','runtime_cell':'128x128','layout':'4x2','atlas':'512x256','duplicate_adjacent':dup,'max_center_drift':round(drift,2),**tempora",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_fx_sheet_factory_v1.py",
+          "line": 119,
+          "preview": "rep={'engine':'procedural-fx-v1.2-runtime-atlas','attempted':0,'accepted':0,'rejected':0,'runtime_contract':'8 frames; 4x2 atlas; 128x128 runtime cell; 512x256 texture; matches exi",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_fx_sheet_factory_v1.py",
+          "line": 128,
+          "preview": "sheet,m,attempt=accepted; p=INCOMING/f\"{item['stem']}.png\"; sheet.save(p,'PNG',optimize=True); rep['accepted']+=1;rep['items'].append({'id':item['id'],'accepted':True,'attempt':att",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_chatgpt_originals.py",
+          "line": 43,
+          "preview": "raise ValueError(f\"Bad atlas: {ident}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 225,
+          "preview": "\"\"\"Optional frame-aligned ground-shadow atlas, isolated from character pixels.\"\"\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 348,
+          "preview": "atlas=Image.new('RGBA',(size*cols,size*rows))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 351,
+          "preview": "atlas.alpha_composite(scaled,((i%cols)*size,(i//cols)*size))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 353,
+          "preview": "atlas.save(path,optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 319,
+          "preview": "'Create one exact 4 columns by 4 rows animation atlas on a perfectly flat uniform neutral gray background. '",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 410,
+          "preview": "\"\"\"Explicitly request ONE complete subject, never a sheet or sprite atlas.\"\"\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 541,
+          "preview": "# The atlas may be formed ONLY after each standalone frame",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 564,
+          "preview": "mark_queue(it['id'],'CANDIDATE',seed,'pollinations-character-atlas',producer_run_id)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 571,
+          "preview": "'producer':'pollinations-character-atlas',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/process_final_sprites.py",
+          "line": 165,
+          "preview": "fail(f\"{path.name}: unused character atlas cell {i} is not transparent\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 6,
+          "preview": "4-column RGBA atlas: 1024x1024, no ground shadow. Role IDLE can accompany",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 345,
+          "preview": "count=ACTIONS[action]; atlas=Image.new('RGBA',(1024,1024),(0,0,0,0))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 353,
+          "preview": "x=(i%4)*FRAME;y=(i//4)*FRAME;atlas.alpha_composite(rgba,(x,y))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 358,
+          "preview": "path=outdir/'candidates'/name;path.parent.mkdir(parents=True,exist_ok=True);atlas.save(path,optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_original_character_previews.py",
+          "line": 26,
+          "preview": "raise ValueError(f\"Invalid RGBA atlas geometry: {path}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_original_character_previews.py",
+          "line": 80,
+          "preview": "atlas = Image.new(\"RGB\", (6*190, 3*223), \"#202732\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_original_character_previews.py",
+          "line": 81,
+          "preview": "draw = ImageDraw.Draw(atlas)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_original_character_previews.py",
+          "line": 131,
+          "preview": "atlas.paste(small, pos)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_original_character_previews.py",
+          "line": 163,
+          "preview": "atlas.save(source/\"original-review-contact-sheet.png\", optimize=True)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 120
+    },
+    "write_atlases": {
+      "definition": {
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "line": 54,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 32,
+          "preview": "self.write_atlases()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 54,
+          "preview": "def write_atlases(self, *, same_head=False, bad_frame=None):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 126,
+          "preview": "self.write_atlases(bad_frame=4)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 137,
+          "preview": "self.write_atlases(same_head=True)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
     },
     "save": {
       "definition": {
-        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-        "line": 61,
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "line": 76,
         "kind": "function",
         "language": "python"
       },
@@ -3188,6 +2562,18 @@
           "file": "tools/sprites/autonomous_walk.py",
           "line": 249,
           "preview": "review.save(output/'contact-sheet.jpg',quality=88)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 55,
+          "preview": "image.save(result, \"PNG\", optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 96,
+          "preview": "canvas.save(destination, \"PNG\", optimize=True)",
           "definition_candidate": false
         },
         {
@@ -3675,102 +3061,124 @@
           "line": 37,
           "preview": "atlas(True).save(directory / \"zte_chr_log_idle_final.png\")",
           "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_verify_character_idle_candidates.py",
-          "line": 38,
-          "preview": "atlas(False).save(directory / \"zte_chr_op_idle_final.png\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_verify_character_idle_candidates.py",
-          "line": 63,
-          "preview": "atlas(True).save(Path(tmp) / name)",
-          "definition_candidate": false
         }
       ],
       "occurrence_count": 120
     },
-    "test_role_sheet_is_readable_png_and_does_not_approve_candidates": {
+    "test_proposes_complete_review_only_identity_retouch": {
       "definition": {
-        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-        "line": 78,
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "line": 88,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-          "line": 78,
-          "preview": "def test_role_sheet_is_readable_png_and_does_not_approve_candidates(self):",
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 88,
+          "preview": "def test_proposes_complete_review_only_identity_retouch(self):",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_sha_tampering_of_png_or_audit_fails_closed": {
+    "test_one_unsafe_pose_rejects_entire_proposal_not_just_one_frame": {
       "definition": {
-        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-        "line": 90,
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "line": 125,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-          "line": 90,
-          "preview": "def test_sha_tampering_of_png_or_audit_fails_closed(self):",
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 125,
+          "preview": "def test_one_unsafe_pose_rejects_entire_proposal_not_just_one_frame(self):",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_missing_audit_coverage_is_not_silently_ignored": {
+    "test_consistent_actions_are_not_needlessly_modified": {
       "definition": {
-        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-        "line": 103,
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "line": 136,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-          "line": 103,
-          "preview": "def test_missing_audit_coverage_is_not_silently_ignored(self):",
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 136,
+          "preview": "def test_consistent_actions_are_not_needlessly_modified(self):",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_semantically_approved_candidate_or_audit_must_be_rejected": {
+    "test_invalid_candidate_sha_fails_closed": {
       "definition": {
-        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-        "line": 109,
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "line": 142,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-          "line": 109,
-          "preview": "def test_semantically_approved_candidate_or_audit_must_be_rejected(self):",
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 142,
+          "preview": "def test_invalid_candidate_sha_fails_closed(self):",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_empty_first_frame_is_blocking_even_with_valid_hash": {
+    "test_audit_reference_is_same_role_verified_and_not_forged": {
       "definition": {
-        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-        "line": 120,
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "line": 149,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-          "line": 120,
-          "preview": "def test_empty_first_frame_is_blocking_even_with_valid_hash(self):",
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 149,
+          "preview": "def test_audit_reference_is_same_role_verified_and_not_forged(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_audit_metric_cannot_be_forged_to_force_proposal": {
+      "definition": {
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "line": 157,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 157,
+          "preview": "def test_audit_metric_cannot_be_forged_to_force_proposal(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_no_auto_promotion_even_when_source_falsely_claims_approval": {
+      "definition": {
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "line": 165,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 165,
+          "preview": "def test_no_auto_promotion_even_when_source_falsely_claims_approval(self):",
           "definition_candidate": true
         }
       ],

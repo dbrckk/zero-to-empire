@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "2add0abb96c5379cb7e04f02eca8d8183610baf6",
-  "head": "4fa652f9cab2f0449a2941e2a63430f62649caa3",
+  "base": "4fa652f9cab2f0449a2941e2a63430f62649caa3",
+  "head": "3740d88cfe53c340666b2dc8046fb338bee11045",
   "index_mode": "incremental",
   "changed_files": [
     {
@@ -14,374 +14,139 @@
       "status": "M"
     },
     {
-      "path": "art/production/autofactory-state.json",
-      "status": "M"
-    },
-    {
-      "path": "art/production/autofactory-summary.md",
-      "status": "M"
-    },
-    {
-      "path": "art/production/character-strict-review-backlog.md",
-      "status": "M"
-    },
-    {
-      "path": "art/production/controlled-character-regen-queue.json",
-      "status": "M"
-    },
-    {
-      "path": "art/production/kaggle-async-state.json",
-      "status": "M"
-    },
-    {
-      "path": "art/production/master-asset-queue.json",
-      "status": "M"
-    },
-    {
-      "path": "tools/assets/test_queue_state_policy.py",
-      "status": "M"
-    },
-    {
-      "path": "tools/sprites/asset_queue_utils.py",
-      "status": "M"
-    },
-    {
-      "path": "tools/sprites/asset_wave_orchestrator.py",
-      "status": "M"
-    },
-    {
-      "path": "tools/sprites/build_character_role_contact_sheet.py",
+      "path": "tools/sprites/build_character_identity_polish.py",
       "status": "A"
     },
     {
-      "path": "tools/sprites/tests/test_asset_production_policy.py",
-      "status": "M"
-    },
-    {
-      "path": "tools/sprites/tests/test_character_role_contact_sheet.py",
+      "path": "tools/sprites/tests/test_character_identity_polish.py",
       "status": "A"
     }
   ],
   "changed_source_files": [
-    "tools/sprites/asset_queue_utils.py",
-    "tools/sprites/asset_wave_orchestrator.py",
-    "tools/sprites/build_character_role_contact_sheet.py",
-    "tools/sprites/tests/test_asset_production_policy.py",
-    "tools/sprites/tests/test_character_role_contact_sheet.py"
+    "tools/sprites/build_character_identity_polish.py",
+    "tools/sprites/tests/test_character_identity_polish.py"
   ],
   "impacted_files": [
-    "tools/sprites/asset_queue_utils.py",
-    "tools/sprites/asset_wave_orchestrator.py",
-    "tools/sprites/build_character_role_contact_sheet.py",
-    "tools/sprites/test_character_provider_reservation.py",
-    "tools/sprites/tests/test_asset_production_policy.py",
-    "tools/sprites/tests/test_character_role_contact_sheet.py"
+    "tools/sprites/build_character_identity_polish.py",
+    "tools/sprites/tests/test_character_identity_polish.py"
   ],
   "impacted_symbols": [
     {
-      "name": "load_json",
+      "name": "_atlas",
       "kind": "function",
-      "file": "tools/sprites/asset_queue_utils.py",
-      "line": 44
+      "file": "tools/sprites/build_character_identity_polish.py",
+      "line": 32
     },
     {
-      "name": "save_json",
+      "name": "_frames",
       "kind": "function",
-      "file": "tools/sprites/asset_queue_utils.py",
+      "file": "tools/sprites/build_character_identity_polish.py",
+      "line": 42
+    },
+    {
+      "name": "_pack",
+      "kind": "function",
+      "file": "tools/sprites/build_character_identity_polish.py",
       "line": 50
-    },
-    {
-      "name": "manifest_rows",
-      "kind": "function",
-      "file": "tools/sprites/asset_queue_utils.py",
-      "line": 55
-    },
-    {
-      "name": "unresolved_ids",
-      "kind": "function",
-      "file": "tools/sprites/asset_queue_utils.py",
-      "line": 78
-    },
-    {
-      "name": "default_asset",
-      "kind": "function",
-      "file": "tools/sprites/asset_queue_utils.py",
-      "line": 85
-    },
-    {
-      "name": "ensure_master",
-      "kind": "function",
-      "file": "tools/sprites/asset_queue_utils.py",
-      "line": 117
-    },
-    {
-      "name": "sync_controlled_queues",
-      "kind": "function",
-      "file": "tools/sprites/asset_queue_utils.py",
-      "line": 159
-    },
-    {
-      "name": "stats",
-      "kind": "function",
-      "file": "tools/sprites/asset_queue_utils.py",
-      "line": 231
-    },
-    {
-      "name": "write_summary",
-      "kind": "function",
-      "file": "tools/sprites/asset_queue_utils.py",
-      "line": 258
-    },
-    {
-      "name": "by_id",
-      "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 59
-    },
-    {
-      "name": "mirror_character_outcomes_from_controlled",
-      "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 63
-    },
-    {
-      "name": "update_from_trigger",
-      "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 88
-    },
-    {
-      "name": "active_pending",
-      "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 158
-    },
-    {
-      "name": "character_retry_available",
-      "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 163
-    },
-    {
-      "name": "mark_dispatch",
-      "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 186
-    },
-    {
-      "name": "prioritize_controlled_character_targets",
-      "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 225
-    },
-    {
-      "name": "building_family_ids",
-      "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 291
-    },
-    {
-      "name": "prepare_building_group",
-      "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 295
-    },
-    {
-      "name": "prepare_character_burst",
-      "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 306
-    },
-    {
-      "name": "next_group",
-      "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 395
-    },
-    {
-      "name": "close_exhausted_character_dispatches",
-      "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 414
-    },
-    {
-      "name": "active_pollinations_repair",
-      "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 469
-    },
-    {
-      "name": "pending_ids_from_controlled",
-      "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 494
-    },
-    {
-      "name": "order_character_groups_by_retry",
-      "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 511
-    },
-    {
-      "name": "current_epoch_attempts",
-      "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 517
-    },
-    {
-      "name": "make_decision",
-      "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 541
-    },
-    {
-      "name": "main",
-      "kind": "function",
-      "file": "tools/sprites/asset_wave_orchestrator.py",
-      "line": 611
     },
     {
       "name": "_font",
       "kind": "function",
-      "file": "tools/sprites/build_character_role_contact_sheet.py",
-      "line": 40
+      "file": "tools/sprites/build_character_identity_polish.py",
+      "line": 59
     },
     {
-      "name": "_load",
+      "name": "_comparison",
       "kind": "function",
-      "file": "tools/sprites/build_character_role_contact_sheet.py",
-      "line": 49
+      "file": "tools/sprites/build_character_identity_polish.py",
+      "line": 69
     },
     {
       "name": "build",
       "kind": "function",
-      "file": "tools/sprites/build_character_role_contact_sheet.py",
-      "line": 118
+      "file": "tools/sprites/build_character_identity_polish.py",
+      "line": 99
     },
     {
       "name": "main",
       "kind": "function",
-      "file": "tools/sprites/build_character_role_contact_sheet.py",
-      "line": 173
+      "file": "tools/sprites/build_character_identity_polish.py",
+      "line": 268
     },
     {
-      "name": "ReservationTests",
+      "name": "CharacterIdentityPolishTests",
       "kind": "class",
-      "file": "tools/sprites/test_character_provider_reservation.py",
-      "line": 11
-    },
-    {
-      "name": "test_external_repair_excludes_concurrent_kaggle_character_dispatch",
-      "kind": "function",
-      "file": "tools/sprites/test_character_provider_reservation.py",
-      "line": 12
-    },
-    {
-      "name": "test_expired_or_other_provider_has_no_lock",
-      "kind": "function",
-      "file": "tools/sprites/test_character_provider_reservation.py",
-      "line": 30
-    },
-    {
-      "name": "test_injected_invalid_or_missing_reservation_does_not_block",
-      "kind": "function",
-      "file": "tools/sprites/test_character_provider_reservation.py",
-      "line": 43
-    },
-    {
-      "name": "ProductionFirstTests",
-      "kind": "class",
-      "file": "tools/sprites/tests/test_asset_production_policy.py",
-      "line": 14
-    },
-    {
-      "name": "test_relaxed_motion_admits_previous_static_rejections",
-      "kind": "function",
-      "file": "tools/sprites/tests/test_asset_production_policy.py",
-      "line": 15
-    },
-    {
-      "name": "test_strict_floors_unchanged",
-      "kind": "function",
-      "file": "tools/sprites/tests/test_asset_production_policy.py",
-      "line": 21
-    },
-    {
-      "name": "test_art_warnings_do_not_block_candidate",
-      "kind": "function",
-      "file": "tools/sprites/tests/test_asset_production_policy.py",
-      "line": 25
-    },
-    {
-      "name": "test_new_repair_algorithm_reopens_only_a_bounded_epoch",
-      "kind": "function",
-      "file": "tools/sprites/tests/test_asset_production_policy.py",
-      "line": 33
-    },
-    {
-      "name": "test_structural_risks_remain_blocking",
-      "kind": "function",
-      "file": "tools/sprites/tests/test_asset_production_policy.py",
-      "line": 67
-    },
-    {
-      "name": "test_unknown_risk_is_not_silently_waived",
-      "kind": "function",
-      "file": "tools/sprites/tests/test_asset_production_policy.py",
-      "line": 76
-    },
-    {
-      "name": "RoleConsistencySheetTests",
-      "kind": "class",
-      "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-      "line": 19
+      "file": "tools/sprites/tests/test_character_identity_polish.py",
+      "line": 20
     },
     {
       "name": "setUp",
       "kind": "function",
-      "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-      "line": 20
+      "file": "tools/sprites/tests/test_character_identity_polish.py",
+      "line": 21
+    },
+    {
+      "name": "atlas",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_identity_polish.py",
+      "line": 35
+    },
+    {
+      "name": "write_atlases",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_identity_polish.py",
+      "line": 54
     },
     {
       "name": "save",
       "kind": "function",
-      "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-      "line": 61
+      "file": "tools/sprites/tests/test_character_identity_polish.py",
+      "line": 76
     },
     {
-      "name": "test_role_sheet_is_readable_png_and_does_not_approve_candidates",
+      "name": "test_proposes_complete_review_only_identity_retouch",
       "kind": "function",
-      "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-      "line": 78
+      "file": "tools/sprites/tests/test_character_identity_polish.py",
+      "line": 88
     },
     {
-      "name": "test_sha_tampering_of_png_or_audit_fails_closed",
+      "name": "test_one_unsafe_pose_rejects_entire_proposal_not_just_one_frame",
       "kind": "function",
-      "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-      "line": 90
+      "file": "tools/sprites/tests/test_character_identity_polish.py",
+      "line": 125
     },
     {
-      "name": "test_missing_audit_coverage_is_not_silently_ignored",
+      "name": "test_consistent_actions_are_not_needlessly_modified",
       "kind": "function",
-      "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-      "line": 103
+      "file": "tools/sprites/tests/test_character_identity_polish.py",
+      "line": 136
     },
     {
-      "name": "test_semantically_approved_candidate_or_audit_must_be_rejected",
+      "name": "test_invalid_candidate_sha_fails_closed",
       "kind": "function",
-      "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-      "line": 109
+      "file": "tools/sprites/tests/test_character_identity_polish.py",
+      "line": 142
     },
     {
-      "name": "test_empty_first_frame_is_blocking_even_with_valid_hash",
+      "name": "test_audit_reference_is_same_role_verified_and_not_forged",
       "kind": "function",
-      "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-      "line": 120
+      "file": "tools/sprites/tests/test_character_identity_polish.py",
+      "line": 149
+    },
+    {
+      "name": "test_audit_metric_cannot_be_forged_to_force_proposal",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_identity_polish.py",
+      "line": 157
+    },
+    {
+      "name": "test_no_auto_promotion_even_when_source_falsely_claims_approval",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_identity_polish.py",
+      "line": 165
     }
   ],
   "selected_tests": [
-    "tools/sprites/test_character_provider_reservation.py",
-    "tools/sprites/tests/test_asset_production_policy.py",
-    "tools/sprites/tests/test_character_role_contact_sheet.py"
+    "tools/sprites/tests/test_character_identity_polish.py"
   ]
 }

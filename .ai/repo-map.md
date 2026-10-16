@@ -356,6 +356,7 @@ tools/
       test_character_bank_mobile_review.py
       test_character_bank_motion_audit.py
       test_character_candidate_bank.py
+      test_character_identity_polish.py
       test_character_provisional_idle_seed.py
       test_character_repair_pose_plan.py
       test_character_role_contact_sheet.py
@@ -371,6 +372,7 @@ tools/
     autonomous_walk.py
     build_character_bank_mobile_review.py
     build_character_candidate_bank.py
+    build_character_identity_polish.py
     build_character_review_panels.py
     build_character_role_contact_sheet.py
     build_original_offline_review.py
@@ -1665,6 +1667,8 @@ on:
       - 'tools/sprites/tests/test_character_bank_mobile_review.py'
       - 'tools/sprites/build_character_role_contact_sheet.py'
       - 'tools/sprites/tests/test_character_role_contact_sheet.py'
+      - 'tools/sprites/build_character_identity_polish.py'
+      - 'tools/sprites/tests/test_character_identity_polish.py'
       - 'tools/sprites/tests/test_character_candidate_bank.py'
       - 'tools/sprites/tests/test_archive_character_candidates.py'
       - 'tools/sprites/asset_wave_orchestrator.py'
@@ -1733,6 +1737,8 @@ on:
       - 'tools/sprites/tests/test_character_bank_mobile_review.py'
       - 'tools/sprites/build_character_role_contact_sheet.py'
       - 'tools/sprites/tests/test_character_role_contact_sheet.py'
+      - 'tools/sprites/build_character_identity_polish.py'
+      - 'tools/sprites/tests/test_character_identity_polish.py'
       - 'tools/sprites/tests/test_character_candidate_bank.py'
       - 'tools/sprites/tests/test_archive_character_candidates.py'
       - 'tools/sprites/asset_wave_orchestrator.py'
@@ -2063,6 +2069,7 @@ jobs:
           python -m unittest discover -s tools/sprites/tests -p 'test_character_repair_pose_plan.py' -v
           python -m unittest discover -s tools/sprites/tests -p 'test_character_bank_motion_audit.py' -v
           python -m unittest discover -s tools/sprites/tests -p 'test_character_role_contact_sheet.py' -v
+          python -m unittest discover -s tools/sprites/tests -p 'test_character_identity_polish.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_semantic_gate.py' -v
           python -m unittest discover -s tools/sprites -p 'test_verify_character_idle_candidates.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_head_identity_lock.py' -v
@@ -2296,7 +2303,8 @@ jobs:
           python -m unittest discover -s tools/sprites/tests -p test_character_bank_mobile_review.py -v
           python -m unittest discover -s tools/sprites/tests -p test_character_bank_motion_audit.py -v
           python -m unittest discover -s tools/sprites/tests -p test_character_role_contact_sheet.py -v
-          python -m py_compile tools/sprites/build_character_candidate_bank.py tools/sprites/build_character_bank_mobile_review.py tools/sprites/audit_character_bank_motion.py tools/sprites/build_character_role_contact_sheet.py
+          python -m unittest discover -s tools/sprites/tests -p test_character_identity_polish.py -v
+          python -m py_compile tools/sprites/build_character_candidate_bank.py tools/sprites/build_character_bank_mobile_review.py tools/sprites/audit_character_bank_motion.py tools/sprites/build_character_role_contact_sheet.py tools/sprites/build_character_identity_polish.py
 
       - name: Download current permanent candidate archives
         shell: bash
@@ -2358,6 +2366,29 @@ jobs:
           print('- No flags represent automatic semantic approval.')
           PY
 
+      - name: Produce safe alternative head and helmet atlases for artistic review
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/sprites/build_character_identity_polish.py \
+            --bank /tmp/zte-character-bank-current.zip \
+            --audit /tmp/zte-character-bank-motion-audit.json \
+            --output /tmp/zte-character-identity-polish-current.zip \
+            --report /tmp/zte-character-identity-polish-current.json \
+            --comparison /tmp/zte-character-identity-polish-preview.png
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          d=json.load(open('/tmp/zte-character-identity-polish-current.json'))
+          print('## Same-role face/helmet polish proposals (review-only)')
+          print(f"- Identity warnings: **{d['identity_flags_to_review']}**")
+          print(f"- Fully safe multi-frame alternatives: **{d['alternatives_created']}**")
+          for row in d['alternatives']:
+              print(f"- {row['id']}: {row['head_rgb_before']:.2f} → {row['head_rgb_after']:.2f} mean head RGB change; {row['frames_head_locked']}/{row['frames']} frames corrected")
+          for row in d['not_safe_to_polish']:
+              print(f"- Not modified: {row['id']}: {row['reason']}")
+          print('- These alternative PNGs do **not** replace canonical bank, Android files, strict DONE or human approval.')
+          PY
+
       - name: Build one-page character identity contact sheet for Android
         shell: bash
         run: |
@@ -2389,6 +2420,9 @@ jobs:
             /tmp/zte-character-bank-current.zip \
             /tmp/zte-character-bank-current.json \
             /tmp/zte-character-bank-motion-audit.json \
+            /tmp/zte-character-identity-polish-current.zip \
+            /tmp/zte-character-identity-polish-current.json \
+            /tmp/zte-character-identity-polish-preview.png \
             /tmp/zte-character-bank-role-consistency.png \
             /tmp/zte-character-bank-mobile-review.html \
             --repo "$GITHUB_REPOSITORY" --clobber
@@ -2403,6 +2437,9 @@ jobs:
             /tmp/zte-character-bank-current.zip
             /tmp/zte-character-bank-current.json
             /tmp/zte-character-bank-motion-audit.json
+            /tmp/zte-character-identity-polish-current.zip
+            /tmp/zte-character-identity-polish-current.json
+            /tmp/zte-character-identity-polish-preview.png
             /tmp/zte-character-bank-role-consistency.png
             /tmp/zte-character-bank-mobile-review.html
           retention-days: 30
@@ -30476,6 +30513,67 @@ qa_file = local / "candidate-qa.json"
 data = json.loads(qa_file.read_text())
 ```
 
+## File: tools/sprites/tests/test_character_identity_polish.py
+```python
+"""Protect deterministic role face/helmet retouch proposals from silent approvals."""
+⋮----
+class CharacterIdentityPolishTests(unittest.TestCase)
+⋮----
+def setUp(self)
+⋮----
+temp = tempfile.TemporaryDirectory()
+⋮----
+atlas = Image.new("RGBA", (1024, 1024))
+⋮----
+frame = Image.new("RGBA", (256, 256))
+artist = ImageDraw.Draw(frame)
+⋮----
+out = io.BytesIO()
+⋮----
+def write_atlases(self, *, same_head=False, bad_frame=None)
+⋮----
+reference_color = (252, 122, 14)
+diverged_color = reference_color if same_head else (8, 180, 233)
+data = [
+⋮----
+fname = "zte_chr_" + aid.split("-")[1].lower() + "_" + aid.split("-")[2].lower() + "_final.png"
+blob = self.atlas(count, col, damage)
+⋮----
+def save(self)
+⋮----
+def test_proposes_complete_review_only_identity_retouch(self)
+⋮----
+result = build(self.bank, self.audit, self.output, self.report, self.comparison)
+⋮----
+row = result["alternatives"][0]
+⋮----
+blob = packed.read(row["path"])
+⋮----
+original = Image.open(io.BytesIO(self.blobs["zte_chr_op_work_final.png"]))
+# The change is strictly restricted to head/neck; legs and
+# lower torso of EVERY frame remain pixel-exact.
+⋮----
+a = original.crop(((i % 4) * 256, (i // 4) * 256 + 126,
+b = sprite.crop(((i % 4) * 256, (i // 4) * 256 + 126,
+⋮----
+def test_one_unsafe_pose_rejects_entire_proposal_not_just_one_frame(self)
+⋮----
+result = build(self.bank, self.audit, self.output, self.report)
+⋮----
+def test_consistent_actions_are_not_needlessly_modified(self)
+⋮----
+def test_invalid_candidate_sha_fails_closed(self)
+⋮----
+def test_audit_reference_is_same_role_verified_and_not_forged(self)
+⋮----
+data = json.loads(self.audit.read_text())
+row = next(x for x in data["assets"] if x["id"] == "CHR-OP-WORK")
+⋮----
+def test_audit_metric_cannot_be_forged_to_force_proposal(self)
+⋮----
+def test_no_auto_promotion_even_when_source_falsely_claims_approval(self)
+```
+
 ## File: tools/sprites/tests/test_character_provisional_idle_seed.py
 ```python
 """Engineer IDLE anchoring: provenance/technical-pass ONLY, never strict DONE."""
@@ -31758,6 +31856,120 @@ parser = argparse.ArgumentParser()
 ⋮----
 args = parser.parse_args()
 d = assemble(args.master, args.archives, args.output, args.report, args.local_original)
+```
+
+## File: tools/sprites/build_character_identity_polish.py
+```python
+#!/usr/bin/env python3
+"""Make safe, deterministic, review-only head/helmet continuity alternatives.
+
+Never replace the canonical candidate bank, an Android resource, or a strict
+approval. Reuse the SHA-verified first-frame role reference from the exact
+published candidate bank; all modified poses must pass the existing
+conservative full-body head-registration guard. One rejected pose rejects
+that whole *alternative*, avoiding flickering mixed-identity animations.
+"""
+⋮----
+NAME = re.compile(r"^CHR-(OP|LOG|ENG|TECH)-(IDLE|WALK|WORK|CARRY|REPAIR|CELEB)$")
+MAX_BLOB = 20 * 1024 * 1024
+REQUIRED_FLAG = "CROSS_ACTION_HEAD_IDENTITY_REVIEW"
+MAX_HEAD_AFTER = 8.0
+MAX_REMAINING_ERROR_FRACTION = .65
+⋮----
+def _atlas(blob: bytes, asset_id: str) -> Image.Image
+⋮----
+def _frames(atlas: Image.Image, count: int) -> list[Image.Image]
+⋮----
+def _pack(frames: list[Image.Image]) -> bytes
+⋮----
+image = Image.new("RGBA", (1024, 1024))
+⋮----
+result = io.BytesIO()
+⋮----
+def _font(size: int) -> ImageFont.ImageFont
+⋮----
+def _comparison(rows: list[dict], destination: Path) -> None
+⋮----
+"""Provide a lightweight visual comparison without modifying the source."""
+⋮----
+canvas = Image.new("RGB", (width, header + height * len(rows) + 12),
+pen = ImageDraw.Draw(canvas)
+font = _font(17)
+small = _font(12)
+⋮----
+y = header + n * height
+⋮----
+x = 16 + j * (unit + 12)
+⋮----
+background = Image.new("RGBA", (208, 208), (194, 207, 218, 255))
+⋮----
+"""An all-or-nothing alternative per action, fail-closed on provenance."""
+audit = json.loads(audit_path.read_text(encoding="utf-8"))
+audit_rows = audit.get("assets")
+⋮----
+by_audit = {x.get("id"): x for x in audit_rows if isinstance(x, dict)}
+⋮----
+names = bank.namelist()
+⋮----
+meta = json.loads(bank.read("candidate-bank-index.json"))
+entries = meta.get("bank_entries")
+⋮----
+verified: dict[str, dict] = {}
+⋮----
+asset_id = str(entry.get("id") or "")
+parsed = NAME.fullmatch(asset_id)
+⋮----
+fname = "zte_chr_" + parsed.group(1).lower() + "_" + parsed.group(2).lower() + "_final.png"
+⋮----
+blob = bank.read("candidates/" + fname)
+sha = hashlib.sha256(blob).hexdigest()
+⋮----
+image = _atlas(blob, asset_id)
+audit_row = by_audit.get(asset_id)
+⋮----
+members: list[tuple[str, bytes]] = []
+⋮----
+flags = record["audit"]["new_identity_flags"]
+⋮----
+reference_id = record["audit"]["head_identity_metrics"].get("reference_id")
+anchor = verified.get(reference_id)
+⋮----
+original = _frames(record["atlas"], FRAMES[record["action"]])
+reference_frame = _frames(anchor["atlas"], FRAMES[anchor["action"]])[0]
+before = head_difference(
+recorded_before = record["audit"]["head_identity_metrics"].get("mean_head_rgb_change")
+⋮----
+fixed: list[Image.Image] = []
+skip_reason = None
+⋮----
+skip_reason = f"frame-{number}: {why}"
+⋮----
+# Preserve feet, lower torso, arms and tools exactly. Head
+# transfer must not masquerade as full-action regeneration.
+box = frame.getchannel("A").getbbox()
+⋮----
+skip_reason = f"frame-{number}: empty-alpha"
+⋮----
+lower_y = min(255, box[1] + round((box[3] - box[1]) * .46))
+⋮----
+skip_reason = f"frame-{number}: lower-body-mutated"
+⋮----
+blob = _pack(fixed)
+after = head_difference(head_thumbnail(anchor["blob"]), head_thumbnail(blob))
+⋮----
+filename = asset_id.lower().replace("-", "_") + "_head-polish.png"
+destination_name = "review-alternatives/" + filename
+⋮----
+report = {
+⋮----
+destination_index = json.dumps(report, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser()
+⋮----
+args = parser.parse_args()
+report = build(args.bank, args.audit, args.output, args.report, args.comparison)
 ```
 
 ## File: tools/sprites/build_character_review_panels.py

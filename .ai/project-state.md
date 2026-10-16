@@ -29,18 +29,20 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-16T08:21:59Z
+Generated: 2026-10-16T08:41:01Z
 
 ### Git
 - Branch: `main`
-- Head: `4fa652f9cab2`
-- Commit date: 2026-10-16T10:21:44+02:00
-- Commit: art: publish verified mobile role identity contact sheet with candidate bank (#177)
-- Tracked files: 1805
+- Head: `3740d88cfe53`
+- Commit date: 2026-10-16T10:40:45+02:00
+- Commit: art: generate non-destructive head identity polish review alternatives (#178)
+- Tracked files: 1807
 
 ### Recently changed files
 - `.github/workflows/asset-pipeline-ci.yml`
 - `.github/workflows/character-candidate-bank.yml`
+- `tools/sprites/build_character_identity_polish.py`
+- `tools/sprites/tests/test_character_identity_polish.py`
 - `tools/sprites/build_character_role_contact_sheet.py`
 - `tools/sprites/tests/test_character_role_contact_sheet.py`
 - `art/production/autofactory-state.json`
