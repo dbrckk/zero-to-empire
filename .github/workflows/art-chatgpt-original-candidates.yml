@@ -14,6 +14,7 @@ on:
       - 'tools/sprites/render_original_character_previews.py'
       - 'tools/sprites/build_original_offline_review.py'
       - 'tools/sprites/audit_chatgpt_originals.py'
+      - 'tools/sprites/test_audit_chatgpt_originals.py'
 
 permissions:
   contents: write
@@ -71,6 +72,8 @@ jobs:
           python -m unittest discover -s tools/sprites -p 'test_local_character_action_fx.py' -v
       - name: Verify planted-foot motion and phase-continuous boot geometry
         run: python -m unittest discover -s tools/sprites -p 'test_local_character_contact_gait.py' -v
+      - name: Verify loop seam is included in character motion risk audit
+        run: python -m unittest discover -s tools/sprites -p 'test_audit_chatgpt_originals.py' -v
       - name: Render all remaining role families from committed source
         run: |
           python tools/sprites/render_chatgpt_originals.py \
