@@ -58,12 +58,12 @@ def inspect(atlas: Path, role: str, action: str) -> dict:
             ) for f in frames
         ]
         scores = []
-        for a,b in zip(lower, lower[1:]):
+        for a,b in zip(lower, lower[1:]+lower[:1]):
             aa=list(a.getdata());bb=list(b.getdata())
             inter=sum(x and y for x,y in zip(aa,bb))
             union=sum(x or y for x,y in zip(aa,bb))
             scores.append(round(1-inter/union,4) if union else 0.0)
-        evidence["lower_body_adjacent_changes"] = scores
+        # Include last-to-first transition: a sprite loop can be smooth\n        # internally but visibly snap at its playback boundary.\n        evidence["lower_body_adjacent_changes"] = scores\n        evidence["lower_body_loop_seam_change"] = scores[-1]
         evidence["lower_body_mean_change"] = round(sum(scores)/len(scores),4)
         if evidence["lower_body_mean_change"] < .075:
             evidence["flags"].append("LOCOMOTION_LOWER_BODY_TOO_STATIC_RISK")
