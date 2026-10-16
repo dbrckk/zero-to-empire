@@ -103,7 +103,7 @@ class RoleConsistencySheetTests(unittest.TestCase):
     def test_missing_audit_coverage_is_not_silently_ignored(self):
         self.records.pop()
         self.save()
-        with self.assertRaisesRegex(ValueError, "does not cover precisely"):
+        with self.assertRaisesRegex(ValueError, "Stale or incomplete head/motion audit"):
             build(self.bank, self.audit, self.output)
 
     def test_semantically_approved_candidate_or_audit_must_be_rejected(self):
