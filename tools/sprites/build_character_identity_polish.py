@@ -157,6 +157,25 @@ def build(bank_path: Path, audit_path: Path, destination: Path,
         raise ValueError("Audit covers a different character candidate set")
     if not verified:
         raise ValueError("Empty candidate bank")
+    # A plausible same-role atlas is not necessarily the intended reference.
+    # Lock every polish proposal to the audit's declared canonical role anchor,
+    # preventing stale or edited audit records from silently using another pose.
+    anchors = audit.get("head_identity_reference")
+    if not isinstance(anchors, dict):
+        raise ValueError("Missing role identity anchors")
+    for asset_id, record in verified.items():
+        role = record["role"]
+        reference_id = anchors.get(role)
+        reference = verified.get(reference_id)
+        metrics = record["audit"]["head_identity_metrics"]
+        if (not isinstance(reference_id, str) or reference is None
+                or reference["role"] != role
+                or metrics.get("reference_id") != reference_id):
+            raise ValueError("Invalid canonical role identity anchor: " + asset_id)
+        if asset_id == reference_id:
+            if (metrics.get("mean_head_rgb_change") != 0
+                    or record["audit"]["new_identity_flags"]):
+                raise ValueError("Invalid anchor self-comparison: " + asset_id)
 
     alternatives, skipped, previews, gallery_rows = [], [], [], []
     members: list[tuple[str, bytes]] = []
