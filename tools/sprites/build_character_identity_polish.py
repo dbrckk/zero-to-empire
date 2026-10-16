@@ -147,7 +147,7 @@ def build(bank_path: Path, audit_path: Path, destination: Path,
                     or not isinstance(audit_row.get("head_identity_metrics"), dict)):
                 raise ValueError("Missing/stale/unsafe identity audit for " + asset_id)
             verified[asset_id] = {
-                "atlas": image, "sha256": sha, "entry": entry,
+                "atlas": image, "blob": blob, "sha256": sha, "entry": entry,
                 "audit": audit_row, "role": parsed.group(1),
                 "action": parsed.group(2),
             }
@@ -169,7 +169,9 @@ def build(bank_path: Path, audit_path: Path, destination: Path,
             raise ValueError("Missing/inconsistent same-role visual reference " + asset_id)
         original = _frames(record["atlas"], FRAMES[record["action"]])
         reference_frame = _frames(anchor["atlas"], FRAMES[anchor["action"]])[0]
-        before = head_difference(head_thumbnail(reference_frame), head_thumbnail(original[0]))
+        before = head_difference(
+            head_thumbnail(anchor["blob"]), head_thumbnail(record["blob"])
+        )
         recorded_before = record["audit"]["head_identity_metrics"].get("mean_head_rgb_change")
         if (not isinstance(recorded_before, (float, int))
                 or abs(before - recorded_before) > .035
@@ -200,7 +202,8 @@ def build(bank_path: Path, audit_path: Path, destination: Path,
                             "frames_applied_before_reject": len(fixed),
                             "original_sha256": record["sha256"]})
             continue
-        after = head_difference(head_thumbnail(reference_frame), head_thumbnail(fixed[0]))
+        blob = _pack(fixed)
+        after = head_difference(head_thumbnail(anchor["blob"]), head_thumbnail(blob))
         if (after >= before * MAX_REMAINING_ERROR_FRACTION
                 or after > MAX_HEAD_AFTER):
             skipped.append({"id": asset_id, "reference_id": reference_id,
@@ -208,7 +211,6 @@ def build(bank_path: Path, audit_path: Path, destination: Path,
                             "frames_applied_before_reject": len(fixed),
                             "original_sha256": record["sha256"]})
             continue
-        blob = _pack(fixed)
         filename = asset_id.lower().replace("-", "_") + "_head-polish.png"
         destination_name = "review-alternatives/" + filename
         members.append((destination_name, blob))
