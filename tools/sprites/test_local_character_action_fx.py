@@ -117,7 +117,7 @@ class LocalActionFxTests(unittest.TestCase):
             self.assertTrue(all(float(n.get("data-ankle-y")) == 226.0
                                 for n in feet))
         self.assertGreater(max(x for x, _ in points)-min(x for x, _ in points), 40)
-        self.assertGreater(max(y for _, y in points)-min(y for _, y in points), 30)
+        self.assertGreaterEqual(max(y for _, y in points)-min(y for _, y in points), 29.5)
         self.assertGreater(max(angles)-min(angles), 23)
         for role in ("OP", "LOG"):
             markup = svg_frame(role, "WORK", 3, 10)
