@@ -44,26 +44,28 @@ def foot_pose(phase: float, side: str, action: str, bounce: float = 0.0, *, prof
         raise ValueError("side must be L or R")
     if action not in ("WALK","CARRY"):
         raise ValueError("contact gait is only for WALK/CARRY")
-    if profile not in ("standard", "op-walk") or (profile == "op-walk" and action != "WALK"):
-        raise ValueError("operator stride profile requires WALK")
+    if profile not in ("standard", "op-walk", "eng-walk") or (profile != "standard" and action != "WALK"):
+        raise ValueError("special stride profile requires WALK")
 
     # OP-specific stance/swing profile. A small phase offset prevents eight
     # source frames from hiding heel lift behind a pair of flat planted boots.
     # Standard WALK and all CARRY geometry remain byte-for-byte equivalent.
     operator = profile == "op-walk"
-    stance_fraction = .58 if operator else STANCE_FRACTION
-    phase_offset = .10 if operator else 0.0
+    engineer = profile == "eng-walk"
+    specialized = operator or engineer
+    stance_fraction = .58 if specialized else STANCE_FRACTION
+    phase_offset = .10 if operator else (.075 if engineer else 0.0)
     cycle = (phase/(2*math.pi)+(0 if side == "L" else .5)+phase_offset) % 1.0
-    reach = 19.0 if operator else (14.0 if action == "WALK" else 12.0)
-    clearance = 21.0 if operator else (16.0 if action == "WALK" else 12.0)
+    reach = 19.0 if operator else (20.0 if engineer else (14.0 if action == "WALK" else 12.0))
+    clearance = 21.0 if operator else (22.0 if engineer else (16.0 if action == "WALK" else 12.0))
     if cycle < stance_fraction:
         progress = _ease(cycle/stance_fraction)
         # OP's planted ankle travels at a uniform ground-relative speed
         # during support; keep the original eased gait for all other profiles.
         foot_dx = (reach*(1.0-2.0*cycle/stance_fraction)
-                   if operator else reach*(1.0-2.0*progress))
+                   if specialized else reach*(1.0-2.0*progress))
         lift = 0.0
-        angle = 0.0 if operator else -4.0 + 8.0*progress
+        angle = 0.0 if specialized else -4.0 + 8.0*progress
         planted = True
     else:
         progress = (cycle-stance_fraction)/(1.0-stance_fraction)
@@ -72,7 +74,7 @@ def foot_pose(phase: float, side: str, action: str, bounce: float = 0.0, *, prof
         angle = 4.0-8.0*_ease(progress)
         planted = False
 
-    hip_x = (103.0 if side == "L" else 150.0) if operator else (106.0 if side == "L" else 146.0)
+    hip_x = (103.0 if side == "L" else 150.0) if specialized else (106.0 if side == "L" else 146.0)
     hip_y = 155.0+bounce
     ankle_x = hip_x+foot_dx
     ankle_y = FLOOR_ANKLE_Y-lift

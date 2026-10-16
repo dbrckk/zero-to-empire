@@ -58,6 +58,34 @@ class ContactGaitTests(unittest.TestCase):
                 for coord in ("knee_x","knee_y","ankle_x","ankle_y","boot_angle"):
                     self.assertAlmostEqual(getattr(first,coord),getattr(last,coord),places=7)
 
+    def test_engineer_gait_exaggerates_readable_steps_without_crossed_legs(self):
+        ankles = {"L": [], "R": []}
+        lift = {"L": [], "R": []}
+        stance_counts = {"L": 0, "R": 0}
+        for index in range(8):
+            phase = 2 * math.pi * index / 8
+            poses = {}
+            for side in ("L", "R"):
+                pose = foot_pose(phase, side, "WALK", profile="eng-walk")
+                poses[side] = pose
+                ankles[side].append(pose.ankle_x)
+                lift[side].append(FLOOR_ANKLE_Y - pose.ankle_y)
+                stance_counts[side] += int(pose.planted)
+                if pose.planted:
+                    self.assertEqual(pose.ankle_y, FLOOR_ANKLE_Y)
+            self.assertLess(poses["L"].ankle_x, poses["R"].ankle_x)
+        for side in ("L", "R"):
+            self.assertGreater(max(ankles[side]) - min(ankles[side]), 36)
+            self.assertGreater(max(lift[side]), 20)
+            self.assertGreaterEqual(stance_counts[side], 4)
+            start = foot_pose(0, side, "WALK", profile="eng-walk")
+            end = foot_pose(2 * math.pi, side, "WALK", profile="eng-walk")
+            self.assertAlmostEqual(start.ankle_x, end.ankle_x)
+            self.assertAlmostEqual(start.ankle_y, end.ankle_y)
+        with self.assertRaises(ValueError):
+            foot_pose(0, "L", "CARRY", profile="eng-walk")
+        self.assertEqual(foot_pose(0,"L","CARRY").hip_x,106)
+
     def test_loaded_carry_has_less_sway_than_unladen_walk(self):
         self.assertGreater(abs(torso_weight_shift(math.pi/2,"WALK")),
                            abs(torso_weight_shift(math.pi/2,"CARRY")))

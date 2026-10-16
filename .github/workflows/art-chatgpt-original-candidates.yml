@@ -168,6 +168,49 @@ jobs:
           print('OP_WALK_REAL_SVG_STRIDE_AND_PLANTED_FOOT_PASS=8_FRAMES')
           print('STRICT_DONE_ADDED=0')
           PY
+      - name: Prove engineer WALK foot contact and mechanical REPAIR readability
+        run: |
+          python - <<'PY'
+          import math, xml.etree.ElementTree as ET
+          from pathlib import Path
+          root=Path('art/incoming/chatgpt-original/src_svg/ENG/WALK')
+          x_positions={'L':[], 'R':[]}
+          clearances={'L':[], 'R':[]}
+          support={'L':0, 'R':0}
+          for i in range(8):
+              svg=ET.parse(root/f'{i:02d}.svg').getroot()
+              legs={n.get('data-eng-walk-foot'):n for n in svg.iter()
+                    if n.get('data-eng-walk-foot') is not None}
+              assert set(legs)=={'L','R'},('missing-engineer-leg',i)
+              for side,node in legs.items():
+                  x=float(node.get('data-ankle-x'))
+                  y=float(node.get('data-ankle-y'))
+                  x_positions[side].append(x)
+                  clearances[side].append(226.0-y)
+                  planted=node.get('data-planted')=='true'
+                  if planted:
+                      assert y==226.0,('foot-slide',i,side)
+                      support[side]+=1
+                  else:
+                      assert y<226.0,('missing-swing-clearance',i,side)
+              assert x_positions['L'][-1]<x_positions['R'][-1],('crossed-boots',i)
+          for side in ('L','R'):
+              assert max(x_positions[side])-min(x_positions[side])>36,(side,'short-stride')
+              assert max(clearances[side])>20,(side,'low-foot-clearance')
+              assert support[side]>=4,(side,'insufficient-support')
+          repair=Path('art/incoming/chatgpt-original/src_svg/ENG/REPAIR')
+          angles=[]
+          for i in range(10):
+              svg=ET.parse(repair/f'{i:02d}.svg').getroot()
+              wrench=[e for e in svg.iter() if e.get('data-repair-tool')=='ENG']
+              assert len(wrench)==1,('repair-wrench',i)
+              angle=float(wrench[0].get('transform').split('rotate(')[1][:-1])
+              angles.append(angle)
+          assert max(angles)-min(angles)>48,'Weak mechanical ratchet action'
+          print('ENG_WALK_BOOT_TRAVEL_GT_36PX_AND_LIFT_GT_20PX=1')
+          print('ENG_REPAIR_RATCHET_TORQUE_GT_48_DEGREES=1')
+          print('STRICT_DONE_ADDED=0')
+          PY
       - name: Check each candidate atlas without strict promotion
         run: |
           python - <<'PY'
