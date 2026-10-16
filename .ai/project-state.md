@@ -29,13 +29,13 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-16T13:40:50Z
+Generated: 2026-10-16T14:08:09Z
 
 ### Git
 - Branch: `main`
-- Head: `afdc65a111db`
-- Commit date: 2026-10-16T15:40:35+02:00
-- Commit: feat(ci): publish persistent engineer Android motion player (#195)
+- Head: `f20ec67ce3bd`
+- Commit date: 2026-10-16T16:07:53+02:00
+- Commit: fix(ci): serialize engineer motion review release uploads (#196)
 - Tracked files: 1812
 
 ### Recently changed files
@@ -58,7 +58,6 @@ Generated: 2026-10-16T13:40:50Z
 - `art/incoming/chatgpt-original/src_svg/ENG/WORK/08.svg`
 - `art/incoming/chatgpt-original/src_svg/ENG/WORK/09.svg`
 - `art/incoming/chatgpt-original/visual-risk-qa.json`
-- `tools/sprites/local_character_action_fx.py`
 
 ### Project signals
 - `build.gradle.kts`
