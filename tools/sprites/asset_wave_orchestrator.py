@@ -35,7 +35,11 @@ TRIGGER_DISPATCH_TOKEN = os.getenv("AUTOF_TRIGGER_DISPATCH_TOKEN", "")
 CURRENT_DISPATCH_TOKEN = os.getenv("GITHUB_RUN_ID", "")
 KAGGLE_BUSY = os.getenv("AUTOF_KAGGLE_BUSY", "0") == "1"
 FX_BUSY = os.getenv("AUTOF_FX_BUSY", "0") == "1"
-CHARACTER_GENERATION_EPOCH = "production-first-v1.21-art-deferred"
+# New, mechanically coherent planted-foot REPAIR trajectory in PR #175:
+# prior four attempts used deep-kneel/standing poses and high denoise.
+# This is an algorithm change, so reopen a bounded four-attempt budget;
+# never erase historical attempts, rejected evidence, or strict review.
+CHARACTER_GENERATION_EPOCH = "production-first-v1.22-planted-repair-poses"
 CHARACTER_EPOCH_ATTEMPT_LIMIT = 4
 CHARACTER_BATCH_SIZE = 12
 INFRA_FAILURE_LIMIT = 3
