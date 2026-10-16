@@ -29,16 +29,19 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-16T14:42:30Z
+Generated: 2026-10-16T15:00:30Z
 
 ### Git
 - Branch: `main`
-- Head: `23a83b780524`
-- Commit date: 2026-10-16T16:42:12+02:00
-- Commit: test(art): guard engineer gait at 240 samples per cycle (#197)
-- Tracked files: 1812
+- Head: `aacccdb3f5d2`
+- Commit date: 2026-10-16T17:00:03+02:00
+- Commit: fix(art): audit last-to-first locomotion loop seam (#198)
+- Tracked files: 1813
 
 ### Recently changed files
+- `.github/workflows/art-chatgpt-original-candidates.yml`
+- `tools/sprites/audit_chatgpt_originals.py`
+- `tools/sprites/test_audit_chatgpt_originals.py`
 - `tools/sprites/test_local_character_contact_gait.py`
 - `.github/workflows/engineer-motion-candidate-review.yml`
 

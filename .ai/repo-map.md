@@ -450,6 +450,7 @@ tools/
     ter07_energy_conduit_candidate.py
     test_action_contact.py
     test_animation_batch_planner.py
+    test_audit_chatgpt_originals.py
     test_autonomous_walk.py
     test_character_action_gate.py
     test_character_anchor_pair_salvage.py
@@ -1081,6 +1082,7 @@ on:
       - 'tools/sprites/render_original_character_previews.py'
       - 'tools/sprites/build_original_offline_review.py'
       - 'tools/sprites/audit_chatgpt_originals.py'
+      - 'tools/sprites/test_audit_chatgpt_originals.py'
 
 permissions:
   contents: write
@@ -1138,6 +1140,8 @@ jobs:
           python -m unittest discover -s tools/sprites -p 'test_local_character_action_fx.py' -v
       - name: Verify planted-foot motion and phase-continuous boot geometry
         run: python -m unittest discover -s tools/sprites -p 'test_local_character_contact_gait.py' -v
+      - name: Verify loop seam is included in character motion risk audit
+        run: python -m unittest discover -s tools/sprites -p 'test_audit_chatgpt_originals.py' -v
       - name: Render all remaining role families from committed source
         run: |
           python tools/sprites/render_chatgpt_originals.py \
@@ -32016,6 +32020,8 @@ aa=list(a.getdata());bb=list(b.getdata())
 inter=sum(x and y for x,y in zip(aa,bb))
 union=sum(x or y for x,y in zip(aa,bb))
 ⋮----
+# Include last-to-first transition: a sprite loop can be smooth\n        # internally but visibly snap at its playback boundary.\n        evidence["lower_body_adjacent_changes"] = scores\n        evidence["lower_body_loop_seam_change"] = scores[-1]
+⋮----
 def audit(base: Path) -> dict
 ⋮----
 candidates=base/"candidates"
@@ -39567,6 +39573,35 @@ files=[MASTER,MANIFEST]
 before=[hashlib.sha256(p.read_bytes()).hexdigest() for p in files]
 ⋮----
 after=[hashlib.sha256(p.read_bytes()).hexdigest() for p in files]
+```
+
+## File: tools/sprites/test_audit_chatgpt_originals.py
+```python
+"""Regression coverage for character motion audit loop closure."""
+⋮----
+class CharacterLoopSeamTests(unittest.TestCase)
+⋮----
+def test_walk_reports_last_to_first_change(self)
+⋮----
+atlas = Image.new("RGBA", (1024, 1024))
+⋮----
+frame = Image.new("RGBA", (256, 256))
+draw = ImageDraw.Draw(frame)
+# Last frame intentionally returns to first, giving a zero
+# seam change despite motion between intermediate frames.
+offset = 0 if index in (0, 7) else 10 + index * 5
+⋮----
+path = Path(temp) / "walk.png"
+⋮----
+result = inspect(path, "ENG", "WALK")
+⋮----
+def test_carry_reports_wraparound_too(self)
+⋮----
+draw = ImageDraw.Draw(atlas)
+⋮----
+path = Path(temp) / "carry.png"
+⋮----
+result = inspect(path, "LOG", "CARRY")
 ```
 
 ## File: tools/sprites/test_autonomous_walk.py

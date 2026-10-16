@@ -673,6 +673,7 @@
         "tools/sprites/rigged_tech_walk_v2.py",
         "tools/sprites/temporal_sprite_audit.py",
         "tools/sprites/ter07_energy_conduit_candidate.py",
+        "tools/sprites/test_audit_chatgpt_originals.py",
         "tools/sprites/test_character_approved_idle_fallback.py",
         "tools/sprites/test_export_tech_canonical_review.py",
         "tools/sprites/test_pollinations_character_sheet_factory.py",
@@ -687,7 +688,7 @@
         "tools/sprites/tests/test_character_provisional_idle_seed.py",
         "tools/sprites/tests/test_character_role_contact_sheet.py"
       ],
-      "in_degree": 61,
+      "in_degree": 62,
       "out_degree": 7
     },
     "app/src/main/java/com/zerotoempire/game/GameTheme.kt": {
@@ -2009,8 +2010,10 @@
       "dependencies": [
         "tools/sprites/character_semantic_gate.py"
       ],
-      "dependents": [],
-      "in_degree": 0,
+      "dependents": [
+        "tools/sprites/test_audit_chatgpt_originals.py"
+      ],
+      "in_degree": 1,
       "out_degree": 1
     },
     "tools/sprites/audit_complete_sprite_manifest.py": {
@@ -2717,6 +2720,15 @@
       "dependents": [],
       "in_degree": 0,
       "out_degree": 4
+    },
+    "tools/sprites/test_audit_chatgpt_originals.py": {
+      "dependencies": [
+        "app/src/main/java/com/zerotoempire/game/GameRepository.kt",
+        "tools/sprites/audit_chatgpt_originals.py"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 2
     },
     "tools/sprites/test_autonomous_walk.py": {
       "dependencies": [

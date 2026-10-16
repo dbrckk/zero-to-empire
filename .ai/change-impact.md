@@ -1,12 +1,15 @@
 # Change impact
 
-Base: 76c750b31a0b4176019d4bb5064412f5633e2331
-Head: 23a83b7805247796ffaa57b6a3363343c6362c0b
+Base: 7645d09b374250db39f9d7577b29c26cf53b0c68
+Head: aacccdb3f5d224ce82cc33c8cffff34acf97092f
 
 ## Changed files
-- M tools/sprites/test_local_character_contact_gait.py
+- M .github/workflows/art-chatgpt-original-candidates.yml
+- M tools/sprites/audit_chatgpt_originals.py
+- A tools/sprites/test_audit_chatgpt_originals.py
 
 ## Affected areas
+- .github
 - tools
 
 ## Related test candidates
