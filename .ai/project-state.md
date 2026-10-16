@@ -29,31 +29,27 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-16T06:18:11Z
+Generated: 2026-10-16T07:57:11Z
 
 ### Git
 - Branch: `main`
-- Head: `0fb62358eb1d`
-- Commit date: 2026-10-16T08:17:56+02:00
-- Commit: art: provenance-verified engineer IDLE source for future Kaggle GPU recovery (#172)
+- Head: `9d72c1bd5990`
+- Commit date: 2026-10-16T09:56:56+02:00
+- Commit: art: add cross-action character face and helmet continuity review (#174)
 - Tracked files: 1801
 
 ### Recently changed files
-- `.github/workflows/asset-pipeline-ci.yml`
-- `.github/workflows/kaggle-mass-sprite-factory.yml`
-- `kaggle/github_mass_factory.py`
-- `tools/assets/test_workflow_policy.py`
-- `tools/sprites/character_provisional_idle_seed.py`
-- `tools/sprites/kaggle_character_sheet_factory_v1.py`
-- `tools/sprites/tests/test_character_provisional_idle_seed.py`
-- `tools/sprites/archive_character_candidates.py`
-- `tools/sprites/tests/test_archive_character_candidates.py`
+- `.github/workflows/character-candidate-bank.yml`
+- `tools/sprites/audit_character_bank_motion.py`
+- `tools/sprites/build_character_bank_mobile_review.py`
+- `tools/sprites/tests/test_character_bank_mobile_review.py`
+- `tools/sprites/tests/test_character_bank_motion_audit.py`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
 - `art/production/character-strict-review-backlog.md`
 - `art/production/master-asset-queue.json`
-- `art/production/kaggle-async-state.json`
 - `art/production/controlled-character-regen-queue.json`
+- `art/production/kaggle-async-state.json`
 
 ### Project signals
 - `build.gradle.kts`

@@ -2331,9 +2331,14 @@ jobs:
           print('## Motion readability review (heuristic only)')
           print(f"- Screen size: **{data['mobile_render_px']} px**")
           print(f"- Candidate actions flagged: **{data['motion_attention_count']} / {data['candidate_count']}**")
+          print(f"- Cross-action head identity deviations: **{data['identity_attention_count']} / {data['candidate_count']}**")
           for row in data['assets']:
               if row['new_motion_flags']:
                   print(f"- {row['id']}: {', '.join(row['new_motion_flags'])}")
+              if row['new_identity_flags']:
+                  reference=row['head_identity_metrics']['reference_id']
+                  distance=row['head_identity_metrics']['mean_head_rgb_change']
+                  print(f"- {row['id']} vs {reference}: head RGB deviation {distance:.2f}; "+', '.join(row['new_identity_flags']))
           print('- No flags represent automatic semantic approval.')
           PY
 
@@ -3643,7 +3648,9 @@ on:
   # Observe new producer submissions immediately; Kaggle completion is still
   # polled by the existing hourly schedule. This event only reads the kernel.
   workflow_run:
-    workflows: [Kaggle Mass Sprite Factory]
+    # Also observe after the reliable 6-hour autofactory schedule when the
+    # collector hourly cron has been delayed by GitHub Actions.
+    workflows: [Kaggle Mass Sprite Factory, Asset Autofactory 235]
     types: [completed]
   push:
     branches: [main]
@@ -30013,6 +30020,9 @@ header = text.split("\npermissions:", 1)[0]
 ⋮----
 # The collector must not submit a new paid GPU batch on its own.
 ⋮----
+# The 6-hour autofactory schedule is an independent, trusted fallback
+# if hourly scheduled collector runs are dropped by the provider.
+⋮----
 def test_async_collector_recovers_candidates_when_generated_targets_is_empty(self)
 ⋮----
 # The collector may poll existing GPU jobs but may not start them.
@@ -30303,6 +30313,36 @@ item = result["assets"][0]
 def test_distinct_poses_have_higher_observable_motion(self)
 ⋮----
 moved = analyze(self.bank, self.report)
+⋮----
+def write_pair(self, *, alternate_color=(8, 100, 160))
+⋮----
+def sprite(role, action, count, color)
+⋮----
+atlas = Image.new("RGBA", (1024, 1024))
+pen = ImageDraw.Draw(atlas)
+⋮----
+out = io.BytesIO()
+⋮----
+filename = f"zte_chr_eng_{action.lower()}_final.png"
+blob = sprite("ENG", action, count, color)
+⋮----
+data = dict(self.metadata, candidate_count=2, bank_entries=entries)
+⋮----
+def test_different_engineer_helmet_style_is_flagged_without_promotion(self)
+⋮----
+report = analyze(self.bank, self.report)
+⋮----
+work = next(row for row in report["assets"]
+⋮----
+def test_matching_engineer_head_is_not_falsely_flagged(self)
+⋮----
+def test_missing_or_empty_head_cannot_silently_pass_audit(self)
+⋮----
+index = json.loads(archive.read("candidate-bank-index.json"))
+sprites = {row["filename"]: archive.read("candidates/" + row["filename"])
+⋮----
+empty = buffer.getvalue()
+name = "zte_chr_eng_idle_final.png"
 ⋮----
 def test_sha_mismatch_fails_closed(self)
 ⋮----
@@ -30994,6 +31034,10 @@ FRAMES = {"IDLE": 6, "WALK": 8, "WORK": 10, "CARRY": 8, "REPAIR": 10, "CELEB": 8
 MOBILE_SIZE = 42
 DAY = (189, 203, 211, 255)
 NIGHT = (16, 27, 41, 255)
+HEAD_ANCHOR_ACTION = {"OP": "WALK", "LOG": "WALK", "ENG": "IDLE", "TECH": "IDLE"}
+# Conservative pre-screening: a distance is not proof that two faces differ.
+HEAD_REVIEW_THRESHOLD = 11.0
+HEAD_EXTREME_THRESHOLD = 30.0
 ⋮----
 def composite(tile: Image.Image, color: tuple[int, ...]) -> Image.Image
 ⋮----
@@ -31009,6 +31053,33 @@ tiles = [
 ⋮----
 images = [composite(tile, background) for tile in tiles]
 ⋮----
+def head_thumbnail(blob: bytes) -> Image.Image
+⋮----
+"""Normalized first-frame helmet/face crop for review, not recognition.
+
+    Foreground-based head positioning avoids treating a large handheld crate as
+    the person's face. A fixed neutral composite makes alpha-crop edges
+    comparable. A 64px color difference is merely a triage signal.
+    """
+⋮----
+frame = source.crop((0, 0, 256, 256))
+alpha = frame.getchannel("A")
+bounds = alpha.getbbox()
+⋮----
+span = bottom - top
+⋮----
+upper = alpha.crop((0, top, 256, min(256, top + max(1, round(span * .28)))))
+⋮----
+pixels = upper.load()
+⋮----
+xmid = round(weighted_x / total)
+cropped = frame.crop((xmid - 47, max(0, top - 5),
+canvas = Image.new("RGBA", cropped.size, (170, 181, 193, 255))
+⋮----
+def head_difference(first: Image.Image, second: Image.Image) -> float
+⋮----
+"""RGB mean absolute difference of centered head thumbnails (0..255)."""
+⋮----
 def analyze(bank_path: Path, output_path: Path) -> dict
 ⋮----
 metadata = json.loads(bank.read("candidate-bank-index.json"))
@@ -31022,9 +31093,24 @@ filename = "zte_chr_" + parts[1].lower() + "_" + parts[2].lower() + "_final.png"
 blob = bank.read("candidates/" + filename)
 ⋮----
 metrics = motion_stats(blob, FRAMES[parts[2]])
+⋮----
 flags = []
 ⋮----
 prior_flags = [str(x) for x in row.get("deferred_art_warnings") or []]
+⋮----
+# Compare each role with its coherent visual reference. OP/LOG usually
+# have no unfinished IDLE in the bank; their WALK is the review reference.
+# A technically accepted engineer IDLE is a baseline, not an approval.
+role_anchor = {}
+⋮----
+candidates = sorted(asset_id for asset_id in first_heads
+⋮----
+preferred = "CHR-" + role + "-" + preferred_action
+⋮----
+role = row["id"].split("-")[1]
+reference_id = role_anchor[role]
+distance = head_difference(first_heads[reference_id], first_heads[row["id"]])
+identity_flags = []
 ⋮----
 ranked = sorted(
 audit = {
@@ -31424,10 +31510,14 @@ match = PNG_NAME.fullmatch(filename)
 source = bank.read("candidates/"+filename)
 ⋮----
 motion_flags = []
+identity_flags = []
+identity_reference = None
 ⋮----
 audit_record = audit_by_id.get(aid)
 ⋮----
 motion_flags = [str(flag) for flag in (audit_record.get("new_motion_flags") or [])]
+identity_flags = [str(flag) for flag in (audit_record.get("new_identity_flags") or [])]
+identity_reference = (audit_record.get("head_identity_metrics") or {}).get("reference_id")
 ⋮----
 payload = {
 serialized = json.dumps(payload, ensure_ascii=False, separators=(",",":"))
