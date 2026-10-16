@@ -168,7 +168,7 @@ class CharacterIdentityPolishTests(unittest.TestCase):
             result = original(blob, count)
             calls[0] += 1
             if calls[0] % 2 == 0:
-                result["mean_frame_change"] = result["mean_frame_change"] * .5
+                result["low_change_pairs"] += 2
             return result
 
         with patch.object(module, "motion_stats", side_effect=deteriorated_second_atlas):
