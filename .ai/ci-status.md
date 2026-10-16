@@ -1,15 +1,15 @@
 # CI status
 
-Summary: 5 success / 1 failure / 1 active
+Summary: 6 success / 1 failure / 0 active
 
-- ChatGPT Original Character Candidates: in_progress / pending (8d787580)
+- Character Motion Audit PR Gate: completed / success (5f468ae5)
+- Assemble Character Candidate Bank: completed / success (93a3f74b)
+- ChatGPT Original Character Candidates: completed / success (8d787580)
 - Assemble Character Candidate Bank: completed / success (22b02bf0)
 - ChatGPT Original Character Candidates: completed / success (e166825d)
 - Assemble Character Candidate Bank: completed / skipped (aacccdb3)
 - ChatGPT Original Character Candidates: completed / failure (aacccdb3)
 - Asset Pipeline CI: completed / success (af774999)
-- Engineer Motion Candidate Visual Review: completed / success (23a83b78)
-- Asset Pipeline CI: completed / success (23a83b78)
 
 ## Latest failed run structure
 - Job: render

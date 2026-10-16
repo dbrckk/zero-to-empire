@@ -53,6 +53,7 @@ The content is organized as follows:
     backfill-character-candidate-archives.yml
     build-test-apk.yml
     character-candidate-bank.yml
+    character-motion-audit-pr-gate.yml
     character-review-matrix.yml
     character-single-subject-gpu-evidence.yml
     engineer-motion-candidate-review.yml
@@ -2602,6 +2603,39 @@ jobs:
             /tmp/zte-character-eng-role-review-motion-audit.json
             /tmp/zte-character-eng-role-review-motion-storyboard.png
           retention-days: 30
+```
+
+## File: .github/workflows/character-motion-audit-pr-gate.yml
+```yaml
+name: Character Motion Audit PR Gate
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/sprites/audit_chatgpt_originals.py'
+      - 'tools/sprites/test_audit_chatgpt_originals.py'
+      - 'tools/sprites/character_semantic_gate.py'
+      - '.github/workflows/character-motion-audit-pr-gate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned audit dependency
+        run: python -m pip install --disable-pip-version-check 'Pillow==11.3.0'
+      - name: Verify loop seam and risk gate regressions
+        run: python -m unittest discover -s tools/sprites -p 'test_audit_chatgpt_originals.py' -v
+      - name: Check audit syntax
+        run: python -m py_compile tools/sprites/audit_chatgpt_originals.py tools/sprites/character_semantic_gate.py
+
+# Reject-only automated audit. Passing is not semantic approval or runtime promotion.
 ```
 
 ## File: .github/workflows/character-review-matrix.yml
