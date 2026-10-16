@@ -50,12 +50,13 @@ class RoleConsistencySheetTests(unittest.TestCase):
             self.records.append({
                 "id": asset_id, "sha256": checksum, "strict_approved": False,
                 "runtime_promoted": False,
-                "new_identity_flags": ["CROSS_ACTION_HEAD_IDENTITY_REVIEW"] if role == "LOG" else [],
+                "new_identity_flags": [],
                 "new_motion_flags": ["LOW_MOBILE_FRAME_CHANGE_REVIEW"] if role == "OP" else [],
                 "head_identity_metrics": {
                     "reference_id": asset_id, "mean_head_rgb_change": 0.0,
                 },
             })
+        self.anchors = {entry["id"].split("-")[1]: entry["id"] for entry in self.entries}
         self.save()
 
     def save(self):
@@ -73,13 +74,14 @@ class RoleConsistencySheetTests(unittest.TestCase):
             "automatic_semantic_approval": False,
             "automatic_runtime_promotion": False,
             "assets": self.records,
+            "head_identity_reference": self.anchors,
         }))
 
     def test_role_sheet_is_readable_png_and_does_not_approve_candidates(self):
         report = build(self.bank, self.audit, self.output)
         self.assertTrue(report["review_only"])
         self.assertEqual(report["asset_count"], 3)
-        self.assertEqual(report["identity_attention_count"], 1)
+        self.assertEqual(report["identity_attention_count"], 0)
         self.assertEqual(report["strict_done_unchanged"], 219)
         self.assertEqual(report["strict_done_added"], 0)
         with Image.open(self.output) as image:
@@ -115,6 +117,24 @@ class RoleConsistencySheetTests(unittest.TestCase):
         self.records[0]["runtime_promoted"] = True
         self.save()
         with self.assertRaisesRegex(ValueError, "Stale or incomplete"):
+            build(self.bank, self.audit, self.output)
+
+    def test_cross_role_reference_fails_even_with_valid_sha(self):
+        self.anchors["LOG"] = self.anchors["OP"]
+        self.records[1]["head_identity_metrics"]["reference_id"] = self.anchors["OP"]
+        self.save()
+        with self.assertRaisesRegex(ValueError, "Invalid same-role"):
+            build(self.bank, self.audit, self.output)
+
+    def test_forged_reference_distance_and_self_flags_fail_closed(self):
+        self.records[0]["head_identity_metrics"]["mean_head_rgb_change"] = -1
+        self.save()
+        with self.assertRaisesRegex(ValueError, "Invalid same-role"):
+            build(self.bank, self.audit, self.output)
+        self.records[0]["head_identity_metrics"]["mean_head_rgb_change"] = 0
+        self.records[0]["new_identity_flags"] = ["CROSS_ACTION_HEAD_IDENTITY_REVIEW"]
+        self.save()
+        with self.assertRaisesRegex(ValueError, "Invalid same-role"):
             build(self.bank, self.audit, self.output)
 
     def test_empty_first_frame_is_blocking_even_with_valid_hash(self):

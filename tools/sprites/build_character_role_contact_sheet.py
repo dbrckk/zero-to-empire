@@ -112,6 +112,26 @@ def _load(bank_path: Path, audit_path: Path) -> tuple[dict, list[dict]]:
             })
         if set(records) != seen:
             raise ValueError("Audit does not cover precisely the verified bank")
+        # A matching PNG hash is necessary but insufficient: reject an audit
+        # with a forged reference ID, nonsensical distance, or flags claiming
+        # a same-role match against another role. Otherwise the mobile sheet
+        # can misleadingly direct reviewers to the wrong character family.
+        anchors = audit.get("head_identity_reference")
+        if not isinstance(anchors, dict):
+            raise ValueError("Missing role identity anchors in audit")
+        for item in result:
+            role, aid = item["role"], item["id"]
+            expected = anchors.get(role)
+            distance = item["head_deviation"]
+            if (not isinstance(expected, str)
+                    or expected not in seen
+                    or not expected.startswith("CHR-" + role + "-")
+                    or item["reference"] != expected
+                    or isinstance(distance, bool)
+                    or not isinstance(distance, (int, float))
+                    or not 0 <= distance <= 255
+                    or (aid == expected and (distance != 0 or item["identity_flags"]))):
+                raise ValueError("Invalid same-role head identity reference " + aid)
     return meta, result
 
 
