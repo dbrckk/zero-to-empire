@@ -21,6 +21,7 @@ from character_ground_shadow_cleanup import remove_baked_ground_shadow
 from character_rejection_evidence import save_rejected_idle_preview
 from character_anchor_pair_salvage import salvage_two_full_body_subjects
 from character_approved_idle_fallback import load_approved_idle_anchor
+from character_provisional_idle_seed import load_seed as load_provisional_idle_seed
 from character_idle_breathing_fallback import build_idle_breathing_frames
 
 ROOT=Path(__file__).resolve().parents[2]
@@ -635,6 +636,25 @@ def main():
  for ri,role in enumerate(roles):
   pe,ppe=anchor_encs[role]
   failures=[]
+  # If a technically passed, exact-run engineer IDLE was already collected,
+  # use its reviewed *pixels* as the same-role visual identity source instead
+  # of spending four text-to-image anchors that often yield two workers.
+  # The overlay is SHA-256/provenance locked and explicitly review-only; it
+  # still must pass the generator's full single-subject safety checks.
+  if role=='ENG':
+   provisional,provisional_note=load_provisional_idle_seed(role,ROOT)
+   if provisional is not None:
+    try:
+     coverage=validated_single_role_anchor(provisional)
+     role_anchor[role]=provisional
+     role_anchor_salvage[role]=provisional_note
+     print(f'KAGGLE_CHR_PROVISIONAL_IDENTITY_SOURCE={role} {provisional_note} coverage={coverage:.3f} semantic_approval=false',flush=True)
+    except (RuntimeError,ValueError) as exc:
+     failures.append('provisional-seed-structural-QA:'+str(exc))
+   else:
+    failures.append(provisional_note)
+  if role in role_anchor:
+   continue
   # A single malformed text-to-image role anchor previously poisoned all six
   # character actions. Reject multi-subject/cropped source images before any
   # action frame is generated, and try independent deterministic seeds.

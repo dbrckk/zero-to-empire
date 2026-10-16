@@ -125,7 +125,7 @@ jobs:
           fi
 
       - name: Compile sprite generators
-        run: python -m py_compile tools/sprites/kaggle_building_family_factory_v16.py tools/sprites/kaggle_character_sheet_factory_v1.py tools/sprites/character_acceptance_policy.py tools/sprites/character_head_identity_lock.py tools/sprites/character_ground_shadow_cleanup.py tools/sprites/character_anchor_pair_salvage.py tools/sprites/character_approved_idle_fallback.py tools/sprites/character_rejection_evidence.py tools/sprites/character_idle_breathing_fallback.py kaggle/github_mass_factory.py
+        run: python -m py_compile tools/sprites/kaggle_building_family_factory_v16.py tools/sprites/kaggle_character_sheet_factory_v1.py tools/sprites/character_acceptance_policy.py tools/sprites/character_head_identity_lock.py tools/sprites/character_ground_shadow_cleanup.py tools/sprites/character_anchor_pair_salvage.py tools/sprites/character_approved_idle_fallback.py tools/sprites/character_provisional_idle_seed.py tools/sprites/character_rejection_evidence.py tools/sprites/character_idle_breathing_fallback.py kaggle/github_mass_factory.py
       - name: Recover async preflight failure
         if: ${{ failure() && env.ASYNC_SUBMIT == 'true' }}
         env:
@@ -265,6 +265,51 @@ jobs:
             echo 'KAGGLE_REUSE_ACTIVE_KERNEL=0'
           fi
 
+      - name: Prepare immutable, review-only engineer IDLE identity source
+        if: steps.kernel-state.outputs.reuse != 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          # Only a canonical, technically-collected engineer IDLE may supply
+          # GPU source pixels. No semantic approval or strict DONE is implied.
+          source_run="$(python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('art/production/controlled-character-regen-queue.json').read_text())
+          ids={str(x.get('id') or '') for x in c.get('targets',[])
+               if str(x.get('status') or '').upper()=='PENDING_KAGGLE'}
+          if not {'CHR-ENG-WORK','CHR-ENG-REPAIR'}.intersection(ids) or 'CHR-ENG-IDLE' not in ids:
+              print('')
+          else:
+              q=json.loads(Path('art/production/master-asset-queue.json').read_text())
+              eng=[x for x in q['assets'] if x['id']=='CHR-ENG-IDLE']
+              if len(eng)!=1: raise SystemExit('Canonical engineer IDLE not unique')
+              row=eng[0]
+              if (row.get('strict_status')=='DONE' or
+                  row.get('pipeline_status')!='AWAITING_REVIEW' or
+                  not isinstance(row.get('review_artifact_run_id'),int)):
+                  raise SystemExit('Engineer IDLE does not have exact provisional QA provenance')
+              print(row['review_artifact_run_id'])
+          PY
+          )"
+          if [ -z "$source_run" ]; then
+            echo 'KAGGLE_ENG_PROVISIONAL_SOURCE=not-applicable'
+            exit 0
+          fi
+          mkdir -p /tmp/zte-engineer-source-archive /tmp/zte-provisional-seed-overlay
+          gh release download zte-character-candidates \
+            --repo "$GITHUB_REPOSITORY" \
+            --pattern "zte-characters-${source_run}.zip" \
+            --dir /tmp/zte-engineer-source-archive
+          python tools/sprites/character_provisional_idle_seed.py \
+            --master art/production/master-asset-queue.json \
+            --queue art/production/controlled-character-regen-queue.json \
+            --archive "/tmp/zte-engineer-source-archive/zte-characters-${source_run}.zip" \
+            --output-directory /tmp/zte-provisional-seed-overlay \
+            --source-run-id "$source_run"
+
       - name: Prepare Kaggle kernel
         if: steps.kernel-state.outputs.reuse != 'true'
         shell: bash
@@ -284,6 +329,7 @@ jobs:
              tools/sprites/character_ground_shadow_cleanup.py \
              tools/sprites/character_anchor_pair_salvage.py \
              tools/sprites/character_approved_idle_fallback.py \
+             tools/sprites/character_provisional_idle_seed.py \
              tools/sprites/character_rejection_evidence.py \
              tools/sprites/character_idle_breathing_fallback.py \
              /tmp/zte-kaggle/tools/sprites/
@@ -318,6 +364,7 @@ jobs:
               'character_ground_shadow_cleanup.py',
               'character_anchor_pair_salvage.py',
               'character_approved_idle_fallback.py',
+              'character_provisional_idle_seed.py',
               'character_rejection_evidence.py',
               'character_idle_breathing_fallback.py',
           ]
@@ -336,6 +383,16 @@ jobs:
                   'art/production/generation-rejection-ledger.json',
               ):
                   z.write(Path(rel),arcname=rel)
+              # Bundle the provenance-pinned PNG and index only when both
+              # exist. They are a source identity seed, never a runtime asset.
+              seeded=Path('/tmp/zte-provisional-seed-overlay')
+              if seeded.is_dir():
+                  for name in ('zte_chr_eng_idle_final.png','provenance.json'):
+                      rel=Path('art/production/kaggle-provisional-idle-seed')/name
+                      file=seeded/rel
+                      if not file.is_file():
+                          raise SystemExit('Partial engineer IDLE seed overlay')
+                      z.write(file,arcname=str(rel))
           qpayload=base64.b64encode(qbuf.getvalue()).decode('ascii')
           s,n=re.subn(r"QUEUE_OVERLAY_B64=''",f"QUEUE_OVERLAY_B64='{qpayload}'",s,count=1)
           if n != 1: raise SystemExit('Failed to inject QUEUE_OVERLAY_B64 into Kaggle kernel')
