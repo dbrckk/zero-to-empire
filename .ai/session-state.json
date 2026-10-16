@@ -3,7 +3,7 @@
   "updated_at": "2026-10-16",
   "task": "Finish OP WALK strict visual-semantic review after successful eight-frame Android and moving real-stage proof; only promote via exact production runtime integration",
   "branch": "main",
-  "last_observed_head": "04925f8a1d5711cf4560a5601936cf1721b8bd66",
+  "last_observed_head": "fb7e097b201ab5bb03216046ddb33e7927d5bdf3",
   "state": {
     "strict_done": 219,
     "target_total": 235,
@@ -237,20 +237,38 @@
       "android_ci_run": 38938490383,
       "android_ci_status": "SUCCESS",
       "emulator_run": 38938490410,
-      "emulator_status_at_checkpoint": "IN_PROGRESS",
-      "merged": false,
+      "emulator_status_at_checkpoint": "SUCCESS",
+      "merged": true,
       "reset_frames_before": 10000,
       "reset_frames_after": 10080,
       "legacy_op_walk_reset_jump_dp_at_360": 76.05,
       "corrected_op_walk_reset_jump_dp_at_360": 1.17,
-      "new_unit_tests": 0
+      "new_unit_tests": 0,
+      "merge_commit": "8adbd25deb4a483685098278e60e34969395faad",
+      "android_emulator_run_verified": 38938490410
+    },
+    "terrain_visibility_and_real_city_qa": {
+      "pr": 207,
+      "branch": "fix/terrain-visibility-and-authentic-city-qa-20261016",
+      "latest_head_sha": "dbc5db809f6812dd5766b8f770459641f6b3671b",
+      "status": "PR_OPEN_RECHECKING",
+      "initial_ci_run": 38940605309,
+      "initial_emulator_run": 38940605779,
+      "initial_emulator_failure": "Pixel Launcher ANR recurred after initial dialog recovery, hiding MANAGERS; downloaded XML shows actual game tabs on system-dialog-2.xml. This is a CI emulator/system issue rather than proven runtime regression.",
+      "recovery_commit": "dbc5db809f6812dd5766b8f770459641f6b3671b",
+      "rerun_android_ci": 38941335671,
+      "rerun_emulator": 38941335829,
+      "source_fix": "ReviewedTerrainLayer.kt ground row was offset at 610/654dp inside 620dp city stage. Replace with responsive stage-bounded terrain positions.",
+      "new_visual_qa": "Existing emulator integration script now rejects flat-gradient/actor-only city screenshots on nonactor background rows.",
+      "strict_done_added": 0,
+      "semantic_approved": false
     }
   },
-  "last_completed": "PR #206 staged (not yet merged): seamless 10,080-frame shared city clock and live reduced-motion policy for city/foundry/core. Exact Android CI run 38938490383 SUCCESS (debug build, unit tests, lint, release AAB). Emulator 38938490410 still IN_PROGRESS at checkpoint. Historical OP WALK Android screenshot artifact 11992229467 inspected, shows isolated gradient stage only. Canonical strict count remains 219/235.",
+  "last_completed": "Merged PR #206 8adbd25d: 10,080-frame seamless clock, reactive Battery Saver, Android CI 38938490383 SUCCESS and real emulator functional smoke 38938490410 SUCCESS. Opened PR #207 to fix nearly offscreen 610/654dp reviewed terrain in 620dp stage, strengthen authentic-city visual screenshot gate, and recover recurring Pixel Launcher emulator ANR. PR #207 rerun CI/emulator IN PROGRESS; NOT MERGED. Strict 219/235, 16 semantic candidate actions unchanged.",
   "next_actions": [
-    "Inspect Android Emulator Smoke run 38938490410 for PR #206. If SUCCESS and GitHub PR clean, merge #206; otherwise inspect actual device evidence and repair the failure without suppressing gameplay assertions.",
-    "After PR merge, verify exact main Android CI and emulator/functional verification; update continuity and project-state documents.",
-    "Create realistic full shipping-city visual QA for CHR-OP-WALK rather than the isolated gradient stage; assess actual gait and small-screen style at speed, especially stage widths >360dp.",
-    "Require explicit semantic, exact production WebP, on-device and release validation before promoting any of the 16 CHR assets. Strict remains 219/235."
+    "Wait for exact current PR #207 Android CI 38941335671 AND emulator 38941335829; inspect any failures and keep PR unmerged until verified SUCCESS.",
+    "After both are green, squash-merge PR #207 and check automatically triggered separate 18-atlas Android review APK and emulator for genuine city scenery; do not lower the gradient-only review gate.",
+    "Inspect fresh complete-world Android screenshots at native and narrow widths for actual ground presence, OP WALK foot contact, scene identity and traffic occlusion; improve next specific defect.",
+    "Never promote the 16 unapproved character actions without manual art semantics, exact production WebP, on-device gameplay and release checks; canonical 219/235 remains."
   ]
 }
