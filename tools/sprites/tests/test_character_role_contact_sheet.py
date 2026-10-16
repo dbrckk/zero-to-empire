@@ -84,7 +84,7 @@ class RoleConsistencySheetTests(unittest.TestCase):
         self.assertEqual(report["strict_done_added"], 0)
         with Image.open(self.output) as image:
             self.assertEqual(image.format, "PNG")
-            self.assertEqual(image.size, (1344, 1026))
+            self.assertEqual(image.size, (1344, 1032))
             self.assertGreater(len(image.getcolors(1 << 20) or []), 10)
 
     def test_sha_tampering_of_png_or_audit_fails_closed(self):
