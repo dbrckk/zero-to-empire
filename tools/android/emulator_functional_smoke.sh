@@ -123,6 +123,9 @@ complete_onboarding_if_present() {
   for step in 0 1 2 3 4 5; do
     probe="onboarding-step-$step"
     dump_ui "$probe"
+    if grep -Fq "Pixel Launcher isn't responding" "$EVIDENCE/$probe.xml"; then
+      fail "system-dialog-obscures-onboarding:step=$step"
+    fi
     if ! grep -Fq 'ZERO → EMPIRE' "$EVIDENCE/$probe.xml"; then
       echo "FUNCTIONAL_ONBOARDING_PASS=steps-$step"
       return 0
@@ -147,7 +150,7 @@ check_alive() {
 
 dismiss_launcher_anr_if_present() {
   local attempt probe coords x y
-  for attempt in 1 2 3; do
+  for attempt in 1 2 3 4 5 6; do
     probe="$EVIDENCE/system-dialog-$attempt.xml"
     if ! ui_dump_with_retry "$probe"; then
       return 0
@@ -170,6 +173,7 @@ dismiss_launcher_anr_if_present() {
     adb shell input keyevent KEYCODE_BACK || true
     sleep 2
   done
+  fail "system-launcher-anr-dialog-persisted"
 }
 
 check_no_fatal() {
