@@ -229,13 +229,28 @@
       "actual_production_art_approved": false,
       "android_runtime_approved": false,
       "strict_done_added": 0
+    },
+    "city_motion_clock_pending": {
+      "pr": 206,
+      "branch": "fix/city-motion-clock-and-power-policy-20261016",
+      "head_sha": "f4e56f9f568e0cd821280c783b80b44aaf85a005",
+      "android_ci_run": 38938490383,
+      "android_ci_status": "SUCCESS",
+      "emulator_run": 38938490410,
+      "emulator_status_at_checkpoint": "IN_PROGRESS",
+      "merged": false,
+      "reset_frames_before": 10000,
+      "reset_frames_after": 10080,
+      "legacy_op_walk_reset_jump_dp_at_360": 76.05,
+      "corrected_op_walk_reset_jump_dp_at_360": 1.17,
+      "new_unit_tests": 0
     }
   },
-  "last_completed": "PR #205 merged to main (1c9693b6). Verified fixed ENG REPAIR station-aware silhouette review on actual 18 candidate atlases. PR and main Character Motion Audit and Asset Pipeline all SUCCESS; main original candidate generator 38937862598 SUCCESS and committed refreshed visual-risk-qa.json (18 assets, 0 blocking risks). Manual semantic, shipping city and Android release checks are still needed. Canonical 219/235 strict DONE.",
+  "last_completed": "PR #206 staged (not yet merged): seamless 10,080-frame shared city clock and live reduced-motion policy for city/foundry/core. Exact Android CI run 38938490383 SUCCESS (debug build, unit tests, lint, release AAB). Emulator 38938490410 still IN_PROGRESS at checkpoint. Historical OP WALK Android screenshot artifact 11992229467 inspected, shows isolated gradient stage only. Canonical strict count remains 219/235.",
   "next_actions": [
-    "Inspect CHR-OP-WALK moving in the actual realistically composed shipping city and assess foot slide, contact, weight, role identity and small-screen readability (existing isolated debug gradient proof is insufficient).",
-    "Fix any verified OP WALK motion/style defects, review semantic quality explicitly, then link the exact approved WebP to production and verify Android debug/release and on-device gameplay before any strict promotion.",
-    "Continue the remaining 15 character animation actions individually, preserving both actual source provenance and approved identity.",
-    "Keep the canonical strict 219/235 target and no automatic semantic/runtime promotion until all per-asset gates have evidence."
+    "Inspect Android Emulator Smoke run 38938490410 for PR #206. If SUCCESS and GitHub PR clean, merge #206; otherwise inspect actual device evidence and repair the failure without suppressing gameplay assertions.",
+    "After PR merge, verify exact main Android CI and emulator/functional verification; update continuity and project-state documents.",
+    "Create realistic full shipping-city visual QA for CHR-OP-WALK rather than the isolated gradient stage; assess actual gait and small-screen style at speed, especially stage widths >360dp.",
+    "Require explicit semantic, exact production WebP, on-device and release validation before promoting any of the 16 CHR assets. Strict remains 219/235."
   ]
 }
