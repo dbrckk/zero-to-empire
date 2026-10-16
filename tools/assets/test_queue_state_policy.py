@@ -75,7 +75,7 @@ class QueueStatePolicyTests(unittest.TestCase):
 
     def test_canonical_queue_policy_matches_current_character_epoch(self) -> None:
         text = MODULE_PATH.read_text(encoding="utf-8")
-        self.assertIn('"character_generation_epoch": "production-first-v1.21-art-deferred"', text)
+        self.assertIn('"character_generation_epoch": "production-first-v1.22-planted-repair-poses"', text)
         self.assertIn('"max_attempts_per_character_epoch": 4', text)
 
 
@@ -376,10 +376,10 @@ class DispatchCorrelationTests(unittest.TestCase):
         orchestrator = self._load_orchestrator("")
         self.assertEqual(orchestrator.CHARACTER_EPOCH_ATTEMPT_LIMIT, 4)
 
-    def test_character_epoch_is_v121_production_first(self) -> None:
+    def test_character_epoch_matches_corrected_repair_rig(self) -> None:
         orchestrator = self._load_orchestrator("")
         self.assertEqual(orchestrator.CHARACTER_GENERATION_EPOCH,
-                         "production-first-v1.21-art-deferred")
+                         "production-first-v1.22-planted-repair-poses")
 
     def test_new_epoch_reopens_semantic_reject_even_with_high_legacy_attempts(self) -> None:
         orchestrator = self._load_orchestrator("")
