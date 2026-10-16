@@ -242,6 +242,19 @@ def build(bank_path: Path, audit_path: Path, destination: Path,
             or polished_motion["low_change_pairs"] > original_motion["low_change_pairs"]
             or polished_motion["mean_lower_body_change"] < original_motion["mean_lower_body_change"] * .95
         )
+        # A visually improved face cannot compensate for a regressed 42px
+        # action. Reject the complete alternative, rather than publishing
+        # a sprite known to have a motion regression for later selection.
+        if motion_warning:
+            skipped.append({
+                "id": asset_id, "reference_id": reference_id,
+                "reason": "mobile-motion-regression-after-head-polish",
+                "frames_applied_before_reject": len(fixed),
+                "original_sha256": record["sha256"],
+                "mobile_motion_before": original_motion,
+                "mobile_motion_after": polished_motion,
+            })
+            continue
         filename = asset_id.lower().replace("-", "_") + "_head-polish.png"
         destination_name = "review-alternatives/" + filename
         members.append((destination_name, blob))

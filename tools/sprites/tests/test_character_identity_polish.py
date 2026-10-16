@@ -157,6 +157,30 @@ class CharacterIdentityPolishTests(unittest.TestCase):
                                  for name in packed.namelist()))
         self.assertNotIn("data:image/png;base64,", self.mobile.read_text())
 
+    def test_mobile_motion_regression_rejects_entire_retouch(self):
+        from unittest.mock import patch
+        import build_character_identity_polish as module
+
+        original = module.motion_stats
+        calls = [0]
+
+        def deteriorated_second_atlas(blob, count):
+            result = original(blob, count)
+            calls[0] += 1
+            if calls[0] % 2 == 0:
+                result["low_change_pairs"] += 2
+            return result
+
+        with patch.object(module, "motion_stats", side_effect=deteriorated_second_atlas):
+            report = build(self.bank, self.audit, self.output, self.report)
+        self.assertEqual(report["alternatives_created"], 0)
+        self.assertEqual(report["not_safe_to_polish"][0]["id"], "CHR-OP-WORK")
+        self.assertEqual(report["not_safe_to_polish"][0]["reason"],
+                         "mobile-motion-regression-after-head-polish")
+        with zipfile.ZipFile(self.output) as packed:
+            self.assertFalse(any(x.startswith("review-alternatives/")
+                                 for x in packed.namelist()))
+
     def test_consistent_actions_are_not_needlessly_modified(self):
         self.write_atlases(same_head=True)
         result = build(self.bank, self.audit, self.output, self.report)
