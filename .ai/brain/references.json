@@ -5,10 +5,33 @@
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
   "symbols": {
+    "_verified_fixed_engineer_station": {
+      "definition": {
+        "file": "tools/sprites/audit_chatgpt_originals.py",
+        "line": 27,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/audit_chatgpt_originals.py",
+          "line": 27,
+          "preview": "def _verified_fixed_engineer_station(base: Path, count: int) -> bool:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/audit_chatgpt_originals.py",
+          "line": 78,
+          "preview": "and _verified_fixed_engineer_station(atlas.parent.parent, count)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
     "inspect": {
       "definition": {
         "file": "tools/sprites/audit_chatgpt_originals.py",
-        "line": 22,
+        "line": 61,
         "kind": "function",
         "language": "python"
       },
@@ -51,13 +74,13 @@
         },
         {
           "file": "tools/sprites/audit_chatgpt_originals.py",
-          "line": 22,
+          "line": 61,
           "preview": "def inspect(atlas: Path, role: str, action: str) -> dict:",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/audit_chatgpt_originals.py",
-          "line": 111,
+          "line": 175,
           "preview": "result=inspect(candidates/name,role,action)",
           "definition_candidate": false
         },
@@ -199,7 +222,7 @@
     "audit": {
       "definition": {
         "file": "tools/sprites/audit_chatgpt_originals.py",
-        "line": 105,
+        "line": 169,
         "kind": "function",
         "language": "python"
       },
@@ -314,13 +337,13 @@
         },
         {
           "file": "tools/sprites/audit_chatgpt_originals.py",
-          "line": 105,
+          "line": 169,
           "preview": "def audit(base: Path) -> dict:",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/audit_chatgpt_originals.py",
-          "line": 161,
+          "line": 225,
           "preview": "report=audit(args.base)",
           "definition_candidate": false
         },
@@ -930,7 +953,7 @@
     "main": {
       "definition": {
         "file": "tools/sprites/audit_chatgpt_originals.py",
-        "line": 157,
+        "line": 221,
         "kind": "function",
         "language": "python"
       },
@@ -1369,13 +1392,19 @@
         },
         {
           "file": "tools/sprites/audit_chatgpt_originals.py",
-          "line": 157,
+          "line": 23,
+          "preview": "# portrait. The main actor (head, torso, legs) occupies the left 202px.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_chatgpt_originals.py",
+          "line": 221,
           "preview": "def main() -> int:",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/audit_chatgpt_originals.py",
-          "line": 171,
+          "line": 235,
           "preview": "raise SystemExit(main())",
           "definition_candidate": false
         },
@@ -1648,100 +1677,925 @@
           "line": 9,
           "preview": "def main() -> None:",
           "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/integrate_fx05_runtime.py",
-          "line": 73,
-          "preview": "main()",
-          "definition_candidate": false
         }
       ],
       "occurrence_count": 120
     },
-    "CharacterLoopSeamTests": {
+    "_runs": {
       "definition": {
-        "file": "tools/sprites/test_audit_chatgpt_originals.py",
-        "line": 10,
-        "kind": "class",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/test_audit_chatgpt_originals.py",
-          "line": 10,
-          "preview": "class CharacterLoopSeamTests(unittest.TestCase):",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_walk_reports_last_to_first_change": {
-      "definition": {
-        "file": "tools/sprites/test_audit_chatgpt_originals.py",
-        "line": 11,
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 13,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/test_audit_chatgpt_originals.py",
-          "line": 11,
-          "preview": "def test_walk_reports_last_to_first_change(self):",
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 13,
+          "preview": "def _runs(occupancy):",
           "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 44,
+          "preview": "runs=_runs(occupancy)",
+          "definition_candidate": false
         }
       ],
-      "occurrence_count": 1
+      "occurrence_count": 2
     },
-    "test_walk_flags_disproportionate_loop_snap": {
+    "frame_geometry": {
       "definition": {
-        "file": "tools/sprites/test_audit_chatgpt_originals.py",
-        "line": 31,
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 22,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/test_audit_chatgpt_originals.py",
-          "line": 31,
-          "preview": "def test_walk_flags_disproportionate_loop_snap(self):",
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 22,
+          "preview": "def frame_geometry(frame:Image.Image)->dict:",
           "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 399,
+          "preview": "dims=[frame_geometry(f) for f in (geometry_frames if geometry_frames is not None else frames)]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 8,
+          "preview": "from character_semantic_gate import clip_risk, frame_geometry",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 12,
+          "preview": "from tools.sprites.character_semantic_gate import clip_risk, frame_geometry",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 446,
+          "preview": "geometry=frame_geometry(frame)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 4,
+          "preview": "from character_semantic_gate import clip_risk,frame_geometry,palette_distance,color_signature,idle_visual_activity,idle_distinct_head_clusters,lower_ground_band_ratio,celebration_a",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 79,
+          "preview": "self.assertFalse(frame_geometry(Image.new('RGBA',(256,256)))['valid'])",
+          "definition_candidate": false
         }
       ],
-      "occurrence_count": 1
+      "occurrence_count": 7
     },
-    "test_repair_detects_tool_snap_even_with_stationary_legs": {
+    "color_signature": {
       "definition": {
-        "file": "tools/sprites/test_audit_chatgpt_originals.py",
-        "line": 49,
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 64,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/test_audit_chatgpt_originals.py",
-          "line": 49,
-          "preview": "def test_repair_detects_tool_snap_even_with_stationary_legs(self):",
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 64,
+          "preview": "def color_signature(frame:Image.Image):",
           "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 271,
+          "preview": "return color_signature(rgba.crop((0,top,rgba.width,bottom)))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 403,
+          "preview": "signatures=[color_signature(frame) for frame in frames]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 4,
+          "preview": "from character_semantic_gate import clip_risk,frame_geometry,palette_distance,color_signature,idle_visual_activity,idle_distinct_head_clusters,lower_ground_band_ratio,celebration_a",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 235,
+          "preview": "signature=color_signature(person())",
+          "definition_candidate": false
         }
       ],
-      "occurrence_count": 1
+      "occurrence_count": 5
     },
-    "test_carry_reports_wraparound_too": {
+    "palette_distance": {
       "definition": {
-        "file": "tools/sprites/test_audit_chatgpt_originals.py",
-        "line": 67,
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 79,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/test_audit_chatgpt_originals.py",
-          "line": 67,
-          "preview": "def test_carry_reports_wraparound_too(self):",
+          "file": "tools/sprites/audit_chatgpt_originals.py",
+          "line": 17,
+          "preview": "from character_semantic_gate import clip_risk, celebration_arm_reach_counts, palette_distance, _body_region_color_signature",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_chatgpt_originals.py",
+          "line": 196,
+          "preview": "delta=palette_distance(anchor,_body_region_color_signature(frame,0,.28))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 79,
+          "preview": "def palette_distance(a,b)->float:",
           "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 405,
+          "preview": "palette_distance(signatures[i],signatures[(i+1)%len(frames)])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 415,
+          "preview": "palette_distance(head_signatures[i-1],head_signatures[i])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 421,
+          "preview": "palette_distance(mid_signatures[i-1],mid_signatures[i])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 4,
+          "preview": "from character_semantic_gate import clip_risk,frame_geometry,palette_distance,color_signature,idle_visual_activity,idle_distinct_head_clusters,lower_ground_band_ratio,celebration_a",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 236,
+          "preview": "self.assertAlmostEqual(palette_distance(signature,signature),0)",
+          "definition_candidate": false
         }
       ],
-      "occurrence_count": 1
+      "occurrence_count": 8
+    },
+    "celebration_arm_reach_counts": {
+      "definition": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 84,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 372,
+          "preview": "self.assertIn(\"arms=celebration_arm_reach_counts(frames)\", text)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_chatgpt_originals.py",
+          "line": 17,
+          "preview": "from character_semantic_gate import clip_risk, celebration_arm_reach_counts, palette_distance, _body_region_color_signature",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_chatgpt_originals.py",
+          "line": 110,
+          "preview": "raised = celebration_arm_reach_counts(frames)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 84,
+          "preview": "def celebration_arm_reach_counts(frames:list[Image.Image])->list[int]:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 17,
+          "preview": "from character_semantic_gate import clip_risk,idle_visual_activity,celebration_arm_reach_counts,idle_distinct_head_clusters",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 559,
+          "preview": "arms=celebration_arm_reach_counts(frames)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_action_gate.py",
+          "line": 18,
+          "preview": "from character_semantic_gate import idle_visual_activity, celebration_arm_reach_counts",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_action_gate.py",
+          "line": 47,
+          "preview": "\"celebration_arm_reach_counts\": celebration_arm_reach_counts,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 4,
+          "preview": "from character_semantic_gate import clip_risk,frame_geometry,palette_distance,color_signature,idle_visual_activity,idle_distinct_head_clusters,lower_ground_band_ratio,celebration_a",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 186,
+          "preview": "counts=celebration_arm_reach_counts([frame.copy() for _ in range(8)])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 191,
+          "preview": "self.assertGreaterEqual(celebration_arm_reach_counts([raised])[0],28)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 211,
+          "preview": "counts=celebration_arm_reach_counts(false_loop)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 214,
+          "preview": "scores=celebration_arm_reach_counts(progressive)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/verify_character_action_candidates.py",
+          "line": 17,
+          "preview": "from character_semantic_gate import clip_risk, celebration_arm_reach_counts",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/verify_character_action_candidates.py",
+          "line": 43,
+          "preview": "scores = celebration_arm_reach_counts(frames)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 15
+    },
+    "idle_visual_activity": {
+      "definition": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 136,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 410,
+          "preview": "self.assertIn(\"from character_semantic_gate import clip_risk,idle_visual_activity\", text)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 411,
+          "preview": "self.assertIn(\"activity=idle_visual_activity(frames)\", text)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 136,
+          "preview": "def idle_visual_activity(frames:list[Image.Image])->float:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 17,
+          "preview": "from character_semantic_gate import clip_risk,idle_visual_activity,celebration_arm_reach_counts,idle_distinct_head_clusters",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 536,
+          "preview": "activity=idle_visual_activity(frames)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_action_gate.py",
+          "line": 18,
+          "preview": "from character_semantic_gate import idle_visual_activity, celebration_arm_reach_counts",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_action_gate.py",
+          "line": 46,
+          "preview": "\"idle_visual_activity\": idle_visual_activity,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 4,
+          "preview": "from character_semantic_gate import clip_risk,frame_geometry,palette_distance,color_signature,idle_visual_activity,idle_distinct_head_clusters,lower_ground_band_ratio,celebration_a",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 226,
+          "preview": "self.assertEqual(idle_visual_activity([base]*6),0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 227,
+          "preview": "self.assertGreater(idle_visual_activity(frames),.00035)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 228,
+          "preview": "self.assertLess(idle_visual_activity(frames),.03)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 231,
+          "preview": "self.assertEqual(idle_visual_activity([person()]),0.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 232,
+          "preview": "self.assertEqual(idle_visual_activity([]),0.0)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 13
+    },
+    "head_structure_drift": {
+      "definition": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 162,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 162,
+          "preview": "def head_structure_drift(frames:list[Image.Image])->float:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 425,
+          "preview": "head_shape_drift=(head_structure_drift(frames)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 4,
+          "preview": "from character_semantic_gate import clip_risk,frame_geometry,palette_distance,color_signature,idle_visual_activity,idle_distinct_head_clusters,lower_ground_band_ratio,celebration_a",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 171,
+          "preview": "self.assertGreater(head_structure_drift(frames),.19)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "lower_ground_band_ratio": {
+      "definition": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 207,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 207,
+          "preview": "def lower_ground_band_ratio(frame:Image.Image)->float:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 428,
+          "preview": "ground_band_ratios=[lower_ground_band_ratio(frame) for frame in frames]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 4,
+          "preview": "from character_semantic_gate import clip_risk,frame_geometry,palette_distance,color_signature,idle_visual_activity,idle_distinct_head_clusters,lower_ground_band_ratio,celebration_a",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 85,
+          "preview": "self.assertTrue(all(lower_ground_band_ratio(frame)<1.27 for frame in clean))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 107,
+          "preview": "self.assertEqual(lower_ground_band_ratio(frames[0]),0.0)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 5
+    },
+    "_body_region_color_signature": {
+      "definition": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 258,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/audit_chatgpt_originals.py",
+          "line": 17,
+          "preview": "from character_semantic_gate import clip_risk, celebration_arm_reach_counts, palette_distance, _body_region_color_signature",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_chatgpt_originals.py",
+          "line": 185,
+          "preview": "anchor=_body_region_color_signature(idle,0,.28)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_chatgpt_originals.py",
+          "line": 196,
+          "preview": "delta=palette_distance(anchor,_body_region_color_signature(frame,0,.28))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 258,
+          "preview": "def _body_region_color_signature(frame:Image.Image,start:float,end:float):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 413,
+          "preview": "head_signatures=[_body_region_color_signature(f,0,.28) for f in frames]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 419,
+          "preview": "mid_signatures=[_body_region_color_signature(f,.40,.73) for f in frames]",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 6
+    },
+    "idle_distinct_head_clusters": {
+      "definition": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 274,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 388,
+          "preview": "self.assertIn(\"idle_distinct_head_clusters(cell)>=2\", text)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 274,
+          "preview": "def idle_distinct_head_clusters(frame:Image.Image)->int:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 431,
+          "preview": "[idle_distinct_head_clusters(frame) for frame in frames]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 17,
+          "preview": "from character_semantic_gate import clip_risk,idle_visual_activity,celebration_arm_reach_counts,idle_distinct_head_clusters",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 443,
+          "preview": "if idle_distinct_head_clusters(cell)>=2:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 4,
+          "preview": "from character_semantic_gate import clip_risk,frame_geometry,palette_distance,color_signature,idle_visual_activity,idle_distinct_head_clusters,lower_ground_band_ratio,celebration_a",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 57,
+          "preview": "self.assertEqual(idle_distinct_head_clusters(frame),2)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 65,
+          "preview": "self.assertTrue(all(idle_distinct_head_clusters(frame)<=1 for frame in frames))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/verify_character_idle_candidates.py",
+          "line": 17,
+          "preview": "from character_semantic_gate import clip_risk, idle_distinct_head_clusters",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/verify_character_idle_candidates.py",
+          "line": 43,
+          "preview": "\"head_counts\": [idle_distinct_head_clusters(frame) for frame in frames],",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 10
+    },
+    "_upper_head_centroid": {
+      "definition": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 319,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 319,
+          "preview": "def _upper_head_centroid(frame:Image.Image):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 364,
+          "preview": "anchors=[_upper_head_centroid(f) for f in rgba]",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_binary_alpha_iou": {
+      "definition": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 343,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 343,
+          "preview": "def _binary_alpha_iou(a:Image.Image,b:Image.Image)->float:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 374,
+          "preview": "raw=sum(1-_binary_alpha_iou(a,b) for a,b in zip(rgba,rgba[1:]))/(len(rgba)-1)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 375,
+          "preview": "residual=sum(1-_binary_alpha_iou(a,b)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "action_translation_metrics": {
+      "definition": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 351,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 351,
+          "preview": "def action_translation_metrics(frames:list[Image.Image])->dict:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 438,
+          "preview": "action_pose_metrics=action_translation_metrics(frames)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_verify_character_action_candidates.py",
+          "line": 7,
+          "preview": "from character_semantic_gate import action_translation_metrics",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_verify_character_action_candidates.py",
+          "line": 36,
+          "preview": "metrics = action_translation_metrics(frames)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_verify_character_action_candidates.py",
+          "line": 55,
+          "preview": "metrics = action_translation_metrics(frames)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 5
+    },
+    "clip_risk": {
+      "definition": {
+        "file": "tools/sprites/character_semantic_gate.py",
+        "line": 388,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 410,
+          "preview": "self.assertIn(\"from character_semantic_gate import clip_risk,idle_visual_activity\", text)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 437,
+          "preview": "self.assertIn(\"from character_semantic_gate import clip_risk\", generator)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 438,
+          "preview": "self.assertIn(\"visual_risk=clip_risk(frames,i['action'])\", generator)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 15,
+          "preview": "from character_semantic_gate import clip_risk",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 91,
+          "preview": "result[\"visual_risk\"]=clip_risk(semantic_frames)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_chatgpt_originals.py",
+          "line": 17,
+          "preview": "from character_semantic_gate import clip_risk, celebration_arm_reach_counts, palette_distance, _body_region_color_signature",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_chatgpt_originals.py",
+          "line": 90,
+          "preview": "flagged = clip_risk(frames, action, geometry_frames=actor_frames)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 13,
+          "preview": "from character_semantic_gate import clip_risk",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 249,
+          "preview": "visual_risk = clip_risk(raw_frames, action.upper())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 388,
+          "preview": "def clip_risk(frames:list[Image.Image],action:str|None=None,*,geometry_frames:list[Image.Image]|None=None)->dict:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/identity_locked_walk_candidate.py",
+          "line": 19,
+          "preview": "from character_semantic_gate import clip_risk",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/identity_locked_walk_candidate.py",
+          "line": 97,
+          "preview": "risk=clip_risk(frames,'WALK')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 17,
+          "preview": "from character_semantic_gate import clip_risk,idle_visual_activity,celebration_arm_reach_counts,idle_distinct_head_clusters",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 723,
+          "preview": "risk=clip_risk(recovered,'IDLE')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 870,
+          "preview": "visual_risk=clip_risk(frames,i['action'])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 8,
+          "preview": "from character_semantic_gate import clip_risk, frame_geometry",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 12,
+          "preview": "from tools.sprites.character_semantic_gate import clip_risk, frame_geometry",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 543,
+          "preview": "screen=clip_risk(frames)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 4,
+          "preview": "from character_semantic_gate import clip_risk,frame_geometry,palette_distance,color_signature,idle_visual_activity,idle_distinct_head_clusters,lower_ground_band_ratio,celebration_a",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 32,
+          "preview": "result=clip_risk([person(i%3) for i in range(8)])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 37,
+          "preview": "result=clip_risk([portrait(i%2) for i in range(8)])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 44,
+          "preview": "result=clip_risk(frames)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 58,
+          "preview": "result=clip_risk([frame.copy() for _ in range(6)],'IDLE')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 66,
+          "preview": "self.assertNotIn('MULTIPLE_IDLE_HEADS_RISK',clip_risk(frames,'IDLE')['flags'])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 73,
+          "preview": "result=clip_risk(frames)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 81,
+          "preview": "self.assertEqual(clip_risk(frames)['risk_level'],'BLOCKING')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 86,
+          "preview": "self.assertNotIn('BAKED_GROUND_SHADOW_RISK',clip_risk(clean,'IDLE')['flags'])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 93,
+          "preview": "report=clip_risk(shadowed,'IDLE')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 108,
+          "preview": "report=clip_risk(frames,'IDLE')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 116,
+          "preview": "report=clip_risk(frames,'WORK')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 126,
+          "preview": "result=clip_risk(frames,'WORK')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 138,
+          "preview": "result=clip_risk(frames,'IDLE')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 150,
+          "preview": "result=clip_risk(frames,'CARRY')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 157,
+          "preview": "clip_risk(frames,'IDLE')['flags'])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 167,
+          "preview": "result=clip_risk(frames,'WORK')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_semantic_gate.py",
+          "line": 238,
+          "preview": "clip_risk([person()])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+          "line": 9,
+          "preview": "from character_semantic_gate import clip_risk",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+          "line": 60,
+          "preview": "self.assertNotEqual(clip_risk(first)['risk_level'],'BLOCKING')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/verify_character_action_candidates.py",
+          "line": 17,
+          "preview": "from character_semantic_gate import clip_risk, celebration_arm_reach_counts",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/verify_character_action_candidates.py",
+          "line": 36,
+          "preview": "risk = clip_risk(frames, action.upper())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/verify_character_idle_candidates.py",
+          "line": 17,
+          "preview": "from character_semantic_gate import clip_risk, idle_distinct_head_clusters",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/verify_character_idle_candidates.py",
+          "line": 35,
+          "preview": "risk = clip_risk(frames, \"IDLE\")",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 42
     }
   }
 }

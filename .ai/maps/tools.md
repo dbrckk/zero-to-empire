@@ -3116,13 +3116,50 @@ ROOT = Path(__file__).resolve().parents[2]
 ⋮----
 FRAME_COUNTS = {"IDLE":6,"WALK":8,"WORK":10,"CARRY":8,"REPAIR":10,"CELEB":8}
 ROLES = ("OP","LOG","ENG")
+# In this authored atlas the fixed service console starts to the right of
+# the worker. Its large horizontal footprint must not masquerade as a cropped
+# portrait. The main actor (head, torso, legs) occupies the left 202px.
+ENG_REPAIR_ACTOR_GEOMETRY_RIGHT = 202
+⋮----
+def _verified_fixed_engineer_station(base: Path, count: int) -> bool
+⋮----
+"""Require every editable SVG to contain the identical fixed station.
+
+    Without this provenance evidence we use the strict full-composite
+    geometry assessment; imported or mismatched atlases get no exception.
+    """
+reference = None
+⋮----
+source = base / "src_svg" / "ENG" / "REPAIR" / f"{i:02d}.svg"
+⋮----
+root = ET.parse(source).getroot()
+⋮----
+stations = [
+⋮----
+socket = [
+⋮----
+markup = ET.tostring(stations[0], encoding="utf-8")
+⋮----
+reference = markup
 ⋮----
 def inspect(atlas: Path, role: str, action: str) -> dict
 ⋮----
 image = source.convert("RGBA")
 count = FRAME_COUNTS[action]
 frames = [
-flagged = clip_risk(frames, action)
+# ENG REPAIR is a deliberately composite *scene*: a separately authored
+# fixed service console extends the overall width without clipping the
+# engineer. Only its full-body silhouette/feet geometry is isolated; the
+# entire atlas remains subject to palette, tool-motion and loop QA.
+# This exception requires the matching, stationary editable SVG fixture.
+station_verified = (
+actor_frames = None
+⋮----
+actor_frames = []
+⋮----
+isolated = Image.new("RGBA", frame.size, (0, 0, 0, 0))
+⋮----
+flagged = clip_risk(frames, action, geometry_frames=actor_frames)
 evidence = {
 ⋮----
 raised = celebration_arm_reach_counts(frames)
@@ -5111,9 +5148,16 @@ head_excursion=max(x for x,y in anchors)-min(x for x,y in anchors)
 ratio=residual/max(raw,.001)
 dominated=raw>=.15 and head_excursion>=12 and ratio<.43
 ⋮----
-def clip_risk(frames:list[Image.Image],action:str|None=None)->dict
+def clip_risk(frames:list[Image.Image],action:str|None=None,*,geometry_frames:list[Image.Image]|None=None)->dict
 ⋮----
-dims=[frame_geometry(f) for f in frames]
+"""Check full-frame action/palette risk, optionally isolating actor silhouette.
+
+    Geometry-only overrides are for documented static-prop composites; all
+    temporal, palette, head, ground and action checks still use full frames.
+    This never grants visual or production approval.
+    """
+⋮----
+dims=[frame_geometry(f) for f in (geometry_frames if geometry_frames is not None else frames)]
 ⋮----
 signatures=[color_signature(frame) for frame in frames]
 adjacent=[

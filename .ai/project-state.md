@@ -29,21 +29,22 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-16T17:06:20Z
+Generated: 2026-10-16T17:12:27Z
 
 ### Git
 - Branch: `main`
-- Head: `f9cce7bfd8eb`
-- Commit date: 2026-10-16T19:06:05+02:00
-- Commit: art(qa): detect upper-body and tool animation loop snaps (#204)
+- Head: `1c9693b68274`
+- Commit date: 2026-10-16T19:12:12+02:00
+- Commit: fix(art): isolate ENG repair actor silhouette from verified fixed station (#205)
 - Tracked files: 1814
 
 ### Recently changed files
-- `tools/sprites/audit_chatgpt_originals.py`
-- `tools/sprites/test_audit_chatgpt_originals.py`
 - `.github/workflows/character-motion-audit-pr-gate.yml`
-- `.github/workflows/engineer-motion-candidate-review.yml`
+- `tools/sprites/audit_chatgpt_originals.py`
+- `tools/sprites/character_semantic_gate.py`
 - `art/incoming/chatgpt-original/visual-risk-qa.json`
+- `tools/sprites/test_audit_chatgpt_originals.py`
+- `.github/workflows/engineer-motion-candidate-review.yml`
 
 ### Project signals
 - `build.gradle.kts`

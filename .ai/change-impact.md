@@ -1,13 +1,15 @@
 # Change impact
 
-Base: bc20dd979103667620533872fc0cf1ff35ba3965
-Head: f9cce7bfd8eb213047e9b59e4f597437131975a3
+Base: 458721f1a71e12cd152ef2eb144c7f0bcd2ea68c
+Head: 1c9693b682741cf74578d21cff4c88646cdff6b0
 
 ## Changed files
+- M .github/workflows/character-motion-audit-pr-gate.yml
 - M tools/sprites/audit_chatgpt_originals.py
-- M tools/sprites/test_audit_chatgpt_originals.py
+- M tools/sprites/character_semantic_gate.py
 
 ## Affected areas
+- .github
 - tools
 
 ## Related test candidates
