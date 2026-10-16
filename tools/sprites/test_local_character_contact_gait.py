@@ -86,6 +86,30 @@ class ContactGaitTests(unittest.TestCase):
             foot_pose(0, "L", "CARRY", profile="eng-walk")
         self.assertEqual(foot_pose(0,"L","CARRY").hip_x,106)
 
+    def test_engineer_stride_has_stable_ground_contact_across_dense_cycle(self):
+        # Catch contact glitches between the eight exported sprite samples.
+        # The planted sole must never rise or rotate; the recovering boot
+        # must clear the ground without crossing the opposite ankle.
+        for i in range(240):
+            phase = 2 * math.pi * i / 240
+            left = foot_pose(phase, "L", "WALK", profile="eng-walk")
+            right = foot_pose(phase, "R", "WALK", profile="eng-walk")
+            self.assertLess(left.ankle_x, right.ankle_x)
+            self.assertTrue(left.planted or right.planted)
+            for pose in (left, right):
+                self.assertGreaterEqual(pose.ankle_y, FLOOR_ANKLE_Y - 23)
+                self.assertLessEqual(pose.ankle_y, FLOOR_ANKLE_Y)
+                if pose.planted:
+                    self.assertEqual(pose.ankle_y, FLOOR_ANKLE_Y)
+                    self.assertEqual(pose.boot_angle, 0.0)
+        for side in ("L", "R"):
+            # Cyclic geometry, including knee and boot, must close cleanly.
+            a = foot_pose(0, side, "WALK", profile="eng-walk")
+            b = foot_pose(2 * math.pi, side, "WALK", profile="eng-walk")
+            for field in ("hip_x", "hip_y", "knee_x", "knee_y",
+                          "ankle_x", "ankle_y", "boot_angle"):
+                self.assertAlmostEqual(getattr(a, field), getattr(b, field), places=7)
+
     def test_loaded_carry_has_less_sway_than_unladen_walk(self):
         self.assertGreater(abs(torso_weight_shift(math.pi/2,"WALK")),
                            abs(torso_weight_shift(math.pi/2,"CARRY")))
