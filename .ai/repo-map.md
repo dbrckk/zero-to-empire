@@ -2284,6 +2284,15 @@ on:
       - 'art/incoming/chatgpt-original/src_svg/**'
       - 'art/incoming/chatgpt-original/creation-manifest.json'
       - 'art/incoming/chatgpt-original/candidate-qa.json'
+      - 'tools/sprites/build_character_candidate_bank.py'
+      - 'tools/sprites/build_character_bank_mobile_review.py'
+      - 'tools/sprites/audit_character_bank_motion.py'
+      - 'tools/sprites/build_character_role_contact_sheet.py'
+      - 'tools/sprites/build_character_mobile_motion_storyboard.py'
+      - 'tools/sprites/build_character_identity_polish.py'
+      - 'tools/sprites/character_identity_polish_mobile_review.py'
+      - 'tools/sprites/character_head_identity_lock.py'
+      - 'tools/sprites/tests/test_character_*'
 
 permissions:
   contents: write

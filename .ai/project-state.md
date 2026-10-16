@@ -29,24 +29,21 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-16T11:01:16Z
+Generated: 2026-10-16T11:09:23Z
 
 ### Git
 - Branch: `main`
-- Head: `e210a4905503`
-- Commit date: 2026-10-16T13:01:00+02:00
-- Commit: fix(art): reject identity retouches that regress mobile animation (#184)
+- Head: `67ab7eeb11f6`
+- Commit date: 2026-10-16T13:09:08+02:00
+- Commit: fix(ci): rebuild Android character review artifacts on QA tool changes (#185)
 - Tracked files: 1811
 
 ### Recently changed files
+- `.github/workflows/character-candidate-bank.yml`
 - `tools/sprites/build_character_identity_polish.py`
 - `tools/sprites/tests/test_character_identity_polish.py`
-- `.github/workflows/character-candidate-bank.yml`
 - `tools/sprites/build_character_role_contact_sheet.py`
 - `tools/sprites/tests/test_character_role_contact_sheet.py`
-- `.github/workflows/asset-pipeline-ci.yml`
-- `tools/sprites/build_character_mobile_motion_storyboard.py`
-- `tools/sprites/tests/test_character_mobile_motion_storyboard.py`
 
 ### Project signals
 - `build.gradle.kts`
