@@ -102,6 +102,16 @@ class CharacterIdentityPolishTests(unittest.TestCase):
         self.assertEqual(row["frames_head_locked"], 10)
         self.assertEqual(row["frames"], 10)
         self.assertLess(row["head_rgb_after"], row["head_rgb_before"] * .65)
+        self.assertEqual(row["mobile_motion_before"]["mobile_render_px"], 42)
+        self.assertEqual(row["mobile_motion_after"]["mobile_render_px"], 42)
+        self.assertEqual(
+            row["mobile_motion_before"]["mean_lower_body_change"],
+            row["mobile_motion_after"]["mean_lower_body_change"],
+        )
+        self.assertEqual(
+            result["mobile_motion_regression_review_count"],
+            sum(x["mobile_motion_regression_review"] for x in result["alternatives"]),
+        )
         self.assertFalse(row["strict_approved"])
         self.assertFalse(row["runtime_promoted"])
         with zipfile.ZipFile(self.output) as packed:

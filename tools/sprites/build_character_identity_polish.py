@@ -19,7 +19,7 @@ from pathlib import Path
 
 from PIL import Image, ImageChops, ImageDraw, ImageFont
 
-from audit_character_bank_motion import FRAMES, head_difference, head_thumbnail
+from audit_character_bank_motion import FRAMES, head_difference, head_thumbnail, motion_stats
 from character_head_identity_lock import lock_head_to_idle
 from character_identity_polish_mobile_review import write_mobile_review
 
@@ -232,6 +232,16 @@ def build(bank_path: Path, audit_path: Path, destination: Path,
                             "frames_applied_before_reject": len(fixed),
                             "original_sha256": record["sha256"]})
             continue
+        # Recheck real 42px animation readability after head retouch. A
+        # head-color improvement cannot justify a newly static animation.
+        # The motion audit is a conservative warning, not semantic approval.
+        original_motion = motion_stats(record["blob"], len(original))
+        polished_motion = motion_stats(blob, len(fixed))
+        motion_warning = (
+            polished_motion["mean_frame_change"] < original_motion["mean_frame_change"] * .65
+            or polished_motion["low_change_pairs"] > original_motion["low_change_pairs"]
+            or polished_motion["mean_lower_body_change"] < original_motion["mean_lower_body_change"] * .95
+        )
         filename = asset_id.lower().replace("-", "_") + "_head-polish.png"
         destination_name = "review-alternatives/" + filename
         members.append((destination_name, blob))
@@ -245,6 +255,9 @@ def build(bank_path: Path, audit_path: Path, destination: Path,
             "atlas_size": [1024, 1024],
             "frames": len(fixed), "frames_head_locked": len(fixed),
             "head_rgb_before": before, "head_rgb_after": after,
+            "mobile_motion_before": original_motion,
+            "mobile_motion_after": polished_motion,
+            "mobile_motion_regression_review": motion_warning,
             "review_only": True, "strict_approved": False,
             "runtime_promoted": False,
             "full_character_action_regeneration": False,
@@ -271,6 +284,9 @@ def build(bank_path: Path, audit_path: Path, destination: Path,
             for row in verified.values()
         ),
         "alternatives_created": len(alternatives),
+        "mobile_motion_regression_review_count": sum(
+            row["mobile_motion_regression_review"] for row in alternatives
+        ),
         "alternatives": alternatives, "not_safe_to_polish": skipped,
         "no_canonical_bank_change": True,
         "no_android_runtime_change": True,
@@ -310,6 +326,8 @@ def main() -> int:
                    args.mobile_review)
     print("IDENTITY_POLISH_FLAGGED=" + str(report["identity_flags_to_review"]))
     print("IDENTITY_POLISH_REVIEW_ALTERNATIVES=" + str(report["alternatives_created"]))
+    print("IDENTITY_POLISH_MOTION_REGRESSION_REVIEW=" +
+          str(report["mobile_motion_regression_review_count"]))
     for row in report["not_safe_to_polish"]:
         print("IDENTITY_POLISH_SKIPPED=" + row["id"] + " reason=" + row["reason"])
     return 0
