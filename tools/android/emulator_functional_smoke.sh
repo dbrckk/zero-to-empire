@@ -17,8 +17,20 @@ fail() {
 }
 
 dump_ui() {
-  local name="$1"
-  ui_dump_with_retry "$EVIDENCE/$name.xml" || fail "ui-hierarchy-unavailable:$name"
+  local name="$1" attempt
+  # Pixel Launcher ANRs can recur after the initial boot recovery. Do not
+  # misclassify the ANR dialog as a finished onboarding page or missing tab.
+  # Bound all recovery attempts and fail closed if the launcher stays blocked.
+  for attempt in 1 2 3 4; do
+    ui_dump_with_retry "$EVIDENCE/$name.xml" || fail "ui-hierarchy-unavailable:$name"
+    if ! grep -Fq "Pixel Launcher isn't responding" "$EVIDENCE/$name.xml"; then
+      return 0
+    fi
+    echo "SYSTEM_FLAKE_DETECTED=pixel-launcher-anr during=$name attempt=$attempt"
+    dismiss_launcher_anr_if_present
+    sleep 2
+  done
+  fail "pixel-launcher-anr-unresolved:$name"
 }
 
 click_node() {
