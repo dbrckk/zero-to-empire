@@ -5,10 +5,85 @@
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
   "symbols": {
+    "_atlas": {
+      "definition": {
+        "file": "tools/sprites/build_character_identity_polish.py",
+        "line": 33,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 33,
+          "preview": "def _atlas(blob: bytes, asset_id: str) -> Image.Image:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 143,
+          "preview": "image = _atlas(blob, asset_id)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_frames": {
+      "definition": {
+        "file": "tools/sprites/build_character_identity_polish.py",
+        "line": 43,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 43,
+          "preview": "def _frames(atlas: Image.Image, count: int) -> list[Image.Image]:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 191,
+          "preview": "original = _frames(record[\"atlas\"], FRAMES[record[\"action\"]])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 192,
+          "preview": "reference_frame = _frames(anchor[\"atlas\"], FRAMES[anchor[\"action\"]])[0]",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_pack": {
+      "definition": {
+        "file": "tools/sprites/build_character_identity_polish.py",
+        "line": 51,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 51,
+          "preview": "def _pack(frames: list[Image.Image]) -> bytes:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 226,
+          "preview": "blob = _pack(fixed)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
     "_font": {
       "definition": {
-        "file": "tools/sprites/build_character_role_contact_sheet.py",
-        "line": 40,
+        "file": "tools/sprites/build_character_identity_polish.py",
+        "line": 60,
         "kind": "function",
         "language": "python"
       },
@@ -17,7 +92,7 @@
           "file": "tools/sprites/build_character_identity_polish.py",
           "line": 60,
           "preview": "def _font(size: int) -> ImageFont.ImageFont:",
-          "definition_candidate": false
+          "definition_candidate": true
         },
         {
           "file": "tools/sprites/build_character_identity_polish.py",
@@ -47,7 +122,7 @@
           "file": "tools/sprites/build_character_role_contact_sheet.py",
           "line": 40,
           "preview": "def _font(size: int) -> ImageFont.ImageFont:",
-          "definition_candidate": true
+          "definition_candidate": false
         },
         {
           "file": "tools/sprites/build_character_role_contact_sheet.py",
@@ -58,45 +133,33 @@
       ],
       "occurrence_count": 7
     },
-    "_load": {
+    "_comparison": {
       "definition": {
-        "file": "tools/sprites/build_character_role_contact_sheet.py",
-        "line": 49,
+        "file": "tools/sprites/build_character_identity_polish.py",
+        "line": 70,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/build_character_mobile_motion_storyboard.py",
-          "line": 19,
-          "preview": "from build_character_role_contact_sheet import _font, _load",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_mobile_motion_storyboard.py",
-          "line": 44,
-          "preview": "metadata, rows = _load(bank_path, audit_path)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_role_contact_sheet.py",
-          "line": 49,
-          "preview": "def _load(bank_path: Path, audit_path: Path) -> tuple[dict, list[dict]]:",
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 70,
+          "preview": "def _comparison(rows: list[dict], destination: Path) -> None:",
           "definition_candidate": true
         },
         {
-          "file": "tools/sprites/build_character_role_contact_sheet.py",
-          "line": 139,
-          "preview": "meta, rows = _load(bank_path, audit_path)",
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 292,
+          "preview": "_comparison(previews, comparison_path)",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 4
+      "occurrence_count": 2
     },
     "build": {
       "definition": {
-        "file": "tools/sprites/build_character_role_contact_sheet.py",
-        "line": 138,
+        "file": "tools/sprites/build_character_identity_polish.py",
+        "line": 100,
         "kind": "function",
         "language": "python"
       },
@@ -315,11 +378,11 @@
           "file": "tools/sprites/build_character_identity_polish.py",
           "line": 100,
           "preview": "def build(bank_path: Path, audit_path: Path, destination: Path,",
-          "definition_candidate": false
+          "definition_candidate": true
         },
         {
           "file": "tools/sprites/build_character_identity_polish.py",
-          "line": 290,
+          "line": 309,
           "preview": "report = build(args.bank, args.audit, args.output, args.report, args.comparison,",
           "definition_candidate": false
         },
@@ -339,7 +402,7 @@
           "file": "tools/sprites/build_character_role_contact_sheet.py",
           "line": 138,
           "preview": "def build(bank_path: Path, audit_path: Path, output_path: Path) -> dict:",
-          "definition_candidate": true
+          "definition_candidate": false
         },
         {
           "file": "tools/sprites/build_character_role_contact_sheet.py",
@@ -655,7 +718,19 @@
         },
         {
           "file": "tools/sprites/tests/test_character_identity_polish.py",
-          "line": 183,
+          "line": 186,
+          "preview": "build(self.bank, self.audit, self.output, self.report)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 195,
+          "preview": "build(self.bank, self.audit, self.output, self.report)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 202,
           "preview": "build(self.bank, self.audit, self.output, self.report)",
           "definition_candidate": false
         },
@@ -750,12 +825,12 @@
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 108
+      "occurrence_count": 110
     },
     "main": {
       "definition": {
-        "file": "tools/sprites/build_character_role_contact_sheet.py",
-        "line": 193,
+        "file": "tools/sprites/build_character_identity_polish.py",
+        "line": 300,
         "kind": "function",
         "language": "python"
       },
@@ -1260,13 +1335,13 @@
         },
         {
           "file": "tools/sprites/build_character_identity_polish.py",
-          "line": 281,
+          "line": 300,
           "preview": "def main() -> int:",
-          "definition_candidate": false
+          "definition_candidate": true
         },
         {
           "file": "tools/sprites/build_character_identity_polish.py",
-          "line": 300,
+          "line": 319,
           "preview": "raise SystemExit(main())",
           "definition_candidate": false
         },
@@ -1298,7 +1373,7 @@
           "file": "tools/sprites/build_character_role_contact_sheet.py",
           "line": 193,
           "preview": "def main() -> int:",
-          "definition_candidate": true
+          "definition_candidate": false
         },
         {
           "file": "tools/sprites/build_character_role_contact_sheet.py",
@@ -1483,45 +1558,27 @@
       ],
       "occurrence_count": 120
     },
-    "RoleConsistencySheetTests": {
+    "CharacterIdentityPolishTests": {
       "definition": {
-        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-        "line": 19,
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "line": 20,
         "kind": "class",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
-          "line": 13,
-          "preview": "from test_character_role_contact_sheet import RoleConsistencySheetTests",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
-          "line": 17,
-          "preview": "save = RoleConsistencySheetTests.save",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
-          "line": 21,
-          "preview": "RoleConsistencySheetTests.setUp(self)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-          "line": 19,
-          "preview": "class RoleConsistencySheetTests(unittest.TestCase):",
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 20,
+          "preview": "class CharacterIdentityPolishTests(unittest.TestCase):",
           "definition_candidate": true
         }
       ],
-      "occurrence_count": 4
+      "occurrence_count": 1
     },
     "setUp": {
       "definition": {
-        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-        "line": 20,
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "line": 21,
         "kind": "function",
         "language": "python"
       },
@@ -1572,7 +1629,7 @@
           "file": "tools/sprites/tests/test_character_identity_polish.py",
           "line": 21,
           "preview": "def setUp(self):",
-          "definition_candidate": false
+          "definition_candidate": true
         },
         {
           "file": "tools/sprites/tests/test_character_identity_polish_mobile_review.py",
@@ -1602,15 +1659,781 @@
           "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
           "line": 20,
           "preview": "def setUp(self):",
-          "definition_candidate": true
+          "definition_candidate": false
         }
       ],
       "occurrence_count": 13
     },
+    "atlas": {
+      "definition": {
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "line": 36,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
+          "line": 246,
+          "preview": "atlas = actionAtlas,",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
+          "line": 334,
+          "preview": "val atlas = remember(role, action) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
+          "line": 344,
+          "preview": "atlas = atlas,",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt",
+          "line": 115,
+          "preview": "// Never launch a second ticker that could desync city and atlas.",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/CanonicalCharacterRaster.kt",
+          "line": 6,
+          "preview": "* Every authored sheet uses the same 4x4 atlas contract (256px cells on a",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/CanonicalCharacterRaster.kt",
+          "line": 8,
+          "preview": "* displaying the whole atlas as a static image.",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
+          "line": 99,
+          "preview": "* Only reviewed atlas frames are rendered; all speculative candidates remain",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
+          "line": 123,
+          "preview": "// Match the 37dp OP boot's authored planted speed (38 atlas pixels",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
+          "line": 142,
+          "preview": "// An override must load the *new* action atlas, not reuse cached WALK",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
+          "line": 190,
+          "preview": "atlas = atlases.getValue(placement.role to placement.action),",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
+          "line": 205,
+          "preview": "atlas: ImageBitmap,",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
+          "line": 225,
+          "preview": "image = atlas,",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
+          "line": 241,
+          "preview": "image = atlas,",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/AmbientCharacterMotionTest.kt",
+          "line": 56,
+          "preview": "fun `reduced motion freezes travel and source atlas pose`() {",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/CanonicalCharacterRasterTest.kt",
+          "line": 61,
+          "preview": "fun `character atlas contract matches production sheets`() {",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/audit_character_runtime.py",
+          "line": 2,
+          "preview": "\"\"\"Audit canonical character atlas registration and runtime exercise coverage.\"\"\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 280,
+          "preview": "\".github/workflows/pollinations-character-atlas.yml\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_bank_motion.py",
+          "line": 5,
+          "preview": "existence. Source atlas bytes, hashes and review-only provenance are verified.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_bank_motion.py",
+          "line": 47,
+          "preview": "raise ValueError(\"Expected a decoded 1024x1024 RGBA atlas\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_bank_motion.py",
+          "line": 85,
+          "preview": "raise ValueError(\"Expected a decoded RGBA 1024x1024 atlas\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 60,
+          "preview": "# Blank atlas cells are intentional padding, not extra animation",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_chatgpt_originals.py",
+          "line": 22,
+          "preview": "def inspect(atlas: Path, role: str, action: str) -> dict:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_chatgpt_originals.py",
+          "line": 23,
+          "preview": "with Image.open(atlas) as source:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_chatgpt_originals.py",
+          "line": 25,
+          "preview": "raise ValueError(f\"Wrong 1024 atlas: {atlas}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_chatgpt_originals.py",
+          "line": 99,
+          "preview": "atlas=image.convert(\"RGBA\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_chatgpt_originals.py",
+          "line": 100,
+          "preview": "frame=atlas.crop((0,0,256,256))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/autonomous_walk.py",
+          "line": 233,
+          "preview": "atlas=Image.new('RGBA',(CANVAS*4,CANVAS*math.ceil(settings.frames/4)))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/autonomous_walk.py",
+          "line": 238,
+          "preview": "atlas.alpha_composite(im,((i%4)*CANVAS,(i//4)*CANVAS))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/autonomous_walk.py",
+          "line": 239,
+          "preview": "atlas.save(output/'atlas.png', optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_bank_mobile_review.py",
+          "line": 221,
+          "preview": "with Image.open(io.BytesIO(source)) as atlas:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_bank_mobile_review.py",
+          "line": 222,
+          "preview": "atlas.load()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_bank_mobile_review.py",
+          "line": 223,
+          "preview": "if atlas.size != (1024,1024) or atlas.mode != \"RGBA\":",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_bank_mobile_review.py",
+          "line": 224,
+          "preview": "raise ValueError(\"Invalid selected atlas: \" + aid)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_candidate_bank.py",
+          "line": 4,
+          "preview": "Every selected atlas must have the *same collector run* recorded on the",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_candidate_bank.py",
+          "line": 104,
+          "preview": "\"source_validation\": \"original-manifest+original-qa+independent-atlas-geometry\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_candidate_bank.py",
+          "line": 130,
+          "preview": "raise ValueError(f\"Duplicate or unrecognized source atlas {name!r}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_candidate_bank.py",
+          "line": 134,
+          "preview": "raise ValueError(f\"Missing or ambiguous archive atlas {name!r}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_candidate_bank.py",
+          "line": 185,
+          "preview": "raise ValueError(f\"Wrong character atlas dimensions: {name}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_candidate_bank.py",
+          "line": 256,
+          "preview": "\"Zero to Empire - review-only character atlas bank.\\n\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_candidate_bank.py",
+          "line": 274,
+          "preview": "help=\"Optional 18-atlas in-repository original SVG/PNG review source\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 35,
+          "preview": "raise ValueError(\"Invalid atlas byte size: \" + asset_id)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 39,
+          "preview": "raise ValueError(\"Invalid 1024x1024 RGBA atlas: \" + asset_id)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 43,
+          "preview": "def _frames(atlas: Image.Image, count: int) -> list[Image.Image]:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 45,
+          "preview": "atlas.crop(((i % 4) * 256, (i // 4) * 256,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 152,
+          "preview": "\"atlas\": image, \"blob\": blob, \"sha256\": sha, \"entry\": entry,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 160,
+          "preview": "# A plausible same-role atlas is not necessarily the intended reference.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 191,
+          "preview": "original = _frames(record[\"atlas\"], FRAMES[record[\"action\"]])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 192,
+          "preview": "reference_frame = _frames(anchor[\"atlas\"], FRAMES[anchor[\"action\"]])[0]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_mobile_motion_storyboard.py",
+          "line": 67,
+          "preview": "with Image.open(io.BytesIO(bank.read(name))) as atlas:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_mobile_motion_storyboard.py",
+          "line": 68,
+          "preview": "atlas.load()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_mobile_motion_storyboard.py",
+          "line": 71,
+          "preview": "atlas.crop(((i % 4) * 256, (i // 4) * 256,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 95,
+          "preview": "raise ValueError(\"Expected a 1024x1024 character atlas\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 96,
+          "preview": "atlas = src.convert(\"RGBA\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 98,
+          "preview": "f = atlas.crop(((index % 4) * CELL, (index // 4) * CELL,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 146,
+          "preview": "raise ValueError(f\"Invalid mobile review atlas: {path}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 147,
+          "preview": "atlas = src.convert(\"RGBA\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 152,
+          "preview": "tile = atlas.crop(((index % 4) * CELL, (index // 4) * CELL,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 237,
+          "preview": "raise ValueError(f\"Expected atlas 1024x1024, got {src.size}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 294,
+          "preview": "review exact costume and pixels in the separately preserved full PNG atlas.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 300,
+          "preview": "raise ValueError(\"Expected complete 1024x1024 RGBA character atlas\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 301,
+          "preview": "atlas = image.convert(\"RGBA\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 309,
+          "preview": "sprite = atlas.crop((x, y, x + CELL, y + CELL))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_role_contact_sheet.py",
+          "line": 86,
+          "preview": "raise ValueError(\"Excessive candidate atlas size\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_role_contact_sheet.py",
+          "line": 98,
+          "preview": "with Image.open(io.BytesIO(blob)) as atlas:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_role_contact_sheet.py",
+          "line": 99,
+          "preview": "atlas.load()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_role_contact_sheet.py",
+          "line": 100,
+          "preview": "if atlas.size != (1024, 1024) or atlas.mode != \"RGBA\":",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_role_contact_sheet.py",
+          "line": 101,
+          "preview": "raise ValueError(\"Invalid candidate atlas dimensions \" + aid)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_role_contact_sheet.py",
+          "line": 102,
+          "preview": "frame = atlas.crop((0, 0, 256, 256))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_original_offline_review.py",
+          "line": 30,
+          "preview": "<h1>Zero to Empire \u00b7 Personnages</h1><p>18 atlas \u00b7 150 poses SVG \u00b7 cr\u00e9\u00e9s dans le projet \u00b7 lecture hors ligne</p>",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_original_offline_review.py",
+          "line": 47,
+          "preview": "let role='OP',action='WALK',frame=0,still=false,atlas=new Image();",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_original_offline_review.py",
+          "line": 54,
+          "preview": "if(still&&atlas.complete&&atlas.naturalWidth){",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_original_offline_review.py",
+          "line": 55,
+          "preview": "// Use exactly the same atlas cell for all three canvases. Animated GIFs",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_original_offline_review.py",
+          "line": 59,
+          "preview": "ctx.drawImage(atlas,(frame%4)*256,Math.floor(frame/4)*256,256,256,0,0,256,256)}}}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_original_offline_review.py",
+          "line": 64,
+          "preview": "function render(){const item=current();frame=0;still=false;atlas=new Image();atlas.onload=paint;atlas.src=item.atlas;",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_original_offline_review.py",
+          "line": 88,
+          "preview": "raise ValueError('Incorrect original atlas '+name)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_original_offline_review.py",
+          "line": 94,
+          "preview": "'atlas':'data:image/png;base64,'+base64.b64encode(src.read_bytes()).decode(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_sprite_contact_sheet.py",
+          "line": 44,
+          "preview": "issues.append(\"bad-fx-atlas-size\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_sprite_contact_sheet.py",
+          "line": 57,
+          "preview": "issues.append(\"bad-character-atlas-size\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_tech_review_board.py",
+          "line": 54,
+          "preview": "raise ValueError(f'{action}: invalid atlas geometry')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_tech_review_board.py",
+          "line": 57,
+          "preview": "raise ValueError(f'{action}: atlas must be directly inside review directory')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_approved_idle_fallback.py",
+          "line": 41,
+          "preview": "return None, \"strict-done-idle-invalid-atlas-size\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_identity_polish_mobile_review.py",
+          "line": 3,
+          "preview": "Called only after the candidate bank, same-run reference atlas and all-frame",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_provisional_idle_seed.py",
+          "line": 7,
+          "preview": "independently runs its full subject/atlas checks before using these pixels.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_provisional_idle_seed.py",
+          "line": 74,
+          "preview": "raise ValueError(\"Missing or ambiguous archived engineer idle atlas\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_rejection_evidence.py",
+          "line": 30,
+          "preview": "atlas = Image.new(\"RGBA\", (1024, 1024), (0, 0, 0, 0))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_rejection_evidence.py",
+          "line": 32,
+          "preview": "atlas.alpha_composite(frame.convert(\"RGBA\"),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_rejection_evidence.py",
+          "line": 37,
+          "preview": "atlas.save(image_path, \"PNG\", optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 354,
+          "preview": "A 256px WORK/REPAIR atlas can exceed the alpha-change threshold if the",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/export_tech_canonical_review.py",
+          "line": 80,
+          "preview": "atlas = Image.new(\"RGBA\", (1024, 1024), (0, 0, 0, 0))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/export_tech_canonical_review.py",
+          "line": 95,
+          "preview": "atlas.alpha_composite(scaled, ((cell_index % 4) * CELL,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/export_tech_canonical_review.py",
+          "line": 104,
+          "preview": "atlas.save(png, optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/export_tech_canonical_review.py",
+          "line": 108,
+          "preview": "raise ValueError(f\"Canonical atlas structural QA rejected {action}: \"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/identity_locked_walk_candidate.py",
+          "line": 74,
+          "preview": "with Image.open(path) as atlas:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/identity_locked_walk_candidate.py",
+          "line": 75,
+          "preview": "if atlas.size!=(1024,1024) or atlas.mode!='RGBA':",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/identity_locked_walk_candidate.py",
+          "line": 80,
+          "preview": "frame=atlas.crop((x,y,x+SIZE,y+SIZE))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 585,
+          "preview": "# Canonical character deliverable: fixed 1024x1024 transparent atlas.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 587,
+          "preview": "if len(frames)>16:raise RuntimeError('character atlas supports at most 16 frames')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 633,
+          "preview": "# IDLE atlas is rejected, rendering unrelated actions would burn GPU time",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 737,
+          "preview": "'frames':len(recovered),'atlas':'1024x1024','cell':'256x256',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 905,
+          "preview": "if sheet.size!=(1024,1024):raise RuntimeError(f'bad atlas size {sheet.size}')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 910,
+          "preview": "print(f\"KAGGLE_CHR_VALIDATED={p.relative_to(ROOT)} {why} atlas=1024x1024\",flush=True);report.append({'id':i['id'],'status':'CANDIDATE','reason':why,'frames':len(frames),'atlas':'10",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_fx_sheet_factory_v1.py",
+          "line": 113,
+          "preview": "if sheet.size!=(512,256): raise RuntimeError(f'bad-runtime-atlas-size={sheet.size}')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_fx_sheet_factory_v1.py",
+          "line": 114,
+          "preview": "return sheet,{'frames':FRAMES,'render_cell':'256x256','runtime_cell':'128x128','layout':'4x2','atlas':'512x256','duplicate_adjacent':dup,'max_center_drift':round(drift,2),**tempora",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_fx_sheet_factory_v1.py",
+          "line": 119,
+          "preview": "rep={'engine':'procedural-fx-v1.2-runtime-atlas','attempted':0,'accepted':0,'rejected':0,'runtime_contract':'8 frames; 4x2 atlas; 128x128 runtime cell; 512x256 texture; matches exi",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_fx_sheet_factory_v1.py",
+          "line": 128,
+          "preview": "sheet,m,attempt=accepted; p=INCOMING/f\"{item['stem']}.png\"; sheet.save(p,'PNG',optimize=True); rep['accepted']+=1;rep['items'].append({'id':item['id'],'accepted':True,'attempt':att",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_chatgpt_originals.py",
+          "line": 43,
+          "preview": "raise ValueError(f\"Bad atlas: {ident}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 225,
+          "preview": "\"\"\"Optional frame-aligned ground-shadow atlas, isolated from character pixels.\"\"\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 348,
+          "preview": "atlas=Image.new('RGBA',(size*cols,size*rows))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 351,
+          "preview": "atlas.alpha_composite(scaled,((i%cols)*size,(i//cols)*size))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 353,
+          "preview": "atlas.save(path,optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 319,
+          "preview": "'Create one exact 4 columns by 4 rows animation atlas on a perfectly flat uniform neutral gray background. '",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 410,
+          "preview": "\"\"\"Explicitly request ONE complete subject, never a sheet or sprite atlas.\"\"\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 541,
+          "preview": "# The atlas may be formed ONLY after each standalone frame",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 564,
+          "preview": "mark_queue(it['id'],'CANDIDATE',seed,'pollinations-character-atlas',producer_run_id)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 571,
+          "preview": "'producer':'pollinations-character-atlas',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/process_final_sprites.py",
+          "line": 165,
+          "preview": "fail(f\"{path.name}: unused character atlas cell {i} is not transparent\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 6,
+          "preview": "4-column RGBA atlas: 1024x1024, no ground shadow. Role IDLE can accompany",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 345,
+          "preview": "count=ACTIONS[action]; atlas=Image.new('RGBA',(1024,1024),(0,0,0,0))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 353,
+          "preview": "x=(i%4)*FRAME;y=(i//4)*FRAME;atlas.alpha_composite(rgba,(x,y))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 358,
+          "preview": "path=outdir/'candidates'/name;path.parent.mkdir(parents=True,exist_ok=True);atlas.save(path,optimize=True)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 120
+    },
+    "write_atlases": {
+      "definition": {
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "line": 55,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 33,
+          "preview": "self.write_atlases()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 55,
+          "preview": "def write_atlases(self, *, same_head=False, bad_frame=None):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 138,
+          "preview": "self.write_atlases(bad_frame=4)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 151,
+          "preview": "self.write_atlases(same_head=True)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
     "save": {
       "definition": {
-        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-        "line": 62,
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "line": 77,
         "kind": "function",
         "language": "python"
       },
@@ -2338,120 +3161,154 @@
       ],
       "occurrence_count": 120
     },
-    "test_role_sheet_is_readable_png_and_does_not_approve_candidates": {
+    "test_proposes_complete_review_only_identity_retouch": {
       "definition": {
-        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-        "line": 80,
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "line": 89,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-          "line": 80,
-          "preview": "def test_role_sheet_is_readable_png_and_does_not_approve_candidates(self):",
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 89,
+          "preview": "def test_proposes_complete_review_only_identity_retouch(self):",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_sha_tampering_of_png_or_audit_fails_closed": {
+    "test_one_unsafe_pose_rejects_entire_proposal_not_just_one_frame": {
       "definition": {
-        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-        "line": 92,
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "line": 137,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-          "line": 92,
-          "preview": "def test_sha_tampering_of_png_or_audit_fails_closed(self):",
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 137,
+          "preview": "def test_one_unsafe_pose_rejects_entire_proposal_not_just_one_frame(self):",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_missing_audit_coverage_is_not_silently_ignored": {
+    "test_consistent_actions_are_not_needlessly_modified": {
       "definition": {
-        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-        "line": 105,
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "line": 150,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-          "line": 105,
-          "preview": "def test_missing_audit_coverage_is_not_silently_ignored(self):",
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 150,
+          "preview": "def test_consistent_actions_are_not_needlessly_modified(self):",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_semantically_approved_candidate_or_audit_must_be_rejected": {
+    "test_invalid_candidate_sha_fails_closed": {
       "definition": {
-        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-        "line": 111,
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "line": 156,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-          "line": 111,
-          "preview": "def test_semantically_approved_candidate_or_audit_must_be_rejected(self):",
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 156,
+          "preview": "def test_invalid_candidate_sha_fails_closed(self):",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_cross_role_reference_fails_even_with_valid_sha": {
+    "test_audit_reference_is_same_role_verified_and_not_forged": {
       "definition": {
-        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-        "line": 122,
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "line": 163,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-          "line": 122,
-          "preview": "def test_cross_role_reference_fails_even_with_valid_sha(self):",
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 163,
+          "preview": "def test_audit_reference_is_same_role_verified_and_not_forged(self):",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_forged_reference_distance_and_self_flags_fail_closed": {
+    "test_audit_metric_cannot_be_forged_to_force_proposal": {
       "definition": {
-        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-        "line": 129,
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "line": 171,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-          "line": 129,
-          "preview": "def test_forged_reference_distance_and_self_flags_fail_closed(self):",
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 171,
+          "preview": "def test_audit_metric_cannot_be_forged_to_force_proposal(self):",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_empty_first_frame_is_blocking_even_with_valid_hash": {
+    "test_forged_same_role_anchor_is_rejected": {
       "definition": {
-        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-        "line": 140,
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "line": 179,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-          "line": 140,
-          "preview": "def test_empty_first_frame_is_blocking_even_with_valid_hash(self):",
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 179,
+          "preview": "def test_forged_same_role_anchor_is_rejected(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_self_anchor_cannot_claim_identity_warning": {
+      "definition": {
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "line": 189,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 189,
+          "preview": "def test_self_anchor_cannot_claim_identity_warning(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_no_auto_promotion_even_when_source_falsely_claims_approval": {
+      "definition": {
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "line": 198,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 198,
+          "preview": "def test_no_auto_promotion_even_when_source_falsely_claims_approval(self):",
           "definition_candidate": true
         }
       ],

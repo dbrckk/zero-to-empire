@@ -30636,6 +30636,12 @@ row = next(x for x in data["assets"] if x["id"] == "CHR-OP-WORK")
 ⋮----
 def test_audit_metric_cannot_be_forged_to_force_proposal(self)
 ⋮----
+def test_forged_same_role_anchor_is_rejected(self)
+⋮----
+def test_self_anchor_cannot_claim_identity_warning(self)
+⋮----
+row = next(x for x in data["assets"] if x["id"] == "CHR-OP-WALK")
+⋮----
 def test_no_auto_promotion_even_when_source_falsely_claims_approval(self)
 ```
 
@@ -32020,6 +32026,16 @@ sha = hashlib.sha256(blob).hexdigest()
 ⋮----
 image = _atlas(blob, asset_id)
 audit_row = by_audit.get(asset_id)
+⋮----
+# A plausible same-role atlas is not necessarily the intended reference.
+# Lock every polish proposal to the audit's declared canonical role anchor,
+# preventing stale or edited audit records from silently using another pose.
+anchors = audit.get("head_identity_reference")
+⋮----
+role = record["role"]
+reference_id = anchors.get(role)
+reference = verified.get(reference_id)
+metrics = record["audit"]["head_identity_metrics"]
 ⋮----
 members: list[tuple[str, bytes]] = []
 ⋮----

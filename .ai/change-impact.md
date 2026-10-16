@@ -1,11 +1,11 @@
 # Change impact
 
-Base: 89124f6ccd38a6517beda6ebcb28250e2de6ca6e
-Head: 75c7695339db34e1c50f3edcf8b88297aabfb409
+Base: 062688fb4e33792bbffe9b75726b3d3095ca0770
+Head: 85595d799becb4b35b56cc5afbee0d4d781c21b8
 
 ## Changed files
-- M tools/sprites/build_character_role_contact_sheet.py
-- M tools/sprites/tests/test_character_role_contact_sheet.py
+- M tools/sprites/build_character_identity_polish.py
+- M tools/sprites/tests/test_character_identity_polish.py
 
 ## Affected areas
 - tools

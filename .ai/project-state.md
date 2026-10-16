@@ -29,25 +29,25 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-16T10:47:35Z
+Generated: 2026-10-16T10:52:05Z
 
 ### Git
 - Branch: `main`
-- Head: `75c7695339db`
-- Commit date: 2026-10-16T12:47:20+02:00
-- Commit: fix(art): verify same-role identity references before visual review (#181)
+- Head: `85595d799bec`
+- Commit date: 2026-10-16T12:51:48+02:00
+- Commit: fix(art): preserve canonical character identity in polish proposals (#182)
 - Tracked files: 1811
 
 ### Recently changed files
+- `tools/sprites/build_character_identity_polish.py`
+- `tools/sprites/tests/test_character_identity_polish.py`
 - `tools/sprites/build_character_role_contact_sheet.py`
 - `tools/sprites/tests/test_character_role_contact_sheet.py`
 - `.github/workflows/asset-pipeline-ci.yml`
 - `.github/workflows/character-candidate-bank.yml`
 - `tools/sprites/build_character_mobile_motion_storyboard.py`
 - `tools/sprites/tests/test_character_mobile_motion_storyboard.py`
-- `tools/sprites/build_character_identity_polish.py`
 - `tools/sprites/character_identity_polish_mobile_review.py`
-- `tools/sprites/tests/test_character_identity_polish.py`
 - `tools/sprites/tests/test_character_identity_polish_mobile_review.py`
 
 ### Project signals

@@ -5,71 +5,55 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
+    "_atlas": {
+      "source": {
+        "file": "tools/sprites/build_character_identity_polish.py",
+        "start": 33,
+        "end": 40
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "_frames": {
+      "source": {
+        "file": "tools/sprites/build_character_identity_polish.py",
+        "start": 43,
+        "end": 48
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "_pack": {
+      "source": {
+        "file": "tools/sprites/build_character_identity_polish.py",
+        "start": 51,
+        "end": 57
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
     "_font": {
       "source": {
-        "file": "tools/sprites/build_character_role_contact_sheet.py",
-        "start": 40,
-        "end": 46
+        "file": "tools/sprites/build_character_identity_polish.py",
+        "start": 60,
+        "end": 67
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "_load": {
+    "_comparison": {
       "source": {
-        "file": "tools/sprites/build_character_role_contact_sheet.py",
-        "start": 49,
-        "end": 135
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "build": {
-      "source": {
-        "file": "tools/sprites/build_character_role_contact_sheet.py",
-        "start": 138,
-        "end": 190
+        "file": "tools/sprites/build_character_identity_polish.py",
+        "start": 70,
+        "end": 97
       },
       "symbol_dependencies": [
         {
           "symbol": "_font",
           "definitions": [
             {
-              "file": "tools/sprites/build_character_role_contact_sheet.py",
-              "line": 40,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_load",
-          "definitions": [
-            {
-              "file": "tools/sprites/build_character_role_contact_sheet.py",
-              "line": 49,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "main": {
-      "source": {
-        "file": "tools/sprites/build_character_role_contact_sheet.py",
-        "start": 193,
-        "end": 313
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "build",
-          "definitions": [
-            {
-              "file": "tools/sprites/build_character_role_contact_sheet.py",
-              "line": 138,
+              "file": "tools/sprites/build_character_identity_polish.py",
+              "line": 60,
               "kind": "function",
               "language": "python"
             }
@@ -79,19 +63,183 @@
       ],
       "dependency_count": 1
     },
-    "RoleConsistencySheetTests": {
+    "build": {
       "source": {
-        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-        "start": 19,
-        "end": 151
+        "file": "tools/sprites/build_character_identity_polish.py",
+        "start": 100,
+        "end": 297
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_atlas",
+          "definitions": [
+            {
+              "file": "tools/sprites/build_character_identity_polish.py",
+              "line": 33,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_comparison",
+          "definitions": [
+            {
+              "file": "tools/sprites/build_character_identity_polish.py",
+              "line": 70,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_frames",
+          "definitions": [
+            {
+              "file": "tools/sprites/build_character_identity_polish.py",
+              "line": 43,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_pack",
+          "definitions": [
+            {
+              "file": "tools/sprites/build_character_identity_polish.py",
+              "line": 51,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "head_difference",
+          "definitions": [
+            {
+              "file": "tools/sprites/audit_character_bank_motion.py",
+              "line": 114,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "head_thumbnail",
+          "definitions": [
+            {
+              "file": "tools/sprites/audit_character_bank_motion.py",
+              "line": 75,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "lock_head_to_idle",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_head_identity_lock.py",
+              "line": 42,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "write_mobile_review",
+          "definitions": [
+            {
+              "file": "tools/sprites/character_identity_polish_mobile_review.py",
+              "line": 145,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 8
+    },
+    "main": {
+      "source": {
+        "file": "tools/sprites/build_character_identity_polish.py",
+        "start": 300,
+        "end": 420
       },
       "symbol_dependencies": [
         {
           "symbol": "build",
           "definitions": [
             {
-              "file": "tools/sprites/build_character_role_contact_sheet.py",
-              "line": 138,
+              "file": "tools/sprites/build_character_identity_polish.py",
+              "line": 100,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "CharacterIdentityPolishTests": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "start": 20,
+        "end": 202
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "analyze",
+          "definitions": [
+            {
+              "file": "tools/sprites/audit_character_bank_motion.py",
+              "line": 121,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "atlas",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 36,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "build",
+          "definitions": [
+            {
+              "file": "tools/sprites/build_character_identity_polish.py",
+              "line": 100,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "change",
+          "definitions": [
+            {
+              "file": "tools/sprites/audit_character_bank_motion.py",
+              "line": 38,
               "kind": "function",
               "language": "python"
             }
@@ -102,8 +250,8 @@
           "symbol": "save",
           "definitions": [
             {
-              "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-              "line": 62,
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 77,
               "kind": "function",
               "language": "python"
             }
@@ -114,8 +262,8 @@
           "symbol": "setUp",
           "definitions": [
             {
-              "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-              "line": 20,
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 21,
               "kind": "function",
               "language": "python"
             }
@@ -123,11 +271,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_cross_role_reference_fails_even_with_valid_sha",
+          "symbol": "test_audit_metric_cannot_be_forged_to_force_proposal",
           "definitions": [
             {
-              "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-              "line": 122,
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 171,
               "kind": "function",
               "language": "python"
             }
@@ -135,11 +283,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_empty_first_frame_is_blocking_even_with_valid_hash",
+          "symbol": "test_audit_reference_is_same_role_verified_and_not_forged",
           "definitions": [
             {
-              "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-              "line": 140,
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 163,
               "kind": "function",
               "language": "python"
             }
@@ -147,11 +295,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_forged_reference_distance_and_self_flags_fail_closed",
+          "symbol": "test_consistent_actions_are_not_needlessly_modified",
           "definitions": [
             {
-              "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-              "line": 129,
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 150,
               "kind": "function",
               "language": "python"
             }
@@ -159,11 +307,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_missing_audit_coverage_is_not_silently_ignored",
+          "symbol": "test_forged_same_role_anchor_is_rejected",
           "definitions": [
             {
-              "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-              "line": 105,
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 179,
               "kind": "function",
               "language": "python"
             }
@@ -171,11 +319,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_role_sheet_is_readable_png_and_does_not_approve_candidates",
+          "symbol": "test_invalid_candidate_sha_fails_closed",
           "definitions": [
             {
-              "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-              "line": 80,
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 156,
               "kind": "function",
               "language": "python"
             }
@@ -183,11 +331,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_semantically_approved_candidate_or_audit_must_be_rejected",
+          "symbol": "test_no_auto_promotion_even_when_source_falsely_claims_approval",
           "definitions": [
             {
-              "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-              "line": 111,
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 198,
               "kind": "function",
               "language": "python"
             }
@@ -195,11 +343,47 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_sha_tampering_of_png_or_audit_fails_closed",
+          "symbol": "test_one_unsafe_pose_rejects_entire_proposal_not_just_one_frame",
           "definitions": [
             {
-              "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-              "line": 92,
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 137,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_proposes_complete_review_only_identity_retouch",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 89,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_self_anchor_cannot_claim_identity_warning",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 189,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "write_atlases",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 55,
               "kind": "function",
               "language": "python"
             }
@@ -207,21 +391,21 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 10
+      "dependency_count": 16
     },
     "setUp": {
       "source": {
-        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-        "start": 20,
-        "end": 60
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "start": 21,
+        "end": 33
       },
       "symbol_dependencies": [
         {
-          "symbol": "save",
+          "symbol": "write_atlases",
           "definitions": [
             {
-              "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-              "line": 62,
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 55,
               "kind": "function",
               "language": "python"
             }
@@ -231,28 +415,232 @@
       ],
       "dependency_count": 1
     },
+    "atlas": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "start": 36,
+        "end": 53
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "save",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 77,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "write_atlases": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "start": 55,
+        "end": 75
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "analyze",
+          "definitions": [
+            {
+              "file": "tools/sprites/audit_character_bank_motion.py",
+              "line": 121,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "atlas",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 36,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "save",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 77,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 3
+    },
     "save": {
       "source": {
-        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-        "start": 62,
-        "end": 78
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "start": 77,
+        "end": 87
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "test_role_sheet_is_readable_png_and_does_not_approve_candidates": {
+    "test_proposes_complete_review_only_identity_retouch": {
       "source": {
-        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-        "start": 80,
-        "end": 90
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "start": 89,
+        "end": 135
       },
       "symbol_dependencies": [
         {
           "symbol": "build",
           "definitions": [
             {
-              "file": "tools/sprites/build_character_role_contact_sheet.py",
-              "line": 138,
+              "file": "tools/sprites/build_character_identity_polish.py",
+              "line": 100,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "change",
+          "definitions": [
+            {
+              "file": "tools/sprites/audit_character_bank_motion.py",
+              "line": 38,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_one_unsafe_pose_rejects_entire_proposal_not_just_one_frame": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "start": 137,
+        "end": 148
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "build",
+          "definitions": [
+            {
+              "file": "tools/sprites/build_character_identity_polish.py",
+              "line": 100,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "write_atlases",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 55,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_consistent_actions_are_not_needlessly_modified": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "start": 150,
+        "end": 154
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "build",
+          "definitions": [
+            {
+              "file": "tools/sprites/build_character_identity_polish.py",
+              "line": 100,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "write_atlases",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 55,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_invalid_candidate_sha_fails_closed": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "start": 156,
+        "end": 161
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "build",
+          "definitions": [
+            {
+              "file": "tools/sprites/build_character_identity_polish.py",
+              "line": 100,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "save",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 77,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_audit_reference_is_same_role_verified_and_not_forged": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "start": 163,
+        "end": 169
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "build",
+          "definitions": [
+            {
+              "file": "tools/sprites/build_character_identity_polish.py",
+              "line": 100,
               "kind": "function",
               "language": "python"
             }
@@ -262,121 +650,85 @@
       ],
       "dependency_count": 1
     },
-    "test_sha_tampering_of_png_or_audit_fails_closed": {
+    "test_audit_metric_cannot_be_forged_to_force_proposal": {
       "source": {
-        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-        "start": 92,
-        "end": 103
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "start": 171,
+        "end": 177
       },
       "symbol_dependencies": [
         {
           "symbol": "build",
           "definitions": [
             {
-              "file": "tools/sprites/build_character_role_contact_sheet.py",
-              "line": 138,
+              "file": "tools/sprites/build_character_identity_polish.py",
+              "line": 100,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "imported_module"
-        },
-        {
-          "symbol": "save",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-              "line": 62,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
         }
       ],
-      "dependency_count": 2
+      "dependency_count": 1
     },
-    "test_missing_audit_coverage_is_not_silently_ignored": {
+    "test_forged_same_role_anchor_is_rejected": {
       "source": {
-        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-        "start": 105,
-        "end": 109
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "start": 179,
+        "end": 187
       },
       "symbol_dependencies": [
         {
           "symbol": "build",
           "definitions": [
             {
-              "file": "tools/sprites/build_character_role_contact_sheet.py",
-              "line": 138,
+              "file": "tools/sprites/build_character_identity_polish.py",
+              "line": 100,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "imported_module"
-        },
-        {
-          "symbol": "save",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-              "line": 62,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
         }
       ],
-      "dependency_count": 2
+      "dependency_count": 1
     },
-    "test_semantically_approved_candidate_or_audit_must_be_rejected": {
+    "test_self_anchor_cannot_claim_identity_warning": {
       "source": {
-        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-        "start": 111,
-        "end": 120
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "start": 189,
+        "end": 196
       },
       "symbol_dependencies": [
         {
           "symbol": "build",
           "definitions": [
             {
-              "file": "tools/sprites/build_character_role_contact_sheet.py",
-              "line": 138,
+              "file": "tools/sprites/build_character_identity_polish.py",
+              "line": 100,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "imported_module"
-        },
-        {
-          "symbol": "save",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-              "line": 62,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
         }
       ],
-      "dependency_count": 2
+      "dependency_count": 1
     },
-    "test_cross_role_reference_fails_even_with_valid_sha": {
+    "test_no_auto_promotion_even_when_source_falsely_claims_approval": {
       "source": {
-        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-        "start": 122,
-        "end": 127
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "start": 198,
+        "end": 202
       },
       "symbol_dependencies": [
         {
           "symbol": "build",
           "definitions": [
             {
-              "file": "tools/sprites/build_character_role_contact_sheet.py",
-              "line": 138,
+              "file": "tools/sprites/build_character_identity_polish.py",
+              "line": 100,
               "kind": "function",
               "language": "python"
             }
@@ -387,76 +739,8 @@
           "symbol": "save",
           "definitions": [
             {
-              "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-              "line": 62,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_forged_reference_distance_and_self_flags_fail_closed": {
-      "source": {
-        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-        "start": 129,
-        "end": 138
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "build",
-          "definitions": [
-            {
-              "file": "tools/sprites/build_character_role_contact_sheet.py",
-              "line": 138,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "save",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-              "line": 62,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_empty_first_frame_is_blocking_even_with_valid_hash": {
-      "source": {
-        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-        "start": 140,
-        "end": 151
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "build",
-          "definitions": [
-            {
-              "file": "tools/sprites/build_character_role_contact_sheet.py",
-              "line": 138,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "save",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-              "line": 62,
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 77,
               "kind": "function",
               "language": "python"
             }
