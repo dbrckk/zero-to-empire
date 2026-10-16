@@ -4,7 +4,7 @@ import unittest
 from pathlib import Path
 import xml.etree.ElementTree as ET
 
-from local_character_action_fx import action_fx, ROLE_LIGHT
+from local_character_action_fx import action_fx, ROLE_LIGHT, tool_angle, tool_tip
 
 ROOT=Path(__file__).resolve().parents[2]
 
@@ -57,6 +57,35 @@ class LocalActionFxTests(unittest.TestCase):
         self.assertIn("handpos=((80+2*reach",source)
         self.assertIn("else (176+reach_px*reach,123+pump_px*pump+bounce)",source)
         self.assertIn("add(action_fx(role,action,phase",source)
+
+    def test_engineer_repair_wrench_rotates_about_fixed_real_socket(self):
+        from render_chatgpt_originals import engineer_repair_wrist, ENG_REPAIR_TARGET, svg_frame
+        swings = []
+        stations = []
+        ns = "{http://www.w3.org/2000/svg}"
+        for index in range(10):
+            phase = 2 * math.pi * index / 10
+            wrist = engineer_repair_wrist(phase)
+            tip = tool_tip("ENG", "REPAIR", phase,
+                           tool_x=wrist[0], tool_y=wrist[1])
+            self.assertLess(math.dist(tip, ENG_REPAIR_TARGET), 1e-8)
+            angle = tool_angle("REPAIR", phase, role="ENG")
+            swings.append(angle)
+            svg = ET.fromstring(svg_frame("ENG", "REPAIR", index, 10))
+            station = [e for e in svg.iter()
+                       if e.get("data-fixed-socket") == "true"]
+            wrench = [e for e in svg.iter()
+                      if e.get("data-repair-tool") == "ENG"]
+            self.assertEqual((len(station), len(wrench)), (1, 1))
+            stations.append(ET.tostring(station[0]))
+            self.assertIn(f"rotate({angle:.1f})", wrench[0].get("transform"))
+            self.assertGreaterEqual(len(list(wrench[0])), 6)
+        self.assertEqual(len(set(stations)), 1)
+        self.assertGreater(max(swings) - min(swings), 48)
+        self.assertLess(max(tool_angle("REPAIR", p) for p in
+                            (math.pi/2, 3*math.pi/2)) -
+                        min(tool_angle("REPAIR", p) for p in
+                            (math.pi/2, 3*math.pi/2)), 40)
 
     def test_idle_and_walk_have_no_unattached_decorations(self):
         for role in ROLE_LIGHT:
