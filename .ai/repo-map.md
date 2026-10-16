@@ -358,6 +358,7 @@ tools/
       test_character_candidate_bank.py
       test_character_identity_polish_mobile_review.py
       test_character_identity_polish.py
+      test_character_mobile_motion_storyboard.py
       test_character_provisional_idle_seed.py
       test_character_repair_pose_plan.py
       test_character_role_contact_sheet.py
@@ -374,6 +375,7 @@ tools/
     build_character_bank_mobile_review.py
     build_character_candidate_bank.py
     build_character_identity_polish.py
+    build_character_mobile_motion_storyboard.py
     build_character_review_panels.py
     build_character_role_contact_sheet.py
     build_original_offline_review.py
@@ -1669,6 +1671,8 @@ on:
       - 'tools/sprites/tests/test_character_bank_mobile_review.py'
       - 'tools/sprites/build_character_role_contact_sheet.py'
       - 'tools/sprites/tests/test_character_role_contact_sheet.py'
+      - 'tools/sprites/build_character_mobile_motion_storyboard.py'
+      - 'tools/sprites/tests/test_character_mobile_motion_storyboard.py'
       - 'tools/sprites/build_character_identity_polish.py'
       - 'tools/sprites/tests/test_character_identity_polish.py'
       - 'tools/sprites/character_identity_polish_mobile_review.py'
@@ -1741,6 +1745,8 @@ on:
       - 'tools/sprites/tests/test_character_bank_mobile_review.py'
       - 'tools/sprites/build_character_role_contact_sheet.py'
       - 'tools/sprites/tests/test_character_role_contact_sheet.py'
+      - 'tools/sprites/build_character_mobile_motion_storyboard.py'
+      - 'tools/sprites/tests/test_character_mobile_motion_storyboard.py'
       - 'tools/sprites/build_character_identity_polish.py'
       - 'tools/sprites/tests/test_character_identity_polish.py'
       - 'tools/sprites/character_identity_polish_mobile_review.py'
@@ -2075,6 +2081,7 @@ jobs:
           python -m unittest discover -s tools/sprites/tests -p 'test_character_repair_pose_plan.py' -v
           python -m unittest discover -s tools/sprites/tests -p 'test_character_bank_motion_audit.py' -v
           python -m unittest discover -s tools/sprites/tests -p 'test_character_role_contact_sheet.py' -v
+          python -m unittest discover -s tools/sprites/tests -p 'test_character_mobile_motion_storyboard.py' -v
           python -m unittest discover -s tools/sprites/tests -p 'test_character_identity_polish.py' -v
           python -m unittest discover -s tools/sprites/tests -p 'test_character_identity_polish_mobile_review.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_semantic_gate.py' -v
@@ -2310,9 +2317,10 @@ jobs:
           python -m unittest discover -s tools/sprites/tests -p test_character_bank_mobile_review.py -v
           python -m unittest discover -s tools/sprites/tests -p test_character_bank_motion_audit.py -v
           python -m unittest discover -s tools/sprites/tests -p test_character_role_contact_sheet.py -v
+          python -m unittest discover -s tools/sprites/tests -p test_character_mobile_motion_storyboard.py -v
           python -m unittest discover -s tools/sprites/tests -p test_character_identity_polish.py -v
           python -m unittest discover -s tools/sprites/tests -p test_character_identity_polish_mobile_review.py -v
-          python -m py_compile tools/sprites/build_character_candidate_bank.py tools/sprites/build_character_bank_mobile_review.py tools/sprites/audit_character_bank_motion.py tools/sprites/build_character_role_contact_sheet.py tools/sprites/build_character_identity_polish.py tools/sprites/character_identity_polish_mobile_review.py
+          python -m py_compile tools/sprites/build_character_candidate_bank.py tools/sprites/build_character_bank_mobile_review.py tools/sprites/audit_character_bank_motion.py tools/sprites/build_character_role_contact_sheet.py tools/sprites/build_character_mobile_motion_storyboard.py tools/sprites/build_character_identity_polish.py tools/sprites/character_identity_polish_mobile_review.py
 
       - name: Download current permanent candidate archives
         shell: bash
@@ -2409,6 +2417,17 @@ jobs:
           test -s /tmp/zte-character-bank-role-consistency.png
           echo "MOBILE_IDENTITY_CONTACT_SHEET=review-only/OP-LOG-ENG" >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Render actual 42px animation storyboard for day and night
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/sprites/build_character_mobile_motion_storyboard.py \
+            --bank /tmp/zte-character-bank-current.zip \
+            --audit /tmp/zte-character-bank-motion-audit.json \
+            --output /tmp/zte-character-bank-motion-storyboard.png
+          test -s /tmp/zte-character-bank-motion-storyboard.png
+          echo "MOBILE_GAMEPLAY_STORYBOARD=42px-day-night/review-only" >> "$GITHUB_STEP_SUMMARY"
+
       - name: Create self-contained mobile animation comparison
         shell: bash
         run: |
@@ -2434,6 +2453,7 @@ jobs:
             /tmp/zte-character-identity-polish-preview.png \
             /tmp/zte-character-identity-polish-mobile-review.html \
             /tmp/zte-character-bank-role-consistency.png \
+            /tmp/zte-character-bank-motion-storyboard.png \
             /tmp/zte-character-bank-mobile-review.html \
             --repo "$GITHUB_REPOSITORY" --clobber
           sha256sum /tmp/zte-character-bank-current.zip >> "$GITHUB_STEP_SUMMARY"
@@ -2452,6 +2472,7 @@ jobs:
             /tmp/zte-character-identity-polish-preview.png
             /tmp/zte-character-identity-polish-mobile-review.html
             /tmp/zte-character-bank-role-consistency.png
+            /tmp/zte-character-bank-motion-storyboard.png
             /tmp/zte-character-bank-mobile-review.html
           retention-days: 30
 ```
@@ -30618,6 +30639,31 @@ def test_audit_metric_cannot_be_forged_to_force_proposal(self)
 def test_no_auto_promotion_even_when_source_falsely_claims_approval(self)
 ```
 
+## File: tools/sprites/tests/test_character_mobile_motion_storyboard.py
+```python
+"""42px gameplay storyboard is a provenance-verified review aid."""
+⋮----
+class GameplayMotionStoryboardTests(unittest.TestCase)
+⋮----
+save = RoleConsistencySheetTests.save
+⋮----
+def setUp(self)
+⋮----
+# Reuse synthetic OP/LOG/ENG candidate bank with SHA-matched audit.
+⋮----
+def test_frames_include_first_middle_and_loop_seam(self)
+⋮----
+def test_42px_both_lighting_conditions_and_no_promotion(self)
+⋮----
+report = build(self.bank, self.audit, self.output)
+⋮----
+def test_corrupt_audit_rejected_without_creating_output(self)
+⋮----
+data = json.loads(self.audit.read_text())
+⋮----
+def test_automatic_approval_forbidden(self)
+```
+
 ## File: tools/sprites/tests/test_character_provisional_idle_seed.py
 ```python
 """Engineer IDLE anchoring: provenance/technical-pass ONLY, never strict DONE."""
@@ -32016,6 +32062,65 @@ parser = argparse.ArgumentParser()
 ⋮----
 args = parser.parse_args()
 report = build(args.bank, args.audit, args.output, args.report, args.comparison,
+```
+
+## File: tools/sprites/build_character_mobile_motion_storyboard.py
+```python
+#!/usr/bin/env python3
+"""Actual-gameplay-size animation storyboard, verified source candidates only.
+
+Every 42px frame is rendered first against both daytime and nighttime game
+backgrounds, *then* enlarged with nearest-neighbor for human inspection.
+This avoids judging movement from attractive but misleading 256px source art.
+"""
+⋮----
+SCALE = 3
+PAD = 18
+LABEL_WIDTH = 210
+FRAME_GAP = 12
+TILE_WIDTH = MOBILE_SIZE * SCALE
+ROW_HEIGHT = 320
+TITLE_HEIGHT = 104
+BG = (12, 20, 33)
+TEXT = (242, 248, 255)
+MUTED = (173, 192, 212)
+WARNING = (255, 173, 109)
+FRAME_INDICES = (0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+DISPLAY_FRAMES = 4
+⋮----
+def _selected_frames(count: int) -> tuple[int, ...]
+⋮----
+"""Representative early/mid/late frames, including first and final seam."""
+⋮----
+def build(bank_path: Path, audit_path: Path, output_path: Path) -> dict
+⋮----
+width = PAD * 2 + LABEL_WIDTH + (TILE_WIDTH + FRAME_GAP) * DISPLAY_FRAMES
+height = TITLE_HEIGHT + ROW_HEIGHT * len(rows) + PAD
+output = Image.new("RGB", (width, height), BG)
+painter = ImageDraw.Draw(output)
+⋮----
+top = TITLE_HEIGHT + position * ROW_HEIGHT
+⋮----
+name = f"candidates/zte_chr_{role.lower()}_{action.lower()}_final.png"
+count = FRAMES[action]
+⋮----
+selected = _selected_frames(count)
+frames = [
+flagged = bool(row["identity_flags"] or row["motion_flags"])
+⋮----
+notice = ("IDENTITE" if row["identity_flags"] else
+⋮----
+x = PAD + LABEL_WIDTH + j * (TILE_WIDTH + FRAME_GAP)
+⋮----
+y = top + 31 + k * (TILE_WIDTH + 20)
+rendered = composite(frame, bg)
+zoomed = rendered.resize((TILE_WIDTH, TILE_WIDTH),
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser()
+⋮----
+args = parser.parse_args()
 ```
 
 ## File: tools/sprites/build_character_review_panels.py

@@ -1,15 +1,13 @@
 # Change impact
 
-Base: 385c0da85fafe317a78308fe8494e0aa894ee55c
-Head: e52e6ba8d37ebe2f98082b71de1e6f63c4df4c65
+Base: adbcb2fce529105849663aa0ae77a4380d5bb7fa
+Head: 0faec21dd0f463346c69c220d04da512a27f0f26
 
 ## Changed files
 - M .github/workflows/asset-pipeline-ci.yml
 - M .github/workflows/character-candidate-bank.yml
-- M tools/sprites/build_character_identity_polish.py
-- A tools/sprites/character_identity_polish_mobile_review.py
-- M tools/sprites/tests/test_character_identity_polish.py
-- A tools/sprites/tests/test_character_identity_polish_mobile_review.py
+- A tools/sprites/build_character_mobile_motion_storyboard.py
+- A tools/sprites/tests/test_character_mobile_motion_storyboard.py
 
 ## Affected areas
 - .github

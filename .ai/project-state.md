@@ -29,18 +29,20 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-16T08:48:20Z
+Generated: 2026-10-16T10:41:35Z
 
 ### Git
 - Branch: `main`
-- Head: `e52e6ba8d37e`
-- Commit date: 2026-10-16T10:48:06+02:00
-- Commit: art: offline Android animated face-polish comparison and human-review export (#179)
-- Tracked files: 1809
+- Head: `0faec21dd0f4`
+- Commit date: 2026-10-16T12:41:20+02:00
+- Commit: art: publish 42px day/night motion storyboard for 16 character candidates (#180)
+- Tracked files: 1811
 
 ### Recently changed files
 - `.github/workflows/asset-pipeline-ci.yml`
 - `.github/workflows/character-candidate-bank.yml`
+- `tools/sprites/build_character_mobile_motion_storyboard.py`
+- `tools/sprites/tests/test_character_mobile_motion_storyboard.py`
 - `tools/sprites/build_character_identity_polish.py`
 - `tools/sprites/character_identity_polish_mobile_review.py`
 - `tools/sprites/tests/test_character_identity_polish.py`
@@ -51,8 +53,6 @@ Generated: 2026-10-16T08:48:20Z
 - `art/production/autofactory-summary.md`
 - `art/production/character-strict-review-backlog.md`
 - `art/production/master-asset-queue.json`
-- `art/production/controlled-character-regen-queue.json`
-- `art/production/kaggle-async-state.json`
 
 ### Project signals
 - `build.gradle.kts`
