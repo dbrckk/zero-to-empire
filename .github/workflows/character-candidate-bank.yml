@@ -97,9 +97,14 @@ jobs:
           print('## Motion readability review (heuristic only)')
           print(f"- Screen size: **{data['mobile_render_px']} px**")
           print(f"- Candidate actions flagged: **{data['motion_attention_count']} / {data['candidate_count']}**")
+          print(f"- Cross-action head identity deviations: **{data['identity_attention_count']} / {data['candidate_count']}**")
           for row in data['assets']:
               if row['new_motion_flags']:
                   print(f"- {row['id']}: {', '.join(row['new_motion_flags'])}")
+              if row['new_identity_flags']:
+                  reference=row['head_identity_metrics']['reference_id']
+                  distance=row['head_identity_metrics']['mean_head_rgb_change']
+                  print(f"- {row['id']} vs {reference}: head RGB deviation {distance:.2f}; "+', '.join(row['new_identity_flags']))
           print('- No flags represent automatic semantic approval.')
           PY
 
