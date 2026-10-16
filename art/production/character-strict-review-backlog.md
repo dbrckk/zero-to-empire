@@ -21,9 +21,9 @@ Generated from `art/production/master-asset-queue.json` after production complet
 | CHR-LOG-CELEB | LOG | CELEB | AWAITING_REVIEW | 38815707999 | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
 | CHR-ENG-IDLE | ENG | IDLE | AWAITING_REVIEW | 38825860064 | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
 | CHR-ENG-WALK | ENG | WALK | AWAITING_REVIEW | 38825860064 | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
-| CHR-ENG-WORK | ENG | WORK | DISPATCHED | 38831389791 | Fresh kaggle-character-sheet dispatch 38831425983 is active; semantic review remains required after candidate collection. |
+| CHR-ENG-WORK | ENG | WORK | DISPATCHED | 38831389791 | Kaggle candidate failed or missing: required-role-idle-candidate-rejected; retry-details=The same-run IDLE identity sheet must pass generation and visual-risk QA before sibling actions are generated. |
 | CHR-ENG-CARRY | ENG | CARRY | AWAITING_REVIEW | 38309355566 | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
-| CHR-ENG-REPAIR | ENG | REPAIR | DISPATCHED | 38831389791 | Fresh kaggle-character-sheet dispatch 38831425983 is active; semantic review remains required after candidate collection. |
+| CHR-ENG-REPAIR | ENG | REPAIR | DISPATCHED | 38831389791 | Kaggle candidate failed or missing: required-role-idle-candidate-rejected; retry-details=The same-run IDLE identity sheet must pass generation and visual-risk QA before sibling actions are generated. |
 | CHR-ENG-CELEB | ENG | CELEB | AWAITING_REVIEW | 38825860064 | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
 
 ## Review rule
