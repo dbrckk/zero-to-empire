@@ -3136,7 +3136,8 @@ aa=list(a.getdata());bb=list(b.getdata())
 inter=sum(x and y for x,y in zip(aa,bb))
 union=sum(x or y for x,y in zip(aa,bb))
 ⋮----
-# Include last-to-first transition: a sprite loop can be smooth\n        # internally but visibly snap at its playback boundary.\n        evidence["lower_body_adjacent_changes"] = scores\n        evidence["lower_body_loop_seam_change"] = scores[-1]
+# Include last-to-first transition: a sprite loop can be smooth
+# internally but visibly snap at its playback boundary.
 ⋮----
 def audit(base: Path) -> dict
 ⋮----
