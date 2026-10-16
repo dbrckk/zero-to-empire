@@ -29,16 +29,19 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-16T12:46:16Z
+Generated: 2026-10-16T12:50:09Z
 
 ### Git
 - Branch: `main`
-- Head: `d2195a1a0fd0`
-- Commit date: 2026-10-16T14:46:00+02:00
-- Commit: fix(art): align identity-locked walk review with square atlas and PR validation (#189)
+- Head: `f3722aa35166`
+- Commit date: 2026-10-16T14:49:54+02:00
+- Commit: art: publish isolated six-action engineer coherent vector review alternative (#190)
 - Tracked files: 1812
 
 ### Recently changed files
+- `.github/workflows/character-candidate-bank.yml`
+- `tools/sprites/build_character_candidate_bank.py`
+- `tools/sprites/tests/test_character_candidate_bank.py`
 - `.github/workflows/identity-locked-walk-review.yml`
 - `tools/sprites/identity_locked_walk_candidate.py`
 - `tools/sprites/test_identity_locked_walk_candidate.py`
@@ -56,9 +59,6 @@ Generated: 2026-10-16T12:46:16Z
 - `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/02.svg`
 - `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/03.svg`
 - `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/04.svg`
-- `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/05.svg`
-- `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/06.svg`
-- `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/07.svg`
 
 ### Project signals
 - `build.gradle.kts`

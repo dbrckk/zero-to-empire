@@ -1,12 +1,12 @@
 # Change impact
 
-Base: ae16ccc9693552c9c38b4d3c038a0f8d9aeebfff
-Head: d2195a1a0fd003a92cd539c82c11bddb20b0e6e0
+Base: 6e789caf94bbf4d4ea5f4057127d71247446354b
+Head: f3722aa351663d1719b86ba8dd5d6f96fa741a23
 
 ## Changed files
-- M .github/workflows/identity-locked-walk-review.yml
-- M tools/sprites/identity_locked_walk_candidate.py
-- M tools/sprites/test_identity_locked_walk_candidate.py
+- M .github/workflows/character-candidate-bank.yml
+- M tools/sprites/build_character_candidate_bank.py
+- M tools/sprites/tests/test_character_candidate_bank.py
 
 ## Affected areas
 - .github

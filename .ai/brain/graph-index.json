@@ -29,6 +29,7 @@
         "tools/process_final_assets.py",
         "tools/sprites/audit_character_candidates.py",
         "tools/sprites/autonomous_walk.py",
+        "tools/sprites/build_character_candidate_bank.py",
         "tools/sprites/build_character_identity_polish.py",
         "tools/sprites/build_character_mobile_motion_storyboard.py",
         "tools/sprites/build_character_review_panels.py",
@@ -78,7 +79,7 @@
         "tools/sprites/tests/test_character_provisional_idle_seed.py",
         "tools/sprites/tests/test_character_role_contact_sheet.py"
       ],
-      "in_degree": 60,
+      "in_degree": 61,
       "out_degree": 7,
       "path": "app/src/main/java/com/zerotoempire/game/GameRepository.kt"
     },
@@ -401,6 +402,7 @@
         "tools/sprites/asset_wave_orchestrator.py",
         "tools/sprites/audit_character_candidates.py",
         "tools/sprites/audit_complete_sprite_manifest.py",
+        "tools/sprites/build_character_candidate_bank.py",
         "tools/sprites/character_ground_shadow_cleanup.py",
         "tools/sprites/character_provisional_idle_seed.py",
         "tools/sprites/character_review_matrix.py",
@@ -411,9 +413,10 @@
         "tools/sprites/test_character_review_matrix.py",
         "tools/sprites/test_pollinations_character_sheet_factory.py",
         "tools/sprites/tests/test_asset_production_policy.py",
+        "tools/sprites/tests/test_character_candidate_bank.py",
         "tools/sprites/tests/test_character_provisional_idle_seed.py"
       ],
-      "in_degree": 26,
+      "in_degree": 28,
       "out_degree": 1,
       "path": "app/src/main/java/com/zerotoempire/game/Monetization.kt"
     },
@@ -896,6 +899,21 @@
     {
       "dependencies": [
         "app/src/main/java/com/zerotoempire/game/GameRepository.kt",
+        "app/src/main/java/com/zerotoempire/game/Monetization.kt",
+        "tools/sprites/build_sprite_contact_sheet.py",
+        "tools/sprites/plan_sprite_batches.py"
+      ],
+      "dependents": [
+        "tools/sprites/build_character_bank_mobile_review.py",
+        "tools/sprites/tests/test_character_candidate_bank.py"
+      ],
+      "in_degree": 2,
+      "out_degree": 4,
+      "path": "tools/sprites/build_character_candidate_bank.py"
+    },
+    {
+      "dependencies": [
+        "app/src/main/java/com/zerotoempire/game/GameRepository.kt",
         "tools/sprites/action_contact.py",
         "tools/sprites/focused_sprite_atlas.py",
         "tools/sprites/plan_sprite_batches.py"
@@ -1295,22 +1313,9 @@
       "in_degree": 3,
       "out_degree": 1,
       "path": "app/src/main/java/com/zerotoempire/game/InterstitialPolicy.kt"
-    },
-    {
-      "dependencies": [
-        "tools/sprites/build_sprite_contact_sheet.py",
-        "tools/sprites/plan_sprite_batches.py"
-      ],
-      "dependents": [
-        "tools/sprites/build_character_bank_mobile_review.py",
-        "tools/sprites/tests/test_character_candidate_bank.py"
-      ],
-      "in_degree": 2,
-      "out_degree": 2,
-      "path": "tools/sprites/build_character_candidate_bank.py"
     }
   ],
-  "edge_count": 593,
+  "edge_count": 596,
   "generated_by": "dbrckk/repo-brain-v7-graph",
   "node_count": 263,
   "schema_version": 1

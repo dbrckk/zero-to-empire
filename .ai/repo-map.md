@@ -2442,6 +2442,57 @@ jobs:
           print('- No flags represent automatic semantic approval.')
           PY
 
+      - name: Build a separate coherent engineer role alternative with all six local vector actions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/sprites/build_character_candidate_bank.py \
+            --master art/production/master-asset-queue.json \
+            --archives /tmp/zte-review-archives \
+            --local-original art/incoming/chatgpt-original \
+            --engineer-role-coherent-review \
+            --output /tmp/zte-character-eng-role-review-current.zip \
+            --report /tmp/zte-character-eng-role-review-current.json
+          python tools/sprites/audit_character_bank_motion.py \
+            --bank /tmp/zte-character-eng-role-review-current.zip \
+            --output /tmp/zte-character-eng-role-review-motion-audit.json
+          python tools/sprites/build_character_mobile_motion_storyboard.py \
+            --bank /tmp/zte-character-eng-role-review-current.zip \
+            --audit /tmp/zte-character-eng-role-review-motion-audit.json \
+            --output /tmp/zte-character-eng-role-review-motion-storyboard.png
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          root='/tmp/'
+          canonical=json.load(open(root+'zte-character-bank-current.json'))
+          alternate=json.load(open(root+'zte-character-eng-role-review-current.json'))
+          baseline=json.load(open(root+'zte-character-bank-motion-audit.json'))
+          review=json.load(open(root+'zte-character-eng-role-review-motion-audit.json'))
+          expected={'CHR-ENG-'+action for action in ('IDLE','WALK','WORK','CARRY','REPAIR','CELEB')}
+          assert alternate['source_selection_profile']=='engineer-local-role-review'
+          assert set(alternate['local_original_preferred_ids'])==expected
+          assert alternate['candidate_count']==canonical['candidate_count']
+          assert alternate['strict_done']==canonical['strict_done']
+          assert alternate['automatic_semantic_approval'] is False
+          assert alternate['automatic_runtime_promotion'] is False
+          by_id={row['id']:row for row in review['assets']}
+          before={row['id']:row for row in baseline['assets']}
+          assert all(not by_id[key]['new_identity_flags'] for key in expected)
+          base_walk=before['CHR-ENG-WALK']['motion_metrics']['mean_frame_change']
+          local_walk=by_id['CHR-ENG-WALK']['motion_metrics']['mean_frame_change']
+          assert local_walk>=0.012 and local_walk>=base_walk*1.25, (
+              'Engineer local gait was not measurably better at 42px',base_walk,local_walk)
+          print('## Separate coherent engineer role (review only)')
+          print(f'- All **6 ENG actions** use one edited local vector character; other roles retain canonical sources')
+          print(f'- ENG WALK 42px mean frame change: **{base_walk:.5f} → {local_walk:.5f}**')
+          print('- ENG identity deviations in local candidate cohort: **0** (heuristic)')
+          for action in ('WORK','REPAIR'):
+              name='CHR-ENG-'+action
+              old=before[name]['motion_metrics']['mean_frame_change']
+              new=by_id[name]['motion_metrics']['mean_frame_change']
+              print(f'- ENG {action} motion: {old:.5f} → {new:.5f}; manual review still required')
+          print('- Canonical bank and runtime remain unchanged; strict DONE unchanged.')
+          PY
+
       - name: Produce safe alternative head and helmet atlases for artistic review
         shell: bash
         run: |
@@ -2519,6 +2570,10 @@ jobs:
             /tmp/zte-character-bank-role-consistency.png \
             /tmp/zte-character-bank-motion-storyboard.png \
             /tmp/zte-character-bank-mobile-review.html \
+            /tmp/zte-character-eng-role-review-current.zip \
+            /tmp/zte-character-eng-role-review-current.json \
+            /tmp/zte-character-eng-role-review-motion-audit.json \
+            /tmp/zte-character-eng-role-review-motion-storyboard.png \
             --repo "$GITHUB_REPOSITORY" --clobber
           sha256sum /tmp/zte-character-bank-current.zip >> "$GITHUB_STEP_SUMMARY"
           echo "CHARACTER_CANDIDATE_BANK_RELEASE=$TAG" >> "$GITHUB_STEP_SUMMARY"
@@ -2538,6 +2593,10 @@ jobs:
             /tmp/zte-character-bank-role-consistency.png
             /tmp/zte-character-bank-motion-storyboard.png
             /tmp/zte-character-bank-mobile-review.html
+            /tmp/zte-character-eng-role-review-current.zip
+            /tmp/zte-character-eng-role-review-current.json
+            /tmp/zte-character-eng-role-review-motion-audit.json
+            /tmp/zte-character-eng-role-review-motion-storyboard.png
           retention-days: 30
 ```
 
@@ -30716,6 +30775,28 @@ entry = report["bank_entries"][0]
 ⋮----
 def test_prefer_real_collected_candidate_to_local_original(self)
 ⋮----
+def complete_eng_original(self)
+⋮----
+original = self.authored_original()
+counts = {"IDLE": 6, "WORK": 10, "CARRY": 8,
+⋮----
+atlas = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
+folder = original / "src_svg" / "ENG" / action
+⋮----
+def test_explicit_engineer_cohort_creates_separate_six_action_review_bank(self)
+⋮----
+local = self.complete_eng_original()
+⋮----
+normal_path = self.root / "canonical.zip"
+normal = assemble(self.master, self.archives, normal_path,
+⋮----
+original_master = self.master.read_bytes()
+preferred = assemble(
+⋮----
+name = f"zte_chr_eng_{action.lower()}_final.png"
+⋮----
+def test_engineer_coherent_option_rejects_incomplete_role_or_missing_source(self)
+⋮----
 def test_local_manifest_claims_do_not_waive_technical_frame_QA(self)
 ⋮----
 def test_local_original_requires_all_editable_svg_frames(self)
@@ -32107,8 +32188,16 @@ target_total = data["target_total"]
 ⋮----
 sources = open_archives(archive_folder)
 originals = load_local_originals(local_original)
+⋮----
 strict_done = sum(x["strict_status"] == "DONE" for x in assets)
 review_targets = [
+⋮----
+# Do not compose a character from two incompatible visual identities.
+# The currently unfinished ENG role must be available as a complete
+# six-action set before its entire bank cohort can be replaced.
+actual_eng = {x["id"] for x in review_targets
+expected_eng = {"CHR-ENG-" + action for action in FRAME_COUNTS}
+⋮----
 remaining_noncharacters = [
 canonical_queue_produced = sum(
 included: list[tuple[str, bytes]] = []
@@ -32121,11 +32210,15 @@ run_id = int(asset.get("review_artifact_run_id") or 0)
 source = sources.get(run_id)
 source_details: dict
 ⋮----
+# Separate, explicitly named review bank only: never change the
+# canonical collector-first selection or the Android runtime.
+⋮----
+digest = hashlib.sha256(blob).hexdigest()
+source_warnings = []
+⋮----
 recorded = source["index"][name]
 ⋮----
 blob = container.read("candidates/" + name)
-⋮----
-digest = hashlib.sha256(blob).hexdigest()
 ⋮----
 source_details = {
 source_warnings = recorded.get("deferred_art_warnings") or []
@@ -32133,8 +32226,6 @@ source_warnings = recorded.get("deferred_art_warnings") or []
 # A real on-repo, authored 1024px/4-column/transparent source
 # is preferable to an uncollected async GPU job. It is clearly
 # identified as a local review candidate, not as Kaggle output.
-⋮----
-source_warnings = []
 ⋮----
 warnings = sorted(set(
 ⋮----
@@ -32147,7 +32238,7 @@ def main() -> int
 parser = argparse.ArgumentParser()
 ⋮----
 args = parser.parse_args()
-d = assemble(args.master, args.archives, args.output, args.report, args.local_original)
+d = assemble(args.master, args.archives, args.output, args.report,
 ```
 
 ## File: tools/sprites/build_character_identity_polish.py

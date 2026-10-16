@@ -1,14 +1,18 @@
 # CI status
 
-Summary: 7 success / 0 failure / 1 active
+Summary: 5 success / 1 failure / 2 active
 
-- Identity-locked WALK alternatives (review only): in_progress / pending (d2195a1a)
+- Assemble Character Candidate Bank: in_progress / pending (f3722aa3)
+- Asset Pipeline CI: in_progress / pending (f3722aa3)
+- Asset Pipeline CI: completed / success (717051e3)
+- Asset Pipeline CI: completed / failure (ab214cf7)
+- Identity-locked WALK alternatives (review only): completed / success (d2195a1a)
 - Identity-locked WALK alternatives (review only): completed / success (033f7471)
 - Assemble Character Candidate Bank: completed / success (ae16ccc9)
 - Archive Character Candidates: completed / success (ae16ccc9)
-- Kaggle Async Character Collector: completed / success (ae16ccc9)
-- Assemble Character Candidate Bank: completed / success (8071b5f3)
-- ChatGPT Original Character Candidates: completed / success (1d62b7e9)
-- Asset Pipeline CI: completed / success (7ec44a24)
+
+## Latest failed run structure
+- Job: validate
+  - Failed step: Run unified asset pipeline and visual-semantic gate checks
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

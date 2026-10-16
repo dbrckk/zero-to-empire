@@ -5,450 +5,246 @@
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
   "symbols": {
-    "sample_premultiplied": {
+    "load_local_originals": {
       "definition": {
-        "file": "tools/sprites/identity_locked_walk_candidate.py",
-        "line": 27,
+        "file": "tools/sprites/build_character_candidate_bank.py",
+        "line": 33,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/identity_locked_walk_candidate.py",
-          "line": 27,
-          "preview": "def sample_premultiplied(source:np.ndarray, src_x:np.ndarray,",
+          "file": "tools/sprites/build_character_bank_mobile_review.py",
+          "line": 20,
+          "preview": "from build_character_candidate_bank import load_local_originals, validated_local_candidate",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_bank_mobile_review.py",
+          "line": 182,
+          "preview": "originals = load_local_originals(local_path)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_candidate_bank.py",
+          "line": 33,
+          "preview": "def load_local_originals(source: Path | None) -> dict[str, dict]:",
           "definition_candidate": true
         },
         {
-          "file": "tools/sprites/identity_locked_walk_candidate.py",
-          "line": 68,
-          "preview": "rgba=sample_premultiplied(array,xx-lateral-arms,",
+          "file": "tools/sprites/build_character_candidate_bank.py",
+          "line": 152,
+          "preview": "originals = load_local_originals(local_original)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "validated_local_candidate": {
+      "definition": {
+        "file": "tools/sprites/build_character_candidate_bank.py",
+        "line": 67,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/assets/test_candidate_archive_workflow.py",
+          "line": 47,
+          "preview": "self.assertIn(\"validated_local_candidate\", source)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_candidate_archive_workflow.py",
+          "line": 78,
+          "preview": "self.assertIn(\"validated_local_candidate\", source)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_bank_mobile_review.py",
+          "line": 20,
+          "preview": "from build_character_candidate_bank import load_local_originals, validated_local_candidate",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_bank_mobile_review.py",
+          "line": 239,
+          "preview": "original, _ = validated_local_candidate(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_candidate_bank.py",
+          "line": 67,
+          "preview": "def validated_local_candidate(asset: dict, record: dict) -> tuple[bytes, dict]:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/build_character_candidate_bank.py",
+          "line": 191,
+          "preview": "blob, source_details = validated_local_candidate(asset, originals[asset_id])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_candidate_bank.py",
+          "line": 218,
+          "preview": "blob, source_details = validated_local_candidate(asset, originals[asset_id])",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 7
+    },
+    "open_archives": {
+      "definition": {
+        "file": "tools/sprites/build_character_candidate_bank.py",
+        "line": 108,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/build_character_candidate_bank.py",
+          "line": 108,
+          "preview": "def open_archives(folder: Path) -> dict[int, dict]:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/build_character_candidate_bank.py",
+          "line": 151,
+          "preview": "sources = open_archives(archive_folder)",
           "definition_candidate": false
         }
       ],
       "occurrence_count": 2
     },
-    "warp": {
+    "assemble": {
       "definition": {
-        "file": "tools/sprites/identity_locked_walk_candidate.py",
-        "line": 45,
+        "file": "tools/sprites/build_character_candidate_bank.py",
+        "line": 140,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/character_idle_breathing_fallback.py",
-          "line": 43,
-          "preview": "# The geometric warp uses fractional pixels; torso-only compositing",
+          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Evolution.kt",
+          "line": 221,
+          "preview": "// Expansion tiers assemble like powered machinery: a core ignition, segmented",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/identity_locked_walk_candidate.py",
-          "line": 45,
-          "preview": "def warp(anchor:Image.Image,t:float,amplitude:float=14)->Image.Image:",
+          "file": "tools/sprites/build_character_candidate_bank.py",
+          "line": 140,
+          "preview": "def assemble(master: Path, archive_folder: Path, output: Path,",
           "definition_candidate": true
         },
         {
-          "file": "tools/sprites/identity_locked_walk_candidate.py",
-          "line": 93,
-          "preview": "raw_frames=[warp(anchor,n/N_FRAMES,amplitude) for n in range(N_FRAMES)]",
+          "file": "tools/sprites/build_character_candidate_bank.py",
+          "line": 304,
+          "preview": "d = assemble(args.master, args.archives, args.output, args.report,",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/test_identity_locked_walk_candidate.py",
-          "line": 9,
-          "preview": "N_FRAMES,ROLES,source_frame,warp,render,",
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 16,
+          "preview": "from build_character_candidate_bank import assemble",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/test_identity_locked_walk_candidate.py",
-          "line": 54,
-          "preview": "one=warp(first,t)",
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 75,
+          "preview": "report = assemble(self.master, self.archives, self.output)",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/test_identity_locked_walk_candidate.py",
-          "line": 55,
-          "preview": "two=warp(first,t)",
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 92,
+          "preview": "report = assemble(self.master, self.archives, self.output)",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/test_identity_locked_walk_candidate.py",
-          "line": 58,
-          "preview": "self.assertEqual(warp(first,0).tobytes(),warp(first,1).tobytes())",
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 101,
+          "preview": "result = assemble(self.master, self.archives, self.output)",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/test_identity_locked_walk_candidate.py",
-          "line": 62,
-          "preview": "with self.assertRaises(ValueError):warp(Image.new('RGB',(256,256)),.1)",
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 107,
+          "preview": "report = assemble(self.master, self.archives, self.output)",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/test_identity_locked_walk_candidate.py",
-          "line": 63,
-          "preview": "with self.assertRaises(ValueError):warp(Image.new('RGBA',(128,128)),.1)",
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 115,
+          "preview": "assemble(self.master, self.archives, self.output)",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/test_identity_locked_walk_candidate.py",
-          "line": 64,
-          "preview": "with self.assertRaises(ValueError):warp(Image.new('RGBA',(256,256)),float('nan'))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_identity_locked_walk_candidate.py",
-          "line": 65,
-          "preview": "with self.assertRaises(ValueError):warp(Image.new('RGBA',(256,256)),.1,amplitude=40)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 11
-    },
-    "source_frame": {
-      "definition": {
-        "file": "tools/sprites/identity_locked_walk_candidate.py",
-        "line": 73,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/identity_locked_walk_candidate.py",
-          "line": 73,
-          "preview": "def source_frame(path:Path,source_index:int)->Image.Image:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/identity_locked_walk_candidate.py",
-          "line": 91,
-          "preview": "original=source_frame(source,ROLES[role])",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_identity_locked_walk_candidate.py",
-          "line": 9,
-          "preview": "N_FRAMES,ROLES,source_frame,warp,render,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_identity_locked_walk_candidate.py",
-          "line": 41,
-          "preview": "first=source_frame(source,ROLES[role])",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_identity_locked_walk_candidate.py",
-          "line": 51,
-          "preview": "first=source_frame(source,ROLES['OP'])",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 5
-    },
-    "render": {
-      "definition": {
-        "file": "tools/sprites/identity_locked_walk_candidate.py",
-        "line": 87,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/AdaptiveMusic.kt",
-          "line": 46,
-          "preview": "// The render loop sleeps while focus is absent, so no additional audio is queued.",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/CanonicalCharacterRaster.kt",
-          "line": 7,
-          "preview": "* 1024px canvas). Runtime callers must render one frame at a time rather than",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
-          "line": 108,
-          "preview": "// Debug QA can isolate one profession and render any of its six actions",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/audit_character_candidates.py",
-          "line": 2,
-          "preview": "\"\"\"Audit actual canonical character sprite sheets and render contact evidence.",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/autonomous_walk.py",
-          "line": 175,
-          "preview": "def render(poses: list[dict[str,Any]], source_html: Path, palette: str) -> list[Image.Image]:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/autonomous_walk.py",
-          "line": 216,
-          "preview": "frames=render(frames_list,html,settings.palette)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_bank_mobile_review.py",
-          "line": 130,
-          "preview": "chosen.onload=render;original.onload=render;chosen.src=row.selectedAtlas;original.src=row.originalAtlas;",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_bank_mobile_review.py",
-          "line": 145,
-          "preview": "render()}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_bank_mobile_review.py",
-          "line": 151,
-          "preview": "function render(){const row=byId[current];if(!row)return;",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_bank_mobile_review.py",
-          "line": 157,
-          "preview": "function tick(ts){if(!paused&&document.visibilityState==='visible'&&ts-last>1000/fps){last=ts;frame++;render()}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_bank_mobile_review.py",
-          "line": 160,
-          "preview": "$('prev').onclick=()=>{paused=true;$('toggle').textContent='Lecture';frame--;render()};",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_bank_mobile_review.py",
-          "line": 161,
-          "preview": "$('next').onclick=()=>{paused=true;$('toggle').textContent='Lecture';frame++;render()};",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_bank_mobile_review.py",
-          "line": 162,
-          "preview": "$('scrub').oninput=e=>{paused=true;$('toggle').textContent='Lecture';frame=Number(e.target.value);render()};",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_original_offline_review.py",
-          "line": 64,
-          "preview": "function render(){const item=current();frame=0;still=false;atlas=new Image();atlas.onload=paint;atlas.src=item.atlas;",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_original_offline_review.py",
-          "line": 68,
-          "preview": "controls('roles',roles,r=>{role=r;render()},role);controls('actions',actions,a=>{action=a;render()},action);mode()}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_original_offline_review.py",
-          "line": 71,
-          "preview": "render()})();</script></body></html>'''",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/character_identity_polish_mobile_review.py",
-          "line": 94,
-          "preview": "const row=byId[id];before=new Image();after=new Image();before.onload=render;after.onload=render;",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/character_identity_polish_mobile_review.py",
-          "line": 105,
-          "preview": "render()}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/character_identity_polish_mobile_review.py",
-          "line": 111,
-          "preview": "function render(){const row=byId[current];if(!row)return;",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/character_identity_polish_mobile_review.py",
-          "line": 117,
-          "preview": "function tick(now){if(!paused&&document.visibilityState==='visible'&&now-last>1000/fps){last=now;frame++;render()}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/character_identity_polish_mobile_review.py",
-          "line": 121,
-          "preview": "$('previous').onclick=()=>{pause();frame--;render()};",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/character_identity_polish_mobile_review.py",
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
           "line": 122,
-          "preview": "$('next').onclick=()=>{pause();frame++;render()};",
+          "preview": "assemble(self.master, self.archives, self.output)",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/character_identity_polish_mobile_review.py",
-          "line": 124,
-          "preview": "$('scrub').oninput=event=>{pause();frame=Number(event.target.value);render()};",
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 168,
+          "preview": "report = assemble(self.master, self.archives, self.output, local_original=local)",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/character_review_matrix.py",
-          "line": 50,
-          "preview": "# A standalone TECH review render is not the canonical Kaggle asset.",
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 188,
+          "preview": "report = assemble(self.master, self.archives, self.output, local_original=local)",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/identity_locked_walk_candidate.py",
-          "line": 87,
-          "preview": "def render(source:Path,role:str,out:Path,amplitude:float=14)->dict:",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/identity_locked_walk_candidate.py",
-          "line": 141,
-          "preview": "print(json.dumps(render(path,args.role,args.out),indent=2))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_building_family_factory.py",
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
           "line": 233,
-          "preview": "print(f\"KAGGLE_REJECTED={i['id']} stage=render reason={e}\",flush=True);failed=True;rejected+=1;break",
+          "preview": "normal = assemble(self.master, self.archives, normal_path,",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
-          "line": 256,
-          "preview": "print(f\"KAGGLE_REJECTED={i['id']} stage=render reason={type(e).__name__}: {e}\",flush=True);failed=True;rejected+=1;break",
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 239,
+          "preview": "preferred = assemble(",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
-          "line": 89,
-          "preview": "isolation = \"Studio cutout render on a perfectly flat uniform neutral medium-gray background touching every image edge. Background only, no visible floor. No platform card, terrain",
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 265,
+          "preview": "assemble(self.master, self.archives, self.output,",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
-          "line": 315,
-          "preview": "print(f\"KAGGLE_REJECTED={i['id']} stage=render reason={e}\",flush=True); failed=True; rejected+=1; break",
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 269,
+          "preview": "assemble(self.master, self.archives, self.output,",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/kaggle_building_family_factory_v14.py",
-          "line": 130,
-          "preview": "def render(i,prev,pe,ppe,base,img,seed):",
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 278,
+          "preview": "assemble(self.master, self.archives, self.output, local_original=local)",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/kaggle_building_family_factory_v14.py",
-          "line": 157,
-          "preview": "try:prev,final,cov=render(i,prev,pe,ppe,base,img,args.seed+fam*1000+i['tier']*97);recs.append((i,final,cov))",
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 284,
+          "preview": "assemble(self.master, self.archives, self.output, local_original=local)",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/kaggle_building_family_factory_v14.py",
-          "line": 158,
-          "preview": "except Exception as e:print(f\"KAGGLE_REJECTED={i['id']} stage=render reason={e}\",flush=True);failed=True;break",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_building_family_factory_v15.py",
-          "line": 87,
-          "preview": "raw,final,cov=v14.render(i,prev,pe,ppe,base,img,seed+attempt*23003)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_building_family_factory_v15.py",
-          "line": 117,
-          "preview": "raw,final,cov=v14.render(t0,None,pe0,ppe0,base,img,args.seed+fam*10000+a*15401)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_building_family_factory_v16.py",
-          "line": 210,
-          "preview": "ORIGINAL_RENDER = v14.render",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_building_family_factory_v16.py",
-          "line": 330,
-          "preview": "v14.render = family_aware_render",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_building_family_factory_v16_10.py",
-          "line": 71,
-          "preview": "'graphite steel alloys, upper-left key light, cool fill, restrained amber/cyan emissive accents, shadowless catalog render, perfectly flat solid neutral gray background, no gradien",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_building_family_factory_v17.py",
-          "line": 210,
-          "preview": "ORIGINAL_RENDER = v14.render",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_building_family_factory_v17.py",
-          "line": 330,
-          "preview": "v14.render = family_aware_render",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/procedural_terrain_factory.py",
-          "line": 79,
-          "preview": "def render(i: int) -> Image.Image:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/procedural_terrain_factory.py",
-          "line": 167,
-          "preview": "im=render(i); validate(im,i)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 61,
-          "preview": "def render():",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
-          "line": 186,
-          "preview": "im=render()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_identity_locked_walk_candidate.py",
-          "line": 9,
-          "preview": "N_FRAMES,ROLES,source_frame,warp,render,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_identity_locked_walk_candidate.py",
-          "line": 23,
-          "preview": "report=render(source,role,Path(tmp))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_identity_locked_walk_candidate.py",
-          "line": 66,
-          "preview": "with self.assertRaises(ValueError):render(Path('unused'),'ALIEN',Path('unused'))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_rigged_tech_walk_v2.py",
-          "line": 112,
-          "preview": "out=Path(tmp)/'render'",
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 295,
+          "preview": "assemble(self.master, self.archives, self.output, local_original=local)",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 48
+      "occurrence_count": 19
     },
     "main": {
       "definition": {
-        "file": "tools/sprites/identity_locked_walk_candidate.py",
-        "line": 134,
+        "file": "tools/sprites/build_character_candidate_bank.py",
+        "line": 293,
         "kind": "function",
         "language": "python"
       },
@@ -941,13 +737,13 @@
         },
         {
           "file": "tools/sprites/build_character_candidate_bank.py",
-          "line": 267,
+          "line": 293,
           "preview": "def main() -> int:",
-          "definition_candidate": false
+          "definition_candidate": true
         },
         {
           "file": "tools/sprites/build_character_candidate_bank.py",
-          "line": 290,
+          "line": 321,
           "preview": "raise SystemExit(main())",
           "definition_candidate": false
         },
@@ -1141,7 +937,7 @@
           "file": "tools/sprites/identity_locked_walk_candidate.py",
           "line": 134,
           "preview": "def main():",
-          "definition_candidate": true
+          "definition_candidate": false
         },
         {
           "file": "tools/sprites/identity_locked_walk_candidate.py",
@@ -1176,69 +972,1913 @@
       ],
       "occurrence_count": 120
     },
-    "IdentityLockedWalkTests": {
+    "CharacterBankTests": {
       "definition": {
-        "file": "tools/sprites/test_identity_locked_walk_candidate.py",
-        "line": 15,
+        "file": "tools/sprites/tests/test_character_candidate_bank.py",
+        "line": 19,
         "kind": "class",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/test_identity_locked_walk_candidate.py",
-          "line": 15,
-          "preview": "class IdentityLockedWalkTests(unittest.TestCase):",
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 19,
+          "preview": "class CharacterBankTests(unittest.TestCase):",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_four_real_assets_are_not_overwritten_and_only_staged": {
+    "setUp": {
       "definition": {
-        "file": "tools/sprites/test_identity_locked_walk_candidate.py",
-        "line": 16,
+        "file": "tools/sprites/tests/test_character_candidate_bank.py",
+        "line": 20,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/test_identity_locked_walk_candidate.py",
+          "file": "tools/sprites/test_character_rejection_evidence.py",
+          "line": 11,
+          "preview": "def setUp(self):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_package_tech_actions_runtime.py",
+          "line": 19,
+          "preview": "def setUp(self):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_temporal_sprite_audit.py",
+          "line": 13,
+          "preview": "def setUp(self):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_archive_character_candidates.py",
           "line": 16,
-          "preview": "def test_four_real_assets_are_not_overwritten_and_only_staged(self):",
+          "preview": "def setUp(self):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
+          "line": 20,
+          "preview": "def setUp(self):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
+          "line": 20,
+          "preview": "def setUp(self):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 20,
+          "preview": "def setUp(self):",
           "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 21,
+          "preview": "def setUp(self):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_identity_polish_mobile_review.py",
+          "line": 12,
+          "preview": "def setUp(self):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
+          "line": 19,
+          "preview": "def setUp(self):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
+          "line": 21,
+          "preview": "RoleConsistencySheetTests.setUp(self)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_provisional_idle_seed.py",
+          "line": 20,
+          "preview": "def setUp(self):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+          "line": 20,
+          "preview": "def setUp(self):",
+          "definition_candidate": false
         }
       ],
-      "occurrence_count": 1
+      "occurrence_count": 13
     },
-    "test_cycle_deterministic_and_source_identity_immutable": {
+    "save_master": {
       "definition": {
-        "file": "tools/sprites/test_identity_locked_walk_candidate.py",
-        "line": 49,
+        "file": "tools/sprites/tests/test_character_candidate_bank.py",
+        "line": 43,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/test_identity_locked_walk_candidate.py",
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 41,
+          "preview": "self.save_master()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 43,
+          "preview": "def save_master(self):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 100,
+          "preview": "self.save_master()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 166,
+          "preview": "self.save_master()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 230,
+          "preview": "self.save_master()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 5
+    },
+    "png": {
+      "definition": {
+        "file": "tools/sprites/tests/test_character_candidate_bank.py",
+        "line": 48,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "kaggle/github_mass_factory.py",
+          "line": 170,
+          "preview": "incoming=REPO/'art/incoming/final-sprites';incoming.mkdir(parents=True,exist_ok=True);before={p.name:digest(p) for p in incoming.glob('*_final.png') if p.is_file()};q=backlog();pri",
+          "definition_candidate": false
+        },
+        {
+          "file": "kaggle/github_mass_factory.py",
+          "line": 186,
+          "preview": "def current_fresh():return [p for p in sorted(incoming.glob('*_final.png')) if p.is_file() and (p.name not in before or before[p.name]!=digest(p))]",
+          "definition_candidate": false
+        },
+        {
+          "file": "kaggle/github_mass_factory.py",
+          "line": 221,
+          "preview": "qa=OUT/'batch-contact-sheet.png';report=OUT/'batch-qa-report.json';subprocess.run(['python','tools/sprites/build_sprite_contact_sheet.py','--output',str(qa),'--report',str(report),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/audit_character_runtime.py",
+          "line": 33,
+          "preview": "if path.is_file() and path.suffix.lower() in {\".png\", \".webp\", \".jpg\", \".jpeg\", \".gif\", \".xml\"}:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/audit_character_runtime.py",
           "line": 49,
-          "preview": "def test_cycle_deterministic_and_source_identity_immutable(self):",
-          "definition_candidate": true
+          "preview": "missing_files = sorted(name for name in expected if not (DRAWABLES / f\"{name}.webp\").is_file() and not (DRAWABLES / f\"{name}.png\").is_file())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/character_preview_pixel_audit.py",
+          "line": 32,
+          "preview": "shot = folder / f\"tech-stage-{action}{suffix}.png\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/pipeline.py",
+          "line": 53,
+          "preview": "image_path = output_dir / \"candidate.png\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/qa_report.py",
+          "line": 12,
+          "preview": "image_path = candidate_dir / \"candidate.png\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/qa_report.py",
+          "line": 16,
+          "preview": "raise FileNotFoundError(f\"missing candidate.png: {image_path}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/qa_report.py",
+          "line": 28,
+          "preview": "sheet_path = candidate_dir / \"contact-sheet.png\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_pipeline.py",
+          "line": 30,
+          "preview": "\"app/src/main/res/drawable-nodpi/prop_test.png\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_pipeline.py",
+          "line": 44,
+          "preview": "self.assertEqual(result.image_path.name, \"candidate.png\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_pipeline.py",
+          "line": 52,
+          "preview": "asset = ManifestAsset(\"PRP-DONE\", \"Done\", \"done prop\", \"drawable/done.png\", \"DONE\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_qa_report.py",
+          "line": 19,
+          "preview": "image.save(candidate_dir / \"candidate.png\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_qa_report.py",
+          "line": 40,
+          "preview": "self.assertEqual(payload[\"candidate_file\"], \"candidate.png\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_qa_report.py",
+          "line": 52,
+          "preview": "with self.assertRaisesRegex(FileNotFoundError, \"candidate.png\"):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 31,
+          "preview": "self.assertIn(\"candidate.png\", text)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 34,
+          "preview": "self.assertIn(\"contact-sheet.png\", text)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 164,
+          "preview": "self.assertIn(\"candidate_dir.glob('*_final.png')\", text)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/process_final_assets.py",
+          "line": 70,
+          "preview": "preview = PROCESSED / f'{asset_id}.png'",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/process_final_assets.py",
+          "line": 109,
+          "preview": "sheet.save(PROCESSED / f'{asset_id}.png', 'PNG', optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/process_final_assets.py",
+          "line": 132,
+          "preview": "if not target.startswith('zte_') or not target.endswith(('_final.webp', '_final.png')):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/animation_batch_planner.py",
+          "line": 88,
+          "preview": "candidate = root / INCOMING.relative_to(ROOT) / (stem + \".png\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/archive_character_candidates.py",
+          "line": 17,
+          "preview": "NAME = re.compile(r\"zte_chr_(?:op|tech|log|eng)_(?:idle|walk|work|carry|repair|celeb)_final\\.png\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/archive_character_candidates.py",
+          "line": 36,
+          "preview": "if list(source.rglob(\"*_final.png\")):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_queue_utils.py",
+          "line": 66,
+          "preview": "runtime = f\"app/src/main/res/drawable-nodpi/zte_business_08_t{tier}_final.png\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_bank_motion.py",
+          "line": 141,
+          "preview": "filename = \"zte_chr_\" + parts[1].lower() + \"_\" + parts[2].lower() + \"_final.png\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 141,
+          "preview": "stem=\"zte_chr_\"+asset_id[4:].lower().replace(\"-\",\"_\")+\"_final.png\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 151,
+          "preview": "contact(rows,args.out/\"canonical-character-contact.png\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_chatgpt_originals.py",
+          "line": 79,
+          "preview": "name=f\"zte_chr_{role.lower()}_{action.lower()}_final.png\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_chatgpt_originals.py",
+          "line": 87,
+          "preview": "idle_path=candidates/f\"zte_chr_{role.lower()}_idle_final.png\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_chatgpt_originals.py",
+          "line": 98,
+          "preview": "with Image.open(candidates/f\"zte_chr_{role.lower()}_{action.lower()}_final.png\") as image:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/autonomous_walk.py",
+          "line": 190,
+          "preview": "scene(c.getContext('2d'),p,{background:false,handles:false});return c.toDataURL('image/png')}''',p)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/autonomous_walk.py",
+          "line": 235,
+          "preview": "out=output/'frames'/f'{settings.asset_id}-{i:02d}.png'",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/autonomous_walk.py",
+          "line": 239,
+          "preview": "atlas.save(output/'atlas.png', optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_bank_mobile_review.py",
+          "line": 22,
+          "preview": "PNG_NAME = re.compile(r\"^zte_chr_(op|log|eng|tech)_(idle|walk|work|carry|repair|celeb)_final\\.png$\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_bank_mobile_review.py",
+          "line": 244,
+          "preview": "\"selectedAtlas\": \"data:image/png;base64,\" + base64.b64encode(source).decode(\"ascii\"),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_bank_mobile_review.py",
+          "line": 245,
+          "preview": "\"originalAtlas\": \"data:image/png;base64,\" + base64.b64encode(original).decode(\"ascii\"),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_candidate_bank.py",
+          "line": 20,
+          "preview": "ASSET_NAME = re.compile(r\"^zte_chr_(?:op|tech|log|eng)_(?:idle|walk|work|carry|repair|celeb)_final\\.png$\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_candidate_bank.py",
+          "line": 74,
+          "preview": "name = Path(asset[\"runtime\"]).with_suffix(\".png\").name",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_candidate_bank.py",
+          "line": 185,
+          "preview": "name = Path(asset[\"runtime\"]).with_suffix(\".png\").name",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 133,
+          "preview": "fname = \"zte_chr_\" + parsed.group(1).lower() + \"_\" + parsed.group(2).lower() + \"_final.png\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 258,
+          "preview": "filename = asset_id.lower().replace(\"-\", \"_\") + \"_head-polish.png\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_mobile_motion_storyboard.py",
+          "line": 65,
+          "preview": "name = f\"candidates/zte_chr_{role.lower()}_{action.lower()}_final.png\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 16,
+          "preview": "PATTERN = re.compile(r\"^zte_chr_(op|tech|log|eng)_(idle|walk|work|carry|repair|celeb)_final\\.png$\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 354,
+          "preview": "item = create_panel(role, assets, args.output_dir / f\"review-frames-{role}.png\", qa)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 355,
+          "preview": "create_head_panel(role, assets, args.output_dir / f\"review-heads-{role}.png\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 356,
+          "preview": "item[\"head_detail_file\"] = f\"review-heads-{role}.png\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 360,
+          "preview": "filename = f\"review-mobile-{role}-{action}.png\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_role_contact_sheet.py",
+          "line": 78,
+          "preview": "expected_name = f\"zte_chr_{match.group(1).lower()}_{match.group(2).lower()}_final.png\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_original_offline_review.py",
+          "line": 83,
+          "preview": "name=f'zte_chr_{role.lower()}_{action.lower()}_final.png'",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_original_offline_review.py",
+          "line": 94,
+          "preview": "'atlas':'data:image/png;base64,'+base64.b64encode(src.read_bytes()).decode(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_sprite_contact_sheet.py",
+          "line": 20,
+          "preview": "DEFAULT_OUT = ROOT / \"art/production/batch-contact-sheet.png\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_sprite_contact_sheet.py",
+          "line": 22,
+          "preview": "FX_RE = re.compile(r\"^zte_fx_(?:0[0-9]|1[0-7])_final\\.png$\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_sprite_contact_sheet.py",
+          "line": 23,
+          "preview": "CHR_RE = re.compile(r\"^zte_chr_(?:op|tech|log|eng)_(idle|walk|work|carry|repair|celeb)_final\\.png$\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_sprite_contact_sheet.py",
+          "line": 157,
+          "preview": "ap.add_argument(\"--pattern\", default=\"*_final.png\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_tech_review_board.py",
+          "line": 249,
+          "preview": "board(rec,args.output/'tech-review-true-source-board.png')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_tech_review_board.py",
+          "line": 250,
+          "preview": "lower_limb_closeups(rec,args.output/'tech-review-footfall-closeups.png')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_approved_idle_fallback.py",
+          "line": 35,
+          "preview": "filename = sprite_dir / f\"zte_chr_{role.lower()}_idle_final.png\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_identity_polish_mobile_review.py",
+          "line": 167,
+          "preview": "\"originalAtlas\": \"data:image/png;base64,\" +",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_identity_polish_mobile_review.py",
+          "line": 169,
+          "preview": "\"polishedAtlas\": \"data:image/png;base64,\" +",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_provisional_idle_seed.py",
+          "line": 22,
+          "preview": "PNG_NAME = \"zte_chr_eng_idle_final.png\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_rejection_evidence.py",
+          "line": 35,
+          "preview": "image_path = root / f\"{stem}_rejected_review_only.png\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/colab_mass_factory.py",
+          "line": 112,
+          "preview": "before = {p.name: digest(p) for p in incoming.glob('*_final.png') if p.is_file()}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/colab_mass_factory.py",
+          "line": 140,
+          "preview": "p for p in sorted(incoming.glob('*_final.png'))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/colab_mass_factory.py",
+          "line": 147,
+          "preview": "qa = OUT / 'batch-contact-sheet.png'",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/export_tech_canonical_review.py",
+          "line": 84,
+          "preview": "path = folder / \"frames\" / f\"CHR-TECH-{action}-{index:02d}.png\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/export_tech_canonical_review.py",
+          "line": 103,
+          "preview": "png = output / (stem + \".png\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/export_tech_canonical_review.py",
+          "line": 104,
+          "preview": "atlas.save(png, optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/export_tech_canonical_review.py",
+          "line": 105,
+          "preview": "technical = inspect(png, f\"CHR-TECH-{action}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/export_tech_canonical_review.py",
+          "line": 107,
+          "preview": "png.unlink(missing_ok=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/export_tech_canonical_review.py",
+          "line": 116,
+          "preview": "contact.save(output / (stem + \"-contact.png\"), optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/export_tech_canonical_review.py",
+          "line": 128,
+          "preview": "\"staged_png\": png.name,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/export_tech_canonical_review.py",
+          "line": 129,
+          "preview": "\"staged_sha256\": digest(png),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_public_flux_factory.py",
+          "line": 107,
+          "preview": "out=INCOMING/f'{stem}.png'",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_sprite_factory.py",
+          "line": 79,
+          "preview": "if suffix not in {\".png\", \".jpg\", \".jpeg\", \".webp\"}:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_sprite_factory.py",
+          "line": 178,
+          "preview": "\"FX-00\": (\"AAA mobile game VFX asset, one single centered warm welding spark burst, bright white-yellow core with short amber orange metal sparks radiating outward, crisp readable ",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_sprite_factory.py",
+          "line": 179,
+          "preview": "\"FX-01\": (\"AAA mobile game VFX asset, one single centered small furnace flame, compact hot orange yellow flame with white-hot center and subtle red edge, crisp readable silhouette ",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_sprite_factory.py",
+          "line": 180,
+          "preview": "\"FX-02\": (\"AAA mobile game VFX asset, one single centered large industrial furnace plasma flame, intense white-hot core with orange amber outer flame and slight cyan plasma accent,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_sprite_factory.py",
+          "line": 181,
+          "preview": "\"FX-03\": (\"AAA mobile game VFX asset, one single centered industrial smoke puff, compact medium gray charcoal vapor cloud expanding upward, soft turbulent edges with readable silho",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_sprite_factory.py",
+          "line": 182,
+          "preview": "\"FX-04\": (\"AAA mobile game VFX asset, one single centered industrial steam vent plume, compact clean white silver cool-gray pressurized steam jet rising upward, soft turbulent vapo",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_sprite_factory.py",
+          "line": 183,
+          "preview": "\"FX-05\": (\"AAA mobile game VFX asset, one single centered cyan energy pulse, compact circular electric cyan blue plasma ring with a bright white-cyan core, crisp readable silhouett",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_sprite_factory.py",
+          "line": 184,
+          "preview": "\"FX-06\": (\"AAA mobile game VFX asset, one single centered warm energy pulse, compact circular amber gold orange plasma ring with a bright white-gold core, crisp readable silhouette",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_sprite_factory.py",
+          "line": 185,
+          "preview": "\"FX-07\": (\"AAA mobile game VFX asset, one single centered construction dust and debris burst, compact warm tan ochre dust cloud with a few small bright stone and metal fragments, e",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_static_manifest_factory.py",
+          "line": 149,
+          "preview": "out=INCOMING/(Path(runtime).stem+\".png\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/identity_locked_walk_candidate.py",
+          "line": 107,
+          "preview": "dest=out/f\"CHR-{role}-WALK-identity-locked-REVIEW.png\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/identity_locked_walk_candidate.py",
+          "line": 112,
+          "preview": "grid.save(out/f\"CHR-{role}-WALK-contact.png\",optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/identity_locked_walk_candidate.py",
+          "line": 140,
+          "preview": "path=args.source or Path(\"art/incoming/final-sprites\")/f\"zte_chr_{args.role.lower()}_walk_final.png\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory.py",
+          "line": 240,
+          "preview": "p=INCOMING/f\"{i['stem']}.png\";final.save(p,'PNG',optimize=True);accepted.append(i['id']);print(f\"KAGGLE_VALIDATED={p.relative_to(ROOT)} coverage={cov:.1%} {why}\",flush=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 264,
+          "preview": "p=INCOMING/f\"{i['stem']}.png\";final.save(p,'PNG',optimize=True);accepted.append(i['id'])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
+          "line": 323,
+          "preview": "p=INCOMING/f\"{i['stem']}.png\"; final.save(p,'PNG',optimize=True); accepted.append(i['id'])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v14.py",
+          "line": 166,
+          "preview": "p=INCOMING/f\"{i['stem']}.png\";final.save(p,'PNG',optimize=True);accepted.append(i['id']);print(f\"KAGGLE_VALIDATED={p.relative_to(ROOT)} coverage={cov:.1%} {why}\",flush=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v15.py",
+          "line": 141,
+          "preview": "p=v14.INCOMING/f\"{i['stem']}.png\";final.save(p,'PNG',optimize=True);accepted.append(i['id']);print(f'KAGGLE_VALIDATED={p.relative_to(v14.ROOT)} coverage={cov:.1%} selected_branch={",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 729,
+          "preview": "dst=INCOMING/f\"{item['stem']}.png\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 906,
+          "preview": "p=INCOMING/f\"{i['stem']}.png\";sheet.save(p,'PNG',optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_fx_sheet_factory_v1.py",
+          "line": 128,
+          "preview": "sheet,m,attempt=accepted; p=INCOMING/f\"{item['stem']}.png\"; sheet.save(p,'PNG',optimize=True); rep['accepted']+=1;rep['items'].append({'id':item['id'],'accepted':True,'attempt':att",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_sprite_factory.py",
+          "line": 165,
+          "preview": "image=dec.image_processor.postprocess(tensor)[0];final,cov=finish(image,item);out=INCOMING/f\"{item['stem']}.png\";final.save(out,'PNG',optimize=True);ok+=1;print(f'KAGGLE_VALIDATED=",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/lightning_studio_factory.py",
+          "line": 112,
+          "preview": "before = {p.name: digest(p) for p in INCOMING.glob(\"*_final.png\") if p.is_file()}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/lightning_studio_factory.py",
+          "line": 120,
+          "preview": "p for p in sorted(INCOMING.glob(\"*_final.png\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/lightning_studio_factory.py",
+          "line": 127,
+          "preview": "qa = OUT / \"batch-contact-sheet.png\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/multi_provider_static_manifest_factory.py",
+          "line": 111,
+          "preview": "out = factory.INCOMING / (Path(runtime).stem + \".png\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_chatgpt_originals.py",
+          "line": 37,
+          "preview": "name=f\"zte_chr_{role.lower()}_{action.lower()}_final.png\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_chatgpt_originals.py",
+          "line": 65,
+          "preview": "\"original-review-contact-sheet.png\"):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 123,
+          "preview": "frames=sorted((folder/'frames').glob('*.png'))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 124,
+          "preview": "ensure(len(frames)==count and all(f.name==f'{asset}-{i:02d}.png' for i,f in enumerate(frames)),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 352,
+          "preview": "path=folder/f'{action.lower()}-{size}.png'",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 358,
+          "preview": "shadow_path=folder/f'{action.lower()}-shadow-{size}.png'",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 379,
+          "preview": "focus_path=folder/f'{action.lower()}-focused-{size}.png'",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 381,
+          "preview": "shadow_path=folder/f'{action.lower()}-focused-shadow-{size}.png'",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 416,
+          "preview": "contact96.save(output/'review-all-actions-96.png',optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 417,
+          "preview": "contact_focus.save(output/'review-focused-all-actions-96.png',optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/plan_sprite_batches.py",
+          "line": 47,
+          "preview": "candidate = INCOMING / f\"{stem}.png\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_batch.py",
+          "line": 109,
+          "preview": "contact=PROD/f'pollinations-{aid.lower()}-contact.png'",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_batch.py",
+          "line": 148,
+          "preview": "contact=PROD/f'pollinations-{aid.lower()}-contact.png'",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_factory.py",
+          "line": 43,
+          "preview": "tmp=Path(f'/tmp/pollinations-board-{int(seed)}-{width}x{height}.png')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_factory.py",
+          "line": 92,
+          "preview": "out=INCOMING/f'{stem}.png'",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_factory.py",
+          "line": 213,
+          "preview": "tmp=Path(f'/tmp/pollinations-{aid.lower()}-{int(seed)}.png')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_factory.py",
+          "line": 227,
+          "preview": "out=INCOMING/f'{stem}.png'",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 85,
+          "preview": "return OUT/'character-repair-candidates'/f\"{item['stem']}.png\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 86,
+          "preview": "return INCOMING/f\"{item['stem']}.png\"",
+          "definition_candidate": false
         }
       ],
-      "occurrence_count": 1
+      "occurrence_count": 120
     },
-    "test_refuses_bad_inputs": {
+    "source": {
       "definition": {
-        "file": "tools/sprites/test_identity_locked_walk_candidate.py",
-        "line": 61,
+        "file": "tools/sprites/tests/test_character_candidate_bank.py",
+        "line": 55,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/test_identity_locked_walk_candidate.py",
-          "line": 61,
-          "preview": "def test_refuses_bad_inputs(self):",
+          "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
+          "line": 46,
+          "preview": "* entirely absent from the release source set and does not approve assets.",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/CanonicalFxRaster.kt",
+          "line": 8,
+          "preview": "* production asset ids. Do not add a semantic alias without a documented source.",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/CanonicalFxSprite.kt",
+          "line": 28,
+          "preview": "* Only one 128x128 source cell is drawn at a time; the sheet itself is never",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/DynastyProgression.kt",
+          "line": 45,
+          "preview": "/** Persistent campaign score. Every source survives ordinary ascensions. */",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/Monetization.kt",
+          "line": 9,
+          "preview": "* implementations source-compatible while production gateways can actively invalidate loads.",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
+          "line": 306,
+          "preview": "// the entitlement source; acknowledge promptly to prevent automatic refund.",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/PowerCoreTapImpact.kt",
+          "line": 24,
+          "preview": "* source-verified color match exists. Runtime Canvas drawing is limited to",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
+          "line": 220,
+          "preview": "// treatment. Their real atlases, pivots, timing and source pixels",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/WorldSpriteRegistry.kt",
+          "line": 48,
+          "preview": "val source = when (businessId to tier) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/WorldSpriteRegistry.kt",
+          "line": 49,
+          "preview": "0 to 0 -> \"art/source/era01/street_stand/t0/zte_business_00_t0_master.svg\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/WorldSpriteRegistry.kt",
+          "line": 50,
+          "preview": "0 to 1 -> \"art/source/era01/street_stand/t1/zte_business_00_t1_master.svg\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/WorldSpriteRegistry.kt",
+          "line": 51,
+          "preview": "0 to 2 -> \"art/source/era01/street_stand/t2/zte_business_00_t2_master.svg\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/WorldSpriteRegistry.kt",
+          "line": 52,
+          "preview": "1 to 0 -> \"art/source/era01/corner_shop/t0/zte_business_01_t0_master.svg\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/WorldSpriteRegistry.kt",
+          "line": 53,
+          "preview": "1 to 1 -> \"art/source/era01/corner_shop/t1/zte_business_01_t1_master.svg\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/WorldSpriteRegistry.kt",
+          "line": 54,
+          "preview": "2 to 0 -> \"art/source/era01/furnace_stall/t0/zte_business_02_t0_master.svg\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/WorldSpriteRegistry.kt",
+          "line": 55,
+          "preview": "2 to 1 -> \"art/source/era01/furnace_stall/t1/zte_business_02_t1_master.svg\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/WorldSpriteRegistry.kt",
+          "line": 56,
+          "preview": "3 to 0 -> \"art/source/era01/assembly_hub/t0/zte_business_03_t0_master.svg\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/WorldSpriteRegistry.kt",
+          "line": 57,
+          "preview": "3 to 1 -> \"art/source/era01/assembly_hub/t1/zte_business_03_t1_master.svg\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/WorldSpriteRegistry.kt",
+          "line": 63,
+          "preview": "sourceMasterPath = source,",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/AmbientCharacterMotionTest.kt",
+          "line": 56,
+          "preview": "fun `reduced motion freezes travel and source atlas pose`() {",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/ChallengeRotationTest.kt",
+          "line": 72,
+          "preview": "val source = listOf(",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/ChallengeRotationTest.kt",
+          "line": 78,
+          "preview": "ChallengeOrdering.forCommandCenter(source)",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/ChallengeRotationTest.kt",
+          "line": 80,
+          "preview": "assertEquals(listOf(\"done\", \"claimable\", \"active\"), source.map { it.id })",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/PlayBillingGatewayInvariantTest.kt",
+          "line": 11,
+          "preview": "* These invariants deliberately inspect the production source because PlayBillingGateway owns a",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/PlayBillingGatewayInvariantTest.kt",
+          "line": 17,
+          "preview": "private val source: String by lazy { gatewaySource() }",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/PlayBillingGatewayInvariantTest.kt",
+          "line": 31,
+          "preview": "source.contains(",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/PlayBillingGatewayInvariantTest.kt",
+          "line": 43,
+          "preview": "val function = source.substringAfter(\"private fun completeDeferred(\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/PlayBillingGatewayInvariantTest.kt",
+          "line": 58,
+          "preview": "val function = source.substringAfter(\"override fun disconnect()\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/PlayBillingGatewayInvariantTest.kt",
+          "line": 69,
+          "preview": "val index = source.indexOf(snippet, startIndex = previous + 1)",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/ReviewedTerrainLayerTest.kt",
+          "line": 12,
+          "preview": "val source = listOf(File(relativePath), File(\"app/$relativePath\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/ReviewedTerrainLayerTest.kt",
+          "line": 18,
+          "preview": ".findAll(source)",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt",
+          "line": 10,
+          "preview": "val source = source(\"EndgameAtmosphere.kt\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt",
+          "line": 11,
+          "preview": "val earlyReturn = source.indexOf(\"if (eraIndex < 7) return\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt",
+          "line": 12,
+          "preview": "val animationClock = source.indexOf(\"rememberInfiniteTransition(label\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt",
+          "line": 13,
+          "preview": "val canvas = source.indexOf(\"Canvas(modifier)\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt",
+          "line": 22,
+          "preview": "val source = source(\"EmpireCoreArt.kt\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt",
+          "line": 23,
+          "preview": "val reducedBranch = source.indexOf(\"if (reducedMotion)\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt",
+          "line": 24,
+          "preview": "val animationClock = source.indexOf(\"rememberInfiniteTransition(label\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt",
+          "line": 32,
+          "preview": "val source = source(\"MotionQuality.kt\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt",
+          "line": 33,
+          "preview": "assertTrue(source.contains(\"fun reducedMotion(context: Context): Boolean = !animationsEnabled(context) || lowPowerMode(context)\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt",
+          "line": 34,
+          "preview": "assertTrue(source.contains(\"reducedMotion(context) -> 0\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt",
+          "line": 39,
+          "preview": "val source = source(\"CinematicRuntimeTransition.kt\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt",
+          "line": 40,
+          "preview": "assertTrue(source.contains(\"phase < CINEMATIC_TRANSITION_END\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt",
+          "line": 41,
+          "preview": "assertTrue(source.contains(\"if (shouldRenderCinematicTransition(reducedMotion, phase.value))\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt",
+          "line": 44,
+          "preview": "private fun source(name: String): String {",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt",
+          "line": 50,
+          "preview": "else -> error(\"Unable to locate production source $name\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "kaggle/github_mass_factory.py",
+          "line": 30,
+          "preview": "print('KAGGLE_ENGINE=yield-router-v12-positive-source-locked',flush=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "kaggle/github_mass_factory.py",
+          "line": 63,
+          "preview": "# The tarball is the immutable payload uploaded for this exact source fingerprint.",
+          "definition_candidate": false
+        },
+        {
+          "file": "kaggle/github_mass_factory.py",
+          "line": 110,
+          "preview": "source_kind,source=resolve_source()",
+          "definition_candidate": false
+        },
+        {
+          "file": "kaggle/github_mass_factory.py",
+          "line": 111,
+          "preview": "if source is None:raise SystemExit('sprite repository source missing from Kaggle inputs')",
+          "definition_candidate": false
+        },
+        {
+          "file": "kaggle/github_mass_factory.py",
+          "line": 112,
+          "preview": "if source_kind=='tree':shutil.copytree(source,REPO,dirs_exist_ok=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "kaggle/github_mass_factory.py",
+          "line": 115,
+          "preview": "with tarfile.open(source,'r:gz') as t:t.extractall(REPO)",
+          "definition_candidate": false
+        },
+        {
+          "file": "kaggle/github_mass_factory.py",
+          "line": 116,
+          "preview": "print(f'KAGGLE_REPO_SOURCE={source_kind}:{source}',flush=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "kaggle/github_mass_factory.py",
+          "line": 217,
+          "preview": "(OUT/'generated-targets.json').write_text(json.dumps({'count':0,'engine':'yield-router-v12-positive-source-locked','lane':lane,'seed':SEED,'backlog':q,'targets':[]},indent=2),encod",
+          "definition_candidate": false
+        },
+        {
+          "file": "kaggle/github_mass_factory.py",
+          "line": 225,
+          "preview": "(OUT/'generated-targets.json').write_text(json.dumps({'count':len(targets),'engine':'yield-router-v12-positive-source-locked','lane':lane,'seed':SEED,'backlog':q,'targets':targets}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/character_preview_pixel_audit.py",
+          "line": 51,
+          "preview": "with Image.open(shot) as source:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/character_preview_pixel_audit.py",
+          "line": 52,
+          "preview": "rgb = source.convert(\"RGB\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/test_ui_dump_retry.py",
+          "line": 56,
+          "preview": "command = f\"source {HELPER!s}; ui_dump_with_retry {output!s}\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/validate_release_privacy.py",
+          "line": 74,
+          "preview": "for source in (\"marketing/privacy-policy.md\", \"marketing/data-safety.md\"):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/validate_release_privacy.py",
+          "line": 75,
+          "preview": "if f\"`{source}`\" not in listing:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/validate_release_privacy.py",
+          "line": 76,
+          "preview": "raise SystemExit(f\"Play Store listing no longer references {source}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/metadata.py",
+          "line": 42,
+          "preview": "raise MetadataError(f\"unsupported source type: {self.source_type}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_candidate_archive_workflow.py",
+          "line": 29,
+          "preview": "source = Path(\"tools/sprites/build_character_candidate_bank.py\").read_text()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_candidate_archive_workflow.py",
+          "line": 40,
+          "preview": "self.assertIn(\"candidate-bank-index.json\", source)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_candidate_archive_workflow.py",
+          "line": 41,
+          "preview": "self.assertIn(\"review_artifact_run_id\", source)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_candidate_archive_workflow.py",
+          "line": 42,
+          "preview": "self.assertIn(\"sha256\", source)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_candidate_archive_workflow.py",
+          "line": 43,
+          "preview": "self.assertIn(\"candidate_production_complete\", source)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_candidate_archive_workflow.py",
+          "line": 47,
+          "preview": "self.assertIn(\"validated_local_candidate\", source)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_candidate_archive_workflow.py",
+          "line": 48,
+          "preview": "self.assertIn(\"canonical_queue_production_processed\", source)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_candidate_archive_workflow.py",
+          "line": 49,
+          "preview": "self.assertIn(\"repo-local-original\", source)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_candidate_archive_workflow.py",
+          "line": 50,
+          "preview": "self.assertIn('\"automatic_runtime_promotion\": False', source)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_candidate_archive_workflow.py",
+          "line": 51,
+          "preview": "self.assertIn('\"strict_approved\": False', source)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_candidate_archive_workflow.py",
+          "line": 72,
+          "preview": "source = Path(\"tools/sprites/build_character_bank_mobile_review.py\").read_text()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_candidate_archive_workflow.py",
+          "line": 77,
+          "preview": "self.assertIn(\"hashlib.sha256\", source)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_candidate_archive_workflow.py",
+          "line": 78,
+          "preview": "self.assertIn(\"validated_local_candidate\", source)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_candidate_archive_workflow.py",
+          "line": 79,
+          "preview": "self.assertIn(\"42 px\", source)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_candidate_archive_workflow.py",
+          "line": 80,
+          "preview": "self.assertIn(\"review_only\", source)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_candidate_archive_workflow.py",
+          "line": 88,
+          "preview": "self.assertIn(\"--source-run-id\", flow)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_pollinations_character_qa.py",
+          "line": 19,
+          "preview": "with self.assertRaisesRegex(RuntimeError, \"source edge\"):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_pollinations_character_qa.py",
+          "line": 23,
+          "preview": "with self.assertRaisesRegex(RuntimeError, \"source short\"):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_static_processing.py",
+          "line": 10,
+          "preview": "source = Image.new(\"RGB\", (256, 256), (0, 0, 0))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_static_processing.py",
+          "line": 13,
+          "preview": "source.putpixel((x, y), (230, 180, 90))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_static_processing.py",
+          "line": 15,
+          "preview": "isolated = isolate(source)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 109,
+          "preview": "self.assertIn(\"Automatic source run resolution requires one shared review_artifact_run_id\", text)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 123,
+          "preview": "self.assertIn(\"str(recorded or '')!=source\", text)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 131,
+          "preview": "self.assertIn(\"Promotion source run does not match canonical review provenance\", text)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 345,
+          "preview": "self.assertIn(\"source subject too short\", text)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 346,
+          "preview": "self.assertIn(\"source edge contact\", text)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 356,
+          "preview": "self.assertIn(\"source=semantic_scaffold(anchor_raw,i['action'],fi)\", text)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 360,
+          "preview": "self.assertIn(\"def semantic_scaffold(source,action,frame_index=0):\", text)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 362,
+          "preview": "self.assertIn(\"source=semantic_scaffold(shared,i['action'],fi)\", text)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 476,
+          "preview": "self.assertIn(\"source-idle-not-uniquely-strict-done\", Path(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/process_final_assets.py",
+          "line": 49,
+          "preview": "src = INBOX / spec['source']",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/process_final_assets.py",
+          "line": 81,
+          "preview": "src = INBOX / spec['source']",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/process_final_assets.py",
+          "line": 91,
+          "preview": "source = opened.convert('RGBA')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/process_final_assets.py",
+          "line": 92,
+          "preview": "alpha_quality(source)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/process_final_assets.py",
+          "line": 95,
+          "preview": "top = round(row * source.height / rows)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/process_final_assets.py",
+          "line": 96,
+          "preview": "bottom = round((row + 1) * source.height / rows)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/process_final_assets.py",
+          "line": 98,
+          "preview": "left = round(column * source.width / columns)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/process_final_assets.py",
+          "line": 99,
+          "preview": "right = round((column + 1) * source.width / columns)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/process_final_assets.py",
+          "line": 100,
+          "preview": "frame = trim_alpha(source.crop((left, top, right, bottom)))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/archive_character_candidates.py",
+          "line": 23,
+          "preview": "def archive_candidates(source: Path, destination: Path, source_run_id: int) -> dict:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/archive_character_candidates.py",
+          "line": 25,
+          "preview": "raise ValueError(\"source run id must be positive\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/archive_character_candidates.py",
+          "line": 26,
+          "preview": "if not source.is_dir():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/archive_character_candidates.py",
+          "line": 28,
+          "preview": "qa_files = list(source.rglob(\"github-qa-report.json\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/archive_character_candidates.py",
+          "line": 36,
+          "preview": "if list(source.rglob(\"*_final.png\")):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/archive_character_candidates.py",
+          "line": 38,
+          "preview": "producer_reports = list(source.rglob(\"character-sheet-report.json\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/archive_character_candidates.py",
+          "line": 39,
+          "preview": "generated_manifests = list(source.rglob(\"generated-targets.json\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/archive_character_candidates.py",
+          "line": 82,
+          "preview": "found = [p for p in source.rglob(name) if p.parent.name == \"candidates\" and p.is_file()]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/archive_character_candidates.py",
+          "line": 94,
+          "preview": "raise ValueError(\"archive exceeds bounded total source size\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/archive_character_candidates.py",
+          "line": 125,
+          "preview": "parser.add_argument(\"--source\", type=Path, required=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/archive_character_candidates.py",
+          "line": 127,
+          "preview": "parser.add_argument(\"--source-run-id\", type=int, required=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/archive_character_candidates.py",
+          "line": 129,
+          "preview": "manifest = archive_candidates(args.source, args.output, args.source_run_id)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_wave_orchestrator.py",
+          "line": 473,
+          "preview": "same character to Kaggle or wiping its preserved source evidence.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_bank_motion.py",
+          "line": 44,
+          "preview": "with Image.open(io.BytesIO(blob)) as source:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_bank_motion.py",
+          "line": 45,
+          "preview": "source.load()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_bank_motion.py",
+          "line": 46,
+          "preview": "if source.size != (1024, 1024) or source.mode != \"RGBA\":",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_bank_motion.py",
+          "line": 49,
+          "preview": "source.crop(((i % 4) * 256, (i // 4) * 256,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_bank_motion.py",
+          "line": 82,
+          "preview": "with Image.open(io.BytesIO(blob)) as source:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_bank_motion.py",
+          "line": 83,
+          "preview": "source.load()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 120
+    },
+    "test_complete_pack_contains_exact_verified_candidate_and_deferred_warnings": {
+      "definition": {
+        "file": "tools/sprites/tests/test_character_candidate_bank.py",
+        "line": 73,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 73,
+          "preview": "def test_complete_pack_contains_exact_verified_candidate_and_deferred_warnings(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_missing_source_does_not_inflate_progress": {
+      "definition": {
+        "file": "tools/sprites/tests/test_character_candidate_bank.py",
+        "line": 91,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 91,
+          "preview": "def test_missing_source_does_not_inflate_progress(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_dispatched_asset_not_counted_even_with_old_artifact": {
+      "definition": {
+        "file": "tools/sprites/tests/test_character_candidate_bank.py",
+        "line": 97,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 97,
+          "preview": "def test_dispatched_asset_not_counted_even_with_old_artifact(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_wrong_source_id_is_never_accepted": {
+      "definition": {
+        "file": "tools/sprites/tests/test_character_candidate_bank.py",
+        "line": 105,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 105,
+          "preview": "def test_wrong_source_id_is_never_accepted(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_mismatched_sha_fails_closed": {
+      "definition": {
+        "file": "tools/sprites/tests/test_character_candidate_bank.py",
+        "line": 112,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 112,
+          "preview": "def test_mismatched_sha_fails_closed(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_wrong_dimensions_fail_closed": {
+      "definition": {
+        "file": "tools/sprites/tests/test_character_candidate_bank.py",
+        "line": 117,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 117,
+          "preview": "def test_wrong_dimensions_fail_closed(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "authored_original": {
+      "definition": {
+        "file": "tools/sprites/tests/test_character_candidate_bank.py",
+        "line": 124,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 124,
+          "preview": "def authored_original(self):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 164,
+          "preview": "local = self.authored_original()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 186,
+          "preview": "local = self.authored_original()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 195,
+          "preview": "original = self.authored_original()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 274,
+          "preview": "local = self.authored_original()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 281,
+          "preview": "local = self.authored_original()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 287,
+          "preview": "local = self.authored_original()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 7
+    },
+    "test_local_original_completes_candidate_scope_while_remote_is_dispatched": {
+      "definition": {
+        "file": "tools/sprites/tests/test_character_candidate_bank.py",
+        "line": 163,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 163,
+          "preview": "def test_local_original_completes_candidate_scope_while_remote_is_dispatched(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_prefer_real_collected_candidate_to_local_original": {
+      "definition": {
+        "file": "tools/sprites/tests/test_character_candidate_bank.py",
+        "line": 185,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 185,
+          "preview": "def test_prefer_real_collected_candidate_to_local_original(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "complete_eng_original": {
+      "definition": {
+        "file": "tools/sprites/tests/test_character_candidate_bank.py",
+        "line": 194,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 194,
+          "preview": "def complete_eng_original(self):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 216,
+          "preview": "local = self.complete_eng_original()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 267,
+          "preview": "local = self.complete_eng_original()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "test_explicit_engineer_cohort_creates_separate_six_action_review_bank": {
+      "definition": {
+        "file": "tools/sprites/tests/test_character_candidate_bank.py",
+        "line": 215,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 215,
+          "preview": "def test_explicit_engineer_cohort_creates_separate_six_action_review_bank(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_engineer_coherent_option_rejects_incomplete_role_or_missing_source": {
+      "definition": {
+        "file": "tools/sprites/tests/test_character_candidate_bank.py",
+        "line": 263,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 263,
+          "preview": "def test_engineer_coherent_option_rejects_incomplete_role_or_missing_source(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_local_manifest_claims_do_not_waive_technical_frame_QA": {
+      "definition": {
+        "file": "tools/sprites/tests/test_character_candidate_bank.py",
+        "line": 273,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 273,
+          "preview": "def test_local_manifest_claims_do_not_waive_technical_frame_QA(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_local_original_requires_all_editable_svg_frames": {
+      "definition": {
+        "file": "tools/sprites/tests/test_character_candidate_bank.py",
+        "line": 280,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 280,
+          "preview": "def test_local_original_requires_all_editable_svg_frames(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_local_original_fails_closed_when_qa_claims_artistic_approval": {
+      "definition": {
+        "file": "tools/sprites/tests/test_character_candidate_bank.py",
+        "line": 286,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "line": 286,
+          "preview": "def test_local_original_fails_closed_when_qa_claims_artistic_approval(self):",
           "definition_candidate": true
         }
       ],
