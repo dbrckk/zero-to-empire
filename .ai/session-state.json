@@ -250,8 +250,8 @@
     "terrain_visibility_and_real_city_qa": {
       "pr": 207,
       "branch": "fix/terrain-visibility-and-authentic-city-qa-20261016",
-      "latest_head_sha": "dbc5db809f6812dd5766b8f770459641f6b3671b",
-      "status": "PR_OPEN_RECHECKING",
+      "latest_head_sha": "c79ecb81dd00213573310a73b00cff1bcd5a65d4",
+      "status": "PR_OPEN_THIRD_ANDROID_CI_AND_EMULATOR_IN_PROGRESS",
       "initial_ci_run": 38940605309,
       "initial_emulator_run": 38940605779,
       "initial_emulator_failure": "Pixel Launcher ANR recurred after initial dialog recovery, hiding MANAGERS; downloaded XML shows actual game tabs on system-dialog-2.xml. This is a CI emulator/system issue rather than proven runtime regression.",
@@ -261,14 +261,21 @@
       "source_fix": "ReviewedTerrainLayer.kt ground row was offset at 610/654dp inside 620dp city stage. Replace with responsive stage-bounded terrain positions.",
       "new_visual_qa": "Existing emulator integration script now rejects flat-gradient/actor-only city screenshots on nonactor background rows.",
       "strict_done_added": 0,
-      "semantic_approved": false
+      "semantic_approved": false,
+      "second_emulator_run": 38941335829,
+      "second_emulator_result": "FAILED_AFTER_CHARACTER_QA_PASS_ON_FINAL_ADB_LOGCAT",
+      "second_emulator_artifact_id": 12063747537,
+      "confirmed_secondary_gap": "Return am start -W returned OK but Activity remained CharacterReviewActivity, visible in final.png even in earlier green run",
+      "third_fix_commit": "c79ecb81dd00213573310a73b00cff1bcd5a65d4",
+      "third_fix": "Android BACK from Character Review and assert CAPITAL/MANAGERS; bounded 10k-line Android logcat retry preserving crash/events buffers and fail-closed if unavailable",
+      "third_ci_run": 38943038488,
+      "third_emulator_run": 38943038475
     }
   },
-  "last_completed": "Merged PR #206 8adbd25d: 10,080-frame seamless clock, reactive Battery Saver, Android CI 38938490383 SUCCESS and real emulator functional smoke 38938490410 SUCCESS. Opened PR #207 to fix nearly offscreen 610/654dp reviewed terrain in 620dp stage, strengthen authentic-city visual screenshot gate, and recover recurring Pixel Launcher emulator ANR. PR #207 rerun CI/emulator IN PROGRESS; NOT MERGED. Strict 219/235, 16 semantic candidate actions unchanged.",
+  "last_completed": "PR #206 merged and verified. PR #207 open: responsive ground tiles and authentic city visual QA guard. Fixed recurrent Pixel Launcher ANR; second emulator 38941335829 progressed through 5 onboarding steps, every economy/navigation/persistence assertion and CHARACTER_QA_EMULATOR_PASS=1, then adb logcat stream failed with exit255 and exact file showed gallery never navigated back to MainActivity. Latest commit c79ecb8 fixes bounded logcat capture and asserts real BACK navigation to CAPITAL and MANAGERS. Third Android CI 38943038488 and emulator 38943038475 pending. Strict 219/235 unchanged.",
   "next_actions": [
-    "Wait for exact current PR #207 Android CI 38941335671 AND emulator 38941335829; inspect any failures and keep PR unmerged until verified SUCCESS.",
-    "After both are green, squash-merge PR #207 and check automatically triggered separate 18-atlas Android review APK and emulator for genuine city scenery; do not lower the gradient-only review gate.",
-    "Inspect fresh complete-world Android screenshots at native and narrow widths for actual ground presence, OP WALK foot contact, scene identity and traffic occlusion; improve next specific defect.",
-    "Never promote the 16 unapproved character actions without manual art semantics, exact production WebP, on-device gameplay and release checks; canonical 219/235 remains."
+    "Check Android CI run 38943038488 and Android Emulator Smoke 38943038475 for latest PR #207 commit c79ecb8. If both succeed, merge PR #207; if not, retrieve exact new emulator logs/artifact and fix root cause.",
+    "Verify after merge main Android CI and the isolated original character review APK plus subsequent emulator authentic-city scenery/OP gait proof. The latter should reject flat gradient and may need significant visual content repair.",
+    "Do not approve original animation candidate atlases automatically; confirm exact production visuals, performance and semantics. Strict canonical DONE remains 219/235."
   ]
 }
