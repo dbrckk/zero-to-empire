@@ -29,16 +29,19 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-16T12:50:09Z
+Generated: 2026-10-16T12:54:10Z
 
 ### Git
 - Branch: `main`
-- Head: `f3722aa35166`
-- Commit date: 2026-10-16T14:49:54+02:00
-- Commit: art: publish isolated six-action engineer coherent vector review alternative (#190)
+- Head: `004f9a782cd9`
+- Commit date: 2026-10-16T14:53:53+02:00
+- Commit: art(eng): grounded braced torque repair with stronger 42px action (#191)
 - Tracked files: 1812
 
 ### Recently changed files
+- `.github/workflows/engineer-motion-candidate-review.yml`
+- `tools/sprites/render_chatgpt_originals.py`
+- `tools/sprites/test_local_character_action_fx.py`
 - `.github/workflows/character-candidate-bank.yml`
 - `tools/sprites/build_character_candidate_bank.py`
 - `tools/sprites/tests/test_character_candidate_bank.py`
@@ -56,9 +59,6 @@ Generated: 2026-10-16T12:50:09Z
 - `art/incoming/chatgpt-original/previews/mobile-eng.png`
 - `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/00.svg`
 - `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/01.svg`
-- `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/02.svg`
-- `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/03.svg`
-- `art/incoming/chatgpt-original/src_svg/ENG/REPAIR/04.svg`
 
 ### Project signals
 - `build.gradle.kts`

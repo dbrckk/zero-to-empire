@@ -9444,6 +9444,10 @@ p=ROLES[role]; phase=2*math.pi*index/count; motion=math.sin(phase); bounce=0.0
 ⋮----
 bounce=2.8*(1-math.cos(phase*2))/2
 elif action=='IDLE':bounce=1.8*math.sin(phase)
+⋮----
+# Torque transfers through the knees and shoulders while BOTH boots stay
+# planted. The socket/tool remain locked to world space, not to this bob.
+bounce=5.1*math.sin(phase)
 else:bounce=1.6*math.sin(phase)
 # Always keep same facial shape, helmet model, costume palette and 3/4 view.
 s=[]
@@ -9474,7 +9478,9 @@ handpos=((80+2*reach,146-3*pump+bounce) if side=='L'
 elbow=((82,132+bounce) if side=='L'
 ⋮----
 handpos=engineer_repair_wrist(phase)
-elbow=(168+.45*(handpos[0]-176),115+.58*(handpos[1]-123))
+# Braced elbow drives the ratchet against a world-fixed socket instead
+# of letting the entire character remain static during the torque cycle.
+elbow=(167+9.5*math.sin(phase-.35),
 ⋮----
 swing=motion*(-1 if side=='L' else 1)
 ⋮----
@@ -9512,9 +9518,9 @@ boot_angle=leg.boot_angle
 hipx=106 if side=='L' else 146
 yhip=155+bounce
 knee_x=hipx+(2 if side=='L' else -2)
-knee_y=190+bounce
+knee_y=190+(.48*bounce if role=='ENG' and action=='REPAIR' else bounce)
 ankle_x=hipx
-ankle_y=226+bounce
+ankle_y=(226 if role=='ENG' and action=='REPAIR' else 226+bounce)
 boot_angle=0.0
 ⋮----
 # no floor shadow; transparency is exact outside figure
@@ -9540,9 +9546,12 @@ else:toe=ax+9
 # Heel-strike and toe-off flex the same boot art around its ankle.
 ⋮----
 add('</g>')  # close the per-leg pose-evidence group
+⋮----
+add('</g>')  # close world-planted repair boot evidence group
 # Weight shifts toward stance foot; cargo carry sway remains restrained.
 # The hands, equipment, torso, helmet and face all receive the exact same
 # transform, avoiding drift in object contact or character identity.
+repair_body_evidence=(f' data-eng-repair-body-bounce="{bounce:.2f}"'
 ⋮----
 # BACK arm
 ⋮----
@@ -9637,7 +9646,7 @@ parser=argparse.ArgumentParser()
 args=parser.parse_args();outdir=pathlib.Path(args.output_dir);outdir.mkdir(parents=True,exist_ok=True)
 results=[]
 ⋮----
-report={'version':'chatgpt-original-character-rig-v11-engineer-mechanical-motion','strict_done_added':0,'review_only':True,
+report={'version':'chatgpt-original-character-rig-v12-engineer-planted-torque','strict_done_added':0,'review_only':True,
 ```
 
 ## File: sprites/render_original_character_previews.py
@@ -11299,6 +11308,18 @@ angle = tool_angle("REPAIR", phase, role="ENG")
 svg = ET.fromstring(svg_frame("ENG", "REPAIR", index, 10))
 station = [e for e in svg.iter()
 wrench = [e for e in svg.iter()
+⋮----
+def test_engineer_repair_torso_loads_but_both_feet_stay_planted(self)
+⋮----
+motions = []
+⋮----
+feet = [e for e in svg.iter()
+⋮----
+motion = [e for e in svg.iter()
+⋮----
+fixed = [e for e in svg.iter()
+⋮----
+svg = svg_frame(role, "REPAIR", 3, 10)
 ⋮----
 def test_idle_and_walk_have_no_unattached_decorations(self)
 ⋮----

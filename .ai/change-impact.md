@@ -1,12 +1,12 @@
 # Change impact
 
-Base: 6e789caf94bbf4d4ea5f4057127d71247446354b
-Head: f3722aa351663d1719b86ba8dd5d6f96fa741a23
+Base: 8a7dae4cd8d0e982bcb9361a10d2877f65636aa8
+Head: 004f9a782cd975353185ab7e907330f8d454be8b
 
 ## Changed files
-- M .github/workflows/character-candidate-bank.yml
-- M tools/sprites/build_character_candidate_bank.py
-- M tools/sprites/tests/test_character_candidate_bank.py
+- M .github/workflows/engineer-motion-candidate-review.yml
+- M tools/sprites/render_chatgpt_originals.py
+- M tools/sprites/test_local_character_action_fx.py
 
 ## Affected areas
 - .github

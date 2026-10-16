@@ -5,46 +5,53 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "load_local_originals": {
+    "engineer_repair_wrist": {
       "source": {
-        "file": "tools/sprites/build_character_candidate_bank.py",
-        "start": 33,
-        "end": 64
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "validated_local_candidate": {
-      "source": {
-        "file": "tools/sprites/build_character_candidate_bank.py",
-        "start": 67,
-        "end": 105
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "open_archives": {
-      "source": {
-        "file": "tools/sprites/build_character_candidate_bank.py",
-        "start": 108,
-        "end": 137
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "assemble": {
-      "source": {
-        "file": "tools/sprites/build_character_candidate_bank.py",
-        "start": 140,
-        "end": 290
+        "file": "tools/sprites/render_chatgpt_originals.py",
+        "start": 29,
+        "end": 35
       },
       "symbol_dependencies": [
         {
-          "symbol": "load_local_originals",
+          "symbol": "tool_angle",
           "definitions": [
             {
-              "file": "tools/sprites/build_character_candidate_bank.py",
-              "line": 33,
+              "file": "tools/sprites/local_character_action_fx.py",
+              "line": 26,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "svg_frame": {
+      "source": {
+        "file": "tools/sprites/render_chatgpt_originals.py",
+        "start": 39,
+        "end": 374
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "action_fx",
+          "definitions": [
+            {
+              "file": "tools/sprites/local_character_action_fx.py",
+              "line": 53,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "add",
+          "definitions": [
+            {
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 51,
               "kind": "function",
               "language": "python"
             }
@@ -52,11 +59,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "open_archives",
+          "symbol": "engineer_repair_wrist",
           "definitions": [
             {
-              "file": "tools/sprites/build_character_candidate_bank.py",
-              "line": 108,
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 29,
               "kind": "function",
               "language": "python"
             }
@@ -64,11 +71,141 @@
           "relation": "same_file"
         },
         {
-          "symbol": "validated_local_candidate",
+          "symbol": "foot_pose",
           "definitions": [
             {
-              "file": "tools/sprites/build_character_candidate_bank.py",
-              "line": 67,
+              "file": "tools/sprites/local_character_contact_gait.py",
+              "line": 34,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "hand",
+          "definitions": [
+            {
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 55,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "joint_arm",
+          "definitions": [
+            {
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 57,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "line",
+          "definitions": [
+            {
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 52,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "tool_angle",
+          "definitions": [
+            {
+              "file": "tools/sprites/local_character_action_fx.py",
+              "line": 26,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "torso_weight_shift",
+          "definitions": [
+            {
+              "file": "tools/sprites/local_character_contact_gait.py",
+              "line": 103,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 9
+    },
+    "add": {
+      "source": {
+        "file": "tools/sprites/render_chatgpt_originals.py",
+        "start": 51,
+        "end": 171
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "engineer_repair_wrist",
+          "definitions": [
+            {
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 29,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "foot_pose",
+          "definitions": [
+            {
+              "file": "tools/sprites/local_character_contact_gait.py",
+              "line": 34,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "hand",
+          "definitions": [
+            {
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 55,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "joint_arm",
+          "definitions": [
+            {
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 57,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "line",
+          "definitions": [
+            {
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 52,
               "kind": "function",
               "language": "python"
             }
@@ -76,21 +213,265 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 3
+      "dependency_count": 5
     },
-    "main": {
+    "line": {
       "source": {
-        "file": "tools/sprites/build_character_candidate_bank.py",
-        "start": 293,
-        "end": 413
+        "file": "tools/sprites/render_chatgpt_originals.py",
+        "start": 52,
+        "end": 172
       },
       "symbol_dependencies": [
         {
-          "symbol": "assemble",
+          "symbol": "add",
           "definitions": [
             {
-              "file": "tools/sprites/build_character_candidate_bank.py",
-              "line": 140,
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 51,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "engineer_repair_wrist",
+          "definitions": [
+            {
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 29,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "foot_pose",
+          "definitions": [
+            {
+              "file": "tools/sprites/local_character_contact_gait.py",
+              "line": 34,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "hand",
+          "definitions": [
+            {
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 55,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "joint_arm",
+          "definitions": [
+            {
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 57,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 5
+    },
+    "hand": {
+      "source": {
+        "file": "tools/sprites/render_chatgpt_originals.py",
+        "start": 55,
+        "end": 175
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "add",
+          "definitions": [
+            {
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 51,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "engineer_repair_wrist",
+          "definitions": [
+            {
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 29,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "foot_pose",
+          "definitions": [
+            {
+              "file": "tools/sprites/local_character_contact_gait.py",
+              "line": 34,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "joint_arm",
+          "definitions": [
+            {
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 57,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "line",
+          "definitions": [
+            {
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 52,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 5
+    },
+    "joint_arm": {
+      "source": {
+        "file": "tools/sprites/render_chatgpt_originals.py",
+        "start": 57,
+        "end": 177
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "add",
+          "definitions": [
+            {
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 51,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "engineer_repair_wrist",
+          "definitions": [
+            {
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 29,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "foot_pose",
+          "definitions": [
+            {
+              "file": "tools/sprites/local_character_contact_gait.py",
+              "line": 34,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "hand",
+          "definitions": [
+            {
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 55,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "line",
+          "definitions": [
+            {
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 52,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 5
+    },
+    "render_atlas": {
+      "source": {
+        "file": "tools/sprites/render_chatgpt_originals.py",
+        "start": 377,
+        "end": 394
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "finish_frame",
+          "definitions": [
+            {
+              "file": "tools/sprites/local_character_material_finish.py",
+              "line": 32,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "svg_frame",
+          "definitions": [
+            {
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 39,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "main": {
+      "source": {
+        "file": "tools/sprites/render_chatgpt_originals.py",
+        "start": 396,
+        "end": 516
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "render_atlas",
+          "definitions": [
+            {
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 377,
               "kind": "function",
               "language": "python"
             }
@@ -100,19 +481,19 @@
       ],
       "dependency_count": 1
     },
-    "CharacterBankTests": {
+    "LocalActionFxTests": {
       "source": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "start": 19,
-        "end": 295
+        "file": "tools/sprites/test_local_character_action_fx.py",
+        "start": 12,
+        "end": 136
       },
       "symbol_dependencies": [
         {
-          "symbol": "assemble",
+          "symbol": "action_fx",
           "definitions": [
             {
-              "file": "tools/sprites/build_character_candidate_bank.py",
-              "line": 140,
+              "file": "tools/sprites/local_character_action_fx.py",
+              "line": 53,
               "kind": "function",
               "language": "python"
             }
@@ -120,35 +501,11 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "authored_original",
+          "symbol": "add",
           "definitions": [
             {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 124,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "complete_eng_original",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 194,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "main",
-          "definitions": [
-            {
-              "file": "tools/sprites/build_character_candidate_bank.py",
-              "line": 293,
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 51,
               "kind": "function",
               "language": "python"
             }
@@ -156,59 +513,59 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "png",
+          "symbol": "engineer_repair_wrist",
           "definitions": [
             {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 48,
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 29,
               "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "same_file"
+          "relation": "imported_module"
         },
         {
-          "symbol": "save_master",
+          "symbol": "hand",
           "definitions": [
             {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 43,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "setUp",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 20,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "source",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
+              "file": "tools/sprites/render_chatgpt_originals.py",
               "line": 55,
               "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "same_file"
+          "relation": "imported_module"
         },
         {
-          "symbol": "test_complete_pack_contains_exact_verified_candidate_and_deferred_warnings",
+          "symbol": "joint_arm",
           "definitions": [
             {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 73,
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 57,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "svg_frame",
+          "definitions": [
+            {
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 39,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "test_action_highlights_close_the_loop",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_local_character_action_fx.py",
+              "line": 27,
               "kind": "function",
               "language": "python"
             }
@@ -216,11 +573,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_dispatched_asset_not_counted_even_with_old_artifact",
+          "symbol": "test_bad_role_action_rejected",
           "definitions": [
             {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 97,
+              "file": "tools/sprites/test_local_character_action_fx.py",
+              "line": 122,
               "kind": "function",
               "language": "python"
             }
@@ -228,11 +585,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_engineer_coherent_option_rejects_incomplete_role_or_missing_source",
+          "symbol": "test_engineer_repair_torso_loads_but_both_feet_stay_planted",
           "definitions": [
             {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 263,
+              "file": "tools/sprites/test_local_character_action_fx.py",
+              "line": 90,
               "kind": "function",
               "language": "python"
             }
@@ -240,11 +597,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_explicit_engineer_cohort_creates_separate_six_action_review_bank",
+          "symbol": "test_engineer_repair_wrench_rotates_about_fixed_real_socket",
           "definitions": [
             {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 215,
+              "file": "tools/sprites/test_local_character_action_fx.py",
+              "line": 61,
               "kind": "function",
               "language": "python"
             }
@@ -252,11 +609,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_local_manifest_claims_do_not_waive_technical_frame_QA",
+          "symbol": "test_every_role_has_distinct_integrated_action_effects",
           "definitions": [
             {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 273,
+              "file": "tools/sprites/test_local_character_action_fx.py",
+              "line": 13,
               "kind": "function",
               "language": "python"
             }
@@ -264,82 +621,10 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_local_original_completes_candidate_scope_while_remote_is_dispatched",
+          "symbol": "test_idle_and_walk_have_no_unattached_decorations",
           "definitions": [
             {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 163,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_local_original_fails_closed_when_qa_claims_artistic_approval",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 286,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_local_original_requires_all_editable_svg_frames",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 280,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_mismatched_sha_fails_closed",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 112,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_missing_source_does_not_inflate_progress",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 91,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_prefer_real_collected_candidate_to_local_original",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 185,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_wrong_dimensions_fail_closed",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
+              "file": "tools/sprites/test_local_character_action_fx.py",
               "line": 117,
               "kind": "function",
               "language": "python"
@@ -348,33 +633,47 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_wrong_source_id_is_never_accepted",
+          "symbol": "test_raster_effects_do_not_escape_frame_or_create_fake_labels",
           "definitions": [
             {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 105,
+              "file": "tools/sprites/test_local_character_action_fx.py",
+              "line": 35,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "same_file"
-        }
-      ],
-      "dependency_count": 21
-    },
-    "setUp": {
-      "source": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "start": 20,
-        "end": 41
-      },
-      "symbol_dependencies": [
+        },
         {
-          "symbol": "main",
+          "symbol": "test_renderer_invokes_attached_effects_after_hand",
           "definitions": [
             {
-              "file": "tools/sprites/build_character_candidate_bank.py",
-              "line": 293,
+              "file": "tools/sprites/test_local_character_action_fx.py",
+              "line": 128,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_repair_is_a_distinct_compact_hand_tool_cycle",
+          "definitions": [
+            {
+              "file": "tools/sprites/test_local_character_action_fx.py",
+              "line": 47,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "tool_angle",
+          "definitions": [
+            {
+              "file": "tools/sprites/local_character_action_fx.py",
+              "line": 26,
               "kind": "function",
               "language": "python"
             }
@@ -382,131 +681,33 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "png",
+          "symbol": "tool_tip",
           "definitions": [
             {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 48,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "save_master",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
+              "file": "tools/sprites/local_character_action_fx.py",
               "line": 43,
               "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "save_master": {
-      "source": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "start": 43,
-        "end": 46
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "png": {
-      "source": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "start": 48,
-        "end": 53
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "source": {
-      "source": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "start": 55,
-        "end": 71
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "png",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 48,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "test_complete_pack_contains_exact_verified_candidate_and_deferred_warnings": {
-      "source": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "start": 73,
-        "end": 89
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "assemble",
-          "definitions": [
-            {
-              "file": "tools/sprites/build_character_candidate_bank.py",
-              "line": 140,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
           "relation": "imported_module"
-        },
-        {
-          "symbol": "png",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 48,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "source",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 55,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
         }
       ],
-      "dependency_count": 3
+      "dependency_count": 17
     },
-    "test_missing_source_does_not_inflate_progress": {
+    "test_every_role_has_distinct_integrated_action_effects": {
       "source": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "start": 91,
-        "end": 95
+        "file": "tools/sprites/test_local_character_action_fx.py",
+        "start": 13,
+        "end": 25
       },
       "symbol_dependencies": [
         {
-          "symbol": "assemble",
+          "symbol": "action_fx",
           "definitions": [
             {
-              "file": "tools/sprites/build_character_candidate_bank.py",
-              "line": 140,
+              "file": "tools/sprites/local_character_action_fx.py",
+              "line": 53,
               "kind": "function",
               "language": "python"
             }
@@ -516,19 +717,63 @@
       ],
       "dependency_count": 1
     },
-    "test_dispatched_asset_not_counted_even_with_old_artifact": {
+    "test_action_highlights_close_the_loop": {
       "source": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "start": 97,
-        "end": 103
+        "file": "tools/sprites/test_local_character_action_fx.py",
+        "start": 27,
+        "end": 33
       },
       "symbol_dependencies": [
         {
-          "symbol": "assemble",
+          "symbol": "action_fx",
           "definitions": [
             {
-              "file": "tools/sprites/build_character_candidate_bank.py",
-              "line": 140,
+              "file": "tools/sprites/local_character_action_fx.py",
+              "line": 53,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_raster_effects_do_not_escape_frame_or_create_fake_labels": {
+      "source": {
+        "file": "tools/sprites/test_local_character_action_fx.py",
+        "start": 35,
+        "end": 45
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "action_fx",
+          "definitions": [
+            {
+              "file": "tools/sprites/local_character_action_fx.py",
+              "line": 53,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_repair_is_a_distinct_compact_hand_tool_cycle": {
+      "source": {
+        "file": "tools/sprites/test_local_character_action_fx.py",
+        "start": 47,
+        "end": 59
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "action_fx",
+          "definitions": [
+            {
+              "file": "tools/sprites/local_character_action_fx.py",
+              "line": 53,
               "kind": "function",
               "language": "python"
             }
@@ -536,169 +781,169 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "save_master",
+          "symbol": "add",
           "definitions": [
             {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 51,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "hand",
+          "definitions": [
+            {
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 55,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "test_engineer_repair_wrench_rotates_about_fixed_real_socket": {
+      "source": {
+        "file": "tools/sprites/test_local_character_action_fx.py",
+        "start": 61,
+        "end": 88
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "engineer_repair_wrist",
+          "definitions": [
+            {
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 29,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "svg_frame",
+          "definitions": [
+            {
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 39,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "tool_angle",
+          "definitions": [
+            {
+              "file": "tools/sprites/local_character_action_fx.py",
+              "line": 26,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "tool_tip",
+          "definitions": [
+            {
+              "file": "tools/sprites/local_character_action_fx.py",
               "line": 43,
               "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "source",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 55,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "test_wrong_source_id_is_never_accepted": {
-      "source": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "start": 105,
-        "end": 110
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "assemble",
-          "definitions": [
-            {
-              "file": "tools/sprites/build_character_candidate_bank.py",
-              "line": 140,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
           "relation": "imported_module"
-        },
-        {
-          "symbol": "source",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 55,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
         }
       ],
-      "dependency_count": 2
+      "dependency_count": 4
     },
-    "test_mismatched_sha_fails_closed": {
+    "test_engineer_repair_torso_loads_but_both_feet_stay_planted": {
       "source": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "start": 112,
+        "file": "tools/sprites/test_local_character_action_fx.py",
+        "start": 90,
         "end": 115
       },
       "symbol_dependencies": [
         {
-          "symbol": "assemble",
+          "symbol": "svg_frame",
           "definitions": [
             {
-              "file": "tools/sprites/build_character_candidate_bank.py",
-              "line": 140,
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 39,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "imported_module"
-        },
-        {
-          "symbol": "source",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 55,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_wrong_dimensions_fail_closed": {
-      "source": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "start": 117,
-        "end": 122
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "assemble",
-          "definitions": [
-            {
-              "file": "tools/sprites/build_character_candidate_bank.py",
-              "line": 140,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "source",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 55,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "authored_original": {
-      "source": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "start": 124,
-        "end": 161
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "png",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 48,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
         }
       ],
       "dependency_count": 1
     },
-    "test_local_original_completes_candidate_scope_while_remote_is_dispatched": {
+    "test_idle_and_walk_have_no_unattached_decorations": {
       "source": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "start": 163,
-        "end": 183
+        "file": "tools/sprites/test_local_character_action_fx.py",
+        "start": 117,
+        "end": 120
       },
       "symbol_dependencies": [
         {
-          "symbol": "assemble",
+          "symbol": "action_fx",
           "definitions": [
             {
-              "file": "tools/sprites/build_character_candidate_bank.py",
-              "line": 140,
+              "file": "tools/sprites/local_character_action_fx.py",
+              "line": 53,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_bad_role_action_rejected": {
+      "source": {
+        "file": "tools/sprites/test_local_character_action_fx.py",
+        "start": 122,
+        "end": 126
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "action_fx",
+          "definitions": [
+            {
+              "file": "tools/sprites/local_character_action_fx.py",
+              "line": 53,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "test_renderer_invokes_attached_effects_after_hand": {
+      "source": {
+        "file": "tools/sprites/test_local_character_action_fx.py",
+        "start": 128,
+        "end": 136
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "action_fx",
+          "definitions": [
+            {
+              "file": "tools/sprites/local_character_action_fx.py",
+              "line": 53,
               "kind": "function",
               "language": "python"
             }
@@ -706,329 +951,31 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "authored_original",
+          "symbol": "add",
           "definitions": [
             {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 124,
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 51,
               "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "same_file"
+          "relation": "imported_module"
         },
         {
-          "symbol": "save_master",
+          "symbol": "joint_arm",
           "definitions": [
             {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 43,
+              "file": "tools/sprites/render_chatgpt_originals.py",
+              "line": 57,
               "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "same_file"
+          "relation": "imported_module"
         }
       ],
       "dependency_count": 3
-    },
-    "test_prefer_real_collected_candidate_to_local_original": {
-      "source": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "start": 185,
-        "end": 192
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "assemble",
-          "definitions": [
-            {
-              "file": "tools/sprites/build_character_candidate_bank.py",
-              "line": 140,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "authored_original",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 124,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "source",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 55,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "complete_eng_original": {
-      "source": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "start": 194,
-        "end": 213
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "authored_original",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 124,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "png",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 48,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_explicit_engineer_cohort_creates_separate_six_action_review_bank": {
-      "source": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "start": 215,
-        "end": 261
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "assemble",
-          "definitions": [
-            {
-              "file": "tools/sprites/build_character_candidate_bank.py",
-              "line": 140,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "complete_eng_original",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 194,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "main",
-          "definitions": [
-            {
-              "file": "tools/sprites/build_character_candidate_bank.py",
-              "line": 293,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "png",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 48,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "save_master",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 43,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "source",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 55,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 6
-    },
-    "test_engineer_coherent_option_rejects_incomplete_role_or_missing_source": {
-      "source": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "start": 263,
-        "end": 271
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "assemble",
-          "definitions": [
-            {
-              "file": "tools/sprites/build_character_candidate_bank.py",
-              "line": 140,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "complete_eng_original",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 194,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_local_manifest_claims_do_not_waive_technical_frame_QA": {
-      "source": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "start": 273,
-        "end": 278
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "assemble",
-          "definitions": [
-            {
-              "file": "tools/sprites/build_character_candidate_bank.py",
-              "line": 140,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "authored_original",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 124,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_local_original_requires_all_editable_svg_frames": {
-      "source": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "start": 280,
-        "end": 284
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "assemble",
-          "definitions": [
-            {
-              "file": "tools/sprites/build_character_candidate_bank.py",
-              "line": 140,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "authored_original",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 124,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "test_local_original_fails_closed_when_qa_claims_artistic_approval": {
-      "source": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "start": 286,
-        "end": 295
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "assemble",
-          "definitions": [
-            {
-              "file": "tools/sprites/build_character_candidate_bank.py",
-              "line": 140,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "authored_original",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_candidate_bank.py",
-              "line": 124,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
     }
   }
 }

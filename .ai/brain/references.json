@@ -5,246 +5,1971 @@
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
   "symbols": {
-    "load_local_originals": {
+    "engineer_repair_wrist": {
       "definition": {
-        "file": "tools/sprites/build_character_candidate_bank.py",
-        "line": 33,
+        "file": "tools/sprites/render_chatgpt_originals.py",
+        "line": 29,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/build_character_bank_mobile_review.py",
-          "line": 20,
-          "preview": "from build_character_candidate_bank import load_local_originals, validated_local_candidate",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_bank_mobile_review.py",
-          "line": 182,
-          "preview": "originals = load_local_originals(local_path)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_candidate_bank.py",
-          "line": 33,
-          "preview": "def load_local_originals(source: Path | None) -> dict[str, dict]:",
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 29,
+          "preview": "def engineer_repair_wrist(phase:float)->tuple[float,float]:",
           "definition_candidate": true
         },
         {
-          "file": "tools/sprites/build_character_candidate_bank.py",
-          "line": 152,
-          "preview": "originals = load_local_originals(local_original)",
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 81,
+          "preview": "handpos=engineer_repair_wrist(phase)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 317,
+          "preview": "tool_x,tool_y=engineer_repair_wrist(phase)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 363,
+          "preview": "fx_tool_x,fx_tool_y=engineer_repair_wrist(phase)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 62,
+          "preview": "from render_chatgpt_originals import engineer_repair_wrist, ENG_REPAIR_TARGET, svg_frame",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 68,
+          "preview": "wrist = engineer_repair_wrist(phase)",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 4
+      "occurrence_count": 6
     },
-    "validated_local_candidate": {
+    "svg_frame": {
       "definition": {
-        "file": "tools/sprites/build_character_candidate_bank.py",
-        "line": 67,
+        "file": "tools/sprites/render_chatgpt_originals.py",
+        "line": 39,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/assets/test_candidate_archive_workflow.py",
-          "line": 47,
-          "preview": "self.assertIn(\"validated_local_candidate\", source)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_candidate_archive_workflow.py",
-          "line": 78,
-          "preview": "self.assertIn(\"validated_local_candidate\", source)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_bank_mobile_review.py",
-          "line": 20,
-          "preview": "from build_character_candidate_bank import load_local_originals, validated_local_candidate",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_bank_mobile_review.py",
-          "line": 239,
-          "preview": "original, _ = validated_local_candidate(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_candidate_bank.py",
-          "line": 67,
-          "preview": "def validated_local_candidate(asset: dict, record: dict) -> tuple[bytes, dict]:",
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 39,
+          "preview": "def svg_frame(role:str, action:str, index:int, count:int)->str:",
           "definition_candidate": true
         },
         {
-          "file": "tools/sprites/build_character_candidate_bank.py",
-          "line": 191,
-          "preview": "blob, source_details = validated_local_candidate(asset, originals[asset_id])",
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 382,
+          "preview": "svg=svg_frame(role,action,i,count)",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/build_character_candidate_bank.py",
-          "line": 218,
-          "preview": "blob, source_details = validated_local_candidate(asset, originals[asset_id])",
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 62,
+          "preview": "from render_chatgpt_originals import engineer_repair_wrist, ENG_REPAIR_TARGET, svg_frame",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 74,
+          "preview": "svg = ET.fromstring(svg_frame(\"ENG\", \"REPAIR\", index, 10))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 91,
+          "preview": "from render_chatgpt_originals import svg_frame",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 95,
+          "preview": "svg = ET.fromstring(svg_frame(\"ENG\", \"REPAIR\", index, 10))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 113,
+          "preview": "svg = svg_frame(role, \"REPAIR\", 3, 10)",
           "definition_candidate": false
         }
       ],
       "occurrence_count": 7
     },
-    "open_archives": {
+    "add": {
       "definition": {
-        "file": "tools/sprites/build_character_candidate_bank.py",
-        "line": 108,
+        "file": "tools/sprites/render_chatgpt_originals.py",
+        "line": 51,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/build_character_candidate_bank.py",
-          "line": 108,
-          "preview": "def open_archives(folder: Path) -> dict[int, dict]:",
+          "file": "app/src/main/java/com/zerotoempire/game/CanonicalFxRaster.kt",
+          "line": 8,
+          "preview": "* production asset ids. Do not add a semantic alias without a documented source.",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/CommerceUi.kt",
+          "line": 81,
+          "preview": "owned = owned + buildSet { if (meta.adsRemoved) add(StoreProduct.REMOVE_ADS); if (meta.starterPackOwned) add(StoreProduct.STARTER_PACK) },",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/EraVistaCinematicOverlay.kt",
+          "line": 82,
+          "preview": "// Thin anamorphic edge glints add a premium lens treatment without bloom shaders.",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/PurchaseCreditLedger.kt",
+          "line": 9,
+          "preview": "transactionId.isNotBlank() && credited.add(transactionId)",
+          "definition_candidate": false
+        },
+        {
+          "file": "kaggle/github_mass_factory.py",
+          "line": 101,
+          "preview": "seen.add(key)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/static_processing.py",
+          "line": 83,
+          "preview": "q=deque([(x,y)]); seen.add((x,y)); area=0",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/static_processing.py",
+          "line": 88,
+          "preview": "seen.add((nx,ny)); q.append((nx,ny))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_workflow_policy.py",
+          "line": 421,
+          "preview": "self.assertIn(\"verified_idle_roles.add(i['role'])\", text)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/process_final_assets.py",
+          "line": 131,
+          "preview": "seen.add(asset_id)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/animation_batch_planner.py",
+          "line": 72,
+          "preview": "manifest_ids.add(asset_id)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/archive_character_candidates.py",
+          "line": 81,
+          "preview": "seen.add(name)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_bank_motion.py",
+          "line": 140,
+          "preview": "seen.add(asset_id)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_complete_sprite_manifest.py",
+          "line": 55,
+          "preview": "seen.add(str(p))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_bank_mobile_review.py",
+          "line": 216,
+          "preview": "seen.add(aid)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_role_contact_sheet.py",
+          "line": 77,
+          "preview": "seen.add(aid)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_anchor_pair_salvage.py",
+          "line": 23,
+          "preview": "seen.add((x,y))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_anchor_pair_salvage.py",
+          "line": 35,
+          "preview": "seen.add((xx,yy))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_approved_idle_fallback.py",
+          "line": 60,
+          "preview": "visited.add((xx, yy))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_approved_idle_fallback.py",
+          "line": 69,
+          "preview": "visited.add((nx, ny))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_ground_shadow_cleanup.py",
+          "line": 64,
+          "preview": "seen.add((x, y))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_identity_polish_mobile_review.py",
+          "line": 157,
+          "preview": "seen.add(asset_id)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_semantic_gate.py",
+          "line": 280,
+          "preview": "this check to IDLE: raised arms or props can add upper clusters in actions.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory.py",
+          "line": 21,
+          "preview": "DELTA={0:'starter: very small one-storey shell, low roofline, sparse machinery, no tower or gantry',1:'reinforced: retain starter shell, add one attached machinery enclosure and ro",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory.py",
+          "line": 96,
+          "preview": "q=deque([(x,y)]);seen.add((x,y));pts=[]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory.py",
+          "line": 101,
+          "preview": "if 0<=u<128 and 0<=v<128 and n not in seen and px[u,v]>=32: seen.add(n);q.append(n)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory.py",
+          "line": 121,
+          "preview": "seen.add(p)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory.py",
+          "line": 132,
+          "preview": "if n in inner: inner.remove(n);comp.add(n);q.append(n)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 42,
+          "preview": "1:'reinforced starter: retain exact shell, add one attached machinery enclosure and low roof ribs only',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 43,
+          "preview": "2:'industrial: retain all prior anchors, widen attached side bays and add one second integrated subsystem',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 44,
+          "preview": "3:'automated: retain prior structure, add one attached central automation tower and integrated logistics conduit',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 45,
+          "preview": "4:'advanced: retain base and tower, add two physically attached machinery wings and denser routing',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 46,
+          "preview": "5:'megastructure: retain all prior structure, add one large attached upper production assembly and energy routing',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 47,
+          "preview": "6:'ultimate: retain entire evolved structure, add a tall attached central prestige crown and heroic integrated machinery'",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 134,
+          "preview": "q=deque([(x,y)]);seen.add((x,y));pts=[]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 139,
+          "preview": "if 0<=u<128 and 0<=v<128 and n not in seen and px[u,v]>=32:seen.add(n);q.append(n)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 149,
+          "preview": "if px[x,0]==0:q.append((x,0));seen.add((x,0))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 150,
+          "preview": "if px[x,95]==0:q.append((x,95));seen.add((x,95))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 152,
+          "preview": "if px[0,y]==0:q.append((0,y));seen.add((0,y))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 153,
+          "preview": "if px[95,y]==0:q.append((95,y));seen.add((95,y))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 158,
+          "preview": "if 0<=u<96 and 0<=v<96 and n not in seen and px[u,v]==0:seen.add(n);q.append(n)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
+          "line": 48,
+          "preview": "5:'megastructure: preserve prior structure and add a large attached upper production assembly and energy routing',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
+          "line": 49,
+          "preview": "6:'ultimate: preserve the complete evolved structure and add a tall central prestige crown and heroic attached machinery',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
+          "line": 146,
+          "preview": "seen.add(p)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
+          "line": 164,
+          "preview": "q=deque([(x,y)]); seen.add((x,y)); pts=[]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
+          "line": 170,
+          "preview": "seen.add(n); q.append(n)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
+          "line": 191,
+          "preview": "exterior.add(p)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
+          "line": 202,
+          "preview": "if n in inner: inner.remove(n); comp.add(n); q.append(n)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v14.py",
+          "line": 77,
+          "preview": "seen.add(p)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v14.py",
+          "line": 89,
+          "preview": "q=deque([(x,y)]);seen.add((x,y));pts=[]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v14.py",
+          "line": 94,
+          "preview": "if 0<=u<128 and 0<=v<128 and n not in seen and px[u,v]>=32:seen.add(n);q.append(n)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+          "line": 31,
+          "preview": "1: 'first architectural expansion: add one large attached side volume that visibly changes the outer silhouette; do not merely enlarge the baseline',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+          "line": 32,
+          "preview": "2: 'second architectural expansion: add a different connected wing or ring segment on the opposite axis and broaden the footprint; preserve family identity but change massing',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+          "line": 34,
+          "preview": "4: 'advanced complex: add a substantial upper structural block and two fused service/process volumes; create a new stepped silhouette rather than decorating or scaling T3',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+          "line": 35,
+          "preview": "5: 'megastructure evolution: add a dominant family-appropriate tower, ring, dome, furnace, portal, or energy-core mass plus enlarged connected wings; unmistakably new architecture,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+          "line": 61,
+          "preview": "2: 'major second redesign: add a second offset containment ring stage plus substantial rear shield blocks and one forward process module; produce a distinctly stepped footprint, no",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+          "line": 62,
+          "preview": "3: 'major vertical redesign: raise a tall central reality-core tower through the ring, add two low fused machinery blocks and break the pure circular silhouette; unmistakable heigh",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+          "line": 63,
+          "preview": "4: 'add a second elevated containment stage and four connected shield/process blocks, creating a stepped multi-level silhouette',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+          "line": 74,
+          "preview": "1:'add one visibly larger fused laboratory wing and reinforce the central data core; wider silhouette, same headquarters identity',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+          "line": 75,
+          "preview": "2:'add the opposite fused lab wing plus an enclosed utility/data annex; broaden footprint without creating a campus',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+          "line": 77,
+          "preview": "4:'add a second-storey research block bridging the fused lab wings; denser service modules remain attached to one building',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+          "line": 83,
+          "preview": "1:'add one taller fused tower mass and a connected industrial podium section; retain one urban megablock',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+          "line": 84,
+          "preview": "2:'add a second unequal tower and an enclosed cross-block transit spine; clearly denser skyline silhouette',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+          "line": 92,
+          "preview": "1:'add a second connected habitat module and short sealed service tunnel; preserve low lunar-colony silhouette',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+          "line": 93,
+          "preview": "2:'add a larger utility/processing block and another sealed dome on the opposite side; wider connected colony footprint',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+          "line": 102,
+          "preview": "2:'add the opposite fused production wing plus a taller enclosed industrial block; broader palace-factory silhouette',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+          "line": 110,
+          "preview": "1:'add a larger fused collector arc and one connected routing hub; visibly wider energy structure',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+          "line": 111,
+          "preview": "2:'add the opposite enclosed collector arc to form a partial ring around the persistent central hub',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+          "line": 112,
+          "preview": "3:'raise a taller central power-transfer core through the partial ring and add lower fused routing masses',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+          "line": 120,
+          "preview": "2:'add the opposite fused logistics wing plus a larger connected cargo-routing block; broader station footprint',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+          "line": 128,
+          "preview": "1:'thicken the same portal frame and add one large fused service wing; gateway remains the dominant feature',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+          "line": 129,
+          "preview": "2:'add the opposite fused service wing plus integrated energy-routing housings around the persistent portal frame',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16.py",
+          "line": 149,
+          "preview": "2: 'second redesign of the same vertical nexus: add offset attached energy systems around the persistent side pylons and raise the central spine; stepped connected massing, not a r",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16_10.py",
+          "line": 23,
+          "preview": "# Phase A (T0-T3): preserve massing. Phase B (T4-T6): add detail/attached volumes",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16_10.py",
+          "line": 63,
+          "preview": "1:'structural evolution: preserve the core shell but add one clearly visible attached utility wing and reinforced entrance volume',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16_10.py",
+          "line": 64,
+          "preview": "2:'structural evolution: add a second attached lab/production wing and broaden the connected footprint; silhouette must visibly differ from T1',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16_10.py",
+          "line": 65,
+          "preview": "3:'structural evolution: add a taller central automation/data-core volume plus enclosed side machinery; increase verticality as well as footprint',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16_10.py",
+          "line": 66,
+          "preview": "4:'district-scale evolution: add a second-storey research block and dense attached service modules while preserving the same facade axis and family DNA',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v16_10.py",
+          "line": 67,
+          "preview": "5:'megastructure evolution: add a substantial central tower/core, larger symmetric lab wings and premium enclosed energy-routing machinery; unmistakably larger and richer than T4',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v17.py",
+          "line": 31,
+          "preview": "1: 'first architectural expansion: add one large attached side volume that visibly changes the outer silhouette; do not merely enlarge the baseline',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v17.py",
+          "line": 32,
+          "preview": "2: 'second architectural expansion: add a different connected wing or ring segment on the opposite axis and broaden the footprint; preserve family identity but change massing',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v17.py",
+          "line": 34,
+          "preview": "4: 'advanced complex: add a substantial upper structural block and two fused service/process volumes; create a new stepped silhouette rather than decorating or scaling T3',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v17.py",
+          "line": 35,
+          "preview": "5: 'megastructure evolution: add a dominant family-appropriate tower, ring, dome, furnace, portal, or energy-core mass plus enlarged connected wings; unmistakably new architecture,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v17.py",
+          "line": 61,
+          "preview": "2: 'major second redesign: add a second offset containment ring stage plus substantial rear shield blocks and one forward process module; produce a distinctly stepped footprint, no",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v17.py",
+          "line": 62,
+          "preview": "3: 'major vertical redesign: raise a tall central reality-core tower through the ring, add two low fused machinery blocks and break the pure circular silhouette; unmistakable heigh",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v17.py",
+          "line": 63,
+          "preview": "4: 'add a second elevated containment stage and four connected shield/process blocks, creating a stepped multi-level silhouette',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v17.py",
+          "line": 74,
+          "preview": "1:'add one visibly larger fused laboratory wing and reinforce the central data core; wider silhouette, same headquarters identity',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v17.py",
+          "line": 75,
+          "preview": "2:'add the opposite fused lab wing plus an enclosed utility/data annex; broaden footprint without creating a campus',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v17.py",
+          "line": 77,
+          "preview": "4:'add a second-storey research block bridging the fused lab wings; denser service modules remain attached to one building',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v17.py",
+          "line": 83,
+          "preview": "1:'add one taller fused tower mass and a connected industrial podium section; retain one urban megablock',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v17.py",
+          "line": 84,
+          "preview": "2:'add a second unequal tower and an enclosed cross-block transit spine; clearly denser skyline silhouette',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v17.py",
+          "line": 92,
+          "preview": "1:'add a second connected habitat module and short sealed service tunnel; preserve low lunar-colony silhouette',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v17.py",
+          "line": 93,
+          "preview": "2:'add a larger utility/processing block and another sealed dome on the opposite side; wider connected colony footprint',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v17.py",
+          "line": 102,
+          "preview": "2:'add the opposite fused production wing plus a taller enclosed industrial block; broader palace-factory silhouette',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v17.py",
+          "line": 110,
+          "preview": "1:'add a larger fused collector arc and one connected routing hub; visibly wider energy structure',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v17.py",
+          "line": 111,
+          "preview": "2:'add the opposite enclosed collector arc to form a partial ring around the persistent central hub',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v17.py",
+          "line": 112,
+          "preview": "3:'raise a taller central power-transfer core through the partial ring and add lower fused routing masses',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v17.py",
+          "line": 120,
+          "preview": "2:'add the opposite fused logistics wing plus a larger connected cargo-routing block; broader station footprint',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v17.py",
+          "line": 128,
+          "preview": "1:'thicken the same portal frame and add one large fused service wing; gateway remains the dominant feature',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v17.py",
+          "line": 129,
+          "preview": "2:'add the opposite fused service wing plus integrated energy-routing housings around the persistent portal frame',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v17.py",
+          "line": 149,
+          "preview": "2: 'second redesign of the same vertical nexus: add offset attached energy systems around the persistent side pylons and raise the central spine; stepped connected massing, not a r",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 172,
+          "preview": "seen.add(hint.casefold())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 379,
+          "preview": "seen.add(p)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 424,
+          "preview": "stack=[(sx,sy)];seen.add((sx,sy));n=0",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 429,
+          "preview": "seen.add((nx,ny));stack.append((nx,ny))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 732,
+          "preview": "verified_idle_roles.add(item['role'])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 908,
+          "preview": "verified_idle_roles.add(i['role'])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_fx_sheet_factory_v1.py",
+          "line": 29,
+          "preview": "def add(dst,src): return Image.alpha_composite(dst,src)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_fx_sheet_factory_v1.py",
+          "line": 76,
+          "preview": "return add(glow(im,8),im)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_sprite_factory.py",
+          "line": 109,
+          "preview": "if mp[x,y]<180 and (x,y) not in seen:seen.add((x,y));q.append((x,y))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_sprite_factory.py",
+          "line": 112,
+          "preview": "if mp[x,y]<180 and (x,y) not in seen:seen.add((x,y));q.append((x,y))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_sprite_factory.py",
+          "line": 116,
+          "preview": "if 0<=nx<w and 0<=ny<h and (nx,ny) not in seen and mp[nx,ny]<180:seen.add((nx,ny));q.append((nx,ny))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_sprite_factory.py",
+          "line": 123,
+          "preview": "q=deque([(x,y)]);seen.add((x,y));pts=[]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_sprite_factory.py",
+          "line": 128,
+          "preview": "if 0<=nx<128 and 0<=ny<128 and n not in seen and px[nx,ny]>=threshold:seen.add(n);q.append(n)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/local_character_material_finish.py",
+          "line": 43,
+          "preview": "light=ImageChops.add(light,warm,scale=1.0,offset=0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/local_character_material_finish.py",
+          "line": 44,
+          "preview": "light=ImageChops.add(light,cool,scale=1.0,offset=0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_factory.py",
+          "line": 160,
+          "preview": "comp=[]; stack=[(x,y)]; seen.add((x,y))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_factory.py",
+          "line": 165,
+          "preview": "seen.add((nx,ny)); stack.append((nx,ny))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 182,
+          "preview": "stack=[(x,y)]; seen.add((x,y)); comp=[]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 187,
+          "preview": "seen.add((nx,ny)); stack.append((nx,ny))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 453,
+          "preview": "bad.add('CHARACTER_TOO_SMALL_FOR_CELL')",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 120
+    },
+    "line": {
+      "definition": {
+        "file": "tools/sprites/render_chatgpt_originals.py",
+        "line": 52,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/BillingDiagnosticsTest.kt",
+          "line": 11,
+          "preview": "val line = BillingDiagnostic(",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/BillingDiagnosticsTest.kt",
+          "line": 17,
+          "preview": "assertEquals(\"operation=CONSUME responseCode=-1 category=SERVICE_DISCONNECTED\", line)",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/BillingDiagnosticsTest.kt",
+          "line": 18,
+          "preview": "assertFalse(line.contains(\"token\", ignoreCase = true))",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/BillingDiagnosticsTest.kt",
+          "line": 19,
+          "preview": "assertFalse(line.contains(\"order\", ignoreCase = true))",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/test/java/com/zerotoempire/game/BillingDiagnosticsTest.kt",
+          "line": 20,
+          "preview": "assertFalse(line.contains(\"product\", ignoreCase = true))",
+          "definition_candidate": false
+        },
+        {
+          "file": "kaggle/github_mass_factory.py",
+          "line": 49,
+          "preview": "for line in (REPO/'docs/art/FINAL_AAA_SPRITE_MANIFEST.md').read_text(encoding='utf-8').splitlines():",
+          "definition_candidate": false
+        },
+        {
+          "file": "kaggle/github_mass_factory.py",
+          "line": 50,
+          "preview": "m=ROW.match(line)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/manifest.py",
+          "line": 28,
+          "preview": "for line in path.read_text(encoding=\"utf-8\").splitlines():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/manifest.py",
+          "line": 29,
+          "preview": "match = ROW.match(line)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/animation_batch_planner.py",
+          "line": 65,
+          "preview": "for line in (root / MANIFEST.relative_to(ROOT)).read_text(encoding=\"utf-8\").splitlines():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/animation_batch_planner.py",
+          "line": 66,
+          "preview": "match = ROW.match(line)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_queue_utils.py",
+          "line": 57,
+          "preview": "for line in MANIFEST.read_text(encoding=\"utf-8\").splitlines():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/asset_queue_utils.py",
+          "line": 58,
+          "preview": "m = ROW.match(line)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_complete_sprite_manifest.py",
+          "line": 21,
+          "preview": "for line in MANIFEST.read_text(encoding='utf-8').splitlines():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_complete_sprite_manifest.py",
+          "line": 22,
+          "preview": "if not line.startswith('|') or 'app/src/main/res/' not in line: continue",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_complete_sprite_manifest.py",
+          "line": 23,
+          "preview": "cols=[c.strip() for c in line.split('|')[1:-1]]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_bank_mobile_review.py",
+          "line": 33,
+          "preview": "p{line-height:1.45;color:#b5c7de}.muted{color:#b5c7de;font-size:.9rem}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 86,
+          "preview": "draw.line((0, y, width, y), fill=(68, 75, 86), width=1)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_original_offline_review.py",
+          "line": 17,
+          "preview": "p,.muted{color:#b6c4d8;line-height:1.5}.warn{border-left:3px solid #efbb78;padding:9px;background:#292a30}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_approved_idle_fallback.py",
+          "line": 30,
+          "preview": "for line in manifest.read_text(encoding=\"utf-8\").splitlines():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_approved_idle_fallback.py",
+          "line": 31,
+          "preview": "if _ITEM.match(line) and line.split(\"|\")[1].strip() == source_id:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_approved_idle_fallback.py",
+          "line": 32,
+          "preview": "statuses.append(line.split(\"|\")[-2].strip().upper())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_cargo_identity_lock.py",
+          "line": 42,
+          "preview": "brush.line((0, y, 255, y), fill=max(0, min(255, round(255 * factor))))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_identity_polish_mobile_review.py",
+          "line": 22,
+          "preview": "p{line-height:1.5;color:#bbccde}.muted{color:#bbccde;font-size:.88rem}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/colab_mass_factory.py",
+          "line": 82,
+          "preview": "for line in manifest.read_text(encoding='utf-8').splitlines():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/colab_mass_factory.py",
+          "line": 83,
+          "preview": "m = ROW.match(line)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_public_flux_factory.py",
+          "line": 19,
+          "preview": "for line in MANIFEST.read_text(encoding='utf-8').splitlines():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_public_flux_factory.py",
+          "line": 20,
+          "preview": "if not line.startswith('|') or 'app/src/main/res/' not in line: continue",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_public_flux_factory.py",
+          "line": 21,
+          "preview": "cols=[c.strip() for c in line.split('|')[1:-1]]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_sprite_factory.py",
+          "line": 50,
+          "preview": "for line in sse.splitlines():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_sprite_factory.py",
+          "line": 51,
+          "preview": "if line.startswith(\"event:\"):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_sprite_factory.py",
+          "line": 52,
+          "preview": "current_event = line.split(\":\", 1)[1].strip()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_sprite_factory.py",
+          "line": 53,
+          "preview": "elif line.startswith(\"data:\") and current_event == \"complete\":",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_sprite_factory.py",
+          "line": 54,
+          "preview": "complete_data = json.loads(line.split(\":\", 1)[1].strip())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_static_manifest_factory.py",
+          "line": 60,
+          "preview": "for line in MANIFEST.read_text(encoding=\"utf-8\").splitlines():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_static_manifest_factory.py",
+          "line": 61,
+          "preview": "m = ROW.match(line)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_static_manifest_factory.py",
+          "line": 98,
+          "preview": "for line in sse.splitlines():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_static_manifest_factory.py",
+          "line": 99,
+          "preview": "if line.startswith(\"event:\"):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_static_manifest_factory.py",
+          "line": 100,
+          "preview": "event = line.split(\":\", 1)[1].strip()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_static_manifest_factory.py",
+          "line": 101,
+          "preview": "elif line.startswith(\"data:\") and event == \"complete\":",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_static_manifest_factory.py",
+          "line": 102,
+          "preview": "data = json.loads(line.split(\":\", 1)[1].strip())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory.py",
+          "line": 28,
+          "preview": "for order,line in enumerate(MANIFEST.read_text(encoding='utf-8').splitlines()):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory.py",
+          "line": 29,
+          "preview": "m=ROW.match(line)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 56,
+          "preview": "for order,line in enumerate(MANIFEST.read_text(encoding='utf-8').splitlines()):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 57,
+          "preview": "m=ROW.match(line)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
+          "line": 60,
+          "preview": "for order, line in enumerate(MANIFEST.read_text(encoding='utf-8').splitlines()):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
+          "line": 61,
+          "preview": "m = ROW.match(line)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v14.py",
+          "line": 20,
+          "preview": "for order,line in enumerate(MANIFEST.read_text(encoding='utf-8').splitlines()):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v14.py",
+          "line": 21,
+          "preview": "m=ROW.match(line)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 82,
+          "preview": "for order,line in enumerate(MANIFEST.read_text(encoding='utf-8').splitlines()):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 83,
+          "preview": "m=ROW.match(line)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 280,
+          "preview": "draw.line((508,530,568,517+phase),fill=(54,62,68,255),width=22)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 285,
+          "preview": "draw.line((633,502+phase,697,500+tip_delta),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 295,
+          "preview": "draw.line((493,542,551,528+phase),fill=(57,65,72,255),width=24)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 298,
+          "preview": "draw.line((620,513+phase,700,485+tip_delta),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_fx_sheet_factory_v1.py",
+          "line": 22,
+          "preview": "for line in MANIFEST.read_text(encoding='utf-8').splitlines():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_fx_sheet_factory_v1.py",
+          "line": 23,
+          "preview": "m=ROW.match(line)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_fx_sheet_factory_v1.py",
+          "line": 38,
+          "preview": "d.line((x,y,x2,y2),fill=(255,190+rng.randrange(55),70,round(235*env)),width=rng.choice((2,3)))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_fx_sheet_factory_v1.py",
+          "line": 67,
+          "preview": "d.line(pts,fill=(120,230,255,235),width=5)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_sprite_factory.py",
+          "line": 67,
+          "preview": "for line in MANIFEST.read_text(encoding='utf-8').splitlines():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_sprite_factory.py",
+          "line": 68,
+          "preview": "m=ROW.match(line)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/lightning_studio_factory.py",
+          "line": 68,
+          "preview": "for line in manifest.read_text(encoding=\"utf-8\").splitlines():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/lightning_studio_factory.py",
+          "line": 69,
+          "preview": "m = ROW.match(line)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/local_character_contact_gait.py",
+          "line": 38,
+          "preview": "the sole stays on a constant ground-height line; during recovery it lifts",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/manifest_batch_planner.py",
+          "line": 25,
+          "preview": "for line in MANIFEST.read_text(encoding=\"utf-8\").splitlines():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/manifest_batch_planner.py",
+          "line": 26,
+          "preview": "m = ROW.match(line)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_batch.py",
+          "line": 18,
+          "preview": "for line in MANIFEST.read_text(encoding='utf-8').splitlines():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_batch.py",
+          "line": 19,
+          "preview": "if not line.startswith('|') or 'app/src/main/res/' not in line:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_batch.py",
+          "line": 21,
+          "preview": "cols=[c.strip() for c in line.split('|')[1:-1]]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_batch.py",
+          "line": 45,
+          "preview": "for line in lines:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_batch.py",
+          "line": 46,
+          "preview": "if line.startswith('|'):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_batch.py",
+          "line": 47,
+          "preview": "cols=[c.strip() for c in line.split('|')[1:-1]]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_batch.py",
+          "line": 49,
+          "preview": "cols[4]='RUNTIME'; line='| '+' | '.join(cols)+' |'; changed+=1",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_batch.py",
+          "line": 50,
+          "preview": "out.append(line)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_factory.py",
+          "line": 115,
+          "preview": "for line in MANIFEST.read_text(encoding='utf-8').splitlines():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_factory.py",
+          "line": 116,
+          "preview": "if not line.startswith('|') or 'app/src/main/res/' not in line: continue",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_factory.py",
+          "line": 117,
+          "preview": "cols=[c.strip() for c in line.split('|')[1:-1]]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 46,
+          "preview": "for line in MANIFEST.read_text(encoding='utf-8').splitlines():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 47,
+          "preview": "if not line.startswith('|') or 'CHR-' not in line or 'app/src/main/res/' not in line:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 49,
+          "preview": "p=[x.strip() for x in line.split('|')[1:-1]]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/procedural_fx_factory.py",
+          "line": 55,
+          "preview": "d.line((x0, y0, x1, y1), fill=col, width=2 if i % 3 else 3)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/procedural_terrain_factory.py",
+          "line": 76,
+          "preview": "draw.line([p1,p2], fill=fill, width=width)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/procedural_terrain_factory.py",
+          "line": 86,
+          "preview": "d.line(poly+[poly[0]], fill=(180,190,200,150), width=5, joint=\"curve\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/procedural_terrain_factory.py",
+          "line": 92,
+          "preview": "d.line(inset+[inset[0]], fill=(*mid,135), width=5, joint=\"curve\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/procedural_terrain_factory.py",
+          "line": 100,
+          "preview": "d.line(pts, fill=(25,25,27,150), width=3)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/procedural_terrain_factory.py",
+          "line": 130,
+          "preview": "d.polygon(pad, fill=(*mid,210)); d.line(pad+[pad[0]], fill=(*accent,190), width=9)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/procedural_terrain_factory.py",
+          "line": 136,
+          "preview": "d.line(pad+[pad[0]], fill=(*accent,170), width=8)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 52,
+          "preview": "def line(x1,y1,x2,y2,color,width,outline=3):",
           "definition_candidate": true
         },
         {
-          "file": "tools/sprites/build_character_candidate_bank.py",
-          "line": 151,
-          "preview": "sources = open_archives(archive_folder)",
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 111,
+          "preview": "sleeve=line(shoulder_x,shoulder_y,ex,ey,'url(#jacket)',17,3)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 112,
+          "preview": "sleeve+=line(ex,ey,hx,hy,'url(#jacket)',14,3)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 114,
+          "preview": "sleeve+=line(ex+(1 if side=='R' else -1)*2,ey,hx,hy,p['jacket_hi'],4,1)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 194,
+          "preview": "add(line(hipx,yhip,kx,ky,'url(#pant)',23,3));add(line(kx,ky,ax,ay,'url(#pant)',20,3))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 163,
+          "preview": "d.line((x + offset, y + 25, x + offset, y + 67),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 165,
+          "preview": "d.line((x + offset + 2, y + 25, x + offset + 2, y + 65),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 167,
+          "preview": "d.line((x + 27, y + 64, x + 92, y + 64),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 173,
+          "preview": "d.line((x + 58, y + 47, x + 63, y + 47),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 201,
+          "preview": "d.line((x + 13, y + 32, x + 76, y + 32), fill=(28, 85, 104, 240), width=2)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 223,
+          "preview": "d.line((x-7,y,x+7,y),fill=(180,239,255,round(135*pulse)),width=1)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 237,
+          "preview": "d.line((xx, y + 16, xx, y + 56), fill=(11, 29, 44, 230), width=3)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 245,
+          "preview": "d.line((x + 8, y + 69, x + 53, y + 69),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 254,
+          "preview": "d.line((hand[0], hand[1], tip[0], tip[1]), fill=(39, 55, 65, 250), width=7)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 255,
+          "preview": "d.line((hand[0], hand[1]-2, tip[0]-2, tip[1]-1),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 282,
+          "preview": "d.line((tip, (px, py)), fill=(*tone, alpha), width=3)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 313,
+          "preview": "d.line((px-5,py+4,px+4,py-5),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_walk_v2.py",
+          "line": 144,
+          "preview": "draw.line([xy(-r*.49,yy-slope),xy(r*.47,yy+slope)],",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_walk_v2.py",
+          "line": 146,
+          "preview": "draw.line([xy(-r*.36,yy-slope-2.4),xy(r*.33,yy+slope-2.4)],",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_walk_v2.py",
+          "line": 148,
+          "preview": "draw.line([xy(-r*.56,-r*1.15),xy(-r*.55,r*1.17)],",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_walk_v2.py",
+          "line": 150,
+          "preview": "draw.line([xy(r*.55,-r*1.15),xy(r*.54,r*1.16)],",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_walk_v2.py",
+          "line": 172,
+          "preview": "draw.line([a,b],fill=(123,135,143,150),width=2)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tech_prop_mount.py",
+          "line": 63,
+          "preview": "d.line(coords,fill=(7,16,26,240),width=14,joint=\"curve\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tech_prop_mount.py",
+          "line": 64,
+          "preview": "d.line(coords,fill=(54,70,84,245),width=9,joint=\"curve\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tech_prop_mount.py",
+          "line": 65,
+          "preview": "d.line(coords,fill=(137,156,170,180),width=2,joint=\"curve\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tech_prop_mount.py",
+          "line": 68,
+          "preview": "d.line([(a[0],a[1]-3),(b[0],b[1]-3)],",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 67,
+          "preview": "gd.line([P0,P1],fill=(43,215,235,95),width=78)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 94,
+          "preview": "d.line([shadow_a,shadow_b],fill=(0,9,13,210),width=18)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 95,
+          "preview": "d.line([a,b],fill=(20,136,154,255),width=16)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 96,
+          "preview": "d.line([a,b],fill=(28,225,242,255),width=10)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 97,
+          "preview": "d.line([add(a,mul(N,-2)),add(b,mul(N,-2))],fill=(211,255,255,205),width=3)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 103,
+          "preview": "d.line([add(a,(6,8)),add(b,(6,8))],fill=(23,31,38,255),width=18)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 104,
+          "preview": "d.line([a,b],fill=(116,133,143,255),width=15)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 120
+    },
+    "hand": {
+      "definition": {
+        "file": "tools/sprites/render_chatgpt_originals.py",
+        "line": 55,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/action_contact.py",
+          "line": 30,
+          "preview": "def within(hand):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/action_contact.py",
+          "line": 31,
+          "preview": "x, y = p[hand]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_cargo_identity_lock.py",
+          "line": 1,
+          "preview": "\"\"\"Conservative 256px sprite cargo/hand-region lock for CARRY actions.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_repair_pose_plan.py",
+          "line": 12,
+          "preview": "\"medium crouch, BOTH FEET PLANTED at fixed positions, right hand tool touching waist-height repair fixture, left elbow near torso\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_repair_pose_plan.py",
+          "line": 15,
+          "preview": "\"same planted stance, right hand presses the tool against the SAME point, left hand braces the near panel\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_repair_pose_plan.py",
+          "line": 16,
+          "preview": "\"same planted stance, right elbow withdraws one hand length, torso moves back slightly while keeping repair point in view\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_repair_pose_plan.py",
+          "line": 17,
+          "preview": "\"same planted stance, right hand rotates diagnostic tool for inspection, free hand steadies equipment, knees unchanged\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_repair_pose_plan.py",
+          "line": 20,
+          "preview": "\"same planted stance, right hand retracts from repair point, left hand returns near torso, feet unchanged\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_repair_pose_plan.py",
+          "line": 21,
+          "preview": "\"return to first medium crouch, right hand tool touching original waist-height repair fixture, seamless loop\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_repair_pose_plan.py",
+          "line": 28,
+          "preview": "The hand/tool scaffold supplies much of the pose, so reducing FLUX",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_review_matrix.py",
+          "line": 19,
+          "preview": "\"WORK\":(\"one consistent tool/workstation, both hands visible\",\"hand-to-device contact and work-cycle legibility\"),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 58,
+          "preview": "'WORK':('operating a compact industrial hand tool',10),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 66,
+          "preview": "'WORK':'one visible compact hand tool held at the work point in every frame; arms and torso visibly operate it',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 69,
+          "preview": "'CELEB':'real raised-hand celebration: both shoulders and elbows move through multiple progressive poses, fist visibly overhead at peak, then lower smoothly; no sparks, rays, confe",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 872,
+          "preview": "# One bizarre empty head/hand crop must not abort a 12-sheet GPU kernel,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_sprite_factory.py",
+          "line": 21,
+          "preview": "'compact hand-fed stamping press with exposed flywheel and guarded ram',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/patch_final_character_motion.py",
+          "line": 10,
+          "preview": "old_repair=\"'REPAIR':['half-kneel and reach tool toward low repair point','tool pressed to low repair point, free hand bracing','tool moves horizontally across repair point, no spa",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/patch_final_character_motion.py",
+          "line": 11,
+          "preview": "new_repair=\"'REPAIR':['deep half-kneel, torso leaned far forward, right arm fully extended with tool toward low repair point','tool pressed low, free hand bracing wide, shoulders r",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 31,
+          "preview": "'WORK':('operating one compact industrial hand tool',10),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 414,
+          "preview": "'WORK':'one small industrial tool gripped by the same visible hand while interacting with a compact work point',",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 55,
+          "preview": "def hand(x,y):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 58,
+          "preview": "# x shoulder, elbow, hand; design ergonomic positions for each action.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 116,
+          "preview": "return sleeve+hand(hx,hy)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 281,
+          "preview": "# geometry, with invariant shape within each animation and hand contact.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 307,
+          "preview": "# Two hand grips overlap the left/right handle in every phase.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 312,
+          "preview": "# The exact same right-hand joint drives the held equipment. One cycle",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 354,
+          "preview": "# foreground right arm and hand over equipment, never floating",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 213,
+          "preview": "raise ValueError(\"WORK hand outside touchscreen\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 253,
+          "preview": "hand = (round(p[\"handR\"][0]), round(p[\"handR\"][1]))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 254,
+          "preview": "d.line((hand[0], hand[1], tip[0], tip[1]), fill=(39, 55, 65, 250), width=7)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 255,
+          "preview": "d.line((hand[0], hand[1]-2, tip[0]-2, tip[1]-1),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 292,
+          "preview": "Every mote is derived from a hand anchor and cyclic phase (never random),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 297,
+          "preview": "for side,hand in enumerate((\"handL\",\"handR\")):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 298,
+          "preview": "x,y=p[hand]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 355,
+          "preview": "for hand, shoulder in shoulders.items():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 356,
+          "preview": "distance = math.dist(shoulder, p[hand])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 358,
+          "preview": "violations.append({\"frame\": index, \"hand\": hand,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 361,
+          "preview": "hand: round(max(math.dist(poses[0][hand], q[hand]) for q in poses), 3)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 362,
+          "preview": "for hand in (\"handL\", \"handR\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_action_contact.py",
+          "line": 43,
+          "preview": "hand=(root[0]+58+12*math.sin(phase),root[1]-54+11*math.cos(phase))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_action_contact.py",
+          "line": 44,
+          "preview": "contact=repair_contact({'root':root,'handR':hand})",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 48,
+          "preview": "# WORK and REPAIR used to have identical 15px x 12px hand strokes,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_package_tech_actions_runtime.py",
+          "line": 85,
+          "preview": "# gate for WORK and REPAIR, not just an on-screen hand marker.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 48,
+          "preview": "for hand,dx,dy in [('handL',-24,-86),('handR',23,-85)]:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 50,
+          "preview": "self.assertLessEqual(math.dist(anchor,before[hand]),118)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 119,
+          "preview": "hand = [pose_for(i / 24, action)[\"handR\"] for i in range(24)]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 120,
+          "preview": "self.assertGreaterEqual(max(math.dist(hand[0], q) for q in hand), 18)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 129,
+          "preview": "for hand,dx,dy in ((\"handL\",-24,-86),(\"handR\",23,-85)):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 131,
+          "preview": "self.assertGreaterEqual(shoulder[1]-p[hand][1],65)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_rigged_tech_actions_v3.py",
+          "line": 132,
+          "preview": "self.assertLessEqual(math.dist(shoulder,p[hand]),118)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_weight_transfer.py",
+          "line": 37,
+          "preview": "for hand in ('handL','handR'):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_weight_transfer.py",
+          "line": 39,
+          "preview": "new[hand][0]-old[hand][0],",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_weight_transfer.py",
+          "line": 41,
+          "preview": "self.assertAlmostEqual(new[hand][1],old[hand][1],places=8)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_weight_transfer.py",
+          "line": 57,
+          "preview": "for hand,dx,dy in (('handL',-24,-86),('handR',23,-85)):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_weight_transfer.py",
+          "line": 62,
+          "preview": "self.assertLessEqual(math.dist(shoulder,p[hand]),118)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 55
+    },
+    "joint_arm": {
+      "definition": {
+        "file": "tools/sprites/render_chatgpt_originals.py",
+        "line": 57,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 57,
+          "preview": "def joint_arm(side, pose):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 220,
+          "preview": "add(joint_arm('L',action))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 355,
+          "preview": "add(joint_arm('R',action))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 135,
+          "preview": "self.assertLess(text.index(\"add(joint_arm('R',action))\"),",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "render_atlas": {
+      "definition": {
+        "file": "tools/sprites/render_chatgpt_originals.py",
+        "line": 377,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 377,
+          "preview": "def render_atlas(role,action,outdir,save_svgs=False):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 404,
+          "preview": "results.append(render_atlas(role,action,outdir,args.save_svg))",
           "definition_candidate": false
         }
       ],
       "occurrence_count": 2
     },
-    "assemble": {
-      "definition": {
-        "file": "tools/sprites/build_character_candidate_bank.py",
-        "line": 140,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/BusinessGroup02Evolution.kt",
-          "line": 221,
-          "preview": "// Expansion tiers assemble like powered machinery: a core ignition, segmented",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_candidate_bank.py",
-          "line": 140,
-          "preview": "def assemble(master: Path, archive_folder: Path, output: Path,",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/build_character_candidate_bank.py",
-          "line": 304,
-          "preview": "d = assemble(args.master, args.archives, args.output, args.report,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 16,
-          "preview": "from build_character_candidate_bank import assemble",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 75,
-          "preview": "report = assemble(self.master, self.archives, self.output)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 92,
-          "preview": "report = assemble(self.master, self.archives, self.output)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 101,
-          "preview": "result = assemble(self.master, self.archives, self.output)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 107,
-          "preview": "report = assemble(self.master, self.archives, self.output)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 115,
-          "preview": "assemble(self.master, self.archives, self.output)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 122,
-          "preview": "assemble(self.master, self.archives, self.output)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 168,
-          "preview": "report = assemble(self.master, self.archives, self.output, local_original=local)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 188,
-          "preview": "report = assemble(self.master, self.archives, self.output, local_original=local)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 233,
-          "preview": "normal = assemble(self.master, self.archives, normal_path,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 239,
-          "preview": "preferred = assemble(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 265,
-          "preview": "assemble(self.master, self.archives, self.output,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 269,
-          "preview": "assemble(self.master, self.archives, self.output,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 278,
-          "preview": "assemble(self.master, self.archives, self.output, local_original=local)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 284,
-          "preview": "assemble(self.master, self.archives, self.output, local_original=local)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 295,
-          "preview": "assemble(self.master, self.archives, self.output, local_original=local)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 19
-    },
     "main": {
       "definition": {
-        "file": "tools/sprites/build_character_candidate_bank.py",
-        "line": 293,
+        "file": "tools/sprites/render_chatgpt_originals.py",
+        "line": 396,
         "kind": "function",
         "language": "python"
       },
@@ -739,7 +2464,7 @@
           "file": "tools/sprites/build_character_candidate_bank.py",
           "line": 293,
           "preview": "def main() -> int:",
-          "definition_candidate": true
+          "definition_candidate": false
         },
         {
           "file": "tools/sprites/build_character_candidate_bank.py",
@@ -972,1913 +2697,171 @@
       ],
       "occurrence_count": 120
     },
-    "CharacterBankTests": {
+    "LocalActionFxTests": {
       "definition": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "line": 19,
+        "file": "tools/sprites/test_local_character_action_fx.py",
+        "line": 12,
         "kind": "class",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 19,
-          "preview": "class CharacterBankTests(unittest.TestCase):",
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 12,
+          "preview": "class LocalActionFxTests(unittest.TestCase):",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "setUp": {
+    "test_every_role_has_distinct_integrated_action_effects": {
       "definition": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "line": 20,
+        "file": "tools/sprites/test_local_character_action_fx.py",
+        "line": 13,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/test_character_rejection_evidence.py",
-          "line": 11,
-          "preview": "def setUp(self):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_package_tech_actions_runtime.py",
-          "line": 19,
-          "preview": "def setUp(self):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/test_temporal_sprite_audit.py",
+          "file": "tools/sprites/test_local_character_action_fx.py",
           "line": 13,
-          "preview": "def setUp(self):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_archive_character_candidates.py",
-          "line": 16,
-          "preview": "def setUp(self):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_bank_mobile_review.py",
-          "line": 20,
-          "preview": "def setUp(self):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_bank_motion_audit.py",
-          "line": 20,
-          "preview": "def setUp(self):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 20,
-          "preview": "def setUp(self):",
+          "preview": "def test_every_role_has_distinct_integrated_action_effects(self):",
           "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/tests/test_character_identity_polish.py",
-          "line": 21,
-          "preview": "def setUp(self):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_identity_polish_mobile_review.py",
-          "line": 12,
-          "preview": "def setUp(self):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
-          "line": 19,
-          "preview": "def setUp(self):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
-          "line": 21,
-          "preview": "RoleConsistencySheetTests.setUp(self)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_provisional_idle_seed.py",
-          "line": 20,
-          "preview": "def setUp(self):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-          "line": 20,
-          "preview": "def setUp(self):",
-          "definition_candidate": false
         }
       ],
-      "occurrence_count": 13
+      "occurrence_count": 1
     },
-    "save_master": {
+    "test_action_highlights_close_the_loop": {
       "definition": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "line": 43,
+        "file": "tools/sprites/test_local_character_action_fx.py",
+        "line": 27,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 41,
-          "preview": "self.save_master()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 43,
-          "preview": "def save_master(self):",
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 27,
+          "preview": "def test_action_highlights_close_the_loop(self):",
           "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 100,
-          "preview": "self.save_master()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 166,
-          "preview": "self.save_master()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 230,
-          "preview": "self.save_master()",
-          "definition_candidate": false
         }
       ],
-      "occurrence_count": 5
+      "occurrence_count": 1
     },
-    "png": {
+    "test_raster_effects_do_not_escape_frame_or_create_fake_labels": {
       "definition": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "line": 48,
+        "file": "tools/sprites/test_local_character_action_fx.py",
+        "line": 35,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "kaggle/github_mass_factory.py",
-          "line": 170,
-          "preview": "incoming=REPO/'art/incoming/final-sprites';incoming.mkdir(parents=True,exist_ok=True);before={p.name:digest(p) for p in incoming.glob('*_final.png') if p.is_file()};q=backlog();pri",
-          "definition_candidate": false
-        },
-        {
-          "file": "kaggle/github_mass_factory.py",
-          "line": 186,
-          "preview": "def current_fresh():return [p for p in sorted(incoming.glob('*_final.png')) if p.is_file() and (p.name not in before or before[p.name]!=digest(p))]",
-          "definition_candidate": false
-        },
-        {
-          "file": "kaggle/github_mass_factory.py",
-          "line": 221,
-          "preview": "qa=OUT/'batch-contact-sheet.png';report=OUT/'batch-qa-report.json';subprocess.run(['python','tools/sprites/build_sprite_contact_sheet.py','--output',str(qa),'--report',str(report),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/android/audit_character_runtime.py",
-          "line": 33,
-          "preview": "if path.is_file() and path.suffix.lower() in {\".png\", \".webp\", \".jpg\", \".jpeg\", \".gif\", \".xml\"}:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/android/audit_character_runtime.py",
-          "line": 49,
-          "preview": "missing_files = sorted(name for name in expected if not (DRAWABLES / f\"{name}.webp\").is_file() and not (DRAWABLES / f\"{name}.png\").is_file())",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/android/character_preview_pixel_audit.py",
-          "line": 32,
-          "preview": "shot = folder / f\"tech-stage-{action}{suffix}.png\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/pipeline.py",
-          "line": 53,
-          "preview": "image_path = output_dir / \"candidate.png\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/qa_report.py",
-          "line": 12,
-          "preview": "image_path = candidate_dir / \"candidate.png\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/qa_report.py",
-          "line": 16,
-          "preview": "raise FileNotFoundError(f\"missing candidate.png: {image_path}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/qa_report.py",
-          "line": 28,
-          "preview": "sheet_path = candidate_dir / \"contact-sheet.png\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_pipeline.py",
-          "line": 30,
-          "preview": "\"app/src/main/res/drawable-nodpi/prop_test.png\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_pipeline.py",
-          "line": 44,
-          "preview": "self.assertEqual(result.image_path.name, \"candidate.png\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_pipeline.py",
-          "line": 52,
-          "preview": "asset = ManifestAsset(\"PRP-DONE\", \"Done\", \"done prop\", \"drawable/done.png\", \"DONE\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_qa_report.py",
-          "line": 19,
-          "preview": "image.save(candidate_dir / \"candidate.png\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_qa_report.py",
-          "line": 40,
-          "preview": "self.assertEqual(payload[\"candidate_file\"], \"candidate.png\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_qa_report.py",
-          "line": 52,
-          "preview": "with self.assertRaisesRegex(FileNotFoundError, \"candidate.png\"):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_workflow_policy.py",
-          "line": 31,
-          "preview": "self.assertIn(\"candidate.png\", text)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_workflow_policy.py",
-          "line": 34,
-          "preview": "self.assertIn(\"contact-sheet.png\", text)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_workflow_policy.py",
-          "line": 164,
-          "preview": "self.assertIn(\"candidate_dir.glob('*_final.png')\", text)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/process_final_assets.py",
-          "line": 70,
-          "preview": "preview = PROCESSED / f'{asset_id}.png'",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/process_final_assets.py",
-          "line": 109,
-          "preview": "sheet.save(PROCESSED / f'{asset_id}.png', 'PNG', optimize=True)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/process_final_assets.py",
-          "line": 132,
-          "preview": "if not target.startswith('zte_') or not target.endswith(('_final.webp', '_final.png')):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/animation_batch_planner.py",
-          "line": 88,
-          "preview": "candidate = root / INCOMING.relative_to(ROOT) / (stem + \".png\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/archive_character_candidates.py",
-          "line": 17,
-          "preview": "NAME = re.compile(r\"zte_chr_(?:op|tech|log|eng)_(?:idle|walk|work|carry|repair|celeb)_final\\.png\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/archive_character_candidates.py",
-          "line": 36,
-          "preview": "if list(source.rglob(\"*_final.png\")):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_queue_utils.py",
-          "line": 66,
-          "preview": "runtime = f\"app/src/main/res/drawable-nodpi/zte_business_08_t{tier}_final.png\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/audit_character_bank_motion.py",
-          "line": 141,
-          "preview": "filename = \"zte_chr_\" + parts[1].lower() + \"_\" + parts[2].lower() + \"_final.png\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/audit_character_candidates.py",
-          "line": 141,
-          "preview": "stem=\"zte_chr_\"+asset_id[4:].lower().replace(\"-\",\"_\")+\"_final.png\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/audit_character_candidates.py",
-          "line": 151,
-          "preview": "contact(rows,args.out/\"canonical-character-contact.png\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/audit_chatgpt_originals.py",
-          "line": 79,
-          "preview": "name=f\"zte_chr_{role.lower()}_{action.lower()}_final.png\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/audit_chatgpt_originals.py",
-          "line": 87,
-          "preview": "idle_path=candidates/f\"zte_chr_{role.lower()}_idle_final.png\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/audit_chatgpt_originals.py",
-          "line": 98,
-          "preview": "with Image.open(candidates/f\"zte_chr_{role.lower()}_{action.lower()}_final.png\") as image:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/autonomous_walk.py",
-          "line": 190,
-          "preview": "scene(c.getContext('2d'),p,{background:false,handles:false});return c.toDataURL('image/png')}''',p)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/autonomous_walk.py",
-          "line": 235,
-          "preview": "out=output/'frames'/f'{settings.asset_id}-{i:02d}.png'",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/autonomous_walk.py",
-          "line": 239,
-          "preview": "atlas.save(output/'atlas.png', optimize=True)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_bank_mobile_review.py",
-          "line": 22,
-          "preview": "PNG_NAME = re.compile(r\"^zte_chr_(op|log|eng|tech)_(idle|walk|work|carry|repair|celeb)_final\\.png$\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_bank_mobile_review.py",
-          "line": 244,
-          "preview": "\"selectedAtlas\": \"data:image/png;base64,\" + base64.b64encode(source).decode(\"ascii\"),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_bank_mobile_review.py",
-          "line": 245,
-          "preview": "\"originalAtlas\": \"data:image/png;base64,\" + base64.b64encode(original).decode(\"ascii\"),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_candidate_bank.py",
-          "line": 20,
-          "preview": "ASSET_NAME = re.compile(r\"^zte_chr_(?:op|tech|log|eng)_(?:idle|walk|work|carry|repair|celeb)_final\\.png$\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_candidate_bank.py",
-          "line": 74,
-          "preview": "name = Path(asset[\"runtime\"]).with_suffix(\".png\").name",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_candidate_bank.py",
-          "line": 185,
-          "preview": "name = Path(asset[\"runtime\"]).with_suffix(\".png\").name",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_identity_polish.py",
-          "line": 133,
-          "preview": "fname = \"zte_chr_\" + parsed.group(1).lower() + \"_\" + parsed.group(2).lower() + \"_final.png\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_identity_polish.py",
-          "line": 258,
-          "preview": "filename = asset_id.lower().replace(\"-\", \"_\") + \"_head-polish.png\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_mobile_motion_storyboard.py",
-          "line": 65,
-          "preview": "name = f\"candidates/zte_chr_{role.lower()}_{action.lower()}_final.png\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_review_panels.py",
-          "line": 16,
-          "preview": "PATTERN = re.compile(r\"^zte_chr_(op|tech|log|eng)_(idle|walk|work|carry|repair|celeb)_final\\.png$\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_review_panels.py",
-          "line": 354,
-          "preview": "item = create_panel(role, assets, args.output_dir / f\"review-frames-{role}.png\", qa)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_review_panels.py",
-          "line": 355,
-          "preview": "create_head_panel(role, assets, args.output_dir / f\"review-heads-{role}.png\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_review_panels.py",
-          "line": 356,
-          "preview": "item[\"head_detail_file\"] = f\"review-heads-{role}.png\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_review_panels.py",
-          "line": 360,
-          "preview": "filename = f\"review-mobile-{role}-{action}.png\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_character_role_contact_sheet.py",
-          "line": 78,
-          "preview": "expected_name = f\"zte_chr_{match.group(1).lower()}_{match.group(2).lower()}_final.png\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_original_offline_review.py",
-          "line": 83,
-          "preview": "name=f'zte_chr_{role.lower()}_{action.lower()}_final.png'",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_original_offline_review.py",
-          "line": 94,
-          "preview": "'atlas':'data:image/png;base64,'+base64.b64encode(src.read_bytes()).decode(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_sprite_contact_sheet.py",
-          "line": 20,
-          "preview": "DEFAULT_OUT = ROOT / \"art/production/batch-contact-sheet.png\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_sprite_contact_sheet.py",
-          "line": 22,
-          "preview": "FX_RE = re.compile(r\"^zte_fx_(?:0[0-9]|1[0-7])_final\\.png$\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_sprite_contact_sheet.py",
-          "line": 23,
-          "preview": "CHR_RE = re.compile(r\"^zte_chr_(?:op|tech|log|eng)_(idle|walk|work|carry|repair|celeb)_final\\.png$\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_sprite_contact_sheet.py",
-          "line": 157,
-          "preview": "ap.add_argument(\"--pattern\", default=\"*_final.png\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_tech_review_board.py",
-          "line": 249,
-          "preview": "board(rec,args.output/'tech-review-true-source-board.png')",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/build_tech_review_board.py",
-          "line": 250,
-          "preview": "lower_limb_closeups(rec,args.output/'tech-review-footfall-closeups.png')",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/character_approved_idle_fallback.py",
+          "file": "tools/sprites/test_local_character_action_fx.py",
           "line": 35,
-          "preview": "filename = sprite_dir / f\"zte_chr_{role.lower()}_idle_final.png\"",
-          "definition_candidate": false
-        },
+          "preview": "def test_raster_effects_do_not_escape_frame_or_create_fake_labels(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_repair_is_a_distinct_compact_hand_tool_cycle": {
+      "definition": {
+        "file": "tools/sprites/test_local_character_action_fx.py",
+        "line": 47,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
         {
-          "file": "tools/sprites/character_identity_polish_mobile_review.py",
-          "line": 167,
-          "preview": "\"originalAtlas\": \"data:image/png;base64,\" +",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/character_identity_polish_mobile_review.py",
-          "line": 169,
-          "preview": "\"polishedAtlas\": \"data:image/png;base64,\" +",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/character_provisional_idle_seed.py",
-          "line": 22,
-          "preview": "PNG_NAME = \"zte_chr_eng_idle_final.png\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/character_rejection_evidence.py",
-          "line": 35,
-          "preview": "image_path = root / f\"{stem}_rejected_review_only.png\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/colab_mass_factory.py",
-          "line": 112,
-          "preview": "before = {p.name: digest(p) for p in incoming.glob('*_final.png') if p.is_file()}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/colab_mass_factory.py",
-          "line": 140,
-          "preview": "p for p in sorted(incoming.glob('*_final.png'))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/colab_mass_factory.py",
-          "line": 147,
-          "preview": "qa = OUT / 'batch-contact-sheet.png'",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/export_tech_canonical_review.py",
-          "line": 84,
-          "preview": "path = folder / \"frames\" / f\"CHR-TECH-{action}-{index:02d}.png\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/export_tech_canonical_review.py",
-          "line": 103,
-          "preview": "png = output / (stem + \".png\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/export_tech_canonical_review.py",
-          "line": 104,
-          "preview": "atlas.save(png, optimize=True)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/export_tech_canonical_review.py",
-          "line": 105,
-          "preview": "technical = inspect(png, f\"CHR-TECH-{action}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/export_tech_canonical_review.py",
-          "line": 107,
-          "preview": "png.unlink(missing_ok=True)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/export_tech_canonical_review.py",
-          "line": 116,
-          "preview": "contact.save(output / (stem + \"-contact.png\"), optimize=True)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/export_tech_canonical_review.py",
-          "line": 128,
-          "preview": "\"staged_png\": png.name,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/export_tech_canonical_review.py",
-          "line": 129,
-          "preview": "\"staged_sha256\": digest(png),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_public_flux_factory.py",
-          "line": 107,
-          "preview": "out=INCOMING/f'{stem}.png'",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_sprite_factory.py",
-          "line": 79,
-          "preview": "if suffix not in {\".png\", \".jpg\", \".jpeg\", \".webp\"}:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_sprite_factory.py",
-          "line": 178,
-          "preview": "\"FX-00\": (\"AAA mobile game VFX asset, one single centered warm welding spark burst, bright white-yellow core with short amber orange metal sparks radiating outward, crisp readable ",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_sprite_factory.py",
-          "line": 179,
-          "preview": "\"FX-01\": (\"AAA mobile game VFX asset, one single centered small furnace flame, compact hot orange yellow flame with white-hot center and subtle red edge, crisp readable silhouette ",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_sprite_factory.py",
-          "line": 180,
-          "preview": "\"FX-02\": (\"AAA mobile game VFX asset, one single centered large industrial furnace plasma flame, intense white-hot core with orange amber outer flame and slight cyan plasma accent,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_sprite_factory.py",
-          "line": 181,
-          "preview": "\"FX-03\": (\"AAA mobile game VFX asset, one single centered industrial smoke puff, compact medium gray charcoal vapor cloud expanding upward, soft turbulent edges with readable silho",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_sprite_factory.py",
-          "line": 182,
-          "preview": "\"FX-04\": (\"AAA mobile game VFX asset, one single centered industrial steam vent plume, compact clean white silver cool-gray pressurized steam jet rising upward, soft turbulent vapo",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_sprite_factory.py",
-          "line": 183,
-          "preview": "\"FX-05\": (\"AAA mobile game VFX asset, one single centered cyan energy pulse, compact circular electric cyan blue plasma ring with a bright white-cyan core, crisp readable silhouett",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_sprite_factory.py",
-          "line": 184,
-          "preview": "\"FX-06\": (\"AAA mobile game VFX asset, one single centered warm energy pulse, compact circular amber gold orange plasma ring with a bright white-gold core, crisp readable silhouette",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_sprite_factory.py",
-          "line": 185,
-          "preview": "\"FX-07\": (\"AAA mobile game VFX asset, one single centered construction dust and debris burst, compact warm tan ochre dust cloud with a few small bright stone and metal fragments, e",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/hf_static_manifest_factory.py",
-          "line": 149,
-          "preview": "out=INCOMING/(Path(runtime).stem+\".png\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/identity_locked_walk_candidate.py",
-          "line": 107,
-          "preview": "dest=out/f\"CHR-{role}-WALK-identity-locked-REVIEW.png\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/identity_locked_walk_candidate.py",
-          "line": 112,
-          "preview": "grid.save(out/f\"CHR-{role}-WALK-contact.png\",optimize=True)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/identity_locked_walk_candidate.py",
-          "line": 140,
-          "preview": "path=args.source or Path(\"art/incoming/final-sprites\")/f\"zte_chr_{args.role.lower()}_walk_final.png\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_building_family_factory.py",
-          "line": 240,
-          "preview": "p=INCOMING/f\"{i['stem']}.png\";final.save(p,'PNG',optimize=True);accepted.append(i['id']);print(f\"KAGGLE_VALIDATED={p.relative_to(ROOT)} coverage={cov:.1%} {why}\",flush=True)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
-          "line": 264,
-          "preview": "p=INCOMING/f\"{i['stem']}.png\";final.save(p,'PNG',optimize=True);accepted.append(i['id'])",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
-          "line": 323,
-          "preview": "p=INCOMING/f\"{i['stem']}.png\"; final.save(p,'PNG',optimize=True); accepted.append(i['id'])",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_building_family_factory_v14.py",
-          "line": 166,
-          "preview": "p=INCOMING/f\"{i['stem']}.png\";final.save(p,'PNG',optimize=True);accepted.append(i['id']);print(f\"KAGGLE_VALIDATED={p.relative_to(ROOT)} coverage={cov:.1%} {why}\",flush=True)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_building_family_factory_v15.py",
-          "line": 141,
-          "preview": "p=v14.INCOMING/f\"{i['stem']}.png\";final.save(p,'PNG',optimize=True);accepted.append(i['id']);print(f'KAGGLE_VALIDATED={p.relative_to(v14.ROOT)} coverage={cov:.1%} selected_branch={",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 729,
-          "preview": "dst=INCOMING/f\"{item['stem']}.png\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
-          "line": 906,
-          "preview": "p=INCOMING/f\"{i['stem']}.png\";sheet.save(p,'PNG',optimize=True)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_fx_sheet_factory_v1.py",
-          "line": 128,
-          "preview": "sheet,m,attempt=accepted; p=INCOMING/f\"{item['stem']}.png\"; sheet.save(p,'PNG',optimize=True); rep['accepted']+=1;rep['items'].append({'id':item['id'],'accepted':True,'attempt':att",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/kaggle_sprite_factory.py",
-          "line": 165,
-          "preview": "image=dec.image_processor.postprocess(tensor)[0];final,cov=finish(image,item);out=INCOMING/f\"{item['stem']}.png\";final.save(out,'PNG',optimize=True);ok+=1;print(f'KAGGLE_VALIDATED=",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/lightning_studio_factory.py",
-          "line": 112,
-          "preview": "before = {p.name: digest(p) for p in INCOMING.glob(\"*_final.png\") if p.is_file()}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/lightning_studio_factory.py",
-          "line": 120,
-          "preview": "p for p in sorted(INCOMING.glob(\"*_final.png\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/lightning_studio_factory.py",
-          "line": 127,
-          "preview": "qa = OUT / \"batch-contact-sheet.png\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/multi_provider_static_manifest_factory.py",
-          "line": 111,
-          "preview": "out = factory.INCOMING / (Path(runtime).stem + \".png\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/package_chatgpt_originals.py",
-          "line": 37,
-          "preview": "name=f\"zte_chr_{role.lower()}_{action.lower()}_final.png\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/package_chatgpt_originals.py",
-          "line": 65,
-          "preview": "\"original-review-contact-sheet.png\"):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 123,
-          "preview": "frames=sorted((folder/'frames').glob('*.png'))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 124,
-          "preview": "ensure(len(frames)==count and all(f.name==f'{asset}-{i:02d}.png' for i,f in enumerate(frames)),",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 352,
-          "preview": "path=folder/f'{action.lower()}-{size}.png'",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 358,
-          "preview": "shadow_path=folder/f'{action.lower()}-shadow-{size}.png'",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 379,
-          "preview": "focus_path=folder/f'{action.lower()}-focused-{size}.png'",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 381,
-          "preview": "shadow_path=folder/f'{action.lower()}-focused-shadow-{size}.png'",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 416,
-          "preview": "contact96.save(output/'review-all-actions-96.png',optimize=True)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/package_tech_actions_runtime.py",
-          "line": 417,
-          "preview": "contact_focus.save(output/'review-focused-all-actions-96.png',optimize=True)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/plan_sprite_batches.py",
+          "file": "tools/sprites/test_local_character_action_fx.py",
           "line": 47,
-          "preview": "candidate = INCOMING / f\"{stem}.png\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/pollinations_building_batch.py",
-          "line": 109,
-          "preview": "contact=PROD/f'pollinations-{aid.lower()}-contact.png'",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/pollinations_building_batch.py",
-          "line": 148,
-          "preview": "contact=PROD/f'pollinations-{aid.lower()}-contact.png'",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/pollinations_building_factory.py",
-          "line": 43,
-          "preview": "tmp=Path(f'/tmp/pollinations-board-{int(seed)}-{width}x{height}.png')",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/pollinations_building_factory.py",
-          "line": 92,
-          "preview": "out=INCOMING/f'{stem}.png'",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/pollinations_building_factory.py",
-          "line": 213,
-          "preview": "tmp=Path(f'/tmp/pollinations-{aid.lower()}-{int(seed)}.png')",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/pollinations_building_factory.py",
-          "line": 227,
-          "preview": "out=INCOMING/f'{stem}.png'",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/pollinations_character_sheet_factory.py",
-          "line": 85,
-          "preview": "return OUT/'character-repair-candidates'/f\"{item['stem']}.png\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/pollinations_character_sheet_factory.py",
-          "line": 86,
-          "preview": "return INCOMING/f\"{item['stem']}.png\"",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 120
-    },
-    "source": {
-      "definition": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "line": 55,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
-          "line": 46,
-          "preview": "* entirely absent from the release source set and does not approve assets.",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/CanonicalFxRaster.kt",
-          "line": 8,
-          "preview": "* production asset ids. Do not add a semantic alias without a documented source.",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/CanonicalFxSprite.kt",
-          "line": 28,
-          "preview": "* Only one 128x128 source cell is drawn at a time; the sheet itself is never",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/DynastyProgression.kt",
-          "line": 45,
-          "preview": "/** Persistent campaign score. Every source survives ordinary ascensions. */",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/Monetization.kt",
-          "line": 9,
-          "preview": "* implementations source-compatible while production gateways can actively invalidate loads.",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PlayBillingGateway.kt",
-          "line": 306,
-          "preview": "// the entitlement source; acknowledge promptly to prevent automatic refund.",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/PowerCoreTapImpact.kt",
-          "line": 24,
-          "preview": "* source-verified color match exists. Runtime Canvas drawing is limited to",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/ReviewedCharacterLayer.kt",
-          "line": 220,
-          "preview": "// treatment. Their real atlases, pivots, timing and source pixels",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/WorldSpriteRegistry.kt",
-          "line": 48,
-          "preview": "val source = when (businessId to tier) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/WorldSpriteRegistry.kt",
-          "line": 49,
-          "preview": "0 to 0 -> \"art/source/era01/street_stand/t0/zte_business_00_t0_master.svg\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/WorldSpriteRegistry.kt",
-          "line": 50,
-          "preview": "0 to 1 -> \"art/source/era01/street_stand/t1/zte_business_00_t1_master.svg\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/WorldSpriteRegistry.kt",
-          "line": 51,
-          "preview": "0 to 2 -> \"art/source/era01/street_stand/t2/zte_business_00_t2_master.svg\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/WorldSpriteRegistry.kt",
-          "line": 52,
-          "preview": "1 to 0 -> \"art/source/era01/corner_shop/t0/zte_business_01_t0_master.svg\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/WorldSpriteRegistry.kt",
-          "line": 53,
-          "preview": "1 to 1 -> \"art/source/era01/corner_shop/t1/zte_business_01_t1_master.svg\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/WorldSpriteRegistry.kt",
-          "line": 54,
-          "preview": "2 to 0 -> \"art/source/era01/furnace_stall/t0/zte_business_02_t0_master.svg\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/WorldSpriteRegistry.kt",
-          "line": 55,
-          "preview": "2 to 1 -> \"art/source/era01/furnace_stall/t1/zte_business_02_t1_master.svg\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/WorldSpriteRegistry.kt",
-          "line": 56,
-          "preview": "3 to 0 -> \"art/source/era01/assembly_hub/t0/zte_business_03_t0_master.svg\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/WorldSpriteRegistry.kt",
-          "line": 57,
-          "preview": "3 to 1 -> \"art/source/era01/assembly_hub/t1/zte_business_03_t1_master.svg\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/main/java/com/zerotoempire/game/WorldSpriteRegistry.kt",
-          "line": 63,
-          "preview": "sourceMasterPath = source,",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/test/java/com/zerotoempire/game/AmbientCharacterMotionTest.kt",
-          "line": 56,
-          "preview": "fun `reduced motion freezes travel and source atlas pose`() {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/test/java/com/zerotoempire/game/ChallengeRotationTest.kt",
-          "line": 72,
-          "preview": "val source = listOf(",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/test/java/com/zerotoempire/game/ChallengeRotationTest.kt",
-          "line": 78,
-          "preview": "ChallengeOrdering.forCommandCenter(source)",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/test/java/com/zerotoempire/game/ChallengeRotationTest.kt",
-          "line": 80,
-          "preview": "assertEquals(listOf(\"done\", \"claimable\", \"active\"), source.map { it.id })",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/test/java/com/zerotoempire/game/PlayBillingGatewayInvariantTest.kt",
-          "line": 11,
-          "preview": "* These invariants deliberately inspect the production source because PlayBillingGateway owns a",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/test/java/com/zerotoempire/game/PlayBillingGatewayInvariantTest.kt",
-          "line": 17,
-          "preview": "private val source: String by lazy { gatewaySource() }",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/test/java/com/zerotoempire/game/PlayBillingGatewayInvariantTest.kt",
-          "line": 31,
-          "preview": "source.contains(",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/test/java/com/zerotoempire/game/PlayBillingGatewayInvariantTest.kt",
-          "line": 43,
-          "preview": "val function = source.substringAfter(\"private fun completeDeferred(\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/test/java/com/zerotoempire/game/PlayBillingGatewayInvariantTest.kt",
-          "line": 58,
-          "preview": "val function = source.substringAfter(\"override fun disconnect()\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/test/java/com/zerotoempire/game/PlayBillingGatewayInvariantTest.kt",
-          "line": 69,
-          "preview": "val index = source.indexOf(snippet, startIndex = previous + 1)",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/test/java/com/zerotoempire/game/ReviewedTerrainLayerTest.kt",
-          "line": 12,
-          "preview": "val source = listOf(File(relativePath), File(\"app/$relativePath\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/test/java/com/zerotoempire/game/ReviewedTerrainLayerTest.kt",
-          "line": 18,
-          "preview": ".findAll(source)",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt",
-          "line": 10,
-          "preview": "val source = source(\"EndgameAtmosphere.kt\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt",
-          "line": 11,
-          "preview": "val earlyReturn = source.indexOf(\"if (eraIndex < 7) return\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt",
-          "line": 12,
-          "preview": "val animationClock = source.indexOf(\"rememberInfiniteTransition(label\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt",
-          "line": 13,
-          "preview": "val canvas = source.indexOf(\"Canvas(modifier)\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt",
-          "line": 22,
-          "preview": "val source = source(\"EmpireCoreArt.kt\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt",
-          "line": 23,
-          "preview": "val reducedBranch = source.indexOf(\"if (reducedMotion)\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt",
-          "line": 24,
-          "preview": "val animationClock = source.indexOf(\"rememberInfiniteTransition(label\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt",
-          "line": 32,
-          "preview": "val source = source(\"MotionQuality.kt\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt",
-          "line": 33,
-          "preview": "assertTrue(source.contains(\"fun reducedMotion(context: Context): Boolean = !animationsEnabled(context) || lowPowerMode(context)\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt",
-          "line": 34,
-          "preview": "assertTrue(source.contains(\"reducedMotion(context) -> 0\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt",
-          "line": 39,
-          "preview": "val source = source(\"CinematicRuntimeTransition.kt\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt",
-          "line": 40,
-          "preview": "assertTrue(source.contains(\"phase < CINEMATIC_TRANSITION_END\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt",
-          "line": 41,
-          "preview": "assertTrue(source.contains(\"if (shouldRenderCinematicTransition(reducedMotion, phase.value))\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt",
-          "line": 44,
-          "preview": "private fun source(name: String): String {",
-          "definition_candidate": false
-        },
-        {
-          "file": "app/src/test/java/com/zerotoempire/game/RuntimePerformanceInvariantTest.kt",
-          "line": 50,
-          "preview": "else -> error(\"Unable to locate production source $name\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "kaggle/github_mass_factory.py",
-          "line": 30,
-          "preview": "print('KAGGLE_ENGINE=yield-router-v12-positive-source-locked',flush=True)",
-          "definition_candidate": false
-        },
-        {
-          "file": "kaggle/github_mass_factory.py",
-          "line": 63,
-          "preview": "# The tarball is the immutable payload uploaded for this exact source fingerprint.",
-          "definition_candidate": false
-        },
-        {
-          "file": "kaggle/github_mass_factory.py",
-          "line": 110,
-          "preview": "source_kind,source=resolve_source()",
-          "definition_candidate": false
-        },
-        {
-          "file": "kaggle/github_mass_factory.py",
-          "line": 111,
-          "preview": "if source is None:raise SystemExit('sprite repository source missing from Kaggle inputs')",
-          "definition_candidate": false
-        },
-        {
-          "file": "kaggle/github_mass_factory.py",
-          "line": 112,
-          "preview": "if source_kind=='tree':shutil.copytree(source,REPO,dirs_exist_ok=True)",
-          "definition_candidate": false
-        },
-        {
-          "file": "kaggle/github_mass_factory.py",
-          "line": 115,
-          "preview": "with tarfile.open(source,'r:gz') as t:t.extractall(REPO)",
-          "definition_candidate": false
-        },
-        {
-          "file": "kaggle/github_mass_factory.py",
-          "line": 116,
-          "preview": "print(f'KAGGLE_REPO_SOURCE={source_kind}:{source}',flush=True)",
-          "definition_candidate": false
-        },
-        {
-          "file": "kaggle/github_mass_factory.py",
-          "line": 217,
-          "preview": "(OUT/'generated-targets.json').write_text(json.dumps({'count':0,'engine':'yield-router-v12-positive-source-locked','lane':lane,'seed':SEED,'backlog':q,'targets':[]},indent=2),encod",
-          "definition_candidate": false
-        },
-        {
-          "file": "kaggle/github_mass_factory.py",
-          "line": 225,
-          "preview": "(OUT/'generated-targets.json').write_text(json.dumps({'count':len(targets),'engine':'yield-router-v12-positive-source-locked','lane':lane,'seed':SEED,'backlog':q,'targets':targets}",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/android/character_preview_pixel_audit.py",
-          "line": 51,
-          "preview": "with Image.open(shot) as source:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/android/character_preview_pixel_audit.py",
-          "line": 52,
-          "preview": "rgb = source.convert(\"RGB\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/android/test_ui_dump_retry.py",
-          "line": 56,
-          "preview": "command = f\"source {HELPER!s}; ui_dump_with_retry {output!s}\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/android/validate_release_privacy.py",
-          "line": 74,
-          "preview": "for source in (\"marketing/privacy-policy.md\", \"marketing/data-safety.md\"):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/android/validate_release_privacy.py",
-          "line": 75,
-          "preview": "if f\"`{source}`\" not in listing:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/android/validate_release_privacy.py",
-          "line": 76,
-          "preview": "raise SystemExit(f\"Play Store listing no longer references {source}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/metadata.py",
-          "line": 42,
-          "preview": "raise MetadataError(f\"unsupported source type: {self.source_type}\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_candidate_archive_workflow.py",
-          "line": 29,
-          "preview": "source = Path(\"tools/sprites/build_character_candidate_bank.py\").read_text()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_candidate_archive_workflow.py",
-          "line": 40,
-          "preview": "self.assertIn(\"candidate-bank-index.json\", source)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_candidate_archive_workflow.py",
-          "line": 41,
-          "preview": "self.assertIn(\"review_artifact_run_id\", source)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_candidate_archive_workflow.py",
-          "line": 42,
-          "preview": "self.assertIn(\"sha256\", source)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_candidate_archive_workflow.py",
-          "line": 43,
-          "preview": "self.assertIn(\"candidate_production_complete\", source)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_candidate_archive_workflow.py",
-          "line": 47,
-          "preview": "self.assertIn(\"validated_local_candidate\", source)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_candidate_archive_workflow.py",
-          "line": 48,
-          "preview": "self.assertIn(\"canonical_queue_production_processed\", source)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_candidate_archive_workflow.py",
-          "line": 49,
-          "preview": "self.assertIn(\"repo-local-original\", source)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_candidate_archive_workflow.py",
-          "line": 50,
-          "preview": "self.assertIn('\"automatic_runtime_promotion\": False', source)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_candidate_archive_workflow.py",
-          "line": 51,
-          "preview": "self.assertIn('\"strict_approved\": False', source)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_candidate_archive_workflow.py",
-          "line": 72,
-          "preview": "source = Path(\"tools/sprites/build_character_bank_mobile_review.py\").read_text()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_candidate_archive_workflow.py",
-          "line": 77,
-          "preview": "self.assertIn(\"hashlib.sha256\", source)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_candidate_archive_workflow.py",
-          "line": 78,
-          "preview": "self.assertIn(\"validated_local_candidate\", source)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_candidate_archive_workflow.py",
-          "line": 79,
-          "preview": "self.assertIn(\"42 px\", source)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_candidate_archive_workflow.py",
-          "line": 80,
-          "preview": "self.assertIn(\"review_only\", source)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_candidate_archive_workflow.py",
-          "line": 88,
-          "preview": "self.assertIn(\"--source-run-id\", flow)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_pollinations_character_qa.py",
-          "line": 19,
-          "preview": "with self.assertRaisesRegex(RuntimeError, \"source edge\"):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_pollinations_character_qa.py",
-          "line": 23,
-          "preview": "with self.assertRaisesRegex(RuntimeError, \"source short\"):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_static_processing.py",
-          "line": 10,
-          "preview": "source = Image.new(\"RGB\", (256, 256), (0, 0, 0))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_static_processing.py",
-          "line": 13,
-          "preview": "source.putpixel((x, y), (230, 180, 90))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_static_processing.py",
-          "line": 15,
-          "preview": "isolated = isolate(source)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_workflow_policy.py",
-          "line": 109,
-          "preview": "self.assertIn(\"Automatic source run resolution requires one shared review_artifact_run_id\", text)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_workflow_policy.py",
-          "line": 123,
-          "preview": "self.assertIn(\"str(recorded or '')!=source\", text)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_workflow_policy.py",
-          "line": 131,
-          "preview": "self.assertIn(\"Promotion source run does not match canonical review provenance\", text)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_workflow_policy.py",
-          "line": 345,
-          "preview": "self.assertIn(\"source subject too short\", text)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_workflow_policy.py",
-          "line": 346,
-          "preview": "self.assertIn(\"source edge contact\", text)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_workflow_policy.py",
-          "line": 356,
-          "preview": "self.assertIn(\"source=semantic_scaffold(anchor_raw,i['action'],fi)\", text)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_workflow_policy.py",
-          "line": 360,
-          "preview": "self.assertIn(\"def semantic_scaffold(source,action,frame_index=0):\", text)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_workflow_policy.py",
-          "line": 362,
-          "preview": "self.assertIn(\"source=semantic_scaffold(shared,i['action'],fi)\", text)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/assets/test_workflow_policy.py",
-          "line": 476,
-          "preview": "self.assertIn(\"source-idle-not-uniquely-strict-done\", Path(",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/process_final_assets.py",
-          "line": 49,
-          "preview": "src = INBOX / spec['source']",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/process_final_assets.py",
-          "line": 81,
-          "preview": "src = INBOX / spec['source']",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/process_final_assets.py",
-          "line": 91,
-          "preview": "source = opened.convert('RGBA')",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/process_final_assets.py",
-          "line": 92,
-          "preview": "alpha_quality(source)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/process_final_assets.py",
-          "line": 95,
-          "preview": "top = round(row * source.height / rows)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/process_final_assets.py",
-          "line": 96,
-          "preview": "bottom = round((row + 1) * source.height / rows)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/process_final_assets.py",
-          "line": 98,
-          "preview": "left = round(column * source.width / columns)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/process_final_assets.py",
-          "line": 99,
-          "preview": "right = round((column + 1) * source.width / columns)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/process_final_assets.py",
-          "line": 100,
-          "preview": "frame = trim_alpha(source.crop((left, top, right, bottom)))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/archive_character_candidates.py",
-          "line": 23,
-          "preview": "def archive_candidates(source: Path, destination: Path, source_run_id: int) -> dict:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/archive_character_candidates.py",
-          "line": 25,
-          "preview": "raise ValueError(\"source run id must be positive\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/archive_character_candidates.py",
-          "line": 26,
-          "preview": "if not source.is_dir():",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/archive_character_candidates.py",
-          "line": 28,
-          "preview": "qa_files = list(source.rglob(\"github-qa-report.json\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/archive_character_candidates.py",
-          "line": 36,
-          "preview": "if list(source.rglob(\"*_final.png\")):",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/archive_character_candidates.py",
-          "line": 38,
-          "preview": "producer_reports = list(source.rglob(\"character-sheet-report.json\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/archive_character_candidates.py",
-          "line": 39,
-          "preview": "generated_manifests = list(source.rglob(\"generated-targets.json\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/archive_character_candidates.py",
-          "line": 82,
-          "preview": "found = [p for p in source.rglob(name) if p.parent.name == \"candidates\" and p.is_file()]",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/archive_character_candidates.py",
-          "line": 94,
-          "preview": "raise ValueError(\"archive exceeds bounded total source size\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/archive_character_candidates.py",
-          "line": 125,
-          "preview": "parser.add_argument(\"--source\", type=Path, required=True)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/archive_character_candidates.py",
-          "line": 127,
-          "preview": "parser.add_argument(\"--source-run-id\", type=int, required=True)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/archive_character_candidates.py",
-          "line": 129,
-          "preview": "manifest = archive_candidates(args.source, args.output, args.source_run_id)",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/asset_wave_orchestrator.py",
-          "line": 473,
-          "preview": "same character to Kaggle or wiping its preserved source evidence.",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/audit_character_bank_motion.py",
-          "line": 44,
-          "preview": "with Image.open(io.BytesIO(blob)) as source:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/audit_character_bank_motion.py",
-          "line": 45,
-          "preview": "source.load()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/audit_character_bank_motion.py",
-          "line": 46,
-          "preview": "if source.size != (1024, 1024) or source.mode != \"RGBA\":",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/audit_character_bank_motion.py",
-          "line": 49,
-          "preview": "source.crop(((i % 4) * 256, (i // 4) * 256,",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/audit_character_bank_motion.py",
-          "line": 82,
-          "preview": "with Image.open(io.BytesIO(blob)) as source:",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/audit_character_bank_motion.py",
-          "line": 83,
-          "preview": "source.load()",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 120
-    },
-    "test_complete_pack_contains_exact_verified_candidate_and_deferred_warnings": {
-      "definition": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "line": 73,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 73,
-          "preview": "def test_complete_pack_contains_exact_verified_candidate_and_deferred_warnings(self):",
+          "preview": "def test_repair_is_a_distinct_compact_hand_tool_cycle(self):",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_missing_source_does_not_inflate_progress": {
+    "test_engineer_repair_wrench_rotates_about_fixed_real_socket": {
       "definition": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "line": 91,
+        "file": "tools/sprites/test_local_character_action_fx.py",
+        "line": 61,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 91,
-          "preview": "def test_missing_source_does_not_inflate_progress(self):",
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 61,
+          "preview": "def test_engineer_repair_wrench_rotates_about_fixed_real_socket(self):",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_dispatched_asset_not_counted_even_with_old_artifact": {
+    "test_engineer_repair_torso_loads_but_both_feet_stay_planted": {
       "definition": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "line": 97,
+        "file": "tools/sprites/test_local_character_action_fx.py",
+        "line": 90,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 97,
-          "preview": "def test_dispatched_asset_not_counted_even_with_old_artifact(self):",
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 90,
+          "preview": "def test_engineer_repair_torso_loads_but_both_feet_stay_planted(self):",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_wrong_source_id_is_never_accepted": {
+    "test_idle_and_walk_have_no_unattached_decorations": {
       "definition": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "line": 105,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 105,
-          "preview": "def test_wrong_source_id_is_never_accepted(self):",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_mismatched_sha_fails_closed": {
-      "definition": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "line": 112,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 112,
-          "preview": "def test_mismatched_sha_fails_closed(self):",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_wrong_dimensions_fail_closed": {
-      "definition": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
+        "file": "tools/sprites/test_local_character_action_fx.py",
         "line": 117,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
+          "file": "tools/sprites/test_local_character_action_fx.py",
           "line": 117,
-          "preview": "def test_wrong_dimensions_fail_closed(self):",
+          "preview": "def test_idle_and_walk_have_no_unattached_decorations(self):",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "authored_original": {
+    "test_bad_role_action_rejected": {
       "definition": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "line": 124,
+        "file": "tools/sprites/test_local_character_action_fx.py",
+        "line": 122,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 124,
-          "preview": "def authored_original(self):",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 164,
-          "preview": "local = self.authored_original()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 186,
-          "preview": "local = self.authored_original()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 195,
-          "preview": "original = self.authored_original()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 274,
-          "preview": "local = self.authored_original()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 281,
-          "preview": "local = self.authored_original()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 287,
-          "preview": "local = self.authored_original()",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 7
-    },
-    "test_local_original_completes_candidate_scope_while_remote_is_dispatched": {
-      "definition": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "line": 163,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 163,
-          "preview": "def test_local_original_completes_candidate_scope_while_remote_is_dispatched(self):",
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 122,
+          "preview": "def test_bad_role_action_rejected(self):",
           "definition_candidate": true
         }
       ],
       "occurrence_count": 1
     },
-    "test_prefer_real_collected_candidate_to_local_original": {
+    "test_renderer_invokes_attached_effects_after_hand": {
       "definition": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "line": 185,
+        "file": "tools/sprites/test_local_character_action_fx.py",
+        "line": 128,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 185,
-          "preview": "def test_prefer_real_collected_candidate_to_local_original(self):",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "complete_eng_original": {
-      "definition": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "line": 194,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 194,
-          "preview": "def complete_eng_original(self):",
-          "definition_candidate": true
-        },
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 216,
-          "preview": "local = self.complete_eng_original()",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 267,
-          "preview": "local = self.complete_eng_original()",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 3
-    },
-    "test_explicit_engineer_cohort_creates_separate_six_action_review_bank": {
-      "definition": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "line": 215,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 215,
-          "preview": "def test_explicit_engineer_cohort_creates_separate_six_action_review_bank(self):",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_engineer_coherent_option_rejects_incomplete_role_or_missing_source": {
-      "definition": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "line": 263,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 263,
-          "preview": "def test_engineer_coherent_option_rejects_incomplete_role_or_missing_source(self):",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_local_manifest_claims_do_not_waive_technical_frame_QA": {
-      "definition": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "line": 273,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 273,
-          "preview": "def test_local_manifest_claims_do_not_waive_technical_frame_QA(self):",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_local_original_requires_all_editable_svg_frames": {
-      "definition": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "line": 280,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 280,
-          "preview": "def test_local_original_requires_all_editable_svg_frames(self):",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_local_original_fails_closed_when_qa_claims_artistic_approval": {
-      "definition": {
-        "file": "tools/sprites/tests/test_character_candidate_bank.py",
-        "line": 286,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/sprites/tests/test_character_candidate_bank.py",
-          "line": 286,
-          "preview": "def test_local_original_fails_closed_when_qa_claims_artistic_approval(self):",
+          "file": "tools/sprites/test_local_character_action_fx.py",
+          "line": 128,
+          "preview": "def test_renderer_invokes_attached_effects_after_hand(self):",
           "definition_candidate": true
         }
       ],
