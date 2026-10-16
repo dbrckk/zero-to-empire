@@ -2315,6 +2315,10 @@ def test_missing_audit_coverage_is_not_silently_ignored(self)
 ⋮----
 def test_semantically_approved_candidate_or_audit_must_be_rejected(self)
 ⋮----
+def test_cross_role_reference_fails_even_with_valid_sha(self)
+⋮----
+def test_forged_reference_distance_and_self_flags_fail_closed(self)
+⋮----
 def test_empty_first_frame_is_blocking_even_with_valid_hash(self)
 ⋮----
 filename = self.entries[0]["filename"]
@@ -3945,6 +3949,15 @@ blob = packed.read(name)
 record = records.get(aid)
 ⋮----
 frame = atlas.crop((0, 0, 256, 256))
+⋮----
+# A matching PNG hash is necessary but insufficient: reject an audit
+# with a forged reference ID, nonsensical distance, or flags claiming
+# a same-role match against another role. Otherwise the mobile sheet
+# can misleadingly direct reviewers to the wrong character family.
+anchors = audit.get("head_identity_reference")
+⋮----
+expected = anchors.get(role)
+distance = item["head_deviation"]
 ⋮----
 def build(bank_path: Path, audit_path: Path, output_path: Path) -> dict
 ⋮----

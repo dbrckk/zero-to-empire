@@ -29,16 +29,18 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-16T10:41:35Z
+Generated: 2026-10-16T10:47:35Z
 
 ### Git
 - Branch: `main`
-- Head: `0faec21dd0f4`
-- Commit date: 2026-10-16T12:41:20+02:00
-- Commit: art: publish 42px day/night motion storyboard for 16 character candidates (#180)
+- Head: `75c7695339db`
+- Commit date: 2026-10-16T12:47:20+02:00
+- Commit: fix(art): verify same-role identity references before visual review (#181)
 - Tracked files: 1811
 
 ### Recently changed files
+- `tools/sprites/build_character_role_contact_sheet.py`
+- `tools/sprites/tests/test_character_role_contact_sheet.py`
 - `.github/workflows/asset-pipeline-ci.yml`
 - `.github/workflows/character-candidate-bank.yml`
 - `tools/sprites/build_character_mobile_motion_storyboard.py`
@@ -47,12 +49,6 @@ Generated: 2026-10-16T10:41:35Z
 - `tools/sprites/character_identity_polish_mobile_review.py`
 - `tools/sprites/tests/test_character_identity_polish.py`
 - `tools/sprites/tests/test_character_identity_polish_mobile_review.py`
-- `tools/sprites/build_character_role_contact_sheet.py`
-- `tools/sprites/tests/test_character_role_contact_sheet.py`
-- `art/production/autofactory-state.json`
-- `art/production/autofactory-summary.md`
-- `art/production/character-strict-review-backlog.md`
-- `art/production/master-asset-queue.json`
 
 ### Project signals
 - `build.gradle.kts`

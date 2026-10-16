@@ -5,20 +5,29 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "_selected_frames": {
+    "_font": {
       "source": {
-        "file": "tools/sprites/build_character_mobile_motion_storyboard.py",
-        "start": 36,
-        "end": 40
+        "file": "tools/sprites/build_character_role_contact_sheet.py",
+        "start": 40,
+        "end": 46
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "_load": {
+      "source": {
+        "file": "tools/sprites/build_character_role_contact_sheet.py",
+        "start": 49,
+        "end": 135
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
     "build": {
       "source": {
-        "file": "tools/sprites/build_character_mobile_motion_storyboard.py",
-        "start": 43,
-        "end": 111
+        "file": "tools/sprites/build_character_role_contact_sheet.py",
+        "start": 138,
+        "end": 190
       },
       "symbol_dependencies": [
         {
@@ -31,7 +40,7 @@
               "language": "python"
             }
           ],
-          "relation": "imported_module"
+          "relation": "same_file"
         },
         {
           "symbol": "_load",
@@ -43,48 +52,24 @@
               "language": "python"
             }
           ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "_selected_frames",
-          "definitions": [
-            {
-              "file": "tools/sprites/build_character_mobile_motion_storyboard.py",
-              "line": 36,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
           "relation": "same_file"
-        },
-        {
-          "symbol": "composite",
-          "definitions": [
-            {
-              "file": "tools/sprites/audit_character_bank_motion.py",
-              "line": 30,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
         }
       ],
-      "dependency_count": 4
+      "dependency_count": 2
     },
     "main": {
       "source": {
-        "file": "tools/sprites/build_character_mobile_motion_storyboard.py",
-        "start": 114,
-        "end": 234
+        "file": "tools/sprites/build_character_role_contact_sheet.py",
+        "start": 193,
+        "end": 313
       },
       "symbol_dependencies": [
         {
           "symbol": "build",
           "definitions": [
             {
-              "file": "tools/sprites/build_character_mobile_motion_storyboard.py",
-              "line": 43,
+              "file": "tools/sprites/build_character_role_contact_sheet.py",
+              "line": 138,
               "kind": "function",
               "language": "python"
             }
@@ -94,43 +79,19 @@
       ],
       "dependency_count": 1
     },
-    "GameplayMotionStoryboardTests": {
+    "RoleConsistencySheetTests": {
       "source": {
-        "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
-        "start": 16,
-        "end": 55
+        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+        "start": 19,
+        "end": 151
       },
       "symbol_dependencies": [
-        {
-          "symbol": "RoleConsistencySheetTests",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-              "line": 19,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "_selected_frames",
-          "definitions": [
-            {
-              "file": "tools/sprites/build_character_mobile_motion_storyboard.py",
-              "line": 36,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        },
         {
           "symbol": "build",
           "definitions": [
             {
-              "file": "tools/sprites/build_character_mobile_motion_storyboard.py",
-              "line": 43,
+              "file": "tools/sprites/build_character_role_contact_sheet.py",
+              "line": 138,
               "kind": "function",
               "language": "python"
             }
@@ -142,19 +103,19 @@
           "definitions": [
             {
               "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-              "line": 61,
+              "line": 62,
               "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "imported_module"
+          "relation": "same_file"
         },
         {
           "symbol": "setUp",
           "definitions": [
             {
-              "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
-              "line": 19,
+              "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+              "line": 20,
               "kind": "function",
               "language": "python"
             }
@@ -162,113 +123,136 @@
           "relation": "same_file"
         },
         {
-          "symbol": "test_42px_both_lighting_conditions_and_no_promotion",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
-              "line": 29,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_automatic_approval_forbidden",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
-              "line": 50,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_corrupt_audit_rejected_without_creating_output",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
-              "line": 42,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "test_frames_include_first_middle_and_loop_seam",
-          "definitions": [
-            {
-              "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
-              "line": 24,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 9
-    },
-    "setUp": {
-      "source": {
-        "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
-        "start": 19,
-        "end": 22
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "RoleConsistencySheetTests",
+          "symbol": "test_cross_role_reference_fails_even_with_valid_sha",
           "definitions": [
             {
               "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-              "line": 19,
-              "kind": "class",
-              "language": "python"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "test_frames_include_first_middle_and_loop_seam": {
-      "source": {
-        "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
-        "start": 24,
-        "end": 27
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "_selected_frames",
-          "definitions": [
-            {
-              "file": "tools/sprites/build_character_mobile_motion_storyboard.py",
-              "line": 36,
+              "line": 122,
               "kind": "function",
               "language": "python"
             }
           ],
-          "relation": "imported_module"
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_empty_first_frame_is_blocking_even_with_valid_hash",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+              "line": 140,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_forged_reference_distance_and_self_flags_fail_closed",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+              "line": 129,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_missing_audit_coverage_is_not_silently_ignored",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+              "line": 105,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_role_sheet_is_readable_png_and_does_not_approve_candidates",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+              "line": 80,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_semantically_approved_candidate_or_audit_must_be_rejected",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+              "line": 111,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_sha_tampering_of_png_or_audit_fails_closed",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+              "line": 92,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 10
+    },
+    "setUp": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+        "start": 20,
+        "end": 60
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "save",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+              "line": 62,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
         }
       ],
       "dependency_count": 1
     },
-    "test_42px_both_lighting_conditions_and_no_promotion": {
+    "save": {
       "source": {
-        "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
-        "start": 29,
-        "end": 40
+        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+        "start": 62,
+        "end": 78
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "test_role_sheet_is_readable_png_and_does_not_approve_candidates": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+        "start": 80,
+        "end": 90
       },
       "symbol_dependencies": [
         {
           "symbol": "build",
           "definitions": [
             {
-              "file": "tools/sprites/build_character_mobile_motion_storyboard.py",
-              "line": 43,
+              "file": "tools/sprites/build_character_role_contact_sheet.py",
+              "line": 138,
               "kind": "function",
               "language": "python"
             }
@@ -278,49 +262,209 @@
       ],
       "dependency_count": 1
     },
-    "test_corrupt_audit_rejected_without_creating_output": {
+    "test_sha_tampering_of_png_or_audit_fails_closed": {
       "source": {
-        "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
-        "start": 42,
-        "end": 48
+        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+        "start": 92,
+        "end": 103
       },
       "symbol_dependencies": [
         {
           "symbol": "build",
           "definitions": [
             {
-              "file": "tools/sprites/build_character_mobile_motion_storyboard.py",
-              "line": 43,
+              "file": "tools/sprites/build_character_role_contact_sheet.py",
+              "line": 138,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "imported_module"
+        },
+        {
+          "symbol": "save",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+              "line": 62,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
         }
       ],
-      "dependency_count": 1
+      "dependency_count": 2
     },
-    "test_automatic_approval_forbidden": {
+    "test_missing_audit_coverage_is_not_silently_ignored": {
       "source": {
-        "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
-        "start": 50,
-        "end": 55
+        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+        "start": 105,
+        "end": 109
       },
       "symbol_dependencies": [
         {
           "symbol": "build",
           "definitions": [
             {
-              "file": "tools/sprites/build_character_mobile_motion_storyboard.py",
-              "line": 43,
+              "file": "tools/sprites/build_character_role_contact_sheet.py",
+              "line": 138,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "imported_module"
+        },
+        {
+          "symbol": "save",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+              "line": 62,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
         }
       ],
-      "dependency_count": 1
+      "dependency_count": 2
+    },
+    "test_semantically_approved_candidate_or_audit_must_be_rejected": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+        "start": 111,
+        "end": 120
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "build",
+          "definitions": [
+            {
+              "file": "tools/sprites/build_character_role_contact_sheet.py",
+              "line": 138,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "save",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+              "line": 62,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_cross_role_reference_fails_even_with_valid_sha": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+        "start": 122,
+        "end": 127
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "build",
+          "definitions": [
+            {
+              "file": "tools/sprites/build_character_role_contact_sheet.py",
+              "line": 138,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "save",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+              "line": 62,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_forged_reference_distance_and_self_flags_fail_closed": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+        "start": 129,
+        "end": 138
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "build",
+          "definitions": [
+            {
+              "file": "tools/sprites/build_character_role_contact_sheet.py",
+              "line": 138,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "save",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+              "line": 62,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "test_empty_first_frame_is_blocking_even_with_valid_hash": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+        "start": 140,
+        "end": 151
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "build",
+          "definitions": [
+            {
+              "file": "tools/sprites/build_character_role_contact_sheet.py",
+              "line": 138,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "save",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+              "line": 62,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
     }
   }
 }

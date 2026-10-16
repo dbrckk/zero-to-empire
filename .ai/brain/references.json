@@ -5,57 +5,98 @@
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
   "symbols": {
-    "_selected_frames": {
+    "_font": {
       "definition": {
-        "file": "tools/sprites/build_character_mobile_motion_storyboard.py",
-        "line": 36,
+        "file": "tools/sprites/build_character_role_contact_sheet.py",
+        "line": 40,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 60,
+          "preview": "def _font(size: int) -> ImageFont.ImageFont:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 76,
+          "preview": "font = _font(17)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 77,
+          "preview": "small = _font(12)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_mobile_motion_storyboard.py",
+          "line": 19,
+          "preview": "from build_character_role_contact_sheet import _font, _load",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_mobile_motion_storyboard.py",
+          "line": 53,
+          "preview": "title_font, label_font, detail_font = _font(20), _font(15), _font(12)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_role_contact_sheet.py",
+          "line": 40,
+          "preview": "def _font(size: int) -> ImageFont.ImageFont:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/build_character_role_contact_sheet.py",
+          "line": 149,
+          "preview": "hfont, font, small = _font(23), _font(16), _font(12)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 7
+    },
+    "_load": {
+      "definition": {
+        "file": "tools/sprites/build_character_role_contact_sheet.py",
+        "line": 49,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/build_character_mobile_motion_storyboard.py",
-          "line": 36,
-          "preview": "def _selected_frames(count: int) -> tuple[int, ...]:",
-          "definition_candidate": true
+          "line": 19,
+          "preview": "from build_character_role_contact_sheet import _font, _load",
+          "definition_candidate": false
         },
         {
           "file": "tools/sprites/build_character_mobile_motion_storyboard.py",
-          "line": 69,
-          "preview": "selected = _selected_frames(count)",
+          "line": 44,
+          "preview": "metadata, rows = _load(bank_path, audit_path)",
           "definition_candidate": false
         },
         {
-          "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
-          "line": 12,
-          "preview": "from build_character_mobile_motion_storyboard import build, _selected_frames",
-          "definition_candidate": false
+          "file": "tools/sprites/build_character_role_contact_sheet.py",
+          "line": 49,
+          "preview": "def _load(bank_path: Path, audit_path: Path) -> tuple[dict, list[dict]]:",
+          "definition_candidate": true
         },
         {
-          "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
-          "line": 25,
-          "preview": "self.assertEqual(_selected_frames(6), (0, 2, 4, 5))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
-          "line": 26,
-          "preview": "self.assertEqual(_selected_frames(8), (0, 2, 5, 7))",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
-          "line": 27,
-          "preview": "self.assertEqual(_selected_frames(10), (0, 3, 6, 9))",
+          "file": "tools/sprites/build_character_role_contact_sheet.py",
+          "line": 139,
+          "preview": "meta, rows = _load(bank_path, audit_path)",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 6
+      "occurrence_count": 4
     },
     "build": {
       "definition": {
-        "file": "tools/sprites/build_character_mobile_motion_storyboard.py",
-        "line": 43,
+        "file": "tools/sprites/build_character_role_contact_sheet.py",
+        "line": 138,
         "kind": "function",
         "language": "python"
       },
@@ -286,7 +327,7 @@
           "file": "tools/sprites/build_character_mobile_motion_storyboard.py",
           "line": 43,
           "preview": "def build(bank_path: Path, audit_path: Path, output_path: Path) -> dict:",
-          "definition_candidate": true
+          "definition_candidate": false
         },
         {
           "file": "tools/sprites/build_character_mobile_motion_storyboard.py",
@@ -296,13 +337,13 @@
         },
         {
           "file": "tools/sprites/build_character_role_contact_sheet.py",
-          "line": 118,
+          "line": 138,
           "preview": "def build(bank_path: Path, audit_path: Path, output_path: Path) -> dict:",
-          "definition_candidate": false
+          "definition_candidate": true
         },
         {
           "file": "tools/sprites/build_character_role_contact_sheet.py",
-          "line": 179,
+          "line": 199,
           "preview": "print(json.dumps(build(args.bank, args.audit, args.output), sort_keys=True))",
           "definition_candidate": false
         },
@@ -650,53 +691,71 @@
         },
         {
           "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-          "line": 79,
+          "line": 81,
           "preview": "report = build(self.bank, self.audit, self.output)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-          "line": 94,
+          "line": 96,
           "preview": "build(self.bank, self.audit, self.output)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-          "line": 101,
+          "line": 103,
           "preview": "build(self.bank, self.audit, self.output)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-          "line": 107,
+          "line": 109,
           "preview": "build(self.bank, self.audit, self.output)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-          "line": 113,
+          "line": 115,
           "preview": "build(self.bank, self.audit, self.output)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-          "line": 118,
+          "line": 120,
           "preview": "build(self.bank, self.audit, self.output)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
-          "line": 131,
+          "line": 127,
+          "preview": "build(self.bank, self.audit, self.output)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+          "line": 133,
+          "preview": "build(self.bank, self.audit, self.output)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+          "line": 138,
+          "preview": "build(self.bank, self.audit, self.output)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+          "line": 151,
           "preview": "build(self.bank, self.audit, self.output)",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 105
+      "occurrence_count": 108
     },
     "main": {
       "definition": {
-        "file": "tools/sprites/build_character_mobile_motion_storyboard.py",
-        "line": 114,
+        "file": "tools/sprites/build_character_role_contact_sheet.py",
+        "line": 193,
         "kind": "function",
         "language": "python"
       },
@@ -1215,7 +1274,7 @@
           "file": "tools/sprites/build_character_mobile_motion_storyboard.py",
           "line": 114,
           "preview": "def main() -> int:",
-          "definition_candidate": true
+          "definition_candidate": false
         },
         {
           "file": "tools/sprites/build_character_mobile_motion_storyboard.py",
@@ -1237,13 +1296,13 @@
         },
         {
           "file": "tools/sprites/build_character_role_contact_sheet.py",
-          "line": 173,
+          "line": 193,
           "preview": "def main() -> int:",
-          "definition_candidate": false
+          "definition_candidate": true
         },
         {
           "file": "tools/sprites/build_character_role_contact_sheet.py",
-          "line": 184,
+          "line": 204,
           "preview": "raise SystemExit(main())",
           "definition_candidate": false
         },
@@ -1424,27 +1483,45 @@
       ],
       "occurrence_count": 120
     },
-    "GameplayMotionStoryboardTests": {
+    "RoleConsistencySheetTests": {
       "definition": {
-        "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
-        "line": 16,
+        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+        "line": 19,
         "kind": "class",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
-          "line": 16,
-          "preview": "class GameplayMotionStoryboardTests(unittest.TestCase):",
+          "line": 13,
+          "preview": "from test_character_role_contact_sheet import RoleConsistencySheetTests",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
+          "line": 17,
+          "preview": "save = RoleConsistencySheetTests.save",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
+          "line": 21,
+          "preview": "RoleConsistencySheetTests.setUp(self)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+          "line": 19,
+          "preview": "class RoleConsistencySheetTests(unittest.TestCase):",
           "definition_candidate": true
         }
       ],
-      "occurrence_count": 1
+      "occurrence_count": 4
     },
     "setUp": {
       "definition": {
-        "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
-        "line": 19,
+        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+        "line": 20,
         "kind": "function",
         "language": "python"
       },
@@ -1507,7 +1584,7 @@
           "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
           "line": 19,
           "preview": "def setUp(self):",
-          "definition_candidate": true
+          "definition_candidate": false
         },
         {
           "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
@@ -1525,74 +1602,856 @@
           "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
           "line": 20,
           "preview": "def setUp(self):",
-          "definition_candidate": false
+          "definition_candidate": true
         }
       ],
       "occurrence_count": 13
     },
-    "test_frames_include_first_middle_and_loop_seam": {
+    "save": {
       "definition": {
-        "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
-        "line": 24,
+        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+        "line": 62,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
+          "file": "app/build.gradle.kts",
+          "line": 17,
+          "preview": "// reviewer cannot overwrite the normal game's DataStore/save files.",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt",
+          "line": 276,
+          "preview": "// runtime drawable or save file is modified.",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/debug/java/com/zerotoempire/game/SmokeSeedReceiver.kt",
+          "line": 18,
+          "preview": "val save = repository.load()",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/debug/java/com/zerotoempire/game/SmokeSeedReceiver.kt",
+          "line": 19,
+          "preview": "val seededCash = maxOf(save.state.cash, requestedCash)",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/debug/java/com/zerotoempire/game/SmokeSeedReceiver.kt",
+          "line": 20,
+          "preview": "repository.save(",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/debug/java/com/zerotoempire/game/SmokeSeedReceiver.kt",
+          "line": 21,
+          "preview": "s = save.state.copy(",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/debug/java/com/zerotoempire/game/SmokeSeedReceiver.kt",
+          "line": 23,
+          "preview": "lifetimeCash = maxOf(save.state.lifetimeCash, seededCash)",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/debug/java/com/zerotoempire/game/SmokeSeedReceiver.kt",
+          "line": 25,
+          "preview": "m = save.meta.copy(onboardingCompleted = true),",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/debug/java/com/zerotoempire/game/SmokeSeedReceiver.kt",
+          "line": 26,
+          "preview": "creditedPurchaseTokens = save.creditedPurchaseTokens",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt",
+          "line": 51,
+          "preview": "* Economy and save behavior remain delegated to the existing GameViewModel.",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/DynastyProgression.kt",
+          "line": 8,
+          "preview": "* It therefore works with every existing save without migrations.",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/GameRepository.kt",
+          "line": 100,
+          "preview": "suspend fun save(s: GameState, m: PlayerMeta, creditedPurchaseTokens: Set<String> = emptySet(), now: Long = System.currentTimeMillis()) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/GameViewModel.kt",
+          "line": 46,
+          "preview": "val save = repository.load()",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/GameViewModel.kt",
+          "line": 47,
+          "preview": "purchaseCreditLedger = PurchaseCreditLedger(save.creditedPurchaseTokens)",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/GameViewModel.kt",
+          "line": 48,
+          "preview": "var restored = save.state",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/GameViewModel.kt",
+          "line": 49,
+          "preview": "val reward = OfflineProgress.calculate(restored, save.lastSeenMillis)",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/GameViewModel.kt",
+          "line": 59,
+          "preview": "_meta.value = save.meta.copy(gems = restored.gems, boostEndsAtMillis = restored.boostEndsAtMillis, highestEraSeen = maxOf(save.meta.highestEraSeen, eraIndex))",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/GameViewModel.kt",
+          "line": 108,
+          "preview": "repository.save(stateSnapshot, metaSnapshot, purchaseCreditLedger.snapshot(), nowMillis)",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/GameViewModel.kt",
+          "line": 325,
+          "preview": "repository.save(stateSnapshot, metaSnapshot)",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/GameViewModel.kt",
+          "line": 329,
+          "preview": "override fun onCleared(){if(loaded&&appForeground){val s=_state.value;val m=_meta.value;viewModelScope.launch{repository.save(s,m)}};super.onCleared()}",
+          "definition_candidate": false
+        },
+        {
+          "file": "app/src/main/java/com/zerotoempire/game/PrivacyPolicy.kt",
           "line": 24,
-          "preview": "def test_frames_include_first_middle_and_loop_seam(self):",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_42px_both_lighting_conditions_and_no_promotion": {
-      "definition": {
-        "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
-        "line": 29,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
+          "preview": "\"Progress, settings, purchase-delivery markers and limited local growth milestones are stored on-device. Android backup or device-transfer services may copy eligible local save dat",
+          "definition_candidate": false
+        },
         {
-          "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
-          "line": 29,
-          "preview": "def test_42px_both_lighting_conditions_and_no_promotion(self):",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "test_corrupt_audit_rejected_without_creating_output": {
-      "definition": {
-        "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
-        "line": 42,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
+          "file": "app/src/main/java/com/zerotoempire/game/UpgradeProgression.kt",
+          "line": 27,
+          "preview": "* Upgrade tiers are deliberately derived from catalog order. No new save fields are required.",
+          "definition_candidate": false
+        },
         {
-          "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
+          "file": "app/src/main/java/com/zerotoempire/game/WorldSpriteRegistry.kt",
+          "line": 10,
+          "preview": "* No economy, save, purchase, unlock or monetization behavior belongs in this registry.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/validate_manifest_policy.py",
+          "line": 36,
+          "preview": "# Backup is intentionally allowlisted to the single gameplay save file. Keep",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/pipeline.py",
+          "line": 55,
+          "preview": "candidate.save(image_path, \"PNG\", optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/assets/test_qa_report.py",
+          "line": 19,
+          "preview": "image.save(candidate_dir / \"candidate.png\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/process_final_assets.py",
+          "line": 71,
+          "preview": "canvas.save(preview, 'PNG', optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/process_final_assets.py",
+          "line": 74,
+          "preview": "canvas.save(runtime, 'WEBP', lossless=True, method=6)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/process_final_assets.py",
+          "line": 76,
+          "preview": "canvas.save(runtime, 'PNG', optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/process_final_assets.py",
+          "line": 109,
+          "preview": "sheet.save(PROCESSED / f'{asset_id}.png', 'PNG', optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/process_final_assets.py",
+          "line": 112,
+          "preview": "sheet.save(runtime, 'WEBP', lossless=True, method=6)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/process_final_assets.py",
+          "line": 114,
+          "preview": "sheet.save(runtime, 'PNG', optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/audit_character_candidates.py",
+          "line": 129,
+          "preview": "canvas.save(output,optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/autonomous_walk.py",
+          "line": 237,
+          "preview": "im.save(out,optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/autonomous_walk.py",
+          "line": 239,
+          "preview": "atlas.save(output/'atlas.png', optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/autonomous_walk.py",
+          "line": 245,
+          "preview": "thumbs[0].save(output/'preview.gif',save_all=True,append_images=thumbs[1:],duration=int(round(1000/settings.fps)),loop=0,optimize=False)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/autonomous_walk.py",
+          "line": 249,
+          "preview": "review.save(output/'contact-sheet.jpg',quality=88)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 56,
+          "preview": "image.save(result, \"PNG\", optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_identity_polish.py",
+          "line": 97,
+          "preview": "canvas.save(destination, \"PNG\", optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_mobile_motion_storyboard.py",
+          "line": 104,
+          "preview": "output.save(output_path, \"PNG\", optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 118,
+          "preview": "panel.save(output, \"PNG\", optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 160,
+          "preview": "image.save(output, \"PNG\", optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 284,
+          "preview": "sheet.save(output, \"PNG\", optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_review_panels.py",
+          "line": 324,
+          "preview": "frames[0].save(output, format=\"GIF\", save_all=True,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_character_role_contact_sheet.py",
+          "line": 184,
+          "preview": "result.save(output_path, \"PNG\", optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_sprite_contact_sheet.py",
+          "line": 149,
+          "preview": "sheet.save(out, \"PNG\", optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_tech_review_board.py",
+          "line": 132,
+          "preview": "im.convert('RGB').save(out, 'PNG', optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_tech_review_board.py",
+          "line": 182,
+          "preview": "surface.convert('RGB').save(out,'PNG',optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_tech_review_board.py",
+          "line": 217,
+          "preview": "frames_out[0].save(out, format='GIF', save_all=True,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/build_tech_review_board.py",
+          "line": 239,
+          "preview": "still[0].save(out, format='GIF', save_all=True, append_images=still[1:], duration=125, loop=0, optimize=False)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/character_rejection_evidence.py",
+          "line": 37,
+          "preview": "atlas.save(image_path, \"PNG\", optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/export_tech_canonical_review.py",
+          "line": 104,
+          "preview": "atlas.save(png, optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/export_tech_canonical_review.py",
+          "line": 116,
+          "preview": "contact.save(output / (stem + \"-contact.png\"), optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/export_tech_canonical_review.py",
+          "line": 117,
+          "preview": "preview[0].save(output / (stem + \"-preview.gif\"),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_public_flux_factory.py",
+          "line": 108,
+          "preview": "isolated.save(out,'PNG',optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_sprite_factory.py",
+          "line": 201,
+          "preview": "sheet.save(out, \"PNG\", optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/hf_static_manifest_factory.py",
+          "line": 150,
+          "preview": "final.save(out,\"PNG\",optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/identity_locked_walk_candidate.py",
+          "line": 108,
+          "preview": "sheet.save(dest,optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/identity_locked_walk_candidate.py",
+          "line": 112,
+          "preview": "grid.save(out/f\"CHR-{role}-WALK-contact.png\",optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory.py",
+          "line": 240,
+          "preview": "p=INCOMING/f\"{i['stem']}.png\";final.save(p,'PNG',optimize=True);accepted.append(i['id']);print(f\"KAGGLE_VALIDATED={p.relative_to(ROOT)} coverage={cov:.1%} {why}\",flush=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v11.py",
+          "line": 264,
+          "preview": "p=INCOMING/f\"{i['stem']}.png\";final.save(p,'PNG',optimize=True);accepted.append(i['id'])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v13.py",
+          "line": 323,
+          "preview": "p=INCOMING/f\"{i['stem']}.png\"; final.save(p,'PNG',optimize=True); accepted.append(i['id'])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v14.py",
+          "line": 166,
+          "preview": "p=INCOMING/f\"{i['stem']}.png\";final.save(p,'PNG',optimize=True);accepted.append(i['id']);print(f\"KAGGLE_VALIDATED={p.relative_to(ROOT)} coverage={cov:.1%} {why}\",flush=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_building_family_factory_v15.py",
+          "line": 141,
+          "preview": "p=v14.INCOMING/f\"{i['stem']}.png\";final.save(p,'PNG',optimize=True);accepted.append(i['id']);print(f'KAGGLE_VALIDATED={p.relative_to(v14.ROOT)} coverage={cov:.1%} selected_branch={",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 730,
+          "preview": "sheet.save(dst,'PNG',optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_character_sheet_factory_v1.py",
+          "line": 906,
+          "preview": "p=INCOMING/f\"{i['stem']}.png\";sheet.save(p,'PNG',optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_fx_sheet_factory_v1.py",
+          "line": 128,
+          "preview": "sheet,m,attempt=accepted; p=INCOMING/f\"{item['stem']}.png\"; sheet.save(p,'PNG',optimize=True); rep['accepted']+=1;rep['items'].append({'id':item['id'],'accepted':True,'attempt':att",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/kaggle_sprite_factory.py",
+          "line": 165,
+          "preview": "image=dec.image_processor.postprocess(tensor)[0];final,cov=finish(image,item);out=INCOMING/f\"{item['stem']}.png\";final.save(out,'PNG',optimize=True);ok+=1;print(f'KAGGLE_VALIDATED=",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/multi_provider_static_manifest_factory.py",
+          "line": 112,
+          "preview": "final.save(out, \"PNG\", optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 353,
+          "preview": "atlas.save(path,optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 359,
+          "preview": "shadow_atlas.save(shadow_path,optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 380,
+          "preview": "focus_atlas.save(focus_path,optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 382,
+          "preview": "focus_shadow_atlas.save(shadow_path,optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 415,
+          "preview": "overview.save(output/'game-scale-overview.jpg',quality=93)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 416,
+          "preview": "contact96.save(output/'review-all-actions-96.png',optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/package_tech_actions_runtime.py",
+          "line": 417,
+          "preview": "contact_focus.save(output/'review-focused-all-actions-96.png',optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_factory.py",
+          "line": 93,
+          "preview": "isolated.save(out,'PNG',optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_building_factory.py",
+          "line": 228,
+          "preview": "isolated.save(out,'PNG',optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 368,
+          "preview": "frame.save(cache_file,'PNG',optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 393,
+          "preview": "frame.save(cache_file,'PNG',optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 498,
+          "preview": "frame.save(cache_file,'PNG',optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/pollinations_character_sheet_factory.py",
+          "line": 562,
+          "preview": "sheet.save(p,'PNG',optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/procedural_fx_factory.py",
+          "line": 186,
+          "preview": "build(target).save(out, \"PNG\", optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/procedural_terrain_factory.py",
+          "line": 170,
+          "preview": "im.save(png,\"PNG\",optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/procedural_terrain_factory.py",
+          "line": 171,
+          "preview": "im.save(webp,\"WEBP\",lossless=True,method=4,exact=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/process_final_sprites.py",
+          "line": 127,
+          "preview": "im.save(out, \"WEBP\", lossless=True, method=4, exact=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/process_final_sprites.py",
+          "line": 170,
+          "preview": "im.save(out, \"WEBP\", lossless=True, method=4, exact=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/process_final_sprites.py",
+          "line": 219,
+          "preview": "canvas.save(out, \"WEBP\", lossless=True, method=4, exact=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/promote_ter07_v3.py",
+          "line": 58,
+          "preview": "im.save(TARGET,'WEBP',lossless=True,method=6,exact=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 358,
+          "preview": "path=outdir/'candidates'/name;path.parent.mkdir(parents=True,exist_ok=True);atlas.save(path,optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_chatgpt_originals.py",
+          "line": 364,
+          "preview": "parser.add_argument('--save-svg',action='store_true')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_original_character_previews.py",
+          "line": 126,
+          "preview": "rendered[0].save(gif_path, \"GIF\", save_all=True, append_images=rendered[1:],",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_original_character_previews.py",
+          "line": 163,
+          "preview": "atlas.save(source/\"original-review-contact-sheet.png\", optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/render_original_character_previews.py",
+          "line": 165,
+          "preview": "board.save(preview/f\"mobile-{role.lower()}.png\", optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/repair_shadowed_character_atlas.py",
+          "line": 63,
+          "preview": "result.save(args.output, \"PNG\", optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 461,
+          "preview": "im.save(out / \"frames\" / f\"{asset_id}-{i:02d}.png\", optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 481,
+          "preview": "atlas.save(out / \"atlas.png\", optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 482,
+          "preview": "sheet.save(out / \"contact.jpg\", quality=91)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 483,
+          "preview": "game_sheet.save(out / \"contact-game-scale.jpg\", quality=90)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_actions_v3.py",
+          "line": 484,
+          "preview": "thumbs[0].save(out / \"preview.gif\", save_all=True, append_images=thumbs[1:],",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_walk_v2.py",
+          "line": 328,
+          "preview": "im.save(out/'frames'/f'CHR-TECH-WALK-{i:02d}.png',optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_walk_v2.py",
+          "line": 338,
+          "preview": "atlas_img.save(out/'atlas.png',optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_walk_v2.py",
+          "line": 341,
+          "preview": "contact.save(out/'contact.jpg',quality=94)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/rigged_tech_walk_v2.py",
+          "line": 342,
+          "preview": "thumbs[0].save(out/'preview.gif',save_all=True,append_images=thumbs[1:],duration=round(1000/fps),loop=0,optimize=False)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/temporal_sprite_audit.py",
+          "line": 204,
+          "preview": "image.save(output/'motion-timeline.png',optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/ter07_energy_conduit_candidate.py",
+          "line": 189,
+          "preview": "im.save(png,'PNG',optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_character_approved_idle_fallback.py",
+          "line": 20,
+          "preview": "atlas.save(path)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_export_tech_canonical_review.py",
+          "line": 70,
+          "preview": "im.save(folder / \"frames\" / f\"CHR-TECH-{action}-{i:02d}.png\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+          "line": 53,
+          "preview": "Image.new('RGBA',(256,256)).save(old/'00.png')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_pollinations_character_sheet_factory.py",
+          "line": 101,
+          "preview": "Image.new('RGBA',(1024,1024)).save(target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_temporal_sprite_audit.py",
+          "line": 48,
+          "preview": "image.save(self.root/a/'frames'/f'CHR-TECH-{a}-{i:02d}.png')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_temporal_sprite_audit.py",
+          "line": 77,
+          "preview": "image.save(self.root/'WORK/frames/CHR-TECH-WORK-06.png')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_temporal_sprite_audit.py",
+          "line": 105,
+          "preview": "corrupted.save(path)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_temporal_sprite_audit.py",
+          "line": 120,
+          "preview": "Image.fromarray(modified,'RGBA').save(path)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_verify_character_action_candidates.py",
           "line": 42,
-          "preview": "def test_corrupt_audit_rejected_without_creating_output(self):",
-          "definition_candidate": true
+          "preview": "atlas(frames).save(target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_verify_character_action_candidates.py",
+          "line": 65,
+          "preview": "atlas(frames).save(Path(temp) / name)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_verify_character_action_candidates.py",
+          "line": 85,
+          "preview": "atlas(frames).save(path)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_verify_character_action_candidates.py",
+          "line": 96,
+          "preview": "atlas([figure() for _ in range(8)]).save(Path(temp) / name)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_verify_character_action_candidates.py",
+          "line": 109,
+          "preview": "Image.new(\"RGBA\", (256, 256)).save(Path(temp) / name)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_verify_character_action_candidates.py",
+          "line": 119,
+          "preview": "Image.new(\"RGBA\", (256, 256)).save(target)",
+          "definition_candidate": false
         }
       ],
-      "occurrence_count": 1
+      "occurrence_count": 120
     },
-    "test_automatic_approval_forbidden": {
+    "test_role_sheet_is_readable_png_and_does_not_approve_candidates": {
       "definition": {
-        "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
-        "line": 50,
+        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+        "line": 80,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
-          "line": 50,
-          "preview": "def test_automatic_approval_forbidden(self):",
+          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+          "line": 80,
+          "preview": "def test_role_sheet_is_readable_png_and_does_not_approve_candidates(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_sha_tampering_of_png_or_audit_fails_closed": {
+      "definition": {
+        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+        "line": 92,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+          "line": 92,
+          "preview": "def test_sha_tampering_of_png_or_audit_fails_closed(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_missing_audit_coverage_is_not_silently_ignored": {
+      "definition": {
+        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+        "line": 105,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+          "line": 105,
+          "preview": "def test_missing_audit_coverage_is_not_silently_ignored(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_semantically_approved_candidate_or_audit_must_be_rejected": {
+      "definition": {
+        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+        "line": 111,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+          "line": 111,
+          "preview": "def test_semantically_approved_candidate_or_audit_must_be_rejected(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_cross_role_reference_fails_even_with_valid_sha": {
+      "definition": {
+        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+        "line": 122,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+          "line": 122,
+          "preview": "def test_cross_role_reference_fails_even_with_valid_sha(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_forged_reference_distance_and_self_flags_fail_closed": {
+      "definition": {
+        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+        "line": 129,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+          "line": 129,
+          "preview": "def test_forged_reference_distance_and_self_flags_fail_closed(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_empty_first_frame_is_blocking_even_with_valid_hash": {
+      "definition": {
+        "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+        "line": 140,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+          "line": 140,
+          "preview": "def test_empty_first_frame_is_blocking_even_with_valid_hash(self):",
           "definition_candidate": true
         }
       ],

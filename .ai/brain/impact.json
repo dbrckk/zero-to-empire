@@ -1,34 +1,28 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "e52e6ba8d37ebe2f98082b71de1e6f63c4df4c65",
-  "head": "0faec21dd0f463346c69c220d04da512a27f0f26",
+  "base": "0faec21dd0f463346c69c220d04da512a27f0f26",
+  "head": "75c7695339db34e1c50f3edcf8b88297aabfb409",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": ".github/workflows/asset-pipeline-ci.yml",
+      "path": "tools/sprites/build_character_role_contact_sheet.py",
       "status": "M"
     },
     {
-      "path": ".github/workflows/character-candidate-bank.yml",
+      "path": "tools/sprites/tests/test_character_role_contact_sheet.py",
       "status": "M"
-    },
-    {
-      "path": "tools/sprites/build_character_mobile_motion_storyboard.py",
-      "status": "A"
-    },
-    {
-      "path": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
-      "status": "A"
     }
   ],
   "changed_source_files": [
-    "tools/sprites/build_character_mobile_motion_storyboard.py",
-    "tools/sprites/tests/test_character_mobile_motion_storyboard.py"
+    "tools/sprites/build_character_role_contact_sheet.py",
+    "tools/sprites/tests/test_character_role_contact_sheet.py"
   ],
   "impacted_files": [
     "tools/sprites/build_character_mobile_motion_storyboard.py",
-    "tools/sprites/tests/test_character_mobile_motion_storyboard.py"
+    "tools/sprites/build_character_role_contact_sheet.py",
+    "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
+    "tools/sprites/tests/test_character_role_contact_sheet.py"
   ],
   "impacted_symbols": [
     {
@@ -48,6 +42,30 @@
       "kind": "function",
       "file": "tools/sprites/build_character_mobile_motion_storyboard.py",
       "line": 114
+    },
+    {
+      "name": "_font",
+      "kind": "function",
+      "file": "tools/sprites/build_character_role_contact_sheet.py",
+      "line": 40
+    },
+    {
+      "name": "_load",
+      "kind": "function",
+      "file": "tools/sprites/build_character_role_contact_sheet.py",
+      "line": 49
+    },
+    {
+      "name": "build",
+      "kind": "function",
+      "file": "tools/sprites/build_character_role_contact_sheet.py",
+      "line": 138
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "tools/sprites/build_character_role_contact_sheet.py",
+      "line": 193
     },
     {
       "name": "GameplayMotionStoryboardTests",
@@ -84,9 +102,70 @@
       "kind": "function",
       "file": "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
       "line": 50
+    },
+    {
+      "name": "RoleConsistencySheetTests",
+      "kind": "class",
+      "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+      "line": 19
+    },
+    {
+      "name": "setUp",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+      "line": 20
+    },
+    {
+      "name": "save",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+      "line": 62
+    },
+    {
+      "name": "test_role_sheet_is_readable_png_and_does_not_approve_candidates",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+      "line": 80
+    },
+    {
+      "name": "test_sha_tampering_of_png_or_audit_fails_closed",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+      "line": 92
+    },
+    {
+      "name": "test_missing_audit_coverage_is_not_silently_ignored",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+      "line": 105
+    },
+    {
+      "name": "test_semantically_approved_candidate_or_audit_must_be_rejected",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+      "line": 111
+    },
+    {
+      "name": "test_cross_role_reference_fails_even_with_valid_sha",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+      "line": 122
+    },
+    {
+      "name": "test_forged_reference_distance_and_self_flags_fail_closed",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+      "line": 129
+    },
+    {
+      "name": "test_empty_first_frame_is_blocking_even_with_valid_hash",
+      "kind": "function",
+      "file": "tools/sprites/tests/test_character_role_contact_sheet.py",
+      "line": 140
     }
   ],
   "selected_tests": [
-    "tools/sprites/tests/test_character_mobile_motion_storyboard.py"
+    "tools/sprites/tests/test_character_mobile_motion_storyboard.py",
+    "tools/sprites/tests/test_character_role_contact_sheet.py"
   ]
 }

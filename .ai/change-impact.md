@@ -1,16 +1,13 @@
 # Change impact
 
-Base: adbcb2fce529105849663aa0ae77a4380d5bb7fa
-Head: 0faec21dd0f463346c69c220d04da512a27f0f26
+Base: 89124f6ccd38a6517beda6ebcb28250e2de6ca6e
+Head: 75c7695339db34e1c50f3edcf8b88297aabfb409
 
 ## Changed files
-- M .github/workflows/asset-pipeline-ci.yml
-- M .github/workflows/character-candidate-bank.yml
-- A tools/sprites/build_character_mobile_motion_storyboard.py
-- A tools/sprites/tests/test_character_mobile_motion_storyboard.py
+- M tools/sprites/build_character_role_contact_sheet.py
+- M tools/sprites/tests/test_character_role_contact_sheet.py
 
 ## Affected areas
-- .github
 - tools
 
 ## Related test candidates
