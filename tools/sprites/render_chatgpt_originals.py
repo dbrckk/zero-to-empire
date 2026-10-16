@@ -41,6 +41,10 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
  if action in ('WALK','CARRY'):
   bounce=2.8*(1-math.cos(phase*2))/2
  elif action=='IDLE':bounce=1.8*math.sin(phase)
+ elif role=='ENG' and action=='REPAIR':
+  # Torque transfers through the knees and shoulders while BOTH boots stay
+  # planted. The socket/tool remain locked to world space, not to this bob.
+  bounce=5.1*math.sin(phase)
  else:bounce=1.6*math.sin(phase)
  # Always keep same facial shape, helmet model, costume palette and 3/4 view.
  s=[]
@@ -75,7 +79,10 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
           else (168+reach_px*.47*reach,115+pump_px*.58*pump+bounce))
    if role=='ENG' and pose=='REPAIR' and side=='R':
     handpos=engineer_repair_wrist(phase)
-    elbow=(168+.45*(handpos[0]-176),115+.58*(handpos[1]-123))
+    # Braced elbow drives the ratchet against a world-fixed socket instead
+    # of letting the entire character remain static during the torque cycle.
+    elbow=(167+9.5*math.sin(phase-.35),
+           115+8.5*math.cos(phase-.35)+.30*bounce)
   elif pose=='WALK':
    swing=motion*(-1 if side=='L' else 1)
    if role=='ENG':
@@ -124,9 +131,9 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
    hipx=106 if side=='L' else 146
    yhip=155+bounce
    knee_x=hipx+(2 if side=='L' else -2)
-   knee_y=190+bounce
+   knee_y=190+(.48*bounce if role=='ENG' and action=='REPAIR' else bounce)
    ankle_x=hipx
-   ankle_y=226+bounce
+   ankle_y=(226 if role=='ENG' and action=='REPAIR' else 226+bounce)
    boot_angle=0.0
   leg_poses.append((side,hipx,yhip,knee_x,knee_y,ankle_x,ankle_y,boot_angle))
  add('<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">')
@@ -182,6 +189,8 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
    gait_attr='data-op-walk-foot' if role=='OP' else 'data-eng-walk-foot'
    foot=foot_pose(phase,side,action,bounce,profile=gait_profile)
    add(f'<g {gait_attr}="{side}" data-planted="{str(foot.planted).lower()}" data-ankle-x="{ax:.2f}" data-ankle-y="{ay:.2f}">')
+  if role=='ENG' and action=='REPAIR':
+   add(f'<g data-eng-repair-foot="{side}" data-ankle-y="{ay:.2f}">')
   add(line(hipx,yhip,kx,ky,'url(#pant)',23,3));add(line(kx,ky,ax,ay,'url(#pant)',20,3))
   # knee armor pad and seam
   add(f'<ellipse cx="{kx:.1f}" cy="{ky:.1f}" rx="11" ry="8" fill="#647687" stroke="#253645" stroke-width="2" opacity=".85"/>')
@@ -199,10 +208,14 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
   add('</g>')
   if role in ('OP','ENG') and action=='WALK':
    add('</g>')  # close the per-leg pose-evidence group
+  if role=='ENG' and action=='REPAIR':
+   add('</g>')  # close world-planted repair boot evidence group
  # Weight shifts toward stance foot; cargo carry sway remains restrained.
  # The hands, equipment, torso, helmet and face all receive the exact same
  # transform, avoiding drift in object contact or character identity.
- add(f'<g transform="translate({torso_weight_shift(phase,action):.2f},0)">')
+ repair_body_evidence=(f' data-eng-repair-body-bounce="{bounce:.2f}"'
+                       if role=='ENG' and action=='REPAIR' else '')
+ add(f'<g{repair_body_evidence} transform="translate({torso_weight_shift(phase,action):.2f},0)">')
  # BACK arm
  add(joint_arm('L',action))
  # main torso, premium tapered silhouette, safety accents
@@ -389,7 +402,7 @@ def main():
  for role in ROLES:
   for action in ACTIONS:
    results.append(render_atlas(role,action,outdir,args.save_svg))
- report={'version':'chatgpt-original-character-rig-v11-engineer-mechanical-motion','strict_done_added':0,'review_only':True,
+ report={'version':'chatgpt-original-character-rig-v12-engineer-planted-torque','strict_done_added':0,'review_only':True,
          'material_finish':'local-alpha-safe-directional-light-v1',
          'action_vfx':'local-rigid-tool-tip-lights-and-engineer-torque-v3',
          'asset_count':len(results),'unresolved_target_count':16,'assets':results}

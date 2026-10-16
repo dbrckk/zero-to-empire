@@ -87,6 +87,33 @@ class LocalActionFxTests(unittest.TestCase):
                         min(tool_angle("REPAIR", p) for p in
                             (math.pi/2, 3*math.pi/2)), 40)
 
+    def test_engineer_repair_torso_loads_but_both_feet_stay_planted(self):
+        from render_chatgpt_originals import svg_frame
+        stations = []
+        motions = []
+        for index in range(10):
+            svg = ET.fromstring(svg_frame("ENG", "REPAIR", index, 10))
+            feet = [e for e in svg.iter()
+                    if e.get("data-eng-repair-foot") is not None]
+            self.assertEqual(
+                {e.get("data-eng-repair-foot") for e in feet}, {"L", "R"})
+            self.assertTrue(all(float(e.get("data-ankle-y")) == 226.0
+                                for e in feet))
+            motion = [e for e in svg.iter()
+                      if e.get("data-eng-repair-body-bounce") is not None]
+            self.assertEqual(len(motion), 1)
+            motions.append(float(motion[0].get("data-eng-repair-body-bounce")))
+            fixed = [e for e in svg.iter()
+                     if e.get("data-fixed-socket") == "true"]
+            self.assertEqual(len(fixed), 1)
+            stations.append(ET.tostring(fixed[0]))
+        self.assertEqual(len(set(stations)), 1)
+        self.assertGreater(max(motions) - min(motions), 9.0)
+        for role in ("OP", "LOG"):
+            svg = svg_frame(role, "REPAIR", 3, 10)
+            self.assertNotIn("data-eng-repair-foot", svg)
+            self.assertNotIn("data-eng-repair-body-bounce", svg)
+
     def test_idle_and_walk_have_no_unattached_decorations(self):
         for role in ROLE_LIGHT:
             self.assertEqual(action_fx(role,'IDLE',0),'')
