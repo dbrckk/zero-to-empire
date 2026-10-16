@@ -87,6 +87,43 @@ class LocalActionFxTests(unittest.TestCase):
                         min(tool_angle("REPAIR", p) for p in
                             (math.pi/2, 3*math.pi/2)), 40)
 
+    def test_engineer_work_scans_with_shared_tool_light_and_planted_boots(self):
+        from render_chatgpt_originals import svg_frame, engineer_work_wrist
+        points = []
+        angles = []
+        for index in range(10):
+            phase = 2 * math.pi * index / 10
+            bounce = 3.6 * math.sin(phase)
+            expected_x, expected_y = engineer_work_wrist(phase, bounce)
+            tree = ET.fromstring(svg_frame("ENG", "WORK", index, 10))
+            tools = [node for node in tree.iter()
+                     if node.get("data-work-tool") == "ENG"]
+            self.assertEqual(len(tools), 1)
+            transform = tools[0].get("transform")
+            coords = transform.split("translate(")[1].split(")")[0].split(",")
+            self.assertAlmostEqual(float(coords[0]), expected_x, delta=.06)
+            self.assertAlmostEqual(float(coords[1]), expected_y, delta=.06)
+            angle = tool_angle("WORK", phase, role="ENG")
+            self.assertIn(f"rotate({angle:.1f})", transform)
+            # The real work light travels with the physical sensor tip.
+            tip = tool_tip("ENG", "WORK", phase,
+                           tool_x=expected_x, tool_y=expected_y)
+            self.assertLessEqual(tip[0], 233.0)
+            points.append((expected_x, expected_y))
+            angles.append(angle)
+            feet = [node for node in tree.iter()
+                    if node.get("data-eng-work-foot") is not None]
+            self.assertEqual({n.get("data-eng-work-foot") for n in feet}, {"L", "R"})
+            self.assertTrue(all(float(n.get("data-ankle-y")) == 226.0
+                                for n in feet))
+        self.assertGreater(max(x for x, _ in points)-min(x for x, _ in points), 40)
+        self.assertGreater(max(y for _, y in points)-min(y for _, y in points), 30)
+        self.assertGreater(max(angles)-min(angles), 23)
+        for role in ("OP", "LOG"):
+            markup = svg_frame(role, "WORK", 3, 10)
+            self.assertNotIn("data-work-tool", markup)
+            self.assertNotIn("data-eng-work-foot", markup)
+
     def test_engineer_repair_torso_loads_but_both_feet_stay_planted(self):
         from render_chatgpt_originals import svg_frame
         stations = []
