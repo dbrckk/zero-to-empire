@@ -356,6 +356,7 @@ tools/
       test_character_bank_mobile_review.py
       test_character_bank_motion_audit.py
       test_character_candidate_bank.py
+      test_character_identity_polish_mobile_review.py
       test_character_identity_polish.py
       test_character_provisional_idle_seed.py
       test_character_repair_pose_plan.py
@@ -384,6 +385,7 @@ tools/
     character_cargo_identity_lock.py
     character_ground_shadow_cleanup.py
     character_head_identity_lock.py
+    character_identity_polish_mobile_review.py
     character_idle_breathing_fallback.py
     character_provisional_idle_seed.py
     character_rejection_evidence.py
@@ -1669,6 +1671,8 @@ on:
       - 'tools/sprites/tests/test_character_role_contact_sheet.py'
       - 'tools/sprites/build_character_identity_polish.py'
       - 'tools/sprites/tests/test_character_identity_polish.py'
+      - 'tools/sprites/character_identity_polish_mobile_review.py'
+      - 'tools/sprites/tests/test_character_identity_polish_mobile_review.py'
       - 'tools/sprites/tests/test_character_candidate_bank.py'
       - 'tools/sprites/tests/test_archive_character_candidates.py'
       - 'tools/sprites/asset_wave_orchestrator.py'
@@ -1739,6 +1743,8 @@ on:
       - 'tools/sprites/tests/test_character_role_contact_sheet.py'
       - 'tools/sprites/build_character_identity_polish.py'
       - 'tools/sprites/tests/test_character_identity_polish.py'
+      - 'tools/sprites/character_identity_polish_mobile_review.py'
+      - 'tools/sprites/tests/test_character_identity_polish_mobile_review.py'
       - 'tools/sprites/tests/test_character_candidate_bank.py'
       - 'tools/sprites/tests/test_archive_character_candidates.py'
       - 'tools/sprites/asset_wave_orchestrator.py'
@@ -2070,6 +2076,7 @@ jobs:
           python -m unittest discover -s tools/sprites/tests -p 'test_character_bank_motion_audit.py' -v
           python -m unittest discover -s tools/sprites/tests -p 'test_character_role_contact_sheet.py' -v
           python -m unittest discover -s tools/sprites/tests -p 'test_character_identity_polish.py' -v
+          python -m unittest discover -s tools/sprites/tests -p 'test_character_identity_polish_mobile_review.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_semantic_gate.py' -v
           python -m unittest discover -s tools/sprites -p 'test_verify_character_idle_candidates.py' -v
           python -m unittest discover -s tools/sprites -p 'test_character_head_identity_lock.py' -v
@@ -2304,7 +2311,8 @@ jobs:
           python -m unittest discover -s tools/sprites/tests -p test_character_bank_motion_audit.py -v
           python -m unittest discover -s tools/sprites/tests -p test_character_role_contact_sheet.py -v
           python -m unittest discover -s tools/sprites/tests -p test_character_identity_polish.py -v
-          python -m py_compile tools/sprites/build_character_candidate_bank.py tools/sprites/build_character_bank_mobile_review.py tools/sprites/audit_character_bank_motion.py tools/sprites/build_character_role_contact_sheet.py tools/sprites/build_character_identity_polish.py
+          python -m unittest discover -s tools/sprites/tests -p test_character_identity_polish_mobile_review.py -v
+          python -m py_compile tools/sprites/build_character_candidate_bank.py tools/sprites/build_character_bank_mobile_review.py tools/sprites/audit_character_bank_motion.py tools/sprites/build_character_role_contact_sheet.py tools/sprites/build_character_identity_polish.py tools/sprites/character_identity_polish_mobile_review.py
 
       - name: Download current permanent candidate archives
         shell: bash
@@ -2375,7 +2383,8 @@ jobs:
             --audit /tmp/zte-character-bank-motion-audit.json \
             --output /tmp/zte-character-identity-polish-current.zip \
             --report /tmp/zte-character-identity-polish-current.json \
-            --comparison /tmp/zte-character-identity-polish-preview.png
+            --comparison /tmp/zte-character-identity-polish-preview.png \
+            --mobile-review /tmp/zte-character-identity-polish-mobile-review.html
           python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
           import json
           d=json.load(open('/tmp/zte-character-identity-polish-current.json'))
@@ -2423,6 +2432,7 @@ jobs:
             /tmp/zte-character-identity-polish-current.zip \
             /tmp/zte-character-identity-polish-current.json \
             /tmp/zte-character-identity-polish-preview.png \
+            /tmp/zte-character-identity-polish-mobile-review.html \
             /tmp/zte-character-bank-role-consistency.png \
             /tmp/zte-character-bank-mobile-review.html \
             --repo "$GITHUB_REPOSITORY" --clobber
@@ -2440,6 +2450,7 @@ jobs:
             /tmp/zte-character-identity-polish-current.zip
             /tmp/zte-character-identity-polish-current.json
             /tmp/zte-character-identity-polish-preview.png
+            /tmp/zte-character-identity-polish-mobile-review.html
             /tmp/zte-character-bank-role-consistency.png
             /tmp/zte-character-bank-mobile-review.html
           retention-days: 30
@@ -30513,6 +30524,35 @@ qa_file = local / "candidate-qa.json"
 data = json.loads(qa_file.read_text())
 ```
 
+## File: tools/sprites/tests/test_character_identity_polish_mobile_review.py
+```python
+"""The offline identity viewer is an export-only review surface, not a publisher."""
+⋮----
+class MobileIdentityReviewTests(unittest.TestCase)
+⋮----
+def setUp(self)
+⋮----
+temp = tempfile.TemporaryDirectory()
+⋮----
+def test_self_contained_readable_and_no_runtime_promotion(self)
+⋮----
+result = write_mobile_review([self.row], self.file, 219)
+⋮----
+html = self.file.read_text(encoding="utf-8")
+⋮----
+def test_injection_attempt_in_label_is_encoded_before_script(self)
+⋮----
+changed = dict(self.row, id="CHR-ENG-WALK</script><script>alert(1)</script>")
+⋮----
+def test_duplicate_ids_and_invalid_frame_counts_block_output(self)
+⋮----
+def test_invalid_strict_done_not_misrepresented(self)
+⋮----
+def test_zero_safe_alternatives_displays_no_fake_candidate(self)
+⋮----
+result = write_mobile_review([], self.file, 219)
+```
+
 ## File: tools/sprites/tests/test_character_identity_polish.py
 ```python
 """Protect deterministic role face/helmet retouch proposals from silent approvals."""
@@ -30543,7 +30583,7 @@ def save(self)
 ⋮----
 def test_proposes_complete_review_only_identity_retouch(self)
 ⋮----
-result = build(self.bank, self.audit, self.output, self.report, self.comparison)
+result = build(self.bank, self.audit, self.output, self.report, self.comparison,
 ⋮----
 row = result["alternatives"][0]
 ⋮----
@@ -30556,11 +30596,15 @@ original = Image.open(io.BytesIO(self.blobs["zte_chr_op_work_final.png"]))
 a = original.crop(((i % 4) * 256, (i // 4) * 256 + 126,
 b = sprite.crop(((i % 4) * 256, (i // 4) * 256 + 126,
 ⋮----
+html = self.mobile.read_text(encoding="utf-8")
+⋮----
 def test_one_unsafe_pose_rejects_entire_proposal_not_just_one_frame(self)
 ⋮----
-result = build(self.bank, self.audit, self.output, self.report)
+result = build(self.bank, self.audit, self.output, self.report,
 ⋮----
 def test_consistent_actions_are_not_needlessly_modified(self)
+⋮----
+result = build(self.bank, self.audit, self.output, self.report)
 ⋮----
 def test_invalid_candidate_sha_fails_closed(self)
 ⋮----
@@ -31964,12 +32008,14 @@ report = {
 ⋮----
 destination_index = json.dumps(report, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
 ⋮----
+mobile = write_mobile_review(gallery_rows, mobile_review_path, meta["strict_done"])
+⋮----
 def main() -> int
 ⋮----
 parser = argparse.ArgumentParser()
 ⋮----
 args = parser.parse_args()
-report = build(args.bank, args.audit, args.output, args.report, args.comparison)
+report = build(args.bank, args.audit, args.output, args.report, args.comparison,
 ```
 
 ## File: tools/sprites/build_character_review_panels.py
@@ -32827,6 +32873,29 @@ soft = soft.filter(ImageFilter.GaussianBlur(5))
 mask = ImageChops.multiply(piece.getchannel("A"), soft)
 ⋮----
 result = target.copy()
+```
+
+## File: tools/sprites/character_identity_polish_mobile_review.py
+```python
+"""Offline Android animation comparison for *already verified* polish proposals.
+
+Called only after the candidate bank, same-run reference atlas and all-frame
+alternative have passed source/audit SHA-256 checks. This viewer never
+updates game resources, certifies art or transmits the review notes.
+"""
+⋮----
+HTML = r'''<!doctype html><html lang="fr"><head><meta charset="utf-8">
+⋮----
+"""rows must be supplied by the verified character identity polish builder."""
+⋮----
+seen: set[str] = set()
+embedded: list[dict] = []
+⋮----
+asset_id = row["id"]
+⋮----
+payload = {"schemaVersion": 1, "reviewOnly": True,
+serialized = json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+serialized = (serialized.replace("<", "\\u003c")
 ```
 
 ## File: tools/sprites/character_idle_breathing_fallback.py

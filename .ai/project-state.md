@@ -29,20 +29,22 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-16T08:41:01Z
+Generated: 2026-10-16T08:48:20Z
 
 ### Git
 - Branch: `main`
-- Head: `3740d88cfe53`
-- Commit date: 2026-10-16T10:40:45+02:00
-- Commit: art: generate non-destructive head identity polish review alternatives (#178)
-- Tracked files: 1807
+- Head: `e52e6ba8d37e`
+- Commit date: 2026-10-16T10:48:06+02:00
+- Commit: art: offline Android animated face-polish comparison and human-review export (#179)
+- Tracked files: 1809
 
 ### Recently changed files
 - `.github/workflows/asset-pipeline-ci.yml`
 - `.github/workflows/character-candidate-bank.yml`
 - `tools/sprites/build_character_identity_polish.py`
+- `tools/sprites/character_identity_polish_mobile_review.py`
 - `tools/sprites/tests/test_character_identity_polish.py`
+- `tools/sprites/tests/test_character_identity_polish_mobile_review.py`
 - `tools/sprites/build_character_role_contact_sheet.py`
 - `tools/sprites/tests/test_character_role_contact_sheet.py`
 - `art/production/autofactory-state.json`
