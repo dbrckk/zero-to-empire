@@ -67,7 +67,7 @@
       "source": {
         "file": "tools/sprites/build_character_identity_polish.py",
         "start": 100,
-        "end": 313
+        "end": 326
       },
       "symbol_dependencies": [
         {
@@ -184,8 +184,8 @@
     "main": {
       "source": {
         "file": "tools/sprites/build_character_identity_polish.py",
-        "start": 316,
-        "end": 436
+        "start": 329,
+        "end": 449
       },
       "symbol_dependencies": [
         {
@@ -207,7 +207,7 @@
       "source": {
         "file": "tools/sprites/tests/test_character_identity_polish.py",
         "start": 20,
-        "end": 212
+        "end": 236
       },
       "symbol_dependencies": [
         {
@@ -259,6 +259,30 @@
           "relation": "imported_module"
         },
         {
+          "symbol": "deteriorated_second_atlas",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 167,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "motion_stats",
+          "definitions": [
+            {
+              "file": "tools/sprites/audit_character_bank_motion.py",
+              "line": 43,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
           "symbol": "save",
           "definitions": [
             {
@@ -287,7 +311,7 @@
           "definitions": [
             {
               "file": "tools/sprites/tests/test_character_identity_polish.py",
-              "line": 181,
+              "line": 205,
               "kind": "function",
               "language": "python"
             }
@@ -299,7 +323,7 @@
           "definitions": [
             {
               "file": "tools/sprites/tests/test_character_identity_polish.py",
-              "line": 173,
+              "line": 197,
               "kind": "function",
               "language": "python"
             }
@@ -311,7 +335,7 @@
           "definitions": [
             {
               "file": "tools/sprites/tests/test_character_identity_polish.py",
-              "line": 160,
+              "line": 184,
               "kind": "function",
               "language": "python"
             }
@@ -323,7 +347,7 @@
           "definitions": [
             {
               "file": "tools/sprites/tests/test_character_identity_polish.py",
-              "line": 189,
+              "line": 213,
               "kind": "function",
               "language": "python"
             }
@@ -335,7 +359,19 @@
           "definitions": [
             {
               "file": "tools/sprites/tests/test_character_identity_polish.py",
-              "line": 166,
+              "line": 190,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_mobile_motion_regression_rejects_entire_retouch",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 160,
               "kind": "function",
               "language": "python"
             }
@@ -347,7 +383,7 @@
           "definitions": [
             {
               "file": "tools/sprites/tests/test_character_identity_polish.py",
-              "line": 208,
+              "line": 232,
               "kind": "function",
               "language": "python"
             }
@@ -383,7 +419,7 @@
           "definitions": [
             {
               "file": "tools/sprites/tests/test_character_identity_polish.py",
-              "line": 199,
+              "line": 223,
               "kind": "function",
               "language": "python"
             }
@@ -403,7 +439,7 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 16
+      "dependency_count": 19
     },
     "setUp": {
       "source": {
@@ -572,11 +608,217 @@
       ],
       "dependency_count": 2
     },
-    "test_consistent_actions_are_not_needlessly_modified": {
+    "test_mobile_motion_regression_rejects_entire_retouch": {
       "source": {
         "file": "tools/sprites/tests/test_character_identity_polish.py",
         "start": 160,
-        "end": 164
+        "end": 182
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "build",
+          "definitions": [
+            {
+              "file": "tools/sprites/build_character_identity_polish.py",
+              "line": 100,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "deteriorated_second_atlas",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 167,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "motion_stats",
+          "definitions": [
+            {
+              "file": "tools/sprites/audit_character_bank_motion.py",
+              "line": 43,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "deteriorated_second_atlas": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "start": 167,
+        "end": 287
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "build",
+          "definitions": [
+            {
+              "file": "tools/sprites/build_character_identity_polish.py",
+              "line": 100,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "main",
+          "definitions": [
+            {
+              "file": "tools/sprites/audit_character_bank_motion.py",
+              "line": 236,
+              "kind": "function",
+              "language": "python"
+            },
+            {
+              "file": "tools/sprites/build_character_identity_polish.py",
+              "line": 329,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "motion_stats",
+          "definitions": [
+            {
+              "file": "tools/sprites/audit_character_bank_motion.py",
+              "line": 43,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "save",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 77,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_audit_metric_cannot_be_forged_to_force_proposal",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 205,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_audit_reference_is_same_role_verified_and_not_forged",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 197,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_consistent_actions_are_not_needlessly_modified",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 184,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_forged_same_role_anchor_is_rejected",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 213,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_invalid_candidate_sha_fails_closed",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 190,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_no_auto_promotion_even_when_source_falsely_claims_approval",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 232,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "test_self_anchor_cannot_claim_identity_warning",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 223,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "write_atlases",
+          "definitions": [
+            {
+              "file": "tools/sprites/tests/test_character_identity_polish.py",
+              "line": 55,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 12
+    },
+    "test_consistent_actions_are_not_needlessly_modified": {
+      "source": {
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "start": 184,
+        "end": 188
       },
       "symbol_dependencies": [
         {
@@ -609,8 +851,8 @@
     "test_invalid_candidate_sha_fails_closed": {
       "source": {
         "file": "tools/sprites/tests/test_character_identity_polish.py",
-        "start": 166,
-        "end": 171
+        "start": 190,
+        "end": 195
       },
       "symbol_dependencies": [
         {
@@ -643,8 +885,8 @@
     "test_audit_reference_is_same_role_verified_and_not_forged": {
       "source": {
         "file": "tools/sprites/tests/test_character_identity_polish.py",
-        "start": 173,
-        "end": 179
+        "start": 197,
+        "end": 203
       },
       "symbol_dependencies": [
         {
@@ -665,8 +907,8 @@
     "test_audit_metric_cannot_be_forged_to_force_proposal": {
       "source": {
         "file": "tools/sprites/tests/test_character_identity_polish.py",
-        "start": 181,
-        "end": 187
+        "start": 205,
+        "end": 211
       },
       "symbol_dependencies": [
         {
@@ -687,8 +929,8 @@
     "test_forged_same_role_anchor_is_rejected": {
       "source": {
         "file": "tools/sprites/tests/test_character_identity_polish.py",
-        "start": 189,
-        "end": 197
+        "start": 213,
+        "end": 221
       },
       "symbol_dependencies": [
         {
@@ -709,8 +951,8 @@
     "test_self_anchor_cannot_claim_identity_warning": {
       "source": {
         "file": "tools/sprites/tests/test_character_identity_polish.py",
-        "start": 199,
-        "end": 206
+        "start": 223,
+        "end": 230
       },
       "symbol_dependencies": [
         {
@@ -731,8 +973,8 @@
     "test_no_auto_promotion_even_when_source_falsely_claims_approval": {
       "source": {
         "file": "tools/sprites/tests/test_character_identity_polish.py",
-        "start": 208,
-        "end": 212
+        "start": 232,
+        "end": 236
       },
       "symbol_dependencies": [
         {

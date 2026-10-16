@@ -1,15 +1,13 @@
 # Change impact
 
-Base: 8273811bf7c4ffa49cc5ba5747815e6af802ce87
-Head: 72d9e7c39d0414e22e88d5fa1c2e355b904232cf
+Base: dfe1265f05f844cdaf1ca6f71e5279b674e89cad
+Head: e210a49055038983063f421e4c0eef3d02e5eaea
 
 ## Changed files
-- M .github/workflows/character-candidate-bank.yml
 - M tools/sprites/build_character_identity_polish.py
 - M tools/sprites/tests/test_character_identity_polish.py
 
 ## Affected areas
-- .github
 - tools
 
 ## Related test candidates

@@ -30627,6 +30627,17 @@ def test_one_unsafe_pose_rejects_entire_proposal_not_just_one_frame(self)
 ⋮----
 result = build(self.bank, self.audit, self.output, self.report,
 ⋮----
+def test_mobile_motion_regression_rejects_entire_retouch(self)
+⋮----
+original = module.motion_stats
+calls = [0]
+⋮----
+def deteriorated_second_atlas(blob, count)
+⋮----
+result = original(blob, count)
+⋮----
+report = build(self.bank, self.audit, self.output, self.report)
+⋮----
 def test_consistent_actions_are_not_needlessly_modified(self)
 ⋮----
 result = build(self.bank, self.audit, self.output, self.report)
@@ -32077,6 +32088,10 @@ after = head_difference(head_thumbnail(anchor["blob"]), head_thumbnail(blob))
 original_motion = motion_stats(record["blob"], len(original))
 polished_motion = motion_stats(blob, len(fixed))
 motion_warning = (
+# A visually improved face cannot compensate for a regressed 42px
+# action. Reject the complete alternative, rather than publishing
+# a sprite known to have a motion regression for later selection.
+⋮----
 filename = asset_id.lower().replace("-", "_") + "_head-polish.png"
 destination_name = "review-alternatives/" + filename
 ⋮----

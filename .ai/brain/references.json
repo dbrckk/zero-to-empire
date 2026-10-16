@@ -149,7 +149,7 @@
         },
         {
           "file": "tools/sprites/build_character_identity_polish.py",
-          "line": 308,
+          "line": 321,
           "preview": "_comparison(previews, comparison_path)",
           "definition_candidate": false
         }
@@ -382,7 +382,7 @@
         },
         {
           "file": "tools/sprites/build_character_identity_polish.py",
-          "line": 325,
+          "line": 338,
           "preview": "report = build(args.bank, args.audit, args.output, args.report, args.comparison,",
           "definition_candidate": false
         },
@@ -694,43 +694,49 @@
         },
         {
           "file": "tools/sprites/tests/test_character_identity_polish.py",
-          "line": 162,
+          "line": 175,
+          "preview": "report = build(self.bank, self.audit, self.output, self.report)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 186,
           "preview": "result = build(self.bank, self.audit, self.output, self.report)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/tests/test_character_identity_polish.py",
-          "line": 170,
+          "line": 194,
           "preview": "build(self.bank, self.audit, self.output, self.report)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/tests/test_character_identity_polish.py",
-          "line": 179,
+          "line": 203,
           "preview": "build(self.bank, self.audit, self.output, self.report)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/tests/test_character_identity_polish.py",
-          "line": 187,
+          "line": 211,
           "preview": "build(self.bank, self.audit, self.output, self.report)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/tests/test_character_identity_polish.py",
-          "line": 196,
+          "line": 220,
           "preview": "build(self.bank, self.audit, self.output, self.report)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/tests/test_character_identity_polish.py",
-          "line": 205,
+          "line": 229,
           "preview": "build(self.bank, self.audit, self.output, self.report)",
           "definition_candidate": false
         },
         {
           "file": "tools/sprites/tests/test_character_identity_polish.py",
-          "line": 212,
+          "line": 236,
           "preview": "build(self.bank, self.audit, self.output, self.report)",
           "definition_candidate": false
         },
@@ -825,12 +831,12 @@
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 110
+      "occurrence_count": 111
     },
     "main": {
       "definition": {
         "file": "tools/sprites/build_character_identity_polish.py",
-        "line": 316,
+        "line": 329,
         "kind": "function",
         "language": "python"
       },
@@ -1335,13 +1341,13 @@
         },
         {
           "file": "tools/sprites/build_character_identity_polish.py",
-          "line": 316,
+          "line": 329,
           "preview": "def main() -> int:",
           "definition_candidate": true
         },
         {
           "file": "tools/sprites/build_character_identity_polish.py",
-          "line": 337,
+          "line": 350,
           "preview": "raise SystemExit(main())",
           "definition_candidate": false
         },
@@ -2423,7 +2429,7 @@
         },
         {
           "file": "tools/sprites/tests/test_character_identity_polish.py",
-          "line": 161,
+          "line": 185,
           "preview": "self.write_atlases(same_head=True)",
           "definition_candidate": false
         }
@@ -3195,7 +3201,7 @@
       ],
       "occurrence_count": 1
     },
-    "test_consistent_actions_are_not_needlessly_modified": {
+    "test_mobile_motion_regression_rejects_entire_retouch": {
       "definition": {
         "file": "tools/sprites/tests/test_character_identity_polish.py",
         "line": 160,
@@ -3206,6 +3212,46 @@
         {
           "file": "tools/sprites/tests/test_character_identity_polish.py",
           "line": 160,
+          "preview": "def test_mobile_motion_regression_rejects_entire_retouch(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "deteriorated_second_atlas": {
+      "definition": {
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "line": 167,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 167,
+          "preview": "def deteriorated_second_atlas(blob, count):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 174,
+          "preview": "with patch.object(module, \"motion_stats\", side_effect=deteriorated_second_atlas):",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "test_consistent_actions_are_not_needlessly_modified": {
+      "definition": {
+        "file": "tools/sprites/tests/test_character_identity_polish.py",
+        "line": 184,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/sprites/tests/test_character_identity_polish.py",
+          "line": 184,
           "preview": "def test_consistent_actions_are_not_needlessly_modified(self):",
           "definition_candidate": true
         }
@@ -3215,14 +3261,14 @@
     "test_invalid_candidate_sha_fails_closed": {
       "definition": {
         "file": "tools/sprites/tests/test_character_identity_polish.py",
-        "line": 166,
+        "line": 190,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/tests/test_character_identity_polish.py",
-          "line": 166,
+          "line": 190,
           "preview": "def test_invalid_candidate_sha_fails_closed(self):",
           "definition_candidate": true
         }
@@ -3232,14 +3278,14 @@
     "test_audit_reference_is_same_role_verified_and_not_forged": {
       "definition": {
         "file": "tools/sprites/tests/test_character_identity_polish.py",
-        "line": 173,
+        "line": 197,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/tests/test_character_identity_polish.py",
-          "line": 173,
+          "line": 197,
           "preview": "def test_audit_reference_is_same_role_verified_and_not_forged(self):",
           "definition_candidate": true
         }
@@ -3249,14 +3295,14 @@
     "test_audit_metric_cannot_be_forged_to_force_proposal": {
       "definition": {
         "file": "tools/sprites/tests/test_character_identity_polish.py",
-        "line": 181,
+        "line": 205,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/tests/test_character_identity_polish.py",
-          "line": 181,
+          "line": 205,
           "preview": "def test_audit_metric_cannot_be_forged_to_force_proposal(self):",
           "definition_candidate": true
         }
@@ -3266,14 +3312,14 @@
     "test_forged_same_role_anchor_is_rejected": {
       "definition": {
         "file": "tools/sprites/tests/test_character_identity_polish.py",
-        "line": 189,
+        "line": 213,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/tests/test_character_identity_polish.py",
-          "line": 189,
+          "line": 213,
           "preview": "def test_forged_same_role_anchor_is_rejected(self):",
           "definition_candidate": true
         }
@@ -3283,14 +3329,14 @@
     "test_self_anchor_cannot_claim_identity_warning": {
       "definition": {
         "file": "tools/sprites/tests/test_character_identity_polish.py",
-        "line": 199,
+        "line": 223,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/tests/test_character_identity_polish.py",
-          "line": 199,
+          "line": 223,
           "preview": "def test_self_anchor_cannot_claim_identity_warning(self):",
           "definition_candidate": true
         }
@@ -3300,14 +3346,14 @@
     "test_no_auto_promotion_even_when_source_falsely_claims_approval": {
       "definition": {
         "file": "tools/sprites/tests/test_character_identity_polish.py",
-        "line": 208,
+        "line": 232,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
           "file": "tools/sprites/tests/test_character_identity_polish.py",
-          "line": 208,
+          "line": 232,
           "preview": "def test_no_auto_promotion_even_when_source_falsely_claims_approval(self):",
           "definition_candidate": true
         }

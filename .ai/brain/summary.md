@@ -3,7 +3,7 @@
 - Index mode: incremental
 - Files indexed: 300
 - Files reparsed this run: 2
-- Symbols: 1611
+- Symbols: 1613
 - Internal import edges: 98
 - Impacted files: 2
 - Selected tests: 2
@@ -31,8 +31,8 @@
 - tools/sprites/tests/test_character_candidate_bank.py: 17 symbols
 - app/src/main/java/com/zerotoempire/game/BillingDiagnostics.kt: 16 symbols
 - tools/sprites/test_package_tech_actions_runtime.py: 16 symbols
+- tools/sprites/tests/test_character_identity_polish.py: 16 symbols
 - app/src/main/java/com/zerotoempire/game/IdentitySystems.kt: 15 symbols
-- tools/sprites/rigged_tech_actions_v3.py: 15 symbols
 
 ## Agent routing
 - Read impact.json first after project/change context.
@@ -46,7 +46,7 @@
 - AST files reparsed this run: 2
 - outline files retained: 307
 - top-level items retained: 4095
-- direct members retained: 999
+- direct members retained: 1000
 - symbol shards: 26
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard
 
