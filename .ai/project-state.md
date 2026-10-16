@@ -31,22 +31,22 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-16T17:12:27Z
+Generated: 2026-10-16T17:30:05Z
 
 ### Git
 - Branch: `main`
-- Head: `1c9693b68274`
-- Commit date: 2026-10-16T19:12:12+02:00
-- Commit: fix(art): isolate ENG repair actor silhouette from verified fixed station (#205)
+- Head: `8adbd25deb4a`
+- Commit date: 2026-10-16T19:29:48+02:00
+- Commit: fix(android): seamless city motion and live battery policy (#206)
 - Tracked files: 1814
 
 ### Recently changed files
-- `.github/workflows/character-motion-audit-pr-gate.yml`
-- `tools/sprites/audit_chatgpt_originals.py`
-- `tools/sprites/character_semantic_gate.py`
+- `app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt`
+- `app/src/main/java/com/zerotoempire/game/FoundryWorldMotion.kt`
+- `PROJECT_CONTINUITY.md`
+- `docs/art/FINAL_AAA_SPRITE_MANIFEST.md`
+- `docs/art/FINAL_AAA_SPRITE_PROGRESS.md`
 - `art/incoming/chatgpt-original/visual-risk-qa.json`
-- `tools/sprites/test_audit_chatgpt_originals.py`
-- `.github/workflows/engineer-motion-candidate-review.yml`
 
 ### Project signals
 - `build.gradle.kts`

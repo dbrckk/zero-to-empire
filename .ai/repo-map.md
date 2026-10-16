@@ -13064,7 +13064,6 @@ object NoOpAnalytics : GameAnalytics {
 ```kotlin
 package com.zerotoempire.game
 
-import android.provider.Settings
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -13170,7 +13169,8 @@ internal fun AscendantCityStage(
     reviewActionOverride: ReviewedCharacterAction? = null,
 ) {
     val context = LocalContext.current
-    val reducedMotion = remember(context) { MotionQuality.reducedMotion(context) }
+    // Read Compose-backed policy on recomposition: Battery Saver can change while the game is open.
+    val reducedMotion = MotionQuality.reducedMotion(context)
     var ambientFrame by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(reducedMotion, reviewWorldFrame != null) {
@@ -13184,7 +13184,11 @@ internal fun AscendantCityStage(
         } else {
             while (true) {
                 delay(100)
-                ambientFrame = (ambientFrame + 1) % 10_000
+                // Seamless shared-clock reset: 10_080 is divisible by the 168-frame
+                // pedestrian route, the 180-frame vehicle route and the 6/8/10
+                // character atlas loops. The previous 10_000 reset teleported
+                // moving actors partway through their journeys.
+                ambientFrame = (ambientFrame + 1) % 10_080
             }
         }
     }
@@ -13247,7 +13251,8 @@ private fun AscendantCorePlaza(state:GameState,tap:()->Unit,modifier:Modifier=Mo
  )}
  val coreIndex=EmpireEras.current(state.lifetimeCash).index.coerceIn(0,6)
  val coreSprite=coreSprites[coreIndex]
- val motionEnabled=remember(context){Settings.Global.getFloat(context.contentResolver,Settings.Global.ANIMATOR_DURATION_SCALE,1f)>0f}
+ // Core VFX shares the live system animation and Battery Saver policy.
+ val motionEnabled = !MotionQuality.reducedMotion(context)
  var cyanFrame by remember{mutableIntStateOf(0)};var pulseToken by remember{mutableIntStateOf(0)};var pulseFrame by remember{mutableIntStateOf(-1)}
  LaunchedEffect(motionEnabled){if(!motionEnabled){cyanFrame=3}else{while(true){for(frame in 0 until 8){cyanFrame=frame;delay(110)};delay(440)}}}
  LaunchedEffect(pulseToken){if(pulseToken==0)return@LaunchedEffect;if(!motionEnabled){pulseFrame=3;delay(80)}else{for(frame in 0 until 8){pulseFrame=frame;delay(42)}};pulseFrame=-1}
@@ -18306,7 +18311,8 @@ internal fun FoundryWorkerTraffic(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val reducedMotion = remember(context) { MotionQuality.reducedMotion(context) }
+    // Battery Saver and system animator changes must update this active ticker.
+    val reducedMotion = MotionQuality.reducedMotion(context)
     val phase = remember { Animatable(.18f) }
 
     LaunchedEffect(reducedMotion) {
@@ -41710,6 +41716,22 @@ plugins {
 ## File: PROJECT_CONTINUITY.md
 ```markdown
 # PROJECT CONTINUITY — Zero → Empire
+
+## 2026-10-16 — City animation clock and responsive Battery Saver (PR #206 pending emulator)
+
+- **[PR #206](https://github.com/dbrckk/zero-to-empire/pull/206)** changes `AscendantCityWorld.kt` and `FoundryWorldMotion.kt`. The shared city clock previously wrapped every 10,000 frames while pedestrian motion repeats every 168, traffic every 180, and character atlases every 6/8/10 frames. The new 10,080-frame period is divisible by all these periods. Deterministic 360dp OP WALK calculations reduce an observed old reset displacement of ~76dp (phase 6) to the ordinary 1.17dp/frame. This is mathematical evidence, not device frame-capture evidence.
+- `AscendantCityStage` and `FoundryWorkerTraffic` no longer freeze `MotionQuality.reducedMotion(context)` inside `remember(context)`. The stage and foundry now observe the existing Compose-backed motion policy as Android's Battery Saver/animator setting changes. Core VFX also consults that same policy instead of only the animator-scale setting. Saves, economy, billing, character raster resources and strict status are unchanged.
+- **[Android CI 38938490383](https://github.com/dbrckk/zero-to-empire/actions/runs/38938490383) SUCCESS**, including debug APK, existing unit suite, lint, release AAB, manifest/privacy/resource audits and artifact upload. **[Android Emulator Smoke 38938490410](https://github.com/dbrckk/zero-to-empire/actions/runs/38938490410) remained IN_PROGRESS during this checkpoint** (debug APK built and helper checks passed, live emulator smoke not yet finished). **Do not merge PR #206 until emulator result is examined.** If the emulator fails, inspect the error and discriminate Pixel Launcher ANR from game defects; PR #160 contains a separate previously CI-tested launcher-ANR recovery, not merged.
+- Recovered and visually inspected old device artifact [38774032853](https://github.com/dbrckk/zero-to-empire/actions/runs/38774032853): OP WALK is visible at 39–42dp, but the debug stage screenshot is a nearly empty dark gradient. This is inadequate proof of AAA fidelity in the decorated shipping city. Next after merging PR #206: implement full shipping-city-context visual QA and analyze responsive planted-foot speed at varying mobile/tablet widths, before considering any strict CHR promotion.
+- Canonical master queue unchanged: **219/235 strict DONE**, **16 original-character actions NEEDS_REVIEW**. No automatic art promotion, no new unit tests.
+
+## 2026-10-16 verified — ENG REPAIR fixed-station risk-audit correction
+
+- **PR [#205](https://github.com/dbrckk/zero-to-empire/pull/205)** squash-merged into `main` as `1c9693b682741cf74578d21cff4c88646cdff6b0`. The original `CHR-ENG-REPAIR` candidate includes a deliberate stationary service console that made the generic composite bounding-box classifier incorrectly flag a portrait/wide character silhouette. No released Android drawables or gameplay code changed.
+- Risk QA now examines the engineer-only region for **frame geometry**, and only after checking all **10 editable ENG/REPAIR SVGs** for the identical fixed service station and its large socket. Original composite frames remain subject to palette, head/prop, action and temporal-risk checks. No false exemption for imports or other roles.
+- **PR Character Motion Audit [38937726736](https://github.com/dbrckk/zero-to-empire/actions/runs/38937726736) SUCCESS** with the **real 18-atlas audit** reporting zero image-only blocking risks; **PR Asset Pipeline [38937727160](https://github.com/dbrckk/zero-to-empire/actions/runs/38937727160) SUCCESS**. Following merge, **main Character Motion Gate [38937862782](https://github.com/dbrckk/zero-to-empire/actions/runs/38937862782)**, **Asset Pipeline [38937862630](https://github.com/dbrckk/zero-to-empire/actions/runs/38937862630)**, **Character strict review matrix [38937862662](https://github.com/dbrckk/zero-to-empire/actions/runs/38937862662)**, and **original 18 atlas generator [38937862598](https://github.com/dbrckk/zero-to-empire/actions/runs/38937862598)** all **SUCCESS**.
+- The generated `art/incoming/chatgpt-original/visual-risk-qa.json` was committed to `main` by the source regeneration in `04925f8a`: **18 inspected, 0 blocking risks**, `CHR-ENG-REPAIR.fixed_service_station_svg_verified=true`, `actor_only_geometry_assessment=true`. This is **technical rejection screening**, not visual/semantic acceptance. **Canonical strict remains 219/235 DONE, 16 NEEDS_REVIEW** (authoritative `art/production/master-asset-queue.json` re-counted).
+- **Next:** revisit `CHR-OP-WALK` in a realistically composed *shipping* city at true motion speed; assess foot contact, weight, consistency with already approved assets and small-screen legibility. Correct meaningful defects one at a time. Promote an action only after explicit semantic review, exact production WebP linkage and successful Android release/runtime/device checks. Then proceed to remaining CHR actions individually. No automatic strict promotion, save/economy change or new unit tests in this intervention.
 
 ## 2026-10-15 verified — OP WALK city-stage Android motion
 

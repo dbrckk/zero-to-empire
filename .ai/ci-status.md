@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 5 success / 0 failure / 3 active
+Summary: 5 success / 0 failure / 2 active
 
-- Character Motion Audit PR Gate: completed / success (1c9693b6)
-- Character strict review matrix: in_progress / pending (1c9693b6)
-- Asset Pipeline CI: in_progress / pending (1c9693b6)
-- ChatGPT Original Character Candidates: in_progress / pending (1c9693b6)
-- Asset Pipeline CI: completed / success (016756b7)
-- Character Motion Audit PR Gate: completed / success (016756b7)
-- Assemble Character Candidate Bank: completed / success (f59919d3)
-- Character Motion Audit PR Gate: completed / success (f9cce7bf)
+- Android CI: in_progress / pending (8adbd25d)
+- Android Emulator Smoke: in_progress / pending (8adbd25d)
+- Reconcile Sprite Progress Ledger: completed / success (18c35b66)
+- Reconcile reviewed run 25: completed / skipped (620f23cb)
+- Android Emulator Smoke: completed / success (f4e56f9f)
+- Android CI: completed / success (f4e56f9f)
+- Reconcile Sprite Progress Ledger: completed / success (45c9d138)
+- Assemble Character Candidate Bank: completed / success (04925f8a)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

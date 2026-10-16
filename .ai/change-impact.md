@@ -1,16 +1,14 @@
 # Change impact
 
-Base: 458721f1a71e12cd152ef2eb144c7f0bcd2ea68c
-Head: 1c9693b682741cf74578d21cff4c88646cdff6b0
+Base: 7bcdbd9763e74900ed14d930a4ecb242d24a4dc8
+Head: 8adbd25deb4a483685098278e60e34969395faad
 
 ## Changed files
-- M .github/workflows/character-motion-audit-pr-gate.yml
-- M tools/sprites/audit_chatgpt_originals.py
-- M tools/sprites/character_semantic_gate.py
+- M app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt
+- M app/src/main/java/com/zerotoempire/game/FoundryWorldMotion.kt
 
 ## Affected areas
-- .github
-- tools
+- app
 
 ## Related test candidates
 - No direct filename-based test match detected.
