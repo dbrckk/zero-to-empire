@@ -47,7 +47,8 @@ jobs:
           python -m unittest discover -s tools/sprites/tests -p test_character_bank_mobile_review.py -v
           python -m unittest discover -s tools/sprites/tests -p test_character_bank_motion_audit.py -v
           python -m unittest discover -s tools/sprites/tests -p test_character_role_contact_sheet.py -v
-          python -m py_compile tools/sprites/build_character_candidate_bank.py tools/sprites/build_character_bank_mobile_review.py tools/sprites/audit_character_bank_motion.py tools/sprites/build_character_role_contact_sheet.py
+          python -m unittest discover -s tools/sprites/tests -p test_character_identity_polish.py -v
+          python -m py_compile tools/sprites/build_character_candidate_bank.py tools/sprites/build_character_bank_mobile_review.py tools/sprites/audit_character_bank_motion.py tools/sprites/build_character_role_contact_sheet.py tools/sprites/build_character_identity_polish.py
 
       - name: Download current permanent candidate archives
         shell: bash
@@ -109,6 +110,29 @@ jobs:
           print('- No flags represent automatic semantic approval.')
           PY
 
+      - name: Produce safe alternative head and helmet atlases for artistic review
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/sprites/build_character_identity_polish.py \
+            --bank /tmp/zte-character-bank-current.zip \
+            --audit /tmp/zte-character-bank-motion-audit.json \
+            --output /tmp/zte-character-identity-polish-current.zip \
+            --report /tmp/zte-character-identity-polish-current.json \
+            --comparison /tmp/zte-character-identity-polish-preview.png
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          d=json.load(open('/tmp/zte-character-identity-polish-current.json'))
+          print('## Same-role face/helmet polish proposals (review-only)')
+          print(f"- Identity warnings: **{d['identity_flags_to_review']}**")
+          print(f"- Fully safe multi-frame alternatives: **{d['alternatives_created']}**")
+          for row in d['alternatives']:
+              print(f"- {row['id']}: {row['head_rgb_before']:.2f} → {row['head_rgb_after']:.2f} mean head RGB change; {row['frames_head_locked']}/{row['frames']} frames corrected")
+          for row in d['not_safe_to_polish']:
+              print(f"- Not modified: {row['id']}: {row['reason']}")
+          print('- These alternative PNGs do **not** replace canonical bank, Android files, strict DONE or human approval.')
+          PY
+
       - name: Build one-page character identity contact sheet for Android
         shell: bash
         run: |
@@ -140,6 +164,9 @@ jobs:
             /tmp/zte-character-bank-current.zip \
             /tmp/zte-character-bank-current.json \
             /tmp/zte-character-bank-motion-audit.json \
+            /tmp/zte-character-identity-polish-current.zip \
+            /tmp/zte-character-identity-polish-current.json \
+            /tmp/zte-character-identity-polish-preview.png \
             /tmp/zte-character-bank-role-consistency.png \
             /tmp/zte-character-bank-mobile-review.html \
             --repo "$GITHUB_REPOSITORY" --clobber
@@ -154,6 +181,9 @@ jobs:
             /tmp/zte-character-bank-current.zip
             /tmp/zte-character-bank-current.json
             /tmp/zte-character-bank-motion-audit.json
+            /tmp/zte-character-identity-polish-current.zip
+            /tmp/zte-character-identity-polish-current.json
+            /tmp/zte-character-identity-polish-preview.png
             /tmp/zte-character-bank-role-consistency.png
             /tmp/zte-character-bank-mobile-review.html
           retention-days: 30
