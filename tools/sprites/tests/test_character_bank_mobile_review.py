@@ -108,6 +108,8 @@ class MobileCandidateReviewTests(unittest.TestCase):
             "assets": [{
                 "id": self.asset_id, "sha256": self.record["sha256"],
                 "new_motion_flags": ["LOW_MOBILE_FRAME_CHANGE_REVIEW"],
+                "new_identity_flags": ["CROSS_ACTION_HEAD_IDENTITY_REVIEW"],
+                "head_identity_metrics": {"reference_id": "CHR-ENG-IDLE"},
                 "strict_approved": False, "runtime_promoted": False,
             }],
         }))
@@ -115,6 +117,9 @@ class MobileCandidateReviewTests(unittest.TestCase):
         html = self.html.read_text()
         self.assertIn("LOW_MOBILE_FRAME_CHANGE_REVIEW", html)
         self.assertIn("Animation trop peu visible", html)
+        self.assertIn("CROSS_ACTION_HEAD_IDENTITY_REVIEW", html)
+        self.assertIn("CHR-ENG-IDLE", html)
+        self.assertIn("Visage ou casque potentiellement différent", html)
 
     def test_stale_motion_audit_must_not_be_misattached_to_new_png(self):
         audit = self.root / "stale-audit.json"
