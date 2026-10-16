@@ -35,12 +35,20 @@ def engineer_repair_wrist(phase:float)->tuple[float,float]:
          ENG_REPAIR_TARGET[1]-rotated_y)
 
 
+def engineer_work_wrist(phase:float,bounce:float)->tuple[float,float]:
+ # Separate wide diagnostic scan sweep. The held tablet, right hand and
+ # illuminated sensor share exactly one trajectory, not three approximations.
+ return (176+23.0*math.sin(phase),123+15.0*math.cos(phase)+bounce)
+
+
 # SVG drawn in painter's order: back arm and legs -> torso -> head -> front hands.
 def svg_frame(role:str, action:str, index:int, count:int)->str:
  p=ROLES[role]; phase=2*math.pi*index/count; motion=math.sin(phase); bounce=0.0
  if action in ('WALK','CARRY'):
   bounce=2.8*(1-math.cos(phase*2))/2
  elif action=='IDLE':bounce=1.8*math.sin(phase)
+ elif role=='ENG' and action=='WORK':
+  bounce=3.6*math.sin(phase)
  elif role=='ENG' and action=='REPAIR':
   # Torque transfers through the knees and shoulders while BOTH boots stay
   # planted. The socket/tool remain locked to world space, not to this bob.
@@ -77,6 +85,9 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
             else (176+reach_px*reach,123+pump_px*pump+bounce))
    elbow=((82,132+bounce) if side=='L'
           else (168+reach_px*.47*reach,115+pump_px*.58*pump+bounce))
+   if role=='ENG' and pose=='WORK' and side=='R':
+    handpos=engineer_work_wrist(phase,bounce)
+    elbow=(165+11*math.sin(phase-.18),115+7*math.cos(phase-.18)+.30*bounce)
    if role=='ENG' and pose=='REPAIR' and side=='R':
     handpos=engineer_repair_wrist(phase)
     # Braced elbow drives the ratchet against a world-fixed socket instead
@@ -131,9 +142,9 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
    hipx=106 if side=='L' else 146
    yhip=155+bounce
    knee_x=hipx+(2 if side=='L' else -2)
-   knee_y=190+(.48*bounce if role=='ENG' and action=='REPAIR' else bounce)
+   knee_y=190+(.48*bounce if role=='ENG' and action in ('WORK','REPAIR') else bounce)
    ankle_x=hipx
-   ankle_y=(226 if role=='ENG' and action=='REPAIR' else 226+bounce)
+   ankle_y=(226 if role=='ENG' and action in ('WORK','REPAIR') else 226+bounce)
    boot_angle=0.0
   leg_poses.append((side,hipx,yhip,knee_x,knee_y,ankle_x,ankle_y,boot_angle))
  add('<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">')
@@ -191,6 +202,8 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
    add(f'<g {gait_attr}="{side}" data-planted="{str(foot.planted).lower()}" data-ankle-x="{ax:.2f}" data-ankle-y="{ay:.2f}">')
   if role=='ENG' and action=='REPAIR':
    add(f'<g data-eng-repair-foot="{side}" data-ankle-y="{ay:.2f}">')
+  if role=='ENG' and action=='WORK':
+   add(f'<g data-eng-work-foot="{side}" data-ankle-y="{ay:.2f}">')
   add(line(hipx,yhip,kx,ky,'url(#pant)',23,3));add(line(kx,ky,ax,ay,'url(#pant)',20,3))
   # knee armor pad and seam
   add(f'<ellipse cx="{kx:.1f}" cy="{ky:.1f}" rx="11" ry="8" fill="#647687" stroke="#253645" stroke-width="2" opacity=".85"/>')
@@ -210,6 +223,8 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
    add('</g>')  # close the per-leg pose-evidence group
   if role=='ENG' and action=='REPAIR':
    add('</g>')  # close world-planted repair boot evidence group
+  if role=='ENG' and action=='WORK':
+   add('</g>')  # close world-planted diagnostic work boots
  # Weight shifts toward stance foot; cargo carry sway remains restrained.
  # The hands, equipment, torso, helmet and face all receive the exact same
  # transform, avoiding drift in object contact or character identity.
@@ -315,8 +330,11 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
   tool_y=123+(12 if action=='WORK' else 7)*math.cos(phase)+bounce
   if role=='ENG' and action=='REPAIR':
    tool_x,tool_y=engineer_repair_wrist(phase)
+  elif role=='ENG' and action=='WORK':
+   tool_x,tool_y=engineer_work_wrist(phase,bounce)
   repair_marker=' data-repair-tool="ENG"' if role=='ENG' and action=='REPAIR' else ''
-  add(f'<g{repair_marker} transform="translate({tool_x:.1f},{tool_y:.1f}) rotate({tool_angle(action,phase,role=role):.1f})">')
+  work_marker=' data-work-tool="ENG"' if role=='ENG' and action=='WORK' else ''
+  add(f'<g{repair_marker}{work_marker} transform="translate({tool_x:.1f},{tool_y:.1f}) rotate({tool_angle(action,phase,role=role):.1f})">')
   if action=='WORK':
    if role=='OP':
     add('<rect x="-12" y="-9" width="37" height="19" rx="5" fill="#435964" stroke="#182c3b" stroke-width="3"/>')
@@ -361,6 +379,8 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
  fx_tool_y=123+(12 if action=='WORK' else 7)*math.cos(phase)+bounce
  if role=='ENG' and action=='REPAIR':
   fx_tool_x,fx_tool_y=engineer_repair_wrist(phase)
+ elif role=='ENG' and action=='WORK':
+  fx_tool_x,fx_tool_y=engineer_work_wrist(phase,bounce)
  add(action_fx(role,action,phase,
                tool_x=fx_tool_x,tool_y=fx_tool_y,
                bounce=bounce))
@@ -402,9 +422,9 @@ def main():
  for role in ROLES:
   for action in ACTIONS:
    results.append(render_atlas(role,action,outdir,args.save_svg))
- report={'version':'chatgpt-original-character-rig-v12-engineer-planted-torque','strict_done_added':0,'review_only':True,
+ report={'version':'chatgpt-original-character-rig-v13-engineer-diagnostic-sweep','strict_done_added':0,'review_only':True,
          'material_finish':'local-alpha-safe-directional-light-v1',
-         'action_vfx':'local-rigid-tool-tip-lights-and-engineer-torque-v3',
+         'action_vfx':'local-rigid-tool-tip-lights-and-engineer-torque-v4',
          'asset_count':len(results),'unresolved_target_count':16,'assets':results}
  (outdir/'creation-manifest.json').write_text(json.dumps(report,indent=2)+'\n')
  print(f'CHATGPT_CHARACTER_ATLASES_CREATED={len(results)} ASSETS_UNRESOLVED=16 STRICT_DONE_ADDED=0')
