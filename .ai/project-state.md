@@ -29,16 +29,17 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-16T16:24:42Z
+Generated: 2026-10-16T17:00:37Z
 
 ### Git
 - Branch: `main`
-- Head: `030b26b0c298`
-- Commit date: 2026-10-16T18:24:26+02:00
-- Commit: ci(art): run character motion audit regressions on PRs (#201)
+- Head: `0c58fd0e4d24`
+- Commit date: 2026-10-16T19:00:16+02:00
+- Commit: fix(ci): retain queued engineer animation reviews (#202)
 - Tracked files: 1814
 
 ### Recently changed files
+- `.github/workflows/engineer-motion-candidate-review.yml`
 - `.github/workflows/character-motion-audit-pr-gate.yml`
 - `art/incoming/chatgpt-original/visual-risk-qa.json`
 - `tools/sprites/audit_chatgpt_originals.py`

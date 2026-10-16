@@ -1,18 +1,14 @@
 # CI status
 
-Summary: 6 success / 1 failure / 0 active
+Summary: 6 success / 0 failure / 2 active
 
-- Character Motion Audit PR Gate: completed / success (5f468ae5)
-- Assemble Character Candidate Bank: completed / success (93a3f74b)
-- ChatGPT Original Character Candidates: completed / success (8d787580)
-- Assemble Character Candidate Bank: completed / success (22b02bf0)
-- ChatGPT Original Character Candidates: completed / success (e166825d)
-- Assemble Character Candidate Bank: completed / skipped (aacccdb3)
-- ChatGPT Original Character Candidates: completed / failure (aacccdb3)
-- Asset Pipeline CI: completed / success (af774999)
-
-## Latest failed run structure
-- Job: render
-  - Failed step: Verify loop seam is included in character motion risk audit
+- Character Motion Audit PR Gate: in_progress / pending (fe866d16)
+- Engineer Motion Candidate Visual Review: in_progress / pending (0c58fd0e)
+- Engineer Motion Candidate Visual Review: completed / success (f205b4d8)
+- Assemble Character Candidate Bank: completed / success (9a2baf82)
+- Archive Character Candidates: completed / success (9a2baf82)
+- Kaggle Async Character Collector: completed / success (9a2baf82)
+- Assemble Character Candidate Bank: completed / success (9a2baf82)
+- Archive Character Candidates: completed / success (9a2baf82)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.
