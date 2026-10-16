@@ -14,6 +14,8 @@ from test_character_role_contact_sheet import RoleConsistencySheetTests
 
 
 class GameplayMotionStoryboardTests(unittest.TestCase):
+    save = RoleConsistencySheetTests.save
+
     def setUp(self):
         # Reuse synthetic OP/LOG/ENG candidate bank with SHA-matched audit.
         RoleConsistencySheetTests.setUp(self)
