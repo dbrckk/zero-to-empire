@@ -1,14 +1,13 @@
 # Change impact
 
-Base: 7bcdbd9763e74900ed14d930a4ecb242d24a4dc8
-Head: 8adbd25deb4a483685098278e60e34969395faad
+Base: b30421851b6ce4f7d74f923f8bd921d638a18893
+Head: 1ce996f251aca9952f05ce858daa456acce7caf4
 
 ## Changed files
-- M app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt
-- M app/src/main/java/com/zerotoempire/game/FoundryWorldMotion.kt
+- M PROJECT_CONTINUITY.md
 
 ## Affected areas
-- app
+- (root)
 
 ## Related test candidates
 - No direct filename-based test match detected.

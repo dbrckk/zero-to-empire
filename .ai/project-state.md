@@ -31,22 +31,21 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-16T17:30:05Z
+Generated: 2026-10-16T17:41:55Z
 
 ### Git
 - Branch: `main`
-- Head: `8adbd25deb4a`
-- Commit date: 2026-10-16T19:29:48+02:00
-- Commit: fix(android): seamless city motion and live battery policy (#206)
+- Head: `1ce996f251ac`
+- Commit date: 2026-10-16T19:41:39+02:00
+- Commit: docs(project): record verified PR 206 merge and terrain QA emulator blocker
 - Tracked files: 1814
 
 ### Recently changed files
+- `PROJECT_CONTINUITY.md`
 - `app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt`
 - `app/src/main/java/com/zerotoempire/game/FoundryWorldMotion.kt`
-- `PROJECT_CONTINUITY.md`
 - `docs/art/FINAL_AAA_SPRITE_MANIFEST.md`
 - `docs/art/FINAL_AAA_SPRITE_PROGRESS.md`
-- `art/incoming/chatgpt-original/visual-risk-qa.json`
 
 ### Project signals
 - `build.gradle.kts`
