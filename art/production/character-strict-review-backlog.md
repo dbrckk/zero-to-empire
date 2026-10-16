@@ -19,11 +19,11 @@ Generated from `art/production/master-asset-queue.json` after production complet
 | CHR-LOG-CARRY | LOG | CARRY | AWAITING_REVIEW | 38815707999 | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
 | CHR-LOG-REPAIR | LOG | REPAIR | AWAITING_REVIEW | 38815707999 | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
 | CHR-LOG-CELEB | LOG | CELEB | AWAITING_REVIEW | 38815707999 | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
-| CHR-ENG-IDLE | ENG | IDLE | AWAITING_REVIEW | 38860615692 | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
+| CHR-ENG-IDLE | ENG | IDLE | AWAITING_REVIEW | 38861009887 | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
 | CHR-ENG-WALK | ENG | WALK | AWAITING_REVIEW | 38825860064 | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
 | CHR-ENG-WORK | ENG | WORK | AWAITING_REVIEW | 38860615692 | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
 | CHR-ENG-CARRY | ENG | CARRY | AWAITING_REVIEW | 38309355566 | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
-| CHR-ENG-REPAIR | ENG | REPAIR | DISPATCHED | 38860615692 | Fresh kaggle-character-sheet dispatch 38860654945 is active; semantic review remains required after candidate collection. |
+| CHR-ENG-REPAIR | ENG | REPAIR | REJECTED_SEMANTIC | 38861009887 | Kaggle candidate failed or missing: identity/silhouette jump=0.24 |
 | CHR-ENG-CELEB | ENG | CELEB | AWAITING_REVIEW | 38825860064 | Fresh Kaggle candidate produced; strict semantic review is required before runtime promotion. |
 
 ## Review rule
