@@ -50,66 +50,91 @@ jobs:
               assert item['strict_approved'] is False
               print('RENDERED_ENGINEER_'+action+'='+str(item['frames']))
           PY
-      - name: Compare original/current 42px action on night and daylight stages
+      - name: Download canonical collector-first character bank
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p build/engineer-motion-review
+          gh release download zte-character-candidates --repo "$GITHUB_REPOSITORY" \
+            --pattern 'zte-character-bank-current.zip' \
+            --dir build/engineer-motion-review
+      - name: Compare independent Kaggle collector and local vector rig at 42px
         run: |
           python - <<'PY'
-          import json, sys
+          import hashlib,io,json,zipfile,sys
           from pathlib import Path
-          from PIL import Image,ImageDraw,ImageFont
+          from PIL import Image,ImageDraw
           sys.path.insert(0,'tools/sprites')
           from audit_character_bank_motion import motion_stats,composite,DAY,NIGHT
           out=Path('build/engineer-motion-review')
-          original=Path('art/incoming/chatgpt-original/candidates')
-          w=1000
-          board=Image.new('RGB',(w,24*69+64),(19,30,44))
+          board=Image.new('RGB',(1000,12*69+64),(19,30,44))
           pen=ImageDraw.Draw(board)
-          pen.text((15,12),'ZERO TO EMPIRE — engineer motion at real 42px',fill=(241,248,255))
-          pen.text((15,32),'REVIEW ONLY. No automatic approval or Android promotion.',fill=(174,197,216))
+          pen.text((15,12),'ZERO TO EMPIRE / ENGINEER / real independent 42px comparison',fill=(241,248,255))
+          pen.text((15,32),'Kaggle collector bank vs local vector alternative. REVIEW ONLY; no automatic approval.',fill=(174,197,216))
           metrics={'review_only':True,'semantic_approved':False,
                    'runtime_promoted':False,'strict_done_added':0,
-                   'mobile_render_px':42,'actions':{}}
-          for action_index,(action,count) in enumerate((('WALK',8),('WORK',10),('REPAIR',10))):
-              filename='zte_chr_eng_'+action.lower()+'_final.png'
-              old=original/filename
-              new=out/'candidates'/filename
-              before=old.read_bytes()
-              after=new.read_bytes()
-              # This workflow also runs for REPAIR-only changes. The untouched
-              # WALK is an identity/control baseline, not a test failure.
-              changed=before!=after
-              print('ENGINEER_'+action+'_CHANGED='+str(changed))
-              before_m=motion_stats(before,count)
-              after_m=motion_stats(after,count)
-              if action=='WORK' and changed:
-                  assert after_m['mean_frame_change']>=.012, 'ENG WORK still too static at 42px'
-                  assert after_m['mean_frame_change']>=before_m['mean_frame_change']*1.15, 'ENG WORK not meaningfully improved'
-              metrics['actions'][action]={
-                  'old':before_m,'candidate':after_m,
-                  'motion_change_delta':round(after_m['mean_frame_change']-before_m['mean_frame_change'],5),
-                  'lower_body_change_delta':round(after_m['mean_lower_body_change']-before_m['mean_lower_body_change'],5),
-                  'changed_from_committed':changed,
-                  'requires_visual_review':True,
-              }
-              with Image.open(old) as a,Image.open(new) as b:
-                  for candidate_index,atlas in enumerate((a,b)):
-                      frames=[atlas.crop(((i%4)*256,(i//4)*256,(i%4+1)*256,(i//4+1)*256)) for i in range(count)]
-                      assert all(fr.getchannel('A').getbbox() is not None for fr in frames)
-                      for lighting_index,(bg,caption) in enumerate(((NIGHT,'night'),(DAY,'day'))):
-                          row=action_index*8+candidate_index*4+lighting_index*2
-                          yy=row*69+70
-                          pen.text((15,yy+8),action+' / '+('CURRENT' if candidate_index==0 else 'NEW')+' / '+caption,fill=(216,234,248))
-                          for i,fr in enumerate(frames):
-                              tiny=composite(fr,bg)
-                              xx=250+i*70
-                              board.paste(tiny,(xx,yy))
-                              pen.text((xx+14,yy+43),str(i+1),fill=(166,187,208))
-                          # Two duplicate rows intentionally show stage size and a
-                          # transparent-cell alignment baseline without resampling.
-                          if row%2==0:
+                   'mobile_render_px':42,'comparison_independent':True,
+                   'canonical_bank_profile':'collector-first','actions':{}}
+          with zipfile.ZipFile(out/'zte-character-bank-current.zip') as bank:
+              assert bank.namelist().count('candidate-bank-index.json') == 1
+              bank_index=json.loads(bank.read('candidate-bank-index.json'))
+              assert bank_index['source_selection_profile']=='collector-first'
+              assert bank_index['automatic_semantic_approval'] is False
+              assert bank_index['automatic_runtime_promotion'] is False
+              entries=bank_index['bank_entries']
+              assert len(entries)==bank_index['candidate_count']
+              assert len({row['id'] for row in entries})==len(entries)
+              by_id={row['id']:row for row in entries}
+              for action_index,(action,count) in enumerate((('WALK',8),('WORK',10),('REPAIR',10))):
+                  asset_id='CHR-ENG-'+action
+                  name='zte_chr_eng_'+action.lower()+'_final.png'
+                  entry=by_id[asset_id]
+                  assert entry['filename']==name and entry['source_type']=='collected-kaggle', asset_id
+                  assert entry['strict_approved'] is False and entry['runtime_promoted'] is False
+                  member='candidates/'+name
+                  assert bank.namelist().count(member)==1
+                  before=bank.read(member)
+                  assert len(before)==entry['bytes']
+                  before_sha=hashlib.sha256(before).hexdigest()
+                  assert before_sha==entry['sha256'], 'Untrusted Kaggle source: '+asset_id
+                  after=(out/'candidates'/name).read_bytes()
+                  after_sha=hashlib.sha256(after).hexdigest()
+                  assert after_sha!=before_sha, 'False comparison: identical input sprites '+asset_id
+                  for blob in (before,after):
+                      with Image.open(io.BytesIO(blob)) as check:
+                          check.load()
+                          assert check.size==(1024,1024) and check.mode=='RGBA'
+                          assert all(check.crop(((i%4)*256,(i//4)*256,(i%4+1)*256,(i//4+1)*256)).getchannel('A').getbbox() is not None for i in range(count))
+                  bm=motion_stats(before,count)
+                  am=motion_stats(after,count)
+                  metrics['actions'][action]={
+                      'collector':bm,'vector':am,
+                      'collector_source_type':'collected-kaggle',
+                      'collector_run_id':entry['source_collector_run_id'],
+                      'collector_sha256':before_sha,'vector_sha256':after_sha,
+                      'mean_frame_change_delta':round(am['mean_frame_change']-bm['mean_frame_change'],5),
+                      'lower_body_change_delta':round(am['mean_lower_body_change']-bm['mean_lower_body_change'],5),
+                      'requires_visual_review':True,'runtime_promoted':False}
+                  for candidate_index,blob in enumerate((before,after)):
+                      with Image.open(io.BytesIO(blob)) as atlas:
+                          frames=[atlas.crop(((i%4)*256,(i//4)*256,(i%4+1)*256,(i//4+1)*256)) for i in range(count)]
+                          for lighting_index,(bg,caption) in enumerate(((NIGHT,'night'),(DAY,'day'))):
+                              row=action_index*4+candidate_index*2+lighting_index
+                              yy=row*69+70
+                              kind='COLLECTOR' if candidate_index==0 else 'VECTOR'
+                              pen.text((15,yy+8),action+' / '+kind+' / '+caption,fill=(216,234,248))
                               pen.text((15,yy+27),'exact 42 px',fill=(157,180,202))
-              print(action,'42px baseline',before_m,'42px candidate',after_m)
+                              for i,fr in enumerate(frames):
+                                  tiny=composite(fr,bg)
+                                  xx=250+i*70
+                                  board.paste(tiny,(xx,yy))
+                                  pen.text((xx+14,yy+43),str(i+1),fill=(166,187,208))
+                  print('ENGINEER_'+action+'_COLLECTOR_SHA256='+before_sha)
+                  print('ENGINEER_'+action+'_VECTOR_SHA256='+after_sha)
+                  print('ENGINEER_'+action+'_MOTION_DELTA='+str(metrics['actions'][action]['mean_frame_change_delta']))
           (out/'review-metrics.json').write_text(json.dumps(metrics,indent=2)+'\n')
           board.save(out/'engineer-walk-repair-real-42px.png',optimize=True)
+          print('ENGINEER_COMPARISON_INDEPENDENT=1')
           print('ENGINEER_COMPARISON_REVIEW_ONLY=1')
           PY
       - name: Publish original and proposed sprite sheets for inspection
