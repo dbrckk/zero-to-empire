@@ -213,7 +213,9 @@ def svg_frame(role:str, action:str, index:int, count:int)->str:
  # Weight shifts toward stance foot; cargo carry sway remains restrained.
  # The hands, equipment, torso, helmet and face all receive the exact same
  # transform, avoiding drift in object contact or character identity.
- add(f'<g transform="translate({torso_weight_shift(phase,action):.2f},0)">')
+ repair_body_evidence=(f' data-eng-repair-body-bounce="{bounce:.2f}"'
+                       if role=='ENG' and action=='REPAIR' else '')
+ add(f'<g{repair_body_evidence} transform="translate({torso_weight_shift(phase,action):.2f},0)">')
  # BACK arm
  add(joint_arm('L',action))
  # main torso, premium tapered silhouette, safety accents
