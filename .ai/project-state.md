@@ -29,17 +29,18 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-16T11:45:56Z
+Generated: 2026-10-16T11:49:29Z
 
 ### Git
 - Branch: `main`
-- Head: `6c9275b1c82e`
-- Commit date: 2026-10-16T13:45:35+02:00
-- Commit: art: new engineer walk and mechanical repair motion, with 42px visual review (#186)
+- Head: `35265761a659`
+- Commit date: 2026-10-16T13:49:12+02:00
+- Commit: fix(ci): validate engineer repair socket by geometry and test original art workflows (#187)
 - Tracked files: 1812
 
 ### Recently changed files
 - `.github/workflows/art-chatgpt-original-candidates.yml`
+- `.github/workflows/asset-pipeline-ci.yml`
 - `.github/workflows/character-candidate-bank.yml`
 - `.github/workflows/engineer-motion-candidate-review.yml`
 - `tools/assets/test_candidate_archive_workflow.py`

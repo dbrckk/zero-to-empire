@@ -1162,8 +1162,13 @@ jobs:
               station_markup=ET.tostring(stations[0])
               if station_reference is None: station_reference=station_markup
               assert station_markup==station_reference,('moving-station',frame)
-              socket=next(e for e in stations[0].iter()
-                          if e.tag==namespace+'circle')
+              # Decorative panel rivets can appear before the actual
+              # mechanical socket. Identify the unique large bearing by
+              # geometry, never by XML painter/order position.
+              sockets=[e for e in stations[0].iter()
+                       if e.tag==namespace+'circle' and float(e.get('r','0'))>=6.0]
+              assert len(sockets)==1,('ambiguous-main-socket',frame)
+              socket=sockets[0]
               target=(float(socket.get('cx')),float(socket.get('cy')))
               assert target==ENG_REPAIR_TARGET,(frame,target)
               match=re.fullmatch(
@@ -1767,6 +1772,7 @@ on:
       - '.github/workflows/kaggle-async-character-collector.yml'
       - '.github/workflows/archive-character-candidates.yml'
       - '.github/workflows/character-candidate-bank.yml'
+      - '.github/workflows/art-chatgpt-original-candidates.yml'
       - '.github/workflows/backfill-character-candidate-archives.yml'
       - '.github/workflows/local-character-review.yml'
       - '.github/workflows/kaggle-superseded-character-evidence.yml'
