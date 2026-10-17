@@ -1,13 +1,15 @@
 # Change impact
 
-Base: b30421851b6ce4f7d74f923f8bd921d638a18893
-Head: 1ce996f251aca9952f05ce858daa456acce7caf4
+Base: 96c63e2d19ca9b087f62316d6fa70f6037b621f7
+Head: 6fd892f9f809f92806d10c78939e9cf57b1d1f58
 
 ## Changed files
-- M PROJECT_CONTINUITY.md
+- M app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt
+- M tools/android/emulator_functional_smoke.sh
 
 ## Affected areas
-- (root)
+- app
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

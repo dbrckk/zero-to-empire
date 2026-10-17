@@ -31,16 +31,18 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-16T17:41:55Z
+Generated: 2026-10-17T07:10:50Z
 
 ### Git
 - Branch: `main`
-- Head: `1ce996f251ac`
-- Commit date: 2026-10-16T19:41:39+02:00
-- Commit: docs(project): record verified PR 206 merge and terrain QA emulator blocker
+- Head: `6fd892f9f809`
+- Commit date: 2026-10-17T03:10:36-04:00
+- Commit: fix: align Android character review clock and harden emulator smoke
 - Tracked files: 1814
 
 ### Recently changed files
+- `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
+- `tools/android/emulator_functional_smoke.sh`
 - `PROJECT_CONTINUITY.md`
 - `app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt`
 - `app/src/main/java/com/zerotoempire/game/FoundryWorldMotion.kt`
