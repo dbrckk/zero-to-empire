@@ -199,8 +199,9 @@ private fun AscendantCorePlaza(state:GameState,tap:()->Unit,modifier:Modifier=Mo
  // Core VFX shares the live system animation and Battery Saver policy.
  val motionEnabled = !MotionQuality.reducedMotion(context)
  var cyanFrame by remember{mutableIntStateOf(0)};var pulseToken by remember{mutableIntStateOf(0)};var pulseFrame by remember{mutableIntStateOf(-1)}
- // Only load the tap-burst sheet while an actual burst is visible.
- val pulseSheet=if(pulseFrame>=0){
+ // Decode on the first tap and retain for later taps while the plaza is composed.
+ // Toggling the composable on every tap would otherwise decode the atlas repeatedly.
+ val pulseSheet=if(pulseToken>0){
   remember(context.resources){ImageBitmap.imageResource(context.resources,R.drawable.zte_fx_06_final)}
  }else null
  val cyanPulseSheet=remember(context.resources){ImageBitmap.imageResource(context.resources,R.drawable.zte_fx_05_final)}
