@@ -1,17 +1,13 @@
 # Change impact
 
-Base: f8883231c757cfe5de4566e03e66752e45c96e71
-Head: 48a4d1a2dcf0ce8988928b2f95d90a8ec9bb96f7
+Base: 8bb6b0ef330006c059c2c589a78cd4a425048e40
+Head: df2802d5bc174220481371c7312f8041f6c6e1ef
 
 ## Changed files
-- M .github/workflows/android-emulator-smoke.yml
-- M app/src/main/java/com/zerotoempire/game/FoundryWorldMotion.kt
-- M tools/android/emulator_functional_smoke.sh
+- M app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt
 
 ## Affected areas
-- .github
 - app
-- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

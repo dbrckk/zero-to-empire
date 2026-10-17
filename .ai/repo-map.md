@@ -13111,6 +13111,16 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+private val CORE_ERA_SPRITES = intArrayOf(
+ R.drawable.zte_power_core_t0_final,
+ R.drawable.zte_power_core_t1_final,
+ R.drawable.zte_power_core_t2_final,
+ R.drawable.zte_power_core_t3_final,
+ R.drawable.zte_power_core_t4_final,
+ R.drawable.zte_power_core_t5_final,
+ R.drawable.zte_power_core_t6_final
+)
+
 /** World-first Empire surface defined by AAA_WORLD_SPRITE_BIBLE.md.
  * Economy and save behavior remain delegated to the existing GameViewModel.
  */
@@ -13244,17 +13254,13 @@ private fun AscendantCorePlaza(state:GameState,tap:()->Unit,modifier:Modifier=Mo
  val context=LocalContext.current
  val cyanPulseSheet=remember{ImageBitmap.imageResource(context.resources,R.drawable.zte_fx_05_final)}
  val pulseSheet=remember{ImageBitmap.imageResource(context.resources,R.drawable.zte_fx_06_final)}
- val coreSprites=remember{listOf(
-  ImageBitmap.imageResource(context.resources,R.drawable.zte_power_core_t0_final),
-  ImageBitmap.imageResource(context.resources,R.drawable.zte_power_core_t1_final),
-  ImageBitmap.imageResource(context.resources,R.drawable.zte_power_core_t2_final),
-  ImageBitmap.imageResource(context.resources,R.drawable.zte_power_core_t3_final),
-  ImageBitmap.imageResource(context.resources,R.drawable.zte_power_core_t4_final),
-  ImageBitmap.imageResource(context.resources,R.drawable.zte_power_core_t5_final),
-  ImageBitmap.imageResource(context.resources,R.drawable.zte_power_core_t6_final),
- )}
+ // Decode only the current era's core texture. Loading all seven eagerly
+ // retained six unused bitmaps on every device, even at the first era.
  val coreIndex=EmpireEras.current(state.lifetimeCash).index.coerceIn(0,6)
- val coreSprite=coreSprites[coreIndex]
+ val coreResource=CORE_ERA_SPRITES[coreIndex]
+ val coreSprite=remember(context.resources,coreResource){
+  ImageBitmap.imageResource(context.resources,coreResource)
+ }
  // Core VFX shares the live system animation and Battery Saver policy.
  val motionEnabled = !MotionQuality.reducedMotion(context)
  var cyanFrame by remember{mutableIntStateOf(0)};var pulseToken by remember{mutableIntStateOf(0)};var pulseFrame by remember{mutableIntStateOf(-1)}

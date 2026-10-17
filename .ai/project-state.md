@@ -31,20 +31,20 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-17T08:29:38Z
+Generated: 2026-10-17T12:53:03Z
 
 ### Git
 - Branch: `main`
-- Head: `48a4d1a2dcf0`
-- Commit date: 2026-10-17T04:29:23-04:00
-- Commit: perf(android): optimize Foundry animation and stabilize emulator QA
+- Head: `df2802d5bc17`
+- Commit date: 2026-10-17T08:52:44-04:00
+- Commit: perf(android): lazily decode active Power Core era sprite
 - Tracked files: 1814
 
 ### Recently changed files
+- `app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt`
 - `.github/workflows/android-emulator-smoke.yml`
 - `app/src/main/java/com/zerotoempire/game/FoundryWorldMotion.kt`
 - `tools/android/emulator_functional_smoke.sh`
-- `app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt`
 - `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
 - `PROJECT_CONTINUITY.md`
 
