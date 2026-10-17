@@ -24,7 +24,27 @@ dump_ui() {
 click_node() {
   local needle="$1"
   local dump_name="$2"
-  dump_ui "$dump_name"
+  local attempt
+  for attempt in 1 2 3 4 5; do
+    dump_ui "$dump_name"
+    if python3 - "$EVIDENCE/$dump_name.xml" "$needle" <<'PY_PROBE'
+import sys,xml.etree.ElementTree as ET
+needle=sys.argv[2].lower()
+for node in ET.parse(sys.argv[1]).getroot().iter('node'):
+    label=(node.attrib.get('text','')+' '+node.attrib.get('content-desc','')).lower()
+    if needle in label and node.attrib.get('bounds','') not in ('','[0,0][0,0]'):
+        raise SystemExit(0)
+raise SystemExit(1)
+PY_PROBE
+    then
+      break
+    fi
+    if (( attempt == 5 )); then
+      fail "navigation-target-not-ready:$needle"
+    fi
+    echo "UI_WAIT_TARGET=$needle attempt=$attempt"
+    sleep 2
+  done
   python3 - "$EVIDENCE/$dump_name.xml" "$needle" <<'PY'
 import re,sys,subprocess,xml.etree.ElementTree as ET
 path,needle=sys.argv[1],sys.argv[2]
@@ -103,6 +123,9 @@ complete_onboarding_if_present() {
   for step in 0 1 2 3 4 5; do
     probe="onboarding-step-$step"
     dump_ui "$probe"
+    if grep -Fq "Pixel Launcher isn't responding" "$EVIDENCE/$probe.xml"; then
+      fail "system-dialog-obscures-onboarding:step=$step"
+    fi
     if ! grep -Fq 'ZERO → EMPIRE' "$EVIDENCE/$probe.xml"; then
       echo "FUNCTIONAL_ONBOARDING_PASS=steps-$step"
       return 0
@@ -127,7 +150,7 @@ check_alive() {
 
 dismiss_launcher_anr_if_present() {
   local attempt probe coords x y
-  for attempt in 1 2 3; do
+  for attempt in 1 2 3 4 5 6; do
     probe="$EVIDENCE/system-dialog-$attempt.xml"
     if ! ui_dump_with_retry "$probe"; then
       return 0
@@ -150,6 +173,7 @@ dismiss_launcher_anr_if_present() {
     adb shell input keyevent KEYCODE_BACK || true
     sleep 2
   done
+  fail "system-launcher-anr-dialog-persisted"
 }
 
 check_no_fatal() {

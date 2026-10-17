@@ -62,7 +62,7 @@ private fun CharacterReviewGallery() {
     LaunchedEffect(playing) {
         while (playing) {
             delay(100L)
-            worldFrame = (worldFrame + 1) % 1680
+            worldFrame = (worldFrame + 1) % 10080
         }
     }
 
@@ -105,11 +105,11 @@ private fun CharacterReviewGallery() {
                             }
                             OutlinedButton(onClick = {
                                 playing = false
-                                worldFrame = Math.floorMod(worldFrame - 1, 1680)
+                                worldFrame = Math.floorMod(worldFrame - 1, 10080)
                             }) { Text("−1") }
                             OutlinedButton(onClick = {
                                 playing = false
-                                worldFrame = (worldFrame + 1) % 1680
+                                worldFrame = (worldFrame + 1) % 10080
                             }) { Text("+1") }
                         }
                         Text(
@@ -197,7 +197,7 @@ private fun CharacterReviewGallery() {
                                 }
                                 OutlinedButton(onClick = {
                                     playing = false
-                                    worldFrame = (worldFrame + 1) % 1680
+                                    worldFrame = (worldFrame + 1) % 10080
                                 }) { Text("Stage +1") }
                             }
                             // This full-body preview must be above the six selector
