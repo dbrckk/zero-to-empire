@@ -45,6 +45,7 @@ android/
   emulator_functional_smoke.sh
   local_original_character_emulator_smoke.sh
   local_review_ui_target.py
+  parse_emulator_performance.py
   test_ui_click_target.py
   test_ui_dump_retry.py
   test_ui_economy_probe.py
@@ -1126,7 +1127,26 @@ sleep 3
 check_alive
 assert_ui_contains "MANAGERS" "character-qa-return-main"
 
+# Observational performance evidence: sample the real game (not the separate
+# Character Review screen) during a repeatable, short navigation window.
+# The software-rendered CI emulator cannot establish production-device FPS.
+# ADB gfxinfo unavailability is reported as no_profiledata, never as zero jank.
+if timeout -k 5s 25s adb shell dumpsys gfxinfo "$PKG" reset > "$EVIDENCE/gfxinfo-reset.txt" 2> "$EVIDENCE/gfxinfo-reset-error.txt"; then
+  timeout -k 5s 20s adb shell input swipe 540 1300 540 700 400 || echo "PERF_CAPTURE_WARN=scroll-forward-failed"
+  timeout -k 5s 20s adb shell input swipe 540 700 540 1300 400 || echo "PERF_CAPTURE_WARN=scroll-back-failed"
+  sleep 5
+  if ! timeout -k 5s 25s adb shell dumpsys gfxinfo "$PKG" framestats > "$EVIDENCE/gfxinfo-framestats.txt" 2> "$EVIDENCE/gfxinfo-error.txt"; then
+    echo "PERF_CAPTURE_WARN=gfxinfo-unavailable"
+  fi
+else
+  echo "PERF_CAPTURE_WARN=gfxinfo-reset-unavailable"
+fi
+check_alive
 timeout -k 5s 25s adb shell dumpsys meminfo "$PKG" > "$EVIDENCE/meminfo.txt" || fail "final-meminfo-unavailable"
+python3 "$SCRIPT_DIR/parse_emulator_performance.py" \
+  --gfxinfo "$EVIDENCE/gfxinfo-framestats.txt" \
+  --meminfo "$EVIDENCE/meminfo.txt" \
+  --output "$EVIDENCE/performance-summary.json" || fail "performance-summary-failed"
 timeout -k 5s 25s adb exec-out screencap -p > "$EVIDENCE/final.png" || fail "final-screenshot-unavailable"
 timeout -k 5s 25s adb shell dumpsys activity activities > "$EVIDENCE/activity.txt" || fail "final-activity-dump-unavailable"
 timeout -k 5s 25s adb shell dumpsys window windows > "$EVIDENCE/window.txt" || fail "final-window-dump-unavailable"
@@ -1593,6 +1613,67 @@ parser = argparse.ArgumentParser()
 args = parser.parse_args()
 ⋮----
 coord = find(args.xml, args.label, not args.allow_static_label)
+```
+
+## File: android/parse_emulator_performance.py
+```python
+#!/usr/bin/env python3
+"""Summarize observational Android gfxinfo framestats + meminfo CI evidence.
+
+Does not enforce FPS thresholds: emulator timing is not production-device FPS.
+Missing/malformed samples are explicitly marked unavailable, never reported as zero.
+"""
+⋮----
+def percentile(sorted_values, fraction)
+⋮----
+index = (len(sorted_values) - 1) * fraction
+lower = int(index)
+upper = min(lower + 1, len(sorted_values) - 1)
+⋮----
+def read_frames(raw)
+⋮----
+in_profile = False
+fields = None
+durations_ms = []
+discarded_rows = 0
+profile_sections = 0
+⋮----
+line = line_text.strip()
+⋮----
+in_profile = not in_profile
+⋮----
+fields = {field.strip(): n for n, field in enumerate(line.split(','))}
+⋮----
+columns = line.split(',')
+⋮----
+flags = int(columns[fields['Flags']])
+start = int(columns[fields['IntendedVsync']])
+end = int(columns[fields['FrameCompleted']])
+⋮----
+# Android uses flags 0 and 1 for ordinary and first-window frames.
+# Only completed, positive timestamps describe a real rendered frame.
+⋮----
+duration_ns = end - start
+⋮----
+count = len(durations_ms)
+⋮----
+# A diagnostic 60 Hz threshold, NOT a device-calibrated jank metric.
+⋮----
+def read_total_pss_kb(raw)
+⋮----
+# Android changes meminfo layout across API levels. App Summary has
+# `TOTAL: ...`; the detailed table has `TOTAL ...`; either is in KiB.
+⋮----
+match = re.search(pattern, raw, re.MULTILINE)
+⋮----
+def main()
+⋮----
+parser = argparse.ArgumentParser(description=__doc__)
+⋮----
+args = parser.parse_args()
+gfx = args.gfxinfo.read_text(errors='replace') if args.gfxinfo.is_file() else ''
+mem = args.meminfo.read_text(errors='replace') if args.meminfo.is_file() else ''
+summary = {
 ```
 
 ## File: android/test_ui_click_target.py

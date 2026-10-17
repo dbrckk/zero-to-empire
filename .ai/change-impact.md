@@ -1,13 +1,16 @@
 # Change impact
 
-Base: c5f305a19556bc0a50dc627ec41f1425825762d1
-Head: 46db1a6a69f0451b8189c6ee10a23b141eb806be
+Base: 968dd5c1f31bca7fb61cd502a2329614e8ba6336
+Head: 7c17675bce2d0f68c479444e2c25c88302edd912
 
 ## Changed files
-- M app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt
+- M .github/workflows/android-emulator-smoke.yml
+- M tools/android/emulator_functional_smoke.sh
+- A tools/android/parse_emulator_performance.py
 
 ## Affected areas
-- app
+- .github
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.
