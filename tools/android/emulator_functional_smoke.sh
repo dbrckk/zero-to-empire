@@ -213,6 +213,10 @@ adb exec-out screencap -p > "$EVIDENCE/initial.png"
 # whole flow bounded to the five visual onboarding steps.
 complete_onboarding_if_present
 
+# Capture the post-onboarding memory baseline before economy/persistence exercises.
+# Each dumpsys snapshot is bounded; a missing measurement must not look green.
+timeout -k 5s 25s adb shell dumpsys meminfo "$PKG" > "$EVIDENCE/meminfo-start.txt" || fail "baseline-meminfo-unavailable"
+
 for tab in MANAGERS UPGRADES GOALS EMPIRE; do
   click_node "$tab" "before-$tab"
   assert_ui_contains "$tab" "after-$tab"
@@ -409,7 +413,23 @@ sleep 3
 check_alive
 assert_ui_contains "MANAGERS" "character-qa-return-main"
 
+# Sample frame timing after a real on-screen Power Core tap, avoiding
+# accumulation of unrelated Character Review/launcher rendering history.
+timeout -k 5s 25s adb shell dumpsys gfxinfo "$PKG" reset > "$EVIDENCE/gfxinfo-reset.txt" || fail "gfxinfo-reset-unavailable"
+click_resolved_node "Power Core" "performance-before-core-tap"
+sleep 3
+check_alive
+timeout -k 5s 25s adb shell dumpsys gfxinfo "$PKG" framestats > "$EVIDENCE/gfxinfo-framestats.txt" || fail "gfxinfo-framestats-unavailable"
 timeout -k 5s 25s adb shell dumpsys meminfo "$PKG" > "$EVIDENCE/meminfo.txt" || fail "final-meminfo-unavailable"
+python3 "$SCRIPT_DIR/performance_snapshot.py" \
+  --meminfo-start "$EVIDENCE/meminfo-start.txt" \
+  --meminfo-end "$EVIDENCE/meminfo.txt" \
+  --gfxinfo "$EVIDENCE/gfxinfo-framestats.txt" \
+  --output "$EVIDENCE/performance-snapshot.json" \
+  --markdown "$EVIDENCE/performance-summary.md" || fail "performance-snapshot-invalid"
+if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
+  cat "$EVIDENCE/performance-summary.md" >> "$GITHUB_STEP_SUMMARY"
+fi
 timeout -k 5s 25s adb exec-out screencap -p > "$EVIDENCE/final.png" || fail "final-screenshot-unavailable"
 timeout -k 5s 25s adb shell dumpsys activity activities > "$EVIDENCE/activity.txt" || fail "final-activity-dump-unavailable"
 timeout -k 5s 25s adb shell dumpsys window windows > "$EVIDENCE/window.txt" || fail "final-window-dump-unavailable"
