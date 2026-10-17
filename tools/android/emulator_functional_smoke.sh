@@ -409,7 +409,26 @@ sleep 3
 check_alive
 assert_ui_contains "MANAGERS" "character-qa-return-main"
 
+# Observational performance evidence: sample the real game (not the separate
+# Character Review screen) during a repeatable, short navigation window.
+# The software-rendered CI emulator cannot establish production-device FPS.
+# ADB gfxinfo unavailability is reported as no_profiledata, never as zero jank.
+if timeout -k 5s 25s adb shell dumpsys gfxinfo "$PKG" reset > "$EVIDENCE/gfxinfo-reset.txt" 2> "$EVIDENCE/gfxinfo-reset-error.txt"; then
+  timeout -k 5s 20s adb shell input swipe 540 1300 540 700 400 || echo "PERF_CAPTURE_WARN=scroll-forward-failed"
+  timeout -k 5s 20s adb shell input swipe 540 700 540 1300 400 || echo "PERF_CAPTURE_WARN=scroll-back-failed"
+  sleep 5
+  if ! timeout -k 5s 25s adb shell dumpsys gfxinfo "$PKG" framestats > "$EVIDENCE/gfxinfo-framestats.txt" 2> "$EVIDENCE/gfxinfo-error.txt"; then
+    echo "PERF_CAPTURE_WARN=gfxinfo-unavailable"
+  fi
+else
+  echo "PERF_CAPTURE_WARN=gfxinfo-reset-unavailable"
+fi
+check_alive
 timeout -k 5s 25s adb shell dumpsys meminfo "$PKG" > "$EVIDENCE/meminfo.txt" || fail "final-meminfo-unavailable"
+python3 "$SCRIPT_DIR/parse_emulator_performance.py" \
+  --gfxinfo "$EVIDENCE/gfxinfo-framestats.txt" \
+  --meminfo "$EVIDENCE/meminfo.txt" \
+  --output "$EVIDENCE/performance-summary.json" || fail "performance-summary-failed"
 timeout -k 5s 25s adb exec-out screencap -p > "$EVIDENCE/final.png" || fail "final-screenshot-unavailable"
 timeout -k 5s 25s adb shell dumpsys activity activities > "$EVIDENCE/activity.txt" || fail "final-activity-dump-unavailable"
 timeout -k 5s 25s adb shell dumpsys window windows > "$EVIDENCE/window.txt" || fail "final-window-dump-unavailable"
