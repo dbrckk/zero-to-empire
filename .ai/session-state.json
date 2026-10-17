@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-16",
-  "task": "Finish OP WALK strict visual-semantic review after successful eight-frame Android and moving real-stage proof; only promote via exact production runtime integration",
-  "branch": "main",
-  "last_observed_head": "fb7e097b201ab5bb03216046ddb33e7927d5bdf3",
+  "updated_at": "2026-10-17",
+  "task": "Collect reliable Android emulator memory/frame-timing evidence during the existing functional smoke without using emulator FPS as a release benchmark",
+  "branch": "perf/android-emulator-runtime-metrics-20261017",
+  "last_observed_head": "46db1a6a69f0451b8189c6ee10a23b141eb806be",
   "state": {
     "strict_done": 219,
     "target_total": 235,
@@ -277,13 +277,21 @@
       "fourth_ci_run": 38943833429,
       "fourth_emulator_run": 38943833467,
       "manual_artfinding": "Shipping-debug character QA screenshots show inconsistent OPERATOR silhouettes across IDLE, WALK, WORK, CARRY, REPAIR, CELEBRATE; candidate identities require independent semantic review. No promotion."
+    },
+    "android_emulator_performance_observability": {
+      "branch": "perf/android-emulator-runtime-metrics-20261017",
+      "pr": "pending",
+      "scope": "New tools/android/performance_snapshot.py; existing emulator smoke captures onboarding and post-functional PSS and real Power Core tap framestats; workflow uploads structured JSON plus markdown job summary",
+      "guardrails": "No production changes or unit tests; invalid/missing PSS fails closed; no frame samples produce explicit null metrics; no emulator FPS gate",
+      "review_status": "Pending Android CI and Android Emulator Smoke on PR head",
+      "strict_art_status": "219/235, 16 remain without approval"
     }
   },
-  "last_completed": "PR #206 merged 8adbd25d with PR Android CI+smoke success and main Android CI success. PR #207 code staged, canonical terrain previously mostly offscreen fixed with stage-bounded layout; original character isolated city review rejects gradient-only background; CI emulator helper hardened for recurring Android Pixel Launcher ANR, real gallery-to-game return and bounded logcat. Third PR emulator 38943038475 blocked by persistent Pixel Launcher ANR. Latest PR commit 1821e2f7 selects Close app only for Pixel Launcher ANR; Android CI 38943833429 and emulator 38943833467 in progress. No merge of #207 until green. Strict remains 219/235.",
+  "last_completed": "PR #213 merged as 46db1a6 with Android CI #39035850493 and Android Emulator Smoke #39035850483 green. Current follow-up branch instruments emulator performance; pending PR verification.",
   "next_actions": [
-    "Check exact CI result 38943833429 and full emulator smoke 38943833467 at PR #207 head 1821e2f7. If both pass, squash merge #207 with expected head SHA and inspect fresh postmerge main CI.",
-    "If emulator fails, retrieve the exact run's job log/artifact. Distinguish persistent Pixel Launcher ANR/system hiccups from app process errors; do not bypass core economy/persistence assertions.",
-    "Following merge, isolated original-character review builds from updated main and emulator verifies non-gradient city scene; inspect city screenshot, terrain visibility, OP WALK planted foot and role identity before semantics and production promotion.",
-    "OP WALK travel speed is currently normalized to stage width; verify foot slide on tablet/wide stages. Original QA screenshot shows inconsistent OP identity, so retain 16 review-only asset backlog, strict 219/235."
+    "Open performance observability PR; inspect Android CI and emulator smoke results on exact PR SHA; fix errors before merge.",
+    "Download Android Emulator Smoke artifact and inspect performance-snapshot.json for valid PSS, frames and limitations; never substitute emulator measurements for physical device benchmarks.",
+    "If green, squash merge observability PR with expected SHA; then investigate any graphics-memory hotspot supported by evidence.",
+    "Continue staged premium art review; strict production approval remains 219/235, 16 unfinished candidate actions."
   ]
 }
