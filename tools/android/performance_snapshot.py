@@ -65,6 +65,12 @@ def frame_durations_ms(raw: str) -> tuple[list[float], int]:
 def generate(mem_start: str, mem_end: str, gfxinfo: str) -> dict:
     start = total_pss_kib(mem_start)
     end = total_pss_kib(mem_end)
+    if start <= 0 or end <= 0:
+        raise ValueError("invalid zero/negative process PSS")
+    # A successful adb command can still return an error banner rather than
+    # framestats. A missing PROFILEDATA section is missing evidence, not zero FPS.
+    if "---PROFILEDATA---" not in gfxinfo:
+        raise ValueError("missing gfxinfo PROFILEDATA section")
     frames, total_rows = frame_durations_ms(gfxinfo)
     frame_stats = {
         "measurement": "dumpsys gfxinfo framestats; IntendedVsync to FrameCompleted",
