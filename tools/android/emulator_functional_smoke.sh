@@ -177,7 +177,19 @@ dismiss_launcher_anr_if_present() {
 }
 
 check_no_fatal() {
-  adb logcat -d > "$EVIDENCE/logcat.txt"
+  local attempt
+  # adb occasionally drops the shell connection after this long emulator soak.
+  # Retrying collection is safe; never ignore missing crash evidence.
+  for attempt in 1 2 3; do
+    if adb logcat -d > "$EVIDENCE/logcat.txt"; then
+      break
+    fi
+    echo "LOGCAT_RETRY=$attempt" >&2
+    if (( attempt == 3 )); then
+      fail "final-logcat-unavailable"
+    fi
+    sleep 2
+  done
   if grep -E "FATAL EXCEPTION|AndroidRuntime.*FATAL|Process: $PKG.*has died" "$EVIDENCE/logcat.txt"; then
     fail "fatal-runtime-crash"
   fi
@@ -388,9 +400,14 @@ click_node "+1" "character-qa-before-step"
 assert_ui_contains "Lecture" "character-qa-stepped"
 adb exec-out screencap -p > "$EVIDENCE/character-qa-stepped.png"
 echo "CHARACTER_QA_EMULATOR_PASS=1"
+# Starting MainActivity while the debug review activity is topmost may merely
+# deliver the intent to the review task and leave the game hidden. Restart the
+# app explicitly, then assert that the real game navigation is visible.
+adb shell am force-stop "$PKG"
 adb shell am start -W -n "$ACT" > "$EVIDENCE/character-qa-return-to-game.txt"
-sleep 2
+sleep 3
 check_alive
+assert_ui_contains "MANAGERS" "character-qa-return-main"
 
 adb shell dumpsys meminfo "$PKG" > "$EVIDENCE/meminfo.txt"
 adb exec-out screencap -p > "$EVIDENCE/final.png"
