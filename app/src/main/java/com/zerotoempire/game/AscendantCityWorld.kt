@@ -189,8 +189,6 @@ private fun AscendantHeroLot(vm: GameViewModel,business: Business,state: GameSta
 @Composable
 private fun AscendantCorePlaza(state:GameState,tap:()->Unit,modifier:Modifier=Modifier){
  val context=LocalContext.current
- val cyanPulseSheet=remember{ImageBitmap.imageResource(context.resources,R.drawable.zte_fx_05_final)}
- val pulseSheet=remember{ImageBitmap.imageResource(context.resources,R.drawable.zte_fx_06_final)}
  // Decode only the current era's core texture. Loading all seven eagerly
  // retained six unused bitmaps on every device, even at the first era.
  val coreIndex=EmpireEras.current(state.lifetimeCash).index.coerceIn(0,6)
@@ -201,6 +199,11 @@ private fun AscendantCorePlaza(state:GameState,tap:()->Unit,modifier:Modifier=Mo
  // Core VFX shares the live system animation and Battery Saver policy.
  val motionEnabled = !MotionQuality.reducedMotion(context)
  var cyanFrame by remember{mutableIntStateOf(0)};var pulseToken by remember{mutableIntStateOf(0)};var pulseFrame by remember{mutableIntStateOf(-1)}
+ // Only load the tap-burst sheet while an actual burst is visible.
+ val pulseSheet=if(pulseFrame>=0){
+  remember(context.resources){ImageBitmap.imageResource(context.resources,R.drawable.zte_fx_06_final)}
+ }else null
+ val cyanPulseSheet=remember(context.resources){ImageBitmap.imageResource(context.resources,R.drawable.zte_fx_05_final)}
  LaunchedEffect(motionEnabled){if(!motionEnabled){cyanFrame=3}else{while(true){for(frame in 0 until 8){cyanFrame=frame;delay(110)};delay(440)}}}
  LaunchedEffect(pulseToken){if(pulseToken==0)return@LaunchedEffect;if(!motionEnabled){pulseFrame=3;delay(80)}else{for(frame in 0 until 8){pulseFrame=frame;delay(42)}};pulseFrame=-1}
  Box(modifier.fillMaxWidth().height(118.dp),contentAlignment=Alignment.Center){
@@ -209,7 +212,7 @@ private fun AscendantCorePlaza(state:GameState,tap:()->Unit,modifier:Modifier=Mo
   Surface(color=EmpireColors.DeepSpace.copy(alpha=.42f),shape=CircleShape,modifier=Modifier.size(98.dp).border(2.dp,EmpireColors.Gold.copy(alpha=.48f),CircleShape).semantics { contentDescription = "Power Core: collect ${moneyV2(state.tapValue)}" }.clickable(role=Role.Button){pulseToken+=1;tap()}){
    Box(contentAlignment=Alignment.Center){Canvas(Modifier.size(88.dp)){val side=minOf(size.width,size.height).toInt();drawImage(image=coreSprite,srcOffset=IntOffset.Zero,srcSize=IntSize(coreSprite.width,coreSprite.height),dstOffset=IntOffset(((size.width-side)/2f).toInt(),((size.height-side)/2f).toInt()),dstSize=IntSize(side,side))}}
   }
-  if(pulseFrame>=0){Canvas(Modifier.size(118.dp)){val frame=pulseFrame.coerceIn(0,7);val side=minOf(size.width,size.height).toInt();drawImage(image=pulseSheet,srcOffset=IntOffset((frame%4)*128,(frame/4)*128),srcSize=IntSize(128,128),dstOffset=IntOffset(((size.width-side)/2f).toInt(),((size.height-side)/2f).toInt()),dstSize=IntSize(side,side))}}
+  if(pulseFrame>=0 && pulseSheet!=null){Canvas(Modifier.size(118.dp)){val frame=pulseFrame.coerceIn(0,7);val side=minOf(size.width,size.height).toInt();drawImage(image=pulseSheet,srcOffset=IntOffset((frame%4)*128,(frame/4)*128),srcSize=IntSize(128,128),dstOffset=IntOffset(((size.width-side)/2f).toInt(),((size.height-side)/2f).toInt()),dstSize=IntSize(side,side))}}
   Surface(color=EmpireColors.DeepSpace.copy(alpha=.90f),shape=RoundedCornerShape(10.dp),modifier=Modifier.align(Alignment.BottomCenter)){Text("POWER CORE  +${moneyV2(state.tapValue)}",Modifier.padding(horizontal=9.dp,vertical=5.dp),color=EmpireColors.GoldBright,fontSize=9.sp,fontWeight=FontWeight.Black)}
  }
 }
