@@ -17,8 +17,22 @@ fail() {
 }
 
 dump_ui() {
-  local name="$1"
-  ui_dump_with_retry "$EVIDENCE/$name.xml" || fail "ui-hierarchy-unavailable:$name"
+  local name="$1" attempt
+  # Pixel Launcher may display a *system* ANR above our healthy app on the
+  # slower API-35 CI emulator, then reappear after the initial dismissal.
+  # Never interpret that transient system dialog as a missing game tab or as
+  # an absent onboarding screen. Retry only this known system-level condition.
+  for attempt in 1 2 3 4 5 6; do
+    ui_dump_with_retry "$EVIDENCE/$name.xml" ||
+      fail "ui-hierarchy-unavailable:$name"
+    if ! grep -Fq "Pixel Launcher isn't responding" "$EVIDENCE/$name.xml"; then
+      return 0
+    fi
+    echo "SYSTEM_FLAKE_RECOVERY=pixel-launcher-anr ui=$name attempt=$attempt"
+    dismiss_launcher_anr_if_present
+    sleep 1
+  done
+  fail "pixel-launcher-anr-persisted:$name"
 }
 
 click_node() {
