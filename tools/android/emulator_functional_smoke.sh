@@ -11,8 +11,8 @@ mkdir -p "$EVIDENCE"
 
 fail() {
   echo "FUNCTIONAL_SMOKE_ERROR=$*" >&2
-  adb logcat -d > "$EVIDENCE/logcat-failure.txt" || true
-  adb exec-out screencap -p > "$EVIDENCE/failure.png" || true
+  timeout -k 5s 25s adb logcat -d > "$EVIDENCE/logcat-failure.txt" || true
+  timeout -k 5s 25s adb exec-out screencap -p > "$EVIDENCE/failure.png" || true
   exit 1
 }
 
@@ -181,7 +181,7 @@ check_no_fatal() {
   # adb occasionally drops the shell connection after this long emulator soak.
   # Retrying collection is safe; never ignore missing crash evidence.
   for attempt in 1 2 3; do
-    if adb logcat -d > "$EVIDENCE/logcat.txt"; then
+    if timeout -k 5s 25s adb logcat -d > "$EVIDENCE/logcat.txt"; then
       break
     fi
     echo "LOGCAT_RETRY=$attempt" >&2
@@ -403,16 +403,16 @@ echo "CHARACTER_QA_EMULATOR_PASS=1"
 # Starting MainActivity while the debug review activity is topmost may merely
 # deliver the intent to the review task and leave the game hidden. Restart the
 # app explicitly, then assert that the real game navigation is visible.
-adb shell am force-stop "$PKG"
-adb shell am start -W -n "$ACT" > "$EVIDENCE/character-qa-return-to-game.txt"
+timeout -k 5s 25s adb shell am force-stop "$PKG" || fail "character-qa-force-stop-timeout"
+timeout -k 5s 35s adb shell am start -W -n "$ACT" > "$EVIDENCE/character-qa-return-to-game.txt" || fail "character-qa-main-start-timeout"
 sleep 3
 check_alive
 assert_ui_contains "MANAGERS" "character-qa-return-main"
 
-adb shell dumpsys meminfo "$PKG" > "$EVIDENCE/meminfo.txt"
-adb exec-out screencap -p > "$EVIDENCE/final.png"
-adb shell dumpsys activity activities > "$EVIDENCE/activity.txt"
-adb shell dumpsys window windows > "$EVIDENCE/window.txt"
+timeout -k 5s 25s adb shell dumpsys meminfo "$PKG" > "$EVIDENCE/meminfo.txt" || fail "final-meminfo-unavailable"
+timeout -k 5s 25s adb exec-out screencap -p > "$EVIDENCE/final.png" || fail "final-screenshot-unavailable"
+timeout -k 5s 25s adb shell dumpsys activity activities > "$EVIDENCE/activity.txt" || fail "final-activity-dump-unavailable"
+timeout -k 5s 25s adb shell dumpsys window windows > "$EVIDENCE/window.txt" || fail "final-window-dump-unavailable"
 check_no_fatal
 if grep -E "ANR in $PKG|am_anr.*$PKG" "$EVIDENCE/logcat.txt"; then
   fail "anr-detected"
