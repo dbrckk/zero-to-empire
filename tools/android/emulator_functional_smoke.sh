@@ -409,6 +409,18 @@ sleep 3
 check_alive
 assert_ui_contains "MANAGERS" "character-qa-return-main"
 
+# Capture real Android rendering statistics alongside memory and screenshots.
+# Frame timing is diagnostic evidence, not a fixed FPS gate: CI emulator GPU
+# throughput varies between hosts, so a hard threshold would create false fails.
+if timeout -k 5s 25s adb shell dumpsys gfxinfo "$PKG" framestats > "$EVIDENCE/gfxinfo-framestats.txt"; then
+  if grep -q -- '---PROFILEDATA---' "$EVIDENCE/gfxinfo-framestats.txt"; then
+    echo "FUNCTIONAL_FRAMESTATS_CAPTURED=1"
+  else
+    echo "FUNCTIONAL_FRAMESTATS_UNAVAILABLE=missing-profile-data" >&2
+  fi
+else
+  echo "FUNCTIONAL_FRAMESTATS_UNAVAILABLE=adb-collection-failed" >&2
+fi
 timeout -k 5s 25s adb shell dumpsys meminfo "$PKG" > "$EVIDENCE/meminfo.txt" || fail "final-meminfo-unavailable"
 timeout -k 5s 25s adb exec-out screencap -p > "$EVIDENCE/final.png" || fail "final-screenshot-unavailable"
 timeout -k 5s 25s adb shell dumpsys activity activities > "$EVIDENCE/activity.txt" || fail "final-activity-dump-unavailable"
