@@ -39,7 +39,8 @@ permissions:
   contents: read
 
 concurrency:
-  group: android-emulator-smoke
+  # Isolate each branch/PR: unrelated runs must never cancel one another.
+  group: android-emulator-smoke-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -77,11 +78,11 @@ jobs:
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2
         with:
           api-level: 35
-          target: google_apis
+          target: default
           arch: x86_64
           profile: pixel_6
           disable-animations: true
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
           script: bash tools/android/emulator_functional_smoke.sh
 
       - name: Upload smoke evidence
