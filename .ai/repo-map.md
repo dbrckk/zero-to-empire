@@ -660,7 +660,8 @@ permissions:
   contents: read
 
 concurrency:
-  group: android-emulator-smoke
+  # Isolate each branch/PR: unrelated runs must never cancel one another.
+  group: android-emulator-smoke-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -698,11 +699,11 @@ jobs:
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2
         with:
           api-level: 35
-          target: google_apis
+          target: default
           arch: x86_64
           profile: pixel_6
           disable-animations: true
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
           script: bash tools/android/emulator_functional_smoke.sh
 
       - name: Upload smoke evidence
@@ -18295,6 +18296,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -18302,6 +18305,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import kotlin.math.abs
+
+private val WORKER_FRAMES = intArrayOf(
+    R.drawable.zte_foundry_worker_raster_f0,
+    R.drawable.zte_foundry_worker_raster_f1,
+    R.drawable.zte_foundry_worker_raster_f2,
+    R.drawable.zte_foundry_worker_raster_f3
+)
 
 /**
  * One shared motion phase for lightweight authored worker, vehicle and machine activity
@@ -18317,6 +18327,17 @@ internal fun FoundryWorkerTraffic(
     // Battery Saver and system animator changes must update this active ticker.
     val reducedMotion = MotionQuality.reducedMotion(context)
     val phase = remember { Animatable(.18f) }
+    // Image identity changes at 10 fps; sub-frame positioning belongs in graphicsLayer.
+    // Reading phase.value in composition would recompose the whole district at ~60 fps.
+    val workerStep by remember(phase, reducedMotion) {
+        derivedStateOf { if (reducedMotion) 0 else (phase.value * 72f).toInt() }
+    }
+    val forkliftLoading by remember(phase, reducedMotion) {
+        derivedStateOf {
+            val route = (phase.value + .63f) % 1f
+            !reducedMotion && route >= .32f && route <= .70f
+        }
+    }
 
     LaunchedEffect(reducedMotion) {
         if (reducedMotion) {
@@ -18333,26 +18354,19 @@ internal fun FoundryWorkerTraffic(
     BoxWithConstraints(modifier.fillMaxSize()) {
         val widthPx = constraints.maxWidth.toFloat()
         val heightPx = constraints.maxHeight.toFloat()
-        val p = phase.value
-
         // Four transparent raster frames run at ~10 fps from the existing shared district
         // clock. The second worker is two frames out of phase so the crowd does not march
         // in lockstep. Reduced motion remains a deterministic frozen pose.
-        val workerFrames = intArrayOf(
-            R.drawable.zte_foundry_worker_raster_f0,
-            R.drawable.zte_foundry_worker_raster_f1,
-            R.drawable.zte_foundry_worker_raster_f2,
-            R.drawable.zte_foundry_worker_raster_f3
-        )
-        val workerFrameIndex = if (reducedMotion) 0 else ((p * 72f).toInt() and 3)
-        val secondWorkerFrameIndex = if (reducedMotion) 0 else (((p * 72f).toInt() + 2) and 3)
+        val workerFrameIndex = workerStep and 3
+        val secondWorkerFrameIndex = (workerStep + 2) and 3
 
         Image(
-            painter = painterResource(workerFrames[workerFrameIndex]),
+            painter = painterResource(WORKER_FRAMES[workerFrameIndex]),
             contentDescription = null,
             modifier = Modifier
                 .size(34.dp)
                 .graphicsLayer {
+                    val p = phase.value
                     val edgeFade = (minOf(p, 1f - p) * 12f).coerceIn(0f, 1f)
                     translationX = widthPx * (.19f + p * .24f)
                     translationY = heightPx * (.48f + p * .11f)
@@ -18363,11 +18377,12 @@ internal fun FoundryWorkerTraffic(
         )
 
         Image(
-            painter = painterResource(workerFrames[secondWorkerFrameIndex]),
+            painter = painterResource(WORKER_FRAMES[secondWorkerFrameIndex]),
             contentDescription = null,
             modifier = Modifier
                 .size(29.dp)
                 .graphicsLayer {
+                    val p = phase.value
                     val q = (p + .52f) % 1f
                     val edgeFade = (minOf(q, 1f - q) * 12f).coerceIn(0f, 1f)
                     translationX = widthPx * (.73f - q * .20f)
@@ -18385,6 +18400,7 @@ internal fun FoundryWorkerTraffic(
                 modifier = Modifier
                     .size(46.dp)
                     .graphicsLayer {
+                        val p = phase.value
                         val r = (p + .24f) % 1f
                         translationX = widthPx * (.08f + r * .58f)
                         translationY = heightPx * (.70f - r * .15f)
@@ -18396,11 +18412,10 @@ internal fun FoundryWorkerTraffic(
         }
 
         if (businessId == 2 || businessId == 3) {
-            val route = if (reducedMotion) .38f else (p + .63f) % 1f
-            val forkliftFrame = if (reducedMotion || route < .32f || route > .70f) {
-                R.drawable.zte_foundry_forklift_v1_runtime
-            } else {
+            val forkliftFrame = if (forkliftLoading) {
                 R.drawable.zte_foundry_forklift_load_v1_runtime
+            } else {
+                R.drawable.zte_foundry_forklift_v1_runtime
             }
 
             Image(
@@ -18409,6 +18424,7 @@ internal fun FoundryWorkerTraffic(
                 modifier = Modifier
                     .size(44.dp)
                     .graphicsLayer {
+                        val route = if (reducedMotion) .38f else (phase.value + .63f) % 1f
                         translationX = widthPx * (.34f + route * .24f)
                         translationY = heightPx * (.66f - route * .07f)
                         alpha = if (reducedMotion) .76f else .96f
@@ -18426,6 +18442,7 @@ internal fun FoundryWorkerTraffic(
                 modifier = Modifier
                     .size(if (businessId == 2) 45.dp else 39.dp)
                     .graphicsLayer {
+                        val p = phase.value
                         val cycle = if (reducedMotion) .35f else (p * 3f) % 1f
                         val pulse = 1f - abs(cycle * 2f - 1f)
                         translationX = widthPx * if (businessId == 2) .51f else .57f
@@ -28953,8 +28970,8 @@ mkdir -p "$EVIDENCE"
 
 fail() {
   echo "FUNCTIONAL_SMOKE_ERROR=$*" >&2
-  adb logcat -d > "$EVIDENCE/logcat-failure.txt" || true
-  adb exec-out screencap -p > "$EVIDENCE/failure.png" || true
+  timeout -k 5s 25s adb logcat -d > "$EVIDENCE/logcat-failure.txt" || true
+  timeout -k 5s 25s adb exec-out screencap -p > "$EVIDENCE/failure.png" || true
   exit 1
 }
 
@@ -29119,7 +29136,19 @@ dismiss_launcher_anr_if_present() {
 }
 
 check_no_fatal() {
-  adb logcat -d > "$EVIDENCE/logcat.txt"
+  local attempt
+  # adb occasionally drops the shell connection after this long emulator soak.
+  # Retrying collection is safe; never ignore missing crash evidence.
+  for attempt in 1 2 3; do
+    if timeout -k 5s 25s adb logcat -d > "$EVIDENCE/logcat.txt"; then
+      break
+    fi
+    echo "LOGCAT_RETRY=$attempt" >&2
+    if (( attempt == 3 )); then
+      fail "final-logcat-unavailable"
+    fi
+    sleep 2
+  done
   if grep -E "FATAL EXCEPTION|AndroidRuntime.*FATAL|Process: $PKG.*has died" "$EVIDENCE/logcat.txt"; then
     fail "fatal-runtime-crash"
   fi
@@ -29330,14 +29359,19 @@ click_node "+1" "character-qa-before-step"
 assert_ui_contains "Lecture" "character-qa-stepped"
 adb exec-out screencap -p > "$EVIDENCE/character-qa-stepped.png"
 echo "CHARACTER_QA_EMULATOR_PASS=1"
-adb shell am start -W -n "$ACT" > "$EVIDENCE/character-qa-return-to-game.txt"
-sleep 2
+# Starting MainActivity while the debug review activity is topmost may merely
+# deliver the intent to the review task and leave the game hidden. Restart the
+# app explicitly, then assert that the real game navigation is visible.
+timeout -k 5s 25s adb shell am force-stop "$PKG" || fail "character-qa-force-stop-timeout"
+timeout -k 5s 35s adb shell am start -W -n "$ACT" > "$EVIDENCE/character-qa-return-to-game.txt" || fail "character-qa-main-start-timeout"
+sleep 3
 check_alive
+assert_ui_contains "MANAGERS" "character-qa-return-main"
 
-adb shell dumpsys meminfo "$PKG" > "$EVIDENCE/meminfo.txt"
-adb exec-out screencap -p > "$EVIDENCE/final.png"
-adb shell dumpsys activity activities > "$EVIDENCE/activity.txt"
-adb shell dumpsys window windows > "$EVIDENCE/window.txt"
+timeout -k 5s 25s adb shell dumpsys meminfo "$PKG" > "$EVIDENCE/meminfo.txt" || fail "final-meminfo-unavailable"
+timeout -k 5s 25s adb exec-out screencap -p > "$EVIDENCE/final.png" || fail "final-screenshot-unavailable"
+timeout -k 5s 25s adb shell dumpsys activity activities > "$EVIDENCE/activity.txt" || fail "final-activity-dump-unavailable"
+timeout -k 5s 25s adb shell dumpsys window windows > "$EVIDENCE/window.txt" || fail "final-window-dump-unavailable"
 check_no_fatal
 if grep -E "ANR in $PKG|am_anr.*$PKG" "$EVIDENCE/logcat.txt"; then
   fail "anr-detected"

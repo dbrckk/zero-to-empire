@@ -6284,6 +6284,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -6291,6 +6293,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import kotlin.math.abs
+
+private val WORKER_FRAMES = intArrayOf(
+    R.drawable.zte_foundry_worker_raster_f0,
+    R.drawable.zte_foundry_worker_raster_f1,
+    R.drawable.zte_foundry_worker_raster_f2,
+    R.drawable.zte_foundry_worker_raster_f3
+)
 
 /**
  * One shared motion phase for lightweight authored worker, vehicle and machine activity
@@ -6306,6 +6315,17 @@ internal fun FoundryWorkerTraffic(
     // Battery Saver and system animator changes must update this active ticker.
     val reducedMotion = MotionQuality.reducedMotion(context)
     val phase = remember { Animatable(.18f) }
+    // Image identity changes at 10 fps; sub-frame positioning belongs in graphicsLayer.
+    // Reading phase.value in composition would recompose the whole district at ~60 fps.
+    val workerStep by remember(phase, reducedMotion) {
+        derivedStateOf { if (reducedMotion) 0 else (phase.value * 72f).toInt() }
+    }
+    val forkliftLoading by remember(phase, reducedMotion) {
+        derivedStateOf {
+            val route = (phase.value + .63f) % 1f
+            !reducedMotion && route >= .32f && route <= .70f
+        }
+    }
 
     LaunchedEffect(reducedMotion) {
         if (reducedMotion) {
@@ -6322,26 +6342,19 @@ internal fun FoundryWorkerTraffic(
     BoxWithConstraints(modifier.fillMaxSize()) {
         val widthPx = constraints.maxWidth.toFloat()
         val heightPx = constraints.maxHeight.toFloat()
-        val p = phase.value
-
         // Four transparent raster frames run at ~10 fps from the existing shared district
         // clock. The second worker is two frames out of phase so the crowd does not march
         // in lockstep. Reduced motion remains a deterministic frozen pose.
-        val workerFrames = intArrayOf(
-            R.drawable.zte_foundry_worker_raster_f0,
-            R.drawable.zte_foundry_worker_raster_f1,
-            R.drawable.zte_foundry_worker_raster_f2,
-            R.drawable.zte_foundry_worker_raster_f3
-        )
-        val workerFrameIndex = if (reducedMotion) 0 else ((p * 72f).toInt() and 3)
-        val secondWorkerFrameIndex = if (reducedMotion) 0 else (((p * 72f).toInt() + 2) and 3)
+        val workerFrameIndex = workerStep and 3
+        val secondWorkerFrameIndex = (workerStep + 2) and 3
 
         Image(
-            painter = painterResource(workerFrames[workerFrameIndex]),
+            painter = painterResource(WORKER_FRAMES[workerFrameIndex]),
             contentDescription = null,
             modifier = Modifier
                 .size(34.dp)
                 .graphicsLayer {
+                    val p = phase.value
                     val edgeFade = (minOf(p, 1f - p) * 12f).coerceIn(0f, 1f)
                     translationX = widthPx * (.19f + p * .24f)
                     translationY = heightPx * (.48f + p * .11f)
@@ -6352,11 +6365,12 @@ internal fun FoundryWorkerTraffic(
         )
 
         Image(
-            painter = painterResource(workerFrames[secondWorkerFrameIndex]),
+            painter = painterResource(WORKER_FRAMES[secondWorkerFrameIndex]),
             contentDescription = null,
             modifier = Modifier
                 .size(29.dp)
                 .graphicsLayer {
+                    val p = phase.value
                     val q = (p + .52f) % 1f
                     val edgeFade = (minOf(q, 1f - q) * 12f).coerceIn(0f, 1f)
                     translationX = widthPx * (.73f - q * .20f)
@@ -6374,6 +6388,7 @@ internal fun FoundryWorkerTraffic(
                 modifier = Modifier
                     .size(46.dp)
                     .graphicsLayer {
+                        val p = phase.value
                         val r = (p + .24f) % 1f
                         translationX = widthPx * (.08f + r * .58f)
                         translationY = heightPx * (.70f - r * .15f)
@@ -6385,11 +6400,10 @@ internal fun FoundryWorkerTraffic(
         }
 
         if (businessId == 2 || businessId == 3) {
-            val route = if (reducedMotion) .38f else (p + .63f) % 1f
-            val forkliftFrame = if (reducedMotion || route < .32f || route > .70f) {
-                R.drawable.zte_foundry_forklift_v1_runtime
-            } else {
+            val forkliftFrame = if (forkliftLoading) {
                 R.drawable.zte_foundry_forklift_load_v1_runtime
+            } else {
+                R.drawable.zte_foundry_forklift_v1_runtime
             }
 
             Image(
@@ -6398,6 +6412,7 @@ internal fun FoundryWorkerTraffic(
                 modifier = Modifier
                     .size(44.dp)
                     .graphicsLayer {
+                        val route = if (reducedMotion) .38f else (phase.value + .63f) % 1f
                         translationX = widthPx * (.34f + route * .24f)
                         translationY = heightPx * (.66f - route * .07f)
                         alpha = if (reducedMotion) .76f else .96f
@@ -6415,6 +6430,7 @@ internal fun FoundryWorkerTraffic(
                 modifier = Modifier
                     .size(if (businessId == 2) 45.dp else 39.dp)
                     .graphicsLayer {
+                        val p = phase.value
                         val cycle = if (reducedMotion) .35f else (p * 3f) % 1f
                         val pulse = 1f - abs(cycle * 2f - 1f)
                         translationX = widthPx * if (businessId == 2) .51f else .57f

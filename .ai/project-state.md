@@ -31,21 +31,22 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-17T08:04:47Z
+Generated: 2026-10-17T08:29:38Z
 
 ### Git
 - Branch: `main`
-- Head: `ee205ac09437`
-- Commit date: 2026-10-17T04:04:33-04:00
-- Commit: perf(android): keep city animation time consistent after scheduler delays
+- Head: `48a4d1a2dcf0`
+- Commit date: 2026-10-17T04:29:23-04:00
+- Commit: perf(android): optimize Foundry animation and stabilize emulator QA
 - Tracked files: 1814
 
 ### Recently changed files
+- `.github/workflows/android-emulator-smoke.yml`
+- `app/src/main/java/com/zerotoempire/game/FoundryWorldMotion.kt`
+- `tools/android/emulator_functional_smoke.sh`
 - `app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt`
 - `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
-- `tools/android/emulator_functional_smoke.sh`
 - `PROJECT_CONTINUITY.md`
-- `app/src/main/java/com/zerotoempire/game/FoundryWorldMotion.kt`
 
 ### Project signals
 - `build.gradle.kts`
