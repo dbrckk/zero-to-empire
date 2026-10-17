@@ -1,7 +1,7 @@
 # Change impact
 
-Base: 8bb6b0ef330006c059c2c589a78cd4a425048e40
-Head: df2802d5bc174220481371c7312f8041f6c6e1ef
+Base: 767ccbc6cade77837a609db0d7ea4f2ee591aa64
+Head: 87ead4dde7432beeda3ee7a041dd6af0d3cc73d8
 
 ## Changed files
 - M app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt

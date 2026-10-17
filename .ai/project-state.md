@@ -31,13 +31,13 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-17T12:53:03Z
+Generated: 2026-10-17T13:12:09Z
 
 ### Git
 - Branch: `main`
-- Head: `df2802d5bc17`
-- Commit date: 2026-10-17T08:52:44-04:00
-- Commit: perf(android): lazily decode active Power Core era sprite
+- Head: `87ead4dde743`
+- Commit date: 2026-10-17T09:11:54-04:00
+- Commit: fix(android): label Power Core action for screen readers
 - Tracked files: 1814
 
 ### Recently changed files
@@ -46,7 +46,6 @@ Generated: 2026-10-17T12:53:03Z
 - `app/src/main/java/com/zerotoempire/game/FoundryWorldMotion.kt`
 - `tools/android/emulator_functional_smoke.sh`
 - `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
-- `PROJECT_CONTINUITY.md`
 
 ### Project signals
 - `build.gradle.kts`

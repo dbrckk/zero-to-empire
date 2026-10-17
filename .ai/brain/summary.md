@@ -45,7 +45,7 @@
 - AST index mode: incremental
 - AST files reparsed this run: 1
 - outline files retained: 308
-- top-level items retained: 4105
+- top-level items retained: 4107
 - direct members retained: 1012
 - symbol shards: 26
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard

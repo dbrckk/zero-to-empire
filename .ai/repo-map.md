@@ -13106,6 +13106,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -13269,7 +13271,7 @@ private fun AscendantCorePlaza(state:GameState,tap:()->Unit,modifier:Modifier=Mo
  Box(modifier.fillMaxWidth().height(118.dp),contentAlignment=Alignment.Center){
   Box(Modifier.size(118.dp).background(Brush.radialGradient(listOf(EmpireColors.Gold.copy(alpha=.22f),EmpireColors.Cyan.copy(alpha=.08f),Color.Transparent)),CircleShape))
   Canvas(Modifier.size(110.dp)){val frame=cyanFrame.coerceIn(0,7);val side=minOf(size.width,size.height).toInt();drawImage(image=cyanPulseSheet,srcOffset=IntOffset((frame%4)*128,(frame/4)*128),srcSize=IntSize(128,128),dstOffset=IntOffset(((size.width-side)/2f).toInt(),((size.height-side)/2f).toInt()),dstSize=IntSize(side,side))}
-  Surface(color=EmpireColors.DeepSpace.copy(alpha=.42f),shape=CircleShape,modifier=Modifier.size(98.dp).border(2.dp,EmpireColors.Gold.copy(alpha=.48f),CircleShape).clickable(role=Role.Button){pulseToken+=1;tap()}){
+  Surface(color=EmpireColors.DeepSpace.copy(alpha=.42f),shape=CircleShape,modifier=Modifier.size(98.dp).border(2.dp,EmpireColors.Gold.copy(alpha=.48f),CircleShape).semantics { contentDescription = "Power Core: collect ${moneyV2(state.tapValue)}" }.clickable(role=Role.Button){pulseToken+=1;tap()}){
    Box(contentAlignment=Alignment.Center){Canvas(Modifier.size(88.dp)){val side=minOf(size.width,size.height).toInt();drawImage(image=coreSprite,srcOffset=IntOffset.Zero,srcSize=IntSize(coreSprite.width,coreSprite.height),dstOffset=IntOffset(((size.width-side)/2f).toInt(),((size.height-side)/2f).toInt()),dstSize=IntSize(side,side))}}
   }
   if(pulseFrame>=0){Canvas(Modifier.size(118.dp)){val frame=pulseFrame.coerceIn(0,7);val side=minOf(size.width,size.height).toInt();drawImage(image=pulseSheet,srcOffset=IntOffset((frame%4)*128,(frame/4)*128),srcSize=IntSize(128,128),dstOffset=IntOffset(((size.width-side)/2f).toInt(),((size.height-side)/2f).toInt()),dstSize=IntSize(side,side))}}
