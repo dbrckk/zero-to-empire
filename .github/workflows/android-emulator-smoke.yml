@@ -39,7 +39,8 @@ permissions:
   contents: read
 
 concurrency:
-  group: android-emulator-smoke
+  # Isolate each branch/PR: unrelated runs must never cancel one another.
+  group: android-emulator-smoke-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
