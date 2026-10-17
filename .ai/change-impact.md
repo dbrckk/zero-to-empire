@@ -1,15 +1,13 @@
 # Change impact
 
-Base: 96c63e2d19ca9b087f62316d6fa70f6037b621f7
-Head: 6fd892f9f809f92806d10c78939e9cf57b1d1f58
+Base: 4fce07785864d862c5adba0e973782eca5c5d6a1
+Head: ee205ac094377b525a9baa96f6d4727aa6d7eae9
 
 ## Changed files
-- M app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt
-- M tools/android/emulator_functional_smoke.sh
+- M app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt
 
 ## Affected areas
 - app
-- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

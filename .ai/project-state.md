@@ -31,23 +31,21 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-17T07:10:50Z
+Generated: 2026-10-17T08:04:47Z
 
 ### Git
 - Branch: `main`
-- Head: `6fd892f9f809`
-- Commit date: 2026-10-17T03:10:36-04:00
-- Commit: fix: align Android character review clock and harden emulator smoke
+- Head: `ee205ac09437`
+- Commit date: 2026-10-17T04:04:33-04:00
+- Commit: perf(android): keep city animation time consistent after scheduler delays
 - Tracked files: 1814
 
 ### Recently changed files
+- `app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt`
 - `app/src/debug/java/com/zerotoempire/game/CharacterReviewActivity.kt`
 - `tools/android/emulator_functional_smoke.sh`
 - `PROJECT_CONTINUITY.md`
-- `app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt`
 - `app/src/main/java/com/zerotoempire/game/FoundryWorldMotion.kt`
-- `docs/art/FINAL_AAA_SPRITE_MANIFEST.md`
-- `docs/art/FINAL_AAA_SPRITE_PROGRESS.md`
 
 ### Project signals
 - `build.gradle.kts`

@@ -1171,13 +1171,16 @@ internal fun AscendantCityStage(
         if (reducedMotion) {
             ambientFrame = 0
         } else {
+            // Derive the animation phase from monotonic elapsed time rather than
+            // counting coroutine wakeups. A busy device may delay a wakeup, but
+            // pedestrians, vehicles and sprite atlases must stay in sync.
+            val startedAt = android.os.SystemClock.uptimeMillis()
             while (true) {
                 delay(100)
-                // Seamless shared-clock reset: 10_080 is divisible by the 168-frame
-                // pedestrian route, the 180-frame vehicle route and the 6/8/10
-                // character atlas loops. The previous 10_000 reset teleported
-                // moving actors partway through their journeys.
-                ambientFrame = (ambientFrame + 1) % 10_080
+                // 10_080 is divisible by the 168-frame pedestrian route,
+                // 180-frame vehicle route and 6/8/10-frame atlas loops.
+                val elapsedTicks = (android.os.SystemClock.uptimeMillis() - startedAt) / 100L
+                ambientFrame = (elapsedTicks % 10_080L).toInt()
             }
         }
     }
