@@ -25,6 +25,7 @@ def read_frames(raw):
     fields = None
     durations_ms = []
     discarded_rows = 0
+    excluded_flagged_rows = 0
     profile_sections = 0
     for line_text in raw.splitlines():
         line = line_text.strip()
@@ -52,9 +53,11 @@ def read_frames(raw):
         except (ValueError, IndexError):
             discarded_rows += 1
             continue
-        # Android uses flags 0 and 1 for ordinary and first-window frames.
-        # Only completed, positive timestamps describe a real rendered frame.
-        if flags not in (0, 1):
+        # Android gfxinfo documents only Flags=0 as eligible for frame timings.
+        # Every nonzero flag denotes a special/outlier/skipped frame and must
+        # be excluded to avoid misleading tail percentiles.
+        if flags != 0:
+            excluded_flagged_rows += 1
             continue
         duration_ns = end - start
         if start <= 0 or duration_ns <= 0 or duration_ns >= 100_000_000_000:
@@ -68,6 +71,7 @@ def read_frames(raw):
         'profile_sections': profile_sections,
         'frames': count,
         'discarded_rows': discarded_rows,
+        'excluded_flagged_rows': excluded_flagged_rows,
         'p50_ms': percentile(durations_ms, .50),
         'p90_ms': percentile(durations_ms, .90),
         'p95_ms': percentile(durations_ms, .95),
@@ -109,6 +113,7 @@ def main():
     args.output.write_text(json.dumps(summary, indent=2, sort_keys=True) + '\n')
     print('PERF_EVIDENCE=' + json.dumps({
         'frames': summary['frame_timings']['frames'],
+        'excluded_flagged_rows': summary['frame_timings']['excluded_flagged_rows'],
         'p95_ms': summary['frame_timings']['p95_ms'],
         'status': summary['frame_timings']['status'],
         'total_pss_kb': summary['memory']['total_pss_kb'],
