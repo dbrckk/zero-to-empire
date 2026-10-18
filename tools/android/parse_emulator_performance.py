@@ -70,6 +70,9 @@ def read_frames(raw):
         'status': 'ok' if count else 'no_eligible_frames' if profile_sections else 'no_profiledata',
         'profile_sections': profile_sections,
         'frames': count,
+        # Fewer than 60 eligible frames is a warning about diagnostic sample
+        # size, not a rendering regression or a release-quality FPS gate.
+        'sample_quality': 'unavailable' if not count else 'limited_under_60_frames' if count < 60 else 'observational',
         'discarded_rows': discarded_rows,
         'excluded_flagged_rows': excluded_flagged_rows,
         'p50_ms': percentile(durations_ms, .50),
@@ -113,6 +116,7 @@ def main():
     args.output.write_text(json.dumps(summary, indent=2, sort_keys=True) + '\n')
     print('PERF_EVIDENCE=' + json.dumps({
         'frames': summary['frame_timings']['frames'],
+        'sample_quality': summary['frame_timings']['sample_quality'],
         'excluded_flagged_rows': summary['frame_timings']['excluded_flagged_rows'],
         'p95_ms': summary['frame_timings']['p95_ms'],
         'status': summary['frame_timings']['status'],
