@@ -32,16 +32,17 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-18T16:47:32Z
+Generated: 2026-10-18T16:53:02Z
 
 ### Git
 - Branch: `main`
-- Head: `ebf7adb77df1`
-- Commit date: 2026-10-18T12:47:17-04:00
-- Commit: feat(art): audit all pending character assets before semantic approval (#227)
+- Head: `86fc5289f8c9`
+- Commit date: 2026-10-18T12:52:49-04:00
+- Commit: ci(art): run full Android visual evidence pipeline for 16 pending character animations
 - Tracked files: 1820
 
 ### Recently changed files
+- `ops/local-original-android-review-trigger.txt`
 - `tools/art/character_approval_readiness.py`
 - `docs/art/OP_WALK_8_FRAME_GEOMETRY_AUDIT_2026-10-18.md`
 - `docs/art/OP_WALK_TARGETED_REVIEW_2026-10-18.md`

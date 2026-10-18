@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 330d3ddce6e0ae6f1d1bf626318f2696b6a7a9be
-Head: ebf7adb77df157db8cf947bf21db5eb18bc4fa75
+Base: 1fad7fe1e09cd040959d1b3df10670991228018d
+Head: 86fc5289f8c9d846fdddf76350c07c6eee9e20df
 
 ## Changed files
-- A tools/art/character_approval_readiness.py
+- M ops/local-original-android-review-trigger.txt
 
 ## Affected areas
-- tools
+- ops
 
 ## Related test candidates
 - No direct filename-based test match detected.
