@@ -63,6 +63,10 @@ def export() -> dict:
     icon_path = OUT / "zero-to-empire-icon-512.png"
     feature_path = OUT / "zero-to-empire-feature-1024x500.png"
     cairosvg.svg2png(bytestring=android_vector_svg(), write_to=str(icon_path))
+    # CairoSVG may emit RGB when the artwork is fully opaque. Google Play
+    # specifically requires a 32-bit icon, so force RGBA before validation.
+    with Image.open(icon_path) as image:
+        image.convert("RGBA").save(icon_path, "PNG", optimize=True)
     source_feature = ROOT / "marketing/play-store-feature-graphic.svg"
     cairosvg.svg2png(url=str(source_feature), write_to=str(feature_path))
     # Play requires 24-bit RGB, explicitly remove the PNG alpha channel.
