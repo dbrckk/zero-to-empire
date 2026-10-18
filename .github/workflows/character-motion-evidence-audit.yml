@@ -1,0 +1,32 @@
+name: Character Motion Evidence Audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/art/character_motion_evidence.py'
+      - 'art/production/master-asset-queue.json'
+      - 'art/incoming/chatgpt-original/animation-review.json'
+      - 'art/incoming/chatgpt-original/visual-risk-qa.json'
+      - 'art/incoming/chatgpt-original/creation-manifest.json'
+      - '.github/workflows/character-motion-evidence-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  motion-evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify per-asset original source and full-loop motion metrics
+        run: python tools/art/character_motion_evidence.py
+      - name: Publish auditable evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: character-motion-evidence-review-only
+          path: art/production/character-motion-evidence.json
+          if-no-files-found: warn
+          retention-days: 30
