@@ -32,21 +32,20 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-17T13:46:35Z
+Generated: 2026-10-18T08:46:00Z
 
 ### Git
 - Branch: `main`
-- Head: `7c17675bce2d`
-- Commit date: 2026-10-17T09:46:20-04:00
-- Commit: feat(android): preserve emulator frame timing and memory evidence
-- Tracked files: 1815
+- Head: `b27d0b29e4d9`
+- Commit date: 2026-10-18T04:45:37-04:00
+- Commit: fix(android): filter gfxinfo flags and flag limited emulator samples
+- Tracked files: 1816
 
 ### Recently changed files
-- `.github/workflows/android-emulator-smoke.yml`
 - `tools/android/emulator_functional_smoke.sh`
 - `tools/android/parse_emulator_performance.py`
+- `.github/workflows/android-emulator-smoke.yml`
 - `app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt`
-- `app/src/main/java/com/zerotoempire/game/FoundryWorldMotion.kt`
 
 ### Project signals
 - `build.gradle.kts`

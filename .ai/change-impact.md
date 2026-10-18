@@ -1,15 +1,13 @@
 # Change impact
 
-Base: 968dd5c1f31bca7fb61cd502a2329614e8ba6336
-Head: 7c17675bce2d0f68c479444e2c25c88302edd912
+Base: aade2dc740b850c71f896314a240170a21bb6463
+Head: b27d0b29e4d92c61b55138a6275de0a84c604227
 
 ## Changed files
-- M .github/workflows/android-emulator-smoke.yml
 - M tools/android/emulator_functional_smoke.sh
-- A tools/android/parse_emulator_performance.py
+- M tools/android/parse_emulator_performance.py
 
 ## Affected areas
-- .github
 - tools
 
 ## Related test candidates

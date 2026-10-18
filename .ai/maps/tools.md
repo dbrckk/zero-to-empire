@@ -1132,8 +1132,13 @@ assert_ui_contains "MANAGERS" "character-qa-return-main"
 # The software-rendered CI emulator cannot establish production-device FPS.
 # ADB gfxinfo unavailability is reported as no_profiledata, never as zero jank.
 if timeout -k 5s 25s adb shell dumpsys gfxinfo "$PKG" reset > "$EVIDENCE/gfxinfo-reset.txt" 2> "$EVIDENCE/gfxinfo-reset-error.txt"; then
-  timeout -k 5s 20s adb shell input swipe 540 1300 540 700 400 || echo "PERF_CAPTURE_WARN=scroll-forward-failed"
-  timeout -k 5s 20s adb shell input swipe 540 700 540 1300 400 || echo "PERF_CAPTURE_WARN=scroll-back-failed"
+  # A single two-swipe run yielded only 22 eligible frames on the hosted
+  # software renderer. Repeat the same bounded gesture pair to collect a more
+  # useful observational sample without changing the tested game state.
+  for cycle in 1 2 3; do
+    timeout -k 5s 20s adb shell input swipe 540 1300 540 700 400 || echo "PERF_CAPTURE_WARN=scroll-forward-failed cycle=$cycle"
+    timeout -k 5s 20s adb shell input swipe 540 700 540 1300 400 || echo "PERF_CAPTURE_WARN=scroll-back-failed cycle=$cycle"
+  done
   sleep 5
   if ! timeout -k 5s 25s adb shell dumpsys gfxinfo "$PKG" framestats > "$EVIDENCE/gfxinfo-framestats.txt" 2> "$EVIDENCE/gfxinfo-error.txt"; then
     echo "PERF_CAPTURE_WARN=gfxinfo-unavailable"
@@ -1636,6 +1641,7 @@ in_profile = False
 fields = None
 durations_ms = []
 discarded_rows = 0
+excluded_flagged_rows = 0
 profile_sections = 0
 ⋮----
 line = line_text.strip()
@@ -1650,12 +1656,16 @@ flags = int(columns[fields['Flags']])
 start = int(columns[fields['IntendedVsync']])
 end = int(columns[fields['FrameCompleted']])
 ⋮----
-# Android uses flags 0 and 1 for ordinary and first-window frames.
-# Only completed, positive timestamps describe a real rendered frame.
+# Android gfxinfo documents only Flags=0 as eligible for frame timings.
+# Every nonzero flag denotes a special/outlier/skipped frame and must
+# be excluded to avoid misleading tail percentiles.
 ⋮----
 duration_ns = end - start
 ⋮----
 count = len(durations_ms)
+⋮----
+# Fewer than 60 eligible frames is a warning about diagnostic sample
+# size, not a rendering regression or a release-quality FPS gate.
 ⋮----
 # A diagnostic 60 Hz threshold, NOT a device-calibrated jank metric.
 ⋮----
