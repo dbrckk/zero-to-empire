@@ -1,7 +1,7 @@
 # Change impact
 
-Base: eee7ed9a44ad627431a7194cfdba85b7864b8988
-Head: 4fe264c5816cb17b50748605a20f5426ff0963d8
+Base: 70d52efc1ada461af456cdd3b448b89a69fd9ba0
+Head: fbe13df3c7166c253f4f646eb5f0859f8ff31af9
 
 ## Changed files
 - M tools/android/emulator_functional_smoke.sh

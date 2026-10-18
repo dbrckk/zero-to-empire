@@ -1,14 +1,18 @@
 # CI status
 
-Summary: 5 success / 0 failure / 2 active
+Summary: 3 success / 1 failure / 2 active
 
-- Android CI: in_progress / pending (4fe264c5)
-- Android Emulator Smoke: in_progress / pending (4fe264c5)
-- Assemble Character Candidate Bank: completed / success (eee7ed9a)
-- Archive Character Candidates: completed / success (eee7ed9a)
-- Kaggle Async Character Collector: completed / success (eee7ed9a)
-- Asset Autofactory 235: completed / success (eee7ed9a)
-- Reconcile reviewed run 25: completed / skipped (eee7ed9a)
-- Android Emulator Smoke: completed / success (3c6e39bb)
+- Android Emulator Smoke: in_progress / pending (fbe13df3)
+- Android CI: in_progress / pending (fbe13df3)
+- Reconcile reviewed run 25: completed / skipped (70d52efc)
+- Reconcile reviewed run 25: completed / skipped (70d52efc)
+- Android Emulator Smoke: completed / success (e6ef6331)
+- Android CI: completed / success (e6ef6331)
+- Android CI: completed / success (4fe264c5)
+- Android Emulator Smoke: completed / failure (4fe264c5)
+
+## Latest failed run structure
+- Job: smoke
+  - Failed step: Emulator install and launch smoke
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

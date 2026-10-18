@@ -1145,6 +1145,10 @@ if timeout -k 5s 25s adb shell dumpsys gfxinfo "$PKG" reset > "$EVIDENCE/gfxinfo
     timeout -k 5s 20s adb shell input swipe 540 1300 540 700 400 || echo "PERF_CAPTURE_WARN=scroll-forward-failed cycle=$cycle"
     timeout -k 5s 20s adb shell input swipe 540 700 540 1300 400 || echo "PERF_CAPTURE_WARN=scroll-back-failed cycle=$cycle"
   done
+  # Preserve the actual screen used for the performance sample. This lets
+  # reviewers distinguish a valid city viewport from an unexpected overlay,
+  # rather than trusting only an earlier accessibility hierarchy assertion.
+  timeout -k 5s 25s adb exec-out screencap -p > "$EVIDENCE/performance-scene.png" || fail "performance-scene-screenshot-unavailable"
   sleep 5
   if ! timeout -k 5s 25s adb shell dumpsys gfxinfo "$PKG" framestats > "$EVIDENCE/gfxinfo-framestats.txt" 2> "$EVIDENCE/gfxinfo-error.txt"; then
     echo "PERF_CAPTURE_WARN=gfxinfo-unavailable"
