@@ -56,8 +56,9 @@ Build. Automate. Ascend. Push from ZERO → EMPIRE.
 
 ## Graphic assets
 
-- App icon: Android launcher/adaptive icon is defined in the app resources; export the Play Console 512×512 icon from the final production artwork rather than using an arbitrary screenshot.
-- Feature graphic: `marketing/play-store-feature-graphic.svg`, authored at 1024×500.
+- App icon: `marketing/play-store-assets/zero-to-empire-icon-512.png` (512×512 RGBA, generated from the Android VectorDrawable by `tools/marketing/export_play_store_artwork.py`).
+- Feature graphic: `marketing/play-store-assets/zero-to-empire-feature-1024x500.png` (1024×500 RGB PNG, generated from `marketing/play-store-feature-graphic.svg`).
+- French locale: `marketing/play-store-listing-fr-FR.md`.
 - Social card: `marketing/social-share-card.svg`; not a substitute for required Play screenshots.
 - Phone screenshots: still required from the final RC build. Capture real gameplay rather than mock screens.
 - Recommended screenshot coverage: empire/business screen, manager automation, Power Core/permanent progression, era evolution, goals/challenges, store/optional monetization disclosure.
