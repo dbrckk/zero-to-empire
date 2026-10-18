@@ -744,6 +744,9 @@ click_node() {
   local dump_name="$2"
   local attempt
   for attempt in 1 2 3 4 5; do
+    # A Pixel Launcher ANR can obscure otherwise healthy game navigation.
+    # Recover the system dialog before probing; never bypass the target assertion.
+    dismiss_launcher_anr_if_present
     dump_ui "$dump_name"
     if python3 - "$EVIDENCE/$dump_name.xml" "$needle" <<'PY_PROBE'
 import sys,xml.etree.ElementTree as ET

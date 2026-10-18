@@ -32,19 +32,21 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-18T13:44:00Z
+Generated: 2026-10-18T15:30:53Z
 
 ### Git
 - Branch: `main`
-- Head: `087e7381a151`
-- Commit date: 2026-10-18T09:43:39-04:00
-- Commit: art: document engineer animation visual review
-- Tracked files: 1817
+- Head: `b552e7e2c413`
+- Commit date: 2026-10-18T11:30:38-04:00
+- Commit: art(review): reconcile missing assets and audit OP WALK foot geometry (#226)
+- Tracked files: 1819
 
 ### Recently changed files
+- `docs/art/OP_WALK_8_FRAME_GEOMETRY_AUDIT_2026-10-18.md`
+- `docs/art/OP_WALK_TARGETED_REVIEW_2026-10-18.md`
+- `tools/android/emulator_functional_smoke.sh`
 - `art/production/semantic-review-eng-idle-repair-2026-10-18.md`
 - `app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt`
-- `tools/android/emulator_functional_smoke.sh`
 
 ### Project signals
 - `build.gradle.kts`

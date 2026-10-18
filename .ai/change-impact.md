@@ -1,13 +1,16 @@
 # Change impact
 
-Base: dd113da82259adfe5995a59c88a9dcb73cd010fc
-Head: 087e7381a151bd2e6acdf92a6c0cbfd0badaccd5
+Base: 890d8e2fb2d6bc76d542e5b4787d714da7ea4779
+Head: b552e7e2c4132ef87e58e29c8b1543a58afd8a28
 
 ## Changed files
-- A art/production/semantic-review-eng-idle-repair-2026-10-18.md
+- A docs/art/OP_WALK_8_FRAME_GEOMETRY_AUDIT_2026-10-18.md
+- A docs/art/OP_WALK_TARGETED_REVIEW_2026-10-18.md
+- M tools/android/emulator_functional_smoke.sh
 
 ## Affected areas
-- art
+- docs
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.
