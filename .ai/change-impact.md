@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 916df736efab9b5faf15973e22780278cae16977
-Head: 33726b45acf992c884a2889d3ff4de8e67ac9728
+Base: 6036f9f6e3b14d2761a367de570ad8da948e17d5
+Head: cd8f8e6d362be1c2871c7ea5ae5593150e9a75a8
 
 ## Changed files
-- A docs/art/ANDROID_CHARACTER_SCREENSHOT_INSPECTION_20261018.md
+- A docs/art/ANDROID_CHARACTER_SEMANTIC_REVIEW_20261018.md
 
 ## Affected areas
 - docs
