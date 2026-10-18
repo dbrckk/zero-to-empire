@@ -126,10 +126,20 @@ complete_onboarding_if_present() {
   for step in 0 1 2 3 4 5; do
     probe="onboarding-step-$step"
     dump_ui "$probe"
-    if grep -Fq "Pixel Launcher isn't responding" "$EVIDENCE/$probe.xml"; then
-      fail "system-dialog-obscures-onboarding:step=$step"
+    # An emulator-side Quickstep / Pixel Launcher ANR can cover the app.
+    # Never misreport onboarding success merely because the game is hidden.
+    if grep -Eq "(Pixel Launcher|Quickstep) isn.t responding" "$EVIDENCE/$probe.xml"; then
+      dismiss_launcher_anr_if_present
+      dump_ui "$probe"
+      if grep -Eq "(Pixel Launcher|Quickstep) isn.t responding" "$EVIDENCE/$probe.xml"; then
+        fail "system-dialog-obscures-onboarding:step=$step"
+      fi
     fi
     if ! grep -Fq 'ZERO → EMPIRE' "$EVIDENCE/$probe.xml"; then
+      # Require a real game navigation target, not just absence of a label:
+      # a crash, lock screen or opaque system dialog must never pass here.
+      grep -Fq 'MANAGERS' "$EVIDENCE/$probe.xml" ||
+        fail "onboarding-ended-without-game-navigation:step=$step"
       echo "FUNCTIONAL_ONBOARDING_PASS=steps-$step"
       return 0
     fi
@@ -158,10 +168,10 @@ dismiss_launcher_anr_if_present() {
     if ! ui_dump_with_retry "$probe"; then
       return 0
     fi
-    if ! grep -Fq "Pixel Launcher isn't responding" "$probe"; then
+    if ! grep -Eq "(Pixel Launcher|Quickstep) isn.t responding" "$probe"; then
       return 0
     fi
-    echo "SYSTEM_FLAKE_DETECTED=pixel-launcher-anr attempt=$attempt"
+    echo "SYSTEM_FLAKE_DETECTED=launcher-or-quickstep-anr attempt=$attempt"
     coords=$(python3 "$SCRIPT_DIR/ui_click_target.py" "$probe" "Wait" 2>/dev/null || true)
     if [[ -n "$coords" ]]; then
       read -r x y <<<"$coords"
