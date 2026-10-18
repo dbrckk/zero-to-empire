@@ -56,6 +56,7 @@ The content is organized as follows:
     character-motion-audit-pr-gate.yml
     character-review-matrix.yml
     character-single-subject-gpu-evidence.yml
+    character-strict-approval-readiness.yml
     engineer-motion-candidate-review.yml
     final-aaa-assets.yml
     final-character-motion-patch.yml
@@ -2920,6 +2921,56 @@ jobs:
             /tmp/zte-single-subject/retroactive-action-qa.json
           retention-days: 90
           if-no-files-found: error
+```
+
+## File: .github/workflows/character-strict-approval-readiness.yml
+```yaml
+name: Character Strict Approval Readiness
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'art/production/master-asset-queue.json'
+      - 'art/incoming/chatgpt-original/animation-review.json'
+      - 'art/incoming/chatgpt-original/visual-risk-qa.json'
+      - 'tools/art/character_approval_readiness.py'
+      - '.github/workflows/character-strict-approval-readiness.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify all pending character technical evidence
+        run: python tools/art/character_approval_readiness.py
+      - name: Summarize strict approval status
+        if: always()
+        run: |
+          if [ -f art/production/character-approval-readiness.json ]; then
+            python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          from pathlib import Path
+          r=json.loads(Path('art/production/character-approval-readiness.json').read_text())
+          print(f"## Strict asset approval: {r['strict_done']}/{r['target_total']}")
+          print(f"Technical review-ready: {r['technically_ready_for_visual_review']}/{r['remaining_semantic_review']}")
+          print("Technical readiness is not semantic or runtime approval.")
+          for a in r['assets']:
+              print(f"- {a['id']}: {'ready for visual review' if a['technical_candidate_ready'] else ', '.join(a['blocking_reasons'])}")
+          PY
+          fi
+      - name: Archive machine-readable audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: character-strict-approval-readiness
+          path: art/production/character-approval-readiness.json
+          if-no-files-found: warn
+          retention-days: 30
 ```
 
 ## File: .github/workflows/engineer-motion-candidate-review.yml

@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 0d46d1546d6ab844a81a37358da7da1a6328a37f
-Head: 0ec1ebadeea09c9c3e5c27dacf88903401642b7c
+Base: cc74ccf886779c988809c819223b2167b65b5e65
+Head: 92c4bce9042323ebc3f8aefa0f5d2a6c2d728a08
 
 ## Changed files
-- M ops/chatgpt-original-handoff-trigger.txt
+- A .github/workflows/character-strict-approval-readiness.yml
 
 ## Affected areas
-- ops
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.
