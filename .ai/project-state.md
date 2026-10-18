@@ -32,22 +32,22 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-18T22:14:58Z
+Generated: 2026-10-18T22:21:36Z
 
 ### Git
 - Branch: `main`
-- Head: `3dceb1340226`
-- Commit date: 2026-10-18T18:14:22-04:00
-- Commit: ci(art): start user-approved character promotion on workflow update
-- Tracked files: 1827
+- Head: `48e95e40633b`
+- Commit date: 2026-10-18T18:21:23-04:00
+- Commit: fix(release): unblock approved character integration and verify Play bundle (#233)
+- Tracked files: 1828
 
 ### Recently changed files
 - `.github/workflows/promote-user-approved-characters.yml`
 - `tools/art/promote_user_approved_characters.py`
+- `tools/art/test_promote_user_approved_characters.py`
 - `.github/workflows/character-motion-evidence-audit.yml`
 - `tools/art/character_motion_evidence.py`
 - `docs/art/ANDROID_CHARACTER_SEMANTIC_REVIEW_20261018.md`
-- `docs/art/ANDROID_CHARACTER_SCREENSHOT_INSPECTION_20261018.md`
 
 ### Project signals
 - `build.gradle.kts`

@@ -1,13 +1,16 @@
 # Change impact
 
-Base: b7fb8ee86bd84eab5fc168f4cf0df64a4fa8b289
-Head: 3dceb134022674f7bef0334441130f7a7ab41534
+Base: 5303c49e89c5be8fb5699b2e4fb1fc447492429f
+Head: 48e95e40633b0bc9d9ba4edb841ead870dba0e3e
 
 ## Changed files
 - M .github/workflows/promote-user-approved-characters.yml
+- M tools/art/promote_user_approved_characters.py
+- A tools/art/test_promote_user_approved_characters.py
 
 ## Affected areas
 - .github
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

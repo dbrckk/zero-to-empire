@@ -343,6 +343,7 @@ tools/
     character_approval_readiness.py
     character_motion_evidence.py
     promote_user_approved_characters.py
+    test_promote_user_approved_characters.py
   assets/
     __init__.py
     manifest.py
@@ -10183,6 +10184,8 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m pip install 'Pillow==11.3.0'
+      - name: Test approved-sprite visible pixel equivalence
+        run: python -m unittest discover -s tools/art -p 'test_promote_user_approved_characters.py' -v
       - name: Verify user approval and all 16 source atlases
         run: python tools/art/promote_user_approved_characters.py --stage
       - name: Convert original atlases to lossless Android runtime WebP
@@ -10202,7 +10205,11 @@ jobs:
         run: |
           python tools/android/audit_character_runtime.py
           python tools/android/validate_manifest_policy.py
-          gradle assembleDebug testDebugUnitTest lintDebug --stacktrace
+          python tools/android/validate_release_privacy.py
+          gradle assembleDebug testDebugUnitTest lintDebug bundleRelease --stacktrace
+          AAB="app/build/outputs/bundle/release/app-release.aab"
+          test -s "$AAB"
+          unzip -t "$AAB" >/dev/null
       - name: Commit 235/235 only after passing Android verification
         run: |
           python tools/art/promote_user_approved_characters.py --commit-ledger
@@ -30529,6 +30536,18 @@ occupied=image.getchannel("A").crop((x,y,x+256,y+256)).getbbox() is not None
 ⋮----
 def stage()
 ⋮----
+def assert_render_equivalent(original, converted, ident)
+⋮----
+"""Exact visible pixels after the pipeline's documented alpha < 8 cleanup."""
+⋮----
+source = original.convert("RGBA").tobytes()
+result = converted.convert("RGBA").tobytes()
+⋮----
+expected_alpha = source[offset + 3]
+⋮----
+expected_alpha = 0
+actual_alpha = result[offset + 3]
+⋮----
 def validate()
 ⋮----
 def commit_ledger()
@@ -30541,6 +30560,29 @@ p=argparse.ArgumentParser()
 g=p.add_mutually_exclusive_group(required=True)
 ⋮----
 a=p.parse_args()
+```
+
+## File: tools/art/test_promote_user_approved_characters.py
+```python
+"""Regression tests for verified PNG-to-WebP character promotion."""
+⋮----
+class CharacterRuntimeEquivalenceTests(unittest.TestCase)
+⋮----
+def setUp(self)
+⋮----
+def test_lossless_webp_after_alpha_cleanup(self)
+⋮----
+prepared = self.source.copy()
+⋮----
+encoded = io.BytesIO()
+⋮----
+def test_invisible_rgb_is_not_an_approval_failure(self)
+⋮----
+runtime = Image.new("RGBA", (3, 1))
+⋮----
+def test_detects_visible_color_corruption(self)
+⋮----
+def test_detects_alpha_corruption(self)
 ```
 
 ## File: tools/assets/__init__.py
