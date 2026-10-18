@@ -1,6 +1,10 @@
 name: Promote user-approved original characters
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/promote-user-approved-characters.yml'
   workflow_dispatch:
 
 permissions:
