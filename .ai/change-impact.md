@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 3028024b8d16fd283769be34a33f0575dfc0fb41
-Head: 61138f6e1f8136feea59b6d3076a94e17345f91c
+Base: eee7ed9a44ad627431a7194cfdba85b7864b8988
+Head: 4fe264c5816cb17b50748605a20f5426ff0963d8
 
 ## Changed files
-- M app/src/main/java/com/zerotoempire/game/ReviewedTerrainLayer.kt
+- M tools/android/emulator_functional_smoke.sh
 
 ## Affected areas
-- app
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

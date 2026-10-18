@@ -29391,6 +29391,12 @@ timeout -k 5s 35s adb shell am start -W -n "$ACT" > "$EVIDENCE/character-qa-retu
 sleep 3
 check_alive
 assert_ui_contains "MANAGERS" "character-qa-return-main"
+# Guard the actual measurement scene, not merely the presence of navigation.
+# A resumed overlay or wrong activity can expose a MANAGERS label while the
+# city stage is absent, making frame and memory comparisons meaningless.
+assert_ui_contains "Power Core" "performance-scene-core"
+assert_ui_contains "CAPITAL" "performance-scene-capital"
+echo "PERF_SCENE_VERIFIED=real-empire-city"
 
 # Observational performance evidence: sample the real game (not the separate
 # Character Review screen) during a repeatable, short navigation window.

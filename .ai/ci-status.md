@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 4 success / 0 failure / 2 active
+Summary: 5 success / 0 failure / 2 active
 
-- Android Emulator Smoke: in_progress / pending (61138f6e)
-- Android CI: in_progress / pending (61138f6e)
-- Assemble Character Candidate Bank: completed / success (3028024b)
-- Archive Character Candidates: completed / success (3028024b)
-- Kaggle Async Character Collector: completed / success (3028024b)
-- Reconcile reviewed run 25: completed / skipped (3028024b)
-- Reconcile reviewed run 25: completed / skipped (b27d0b29)
-- Android Emulator Smoke: completed / success (b27d0b29)
+- Android CI: in_progress / pending (4fe264c5)
+- Android Emulator Smoke: in_progress / pending (4fe264c5)
+- Assemble Character Candidate Bank: completed / success (eee7ed9a)
+- Archive Character Candidates: completed / success (eee7ed9a)
+- Kaggle Async Character Collector: completed / success (eee7ed9a)
+- Asset Autofactory 235: completed / success (eee7ed9a)
+- Reconcile reviewed run 25: completed / skipped (eee7ed9a)
+- Android Emulator Smoke: completed / success (3c6e39bb)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.
