@@ -1,15 +1,12 @@
 # Change impact
 
-Base: 890d8e2fb2d6bc76d542e5b4787d714da7ea4779
-Head: b552e7e2c4132ef87e58e29c8b1543a58afd8a28
+Base: 330d3ddce6e0ae6f1d1bf626318f2696b6a7a9be
+Head: ebf7adb77df157db8cf947bf21db5eb18bc4fa75
 
 ## Changed files
-- A docs/art/OP_WALK_8_FRAME_GEOMETRY_AUDIT_2026-10-18.md
-- A docs/art/OP_WALK_TARGETED_REVIEW_2026-10-18.md
-- M tools/android/emulator_functional_smoke.sh
+- A tools/art/character_approval_readiness.py
 
 ## Affected areas
-- docs
 - tools
 
 ## Related test candidates

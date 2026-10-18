@@ -336,6 +336,8 @@ tools/
     ui_economy_probe.py
     validate_manifest_policy.py
     validate_release_privacy.py
+  art/
+    character_approval_readiness.py
   assets/
     __init__.py
     manifest.py
@@ -30267,6 +30269,39 @@ sensitive_dependencies = sorted(
 required_public_headings = (
 ⋮----
 required_in_app_terms = (
+```
+
+## File: tools/art/character_approval_readiness.py
+```python
+#!/usr/bin/env python3
+"""Audit character candidate readiness without granting semantic approval.
+
+Reads only repository-owned production metadata. Exits nonzero for missing,
+technically failed, or explicitly flagged candidates. Does not mutate the queue.
+"""
+⋮----
+ROOT = pathlib.Path(__file__).resolve().parents[2]
+QUEUE = ROOT / "art/production/master-asset-queue.json"
+ANIM = ROOT / "art/incoming/chatgpt-original/animation-review.json"
+RISK = ROOT / "art/incoming/chatgpt-original/visual-risk-qa.json"
+OUT = ROOT / "art/production/character-approval-readiness.json"
+⋮----
+def load(path)
+⋮----
+def main()
+⋮----
+queue = load(QUEUE)
+animation = {a["id"]: a for a in load(ANIM)["assets"]}
+risks = {a["id"]: a for a in load(RISK)["assets"]}
+pending = [a for a in queue["assets"] if a["id"].startswith("CHR-") and a["strict_status"] != "DONE"]
+rows = []
+⋮----
+ident = a["id"]
+motion = animation.get(ident)
+risk = risks.get(ident)
+blockers = []
+⋮----
+report = {
 ```
 
 ## File: tools/assets/__init__.py

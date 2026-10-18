@@ -32,16 +32,17 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-18T15:30:53Z
+Generated: 2026-10-18T16:47:32Z
 
 ### Git
 - Branch: `main`
-- Head: `b552e7e2c413`
-- Commit date: 2026-10-18T11:30:38-04:00
-- Commit: art(review): reconcile missing assets and audit OP WALK foot geometry (#226)
-- Tracked files: 1819
+- Head: `ebf7adb77df1`
+- Commit date: 2026-10-18T12:47:17-04:00
+- Commit: feat(art): audit all pending character assets before semantic approval (#227)
+- Tracked files: 1820
 
 ### Recently changed files
+- `tools/art/character_approval_readiness.py`
 - `docs/art/OP_WALK_8_FRAME_GEOMETRY_AUDIT_2026-10-18.md`
 - `docs/art/OP_WALK_TARGETED_REVIEW_2026-10-18.md`
 - `tools/android/emulator_functional_smoke.sh`
