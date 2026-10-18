@@ -57,6 +57,20 @@ def stage():
         shutil.copyfile(src,dst)
         print("STAGED",ident,digest(dst))
 
+def assert_render_equivalent(original, converted, ident):
+    """Exact visible pixels after the pipeline's documented alpha < 8 cleanup."""
+    assert original.size == converted.size, (ident, "image size mismatch")
+    source = original.convert("RGBA").tobytes()
+    result = converted.convert("RGBA").tobytes()
+    for offset in range(0, len(source), 4):
+        expected_alpha = source[offset + 3]
+        if expected_alpha < 8:
+            expected_alpha = 0
+        actual_alpha = result[offset + 3]
+        assert actual_alpha == expected_alpha, (ident, "alpha mismatch", offset // 4)
+        if expected_alpha:
+            assert source[offset:offset + 3] == result[offset:offset + 3], (ident, "visible RGB mismatch", offset // 4)
+
 def validate():
     _,assets=load()
     for ident in sorted(IDS):
@@ -65,19 +79,7 @@ def validate():
         assert runtime.is_file(),runtime
         with Image.open(src) as original,Image.open(runtime) as converted:
             assert converted.size==original.size,(ident,converted.size)
-            # The canonical raster pipeline intentionally clears alpha < 8.
-            # Transparent RGB is invisible and may legitimately differ after WebP
-            # decoding; compare alpha-exact and all visible RGB pixels instead.
-            source = original.convert("RGBA").tobytes()
-            result = converted.convert("RGBA").tobytes()
-            for offset in range(0, len(source), 4):
-                expected_alpha = source[offset + 3]
-                if expected_alpha < 8:
-                    expected_alpha = 0
-                actual_alpha = result[offset + 3]
-                assert actual_alpha == expected_alpha, (ident, "alpha mismatch", offset // 4)
-                if expected_alpha:
-                    assert source[offset:offset+3] == result[offset:offset+3], (ident, "visible RGB mismatch", offset // 4)
+            assert_render_equivalent(original, converted, ident)
         print("RUNTIME_PIXEL_EXACT",ident,digest(runtime))
     assert len(IDS)==16
     print("16_USER_APPROVED_RUNTIME_SHEETS_VALIDATED")
