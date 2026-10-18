@@ -32,20 +32,20 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-18T11:46:07Z
+Generated: 2026-10-18T13:21:43Z
 
 ### Git
 - Branch: `main`
-- Head: `fbe13df3c716`
-- Commit date: 2026-10-18T07:45:53-04:00
-- Commit: ci(android): archive measured city viewport screenshot
+- Head: `684497977f6b`
+- Commit date: 2026-10-18T09:21:30-04:00
+- Commit: feat(android): add one-tap next investment action
 - Tracked files: 1816
 
 ### Recently changed files
+- `app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt`
 - `tools/android/emulator_functional_smoke.sh`
 - `app/src/main/java/com/zerotoempire/game/ReviewedTerrainLayer.kt`
 - `tools/android/parse_emulator_performance.py`
-- `.github/workflows/android-emulator-smoke.yml`
 
 ### Project signals
 - `build.gradle.kts`

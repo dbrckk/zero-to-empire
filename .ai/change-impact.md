@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 70d52efc1ada461af456cdd3b448b89a69fd9ba0
-Head: fbe13df3c7166c253f4f646eb5f0859f8ff31af9
+Base: fa2debf2ab124d786f2025b4c2e11435b7ba7beb
+Head: 684497977f6b7078934b23d9ad3180d01a6879a0
 
 ## Changed files
-- M tools/android/emulator_functional_smoke.sh
+- M app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt
 
 ## Affected areas
-- tools
+- app
 
 ## Related test candidates
 - No direct filename-based test match detected.
