@@ -32,36 +32,27 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-18T22:30:52Z
+Generated: 2026-10-18T22:34:42Z
 
 ### Git
 - Branch: `main`
-- Head: `b61e53fc1bef`
-- Commit date: 2026-10-18T18:30:35-04:00
-- Commit: release(play): export compliant store artwork, capture gameplay, prepare French listing and checklist (#234)
-- Tracked files: 1833
+- Head: `51310e1e6975`
+- Commit date: 2026-10-18T18:34:27-04:00
+- Commit: ci(standards): align scoped repo-map cap with measured release-era source growth
+- Tracked files: 1836
 
 ### Recently changed files
+- `.github/workflows/ai-repo-map.yml`
+- `art/production/character-strict-review-backlog.md`
+- `marketing/play-store-assets/store-artwork-manifest.json`
+- `marketing/play-store-assets/zero-to-empire-feature-1024x500.png`
+- `marketing/play-store-assets/zero-to-empire-icon-512.png`
+- `tools/marketing/export_play_store_artwork.py`
 - `.github/workflows/play-store-artwork.yml`
 - `marketing/PLAY_STORE_RELEASE_RUNBOOK.md`
 - `marketing/play-store-listing-fr-FR.md`
 - `marketing/play-store-listing.md`
 - `tools/android/emulator_functional_smoke.sh`
-- `tools/marketing/export_play_store_artwork.py`
-- `app/src/main/res/drawable-nodpi/zte_chr_eng_carry_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_chr_eng_celeb_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_chr_eng_idle_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_chr_eng_repair_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_chr_eng_walk_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_chr_eng_work_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_chr_log_carry_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_chr_log_celeb_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_chr_log_repair_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_chr_log_walk_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_chr_log_work_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_chr_op_carry_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_chr_op_celeb_final.webp`
-- `app/src/main/res/drawable-nodpi/zte_chr_op_repair_final.webp`
 
 ### Project signals
 - `build.gradle.kts`

@@ -611,10 +611,10 @@ jobs:
   repository-standards:
     uses: dbrckk/repo-standards/.github/workflows/reusable-unified.yml@main
     with:
-      # The new sprite QA modules pushed the real generated map just beyond
-      # the shared 1.5 MB default. Increase only this repo's scoped budget;
-      # do not weaken standards or change other repositories.
-      ai_map_max_bytes: 1800000
+      # The complete published asset pipeline and Play release tooling now
+      # produce a measured ~1.80 MB source map. Keep a bounded 2 MB cap;
+      # do not relax shared repository standards for unrelated repositories.
+      ai_map_max_bytes: 2000000
 
   strict-review-backlog:
     name: Strict review backlog consistency
@@ -31454,6 +31454,9 @@ def export() -> dict
 ⋮----
 icon_path = OUT / "zero-to-empire-icon-512.png"
 feature_path = OUT / "zero-to-empire-feature-1024x500.png"
+⋮----
+# CairoSVG may emit RGB when the artwork is fully opaque. Google Play
+# specifically requires a 32-bit icon, so force RGBA before validation.
 ⋮----
 source_feature = ROOT / "marketing/play-store-feature-graphic.svg"
 ⋮----
