@@ -1,0 +1,63 @@
+name: Google Play Release Preflight
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/marketing/play_release_preflight.py'
+      - 'marketing/play-store-assets/**'
+      - 'marketing/play-store-listing-fr-FR.md'
+      - 'marketing/play-store-listing.md'
+      - 'art/production/master-asset-queue.json'
+      - '.github/workflows/play-submission-preflight.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  preflight:
+    name: Source readiness and production credentials
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Audit store assets, SDK target and production secrets presence
+        env:
+          ZERO_EMPIRE_KEYSTORE_BASE64: ${{ secrets.ZERO_EMPIRE_KEYSTORE_BASE64 }}
+          ZERO_EMPIRE_KEYSTORE_PASSWORD: ${{ secrets.ZERO_EMPIRE_KEYSTORE_PASSWORD }}
+          ZERO_EMPIRE_KEY_ALIAS: ${{ secrets.ZERO_EMPIRE_KEY_ALIAS }}
+          ZERO_EMPIRE_KEY_PASSWORD: ${{ secrets.ZERO_EMPIRE_KEY_PASSWORD }}
+          ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID }}
+          REWARDED_AD_UNIT_ID: ${{ secrets.REWARDED_AD_UNIT_ID }}
+          INTERSTITIAL_AD_UNIT_ID: ${{ secrets.INTERSTITIAL_AD_UNIT_ID }}
+        run: python3 tools/marketing/play_release_preflight.py
+      - name: Print actionable Play Console checklist
+        if: always()
+        run: |
+          python3 - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          from pathlib import Path
+          path=Path('marketing/play-store-assets/play-release-preflight.json')
+          if not path.is_file():
+              print('## Play Release Preflight\nPreflight did not produce an audit report.')
+              raise SystemExit(0)
+          report=json.loads(path.read_text())
+          print('## Play Store release preflight')
+          print(f"Assets: **{report['strict_done']}/{report['target_assets']}**")
+          for key,passed in report['repo_checks'].items():
+              print(f"- {'PASS' if passed else 'ACTION REQUIRED'}: {key}")
+          missing=report['missing_secret_names']
+          print(f"Missing production GitHub Actions secret names: **{len(missing)}**")
+          for item in missing:
+              print(f"- {item}")
+          print('Even if all checks pass, Play Console policy declarations and signed-AAB installation still require separate verification.')
+          PY
+      - name: Archive metadata-only preflight report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: google-play-submission-preflight
+          path: marketing/play-store-assets/play-release-preflight.json
+          retention-days: 30
+          if-no-files-found: warn
