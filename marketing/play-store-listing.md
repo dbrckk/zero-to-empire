@@ -79,7 +79,7 @@ Do not claim physical-device validation in release notes unless the build was ac
 
 ## Privacy and Data Safety sources
 
-- Public privacy-policy source: `marketing/privacy-policy.md` (must be hosted at an active public URL before production submission).
+- Public privacy-policy source: `marketing/privacy-policy.md`; live hosted page: https://dazzling-rift-vw8829a.shipstatic.com/ (verify public accessibility and contact mechanism before production submission).
 - Data Safety working sheet: `marketing/data-safety.md` (must be reconciled against the exact production AAB and current SDK provider disclosures).
 - The app exposes a readable in-app privacy policy from the Store surface.
 
@@ -91,7 +91,7 @@ Before production submission, complete and verify in Play Console:
 - production `VERSION_CODE` and `VERSION_NAME`;
 - production AdMob App ID and rewarded/interstitial unit IDs;
 - Play Billing products matching the app catalog;
-- privacy policy URL and Data safety form based on the final SDK/runtime behavior;
+- verify https://dazzling-rift-vw8829a.shipstatic.com/ is publicly accessible and matches the final privacy policy; confirm a working privacy-contact method; complete Data safety from the final SDK/runtime behavior;
 - ads declaration, content rating and target audience questionnaires;
 - final screenshots from the release candidate;
 - contact email and store listing locale(s);
