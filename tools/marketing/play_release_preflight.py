@@ -24,7 +24,7 @@ PRODUCTS = ("remove_ads_lifetime", "starter_pack", "gems_small", "gems_medium")
 
 def png_info(path: Path) -> dict:
     raw = path.read_bytes()
-    assert raw[:8] == b"\\x89PNG\\r\n\\x1a\n".decode("unicode_escape").encode("latin1"), str(path)
+    assert raw[:8] == bytes.fromhex("89504e470d0a1a0a"), str(path)
     assert raw[12:16] == b"IHDR", path
     width, height = struct.unpack(">II", raw[16:24])
     return {"width": width, "height": height, "bit_depth": raw[24],
@@ -52,7 +52,7 @@ def audit() -> dict:
     }
     m = re.search(r"^## Description courte[^\n]*\n\n([^\n]+)", listing, re.MULTILINE)
     short = m.group(1).strip() if m else ""
-    m = re.search(r"^## Description complète[^\n]*\n\n(.*?)(?=^## |\\Z)", listing, re.MULTILINE | re.DOTALL)
+    m = re.search(r"^## Description complète[^\n]*\n\n(.*?)(?=^## |\Z)", listing, re.MULTILINE | re.DOTALL)
     long = m.group(1).strip() if m else ""
     tests["french_short_description_within_80"] = 10 <= len(short) <= 80
     tests["french_full_description_within_4000"] = 100 <= len(long) <= 4000
