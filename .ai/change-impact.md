@@ -1,13 +1,13 @@
 # Change impact
 
-Base: cc74ccf886779c988809c819223b2167b65b5e65
-Head: 92c4bce9042323ebc3f8aefa0f5d2a6c2d728a08
+Base: 916df736efab9b5faf15973e22780278cae16977
+Head: 33726b45acf992c884a2889d3ff4de8e67ac9728
 
 ## Changed files
-- A .github/workflows/character-strict-approval-readiness.yml
+- A docs/art/ANDROID_CHARACTER_SCREENSHOT_INSPECTION_20261018.md
 
 ## Affected areas
-- .github
+- docs
 
 ## Related test candidates
 - No direct filename-based test match detected.

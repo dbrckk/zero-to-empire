@@ -32,23 +32,21 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-18T21:09:08Z
+Generated: 2026-10-18T21:21:20Z
 
 ### Git
 - Branch: `main`
-- Head: `92c4bce90423`
-- Commit date: 2026-10-18T17:08:55-04:00
-- Commit: ci(art): publish strict character readiness evidence for all unresolved assets (#228)
-- Tracked files: 1821
+- Head: `33726b45acf9`
+- Commit date: 2026-10-18T17:21:07-04:00
+- Commit: docs(art): record actual 24-screen Android character gallery inspection and approval gaps (#229)
+- Tracked files: 1822
 
 ### Recently changed files
+- `docs/art/ANDROID_CHARACTER_SCREENSHOT_INSPECTION_20261018.md`
 - `.github/workflows/character-strict-approval-readiness.yml`
 - `ops/chatgpt-original-handoff-trigger.txt`
 - `ops/local-original-android-review-trigger.txt`
 - `tools/art/character_approval_readiness.py`
-- `docs/art/OP_WALK_8_FRAME_GEOMETRY_AUDIT_2026-10-18.md`
-- `docs/art/OP_WALK_TARGETED_REVIEW_2026-10-18.md`
-- `tools/android/emulator_functional_smoke.sh`
 
 ### Project signals
 - `build.gradle.kts`
