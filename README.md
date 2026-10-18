@@ -31,6 +31,13 @@ The player starts with a tiny street stand and compounds their way through incre
 - Offline earnings with capped, validated elapsed time
 - Deterministic economy formulas
 
-## Status
+## Release candidate status — 19 October 2026
 
-Foundation in progress. The repository is being built incrementally from a clean Android project structure.
+- **235/235 canonical game assets approved and installed**: the character promotion pipeline passed full runtime checks, debug build, unit tests, Android lint and unsigned release bundle assembly.
+- **Android API 36** target; application ID `com.zerotoempire.game`.
+- Play Store artwork exported in `marketing/play-store-assets/`, and localized copy in `marketing/play-store-listing-fr-FR.md`.
+- A public [privacy policy](https://dazzling-rift-vw8829a.shipstatic.com/) is hosted and linked in the store checklist.
+- **Not yet live on Google Play.** The signed upload AAB, AdMob production settings, Play Billing console products, Play Console compliance declarations and signed-track testing require configuration.
+- Publish readiness can be inspected via [Google Play Release Preflight](https://github.com/dbrckk/zero-to-empire/actions/workflows/play-submission-preflight.yml). Signing is intentionally fail-closed until valid private credentials are configured.
+
+See **[Play Store release runbook](marketing/PLAY_STORE_RELEASE_RUNBOOK.md)** for the exact steps and links. The initial version deliberately keeps user-approved character animation quality stable; visual polish is scheduled for a later update.
