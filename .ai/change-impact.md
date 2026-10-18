@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 0b0d286010016608b8efeb5e181b063f2481bbc2
-Head: 0f4f669777a7b4a7fd709746225d63d7f26d32c8
+Base: dd113da82259adfe5995a59c88a9dcb73cd010fc
+Head: 087e7381a151bd2e6acdf92a6c0cbfd0badaccd5
 
 ## Changed files
-- M app/src/main/java/com/zerotoempire/game/AscendantCityWorld.kt
+- A art/production/semantic-review-eng-idle-repair-2026-10-18.md
 
 ## Affected areas
-- app
+- art
 
 ## Related test candidates
 - No direct filename-based test match detected.
