@@ -6,7 +6,7 @@
 - Symbols: 1632
 - Internal import edges: 100
 - Impacted files: 1
-- Selected tests: 0
+- Selected tests: 1
 
 ## Languages
 - kotlin: 160 files

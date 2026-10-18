@@ -32,16 +32,17 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-18T08:46:00Z
+Generated: 2026-10-18T10:18:46Z
 
 ### Git
 - Branch: `main`
-- Head: `b27d0b29e4d9`
-- Commit date: 2026-10-18T04:45:37-04:00
-- Commit: fix(android): filter gfxinfo flags and flag limited emulator samples
+- Head: `61138f6e1f81`
+- Commit date: 2026-10-18T06:18:30-04:00
+- Commit: fix(android): render reviewed ground tiles inside city viewport
 - Tracked files: 1816
 
 ### Recently changed files
+- `app/src/main/java/com/zerotoempire/game/ReviewedTerrainLayer.kt`
 - `tools/android/emulator_functional_smoke.sh`
 - `tools/android/parse_emulator_performance.py`
 - `.github/workflows/android-emulator-smoke.yml`
