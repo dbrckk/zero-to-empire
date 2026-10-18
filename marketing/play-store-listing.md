@@ -56,8 +56,9 @@ Build. Automate. Ascend. Push from ZERO → EMPIRE.
 
 ## Graphic assets
 
-- App icon: Android launcher/adaptive icon is defined in the app resources; export the Play Console 512×512 icon from the final production artwork rather than using an arbitrary screenshot.
-- Feature graphic: `marketing/play-store-feature-graphic.svg`, authored at 1024×500.
+- App icon: `marketing/play-store-assets/zero-to-empire-icon-512.png` (512×512 RGBA, generated from the Android VectorDrawable by `tools/marketing/export_play_store_artwork.py`).
+- Feature graphic: `marketing/play-store-assets/zero-to-empire-feature-1024x500.png` (1024×500 RGB PNG, generated from `marketing/play-store-feature-graphic.svg`).
+- French locale: `marketing/play-store-listing-fr-FR.md`.
 - Social card: `marketing/social-share-card.svg`; not a substitute for required Play screenshots.
 - Phone screenshots: still required from the final RC build. Capture real gameplay rather than mock screens.
 - Recommended screenshot coverage: empire/business screen, manager automation, Power Core/permanent progression, era evolution, goals/challenges, store/optional monetization disclosure.
@@ -78,7 +79,7 @@ Do not claim physical-device validation in release notes unless the build was ac
 
 ## Privacy and Data Safety sources
 
-- Public privacy-policy source: `marketing/privacy-policy.md` (must be hosted at an active public URL before production submission).
+- Public privacy-policy source: `marketing/privacy-policy.md`; live hosted page: https://dazzling-rift-vw8829a.shipstatic.com/ (verify public accessibility and contact mechanism before production submission).
 - Data Safety working sheet: `marketing/data-safety.md` (must be reconciled against the exact production AAB and current SDK provider disclosures).
 - The app exposes a readable in-app privacy policy from the Store surface.
 
@@ -90,7 +91,7 @@ Before production submission, complete and verify in Play Console:
 - production `VERSION_CODE` and `VERSION_NAME`;
 - production AdMob App ID and rewarded/interstitial unit IDs;
 - Play Billing products matching the app catalog;
-- privacy policy URL and Data safety form based on the final SDK/runtime behavior;
+- verify https://dazzling-rift-vw8829a.shipstatic.com/ is publicly accessible and matches the final privacy policy; confirm a working privacy-contact method; complete Data safety from the final SDK/runtime behavior;
 - ads declaration, content rating and target audience questionnaires;
 - final screenshots from the release candidate;
 - contact email and store listing locale(s);
