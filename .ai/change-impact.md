@@ -1,15 +1,13 @@
 # Change impact
 
-Base: 5f77f1c65aa9450b421fc10c10df33ffb7243b2d
-Head: d0087e7c9bfd770e5f222764c5f7b460bf25a702
+Base: b58407a30586ded804490ec10f0ae5625ecd3411
+Head: 3304b102985e2d6e7716fedc614cf8801e80420e
 
 ## Changed files
-- A .github/workflows/play-submission-preflight.yml
-- A tools/marketing/play_release_preflight.py
+- M README.md
 
 ## Affected areas
-- .github
-- tools
+- (root)
 
 ## Related test candidates
 - No direct filename-based test match detected.

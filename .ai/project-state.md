@@ -32,24 +32,22 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-18T22:42:14Z
+Generated: 2026-10-18T22:44:17Z
 
 ### Git
 - Branch: `main`
-- Head: `d0087e7c9bfd`
-- Commit date: 2026-10-18T18:41:58-04:00
-- Commit: ci(play): automatic publication checklist and safe production-secrets audit (#237)
+- Head: `3304b102985e`
+- Commit date: 2026-10-18T18:44:00-04:00
+- Commit: docs(release): publish truthful Play Store release candidate status and configuration links (#238)
 - Tracked files: 1839
 
 ### Recently changed files
+- `README.md`
 - `.github/workflows/play-submission-preflight.yml`
 - `tools/marketing/play_release_preflight.py`
 - `tools/android/emulator_functional_smoke.sh`
 - `.github/workflows/ai-repo-map.yml`
 - `art/production/character-strict-review-backlog.md`
-- `marketing/play-store-assets/store-artwork-manifest.json`
-- `marketing/play-store-assets/zero-to-empire-feature-1024x500.png`
-- `marketing/play-store-assets/zero-to-empire-icon-512.png`
 
 ### Project signals
 - `build.gradle.kts`
