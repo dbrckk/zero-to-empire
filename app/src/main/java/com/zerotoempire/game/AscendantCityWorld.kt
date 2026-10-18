@@ -67,6 +67,39 @@ internal fun AscendantCityEmpireWorld(vm: GameViewModel, state: GameState, buyMo
     val era = EmpireEras.current(state.lifetimeCash)
     LazyColumn(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
         item { AscendantCompactHud(state) }
+        // Make the economy playable without hunting through a long district list.
+        // Quotes and purchases use the same ViewModel path as every business lot.
+        item {
+            val nextInvestment = visible.mapNotNull { business ->
+                val quote = vm.bulkQuote(business.id, buyMode)
+                if (quote.count > 0 && quote.cost > 0.0) business to quote else null
+            }.minByOrNull { (_, quote) -> quote.cost }
+            nextInvestment?.let { (business, quote) ->
+                val canBuy = state.cash >= quote.cost
+                Surface(
+                    color = EmpireColors.Surface.copy(alpha = .96f),
+                    shape = RoundedCornerShape(16.dp),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 14.dp, vertical = 4.dp)
+                        .border(1.dp, if (canBuy) EmpireColors.Gold.copy(alpha = .55f) else EmpireColors.Cyan.copy(alpha = .25f), RoundedCornerShape(16.dp))
+                        .clickable(enabled = canBuy, role = Role.Button) { vm.buyBulk(business.id, buyMode) },
+                ) {
+                    Row(
+                        Modifier.fillMaxWidth().padding(horizontal = 14.dp, vertical = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Column(Modifier.weight(1f)) {
+                            Text("NEXT INVESTMENT", color = EmpireColors.Gold, fontSize = 9.sp, fontWeight = FontWeight.Black, letterSpacing = 1.sp)
+                            Text(business.name, color = EmpireColors.TextPrimary, fontSize = 15.sp, fontWeight = FontWeight.Black, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                            Text("LV ${business.level} → ${business.level + quote.count}", color = EmpireColors.Cyan, fontSize = 10.sp)
+                        }
+                        Column(horizontalAlignment = Alignment.End) {
+                            Text(if (canBuy) "BUY +${quote.count}" else "SAVE FOR +${quote.count}", color = if (canBuy) EmpireColors.GoldBright else EmpireColors.TextSecondary, fontSize = 11.sp, fontWeight = FontWeight.Black)
+                            Text(moneyV2(quote.cost), color = EmpireColors.TextPrimary, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                        }
+                    }
+                }
+            }
+        }
         item {
             Box(Modifier.fillMaxWidth().height(620.dp)) {
                 AscendantCityStage(era.index, Modifier.fillMaxSize())
