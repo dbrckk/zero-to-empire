@@ -72,7 +72,7 @@ internal fun AscendantCityEmpireWorld(vm: GameViewModel, state: GameState, buyMo
         item {
             val nextInvestment = visible.mapNotNull { business ->
                 val quote = vm.bulkQuote(business.id, buyMode)
-                if (quote.count > 0 && quote.cost > 0.0) business to quote else null
+                if (quote.count > 0 && quote.cost.isFinite() && quote.cost > 0.0) business to quote else null
             }.minByOrNull { (_, quote) -> quote.cost }
             nextInvestment?.let { (business, quote) ->
                 val canBuy = state.cash >= quote.cost
