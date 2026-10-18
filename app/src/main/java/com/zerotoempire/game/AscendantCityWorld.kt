@@ -95,6 +95,18 @@ internal fun AscendantCityEmpireWorld(vm: GameViewModel, state: GameState, buyMo
                         Column(horizontalAlignment = Alignment.End) {
                             Text(if (canBuy) "BUY +${quote.count}" else "SAVE FOR +${quote.count}", color = if (canBuy) EmpireColors.GoldBright else EmpireColors.TextSecondary, fontSize = 11.sp, fontWeight = FontWeight.Black)
                             Text(moneyV2(quote.cost), color = EmpireColors.TextPrimary, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                            if (!canBuy && state.incomePerSecond > 0.0 && state.incomePerSecond.isFinite()) {
+                                val remaining = (quote.cost - state.cash).coerceAtLeast(0.0)
+                                val seconds = remaining / state.incomePerSecond
+                                val waitLabel = when {
+                                    !seconds.isFinite() -> "KEEP EARNING"
+                                    seconds < 60.0 -> "< 1 MIN"
+                                    seconds < 3600.0 -> "≈ ${kotlin.math.ceil(seconds / 60.0).toLong()} MIN"
+                                    seconds < 86400.0 -> "≈ ${kotlin.math.ceil(seconds / 3600.0).toLong()} HR"
+                                    else -> "≈ ${kotlin.math.ceil(seconds / 86400.0).toLong()} DAYS"
+                                }
+                                Text(waitLabel, color = EmpireColors.Cyan, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+                            }
                         }
                     }
                 }
