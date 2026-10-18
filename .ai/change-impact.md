@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 1fad7fe1e09cd040959d1b3df10670991228018d
-Head: 86fc5289f8c9d846fdddf76350c07c6eee9e20df
+Base: 0d46d1546d6ab844a81a37358da7da1a6328a37f
+Head: 0ec1ebadeea09c9c3e5c27dacf88903401642b7c
 
 ## Changed files
-- M ops/local-original-android-review-trigger.txt
+- M ops/chatgpt-original-handoff-trigger.txt
 
 ## Affected areas
 - ops
