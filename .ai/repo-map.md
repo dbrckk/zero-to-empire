@@ -87,6 +87,7 @@ The content is organized as follows:
     modular-tech-actions.yml
     modular-tech-character.yml
     play-store-artwork.yml
+    play-submission-preflight.yml
     pollinations-building-candidate.yml
     pollinations-character-atlas.yml
     pollinations-character-smoke.yml
@@ -363,6 +364,7 @@ tools/
     test_workflow_policy.py
   marketing/
     export_play_store_artwork.py
+    play_release_preflight.py
   sprites/
     tests/
       test_archive_character_candidates.py
@@ -6790,6 +6792,73 @@ jobs:
           git commit -m 'marketing(play): export verified store artwork'
           git pull --rebase origin main
           git push origin HEAD:main
+```
+
+## File: .github/workflows/play-submission-preflight.yml
+```yaml
+name: Google Play Release Preflight
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/marketing/play_release_preflight.py'
+      - 'marketing/play-store-assets/**'
+      - 'marketing/play-store-listing-fr-FR.md'
+      - 'marketing/play-store-listing.md'
+      - 'art/production/master-asset-queue.json'
+      - '.github/workflows/play-submission-preflight.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  preflight:
+    name: Source readiness and production credentials
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Audit store assets, SDK target and production secrets presence
+        env:
+          ZERO_EMPIRE_KEYSTORE_BASE64: ${{ secrets.ZERO_EMPIRE_KEYSTORE_BASE64 }}
+          ZERO_EMPIRE_KEYSTORE_PASSWORD: ${{ secrets.ZERO_EMPIRE_KEYSTORE_PASSWORD }}
+          ZERO_EMPIRE_KEY_ALIAS: ${{ secrets.ZERO_EMPIRE_KEY_ALIAS }}
+          ZERO_EMPIRE_KEY_PASSWORD: ${{ secrets.ZERO_EMPIRE_KEY_PASSWORD }}
+          ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID }}
+          REWARDED_AD_UNIT_ID: ${{ secrets.REWARDED_AD_UNIT_ID }}
+          INTERSTITIAL_AD_UNIT_ID: ${{ secrets.INTERSTITIAL_AD_UNIT_ID }}
+        run: python3 tools/marketing/play_release_preflight.py
+      - name: Print actionable Play Console checklist
+        if: always()
+        run: |
+          python3 - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          from pathlib import Path
+          path=Path('marketing/play-store-assets/play-release-preflight.json')
+          if not path.is_file():
+              print('## Play Release Preflight\nPreflight did not produce an audit report.')
+              raise SystemExit(0)
+          report=json.loads(path.read_text())
+          print('## Play Store release preflight')
+          print(f"Assets: **{report['strict_done']}/{report['target_assets']}**")
+          for key,passed in report['repo_checks'].items():
+              print(f"- {'PASS' if passed else 'ACTION REQUIRED'}: {key}")
+          missing=report['missing_secret_names']
+          print(f"Missing production GitHub Actions secret names: **{len(missing)}**")
+          for item in missing:
+              print(f"- {item}")
+          print('Even if all checks pass, Play Console policy declarations and signed-AAB installation still require separate verification.')
+          PY
+      - name: Archive metadata-only preflight report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: google-play-submission-preflight
+          path: marketing/play-store-assets/play-release-preflight.json
+          retention-days: 30
+          if-no-files-found: warn
 ```
 
 ## File: .github/workflows/pollinations-building-candidate.yml
@@ -31475,6 +31544,50 @@ source_feature = ROOT / "marketing/play-store-feature-graphic.svg"
 rgb = Image.new("RGB", image.size, "#050914")
 ⋮----
 manifest = {
+```
+
+## File: tools/marketing/play_release_preflight.py
+```python
+#!/usr/bin/env python3
+"""Read-only Google Play submission preflight. Never prints secret values."""
+⋮----
+ROOT = Path(__file__).resolve().parents[2]
+OUT = ROOT / "marketing/play-store-assets/play-release-preflight.json"
+SECRET_NAMES = (
+PRODUCTS = ("remove_ads_lifetime", "starter_pack", "gems_small", "gems_medium")
+⋮----
+def png_info(path: Path) -> dict
+⋮----
+raw = path.read_bytes()
+⋮----
+def text(path: str) -> str
+⋮----
+def audit() -> dict
+⋮----
+queue = json.loads(text("art/production/master-asset-queue.json"))
+done = sum(a["strict_status"] == "DONE" for a in queue["assets"])
+build = text("app/build.gradle.kts")
+catalog = text("app/src/main/java/com/zerotoempire/game/Monetization.kt")
+listing = text("marketing/play-store-listing-fr-FR.md")
+privacy = text("marketing/privacy-policy.md")
+tests = {
+m = re.search(r"^## Description courte[^\n]*\n\n([^\n]+)", listing, re.MULTILINE)
+short = m.group(1).strip() if m else ""
+m = re.search(r"^## Description complète[^\n]*\n\n(.*?)(?=^## |\Z)", listing, re.MULTILINE | re.DOTALL)
+long = m.group(1).strip() if m else ""
+⋮----
+icon_path = ROOT / "marketing/play-store-assets/zero-to-empire-icon-512.png"
+feature_path = ROOT / "marketing/play-store-assets/zero-to-empire-feature-1024x500.png"
+⋮----
+icon = png_info(icon_path)
+⋮----
+feature = png_info(feature_path)
+⋮----
+secret_present = {name: bool(os.getenv(name, "").strip()) for name in SECRET_NAMES}
+⋮----
+report = {
+⋮----
+report = audit()
 ```
 
 ## File: tools/sprites/tests/test_archive_character_candidates.py

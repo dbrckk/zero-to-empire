@@ -1,12 +1,14 @@
 # Change impact
 
-Base: 3bcf9b186bcd442aec3eb2fe20f4ef732fb79dc0
-Head: f58e9469eb567e2c379a3f659a96545f1067144a
+Base: 5f77f1c65aa9450b421fc10c10df33ffb7243b2d
+Head: d0087e7c9bfd770e5f222764c5f7b460bf25a702
 
 ## Changed files
-- M tools/android/emulator_functional_smoke.sh
+- A .github/workflows/play-submission-preflight.yml
+- A tools/marketing/play_release_preflight.py
 
 ## Affected areas
+- .github
 - tools
 
 ## Related test candidates
