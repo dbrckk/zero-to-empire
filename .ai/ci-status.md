@@ -1,13 +1,16 @@
 # CI status
 
-Summary: 6 success / 0 failure / 1 active
+Summary: 4 success / 2 failure / 0 active
 
-- Character Motion Evidence Audit: in_progress / pending (735f1f60)
+- Promote user-approved original characters: completed / failure (3dceb134)
+- Assemble Character Candidate Bank: completed / success (3ff7ac2a)
+- Archive Character Candidates: completed / success (3ff7ac2a)
+- Kaggle Async Character Collector: completed / success (3ff7ac2a)
+- Character Motion Evidence Audit: completed / failure (735f1f60)
 - Character Strict Approval Readiness: completed / success (92c4bce9)
-- Review ChatGPT Original Character Pack: completed / success (0ec1ebad)
-- Assemble Character Candidate Bank: completed / success (0d46d154)
-- Archive Character Candidates: completed / success (0d46d154)
-- Kaggle Async Character Collector: completed / success (0d46d154)
-- Asset Autofactory 235: completed / success (0d46d154)
+
+## Latest failed run structure
+- Job: promote
+  - Failed step: Validate every promoted runtime and ledger
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

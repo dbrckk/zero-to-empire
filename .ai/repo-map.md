@@ -119,6 +119,7 @@ The content is organized as follows:
     promote-run66-reviewed.yml
     promote-run75-bld03.yml
     promote-ter07-v3.yml
+    promote-user-approved-characters.yml
     reconcile-bld08-master-queue.yml
     reconcile-core-status.yml
     reconcile-existing-runtime-todos.yml
@@ -341,6 +342,7 @@ tools/
   art/
     character_approval_readiness.py
     character_motion_evidence.py
+    promote_user_approved_characters.py
   assets/
     __init__.py
     manifest.py
@@ -10148,6 +10150,69 @@ jobs:
             app/src/main/res/drawable-nodpi/zte_terrain_07_final.webp
           if-no-files-found: error
           retention-days: 30
+```
+
+## File: .github/workflows/promote-user-approved-characters.yml
+```yaml
+name: Promote user-approved original characters
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/promote-user-approved-characters.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: asset-autofactory-235
+  cancel-in-progress: false
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install 'Pillow==11.3.0'
+      - name: Verify user approval and all 16 source atlases
+        run: python tools/art/promote_user_approved_characters.py --stage
+      - name: Convert original atlases to lossless Android runtime WebP
+        env:
+          SPRITE_TARGETS: zte_chr_op_walk_final,zte_chr_op_work_final,zte_chr_op_carry_final,zte_chr_op_repair_final,zte_chr_op_celeb_final,zte_chr_log_walk_final,zte_chr_log_work_final,zte_chr_log_carry_final,zte_chr_log_repair_final,zte_chr_log_celeb_final,zte_chr_eng_idle_final,zte_chr_eng_walk_final,zte_chr_eng_work_final,zte_chr_eng_carry_final,zte_chr_eng_repair_final,zte_chr_eng_celeb_final
+        run: python tools/sprites/process_final_sprites.py
+      - name: Validate every promoted runtime and ledger
+        run: python tools/art/promote_user_approved_characters.py --validate
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.13'
+      - name: Android compile, tests and lint
+        run: |
+          python tools/android/audit_character_runtime.py
+          python tools/android/validate_manifest_policy.py
+          gradle assembleDebug testDebugUnitTest lintDebug --stacktrace
+      - name: Commit 235/235 only after passing Android verification
+        run: |
+          python tools/art/promote_user_approved_characters.py --commit-ledger
+          git diff --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add art/incoming/final-sprites/zte_chr_*.png app/src/main/res/drawable-nodpi/zte_chr_*.webp art/production/master-asset-queue.json art/production/user-approved-character-promotion.json
+          git commit -m 'art(characters): promote 16 user-approved animations after Android QA'
+          git pull --rebase origin main
+          git push origin HEAD:main
 ```
 
 ## File: .github/workflows/reconcile-bld08-master-queue.yml
@@ -30429,6 +30494,53 @@ def main()
 ⋮----
 report=audit()
 out=ROOT/"art/production/character-motion-evidence.json"
+```
+
+## File: tools/art/promote_user_approved_characters.py
+```python
+#!/usr/bin/env python3
+"""Explicit user-approved v1 character promotion with fail-closed runtime QA."""
+⋮----
+ROOT=Path(__file__).resolve().parents[2]
+QUEUE=ROOT/"art/production/master-asset-queue.json"
+EVIDENCE=ROOT/"art/production/user-approved-character-promotion.json"
+CANDIDATES=ROOT/"art/incoming/chatgpt-original/candidates"
+FINAL=ROOT/"art/incoming/final-sprites"
+RUNTIME=ROOT/"app/src/main/res/drawable-nodpi"
+ROLES={"OP":["WALK","WORK","CARRY","REPAIR","CELEB"],
+IDS={f"CHR-{role}-{action}" for role,actions in ROLES.items() for action in actions}
+FRAMES={"IDLE":6,"WALK":8,"WORK":10,"CARRY":8,"REPAIR":10,"CELEB":8}
+APPROVAL="User explicitly approved all 16 GIF animation candidates in ChatGPT on 2026-10-19; visual improvements deferred to a later app version."
+⋮----
+def digest(path)
+⋮----
+def load()
+⋮----
+data=json.loads(QUEUE.read_text())
+assets={x["id"]:x for x in data["assets"]}
+⋮----
+def paths(ident)
+⋮----
+name=f"zte_chr_{role.lower()}_{action.lower()}_final"
+⋮----
+def inspect_source(ident)
+⋮----
+occupied=image.getchannel("A").crop((x,y,x+256,y+256)).getbbox() is not None
+⋮----
+def stage()
+⋮----
+def validate()
+⋮----
+def commit_ledger()
+⋮----
+rows=[]
+⋮----
+a=assets[ident]
+⋮----
+p=argparse.ArgumentParser()
+g=p.add_mutually_exclusive_group(required=True)
+⋮----
+a=p.parse_args()
 ```
 
 ## File: tools/assets/__init__.py

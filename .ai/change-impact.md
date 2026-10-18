@@ -1,15 +1,13 @@
 # Change impact
 
-Base: 5fcd82dd54e02c3500235c9e6a370592da3d8782
-Head: 735f1f605dc3460471d946ae02be738f37163934
+Base: b7fb8ee86bd84eab5fc168f4cf0df64a4fa8b289
+Head: 3dceb134022674f7bef0334441130f7a7ab41534
 
 ## Changed files
-- A .github/workflows/character-motion-evidence-audit.yml
-- A tools/art/character_motion_evidence.py
+- M .github/workflows/promote-user-approved-characters.yml
 
 ## Affected areas
 - .github
-- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.
