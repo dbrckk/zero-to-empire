@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-17",
-  "task": "Validate Android emulator performance observability while preserving functional gameplay and the 16 strict art approvals still pending",
-  "branch": "perf/android-emulator-frame-memory-evidence-20261017",
-  "last_observed_head": "bae381ef8acc8d68ec92a545670f036a6f5034ba",
+  "updated_at": "2026-10-18",
+  "task": "Correct Android gfxinfo framestats parsing and improve observational emulator frame-sample quality, preserving full smoke checks and the pending 16 strict art approvals",
+  "branch": "fix/android-framestats-nonzero-flags-20261018",
+  "last_observed_head": "2df030f40b8b6e0e7f497a5f778d8708857b51dc",
   "state": {
     "strict_done": 219,
     "target_total": 235,
@@ -281,7 +281,7 @@
     "android_performance_evidence": {
       "pr": 215,
       "branch": "perf/android-emulator-frame-memory-evidence-20261017",
-      "stage": "CI_AND_EMULATOR_VALIDATION_PENDING",
+      "stage": "MERGED_CI_EMULATOR_SUCCESS",
       "collects": [
         "gfxinfo-framestats.txt",
         "meminfo.txt",
@@ -295,14 +295,37 @@
         "frames_over_16_67ms",
         "total_pss_kb"
       ],
-      "constraints": "Software-rendered API35 emulator; diagnostics are observational, not production FPS; missing data explicitly reported."
+      "constraints": "Software-rendered API35 emulator; diagnostics are observational, not production FPS; missing data explicitly reported.",
+      "merge_commit": "7c17675bce2d0f68c479444e2c25c88302edd912",
+      "emulator_smoke_run": 39037174444,
+      "observed_baseline": {
+        "frames": 22,
+        "p95_ms": 916.06,
+        "total_pss_kb": 409108,
+        "quality": "HOSTED_SOFTWARE_EMULATOR_ONLY_NOT_DEVICE_FPS"
+      }
+    },
+    "android_frame_stats_quality_fix": {
+      "pr": 217,
+      "branch": "fix/android-framestats-nonzero-flags-20261018",
+      "head_sha": "2df030f40b8b6e0e7f497a5f778d8708857b51dc",
+      "status": "OPEN_CHECKS_PENDING",
+      "docs": "Android platform gfxinfo requires Flags=0; nonzero rows are excluded",
+      "changes": [
+        "count and log excluded flagged frames",
+        "label sample <60 eligible frames as limited",
+        "three reversible swipe cycles for larger observational sample"
+      ],
+      "android_ci_run": 39111833245,
+      "emulator_run": 39111833222,
+      "strict_done_added": 0
     }
   },
-  "last_completed": "PR #213 merged as 46db1a6a69f0451b8189c6ee10a23b141eb806be after Android CI and emulator smoke SUCCESS. PR #215 introduces observational framestats and PSS measurements in existing emulator smoke, with local parser sample checks; await fresh PR Android CI and emulator checks before merging. Original character strict queue unchanged: 219/235 with 16 pending.",
+  "last_completed": "PR #215 merged 7c17675b, Android CI and Emulator Smoke SUCCESS. Its emulator evidence contained 22 eligible frames, P95 916.06 ms and 409108 KiB PSS; these are software-emulator/debug diagnostics, not real-device FPS. PR #217 is open to correct Flags=0 eligibility and improve low sample quality; await exact latest-head Android CI and Emulator Smoke before merging. Strict art stays 219/235 with 16 pending.",
   "next_actions": [
-    "Check PR #215 Android CI and Emulator Smoke against final head SHA, inspect job logs if either fails; never merge without both passing.",
-    "Inspect performance-summary.json from emulator evidence, requiring actual eligible frames and valid PSS or explicitly flag incomplete instrumentation. Compare only matched emulator/build conditions, never infer device FPS.",
-    "Squash merge PR #215 if both checks pass and performance evidence is available and sensible; refresh project state after merge.",
-    "Continue visual semantic review of OP/LOG/ENG pending 16 art actions, no automatic strict promotion."
+    "Check PR #217 Android CI and Emulator Smoke against latest head SHA 2df030f40b8b6e0e7f497a5f778d8708857b51dc; investigate genuine failures and do not merge before both pass.",
+    "Inspect actual PERF_EVIDENCE from new emulator run for excluded_flagged_rows, sample_quality and total PSS; never infer handset FPS or performance gains from hosted emulator figures.",
+    "Squash-merge PR #217 only if both checks pass and diagnostic evidence is sensible. Keep CI artifacts observational and no new unit tests.",
+    "Continue visual-semantic review of OP/LOG/ENG pending 16 art actions; no automatic strict promotions."
   ]
 }
