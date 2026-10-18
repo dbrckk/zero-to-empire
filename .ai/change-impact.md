@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 04bacca49934c4d3ae669d9123a1df4db26ff68c
-Head: 51310e1e69754662f00b05d4afe2131720fd9b97
+Base: 3bcf9b186bcd442aec3eb2fe20f4ef732fb79dc0
+Head: f58e9469eb567e2c379a3f659a96545f1067144a
 
 ## Changed files
-- M .github/workflows/ai-repo-map.yml
+- M tools/android/emulator_functional_smoke.sh
 
 ## Affected areas
-- .github
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.
