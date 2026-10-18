@@ -32,21 +32,22 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-18T21:30:16Z
+Generated: 2026-10-18T21:46:48Z
 
 ### Git
 - Branch: `main`
-- Head: `cd8f8e6d362b`
-- Commit date: 2026-10-18T17:29:47-04:00
-- Commit: docs(art): record inspected Android role/action poses and eight-frame operator walk review (#230)
-- Tracked files: 1823
+- Head: `735f1f605dc3`
+- Commit date: 2026-10-18T17:46:35-04:00
+- Commit: art: add per-animation motion evidence audit for 16 unresolved assets (#231)
+- Tracked files: 1825
 
 ### Recently changed files
+- `.github/workflows/character-motion-evidence-audit.yml`
+- `tools/art/character_motion_evidence.py`
 - `docs/art/ANDROID_CHARACTER_SEMANTIC_REVIEW_20261018.md`
 - `docs/art/ANDROID_CHARACTER_SCREENSHOT_INSPECTION_20261018.md`
 - `.github/workflows/character-strict-approval-readiness.yml`
 - `ops/chatgpt-original-handoff-trigger.txt`
-- `ops/local-original-android-review-trigger.txt`
 
 ### Project signals
 - `build.gradle.kts`

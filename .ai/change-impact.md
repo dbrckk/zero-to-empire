@@ -1,13 +1,15 @@
 # Change impact
 
-Base: 6036f9f6e3b14d2761a367de570ad8da948e17d5
-Head: cd8f8e6d362be1c2871c7ea5ae5593150e9a75a8
+Base: 5fcd82dd54e02c3500235c9e6a370592da3d8782
+Head: 735f1f605dc3460471d946ae02be738f37163934
 
 ## Changed files
-- A docs/art/ANDROID_CHARACTER_SEMANTIC_REVIEW_20261018.md
+- A .github/workflows/character-motion-evidence-audit.yml
+- A tools/art/character_motion_evidence.py
 
 ## Affected areas
-- docs
+- .github
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

@@ -54,6 +54,7 @@ The content is organized as follows:
     build-test-apk.yml
     character-candidate-bank.yml
     character-motion-audit-pr-gate.yml
+    character-motion-evidence-audit.yml
     character-review-matrix.yml
     character-single-subject-gpu-evidence.yml
     character-strict-approval-readiness.yml
@@ -339,6 +340,7 @@ tools/
     validate_release_privacy.py
   art/
     character_approval_readiness.py
+    character_motion_evidence.py
   assets/
     __init__.py
     manifest.py
@@ -2667,6 +2669,42 @@ jobs:
           PY
 
 # Reject-only automated audit. Passing is not semantic approval or runtime promotion.
+```
+
+## File: .github/workflows/character-motion-evidence-audit.yml
+```yaml
+name: Character Motion Evidence Audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/art/character_motion_evidence.py'
+      - 'art/production/master-asset-queue.json'
+      - 'art/incoming/chatgpt-original/animation-review.json'
+      - 'art/incoming/chatgpt-original/visual-risk-qa.json'
+      - 'art/incoming/chatgpt-original/creation-manifest.json'
+      - '.github/workflows/character-motion-evidence-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  motion-evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify per-asset original source and full-loop motion metrics
+        run: python tools/art/character_motion_evidence.py
+      - name: Publish auditable evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: character-motion-evidence-review-only
+          path: art/production/character-motion-evidence.json
+          if-no-files-found: warn
+          retention-days: 30
 ```
 
 ## File: .github/workflows/character-review-matrix.yml
@@ -30353,6 +30391,44 @@ risk = risks.get(ident)
 blockers = []
 ⋮----
 report = {
+```
+
+## File: tools/art/character_motion_evidence.py
+```python
+#!/usr/bin/env python3
+"""Cross-check pending strict character IDs against all locally authored motion loops.
+
+Read-only review: checks source coverage and per-loop technical motion evidence;
+NEVER grants semantic or Android runtime approval.
+"""
+⋮----
+ROOT=Path(__file__).resolve().parents[2]
+def load(path)
+⋮----
+def audit()
+⋮----
+q=load("art/production/master-asset-queue.json")
+m=load("art/incoming/chatgpt-original/creation-manifest.json")
+a=load("art/incoming/chatgpt-original/animation-review.json")
+risk=load("art/incoming/chatgpt-original/visual-risk-qa.json")
+manifest={x["id"]:x for x in m["assets"]}
+motion={x["id"]:x for x in a["assets"]}
+risks={x["id"]:x for x in risk["assets"]}
+pending=[x for x in q["assets"] if x["id"].startswith("CHR-") and x["strict_status"]!="DONE"]
+rows=[]
+⋮----
+ident=item["id"]
+source=manifest.get(ident)
+evidence=motion.get(ident)
+visual=risks.get(ident)
+problems=[]
+⋮----
+path=ROOT/"art/incoming/chatgpt-original/candidates"/source["file"]
+⋮----
+def main()
+⋮----
+report=audit()
+out=ROOT/"art/production/character-motion-evidence.json"
 ```
 
 ## File: tools/assets/__init__.py
