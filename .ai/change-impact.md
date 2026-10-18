@@ -1,15 +1,19 @@
 # Change impact
 
-Base: 5303c49e89c5be8fb5699b2e4fb1fc447492429f
-Head: 48e95e40633b0bc9d9ba4edb841ead870dba0e3e
+Base: b703a46af0c589673a45aece960376593cf9db85
+Head: b61e53fc1bef8e2104717c6412eb56106f5352f7
 
 ## Changed files
-- M .github/workflows/promote-user-approved-characters.yml
-- M tools/art/promote_user_approved_characters.py
-- A tools/art/test_promote_user_approved_characters.py
+- A .github/workflows/play-store-artwork.yml
+- A marketing/PLAY_STORE_RELEASE_RUNBOOK.md
+- A marketing/play-store-listing-fr-FR.md
+- M marketing/play-store-listing.md
+- M tools/android/emulator_functional_smoke.sh
+- A tools/marketing/export_play_store_artwork.py
 
 ## Affected areas
 - .github
+- marketing
 - tools
 
 ## Related test candidates

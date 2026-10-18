@@ -1,13 +1,15 @@
 # CI status
 
-Summary: 3 success / 2 failure / 1 active
+Summary: 2 success / 1 failure / 5 active
 
-- Promote user-approved original characters: in_progress / pending (48e95e40)
+- Android Emulator Smoke: in_progress / pending (b61e53fc)
+- Android CI: in_progress / pending (b61e53fc)
+- Play Store Artwork Pack: in_progress / pending (b61e53fc)
+- Android CI: in_progress / pending (5fb6e0e9)
+- Android Emulator Smoke: in_progress / pending (5fb6e0e9)
+- Promote user-approved original characters: completed / success (48e95e40)
 - Promote user-approved original characters: completed / failure (3dceb134)
 - Assemble Character Candidate Bank: completed / success (3ff7ac2a)
-- Archive Character Candidates: completed / success (3ff7ac2a)
-- Kaggle Async Character Collector: completed / success (3ff7ac2a)
-- Character Motion Evidence Audit: completed / failure (735f1f60)
 
 ## Latest failed run structure
 - Job: promote

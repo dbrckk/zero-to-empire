@@ -86,6 +86,7 @@ The content is organized as follows:
     manual-kaggle-go-77.yml
     modular-tech-actions.yml
     modular-tech-character.yml
+    play-store-artwork.yml
     pollinations-building-candidate.yml
     pollinations-character-atlas.yml
     pollinations-character-smoke.yml
@@ -360,6 +361,8 @@ tools/
     test_queue_state_policy.py
     test_static_processing.py
     test_workflow_policy.py
+  marketing/
+    export_play_store_artwork.py
   sprites/
     tests/
       test_archive_character_candidates.py
@@ -6711,6 +6714,82 @@ jobs:
             build/CHR-TECH-WALK-modular-v2-review.zip
           if-no-files-found: warn
           retention-days: 30
+```
+
+## File: .github/workflows/play-store-artwork.yml
+```yaml
+name: Play Store Artwork Pack
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/marketing/export_play_store_artwork.py'
+      - 'marketing/play-store-feature-graphic.svg'
+      - 'app/src/main/res/drawable/ic_empire_foreground.xml'
+      - 'app/src/main/res/drawable/ic_empire_background.xml'
+      - '.github/workflows/play-store-artwork.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: play-store-artwork
+  cancel-in-progress: false
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install deterministic raster tools
+        run: python -m pip install 'CairoSVG==2.7.1' 'Pillow==11.3.0'
+      - name: Render launcher icon and feature graphic for Play Store
+        run: python tools/marketing/export_play_store_artwork.py
+      - name: Check required image modes, dimensions, hashes
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          from PIL import Image
+          d=json.loads(Path("marketing/play-store-assets/store-artwork-manifest.json").read_text())
+          assert len(d["artifacts"])==2
+          for row in d["artifacts"]:
+              p=Path(row["path"])
+              assert p.is_file()
+              assert hashlib.sha256(p.read_bytes()).hexdigest()==row["sha256"]
+              with Image.open(p) as image:
+                  assert f"{image.width}x{image.height}"==row["size"]
+                  assert image.mode==row["mode"]
+              print("PLAY_ARTWORK_PASS=",p)
+          PY
+      - name: Upload Google Play listing graphics
+        uses: actions/upload-artifact@v4
+        with:
+          name: zero-to-empire-play-listing-images
+          path: marketing/play-store-assets/
+          retention-days: 90
+      - name: Commit reproducible store imagery to main
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add marketing/play-store-assets/
+          if git diff --cached --quiet; then
+            echo 'PLAY_ASSETS_UNCHANGED=1'
+            exit 0
+          fi
+          git commit -m 'marketing(play): export verified store artwork'
+          git pull --rebase origin main
+          git push origin HEAD:main
 ```
 
 ## File: .github/workflows/pollinations-building-candidate.yml
@@ -29407,10 +29486,29 @@ adb exec-out screencap -p > "$EVIDENCE/initial.png"
 # whole flow bounded to the five visual onboarding steps.
 complete_onboarding_if_present
 
+# Real screenshots from the running Android app. Keep them unaltered;
+# debug-emulator previews are NOT a substitute for final production-AAB review.
+mkdir -p "$EVIDENCE/play-store-preview"
 for tab in MANAGERS UPGRADES GOALS EMPIRE; do
   click_node "$tab" "before-$tab"
   assert_ui_contains "$tab" "after-$tab"
+  case "$tab" in
+    MANAGERS) shot="02-managers" ;;
+    UPGRADES) shot="03-upgrades" ;;
+    GOALS) shot="04-goals" ;;
+    EMPIRE) shot="01-empire" ;;
+  esac
+  adb exec-out screencap -p > "$EVIDENCE/play-store-preview/$shot.png" || fail "screenshot-capture-failed:$tab"
+  test -s "$EVIDENCE/play-store-preview/$shot.png" || fail "empty-screenshot:$tab"
 done
+cat > "$EVIDENCE/play-store-preview/README.txt" <<'EOF'
+ZERO -> EMPIRE. Unmodified Android emulator screenshots.
+Captured from the real game in debug emulator smoke (Pixel 6, API 35).
+These are Play listing composition candidates, not production-AAB images.
+Review text readability, margins, Google Play policy and final version
+before uploading screenshots to the Play Console.
+EOF
+
 
 # POWER CORE has a non-clickable text label layered over part of its clickable
 # surface. Resolve the nearby clickable node and deliberately choose an uncovered
@@ -29521,6 +29619,8 @@ click_node "EMPIRE" "offline-return-empire"
 click_node "STORE" "before-store"
 assert_ui_contains "EMPIRE STORE" "store-open"
 assert_ui_contains "RESTORE PURCHASES" "store-contents"
+adb exec-out screencap -p > "$EVIDENCE/play-store-preview/05-store.png" || fail "screenshot-capture-failed:store"
+test -s "$EVIDENCE/play-store-preview/05-store.png" || fail "empty-screenshot:store"
 click_node "CLOSE" "store-before-close"
 sleep 1
 check_alive
@@ -31311,6 +31411,57 @@ def test_kaggle_rejection_memory_prefers_exact_asset_over_role_fallback(self)
 def test_kaggle_character_retry_uses_controlled_queue_rejection_risks(self)
 ⋮----
 def test_kaggle_character_retry_routes_detached_subject_to_single_mode(self)
+```
+
+## File: tools/marketing/export_play_store_artwork.py
+```python
+#!/usr/bin/env python3
+"""Export verified Play listing artwork from the game's owned vector sources.
+
+Never edits gameplay resources; produces store-only 512px icon and 1024x500
+feature graphic. SVG previews are NOT phone gameplay screenshots.
+"""
+⋮----
+ROOT = Path(__file__).resolve().parents[2]
+A = "{http://schemas.android.com/apk/res/android}"
+OUT = ROOT / "marketing/play-store-assets"
+⋮----
+def sha256(path: Path) -> str
+⋮----
+def android_vector_svg() -> bytes
+⋮----
+src = ROOT / "app/src/main/res/drawable/ic_empire_foreground.xml"
+root = ET.fromstring(src.read_text(encoding="utf-8"))
+⋮----
+width = float(root.get(A + "viewportWidth", "0"))
+height = float(root.get(A + "viewportHeight", "0"))
+⋮----
+parts = [
+⋮----
+path = node.get(A + "pathData")
+⋮----
+fill = node.get(A + "fillColor", "none")
+⋮----
+fill = "none"
+⋮----
+stroke = node.get(A + "strokeColor", "none")
+⋮----
+stroke = "none"
+⋮----
+sw = float(node.get(A + "strokeWidth", "0"))
+⋮----
+def export() -> dict
+⋮----
+icon_path = OUT / "zero-to-empire-icon-512.png"
+feature_path = OUT / "zero-to-empire-feature-1024x500.png"
+⋮----
+source_feature = ROOT / "marketing/play-store-feature-graphic.svg"
+⋮----
+# Play requires 24-bit RGB, explicitly remove the PNG alpha channel.
+⋮----
+rgb = Image.new("RGB", image.size, "#050914")
+⋮----
+manifest = {
 ```
 
 ## File: tools/sprites/tests/test_archive_character_candidates.py

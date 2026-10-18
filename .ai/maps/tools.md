@@ -934,10 +934,29 @@ adb exec-out screencap -p > "$EVIDENCE/initial.png"
 # whole flow bounded to the five visual onboarding steps.
 complete_onboarding_if_present
 
+# Real screenshots from the running Android app. Keep them unaltered;
+# debug-emulator previews are NOT a substitute for final production-AAB review.
+mkdir -p "$EVIDENCE/play-store-preview"
 for tab in MANAGERS UPGRADES GOALS EMPIRE; do
   click_node "$tab" "before-$tab"
   assert_ui_contains "$tab" "after-$tab"
+  case "$tab" in
+    MANAGERS) shot="02-managers" ;;
+    UPGRADES) shot="03-upgrades" ;;
+    GOALS) shot="04-goals" ;;
+    EMPIRE) shot="01-empire" ;;
+  esac
+  adb exec-out screencap -p > "$EVIDENCE/play-store-preview/$shot.png" || fail "screenshot-capture-failed:$tab"
+  test -s "$EVIDENCE/play-store-preview/$shot.png" || fail "empty-screenshot:$tab"
 done
+cat > "$EVIDENCE/play-store-preview/README.txt" <<'EOF'
+ZERO -> EMPIRE. Unmodified Android emulator screenshots.
+Captured from the real game in debug emulator smoke (Pixel 6, API 35).
+These are Play listing composition candidates, not production-AAB images.
+Review text readability, margins, Google Play policy and final version
+before uploading screenshots to the Play Console.
+EOF
+
 
 # POWER CORE has a non-clickable text label layered over part of its clickable
 # surface. Resolve the nearby clickable node and deliberately choose an uncovered
@@ -1048,6 +1067,8 @@ click_node "EMPIRE" "offline-return-empire"
 click_node "STORE" "before-store"
 assert_ui_contains "EMPIRE STORE" "store-open"
 assert_ui_contains "RESTORE PURCHASES" "store-contents"
+adb exec-out screencap -p > "$EVIDENCE/play-store-preview/05-store.png" || fail "screenshot-capture-failed:store"
+test -s "$EVIDENCE/play-store-preview/05-store.png" || fail "empty-screenshot:store"
 click_node "CLOSE" "store-before-close"
 sleep 1
 check_alive
