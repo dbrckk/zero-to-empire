@@ -1,0 +1,55 @@
+name: Promote user-approved original characters
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: asset-autofactory-235
+  cancel-in-progress: false
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install 'Pillow==11.3.0'
+      - name: Verify user approval and all 16 source atlases
+        run: python tools/art/promote_user_approved_characters.py --stage
+      - name: Convert original atlases to lossless Android runtime WebP
+        env:
+          SPRITE_TARGETS: zte_chr_op_walk_final,zte_chr_op_work_final,zte_chr_op_carry_final,zte_chr_op_repair_final,zte_chr_op_celeb_final,zte_chr_log_walk_final,zte_chr_log_work_final,zte_chr_log_carry_final,zte_chr_log_repair_final,zte_chr_log_celeb_final,zte_chr_eng_idle_final,zte_chr_eng_walk_final,zte_chr_eng_work_final,zte_chr_eng_carry_final,zte_chr_eng_repair_final,zte_chr_eng_celeb_final
+        run: python tools/sprites/process_final_sprites.py
+      - name: Validate every promoted runtime and ledger
+        run: python tools/art/promote_user_approved_characters.py --validate
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.13'
+      - name: Android compile, tests and lint
+        run: |
+          python tools/android/audit_character_runtime.py
+          python tools/android/validate_manifest_policy.py
+          gradle assembleDebug testDebugUnitTest lintDebug --stacktrace
+      - name: Commit 235/235 only after passing Android verification
+        run: |
+          python tools/art/promote_user_approved_characters.py --commit-ledger
+          git diff --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add art/incoming/final-sprites/zte_chr_*.png app/src/main/res/drawable-nodpi/zte_chr_*.webp art/production/master-asset-queue.json art/production/user-approved-character-promotion.json
+          git commit -m 'art(characters): promote 16 user-approved animations after Android QA'
+          git pull --rebase origin main
+          git push origin HEAD:main
