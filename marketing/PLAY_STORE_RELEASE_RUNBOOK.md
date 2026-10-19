@@ -13,12 +13,23 @@ Last repository audit: **19 October 2026**. Goal: ship the currently user-approv
 | Signing | `.github/workflows/production-release.yml` validates keystore fingerprint and bundle signature | Create / securely preserve own **upload key**, enroll in **Play App Signing**, add CI secrets |
 | Monetization | Play Billing + Mobile Ads + UMP integrations, configuration fail-closed on test Ad IDs | Register real AdMob app and units and four Play one-time products, validate UMP disclosure |
 | Privacy | Local privacy document and hosted page https://dazzling-rift-vw8829a.shipstatic.com/ | Verify the link externally, developer contact method and final Google SDK disclosures |
-| Listing media | Reproducible 512px Play icon and 1024×500 RGB feature PNG pipeline; raw emulator gameplay screenshots | Review screenshots captured from **final signed candidate**, not just debug, and choose compliant store imagery |
+| Listing media | Play icon 512px, feature 1024×500 and **five 1080×2160 24-bit RGB phone screenshots** from verified Android emulator run [39173005057](https://github.com/dbrckk/zero-to-empire/actions/runs/39173005057), with per-file SHA-256 | Review the five captures in the Play Console and test the **signed candidate** independently; the images originate from a validated debug build |
 | Store text | English `marketing/play-store-listing.md` and French `marketing/play-store-listing-fr-FR.md` | Paste into locale fields; select category, contact info and countries |
 | Audience / policies | Data Safety working sheet `marketing/data-safety.md` | Complete Play Console forms (ads, in-app purchases, target audience, rating, data security) |
 | Production access | No automation can waive Google Play testing criteria | New personal developer accounts created after 13 Nov 2023 usually require **12 opted-in testers for 14 continuous days** plus production access application |
 
 Do **not** call a debug APK or an unsigned AAB a production release.
+
+
+## Verified snapshot — 19 October 2026
+
+- **235/235** master assets are strict DONE on `main`.
+- [Approved character promotion 39171865935](https://github.com/dbrckk/zero-to-empire/actions/runs/39171865935), [Android CI 39173005074](https://github.com/dbrckk/zero-to-empire/actions/runs/39173005074) and [functional emulator smoke 39173005057](https://github.com/dbrckk/zero-to-empire/actions/runs/39173005057) all succeeded.
+- [Play screenshot export 39249852119](https://github.com/dbrckk/zero-to-empire/actions/runs/39249852119) succeeded and archived five screenshot PNGs, each 1080×2160 with **no alpha channel**.
+- [Play source preflight 39173371515](https://github.com/dbrckk/zero-to-empire/actions/runs/39173371515) passed repository-side checks but found **seven required production GitHub secrets absent**; a passing preflight workflow alone is not production readiness.
+- The privacy-policy deployment is reported as `success` and non-expiring by the connected ShipStatic deployment metadata (hostname `dazzling-rift-vw8829a.shipstatic.com`); **verify anonymous browser accessibility and page contents** before Play submission.
+
+**The signed production AAB has not been confirmed**. The source bundle produced by Android CI is **unsigned**. The upload key, real production advertising identifiers, Google Play Billing product setup and developer-console policy declarations must be supplied by the account owner.
 
 ## Step 1: Verify all asset and gameplay gates
 
@@ -29,7 +40,7 @@ On GitHub open **Actions** and confirm the following completed successfully for 
 3. **Android Emulator Smoke**: UI onboarding, tabs, tap economy, manager automation, offline return, persistence, character QA and crash scan.
 4. **Play Store Artwork Pack**: `marketing/play-store-assets/zero-to-empire-icon-512.png` and `zero-to-empire-feature-1024x500.png`, plus `store-artwork-manifest.json` hashes.
 
-Download the release image/screenshots archive via the Actions artifacts. The smoke screenshots in `play-store-preview/` are raw Android **debug** emulator captures, not evidence that the signed release has been tested.
+Download the release image/screenshots archive via the Actions artifacts. Five genuine phone screenshots are versioned under `marketing/play-store-assets/screenshots/` and exported in a Play-compatible **1080×2160 24-bit RGB PNG** format. They are cropped only at the top/bottom to remove emulator margins; no gameplay elements or values have been fabricated. The source is a **debug** emulator build, which does not prove that the signed Play release was installed or tested.
 
 ## Step 2: Supply production secrets securely
 
@@ -64,7 +75,7 @@ Without valid credentials this workflow correctly **fails** instead of producing
 
 1. Create the game application with package `com.zerotoempire.game`. Choose Games → Simulation or other truthful category.
 2. Complete developer identity/contact, countries, content rating, ads, IAP, target audience and policy declarations.
-3. Paste English and French texts from `marketing/`. Upload 512px launcher icon and 1024×500 feature graphic from `marketing/play-store-assets/`.
+3. Paste English and French texts from `marketing/`. Upload 512px launcher icon, 1024×500 feature graphic and five phone screenshots from `marketing/play-store-assets/`; the PNGs must be opened and inspected before submission.
 4. Verify privacy policy at https://dazzling-rift-vw8829a.shipstatic.com/ and reconcile `marketing/data-safety.md` with current Google Mobile Ads, UMP and Play Billing SDK disclosures. Confirm users have a **publicly functioning privacy contact channel**.
 5. Create one-time Play Billing products matching **exactly**: `remove_ads_lifetime`, `starter_pack`, `gems_small`, `gems_medium`. Set regional prices and availability; verify acknowledgment, consumption and restoration on a tester purchase.
 6. Configure the real AdMob application, rewarded/interstitial units and consent messaging. Test with **test devices** in the Play-distributed candidate.
@@ -75,7 +86,7 @@ Without valid credentials this workflow correctly **fails** instead of producing
 
 ## Store asset requirements
 
-Google Play currently requires a **512×512, at most 1,024 KiB, 32-bit PNG** icon and a **1024×500, 24-bit RGB JPEG/PNG** feature graphic. The repository's export workflow verifies these mechanically. Genuine phone screenshots remain a separate mandatory item.
+Google Play currently requires a **512×512, at most 1,024 KiB, 32-bit PNG** icon and a **1024×500, 24-bit RGB JPEG/PNG** feature graphic. The repository's export workflow verifies these mechanically. Five genuine phone screenshots are included, with file hashes and real-emulator provenance; additional signed-Play-install testing remains mandatory.
 
 ## Explicit release blockers that code cannot invent
 
