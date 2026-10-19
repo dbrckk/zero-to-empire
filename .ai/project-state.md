@@ -32,16 +32,18 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-19T12:14:38Z
+Generated: 2026-10-19T12:17:10Z
 
 ### Git
 - Branch: `main`
-- Head: `d43494255a36`
-- Commit date: 2026-10-19T08:14:23-04:00
-- Commit: release(play): enforce real screenshot hashes and both store listing limits (#240)
+- Head: `54f54b20f0da`
+- Commit date: 2026-10-19T08:16:56-04:00
+- Commit: fix(ci): reconcile approved character manifest with canonical 235/235 queue (#241)
 - Tracked files: 1848
 
 ### Recently changed files
+- `docs/art/FINAL_AAA_SPRITE_MANIFEST.md`
+- `docs/art/FINAL_AAA_SPRITE_PROGRESS.md`
 - `marketing/PLAY_STORE_RELEASE_RUNBOOK.md`
 - `tools/marketing/play_release_preflight.py`
 - `marketing/play-store-assets/screenshots/01-empire.png`
@@ -55,7 +57,6 @@ Generated: 2026-10-19T12:14:38Z
 - `tools/marketing/prepare_phone_screenshots.py`
 - `art/production/autofactory-state.json`
 - `art/production/autofactory-summary.md`
-- `README.md`
 
 ### Project signals
 - `build.gradle.kts`

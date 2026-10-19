@@ -1,18 +1,14 @@
 # CI status
 
-Summary: 5 success / 3 failure / 0 active
+Summary: 0 success / 2 failure / 6 active
 
-- Google Play Release Preflight: completed / success (d4349425)
-- Asset Pipeline CI: completed / failure (70ac882c)
-- Export Authentic Google Play Phone Screenshots: completed / success (70ac882c)
-- Assemble Character Candidate Bank: completed / success (70ac882c)
-- Asset Pipeline CI: completed / failure (dbbe7545)
-- Assemble Character Candidate Bank: completed / failure (5ced5083)
-- Archive Character Candidates: completed / success (5ced5083)
-- Kaggle Async Character Collector: completed / success (5ced5083)
-
-## Latest failed run structure
-- Job: validate
-  - Failed step: Verify live character-production plan against strict queue and Android frame contract
+- Reconcile Sprite Progress Ledger: in_progress / pending (54f54b20)
+- Asset Pipeline CI: in_progress / pending (54f54b20)
+- Sprite Production Plan: in_progress / pending (54f54b20)
+- Sprite Completion Gate: in_progress / pending (54f54b20)
+- Android CI: in_progress / pending (54f54b20)
+- Asset Pipeline CI: completed / failure (17d28609)
+- Android CI: completed / failure (17d28609)
+- Android CI: in_progress / pending (6dff322b)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

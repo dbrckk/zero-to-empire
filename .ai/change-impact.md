@@ -1,15 +1,14 @@
 # Change impact
 
-Base: c128b2c9ad8d41451023d82b77a9a958ba21c440
-Head: d43494255a361d13d341c53320840015850fbc12
+Base: bc0dea0ede4ba7f54c3869eb10d61e8edd543eee
+Head: 54f54b20f0da6cdb31edc8b4d846d59301e74f19
 
 ## Changed files
-- M marketing/PLAY_STORE_RELEASE_RUNBOOK.md
-- M tools/marketing/play_release_preflight.py
+- M docs/art/FINAL_AAA_SPRITE_MANIFEST.md
+- M docs/art/FINAL_AAA_SPRITE_PROGRESS.md
 
 ## Affected areas
-- marketing
-- tools
+- docs
 
 ## Related test candidates
 - No direct filename-based test match detected.
