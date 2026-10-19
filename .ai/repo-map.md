@@ -86,6 +86,7 @@ The content is organized as follows:
     manual-kaggle-go-77.yml
     modular-tech-actions.yml
     modular-tech-character.yml
+    play-phone-screenshots.yml
     play-store-artwork.yml
     play-submission-preflight.yml
     pollinations-building-candidate.yml
@@ -365,6 +366,7 @@ tools/
   marketing/
     export_play_store_artwork.py
     play_release_preflight.py
+    prepare_phone_screenshots.py
   sprites/
     tests/
       test_archive_character_candidates.py
@@ -2376,8 +2378,29 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  check-canonical-completion:
+    runs-on: ubuntu-latest
+    outputs:
+      pending: ${{ steps.queue.outputs.pending }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: main
+      - name: Stop review-only generation when all 235 assets are approved
+        id: queue
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+          q=json.loads(Path('art/production/master-asset-queue.json').read_text())
+          assert q['target_total']==235 and len(q['assets'])==235
+          pending=sum(a['strict_status']!='DONE' for a in q['assets'])
+          print('pending='+str(pending>0).lower())
+          print('pending_count='+str(pending))
+          PY
   assemble:
-    if: ${{ github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository) }}
+    needs: check-canonical-completion
+    if: ${{ needs.check-canonical-completion.outputs.pending == 'true' && (github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository)) }}
     runs-on: ubuntu-latest
     timeout-minutes: 12
     env:
@@ -6716,6 +6739,102 @@ jobs:
             build/CHR-TECH-WALK-modular-v2-review.zip
           if-no-files-found: warn
           retention-days: 30
+```
+
+## File: .github/workflows/play-phone-screenshots.yml
+```yaml
+name: Export Authentic Google Play Phone Screenshots
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/play-phone-screenshots.yml'
+      - 'tools/marketing/prepare_phone_screenshots.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: play-phone-screenshots
+  cancel-in-progress: false
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SOURCE_RUN_ID: '39173005057'
+      SOURCE_SHA: 'f58e9469eb567e2c379a3f659a96545f1067144a'
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 50
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify canonical 235 assets and known successful emulator capture
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          q=json.loads(Path('art/production/master-asset-queue.json').read_text())
+          assert len(q['assets'])==235
+          assert sum(a['strict_status']=='DONE' for a in q['assets'])==235
+          print('CANONICAL_235_ASSETS_PASS=1')
+          PY
+          test "$(gh run view "$SOURCE_RUN_ID" --repo "$GITHUB_REPOSITORY" --json conclusion --jq '.conclusion')" = success
+          test "$(gh run view "$SOURCE_RUN_ID" --repo "$GITHUB_REPOSITORY" --json headSha --jq '.headSha')" = "$SOURCE_SHA"
+          test "$(gh run view "$SOURCE_RUN_ID" --repo "$GITHUB_REPOSITORY" --json headBranch --jq '.headBranch')" = main
+          # Do not present old gameplay captures as a new revision if app code changed.
+          git cat-file -e "$SOURCE_SHA^{commit}" || git fetch --depth=1 origin "$SOURCE_SHA"
+          git diff --exit-code "$SOURCE_SHA" HEAD -- app/src/main app/build.gradle.kts
+          echo 'PLAY_SCREENSHOT_SOURCE_MATCHES_CURRENT_GAMEPLAY=1'
+      - name: Download unmodified emulator screen evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/play-emulator-evidence"
+          gh run download "$SOURCE_RUN_ID" --repo "$GITHUB_REPOSITORY" \
+            --name android-emulator-smoke-evidence \
+            --dir "$RUNNER_TEMP/play-emulator-evidence"
+          test -s "$RUNNER_TEMP/play-emulator-evidence/play-store-preview/01-empire.png"
+      - name: Install image validator
+        run: python -m pip install 'Pillow==11.3.0'
+      - name: Produce truthful Google Play phone screenshots
+        run: |
+          python tools/marketing/prepare_phone_screenshots.py \
+            --source-dir "$RUNNER_TEMP/play-emulator-evidence/play-store-preview" \
+            --out-dir marketing/play-store-assets/screenshots \
+            --run-id "$SOURCE_RUN_ID" \
+            --source-sha "$SOURCE_SHA"
+      - name: Archive upload-ready phone media
+        uses: actions/upload-artifact@v4
+        with:
+          name: zero-to-empire-5-play-phone-screenshots
+          path: marketing/play-store-assets/screenshots/
+          if-no-files-found: error
+          retention-days: 90
+      - name: Version screenshots and their provenance
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add marketing/play-store-assets/screenshots/
+          if git diff --cached --quiet; then
+            echo 'PLAY_SCREENSHOTS_UNCHANGED=1'
+            exit 0
+          fi
+          git commit -m 'marketing(play): archive five real compliant emulator screenshots'
+          git pull --rebase origin main
+          git push origin HEAD:main
 ```
 
 ## File: .github/workflows/play-store-artwork.yml
@@ -31583,11 +31702,74 @@ icon = png_info(icon_path)
 ⋮----
 feature = png_info(feature_path)
 ⋮----
+# Screenshots are required Play media, not optional promotional artwork.
+# Assert exact 24-bit RGB PNG files, source provenance and byte hashes.
+screenshots = ROOT / "marketing/play-store-assets/screenshots"
+manifest_path = screenshots / "screenshots-manifest.json"
+screenshots_valid = False
+⋮----
+manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+records = manifest.get("screenshots", [])
+names = [row.get("file") for row in records]
+allowed = ["01-empire.png", "02-managers.png", "03-upgrades.png",
+screenshots_valid = (
+⋮----
+path = screenshots / row["file"]
+⋮----
+properties = png_info(path)
+actual = hashlib.sha256(path.read_bytes()).hexdigest()
+⋮----
+english = text("marketing/play-store-listing.md")
+def section(title: str, content: str) -> str
+⋮----
+marker = "## " + title + "\n\n"
+⋮----
+# The reference English listing carries the same Play Console field caps
+# as the French listing. Detect truncation issues before launch.
+english_title = section("App name", english)
+english_short = section("Short description", english)
+english_long = section("Full description", english)
+⋮----
 secret_present = {name: bool(os.getenv(name, "").strip()) for name in SECRET_NAMES}
 ⋮----
 report = {
 ⋮----
 report = audit()
+```
+
+## File: tools/marketing/prepare_phone_screenshots.py
+```python
+#!/usr/bin/env python3
+"""Package actual Android emulator gameplay screenshots for Google Play.
+
+Only crops existing screenshots; does not generate or alter in-game UI, edit
+numbers or add promotional overlays. Output is 24-bit RGB PNG, 1080x2160
+(exactly 2:1), the maximum Google Play phone screenshot aspect ratio.
+"""
+⋮----
+SCREENSHOTS = {
+SOURCE_SIZE = (1080, 2400)
+CROP = (0, 120, 1080, 2280)
+TARGET_SIZE = (1080, 2160)
+⋮----
+def digest(path: Path) -> str
+⋮----
+def prepare(source: Path, destination: Path, run_id: int, source_sha: str) -> dict
+⋮----
+result = []
+⋮----
+inp = source / (name + ".png")
+out = destination / (name + ".png")
+⋮----
+cropped = original.crop(CROP).convert("RGB")
+⋮----
+manifest = {
+⋮----
+def main() -> None
+⋮----
+parser = argparse.ArgumentParser(description=__doc__)
+⋮----
+args = parser.parse_args()
 ```
 
 ## File: tools/sprites/tests/test_archive_character_candidates.py

@@ -32,22 +32,30 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-18T22:44:17Z
+Generated: 2026-10-19T12:14:38Z
 
 ### Git
 - Branch: `main`
-- Head: `3304b102985e`
-- Commit date: 2026-10-18T18:44:00-04:00
-- Commit: docs(release): publish truthful Play Store release candidate status and configuration links (#238)
-- Tracked files: 1839
+- Head: `d43494255a36`
+- Commit date: 2026-10-19T08:14:23-04:00
+- Commit: release(play): enforce real screenshot hashes and both store listing limits (#240)
+- Tracked files: 1848
 
 ### Recently changed files
-- `README.md`
-- `.github/workflows/play-submission-preflight.yml`
+- `marketing/PLAY_STORE_RELEASE_RUNBOOK.md`
 - `tools/marketing/play_release_preflight.py`
-- `tools/android/emulator_functional_smoke.sh`
-- `.github/workflows/ai-repo-map.yml`
-- `art/production/character-strict-review-backlog.md`
+- `marketing/play-store-assets/screenshots/01-empire.png`
+- `marketing/play-store-assets/screenshots/02-managers.png`
+- `marketing/play-store-assets/screenshots/03-upgrades.png`
+- `marketing/play-store-assets/screenshots/04-goals.png`
+- `marketing/play-store-assets/screenshots/05-store.png`
+- `marketing/play-store-assets/screenshots/screenshots-manifest.json`
+- `.github/workflows/character-candidate-bank.yml`
+- `.github/workflows/play-phone-screenshots.yml`
+- `tools/marketing/prepare_phone_screenshots.py`
+- `art/production/autofactory-state.json`
+- `art/production/autofactory-summary.md`
+- `README.md`
 
 ### Project signals
 - `build.gradle.kts`

@@ -1,13 +1,15 @@
 # Change impact
 
-Base: b58407a30586ded804490ec10f0ae5625ecd3411
-Head: 3304b102985e2d6e7716fedc614cf8801e80420e
+Base: c128b2c9ad8d41451023d82b77a9a958ba21c440
+Head: d43494255a361d13d341c53320840015850fbc12
 
 ## Changed files
-- M README.md
+- M marketing/PLAY_STORE_RELEASE_RUNBOOK.md
+- M tools/marketing/play_release_preflight.py
 
 ## Affected areas
-- (root)
+- marketing
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

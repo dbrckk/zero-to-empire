@@ -1,14 +1,18 @@
 # CI status
 
-Summary: 3 success / 0 failure / 2 active
+Summary: 5 success / 3 failure / 0 active
 
-- Reconcile reviewed run 25: completed / skipped (b58407a3)
-- Google Play Release Preflight: completed / success (d0087e7c)
-- Reconcile reviewed run 25: completed / skipped (5f77f1c6)
-- Android CI: completed / success (f58e9469)
-- Android Emulator Smoke: in_progress / pending (f58e9469)
-- Android CI: completed / success (f9590705)
-- Android Emulator Smoke: in_progress / pending (f9590705)
-- Reconcile reviewed run 25: completed / skipped (51310e1e)
+- Google Play Release Preflight: completed / success (d4349425)
+- Asset Pipeline CI: completed / failure (70ac882c)
+- Export Authentic Google Play Phone Screenshots: completed / success (70ac882c)
+- Assemble Character Candidate Bank: completed / success (70ac882c)
+- Asset Pipeline CI: completed / failure (dbbe7545)
+- Assemble Character Candidate Bank: completed / failure (5ced5083)
+- Archive Character Candidates: completed / success (5ced5083)
+- Kaggle Async Character Collector: completed / success (5ced5083)
+
+## Latest failed run structure
+- Job: validate
+  - Failed step: Verify live character-production plan against strict queue and Android frame contract
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.
