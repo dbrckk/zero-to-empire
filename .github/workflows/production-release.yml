@@ -24,6 +24,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
+      RELEASE_VERSION_CODE: ${{ inputs.version_code }}
+      RELEASE_VERSION_NAME: ${{ inputs.version_name }}
       ZERO_EMPIRE_KEYSTORE_PASSWORD: ${{ secrets.ZERO_EMPIRE_KEYSTORE_PASSWORD }}
       ZERO_EMPIRE_KEY_ALIAS: ${{ secrets.ZERO_EMPIRE_KEY_ALIAS }}
       ZERO_EMPIRE_KEY_PASSWORD: ${{ secrets.ZERO_EMPIRE_KEY_PASSWORD }}
@@ -57,8 +59,9 @@ jobs:
           for name in KEYSTORE_B64 ZERO_EMPIRE_KEYSTORE_PASSWORD ZERO_EMPIRE_KEY_ALIAS ZERO_EMPIRE_KEY_PASSWORD ADMOB_APP_ID REWARDED_AD_UNIT_ID INTERSTITIAL_AD_UNIT_ID; do
             test -n "${!name:-}" || { echo "::error::Missing required production secret: $name"; exit 1; }
           done
-          [[ "${{ inputs.version_code }}" =~ ^[1-9][0-9]*$ ]] || { echo "::error::version_code must be a positive integer"; exit 1; }
-          test -n "${{ inputs.version_name }}" || exit 1
+          [[ "$RELEASE_VERSION_CODE" =~ ^[1-9][0-9]*$ ]] || { echo "::error::version_code must be a positive integer"; exit 1; }
+          [[ "$RELEASE_VERSION_NAME" =~ ^[0-9]+\.[0-9]+\.[0-9]+([.-][A-Za-z0-9]+)*$ ]] || { echo "::error::version_name must be a safe semver-like string"; exit 1; }
+          test "${#RELEASE_VERSION_NAME}" -le 64 || { echo "::error::version_name too long"; exit 1; }
 
       - name: Materialize upload keystore
         shell: bash
@@ -82,8 +85,8 @@ jobs:
           set -euo pipefail
           {
             echo "application_id=com.zerotoempire.game"
-            echo "version_code=${{ inputs.version_code }}"
-            echo "version_name=${{ inputs.version_name }}"
+            echo "version_code=$RELEASE_VERSION_CODE"
+            echo "version_name=$RELEASE_VERSION_NAME"
             echo "git_sha=$GITHUB_SHA"
             echo "git_ref=$GITHUB_REF"
             echo "target_sdk=36"
@@ -97,8 +100,8 @@ jobs:
           ORG_GRADLE_PROJECT_INTERSTITIAL_AD_UNIT_ID: ${{ secrets.INTERSTITIAL_AD_UNIT_ID }}
         run: |
           gradle --no-daemon bundleProductionRelease \
-            -PVERSION_CODE="${{ inputs.version_code }}" \
-            -PVERSION_NAME="${{ inputs.version_name }}" \
+            -PVERSION_CODE="$RELEASE_VERSION_CODE" \
+            -PVERSION_NAME="$RELEASE_VERSION_NAME" \
             --stacktrace
 
       - name: Verify production artifact
