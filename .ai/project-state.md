@@ -32,16 +32,17 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-19T12:17:10Z
+Generated: 2026-10-19T12:19:18Z
 
 ### Git
 - Branch: `main`
-- Head: `54f54b20f0da`
-- Commit date: 2026-10-19T08:16:56-04:00
-- Commit: fix(ci): reconcile approved character manifest with canonical 235/235 queue (#241)
+- Head: `c03f073af306`
+- Commit date: 2026-10-19T08:19:03-04:00
+- Commit: ci(android): build installable V1 release candidate APK after 235 assets and Play assets
 - Tracked files: 1848
 
 ### Recently changed files
+- `ops/build-test-apk-trigger.txt`
 - `docs/art/FINAL_AAA_SPRITE_MANIFEST.md`
 - `docs/art/FINAL_AAA_SPRITE_PROGRESS.md`
 - `marketing/PLAY_STORE_RELEASE_RUNBOOK.md`
@@ -55,8 +56,6 @@ Generated: 2026-10-19T12:17:10Z
 - `.github/workflows/character-candidate-bank.yml`
 - `.github/workflows/play-phone-screenshots.yml`
 - `tools/marketing/prepare_phone_screenshots.py`
-- `art/production/autofactory-state.json`
-- `art/production/autofactory-summary.md`
 
 ### Project signals
 - `build.gradle.kts`

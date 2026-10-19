@@ -1,14 +1,13 @@
 # Change impact
 
-Base: bc0dea0ede4ba7f54c3869eb10d61e8edd543eee
-Head: 54f54b20f0da6cdb31edc8b4d846d59301e74f19
+Base: ebb3bd401e544db1d459a0d052b4f57bae8c8f16
+Head: c03f073af306f2e8ada5fd31de6ba6091fc5691d
 
 ## Changed files
-- M docs/art/FINAL_AAA_SPRITE_MANIFEST.md
-- M docs/art/FINAL_AAA_SPRITE_PROGRESS.md
+- M ops/build-test-apk-trigger.txt
 
 ## Affected areas
-- docs
+- ops
 
 ## Related test candidates
 - No direct filename-based test match detected.
