@@ -128,6 +128,7 @@ internal fun AscendantCityEmpireWorld(vm: GameViewModel, state: GameState, buyMo
                 AscendantCorePlaza(state = state, tap = vm::tap, modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 12.dp))
             }
         }
+        item { NextDistrictRoadmap(state) }
         item { PurchaseModeRailWorld(vm, buyMode) }
         item { Text("DISTRICT NETWORK", Modifier.padding(horizontal = 16.dp, vertical = 4.dp), color = EmpireColors.TextSecondary, fontSize = 10.sp, fontWeight = FontWeight.Black, letterSpacing = 1.5.sp) }
         visible.drop(4).forEach { business -> item(key = business.id) { AscendantWorldLot(vm, business, state, buyMode, business.id) } }
