@@ -67,6 +67,56 @@ def audit() -> dict:
         feature = png_info(feature_path)
         tests["play_feature_size_type"] = (feature["width"], feature["height"], feature["bit_depth"], feature["color_type"]) == (1024,500,8,2)
     else: tests["play_feature_size_type"] = False
+    # Screenshots are required Play media, not optional promotional artwork.
+    # Assert exact 24-bit RGB PNG files, source provenance and byte hashes.
+    screenshots = ROOT / "marketing/play-store-assets/screenshots"
+    manifest_path = screenshots / "screenshots-manifest.json"
+    screenshots_valid = False
+    if manifest_path.is_file():
+        import hashlib
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        records = manifest.get("screenshots", [])
+        names = [row.get("file") for row in records]
+        allowed = ["01-empire.png", "02-managers.png", "03-upgrades.png",
+                   "04-goals.png", "05-store.png"]
+        screenshots_valid = (
+            manifest.get("source_is_actual_emulator_gameplay") is True
+            and manifest.get("play_console_approval") is False
+            and manifest.get("source_build_type") == "debug"
+            and manifest.get("source_run_id") == 39173005057
+            and names == allowed
+            and len(names) == len(set(names))
+        )
+        for row in records:
+            if not screenshots_valid:
+                break
+            path = screenshots / row["file"]
+            if not path.is_file():
+                screenshots_valid = False
+                break
+            properties = png_info(path)
+            actual = hashlib.sha256(path.read_bytes()).hexdigest()
+            if (properties["width"], properties["height"],
+                properties["bit_depth"], properties["color_type"]) != (1080,2160,8,2):
+                screenshots_valid = False
+            if actual != row.get("export_sha256"):
+                screenshots_valid = False
+    tests["five_authentic_play_phone_screenshots"] = screenshots_valid
+
+    english = text("marketing/play-store-listing.md")
+    def section(title: str, content: str) -> str:
+        found = re.search(r"^## " + re.escape(title) + r"[^\\n]*\\n\\n(.*?)(?=^## |\\Z)",
+                          content, re.MULTILINE | re.DOTALL)
+        return found.group(1).strip() if found else ""
+    # The reference English listing carries the same Play Console field caps
+    # as the French listing. Detect truncation issues before launch.
+    english_title = section("App name", english)
+    english_short = section("Short description", english)
+    english_long = section("Full description", english)
+    tests["english_app_name_within_30"] = 1 <= len(english_title) <= 30
+    tests["english_short_description_within_80"] = 10 <= len(english_short) <= 80
+    tests["english_full_description_within_4000"] = 100 <= len(english_long) <= 4000
+
     secret_present = {name: bool(os.getenv(name, "").strip()) for name in SECRET_NAMES}
     tests["production_signing_and_ad_ids_configured"] = all(secret_present.values())
     report = {
