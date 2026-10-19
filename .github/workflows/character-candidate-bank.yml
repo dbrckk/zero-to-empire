@@ -33,8 +33,29 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  check-canonical-completion:
+    runs-on: ubuntu-latest
+    outputs:
+      pending: ${{ steps.queue.outputs.pending }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: main
+      - name: Stop review-only generation when all 235 assets are approved
+        id: queue
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+          q=json.loads(Path('art/production/master-asset-queue.json').read_text())
+          assert q['target_total']==235 and len(q['assets'])==235
+          pending=sum(a['strict_status']!='DONE' for a in q['assets'])
+          print('pending='+str(pending>0).lower())
+          print('pending_count='+str(pending))
+          PY
   assemble:
-    if: ${{ github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository) }}
+    needs: check-canonical-completion
+    if: ${{ needs.check-canonical-completion.outputs.pending == 'true' && (github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository)) }}
     runs-on: ubuntu-latest
     timeout-minutes: 12
     env:
