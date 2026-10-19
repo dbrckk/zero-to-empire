@@ -86,6 +86,7 @@ The content is organized as follows:
     manual-kaggle-go-77.yml
     modular-tech-actions.yml
     modular-tech-character.yml
+    play-console-media-pack.yml
     play-phone-screenshots.yml
     play-store-artwork.yml
     play-submission-preflight.yml
@@ -365,6 +366,7 @@ tools/
     test_workflow_policy.py
   marketing/
     export_play_store_artwork.py
+    pack_play_console_submission.py
     play_release_preflight.py
     prepare_phone_screenshots.py
   sprites/
@@ -6739,6 +6741,60 @@ jobs:
             build/CHR-TECH-WALK-modular-v2-review.zip
           if-no-files-found: warn
           retention-days: 30
+```
+
+## File: .github/workflows/play-console-media-pack.yml
+```yaml
+name: Google Play Console Submission Media Pack
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/marketing/pack_play_console_submission.py'
+      - '.github/workflows/play-console-media-pack.yml'
+      - 'marketing/play-store-assets/screenshots/**'
+      - 'marketing/play-store-listing-fr-FR.md'
+      - 'marketing/play-store-listing.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify 235 assets, Play images, localization, policy source
+        run: python tools/marketing/play_release_preflight.py
+      - name: Create verified, unsigned media/description upload ZIP
+        run: |
+          python tools/marketing/pack_play_console_submission.py \
+            --out /tmp/zero-to-empire-play-console-media.zip
+          unzip -t /tmp/zero-to-empire-play-console-media.zip >/dev/null
+          sha256sum /tmp/zero-to-empire-play-console-media.zip
+      - name: Archive Google Play media pack
+        uses: actions/upload-artifact@v4
+        with:
+          name: zero-to-empire-play-console-media-pack
+          path: /tmp/zero-to-empire-play-console-media.zip
+          if-no-files-found: error
+          retention-days: 90
+      - name: Display publishing responsibilities
+        run: |
+          {
+            echo '## Google Play Console media package ready'
+            echo '- Includes 5 real phone screenshots, icon, feature graphic, English/French copy and privacy documents.'
+            echo '- Source: 235/235 user-approved runtime assets.'
+            echo '- Intentionally contains no signing key and no signed AAB.'
+            echo '- [Production Release Gate](https://github.com/dbrckk/zero-to-empire/actions/workflows/production-release.yml) requires seven account-controlled secrets.'
+            echo '- Complete Play Console compliance and release testing before publication.'
+          } >> "$GITHUB_STEP_SUMMARY"
 ```
 
 ## File: .github/workflows/play-phone-screenshots.yml
@@ -31663,6 +31719,38 @@ source_feature = ROOT / "marketing/play-store-feature-graphic.svg"
 rgb = Image.new("RGB", image.size, "#050914")
 ⋮----
 manifest = {
+```
+
+## File: tools/marketing/pack_play_console_submission.py
+```python
+#!/usr/bin/env python3
+"""Build an auditable Google Play Console upload media pack, without any secrets."""
+⋮----
+ROOT = Path(__file__).resolve().parents[2]
+SCREEN = Path("marketing/play-store-assets/screenshots")
+FILES = [
+⋮----
+README = """ZERO → EMPIRE — GOOGLE PLAY UPLOAD MEDIA PACK
+⋮----
+def main() -> None
+⋮----
+parser = argparse.ArgumentParser()
+⋮----
+args = parser.parse_args()
+q=json.loads((ROOT/"art/production/master-asset-queue.json").read_text())
+⋮----
+evidence=json.loads((ROOT/SCREEN/"screenshots-manifest.json").read_text())
+⋮----
+preflight=ROOT/"marketing/play-store-assets/play-release-preflight.json"
+⋮----
+p=json.loads(preflight.read_text())
+issues=[k for k,v in p["repo_checks"].items()
+⋮----
+manifest={
+⋮----
+p=ROOT/rel
+⋮----
+zi=zipfile.ZipInfo(rel.as_posix(),date_time=(2026,10,19,0,0,0))
 ```
 
 ## File: tools/marketing/play_release_preflight.py

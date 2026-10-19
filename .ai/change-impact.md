@@ -1,13 +1,15 @@
 # Change impact
 
-Base: ebb3bd401e544db1d459a0d052b4f57bae8c8f16
-Head: c03f073af306f2e8ada5fd31de6ba6091fc5691d
+Base: 864147c5d9c0a7c89447d45e4c3309d8e23a49f3
+Head: 4a84062e6ec98fb160547ddafec774e81c232732
 
 ## Changed files
-- M ops/build-test-apk-trigger.txt
+- A .github/workflows/play-console-media-pack.yml
+- A tools/marketing/pack_play_console_submission.py
 
 ## Affected areas
-- ops
+- .github
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.
