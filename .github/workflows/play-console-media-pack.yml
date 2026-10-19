@@ -1,0 +1,50 @@
+name: Google Play Console Submission Media Pack
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/marketing/pack_play_console_submission.py'
+      - '.github/workflows/play-console-media-pack.yml'
+      - 'marketing/play-store-assets/screenshots/**'
+      - 'marketing/play-store-listing-fr-FR.md'
+      - 'marketing/play-store-listing.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify 235 assets, Play images, localization, policy source
+        run: python tools/marketing/play_release_preflight.py
+      - name: Create verified, unsigned media/description upload ZIP
+        run: |
+          python tools/marketing/pack_play_console_submission.py \
+            --out /tmp/zero-to-empire-play-console-media.zip
+          unzip -t /tmp/zero-to-empire-play-console-media.zip >/dev/null
+          sha256sum /tmp/zero-to-empire-play-console-media.zip
+      - name: Archive Google Play media pack
+        uses: actions/upload-artifact@v4
+        with:
+          name: zero-to-empire-play-console-media-pack
+          path: /tmp/zero-to-empire-play-console-media.zip
+          if-no-files-found: error
+          retention-days: 90
+      - name: Display publishing responsibilities
+        run: |
+          {
+            echo '## Google Play Console media package ready'
+            echo '- Includes 5 real phone screenshots, icon, feature graphic, English/French copy and privacy documents.'
+            echo '- Source: 235/235 user-approved runtime assets.'
+            echo '- Intentionally contains no signing key and no signed AAB.'
+            echo '- [Production Release Gate](https://github.com/dbrckk/zero-to-empire/actions/workflows/production-release.yml) requires seven account-controlled secrets.'
+            echo '- Complete Play Console compliance and release testing before publication.'
+          } >> "$GITHUB_STEP_SUMMARY"
