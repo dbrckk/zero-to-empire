@@ -1,15 +1,13 @@
 # Change impact
 
-Base: 864147c5d9c0a7c89447d45e4c3309d8e23a49f3
-Head: 4a84062e6ec98fb160547ddafec774e81c232732
+Base: 707ac83d3c3b44b04ee484d6a13c72a377d72d80
+Head: 37bf38b67cd3496b16e0b9409cb74fbf3327dc00
 
 ## Changed files
-- A .github/workflows/play-console-media-pack.yml
-- A tools/marketing/pack_play_console_submission.py
+- M .github/workflows/production-release.yml
 
 ## Affected areas
 - .github
-- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

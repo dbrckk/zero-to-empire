@@ -32,16 +32,17 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-19T12:26:11Z
+Generated: 2026-10-19T14:44:28Z
 
 ### Git
 - Branch: `main`
-- Head: `4a84062e6ec9`
-- Commit date: 2026-10-19T08:24:34-04:00
-- Commit: release(play): ship unified Play Console media/metadata ZIP (#242)
+- Head: `37bf38b67cd3`
+- Commit date: 2026-10-19T10:44:12-04:00
+- Commit: security(release): validate dispatch metadata without injecting inputs into shell scripts (#243)
 - Tracked files: 1850
 
 ### Recently changed files
+- `.github/workflows/production-release.yml`
 - `.github/workflows/play-console-media-pack.yml`
 - `tools/marketing/pack_play_console_submission.py`
 - `ops/build-test-apk-trigger.txt`
@@ -49,12 +50,6 @@ Generated: 2026-10-19T12:26:11Z
 - `docs/art/FINAL_AAA_SPRITE_PROGRESS.md`
 - `marketing/PLAY_STORE_RELEASE_RUNBOOK.md`
 - `tools/marketing/play_release_preflight.py`
-- `marketing/play-store-assets/screenshots/01-empire.png`
-- `marketing/play-store-assets/screenshots/02-managers.png`
-- `marketing/play-store-assets/screenshots/03-upgrades.png`
-- `marketing/play-store-assets/screenshots/04-goals.png`
-- `marketing/play-store-assets/screenshots/05-store.png`
-- `marketing/play-store-assets/screenshots/screenshots-manifest.json`
 
 ### Project signals
 - `build.gradle.kts`
