@@ -105,9 +105,10 @@ def audit() -> dict:
 
     english = text("marketing/play-store-listing.md")
     def section(title: str, content: str) -> str:
-        found = re.search(r"^## " + re.escape(title) + r"[^\\n]*\\n\\n(.*?)(?=^## |\\Z)",
-                          content, re.MULTILINE | re.DOTALL)
-        return found.group(1).strip() if found else ""
+        marker = "## " + title + "\n\n"
+        if marker not in content:
+            return ""
+        return content.split(marker, 1)[1].split("\n## ", 1)[0].strip()
     # The reference English listing carries the same Play Console field caps
     # as the French listing. Detect truncation issues before launch.
     english_title = section("App name", english)
