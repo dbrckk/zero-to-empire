@@ -309,13 +309,13 @@ If a new runtime sprite is later required, it must be added here first and the d
 | FX-16 | singularity lens pulse | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_16_final.webp` |DONE |
 | FX-17 | mastery crown shimmer | Small transparent loop/one-shot sheet; only raster when Canvas cannot match quality cheaply. | `app/src/main/res/drawable-nodpi/zte_fx_17_final.webp` | DONE |
 
-## Progress ledger — reconciled from canonical queue 2026-10-16
+## Progress ledger — reconciled from canonical queue 2026-10-19
 
-- Canonical strict DONE: **219 / 235**.
-- Manifest DONE: **220 / 236** (including ONB-00 outside the strict target).
-- Manifest RUNTIME awaiting semantic approval: **15 / 236**.
-- Manifest BLOCKED: **1 / 236**.
-- Strict DONE by family: Buildings 98/98, Power Core 7/7, Characters 8/24, Vehicles 18/18, Machines 28/28, Props 28/28, Terrain 14/14, FX 18/18.
+- Canonical strict DONE: **235 / 235**.
+- Manifest DONE: **236 / 236** (including ONB-00 outside the strict target).
+- Manifest RUNTIME awaiting semantic approval: **0 / 236**.
+- Manifest BLOCKED: **0 / 236**.
+- Strict DONE by family: Buildings 98/98, Power Core 7/7, Characters 24/24, Vehicles 18/18, Machines 28/28, Props 28/28, Terrain 14/14, FX 18/18.
 - Historical semantic review: **OPEN**. Reconciliation never grants artistic approval.
 
 ## I. Onboarding authored illustrations
