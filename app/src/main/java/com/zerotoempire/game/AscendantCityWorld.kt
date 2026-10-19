@@ -129,6 +129,47 @@ internal fun AscendantCityEmpireWorld(vm: GameViewModel, state: GameState, buyMo
             }
         }
         item { PurchaseModeRailWorld(vm, buyMode) }
+        item {
+            val nextDistrict = visible.firstOrNull { it.level == 0 }
+            if (nextDistrict != null) {
+                val quote = vm.bulkQuote(nextDistrict.id, BuyMode.X1)
+                val canBuy = quote.count > 0 && state.cash >= quote.cost
+                Surface(
+                    color = EmpireColors.Surface.copy(alpha = .96f),
+                    shape = RoundedCornerShape(16.dp),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 14.dp),
+                ) {
+                    Row(
+                        Modifier.padding(14.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    ) {
+                        Column(Modifier.weight(1f)) {
+                            Text("NEXT DISTRICT", color = EmpireColors.Gold, fontSize = 9.sp, fontWeight = FontWeight.Black, letterSpacing = 1.sp)
+                            Text(nextDistrict.name, color = EmpireColors.TextPrimary, fontSize = 16.sp, fontWeight = FontWeight.Black, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                            Text("Build your next income source", color = EmpireColors.TextSecondary, fontSize = 10.sp)
+                        }
+                        Surface(
+                            color = if (canBuy) EmpireColors.Gold else EmpireColors.DeepSpace,
+                            shape = RoundedCornerShape(12.dp),
+                            modifier = Modifier.clickable(enabled = canBuy, role = Role.Button) {
+                                vm.buyBulk(nextDistrict.id, BuyMode.X1)
+                            }.semantics {
+                                contentDescription = if (canBuy) "Build ${nextDistrict.name}" else "Need ${moneyV2(quote.cost)} to build ${nextDistrict.name}"
+                            },
+                        ) {
+                            Text(
+                                if (canBuy) "BUILD" else moneyV2(quote.cost),
+                                Modifier.padding(horizontal = 12.dp, vertical = 11.dp),
+                                color = if (canBuy) EmpireColors.DeepSpace else EmpireColors.TextSecondary,
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Black,
+                            )
+                        }
+                    }
+                }
+            }
+        }
         item { Text("DISTRICT NETWORK", Modifier.padding(horizontal = 16.dp, vertical = 4.dp), color = EmpireColors.TextSecondary, fontSize = 10.sp, fontWeight = FontWeight.Black, letterSpacing = 1.5.sp) }
         visible.drop(4).forEach { business -> item(key = business.id) { AscendantWorldLot(vm, business, state, buyMode, business.id) } }
         item { Spacer(Modifier.height(22.dp)) }
