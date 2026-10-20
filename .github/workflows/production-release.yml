@@ -22,7 +22,7 @@ concurrency:
 jobs:
   signed-aab:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     env:
       RELEASE_VERSION_CODE: ${{ inputs.version_code }}
       RELEASE_VERSION_NAME: ${{ inputs.version_name }}
@@ -37,6 +37,17 @@ jobs:
 
       - name: Validate release privacy and Data Safety
         run: python3 tools/android/validate_release_privacy.py
+
+      - name: Verify canonical 235/235 and Play submission media
+        env:
+          ZERO_EMPIRE_KEYSTORE_BASE64: ${{ secrets.ZERO_EMPIRE_KEYSTORE_BASE64 }}
+          ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID }}
+          REWARDED_AD_UNIT_ID: ${{ secrets.REWARDED_AD_UNIT_ID }}
+          INTERSTITIAL_AD_UNIT_ID: ${{ secrets.INTERSTITIAL_AD_UNIT_ID }}
+        run: python3 tools/marketing/play_release_preflight.py
+
+      - name: Verify canonical character assets registered in runtime
+        run: python3 tools/android/audit_character_runtime.py
 
       - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
         with:
@@ -108,6 +119,9 @@ jobs:
             echo "min_sdk=26"
           } > production-release-metadata.txt
 
+      - name: Test and lint the exact commit to be signed
+        run: gradle --no-daemon testDebugUnitTest lintDebug --stacktrace
+
       - name: Build signed production AAB
         env:
           ORG_GRADLE_PROJECT_ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID }}
@@ -174,6 +188,7 @@ jobs:
             production-mapping.sha256
             production-release-metadata.txt
             production-release-validation.txt
+            marketing/play-store-assets/play-release-preflight.json
           if-no-files-found: error
           retention-days: 30
 
