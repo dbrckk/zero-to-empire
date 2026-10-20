@@ -94,18 +94,23 @@ jobs:
             exit 1
           fi
           gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RELEASE_RUN_ID" > "$RUN_JSON"
-          ARTIFACT_NAME="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RELEASE_RUN_ID/artifacts?per_page=100" | python3 -c '
-          import json,sys
-          matches=[
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RELEASE_RUN_ID/artifacts?per_page=100" > "$RUNNER_TEMP/zte-artifacts.json"
+          ARTIFACT_NAME="$(python3 - "$RUNNER_TEMP/zte-artifacts.json" <<'PY'
+          import json
+          import sys
+          with open(sys.argv[1], encoding="utf-8") as file:
+              response = json.load(file)
+          matches = [
               item["name"]
-              for item in json.load(sys.stdin).get("artifacts", [])
+              for item in response.get("artifacts", [])
               if item["name"].startswith("zero-to-empire-production-")
               and not item.get("expired", False)
           ]
           if len(matches) != 1:
               raise SystemExit("Expected exactly one non-expired signed production artifact")
           print(matches[0])
-          ')"
+          PY
+          )"
           mkdir -p "$ARTIFACT_ROOT"
           gh run download "$RELEASE_RUN_ID" \
             --repo "$GITHUB_REPOSITORY" \
@@ -116,15 +121,15 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          jarsigner -verify "$ARTIFACT_ROOT/app/build/outputs/bundle/release/app-release.aab" \
+            > "$RUNNER_TEMP/zte-jarsigner-check.txt"
+          grep -Fq "jar verified." "$RUNNER_TEMP/zte-jarsigner-check.txt"
           python3 tools/marketing/play_internal_draft.py \
             --run-json "$RUN_JSON" \
             --artifact-dir "$ARTIFACT_ROOT" \
             --repository "$GITHUB_REPOSITORY" \
             --mode verify_only \
             --report "$REPORT_JSON"
-          jarsigner -verify "$ARTIFACT_ROOT/app/build/outputs/bundle/release/app-release.aab" \
-            > "$RUNNER_TEMP/zte-jarsigner-check.txt"
-          grep -Fq "jar verified." "$RUNNER_TEMP/zte-jarsigner-check.txt"
 
       - name: Install Google Play API client only for requested draft
         if: ${{ inputs.mode == 'create_internal_draft' }}
