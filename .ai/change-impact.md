@@ -1,15 +1,18 @@
 # Change impact
 
-Base: faecc0c4039d1006a23cbb0e6f8c92c77986bedf
-Head: 26ba91ec72a160c298aaadc8045111d28733d651
+Base: b18b9fcd583a89d7cee07fc7b60962f96ef1d579
+Head: db99cbd7183aa54e070dcd815cec330ddaa2e0f8
 
 ## Changed files
+- A .github/workflows/play-internal-draft.yml
 - M .github/workflows/production-release.yml
-- A tools/marketing/test_validate_production_credentials.py
-- A tools/marketing/validate_production_credentials.py
+- A marketing/PLAY_INTERNAL_DRAFT_AUTOMATION.md
+- A tools/marketing/play_internal_draft.py
+- A tools/marketing/test_play_internal_draft.py
 
 ## Affected areas
 - .github
+- marketing
 - tools
 
 ## Related test candidates

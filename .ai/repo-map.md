@@ -87,6 +87,7 @@ The content is organized as follows:
     modular-tech-actions.yml
     modular-tech-character.yml
     play-console-media-pack.yml
+    play-internal-draft.yml
     play-phone-screenshots.yml
     play-store-artwork.yml
     play-submission-preflight.yml
@@ -367,8 +368,10 @@ tools/
   marketing/
     export_play_store_artwork.py
     pack_play_console_submission.py
+    play_internal_draft.py
     play_release_preflight.py
     prepare_phone_screenshots.py
+    test_play_internal_draft.py
     test_validate_production_credentials.py
     validate_production_credentials.py
   sprites/
@@ -6799,6 +6802,191 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 ```
 
+## File: .github/workflows/play-internal-draft.yml
+```yaml
+name: Google Play Internal Draft (Manual Only)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/play-internal-draft.yml'
+      - 'tools/marketing/play_internal_draft.py'
+      - 'tools/marketing/test_play_internal_draft.py'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/play-internal-draft.yml'
+      - 'tools/marketing/play_internal_draft.py'
+      - 'tools/marketing/test_play_internal_draft.py'
+  workflow_dispatch:
+    inputs:
+      production_run_id:
+        description: Successful Production Release Gate run ID containing a signed AAB
+        required: true
+        type: string
+      mode:
+        description: Verify signed artifact or explicitly create a NON-SERVING internal draft
+        required: true
+        default: verify_only
+        type: choice
+        options:
+          - verify_only
+          - create_internal_draft
+      confirmation:
+        description: For draft mode only, enter CREATE_INTERNAL_DRAFT exactly
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: play-internal-draft
+  cancel-in-progress: false
+
+jobs:
+  source-check:
+    name: Validate internal draft source and safeguards
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.12'
+      - run: python3 -m unittest discover -s tools/marketing -p 'test_play_internal_draft.py' -v
+
+  draft:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    needs: source-check
+    name: Verify signed artifact and optionally create internal draft
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      RELEASE_RUN_ID: ${{ inputs.production_run_id }}
+      MODE: ${{ inputs.mode }}
+      DRAFT_CONFIRMATION: ${{ inputs.confirmation }}
+      GH_TOKEN: ${{ github.token }}
+      ARTIFACT_ROOT: ${{ github.workspace }}/.zte-play-release
+      RUN_JSON: ${{ github.workspace }}/.zte-play-release-run.json
+      REPORT_JSON: ${{ github.workspace }}/.zte-internal-draft-result.json
+    steps:
+      - name: Checkout verified tooling
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.12'
+
+      - name: Set up JDK for independent artifact signature validation
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Validate manual intent and download successful signed release
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$RELEASE_RUN_ID" =~ ^[1-9][0-9]{0,17}$ ]] || {
+            echo "::error::Enter a positive numeric Production Release Gate run ID"
+            exit 1
+          }
+          if [[ "$MODE" == "create_internal_draft" ]] && [[ "$DRAFT_CONFIRMATION" != "CREATE_INTERNAL_DRAFT" ]]; then
+            echo "::error::Draft mode requires exact CREATE_INTERNAL_DRAFT confirmation"
+            exit 1
+          fi
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RELEASE_RUN_ID" > "$RUN_JSON"
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RELEASE_RUN_ID/artifacts?per_page=100" > "$RUNNER_TEMP/zte-artifacts.json"
+          ARTIFACT_NAME="$(python3 - "$RUNNER_TEMP/zte-artifacts.json" <<'PY'
+          import json
+          import sys
+          with open(sys.argv[1], encoding="utf-8") as file:
+              response = json.load(file)
+          matches = [
+              item["name"]
+              for item in response.get("artifacts", [])
+              if item["name"].startswith("zero-to-empire-production-")
+              and not item.get("expired", False)
+          ]
+          if len(matches) != 1:
+              raise SystemExit("Expected exactly one non-expired signed production artifact")
+          print(matches[0])
+          PY
+          )"
+          mkdir -p "$ARTIFACT_ROOT"
+          gh run download "$RELEASE_RUN_ID" \
+            --repo "$GITHUB_REPOSITORY" \
+            --name "$ARTIFACT_NAME" \
+            --dir "$ARTIFACT_ROOT"
+
+      - name: Validate exact bundle provenance, hashes and signature
+        shell: bash
+        run: |
+          set -euo pipefail
+          jarsigner -verify "$ARTIFACT_ROOT/app/build/outputs/bundle/release/app-release.aab" \
+            > "$RUNNER_TEMP/zte-jarsigner-check.txt"
+          grep -Fq "jar verified." "$RUNNER_TEMP/zte-jarsigner-check.txt"
+          python3 tools/marketing/play_internal_draft.py \
+            --run-json "$RUN_JSON" \
+            --artifact-dir "$ARTIFACT_ROOT" \
+            --repository "$GITHUB_REPOSITORY" \
+            --mode verify_only \
+            --report "$REPORT_JSON"
+
+      - name: Install Google Play API client only for requested draft
+        if: ${{ inputs.mode == 'create_internal_draft' }}
+        run: python3 -m pip install 'google-api-python-client>=2.150,<3' 'google-auth>=2.30,<3'
+
+      - name: Create Google Play INTERNAL draft (NEVER production, NEVER distribute)
+        if: ${{ inputs.mode == 'create_internal_draft' }}
+        env:
+          GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+        run: |
+          python3 tools/marketing/play_internal_draft.py \
+            --run-json "$RUN_JSON" \
+            --artifact-dir "$ARTIFACT_ROOT" \
+            --repository "$GITHUB_REPOSITORY" \
+            --mode create_internal_draft \
+            --confirmation "$DRAFT_CONFIRMATION" \
+            --report "$REPORT_JSON"
+
+      - name: Write results and clearly mark unsent production
+        if: always()
+        shell: bash
+        run: |
+          python3 - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json,os
+          from pathlib import Path
+          print("## ZERO → EMPIRE — Play internal draft gate")
+          p=Path(os.environ["REPORT_JSON"])
+          if not p.is_file():
+              print("**FAILED OR INCOMPLETE**: no signed-artifact validation evidence.")
+          else:
+              report=json.loads(p.read_text(encoding="utf-8"))
+              print(f"Source commit: `{report['source_sha']}`")
+              print(f"Version: `{report['version_name']} ({report['version_code']})`")
+              print(f"AAB SHA256: `{report['bundle_sha256']}`")
+              if report["play_internal_draft_committed"]:
+                  print("**INTERNAL DRAFT CREATED** — not served to users; review Play Console manually.")
+              else:
+                  print("**SIGNED AAB VALIDATED ONLY** — no change was made in Google Play.")
+          print("No production rollout is performed by this workflow.")
+          PY
+
+      - name: Archive non-secret verification report
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: play-internal-draft-validation
+          path: ${{ github.workspace }}/.zte-internal-draft-result.json
+          if-no-files-found: ignore
+          retention-days: 45
+```
+
 ## File: .github/workflows/play-phone-screenshots.yml
 ```yaml
 name: Export Authentic Google Play Phone Screenshots
@@ -7795,7 +7983,7 @@ concurrency:
 jobs:
   signed-aab:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     env:
       RELEASE_VERSION_CODE: ${{ inputs.version_code }}
       RELEASE_VERSION_NAME: ${{ inputs.version_name }}
@@ -7810,6 +7998,17 @@ jobs:
 
       - name: Validate release privacy and Data Safety
         run: python3 tools/android/validate_release_privacy.py
+
+      - name: Verify canonical 235/235 and Play submission media
+        env:
+          ZERO_EMPIRE_KEYSTORE_BASE64: ${{ secrets.ZERO_EMPIRE_KEYSTORE_BASE64 }}
+          ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID }}
+          REWARDED_AD_UNIT_ID: ${{ secrets.REWARDED_AD_UNIT_ID }}
+          INTERSTITIAL_AD_UNIT_ID: ${{ secrets.INTERSTITIAL_AD_UNIT_ID }}
+        run: python3 tools/marketing/play_release_preflight.py
+
+      - name: Verify canonical character assets registered in runtime
+        run: python3 tools/android/audit_character_runtime.py
 
       - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
         with:
@@ -7881,6 +8080,9 @@ jobs:
             echo "min_sdk=26"
           } > production-release-metadata.txt
 
+      - name: Test and lint the exact commit to be signed
+        run: gradle --no-daemon testDebugUnitTest lintDebug --stacktrace
+
       - name: Build signed production AAB
         env:
           ORG_GRADLE_PROJECT_ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID }}
@@ -7947,6 +8149,7 @@ jobs:
             production-mapping.sha256
             production-release-metadata.txt
             production-release-validation.txt
+            marketing/play-store-assets/play-release-preflight.json
           if-no-files-found: error
           retention-days: 30
 
@@ -31774,6 +31977,92 @@ p=ROOT/rel
 zi=zipfile.ZipInfo(rel.as_posix(),date_time=(2026,10,19,0,0,0))
 ```
 
+## File: tools/marketing/play_internal_draft.py
+```python
+#!/usr/bin/env python3
+"""Auditable, explicitly gated Google Play INTERNAL DRAFT deployment.
+
+A successful production release run is mandatory. No production rollout, no
+testers served, and no Google credentials are stored in generated artifacts.
+"""
+⋮----
+PACKAGE = "com.zerotoempire.game"
+SOURCE_WORKFLOW = ".github/workflows/production-release.yml"
+ARTIFACT_PREFIX = "zero-to-empire-production-"
+BUNDLE_REL = Path("app/build/outputs/bundle/release/app-release.aab")
+MAX_BUNDLE_BYTES = 200 * 1024 * 1024
+⋮----
+def verify_run(run: dict, repo: str) -> str
+⋮----
+"""Reject unrelated, incomplete or unsigned-source GitHub workflow runs."""
+⋮----
+workflow_path = run.get("path", "").split("@", 1)[0]
+⋮----
+sha = run.get("head_sha", "")
+⋮----
+def read_properties(path: Path) -> dict[str, str]
+⋮----
+props = {}
+⋮----
+def verify_artifact(directory: Path, run: dict, repo: str) -> dict
+⋮----
+source_sha = verify_run(run, repo)
+directory = directory.resolve(strict=True)
+artifact = directory / BUNDLE_REL
+metadata_path = directory / "production-release-metadata.txt"
+digest_path = directory / "production-aab.sha256"
+signature_path = directory / "production-signature-validation.txt"
+gate_path = directory / "production-release-validation.txt"
+⋮----
+metadata = read_properties(metadata_path)
+code = metadata.get("version_code", "")
+name = metadata.get("version_name", "")
+⋮----
+digest_line = digest_path.read_text(encoding="utf-8").strip()
+match = re.fullmatch(
+⋮----
+actual_digest = hashlib.sha256(artifact.read_bytes()).hexdigest()
+⋮----
+signature = signature_path.read_text(encoding="utf-8")
+⋮----
+required = {
+⋮----
+def draft_internal_release(info: dict, service_account_json: str) -> dict
+⋮----
+"""May modify ONLY the Google Play internal test track, as a non-serving draft."""
+⋮----
+creds_dict = json.loads(service_account_json)
+⋮----
+creds = service_account.Credentials.from_service_account_info(
+client = build("androidpublisher", "v3", credentials=creds, cache_discovery=False)
+edits = client.edits()
+edit_id = edits.insert(packageName=PACKAGE, body={}).execute()["id"]
+⋮----
+existing = edits.tracks().get(
+⋮----
+existing = {"releases": []}
+⋮----
+media = MediaFileUpload(
+result = edits.bundles().upload(
+⋮----
+remote_sha = result.get("sha256", "").lower()
+⋮----
+release = {
+⋮----
+# Never replace in-review changes or roll out to testers/public automatically.
+⋮----
+def main() -> None
+⋮----
+parser = argparse.ArgumentParser(description=__doc__)
+⋮----
+args = parser.parse_args()
+run = json.loads(args.run_json.read_text(encoding="utf-8"))
+info = verify_artifact(args.artifact_dir, run, args.repository)
+report = {
+⋮----
+result = draft_internal_release(
+```
+
 ## File: tools/marketing/play_release_preflight.py
 ```python
 #!/usr/bin/env python3
@@ -31879,6 +32168,55 @@ def main() -> None
 parser = argparse.ArgumentParser(description=__doc__)
 ⋮----
 args = parser.parse_args()
+```
+
+## File: tools/marketing/test_play_internal_draft.py
+```python
+#!/usr/bin/env python3
+"""Offline security regression tests for the Google Play internal draft gate."""
+⋮----
+SHA = "a" * 40
+REPO = "dbrckk/zero-to-empire"
+⋮----
+def run_info(**overrides)
+⋮----
+run = {
+⋮----
+def synthetic_release(root: Path, source_sha: str = SHA) -> Path
+⋮----
+bundle = root / BUNDLE_REL
+⋮----
+digest = hashlib.sha256(bundle.read_bytes()).hexdigest()
+⋮----
+class PlayInternalDraftTests(unittest.TestCase)
+⋮----
+def test_accept_good_signed_release_metadata(self)
+⋮----
+result = verify_artifact(Path(t), run_info(), REPO)
+⋮----
+def test_reject_forged_source_sha(self)
+⋮----
+def test_reject_unsigned_or_failed_workflow(self)
+⋮----
+def test_reject_wrong_workflow(self)
+⋮----
+def test_reject_other_repository(self)
+⋮----
+def test_reject_non_main(self)
+⋮----
+def test_reject_untrusted_artifact_hash(self)
+⋮----
+bundle = synthetic_release(Path(t))
+⋮----
+def test_reject_missing_signing_evidence(self)
+⋮----
+def test_reject_wrong_version_code(self)
+⋮----
+p = Path(t) / "production-release-metadata.txt"
+⋮----
+def test_reject_missing_required_base_dex(self)
+⋮----
+bundle = Path(t) / BUNDLE_REL
 ```
 
 ## File: tools/marketing/test_validate_production_credentials.py

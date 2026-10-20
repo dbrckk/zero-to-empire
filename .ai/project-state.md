@@ -32,22 +32,25 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-20T11:49:37Z
+Generated: 2026-10-20T19:42:26Z
 
 ### Git
 - Branch: `main`
-- Head: `26ba91ec72a1`
-- Commit date: 2026-10-20T07:49:22-04:00
-- Commit: ci(play): validate signing and AdMob credentials before production bundle (#245)
-- Tracked files: 1852
+- Head: `db99cbd7183a`
+- Commit date: 2026-10-20T15:42:07-04:00
+- Commit: feat(play): verified signed AAB handoff to explicit internal draft (#246)
+- Tracked files: 1856
 
 ### Recently changed files
+- `.github/workflows/play-internal-draft.yml`
 - `.github/workflows/production-release.yml`
+- `marketing/PLAY_INTERNAL_DRAFT_AUTOMATION.md`
+- `tools/marketing/play_internal_draft.py`
+- `tools/marketing/test_play_internal_draft.py`
 - `tools/marketing/test_validate_production_credentials.py`
 - `tools/marketing/validate_production_credentials.py`
 - `.github/workflows/play-console-media-pack.yml`
 - `tools/marketing/pack_play_console_submission.py`
-- `ops/build-test-apk-trigger.txt`
 
 ### Project signals
 - `build.gradle.kts`
