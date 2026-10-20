@@ -369,6 +369,8 @@ tools/
     pack_play_console_submission.py
     play_release_preflight.py
     prepare_phone_screenshots.py
+    test_validate_production_credentials.py
+    validate_production_credentials.py
   sprites/
     tests/
       test_archive_character_candidates.py
@@ -7837,6 +7839,17 @@ jobs:
           fi
           [[ "$RELEASE_VERSION_NAME" =~ ^[0-9]+\.[0-9]+\.[0-9]+([.-][A-Za-z0-9]+)*$ ]] || { echo "::error::version_name must be a safe semver-like string"; exit 1; }
           test "${#RELEASE_VERSION_NAME}" -le 64 || { echo "::error::version_name too long"; exit 1; }
+
+      - name: Test production credential validator
+        run: python3 -m unittest discover -s tools/marketing -p 'test_validate_production_credentials.py' -v
+
+      - name: Validate production credential formats without logging values
+        env:
+          ZERO_EMPIRE_KEYSTORE_BASE64: ${{ secrets.ZERO_EMPIRE_KEYSTORE_BASE64 }}
+          ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID }}
+          REWARDED_AD_UNIT_ID: ${{ secrets.REWARDED_AD_UNIT_ID }}
+          INTERSTITIAL_AD_UNIT_ID: ${{ secrets.INTERSTITIAL_AD_UNIT_ID }}
+        run: python3 tools/marketing/validate_production_credentials.py
 
       - name: Materialize upload keystore
         shell: bash
@@ -31866,6 +31879,55 @@ def main() -> None
 parser = argparse.ArgumentParser(description=__doc__)
 ⋮----
 args = parser.parse_args()
+```
+
+## File: tools/marketing/test_validate_production_credentials.py
+```python
+#!/usr/bin/env python3
+⋮----
+def good()
+⋮----
+class CredentialsTest(unittest.TestCase)
+⋮----
+def test_valid_format(self)
+def test_missing(self)
+def test_reject_sample(self)
+⋮----
+env = good()
+⋮----
+def test_reject_cross_publisher(self)
+def test_reject_duplicate_units(self)
+def test_reject_corrupt_base64(self)
+def test_never_leak_secret(self)
+```
+
+## File: tools/marketing/validate_production_credentials.py
+```python
+#!/usr/bin/env python3
+"""Fail-closed production credential preflight; never prints credential values."""
+⋮----
+SECRETS = (
+TEST_PUBLISHER = "3940256099942544"
+APP_ID = re.compile(r"^ca-app-pub-([0-9]{16})~([0-9]{10})$")
+UNIT_ID = re.compile(r"^ca-app-pub-([0-9]{16})/([0-9]{10})$")
+MAX_KEYSTORE_BYTES = 1024 * 1024
+⋮----
+def check(env: dict[str, str]) -> list[str]
+⋮----
+problems: list[str] = []
+⋮----
+app = env.get("ADMOB_APP_ID", "").strip()
+rewarded = env.get("REWARDED_AD_UNIT_ID", "").strip()
+interstitial = env.get("INTERSTITIAL_AD_UNIT_ID", "").strip()
+app_match = APP_ID.fullmatch(app)
+rewarded_match = UNIT_ID.fullmatch(rewarded)
+interstitial_match = UNIT_ID.fullmatch(interstitial)
+⋮----
+raw = env.get("ZERO_EMPIRE_KEYSTORE_BASE64", "").strip()
+⋮----
+decoded = base64.b64decode(raw, validate=True)
+⋮----
+errors = check(dict(os.environ))
 ```
 
 ## File: tools/sprites/tests/test_archive_character_candidates.py

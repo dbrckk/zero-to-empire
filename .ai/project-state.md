@@ -32,22 +32,22 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-20T11:20:59Z
+Generated: 2026-10-20T11:49:37Z
 
 ### Git
 - Branch: `main`
-- Head: `b57dd16d7d0a`
-- Commit date: 2026-10-20T07:20:43-04:00
-- Commit: fix(release): reject out-of-range Play version codes and oversized upload bundles (#244)
-- Tracked files: 1850
+- Head: `26ba91ec72a1`
+- Commit date: 2026-10-20T07:49:22-04:00
+- Commit: ci(play): validate signing and AdMob credentials before production bundle (#245)
+- Tracked files: 1852
 
 ### Recently changed files
 - `.github/workflows/production-release.yml`
+- `tools/marketing/test_validate_production_credentials.py`
+- `tools/marketing/validate_production_credentials.py`
 - `.github/workflows/play-console-media-pack.yml`
 - `tools/marketing/pack_play_console_submission.py`
 - `ops/build-test-apk-trigger.txt`
-- `docs/art/FINAL_AAA_SPRITE_MANIFEST.md`
-- `docs/art/FINAL_AAA_SPRITE_PROGRESS.md`
 
 ### Project signals
 - `build.gradle.kts`

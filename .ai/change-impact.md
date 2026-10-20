@@ -1,13 +1,16 @@
 # Change impact
 
-Base: a33b7758828dc3c173220e435782a6274889ed2f
-Head: b57dd16d7d0a29792ded3c1186e5ac1eb4cb19d7
+Base: faecc0c4039d1006a23cbb0e6f8c92c77986bedf
+Head: 26ba91ec72a160c298aaadc8045111d28733d651
 
 ## Changed files
 - M .github/workflows/production-release.yml
+- A tools/marketing/test_validate_production_credentials.py
+- A tools/marketing/validate_production_credentials.py
 
 ## Affected areas
 - .github
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

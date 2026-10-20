@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 6 success / 0 failure / 2 active
+Summary: 4 success / 0 failure / 2 active
 
-- Android CI: in_progress / pending (b57dd16d)
-- Android CI: in_progress / pending (20eb8047)
-- Assemble Character Candidate Bank: completed / success (a33b7758)
-- Archive Character Candidates: completed / success (a33b7758)
-- Kaggle Async Character Collector: completed / success (a33b7758)
-- Assemble Character Candidate Bank: completed / success (a33b7758)
-- Archive Character Candidates: completed / success (a33b7758)
-- Kaggle Async Character Collector: completed / success (a33b7758)
+- Android CI: in_progress / pending (26ba91ec)
+- Android CI: in_progress / pending (f3f38255)
+- Assemble Character Candidate Bank: completed / success (faecc0c4)
+- Archive Character Candidates: completed / success (faecc0c4)
+- Kaggle Async Character Collector: completed / success (faecc0c4)
+- Asset Autofactory 235: completed / success (faecc0c4)
+- Reconcile reviewed run 25: completed / skipped (faecc0c4)
+- Reconcile reviewed run 25: completed / skipped (faecc0c4)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.
