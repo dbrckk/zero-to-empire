@@ -67,6 +67,17 @@ jobs:
           [[ "$RELEASE_VERSION_NAME" =~ ^[0-9]+\.[0-9]+\.[0-9]+([.-][A-Za-z0-9]+)*$ ]] || { echo "::error::version_name must be a safe semver-like string"; exit 1; }
           test "${#RELEASE_VERSION_NAME}" -le 64 || { echo "::error::version_name too long"; exit 1; }
 
+      - name: Test production credential validator
+        run: python3 -m unittest discover -s tools/marketing -p 'test_validate_production_credentials.py' -v
+
+      - name: Validate production credential formats without logging values
+        env:
+          ZERO_EMPIRE_KEYSTORE_BASE64: ${{ secrets.ZERO_EMPIRE_KEYSTORE_BASE64 }}
+          ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID }}
+          REWARDED_AD_UNIT_ID: ${{ secrets.REWARDED_AD_UNIT_ID }}
+          INTERSTITIAL_AD_UNIT_ID: ${{ secrets.INTERSTITIAL_AD_UNIT_ID }}
+        run: python3 tools/marketing/validate_production_credentials.py
+
       - name: Materialize upload keystore
         shell: bash
         env:
