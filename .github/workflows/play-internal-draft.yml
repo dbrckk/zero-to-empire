@@ -1,6 +1,18 @@
 name: Google Play Internal Draft (Manual Only)
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/play-internal-draft.yml'
+      - 'tools/marketing/play_internal_draft.py'
+      - 'tools/marketing/test_play_internal_draft.py'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/play-internal-draft.yml'
+      - 'tools/marketing/play_internal_draft.py'
+      - 'tools/marketing/test_play_internal_draft.py'
   workflow_dispatch:
     inputs:
       production_run_id:
@@ -29,7 +41,20 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  source-check:
+    name: Validate internal draft source and safeguards
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.12'
+      - run: python3 -m unittest discover -s tools/marketing -p 'test_play_internal_draft.py' -v
+
   draft:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    needs: source-check
     name: Verify signed artifact and optionally create internal draft
     runs-on: ubuntu-latest
     timeout-minutes: 25
@@ -50,8 +75,11 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Run source and provenance regression tests
-        run: python3 -m unittest discover -s tools/marketing -p 'test_play_internal_draft.py' -v
+      - name: Set up JDK for independent artifact signature validation
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
+        with:
+          distribution: temurin
+          java-version: '17'
 
       - name: Validate manual intent and download successful signed release
         shell: bash
@@ -128,9 +156,9 @@ jobs:
               print("**FAILED OR INCOMPLETE**: no signed-artifact validation evidence.")
           else:
               report=json.loads(p.read_text(encoding="utf-8"))
-              print(f"Source commit: \`{report['source_sha']}\`")
-              print(f"Version: \`{report['version_name']} ({report['version_code']})\`")
-              print(f"AAB SHA256: \`{report['bundle_sha256']}\`")
+              print(f"Source commit: `{report['source_sha']}`")
+              print(f"Version: `{report['version_name']} ({report['version_code']})`")
+              print(f"AAB SHA256: `{report['bundle_sha256']}`")
               if report["play_internal_draft_committed"]:
                   print("**INTERNAL DRAFT CREATED** — not served to users; review Play Console manually.")
               else:
