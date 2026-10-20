@@ -32,13 +32,13 @@ Status: active — Android pipelines functional; original character art still re
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-19T14:44:28Z
+Generated: 2026-10-20T11:20:59Z
 
 ### Git
 - Branch: `main`
-- Head: `37bf38b67cd3`
-- Commit date: 2026-10-19T10:44:12-04:00
-- Commit: security(release): validate dispatch metadata without injecting inputs into shell scripts (#243)
+- Head: `b57dd16d7d0a`
+- Commit date: 2026-10-20T07:20:43-04:00
+- Commit: fix(release): reject out-of-range Play version codes and oversized upload bundles (#244)
 - Tracked files: 1850
 
 ### Recently changed files
@@ -48,8 +48,6 @@ Generated: 2026-10-19T14:44:28Z
 - `ops/build-test-apk-trigger.txt`
 - `docs/art/FINAL_AAA_SPRITE_MANIFEST.md`
 - `docs/art/FINAL_AAA_SPRITE_PROGRESS.md`
-- `marketing/PLAY_STORE_RELEASE_RUNBOOK.md`
-- `tools/marketing/play_release_preflight.py`
 
 ### Project signals
 - `build.gradle.kts`

@@ -7831,6 +7831,10 @@ jobs:
             test -n "${!name:-}" || { echo "::error::Missing required production secret: $name"; exit 1; }
           done
           [[ "$RELEASE_VERSION_CODE" =~ ^[1-9][0-9]*$ ]] || { echo "::error::version_code must be a positive integer"; exit 1; }
+          if (( ${#RELEASE_VERSION_CODE} > 9 )) || (( RELEASE_VERSION_CODE > 2100000000 )); then
+            echo "::error::version_code exceeds the Play Store supported maximum (2100000000)"
+            exit 1
+          fi
           [[ "$RELEASE_VERSION_NAME" =~ ^[0-9]+\.[0-9]+\.[0-9]+([.-][A-Za-z0-9]+)*$ ]] || { echo "::error::version_name must be a safe semver-like string"; exit 1; }
           test "${#RELEASE_VERSION_NAME}" -le 64 || { echo "::error::version_name too long"; exit 1; }
 
@@ -7882,6 +7886,7 @@ jobs:
           AAB="app/build/outputs/bundle/release/app-release.aab"
           test -s "$AAB"
           unzip -t "$AAB" >/dev/null
+          test "$(stat -c%s "$AAB")" -le 209715200 || { echo "::error::AAB exceeds 200 MiB base download safety limit"; exit 1; }
           unzip -l "$AAB" > production-aab-contents.txt
           grep -Fq "base/manifest/AndroidManifest.xml" production-aab-contents.txt
           grep -Fq "base/dex/classes.dex" production-aab-contents.txt
