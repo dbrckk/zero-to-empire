@@ -63,9 +63,9 @@ jobs:
       MODE: ${{ inputs.mode }}
       DRAFT_CONFIRMATION: ${{ inputs.confirmation }}
       GH_TOKEN: ${{ github.token }}
-      ARTIFACT_ROOT: ${{ runner.temp }}/zte-play-release
-      RUN_JSON: ${{ runner.temp }}/zte-play-release-run.json
-      REPORT_JSON: ${{ runner.temp }}/zte-internal-draft-result.json
+      ARTIFACT_ROOT: ${{ github.workspace }}/.zte-play-release
+      RUN_JSON: ${{ github.workspace }}/.zte-play-release-run.json
+      REPORT_JSON: ${{ github.workspace }}/.zte-internal-draft-result.json
     steps:
       - name: Checkout verified tooling
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -176,6 +176,6 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: play-internal-draft-validation
-          path: ${{ runner.temp }}/zte-internal-draft-result.json
+          path: ${{ github.workspace }}/.zte-internal-draft-result.json
           if-no-files-found: ignore
           retention-days: 45
